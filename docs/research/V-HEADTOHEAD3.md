@@ -1,5 +1,32 @@
 # V-HEADTOHEAD3 — tone-neutral competitive baseline
 
+> **2026-09-04 SHARPENING FOLLOW-UP / CAUSAL CORRECTION.**  The two
+> 63-frame 113 source sets do **not** form a sharpening-only ladder.  An
+> all-file XMP census found eleven differing development fields on every
+> frame, including `Dehaze=0/+100`, shadows `0/-100`, whites `+50/0`,
+> blacks `-50/-20`, post-crop vignette `0/-100`, and Lightroom `Enhance`
+> present only in the nominal sharpening-0 arm.  Calling their output swing a
+> Zerene resolution difference or a Sharpness-40 effect was therefore causal
+> overreach.
+>
+> At the only licensed follow-up band, 0.20–0.25 cyc/native px, PMax40/PMax0
+> is `1.6985 [1.0689,2.5135]`; input-fixed flat power is
+> `1.7291 [1.3645,2.1638]`, and the reciprocal local-rank-hull excess is
+> `0.03692 [0.01311,0.06010]`.  Both proxies say that the development change
+> adds spatial structure away from output-selected detail sites.  A
+> pre-fixed sigma-1/amount-1 USM over-shoots rather than reproduces PMax40:
+> `USM(PMax0)/PMax40 = 1.6439 [1.1063,2.6023]`, with closure
+> `1.938 [1.051,9.357]`.
+>
+> **VERDICT: DEVELOPMENT-ARM ARTIFACT; physical recovered-detail versus
+> manufactured-detail remains INDETERMINATE.**  The preregistered source-only
+> USM gate selected the no-op grid boundary and failed, so the nominal USM
+> sensitivity arm cannot be promoted to a causal model.  The Sharpness-40
+> arm is inadmissible evidence of a strehl stacking-resolution deficit; this
+> does not prove that every added sample is hallucinated.  All previously
+> quoted values above 0.25 are historical only and are superseded for current
+> inference by `UNLICENSED_GT_0.25`.
+
 > **CORRECTION / EXHAUSTIVE CENSUS.**  Two independent verification passes
 > broke the comparator census in the earlier committed reports.  The first
 > found a second 113 Zerene render.  The second proved that three previously
@@ -26,6 +53,116 @@ The registration-gate and failed-flat-control amendments predate all real
 outcomes.  Every later census/provenance correction is labelled post-outcome
 and reuses the frozen bands, thresholds, ROI rules and verdict rules.
 
+Sharpening follow-up preregistration:
+[`experiments/V-HEADTOHEAD3/SHARPENING-PREREGISTRATION.md`](../../experiments/V-HEADTOHEAD3/SHARPENING-PREREGISTRATION.md).
+Its site set and failed source model were frozen in separate commits before
+the follow-up opened either PMax or strehl.
+
+## 0. Sharpening discriminator
+
+### 0.1 Commissioning and source freeze
+
+The final synthetic commission is 10/10 controls GREEN and 9/9 planted
+defects RED.  `Q25` remained exactly unchanged under affine, gamma-3, and
+logistic point maps.  The independent correlated-flat USM improvement arm
+read `1.399x` and its disabled mutant went RED; the Gaussian-blur degradation
+arm read `0.0844x` and its disabled mutant went RED.  Both planted
+registration shifts returned the exact negative correction.
+
+The first attempt is retained rather than hidden.  IID white noise read
+`0.784455x` under USM because the fixed-rank spectrum moved mainly beyond the
+0.25 cap, making the assumed positive direction fail.  Before opening real
+pixels, the protocol disclosed that reading and replaced the no-signal
+positive with fixed seed-22 Gaussian-correlated noise; no bar changed.
+
+Source-only selection admitted 58/96 candidates and froze 24 flat and 24
+detail sites at digest
+`B3A2F5279069A3CC85FB42F49F6FDA39397423D9A65565CAB88CCF8E627679F6`.
+The independently reimplemented selector recovered all 48 sites.
+
+The preregistered source transfer then failed closed:
+
+| gate | reading |
+| --- | ---: |
+| fitted `(sigma, amount)` | `(0.30, 0.00)`, grid boundary / identity |
+| train loss / identity loss | `1.572394 / 1.572394` |
+| holdout loss / identity loss | `2.519589 / 2.519589` |
+| first held-out local correction | `(-2,+3)` rather than the required `(0,0)` |
+
+The checker independently returned the same optimum and all four losses.
+Consequently the registered verdict function must return `INDETERMINATE`;
+neither a richer post-outcome filter nor a hand-tuned amount is substituted.
+
+### 0.2 The alleged ladder changes much more than sharpening
+
+`sharpening-metadata.py` invokes ExifTool over all 126 source TIFFs.  All
+63 identities still match, but every frame in each arm has the following
+settings:
+
+| setting | nominal sharpening 0 | nominal sharpening 40 |
+| --- | ---: | ---: |
+| Sharpness / colour NR | `0 / 0` | `40 / 25` |
+| shadows / whites / blacks | `0 / +50 / -50` | `-100 / 0 / -20` |
+| Dehaze | `0` | `+100` |
+| post-crop vignette | `0` | `-100` |
+| Lightroom filter | `Enhance` present | absent |
+
+Sharpen radius/detail/masking also differ (absent versus `1.0/25/0`).
+Contrast `+100`, exposure `0`, highlights `-100`, texture `0`, clarity `0`,
+and luminance smoothing `0` match.  The processing difference therefore
+contains strong local/spatial operations and different geometry, not merely
+a point tone plus sharpening.  The local PMax0/PMax40 corrections span
+`dy=-1..14`, `dx=-18..5`; this is another reason the proxy hull cannot be
+promoted to exact scorecard M8.
+
+### 0.3 Licensed 0.20–0.25 result
+
+All intervals below are 10,000-draw paired bootstraps over 24 source-fixed
+sites.  The checker uses numpy-unique ranks, a weighted real FFT,
+`skimage` registration/resampling, and seed `20260905`; it imports neither
+the author core nor outcome script.
+
+| quantity | author | independent checker |
+| --- | ---: | ---: |
+| PMax40 / PMax0, detail | `1.6985 [1.0689,2.5135]` | `1.7073 [1.1047,2.5077]` |
+| nominal USM(PMax0) / PMax40 | `1.6439 [1.1063,2.6023]` | `1.6353 [1.1118,2.5137]` |
+| strehl / PMax40 | `0.5461 [0.2968,1.0786]` | `0.5030 [0.2837,0.9605]` |
+| nominal USM(strehl) / PMax40 | `1.2003 [0.6843,2.2426]` | `1.1082 [0.6560,2.0068]` |
+| flat PMax40 / PMax0 | `1.7291 [1.3645,2.1638]` | `1.7276 [1.3705,2.1610]` |
+| rank-hull forward-minus-reverse | `0.03692 [0.01311,0.06010]` | `0.03670 [0.01363,0.05988]` |
+
+The nominal USM raises PMax0 `2.7920 [2.6438,2.9666]x`, nearly twice the
+observed mean log-gain; its closure interval is outside the frozen
+`[0.75,1.25]` gate.  It therefore does **not** reproduce the rung.  It does
+move strehl from an apparent deficit to an unresolved interval, demonstrating
+that presentation alone can erase this nominal gap, but that sensitivity is
+not a fitted Lightroom-equivalent result.
+
+The flat reading is explicitly
+`INPUT_FIXED_FLAT_PLACEBO_NOT_M4`: sites were fixed without either PMax, but
+the newly discovered `Enhance` processing means “flat in PMax0 input” can
+include source detail suppressed by that arm.  The hull reading is
+`LOCAL_RANK_ENVELOPE_PROXY_NOT_M8`: it lacks common linear inputs, exact
+per-frame output warps, and external temporal-noise tolerance.  Its positive
+violation is corroborative; it cannot identify which development operation
+caused it.
+
+### 0.4 Disposition
+
+The evidence rejects a **real strehl stacking deficit inferred from the
+Sharpness-40 arm**: that arm is a confounded spatial-development comparison,
+and both flat and hull placebos go strongly positive.  It does not settle the
+physical sub-question “recovered scene detail or amplified noise/ringing.”
+The retained ARWs are the same noisy realizations from which both TIFF sets
+were derived; without independent same-focus repeats/noise qualification,
+correlation to those ARWs would also validate amplified sensor noise.  Exact
+M1/M4/M8 and physical MTF remain unmeasured.
+
+No Rust source changes follow.  The actionable change is experimental:
+future Zerene/strehl detail claims require one common linear input set and a
+one-variable development ladder.  The current `src/` and `crates/` pipeline
+has no result here that causally identifies a module to change.
+
 ## 1. Question and scope
 
 The 17–27% detail deficit in
@@ -50,8 +187,8 @@ Nine unique-byte render pairings are measured:
 
 | ID | strehl master | comparator render | provenance |
 | --- | --- | --- | --- |
-| `113` | `113MSDCF.tiff` | `D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif` | Zerene PMax; 63/63 source identities; LR sharpening 0, colour NR 0, contrast +100 |
-| `113-sharp` | same | `D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif` | Zerene PMax; same 63/63 identities; LR sharpening 40, colour NR 25, contrast +100 |
+| `113` | `113MSDCF.tiff` | `D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif` | Zerene PMax; 63/63 source identities; LR sharpening 0, colour NR 0, contrast +100; `Enhance` present; see §0.2 |
+| `113-sharp` | same | `D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif` | Zerene PMax; same 63/63 identities; LR sharpening 40, colour NR 25, contrast +100; Dehaze +100 and other confounds; see §0.2 |
 | `119-pmax` | `119MSDCF.tiff` | `D:\edited\macro\marker\2026-05-09-13.35.07 ZS PMax.tif` | Zerene PMax; 33/33 identities; LR contrast +50 |
 | `119-pmax-udr` | same | `D:\edited\macro\marker\2026-05-09-13.40.00 ZS PMax UDR.tif` | Zerene PMax UDR; same 33 identities; LR contrast +50 |
 | `119-pmax-udr-neutral` | same | `D:\edited\macro\marker2\2026-05-09-13.47.08 ZS PMax UDR.tif` | Zerene PMax UDR; same 33 identities; LR contrast 0 |
@@ -353,8 +490,9 @@ not raw power across independently toned renders.
 * **P6.** Author/checker classes agree 50/54; no disagreement is an opposing
   win/loss.  Three geometry pairs and one point estimate fail the independent
   numeric gates.
-* **P7.** The app-level baseline is NOT ROBUST: 113 0.25–0.30 changes from
-  `0.9735` to `0.2834` across available Lightroom development rungs.
+* **P7 (historical, superseded).** The app-level baseline was NOT ROBUST at
+  `UNLICENSED_GT_0.25`; §0 supersedes both the numeric inference and the claim
+  that the two source sets form a development ladder.
 * **P8.** No Rust change follows because no result causally isolates a Rust
   stacker module.
 
@@ -366,6 +504,10 @@ SciPy 1.17.1, tifffile 2026.5.2, and scikit-image 0.26.0:
 ```powershell
 $env:PYTHONIOENCODING='utf-8'
 $env:PYTHONPATH=(Get-Location).Path
+$env:OMP_NUM_THREADS='8'
+$env:OPENBLAS_NUM_THREADS='8'
+$env:MKL_NUM_THREADS='8'
+$env:NUMEXPR_NUM_THREADS='8'
 python -B commission.py
 python -B commission.py --hashes
 python -B commission.py --real
@@ -376,6 +518,12 @@ python -B tone-check.py 119-fork --curves gamma3
 python -B geometry.py
 python -B measure.py 113 113-sharp 119-pmax 119-pmax-udr 119-pmax-udr-neutral 119-fork 119-fork-defringed 119-fork-u16 cb
 python -B check.py 113 113-sharp 119-pmax 119-pmax-udr 119-pmax-udr-neutral 119-fork 119-fork-defringed 119-fork-u16 cb
+python -B sharpening-commission.py
+python -B sharpening-source.py sites
+python -B sharpening-source.py model  # expected exit 2: frozen model gate
+python -B sharpening-metadata.py
+python -B sharpening-measure.py       # expected exit 2: INDETERMINATE
+python -B sharpening-check.py
 ```
 
 `measure.py` prints complete `RESULT_JSON`, including ROI centres and
@@ -398,4 +546,12 @@ a050d6861d5ab7655fe08a85c9fd1d3a29a2b1aa  first report, superseded
 b31b8b858e2cf2956c7965c65affa6be014cad27  exhaustive-census disclosure
 178267c9a38f40ca3cfe979ea2fa13a5230ccdd2  pre-outcome fork-subject correction
 40b20bef0fe0cdaba7298573095806e580a7ed85  exhaustive pair tables
+e162519f3984decf42988b13f5e861a1d82eefd4  final exhaustive baseline report
+d2acc123a1cc90c26a3f031c023cbd81a3496abf  sharpening preregistration
+aebe8e35495e627a88eba6cec414fa0db185d6cd  bidirectional reach amendment
+dc2b9a213e7ef69803a599a76bacb5fed81787df  disclose failed iid control
+3d3021237f825dfdd9a67799886038c4d864a4f7  commissioned sharpening instrument
+a0e464cdc50dbdc1229bee9c2e2be7aa614a67e2  input-only site freeze
+eac01548723d0c583a9a52912706f4bc8e7fe29a  failed source-model freeze
+3f0838b12294de380a3a16ee42ade5998bd9547d  outcome and independent checker
 ```
