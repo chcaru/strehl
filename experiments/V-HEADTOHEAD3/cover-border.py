@@ -943,6 +943,79 @@ def _load_module(path: Path) -> ModuleType:
     return module
 
 
+def _map_site_gate_only(
+    arm: np.ndarray,
+    pmax: np.ndarray,
+    pmax_centre: Sequence[int],
+    geometry: dict,
+) -> dict:
+    """Reproduce map_site's gates without evaluating any spectral band."""
+    scale = float(geometry["scale"])
+    gy, gx = map(float, geometry["global_correction"])
+    py, px = map(float, pmax_centre)
+    arm_side = int(round(cc.SIDE * scale))
+    base_y = scale * py + gy
+    base_x = scale * px + gx
+    p_crop = cc.crop_centered(pmax, py, px, cc.SIDE)
+    a_initial = cc.crop_centered(arm, base_y, base_x, arm_side)
+    result = {
+        "centre": [int(py), int(px)],
+        "arm_side": arm_side,
+        "base_arm_centre": [base_y, base_x],
+        "reason": None,
+    }
+    if p_crop is None or a_initial is None:
+        return {**result, "reason": "bounds"}
+    ar0 = cc.midrank_field(a_initial)
+    pr = cc.resized_rank(p_crop, ar0.shape)
+    correction = cc.phase_correction(ar0, pr, max_shift=64)
+    ay = base_y + correction[0]
+    ax = base_x + correction[1]
+    a_crop = cc.crop_centered(arm, ay, ax, arm_side)
+    if a_crop is None:
+        return {**result, "reason": "corrected-bounds"}
+    ar = cc.midrank_field(a_crop)
+    pr = cc.resized_rank(p_crop, ar.shape)
+    corr_initial = cc.pearson(
+        ar0[::4, ::4],
+        cc.resized_rank(p_crop, ar0.shape)[::4, ::4],
+    )
+    corr_fixed = cc.pearson(ar[::4, ::4], pr[::4, ::4])
+    null_gate = float(np.quantile(cc._null_correlations(ar, pr), 0.999))
+    a_rail = cc.rail_fraction(a_crop)
+    p_rail = cc.rail_fraction(p_crop)
+    y0 = int(round(ay - arm_side / 2))
+    x0 = int(round(ax - arm_side / 2))
+    clearance = int(
+        min(
+            y0,
+            x0,
+            arm.shape[0] - (y0 + arm_side),
+            arm.shape[1] - (x0 + arm_side),
+        )
+    )
+    reason = None
+    if corr_fixed <= null_gate:
+        reason = "registration-null"
+    elif corr_fixed - corr_initial < 0.02:
+        reason = "registration-gain"
+    elif a_rail > 0.01 or p_rail > 0.01:
+        reason = "rail"
+    return {
+        **result,
+        "reason": reason,
+        "arm_centre": [ay, ax],
+        "local_correction": [int(correction[0]), int(correction[1])],
+        "phase_peak": float(correction[2]),
+        "corr_initial": corr_initial,
+        "corr_fixed": corr_fixed,
+        "null_gate": null_gate,
+        "arm_rail": a_rail,
+        "pmax_rail": p_rail,
+        "border_clearance": clearance,
+    }
+
+
 def _sensitivity_guards(
     rows: list[dict],
     shape: tuple[int, int],
@@ -987,6 +1060,10 @@ def _interval(payload: dict) -> list[float]:
     ]
 
 
+def _precount_spectrum_guard(calls: int) -> bool:
+    return type(calls) is int and calls == 0
+
+
 def sensitivity_unit_commission() -> dict:
     dimensions = {
         "scale": {
@@ -998,6 +1075,46 @@ def sensitivity_unit_commission() -> dict:
             "output": list(tifffile.memmap(CROP7).shape[:2]),
         },
     }
+    yy, xx = np.indices((1024, 1024), dtype=np.float64)
+    synthetic = (
+        20_000.0
+        + 1200.0 * np.sin(2.0 * np.pi * xx / 37.0)
+        + 900.0 * np.cos(2.0 * np.pi * yy / 53.0)
+        + 500.0 * np.sin(2.0 * np.pi * (xx + yy) / 71.0)
+    )
+    geometry = {
+        "scale": 1.0,
+        "global_correction": [5.0, -3.0],
+    }
+    gate = _map_site_gate_only(
+        synthetic,
+        synthetic,
+        [512, 512],
+        geometry,
+    )
+    full = cc.map_site(
+        synthetic,
+        synthetic,
+        [512, 512],
+        geometry,
+    )
+    shared_fields = (
+        "reason",
+        "arm_side",
+        "arm_centre",
+        "local_correction",
+        "corr_initial",
+        "corr_fixed",
+        "null_gate",
+        "arm_rail",
+        "pmax_rail",
+        "border_clearance",
+    )
+    shared_exact = all(gate.get(name) == full.get(name) for name in shared_fields)
+    planted_clearance = dict(gate)
+    planted_clearance["border_clearance"] += 1
+    planted_reason = dict(gate)
+    planted_reason["reason"] = "registration-null"
     controls = {
         "scale_exact_conversion": dimensions["scale"]
         == {"linear": [2344, 3516], "output": [4688, 7032]},
@@ -1005,6 +1122,10 @@ def sensitivity_unit_commission() -> dict:
         == {"linear": [2298, 3448], "output": [4596, 6896]},
         "scale_threshold": 2 * 640 == SENSITIVITY_SCALE_CLEARANCE,
         "crop_threshold": 2 * 320 == SENSITIVITY_CROP_CLEARANCE,
+        "zero_spectral_call_null": _precount_spectrum_guard(0),
+        "gate_matches_frozen_mapper": shared_exact,
+        "gate_fixed_external_correction": gate["local_correction"] == [-5, 3],
+        "gate_fixed_external_clearance": gate["border_clearance"] == 256,
     }
     mutants = {
         "conversion_omitted": 640 != SENSITIVITY_SCALE_CLEARANCE,
@@ -1013,6 +1134,10 @@ def sensitivity_unit_commission() -> dict:
         != SENSITIVITY_SCALE_CLEARANCE,
         "crop_threshold_minus_one": 2 * 320 - 1
         != SENSITIVITY_CROP_CLEARANCE,
+        "one_spectral_call_leak": not _precount_spectrum_guard(1),
+        "gate_clearance_plus_one": planted_clearance["border_clearance"]
+        != full["border_clearance"],
+        "gate_reason_changed": planted_reason["reason"] != full["reason"],
     }
     green = all(controls.values()) and all(mutants.values())
     return {
@@ -1075,55 +1200,72 @@ def sensitivity() -> dict:
     crop = cc.green(CROP7)
     pmax = cc.green(cc.PMAX["113"])
     losses = collections.Counter()
-    retained = []
+    retained_gates = []
     clearances = {"scale": [], "crop": []}
-    for site in sites:
-        scale_row = cc.map_site(
-            scale,
-            pmax,
-            site["centre"],
-            scale_geometry,
+    rank_calls_before_count = 0
+    original_rank_energy = cc.rank_energy
+
+    def tracked_rank_energy(*args, **kwargs):
+        nonlocal rank_calls_before_count
+        rank_calls_before_count += 1
+        return original_rank_energy(*args, **kwargs)
+
+    cc.rank_energy = tracked_rank_energy
+    try:
+        for site in sites:
+            scale_row = _map_site_gate_only(
+                scale,
+                pmax,
+                site["centre"],
+                scale_geometry,
+            )
+            crop_row = _map_site_gate_only(
+                crop,
+                pmax,
+                site["centre"],
+                crop_geometry,
+            )
+            if scale_row["reason"] is not None:
+                losses[f"scale-{scale_row['reason']}"] += 1
+                continue
+            if crop_row["reason"] is not None:
+                losses[f"crop-{crop_row['reason']}"] += 1
+                continue
+            scale_clearance = int(scale_row["border_clearance"])
+            crop_clearance = int(crop_row["border_clearance"])
+            if scale_clearance < SENSITIVITY_SCALE_CLEARANCE:
+                losses["scale-profile-clearance"] += 1
+                continue
+            if crop_clearance < SENSITIVITY_CROP_CLEARANCE:
+                losses["crop-profile-clearance"] += 1
+                continue
+            retained_gates.append(
+                {
+                    "site": site,
+                    "scale_gate": scale_row,
+                    "crop_gate": crop_row,
+                }
+            )
+            clearances["scale"].append(scale_clearance)
+            clearances["crop"].append(crop_clearance)
+    finally:
+        cc.rank_energy = original_rank_energy
+    if not _precount_spectrum_guard(rank_calls_before_count):
+        raise RuntimeError(
+            "spectral computation leaked before the central-site count gate"
         )
-        crop_row = cc.map_site(
-            crop,
-            pmax,
-            site["centre"],
-            crop_geometry,
-        )
-        if scale_row["reason"] is not None:
-            losses[f"scale-{scale_row['reason']}"] += 1
-            continue
-        if crop_row["reason"] is not None:
-            losses[f"crop-{crop_row['reason']}"] += 1
-            continue
-        if scale_row["pmax_q"] != crop_row["pmax_q"]:
-            raise RuntimeError("paired arms did not use identical PMax pixels")
-        scale_clearance = int(scale_row["border_clearance"])
-        crop_clearance = int(crop_row["border_clearance"])
-        if scale_clearance < SENSITIVITY_SCALE_CLEARANCE:
-            losses["scale-profile-clearance"] += 1
-            continue
-        if crop_clearance < SENSITIVITY_CROP_CLEARANCE:
-            losses["crop-profile-clearance"] += 1
-            continue
-        retained.append(
-            {
-                "centre": site["centre"],
-                "label": site["label"],
-                "scale_q": scale_row["arm_q"],
-                "crop_q": crop_row["arm_q"],
-                "pmax_q": scale_row["pmax_q"],
-            }
-        )
-        clearances["scale"].append(scale_clearance)
-        clearances["crop"].append(crop_clearance)
-    counts = collections.Counter(row["label"] for row in retained)
+    counts = collections.Counter(
+        row["site"]["label"] for row in retained_gates
+    )
     enough = counts["detail"] >= 12 and counts["flat"] >= 6
     result = {
-        "schema": "V-HEADTOHEAD3-COVER-BORDER-SENSITIVITY-1",
+        "schema": "V-HEADTOHEAD3-COVER-BORDER-SENSITIVITY-2",
         "status": "GREEN",
         "label": "CENTRAL_SITE_ORDINAL_BAND_POWER_NOT_RESOLUTION",
         "bias": "TOWARD_RETAINING_COVER_NOT_CAUSE",
+        "withdrawn_schema_1": (
+            "PER_SITE_SPECTRA_TOUCHED_BEFORE_FAILED_COUNT_GATE"
+        ),
         "commission": {
             "border_controls_green": commissioned["control_count"],
             "border_plants_red": commissioned["mutant_count"],
@@ -1157,6 +1299,7 @@ def sensitivity() -> dict:
             "s_determination": "IMAGE_FITTED_INDEPENDENTLY_PER_RENDER",
         },
         "counts_pass": enough,
+        "rank_energy_calls_before_count_gate": rank_calls_before_count,
         "resolution_verdict": "NOT_MEASURED_Q25_REFUSED",
     }
     if not enough:
@@ -1165,6 +1308,42 @@ def sensitivity() -> dict:
             "disposition": "BORDER_UNRESOLVED_INSUFFICIENT_CENTRAL_SITES",
             "primary_0.10_0.20": None,
         }
+    retained = []
+    for gate in retained_gates:
+        site = gate["site"]
+        scale_row = cc.map_site(
+            scale,
+            pmax,
+            site["centre"],
+            scale_geometry,
+        )
+        crop_row = cc.map_site(
+            crop,
+            pmax,
+            site["centre"],
+            crop_geometry,
+        )
+        for name, row, expected in (
+            ("scale", scale_row, gate["scale_gate"]),
+            ("crop", crop_row, gate["crop_gate"]),
+        ):
+            if (
+                row["reason"] is not None
+                or row["border_clearance"] != expected["border_clearance"]
+                or row["local_correction"] != expected["local_correction"]
+            ):
+                raise RuntimeError(f"{name} spectral revisit changed mapping")
+        if scale_row["pmax_q"] != crop_row["pmax_q"]:
+            raise RuntimeError("paired arms did not use identical PMax pixels")
+        retained.append(
+            {
+                "centre": site["centre"],
+                "label": site["label"],
+                "scale_q": scale_row["arm_q"],
+                "crop_q": crop_row["arm_q"],
+                "pmax_q": scale_row["pmax_q"],
+            }
+        )
     detail = [row for row in retained if row["label"] == "detail"]
     flat = [row for row in retained if row["label"] == "flat"]
     detail_primary = cc.bootstrap(detail, cc.SEED)[2]
