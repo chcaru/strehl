@@ -9,7 +9,7 @@
 > Zerene resolution difference or a Sharpness-40 effect was therefore causal
 > overreach.
 >
-> At the only licensed follow-up band, 0.20–0.25 cyc/native px, PMax40/PMax0
+> In the only reported follow-up band, 0.20–0.25 cyc/native px, PMax40/PMax0
 > is `1.6985 [1.0689,2.5135]`; input-fixed flat power is
 > `1.7291 [1.3645,2.1638]`, and the reciprocal local-rank-hull excess is
 > `0.03692 [0.01311,0.06010]`.  Both proxies say that the development change
@@ -25,7 +25,9 @@
 > arm is inadmissible evidence of a strehl stacking-resolution deficit; this
 > does not prove that every added sample is hallucinated.  All previously
 > quoted values above 0.25 are historical only and are superseded for current
-> inference by `UNLICENSED_GT_0.25`.
+> inference by `UNLICENSED_GT_0.25`.  A post-outcome commissioning correction
+> described in §0.1 also leaves every `Q25` causal verdict
+> `INDETERMINATE`; the XMP invalidation is independent of that statistic.
 
 > **CORRECTION / EXHAUSTIVE CENSUS.**  Two independent verification passes
 > broke the comparator census in the earlier committed reports.  The first
@@ -75,6 +77,20 @@ arm read `0.0844x` and its disabled mutant went RED.  Both planted
 registration shifts returned the exact negative correction.  The synthetic
 held-out target read actual/predicted `1.0000`, closure `1.0000`, while the
 executed no-op mutant read closure `0.0000` and went RED.
+
+A second independent pass found two more instrument defects.  The first
+synthetic `REPRODUCES` control had checked point estimates rather than its
+registered 95% intervals; the repaired control executes all interval branches
+(`actual/predicted`, closure, and forward each `[1.0000,1.0000]`; original
+`[0.5533,0.5558]`).  More importantly, the original item-6 demand that an
+above-cap *intensity* sinusoid never move `Q25` is incompatible with exact
+point-tone invariance: adding it changes the global rank field, and the
+end-to-end diagnostic actually reads `0.427222x`.  That failed reading is
+retained.  The corrected licensing control tests the production spectral
+backend after rank construction and reads only `1.469e-7` relative leakage
+from 0.28125 into the licensed band; the mask mutant goes RED.  Because this
+semantic correction occurred after outcomes, it cannot promote the frozen
+causal verdict beyond `INDETERMINATE`.
 
 The first attempt is retained rather than hidden.  IID white noise read
 `0.784455x` under USM because the fixed-rank spectrum moved mainly beyond the
@@ -562,4 +578,5 @@ a0e464cdc50dbdc1229bee9c2e2be7aa614a67e2  input-only site freeze
 eac01548723d0c583a9a52912706f4bc8e7fe29a  failed source-model freeze
 3f0838b12294de380a3a16ee42ade5998bd9547d  outcome and independent checker
 23dd924166107607e5ead82f11140fe6d6d6b3a8  repair verifier-found commissioning defects
+233f1165063d30a2c941b7129a3287e7f99d2e69  correct above-cap and interval controls
 ```
