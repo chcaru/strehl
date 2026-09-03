@@ -21,6 +21,7 @@ from pathlib import Path
 
 import numpy as np
 import tifffile
+from skimage.filters import gaussian
 from skimage.registration import phase_cross_correlation
 from skimage.transform import resize
 
@@ -284,7 +285,39 @@ def bootstrap(detail: np.ndarray, flat: np.ndarray) -> dict:
     }
 
 
-def verdict(e: dict, k: int) -> str:
+def checker_fixture(n: int = 384) -> np.ndarray:
+    rng = np.random.default_rng(710)
+    fy = np.fft.fftfreq(n)[:, None]
+    fx = np.fft.fftfreq(n)[None, :]
+    radius = np.sqrt(fx * fx + fy * fy)
+    phase = np.exp(2j * np.pi * rng.random((n, n)))
+    texture = np.fft.ifft2(
+        phase / np.maximum(radius, 1.0 / n)
+    ).real
+    texture = (texture - texture.mean()) / texture.std()
+    yy, xx = np.mgrid[:n, :n]
+    x = (
+        0.25 * texture
+        + 0.32 * np.sin(2 * np.pi * 0.18 * xx + 0.3)
+        + 0.22 * np.sin(2 * np.pi * 0.27 * (0.8 * xx + 0.6 * yy) + 1.1)
+        + 0.15 * np.sin(2 * np.pi * 0.35 * yy + 0.7)
+        + 0.35 * (xx > n * 0.37)
+        - 0.21 * (yy > n * 0.63)
+    )
+    return (x - x.min()) / (x.max() - x.min())
+
+
+def sensitivity() -> tuple[list[float], list[bool]]:
+    x = checker_fixture()
+    base = shares(x)
+    blurred = shares(gaussian(x, sigma=2.0, preserve_range=True))
+    move = np.abs(blurred / base - 1.0)
+    return move.tolist(), (move >= 0.05).tolist()
+
+
+def verdict(e: dict, k: int, sensitive: bool = True) -> str:
+    if not sensitive:
+        return "NOT SENSITIVE"
     if e["detail_ci_low"][k] > 1.05:
         primary = "LEADS"
     elif e["detail_ci_high"][k] < 1 / 1.05:
@@ -329,9 +362,69 @@ def run(key: str) -> dict:
     fc = float(np.quantile(textures, 0.25))
     dc = float(np.quantile(textures, 0.50))
     flat = np.asarray([r["log_ratio"] for r in good if r["texture"] <= fc])
-    detail = np.asarray([r["log_ratio"] for r in good if r["texture"] >= dc])
+    detail_rows = [r for r in good if r["texture"] >= dc]
+    detail = np.asarray([r["log_ratio"] for r in detail_rows])
     e = bootstrap(detail, flat)
-    classes = [verdict(e, k) for k in range(6)]
+    blur_move, sensitive = sensitivity()
+    classes = [verdict(e, k, sensitive[k]) for k in range(6)]
+    provisional = [
+        "LEADS"
+        if e["detail_ci_low"][k] > 1.05
+        else "TRAILS"
+        if e["detail_ci_high"][k] < 1 / 1.05
+        else "UNRESOLVED"
+        for k in range(6)
+    ]
+
+    loo_reversal = []
+    for k, primary in enumerate(provisional):
+        opposite = (
+            "TRAILS"
+            if primary == "LEADS"
+            else "LEADS"
+            if primary == "TRAILS"
+            else None
+        )
+        reversed_k = False
+        if opposite:
+            for i in range(len(detail)):
+                ratio = float(np.exp(np.mean(np.delete(detail, i, axis=0), axis=0)[k]))
+                cls = (
+                    "LEADS"
+                    if ratio > 1.05
+                    else "TRAILS"
+                    if ratio < 1 / 1.05
+                    else "UNRESOLVED"
+                )
+                reversed_k |= cls == opposite
+        loo_reversal.append(reversed_k)
+        if reversed_k:
+            classes[k] = "UNRESOLVED (LOO REVERSAL)"
+
+    quadrants = []
+    for qy in range(2):
+        for qx in range(2):
+            selected = [
+                r
+                for r in detail_rows
+                if (r["centre"][0] >= sg.shape[0] / 2) == bool(qy)
+                and (r["centre"][1] >= sg.shape[1] / 2) == bool(qx)
+            ]
+            if selected:
+                arr = np.asarray([r["log_ratio"] for r in selected])
+                quadrants.append(np.exp(np.mean(arr, axis=0)).tolist())
+    quadrant_opposition = []
+    for k, primary in enumerate(provisional):
+        if primary == "LEADS":
+            opposite_count = sum(q[k] < 1.0 for q in quadrants)
+        elif primary == "TRAILS":
+            opposite_count = sum(q[k] > 1.0 for q in quadrants)
+        else:
+            opposite_count = 0
+        opposed = opposite_count >= 2
+        quadrant_opposition.append(opposed)
+        if opposed:
+            classes[k] = "UNRESOLVED (QUADRANT)"
     for k, name in enumerate(BAND_NAMES):
         print(
             f"CHECK {name}: R_detail={e['r_detail'][k]:.4f} "
@@ -349,6 +442,11 @@ def run(key: str) -> dict:
         "detail_count": len(detail),
         "flat_count": len(flat),
         "effect": e,
+        "blur_move": blur_move,
+        "sensitive": sensitive,
+        "provisional_classes": provisional,
+        "loo_reversal": loo_reversal,
+        "quadrant_opposition": quadrant_opposition,
         "classes": classes,
     }
 

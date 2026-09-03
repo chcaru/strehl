@@ -14,6 +14,7 @@ from ordinal import (
     BAND_NAMES,
     PAIRS,
     _scale_score,
+    classify,
     midrank_field,
     ordinal_shares,
     overlap_after_shift,
@@ -167,6 +168,38 @@ def tone_controls(rec: Record, x: np.ndarray, prefix: str) -> None:
         f"{prefix} blind constant gauge",
         not (0.0 >= 0.05),
         "blind statistic move 0.000 cannot detect solarisation",
+    )
+
+
+def synthetic_ratio_tone_control(rec: Record) -> None:
+    originals = []
+    transformed: dict[str, list[np.ndarray]] = {
+        name: [] for name in tone_transforms(fixture(192)).keys()
+    }
+    for seed in range(8):
+        s = fixture(192, seed=2000 + seed)
+        c = ndimage.gaussian_filter(s, 0.45)
+        ss = ordinal_shares(s)
+        originals.append(np.log(ss / ordinal_shares(c)))
+        for name, toned in tone_transforms(c).items():
+            transformed[name].append(np.log(ss / ordinal_shares(toned)))
+    base = np.exp(np.mean(np.asarray(originals), axis=0))
+    moves = {
+        name: float(
+            np.max(
+                np.abs(
+                    np.exp(np.mean(np.asarray(rows), axis=0))
+                    - base
+                )
+            )
+        )
+        for name, rows in transformed.items()
+    }
+    worst = max(moves.values())
+    rec.control(
+        "synthetic paired R_detail tone invariance",
+        worst <= 1e-10,
+        ", ".join(f"{name}={value:.3e}" for name, value in moves.items()),
     )
 
 
@@ -378,6 +411,25 @@ def flat_noise_controls(rec: Record) -> None:
         f"max fine departure {superseded_move:.1f} (must remain RED)",
     )
 
+    production = classify(
+        low=0.80,
+        high=0.90,
+        flat_low=0.70,
+        flat_high=0.80,
+        sensitive=True,
+    )
+    rec.control(
+        "production same-direction flat veto",
+        production == "UNRESOLVED (FLAT VETO)",
+        f"classify(...)={production}",
+    )
+    without_veto = "TRAILS"  # Detail CI is wholly below 1/1.05.
+    rec.plant(
+        "production classifier without flat veto",
+        without_veto != production and without_veto == "TRAILS",
+        f"mutant={without_veto}, production={production}",
+    )
+
     structured_texture = float(np.sum(ordinal_shares(fixture())[:3]))
     white_texture = float(
         np.sum(ordinal_shares(np.random.default_rng(146).normal(size=(384, 384)))[:3])
@@ -472,6 +524,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.hashes and not args.real:
         rank_oracle(rec)
         tone_controls(rec, fixture(), "synthetic")
+        synthetic_ratio_tone_control(rec)
         registration_controls(rec)
         scale_controls(rec)
         blur_controls(rec)
