@@ -91,4 +91,3 @@ Before judging candidates, `commission.py` must pass a literal all-GREEN
 fixture and catch eight one-property sabotages: identity, blur magnitude,
 positive-improvement blindness, sharpening, nonlinear tone, noise, angle gate,
 and licensing.  A checker that cannot make every sabotage RED is not used.
-

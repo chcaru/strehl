@@ -112,10 +112,21 @@ def adjudicate(name: str, instrument: dict,
     for case in instrument["angles"]:
         plant = float(case["plant_deg"])
         rec = case["measurement"]
-        measured = abs(float(rec.get("angle_deg", float("inf"))))
-        admitted = is_value(rec) and lo <= measured <= hi
+        measured = (
+            abs(float(rec["angle_deg"]))
+            if is_value(rec) and "angle_deg" in rec else None
+        )
+        # Do not let a few ulps decide whether an inclusive published boundary
+        # is accepted (the 12-degree plants recover as 12.000000000000004).
+        admitted = (
+            measured is not None
+            and lo - 1e-6 <= measured <= hi + 1e-6
+        )
         expected = ANGLE_EXPECTED[plant]
-        recovered = (not expected) or abs(measured - plant) <= 0.2
+        recovered = (
+            (not expected)
+            or (measured is not None and abs(measured - plant) <= 0.2)
+        )
         case_ok = admitted == expected and recovered
         angle_ok &= case_ok
         angle_details.append({
@@ -158,6 +169,9 @@ def adjudicate(name: str, instrument: dict,
             if is_value(arms["logistic"]) else None
         ),
         "noise_median": noise_median,
+        "noise_min": min(noise_ratios) if noise_ratios else None,
+        "noise_max": max(noise_ratios) if noise_ratios else None,
+        "noise_above_base": sum(r > 1.0 for r in noise_ratios),
         "noise_worst_abs": noise_worst,
     }
     passed = all(gates.values())
@@ -268,7 +282,8 @@ def commission_checker() -> dict:
 def run_measurement() -> dict:
     env = dict(os.environ)
     for key in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
-                "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+                "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS",
+                "BLIS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
         env[key] = "1"
     env["PYTHONDONTWRITEBYTECODE"] = "1"
     proc = subprocess.run(
