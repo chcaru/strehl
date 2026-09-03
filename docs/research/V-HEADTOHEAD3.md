@@ -62,12 +62,19 @@ the follow-up opened either PMax or strehl.
 
 ### 0.1 Commissioning and source freeze
 
-The final synthetic commission is 10/10 controls GREEN and 9/9 planted
-defects RED.  `Q25` remained exactly unchanged under affine, gamma-3, and
+The final synthetic commission is 13/13 controls GREEN and 11/11 planted
+defects RED.  An independent verifier rejected the earlier nominal 10/9
+result because its two disabled-arm plants reused the enabled readings and
+several registered guards were absent.  The repaired commission actually
+executes identity improvement/degradation mutants, a no-op transfer, a
+held-out-band import, and a PMax/strehl source-model import; every one goes
+RED.  `Q25` remained exactly unchanged under affine, gamma-3, and
 logistic point maps.  The independent correlated-flat USM improvement arm
 read `1.399x` and its disabled mutant went RED; the Gaussian-blur degradation
 arm read `0.0844x` and its disabled mutant went RED.  Both planted
-registration shifts returned the exact negative correction.
+registration shifts returned the exact negative correction.  The synthetic
+held-out target read actual/predicted `1.0000`, closure `1.0000`, while the
+executed no-op mutant read closure `0.0000` and went RED.
 
 The first attempt is retained rather than hidden.  IID white noise read
 `0.784455x` under USM because the fixed-rank spectrum moved mainly beyond the
@@ -554,4 +561,5 @@ dc2b9a213e7ef69803a599a76bacb5fed81787df  disclose failed iid control
 a0e464cdc50dbdc1229bee9c2e2be7aa614a67e2  input-only site freeze
 eac01548723d0c583a9a52912706f4bc8e7fe29a  failed source-model freeze
 3f0838b12294de380a3a16ee42ade5998bd9547d  outcome and independent checker
+23dd924166107607e5ead82f11140fe6d6d6b3a8  repair verifier-found commissioning defects
 ```
