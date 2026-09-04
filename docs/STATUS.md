@@ -4961,6 +4961,127 @@ talking it into a pass are on their way to being closed.
 
 ---
 
+### 2.9.47 The capture ask doubled, an instrument refusal was turned into a conclusion, and I called an interface closed that is not (M135, M138, M140, M147, M149, M150, orchestrator, 2026-09-05)
+
+#### 2.9.47.1 The capture ask is now two sittings, and the holdout rule forced it
+
+The detail instrument requires **mandatory physical control arms**: a pre-noise
+blur arm that must read `Q95 < 0.90`, and a genuine pre-noise optical
+improvement arm that must read `Q05 > 1.10`. **Neither existed anywhere in the
+891-frame decomposition.** A metric commissioned only against a planted defect
+cannot distinguish a blind instrument from one that scores the defect better;
+the improvement arm is what separates them.
+
+Two cheap ways of supplying those arms were proposed and **both were ruled
+invalid**:
+
+1. **Selecting the blur arm from the existing `sw4`/`sw10` material after the
+   fact.** That is outcome-dependent selection -- choosing which capture is the
+   "blurred" one after seeing which way it read.
+2. **Using the converter-on reference as the improvement arm.** That is
+   circular: the reference cannot be both the truth and the improved output.
+
+Worse, **the controls cannot be shot in the scored sitting at all.** They are
+measured against `R1`/`R2`, which is the same reference the scored value
+depends on. `2026-09-sota-scorecard.md:345-349`, verbatim: *"The holdout unit
+is **subject plus uninterrupted capture session**, not a directory or step
+width. Rendering, tuning, or reading an outcome on any member burns every
+member of that unit."* Reading the controls therefore burns the scored session.
+
+So the ask splits. Rehearsal sitting **768** frames, scored sitting **891**,
+total **1,659** plus the two frames of Ask 2a. The 768 is a summed block table,
+not an assertion: `164 + 60 + 128 + 96 + 128 + 96 + 96`. Committed `0e64be7f`,
+verified 42/42 with an 8-arm negative control.
+
+#### 2.9.47.2 An instrument refusal can be converted into a scientific conclusion
+
+I commissioned M149 to attack the M138 adapter with one question: *can an
+instrument failure be made to look like a result?* **The answer is yes, and it
+was demonstrated rather than argued.** Verdict **SEND BACK**, two CRITICAL.
+
+Both CRITICAL defects are **one defect wearing two hats**: the adapter hashes a
+file's bytes, closes the file, and then **reopens the path** -- to parse JSON at
+`m138_adapter.py:256`/`:469`, and to load the core module at `:58`/`:365`. **The
+bytes consumed are not the bytes verified.**
+
+- An artifact registered as `INSTRUMENT_INVALID` (SHA `de4523fc...`) was
+  replaced after hashing with valid-fail bytes (`2aca17c0...`). The stable run
+  emitted `INSTRUMENT_INVALID` with **no Boolean**, correctly. Under
+  replacement, **attempt 6 exited 0** and emitted
+  `{"detail_pass_by_capture":{"invalid":false},"detail_state_by_capture":{"invalid":"DETAIL_FAIL"}}`.
+- An unregistered core module (`e754b2cb...`) was executed while the process
+  **truthfully reported the registered bundle SHA `fa3f5135...`**.
+
+**Why this is the worst possible failure for this program.**
+`INSTRUMENT_INVALID` means *no verdict was rendered*. `DETAIL_FAIL` means *the
+bar was measured and not met*. The first is an absence of evidence; the second
+is evidence of absence. Silently converting one into the other **fabricates a
+scientific result**, and it is structurally the same error as `NO_COMMON_K`:
+an unasked question recorded as an answered one.
+
+**This is not a contrived attacker model.** This repository routinely runs ten
+or more agents concurrently in one shared working tree. A file changing between
+a hash and a read is an ordinary event here.
+
+The adapter's self-test reported `25/25 PASS` throughout. M149 neutered **24
+separate guards** one at a time -- including both request binding-hash
+comparisons -- and every mutant still reported `25/25 PASS`. **The suite counted
+checks; it never covered them.**
+
+#### 2.9.47.3 Two errors of my own, recorded
+
+**First: my own verifier passed itself and was wrong.** The 42/42 verifier I
+wrote for the two-sitting ask stayed **green** when its negative control changed
+the rehearsal total from `768` to `767`, because the check tested mere
+*presence* of the string `768` and another occurrence elsewhere in the document
+satisfied it. Repaired to parse the block table and re-sum. I have no standing
+to hold a lane to a coverage standard I failed on my own work in the same hour,
+and I told M135 so when sending its adapter back.
+
+**Second, and more consequential: I recorded the M135/M147 interface as
+"closed on first attempt". It is not closed, and the claim was premature.**
+I based it on a *projection* -- projected `LCB95 2.016039` against M135's
+required floor of `2.0`, from a null width measured at ratio `1.0`. M147's own
+document is more careful than I was. Its status line reads **"PROVISIONAL
+INSTRUMENT; DO NOT SHOOT; REAL 2.03x OPTICAL PAIR PENDING"**, and it names the
+real-optics interval width near `2.03x` as **"the gating unknown"**. Its plant
+does recover truth `2.031200` at `2.0312251532` with lower bound `2.0212589`,
+but M147 writes that the plant *"reuses correlated source pixels and introduces
+interpolation"* and that its *"narrower interval is suspicious rather than
+evidence that the optical case will be equally precise."*
+
+**The interface is provisionally closed on synthetic evidence only.** Ask 2a --
+two frames, five minutes -- decides it. If the real-optics width exceeds the
+`1.54%` design margin, **the magnification target moves, not the bar.**
+
+#### 2.9.47.4 Where the twelve axes actually stand
+
+M140 re-derived readiness against the verbatim `Success:` clause of every axis:
+
+| verdict | axes | remedy owner |
+|---|---|---|
+| Scoreable now | M12 | lane |
+| Partially advanceable | M5, M10 | orchestrator |
+| Instrument-blocked | M3, M4, M8, M11 | orchestrator |
+| Capture-blocked | M1, M2, M6, M7, M9 | owner |
+
+**M12 is scoreable but not presently winnable** -- its pass is contingent on
+M11, which has no instrument. M11 was unstaffed; it is now staffed, because it
+is the only thing standing between this program and a non-`FAIL` result on a
+real axis. M10 is blocked on a single untraceable number: the sole repository
+record of `theta_ext` is the phrase *"approximately 10.26 deg"*, with no
+derivation and no uncertainty. Also now staffed.
+
+#### 2.9.47.5 Position
+
+**Unchanged: `0 of 12`.** This segment bought correctness, not score, which
+remains the right trade while five axes wait on the owner's shutter and four on
+instruments that do not yet exist. The concrete gains: the capture ask is now
+honest about what it costs, an adapter that could fabricate a verdict was caught
+**before** it produced one, and the two cheapest unstaffed axes are staffed.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 
