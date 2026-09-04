@@ -1,6 +1,45 @@
 # Capture request: 383 claim frames + 60 witnesses + 160 reference = 603 for M1, M5 and M9
 
-Status: **FROZEN — BLOCKED ON THREE PRE-SHOOT ITEMS (see next section)**
+> # ⛔ STOP — THIS DOCUMENT IS SUPERSEDED AND IS NOT SAFE TO SHOOT FROM
+>
+> **Raised by the orchestrator, 2026-09-04, after the M135 sampling ruling.**
+>
+> **Do not shoot this protocol.** The 603-frame design in the title and
+> throughout the body below has been **superseded by an 891-frame design**, and a
+> **fourth pre-shoot blocker** now gates the session which is not listed in the
+> three-item table below. Clearing blockers 1 and 2 does **not** make this
+> document shootable.
+>
+> **Why.** The design requires the truth reference to oversample the TC0 state by
+> `2.0x`. The geometry gives `2.7015 / 1.33 = 2.0312x`, leaving a margin of
+> `0.0312x`, or **1.54%**. Magnification is set by hand on the focus ring, and
+> M84b's `0.188%` / `~0.36%` figures measure **recovery, not placement** — they
+> describe how precisely a ratio can be *read back* from frames, not how
+> precisely it can be *dialled in*. M141 established that reproduction ratio is
+> metadata-recoverable for **0 of 68** existing stacks, so a session shot below
+> the required ratio would announce nothing and would be discovered only after
+> the fact, burning the whole sitting.
+>
+> **What is settled and carries forward:** **891 registered frames**; the
+> converter **on** for the reference block and **off** for TC0; stabilisation
+> **off**; the 603-frame request **superseded**.
+>
+> **What is not settled:** the working magnification, provisionally `1.32x` or
+> `1.33x`, is **conditional on the preflight** and must not be assumed.
+>
+> **What unblocks it.** Lane **M147** is building an in-field magnification
+> preflight so the achieved ratio can be confirmed *before* the session rather
+> than discovered after it. The measurement is tractable because both optical
+> states image one coplanar grid, which makes the gate a **ratio** — grid pitch,
+> pixel pitch and EXIF all cancel, so no absolute calibration is required.
+>
+> **This banner is removed only when the orchestrator has reconciled the body
+> below to the 891-frame design and M147's preflight has been delivered and
+> rehearsed.** Until then every frame count, block layout and magnification
+> figure in this document should be treated as historical.
+
+Status: **SUPERSEDED — DO NOT SHOOT (see the stop banner above)**
+Superseded: 2026-09-04 by the 891-frame design; reconciliation pending
 Owning lane: **lane-FRC**
 Approver: **orchestrator**
 Raised: 2026-09
@@ -14,11 +53,13 @@ Amended: 2026-09 (truth-reference block; main sweeps pinned to 1.30× reproducti
 Frozen: 2026-09-03
 Amended: 2026-09-04 (reference block made physically executable; three pre-shoot blockers raised)
 
-## DO NOT SHOOT YET — THREE UNRESOLVED ITEMS GATE THIS SESSION
+## DO NOT SHOOT YET — FOUR UNRESOLVED ITEMS GATE THIS SESSION
 
 Raised by lane-FRC on review of the truth-reference integration, 2026-09-04.
-The procedure below is complete and correct **except** for these three, and
-each one can waste the whole session if it is wrong. **Settle all three before
+Item 4 was raised separately by the orchestrator on the M135 sampling ruling and
+is the one that superseded the design; see the stop banner at the top.
+The procedure below is complete and correct **except** for these four, and
+each one can waste the whole session if it is wrong. **Settle all four before
 the owner sets up.** None requires holdout data; all can be settled on
 development captures or a bench dry run.
 
@@ -27,6 +68,7 @@ development captures or a bench dry run.
 | 1 | **`sw4` / `sw10` step widths are unverified at 1.30×** | The widths were frozen without a documented reproduction ratio. Sony's step width is *relative* and depends on aperture and initial focus, so depth-of-field per step changes with magnification. If they are wrong, the ladders have gaps and the sweeps do not sample what the gates assume. | A non-holdout rehearsal at **1.30×, f/5.6, the exact converter**, proving 55 frames at width 4 and 27 at width 10 give **gap-free coverage with interior peaks at 64 eligible sites**. **Verify this from image data, not from EXIF — see the note below.** Do not derive replacement widths from holdout data. |
 | 2 | **G2 and G3 were never commissioned at 1.30×** | G2 is a fixed-focus spectral repeat and G3 a ladder-node match. Their thresholds (`< 0.10` log-ratio, unique zero-lag maximum, `< 0.10` geometry) were frozen at a different configuration and there is no justified magnification-adjusted threshold. | An exact-configuration development dry run. G0 (`≤ 0.033`) and G1 (`< 0.10` native pixel) are unaffected and remain valid. |
 | 3 | ~~Converter identity is unresolved~~ **CLOSED 2026-09-04 — it is a 2× Viltrox, and every existing focus-bracket capture was shot on it** | The concern was that repository Focus-Bracket evidence might have been obtained on different hardware from the session, leaving mode availability, 55/27-shot completion and endpoint repeatability unverified on the converter actually used. | **Settled by the owner directly:** the rig is a **Sony A7C II + Sony FE 100mm F2.8 GM + 2× Viltrox teleconverter**, and **all stacks in the corpus are focus bracketed.** So the Viltrox is not a new variable — it is the converter every existing capture was taken through, including the 182-, 92- and 197-frame bracket ladders on the 2026-09-02 calibration slide, which completed at 200 mm f/5.6. Focus Bracket is therefore demonstrated on this exact hardware. |
+| 4 | **The truth reference oversamples TC0 by only 1.54% — and magnification is set by hand** | **This is the blocker that superseded the design.** The reference must oversample TC0 by `2.0x`; the geometry gives `2.7015 / 1.33 = 2.0312x`, a margin of `0.0312x` = **1.54%**. The owner sets magnification on the focus ring by hand, and M84b's `0.188%` / `~0.36%` figures measure **recovery, not placement**. M141 found reproduction ratio metadata-recoverable for **0 of 68** existing stacks, so a session shot fractionally under the ratio announces nothing at the time and is discovered only in analysis — after the sitting is gone. Frame count moves 603 → **891**. | **M147's in-field magnification preflight**, then a rehearsal. The measurement is tractable because both optical states image one coplanar grid, so the gate is a **ratio** and grid pitch, pixel pitch and EXIF all cancel — no absolute calibration needed. The working magnification (`1.32x` or `1.33x`) is **conditional on that preflight** and must not be assumed. |
 
 **Blockers 1 and 2 are the same rehearsal** — one dry run at the exact
 configuration settles both. **Blocker 3 is closed.**
