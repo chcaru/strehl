@@ -754,3 +754,85 @@ Repository evidence:
 * `experiments/M8-COMPARATIVE/focus-stack-executable-provenance.json` records
   the currently located focus-stack binaries; the execution protocol must pick
   and hash one rather than infer which made an old render.
+
+## 14. Registered `focus-stack` commissioning execution
+
+The registrar has granted only `tilted-sw10-cpl`, 92 frames, from the complete
+2026-09-02 calibration-slide development session. It is deliberately burned,
+is not a holdout, and can never supply a scored row. `tilted-sw4-cpl` and every
+`flat-*` stack remain outside this lane.
+
+The executable specification is frozen in
+`experiments/M8-COMPARATIVE-CONTROLLED/PREREGISTRATION.md`. The preparation
+replays the already-frozen exact placements, uses the previously commissioned
+all-frame crop `(62,41,3392,2262)`, and materializes linear-Rec.2020 uint16
+TIFFs. The audited boundary begins at those hashed arrays. The preparation's
+bilinear interpolation is upstream of the boundary and is not attributed to
+the comparator merge.
+
+The unchanged M8 checker is retained. Its existing block protocol has no copy
+kernel, so the producer-neutral adapter represents one-sample identity support
+without changing checker code: each prepared RGB sample is repeated into a
+`2 x 2` cell, and the checker independently reconstructs a bilinear support at
+half phase whose four values are equal. The reconstructed hull is exactly the
+single prepared sample. The adapter must pass a zero null, an exact two-sided
+plant, and a restored improvement before subject decode.
+
+This arm runs only after a same-dimensions, same-92-input coordinate and linear
+domain witness passes the exact `focus-stack` command. Zerene remains
+unexecuted.
+
+## 15. Zerene purchase decision
+
+### 15.1 What each non-Professional licence buys
+
+The official purchasing and FAQ pages distinguish technical features from
+permitted use. An installed **Personal** licence removes the expired trial's
+general ban on saving images and projects, so it should restore ordinary
+16-bit output saving. It does not permanently unlock “aligned and
+brightness-corrected input images can be saved to external files” or saved
+adjustment parameters; those are explicitly Pro-only features after their
+separate trials expire.
+
+A **Prosumer** licence is also non-Professional, but the vendor says it
+includes *all technical features* of Professional. Therefore Prosumer is
+technically sufficient for Save Adjusted Input Images. Whether Professional is
+legally required depends on use: the vendor requires it for business, funded,
+museum, employment, or image-sale use. The earlier blanket statement that only
+Professional can execute §4.2 was too strong; the technical prerequisite is
+**Prosumer or Professional**, plus vendor confirmation of what that export
+contains.
+
+With Personal alone, the strongest result is a conditional black-box
+configuration audit: direct PMax/DMap output, frozen XML, zero/disabled
+alignment controls, identity values in the saved output description, and the
+same-build output-grid witness. That is useful evidence, but it is not the
+fully manufactured per-frame contract in §4.2. It still trusts Zerene's
+telemetry for the subject-dependent internal planes.
+
+### 15.2 Can an output witness replace adjusted-input export?
+
+No, not completely. A full-size identity witness proves that the registered
+configuration leaves that control on its input grid, and the output
+description can corroborate identity registration. Neither observes every
+subject frame after Zerene's input/adjustment path. The final merge can hide a
+shift or photometric change in one input, so equality of one merged output
+cannot imply equality of all adjusted source planes. Per-frame adjusted-image
+equality, or an equivalently direct vendor-supported export/API, remains the
+load-bearing evidence for the strongest contract. A Personal-only run must be
+labelled conditional rather than promoted by trusting a checkbox.
+
+### 15.3 Is `focus-stack` enough for the headline?
+
+No. It is sufficient to commission the foreign-render M8 instrument and to
+make a narrow candidate claim about this one controlled merge. It is not
+sufficient for the governing market-leading SOTA headline:
+`docs/proposals/2026-08-sota-path.md` explicitly names licensed Zerene PMax
+and DMap as the comparator. Omitting both leaves the proposal's comparative
+arm incomplete. A headline would need the licensed Zerene arms or a separately
+registered change to that governance document; this lane cannot grant either.
+
+Sources:
+
+* <https://zerenesystems.com/cms/stacker/docs/purchasing>
+* <https://zerenesystems.com/cms/stacker/docs/faqlist>

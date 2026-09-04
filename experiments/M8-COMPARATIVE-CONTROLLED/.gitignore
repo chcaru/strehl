@@ -1,0 +1,12 @@
+/work/
+/prepared/
+/checker-state/
+/output/*.tif
+/controls/work/
+/controls/input/
+/controls/*.tif
+/controls/**/*.tif
+/controls/checker-state/
+/controls/blocks/
+/*.m8site
+/__pycache__/
