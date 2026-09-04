@@ -1,0 +1,67 @@
+{
+  "checks": {
+    "alias_regressions_refuse": true,
+    "all_above_threshold_coverage_trials_pass": true,
+    "all_numeric_gate_invariants_hold": true,
+    "all_recorded_commission_arms_pass": true,
+    "artifact_schemas_are_current": true,
+    "commission_rules_hash_matches": true,
+    "commission_source_hash_matches": true,
+    "coverage_is_20_of_20": true,
+    "exact_commission_arm_set_present": true,
+    "field_commission_remains_blocked": true,
+    "independent_null_within_0_25_percent": true,
+    "mapping_regressions_fail": true,
+    "no_below_threshold_coverage_passes": true,
+    "parameter_hash_matches_commission": true,
+    "parameter_hash_matches_null": true,
+    "parameter_mutation_changes_hash": true,
+    "preflight_source_hash_matches": true,
+    "recorded_null_covers_truth_and_fails": true,
+    "reference_decoded_hash_matches": true,
+    "reference_file_hash_matches": true,
+    "scored_decoded_hash_matches": true,
+    "scored_file_hash_matches": true,
+    "stored_arm_pass_flags_match_independent_rules": true,
+    "synthetic_commission_passes": true
+  },
+  "imports_production_modules": false,
+  "independent_period_check": {
+    "ratio": 1.0001490015288081,
+    "reference": {
+      "method": "fixed-ROI two-dimensional spatial autocorrelation",
+      "peak_radii_green_px": [
+        63.411022245483764,
+        63.41102224548375,
+        63.07792304455062,
+        63.07792304455062
+      ],
+      "period_green_px": 63.24447264501718,
+      "roi_green_px": [
+        1200,
+        2200,
+        1800,
+        3300
+      ]
+    },
+    "scored": {
+      "method": "fixed-ROI two-dimensional spatial autocorrelation",
+      "peak_radii_green_px": [
+        63.39944105832845,
+        63.39944105832845,
+        63.07065999330069,
+        63.07065999330068
+      ],
+      "period_green_px": 63.23505052581457,
+      "roi_green_px": [
+        1200,
+        2200,
+        1800,
+        3300
+      ]
+    }
+  },
+  "pass": true,
+  "schema": "m147-independent-verification-v2",
+  "verifier_source_sha256": "21c226b603daba53f2d34249f979880f6e31671153aba6fa62968684d8da5d04"
+}
