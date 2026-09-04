@@ -66,6 +66,10 @@ def make_capture(
         reference_b=signal + reference_noise[1],
         output_a=signal * h[np.newaxis, :] + output_noise[0],
         output_b=signal * h[np.newaxis, :] + output_noise[1],
+        clip_fraction=0.0,
+        effective_bits=16,
+        calibration_correlation=0.0,
+        target_lineage="nonperiodic-random",
     )
     components = {
         "signal": signal,
@@ -98,6 +102,10 @@ def rebuild(
         reference_b=signal + components["reference_noise_b"],
         output_a=signal * h[np.newaxis, :] + na,
         output_b=signal * h[np.newaxis, :] + nb,
+        clip_fraction=0.0,
+        effective_bits=16,
+        calibration_correlation=0.0,
+        target_lineage="nonperiodic-random",
     )
 
 
@@ -284,8 +292,11 @@ def refusal_trials() -> dict[str, dict]:
         flat_capture, _ = make_capture(rng, signal=flat_signal)
         flat_results.append(score_arm(flat_capture))
 
-        template = complex_normal(rng, (1, len(FREQUENCIES)), 1.0)
-        periodic_signal = np.repeat(template, SITE_COUNT, axis=0)
+        sites = np.arange(SITE_COUNT)[:, np.newaxis]
+        harmonics = np.arange(1, len(FREQUENCIES) + 1)[np.newaxis, :]
+        periodic_signal = (1.0 + 0.20 * np.cos(2.0 * np.pi * sites / 8.0)) * np.exp(
+            2j * np.pi * sites * harmonics / 67.0
+        )
         periodic_capture, _ = make_capture(rng, signal=periodic_signal)
         periodic_capture = replace(periodic_capture, target_lineage="periodic")
         periodic_results.append(score_arm(periodic_capture))
@@ -329,10 +340,20 @@ def refusal_trials() -> dict[str, dict]:
         + complex_normal(rng, shared_flat_pattern.shape, OUTPUT_NOISE_SD),
         output_b=shared_flat_pattern
         + complex_normal(rng, shared_flat_pattern.shape, OUTPUT_NOISE_SD),
+        clip_fraction=0.0,
+        effective_bits=16,
         calibration_correlation=0.20,
+        target_lineage="nonperiodic-random",
     )
     shared_flat_without_lineage = replace(
         shared_flat_capture, calibration_correlation=0.0
+    )
+    forged_periodic = replace(periodic_capture, target_lineage="nonperiodic-random")
+    missing_lineage = CaptureSet(
+        reference_a=base_capture.reference_a,
+        reference_b=base_capture.reference_b,
+        output_a=base_capture.output_a,
+        output_b=base_capture.output_b,
     )
 
     return {
@@ -355,6 +376,8 @@ def refusal_trials() -> dict[str, dict]:
         "shared_reference": score_arm(shared_reference_capture),
         "shared_flat": score_arm(shared_flat_capture),
         "shared_flat_without_lineage": score_arm(shared_flat_without_lineage),
+        "periodic_with_forged_lineage": score_arm(forged_periodic),
+        "missing_lineage": score_arm(missing_lineage),
         "clipping_fraction": {"value": clipped_capture.clip_fraction},
         "unused_components_shape": {"signal": list(components["signal"].shape)},
     }
@@ -501,6 +524,8 @@ def main() -> None:
         == "SHARED_REFERENCE"
         and refusals["shared_flat"]["status"] == "SHARED_REFERENCE",
         "C20_checker_mutations": all(mutations.values()),
+        "C21_missing_lineage": refusals["missing_lineage"]["status"]
+        == "MISSING_LINEAGE",
     }
 
     averaging_promotions = sum(

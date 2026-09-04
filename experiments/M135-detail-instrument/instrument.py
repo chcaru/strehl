@@ -26,10 +26,10 @@ class CaptureSet:
     reference_b: np.ndarray
     output_a: np.ndarray
     output_b: np.ndarray
-    clip_fraction: float = 0.0
-    effective_bits: int = 16
-    calibration_correlation: float = 0.0
-    target_lineage: str = "nonperiodic-random"
+    clip_fraction: float | None = None
+    effective_bits: int | None = None
+    calibration_correlation: float | None = None
+    target_lineage: str = "unknown"
 
 
 def _complex_cov(a: np.ndarray, b: np.ndarray) -> complex:
@@ -119,6 +119,13 @@ def _status(captures: CaptureSet) -> tuple[str, dict[str, Any]]:
         return "NONFINITE", {}
     if float(np.max(FREQUENCIES)) > 0.25:
         return "OUT_OF_BAND", {}
+    if (
+        captures.clip_fraction is None
+        or captures.effective_bits is None
+        or captures.calibration_correlation is None
+        or captures.target_lineage == "unknown"
+    ):
+        return "MISSING_LINEAGE", {}
     if captures.clip_fraction > MAX_CLIP_FRACTION:
         return "NONLINEAR_OUTPUT", {"clip_fraction": captures.clip_fraction}
     if captures.effective_bits < MIN_EFFECTIVE_BITS:
