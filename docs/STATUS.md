@@ -5082,6 +5082,122 @@ honest about what it costs, an adapter that could fabricate a verdict was caught
 
 ---
 
+### 2.9.48 A repaired gate that reported its own coverage, a lane that tried to delegate a judgment, and a citation that pointed at eight files (M135, M136, M142, M149, M150, M156, orchestrator, 2026-09-05)
+
+#### 2.9.48.1 The 891-frame ask is verified arithmetic rather than asserted arithmetic
+
+M150 reconciled the capture request to the replacement M1 design, and M156
+verified it without reference to M150's reasoning. Three independent
+derivations -- M150's, M156's and mine -- agree:
+
+```
+replacement block  96 + 164 + 60 + 128     = 448
+scored session     603 - 160 + 448         = 891
+releases           891 + 1 throwaway       = 892
+owner rehearsal    164+60+128+96+128+96+96 = 768
+combined ask       768 + 891               = 1,659
+```
+
+The forty physical block rows sum to `891`, and the stated total is `891`.
+Committed as `90476757`.
+
+**The acquisition estimate was wrong and is corrected.** The page told the
+owner `45-60 minutes`, a figure inherited from the dead 603-frame design. From
+`419` bracket frames across nine passes containing `410` three-second
+intervals, and `891 - 419 = 472` non-bracket exposures, the floor is
+`(410*3 + 472 + 9)/60 = 28.52` minutes at best, and
+`(410*3 + 419 + 472)/60 = 35.35` minutes if the camera charges a full interval
+per frame. Both readings are preserved because camera timing has not been
+measured. The old number was not merely stale: it understated a two-sitting ask
+that the owner is being asked to schedule.
+
+#### 2.9.48.2 The adapter repair is sound, and its coverage number does not reconcile
+
+M135 returned the adapter across `9f1ffd6d`, `f0467ba4` and `8eeefcbc`, with
+evidence in `0d67b88d`. The read-once invariant now covers artifacts **and**
+executable source, closing the hash-then-reopen defect that let attempt 6 exit
+`0` while converting `INSTRUMENT_INVALID` into `DETAIL_FAIL`.
+
+What matters more than the fix is the reporting. M135 was told that a check
+count is not a coverage measurement, and it returned **`51` checks and `25` of
+`25` mutations killed, stated as two separate numbers, with an inert control
+surviving.** That is the standard this program has repeatedly failed to meet,
+met voluntarily.
+
+**One number does not reconcile.** M149's manifest holds **`32`** behavioral
+mutations; M135 reports `25/25`. Either the repair restructured the code so
+that seven anchors no longer apply -- legitimate, if each guard survives in
+some other form -- or a smaller set was substituted for M149's. M149 has been
+sent back to settle it, and told first to prove its own harness still fires
+against the preserved vulnerable fixtures. Its races reproduce
+probabilistically, on attempts `14` and `5` of `80`; **a clean run on the
+repaired tree is otherwise indistinguishable from a harness that has quietly
+stopped working.**
+
+#### 2.9.48.3 A lane spent five hours delegating a judgment that cannot be delegated
+
+M136 was staffed to rule on whether the M8-O bar is legitimate. At the time of
+writing it had run **`18,359` seconds -- `5.1` hours -- and had spawned `19`
+sub-agents**, among them agents auditing its verifier, and then agents auditing
+that audit. Rulings delivered: **zero.** It had already been ordered to stop
+and rule, and spawned again afterwards.
+
+The error is worth naming, because it is seductive. Every individual layer
+looked like diligence. But the legitimacy of a bar is not a measurable
+quantity. It is a question about provenance and registration order, read off
+the record and then decided. **Past the first competent verifier, each new
+layer stops measuring the world and starts measuring the layer beneath it.**
+Depth was substituted for judgment.
+
+A final instruction was issued: no `task` call in the next turn, and one of
+`LEGITIMATE`, `ILLEGITIMATE` or `CANNOT RULE`. `CANNOT RULE` is acceptable;
+another round of delegation is not, and forfeits the lane. M142 was sent a
+lighter version of the same check at `3.3` hours and `9` descendants, since the
+shape was close enough to warrant asking early rather than at hour six.
+
+#### 2.9.48.4 Two citations had drifted, and the one I did not find
+
+M156 failed the capture request on cross-references. Both defects were mine.
+
+The first cited `2026-09-sota-scorecard.md:462-463` for a sentence about
+commissioning; those lines discuss M8 and M12, and the quoted text had moved to
+`:577-578`. **That one I had independently found.** The second I had not: the
+citation read `2026-09-sota-scorecard.md:465-467` with **no directory**, and a
+bare basename matches **eight** files under `projects/strehl`, because
+snapshots carry copies. Its range was stale too, the text being at `:581-582`.
+
+This is the presence-check disease in a new costume. A path that resolves eight
+ways is not a citation; it is a coincidence with eight chances to look right.
+Fixed in `90476757`, after which M156's checker reports `136/136` GREEN.
+
+**It bit a third time while this section was being written.** The checker
+guarding these paragraphs reported all checks passing with one cited commit
+SHA replaced by a fabrication, because the section names that commit twice and
+presence at either site satisfied the check. Only the negative control caught
+it, and only because one arm planted exactly that defect. The checker now
+resolves **every** SHA-shaped token at **every** site through `git cat-file`,
+and two arms mutate the two sites separately to prove that a correct duplicate
+cannot mask a fabricated neighbour.
+
+**That checker is now a standing gate**, committed as `ffdc6196`: `136` checks
+across eight classes, commissioned at `13/13` -- `12` planted defects RED and
+one inert mutation GREEN -- with check count and mutation coverage reported
+separately. The capture request is edited by several lanes, and its arithmetic
+must keep summing to `891` with the STOP banner intact.
+
+#### 2.9.48.5 Position
+
+**Unchanged: `0 of 12`.** No axis moved this segment, and none could: M12 waits
+on M11's harness, four axes wait on instruments still under construction, and
+five wait on the owner's shutter. What did move is the trustworthiness of the
+instruments that will eventually produce the scores -- a gate that now measures
+its own coverage, a capture ask whose stated cost is honest, and one lane
+pulled out of an unterminating regress. **Ask 2a remains the highest-value five
+minutes on the board**, and the 891-frame session's magnification target still
+waits on it.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 
