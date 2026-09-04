@@ -4408,6 +4408,68 @@ credible route to the program's first passing axis. **A well-evidenced "still
 zero" is an acceptable answer** and would mean the detail instrument is even
 more central than 13.5 already claims.
 
+### 2.9.42 The clamped M8-O measurement is preregistered, and the rule is fixed before the number exists (M136, orchestrator, 2026-09-05)
+
+**Commit `6712449e`.** `experiments/M136-m8o-bar/clamped-m8o-preregistration.json`
+holds protocol `"M136 clamped-Catmull-Rom representable-domain M8-O v1"` at
+`status: PREREGISTERED_NOT_EXECUTED`, `result: UNMEASURED`. **This is the first
+hard, pre-committed decision rule in this program**, and it exists because I
+asked for it before the measurement rather than after.
+
+**The rule, verbatim from the artifact:**
+
+> `m8_o_pass`: "After successful commissioning, PASS iff every capture has V=0 and aggregate V=0."
+> `m8_o_fail`: "After successful commissioning, FAIL iff aggregate V>=1."
+> `example_40`: "V=40 is FAIL."
+> `nonzero_floor`: "None. No empirical or statistical allowance may be introduced after observing the result."
+
+It also carries `combined_m8_pass`: the candidate clears M8 only if **M8-O
+`V=0`, M8-R `V=0`, and the crop/reference identity arm `V=0`** — and a
+flat-corpus pass explicitly does not substitute for the later score on every
+scored quality capture. Seven named conditions force `UNMEASURED`, among them a
+failed commissioning control, an unfrozen binary, and a trace older than v3.
+**A run that voids itself is therefore a defined outcome rather than a
+judgement call.**
+
+**M136 corrected me for the third time, and was right for the third time.** I
+had argued the clamp and M8-O were orthogonal, on the grounds that the clamp
+targets the *source hull* while M8-O's impossibility is a property of the
+*output container*. Its ruling:
+
+> The narrow reasoning is correct. [...] **The clamp is not orthogonal to M8-O
+> as a whole.** It changes the gathered values supplied to the merge, so it may
+> change the final nonrail, wrong-rail, reconstruction, and quantizer-sensitive
+> residue. M8-R zero therefore does not imply M8-O zero.
+
+With a numerical correction I verified in the artifact: the clamped arm's old
+Scale-domain unrepresentable population is **`938,062`** — the *shipping
+Catmull* hull, not bilinear's `977,684`
+(`experiments/M136-m8o-bar/analysis.json`, `clamped_artifact_inventory/aggregate_unrepresentable_hulls`
+`{"high": 938062, "low": 0, "valid": 74173536}`). And because M130 moved the
+output from the Scale domain to the compact Crop domain, **neither old count is
+preregistered as the expected Crop number.** The mechanism persists; the
+population must be measured fresh.
+
+**Commissioning is specified in both directions**, which is the property this
+corpus has repeatedly lacked: eight numeric cases split into *green*
+(`expected_violations: 0`) and *red* (`expected_violations: 1`), plus an
+intermediate-quantizer round trip and a `crop_origin_case` whose deliberately
+wrong origin must produce exactly `6` violations. The red cases are what prove
+the checker can **charge** rather than merely ignore.
+
+**Dispatched: M142**, to implement and execute it. Five components are
+`REQUIRED_NOT_YET_IMPLEMENTED` — `m8_trace_v3.rs` in `crates/`, plus a checker,
+fixture, verifier and runner. `crates/` is released to it now that `crop-early`
+has landed and committed; it must confirm `git status --porcelain crates/` is
+clean first, and must show the byte freeze still holds, since trace v3 is
+instrumentation and may not change output bytes.
+
+**The stake, stated plainly.** M8 is the only axis this program has ever scored
+and it failed. M8-R now has a repair at zero violations across `6,131,678,976`
+samples. If clamped M8-O also returns `V=0`, **M8 becomes the first passing axis
+in the program.** If it returns anything else it is a FAIL under a rule I can no
+longer argue with — which is exactly why the rule was written first.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
