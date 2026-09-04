@@ -120,7 +120,8 @@ Catmull-Rom-over-bilinear gap nevertheless rose from
 withdrew the resolved-detail claim. M135's paired-flat requirement and
 spectrally shaped noise-only plant were frozen in response before their first
 successful outcomes
-(`experiments/M134-kernel-frontier/M137-clamped-detail.md:207-289`).
+(`experiments/M134-kernel-frontier/M137-clamped-detail.md`, “Flat/detail
+specificity control” and verdict clauses).
 
 ## M138 consumer contract
 
@@ -142,6 +143,12 @@ non-compensating bars: information-ratio lower 95% `>=0.98`, every cell's
 transfer-ratio lower 95% `>=0.98`, and unexplained-fraction-difference upper
 95% `<=0.02`. Candidate and legacy must also each pass the mandatory
 flat-control bars.
+
+**UNRATIFIED.** The two `0.98` values implement scorecard rule 4 as currently
+written. They are not requirements traceable to the owner's plan. The checker
+is faithful to that interface, but a claim-bearing run still needs explicit
+ratification or a versioned replacement justified by physical power and
+decision utility.
 
 **VERIFIED.** The frozen self-test passed `14 / 14` controls, including exact
 boundary and one-step-beyond-boundary tests, defect and improvement arms,

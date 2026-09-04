@@ -23,7 +23,8 @@ both properties. M115's cited evidence also lacked a data-dependent tuner
 plant. SPLIT2 later added one: illegal evaluation-pair leakage drove high-band
 FRC to exactly `1.0` and moved an externally protected output by `25.002575`,
 so the plant went RED. That commissions a **held-out-tuning guard**, not D8's
-self-tuning claim (`docs/research/M-PHASE0-SPLIT2.md:91-116`).
+self-tuning claim (`docs/research/M-PHASE0-SPLIT2.md`, “Commissioning retained,
+real FRC forbidden”).
 
 **VERIFIED.** The four D8 headline quantities reproduce from the preserved
 byte-pinned rerun of historical M115 commit `77c8d5e9`: eight blur recoveries
@@ -37,53 +38,63 @@ plant locations, and algebra also pass an independent M135 audit
 Those accurate numbers do **not** prove D8's conclusion:
 
 - M115 C2 Fourier-blurs every already-realized frame before the split
-  (`experiments/M115-deconv-headroom/src/m115lib.py:461-483`;
-  `experiments/M115-deconv-headroom/src/s03_instrument.py:159-211`). It then
+  (`experiments/M115-deconv-headroom/src/m115lib.py`, the C2 Fourier-blur
+  implementation; `experiments/M115-deconv-headroom/src/s03_instrument.py`,
+  the C2 challenge block). It then
   reads absolute `P_sig`, which necessarily follows the filter's power. It is
   not a fresh-noise optical-improvement control.
 - C3 filters the two completed half outputs and reads normalized SNR
-  (`experiments/M115-deconv-headroom/src/s03_instrument.py:214-244`). Its
+  (`experiments/M115-deconv-headroom/src/s03_instrument.py`, the C3
+  common-filter challenge block). Its
   `0.54%` stability is the expected cancellation that also hides post-render
   blur. The source's `8.25x` value is specifically an **RMS-gradient** gain
   (`sqrt(gy1/gy0)`), not an energy ratio; the corresponding energy ratio is
   `68.085x`.
 - `(P(A)+P(B))/2 = P_sig + P_noise` follows identically from
   `P_noise=P(A-B)/2`; it verifies arithmetic bookkeeping, not scene
-  specificity (`experiments/M115-deconv-headroom/src/m115lib.py:441-458`).
+  specificity (`experiments/M115-deconv-headroom/src/m115lib.py`, the
+  `split_spectrum` power decomposition).
 - The exact historical rerun still fails its flat null: `MEAN=0.438734` and
   `WIENER_UNG=3.331288` against `0.25`. A direct common-mode plant reads FRC
   `0.972099`, so the registered D8 phase-0 gate returned
   `KILL — STOP/REMOVE RUST`
-  (`docs/research/M-PHASE0-SPLIT.md:3-10,85-101`).
+  (`docs/research/M-PHASE0-SPLIT.md`, status clause and “Common-mode structure
+  plant” result).
 
 **VERIFIED.** The proposal's claimed C6 subtraction is not commissioned
 evidence. C6 is labelled `"ARGUED"` and retains unresolved `[bar]`
 placeholders; it says the proposed map *would* let D8 subtract fixed pattern
-(`docs/proposals/2026-08-sota-path.md:1189-1214`). The later ledger audit
+(`docs/proposals/2026-08-sota-path.md`, “C6. In-situ sensor
+self-calibration — breathing as the dither”). The later ledger audit
 confirms that no axis tests the C6 calibration product
-(`docs/research/M133-blocker-audit.md:1225-1231`). Likewise, a repeated bracket
+(`docs/research/M133-blocker-audit.md`, clause beginning “No axis tests the C6
+calibration product”). Likewise, a repeated bracket
 supplies independent temporal noise but does not by itself erase same-sensor
 DSNU/PRNU. Repeat-pair FRC still requires independent A/B calibration and a
 held-out corrected-flat/dark residual gate
-(`docs/research/M-FRC-VIABILITY.md:470-524`). SPLIT2 states the point even more
+(`docs/research/M-FRC-VIABILITY.md`, “Shared fixed pattern” and
+“Independent repeat capture” clauses). SPLIT2 states the point even more
 directly: `"repeated exposures share stable sensor structure"`
-(`docs/research/M-PHASE0-SPLIT2.md:137-151`).
+(`docs/research/M-PHASE0-SPLIT2.md`, conclusion containing that phrase).
 
 **VERIFIED.** SPLIT2 also tested the available repeat-capture substrate and
 stopped before reading FRC. The bright pass cleared the `0.10 native px`
 non-translation gate at `0.064031`, but the second-light pass failed at
 `0.107703`; an independent spatial estimator reproduced the decisions at
 `0.070005` and `0.105202`. No real FRC or `P_sig/P_noise` result was retained
-(`docs/research/M-PHASE0-SPLIT2.md:1-12,55-90,117-151`;
+(`docs/research/M-PHASE0-SPLIT2.md`, status, geometry-control, and conclusion
+clauses;
 `experiments/M135-detail-instrument/d8-audit.json:88-132`).
 
 **VERIFIED.** D8 had already been run through its registered phase-0 gate and
 killed; it was not an unintegrated solved answer. The proposal prose still
 advertises it, but the current scorecard correctly drops same-frame split-half
-FRC/SNR (`docs/proposals/2026-09-sota-scorecard.md:1119-1124`). The scorecard's
+FRC/SNR (`docs/proposals/2026-09-sota-scorecard.md`, M11 clause beginning
+“The old same-frame split-half FRC/SNR evidence is withdrawn”). The scorecard's
 present state is therefore exactly as severe as the original brief says: M1
 has `"NO ADMISSIBLE BAR — WITHDRAWN"`
-(`docs/proposals/2026-09-sota-scorecard.md:392,489-535`).
+(`docs/proposals/2026-09-sota-scorecard.md`, M1 readiness row and “M1 —
+WITHDRAWN: no admissible detail instrument” card).
 
 ## 0.1 Does an independent repeated bracket rescue D8?
 
@@ -101,16 +112,19 @@ estimator defects intact:
 
 **VERIFIED.** M115's source already defines the odd/even halves as independent
 noise observations
-(`experiments/M115-deconv-headroom/src/m115lib.py:405-453`). The repeat-pair
+(`experiments/M115-deconv-headroom/src/m115lib.py`, the odd/even split and
+power-estimator functions). The repeat-pair
 fixed-pattern model predicts correlation rising, not falling, as temporal
 noise is averaged down
-(`docs/research/M-FRC-VIABILITY.md:470-506`).
+(`docs/research/M-FRC-VIABILITY.md`, “7. Shared fixed-pattern noise and
+calibration count”).
 
 **VERIFIED.** The statement in the updated brief that two brackets of the same
 scene `"do not share"` fixed pattern is therefore too strong. SPLIT2's source
 conclusion is the opposite: even after a new stabilization-off capture,
 `"repeated exposures share stable sensor structure"`
-(`docs/research/M-PHASE0-SPLIT2.md:137-151`). The scorecard capture supplies
+(`docs/research/M-PHASE0-SPLIT2.md`, conclusion containing that phrase). The
+scorecard capture supplies
 necessary material for a better-controlled candidate, not a working or
 admitted M1 instrument.
 
@@ -149,10 +163,12 @@ roles. The estimator is commissioned; the physical instrument is not.
 
 1. The quoted impossibility statement was the verdict in the original
    `34cd4063` version of `M-FRC-VIABILITY`
-   (`34cd4063:docs/research/M-FRC-VIABILITY.md:5-8`). The current source was
+   (`34cd4063:docs/research/M-FRC-VIABILITY.md`, opening verdict beginning
+   “A detail metric exactly invariant to a common linear filter”). The current source was
    revised: it calls common **post-noise** filtering an ideal null and says
    explicitly that pre-noise transfer is different
-   (`docs/research/M-FRC-VIABILITY.md:381-390,426-430`). “Invariant to a common
+      (`docs/research/M-FRC-VIABILITY.md`, “5. Responsiveness: not generically
+      blind, not yet powered for the claim”). “Invariant to a common
    filter implies blind to blur” is correct only when the blur is the same
    post-noise/output transformation covered by the invariance.
 2. D8's numerical summary is accurate, but it combines `P_sig`'s
@@ -164,9 +180,11 @@ roles. The estimator is commissioned; the physical instrument is not.
    logic, and some extraction controls, but they cannot fully commission this
    reference-dependent physical instrument. The slide rows are explicitly
    distinct geometries and “never an FRC repeat or checker reference for a
-   score” (`docs/proposals/2026-09-sota-scorecard.md:283-288`), while the M1
+   score” (`docs/proposals/2026-09-sota-scorecard.md`, “2.2 Scored and control
+   captures”, high-resolution-slide rows), while the M1
    card requires an independent-reference sentinel
-   (`docs/proposals/2026-09-sota-scorecard.md:540-553`). A fresh score is not
+   (`docs/proposals/2026-09-sota-scorecard.md`, M1 “Input needed by a future
+   replacement” clause). A fresh score is not
    needed to design the statistic, but the missing reference role cannot be
    manufactured from existing pixels.
 
@@ -175,7 +193,8 @@ roles. The estimator is commissioned; the physical instrument is not.
 **VERIFIED.** No RAW, holdout render, or scorecard outcome was opened in this
 lane. The five calibration-grid captures are burned as one
 subject/session, and the six high-resolution-slide stacks are development
-only (`docs/proposals/2026-09-sota-scorecard.md:272-288`).
+only (`docs/proposals/2026-09-sota-scorecard.md`, “2.3 Holdout units and burn
+log” and “2.2 Scored and control captures” high-resolution-slide rows).
 
 **VERIFIED.** The scorecard permits those units to commission an instrument
 but forbids using them for its score:
@@ -183,7 +202,8 @@ but forbids using them for its score:
 > “The burned grid and the development-only high-resolution slide may
 > commission a new instrument but may never provide its scored value.”
 
-(`docs/proposals/2026-09-sota-scorecard.md:551-553`)
+(`docs/proposals/2026-09-sota-scorecard.md`, M1 “Input needed by a future
+replacement” clause containing that sentence)
 
 **VERIFIED.** The final campaign uses only synthetic random-code coefficients,
 seed `135135`, 128 independent populations, and no frequency above
@@ -201,22 +221,24 @@ specificity test. M39's direct statement is:
 > “on the FLAT ROI `2272,1344`, where there is no detail to gain”
 
 and the shipped correction credited that ROI with `+35.47%`
-(`docs/research/M39-verify-detail-metric.md:404-417`).
+(`docs/research/M39-verify-detail-metric.md`, clause containing the quoted
+flat-ROI sentence).
 
 **VERIFIED.** This eliminates raw gradient magnitude, Tenengrad, Laplacian
 energy, high-band power, and any positive “noise-subtracted energy” that can
 turn selection noise or fixed pattern into detail. A lower bound of zero is
 not protection: the halo post-mortem says, verbatim,
 `"A metric can be BLIND to a defect ... or PERVERSE on it"`
-(`experiments/BUILD-TRIAGE/halosens.py:16-27`). That is why this lane includes
-both a planted defect and a planted improvement.
+(`experiments/BUILD-TRIAGE/halosens.py`, comment containing that sentence).
+That is why this lane includes both a planted defect and a planted improvement.
 
 ### 2.2 Split FRC, `sigpow`, and equivalent blur
 
 **VERIFIED.** Same-capture split FRC was defeated by common structure. The
 corpus records a flat ROI at `0.63-0.98` of the detail FRC and a 295x-noise arm
 at `0.970`; changing threshold or ring count did not repair it
-(`docs/research/SYNTHESIS.md:1001-1001,1051-1062`).
+(`docs/research/SYNTHESIS.md`, “FRC says flat regions contain detail” and
+295x-noise challenge clauses).
 
 **VERIFIED.** M46's proposed repair, `sigpow = FRC * P_ring`, initially looked
 responsive because it recovered common cross-power. M55 then found:
@@ -227,9 +249,9 @@ and
 
 > “remains quadratic in photometric gain”
 
-(`docs/research/M55-sigpow-verification.md:1-4`). Its split choice had
+(`docs/research/M55-sigpow-verification.md`, opening verdict). Its split choice had
 `50x` the leverage of the blur signal
-(`docs/research/M55-sigpow-verification.md:282-297`). The candidate was not
+(`docs/research/M55-sigpow-verification.md`, split-choice leverage clause). The candidate was not
 merely noisy; its nuisance could dominate and reverse the intended quantity.
 
 **VERIFIED.** M57's equivalent-blur statistic `dsig` did recover a planted
@@ -238,12 +260,14 @@ blur, but:
 > “it fails its own noise null”
 
 and independent noise moved a true zero by up to `0.343 px`
-(`docs/research/M57-detail-metric-from-first-principles.md:34-64`). M57's
+(`docs/research/M57-detail-metric-from-first-principles.md`, opening result
+and noise-null clause). M57's
 surviving conclusion was:
 
 > “The defensible claim is two-dimensional”
 
-(`docs/research/M57-detail-metric-from-first-principles.md:626-635`).
+(`docs/research/M57-detail-metric-from-first-principles.md`, conclusion
+containing that sentence).
 
 **VERIFIED.** That conclusion directly supports a non-compensating certificate.
 Noise and transfer cannot safely be exchanged inside one scalar.
@@ -253,21 +277,23 @@ Noise and transfer cannot safely be exchanged inside one scalar.
 **VERIFIED.** Native `S_25` passed a 24-seed USM test and failed the unchanged
 bar when expanded to 64 sites: `1.028294x`. It also moved `4.8400x` under
 gamma, `18818.9045x` under logistic tone, and changed strongly with noise and
-angle (`docs/proposals/2026-09-sota-scorecard.md:497-510`).
+angle (`docs/proposals/2026-09-sota-scorecard.md`, M1 “Current instrument”
+clause).
 
 **VERIFIED.** The ordinal replacement did not solve sharpening:
 
 > “licensed Q25 ... **5.560744x RED**”
 
 and a genuine improvement moved in the wrong direction
-(`docs/research/M-PHASE0-SLANTEDGE.md:205-219`).
+(`docs/research/M-PHASE0-SLANTEDGE.md`, “Licensed Q25” challenge result).
 
 **VERIFIED.** The reusable result is external, not intrinsic, tone handling:
 
 > “Independent 33-step PCHIP linearisation is the one clean success”
 
 with at most `0.0141%` affine/gamma/logistic movement
-(`docs/research/M-PHASE0-SLANTEDGE.md:286-290`). The recommendation below uses
+(`docs/research/M-PHASE0-SLANTEDGE.md`, conclusion containing that sentence).
+The recommendation below uses
 that witness and does not ask the detail statistic itself to solve tone.
 
 ### 2.4 Candidate 1: finite learned observer
@@ -277,11 +303,11 @@ argument but lost it in the finite implementation. Its own report says:
 
 > “The observed increase is a failure of this finite estimator, not of DPI.”
 
-(`docs/research/M-CAND1.md:37-47`)
+(`docs/research/M-CAND1.md`, “Sharpening challenge” conclusion)
 
 USM raised the estimate from `0.125099` to `0.137075 bits/tile`,
 `1.095732x`; the planted degradation and improvement were correctly not run
-after the stop (`docs/research/M-CAND1.md:49-63`).
+after the stop (`docs/research/M-CAND1.md`, stopped-outcome clause).
 
 **VERIFIED.** The lesson is narrower than “mutual information cannot work.”
 An arm-specific learned decoder, finite feature bottleneck, regularization, and
@@ -293,7 +319,7 @@ the realized sample, including its permutation correction.
 
 **VERIFIED.** Candidate 2 achieved the strongest prior algebraic result:
 unclipped USM ratio `1.0000000000000009`, with covariance residual
-`1.25e-15` (`docs/research/M-CAND2.md:14-20`).
+`1.25e-15` (`docs/research/M-CAND2.md`, “What worked” clause).
 
 **VERIFIED.** It still died because its protection stopped at linear
 transforms. Gamma and logistic moved the score to `0.502893x` and `0.486741x`,
@@ -301,14 +327,15 @@ and the report says:
 
 > “Congruence protects only invertible linear transforms”
 
-(`docs/research/M-CAND2.md:28-44`).
+(`docs/research/M-CAND2.md`, “What failed” clause containing that sentence).
 
 **VERIFIED.** Candidate 2's later optical signs were valid on its supplied
 synthetic task, but the natural captures could not instantiate the required
 target/covariance/derivative/test populations. Worse, a zero-target input
 returned `NUMERIC` in `16/16`, and ratios between null readings spanned
 `0.1108` to `9.0270`
-(`docs/research/M131-cand2-ruling.md:360-385,400-432`).
+(`docs/research/M131-cand2-ruling.md`, zero-target refusal and final-ruling
+clauses).
 
 **VERIFIED.** The recommended architecture keeps Candidate 2's exact
 congruence lesson, replaces its artificial class labels with an independent
@@ -319,20 +346,22 @@ physical reference, uses external PCHIP, and returns typed no-evidence states.
 **VERIFIED.** D8 explicitly promotes M115 into three product roles: a
 per-stack tuning objective, a per-tile FRC `"certified-resolution map"`, and a
 shipped half-difference null
-(`docs/proposals/2026-08-sota-path.md:1694-1745`). Its supporting numbers are
+(`docs/proposals/2026-08-sota-path.md`, “D8. NEW — split-stack
+self-calibration: the stack contains its own ground truth”). Its supporting numbers are
 real, but they belong to different statistics:
 
 > “A tile where the halves agree to `0.35 cyc/px` *measured* that resolution;
 > no model assumption can inflate it.”
 
-(`docs/proposals/2026-08-sota-path.md:1717-1725`)
+(`docs/proposals/2026-08-sota-path.md`, D8 “Certified-resolution map” clause)
 
 - absolute `P_sig` recovered the attenuation of an applied Gaussian filter at
   `0.9938-0.9974`;
 - normalized `R_SNR` moved at most `0.54%` under common output filters;
 - the largest reported naive reading was `8.25x`; and
 - the power decomposition was `1.0000` within floating arithmetic
-  (`docs/research/M115-deconv-headroom.md:82-107,130`).
+  (`docs/research/M115-deconv-headroom.md`, summary table and power-identity
+  clause).
 
 **VERIFIED.** M135 re-derived those claims from
 `M-PHASE0-SPLIT`'s exact historical rerun rather than trusting either prose
@@ -362,19 +391,21 @@ invariant to a frequency-varying filter because the filter reweights modes
 inside a bin and window leakage mixes them. Its measured `0.537785%` residual
 therefore does not contradict the per-cell identity, but neither its sign nor
 its size is a structural blur response
-(`docs/research/M-FRC-VIABILITY.md:340-367`).
+(`docs/research/M-FRC-VIABILITY.md`, “4.1 Quantifying the implemented
+windowing residual”).
 
 **VERIFIED.** M115 itself exposes the operational consequence:
 
 > “`MEAN` — which destroys contrast to 0.24–0.44× and is obviously the wrong
 > answer — scores highest.”
 
-(`docs/research/M115-deconv-headroom.md:148-150`)
+(`docs/research/M115-deconv-headroom.md`, conclusion containing that sentence)
 
 The later coherence adversary makes the failure constructive: delivering
 `(A+B)/2` produces perfect coherence and zero half-difference while losing
 `29.6%` of delivered band power
-(`docs/research/V-SOFTCHECK-coherence.md:130-159`). Thus D8 cannot detect the
+(`docs/research/V-SOFTCHECK-coherence.md`, `(A+B)/2` adversary clause). Thus
+D8 cannot detect the
 brief's averaging defeat.
 
 **VERIFIED.** Same-capture specificity also fails. M115 says:
@@ -382,13 +413,13 @@ brief's averaging defeat.
 > “nothing that uses one capture of one sensor can separate a static sensor
 > pattern from a static scene.”
 
-(`docs/research/M115-deconv-headroom.md:109-119`)
+(`docs/research/M115-deconv-headroom.md`, conclusion containing that sentence)
 
 The published null values in the brief, `MEAN=0.2984` and
 `WIENER_UNG=0.4034`, are the **band means**. The registered rule was maximum
 mid-band SNR `<0.25`; the exact rerun's maxima are still worse:
 `0.438734` and `3.331288`
-(`docs/research/M115-deconv-headroom.md:109-126`;
+(`docs/research/M115-deconv-headroom.md`, flat-null and registered-bar clauses;
 `experiments/M135-detail-instrument/d8-audit.json:72-87`). The registered D8
 phase-0 lane also planted the shared-pattern failure directly: independent
 noise plus a shared pattern read low-band FRC `0.972099`; the lane returned:
@@ -397,28 +428,32 @@ noise plus a shared pattern read low-band FRC `0.972099`; the lane returned:
 > transfer to the common-mode and data-dependent-tuning failures on which D8
 > depends.”
 
-(`docs/research/M-PHASE0-SPLIT.md:3-10,85-101,176-181,269-274`)
+(`docs/research/M-PHASE0-SPLIT.md`, status, common-mode plant, and final
+verdict clauses)
 
 **VERIFIED.** Changing the FRC readout does not repair it. M41 found the
 published `0.4961` crossing was the last-ring fallback, used by `9/12`
 run-of-record values; a `4x4x2` sweep repaired `0/32` settings; a flat reached
 the same endpoint; and planted-blur sensitivity fell approximately as
 `1-rho` with shared-noise fraction
-(`docs/research/M41-r3-kill-measured.md:788-817,994-997`).
+(`docs/research/M41-r3-kill-measured.md`, endpoint-fallback sweep and
+shared-noise sensitivity clauses).
 
 **VERIFIED.** D8's remaining confounds are not minor:
 
 - quantisation error had cross-half correlation `+0.5109`, causing the
   difference channel to report `3.937x` noise where matched independent
   dither reported `63.311x`, a `16x` under-report
-  (`docs/research/M115-deconv-headroom.md:320-340`);
+  (`docs/research/M115-deconv-headroom.md`, quantisation-correlation clause);
 - a separately rendered pair can confound selection with registration:
   `bee-1-cpl` had `8.885 px` median field shift and `1.354 px` local residual,
   sufficient for `87.3%` of observed incoherence
-  (`docs/research/V-SOFTCHECK-selection-vs-alignment.md:89-97,123-134`);
+  (`docs/research/V-SOFTCHECK-selection-vs-alignment.md`, `bee-1-cpl`
+  registration and attribution clauses);
 - the proposal's C6 subtraction is only an argued future instrument with
   unresolved bars, not a commissioned correction
-  (`docs/proposals/2026-08-sota-path.md:1189-1214`); and
+  (`docs/proposals/2026-08-sota-path.md`, “C6. In-situ sensor
+  self-calibration — breathing as the dither”); and
 - M115 commissioned a planted **defect**, not the separately required planted
   **improvement**. Its control therefore cannot distinguish a responsive
   detail metric from one that simply scores every departure downward.
@@ -442,7 +477,8 @@ reference and retains transfer and unexplained-repeatability as vetoes.
 
 **VERIFIED.** The historical no-go said FRC was `"structurally blind to an
 arbitrary-strength common linear post-filter, including blur"`
-(`34cd4063:docs/research/M-FRC-VIABILITY.md:5-8`).
+(`34cd4063:docs/research/M-FRC-VIABILITY.md`, opening verdict containing that
+phrase).
 
 **VERIFIED.** The current report narrows that statement. It says the measured
 blur was a `"post-noise output filter"` and therefore an intended null, while:
@@ -450,14 +486,14 @@ blur was a `"post-noise output filter"` and therefore an intended null, while:
 > “Pre-noise transfer is different: it attenuates or strengthens the latent
 > signal before fresh downstream noise, so repeat correlation should move.”
 
-(`docs/research/M-FRC-VIABILITY.md:381-390`)
+(`docs/research/M-FRC-VIABILITY.md`, clause containing that sentence)
 
 Its current ruling is:
 
 > “FRC is safe-by-null for common invertible postfilters, but it is responsive
 > to pre-noise information transfer.”
 
-(`docs/research/M-FRC-VIABILITY.md:426-430`)
+(`docs/research/M-FRC-VIABILITY.md`, final ruling containing that sentence)
 
 **VERIFIED.** This does not rehabilitate D8. M115 C2 filters an already
 captured noisy cube and reads absolute `P_sig`; it is not the fresh-downstream-
@@ -466,7 +502,8 @@ independent-repeat FRC arm could measure pre-sensor information, but it would
 still need a separate delivered-transfer veto and independent calibration.
 The current repeat-pair report explicitly retains shared fixed pattern as a
 structural confound
-(`docs/research/M-FRC-VIABILITY.md:6-13,470-524`).
+(`docs/research/M-FRC-VIABILITY.md`, opening verdict and “7. Shared
+fixed-pattern noise and calibration count”).
 
 **VERIFIED.** SPLIT2 is the direct test of the proposed repaired substrate. It
 commissioned the arithmetic and 17/17 plants, including held-out tuner leakage,
@@ -474,7 +511,8 @@ but its second repeat failed the registered geometry gate and therefore
 retained no real FRC. More fundamentally, its conclusion says that even a new
 capture with stabilization off would leave stable sensor structure shared
 between repeats
-(`docs/research/M-PHASE0-SPLIT2.md:91-151`). A second bracket repairs
+(`docs/research/M-PHASE0-SPLIT2.md`, “Commissioning retained, real FRC
+forbidden” through “Consequence for source”). A second bracket repairs
 full-ladder latent matching and odd/even partitioning, but not common
 postfilter blindness, averaging, sensor-fixed structure, or inter-bracket
 registration.
@@ -484,23 +522,26 @@ responsive than ring FRC is directionally useful but dimensionally invalid as
 a ratio: it divides micrometres by dimensionless FRC movement. Normalized to
 their baselines, the comparison is about `+191.9%` edge width versus
 `+0.1507%` FRC, and the FRC arm was a common post-noise filter
-(`docs/research/M-FRC-VIABILITY.md:369-390`). It proves FRC cannot stand alone
+(`docs/research/M-FRC-VIABILITY.md`, BUILD-SHARP dimensional comparison and
+pre-noise distinction clauses). It proves FRC cannot stand alone
 as presentation resolution; it does not prove pre-noise blindness.
 
 **VERIFIED.** FRC therefore survives only as a possible information/noise
 coordinate after fresh-repeat geometry, calibration, null, and power gates.
-It cannot by itself supply M1 or the scorecard's `98%` comparator-
-qualification rule, because a deliberately post-blurred mode can retain
-identical ideal FRC.
+It cannot by itself supply M1 or the scorecard-authored, **unratified** `98%`
+comparator-qualification rule, because a deliberately post-blurred mode can
+retain identical ideal FRC.
 
 ### 2.8 Governance conflict inherited from M55
 
 **VERIFIED.** M55's older executable contract says
 `uses_ground_truth=true` makes a candidate `"inadmissible for shipping"`
-(`docs/research/M55-acceptance-spec.md:102-113`). The current scorecard,
+(`docs/research/M55-acceptance-spec.md`, `uses_ground_truth` contract clause).
+The current scorecard,
 however, explicitly requires a common-mode plant absent from an
 `"independent reference"`
-(`docs/proposals/2026-09-sota-scorecard.md:568-577`).
+(`docs/proposals/2026-09-sota-scorecard.md`, M1 “Required controls for any
+replacement” clause).
 
 **ASSUMED.** The scorecard's later requirement supersedes that older B0 field
 for M1. The owner must revise or version the M55 declaration contract before
@@ -515,14 +556,15 @@ flat arm carried only `13.314850036584688%` of the detailed arm's coarse
 structure yet produced a larger `0.3488548829813006 dex` gap. The
 flat/detail gap ratio was `1.0249391472947889`, or
 `2.4939147294788855%` higher on the flat arm
-(`experiments/M134-kernel-frontier/M137-clamped-detail.md:207-250`).
+(`experiments/M134-kernel-frontier/M137-clamped-detail.md`, “Flat/detail
+specificity control” result).
 
 **VERIFIED.** The registered flat-gap ceiling was `0.10`; both the main and
 independent verifier returned `S7_flat_band_null=false`, while the previous
 gates and decomposition remained unchanged. The lane therefore withdrew the
 resolved-detail interpretation
-(`experiments/M134-kernel-frontier/M137-clamped-detail.md:217-289`;
-`experiments/M134-kernel-frontier/detail-results.json:274-296`).
+(`experiments/M134-kernel-frontier/M137-clamped-detail.md`, flat-arm verdict;
+`experiments/M134-kernel-frontier/detail-results.json`, `flat_control` result).
 
 **VERIFIED.** This is the same specificity failure as D8 by a different route.
 FRC treated repeatable flat structure as resolution; band power treated
@@ -640,9 +682,10 @@ Input-only fiducials freeze registration before any output is rendered.
 
 **VERIFIED.** The scorecard already requires two `sw4`, two `sw10`, matched
 dark/flat inputs, and a nonperiodic independent-reference sentinel
-(`docs/proposals/2026-09-sota-scorecard.md:540-553`). It also caps all claim
+(`docs/proposals/2026-09-sota-scorecard.md`, M1 “Input needed by a future
+replacement” clause). It also caps all claim
 frequencies at `0.25 cyc/native px`
-(`docs/proposals/2026-09-sota-scorecard.md:555-560`).
+(`docs/proposals/2026-09-sota-scorecard.md`, M1 “Exact computation” clause).
 
 ### 4.2 Information estimator
 
@@ -718,7 +761,8 @@ scorecard's hard-gate rule:
 
 > “Every primary metric is a hard gate. No win compensates for a loss.”
 
-(`docs/proposals/2026-09-sota-scorecard.md:84-88`)
+(`docs/proposals/2026-09-sota-scorecard.md`, “0.1 Decision rule” hard-gate
+clause containing that sentence)
 
 ### 4.4 Exact sharpening argument
 
@@ -848,7 +892,7 @@ Regularization, clipping, omitted coordinates, or a transform that imports
 energy from outside the feature space breaks the proof. Candidate 2 already
 demonstrated both sides: machine-precision USM congruence and catastrophic
 nonlinear-tone movement
-(`docs/research/M-CAND2.md:14-44`).
+(`docs/research/M-CAND2.md`, “What worked” and “What failed” clauses).
 
 **ASSUMED.** `N=256` for `p=16` is the minimum acceptable planning ratio, not a
 proven physical power result. It quadruples the scorecard's 64-site floor and
@@ -922,21 +966,26 @@ input/reference data only.
 ### 6.3 Scored comparison
 
 **ASSUMED.** Use the scorecard's 10,000-draw fixed-seed hierarchical bootstrap
-by capture then physical site
-(`docs/proposals/2026-09-sota-scorecard.md:99-105`).
+by capture then physical site (`docs/proposals/2026-09-sota-scorecard.md`,
+“10,000 fixed-seed (`20260902`) hierarchical bootstrap draws by capture, then
+physical site” clause).
 
-**ASSUMED.** A mode is information-qualified only if, separately on every
-capture and pooled:
+**UNRATIFIED (inherited from scorecard rule 4).** A mode is provisionally
+information-qualified only if, separately on every capture and pooled:
 
 ```text
 LCB95(J_mode / J_best_registered) >= 0.98.
 ```
 
-That is the scorecard's existing comparator-retention bar
-(`docs/proposals/2026-09-sota-scorecard.md:93-98`), now attached to an explicit
-information coordinate.
+The scorecard calls this its replacement-M1 comparator-retention rule
+(`docs/proposals/2026-09-sota-scorecard.md`, “Once a replacement M1 is
+admitted” clause), but that rule and its `98%` value are not traceable to the
+owner's plan. M135 has implemented the current interface value; it does **not**
+claim owner authority or physical justification for it. A claim-bearing
+protocol must either ratify `0.98` explicitly or replace it by preregistered
+power/utility reasoning and version the consumer contract.
 
-**ASSUMED.** Call one mode M1-ahead of another only if:
+**UNRATIFIED (M135 proposal).** Call one mode M1-ahead of another only if:
 
 ```text
 LCB95(J_A / J_B) > 1.02
@@ -960,10 +1009,287 @@ Omission is `MISSING_FLAT_CONTROL`; any failed condition is
 `FLAT_NULL_FAILED`. These are hard gates, not quantities another coordinate
 may compensate.
 
-**ASSUMED.** The `1.02` superiority margin is paired with the scorecard's
-existing `0.98` retention threshold rather than tuned from a result. It still
-requires a physical power study before adoption; if the registered 64-site
-design cannot resolve it, the outcome is `UNDERPOWERED`, not a relaxed bar.
+**UNRATIFIED.** The `1.02` superiority margin is M135's symmetric planning
+proposal beside the scorecard-authored `0.98` value, not an owner requirement.
+It requires a physical power and decision-utility study before adoption. If
+the registered 64-site design cannot resolve the ultimately ratified margin,
+the outcome is `UNDERPOWERED`, not a relaxed bar.
+
+### 6.4 Owner-facing acquisition specification
+
+> **OWNER-ACTION DRAFT — do not shoot from this section by itself.** The
+> orchestrator owns the executable capture request. This section states what
+> M135 needs that request to contain. `M_work`, the physical control offset,
+> and the final artwork remain unset until the M147 preflight closes them.
+
+> **Conflict to resolve in the owner-owned request.** Its current “existing
+> grid plus a coplanar nonperiodic patch” language says any stable fine
+> irregular texture works. That is enough for the narrower natural-target
+> result in §6.5(b), but not for M135's full structural anti-prediction claim.
+> Full M1 requires the concealed independent-code panels below. M135 records
+> the conflict here and does not edit the orchestrator-owned request.
+
+#### What must physically exist
+
+The full M1 claim needs **one concealed-seed random-code target per session**.
+The cheapest fabrication is one glass carrier holding two physically separate
+panels: `D` for development/rehearsal and `H` for the sealed score. Their seeds
+and site layouts must be independent; cover `H` while `D` is used. It does not
+need certified absolute scale. It does need enough real optical contrast that
+both camera states can recover the same independently randomized coefficients.
+
+Give the fabricator a final 1:1 artwork with these requirements:
+
+- a rigid, flat `25 x 25 mm` glass carrier holding two separately framed
+  panels;
+- one `D` panel and one `H` panel, each with an active image no larger than
+  `12 x 8 mm`, so each whole region remains inside the converter-on reference
+  field;
+- a `10 x 8` interleaved layout containing **64 unique coded sites** and **16
+  featureless sentinel sites** on each panel;
+- in each coded site, a `128 x 128`-scored-pixel interior containing all 16
+  registered frequency/orientation cells, surrounded on every side by a guard
+  equivalent to at least `64` scored native pixels;
+- four or more high-contrast fiducials outside the scored interiors;
+- a coplanar **33-level neutral tone strip**, with strictly monotone levels,
+  large enough that each level has an unclipped uniform interior on each
+  panel; and
+- no repeated code site within or across panels. Generate the per-site phases
+  and amplitudes only after every renderer binary, setting and hash is frozen;
+  keep the `H` seed and analytic site manifest sealed until scored outputs are
+  complete.
+
+The final physical dimensions of each cell and carrier period must be generated
+from M147's accepted `M_work`; **do not let a print shop fit, scale, sharpen,
+screen or resample the artwork**. The supplied file is already final-size.
+The shortest carrier must map to no more than `0.25 cyc/scored native px` after
+the achieved magnification is measured. The target is unusable if the measured
+mapping crosses that cap.
+
+The preferred production medium is a high-resolution photographic emulsion or
+grayscale photomask on glass. A binary chrome-on-glass mask is acceptable for
+the code field only if the 33-level witness is supplied as a separate
+coplanar strip. The strip does not need certified absolute reflectance: its
+camera-linear patch means become the PCHIP abscissae. It does need 33 neutral,
+strictly monotone, spatially uniform and non-clipped levels. Ask for:
+
+- at least `20,000 dpi` addressability or `<=1.25 micrometre` address grid;
+- demonstrated contrast at `>=100 line pairs/mm`;
+- local feature-placement error `<=1 micrometre` and active-area scale error
+  `<=0.25%`;
+- a density range that keeps all 33 measured levels separated from both the
+  noise floor and clipping at the chosen exposure; and
+- no lamination, texture, moire screen, automatic contrast enhancement or
+  geometric correction.
+
+Freeze the maximum registered postfilter support before releasing artwork.
+The proposed `64`-native-pixel guard is admissible only if every registered
+support radius is strictly smaller. Otherwise enlarge the guard/layout or
+refuse that mode; do not waive the guard after printing.
+
+Those manufacturing numbers are conservative procurement screens, not an
+absolute calibration claim. The **load-bearing acceptance test is optical**:
+both reference halves must carry repeatable power in every registered cell,
+all 64 coded sites must remain eligible, sentinels must return `NO_DETAIL`, and
+the reference/scored sampling and transfer gates must pass. A scratched,
+curled, rescaled, screened or insufficiently resolved print is unusable even
+if its invoice advertises the requested dpi.
+
+Ordinary desktop printing is not adequate. At `2400 dpi`, nominal address
+spacing is about `10.6 micrometres`, already comparable to the shortest
+required physical period; marketing dpi is not resolved line-pair contrast.
+
+Commercial targets can help diagnose the rig but do not replace the custom
+artifact:
+
+| candidate | useful for | why it is not the full M135 target |
+|---|---|---|
+| Thorlabs R1DS1P or another USAF 1951 glass target | focus and reference-transfer preflight | sparse, repeated, public bars; no 64 independent codes, concealed seed, sentinels or tone witness |
+| Imatest SFRplus or sinusoidal Siemens Star | field/framing and MTF checks | deterministic public geometry; no independent per-site phases and no matched flat population |
+| a commercial DIC random-speckle target | cheap anti-repetition rehearsal | random texture, but not the frozen 16-cell spectrum, guarded site population or 33-level witness |
+
+#### Reference optical path
+
+**VERIFIED from the current capture request.** The owner has a Sony A7C II,
+Sony FE 100mm F2.8 GM, and 2x Viltrox teleconverter. The cheapest reference
+uses that existing rig: converter **on** at the established maximum-reproduction
+state for `R1/R2`, then converter **off** at M147's accepted `M_work` for the
+scored TC0 brackets. The current conditional geometry is approximately
+`2.7015 / 1.33 = 2.0312x`, but that is not permission to dial `1.33x`; the
+preflight must establish `LCB95(M_ref / M_work) >= 2.0`
+(`docs/capture-requests/2026-09-319-frame-session.md`, stop banner and
+“Reproduction ratio” section).
+
+**ASSUMED.** The converter-on path has stronger object-space transfer in every
+registered cell. Sampling ratio alone does not prove that. The rehearsal must
+measure it; a failed cell is refused, not repaired by resampling.
+
+The reference may share the base lens. What must be independent is the
+physical exposure/noise draw, calibration, sensor footprint and measured
+transfer. Sharing the base optic limits the statement to detail recoverable
+through that reference path: a shared optical zero or aberration cannot be
+certified as object truth. A physically closer capture or extension-tube state
+could also qualify if it passes the same sampling, transfer, footprint and
+calibration gates. A crop, digital zoom or resample of the scored capture
+cannot qualify because it creates no new samples or downstream noise.
+
+No repository evidence says the owner has extension tubes or a second suitable
+macro optic. Treat either as **unknown**, not available. No new optic should be
+bought unless the converter-on rehearsal fails its transfer gate.
+
+#### Shot list
+
+The artifact adds **zero frames** if it replaces the generic nonperiodic patch
+in the already planned sessions and remains visible in every subject frame.
+The complete M135-dependent bill is:
+
+| sitting and block | frames |
+|---|---:|
+| preflight: same unmoved grid, converter on then off | `2` unscored setup frames |
+| rehearsal TC0 `sw4-A/B` and `sw10-A/B` | `164` |
+| rehearsal TC0 reset/start/end witnesses | `60` |
+| rehearsal TC0 flat/dark A/B groups | `128` |
+| rehearsal converter-on `R1/R2` near/mid/far atlas | `96` |
+| rehearsal converter-on flat/dark A/B groups | `128` |
+| rehearsal preregistered sharp control, near/mid/far | `96` |
+| rehearsal preregistered focus-offset blur control, near/mid/far | `96` |
+| **rehearsal total** | **`768`** |
+| scored converter-on claim/calibration block | `383` |
+| scored converter-on fixed-focus witnesses | `60` |
+| scored converter-on `R1/R2` near/mid/far atlas | `96` |
+| scored TC0 `sw4-A/B` and `sw10-A/B` | `164` |
+| scored TC0 fixed-focus witnesses | `60` |
+| scored TC0 flat/dark A/B groups | `128` |
+| **scored-session total** | **`891`** |
+
+This restates the current block arithmetic; the orchestrator's capture request
+remains authoritative (`docs/capture-requests/2026-09-319-frame-session.md`,
+“Frame counts — scored to” and “Physical control arms for the detail
+instrument” sections).
+
+Every coded site must have an interior focus peak in both complete A/B passes.
+At least 64 must survive clipping, registration, guard and reference-power
+eligibility. The focus-offset magnitude for the blur control and the sharp
+control's focus position must be fixed by the non-holdout preflight, not chosen
+from whichever captured frames give the desired signs.
+
+Calibration separation is mandatory:
+
+- converter-on and TC0 may not share flat or dark masters;
+- A and B may not share a master within one optical state;
+- rehearsal and scored sessions may not share a reference or calibration;
+- reference odd frames use converter-on A masters and even frames use
+  converter-on B masters; and
+- every candidate mode renders coded and featureless sites with identical
+  settings.
+
+#### Cost and lead time
+
+These are planning ranges, **not vendor quotations**:
+
+| item | planning cost | lead time | confidence |
+|---|---:|---:|---|
+| existing camera, lens, Viltrox converter, support and lighting | `$0` incremental | available | high; repository-confirmed |
+| one-off `20,000-25,400 dpi` silver-halide photoplot prototype | `$50-150` delivered | `2-5` business days | medium-low; vendor capability must be checked |
+| rigid mount or optical-glass carrier for film | `$20-75` | `1-3` days | medium |
+| separate miniature 33-level matte tone strip | `$5-50` | same day to `3` days | medium; measured monotonicity matters, not nominal density accuracy |
+| production binary chrome-on-glass mask | `$250-800` | `1-3` weeks | low until quoted |
+| integrated grayscale mask instead of a separate strip | `$300-1,000` incremental | `1-3` weeks | low until quoted |
+| two-frame preflight, 768-frame rehearsal and 891-frame scored sitting | `$0` incremental hardware | owner scheduling plus analysis | high on frame counts; duration deliberately unpromised |
+
+The recommended procurement sequence is: quote the cheap photoplot first,
+inspect its vendor MTF/minimum-feature specification, and use it only if the
+rehearsal's optical eligibility tests pass. Order glass only if the film cannot
+retain all carriers or remain flat. The required thing is a physically
+qualified one-time code artifact, not an expensive brand name.
+
+#### What the owner must not do
+
+1. Do not expose the code seed before renderer binaries, settings and hashes
+   are frozen, and do not expose the `H` seed or analytic manifest until all
+   scored outputs are complete.
+2. Do not print from a viewer, office driver or RIP that scales, screens,
+   sharpens or “optimizes” the artwork.
+3. Do not substitute a public periodic chart for the concealed random code.
+4. Do not derive the reference by cropping or resampling a scored frame.
+5. Do not share target panels, flats, darks, reference captures or selected
+   sites across rehearsal and score.
+6. Do not select blur frames after seeing the ladder, and do not use the truth
+   reference itself as the improvement output.
+7. Do not combine rehearsal and score in one uninterrupted sitting. The
+   rehearsal must be read, accepted, and frozen before the scored sitting.
+8. Once the scored sitting starts, do not inspect a render, metric, visual
+   verdict or comparator output from any member. The holdout unit is the
+   subject plus uninterrupted capture session
+   (`docs/proposals/2026-09-sota-scorecard.md`, “2.3 Holdout units and burn
+   log”).
+
+### 6.5 Cheapest lawful escape
+
+#### a. Existing equipment and the same optic
+
+**Yes, conditionally; no new optic is presently justified.** The existing
+converter-on/bare-lens pair can provide the reference/scored sampling ratio.
+Using the same base lens at higher magnification does not violate the
+information estimator. It does, however, leave shared lens transfer outside
+what the reference can reveal. Therefore the admissible statement is
+reference-conditional, and every registered cell must show stronger
+converter-on object-space transfer plus the required sampling lower bound.
+
+A physically closer exposure or an extension tube can create a real
+higher-sampling reference because it creates new sensor samples and new noise.
+A crop, upsample or resample cannot. Extension-tube ownership is not recorded,
+and buying one before testing the confirmed converter path would be premature.
+
+#### b. Natural target plus concealed site selection
+
+**Not for the full structural claim.** Concealing the site manifest prevents
+result-driven site choice. It does not make a natural patch's high-frequency
+coefficients independent of its low-frequency context or of generic texture
+priors. A deterministic renderer can predict plausible fibres, veins or grain
+that correlate with a natural reference even when it did not recover those
+coefficients from the scored input.
+
+The coded target buys the missing fact: independent, one-time phases and
+amplitudes in every registered cell, balanced across sites and unknown before
+the renderer is frozen. That makes reference agreement evidence about
+transferred input information rather than reusable scene prior. It also gives
+an exchangeable site population for the permutation floor and guarantees that
+all frequency/orientation cells are represented.
+
+A natural target with a concealed manifest is still useful for a narrower
+statement: **on this frozen renderer and these concealed natural sites, output
+agreement with the higher-sampling reference improved without a transfer or
+unexplained-structure regression.** That is an operational generalization
+result, not the structurally anti-predictive M1 admission result.
+
+#### c. No-new-capture result
+
+**No scored M1 number is available without a new capture.** The archive has no
+bare-lens frame, no same-site independently sampled reference/output pair with
+disjoint calibration, and no pre-noise blur plus planted-improvement controls.
+The burned grid and development-only slide may commission extraction but may
+never provide the scored value
+(`docs/proposals/2026-09-sota-scorecard.md`, M1 “Input needed by a future
+replacement” clause). A descriptive development result could be reported, but
+it would leave M1 `UNMEASURED`; relabelling it “relative” does not restore the
+missing lineage.
+
+#### d. Rank by cost to first defensible number
+
+| rank | route | cash cost | first defensible result |
+|---:|---|---:|---|
+| 1 | existing rig + concealed natural target + planned sessions | `$0` | narrow renderer-and-target-conditional result only; **not scorecard M1** |
+| 2 | existing rig + one-off high-resolution random-code photoplot, tone strip and planned sessions | about `$75-275` including mount | cheapest plausible full M1 route if the rehearsal qualifies the print |
+| 3 | existing rig + custom glass mask/tone witness + planned sessions | about `$275-1,800` | highest-confidence full M1 route |
+| 4 | new reference optic or body | at least several hundred dollars, plausibly much more | unnecessary unless the existing converter-on path fails sampling or transfer |
+
+**Bottom line.** A new camera or lens is not presently required. A new
+capture is required. Full M1 also requires a one-time coded physical artifact;
+that artifact can be inexpensive film if it passes the same optical gates, so
+glass should not be ordered first. If no such artifact is fabricated, the
+honest fallback is the narrow natural-target statement above, not an admitted
+scorecard M1 value.
 
 ## 7. Frozen challenge battery and outcome
 
@@ -1069,7 +1395,8 @@ D2 `"certified-acuity"` map.
 **VERIFIED.** **NO-GO** for declaring M1 admitted now. The final synthetic run
 commissions the estimator, not the physical reference chain. The scorecard
 requires an implementation and audit independent of the renderer
-(`docs/proposals/2026-09-sota-scorecard.md:555-560`); this Python
+(`docs/proposals/2026-09-sota-scorecard.md`, M1 “Exact computation” clause);
+this Python
 implementation is independent, but the following physical facts remain
 unmeasured.
 
@@ -1094,9 +1421,12 @@ corrected-gate candidate render. It invokes the checker itself under
 campaign-supplied Booleans, and requires a complete per-capture state ledger.
 Only `DETAIL_PASS` and `DETAIL_FAIL` may have Boolean entries;
 `INSTRUMENT_INVALID` must not
-(`experiments/M138-w1-gate-audit/corrected-gate-preregistration.md:250-333`;
-`experiments/M138-w1-gate-audit/corrected-gate-contract.json:121-157`;
-`experiments/M138-w1-gate-audit/adjudicate.py:648-827`). It correctly reserves
+(`experiments/M138-w1-gate-audit/corrected-gate-preregistration.md`, “M135
+executable interface”;
+`experiments/M138-w1-gate-audit/corrected-gate-contract.json`, `m135_detail`
+contract object;
+`experiments/M138-w1-gate-audit/adjudicate.py`, M135 detail-ledger validation
+functions). It correctly reserves
 `BLOCKED_DETAIL_INSTRUMENT` for an absent physical binding rather than calling
 that a Phase-1 loss.
 
@@ -1136,6 +1466,8 @@ certificate. These are preservation bars for Phase 1, not an M1 superiority
 claim, and no capture or coordinate may compensate another
 (`experiments/M135-detail-instrument/CONSUMER-PREREGISTRATION.md:67-107`;
 `experiments/M135-detail-instrument/comparison_checker.py:190-353`).
+The checker implements the current scorecard interface exactly; its `0.98`
+values remain **UNRATIFIED inherited policy**, not owner-mandated constants.
 
 **VERIFIED.** The frozen checker self-test passed `14 / 14` controls: exact
 null, genuine improvement, three independent defects, candidate and legacy
@@ -1210,7 +1542,8 @@ repaired tree then ran 512 attempts per race, with both exit paths exercised
 and no invalid-to-fail conversion or sentinel execution. M149 independently
 reproduced M135's 25/25 mutation and 7/7 race reports. The two CRITICAL TOCTOU
 defects are therefore closed
-(`experiments/M149-adapter-review/REATTACK-REPORT.md:1-36,76-103`).
+(`experiments/M149-adapter-review/REATTACK-REPORT.md`, “Verdict” and
+“Mechanism-level race closure”).
 
 **VERIFIED.** The same re-attack returned a second `SEND BACK`: both
 commissioning threshold-key mutations applied and survived all 51 checks.
@@ -1220,9 +1553,13 @@ improvement q05 `1.00` passed after replacing the strict `>1.10` lookup with
 the read-once restructuring had moved their anchors. M149 manually mapped all
 19 to still-present predicates; they were confirmed present but not exercised
 by the stale automated manifest
-(`experiments/M149-adapter-review/REATTACK-REPORT.md:19-69`;
-`experiments/M149-adapter-review/threshold-mutation-probe-repaired.json:1`;
-`experiments/M149-adapter-review/mutation-report-repaired.json:1`).
+(`experiments/M149-adapter-review/REATTACK-REPORT.md`, “HIGH defect —
+commissioning threshold wiring is not load-bearing” and “Reconciliation of 19
+ANCHOR_ERROR entries”;
+`experiments/M149-adapter-review/threshold-mutation-probe-repaired.json`,
+discriminating fixture result;
+`experiments/M149-adapter-review/mutation-report-repaired.json`, mutation
+summary).
 
 **VERIFIED.** Amendment 8 makes both contract-key selectors named production
 dependencies, directly probes their exact `0.90` and `1.10` values, and adds a
@@ -1285,8 +1622,14 @@ outcome, not a detail failure.
   drives blank-residual correlation below `0.05` on this body.
 - **ASSUMED.** Whether the physical random-code print preserves independent
   phase/amplitude through manufacture and illumination.
+- **ASSUMED.** Whether a vendor can deliver the dual-panel target and tone
+  witness inside the planning cost/lead-time ranges in §6.4. Those figures are
+  estimates, not quotations.
 - **ASSUMED.** Whether the registered guard is wide enough for every
   comparator's undisclosed internal sharpening support.
+- **ASSUMED.** The exact `M_work`, target scale, and focus-offset control
+  remain unknowable until M147's real-optics preflight; no value in §6.4
+  substitutes for that result.
 - **ASSUMED.** Whether the 33-step physical PCHIP witness preserves the
   synthetic `<1%` result after RAW development and resampling.
 - **ASSUMED.** Whether a physical target can supply flat sentinels below the
