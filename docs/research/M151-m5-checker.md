@@ -172,8 +172,12 @@ within-session collapse; pooling may not rescue a failed capture.
 4. **FOV plant:** remove a known 2% strip from the geometric output-valid mask.
    Required response: retained FOV moves from 100% to 98% and fails the 99%
    bar.
-5. **Flat/source-signal null:** the exposure-matched flat development stack
-   must not manufacture 50 eligible tiles. If it does, F1 is not commissioned.
+5. **Source-signal noise null:** a photon/read-noise-only input with the
+   development stack's measured mean and conservative noise amplitude must not
+   manufacture 50 eligible tiles. If it does, F1 is not commissioned. The
+   development directory named `flat-*` is a fronto-parallel **textured
+   calibration slide**, not a signal-free flat field; it is a depth-topology
+   null and is not allowed to stand in for this test.
 6. **Non-planar topology:** permute a measured real depth map spatially without
    changing any elected depth or pass/fail value. The one-dimensional run
    result must be byte-identical. This proves that the definition is actually
