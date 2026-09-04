@@ -1,0 +1,345 @@
+{
+  "schema": "m171-reference-admission-contract-v1",
+  "frozen_at": "2026-09-04T14:25:21.553-07:00",
+  "claim_scope": "GX_REFERENCE_CONDITIONAL",
+  "capture_ruling": "ANALYSIS_ONLY",
+  "source_authority": {
+    "proposal": "docs/proposals/2026-09-truth-referenced-detail.md#3.1",
+    "dominance_commit": "a78a901eca2a2e3caaf79f68387439e54884be3f",
+    "dominance_report": "docs/research/M164-reference-identifiability.md",
+    "noise_difference_factor": 0.5,
+    "later_average_noise_factor": 0.25,
+    "production_convention_status": "UNRESOLVED"
+  },
+  "schemas": {
+    "evidence": "m171-reference-admission-evidence-v1",
+    "result": "m171-reference-admission-result-v1",
+    "commission": "m171-reference-admission-commission-v1",
+    "verification": "m171-reference-admission-verification-v1"
+  },
+  "statuses": {
+    "scientific": [
+      "PASS",
+      "UNMEASURED"
+    ],
+    "harness_error": "HARNESS_ERROR",
+    "forbidden": [
+      "SKIPPED"
+    ],
+    "gate_count": 8
+  },
+  "sample_contract": {
+    "channel": "green",
+    "site_count": 64,
+    "session_count": 4,
+    "bursts_per_session": 2,
+    "sites_per_burst": 8,
+    "max_frequency_cycles_per_native_pixel": 0.25,
+    "native_scored_pixels": true,
+    "reference_only_resampling": true,
+    "equal_site_weights": true
+  },
+  "cells": [
+    {
+      "id": "green-f010-o000",
+      "frequency": 0.1,
+      "orientation": 0.0,
+      "dimension": 1
+    },
+    {
+      "id": "green-f010-o225",
+      "frequency": 0.1,
+      "orientation": 22.5,
+      "dimension": 1
+    },
+    {
+      "id": "green-f010-o450",
+      "frequency": 0.1,
+      "orientation": 45.0,
+      "dimension": 1
+    },
+    {
+      "id": "green-f010-o675",
+      "frequency": 0.1,
+      "orientation": 67.5,
+      "dimension": 1
+    },
+    {
+      "id": "green-f015-o000",
+      "frequency": 0.15,
+      "orientation": 0.0,
+      "dimension": 1
+    },
+    {
+      "id": "green-f015-o225",
+      "frequency": 0.15,
+      "orientation": 22.5,
+      "dimension": 1
+    },
+    {
+      "id": "green-f015-o450",
+      "frequency": 0.15,
+      "orientation": 45.0,
+      "dimension": 1
+    },
+    {
+      "id": "green-f015-o675",
+      "frequency": 0.15,
+      "orientation": 67.5,
+      "dimension": 1
+    },
+    {
+      "id": "green-f020-o000",
+      "frequency": 0.2,
+      "orientation": 0.0,
+      "dimension": 1
+    },
+    {
+      "id": "green-f020-o225",
+      "frequency": 0.2,
+      "orientation": 22.5,
+      "dimension": 1
+    },
+    {
+      "id": "green-f020-o450",
+      "frequency": 0.2,
+      "orientation": 45.0,
+      "dimension": 1
+    },
+    {
+      "id": "green-f020-o675",
+      "frequency": 0.2,
+      "orientation": 67.5,
+      "dimension": 1
+    },
+    {
+      "id": "green-f025-o000",
+      "frequency": 0.25,
+      "orientation": 0.0,
+      "dimension": 1
+    },
+    {
+      "id": "green-f025-o225",
+      "frequency": 0.25,
+      "orientation": 22.5,
+      "dimension": 1
+    },
+    {
+      "id": "green-f025-o450",
+      "frequency": 0.25,
+      "orientation": 45.0,
+      "dimension": 1
+    },
+    {
+      "id": "green-f025-o675",
+      "frequency": 0.25,
+      "orientation": 67.5,
+      "dimension": 2
+    }
+  ],
+  "bootstrap": {
+    "draws": 10000,
+    "fixture_seed": 17120260904,
+    "dominance_seed": 164177,
+    "quantile_method": "higher",
+    "overall_one_sided_alpha": 0.05,
+    "common_mode_family_alpha": 0.025,
+    "dominance_family_alpha": 0.025,
+    "hierarchy": [
+      "session",
+      "burst",
+      "site"
+    ],
+    "invalid_draw_policy": "UNMEASURED",
+    "zero_standard_error_policy": "UNMEASURED"
+  },
+  "synthetic_thresholds": {
+    "sampling_ratio_lcb_min": 2.0,
+    "reference_snr_lcb_min": 4.0,
+    "focus_transfer_singular_value_lcb_min": 0.5,
+    "condition_number_max": 100.0,
+    "cross_cell_leakage_max": 0.05,
+    "raw_response_max_normalized_residual": 1e-06,
+    "split_magnitude_disagreement_max": 0.1,
+    "split_phase_disagreement_rad_max": 0.05,
+    "common_mode_fraction_max": 0.05,
+    "scale_disagreement_percent_max": 0.1,
+    "rotation_disagreement_deg_max": 0.02,
+    "nontranslation_rms_native_px_max": 0.1,
+    "resampler_relative_change_max": 0.01,
+    "duplicate_site_correlation_max": 0.95,
+    "reference_power_lcb_min": 0.25,
+    "delta_information": 0.08,
+    "delta_transfer": 0.08
+  },
+  "production_thresholds_required": [
+    "licensed_cells",
+    "sampling_optical_systematic",
+    "reference_snr_floor",
+    "focus_transfer_floor",
+    "focus_conditioning_ceiling",
+    "raw_response_calibration",
+    "split_agreement_tolerances",
+    "common_mode_allowance",
+    "resampler_allowance",
+    "nonperiodic_power_floor",
+    "delta_information_by_cell",
+    "delta_transfer_by_cell",
+    "reduction_sufficiency",
+    "noise_estimand_convention"
+  ],
+  "gate_definitions": [
+    {
+      "id": "G1",
+      "name": "SUBJECT_SAMPLING_RATIO",
+      "production_missing_reason": "GEOMETRY_PREFLIGHT_PENDING"
+    },
+    {
+      "id": "G2",
+      "name": "SPLIT_REFERENCE_SNR",
+      "production_missing_reason": "SNR_FLOOR_UNRATIFIED"
+    },
+    {
+      "id": "G3",
+      "name": "REFERENCE_FOCUS_TRANSFER_SUFFICIENCY",
+      "production_missing_reason": "TRANSFER_CALIBRATION_REQUIRED"
+    },
+    {
+      "id": "G4",
+      "name": "LINEAR_UNCLIPPED_RAW",
+      "production_missing_reason": "RAW_LINEARITY_UNIDENTIFIED"
+    },
+    {
+      "id": "G5",
+      "name": "REFERENCE_HALF_AGREEMENT",
+      "production_missing_reason": "AGREEMENT_LIMITS_UNRATIFIED"
+    },
+    {
+      "id": "G6",
+      "name": "GEOMETRY_RESAMPLER_SENSITIVITY",
+      "production_missing_reason": "RESAMPLER_ALLOWANCE_UNRATIFIED"
+    },
+    {
+      "id": "G7",
+      "name": "NONPERIODIC_REFERENCE_POWER",
+      "production_missing_reason": "POWER_FLOOR_UNRATIFIED"
+    },
+    {
+      "id": "G8",
+      "name": "REFERENCE_INFORMATION_DOMINANCE",
+      "production_missing_reason": "DOMINANCE_MARGINS_UNRATIFIED"
+    }
+  ],
+  "synthetic_fixture": {
+    "latent_distribution": "proper_complex_normal",
+    "reference_transfer": 1.5,
+    "scored_transfer": 0.8,
+    "reference_noise_sigma": 0.15,
+    "scored_noise_sigma": 0.45,
+    "focus_positions": 5,
+    "focus_peak_index": 2,
+    "response_levels": 33,
+    "response_exponent": 1.0,
+    "baseline_sampling_ratio": 2.08,
+    "baseline_rotation_deg": 0.015,
+    "control_common_mode_sigma": 0.0,
+    "false_improvement_common_mode_sigma": 0.8,
+    "vector_reference_transfer": [
+      1.5,
+      1.5
+    ],
+    "vector_scored_transfer": [
+      0.8,
+      0.8
+    ],
+    "weak_vector_reference_transfer": [
+      2.0,
+      0.7
+    ],
+    "improved_vector_reference_transfer": [
+      2.0,
+      1.5
+    ]
+  },
+  "mutations": [
+    {
+      "case": "g1_low_sampling",
+      "anchor": "SAMPLING_RATIO_MEAN = 2.08",
+      "replacement": "SAMPLING_RATIO_MEAN = 1.99",
+      "target_gate": "G1",
+      "reason": "SAMPLING_RATIO_NOT_ESTABLISHED"
+    },
+    {
+      "case": "g2_high_reference_noise",
+      "anchor": "REFERENCE_NOISE_SIGMA = 0.15",
+      "replacement": "REFERENCE_NOISE_SIGMA = 1.00",
+      "target_gate": "G2",
+      "reason": "REFERENCE_SNR_INSUFFICIENT"
+    },
+    {
+      "case": "g3_endpoint_focus",
+      "anchor": "FOCUS_PEAK_INDEX = 2",
+      "replacement": "FOCUS_PEAK_INDEX = 4",
+      "target_gate": "G3",
+      "reason": "FOCUS_PEAK_NOT_INTERIOR"
+    },
+    {
+      "case": "g4_gamma_response",
+      "anchor": "RAW_RESPONSE_EXPONENT = 1.0",
+      "replacement": "RAW_RESPONSE_EXPONENT = 3.0",
+      "target_gate": "G4",
+      "reason": "RAW_NONLINEARITY_DETECTED"
+    },
+    {
+      "case": "g5_lagged_drift",
+      "anchor": "LAGGED_BLOCK_DRIFT = 0.0",
+      "replacement": "LAGGED_BLOCK_DRIFT = 0.4",
+      "target_gate": "G5",
+      "reason": "LAGGED_COMMON_MODE_EXCESS"
+    },
+    {
+      "case": "g6_wrong_sign_rotation",
+      "anchor": "ESTIMATED_ROTATION_DEG = 0.015",
+      "replacement": "ESTIMATED_ROTATION_DEG = -0.015",
+      "target_gate": "G6",
+      "reason": "WRONG_SIGN_GEOMETRY"
+    },
+    {
+      "case": "g7_zero_power",
+      "anchor": "WEAK_CELL_POWER_MULTIPLIER = 1.0",
+      "replacement": "WEAK_CELL_POWER_MULTIPLIER = 0.0",
+      "target_gate": "G7",
+      "reason": "REFERENCE_POWER_FLOOR"
+    },
+    {
+      "case": "g8_inferior_direction",
+      "anchor": "VECTOR_REFERENCE_TRANSFER = (1.50, 1.50)",
+      "replacement": "VECTOR_REFERENCE_TRANSFER = (2.00, 0.70)",
+      "target_gate": "G8",
+      "reason": "TRANSFER_NOT_DOMINANT"
+    }
+  ],
+  "additional_cases": [
+    {
+      "case": "baseline",
+      "expected": "ALL_PASS"
+    },
+    {
+      "case": "planted_improvement",
+      "expected": "ALL_PASS_AND_G8_MARGINS_INCREASE"
+    },
+    {
+      "case": "common_mode_false_improvement",
+      "expected": "G8_UNMEASURED_COMMON_MODE_BOUND"
+    }
+  ],
+  "campaign_counts": {
+    "scientific_cases": 11,
+    "gate_evaluations": 88,
+    "targeted_red_cases": 9,
+    "expected_green_cases": 2,
+    "missing_anchor_hard_errors": 1,
+    "duplicate_anchor_hard_errors": 1,
+    "capture_reads": 0
+  }
+}
