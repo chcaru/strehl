@@ -290,7 +290,10 @@ spend none of the holdout.
 
 1. **Node coincidence.** Register witness burst 1 against witness burst 2, and 3
    against 4. This is the gate that decides whether the A/B pairing is usable.
-   **The numeric threshold must be frozen before these are read.** Precedent: an
+   **The threshold is already frozen**, before this session was shot, in
+   [`2026-09-node-coincidence-gate.md`](2026-09-node-coincidence-gate.md) — read
+   it before taking any reading, and do not restate its bars from memory.
+   Precedent: an
    earlier session died at a registration residual of `0.107703` against a `0.10`
    native-pixel bar, so this is a real failure mode, not a formality.
 2. **Spectral eligibility, per site.** Confirm the patch carries power out to
