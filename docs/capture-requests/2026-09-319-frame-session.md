@@ -1,31 +1,38 @@
-# Capture request: 383 claim frames + 60 witnesses + 160 reference = 603 for M1, M5 and M9
+# Capture request: inverted M1, M5 and M9 scored session
 
-> # ⛔ STOP — THIS DOCUMENT IS SUPERSEDED AND IS NOT SAFE TO SHOOT FROM
+> # ⛔ STOP — THIS DOCUMENT IS NOT SAFE TO SHOOT FROM
 >
-> **Raised by the orchestrator, 2026-09-04, after the M135 sampling ruling.**
+> **Raised by the orchestrator, 2026-09-04, after the M135 sampling ruling.
+> The scored block table was reconciled by lane M150 on 2026-09-04.**
 >
-> **Do not shoot this protocol.** The 603-frame design in the title and
-> throughout the body below has been **superseded by an 891-frame design**, and a
-> **fourth pre-shoot blocker** now gates the session which is not listed in the
-> three-item table below. Clearing blockers 1 and 2 does **not** make this
-> document shootable.
+> **DO NOT SHOOT.** The scored frame and release totals, block layout and
+> converter inversion are reconciled in the body. The working magnification
+> parameter `M_work` remains unset, M147's in-field preflight has not been
+> delivered or rehearsed, and the non-holdout rehearsal required by blockers 1
+> and 2 has not been completed. Clearing any subset of those open items does
+> **not** make this document shootable.
 >
 > **Why.** The design requires the truth reference to oversample the TC0 state by
-> `2.0x`. The geometry gives `2.7015 / 1.33 = 2.0312x`, leaving a margin of
-> `0.0312x`, or **1.54%**. Magnification is set by hand on the focus ring, and
-> M84b's `0.188%` / `~0.36%` figures measure **recovery, not placement** — they
-> describe how precisely a ratio can be *read back* from frames, not how
-> precisely it can be *dialled in*. M141 established that reproduction ratio is
+> `2.0x`. **Only conditionally, if M147 sets `M_work = 1.33x`,** the conservative
+> geometry is `2.7015 / 1.33 = 2.0312x`, leaving a margin of `0.0312x`, or
+> **1.54%**. That conditional calculation is not permission to enter `1.33x` on
+> the bench sheet. Magnification is set by hand on the focus ring, and M84b's
+> `0.188%` / `~0.36%` figures measure **recovery, not placement** — they describe
+> how precisely a ratio can be *read back* from frames, not how precisely it can
+> be *dialled in*. M141 established that reproduction ratio is
 > metadata-recoverable for **0 of 68** existing stacks, so a session shot below
 > the required ratio would announce nothing and would be discovered only after
 > the fact, burning the whole sitting.
 >
-> **What is settled and carries forward:** **891 registered frames**; the
-> converter **on** for the reference block and **off** for TC0; stabilisation
-> **off**; the 603-frame request **superseded**.
+> **What is settled and carries forward:** the unchanged 443-frame session and
+> the 448-frame inverted block shown in the block table; the converter **on**
+> for the existing session and the reference frames, then **off** for the TC0
+> scored sweeps, their witnesses and their calibration; stabilisation **off**;
+> the 603-frame request **superseded**; and no M135 control frames in the scored
+> sitting.
 >
-> **What is not settled:** the working magnification, provisionally `1.32x` or
-> `1.33x`, is **conditional on the preflight** and must not be assumed.
+> **What is not settled:** `M_work`, supplied by the M147 preflight. It must not
+> be inferred from this document or dialled from a provisional value.
 >
 > **What unblocks it.** Lane **M147** is building an in-field magnification
 > preflight so the achieved ratio can be confirmed *before* the session rather
@@ -33,45 +40,60 @@
 > states image one coplanar grid, which makes the gate a **ratio** — grid pitch,
 > pixel pitch and EXIF all cancel, so no absolute calibration is required.
 >
-> **This banner is removed only when the orchestrator has reconciled the body
-> below to the 891-frame design and M147's preflight has been delivered and
-> rehearsed.** Until then every frame count, block layout and magnification
-> figure in this document should be treated as historical.
+> M135 has ruled that the mandatory physical control arms belong to the
+> already-required **non-holdout rehearsal**, not this scored sitting. They may
+> not be shot or read here; the control rule is recorded below the block table.
+>
+> **This banner is removed only after M147's preflight has been delivered and
+> rehearsed and the exact-configuration non-holdout rehearsal has closed
+> blockers 1 and 2, including the physical control arms. DO NOT SHOOT until the
+> orchestrator removes this banner.**
 
-Status: **SUPERSEDED — DO NOT SHOOT (see the stop banner above)**
-Superseded: 2026-09-04 by the 891-frame design; reconciliation pending
+Status: **BLOCKED — DO NOT SHOOT (M147 and non-holdout rehearsal pending)**
+Superseded: the 603-frame design, on 2026-09-04
+Reconciled: 2026-09-04 to the derived scored block table
 Owning lane: **lane-FRC**
 Approver: **orchestrator**
 Raised: 2026-09
-Session length: **one uninterrupted session, 45–60 minutes** — acquisition floor
-is 18.4–22.6 minutes (255 bracket frames = 250 × 3 s intervals, plus fixed-focus
-exposures); the balance is gates, resets, calibration changes and the reference
-repositioning. **Splitting it across two sittings invalidates the same-session
-requirement.**
+Session length: **PROVISIONAL DURATION; one uninterrupted session; do not
+promise 45 minutes.** The fixed scored blocks include 419 automated-bracket
+frames in nine passes, hence 410 three-second intervals, and 472 non-bracket
+exposures. Their acquisition floor is **28.5–35.4 minutes**:
+`(410 × 3 s + 472 × 1 s + 9 terminal bracket exposures × 1 s) / 60 = 28.52 min`
+if the camera's interval includes each bracket exposure, or
+`(410 × 3 s + 419 × 1 s + 472 × 1 s) / 60 = 35.35 min` if it is additive.
+That leaves only 9.6–16.5 minutes inside a 45-minute sitting for gates, resets,
+converter removal, reframing, calibration changes and three reference focus
+settings.
+**The former 45–60-minute estimate is no longer a safe planning assumption:
+45 minutes is not credible, and completion within 60 minutes is conditional on
+the exact-configuration rehearsal. It may run longer. Splitting it across two
+sittings still invalidates the same-session requirement.**
 Amended: 2026-09 (Sony A7C II automated-bracketing protocol)
-Amended: 2026-09 (truth-reference block; main sweeps pinned to 1.30× reproduction)
+Superseded amendment: 2026-09 (160-frame truth reference and 1.30× main setting)
 Frozen: 2026-09-03
 Amended: 2026-09-04 (reference block made physically executable; three pre-shoot blockers raised)
+Reconciled: 2026-09-04 (448-frame inverted block; `M_work` left unset)
+Resolved: 2026-09-04 (M135 controls assigned to non-holdout rehearsal; no scored frames)
 
-## DO NOT SHOOT YET — FOUR UNRESOLVED ITEMS GATE THIS SESSION
+## DO NOT SHOOT YET — FOUR TRACKED ITEMS; 1, 2 AND 4 REMAIN OPEN
 
 Raised by lane-FRC on review of the truth-reference integration, 2026-09-04.
 Item 4 was raised separately by the orchestrator on the M135 sampling ruling and
-is the one that superseded the design; see the stop banner at the top.
-The procedure below is complete and correct **except** for these four, and
-each one can waste the whole session if it is wrong. **Settle all four before
-the owner sets up.** None requires holdout data; all can be settled on
-development captures or a bench dry run.
+is the superseding blocker; see the stop banner at the top. Item 3 is closed.
+The reconciled procedure remains blocked by items 1, 2 and 4. **Settle every
+open item before the holdout acquisition begins.** The non-holdout rehearsal
+for items 1 and 2 also owns the M135 physical control arms recorded below.
 
 | # | Blocker | Why it can ruin the session | What settles it |
 | --- | --- | --- | --- |
-| 1 | **`sw4` / `sw10` step widths are unverified at 1.30×** | The widths were frozen without a documented reproduction ratio. Sony's step width is *relative* and depends on aperture and initial focus, so depth-of-field per step changes with magnification. If they are wrong, the ladders have gaps and the sweeps do not sample what the gates assume. | A non-holdout rehearsal at **1.30×, f/5.6, the exact converter**, proving 55 frames at width 4 and 27 at width 10 give **gap-free coverage with interior peaks at 64 eligible sites**. **Verify this from image data, not from EXIF — see the note below.** Do not derive replacement widths from holdout data. |
-| 2 | **G2 and G3 were never commissioned at 1.30×** | G2 is a fixed-focus spectral repeat and G3 a ladder-node match. Their thresholds (`< 0.10` log-ratio, unique zero-lag maximum, `< 0.10` geometry) were frozen at a different configuration and there is no justified magnification-adjusted threshold. | An exact-configuration development dry run. G0 (`≤ 0.033`) and G1 (`< 0.10` native pixel) are unaffected and remain valid. |
+| 1 | **TC0 `sw4` / `sw10` step widths are unverified at `M_work`** | The widths were frozen without a documented bare-lens reproduction ratio. Sony's step width is *relative* and depends on aperture and initial focus, so depth-of-field per step changes with magnification. If they are wrong, the ladders have gaps and the sweeps do not sample what the gates assume. | After M147 supplies `M_work`, a non-holdout rehearsal with the **converter off**, at `M_work` and marked f/5.6, proving 55 frames at width 4 and 27 at width 10 give **gap-free coverage with interior peaks at 64 eligible sites**. **Verify this from image data, not from EXIF — see the note below.** Do not derive replacement widths from holdout data. |
+| 2 | **G2 and G3 are not commissioned for bare-lens TC0 at `M_work`** | G2 is a fixed-focus spectral repeat and G3 a ladder-node match. Their thresholds (`< 0.10` log-ratio, unique zero-lag maximum, `< 0.10` geometry) were frozen at a different configuration and there is no justified magnification-adjusted threshold. | The same exact-configuration, converter-off development rehearsal as item 1. G0 (`≤ 0.033`) and G1 (`< 0.10` native pixel) are unaffected and remain valid. |
 | 3 | ~~Converter identity is unresolved~~ **CLOSED 2026-09-04 — it is a 2× Viltrox, and every existing focus-bracket capture was shot on it** | The concern was that repository Focus-Bracket evidence might have been obtained on different hardware from the session, leaving mode availability, 55/27-shot completion and endpoint repeatability unverified on the converter actually used. | **Settled by the owner directly:** the rig is a **Sony A7C II + Sony FE 100mm F2.8 GM + 2× Viltrox teleconverter**, and **all stacks in the corpus are focus bracketed.** So the Viltrox is not a new variable — it is the converter every existing capture was taken through, including the 182-, 92- and 197-frame bracket ladders on the 2026-09-02 calibration slide, which completed at 200 mm f/5.6. Focus Bracket is therefore demonstrated on this exact hardware. |
-| 4 | **The truth reference oversamples TC0 by only 1.54% — and magnification is set by hand** | **This is the blocker that superseded the design.** The reference must oversample TC0 by `2.0x`; the geometry gives `2.7015 / 1.33 = 2.0312x`, a margin of `0.0312x` = **1.54%**. The owner sets magnification on the focus ring by hand, and M84b's `0.188%` / `~0.36%` figures measure **recovery, not placement**. M141 found reproduction ratio metadata-recoverable for **0 of 68** existing stacks, so a session shot fractionally under the ratio announces nothing at the time and is discovered only in analysis — after the sitting is gone. Frame count moves 603 → **891**. | **M147's in-field magnification preflight**, then a rehearsal. The measurement is tractable because both optical states image one coplanar grid, so the gate is a **ratio** and grid pitch, pixel pitch and EXIF all cancel — no absolute calibration needed. The working magnification (`1.32x` or `1.33x`) is **conditional on that preflight** and must not be assumed. |
+| 4 | **`M_work` is unset; the conditional 1.54% margin cannot be dialled in by assumption** | **This is the blocker that superseded the design.** The reference must oversample TC0 by `2.0x`. Only if `M_work = 1.33x` does the conservative geometry give `2.7015 / 1.33 = 2.0312x`, a margin of `0.0312x` = **1.54%**. That is a conditional calculation, not the selected setting. The owner sets magnification on the focus ring by hand, and M84b's `0.188%` / `~0.36%` figures measure **recovery, not placement**. M141 found reproduction ratio metadata-recoverable for **0 of 68** existing stacks, so a session shot fractionally under the ratio announces nothing at the time and is discovered only in analysis — after the sitting is gone. | **M147's in-field magnification preflight, followed by an exact-configuration rehearsal.** It must supply the accepted value of `M_work` and prove the ratio at the bench before any session frame. Both optical states image one coplanar grid, so the gate is a **ratio** and grid pitch, pixel pitch and EXIF all cancel — no absolute calibration is required. Do not substitute a provisional value. |
 
-**Blockers 1 and 2 are the same rehearsal** — one dry run at the exact
-configuration settles both. **Blocker 3 is closed.**
+**Blockers 1, 2 and 4 converge on the M147 preflight plus one
+exact-configuration rehearsal. Blocker 3 is closed.**
 
 ### Do not try to identify the teleconverter from EXIF
 
@@ -133,7 +155,8 @@ reported, not silently edited.
 | Witness-first amendment | 407 | 383 claim/calibration frames + 24 reset witnesses; witnesses could not observe endpoints or interior nodes |
 | Paired-node proposal | 383 | Removed witnesses by interleaving A/B at every node; withdrawn because the A7C II cannot execute it |
 | Automated-bracket amendment | 443 | Restored complete A/B passes and added 60 reset/start/end witnesses |
-| **Frozen request** | **603** | 443-frame automated-bracket session + 160-frame truth-reference block |
+| Superseded frozen request | 603 | 443-frame automated-bracket session + 160-frame truth-reference block |
+| **Current scored request** | **see block table** | Derived fixed total; M135 control arms are excluded from the scored sitting |
 
 ---
 
@@ -146,44 +169,42 @@ version of this request.
 
 | # | Change | Why |
 | --- | --- | --- |
-| 1 | **Two complete automated A/B brackets, with fixed-focus start/end sentinels** | Per-node A/B interleaving is unavailable on this body |
+| 1 | **Two complete automated A/B pairs in each optical state, with fixed-focus start/end sentinels** | Per-node A/B interleaving is unavailable on this body; both the converter-on block and TC0 therefore use whole-pass repeats |
 | 2 | **Patch must be physically large enough** for 64 guarded sites | Frame count is not site count |
-| 3 | **Use separate 32-flat/32-dark groups for A and B** | Shared calibration structure correlates the two realizations |
+| 3 | **Use separate 32-flat/32-dark groups for A and B in each optical state** | Shared A/B calibration correlates the realizations, and sharing across converter states imports the wrong flat field |
 | 4 | **Use a 3 s bracket interval and freeze the repeatability gate before shooting** | The old 1 s interval did not provide a settling margin or a defensible node test |
-| 5 | **Shoot the main sweeps at 1.30× effective reproduction — NOT at maximum magnification** | The truth reference must out-sample the main sweeps. At maximum magnification the ratio is 1.0× and the whole detail axis is an automatic no-go |
-| 6 | **Keep the 2× teleconverter installed for every frame in the session, main and reference alike** | Comparing a bare-lens reference against a teleconverter main sweep compares two different optical paths, not two samplings of one |
-| 7 | **Add a 160-frame truth-reference block at the end** | This is the only block that can make the detail axis measurable at all; without it M1 stays `UNMEASURED` no matter how good the sweeps are |
+| 5 | **Keep the existing 443-frame block converter-on at maximum reproduction** | It remains the M5/M9 session and supplies the optical state and A/B calibration masters for the fixed-focus truth reference; it is not the M1 scored input |
+| 6 | **Invert the M1 design: reference converter-on, scored TC0 converter-off** | The 96 reference frames preserve the existing maximum-reproduction framing; the TC0 sweeps, their 60 witnesses and all 128 TC0 calibration frames use the bare lens |
+| 7 | **Replace the superseded 160-frame reference block with the 448-frame inverted block** | The replacement adds the independently calibrated bare-lens scored passes; appending it to the old reference block would be wrong |
+| 8 | **Leave `M_work` unset until M147 supplies it** | A provisional magnification printed as an instruction would defeat the preflight and can burn the session |
+| 9 | **Keep both M135 physical control arms in the non-holdout rehearsal** | Acquiring or reading either control in this sitting burns the same holdout unit used for the score |
 
 **The detail axis is the reason this session exists, and it is the one thing the
 previous version of this request could not have delivered.** Six candidate
 detail statistics have failed because no single-image measurement separates
 resolved detail from sharpening. The escape is an independently sampled,
-higher-magnification image of the same patch — that is the 160-frame block, and
-it can only be shot while this rig is standing.
+higher-magnification image of the same patch. The replacement 448-frame block
+contains that 96-frame reference plus the independently calibrated TC0 scored
+passes, and it can only be shot while this rig is standing.
 
-**The claim-frame budget changed from 319 to 383.** The focus data remain 255
-frames. The old plan allowed four 16-frame calibration groups; this request
-uses four 32-frame groups instead, adding 64 frames and leaving reserve after
-dark-frame settling discards:
+**The complete arithmetic now lives in the frame table below.** Its currently
+named rows preserve the 383 claim/calibration frames and 60 original witnesses,
+and replace the superseded 160-frame reference with the decomposed 448-frame
+inverted block. M135's two physical control arms are deliberately excluded from
+the scored manifest and assigned to the non-holdout rehearsal.
 
-- **383 claim/calibration frames:** 255 focus + 128 calibration.
-- **60 fixed-focus witness frames:** 12 reset pre-flight + 48 start/end
-  sentinels around the four automated passes.
-- **160 truth-reference frames:** 96 fixed-focus scene frames + 32 independent
-  flats + 32 warmed darks.
-- **603 acquired session frames total.**
-- One throwaway histogram exposure comes first and is not part of the 603.
+The eight discarded settling darks — two from each of four named dark groups —
+remain registered frames. One throwaway histogram exposure comes first and is
+not a registered session frame. The exact frame and release derivation appears
+once, immediately below the block table.
 
-The four discarded settling darks are still counted among the 603 acquired
-session frames. Including the throwaway exposure, the complete procedure is
-**604 shutter releases**. The owner-approved 319 -> 383 amendment is the main
-calibration increase; the 60 witnesses and 160 reference frames are the
-eligibility and truth evidence.
-
-**Before the first session frame:** confirm the G0-G3 reader has passed its
-development-data dry run without changing the bars below. Then take the
-throwaway test exposure, run the 12-frame reset pre-flight, and read its frozen
-gate. Do not begin `sw4-A` unless that pre-flight passes.
+**Before the first session frame:** M147's preflight must have supplied
+`M_work`; the non-holdout rehearsal must have closed blockers 1 and 2 and
+acquired and read both M135 physical control arms; and the G0-G3 reader must
+have passed its development-data dry run without changing the bars below. Then
+take the one throwaway test exposure, run the converter-on 12-frame reset
+pre-flight, and read its frozen gate. Do not begin `sw4-A` unless that gate
+passes.
 
 ## Why this exists
 
@@ -192,9 +213,10 @@ code. Two lanes arrived at the required session independently and from
 different requirements, and they specified the same 319 claim frames. Review
 retained their 255 focus frames but doubled the four calibration groups, making
 **383 claim/calibration frames**. Automated-bracket eligibility adds 60 fixed
-witnesses, and the final truth block adds 160, for 603 acquired session frames.
-This document is the single consolidated request. It is written to be followed
-at the bench.
+witnesses. The replacement inverted block is decomposed in the frame table.
+M135's physical controls are commissioned outside this holdout and add no
+scored frames. This document is the single consolidated request, but it remains
+blocked by the stop banner.
 
 **What is wrong with every capture we currently hold:** in-body stabilisation
 was on, and there are no calibrated frame-for-frame same-focus repeats. IBIS
@@ -206,7 +228,7 @@ stabilisation is off, and every claim-bearing focus node has two exposures.
 
 The scorecard states that the burned grid and the development-only
 high-resolution slide *"may commission a new instrument but may never provide
-its scored value"* (`docs/proposals/2026-09-sota-scorecard.md:462-463`).
+its scored value"* (`docs/proposals/2026-09-sota-scorecard.md:577-578`).
 
 So the division of labour is:
 
@@ -218,16 +240,18 @@ So the division of labour is:
 development, tuning, threshold selection, or debugging.** If any lane renders
 it while an instrument is still being tuned, the holdout is burned and the
 session has to be shot again. A holdout unit is subject plus uninterrupted
-session (`2026-09-sota-scorecard.md:276-295`), so it cannot be partly spent.
+session (`docs/proposals/2026-09-sota-scorecard.md:345-349`), so it cannot be
+partly spent.
 
 ## No certified target is needed
 
 An earlier draft of this request specified a certified 10-µm clear-film grid
 with a fabricated nonperiodic microdot field. **That is withdrawn.** M1 caps its
 claims in **native pixel** units — the registered constraint is *"no frequency
-above `0.25 cyc/native px`"* (`2026-09-sota-scorecard.md:465-467`) — and SOTA
-here is a *relative* comparator-leading claim against Zerene and Helicon on
-identical input. Absolute physical scale is consumed only when converting to
+above `0.25 cyc/native px`"*
+(`docs/proposals/2026-09-sota-scorecard.md:581-582`) — and SOTA here is a
+*relative* comparator-leading claim against Zerene and Helicon on identical
+input. Absolute physical scale is consumed only when converting to
 cycles/mm or physical feature size, which is M10's problem, not M1's.
 
 Certification is therefore deferred to a later, much smaller M10 session. A
@@ -263,44 +287,102 @@ Thorlabs R1DS1P USAF 1951 target would add a clean frequency ladder. Neither
 replaces the nonperiodic patch — the star's radial pattern is deterministic and
 the USAF bars are sparse and repeated, so both risk carrying their own answer.
 
-## Frame counts — 383 claim/calibration + 60 witness + 160 reference = 603
+## Frame counts — scored total derived from named blocks
 
 | Block | Frames | Purpose |
 | --- | ---: | --- |
-| reset pre-flight P0 | 6 | fixed focus at the recorded near-focus reset |
-| reset pre-flight P1 | 6 | same reset after moving away and returning by the recorded approach |
-| start `sw4-A` | 6 | fixed-focus sentinel immediately before A |
-| `sw4-A` | 55 | automated Focus Bracket, step width 4 |
-| end `sw4-A` | 6 | fixed-focus sentinel at A's untouched final position |
-| start `sw4-B` | 6 | fixed-focus sentinel after the repeated reset |
-| `sw4-B` | 55 | identical automated repeat of A |
-| end `sw4-B` | 6 | fixed-focus sentinel at B's untouched final position |
-| start `sw10-A` | 6 | fixed-focus sentinel immediately before A |
-| `sw10-A` | 27 | automated Focus Bracket, step width 10 |
-| end `sw10-A` | 6 | fixed-focus sentinel at A's untouched final position |
-| start `sw10-B` | 6 | fixed-focus sentinel after the repeated reset |
-| `sw10-B` | 27 | identical automated repeat of A |
-| end `sw10-B` | 6 | fixed-focus sentinel at B's untouched final position |
-| `sw1` checker-only | 91 | dense reference. **Never feed this to a stacker.** |
-| flats A | 32 | calibration for the complete A passes |
-| flats B | 32 | calibration for the complete B passes; **move or rotate the diffuser first** |
-| darks A | 32 | calibration for the complete A passes |
-| darks B | 32 | calibration for the complete B passes |
-| **claim/calibration** | **383** | |
-| **fixed-focus witnesses** | **60** | |
-| reference near | 32 | fixed focus, **Focus Bracket OFF**, at maximum reproduction |
-| reference middle | 32 | fixed focus at the middle depth of the same patch |
-| reference far | 32 | fixed focus at the far depth of the same patch |
-| reference flats | 32 | **independently repositioned** diffuser; reference-only masters |
-| reference darks | 32 | warmed, matching the reference exposure |
-| **truth reference block** | **160** | |
-| **session total** | **603** | |
+| reset pre-flight `P0` | 6 | converter on, fixed focus at the existing maximum-reproduction reset |
+| reset pre-flight `P1` | 6 | converter on, same reset after moving away and returning by the recorded approach |
+| start `S4-A` | 6 | converter-on fixed-focus sentinel immediately before A |
+| `sw4-A` | 55 | converter-on automated Focus Bracket, step width 4 |
+| end `E4-A` | 6 | converter-on fixed-focus sentinel at A's untouched final position |
+| start `S4-B` | 6 | converter-on fixed-focus sentinel after the repeated reset |
+| `sw4-B` | 55 | identical converter-on automated repeat of A |
+| end `E4-B` | 6 | converter-on fixed-focus sentinel at B's untouched final position |
+| start `S10-A` | 6 | converter-on fixed-focus sentinel immediately before A |
+| `sw10-A` | 27 | converter-on automated Focus Bracket, step width 10 |
+| end `E10-A` | 6 | converter-on fixed-focus sentinel at A's untouched final position |
+| start `S10-B` | 6 | converter-on fixed-focus sentinel after the repeated reset |
+| `sw10-B` | 27 | identical converter-on automated repeat of A |
+| end `E10-B` | 6 | converter-on fixed-focus sentinel at B's untouched final position |
+| `sw1` checker-only | 91 | converter-on dense checker. **Never feed this to a stacker.** |
+| `TR-REF-NEAR` | 32 | converter on, fixed focus, existing maximum reproduction and framing |
+| `TR-REF-MID` | 32 | converter on, same framing, fixed focus in the middle third |
+| `TR-REF-FAR` | 32 | converter on, same framing, fixed focus in the far third |
+| flats A | 32 | converter-on calibration for the complete A passes and odd reference halves |
+| flats B | 32 | converter-on calibration for the complete B passes and even reference halves; **move or rotate the diffuser first** |
+| darks A | 32 | converter-on calibration for the complete A passes and odd reference halves |
+| darks B | 32 | converter-on calibration for the complete B passes and even reference halves |
+| `TC0-P0` | 6 | converter off, fixed focus at the recorded `M_work` near-focus reset |
+| `TC0-P1` | 6 | same reset after moving away and returning by the recorded approach |
+| `TC0-S4-A` | 6 | fixed-focus sentinel immediately before `TC0-sw4-A` |
+| `TC0-sw4-A` | 55 | bare-lens automated Focus Bracket, step width 4, pass A |
+| `TC0-E4-A` | 6 | fixed-focus sentinel at A's untouched final position |
+| `TC0-S4-B` | 6 | fixed-focus sentinel after the repeated reset |
+| `TC0-sw4-B` | 55 | identical independent repeat of `TC0-sw4-A` |
+| `TC0-E4-B` | 6 | fixed-focus sentinel at B's untouched final position |
+| `TC0-S10-A` | 6 | fixed-focus sentinel immediately before `TC0-sw10-A` |
+| `TC0-sw10-A` | 27 | bare-lens automated Focus Bracket, step width 10, pass A |
+| `TC0-E10-A` | 6 | fixed-focus sentinel at A's untouched final position |
+| `TC0-S10-B` | 6 | fixed-focus sentinel after the repeated reset |
+| `TC0-sw10-B` | 27 | identical independent repeat of `TC0-sw10-A` |
+| `TC0-E10-B` | 6 | fixed-focus sentinel at B's untouched final position |
+| `TC0-FLAT-A` | 32 | bare-lens calibration for the complete TC0 A passes |
+| `TC0-FLAT-B` | 32 | independent bare-lens B flat; **move or rotate the diffuser first** |
+| `TC0-DARK-A` | 32 | bare-lens A dark at the scored exposure |
+| `TC0-DARK-B` | 32 | independent bare-lens B dark at the scored exposure |
+| **existing claim/calibration** | **383** | 255 converter-on focus + 128 converter-on calibration |
+| **existing fixed-focus witnesses** | **60** | converter-on reset, start and endpoint eligibility |
+| **reference subject** | **96** | three converter-on fixed-focus truth bursts |
+| **TC0 scored focus** | **164** | two bare-lens `sw4` plus two bare-lens `sw10` passes |
+| **TC0 fixed-focus witnesses** | **60** | bare-lens reset, start and endpoint eligibility |
+| **TC0 calibration** | **128** | two independent bare-lens flat/dark pairs |
+| **replacement inverted M1 block** | **448** | `96 + 164 + 60 + 128` |
+| **scored session total `T_session`** | **891** | `383 + 60 + 96 + 164 + 60 + 128` |
+
+One throwaway histogram exposure precedes the scored session and is not in
+`T_session`: **`R_session = 891 + 1 = 892` shutter releases.**
+
+## Physical control arms for the detail instrument — NON-HOLDOUT REHEARSAL ONLY
+
+> **⛔ DO NOT ACQUIRE OR READ THESE CONTROLS IN THE SCORED SESSION.**
+
+The detail instrument requires two mandatory **physical** control arms: a
+pre-noise blur arm with information-ratio `Q95 < 0.90`, and a genuine pre-noise
+optical-improvement arm with `Q05 > 1.10`.
+
+These arms must be acquired and read in the non-holdout rehearsal already
+required by blockers 1 and 2. Their rehearsal frame count is intentionally not
+specified here. They are measured against a converter-on `R1/R2` reference,
+and the scored value depends on that same reference channel. The holdout unit
+is the subject plus the uninterrupted capture session; reading an outcome on
+any member burns every member
+(`docs/proposals/2026-09-sota-scorecard.md:345-349`). Reading either control
+against this session's reference would therefore burn the scored session.
+
+- **Do not select the blur arm after the fact from this session's
+  `sw4`/`sw10` ladder frames.** That is outcome-dependent selection.
+- **Do not use the converter-on truth reference measured against the TC0 scored
+  block as the improvement arm.** That uses the reference as both truth and
+  improved output and is circular.
+- **Do not add either control to the scored block table.** Complete and read
+  both in the non-holdout rehearsal before the holdout sitting begins.
 
 ## Literal shooting order
 
-### 1. Reset pre-flight — do this before any bracket
+### 0. M147 and non-holdout rehearsal gates — before the session
 
-1. Establish the near-focus reset. Record exactly how you approached it.
+Do not begin the session until M147's preflight has supplied `M_work`, the
+exact converter-off setup has been rehearsed, blockers 1 and 2 have closed, both
+M135 physical control arms have been acquired and read in that non-holdout
+rehearsal, and the orchestrator has removed the stop banner. Copy the supplied
+`M_work` value onto the live bench sheet; do not fill it from a provisional
+value in another document.
+
+### 1. Converter-on reset pre-flight — do this before any bracket
+
+1. Install the 2× Viltrox and establish the existing maximum-reproduction
+   near-focus reset. Record exactly how you approached it.
 2. Lock the lens at that position without turning the focus ring or issuing
    another AF command. Take six RAWs: `P0`.
 3. Move focus well away, then return to the reset using the same direction and
@@ -308,7 +390,7 @@ the USAF bars are sparse and repeated, so both risk carrying their own answer.
 4. Run the pre-flight gate below. If it fails, **stop without shooting any
    bracket**. Correct the reset/rig problem and begin a new pre-flight.
 
-### 2. `sw4` pair — gate it before continuing
+### 2. Converter-on `sw4` pair — gate it before continuing
 
 1. Return to the reset by the recorded approach. Lock focus and take six
    `S4-A` frames.
@@ -323,56 +405,87 @@ the USAF bars are sparse and repeated, so both risk carrying their own answer.
    frames.
 7. Run the frozen witness and node gate. Do not continue if it fails.
 
-### 3. `sw10` pair — repeat the same pattern
+### 3. Converter-on `sw10` pair — repeat the same pattern
 
 Repeat the seven steps above using `S10-A`, `sw10-A` (27 shots, step width 10),
 `E10-A`, `S10-B`, `sw10-B`, and `E10-B`. Keep order `0 -> +`, interval 3 s,
 and every other camera/lens setting unchanged. Gate the pair before continuing.
 
-### 4. Finish the main session
+### 4. Finish the converter-on brackets
 
 After both A/B pairs pass their input-only gates, shoot the 91-frame `sw1`
-checker-only bracket, then the four 32-frame calibration groups.
+checker-only bracket. Do not remove the converter, move the target, change
+framing or disturb the lighting.
 
-### 5. Truth-reference block — 160 frames, last, and do not skip it
+### 5. Converter-on truth reference — 96 frames, and do not skip it
 
-Everything above measures the stacker against itself. **This block is the only
-part of the session that can tell us whether the stacker resolves real detail
-rather than merely adding contrast**, so if bench time runs short, cut
-something else rather than this.
+The bracket pairs above measure the stacker against itself. **These three bursts
+are the only part of the session that can tell us whether the TC0 stacker
+resolves real detail rather than merely adding contrast.** Do not substitute
+the superseded reference-flat/reference-dark design.
 
 1. **Do not touch the subject or the lighting.** The reference must show the
    same patch under the same illumination. Moving or relighting the target
-   invalidates the block. **The camera does move for this block — see item 4 —
-   and this is the only block in which that is permitted.**
-2. **Leave the 2× teleconverter on.** Do not swap to the bare lens.
-3. **Turn Focus Bracket OFF.** Every frame in this block is fixed focus.
-4. **Translate the camera toward the subject until the grid measures ≥ 2.70×**
-   effective reproduction, versus the 1.30× used for the sweeps. Use a rigid
-   focusing rail if you have one; otherwise move the tripod. **You cannot reach
-   2.70× by refocusing alone from a fixed camera position** — on a fixed
-   focal-length macro lens reproduction is set by subject distance, so the
-   camera must come closer. Reframe onto the same physical patch; the framing
-   will differ, but the same detail and at least some of the same fiducial
-   marks must be visible so the two can be registered.
-5. Use the **same three physical near / middle / far regions you framed for the
-   sweeps**. Centre and focus each in turn, lock focus, and take **32 frames**
-   without touching anything. That is 96 frames.
-6. **32 reference flats.** Move or rotate the diffuser first, exactly as you did
-   between flats A and B. These must not reuse the main session's flats.
-7. **32 reference darks**, warmed, at the same exposure as the reference frames.
-8. Keep every frame in this block in its own folder, clearly separated from the
-   main sweeps.
-
-**Stop and tell me the number before shooting the block if the reference
-reproduction divided by the measured main reproduction is below 2.0.** With the
-main sweeps at 1.30×, that means the reference must measure **at least 2.60×**;
-2.70× is the target so there is margin. Below that ratio the reference cannot
-serve as truth and those 160 frames would be wasted.
+   invalidates the block.
+2. **Leave the 2× teleconverter on and leave the existing
+   maximum-reproduction framing untouched.**
+3. **Turn Focus Bracket OFF.** These are fixed-focus bursts, not a stack.
+4. Use the **same three physical near / middle / far regions**. Approach each
+   focus position from the same recorded direction, lock focus, and take
+   **32 frames** without touching anything: `TR-REF-NEAR`, `TR-REF-MID` and
+   `TR-REF-FAR`, 96 frames total.
+5. Keep the three bursts in separate, clearly named folders. Record the three
+   focus positions and at least four common grid or fiducial intersections.
 
 For every six-frame fixed-focus burst, use the same lock method. Switching
 between the lock and Focus Bracket must not move focus. If it does, this setup
 cannot support the gate and the session must not be used as paired data.
+
+### 6. Converter-on calibration — four groups
+
+Shoot the existing 32-frame flats A/B and 32-frame darks A/B at the unchanged
+converter-on exposure. Move or rotate the diffuser between flat groups. Split
+each 32-frame truth burst odd/even: the 16 odd frames use the A flat/dark
+masters and the 16 even frames use the B masters.
+
+**Do not add reference-only flats or darks.** The truth bursts share the
+converter-on optical state and exposure of these existing masters. If their
+exposure changed, stop: the named blocks no longer supply matching independent
+reference calibration.
+
+### 7. Invert to TC0 and prove the live ratio
+
+Only after every converter-on subject and calibration frame is complete:
+
+1. Remove the converter. Do not move the target, target tilt, lighting,
+   polarizers, camera roll or camera yaw.
+2. Reframe the same physical patch by axial camera motion only, preserving roll
+   and yaw and retaining at least four common fiducials.
+3. Set the near-focus reset to the M147-supplied `M_work` using the common grid,
+   not a lens label or EXIF.
+4. Measure the converter-on reference sampling `M_ref` and the live TC0
+   sampling from pixels per common grid period. **Do not take `TC0-P0` unless
+   `M_ref / M_work >= 2.0` and the M147 preflight accepts the live placement.**
+   If either gate fails, stop; do not substitute another magnification.
+5. Record `M_ref`, the measured `M_work`, their ratio, converter removal,
+   working distance, reset approach and fiducial coordinates.
+
+### 8. TC0 scored pairs and witnesses — 224 frames
+
+With the converter off, repeat sections 1–3 under the TC0-prefixed names:
+`TC0-P0/P1`, `TC0-S4-A`, `TC0-sw4-A`, `TC0-E4-A`, through
+`TC0-S10-B`, `TC0-sw10-B`, `TC0-E10-B`. Use the same counts, direction,
+three-second interval, reset approach and G0–G3 procedure. Keep ISO 100,
+marked f/5.6, 1 s, fixed white balance, EFCS, IBIS off and OSS off. These four
+bare-lens brackets, and not the converter-on brackets, are the M1 scored focus
+inputs.
+
+### 9. TC0 calibration — 128 frames
+
+Finish with `TC0-FLAT-A/B` and `TC0-DARK-A/B`, 32 frames in each group. Move or
+rotate the diffuser between the TC0 flat groups. These bare-lens masters are
+disjoint from the converter-on masters and may not calibrate the truth
+reference.
 
 ## Frozen repeatability gate — both parts must pass
 
@@ -381,9 +494,10 @@ Start and endpoint frames cannot see an interior motor error that later catches
 up. A sacrificial duplicate bracket would prove only that duplicate, not the
 later claim run. This request therefore freezes two complementary tests:
 
-1. the 60 fixed-focus frames gate reset, endpoint, stability, and focus profile;
-2. the actual A/B bracket RAWs gate every corresponding node before any stack
-   is rendered.
+1. each 60-frame fixed-focus witness set gates reset, endpoint, stability, and
+   focus profile — 60 converter-on frames and 60 TC0 frames;
+2. the A/B bracket RAWs in each optical state gate every corresponding node
+   before any stack is rendered.
 
 Both are input-only eligibility tests. Neither may inspect a merged image or a
 competitor result, and neither permits result-time re-indexing.
@@ -395,13 +509,18 @@ the existing four-quadrant estimator.
 
 > **Pass only if every burst is `<= 0.033` native-pixel local RMS.**
 
-Run this first on P0 and P1. If either fails, do not shoot a bracket.
+Run this first on `P0/P1` in the converter-on phase and again on
+`TC0-P0/P1` after converter removal. If either pair fails, do not shoot that
+phase's bracket.
 
 ### G1 — reset and endpoint geometry must repeat
 
-Average the six RAWs in each burst after black subtraction. For each pair
-P0/P1, S4-A/S4-B, E4-A/E4-B, S10-A/S10-B, and E10-A/E10-B, estimate one global
-translation and four quadrant translations. The statistic is
+Average the six RAWs in each burst after black subtraction. Within each optical
+state, use the five pairs `P0/P1`, `S4-A/S4-B`, `E4-A/E4-B`,
+`S10-A/S10-B`, and `E10-A/E10-B`; use the same names with the `TC0-`
+prefix for the bare-lens phase. Never compare a converter-on witness with a
+TC0 witness. For each pair, estimate one global translation and four quadrant
+translations. The statistic is
 
 ```text
 R = 2 * sqrt(mean_q(||shift_q - shift_global||^2))
@@ -425,8 +544,8 @@ On each of at least 64 predeclared 256-pixel patch sites, compute
 q = log(P[0.18, 0.35] / P[0.05, 0.15])
 ```
 
-from each six-frame burst mean. For the same five burst pairs used by G1,
-compute the RMS of the per-site A/B differences.
+from each six-frame burst mean. For the same five burst pairs in each optical
+state used by G1, compute the RMS of the per-site A/B differences.
 
 > **Pass only if every spectral-profile RMS is `< 0.10` log-ratio unit.**
 
@@ -438,8 +557,9 @@ focus profile.
 
 ### G3 — the actual A/B ladder nodes must match
 
-For each step width, compare A frame `i` only with B frame `i`; do not shift the
-index. On every corresponding pair:
+For each step width within each optical state, compare A frame `i` only with B
+frame `i`; do not shift the index and do not compare across converter states.
+On every corresponding pair:
 
 - require the G1 local-geometry statistic to remain `< 0.10` native pixel;
 - compute the per-site `q` curves across frame index;
@@ -457,8 +577,8 @@ changing these bars before it reads this session.
 
 ### Failure action
 
-- **P0/P1 failure:** stop before any bracket. Correct the rig or reset method,
-  then restart the pre-flight from P0.
+- **`P0/P1` or `TC0-P0/P1` failure:** stop before that phase's bracket. Correct
+  the rig or reset method, then restart the phase's pre-flight from P0.
 - **Any later failure:** stop the session. The affected A/B pair is not
   same-node repeat data, and the shared claim session is unusable. Do not
   re-index, choose a favorable subset, widen a bar, or replace one failed node.
@@ -496,22 +616,24 @@ lattice, roughly 2048 by 2048 pixels of usable patch**, before guard margins.
 
 **So, before you shoot:** frame it, take one test exposure, and check that the
 **nonperiodic patch alone** — not the grid, not the background — fills a region of
-that order in the frame. If it does not, use a bigger patch or move in. A patch
-that is too small will pass a whole-frame check and still leave the session
-underpowered.
+that order in both optical states. If it does not, use a bigger patch during
+the rehearsal. **Do not move either live camera position away from the
+M147-accepted geometry merely to enlarge the patch.** A patch that is too small
+will pass a whole-frame check and still leave the session underpowered.
 
 The patch must also sit where the focus peak is **interior to both sweeps** — it
 should come into focus somewhere in the middle of the travel, not at either end.
 
-## Calibration: two independent sets, not one
+## Calibration: independent A/B sets in each optical state
 
 **Why doubled.** If one flat master and one dark master are applied to both A and
 B, they inject **identical** structure into both outputs. Every repeat-pair
 instrument works by treating A and B as independent; shared calibration breaks
 exactly that assumption, and the residual correlation is indistinguishable from
-real detail.
+real detail. Converter removal also changes the flat field, so converter-on and
+TC0 masters may never be shared.
 
-**Flats — 32 for A, 32 for B:**
+**Flats — 32 for A and 32 for B in each optical state, 128 total:**
 
 - Same RAW exposure settings as the session.
 - **Defocused or integrating field, not resolved paper.** Paper fibre texture is
@@ -522,7 +644,7 @@ real detail.
 - **Move or rotate the diffuser between the A group and the B group** so the two
   masters do not share the same residual texture.
 
-**Darks — 32 for A, 32 for B:**
+**Darks — 32 for A and 32 for B in each optical state, 128 total:**
 
 - **1 s, ISO 100**, matching the session exposure.
 - Shot at the **warmed-up session temperature**, not from cold.
@@ -530,9 +652,11 @@ real detail.
 - Lens cap on, and no light leaks.
 
 Capture all 32 frames in each group; the first-two discard is included in that
-count, leaving 30 darks per realization. Apply A calibration to the complete
-named A passes and B calibration to the complete named B passes. Never build
-one master and apply it to both.
+count, leaving 30 darks per realization. Within each optical state, apply A
+calibration to the complete named A passes and B calibration to the complete
+named B passes. For each truth burst, apply the converter-on A masters to the
+16 odd frames and the converter-on B masters to the 16 even frames. Never
+share a master across A/B or converter states.
 
 ## Settings
 
@@ -541,26 +665,29 @@ one master and apply it to both.
 - **Body SteadyShot: OFF**
 - **Lens OSS: OFF**
 
-**Body and lens:** Sony A7C II, Sony FE 100mm F2.8 GM with a **2× Viltrox
-teleconverter**, at 200 mm. This is the rig every existing capture in the
-corpus was shot on, and all of those stacks were focus bracketed.
-**Keep the teleconverter installed for every frame in the session**, including
-the reference block.
+**Body and lens:** Sony A7C II and Sony FE 100mm F2.8 GM. Install the **2×
+Viltrox teleconverter** for the existing 443-frame block and the three truth
+bursts; the body reports that phase at 200 mm. **Remove the converter only
+after all converter-on subject and calibration frames are complete.** Keep it
+off for every TC0 sweep, TC0 witness, TC0 flat and TC0 dark. This is an optical
+state boundary, not a mid-block option.
 
 **Reproduction ratio — this is new and it matters more than it looks:**
 
-- **Main sweeps and all witnesses: 1.30× effective reproduction** at the
-  near-focus reset, verified from the grid as pixels per period. Do **not**
-  shoot these at the lens's maximum magnification.
-- **Truth-reference block only: maximum available reproduction, target ≥ 2.70×.**
+- **Converter-on phase:** keep the existing maximum-reproduction setting and
+  framing for `P0` through `sw1` and all three truth bursts. Measure and record
+  its common-grid sampling as `M_ref`.
+- **TC0 phase:** use the bare lens at **`M_work`**, an explicitly unset
+  parameter supplied by M147. Verify it from pixels per common grid period
+  after converter removal. Do not infer it from the focus ring, a nominal lens
+  maximum, EXIF or this document.
+- **Live eligibility:** require `M_ref / M_work >= 2.0` before `TC0-P0`.
 
-The reference must out-sample the main sweeps by at least 2×; 1.30× against
-2.70× gives 2.078×, with margin. If the main sweeps are shot at maximum
-magnification instead, the ratio collapses to 1.0×, the reference is
-disqualified before it is taken, and the detail axis cannot be measured from
-this session at any later date.
+The `2.7015 / 1.33 = 2.0312x` geometry in the stop banner applies only under
+the stated condition `M_work = 1.33x`; it does not select that value.
 
-**Exposure:** M mode, ISO 100, 1 s, f/5.6. Identical for every session frame.
+**Exposure:** M mode, ISO 100, 1 s, marked f/5.6. Identical for every session
+frame and both optical states.
 
 **File:** 14-bit lossless compressed RAW. Fixed white balance — pick a value,
 do not use auto. EFCS on.
@@ -579,9 +706,10 @@ the lens. Matte-white backing behind the target. Tilt the target roughly 1° so
 the focus sweep has something to resolve through.
 
 **Sweep:** automated Focus Bracket, direction `0 → +`. Use step width 4 / 55
-shots for each `sw4` pass, step width 10 / 27 shots for each `sw10` pass, and
-step width 1 / 91 shots for `sw1`. Approach every near-focus reset from the
-same recorded direction.
+shots for each converter-on and TC0 `sw4` pass, and step width 10 / 27 shots
+for each converter-on and TC0 `sw10` pass. The step width 1 / 91-shot `sw1`
+exists only in the converter-on phase. Approach every near-focus reset from
+the same recorded direction.
 
 **Settling:** set Focus Bracket **Shooting Interval to 3 s** for every automated
 pass. If the menu does not offer 3 s, choose the next longer value; never use
@@ -615,24 +743,32 @@ rear-screen brightness.
 
 While you are there, confirm the nonperiodic patch fills enough of the frame
 (see *The patch must be physically large enough*). This test exposure is not
-one of the 603 acquired session frames. After it passes, run P0/P1 and obtain
-the pre-flight verdict before starting `sw4-A`.
+part of `T_session`; it is the one throwaway already included in the release
+derivation below the block table. After it passes, run `P0/P1` and obtain the
+converter-on reset-gate verdict before starting `sw4-A`. This histogram check
+does not replace the M147 magnification preflight required by the stop banner.
 
 ## Checks on arrival
 
 All of these are **input-only**: they read RAW frames and never a render, so they
 spend none of the holdout.
 
-1. **Manifest.** Confirm the named file ranges contain P0/P1, all eight
+1. **Manifest.** Recompute `T_session` from the block table and confirm every
+   row. The scored rows are converter-on `P0/P1`, eight converter-on
    start/end bursts of six, `sw4-A/B` at 55 each, `sw10-A/B` at 27 each,
-   `sw1` at 91, four calibration groups at 32 each, and the five reference
-   groups at 32 each (near, middle, far, reference flats, reference darks).
-   Confirm A and B used identical bracket settings and the recorded reset
-   approach, and that the reference groups carry **no** Focus Bracket metadata.
+   `sw1` at 91, and four converter-on calibration groups at 32 each;
+   `TR-REF-NEAR/MID/FAR` at 32 each; TC0 `P0/P1`, eight TC0 start/end bursts of
+   six, `TC0-sw4-A/B` at 55 each, `TC0-sw10-A/B` at 27 each, and four TC0
+   calibration groups at 32 each. Confirm no M135 control frame entered this
+   manifest. Confirm A and B used identical bracket settings and the recorded
+   reset approach within each optical state. Confirm all three truth bursts
+   carry **no** Focus Bracket metadata and that no reference-only calibration
+   groups were added.
 2. **Reference eligibility — do this early, because it is the one thing that
-   cannot be fixed later.** Measure effective reproduction on both the main
-   sweeps and the reference block from the grid, as pixels per period, and
-   compute the ratio, then apply exactly three bands so there is no ambiguity:
+   cannot be fixed later.** Measure effective reproduction on both the TC0
+   scored sweeps and the converter-on reference from the grid, as pixels per
+   period, and compute the ratio, then apply exactly three bands so there is no
+   ambiguity:
    **≥ 2.0× is eligible**; **1.25× to 2.0× is degraded** — record it and do not
    use it for a scored detail claim without an explicit ruling; **below 1.25×
    is an automatic no-go** and the block is dead. Confirm the reference is
@@ -640,9 +776,10 @@ spend none of the holdout.
    16-frame halves agree, and that it carries genuine power in every band the
    detail claim will use. A failed gate makes M1 `UNMEASURED`; it never
    produces a lower score.
-3. **Repeatability.** Run G0 through G3 exactly as frozen above. Compare only
-   A frame `i` with B frame `i`; no re-indexing, fractional resampling, scale,
-   rotation, warp, or favorable subset.
+3. **Repeatability.** Run G0 through G3 exactly as frozen above in both optical
+   states. Compare only A frame `i` with B frame `i` from the same state; no
+   cross-state pairing, re-indexing, fractional resampling, scale, rotation,
+   warp, or favorable subset.
 4. **Spectral eligibility, per site.** Confirm the patch carries power out to
    `0.25 cyc/native px` — measured **per site**, not as a frame average, and
    measured as **cross-power attributable to the subject** rather than raw
