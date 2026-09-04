@@ -1,0 +1,34 @@
+{
+  "checks": {
+    "binary_guard_red": true,
+    "defect_peak": true,
+    "defect_safe": true,
+    "dtype_guard_red": true,
+    "edge_red": true,
+    "exit_guard_red": true,
+    "improvement_mass": true,
+    "improvement_safe": true,
+    "map_guard_red": true,
+    "normalisation_red": true,
+    "null_safe": true,
+    "null_zero": true,
+    "restoration_rows": true,
+    "restoration_safe": true,
+    "shape_guard_red": true,
+    "swapped_red": true,
+    "threshold_red": true,
+    "unit_1280": true,
+    "unit_640": true,
+    "unit_768": true
+  },
+  "passed": true,
+  "readings": {
+    "defect_positive_mass": 0.004687500000000119,
+    "defect_safe_inset_px": 64,
+    "improvement_fraction": 0.025000000000023507,
+    "improvement_positive_mass": 0.00011718750000011316,
+    "improvement_safe_inset_px": 8,
+    "null_safe_inset_px": 8
+  },
+  "schema": "M-COVER-BORDER-CONTRADICTION-COMMISSION-1"
+}
