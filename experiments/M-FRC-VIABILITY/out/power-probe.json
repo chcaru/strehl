@@ -1,0 +1,309 @@
+{
+  "fresh_arm_noise": {
+    "arms": {
+      "pre_blur_sigma_0_1": {
+        "arm_crossing": 0.23711405082710718,
+        "base_crossing": 0.23927314005027106,
+        "crossing_delta": -0.002159089223163879,
+        "delta_bootstrap_95": [
+          -0.0048088616217476475,
+          0.001346293878052346
+        ],
+        "maximum_ring_frc_movement": 0.0362394882087182,
+        "measured_bootstrap_fraction": 1.0
+      },
+      "pre_blur_sigma_0_2": {
+        "arm_crossing": 0.2394430552591625,
+        "base_crossing": 0.23927314005027106,
+        "crossing_delta": 0.0001699152088914524,
+        "delta_bootstrap_95": [
+          -0.004508492397445379,
+          0.004270594392569684
+        ],
+        "maximum_ring_frc_movement": 0.03707157664706209,
+        "measured_bootstrap_fraction": 1.0
+      },
+      "pre_blur_sigma_0_3": {
+        "arm_crossing": 0.23541863096441326,
+        "base_crossing": 0.23927314005027106,
+        "crossing_delta": -0.003854509085857799,
+        "delta_bootstrap_95": [
+          -0.006929897384132942,
+          -0.00035283060250253565
+        ],
+        "maximum_ring_frc_movement": 0.05439135389036298,
+        "measured_bootstrap_fraction": 1.0
+      },
+      "pre_blur_sigma_0_5": {
+        "arm_crossing": 0.23011218259423888,
+        "base_crossing": 0.23927314005027106,
+        "crossing_delta": -0.009160957456032182,
+        "delta_bootstrap_95": [
+          -0.012545349053206761,
+          -0.005630501098961558
+        ],
+        "maximum_ring_frc_movement": 0.10907629112116152,
+        "measured_bootstrap_fraction": 1.0
+      },
+      "pre_improve_amount_0_05": {
+        "arm_crossing": 0.2387177231113043,
+        "base_crossing": 0.23927314005027106,
+        "crossing_delta": -0.0005554169389667685,
+        "delta_bootstrap_95": [
+          -0.003841585122523518,
+          0.0030408518624096027
+        ],
+        "maximum_ring_frc_movement": 0.028000074973133556,
+        "measured_bootstrap_fraction": 1.0
+      },
+      "pre_improve_amount_0_1": {
+        "arm_crossing": 0.241794791377475,
+        "base_crossing": 0.23927314005027106,
+        "crossing_delta": 0.0025216513272039442,
+        "delta_bootstrap_95": [
+          -0.002173162647971791,
+          0.0060829288282348345
+        ],
+        "maximum_ring_frc_movement": 0.03550361826068882,
+        "measured_bootstrap_fraction": 1.0
+      },
+      "pre_improve_amount_0_2": {
+        "arm_crossing": 0.2406619052353466,
+        "base_crossing": 0.23927314005027106,
+        "crossing_delta": 0.0013887651850755522,
+        "delta_bootstrap_95": [
+          -0.0016509475520112336,
+          0.004964193874010475
+        ],
+        "maximum_ring_frc_movement": 0.06668364411676375,
+        "measured_bootstrap_fraction": 1.0
+      }
+    },
+    "bootstrap_draws": 5000,
+    "seed": 20260906,
+    "sites": 64,
+    "support": 512,
+    "tile": 256
+  },
+  "implementation": "experiments/M-PHASE0-SPLIT2/frc.py",
+  "paired_common_noise": {
+    "tile_256": {
+      "arms": {
+        "post_blur_sigma_2": {
+          "arm_crossing": 0.23419830369581926,
+          "base_crossing": 0.2339127277945202,
+          "crossing_delta": 0.0002855759012990733,
+          "delta_bootstrap_95": [
+            0.000208549666343482,
+            0.0013528183623578095
+          ],
+          "maximum_ring_frc_movement": 0.9977482934422617,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "post_usm_amount_1_5": {
+          "arm_crossing": 0.2338578315096198,
+          "base_crossing": 0.2339127277945202,
+          "crossing_delta": -5.489628490037979e-05,
+          "delta_bootstrap_95": [
+            -0.0002648173812934376,
+            -2.5133613769570664e-05
+          ],
+          "maximum_ring_frc_movement": 0.0014241986629666848,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_blur_sigma_0_1": {
+          "arm_crossing": 0.23368875392864769,
+          "base_crossing": 0.2339127277945202,
+          "crossing_delta": -0.000223973865872501,
+          "delta_bootstrap_95": [
+            -0.0010960961052889947,
+            -0.0001667881067694381
+          ],
+          "maximum_ring_frc_movement": 0.004337665039295391,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_blur_sigma_0_2": {
+          "arm_crossing": 0.23301626708888826,
+          "base_crossing": 0.2339127277945202,
+          "crossing_delta": -0.0008964607056319296,
+          "delta_bootstrap_95": [
+            -0.003392848629681588,
+            -0.0006633171942648743
+          ],
+          "maximum_ring_frc_movement": 0.017230556595406288,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_blur_sigma_0_3": {
+          "arm_crossing": 0.23189078957014675,
+          "base_crossing": 0.2339127277945202,
+          "crossing_delta": -0.0020219382243734374,
+          "delta_bootstrap_95": [
+            -0.005358982392230485,
+            -0.0014797542885519744
+          ],
+          "maximum_ring_frc_movement": 0.0382843929493219,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_improve_amount_0_05": {
+          "arm_crossing": 0.2352324140931443,
+          "base_crossing": 0.2339127277945202,
+          "crossing_delta": 0.001319686298624112,
+          "delta_bootstrap_95": [
+            0.000510745473157198,
+            0.005221571110420437
+          ],
+          "maximum_ring_frc_movement": 0.014158985928347967,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_improve_amount_0_1": {
+          "arm_crossing": 0.2376674488196576,
+          "base_crossing": 0.2339127277945202,
+          "crossing_delta": 0.0037547210251374086,
+          "delta_bootstrap_95": [
+            0.0010823642949795563,
+            0.009046824436299507
+          ],
+          "maximum_ring_frc_movement": 0.02808332746197556,
+          "measured_bootstrap_fraction": 1.0
+        }
+      },
+      "bootstrap_draws": 3000,
+      "ring_spacing": 0.00390625,
+      "seed": 20261160,
+      "sites": 64,
+      "support": 512,
+      "tile": 256
+    },
+    "tile_64": {
+      "arms": {
+        "post_blur_sigma_2": {
+          "arm_crossing": null,
+          "base_crossing": 0.24389369288235768,
+          "crossing_delta": null,
+          "delta_bootstrap_95": [
+            0.007312361262111105,
+            0.010357327079740913
+          ],
+          "maximum_ring_frc_movement": 1.0024873070303297,
+          "measured_bootstrap_fraction": 0.09133333333333334
+        },
+        "post_usm_amount_1_5": {
+          "arm_crossing": 0.24338087134128175,
+          "base_crossing": 0.24389369288235768,
+          "crossing_delta": -0.0005128215410759307,
+          "delta_bootstrap_95": [
+            -0.000771564492192213,
+            -0.0003066581076871889
+          ],
+          "maximum_ring_frc_movement": 0.008403281218760439,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_blur_sigma_0_1": {
+          "arm_crossing": 0.2435577650825952,
+          "base_crossing": 0.24389369288235768,
+          "crossing_delta": -0.0003359277997624921,
+          "delta_bootstrap_95": [
+            -0.0004908095985661387,
+            -0.0002442805976775819
+          ],
+          "maximum_ring_frc_movement": 0.0041393381794658235,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_blur_sigma_0_2": {
+          "arm_crossing": 0.24252404863374993,
+          "base_crossing": 0.24389369288235768,
+          "crossing_delta": -0.0013696442486077487,
+          "delta_bootstrap_95": [
+            -0.0020317869559989933,
+            -0.0009884813240416909
+          ],
+          "maximum_ring_frc_movement": 0.016422336600573684,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_blur_sigma_0_3": {
+          "arm_crossing": 0.24070393232261195,
+          "base_crossing": 0.24389369288235768,
+          "crossing_delta": -0.0031897605597457357,
+          "delta_bootstrap_95": [
+            -0.004886280603878405,
+            -0.0022708994626677373
+          ],
+          "maximum_ring_frc_movement": 0.036417239667832,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_improve_amount_0_05": {
+          "arm_crossing": 0.2448673835463674,
+          "base_crossing": 0.24389369288235768,
+          "crossing_delta": 0.0009736906640097076,
+          "delta_bootstrap_95": [
+            0.0007122437993684082,
+            0.0014083153044703426
+          ],
+          "maximum_ring_frc_movement": 0.01348781637678692,
+          "measured_bootstrap_fraction": 1.0
+        },
+        "pre_improve_amount_0_1": {
+          "arm_crossing": 0.2457720628795062,
+          "base_crossing": 0.24389369288235768,
+          "crossing_delta": 0.0018783699971485213,
+          "delta_bootstrap_95": [
+            0.001382684491448078,
+            0.0026808264817854604
+          ],
+          "maximum_ring_frc_movement": 0.02678528361791438,
+          "measured_bootstrap_fraction": 1.0
+        }
+      },
+      "bootstrap_draws": 3000,
+      "ring_spacing": 0.015625,
+      "seed": 20260968,
+      "sites": 64,
+      "support": 128,
+      "tile": 64
+    }
+  },
+  "postfilter_replication": {
+    "arms": {
+      "post_blur_sigma_0_5": {
+        "arm_crossing": 0.23745407430595014,
+        "base_crossing": 0.2374138645722278,
+        "crossing_delta": 4.020973372234615e-05,
+        "delta_bootstrap_95": [
+          2.029557621437278e-05,
+          5.915817408225012e-05
+        ],
+        "maximum_ring_frc_movement": 0.0003732108815771573,
+        "measured_bootstrap_fraction": 1.0
+      },
+      "post_blur_sigma_1": {
+        "arm_crossing": 0.23757556882748673,
+        "base_crossing": 0.2374138645722278,
+        "crossing_delta": 0.0001617042552589376,
+        "delta_bootstrap_95": [
+          8.103736688654522e-05,
+          0.000234375591304399
+        ],
+        "maximum_ring_frc_movement": 0.0014906719634346643,
+        "measured_bootstrap_fraction": 1.0
+      },
+      "post_blur_sigma_2": {
+        "arm_crossing": 0.23809071233531665,
+        "base_crossing": 0.2374138645722278,
+        "crossing_delta": 0.0006768477630888503,
+        "delta_bootstrap_95": [
+          0.0003323035633595324,
+          0.0008890025421484084
+        ],
+        "maximum_ring_frc_movement": 0.9936901068096827,
+        "measured_bootstrap_fraction": 1.0
+      }
+    },
+    "bootstrap_draws": 5000,
+    "seed": 20261905,
+    "sites": 64,
+    "support": 512,
+    "tile": 256
+  },
+  "schema": 1,
+  "status": "EXPLORATORY_NOT_ADMISSION_EVIDENCE"
+}

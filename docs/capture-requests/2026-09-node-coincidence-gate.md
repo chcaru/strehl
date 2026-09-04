@@ -35,7 +35,7 @@ focus by holding focus constant, rather than by assuming it.
 ## 2. Why this gate is needed at all, and what it is not
 
 The requirement on a repeat pair is weaker than "the two passes visited
-identical focus positions". `docs/research/M-FRC-VIABILITY.md:40-45` settles
+identical focus positions". `docs/research/M-FRC-VIABILITY.md` §1.1 settles
 this:
 
 > Whole sweeps do not have to alternate at every focus node [...] Independence
@@ -67,9 +67,8 @@ in force, and it already has a measured pass and a measured failure:
 | SPLIT2 second block | `0.107703` | **failed** |
 | Independent reproduction of the failure | `0.105202` | confirms the failure |
 
-`docs/research/M-FRC-VIABILITY.md:84-87` and `:387-388`. The independent
-reproduction matters: the failing number is not an artifact of one
-implementation.
+`docs/research/M-FRC-VIABILITY.md` §§1.3 and 6. The independent reproduction
+matters: the failing number is not an artifact of one implementation.
 
 Reusing this bar is deliberate. Inventing a second, looser registration bar for
 witness frames specifically would be indistinguishable from tuning the gate to
