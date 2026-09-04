@@ -21,6 +21,8 @@ not an independent owner gate. M11's product-native timing bars are also a separ
 reported product result and do not determine publication.
 
 No capture, render, bulk decode, or timing run was performed for this audit.
+The orchestrator's independently verified M8-O `bilinear_aggregate` counts are
+accepted as supplied below; this lane did not recompute them.
 
 ## Verdict rule
 
@@ -35,6 +37,32 @@ A collection of numerically compatible inequalities is not enough to earn
 `ACHIEVABLE` when the scorecard leaves the population, reduction, truth predicate, or
 comparison representation open. Such a bar is reported as `UNDETERMINED` and also
 listed as a well-definedness failure.
+
+## Deterministic-representation and degraded-pass check
+
+The M8-O failure suggests two distinct failure modes: a checker can reject every
+clean implementation because it omits a mandatory deterministic transform, or it can
+reward a degraded implementation because it does not measure the claimed construct.
+The following pass was therefore applied separately from numerical feasibility:
+
+| Axis/component | Deterministic representation check | Degraded-output check |
+|---|---|---|
+| M1 | No active measured value exists, so there is no representation path to audit. | The withdrawn candidates rewarded sharpening or tone changes; this is why they are not bars. |
+| M2 | Final-u16 quantisation creates no exact-zero contradiction because both limits have finite margin. | **Broken in the opposite direction:** the specified residual improves to `0.571215x` under blur, so the card correctly declares the instrument void. |
+| M3 | The quantities are normalized residuals with nonzero tolerances; a source-coherent construction survives final serialization. | The former whole-band veil mean rewarded a one-sided defect; the current side maximum removes that demonstrated invariance, but unresolved aggregation prevents declaring the complete bar healthy. |
+| Retained M4 | No exact representability conflict was found; a constant serialized image still has zero band numerator. | **Directionally non-specific alone:** blur, denoising, or a constant output can reduce `Q_flat` while destroying detail; the card assigns that opposition to M1, which currently has no bar. |
+| M8 | v1.4 omitted the mandatory output-domain transform; v1.5 includes intermediate quantisation, clamps, normalization, and final serialization. | A source selection can pass while being a poor focus stack, but that does not defeat M8's deliberately narrow no-invention claim; other axes carry quality and coverage. |
+| M9 | The representation and quantisation of certificate values and intervals are not frozen, so their boundary effect cannot be audited. | Refusal and overclaim are opposed in intent, but the absent truth predicate prevents demonstrating that the implemented checker rejects either degraded strategy. |
+| M10 | The depth product's encoding, quantisation, invalid sentinel, and decode-to-physical-units rule are not frozen. | A hard-coded plane can pass the ruler alone; the synthetic target is intended to reject it, but undefined layer-confusion/boundary semantics prevent proving that it does. |
+| M11 | Timing has no exact-value representability demand; timer resolution does not create an empty interval around the stated inequalities. | Omitted work and degraded output are intended to fail the end-to-end and quality-qualification rules, but the quality qualifier is currently non-executable. |
+| Retained M12 identity | The compared representation is explicitly the highest-precision delivered byte stream. | A deterministically wrong image can pass identity, but identity licenses only reproducibility and is joined to M11 rather than presented as an image-quality claim. |
+
+Among current gate calculations, M2's specified-but-void residual and retained M4
+when viewed alone have a degraded-output pass direction. The withdrawn M1 candidates
+and superseded M3 whole-band reduction are historical examples, not current
+predicates. M2 is already declared void. Retained M4 is explicitly a joint
+anti-cheat component rather than a standalone quality claim, but its intended
+opposing M1 gate is presently absent.
 
 ## Gate inventory and verdicts
 
@@ -223,7 +251,24 @@ choice of `e`. M136's frozen bilinear census contains 977,684 such
 `full_rail_below_hull` coordinates. One is sufficient to make the required exact
 zero-violation result unattainable on that census.
 
+The supplied, source-verified `bilinear_aggregate` chain is:
+
+```text
+denominator                              74,173,536
+raw violations                             980,097
+full_rail_below_hull                        977,684
+projected_hull_violations                     2,413
+projected_plus_internal_quant_violations          0
+```
+
+The first projection removes the representation-only rail contradiction; modelling
+the fixed intermediate quantizer removes the remaining 2,413 bilinear residues.
+
 **Verdict: IMPOSSIBLE.**
+
+This verdict applies to the **v1.4 statement as written**, not to the intended
+zero-invention property: the v1.5 clean-bilinear zero below constructively shows that
+the intent remains achievable.
 
 ### Prospective M8-O v1.5: ACHIEVABLE
 
@@ -243,7 +288,8 @@ identity copy, the active M8 conjunction has a nonempty pass set.
 
 The bar remains discriminating: the registered diagnostic has zero bilinear
 violations but 31,148 shipping Catmull-Rom violations after the same projected-hull
-and deterministic-transform accounting.
+and deterministic-transform accounting. The clean bilinear zero holds independently
+in R, G and B.
 
 **Verdict: ACHIEVABLE.**
 
@@ -315,6 +361,8 @@ Thus the stated numerical bounds are jointly nonempty.
 The card does not define:
 
 - what makes a target pixel “valid” rather than merely producer-declared valid;
+- the depth product's storage representation, quantisation, invalid sentinel, and
+  decode-to-physical-units rule;
 - the percentile convention/population for flat-null p95 range;
 - the classification rule, exclusion band, and denominator for synthetic
   “layer confusion”; or
@@ -410,9 +458,11 @@ implementers can compute different verdicts, or no verdict at all:
 3. **M3:** singular paired-p99 referent and percentile/per-capture aggregation are
    unfrozen; its mandatory M1 predicate is absent.
 4. **Retained M4:** `noise_floor` is undefined.
-5. **M9:** independent truth and decile/variance/interval reductions are unfrozen.
-6. **M10:** validity, flat-p95 and layer-confusion semantics are incomplete;
-   boundary bias has no threshold and uncertainty has no scored component.
+5. **M9:** independent truth, certificate representation, and
+   decile/variance/interval reductions are unfrozen.
+6. **M10:** depth encoding, validity, flat-p95 and layer-confusion semantics are
+   incomplete; boundary bias has no threshold and uncertainty has no scored
+   component.
 7. **M11:** quality-qualified comparator selection depends on the undefined gates
    above; the non-gating live/cold report also lacks one operational contract.
 
@@ -424,8 +474,8 @@ verdicts.
 
 - **M8-R:** convex/clamped gathering reaches zero while the shipping Catmull-Rom
   diagnostic is nonzero.
-- **M8-O v1.5:** the representable-domain construction and bilinear diagnostic reach
-  zero while the shipping Catmull-Rom diagnostic retains 31,148 violations.
+- **M8-O v1.5:** bilinear reaches `0 / 74,173,536`, independently zero in R, G and B,
+  while the shipping Catmull-Rom diagnostic retains 31,148 violations.
 - **Retained M12 cross-worker identity:** a worker-independent reduction construction
   passes while the scorecard records current diagnostic evidence of cross-worker
   failure.
