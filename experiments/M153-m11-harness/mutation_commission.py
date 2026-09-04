@@ -23,6 +23,9 @@ from m11_runtime import ReadOnlyFileLocks
 
 CORE_PATH = LANE_ROOT / "m11_core.py"
 TEST_PATH = LANE_ROOT / "test_m11_harness.py"
+HARNESS_PATH = LANE_ROOT / "m11_harness.py"
+RUNTIME_TEST_PATH = LANE_ROOT / "test_runtime.py"
+COMMISSIONER_PATH = Path(__file__).resolve(strict=True)
 PYTHON_EXECUTABLE = Path(sys.executable).resolve(strict=True)
 
 
@@ -47,6 +50,80 @@ MUTATIONS = {
     "G18-commissioning-required": "test_g18_commissioning_required",
     "G19-arm-symmetry": "test_g19_arm_symmetry",
     "G20-aggregate-reduction": "test_g20_aggregate_reduction",
+}
+
+RUNTIME_MUTATIONS = {
+    "R01-commercial-execution": {
+        "test": "test_commercial_execution_is_fail_closed_but_fork_is_allowed",
+        "anchor": (
+            "    is_commercial = mode_id in COMMERCIAL_COMPARATOR_MODES  "
+            "# MUTATION_ANCHOR:R01"
+        ),
+        "replacement": "    is_commercial = False  # MUTATION_ANCHOR:R01",
+    },
+    "R02-unit-separation": {
+        "test": "test_candidate_build_identity_spans_all_three_m11_arms",
+        "anchor": "    unit_is_enabled = unit_enabled  # MUTATION_ANCHOR:R02",
+        "replacement": "    unit_is_enabled = True  # MUTATION_ANCHOR:R02",
+    },
+    "R03-effect-recovery": {
+        "test": "test_effect_recovery_requires_correct_sign_and_interval",
+        "anchor": (
+            "    recovery_within_tolerance = within_tolerance  # MUTATION_ANCHOR:R03"
+        ),
+        "replacement": ("    recovery_within_tolerance = True  # MUTATION_ANCHOR:R03"),
+    },
+    "R04-ratio-direction": {
+        "test": "test_comparative_ratio_control_must_fire_both_directions",
+        "anchor": (
+            "    direction_matches = observed_bar_pass is expected_bar_pass  "
+            "# MUTATION_ANCHOR:R04"
+        ),
+        "replacement": "    direction_matches = True  # MUTATION_ANCHOR:R04",
+    },
+    "R05-timing-quarantine": {
+        "test": "test_timing_commission_is_blocked_by_host_load_quarantine",
+        "anchor": "    return allowed  # MUTATION_ANCHOR:R05",
+        "replacement": "    return True  # MUTATION_ANCHOR:R05",
+    },
+    "R06-current-adjudication": {
+        "test": "test_current_adjudication_blocks_quotable_verdicts",
+        "anchor": "    return allowed  # MUTATION_ANCHOR:R06",
+        "replacement": "    return True  # MUTATION_ANCHOR:R06",
+    },
+    "R07-combined-bundle": {
+        "test": "test_candidate_build_identity_spans_all_three_m11_arms",
+        "anchor": "    active_units = set(declared_units)  # MUTATION_ANCHOR:R07",
+        "replacement": (
+            "    active_units = {measurement_unit} if measurement_unit else "
+            "set(declared_units)  # MUTATION_ANCHOR:R07"
+        ),
+    },
+    "R08-commercial-role": {
+        "test": "test_commercial_execution_is_fail_closed_but_fork_is_allowed",
+        "anchor": "    return valid  # MUTATION_ANCHOR:R08",
+        "replacement": "    return True  # MUTATION_ANCHOR:R08",
+    },
+    "R09-optional-hybrid": {
+        "test": "test_product_only_policy_does_not_require_quality_or_hybrid",
+        "anchor": "    return valid  # MUTATION_ANCHOR:R09",
+        "replacement": "    return True  # MUTATION_ANCHOR:R09",
+    },
+    "R10-summary-quality-split": {
+        "test": "test_product_only_policy_does_not_require_quality_or_hybrid",
+        "anchor": "    return required  # MUTATION_ANCHOR:R10",
+        "replacement": "    return True  # MUTATION_ANCHOR:R10",
+    },
+    "R11-summary-redaction": {
+        "test": "test_current_adjudication_blocks_quotable_verdicts",
+        "anchor": "    return redacted  # MUTATION_ANCHOR:R11",
+        "replacement": "    return dict(bar)  # MUTATION_ANCHOR:R11",
+    },
+    "R12-optional-hybrid-cold": {
+        "test": "test_product_only_policy_does_not_require_quality_or_hybrid",
+        "anchor": "    return valid  # MUTATION_ANCHOR:R12",
+        "replacement": "    return True  # MUTATION_ANCHOR:R12",
+    },
 }
 
 
@@ -130,6 +207,76 @@ def substantive_result(
     }
 
 
+def runtime_substantive_result(
+    *,
+    mutation_id: str,
+    specification: dict[str, str],
+    source: str,
+    temp_root: Path,
+) -> dict[str, Any]:
+    anchor = specification["anchor"]
+    replacement = specification["replacement"]
+    mutated = apply_unique_line_mutation(source, anchor, replacement)
+    case_root = temp_root / mutation_id
+    case_root.mkdir()
+    for dependency in LANE_ROOT.iterdir():
+        if dependency.is_file() and dependency.suffix in {".py", ".json"}:
+            shutil.copy2(dependency, case_root / dependency.name)
+    (case_root / HARNESS_PATH.name).write_text(
+        mutated,
+        encoding="utf-8",
+        newline="\n",
+    )
+    test_name = specification["test"]
+    result = run_runtime_test(case_root, test_name)
+    expected_failure = f"FAIL: {test_name}"
+    killed = (
+        result.returncode == 1
+        and expected_failure in result.stdout
+        and "ERROR:" not in result.stdout
+        and "FAILED (failures=1)" in result.stdout
+    )
+    return {
+        "mutation_id": mutation_id,
+        "test": f"RuntimeContractTests.{test_name}",
+        "anchor": anchor,
+        "anchor_count": source.splitlines().count(anchor),
+        "original_sha256": sha256_bytes(source.encode("utf-8")),
+        "mutated_sha256": sha256_bytes(mutated.encode("utf-8")),
+        "returncode": result.returncode,
+        "expected_failure_seen": expected_failure in result.stdout,
+        "unexpected_error_seen": "ERROR:" in result.stdout,
+        "killed": killed,
+        "output_tail": result.stdout[-1200:],
+    }
+
+
+def run_runtime_test(
+    temp: Path,
+    test_name: str,
+) -> subprocess.CompletedProcess[str]:
+    command = [
+        str(PYTHON_EXECUTABLE),
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        f"test_runtime.RuntimeContractTests.{test_name}",
+    ]
+    env = os.environ.copy()
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    with ReadOnlyFileLocks([PYTHON_EXECUTABLE]):
+        return subprocess.run(
+            command,
+            cwd=temp,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            errors="replace",
+        )
+
+
 def inert_result(source: str, temp_root: Path) -> dict[str, Any]:
     anchor = 'INERT_MUTATION_SENTINEL = "m153-inert-v1"  # MUTATION_ANCHOR:INERT'
     replacement = 'INERT_MUTATION_SENTINEL = "m153-inert-v2"  # MUTATION_ANCHOR:INERT'
@@ -167,6 +314,7 @@ def commission(output: Path, work: Path | None) -> int:
             f"mutation/guard registry mismatch; missing={missing}, extra={extra}"
         )
     source = CORE_PATH.read_text(encoding="utf-8")
+    runtime_source = HARNESS_PATH.read_text(encoding="utf-8")
     owned_work = work
     if owned_work is not None:
         require_guard(
@@ -183,7 +331,7 @@ def commission(output: Path, work: Path | None) -> int:
         context = tempfile.TemporaryDirectory(dir=default_work)
     with context as temporary:
         temp_root = Path(temporary)
-        substantive = [
+        guard_substantive = [
             substantive_result(
                 guard_id=guard_id,
                 test_name=test_name,
@@ -192,7 +340,17 @@ def commission(output: Path, work: Path | None) -> int:
             )
             for guard_id, test_name in sorted(MUTATIONS.items())
         ]
+        runtime_substantive = [
+            runtime_substantive_result(
+                mutation_id=mutation_id,
+                specification=specification,
+                source=runtime_source,
+                temp_root=temp_root,
+            )
+            for mutation_id, specification in sorted(RUNTIME_MUTATIONS.items())
+        ]
         inert = inert_result(source, temp_root)
+    substantive = [*guard_substantive, *runtime_substantive]
     killed = sum(bool(row["killed"]) for row in substantive)
     status = "PASS" if killed == len(substantive) and inert["survived"] else "FAIL"
     result = {
@@ -203,6 +361,24 @@ def commission(output: Path, work: Path | None) -> int:
             "path": str(CORE_PATH),
             "sha256": sha256_file(CORE_PATH),
         },
+        "runtime_source": {
+            "path": str(HARNESS_PATH),
+            "sha256": sha256_file(HARNESS_PATH),
+        },
+        "commissioner": {
+            "path": str(COMMISSIONER_PATH),
+            "sha256": sha256_file(COMMISSIONER_PATH),
+        },
+        "test_sources": {
+            TEST_PATH.name: {
+                "path": str(TEST_PATH),
+                "sha256": sha256_file(TEST_PATH),
+            },
+            RUNTIME_TEST_PATH.name: {
+                "path": str(RUNTIME_TEST_PATH),
+                "sha256": sha256_file(RUNTIME_TEST_PATH),
+            },
+        },
         "runtime": {
             "python_executable": {
                 "path": str(PYTHON_EXECUTABLE),
@@ -210,7 +386,16 @@ def commission(output: Path, work: Path | None) -> int:
             }
         },
         "guard_ids": sorted(GUARD_REGISTRY),
-        "mutation_ids": sorted(MUTATIONS),
+        "runtime_mutation_ids": sorted(RUNTIME_MUTATIONS),
+        "mutation_ids": sorted([*MUTATIONS, *RUNTIME_MUTATIONS]),
+        "guard_substantive_total": len(guard_substantive),
+        "guard_substantive_killed": sum(
+            bool(row["killed"]) for row in guard_substantive
+        ),
+        "runtime_substantive_total": len(runtime_substantive),
+        "runtime_substantive_killed": sum(
+            bool(row["killed"]) for row in runtime_substantive
+        ),
         "substantive_total": len(substantive),
         "substantive_killed": killed,
         "substantive_survived": len(substantive) - killed,

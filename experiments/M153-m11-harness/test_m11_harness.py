@@ -263,8 +263,6 @@ def valid_g11() -> dict:
 
 def valid_g12() -> dict:
     return {
-        "dedicated_host": True,
-        "m139_released_host": True,
         "preload_quiet_pass": True,
         "preload_duration_seconds": 60.0,
         "preload_elapsed_seconds": 60.0,
@@ -337,7 +335,6 @@ def valid_g15() -> dict:
             "method": "ACTUAL_REBOOT",
             "windows_boot_id": "4242",
             "reset_complete": True,
-            "dedicated_host": True,
             "no_prior_m11_invocation_this_boot": True,
             "position_key": "cold:n33:r1:a",
             "issued_utc": "2026-09-04T00:00:00Z",
@@ -391,7 +388,6 @@ def valid_g18() -> dict:
     return {
         "real_run_requested": True,
         "authorized_by": "M153_ORCHESTRATOR",
-        "m139_host_release": True,
         "actual_contract_sha256": HASH_A,
         "authorized_contract_sha256": HASH_A,
         "actual_campaign_sha256": HASH_B,
@@ -403,8 +399,13 @@ def valid_g18() -> dict:
             "contract": {"sha256": HASH_A},
             "flat_null_pass": True,
             "async_child_pass": True,
-            "formal_plant_seconds": 1.0,
-            "observed_plant_seconds": 1.0,
+            "formal_slowdown_seconds": 1.0,
+            "observed_slowdown_seconds": 1.0,
+            "formal_speedup_seconds": -1.0,
+            "observed_speedup_seconds": -1.0,
+            "slowdown_pass": True,
+            "speedup_pass": True,
+            "comparative_ratio_bidirectional_pass": True,
             "artifact_sha256": HASH_A,
         },
         "build_audit": {
@@ -601,8 +602,13 @@ class GuardMutationTests(unittest.TestCase):
 
     def test_g18_commissioning_required(self) -> None:
         invalid = valid_g18()
-        invalid["commission"]["observed_plant_seconds"] = 0.949
+        invalid["commission"]["observed_slowdown_seconds"] = 0.949
         self.assert_guard("G18-commissioning-required", valid_g18(), invalid)
+        wrong_sign = valid_g18()
+        wrong_sign["commission"]["observed_speedup_seconds"] = 1.0
+        self.assertFalse(
+            core.evaluate_guard("G18-commissioning-required", wrong_sign).passed
+        )
 
     def test_g19_arm_symmetry(self) -> None:
         invalid = valid_g19()

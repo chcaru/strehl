@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from m11_core import (
+    COMMERCIAL_COMPARATOR_MODES,
     COMPARATOR_PRODUCT_IDS,
     GUARD_REGISTRY,
     LANE_ROOT,
@@ -96,6 +97,20 @@ RUN_IDENTITY_FIELDS = (
     "contract_sha256",
     "measured_commit",
     "campaign_attempt_id",
+)
+RUNTIME_POLICY_MUTATION_IDS = (
+    "R01-commercial-execution",
+    "R02-unit-separation",
+    "R03-effect-recovery",
+    "R04-ratio-direction",
+    "R05-timing-quarantine",
+    "R06-current-adjudication",
+    "R07-combined-bundle",
+    "R08-commercial-role",
+    "R09-optional-hybrid",
+    "R10-summary-quality-split",
+    "R11-summary-redaction",
+    "R12-optional-hybrid-cold",
 )
 COMMISSION_SOURCE_PATHS = (
     LANE_ROOT / "m11_core.py",
@@ -201,6 +216,45 @@ def utc_now() -> str:
 
 def quality_cell_id(capture_id: str, count: int) -> str:
     return f"{capture_id}:N{count}"
+
+
+def measurement_unit_for_segment(segment_name: str) -> str:
+    if segment_name.startswith("comparative"):
+        return "comparative"
+    if segment_name in {"product-warm", "product-cold", "live"}:
+        return "product"
+    raise ValueError(f"unknown M11 segment: {segment_name}")
+
+
+def commercial_comparator_execution_allowed(
+    mode_id: str,
+    contract: dict[str, Any],
+) -> bool:
+    is_commercial = mode_id in COMMERCIAL_COMPARATOR_MODES  # MUTATION_ANCHOR:R01
+    if not is_commercial:
+        return True
+    policy = contract.get("commercial_comparator_execution", {})
+    return policy.get("status") == "AUTHORIZED" and mode_id in set(
+        policy.get("approved_mode_ids", [])
+    )
+
+
+def commercial_mode_role_allowed(role: str, mode_id: str) -> bool:
+    valid = mode_id not in COMMERCIAL_COMPARATOR_MODES or role == "comparator"
+    return valid  # MUTATION_ANCHOR:R08
+
+
+def product_warm_role_set_valid(
+    by_role: dict[str, list[dict[str, Any]]],
+) -> bool:
+    cpu = by_role.get("candidate-cpu", [])
+    valid = (
+        len(cpu) == 1
+        and int(cpu[0].get("workers", -1)) == 16
+        and len(by_role.get("candidate-hybrid", [])) <= 1
+        and len(by_role.get("frozen-default-baseline", [])) == 1
+    )
+    return valid  # MUTATION_ANCHOR:R09
 
 
 def quality_envelope_complete_for_cell(
@@ -782,11 +836,7 @@ def validate_quality_manifest(
     }
     contract = load_contract()
     scorecard_sha256 = contract["scorecard"]["sha256"]
-    criterion_status = (
-        "SCORECARD_DEFINED"
-        if contract["quality_qualification"]["current_status"] == "SCORECARD_DEFINED"
-        else "UNRATIFIED"
-    )
+    criterion_status = contract["quality_qualification"]["current_status"]
     if set(modes) != registered_quality_modes:
         return {
             "source_manifest": source_manifest,
@@ -872,20 +922,29 @@ def validate_quality_manifest(
             }
             continue
         cell_results = {}
-        try:
-            mode_executable_bindings = executable_artifact_guard(
-                mode,
-                uncached=uncached_executables,
-            )
-            mode_executable_bundle_sha256 = executable_bundle_sha256(
-                mode_executable_bindings
-            )
-            mode_executable_bundle_valid = (
-                mode.get("executable_bundle_sha256") == mode_executable_bundle_sha256
-            )
-        except (KeyError, OSError, TypeError, ValueError):
+        commercial_execution_blocked = (
+            mode_id in COMMERCIAL_COMPARATOR_MODES
+            and not commercial_comparator_execution_allowed(mode_id, contract)
+        )
+        if commercial_execution_blocked:
             mode_executable_bundle_sha256 = None
             mode_executable_bundle_valid = False
+        else:
+            try:
+                mode_executable_bindings = executable_artifact_guard(
+                    mode,
+                    uncached=uncached_executables,
+                )
+                mode_executable_bundle_sha256 = executable_bundle_sha256(
+                    mode_executable_bindings
+                )
+                mode_executable_bundle_valid = (
+                    mode.get("executable_bundle_sha256")
+                    == mode_executable_bundle_sha256
+                )
+            except (KeyError, OSError, TypeError, ValueError):
+                mode_executable_bundle_sha256 = None
+                mode_executable_bundle_valid = False
         corpus_fingerprint = {
             "measured_commit": mode.get("measured_commit"),
             "binary_sha256": mode.get("binary_sha256"),
@@ -1441,16 +1500,14 @@ def validate_frozen_campaign(
     campaign: dict[str, Any],
     *,
     uncached_executables: bool = False,
+    measurement_unit: str | None = None,
 ) -> None:
     if (
         campaign.get("schema") != "m153-m11-campaign-v1"
         or campaign.get("status") != "FROZEN"
-        or campaign.get("baseline_frozen_before_candidate") is not True
-        or campaign.get("host", {}).get("dedicated") is not True
-        or campaign.get("host", {}).get("m139_released") is not True
         or not campaign.get("host", {}).get("power_plan")
     ):
-        raise ValueError("campaign/host is not frozen and released for measurement")
+        raise ValueError("campaign and power plan are not frozen for measurement")
     start_interval = campaign.get("conditions", {}).get("start_temperature_interval_c")
     if (
         not math.isclose(
@@ -1475,10 +1532,38 @@ def validate_frozen_campaign(
         "product-cold": "COLD_RESET",
         "live": "WARM",
     }
+    declared_units = campaign.get("enabled_units", ["comparative", "product"])
+    if (
+        not isinstance(declared_units, list)
+        or not declared_units
+        or len(declared_units) != len(set(declared_units))
+        or not set(declared_units) <= {"comparative", "product"}
+    ):
+        raise ValueError("campaign enabled_units declaration is invalid")
+    unit_enabled = measurement_unit is None or measurement_unit in declared_units
+    unit_is_enabled = unit_enabled  # MUTATION_ANCHOR:R02
+    if not unit_is_enabled:
+        raise ValueError(
+            f"campaign does not enable {measurement_unit} measurement unit"
+        )
+    active_units = set(declared_units)  # MUTATION_ANCHOR:R07
+    required_segments = {
+        name
+        for name in expected_cache_states
+        if measurement_unit_for_segment(name) in active_units
+    }
     segments = campaign.get("segments", {})
-    if set(segments) != set(expected_cache_states) or any(
-        segments[name].get("cache_state") != cache_state
-        for name, cache_state in expected_cache_states.items()
+    if (
+        (measurement_unit is None and set(segments) != required_segments)
+        or (
+            measurement_unit is not None
+            and not required_segments <= set(segments) <= set(expected_cache_states)
+        )
+        or any(
+            segments[name].get("cache_state") != cache_state
+            for name, cache_state in expected_cache_states.items()
+            if name in required_segments
+        )
     ):
         raise ValueError("campaign segment names/cache states do not match M11")
     measured_commit = campaign.get("measured_commit")
@@ -1490,23 +1575,37 @@ def validate_frozen_campaign(
         )
     ):
         raise ValueError("campaign measured_commit is not a full commit hash")
-    baseline_ids = [
-        setting_id
-        for setting_id, setting in campaign.get("settings", {}).items()
-        if setting.get("role") == "frozen-default-baseline"
-    ]
-    if len(baseline_ids) != 1:
-        raise ValueError("campaign must register exactly one frozen default baseline")
-    baseline = campaign["settings"][baseline_ids[0]]
-    frozen = campaign.get("frozen_baseline", {})
-    if (
-        frozen.get("binary_path") != baseline.get("binary_path")
-        or baseline.get("arm") != "product"
-        or frozen.get("binary_sha256") != baseline.get("binary_sha256")
-        or frozen.get("settings_sha256") != baseline.get("settings_sha256")
-        or frozen.get("settings_payload") != baseline.get("settings_payload")
-    ):
-        raise ValueError("frozen baseline declaration does not match its setting")
+    settings = campaign.get("settings", {})
+    for setting_id, setting in settings.items():
+        role = str(setting.get("role"))
+        mode_id = str(setting.get("mode_id"))
+        if not commercial_mode_role_allowed(role, mode_id):
+            raise ValueError(
+                f"campaign setting {setting_id} assigns commercial mode "
+                f"{mode_id} outside the comparator role"
+            )
+    if "product" in active_units:
+        if campaign.get("baseline_frozen_before_candidate") is not True:
+            raise ValueError("product baseline was not frozen before the candidate")
+        baseline_ids = [
+            setting_id
+            for setting_id, setting in settings.items()
+            if setting.get("role") == "frozen-default-baseline"
+        ]
+        if len(baseline_ids) != 1:
+            raise ValueError(
+                "campaign must register exactly one frozen default baseline"
+            )
+        baseline = settings[baseline_ids[0]]
+        frozen = campaign.get("frozen_baseline", {})
+        if (
+            frozen.get("binary_path") != baseline.get("binary_path")
+            or baseline.get("arm") != "product"
+            or frozen.get("binary_sha256") != baseline.get("binary_sha256")
+            or frozen.get("settings_sha256") != baseline.get("settings_sha256")
+            or frozen.get("settings_payload") != baseline.get("settings_payload")
+        ):
+            raise ValueError("frozen baseline declaration does not match its setting")
     candidate_roles = (
         "strehl-common",
         "candidate-cpu",
@@ -1514,40 +1613,46 @@ def validate_frozen_campaign(
         "candidate-live",
     )
     by_role = {
-        role: [
-            setting
-            for setting in campaign.get("settings", {}).values()
-            if setting.get("role") == role
-        ]
+        role: [setting for setting in settings.values() if setting.get("role") == role]
         for role in candidate_roles
     }
-    if (
-        len(by_role["strehl-common"]) != len(WORKER_LADDER)
-        or {int(setting.get("workers", -1)) for setting in by_role["strehl-common"]}
-        != set(WORKER_LADDER)
-        or len(by_role["candidate-cpu"]) != 1
-        or int(by_role["candidate-cpu"][0].get("workers", -1)) != 16
-        or len(by_role["candidate-hybrid"]) != 1
-        or len(by_role["candidate-live"]) != 1
-        or {
-            setting.get("mode_id")
-            for setting in by_role["strehl-common"]
-            if int(setting.get("workers", -1)) == 16
-        }
-        != {STREHL_QUALITY_MODE_ID}
-        or len(
-            {
-                setting.get("binary_sha256")
-                for rows in by_role.values()
-                for setting in rows
+    candidate_settings: list[dict[str, Any]] = []
+    if "comparative" in active_units:
+        if (
+            len(by_role["strehl-common"]) != len(WORKER_LADDER)
+            or {int(setting.get("workers", -1)) for setting in by_role["strehl-common"]}
+            != set(WORKER_LADDER)
+            or {
+                setting.get("mode_id")
+                for setting in by_role["strehl-common"]
+                if int(setting.get("workers", -1)) == 16
             }
+            != {STREHL_QUALITY_MODE_ID}
+        ):
+            raise ValueError(
+                "comparative unit must register the complete common-merge worker ladder"
+            )
+        candidate_settings.extend(by_role["strehl-common"])
+    if "product" in active_units:
+        if (
+            len(by_role["candidate-cpu"]) != 1
+            or int(by_role["candidate-cpu"][0].get("workers", -1)) != 16
+            or len(by_role["candidate-hybrid"]) > 1
+            or len(by_role["candidate-live"]) != 1
+        ):
+            raise ValueError(
+                "product unit must register CPU-16 and live settings, with at "
+                "most one optional hybrid setting"
+            )
+        candidate_settings.extend(
+            [
+                *by_role["candidate-cpu"],
+                *by_role["candidate-hybrid"],
+                *by_role["candidate-live"],
+            ]
         )
-        != 1
-    ):
-        raise ValueError(
-            "common-merge worker ladder and product CPU-16, hybrid, and live arms "
-            "must use one candidate build"
-        )
+    if len({setting.get("binary_sha256") for setting in candidate_settings}) != 1:
+        raise ValueError("every enabled Strehl setting must use one candidate build")
     candidate_bundles = {
         executable_bundle_sha256(
             executable_artifact_guard(
@@ -1555,15 +1660,14 @@ def validate_frozen_campaign(
                 uncached=uncached_executables,
             )
         )
-        for rows in by_role.values()
-        for setting in rows
+        for setting in candidate_settings
     }
     if len(candidate_bundles) != 1:
         raise ValueError(
             "comparative, product, hybrid, and live arms must use one complete "
             "candidate executable bundle"
         )
-    if (
+    if "comparative" in active_units and (
         len(
             {
                 object_sha256(worker_ladder_signature(setting))
@@ -1575,11 +1679,16 @@ def validate_frozen_campaign(
         raise ValueError(
             "common-merge worker-ladder settings may differ only in worker count"
         )
-    if by_role["strehl-common"][0].get("arm") != "comparative" or any(
+    comparative_arm_invalid = (
+        "comparative" in active_units
+        and by_role["strehl-common"][0].get("arm") != "comparative"
+    )
+    product_arm_invalid = "product" in active_units and any(
         setting.get("arm") != "product"
         for role in ("candidate-cpu", "candidate-hybrid", "candidate-live")
         for setting in by_role[role]
-    ):
+    )
+    if comparative_arm_invalid or product_arm_invalid:
         raise ValueError("candidate roles are assigned to the wrong M11 arm")
 
 
@@ -1741,7 +1850,6 @@ def validate_authorization(
     payload = {
         "real_run_requested": authorization.get("real_run_requested"),
         "authorized_by": authorization.get("authorized_by"),
-        "m139_host_release": authorization.get("m139_host_release"),
         "authorized_contract_sha256": authorization.get("contract_sha256"),
         "actual_contract_sha256": actual_contract_sha256,
         "authorized_campaign_sha256": authorization.get("campaign_sha256"),
@@ -1837,6 +1945,17 @@ def setting_artifact_guard(
     *,
     uncached: bool = False,
 ) -> list[dict[str, Any]]:
+    role = str(setting.get("role"))
+    mode_id = str(setting.get("mode_id"))
+    if not commercial_mode_role_allowed(role, mode_id):
+        raise ValueError(f"commercial mode {mode_id} must use the comparator role")
+    if mode_id in COMMERCIAL_COMPARATOR_MODES and not (
+        commercial_comparator_execution_allowed(mode_id, load_contract())
+    ):
+        raise ValueError(
+            f"{mode_id} execution is prohibited until a valid "
+            "commercial licence is owner-authorized in the frozen contract"
+        )
     artifacts = executable_artifact_guard(setting, uncached=uncached)
     binary_path = repository_path(setting["binary_path"]).resolve(strict=True)
     template = (
@@ -2402,7 +2521,8 @@ def validate_segment_inputs(
     shared_bindings = [census_binding]
     bindings_by_cell = {}
     comparative_manifest_by_stack: dict[str, str] = {}
-    if segment_name.startswith("comparative"):
+    measurement_unit = measurement_unit_for_segment(segment_name)
+    if measurement_unit == "comparative":
         quality_reference = campaign["quality_qualification"]
         quality_path = repository_path(quality_reference["path"])
         binding = read_artifact_binding(
@@ -2443,7 +2563,7 @@ def validate_segment_inputs(
         ] = [*shared_bindings, input_binding]
         input_manifest = read_json(input_path)
         input_kind = (
-            "common-tiff" if segment_name.startswith("comparative") else "native-arw"
+            "common-tiff" if measurement_unit == "comparative" else "native-arw"
         )
         staged = verify_staged_input(
             input_dir=input_dir,
@@ -2480,7 +2600,7 @@ def validate_segment_inputs(
                 str(cell["input_manifest_sha256"]),
             )
         ].extend([*provenance_bindings, *dimension_bindings])
-        if segment_name.startswith("comparative"):
+        if measurement_unit == "comparative":
             if quality_data is None or quality_result is None:
                 raise AssertionError("comparative quality preflight was not loaded")
             if adapter_identity is None:
@@ -2697,15 +2817,12 @@ def validate_segment_inputs(
                 for setting in by_role["candidate-cpu"]
                 if int(setting.get("workers", -1)) == 16
             ]
-            if segment_name == "product-warm" and (
-                len(by_role["candidate-cpu"]) != 1
-                or int(by_role["candidate-cpu"][0].get("workers", -1)) != 16
-                or len(by_role["candidate-hybrid"]) != 1
-                or len(by_role["frozen-default-baseline"]) != 1
+            if segment_name == "product-warm" and not product_warm_role_set_valid(
+                by_role
             ):
                 raise ValueError(
-                    "each warm product cell must include candidate CPU-16, hybrid, "
-                    "and frozen baseline"
+                    "each warm product cell must include candidate CPU-16 and "
+                    "frozen baseline, with at most one optional hybrid"
                 )
             if (
                 len(candidate_cpu_16) == 1
@@ -2989,6 +3106,7 @@ def _run_segment_impl(
     validate_frozen_campaign(
         campaign,
         uncached_executables=cold_segment,
+        measurement_unit=measurement_unit_for_segment(segment_name),
     )
     host_instruments = validate_host_instruments(campaign)
     segment = campaign["segments"][segment_name]
@@ -3033,7 +3151,7 @@ def _run_segment_impl(
             "colour",
             "write",
         }
-        if not segment_name.startswith("comparative"):
+        if measurement_unit_for_segment(segment_name) == "product":
             expected_stages = {
                 "decode",
                 "registration",
@@ -3528,8 +3646,6 @@ def _run_segment_impl(
                 ),
             }
             conditions_payload = {
-                "dedicated_host": campaign["host"]["dedicated"],
-                "m139_released_host": campaign["host"]["m139_released"],
                 "preload_quiet_pass": preload_pass,
                 "preload_duration_seconds": preload["requested_seconds"],
                 "preload_elapsed_seconds": preload["elapsed_seconds"],
@@ -3839,10 +3955,97 @@ def run_paired_commission(
     }
 
 
+def effect_recovery_pass(
+    interval: dict[str, Any],
+    expected_seconds: float,
+    *,
+    tolerance_seconds: float = 0.05,
+) -> bool:
+    estimate = float(interval.get("estimate_seconds", math.nan))
+    lower = float(interval.get("lower_seconds", math.nan))
+    upper = float(interval.get("upper_seconds", math.nan))
+    within_tolerance = abs(estimate - expected_seconds) <= tolerance_seconds
+    recovery_within_tolerance = within_tolerance  # MUTATION_ANCHOR:R03
+    correct_sign = estimate * expected_seconds > 0.0
+    return (
+        all(math.isfinite(value) for value in (estimate, lower, upper))
+        and recovery_within_tolerance
+        and lower <= expected_seconds <= upper
+        and lower <= estimate <= upper
+        and not lower <= 0.0 <= upper
+        and correct_sign
+    )
+
+
+def comparative_ratio_control(
+    *,
+    strehl_seconds: list[float],
+    comparator_seconds: list[float],
+    expected_bar_pass: bool,
+) -> dict[str, Any]:
+    strehl_minimum = min(float(value) for value in strehl_seconds)
+    comparator_minimum = min(float(value) for value in comparator_seconds)
+    capture_minima = {
+        str(count): {
+            "strehl_minimum_wall_seconds": strehl_minimum,
+            "selected_comparator_minimum_wall_seconds": comparator_minimum,
+        }
+        for count in REGISTERED_COUNTS
+    }
+    capture_ratios = {
+        count: row["selected_comparator_minimum_wall_seconds"]
+        / row["strehl_minimum_wall_seconds"]
+        for count, row in capture_minima.items()
+    }
+    pooled_ratio = sum(
+        row["selected_comparator_minimum_wall_seconds"]
+        for row in capture_minima.values()
+    ) / sum(row["strehl_minimum_wall_seconds"] for row in capture_minima.values())
+    observed_bar_pass = (
+        all(ratio >= 2.0 for ratio in capture_ratios.values()) and pooled_ratio >= 2.0
+    )
+    guard = evaluate_guard(
+        "G20-aggregate-reduction",
+        {
+            "statistic_kind": "comparative",
+            "capture_minima": capture_minima,
+            "capture_ratios": capture_ratios,
+            "pooled_ratio": pooled_ratio,
+            "all_bars_pass": observed_bar_pass,
+        },
+    )
+    direction_matches = observed_bar_pass is expected_bar_pass  # MUTATION_ANCHOR:R04
+    passed = guard.passed and direction_matches
+    return {
+        "synthetic_only": True,
+        "expected_bar_pass": expected_bar_pass,
+        "observed_bar_pass": observed_bar_pass,
+        "strehl_minimum_wall_seconds": strehl_minimum,
+        "comparator_minimum_wall_seconds": comparator_minimum,
+        "capture_ratios": capture_ratios,
+        "pooled_ratio": pooled_ratio,
+        "aggregate_guard": guard.to_json(),
+        "pass": passed,
+    }
+
+
+def timing_commission_allowed(contract: dict[str, Any]) -> bool:
+    timing_status = contract.get("current_adjudication", {}).get("absolute_timing")
+    allowed = timing_status == "ADJUDICABLE"
+    return allowed  # MUTATION_ANCHOR:R05
+
+
 def commission(output: Path, work: Path, formal_scorecard_control: bool) -> int:
     output = output.resolve()
     work = work.resolve()
-    load_contract()
+    contract = load_contract()
+    timing_status = contract.get("current_adjudication", {}).get("absolute_timing")
+    if not timing_commission_allowed(contract):
+        raise RuntimeError(
+            "timing commission is blocked by current absolute-timing status "
+            f"{timing_status!r}; revise the frozen contract only after a recorded "
+            "quiet-host window is available"
+        )
     require_guard(
         "G01-owned-output",
         {"path": str(work), "lane_root": str(LANE_ROOT)},
@@ -3865,24 +4068,40 @@ def commission(output: Path, work: Path, formal_scorecard_control: bool) -> int:
         and null["maximum_single_invocation_seconds"] < 1.0
     )
     plant_seconds = 1.0 if formal_scorecard_control else 0.08
-    planted = run_paired_commission(
+    slowdown = run_paired_commission(
         work=work,
-        scenario="planted-effect",
+        scenario="planted-slowdown",
         sleeps_ms={"A": 4.0, "B": 4.0 + plant_seconds * 1000.0},
     )
-    planted_interval = planted["paired_interval"]
-    plant_estimate = float(planted_interval["estimate_seconds"])
-    plant_pass = (
-        plant_estimate > 0.0
-        and abs(plant_estimate - plant_seconds) <= 0.05
-        and float(planted_interval["lower_seconds"])
-        <= plant_seconds
-        <= float(planted_interval["upper_seconds"])
-        and not planted_interval["covers_no_difference"]
-        and (
-            formal_scorecard_control
-            or planted["maximum_single_invocation_seconds"] < 1.0
-        )
+    slowdown_interval = slowdown["paired_interval"]
+    slowdown_estimate = float(slowdown_interval["estimate_seconds"])
+    slowdown_pass = effect_recovery_pass(slowdown_interval, plant_seconds) and (
+        formal_scorecard_control or slowdown["maximum_single_invocation_seconds"] < 1.0
+    )
+    speedup = run_paired_commission(
+        work=work,
+        scenario="planted-speedup",
+        sleeps_ms={"A": 4.0 + plant_seconds * 1000.0, "B": 4.0},
+    )
+    speedup_interval = speedup["paired_interval"]
+    speedup_estimate = float(speedup_interval["estimate_seconds"])
+    speedup_pass = effect_recovery_pass(speedup_interval, -plant_seconds) and (
+        formal_scorecard_control or speedup["maximum_single_invocation_seconds"] < 1.0
+    )
+    ratio_controls = {
+        "strehl_faster_must_pass": comparative_ratio_control(
+            strehl_seconds=slowdown["arms"]["A"]["scored_wall_seconds"],
+            comparator_seconds=slowdown["arms"]["B"]["scored_wall_seconds"],
+            expected_bar_pass=True,
+        ),
+        "strehl_slower_must_fail": comparative_ratio_control(
+            strehl_seconds=speedup["arms"]["A"]["scored_wall_seconds"],
+            comparator_seconds=speedup["arms"]["B"]["scored_wall_seconds"],
+            expected_bar_pass=False,
+        ),
+    }
+    ratio_bidirectional_pass = all(
+        control["pass"] for control in ratio_controls.values()
     )
     async_record = synthetic_invocation(
         work=work,
@@ -3904,7 +4123,17 @@ def commission(output: Path, work: Path, formal_scorecard_control: bool) -> int:
         >= async_record["process_drained_qpc_ticks"]
         and async_record["wall_seconds"] < 1.0
     )
-    status = "PASS" if null_pass and plant_pass and async_pass else "FAIL"
+    status = (
+        "PASS"
+        if (
+            null_pass
+            and slowdown_pass
+            and speedup_pass
+            and async_pass
+            and (not formal_scorecard_control or ratio_bidirectional_pass)
+        )
+        else "FAIL"
+    )
     result = {
         "schema": (
             "m153-formal-commission-v1"
@@ -3937,8 +4166,9 @@ def commission(output: Path, work: Path, formal_scorecard_control: bool) -> int:
             for path in COMMISSION_SOURCE_PATHS
         },
         "scope": (
-            "Scorecard-required one-second synthetic control. This is not an M11 "
-            "capture timing measurement."
+            "Formal movable-null, one-second slowdown, one-second speedup, and "
+            "bidirectional comparative-ratio controls. This is not an M11 capture "
+            "timing measurement."
             if formal_scorecard_control
             else "Sub-second synthetic commissioning only. This is not an M11 "
             "timing measurement and contains no capture output."
@@ -3948,13 +4178,21 @@ def commission(output: Path, work: Path, formal_scorecard_control: bool) -> int:
             "decision": "NO_DETECTED_DIFFERENCE" if null_pass else "FAIL",
             "pass": null_pass,
         },
-        "planted_effect": {
-            **planted,
+        "planted_slowdown": {
+            **slowdown,
             "planted_seconds": plant_seconds,
             "tolerance_seconds": 0.05,
-            "recovered_seconds": plant_estimate,
-            "pass": plant_pass,
+            "recovered_seconds": slowdown_estimate,
+            "pass": slowdown_pass,
         },
+        "planted_speedup": {
+            **speedup,
+            "planted_seconds": -plant_seconds,
+            "tolerance_seconds": 0.05,
+            "recovered_seconds": speedup_estimate,
+            "pass": speedup_pass,
+        },
+        "comparative_ratio_controls": ratio_controls,
         "asynchronous_child": {
             "planted_child_delay_seconds": 0.075,
             "root_exit_to_tree_drain_seconds": child_tail,
@@ -3966,27 +4204,44 @@ def commission(output: Path, work: Path, formal_scorecard_control: bool) -> int:
         },
         "formal_scorecard_control": (
             {
-                "status": "PASS" if plant_pass else "FAIL",
-                "required_plant_seconds": 1.0,
-                "observed_plant_seconds": plant_estimate,
+                "status": (
+                    "PASS"
+                    if slowdown_pass and speedup_pass and ratio_bidirectional_pass
+                    else "FAIL"
+                ),
+                "required_slowdown_seconds": 1.0,
+                "observed_slowdown_seconds": slowdown_estimate,
+                "required_speedup_seconds": -1.0,
+                "observed_speedup_seconds": speedup_estimate,
+                "comparative_ratio_bidirectional_pass": ratio_bidirectional_pass,
                 "tolerance_seconds": 0.05,
             }
             if formal_scorecard_control
             else {
                 "status": "NOT_RUN",
-                "required_plant_seconds": 1.0,
+                "required_slowdown_seconds": 1.0,
+                "required_speedup_seconds": -1.0,
                 "tolerance_seconds": 0.05,
                 "reason": (
-                    "M153 was ordered to run only sub-second synthetic workloads "
-                    "while M139 owns the timing host."
+                    "Absolute wall-clock commissioning is quarantined until a "
+                    "recorded quiet-host window exists."
                 ),
             }
         ),
         "flat_null_pass": null_pass,
         "async_child_pass": async_pass,
-        "formal_plant_seconds": 1.0 if formal_scorecard_control else None,
-        "observed_plant_seconds": (
-            plant_estimate if formal_scorecard_control else None
+        "slowdown_pass": slowdown_pass,
+        "speedup_pass": speedup_pass,
+        "comparative_ratio_bidirectional_pass": (
+            ratio_bidirectional_pass if formal_scorecard_control else False
+        ),
+        "formal_slowdown_seconds": 1.0 if formal_scorecard_control else None,
+        "observed_slowdown_seconds": (
+            slowdown_estimate if formal_scorecard_control else None
+        ),
+        "formal_speedup_seconds": -1.0 if formal_scorecard_control else None,
+        "observed_speedup_seconds": (
+            speedup_estimate if formal_scorecard_control else None
         ),
         "real_timing_authorized": False,
         "status": status,
@@ -4001,10 +4256,15 @@ def commission(output: Path, work: Path, formal_scorecard_control: bool) -> int:
                     null_interval["lower_seconds"],
                     null_interval["upper_seconds"],
                 ],
-                "plant_seconds": plant_estimate,
-                "plant_ci_seconds": [
-                    planted_interval["lower_seconds"],
-                    planted_interval["upper_seconds"],
+                "slowdown_seconds": slowdown_estimate,
+                "slowdown_ci_seconds": [
+                    slowdown_interval["lower_seconds"],
+                    slowdown_interval["upper_seconds"],
+                ],
+                "speedup_seconds": speedup_estimate,
+                "speedup_ci_seconds": [
+                    speedup_interval["lower_seconds"],
+                    speedup_interval["upper_seconds"],
                 ],
                 "async_tail_seconds": child_tail,
             },
@@ -4176,7 +4436,10 @@ def record_artifacts_intact(record: dict[str, Any]) -> bool:
         if len(campaign_candidates) != 1:
             return False
         campaign = read_json(campaign_candidates[0])
-        validate_frozen_campaign(campaign)
+        validate_frozen_campaign(
+            campaign,
+            measurement_unit=measurement_unit_for_segment(str(record["segment"])),
+        )
         authorization_candidates = []
         for binding in artifacts:
             if binding["actual_sha256"] != record["authorization_sha256"]:
@@ -4896,6 +5159,47 @@ def m11_publication_verdict(bars: dict[str, dict[str, Any]]) -> str:
     )
 
 
+def adjudication_allows(*statuses: str) -> bool:
+    allowed = bool(statuses) and all(status == "ADJUDICABLE" for status in statuses)
+    return allowed  # MUTATION_ANCHOR:R06
+
+
+def summary_quality_required(campaign_units: set[str]) -> bool:
+    required = "comparative" in campaign_units
+    return required  # MUTATION_ANCHOR:R10
+
+
+def redact_unadjudicable_bar(
+    bar: dict[str, Any],
+    *,
+    adjudication_status: str,
+    absolute_timing_status: str | None = None,
+) -> dict[str, Any]:
+    redacted = {
+        "verdict": "UNMEASURED",
+        "adjudication_status": adjudication_status,
+        "timing_values_emitted": False,
+    }
+    if absolute_timing_status is not None:
+        redacted["absolute_timing_status"] = absolute_timing_status
+    return redacted  # MUTATION_ANCHOR:R11
+
+
+def cold_bar_pass(
+    *,
+    complete: bool,
+    values: dict[str, dict[str, Any]],
+    expected_cells: int,
+) -> bool:
+    valid = (
+        complete
+        and len(values) == expected_cells
+        and expected_cells > 0
+        and all(value.get("all_pairs_pass") is True for value in values.values())
+    )
+    return valid  # MUTATION_ANCHOR:R12
+
+
 def all_timed_outputs_match_quality(
     rows: list[dict[str, Any]] | None,
     qualification: dict[str, Any],
@@ -5018,24 +5322,42 @@ def summarize(
         )
         and attempt_history["valid"]
     )
-    quality_matches_campaign = False
-    if campaign_identity_complete and quality_path is not None:
+    summary_campaign: dict[str, Any] = {}
+    campaign_units: set[str] = set()
+    if campaign_identity_complete:
         try:
             campaign_bindings = [
                 binding
                 for binding in records[0].get("artifact_bindings", [])
                 if binding.get("actual_sha256") == records[0].get("campaign_sha256")
             ]
-            if len(campaign_bindings) == 1:
-                campaign = read_json(
-                    Path(campaign_bindings[0]["path"]).resolve(strict=True)
-                )
-                campaign_quality = campaign["quality_qualification"]
-                quality_matches_campaign = repository_path(
-                    campaign_quality["path"]
-                ).resolve(strict=True) == quality_path and campaign_quality[
-                    "sha256"
-                ] == sha256_file(quality_path)
+            if len(campaign_bindings) != 1:
+                raise ValueError("records do not bind exactly one campaign")
+            summary_campaign = read_json(
+                Path(campaign_bindings[0]["path"]).resolve(strict=True)
+            )
+            campaign_units = set(
+                summary_campaign.get("enabled_units", ["comparative", "product"])
+            )
+            if not campaign_units or not campaign_units <= {"comparative", "product"}:
+                raise ValueError("summary campaign has invalid enabled units")
+        except (KeyError, OSError, TypeError, ValueError):
+            campaign_identity_complete = False
+            summary_campaign = {}
+            campaign_units = set()
+    quality_matches_campaign = not summary_quality_required(campaign_units)
+    if (
+        campaign_identity_complete
+        and summary_quality_required(campaign_units)
+        and quality_path is not None
+    ):
+        try:
+            campaign_quality = summary_campaign["quality_qualification"]
+            quality_matches_campaign = repository_path(
+                campaign_quality["path"]
+            ).resolve(strict=True) == quality_path and campaign_quality[
+                "sha256"
+            ] == sha256_file(quality_path)
         except (KeyError, OSError, TypeError, ValueError):
             quality_matches_campaign = False
     campaign_identity_complete &= quality_matches_campaign
@@ -5480,8 +5802,14 @@ def summarize(
     cpu_cells = product_cells("candidate-cpu")
     hybrid_cells = product_cells("candidate-hybrid")
     baseline_cells = product_cells("frozen-default-baseline")
+    hybrid_declared = any(
+        setting.get("role") == "candidate-hybrid"
+        for setting in summary_campaign.get("settings", {}).values()
+    )
     cpu_complete = all(value is not None for value in cpu_cells.values())
-    hybrid_complete = all(value is not None for value in hybrid_cells.values())
+    hybrid_complete = hybrid_declared and all(
+        value is not None for value in hybrid_cells.values()
+    )
     baseline_complete = all(
         value is not None and value["baseline_frozen_before_candidate"] is True
         for value in baseline_cells.values()
@@ -5507,11 +5835,12 @@ def summarize(
     )
     product_schedule_complete = True
     for count, stack in ((33, "bee-1-cpl"), (105, "coffee-bean"), (299, "bee-1-cpl")):
-        cells_for_count = (
+        cells_for_count = [
             cpu_cells[str(count)],
-            hybrid_cells[str(count)],
             baseline_cells[str(count)],
-        )
+        ]
+        if hybrid_declared:
+            cells_for_count.append(hybrid_cells[str(count)])
         if any(cell is None for cell in cells_for_count):
             product_schedule_complete = False
             continue
@@ -5741,10 +6070,13 @@ def summarize(
         for key, value in cold_overheads.items()
         if key.startswith("product|")
     }
-    cold_ok = (
-        cold_complete_by_arm["product"]
-        and len(cold_bar_values) == 6
-        and all(value["all_pairs_pass"] for value in cold_bar_values.values())
+    expected_product_cold_cells = sum(
+        row[0] == "product" for row in required_cold_cells
+    )
+    cold_ok = cold_bar_pass(
+        complete=cold_complete_by_arm["product"],
+        values=cold_bar_values,
+        expected_cells=expected_product_cold_cells,
     )
     comparative_cold_values = {
         key: value
@@ -5912,14 +6244,67 @@ def summarize(
         "live_first_100",
         "candidate_default_baseline",
     )
-    overall = m11_publication_verdict(bars)
+    computed_overall = m11_publication_verdict(bars)
     product_native_verdicts = [
         bars[name]["verdict"] for name in product_native_components
     ]
-    product_native_report_verdict = aggregate_verdict(product_native_verdicts)
+    computed_product_native_verdict = aggregate_verdict(product_native_verdicts)
+    adjudication = contract.get("current_adjudication", {})
+    comparative_adjudication = str(adjudication.get("comparative", "UNMEASURED"))
+    product_adjudication = str(adjudication.get("product_native", "UNMEASURED"))
+    absolute_timing_adjudication = str(
+        adjudication.get("absolute_timing", "UNMEASURED")
+    )
+    comparative_adjudicable = adjudication_allows(comparative_adjudication)
+    product_adjudicable = adjudication_allows(
+        product_adjudication,
+        absolute_timing_adjudication,
+    )
+    if not comparative_adjudicable:
+        bars["comparative"] = redact_unadjudicable_bar(
+            bars["comparative"],
+            adjudication_status=comparative_adjudication,
+        )
+        bars["retained_m12_cross_worker_identity"] = redact_unadjudicable_bar(
+            bars["retained_m12_cross_worker_identity"],
+            adjudication_status=comparative_adjudication,
+        )
+    if not product_adjudicable:
+        for name in product_native_components:
+            bars[name] = redact_unadjudicable_bar(
+                bars[name],
+                adjudication_status=product_adjudication,
+                absolute_timing_status=absolute_timing_adjudication,
+            )
+    overall = computed_overall if comparative_adjudicable else "UNMEASURED"
+    product_native_report_verdict = (
+        computed_product_native_verdict if product_adjudicable else "UNMEASURED"
+    )
+    visible_group_stats = {
+        key: value
+        for key, value in group_stats.items()
+        if (
+            comparative_adjudicable
+            and key.split("|", 1)[0].startswith("comparative-")
+            or product_adjudicable
+            and (
+                key.split("|", 1)[0].startswith("product-")
+                or key.split("|", 1)[0] == "live"
+            )
+        )
+    }
+    timing_values_emitted = bool(records) and (
+        comparative_adjudicable or product_adjudicable
+    )
     result = {
         "schema": "m153-m11-summary-v1",
-        "evidence_tag": "MEASURED" if records else "UNMEASURED",
+        "evidence_tag": (
+            "MEASURED"
+            if timing_values_emitted
+            else "QUARANTINED"
+            if records
+            else "UNMEASURED"
+        ),
         "generated_utc": utc_now(),
         "records": {
             "path": str(records_path),
@@ -5929,15 +6314,27 @@ def summarize(
         "campaign_identity_complete": campaign_identity_complete,
         "campaign_attempt_history": attempt_history,
         "quality_qualification": quality,
-        "group_dispersion": group_stats,
-        "statistic_guards": statistic_guards,
+        "group_dispersion": visible_group_stats,
+        "statistic_guards": (
+            statistic_guards if comparative_adjudicable and product_adjudicable else []
+        ),
         "bars": bars,
         "overall_m11_verdict": overall,
+        "computed_m11_verdict_before_adjudication": (
+            computed_overall if comparative_adjudicable else None
+        ),
         "publication_gate_verdict": overall,
+        "publication_gate_adjudication": comparative_adjudication,
         "publication_gate_components": list(publication_components),
         "product_native_report_verdict": product_native_report_verdict,
+        "computed_product_native_verdict_before_adjudication": (
+            computed_product_native_verdict if product_adjudicable else None
+        ),
+        "product_native_adjudication": product_adjudication,
+        "absolute_timing_adjudication": absolute_timing_adjudication,
         "product_native_report_components": list(product_native_components),
         "product_native_does_not_determine_publication_verdict": True,
+        "timing_values_emitted": timing_values_emitted,
         "headline_rule": "minimum per setting after one warm-up and six alternating sweeps",
     }
     write_json(output, result)
@@ -6588,15 +6985,40 @@ def audit(
         "commission_pass": commission_data.get("status") == "PASS",
         "mutation_pass": mutation_data.get("status") == "PASS",
         "mutation_guard_set_current": mutation_data.get("guard_ids") == guards,
+        "mutation_runtime_policy_set_current": mutation_data.get("runtime_mutation_ids")
+        == list(RUNTIME_POLICY_MUTATION_IDS),
         "mutation_source_current": (
             mutation_data.get("source", {}).get("sha256")
             == sha256_file(LANE_ROOT / "m11_core.py")
         ),
+        "mutation_harness_source_current": (
+            mutation_data.get("runtime_source", {}).get("sha256")
+            == sha256_file(LANE_ROOT / "m11_harness.py")
+        ),
+        "mutation_commissioner_current": (
+            mutation_data.get("commissioner", {}).get("sha256")
+            == sha256_file(LANE_ROOT / "mutation_commission.py")
+        ),
+        "mutation_tests_current": all(
+            mutation_data.get("test_sources", {}).get(name, {}).get("sha256")
+            == sha256_file(LANE_ROOT / name)
+            for name in ("test_m11_harness.py", "test_runtime.py")
+        ),
         "mutation_runtime_current": commission_runtime_binding_current(mutation_data),
         "all_guard_mutations_killed": (
+            mutation_data.get("guard_substantive_killed")
+            == mutation_data.get("guard_substantive_total")
+            == len(guards)
+        ),
+        "all_runtime_policy_mutations_killed": (
+            mutation_data.get("runtime_substantive_killed")
+            == mutation_data.get("runtime_substantive_total")
+            == len(RUNTIME_POLICY_MUTATION_IDS)
+        ),
+        "all_substantive_mutations_killed": (
             mutation_data.get("substantive_killed")
             == mutation_data.get("substantive_total")
-            == len(guards)
+            == len(guards) + len(RUNTIME_POLICY_MUTATION_IDS)
         ),
         "inert_mutation_survived": (
             mutation_data.get("inert_survived") == 1
@@ -6636,6 +7058,12 @@ def audit(
             "status": mutation_data.get("status"),
             "substantive_killed": mutation_data.get("substantive_killed"),
             "substantive_total": mutation_data.get("substantive_total"),
+            "guard_substantive_killed": mutation_data.get("guard_substantive_killed"),
+            "guard_substantive_total": mutation_data.get("guard_substantive_total"),
+            "runtime_substantive_killed": mutation_data.get(
+                "runtime_substantive_killed"
+            ),
+            "runtime_substantive_total": mutation_data.get("runtime_substantive_total"),
             "inert_survived": mutation_data.get("inert_survived"),
         },
         "input_census": {
@@ -6680,7 +7108,7 @@ def build_parser() -> argparse.ArgumentParser:
     commission_parser.add_argument(
         "--formal-scorecard-control",
         action="store_true",
-        help="run the required 1.000-second plant; do not use during M139",
+        help="run the required 1.000-second controls only on an admissibly quiet host",
     )
 
     run_parser = subparsers.add_parser("run")

@@ -2,7 +2,6 @@
   "schema": "m153-real-run-authorization-v1",
   "real_run_requested": false,
   "authorized_by": null,
-  "m139_host_release": false,
   "contract_sha256": null,
   "campaign_sha256": null,
   "commission": {

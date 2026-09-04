@@ -1,15 +1,49 @@
 # M153 - M11 two-arm timing harness
 
+## 2026-09-04 host-contention quarantine and withdrawal
+
+There is no exclusive host lock. The standing program policy permits
+deterministic correctness work but quarantines absolute timing until the
+instrument itself records a window inside its objective load gates. Three
+program-level samples observed `88.6%`, `97.0%`, and `94.1%` whole-host CPU
+busy, mean `93.2%`, with the agent host process the leading consumer. That
+environment cannot support an admissible M11 absolute wall-clock result.
+
+The earlier M153 development observations did not record background load
+alongside their timings. They are absolute wall times, not simultaneous-arm
+ratios, and their windows cannot be shown clear of the disclosed 4.1-second
+host perturbation. They are preserved below for provenance as
+`MEASURED_CONTENDED_WITHDRAWN`, not as valid commissioning or performance
+evidence. No formal control or real M11 campaign was run, so no admissible
+work must be repeated; the withdrawn development observations would have to be
+remeasured before any use. M153 has measured **no admissible M11 product or
+comparator number**.
+
+The functional check and mutation counts remain code-behaviour evidence, not
+wall-clock evidence. They must not be cited to rehabilitate the withdrawn
+timings.
+
 ## Verdict
 
-**YES: the operative M11 computation is buildable, and the instrument is
-built. M11 itself remains UNMEASURED.** No capture timing was run.
+**YES: the M11 instrument remains worth finishing and its operative
+computation is buildable. The current M11 common-merge verdict is
+`UNMEASURED_COMPARATOR_QUALIFICATION`, not PASS or FAIL.** The harness is
+reusable after M1 and comparator availability are repaired; abandoning it
+would preserve those blockers and recreate the missing-instrument blocker.
+The product-native unit is separately `QUARANTINED_HOST_LOAD`. No capture
+timing was run.
+
+The working implementation now separates comparative and product campaign
+units, hard-stops unlicensed commercial execution, and implements formal null,
+one-second slowdown, one-second speedup, and bidirectional ratio controls.
+Those timing controls are implemented but `NOT_RUN_QUARANTINED_HOST_LOAD`.
+The `commission` command itself fails closed while the frozen contract's
+absolute-timing status is not `ADJUDICABLE`.
 
 The implementation is bound to scorecard v1.10 at SHA-256
-`D72160F57494ED1B3A07807EA0D7D6451B5E50D4630E0E6EEB093CED7D74CB28`.
-The final build audit passes, `real_run_authorized` remains `false`, and the
-scorecard-required one-second commissioning plant was deliberately not run
-while M139 owns the host.
+`EB5ED446EE06E8842C61E5F90CB1BD4A8E81CA5DFD39EF53988598EF05DCB603`.
+The last generated build audit predates these changes and is stale;
+`real_run_authorized` remains `false`.
 
 ### Scorecard defect and exact target
 
@@ -68,6 +102,35 @@ Before/after directory snapshots match. Machine-readable evidence is in
 
 ## Instrument design
 
+### Licence-separated units
+
+The orchestrator has verified that the installed Zerene Stacker is an expired,
+consumed trial whose licence prohibits post-trial use and circumvention.
+Helicon Focus is not installed. M153 will not launch either product.
+
+- **Unit 1 - product-native:** independent Strehl-only measurement of CPU-16,
+  optional hybrid, cold-minus-warm, live first-100, and
+  candidate/default-baseline bars. Comparator qualification or availability
+  does not gate this unit. An absent hybrid remains
+  `UNMEASURED_NOT_IMPLEMENTED`.
+- **Unit 2 - comparative:** complete but not run against commercial software.
+  Until M1 is admitted and the required licensed arms exist, it is
+  `UNMEASURED_COMPARATOR_QUALIFICATION`. Its commissioning target is an
+  M153-owned synthetic fixed-delay comparator. No synthetic result may be
+  represented as a commercial-comparator result.
+
+`enabled_units` makes the split operational: product validation and execution
+do not load comparative settings or quality evidence; comparative validation
+does not require a product baseline. A segment whose unit is not enabled is
+rejected. A combined campaign still requires one candidate executable bundle
+across every enabled Strehl role.
+
+Commercial mode IDs are rejected during campaign validation and again before
+executable-artifact access, regardless of their declared role. This prevents a
+prohibited Zerene or Helicon binary from bypassing the licence gate through
+role mislabelling. A future owner-authorized contract must both admit the mode
+and retain its comparator role.
+
 ### Common-merge comparative arm
 
 Every program receives the same ordered, byte-identified, uncompressed 16-bit
@@ -124,9 +187,11 @@ also pass its applicable controls. A required mode that is merely present but
 quality-failed cannot be dropped to improve the speed envelope; the quality
 manifest becomes `UNMEASURED`.
 
-The approved checker-bundle allowlists are intentionally empty. The shipped
-quality template therefore returns `UNMEASURED`, as expected. No speed can be
-credited until the owner binds commissioned checker bundles and real evidence.
+M1 is withdrawn with no admitted bar, and the approved checker-bundle
+allowlists are intentionally empty. The shipped quality template therefore
+returns `UNADJUDICABLE_WITHDRAWN_M1`, as expected. No speed can be credited
+until M1 is repaired and the owner binds commissioned checker bundles and real
+evidence.
 
 ## Timing boundary, controls, and failure durability
 
@@ -150,7 +215,7 @@ campaign/authorization/artifact identity.
 
 Formal campaigns also require:
 
-- a fixed power plan and dedicated host;
+- a fixed power plan and objective recorded load gates;
 - a hash-bound persistent hardware probe;
 - a 60-second preflight with CPU busy `<=0.15`;
 - during-run external busy `<=0.10`, computed without subtracting observer
@@ -180,70 +245,134 @@ observer overhead. They freeze or measure exposed conditions, reject known
 violations, and preserve dispersion instead of treating residual variation as
 an effect.
 
-## Synthetic commissioning
+## Preregistered contention policy
 
-This commissioning used only a generated 4x4 uint16 TIFF and trivial Python
-workloads. It is instrument evidence, not an M11 timing result. Every
-invocation completed in less than one second.
+No lane assertion, queue position, or claimed host lease is evidence of
+quietness. A scored invocation is admissible only if it passes every frozen,
+instrument-recorded condition gate:
 
-### Flat null
+1. fixed power-plan identity and campaign-declared start-temperature interval;
+2. a continuous 60-second preflight with scorecard CPU busy `<=0.15`;
+3. during-run external busy `<=0.10`, computed as total non-idle CPU less Job
+   Object CPU, without subtracting observer CPU;
+4. nominal 10 ms CPU, thermal, throttle, GPU-process, and process-tree
+   telemetry, with zero missing intervals and no edge/adjacent gap above the
+   preregistered 15 ms scheduler tolerance;
+5. no throttle flag and no GPU process outside the OS-display plus timed-job
+   allowlist;
+6. frozen input and executable hashes before and after use; and
+7. a complete warm-up plus six alternating-order scored repetitions.
 
-The two arms were identical except for necessary per-run output paths. Across
-six paired scored sweeps:
+Any miss invalidates the whole campaign. The append-only attempt ledger records
+`STARTED`, `COMPLETED`, and `ABORTED` attempts and forbids selective reruns,
+record-path changes, truncation, and outlier deletion. A quiet-looking minimum
+cannot rescue a campaign whose load telemetry fails or is missing.
 
-- estimated `B-A`: **0.003762750 s**;
-- paired 95% interval: **[-0.003273978, 0.010799478] s**;
-- arm A range / sample SD: **0.0901231-0.1067594 s /
-  0.005628284 s**;
-- arm B range / sample SD: **0.1026105-0.1131417 s /
-  0.004152118 s**; and
-- decision: **NO_DETECTED_DIFFERENCE / PASS** because the interval covers
-  zero.
+The headline is the **minimum of six valid repetitions**, exactly as the
+scorecard specifies, not their mean. Contention adds non-negative delay, so a
+mean is biased slow and is not the score. The minimum is less sensitive to
+residual additive delay, but it is not a contamination correction: all six
+members must first pass the condition gates. Median, range, MAD, scaled MAD,
+sample standard deviation, and relative range remain mandatory diagnostics.
+Alternating forward/reverse order limits monotonic thermal and background-load
+drift between settings.
 
-### Planted effect
+While the contract remains quarantined, `summarize` emits only explicit
+`UNMEASURED` adjudication records and non-timing provenance; it removes group
+dispersion, wall times, seconds-per-frame values, and pre-adjudication PASS/FAIL
+results. A nonempty quarantined input is tagged `QUARANTINED`, never
+`MEASURED`.
 
-The arms were identical except that arm B received a registered
-**0.080000 s** in-boundary sleep. Across six paired scored sweeps:
+## Preregistered three-way commissioning
 
-- recovered `B-A`: **0.081845017 s**;
-- paired 95% interval: **[0.079610273, 0.084079761] s**;
-- recovery error: **+0.001845017 s**;
-- arm A range / sample SD: **0.1003970-0.1049759 s /
-  0.001743098 s**;
-- arm B range / sample SD: **0.1830725-0.1888803 s /
-  0.002183529 s**; and
-- decision: **PASS** with the correct sign, the plant inside the interval,
-  and zero excluded.
+No item in this section will run while absolute timing is quarantined. Each
+control uses one warm-up followed by six alternating-order scored pairs and
+reports the minimum, every observation, dispersion, paired delta, and
+interval.
 
-The asynchronous-child control also passed: two processes were observed, and
-the timer remained open **0.1182856 s** after root exit until tree drain and
-finalization.
+1. **Movable flat null:** both arms execute the same one-frame synthetic
+   shipping-path stand-in with identical executable, input, settings, output
+   contract, and in-boundary work. Necessary output paths differ. The paired
+   interval for `B-A` must cover zero. The exact same arm-selection and timing
+   path is used by the two directional plants; the null is not a hard-coded
+   zero.
+2. **Planted slowdown:** arm B adds exactly 1.000 seconds inside the timed
+   one-frame workload. Measured per-frame `B-A` must be
+   `+1.000 +/- 0.050 s`, with positive sign and an interval excluding zero.
+3. **Planted speedup:** start from the delayed arm and remove exactly 1.000
+   seconds only from the declared improved arm. Measured per-frame
+   `improved-baseline` must be `-1.000 +/- 0.050 s`, with negative sign and an
+   interval excluding zero. This rejects sign inversion or a reducer that
+   systematically flatters the candidate.
 
-The scorecard's separate `1.000+/-0.050 s` formal plant is implemented but
-**NOT RUN** under the host-contention prohibition. A development commission
-cannot authorize a real campaign.
+Unit 2 additionally uses an M153-owned fixed-delay comparator to exercise the
+actual aggregate reducer twice: a preregistered fixture in which every
+`R_c` and `R_pool` exceeds 2.00 must pass, and the reversed timing fixture must
+fail. Required licensed-product identifiers are never attached to these
+synthetic records.
+
+## Measurements collected so far
+
+| Quantity | Recorded value | Status |
+|---|---:|---|
+| M11 product-native bars | none | `QUARANTINED_HOST_LOAD` |
+| M11 common-merge comparator ratio | none | `UNMEASURED_COMPARATOR_QUALIFICATION` |
+| Development flat-null `B-A` | `0.003762750 s`, 95% interval `[-0.003273978, 0.010799478] s` | `MEASURED_CONTENDED_WITHDRAWN` |
+| Development 0.080 s plant `B-A` | `0.081845017 s`, 95% interval `[0.079610273, 0.084079761] s` | `MEASURED_CONTENDED_WITHDRAWN`; also not the required 1 s plant |
+| Development async root-exit-to-drain tail | `0.1182856 s` | `MEASURED_CONTENDED_WITHDRAWN` |
+| Formal movable-null control | none | `NOT_RUN_QUARANTINED_HOST_LOAD` |
+| Formal 1.000 s slowdown control | none | `NOT_RUN_QUARANTINED_HOST_LOAD` |
+| Formal 1.000 s speedup control | none | `NOT_RUN_QUARANTINED_HOST_LOAD` |
+| Formal bidirectional ratio control | none | `NOT_RUN_QUARANTINED_HOST_LOAD` |
+| Metadata-only capture census | bee 299 ARWs; coffee 105 ARWs | `MEASURED_NON_TIMING`; retained |
+
+The withdrawn development artifacts remain on disk as an audit trail. Their
+old `PASS` field means only that they met the then-current development
+predicate; it is superseded by this contention finding and cannot authorize a
+campaign or support a performance claim.
 
 ## Checks and mutation coverage
 
-These are separate results:
+The committed pre-pivot baseline had these separate results:
 
 - ordinary unit/integration checks: **105/105 PASS**;
 - substantive guard mutations: **20/20 killed**, each through its uniquely
   anchored, specifically named test; and
 - inert mutation: **1/1 survived** with the suite green.
 
-Every mutation anchor is a unique exact full line, and the commissioner
-hard-errors unless it occurs exactly once. The final source-bound build audit
-is **PASS**. An independent `gpt-5.6-sol` verifier reran all 105 tests, Ruff
-lint, and formatting and returned **CLEAN**.
+Every mutation anchor was a unique exact full line, and the commissioner
+hard-errors unless it occurs exactly once. The source-bound build audit was
+**PASS** for that committed baseline. An independent `gpt-5.6-sol` verifier
+reran all 105 tests, Ruff lint, and formatting and returned **CLEAN**.
 
-Machine-readable evidence:
+For the current source, these remain separate results:
+
+- ordinary unit/integration suite: **113 checks reported; 112 PASS and 1
+  explicitly `QUARANTINED_HOST_LOAD` process-timing integration skipped**;
+- substantive guard mutations: **20/20 killed**;
+- substantive runtime-policy mutations: **12/12 killed**;
+- all substantive mutations: **32/32 killed**, each through its specifically
+  named check; and
+- inert mutation: **1/1 survived** with the guard suite green.
+
+The current mutation artifact binds the exact `m11_core.py`, `m11_harness.py`,
+mutation commissioner, both test files, and Python executable hashes. These
+are functional results only; none validates the withdrawn wall-clock figures.
+An independent `gpt-5.6-sol` verifier reran the current 113-test suite and
+Ruff, checked every mutation binding/count, and returned **CLEAN**.
+
+Current machine-readable correctness evidence:
+
+- `out/commission/mutation-commission.json`
+
+Historical machine-readable evidence, stale for the current contract/source
+and retained only as an audit trail:
 
 - `out/commission/commission.json`
-- `out/commission/mutation-commission.json`
 - `out/commission/quality-unbound-check.json`
 - `out/commission/audit.json`
-- `out/input-census.json`
+- `out/input-census.json` (the metadata census remains factually retained, but
+  its old contract binding is stale)
 
 ## Explicitly unbound development choices
 
@@ -251,9 +380,9 @@ These are not measured M11 quantities:
 
 1. **UNBOUND DEVELOPMENT CHOICE:** development commissioning uses a two-sided
    paired-mean t interval. M11 does not prescribe an interval estimator.
-2. **UNBOUND DEVELOPMENT CHOICE:** the sub-second development plant is
-   0.080000 s with a +/-0.05 s acceptance tolerance. It does not replace the
-   scorecard's formal one-second control.
+2. **WITHDRAWN HISTORICAL DEVELOPMENT CHOICE:** the old sub-second development
+   plant was 0.080000 s with a +/-0.05 s acceptance tolerance. It does not
+   replace the scorecard's formal one-second controls.
 3. **UNBOUND DEVELOPMENT CHOICE:** nominal 10 ms telemetry permits at most a
    15 ms edge or adjacent-sample gap. The scorecard demands 10 ms sampling and
    rejects missing samples but does not specify scheduler tolerance.
@@ -274,15 +403,19 @@ These are not measured M11 quantities:
 The instrument removes M11's missing-instrument blocker, but no formal M11
 score exists. Before measurement it still needs:
 
-1. M139 host release and a quiet dedicated host;
-2. owner-approved quality, adapter-identity, native-dimension, and
+1. a recorded environment capable of passing the frozen preflight and in-run
+   load gates;
+2. an admitted M1 bar plus a purchased comparator licence before any
+   commercial comparative run;
+3. owner-approved quality, adapter-identity, native-dimension, and
    acquisition-trace checker bundles;
-3. frozen common TIFFs plus adapter identity;
-4. qualified PMax, DMap, fresh fork, Strehl W16, and every obtainable Helicon
+4. frozen common TIFFs plus adapter identity;
+5. qualified PMax, DMap, fresh fork, Strehl W16, and every obtainable Helicon
    mode;
-5. frozen product CPU/hybrid/baseline settings and signed live trace;
-6. the formal one-second commission; and
-7. a hash-bound real-run authorization.
+6. frozen product CPU/hybrid/baseline settings and signed live trace;
+7. the formal null, one-second slowdown, one-second speedup, and bidirectional
+   ratio commission; and
+8. a hash-bound real-run authorization.
 
 M12 is no longer structurally forced to fail for lack of an M11 instrument.
 The `m12-bridge` and `m12-join` paths recompute M11 and accept only the exact

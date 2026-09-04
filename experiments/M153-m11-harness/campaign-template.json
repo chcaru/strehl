@@ -1,6 +1,10 @@
 {
   "schema": "m153-m11-campaign-v1",
   "status": "TEMPLATE_NOT_AUTHORIZED",
+  "enabled_units": [
+    "comparative",
+    "product"
+  ],
   "contract": {
     "path": "experiments/M153-m11-harness/contract.json",
     "sha256": null
@@ -31,12 +35,10 @@
     "product_native_candidate_cpu_workers": [
       16
     ],
-    "product_native_hybrid_settings": 1,
+    "product_native_hybrid_settings": "zero-or-one; absence is UNMEASURED_NOT_IMPLEMENTED",
     "product_native_frozen_baselines": 1
   },
   "host": {
-    "dedicated": false,
-    "m139_released": false,
     "power_plan": null,
     "thermal_probe": {
       "kind": "command",
@@ -192,7 +194,6 @@
   },
   "authorization": {
     "real_run_requested": false,
-    "authorized_by": null,
-    "m139_host_release": false
+    "authorized_by": null
   }
 }

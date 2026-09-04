@@ -5,7 +5,6 @@ import os
 import subprocess
 import sys
 import tempfile
-import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -14,12 +13,15 @@ from live_replay import AvailabilityLocks, replay, validate_spec
 from m11_core import (
     GUARD_REGISTRY,
     alternating_schedule,
+    cold_pair_schedule,
     object_sha256,
     sha256_bytes,
     sha256_file,
 )
 from m11_harness import (
     CONTRACT_PATH,
+    RUNTIME_POLICY_MUTATION_IDS,
+    adjudication_allows,
     aggregate_verdict,
     audit,
     begin_campaign_attempt,
@@ -28,23 +30,32 @@ from m11_harness import (
     complete_alternating_schedule,
     complete_cold_pair_cell_records,
     complete_cell_records,
+    commission,
     comparator_quality_fingerprint,
+    comparative_ratio_control,
+    commercial_comparator_execution_allowed,
+    commercial_mode_role_allowed,
+    cold_bar_pass,
     create_invocation_input_snapshot,
     cross_worker_byte_identity,
     expand_argv,
     finish_campaign_attempt,
+    effect_recovery_pass,
     load_adapter_identity,
     m11_publication_verdict,
     m12_bridge,
     m12_join,
     measurement_receipt_valid,
+    measurement_unit_for_segment,
     all_timed_outputs_match_quality,
     process_images_match_bound_artifacts,
+    product_warm_role_set_valid,
     quality_corpus_evidence_valid,
     quality_envelope_complete_for_cell,
     quality_evidence_valid,
     read_artifact_binding,
     read_json,
+    redact_unadjudicable_bar,
     record_identity_matches,
     records_match_campaign_identity,
     require_bound_command_files,
@@ -54,8 +65,10 @@ from m11_harness import (
     setting_artifact_guard,
     setting_signature_consistent,
     summarize,
+    summary_quality_required,
     synthetic_contract,
     synthetic_invocation,
+    timing_commission_allowed,
     validate_authorization,
     validate_frozen_campaign,
     validate_host_instruments,
@@ -205,6 +218,9 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertTrue(witness["highest_precision"])
         self.assertEqual(witness["compression"], "NONE")
 
+    @unittest.skip(
+        "QUARANTINED_HOST_LOAD: process-sampling timing integration needs a quiet host"
+    )
     def test_synthetic_invocation_records_actual_root_image(self) -> None:
         with self.owned_temporary_directory() as temporary:
             record = synthetic_invocation(
@@ -262,41 +278,64 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(stage_banners(text), ["load", "write"])
 
     def test_hardware_probe_is_one_persistent_json_lines_process(self) -> None:
-        with self.owned_temporary_directory() as temporary:
-            root = Path(temporary)
-            probe = root / "probe.py"
-            probe.write_text(
-                "\n".join(
-                    [
-                        "import json",
-                        "import time",
-                        "while True:",
-                        "    print(json.dumps({",
-                        "        'gpu_utilization_percent': 0.0,",
-                        "        'thermal_c': 40.0,",
-                        "        'hardware_throttle': False,",
-                        "        'gpu_processes': [],",
-                        "    }), flush=True)",
-                        "    time.sleep(0.01)",
-                    ]
-                )
-                + "\n",
-                encoding="utf-8",
-            )
-            sampler = GpuSampler(
+        sampler = GpuSampler(
+            {
+                "kind": "command",
+                "argv": ["bound-probe.exe"],
+                "cwd": str(CONTRACT_PATH.parent),
+                "source": "test-stream",
+            }
+        )
+        row = (
+            json.dumps(
                 {
-                    "kind": "command",
-                    "argv": [sys.executable, str(probe)],
-                    "cwd": str(root),
-                    "source": "test-stream",
+                    "gpu_utilization_percent": 0.0,
+                    "thermal_c": 40.0,
+                    "hardware_throttle": False,
+                    "gpu_processes": [],
                 }
             )
-            sampler.start()
-            sampler.wait_ready()
-            time.sleep(0.05)
-            sampler.stop()
+            + "\n"
+        )
+
+        class FakeStdout:
+            def __init__(self) -> None:
+                self.lines = [row, row, row]
+
+            def readline(self) -> str:
+                value = self.lines.pop(0)
+                if not self.lines:
+                    sampler._stop.set()
+                return value
+
+            def close(self) -> None:
+                return None
+
+        class FakeProcess:
+            def __init__(self) -> None:
+                self.stdout = FakeStdout()
+                self.returncode: int | None = None
+
+            def poll(self) -> int | None:
+                return self.returncode
+
+            def terminate(self) -> None:
+                self.returncode = 0
+
+            def wait(self, timeout: float | None = None) -> int:
+                del timeout
+                self.returncode = 0
+                return 0
+
+            def kill(self) -> None:
+                self.returncode = 1
+
+        process = FakeProcess()
+        with mock.patch("m11_runtime.subprocess.Popen", return_value=process) as popen:
+            sampler._run()
         self.assertGreaterEqual(len(sampler.samples), 3)
         self.assertEqual(sampler.errors, [])
+        popen.assert_called_once()
 
     def test_quality_template_fails_closed(self) -> None:
         path = CONTRACT_PATH.with_name("quality-manifest-template.json")
@@ -584,6 +623,165 @@ class RuntimeContractTests(unittest.TestCase):
             contract["m12_bridge"]["canonical_scored_repetition"],
             1,
         )
+        self.assertEqual(
+            contract["current_adjudication"]["comparative"],
+            "UNMEASURED_COMPARATOR_QUALIFICATION",
+        )
+        self.assertEqual(
+            contract["current_adjudication"]["absolute_timing"],
+            "QUARANTINED_HOST_LOAD",
+        )
+
+    def test_commercial_execution_is_fail_closed_but_fork_is_allowed(self) -> None:
+        contract = read_json(CONTRACT_PATH)
+        self.assertFalse(
+            commercial_comparator_execution_allowed("zerene-pmax", contract)
+        )
+        self.assertFalse(commercial_comparator_execution_allowed("helicon-a", contract))
+        self.assertTrue(
+            commercial_comparator_execution_allowed("fork-best-known", contract)
+        )
+        self.assertTrue(commercial_mode_role_allowed("comparator", "zerene-pmax"))
+        self.assertFalse(commercial_mode_role_allowed("strehl-common", "zerene-pmax"))
+        self.assertFalse(commercial_mode_role_allowed("candidate-cpu", "helicon-a"))
+        with self.assertRaisesRegex(ValueError, "execution is prohibited"):
+            setting_artifact_guard(
+                {
+                    "role": "comparator",
+                    "mode_id": "zerene-pmax",
+                }
+            )
+        for role in ("strehl-common", "candidate-cpu", "candidate-live"):
+            with self.assertRaisesRegex(ValueError, "must use the comparator role"):
+                setting_artifact_guard(
+                    {
+                        "role": role,
+                        "mode_id": "zerene-pmax",
+                    }
+                )
+
+    def test_timing_commission_is_blocked_by_host_load_quarantine(self) -> None:
+        self.assertFalse(timing_commission_allowed(read_json(CONTRACT_PATH)))
+        with self.owned_temporary_directory() as temporary:
+            root = Path(temporary)
+            output = root / "commission.json"
+            work = root / "work"
+            with self.assertRaisesRegex(RuntimeError, "QUARANTINED_HOST_LOAD"):
+                commission(output, work, formal_scorecard_control=True)
+            self.assertFalse(output.exists())
+            self.assertFalse(work.exists())
+
+    def test_measurement_units_are_operationally_separate(self) -> None:
+        self.assertEqual(
+            measurement_unit_for_segment("comparative-warm"),
+            "comparative",
+        )
+        self.assertEqual(measurement_unit_for_segment("product-warm"), "product")
+        self.assertEqual(measurement_unit_for_segment("product-cold"), "product")
+        self.assertEqual(measurement_unit_for_segment("live"), "product")
+        with self.assertRaisesRegex(ValueError, "unknown M11 segment"):
+            measurement_unit_for_segment("combined")
+
+    def test_current_adjudication_blocks_quotable_verdicts(self) -> None:
+        self.assertFalse(adjudication_allows("UNMEASURED_COMPARATOR_QUALIFICATION"))
+        self.assertFalse(adjudication_allows("ADJUDICABLE", "QUARANTINED_HOST_LOAD"))
+        self.assertTrue(adjudication_allows("ADJUDICABLE"))
+        redacted = redact_unadjudicable_bar(
+            {
+                "verdict": "PASS",
+                "minimum_wall_seconds": 1.0,
+                "dispersion": {"median": 1.1},
+            },
+            adjudication_status="UNMEASURED_COMPARATOR_QUALIFICATION",
+        )
+        self.assertEqual(
+            redacted,
+            {
+                "verdict": "UNMEASURED",
+                "adjudication_status": "UNMEASURED_COMPARATOR_QUALIFICATION",
+                "timing_values_emitted": False,
+            },
+        )
+
+    def test_product_only_policy_does_not_require_quality_or_hybrid(self) -> None:
+        self.assertFalse(summary_quality_required({"product"}))
+        self.assertTrue(summary_quality_required({"comparative"}))
+        roles = {
+            "candidate-cpu": [{"workers": 16}],
+            "frozen-default-baseline": [{}],
+            "candidate-hybrid": [],
+        }
+        self.assertTrue(product_warm_role_set_valid(roles))
+        self.assertFalse(
+            product_warm_role_set_valid(
+                {
+                    **roles,
+                    "candidate-hybrid": [{}, {}],
+                }
+            )
+        )
+        cold_values = {
+            f"product|N{count}": {"all_pairs_pass": True} for count in (33, 105, 299)
+        }
+        self.assertTrue(
+            cold_bar_pass(
+                complete=True,
+                values=cold_values,
+                expected_cells=3,
+            )
+        )
+        self.assertFalse(
+            cold_bar_pass(
+                complete=True,
+                values=cold_values,
+                expected_cells=6,
+            )
+        )
+
+    def test_effect_recovery_requires_correct_sign_and_interval(self) -> None:
+        positive = {
+            "estimate_seconds": 1.01,
+            "lower_seconds": 0.98,
+            "upper_seconds": 1.04,
+        }
+        negative = {
+            "estimate_seconds": -0.99,
+            "lower_seconds": -1.03,
+            "upper_seconds": -0.96,
+        }
+        self.assertTrue(effect_recovery_pass(positive, 1.0))
+        self.assertTrue(effect_recovery_pass(negative, -1.0))
+        self.assertFalse(effect_recovery_pass(positive, -1.0))
+        out_of_tolerance = {
+            "estimate_seconds": 1.06,
+            "lower_seconds": 0.95,
+            "upper_seconds": 1.07,
+        }
+        self.assertFalse(effect_recovery_pass(out_of_tolerance, 1.0))
+        crosses_zero = {**positive, "lower_seconds": -0.01}
+        self.assertFalse(effect_recovery_pass(crosses_zero, 1.0))
+
+    def test_comparative_ratio_control_must_fire_both_directions(self) -> None:
+        passing = comparative_ratio_control(
+            strehl_seconds=[0.4, 0.5, 0.45],
+            comparator_seconds=[0.9, 1.0, 0.95],
+            expected_bar_pass=True,
+        )
+        failing = comparative_ratio_control(
+            strehl_seconds=[0.9, 1.0, 0.95],
+            comparator_seconds=[0.4, 0.5, 0.45],
+            expected_bar_pass=False,
+        )
+        wrong_direction = comparative_ratio_control(
+            strehl_seconds=[0.4, 0.5, 0.45],
+            comparator_seconds=[0.9, 1.0, 0.95],
+            expected_bar_pass=False,
+        )
+        self.assertTrue(passing["pass"])
+        self.assertGreaterEqual(passing["pooled_ratio"], 2.0)
+        self.assertTrue(failing["pass"])
+        self.assertLess(failing["pooled_ratio"], 2.0)
+        self.assertFalse(wrong_direction["pass"])
 
     def test_cold_pairs_require_six_distinct_reboots(self) -> None:
         def records(*, duplicate_boot: bool) -> list[dict[str, object]]:
@@ -1442,8 +1640,6 @@ class RuntimeContractTests(unittest.TestCase):
             "status": "FROZEN",
             "baseline_frozen_before_candidate": True,
             "host": {
-                "dedicated": True,
-                "m139_released": True,
                 "power_plan": "frozen",
             },
             "conditions": {
@@ -1514,10 +1710,57 @@ class RuntimeContractTests(unittest.TestCase):
             }
         with self.assertRaisesRegex(ValueError, "one candidate build"):
             validate_frozen_campaign(campaign)
+        with self.assertRaisesRegex(ValueError, "one candidate build"):
+            validate_frozen_campaign(campaign, measurement_unit="comparative")
+        with self.assertRaisesRegex(ValueError, "one candidate build"):
+            validate_frozen_campaign(campaign, measurement_unit="product")
         campaign["settings"]["live"]["binary_path"] = str(candidate_path)
         campaign["settings"]["live"]["binary_sha256"] = candidate_hash
         campaign["settings"]["live"]["executable_artifacts"] = candidate_artifacts
         validate_frozen_campaign(campaign)
+        product_only = json.loads(json.dumps(campaign))
+        product_only["enabled_units"] = ["product"]
+        product_only["segments"] = {
+            name: value
+            for name, value in product_only["segments"].items()
+            if name in {"product-warm", "product-cold", "live"}
+        }
+        product_only["settings"] = {
+            name: value
+            for name, value in product_only["settings"].items()
+            if not name.startswith("common-")
+        }
+        validate_frozen_campaign(product_only)
+        with self.assertRaisesRegex(ValueError, "does not enable comparative"):
+            validate_frozen_campaign(product_only, measurement_unit="comparative")
+        del product_only["settings"]["hybrid"]
+        validate_frozen_campaign(product_only)
+        mislabeled = json.loads(json.dumps(product_only))
+        mislabeled["settings"]["cpu"]["mode_id"] = "zerene-pmax"
+        with (
+            mock.patch(
+                "m11_harness.executable_artifact_guard",
+                side_effect=AssertionError("executable artifact was accessed"),
+            ) as artifact_guard,
+            self.assertRaisesRegex(ValueError, "outside the comparator role"),
+        ):
+            validate_frozen_campaign(mislabeled, measurement_unit="product")
+        artifact_guard.assert_not_called()
+        comparative_only = json.loads(json.dumps(campaign))
+        comparative_only["enabled_units"] = ["comparative"]
+        comparative_only["segments"] = {
+            name: value
+            for name, value in comparative_only["segments"].items()
+            if name.startswith("comparative")
+        }
+        comparative_only["settings"] = {
+            name: value
+            for name, value in comparative_only["settings"].items()
+            if name.startswith("common-")
+        }
+        comparative_only["baseline_frozen_before_candidate"] = False
+        comparative_only.pop("frozen_baseline")
+        validate_frozen_campaign(comparative_only)
         campaign["segments"]["comparative-warm"]["cache_state"] = "COLD_RESET"
         with self.assertRaisesRegex(ValueError, "cache states"):
             validate_frozen_campaign(campaign)
@@ -2203,7 +2446,6 @@ class RuntimeContractTests(unittest.TestCase):
             "method": "ACTUAL_REBOOT",
             "windows_boot_id": "4242",
             "reset_complete": True,
-            "dedicated_host": True,
             "no_prior_m11_invocation_this_boot": True,
             "position_key": "cell-1",
             "issued_utc": "2026-01-01T00:00:00+00:00",
@@ -2885,10 +3127,16 @@ class RuntimeContractTests(unittest.TestCase):
                 "coffee-bean:N105": {"zerene-pmax"},
                 "bee-1-cpl:N299": {"zerene-pmax", "zerene-dmap"},
             }
+            adjudicable_contract = read_json(CONTRACT_PATH)
+            adjudicable_contract["current_adjudication"] = {
+                "comparative": "ADJUDICABLE",
+                "product_native": "ADJUDICABLE",
+                "absolute_timing": "ADJUDICABLE",
+            }
             with (
                 mock.patch(
                     "m11_harness.load_contract",
-                    return_value=read_json(CONTRACT_PATH),
+                    return_value=adjudicable_contract,
                 ),
                 mock.patch(
                     "m11_harness.qualified_mode_ids",
@@ -2918,6 +3166,173 @@ class RuntimeContractTests(unittest.TestCase):
                 "UNMEASURED",
             )
             self.assertEqual(summary["overall_m11_verdict"], "UNMEASURED")
+
+    def test_product_only_summary_needs_neither_quality_nor_hybrid(self) -> None:
+        with self.owned_temporary_directory() as temporary:
+            root = Path(temporary)
+            campaign_path = root / "campaign.json"
+            records_path = root / "records.jsonl"
+            summary_path = root / "summary.json"
+            write_json(
+                campaign_path,
+                {
+                    "enabled_units": ["product"],
+                    "settings": {
+                        "cpu": {"role": "candidate-cpu"},
+                        "baseline": {"role": "frozen-default-baseline"},
+                        "live": {"role": "candidate-live"},
+                    },
+                },
+            )
+            campaign_sha256 = sha256_file(campaign_path)
+            contract_sha256 = sha256_file(CONTRACT_PATH)
+            records = []
+            started_qpc_ticks = 1
+            for count, stack in (
+                (33, "bee-1-cpl"),
+                (105, "coffee-bean"),
+                (299, "bee-1-cpl"),
+            ):
+                for scheduled in alternating_schedule(
+                    ["cpu", "baseline"],
+                    repetitions=6,
+                ):
+                    setting_id = scheduled["setting_id"]
+                    role = (
+                        "candidate-cpu"
+                        if setting_id == "cpu"
+                        else "frozen-default-baseline"
+                    )
+                    records.append(
+                        {
+                            **scheduled,
+                            "accepted": True,
+                            "pair_complete": True,
+                            "segment": "product-warm",
+                            "stack_id": stack,
+                            "count": count,
+                            "setting_id": setting_id,
+                            "role": role,
+                            "mode_id": setting_id,
+                            "workers": 16,
+                            "wall_seconds": 1.0,
+                            "settings_sha256": (
+                                "A" * 64 if setting_id == "cpu" else "B" * 64
+                            ),
+                            "input_manifest_sha256": f"{count:064X}",
+                            "campaign_sha256": campaign_sha256,
+                            "authorization_sha256": "C" * 64,
+                            "contract_sha256": contract_sha256,
+                            "measured_commit": "D" * 40,
+                            "campaign_attempt_id": "product-fixture",
+                            "guards": [{"passed": True}],
+                            "conditions": {"guard": {"passed": True}},
+                            "artifact_bindings": [
+                                {
+                                    "path": str(campaign_path),
+                                    "actual_sha256": campaign_sha256,
+                                }
+                            ],
+                            "baseline_frozen_before_candidate": True,
+                            "started_qpc_ticks": started_qpc_ticks,
+                        }
+                    )
+                    started_qpc_ticks += 1
+                for scheduled in cold_pair_schedule(["cpu"], repetitions=6):
+                    repetition = int(scheduled["repetition"])
+                    pair_member = str(scheduled["pair_member"])
+                    reset = {
+                        "windows_boot_id": f"boot-{count}-{repetition}",
+                    }
+                    records.append(
+                        {
+                            **scheduled,
+                            "accepted": True,
+                            "pair_complete": True,
+                            "segment": "product-cold",
+                            "stack_id": stack,
+                            "count": count,
+                            "setting_id": "cpu",
+                            "role": "candidate-cpu",
+                            "mode_id": "cpu",
+                            "workers": 16,
+                            "wall_seconds": 2.0 if pair_member == "cold" else 1.0,
+                            "settings_sha256": "A" * 64,
+                            "input_manifest_sha256": f"{count:064X}",
+                            "input_content_sha256": f"{count + 1:064X}",
+                            "output_contract_sha256": "E" * 64,
+                            "campaign_sha256": campaign_sha256,
+                            "authorization_sha256": "C" * 64,
+                            "contract_sha256": contract_sha256,
+                            "measured_commit": "D" * 40,
+                            "campaign_attempt_id": "product-fixture",
+                            "guards": [{"passed": True}],
+                            "conditions": {
+                                "cache_state": (
+                                    "COLD_RESET" if pair_member == "cold" else "WARM"
+                                ),
+                                "guard": {"passed": True},
+                            },
+                            "artifact_bindings": [
+                                {
+                                    "path": str(campaign_path),
+                                    "actual_sha256": campaign_sha256,
+                                }
+                            ],
+                            "cold_reset": reset,
+                            "invocation_manifest": {
+                                "path": str(
+                                    root
+                                    / f"{count}-{repetition}-{pair_member}"
+                                    / "manifest.json"
+                                )
+                            },
+                            "started_qpc_ticks": started_qpc_ticks,
+                        }
+                    )
+                    started_qpc_ticks += 1
+            records_path.write_text(
+                "".join(json.dumps(record) + "\n" for record in records),
+                encoding="utf-8",
+            )
+            adjudicable_contract = read_json(CONTRACT_PATH)
+            adjudicable_contract["current_adjudication"] = {
+                "comparative": "UNMEASURED_COMPARATOR_QUALIFICATION",
+                "product_native": "ADJUDICABLE",
+                "absolute_timing": "ADJUDICABLE",
+            }
+            with (
+                mock.patch(
+                    "m11_harness.load_contract",
+                    return_value=adjudicable_contract,
+                ),
+                mock.patch(
+                    "m11_harness.record_artifacts_intact",
+                    return_value=True,
+                ),
+                mock.patch(
+                    "m11_harness.campaign_attempt_history",
+                    return_value={"valid": True},
+                ),
+            ):
+                self.assertEqual(summarize(records_path, summary_path, None), 0)
+            summary = read_json(summary_path)
+            self.assertTrue(summary["campaign_identity_complete"])
+            self.assertEqual(
+                summary["quality_qualification"]["reason"],
+                "no quality manifest supplied",
+            )
+            self.assertEqual(summary["bars"]["native_cpu_16"]["verdict"], "PASS")
+            self.assertEqual(summary["bars"]["native_hybrid"]["verdict"], "UNMEASURED")
+            self.assertEqual(summary["bars"]["cold_overhead"]["verdict"], "PASS")
+            self.assertEqual(
+                len(summary["bars"]["cold_overhead"]["bar_applies_to"]),
+                3,
+            )
+            self.assertEqual(
+                summary["bars"]["candidate_default_baseline"]["verdict"],
+                "PASS",
+            )
 
     def test_common_merge_pass_bridges_when_product_bars_are_unmeasured(
         self,
@@ -3053,6 +3468,12 @@ class RuntimeContractTests(unittest.TestCase):
                 cell_id: set(modes)
                 for cell_id, modes in quality["qualified_modes_by_cell"].items()
             }
+            adjudicable_contract = read_json(CONTRACT_PATH)
+            adjudicable_contract["current_adjudication"] = {
+                "comparative": "ADJUDICABLE",
+                "product_native": "ADJUDICABLE",
+                "absolute_timing": "ADJUDICABLE",
+            }
             with (
                 mock.patch(
                     "m11_harness.qualified_mode_ids",
@@ -3071,42 +3492,75 @@ class RuntimeContractTests(unittest.TestCase):
                     return_value={"valid": True},
                 ),
             ):
+                quarantined_path = root / "quarantined-summary.json"
                 self.assertEqual(
-                    summarize(records_path, summary_path, quality_path),
-                    0,
+                    summarize(records_path, quarantined_path, quality_path), 0
                 )
-                summary = read_json(summary_path)
-                self.assertEqual(summary["overall_m11_verdict"], "PASS")
-                self.assertEqual(
-                    summary["bars"]["comparative"]["pooled"]["ratio"],
-                    2.1,
-                )
-                self.assertEqual(
-                    summary["bars"]["comparative"]["pooled"]["status"],
-                    "PASS",
+                quarantined = read_json(quarantined_path)
+                self.assertEqual(quarantined["overall_m11_verdict"], "UNMEASURED")
+                self.assertIsNone(
+                    quarantined["computed_m11_verdict_before_adjudication"]
                 )
                 self.assertEqual(
-                    summary["product_native_report_verdict"],
+                    quarantined["publication_gate_adjudication"],
+                    "UNMEASURED_COMPARATOR_QUALIFICATION",
+                )
+                self.assertEqual(
+                    quarantined["bars"]["comparative"]["verdict"],
                     "UNMEASURED",
                 )
-                self.assertEqual(
-                    summary["bars"]["retained_m12_cross_worker_identity"]["verdict"],
-                    "PASS",
+                self.assertTrue(
+                    all(
+                        bar["verdict"] == "UNMEASURED"
+                        for bar in quarantined["bars"].values()
+                    )
                 )
-                self.assertEqual(
-                    m12_bridge(summary_path, records_path, bridge_path),
-                    0,
-                )
-                quality["strehl_qualified_by_cell"]["bee-1-cpl:N33"] = False
-                unqualified_path = root / "unqualified-summary.json"
-                self.assertEqual(
-                    summarize(records_path, unqualified_path, quality_path),
-                    0,
-                )
-                self.assertEqual(
-                    read_json(unqualified_path)["overall_m11_verdict"],
-                    "UNMEASURED",
-                )
+                self.assertEqual(quarantined["evidence_tag"], "QUARANTINED")
+                self.assertFalse(quarantined["timing_values_emitted"])
+                self.assertEqual(quarantined["group_dispersion"], {})
+                self.assertNotIn("wall_seconds", json.dumps(quarantined))
+                with mock.patch(
+                    "m11_harness.load_contract",
+                    return_value=adjudicable_contract,
+                ):
+                    self.assertEqual(
+                        summarize(records_path, summary_path, quality_path),
+                        0,
+                    )
+                    summary = read_json(summary_path)
+                    self.assertEqual(summary["overall_m11_verdict"], "PASS")
+                    self.assertEqual(
+                        summary["bars"]["comparative"]["pooled"]["ratio"],
+                        2.1,
+                    )
+                    self.assertEqual(
+                        summary["bars"]["comparative"]["pooled"]["status"],
+                        "PASS",
+                    )
+                    self.assertEqual(
+                        summary["product_native_report_verdict"],
+                        "UNMEASURED",
+                    )
+                    self.assertEqual(
+                        summary["bars"]["retained_m12_cross_worker_identity"][
+                            "verdict"
+                        ],
+                        "PASS",
+                    )
+                    self.assertEqual(
+                        m12_bridge(summary_path, records_path, bridge_path),
+                        0,
+                    )
+                    quality["strehl_qualified_by_cell"]["bee-1-cpl:N33"] = False
+                    unqualified_path = root / "unqualified-summary.json"
+                    self.assertEqual(
+                        summarize(records_path, unqualified_path, quality_path),
+                        0,
+                    )
+                    self.assertEqual(
+                        read_json(unqualified_path)["overall_m11_verdict"],
+                        "UNMEASURED",
+                    )
             bridge = read_json(bridge_path)
             self.assertEqual(bridge["status"], "ELIGIBLE")
             self.assertTrue(
@@ -3139,8 +3593,13 @@ class RuntimeContractTests(unittest.TestCase):
                         "contract": {"sha256": actual_contract_hash},
                         "flat_null_pass": True,
                         "async_child_pass": True,
-                        "formal_plant_seconds": 1.0,
-                        "observed_plant_seconds": 1.0,
+                        "formal_slowdown_seconds": 1.0,
+                        "observed_slowdown_seconds": 1.0,
+                        "formal_speedup_seconds": -1.0,
+                        "observed_speedup_seconds": -1.0,
+                        "slowdown_pass": True,
+                        "speedup_pass": True,
+                        "comparative_ratio_bidirectional_pass": True,
                     }
                 ),
                 encoding="utf-8",
@@ -3168,7 +3627,6 @@ class RuntimeContractTests(unittest.TestCase):
                         "schema": "m153-real-run-authorization-v1",
                         "real_run_requested": True,
                         "authorized_by": "M153_ORCHESTRATOR",
-                        "m139_host_release": True,
                         "contract_sha256": actual_contract_hash,
                         "campaign_sha256": "0" * 64,
                         "commission": {
@@ -3238,14 +3696,35 @@ class RuntimeContractTests(unittest.TestCase):
                                 CONTRACT_PATH.with_name("m11_core.py")
                             )
                         },
+                        "runtime_source": {
+                            "sha256": sha256_file(
+                                CONTRACT_PATH.with_name("m11_harness.py")
+                            )
+                        },
+                        "commissioner": {
+                            "sha256": sha256_file(
+                                CONTRACT_PATH.with_name("mutation_commission.py")
+                            )
+                        },
+                        "test_sources": {
+                            name: {"sha256": sha256_file(CONTRACT_PATH.with_name(name))}
+                            for name in ("test_m11_harness.py", "test_runtime.py")
+                        },
                         "runtime": {
                             "python_executable": {
                                 "path": str(Path(sys.executable).resolve()),
                                 "sha256": sha256_file(Path(sys.executable)),
                             }
                         },
-                        "substantive_killed": len(GUARD_REGISTRY),
-                        "substantive_total": len(GUARD_REGISTRY),
+                        "runtime_mutation_ids": list(RUNTIME_POLICY_MUTATION_IDS),
+                        "guard_substantive_killed": len(GUARD_REGISTRY),
+                        "guard_substantive_total": len(GUARD_REGISTRY),
+                        "runtime_substantive_killed": len(RUNTIME_POLICY_MUTATION_IDS),
+                        "runtime_substantive_total": len(RUNTIME_POLICY_MUTATION_IDS),
+                        "substantive_killed": len(GUARD_REGISTRY)
+                        + len(RUNTIME_POLICY_MUTATION_IDS),
+                        "substantive_total": len(GUARD_REGISTRY)
+                        + len(RUNTIME_POLICY_MUTATION_IDS),
                         "inert_survived": 1,
                         "inert_total": 1,
                     }

@@ -26,6 +26,13 @@ OPTIONAL_COMPARATOR_MODES = {
     "helicon-c",
 }
 REGISTERED_COMPARATOR_MODES = REQUIRED_COMPARATOR_MODES | OPTIONAL_COMPARATOR_MODES
+COMMERCIAL_COMPARATOR_MODES = {
+    "zerene-pmax",
+    "zerene-dmap",
+    "helicon-a",
+    "helicon-b",
+    "helicon-c",
+}
 STREHL_QUALITY_MODE_ID = "strehl-common-16"
 COMPARATOR_PRODUCT_IDS = {
     "zerene-pmax": "zerene-stacker",
@@ -546,9 +553,7 @@ def g12_controlled_conditions(payload: dict[str, Any]) -> bool:
         - float(payload.get("thermal_before_c", -math.inf))
     )
     valid = (
-        payload.get("dedicated_host") is True
-        and payload.get("m139_released_host") is True
-        and payload.get("preload_quiet_pass") is True
+        payload.get("preload_quiet_pass") is True
         and math.isclose(
             float(payload.get("preload_duration_seconds", math.nan)),
             60.0,
@@ -749,7 +754,6 @@ def g15_cold_receipt(payload: dict[str, Any]) -> bool:
         and boot_id not in previously_used_boot_ids
         and boot_id == str(payload.get("current_windows_boot_id", ""))
         and receipt.get("reset_complete") is True
-        and receipt.get("dedicated_host") is True
         and receipt.get("no_prior_m11_invocation_this_boot") is True
         and receipt.get("position_key") == payload.get("position_key")
         and bool(receipt.get("issued_utc"))
@@ -844,7 +848,6 @@ def g18_commissioning_required(payload: dict[str, Any]) -> bool:
     valid = (
         payload.get("real_run_requested") is True
         and payload.get("authorized_by") == "M153_ORCHESTRATOR"
-        and payload.get("m139_host_release") is True
         and _hash_text(payload.get("actual_contract_sha256"))
         and payload.get("actual_contract_sha256")
         == payload.get("authorized_contract_sha256")
@@ -858,8 +861,15 @@ def g18_commissioning_required(payload: dict[str, Any]) -> bool:
         == payload.get("actual_contract_sha256")
         and commission.get("flat_null_pass") is True
         and commission.get("async_child_pass") is True
-        and commission.get("formal_plant_seconds") == 1.0
-        and 0.95 <= float(commission.get("observed_plant_seconds", math.nan)) <= 1.05
+        and commission.get("formal_slowdown_seconds") == 1.0
+        and 0.95 <= float(commission.get("observed_slowdown_seconds", math.nan)) <= 1.05
+        and commission.get("formal_speedup_seconds") == -1.0
+        and -1.05
+        <= float(commission.get("observed_speedup_seconds", math.nan))
+        <= -0.95
+        and commission.get("slowdown_pass") is True
+        and commission.get("speedup_pass") is True
+        and commission.get("comparative_ratio_bidirectional_pass") is True
         and _hash_text(commission.get("artifact_sha256"))
         and build_audit.get("schema") == "m153-build-audit-v1"
         and build_audit.get("status") == "PASS"
@@ -996,7 +1006,7 @@ GUARD_REGISTRY: dict[str, tuple[str, Guard]] = {
         g11_telemetry_complete,
     ),
     "G12-controlled-conditions": (
-        "host, power, thermal, load, and cache controls pass",
+        "recorded power, thermal, load, and cache controls pass",
         g12_controlled_conditions,
     ),
     "G13-schedule-complete": (
@@ -1017,7 +1027,7 @@ GUARD_REGISTRY: dict[str, tuple[str, Guard]] = {
     ),
     "G17-m12-joint": ("M12 worker-16 cells are the M11-passing outputs", g17_m12_joint),
     "G18-commissioning-required": (
-        "real runs require released host and formal controls",
+        "real runs require formal null, slowdown, speedup, and ratio controls",
         g18_commissioning_required,
     ),
     "G19-arm-symmetry": (

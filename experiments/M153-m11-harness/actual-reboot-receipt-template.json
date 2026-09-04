@@ -3,7 +3,6 @@
   "method": "ACTUAL_REBOOT",
   "windows_boot_id": null,
   "reset_complete": false,
-  "dedicated_host": false,
   "no_prior_m11_invocation_this_boot": false,
   "position_key": null,
   "issued_utc": null,

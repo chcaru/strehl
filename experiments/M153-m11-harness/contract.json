@@ -2,10 +2,30 @@
   "schema": "m153-m11-contract-v1",
   "scorecard": {
     "path": "docs/proposals/2026-09-sota-scorecard.md",
-    "sha256": "D72160F57494ED1B3A07807EA0D7D6451B5E50D4630E0E6EEB093CED7D74CB28",
+    "sha256": "EB5ED446EE06E8842C61E5F90CB1BD4A8E81CA5DFD39EF53988598EF05DCB603",
     "success_clause_verbatim": null,
     "success_clause_status": "DEFECT: scorecard v1.10 contains no M11 paragraph labelled Success.",
     "operative_comparative_bar_verbatim": "The fastest-mode tie is product ID then mode ID. Strehl must have `R_c>=2.00` for each\nof `C33`, `C105`, and `C299`, and `R_pool>=2.00`. The per-capture envelope is\nintentional: no slow capture or favourable global mode can hide a miss."
+  },
+  "current_adjudication": {
+    "comparative": "UNMEASURED_COMPARATOR_QUALIFICATION",
+    "comparative_reason": "M1 is withdrawn with no admissible bar, so no mode can satisfy M11's fastest-quality-qualified-comparator predicate; required commercial Zerene modes are also unavailable under a valid licence",
+    "product_native": "QUARANTINED_HOST_LOAD",
+    "product_native_reason": "the current scorecard defines separate product-native disclosures, but their absolute wall times cannot be admitted under the observed uncontrolled host load",
+    "absolute_timing": "QUARANTINED_HOST_LOAD",
+    "absolute_timing_release_condition": "reproduce with recorded preflight and in-run load inside the frozen scorecard gates on a genuinely quiet host"
+  },
+  "commercial_comparator_execution": {
+    "status": "PROHIBITED",
+    "approved_mode_ids": [],
+    "modes": [
+      "zerene-pmax",
+      "zerene-dmap",
+      "helicon-a",
+      "helicon-b",
+      "helicon-c"
+    ],
+    "reason": "Zerene's installed trial is consumed and expired and Helicon is not installed; commercial execution requires a future owner-authorized contract revision after a valid licence exists"
   },
   "inputs": {
     "bee-1-cpl": {
@@ -173,7 +193,7 @@
     "criterion_id": "scorecard-v1.10-m11-quality-corpus-and-timed-output-v1",
     "source": "scorecard named sections 0.2 Joint anti-cheat constraints, 1.3 Output transfer and the tone sentinel, M4 retained component, and M11 Comparative statistic, qualification, and ties",
     "rule": "require the Strehl 16-worker denominator, licensed Zerene PMax, licensed Zerene DMap, and the fresh best-known-source fork rebuild to qualify; record Helicon A/B/C availability and include every obtainable mode; one binary/settings fingerprint per timed mode must pass the common-input transfer/geometry contract, M1, M2, M3, M8, and the retained M4 250-tile flat-power-plus-transfer component on frozen quality-corpus outputs, and every timed output must independently pass its applicable controls",
-    "current_status": "SCORECARD_DEFINED",
+    "current_status": "UNADJUDICABLE_WITHDRAWN_M1",
     "fail_closed": true
   },
   "external_checkers": {
@@ -199,8 +219,7 @@
     "during_external_busy_max": 0.1,
     "sample_interval_ms": 10,
     "preflight_seconds": 60,
-    "requires_dedicated_host": true,
-    "requires_m139_release": true,
+    "host_reservation_policy": "no lane lock is admissibility evidence; accept only recorded preflight and in-run condition gates",
     "requires_fixed_power_plan": true,
     "requires_bound_thermal_probe": true,
     "requires_cpu_thermal_throttle_and_gpu_process_telemetry": true,
@@ -219,8 +238,10 @@
     "development_null": "identical arms; paired 95% interval must cover 0 seconds",
     "development_plant_seconds": 0.08,
     "development_plant_tolerance_seconds": 0.05,
-    "formal_scorecard_plant_seconds": 1.0,
+    "formal_scorecard_slowdown_seconds": 1.0,
+    "formal_scorecard_speedup_seconds": -1.0,
     "formal_scorecard_tolerance_seconds": 0.05,
+    "comparative_ratio_controls": "the same synthetic timer path must make every capture and pooled ratio pass above 2.00 with Strehl faster and fail below 2.00 with Strehl slower",
     "async_child_required": true,
     "formal_control_required_before_real_run": true
   },
