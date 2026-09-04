@@ -203,6 +203,7 @@ The battery itself is commissioned only if:
 - the checker passes its all-GREEN fixture and catches every sabotage;
 - the constructed oracle passes all six predicates;
 - D8, M137 band power, and M2 are each rejected;
+- D8 is rejected by `P1`;
 - M137 is rejected by `P1`; and
 - M2 is rejected by `P4` with its reconstructed blur ratio reported.
 
