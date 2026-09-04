@@ -29,6 +29,20 @@ sharpening can remain inside a broad all-frame hull, and projection back into
 that hull extends the attack to stronger sharpening. M8 remains strong
 one-way artifact evidence; the capture decision is unchanged.
 
+**MEASURED.** **Revision 3:** the owner's converter is a communicating 2x
+Viltrox, not Sony's incompatible SEL20TC. The composed rig was measured at
+maximum reproduction `2.7198 +/- 0.0051` with a widened interval
+`[2.7015, 2.7381]` (`docs/research/SYNTHESIS.md:1705-1711`;
+`docs/research/M84b-ruler-metrology.md:48-53,271-280,550-556`).
+
+**DERIVED.** Main 1.30x gives at least
+`2.7015 / 1.30 = 2.078x` reference/main sampling at the measured maximum.
+Nominal 1.4x would give only `1.929x` at the conservative reference bound.
+
+**ARGUED.** Pin the main sweep's near-focus reset to **1.30x effective
+reproduction with that same converter installed**. The 160-frame counts and
+block structure are unchanged.
+
 ## 0. Decision first
 
 **ARGUED.** Yes, a truth-referenced M1 instrument requires additional physical
@@ -63,31 +77,46 @@ final clamping as a defeat
 therefore cannot certify that a rise in a separate detail proxy came from
 resolved scene structure.
 
+**ARGUED.** The main capture setting is now part of the truth-reference
+contract: set the **near-focus reset to 1.30x effective reproduction**,
+measured from pixels per known grid period, with the existing 2x Viltrox left
+installed. Do not remove the converter for the main sweep. The reference uses
+the same optical train at its maximum available reproduction, targeted at
+`>=2.70x`. If the measured reference/main ratio is below `2.0x`, the reference
+is conditional or refused under section 0.1 rather than relabelled after the
+fact.
+
 **ARGUED.** Add **160 frames** after all main sweeps and their fixed-focus
 witnesses:
 
 | Block | Frames | Operator instruction |
 |---|---:|---|
-| `TR-REF-NEAR` | 32 | Same patch, maximum 2.8x reproduction, fixed-focus intersection in the near third |
+| `TR-REF-NEAR` | 32 | Same patch, maximum available reproduction (`>=2.70x` target), fixed-focus intersection in the near third |
 | `TR-REF-MID` | 32 | Same patch and framing, fixed-focus intersection in the middle third |
 | `TR-REF-FAR` | 32 | Same patch and framing, fixed-focus intersection in the far third |
 | `TR-FLAT-C` | 32 | Reference-only flat, third diffuser position/orientation |
 | `TR-DARK-C` | 32 | Reference-only dark, matching the fixed reference exposure |
 | **Total added** | **160** | 96 subject frames plus 64 calibration frames |
 
-**MEASURED.** The FE 100 mm F2.8 Macro GM reaches 1.4x natively and 2.8x with
-the SEL20TC; the current session already specifies that lens and 2x
-teleconverter (`docs/research/F-camera-lens-optics.md:12-13,61-66`;
+**MEASURED.** The FE 100 mm F2.8 Macro GM reaches 1.4x natively and a true 2x
+converter gives the nominal 2.8x ceiling. The owner's Viltrox communicates
+`200 mm`, `f/5.6`, and `MaxApertureValue = 5.6`
+(`docs/research/F-camera-lens-optics.md:12-13`;
+`docs/research/SYNTHESIS.md:1705`;
 `docs/capture-requests/2026-09-319-frame-session.md:223-229`).
+
+**DERIVED.** The current request's f/5.6 is therefore the combined path wide
+open and must not be doubled again as f/11.
 
 **ARGUED.** The subject blocks must be shot as follows:
 
 1. Finish every main sweep and fixed-focus witness first. Do not touch the
    target, target tilt, lighting, polarizers, camera roll, or camera yaw.
-2. Only then make the axial camera move needed to reach the lens's maximum
-   2.8x reproduction and reframe the **same nonperiodic patch**. Keep at least
-   four surrounding grid or fiducial intersections in the frame. Fill as much
-   of the sensor as possible with the patch rather than with the periodic grid.
+2. Only then make the axial camera move needed to reach the rig's maximum
+   available reproduction, targeted at `>=2.70x`, and reframe the **same
+   nonperiodic patch**. Keep at least four surrounding grid or fiducial
+   intersections in the frame. Fill as much of the sensor as possible with
+   the patch rather than with the periodic grid.
 3. Turn focus bracketing off. Set one manual focus position for the near third,
    approach it from the same focus direction every time, lock it, and take 32
    lossless-compressed 14-bit RAWs without moving focus. Repeat independently
@@ -142,14 +171,60 @@ algorithm may construct the reference.
 and the commissioning battery clears reference-MTF, split-reference SNR and
 resampling-uncertainty bars before holdout rendering.
 
+**DERIVED.** At the measured conservative reference bound, main 1.30x gives
+`2.078x`; main 1.40x gives `1.929x`. The main target is therefore 1.30x, not
+the lens's nominal native maximum.
+
+**ARGUED.** This is a deliberate trade: it reduces the spatial stress on the
+other axes, but it remains above unity reproduction and preserves the only
+independently sampled M1 route available in this session.
+
 **ARGUED.** Those are proposed capture-eligibility thresholds, not active M1
 score bars. The scorecard registrar must ratify or replace them before the
 holdout is opened. Sampling ratio alone is not enough: the reference optic
 must also show superior object-space transfer in every licensed band. A
 higher pixel count with worse reference defocus or aberration is not truth.
 
-**ARGUED.** If the main setup is already at the lens's maximum 2.8x
-reproduction, this lens cannot create a higher-sampling truth reference. The
+**DERIVED.** At the measured maximum and reported f/5.6 wide open, the
+composed path has
+`N_eff = 13.5-17.2`, image-space diffraction cutoff `106-135 cy/mm`, and
+nonzero MTF through the sensor's `97.7 cy/mm` Nyquist
+(`docs/research/M84b-ruler-metrology.md:48-53`;
+`docs/research/M85-output-correctness.md:366-378`).
+
+**DERIVED.** The two-stop converter loss is already present in the reported
+f/5.6; applying another factor of two would double-count it.
+
+**DERIVED.** Under the explicit same-pupil approximation, using the same
+converter at 1.30x and 2.7198x gives a reference/main object-space
+diffraction-cutoff ratio of `1.35-1.45x` over the measured
+`p = 1.31-1.94` interval:
+
+```text
+f_c,object = m / (lambda N (1 + m/p)).
+```
+
+The reference therefore has a predicted diffraction-transfer advantage, not
+a 2.0x optical-resolution advantage. The `2.0x` figure is sampling.
+
+**DERIVED.** Holding object-space frequency fixed at the structure represented
+by the top licensed main-image frequency, `0.25 cyc/main px`, the same
+circular-aperture model predicts reference/main diffraction-MTF
+`1.143-1.155x` there and a strict reference advantage at every positive lower
+frequency (`docs/proposals/2026-09-sota-scorecard.md:103-106`). The model and
+its MTF equation are independently recorded at
+`docs/research/M85-output-correctness.md:366-378`. This is still a
+diffraction-only prediction.
+
+**ARGUED.** Converter aberrations and the change in pupil behaviour with
+focus remain unmeasured. Keeping the same Viltrox installed in both captures
+removes the bare-lens-versus-converter substitution but does not prove equal
+aberrations. The reference remains a qualified proxy and must pass the frozen
+reference-transfer gate after capture. Failure leaves M1 `UNMEASURED`; it
+does not retroactively make the 160 frames claim-bearing.
+
+**ARGUED.** If the main setup is already at the rig's maximum available
+reproduction, this rig cannot create a higher-sampling truth reference. The
 session then needs one of these replacements:
 
 1. a different optical path that gives at least 2x more subject pixels per
@@ -1149,7 +1224,8 @@ an admitted M1 instrument.
 **ARGUED.** The operational decision is:
 
 - **GO:** shoot the 160-frame higher-magnification reference block in the same
-  session and seal it with the main holdout;
+  session, with the main sweeps pinned to 1.30x effective reproduction and the
+  same 2x Viltrox installed throughout, then seal it with the main holdout;
 - **CONDITIONAL GO:** commission `TRD = (J_TR, F_TR)` on development data under
   the ordered battery, then require a registrar revision and independent
   implementation audit;
