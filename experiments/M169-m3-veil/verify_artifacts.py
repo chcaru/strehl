@@ -20,6 +20,12 @@ EXPECTED_SOURCE_HASHES = {
         "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda"
     ),
 }
+EXPECTED_M161_SOURCE_HASHES = {
+    **EXPECTED_SOURCE_HASHES,
+    "commission_m3_v2.py": (
+        "342ea2d9064130117f9173ff2311a47465760519251f2c473f3a8ea8d34952da"
+    ),
+}
 
 
 def read_json(path: Path) -> Any:
@@ -147,6 +153,53 @@ def main() -> int:
         "untouched M161 improvement result changed",
     )
 
+    curve = read_json(OUT / "improvement-response-curve.json")
+    require(
+        curve["verdict"] == "CHARACTERIZED",
+        "improvement response curve did not characterize cleanly",
+    )
+    require(
+        curve["source_hashes"] == EXPECTED_M161_SOURCE_HASHES,
+        "response curve did not use the frozen M161 source",
+    )
+    require(
+        curve["capture_pixels_opened"] == 0
+        and curve["candidate_outputs_opened"] == 0
+        and curve["comparator_outputs_opened"] == 0,
+        "response characterization opened protected pixels",
+    )
+    clean_vs_improvement = curve["clean_vs_registered_improvement"]
+    require(
+        close(
+            clean_vs_improvement["clean_median_h_e"],
+            0.0029430516302103543,
+        )
+        and close(
+            clean_vs_improvement["registered_0_5pct_median_h_e"],
+            0.010413357351919823,
+        ),
+        "clean or registered-improvement h_e changed",
+    )
+    require(
+        clean_vs_improvement["sites_with_strict_h_e_increase"] == 500
+        and clean_vs_improvement["site_count"] == 500,
+        "registered improvement did not move all paired sites above clean",
+    )
+    crossing = curve["crossing_bracket"]
+    require(
+        close(
+            crossing["largest_tested_passing_amplitude_fraction"],
+            0.004777984619140625,
+        )
+        and close(
+            crossing["smallest_tested_failing_amplitude_fraction"],
+            0.004778060913085937,
+        )
+        and crossing["passing_median_h_e"] <= 0.01
+        < crossing["failing_median_h_e"],
+        "median h_e crossing bracket changed",
+    )
+
     measurement = read_json(OUT / "measurement-verdict.json")
     require(
         measurement["verdict"] == "NOT_ADMITTED_COMMISSIONING_FAILED",
@@ -161,6 +214,15 @@ def main() -> int:
         measurement["pixel_files_opened_by_m169"] == 0,
         "measurement opened protected pixels",
     )
+    require(
+        measurement["axis_contract"]["kind"]
+        == "CONJUNCTIVE_ABSOLUTE_AND_COMPARATIVE"
+        and measurement["axis_contract"][
+            "absolute_candidate_result_is_full_axis_score"
+        ]
+        is False,
+        "M3 absolute/comparator contract changed",
+    )
 
     print("PASS")
     print("capture_feasibility=PASS denominator=500 eligible=1233")
@@ -173,6 +235,12 @@ def main() -> int:
         "defect_v50=0.05448648648648648 "
         "improvement_v50=0.004540540540540539"
     )
+    print(
+        "response_curve=CHARACTERIZED clean_h50=0.0029430516302103543 "
+        "registered_h50=0.010413357351919823 crossing_pct="
+        "[0.4777984619140625,0.47780609130859375]"
+    )
+    print("axis_contract=CONJUNCTIVE_ABSOLUTE_AND_COMPARATIVE")
     print("score=NO SCORE confidence_interval=NO CI")
     return 0
 

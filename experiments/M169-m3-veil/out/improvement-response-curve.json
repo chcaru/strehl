@@ -1,0 +1,174 @@
+{
+  "absolute_timing": "QUARANTINED_AND_NOT_REPORTED",
+  "amplitude_grid": [
+    0.0,
+    0.001,
+    0.002,
+    0.003,
+    0.004,
+    0.0045,
+    0.005,
+    0.006,
+    0.01,
+    0.02,
+    0.04,
+    0.06
+  ],
+  "candidate_outputs_opened": 0,
+  "capture_pixels_opened": 0,
+  "checks": {
+    "all_registered_sites_move_up_from_clean": true,
+    "clean_null_matches_frozen_run": true,
+    "clean_null_passes_median_h_gate": true,
+    "crossing_is_bracketed": true,
+    "curve_is_monotone_on_fixed_grid": true,
+    "registered_improvement_fails_median_h_gate": true,
+    "registered_improvement_matches_frozen_run": true,
+    "six_percent_arm_matches_frozen_run": true,
+    "source_hashes_match": true
+  },
+  "clean_vs_registered_improvement": {
+    "clean_median_h_e": 0.0029430516302103543,
+    "maximum_paired_h_e_increase": 0.010019310754781432,
+    "median_h_e_increase": 0.007470305721709468,
+    "median_paired_h_e_increase": 0.007544986400730763,
+    "minimum_paired_h_e_increase": 0.0029828120809117344,
+    "registered_0_5pct_median_h_e": 0.010413357351919823,
+    "site_count": 500,
+    "sites_with_strict_h_e_increase": 500
+  },
+  "comparator_outputs_opened": 0,
+  "crossing_bracket": {
+    "bisection_iterations": 16,
+    "failing_median_h_e": 0.010000025902681366,
+    "largest_tested_passing_amplitude_fraction": 0.004777984619140625,
+    "largest_tested_passing_amplitude_percent": 0.4777984619140625,
+    "passing_median_h_e": 0.009999873321180174,
+    "smallest_tested_failing_amplitude_fraction": 0.004778060913085937,
+    "smallest_tested_failing_amplitude_percent": 0.47780609130859375
+  },
+  "curve": [
+    {
+      "all_registered_gates_pass": true,
+      "amplitude_fraction_of_step": 0.0,
+      "amplitude_percent_of_step": 0.0,
+      "maximum_max_h_v": 0.006863374246262382,
+      "median_h_e": 0.0029430516302103543,
+      "median_h_gate_passes": true,
+      "median_v_e": 0.002320178352496525
+    },
+    {
+      "all_registered_gates_pass": true,
+      "amplitude_fraction_of_step": 0.001,
+      "amplitude_percent_of_step": 0.1,
+      "maximum_max_h_v": 0.007864774416580005,
+      "median_h_e": 0.0034118119238617036,
+      "median_h_gate_passes": true,
+      "median_v_e": 0.002475393020657212
+    },
+    {
+      "all_registered_gates_pass": true,
+      "amplitude_fraction_of_step": 0.002,
+      "amplitude_percent_of_step": 0.2,
+      "maximum_max_h_v": 0.008866174586897629,
+      "median_h_e": 0.004775801765219822,
+      "median_h_gate_passes": true,
+      "median_v_e": 0.002910812050106197
+    },
+    {
+      "all_registered_gates_pass": true,
+      "amplitude_fraction_of_step": 0.003,
+      "amplitude_percent_of_step": 0.3,
+      "maximum_max_h_v": 0.010727057154811374,
+      "median_h_e": 0.006526127291240593,
+      "median_h_gate_passes": true,
+      "median_v_e": 0.003577053014443842
+    },
+    {
+      "all_registered_gates_pass": true,
+      "amplitude_fraction_of_step": 0.004,
+      "amplitude_percent_of_step": 0.4,
+      "maximum_max_h_v": 0.012728420456607369,
+      "median_h_e": 0.008449086050734784,
+      "median_h_gate_passes": true,
+      "median_v_e": 0.004400186674540718
+    },
+    {
+      "all_registered_gates_pass": true,
+      "amplitude_fraction_of_step": 0.0045,
+      "amplitude_percent_of_step": 0.44999999999999996,
+      "maximum_max_h_v": 0.013729102107505366,
+      "median_h_e": 0.0094439273635114,
+      "median_h_gate_passes": true,
+      "median_v_e": 0.004863108659574785
+    },
+    {
+      "all_registered_gates_pass": false,
+      "amplitude_fraction_of_step": 0.005,
+      "amplitude_percent_of_step": 0.5,
+      "maximum_max_h_v": 0.014729783758402937,
+      "median_h_e": 0.010413357351919823,
+      "median_h_gate_passes": false,
+      "median_v_e": 0.005338683767680065
+    },
+    {
+      "all_registered_gates_pass": false,
+      "amplitude_fraction_of_step": 0.006,
+      "amplitude_percent_of_step": 0.6,
+      "maximum_max_h_v": 0.01673114706019893,
+      "median_h_e": 0.012398952010762796,
+      "median_h_gate_passes": false,
+      "median_v_e": 0.00633207696562467
+    },
+    {
+      "all_registered_gates_pass": false,
+      "amplitude_fraction_of_step": 0.01,
+      "amplitude_percent_of_step": 1.0,
+      "maximum_max_h_v": 0.02473660026738249,
+      "median_h_e": 0.02038684175616981,
+      "median_h_gate_passes": false,
+      "median_v_e": 0.010494231486236431
+    },
+    {
+      "all_registered_gates_pass": false,
+      "amplitude_fraction_of_step": 0.02,
+      "amplitude_percent_of_step": 2.0,
+      "maximum_max_h_v": 0.04475023328534116,
+      "median_h_e": 0.04037900641358752,
+      "median_h_gate_passes": false,
+      "median_v_e": 0.020980872220159295
+    },
+    {
+      "all_registered_gates_pass": false,
+      "amplitude_fraction_of_step": 0.04,
+      "amplitude_percent_of_step": 4.0,
+      "maximum_max_h_v": 0.08477749932125808,
+      "median_h_e": 0.08035136877914274,
+      "median_h_gate_passes": false,
+      "median_v_e": 0.04195320243632433
+    },
+    {
+      "all_registered_gates_pass": false,
+      "amplitude_fraction_of_step": 0.06,
+      "amplitude_percent_of_step": 6.0,
+      "maximum_max_h_v": 0.12480476535717543,
+      "median_h_e": 0.12033896557593107,
+      "median_h_gate_passes": false,
+      "median_v_e": 0.06293250081178207
+    }
+  ],
+  "interpretation": "B: the clean-noise null is well below the median h_e gate, while the registered 0.5% combined rim-and-veil plant produces a strictly larger h_e at every paired synthetic site and crosses the gate. This rejects a 0.0104 clean-floor explanation for this commissioning failure; it does not adjudicate whether M174 should change the registered assertion.",
+  "master_seed": 16120260906,
+  "median_h_e_gate_unchanged": 0.01,
+  "noise_sigma_fraction_of_step": 0.002,
+  "purpose": "characterization only; no threshold, plant, assertion, or score was changed",
+  "schema": "m169-m3-improvement-response-characterization-v1",
+  "site_count": 500,
+  "source_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification",
+  "source_hashes": {
+    "commission_m3_v2.py": "342ea2d9064130117f9173ff2311a47465760519251f2c473f3a8ea8d34952da",
+    "m3-checker-definition-v2.json": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+    "m3_checker_v2.py": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda"
+  },
+  "verdict": "CHARACTERIZED"
+}

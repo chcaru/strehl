@@ -21,6 +21,7 @@ REQUIRED_PACKAGES = {
     "zerene-pmax": HERE / "packages" / "zerene-pmax" / "manifest.json",
     "zerene-dmap": HERE / "packages" / "zerene-dmap" / "manifest.json",
 }
+ABSOLUTE_LIMB_PACKAGES = {"common-input", "strehl"}
 
 
 def read_json(path: Path) -> Any:
@@ -43,10 +44,22 @@ def main() -> int:
     m1_dependency_anchor = (
         "M3 remains `UNMEASURED_COMPARATOR_QUALIFICATION` until M1 admits the"
     )
-    if scorecard.count(m1_dependency_anchor) != 1:
-        raise RuntimeError(
-            "M3 scorecard dependency anchor did not occur exactly once"
-        )
+    absolute_anchor = (
+        "The candidate must satisfy every bar both on each of the four "
+        "capture populations and"
+    )
+    comparator_anchor = (
+        "Strehl's value must be `<=` that reference in every scope."
+    )
+    for name, anchor in {
+        "M1 dependency": m1_dependency_anchor,
+        "absolute candidate": absolute_anchor,
+        "comparator": comparator_anchor,
+    }.items():
+        if scorecard.count(anchor) != 1:
+            raise RuntimeError(
+                f"M3 scorecard {name} anchor did not occur exactly once"
+            )
 
     prerequisites = {
         "capture_feasibility": feasibility["verdict"] == "PASS",
@@ -55,7 +68,15 @@ def main() -> int:
     }
 
     package_state = {
-        name: {"path": str(path), "exists": path.is_file()}
+        name: {
+            "path": str(path),
+            "exists": path.is_file(),
+            "required_for": (
+                "absolute_candidate_limb"
+                if name in ABSOLUTE_LIMB_PACKAGES
+                else "full_axis_comparator_limb"
+            ),
+        }
         for name, path in REQUIRED_PACKAGES.items()
     }
     blockers: list[dict[str, Any]] = []
@@ -91,6 +112,7 @@ def main() -> int:
             ),
             "product": name,
             "path": row["path"],
+            "scope": row["required_for"],
         }
         for name, row in package_state.items()
         if not row["exists"]
@@ -98,15 +120,41 @@ def main() -> int:
     )
     blockers.append(
         {
-            "code": "M1_QUALIFIED_COMPARATOR_ENVELOPE_ABSENT",
+            "code": "PROFILE_BUILDER_INPUT_ONLY_WARP_EVIDENCE_ABSENT",
+            "scope": "absolute_candidate_limb",
             "evidence": (
-                "docs/proposals/2026-09-sota-scorecard.md:970-974,1070-1078"
+                "docs/proposals/2026-09-sota-scorecard.md unique M3 "
+                "Definition status anchor"
+            ),
+        }
+    )
+    blockers.append(
+        {
+            "code": "M1_QUALIFIED_COMPARATOR_ENVELOPE_ABSENT",
+            "scope": "full_axis_comparator_limb",
+            "evidence": (
+                "docs/proposals/2026-09-sota-scorecard.md unique M3 "
+                "comparator-clause anchor"
             ),
         }
     )
     subject_counts = feasibility["selected_site_counts"]
     result = {
-        "schema": "m169-m3-measurement-verdict-v1",
+        "schema": "m169-m3-measurement-verdict-v2",
+        "axis_contract": {
+            "kind": "CONJUNCTIVE_ABSOLUTE_AND_COMPARATIVE",
+            "absolute_candidate_limb": (
+                "all absolute bars pass per capture and pooled"
+            ),
+            "comparator_limb": (
+                "strehl p99(a_e) is no worse than the required "
+                "M1-qualified comparator envelope in every scope"
+            ),
+            "missing_comparator_effect": (
+                "UNMEASURED_COMPARATOR_QUALIFICATION"
+            ),
+            "absolute_candidate_result_is_full_axis_score": False,
+        },
         "bar": {
             "statistic": "maximum over frozen sites of max(h_e,v_e)",
             "maximum": 0.05,

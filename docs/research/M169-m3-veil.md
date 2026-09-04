@@ -6,6 +6,11 @@ photon capture is needed.**
 
 **Measurement verdict: `NOT_ADMITTED_COMMISSIONING_FAILED`. NO SCORE. NO CI.**
 
+**Axis-contract verdict: CONJUNCTIVE ABSOLUTE AND COMPARATIVE.** The `0.05`
+maximum is an absolute candidate gate, but it is not by itself an M3 axis
+score. The scorecard also requires Strehl's paired `p99(a_e)` to be no worse
+than the required M1-qualified comparator envelope in every scope.
+
 The score was not run because the frozen M161 commissioning battery failed its
 own registered improvement assertion before any candidate or comparator pixel
 was opened. Required common-input and product packages are also absent, and
@@ -42,7 +47,8 @@ M152 also states the limitation: its input-only selector proves isolated
 high-CNR step geometry, not that every natural edge is independently known to
 separate two physical depth planes. The scorecard nevertheless freezes this
 exact population
-(`docs/proposals/2026-09-sota-scorecard.md:994-996`).
+(`docs/proposals/2026-09-sota-scorecard.md`, unique anchor `The frozen
+population is exactly 500 sites`).
 
 ## 2. Frozen instrument and bar
 
@@ -63,13 +69,63 @@ maximum over frozen scored sites of max(h_e, v_e) <= 0.05
 The remaining median, p99, affected-rate, Wilson, width, coherence and
 comparator gates also remain exactly as registered
 (`docs/research/M161-m3-ratification.md:56-87`;
-`docs/proposals/2026-09-sota-scorecard.md:1057-1078`).
+`docs/proposals/2026-09-sota-scorecard.md`, unique anchors `The candidate must
+satisfy every bar` and `For the comparator clause`).
 
 M169 changed only the copied full-commission runner's obsolete scheduling
 gate. The checker, definition, random seed, plants, assertions and numerical
 code are unchanged. A source diff against M161 confirms that the other changes
 are the local filename used for self-hashing and a non-timing host-policy
 annotation.
+
+### 2.1 The `0.05` bar is not the whole M3 axis contract
+
+**INFERRED BY READING.** The scorecard makes the absolute and comparative
+limbs conjunctive. It first says:
+
+> The candidate must satisfy every bar both on each of the four capture
+> populations and on the pooled 500 sites
+
+and then requires:
+
+> Strehl's value must be `<=` that reference in every scope. If any required
+> comparator product is absent, or no mode has admitted M1 qualification, M3
+> is `UNMEASURED_COMPARATOR_QUALIFICATION`.
+
+The reference is the lowest paired `p99(a_e)` among available modes with
+admitted M1 qualification; required products are the fresh fork and licensed
+Zerene PMax and DMap. M161's frozen preregistration independently describes
+the score as `absolute M3 gates plus strehl paired p99 no worse than the best
+required comparator`
+(`experiments/M161-m3-ratification/preregistration.json`, `measurement.score`).
+
+An absolute candidate-only result is separately reportable as a **diagnostic**:
+M161 states that the p99, rate, Wilson, comparator, width and coherence
+summaries remain reported. It cannot be labelled an M3 axis PASS without the
+comparator limb.
+
+Once commissioning is adjudicated, an absolute candidate diagnostic still
+requires:
+
+- the hashed common-input manifest in the registered native-size,
+  uncompressed 16-bit linear ProPhoto RGB D50 form;
+- the final, un-post-processed Strehl output and its complete 500-site profile
+  package; and
+- one input-only common-to-output transform per capture, with held-out
+  residuals passing the frozen geometry limits.
+
+A full M3 axis verdict additionally requires:
+
+- fresh-fork, licensed Zerene PMax and licensed Zerene DMap profile packages
+  on the identical common input, plus each obtainable Helicon A/B/C mode; and
+- admitted M1 qualification on the same comparator output bytes so that the
+  required paired envelope exists.
+
+The M161 `score_m3_packages.py` bundle checks required package presence and
+the paired p99 comparison, but it contains no M1-qualification field or check.
+Therefore M161 alone does not demonstrate an execution path that enforces the
+current scorecard's M1-qualified-envelope clause. M169 did not alter another
+lane's scorer.
 
 ## 3. Recommissioning
 
@@ -153,6 +209,55 @@ changed to make the arm pass. M161's paper preregistration was sound enough to
 expose this failure, but its statement that the checker was ready to run did
 not constitute successful commissioning because the battery had never run.
 
+### 3.3 Improvement-arm failure: explanation B
+
+**VERIFIED BY RUNNING.** The frozen clean-noise null's actual value is
+`median_h_e = 0.0029430516302103543`, leaving
+`0.007056948369789646` below the unchanged `0.01` gate. The gate is therefore
+reachable; the clean null is not sitting near `0.0104`.
+
+The registered 0.5% combined rim-and-veil arm reads
+`median_h_e = 0.010413357351919823`. On the paired fixed-seed population,
+`h_e` increased at **500/500** sites relative to the clean null; the median
+paired increase was `0.007544986400730763`. This is evidence for explanation
+**(B)**: the instrument separates the clean null from the still-nonzero
+0.5%-of-step plant, while the commissioning assertion requires that planted
+arm to pass. It is not evidence for a clean measurement floor near `0.0104`.
+
+`characterize_improvement_curve.py` imported the untouched, hash-verified
+M161 checker and commissioning source and varied only a separate
+characterisation argument. The registered 0.5% arm, its assertion and every
+gate remain unchanged:
+
+| Combined rim + veil magnitude | `median_h_e` | `median_v_e` | Median-`h_e` gate |
+|---:|---:|---:|---|
+| 0.00% | 0.002943052 | 0.002320178 | PASS |
+| 0.10% | 0.003411812 | 0.002475393 | PASS |
+| 0.20% | 0.004775802 | 0.002910812 | PASS |
+| 0.30% | 0.006526127 | 0.003577053 | PASS |
+| 0.40% | 0.008449086 | 0.004400187 | PASS |
+| 0.45% | 0.009443927 | 0.004863109 | PASS |
+| **0.50% (registered)** | **0.010413357** | **0.005338684** | **FAIL** |
+| 0.60% | 0.012398952 | 0.006332077 | FAIL |
+| 1.00% | 0.020386842 | 0.010494231 | FAIL |
+| 2.00% | 0.040379006 | 0.020980872 | FAIL |
+| 4.00% | 0.080351369 | 0.041953202 | FAIL |
+| 6.00% | 0.120338966 | 0.062932501 | FAIL |
+
+A fixed 16-step bisection brackets the median-`h_e` crossing:
+
+```text
+0.477798461914% plant -> median_h_e=0.009999873321180 PASS
+0.477806091309% plant -> median_h_e=0.010000025902681 FAIL
+```
+
+This is deterministic synthetic transfer characterisation, not a product
+measurement or an inferential population estimate; no confidence interval is
+claimed. It establishes the internal incompatibility of the registered 0.5%
+pass assertion with the frozen plant, checker, noise population and gate. It
+does not pre-empt M174's independent ruling on which requirement, if any,
+should be revised.
+
 ## 4. Score
 
 **VERIFIED BY RUNNING.** Scoring stopped before any candidate or comparator
@@ -167,10 +272,15 @@ confidence_interval=NO CI
 ```
 
 The failed commissioning assertion is sufficient to prohibit a score.
-Independently, the required files are absent:
+Independently, files needed even for the absolute candidate diagnostic are
+absent:
 
 - common-input manifest;
-- Strehl profile package;
+- Strehl profile package; and
+- profile-package-builder/input-only warp evidence.
+
+The full comparative axis additionally lacks:
+
 - fresh-fork profile package;
 - Zerene PMax profile package; and
 - Zerene DMap profile package.
@@ -178,8 +288,9 @@ Independently, the required files are absent:
 **INFERRED BY READING.** The scorecard also makes the comparator limb
 unavailable until an M1-qualified comparator envelope and input-only
 profile-warp evidence exist
-(`docs/proposals/2026-09-sota-scorecard.md:970-974,1070-1078`). Therefore even
-a repaired commissioning run would still be
+(`docs/proposals/2026-09-sota-scorecard.md`, unique M3 `Definition status` and
+`For the comparator clause` anchors). Therefore even a repaired commissioning
+run would still be
 `UNMEASURED_COMPARATOR_QUALIFICATION` today. Producing the missing product
 packages would require a separate common-input rendering/profile-extraction
 run over 693 RAWs plus licensed comparator outputs. M169 did not begin that
@@ -199,13 +310,14 @@ python experiments\M169-m3-veil\test_m3_checker_v2.py
 python experiments\M169-m3-veil\full_commission.py
 python experiments\M169-m3-veil\anchored_controls.py
 python experiments\M169-m3-veil\reproduce_m161_failure.py
+python experiments\M169-m3-veil\characterize_improvement_curve.py
 python experiments\M169-m3-veil\measurement_preflight.py
 python experiments\M169-m3-veil\verify_artifacts.py
 ```
 
-Expected exits for this committed state are `0`, `0`, `3`, `0`, `0`, `5`, `0`.
-The nonzero exits are deliberate fail-closed verdicts, not command failures.
-No absolute timing is recorded.
+Expected exits for this committed state are `0`, `0`, `3`, `0`, `0`, `0`, `5`,
+`0`. The nonzero exits are deliberate fail-closed verdicts, not command
+failures. No absolute timing is recorded.
 
 Primary artifacts:
 
@@ -213,6 +325,8 @@ Primary artifacts:
 - `out/commission-v2.json` and `.sha256` — full frozen commissioning;
 - `out/anchored-controls.json` and `out/control-configs/` — required
   line-anchored controls;
+- `out/improvement-response-curve.json` — fixed-seed combined rim-and-veil
+  transfer characterisation and median-`h_e` crossing bracket;
 - `out/measurement-verdict.json` — final refusal, denominator, subjects and
   explicit `NO CI`.
 

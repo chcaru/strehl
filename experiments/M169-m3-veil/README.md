@@ -12,6 +12,7 @@ python experiments\M169-m3-veil\test_m3_checker_v2.py
 python experiments\M169-m3-veil\full_commission.py
 python experiments\M169-m3-veil\anchored_controls.py
 python experiments\M169-m3-veil\reproduce_m161_failure.py
+python experiments\M169-m3-veil\characterize_improvement_curve.py
 python experiments\M169-m3-veil\measurement_preflight.py
 python experiments\M169-m3-veil\verify_artifacts.py
 ```
@@ -25,6 +26,12 @@ exits `5` with
 newly authorized instrument version, the preflight will still exit `4` while
 any required common-input/product package or M1-qualified comparator envelope
 is absent.
+
+`characterize_improvement_curve.py` imports the hash-verified untouched M161
+source and measures the combined rim-and-veil transfer from zero through 6%.
+It does not replace the registered 0.5% arm, change any gate or assertion, or
+open product pixels. It records the fixed-seed median-`h_e` crossing bracket in
+`out/improvement-response-curve.json`.
 
 `fixtures/control-template.json` represents an eligible edge whose
 output-minus-reference residual is identically flat zero. The defect and

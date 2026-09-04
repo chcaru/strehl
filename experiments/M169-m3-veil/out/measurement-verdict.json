@@ -1,4 +1,11 @@
 {
+  "axis_contract": {
+    "absolute_candidate_limb": "all absolute bars pass per capture and pooled",
+    "absolute_candidate_result_is_full_axis_score": false,
+    "comparator_limb": "strehl p99(a_e) is no worse than the required M1-qualified comparator envelope in every scope",
+    "kind": "CONJUNCTIVE_ABSOLUTE_AND_COMPARATIVE",
+    "missing_comparator_effect": "UNMEASURED_COMPARATOR_QUALIFICATION"
+  },
   "bar": {
     "changed": false,
     "maximum": 0.05,
@@ -15,31 +22,42 @@
     {
       "code": "COMMON_INPUT_MANIFEST_ABSENT",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\INPUT-MANIFEST.json",
-      "product": "common-input"
+      "product": "common-input",
+      "scope": "absolute_candidate_limb"
     },
     {
       "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\strehl\\manifest.json",
-      "product": "strehl"
+      "product": "strehl",
+      "scope": "absolute_candidate_limb"
     },
     {
       "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\fork\\manifest.json",
-      "product": "fork"
+      "product": "fork",
+      "scope": "full_axis_comparator_limb"
     },
     {
       "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-pmax\\manifest.json",
-      "product": "zerene-pmax"
+      "product": "zerene-pmax",
+      "scope": "full_axis_comparator_limb"
     },
     {
       "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-dmap\\manifest.json",
-      "product": "zerene-dmap"
+      "product": "zerene-dmap",
+      "scope": "full_axis_comparator_limb"
+    },
+    {
+      "code": "PROFILE_BUILDER_INPUT_ONLY_WARP_EVIDENCE_ABSENT",
+      "evidence": "docs/proposals/2026-09-sota-scorecard.md unique M3 Definition status anchor",
+      "scope": "absolute_candidate_limb"
     },
     {
       "code": "M1_QUALIFIED_COMPARATOR_ENVELOPE_ABSENT",
-      "evidence": "docs/proposals/2026-09-sota-scorecard.md:970-974,1070-1078"
+      "evidence": "docs/proposals/2026-09-sota-scorecard.md unique M3 comparator-clause anchor",
+      "scope": "full_axis_comparator_limb"
     }
   ],
   "capture_feasibility": "PASS",
@@ -61,26 +79,31 @@
   "required_packages": {
     "common-input": {
       "exists": false,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\INPUT-MANIFEST.json"
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\INPUT-MANIFEST.json",
+      "required_for": "absolute_candidate_limb"
     },
     "fork": {
       "exists": false,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\fork\\manifest.json"
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\fork\\manifest.json",
+      "required_for": "full_axis_comparator_limb"
     },
     "strehl": {
       "exists": false,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\strehl\\manifest.json"
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\strehl\\manifest.json",
+      "required_for": "absolute_candidate_limb"
     },
     "zerene-dmap": {
       "exists": false,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-dmap\\manifest.json"
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-dmap\\manifest.json",
+      "required_for": "full_axis_comparator_limb"
     },
     "zerene-pmax": {
       "exists": false,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-pmax\\manifest.json"
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-pmax\\manifest.json",
+      "required_for": "full_axis_comparator_limb"
     }
   },
-  "schema": "m169-m3-measurement-verdict-v1",
+  "schema": "m169-m3-measurement-verdict-v2",
   "score": null,
   "score_attempted": false,
   "subjects": {
