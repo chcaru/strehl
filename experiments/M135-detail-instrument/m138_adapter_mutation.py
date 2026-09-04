@@ -329,7 +329,11 @@ def main() -> int:
         raise SystemExit("invoke through python -I")
 
     source_bytes = ADAPTER_PATH.read_bytes()
-    source = source_bytes.decode("utf-8")
+    source = (
+        source_bytes.decode("utf-8")
+        .replace("\r\n", "\n")
+        .replace("\r", "\n")
+    )
     base = load_module(source_bytes, "m138_adapter_mutation_base")
     base_checks = base.mutation_probe_checks()
     expected_names = {mutation.expected_failed_check for mutation in MUTATIONS}

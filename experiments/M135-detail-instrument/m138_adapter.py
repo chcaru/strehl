@@ -39,6 +39,7 @@ BUNDLE_SOURCE_NAMES = (
     "M138-ADAPTER-AMENDMENT-3.md",
     "M138-ADAPTER-AMENDMENT-4.md",
     "M138-ADAPTER-AMENDMENT-5.md",
+    "M138-ADAPTER-AMENDMENT-6.md",
     "comparison-binding.json",
     "comparison-contract.json",
     "comparison_checker.py",
