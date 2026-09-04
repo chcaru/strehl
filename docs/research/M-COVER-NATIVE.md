@@ -1,6 +1,122 @@
-# M-COVER-NATIVE — final Q1–Q4 report
+# M-COVER-NATIVE — scorecard crop adjudication and prior Q1–Q4 record
 
-## Answer
+## Revised scorecard adjudication — Amendment 2
+
+This section supersedes the earlier Q3/Q4 framing for the scorecard question.
+It does not repeat the closed COVER lane's external-decoder campaign, border
+profile, safe-inset search, or default decision.
+
+### Q1.1 — native scale
+
+Scorecard §1.5, lines 225–227, says in full:
+
+> “Outputs must retain native scale. Resize is a hard invalidation.
+>
+> Crops are fixed from the common-input overlap before outputs exist. Retained
+> field of view must be `>=99.0%` of that overlap.”
+
+**PASS for native sampling; numeric confirmation PASS.** `cover-default.md`
+already supplies the stronger evidence: Crop is byte-exact against an external
+LibRaw decoder and therefore performs no rescale. No render was repeated here.
+
+As requested, the unchanged frozen affine-ECC reader was rerun on one existing
+Crop output, `m2-second-first16`, selected in `AMENDMENT-2.md` because it has
+the smallest emitted rectangle:
+
+| Reading | Result | §1.5 numeric limit |
+|---|---:|---:|
+| scale disagreement | **0.021415847%** | `<=0.10%` — PASS |
+| rotation disagreement | **0.000001017 deg** | `<=0.02 deg` — PASS |
+
+The frozen identity/translation nulls remained GREEN and its planted `+0.300%`
+scale/rotation case remained RED before the TIFF was opened. The TIFF,
+instrument, and luma-reader hashes matched their frozen values.
+
+This reader is whole-image, 8x-downsampled affine ECC, not the literal
+input-derived-landmark instrument named later in §1.5. It confirms the two
+numeric readings but cannot license the whole similarity-fit conjunction.
+The non-translation residual limb remains **UNMEASURED** because the inherited
+residual reader fails pure-translation nulls.
+
+### Q1.2 — no-inset field of view
+
+**PASS at a zero-pixel inset for these eight M1/M2 arms.** Header-only
+remeasurement gives:
+
+| Arms | Bare Crop output, HxW | Retained against `4688 x 7032` |
+|---|---:|---:|
+| six arms | `4672 x 7012` | **99.375259661%** |
+| `m2-bright-first16` | `4672 x 7008` | **99.318570979%** |
+| `m2-second-first16` | `4664 x 7000` | **99.035321708%** |
+
+All eight exceed `99.0%` even when the denominator is the entire native plane,
+which is stricter than the scorecard's stated common-input-overlap
+denominator. Against the separately frozen diagnostic common rectangle
+`(y=40, x=58, h=4608, w=6912)`, every Crop arm retains
+**100.000000000% geometrically**.
+
+The COVER lane's `64.6047%` is the area left only after its separately required
+256 px level-profile inset. It is not bare Crop's retained field of view.
+Therefore that shipping inset and its `0.1%` level criterion are different and
+stricter than §1.5's no-inset `>=99.0%` geometry bar.
+
+### Q1.3 — the crop must be fixed before outputs exist
+
+`CoverMode::Crop`'s emitted rectangle is computed from each arm's alignment
+solution and differs across the eight renders. Scoring each arm over its own
+entire emitted rectangle would change the scoring domain and does **not**
+satisfy the quoted fixed-common-crop sentence under its strict reading.
+
+The clause is nevertheless satisfiable without changing the renderer:
+
+1. derive one common scene rectangle from the common inputs and frozen
+   registrations;
+2. freeze it before any scored output is inspected;
+3. extract that same physical rectangle 1:1 from every strehl and comparator
+   output, using only the analytically permitted translation.
+
+The existing frozen `4608 x 6912` diagnostic rectangle is contained by all
+eight strehl Crop outputs, so the geometry is feasible on this side. Formal
+qualification is not complete: exact common-input-to-output coordinates,
+comparator containment, the common ProPhoto-TIFF adapter/identity boundary,
+and an admitted landmark/residual fit remain unmeasured. Accepting each
+varying emitted rectangle as the scorecard crop instead would require an
+explicit registrar interpretation.
+
+### Q1.4 — the `2.6106%` boundary result
+
+**No current scorecard clause independently fires from that number.** COVER's
+measurement is a seven-band-versus-two-band boundary-level profile with its
+own `0.1%` shipping gate. It is not §1.3's neutral-ramp sentinel, M3's
+source-interval halo/veil statistic, or M8's source-support census, and it
+cannot be silently imported as any of them.
+
+It would affect scorecard eligibility if excluding the implicated border made
+the frozen crop retain `<99%` of common overlap, left `<80%` of sites, or
+caused `>2 pp` differential attrition. A separately commissioned M3 or M8
+instrument could also detect a related failure. None of those conclusions
+follows from the COVER profile alone.
+
+### Program consequence
+
+**The cover geometry is not blocked on a new no-resample mode.** Bare Crop
+clears §1.5's native-sampling and numerical field-of-view bars at zero inset,
+and one fixed 1:1 score rectangle can be applied outside Rust.
+
+That does **not** make M1/M2 immediately measurable under the scorecard as
+currently written. §1.3, lines 175–177, separately requires each program to emit a
+“native-size 16-bit linear TIFF,” while current Crop TIFFs are smaller. §1.2's
+common-TIFF boundary, comparator geometry, the literal landmark/residual
+instrument, and M1's withdrawn statistic/bar also remain unresolved. Native
+**size** and native **scale** are distinct requirements on the strict reading;
+if §1.5 was intended to authorize smaller emitted TIFFs, the registrar must
+resolve that drafting tension rather than this lane silently waiving §1.3.
+
+## Superseded earlier Q1–Q4 answer
+
+The remainder records the earlier task and its provenance. Its Q3/Q4 product
+framing is not the current scorecard adjudication, and its `64.6047%` COVER
+safe-inset figure must not be used as bare Crop's §1.5 field-of-view value.
 
 **MEASURED — Q1: yes, Crop passes the specific native-scale rule.** The shipped
 `CoverMode::Crop` removes the Scale arm's 0.2901–0.4619% magnification failure:
@@ -509,7 +625,10 @@ No `M8-overshoot` content was read or duplicated.
   path; frozen inputs, caches, tracked protected state, and all owned outputs
   remained auditable.
 
-## Ruling
+## Superseded earlier ruling
+
+This ruling answered the earlier native-size/default-path brief. Amendment 2's
+scorecard-specific ruling at the top of this report controls.
 
 **MEASURED/VERIFIED: Crop fixes the specific native-scale magnification
 failure, but it does not unblock M1 or produce a conforming existing cover

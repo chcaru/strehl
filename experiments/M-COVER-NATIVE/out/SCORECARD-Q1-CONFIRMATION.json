@@ -1,0 +1,298 @@
+{
+  "instrument": {
+    "commissioning": {
+      "commissioned": true,
+      "identity_null": {
+        "anisotropy_percent": 1.2966960838411978e-09,
+        "correlation": 0.999999984424779,
+        "isotropic_scale": 1.0,
+        "matrix_downsampled": [
+          [
+            1.0,
+            -5.898987461699923e-12,
+            -4.171841205824478e-10
+          ],
+          [
+            -7.068108251462313e-12,
+            1.0,
+            -5.669563707400016e-10
+          ]
+        ],
+        "rotation_deg": -3.349284349719329e-11,
+        "scale_disagreement_percent": 0.0,
+        "scorecard_rotation_pass": true,
+        "scorecard_scale_pass": true,
+        "singular_values": [
+          1.0000000000064835,
+          0.9999999999935165
+        ],
+        "translation_yx_fullres": [
+          -4.535650965920013e-09,
+          -3.3374729646595824e-09
+        ]
+      },
+      "null_stayed_green": true,
+      "plant_went_red": true,
+      "scale_rotation_plant": {
+        "anisotropy_percent": 0.007002265193167823,
+        "correlation": 0.9918302670454887,
+        "isotropic_scale": 1.003031401483839,
+        "matrix_downsampled": [
+          [
+            1.0030643939971924,
+            0.0004332344979047775,
+            0.03600315749645233
+          ],
+          [
+            -0.00041030257125385106,
+            1.0029982328414917,
+            -0.300657719373703
+          ]
+        ],
+        "rotation_deg": -0.024092523548595188,
+        "scale_disagreement_percent": 0.3031401483839069,
+        "scorecard_rotation_pass": false,
+        "scorecard_scale_pass": false,
+        "singular_values": [
+          1.003066413420849,
+          1.0029963907689172
+        ],
+        "translation_yx_fullres": [
+          -2.405261754989624,
+          0.28802525997161865
+        ]
+      },
+      "translation_null": {
+        "anisotropy_percent": 0.047303806212306565,
+        "correlation": 0.9868975980476621,
+        "isotropic_scale": 1.0000836321308366,
+        "matrix_downsampled": [
+          [
+            1.0002323389053345,
+            0.00028374703833833337,
+            0.3501555919647217
+          ],
+          [
+            8.41354631120339e-05,
+            0.99993497133255,
+            -0.27271050214767456
+          ]
+        ],
+        "rotation_deg": -0.0057179720445966935,
+        "scale_disagreement_percent": 0.008363213083661947,
+        "scorecard_rotation_pass": true,
+        "scorecard_scale_pass": true,
+        "singular_values": [
+          1.0003201791301848,
+          0.9998471410680617
+        ],
+        "translation_yx_fullres": [
+          -2.1816840171813965,
+          2.8012447357177734
+        ]
+      }
+    },
+    "description": "Frozen whole-image 8x-downsampled affine ECC; not literal discrete input-derived landmarks",
+    "hashes": {
+      "audit_geometry.py": "be1ec143f3d391e7eb0ab4a927c4744aa18283f4992e82d3f975354163a357fd",
+      "measure.py": "7c0d1175c76ffdab7adc3ab799831cbbd63debcdcb31dc5f9b80372e4ceb51b5"
+    },
+    "opencv_threads": 6
+  },
+  "native_scale_confirmation": {
+    "anisotropy_percent": 0.009014369844551062,
+    "arm": "m2-second-first16",
+    "correlation": 0.9999151560363995,
+    "isotropic_scale": 1.0002141584731599,
+    "matrix_downsampled": [
+      [
+        1.0002477169036865,
+        3.007164559676312e-05,
+        -0.38732853531837463
+      ],
+      [
+        3.0107137718005106e-05,
+        1.0001806020736694,
+        -0.5901159048080444
+      ]
+    ],
+    "reference": "second_second16.npy",
+    "render_sha256": "a0b38ce9cab2cd0c1030da21d8d44dc5832055045c03dc89c5d45e27a893ee1c",
+    "rotation_deg": 1.0165566713092892e-06,
+    "scale_disagreement_percent": 0.021415847315986447,
+    "scorecard_rotation_pass": true,
+    "scorecard_scale_pass": true,
+    "singular_values": [
+      1.0002592313379008,
+      1.0001690876394553
+    ],
+    "translation_yx_fullres": [
+      -4.7209272384643555,
+      -3.098628282546997
+    ]
+  },
+  "no_inset_field_of_view": {
+    "all_frozen_common_overlap_fov_pass": true,
+    "all_native_plane_fov_pass": true,
+    "frozen_common_rect_yxhw": [
+      40,
+      58,
+      4608,
+      6912
+    ],
+    "minimum_frozen_common_overlap_retained_percent": 100.0,
+    "minimum_native_plane_retained_percent": 99.03532170827073,
+    "native_shape_hxw": [
+      4688,
+      7032
+    ],
+    "rows": [
+      {
+        "arm": "m1-bright-a12",
+        "crop_rect_fullres_yxhw": [
+          8,
+          10,
+          4672,
+          7012
+        ],
+        "frozen_common_overlap_fov_pass": true,
+        "frozen_common_overlap_retained_percent": 100.0,
+        "native_plane_fov_pass": true,
+        "native_plane_retained_percent": 99.37525966134336,
+        "output_shape_hwc": [
+          4672,
+          7012,
+          3
+        ]
+      },
+      {
+        "arm": "m1-bright-b12",
+        "crop_rect_fullres_yxhw": [
+          8,
+          10,
+          4672,
+          7012
+        ],
+        "frozen_common_overlap_fov_pass": true,
+        "frozen_common_overlap_retained_percent": 100.0,
+        "native_plane_fov_pass": true,
+        "native_plane_retained_percent": 99.37525966134336,
+        "output_shape_hwc": [
+          4672,
+          7012,
+          3
+        ]
+      },
+      {
+        "arm": "m1-second-a12",
+        "crop_rect_fullres_yxhw": [
+          8,
+          10,
+          4672,
+          7012
+        ],
+        "frozen_common_overlap_fov_pass": true,
+        "frozen_common_overlap_retained_percent": 100.0,
+        "native_plane_fov_pass": true,
+        "native_plane_retained_percent": 99.37525966134336,
+        "output_shape_hwc": [
+          4672,
+          7012,
+          3
+        ]
+      },
+      {
+        "arm": "m1-second-b12",
+        "crop_rect_fullres_yxhw": [
+          8,
+          10,
+          4672,
+          7012
+        ],
+        "frozen_common_overlap_fov_pass": true,
+        "frozen_common_overlap_retained_percent": 100.0,
+        "native_plane_fov_pass": true,
+        "native_plane_retained_percent": 99.37525966134336,
+        "output_shape_hwc": [
+          4672,
+          7012,
+          3
+        ]
+      },
+      {
+        "arm": "m2-bright-first16",
+        "crop_rect_fullres_yxhw": [
+          8,
+          12,
+          4672,
+          7008
+        ],
+        "frozen_common_overlap_fov_pass": true,
+        "frozen_common_overlap_retained_percent": 100.0,
+        "native_plane_fov_pass": true,
+        "native_plane_retained_percent": 99.31857097927757,
+        "output_shape_hwc": [
+          4672,
+          7008,
+          3
+        ]
+      },
+      {
+        "arm": "m2-bright-second16",
+        "crop_rect_fullres_yxhw": [
+          8,
+          10,
+          4672,
+          7012
+        ],
+        "frozen_common_overlap_fov_pass": true,
+        "frozen_common_overlap_retained_percent": 100.0,
+        "native_plane_fov_pass": true,
+        "native_plane_retained_percent": 99.37525966134336,
+        "output_shape_hwc": [
+          4672,
+          7012,
+          3
+        ]
+      },
+      {
+        "arm": "m2-second-first16",
+        "crop_rect_fullres_yxhw": [
+          12,
+          16,
+          4664,
+          7000
+        ],
+        "frozen_common_overlap_fov_pass": true,
+        "frozen_common_overlap_retained_percent": 100.0,
+        "native_plane_fov_pass": true,
+        "native_plane_retained_percent": 99.03532170827073,
+        "output_shape_hwc": [
+          4664,
+          7000,
+          3
+        ]
+      },
+      {
+        "arm": "m2-second-second16",
+        "crop_rect_fullres_yxhw": [
+          8,
+          10,
+          4672,
+          7012
+        ],
+        "frozen_common_overlap_fov_pass": true,
+        "frozen_common_overlap_retained_percent": 100.0,
+        "native_plane_fov_pass": true,
+        "native_plane_retained_percent": 99.37525966134336,
+        "output_shape_hwc": [
+          4672,
+          7012,
+          3
+        ]
+      }
+    ]
+  },
+  "scope": "One unchanged frozen-ECC repeat plus deterministic no-inset TIFF-header census; no render and no COVER border remeasurement",
+  "status": "SCORECARD_Q1_CONFIRMATION"
+}
