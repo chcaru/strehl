@@ -14,6 +14,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import math
 import os
 import platform
 import secrets
@@ -178,6 +179,37 @@ def canonical_bytes(value: object) -> bytes:
         )
         + "\n"
     ).encode("utf-8")
+
+
+def reject_json_constant(value: str) -> object:
+    raise ValueError(f"non-standard JSON constant: {value}")
+
+
+def unique_json_object(
+    pairs: list[tuple[str, object]],
+) -> dict[str, object]:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON object key: {key}")
+        result[key] = value
+    return result
+
+
+def finite_json_float(value: str) -> float:
+    result = float(value)
+    if not math.isfinite(result):
+        raise ValueError(f"non-finite JSON number: {value}")
+    return result
+
+
+def strict_json_loads(value: bytes | str) -> object:
+    return json.loads(
+        value,
+        parse_float=finite_json_float,
+        parse_constant=reject_json_constant,
+        object_pairs_hook=unique_json_object,
+    )
 
 
 def sha256_bytes(value: bytes) -> str:
@@ -790,7 +822,9 @@ def run_packet(encoded: bytes, root: Path) -> dict[str, object]:
         parse_status = "NOT_PARSED"
         if process.returncode == 0:
             try:
-                record = json.loads(process.stdout.decode("utf-8"))
+                record = strict_json_loads(
+                    process.stdout.decode("utf-8")
+                )
                 if not isinstance(record, dict):
                     raise TypeError("candidate result is not an object")
                 parse_status = "OK"
@@ -907,7 +941,7 @@ def unblind(
     sealed_bytes: bytes,
     instances: list[dict[str, object]],
 ) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
-    sealed = json.loads(sealed_bytes)
+    sealed = strict_json_loads(sealed_bytes)
     sealed_by_token = {
         packet["token"]: packet
         for instance in sealed["instances"]
@@ -991,8 +1025,8 @@ def validate_sealed_transcript(
     }
     errors = []
     try:
-        sealed = json.loads(sealed_bytes)
-    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        sealed = strict_json_loads(sealed_bytes)
+    except (UnicodeDecodeError, ValueError) as error:
         errors.append(f"{type(error).__name__}: {error}")
         return {"passed": False, "checks": checks, "errors": errors}
 
