@@ -209,3 +209,23 @@ The battery itself is commissioned only if:
 Any deviation is a battery failure, not permission to weaken a predicate.
 M167 opens no RAW/capture and makes no claim that a sound single-image detail
 instrument exists.
+
+## 9. Pre-execution implementation bindings
+
+This section was added and committed before the first candidate execution.  It
+closes adapter choices that the sections above did not spell out:
+
+- D8 uses one centered `256 x 256` tile, the historical `1/7` threshold,
+  minimum ring population and three-adjacent-ring classifier exactly as loaded
+  from the pinned `frc.py`.  No last-bin fallback is enabled.
+- The M137 synthetic diagnostics call the pinned `band_ratio(image, 1.0)`;
+  only the exact historical detail/flat gap snapshot determines its `P1`
+  verdict.
+- M2 scores each ordinary single-image arm as
+  `-population_sd(image / uniform_filter(image,9) - 1)`.  No epsilon, clipping,
+  finite-value replacement, or denominator repair is permitted.
+- A candidate's two malformed cases are isolated calls.  Exceptions become
+  typed `ERROR` records; a returned non-finite scalar becomes `INVALID`.
+- The child measurement process emits JSON on stdout.  The checker invokes it
+  once per built-in candidate with numerical thread environment variables set
+  to one, then adjudicates only that serialized JSON.
