@@ -1,0 +1,1942 @@
+{
+  "schema": 1,
+  "artifact": "M140 scorecard readiness re-derivation",
+  "generated_by": "experiments/M140-readiness/analyze.py",
+  "repository_head": "5a7839a2a6d5c2fd97e978c850dd2f728a0e6dc6",
+  "sources": {
+    "scorecard": {
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "sha256": "170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8",
+      "readiness_lines": [
+        412,
+        437
+      ],
+      "rule_4_lines": [
+        93,
+        98
+      ]
+    },
+    "plan": {
+      "path": "docs/proposals/2026-08-sota-path.md",
+      "sha256": "4329D9A7EC16762266778A494618E4282125998BF58F8102E869AE886EECC431",
+      "matched_output_lines": [
+        1975,
+        1978
+      ],
+      "amendment_1_live_instruments_lines": [
+        2208,
+        2210
+      ],
+      "amendment_2_table_lines": [
+        2269,
+        2274
+      ]
+    }
+  },
+  "mechanical_parse": {
+    "axes": {
+      "M1": {
+        "source_line": 423,
+        "class_cell": "**(a)(b)(c)(d)**",
+        "description": "No active detail statistic or bar exists; scored matched repeats and comparator arms are also absent.",
+        "codes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "blockers": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ]
+      },
+      "M2": {
+        "source_line": 424,
+        "class_cell": "**(a)(b)(d)**",
+        "description": "Residual noise can be computed diagnostically, but the registered matched-information verdict cannot.",
+        "codes": [
+          "a",
+          "b",
+          "d"
+        ],
+        "blockers": [
+          "a",
+          "b",
+          "d"
+        ]
+      },
+      "M3": {
+        "source_line": 425,
+        "class_cell": "**(a)(b)(d)**",
+        "description": "Artifact counts without a licensed detail/matched-presentation arm cannot support the competitive claim.",
+        "codes": [
+          "a",
+          "b",
+          "d"
+        ],
+        "blockers": [
+          "a",
+          "b",
+          "d"
+        ]
+      },
+      "M4": {
+        "source_line": 426,
+        "class_cell": "**(a)(b)(d)**",
+        "description": "Flatness is computable diagnostically, but its detail-preserving comparator verdict is blocked.",
+        "codes": [
+          "a",
+          "b",
+          "d"
+        ],
+        "blockers": [
+          "a",
+          "b",
+          "d"
+        ]
+      },
+      "M5": {
+        "source_line": 427,
+        "class_cell": "**(a)(b)(c)(d)**",
+        "description": "No scored dense/sparse repeat unit exists, and failure coverage needs a licensed detail test.",
+        "codes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "blockers": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ]
+      },
+      "M6": {
+        "source_line": 428,
+        "class_cell": "**(a)(b)(c)(d)**",
+        "description": "The rail census is executable, but the registered capture set has fewer than 10,000 recoverable samples and the full axis includes detail retention and comparators.",
+        "codes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "blockers": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ]
+      },
+      "M7": {
+        "source_line": 429,
+        "class_cell": "**(b)(c)(d)**",
+        "description": "No traceable colour target exists.",
+        "codes": [
+          "b",
+          "c",
+          "d"
+        ],
+        "blockers": [
+          "b",
+          "c",
+          "d"
+        ]
+      },
+      "M8": {
+        "source_line": 430,
+        "class_cell": "**(e)**",
+        "description": "The v1.4 source-hull invariant needs neither detail nor a comparator and may use the development-only flat slide. **Checker commissioned and result read at `76b3d9cc`: FAIL, M8-R `1.030569%` and M8-O `1.326144%` against a bar of exactly `0.0000%`.** This is the only axis in the program with a produced-and-read score.",
+        "codes": [
+          "e"
+        ],
+        "blockers": []
+      },
+      "M9": {
+        "source_line": 431,
+        "class_cell": "**(a)(b)(c)**",
+        "description": "Repeat calibration captures are absent and the shipping product emits no admissible acuity/variance certificate.",
+        "codes": [
+          "a",
+          "b",
+          "c"
+        ],
+        "blockers": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "M10": {
+        "source_line": 432,
+        "class_cell": "**(b)(c)**",
+        "description": "No scored geometric-truth capture or compatible depth product exists. The tilted slide is development-only.",
+        "codes": [
+          "b",
+          "c"
+        ],
+        "blockers": [
+          "b",
+          "c"
+        ]
+      },
+      "M11": {
+        "source_line": 433,
+        "class_cell": "**(a)(b)(d)**",
+        "description": "A quiet host is additionally required; native-decode timing alone is a diagnostic, not the registered competitive verdict.",
+        "codes": [
+          "a",
+          "b",
+          "d"
+        ],
+        "blockers": [
+          "a",
+          "b",
+          "d"
+        ]
+      },
+      "M12": {
+        "source_line": 434,
+        "class_cell": "**(e), scheduled; formal value UNMEASURED**",
+        "description": "Hashes and process-tree RSS need no detail, comparator or holdout. Existing out-of-protocol evidence diagnoses fixed-worker determinism as holding and cross-worker scaling invariance as failing, but the registered N/worker matrix still requires the reserved quiet host.",
+        "codes": [
+          "e"
+        ],
+        "blockers": []
+      }
+    },
+    "blocker_census": {
+      "a": {
+        "count": 8,
+        "axes": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M9",
+          "M11"
+        ],
+        "evidence_status": "VERIFIED"
+      },
+      "b": {
+        "count": 10,
+        "axes": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M7",
+          "M9",
+          "M10",
+          "M11"
+        ],
+        "evidence_status": "VERIFIED"
+      },
+      "c": {
+        "count": 6,
+        "axes": [
+          "M1",
+          "M5",
+          "M6",
+          "M7",
+          "M9",
+          "M10"
+        ],
+        "evidence_status": "VERIFIED"
+      },
+      "d": {
+        "count": 8,
+        "axes": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M7",
+          "M11"
+        ],
+        "evidence_status": "VERIFIED"
+      }
+    },
+    "amendment_2_published_rows": [
+      {
+        "source_line": 2269,
+        "cleared_cell": "nothing -- today",
+        "measurable_cell": "**2 of 12**",
+        "published_count": 2
+      },
+      {
+        "source_line": 2270,
+        "cleared_cell": "any **one** blocker",
+        "measurable_cell": "**2**",
+        "published_count": 2
+      },
+      {
+        "source_line": 2271,
+        "cleared_cell": "any **two** except `b+c`",
+        "measurable_cell": "**2**",
+        "published_count": 2
+      },
+      {
+        "source_line": 2272,
+        "cleared_cell": "`b+c`",
+        "measurable_cell": "**3**",
+        "published_count": 3
+      },
+      {
+        "source_line": 2273,
+        "cleared_cell": "**`a+b+d`**",
+        "measurable_cell": "**6**",
+        "published_count": 6
+      },
+      {
+        "source_line": 2274,
+        "cleared_cell": "**`a+b+c+d`**",
+        "measurable_cell": "**12**",
+        "published_count": 12
+      }
+    ],
+    "amendment_2_comparison": {
+      "all_published_numbers_reproduced_exactly": true,
+      "checks": [
+        {
+          "claim": "nothing",
+          "published_count": 2,
+          "computed": 2,
+          "matches": true
+        },
+        {
+          "claim": "any_one",
+          "published_count": 2,
+          "computed": [
+            2
+          ],
+          "matches": true
+        },
+        {
+          "claim": "any_two_except_b+c",
+          "published_count": 2,
+          "computed": [
+            2
+          ],
+          "matches": true
+        },
+        {
+          "claim": "b+c",
+          "published_count": 3,
+          "computed": 3,
+          "matches": true
+        },
+        {
+          "claim": "a+b+d",
+          "published_count": 6,
+          "computed": 6,
+          "matches": true
+        },
+        {
+          "claim": "a+b+c+d",
+          "published_count": 12,
+          "computed": 12,
+          "matches": true
+        }
+      ],
+      "evidence_status": "VERIFIED"
+    },
+    "evidence_status": "VERIFIED"
+  },
+  "a_rulings": {
+    "M1": {
+      "ruling": "intrinsic",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:491-560",
+      "reason": "The axis is the missing sharpening-safe information instrument itself.",
+      "s2_action": "retain",
+      "s3_action": "retain"
+    },
+    "M2": {
+      "ruling": "propagated",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:579-615",
+      "reason": "Its own success bar is eta and a noise ratio; the future-M1 mode qualifier is rule-4 propagation.",
+      "s2_action": "replace_with_matched_output",
+      "s3_action": "remove"
+    },
+    "M3": {
+      "ruling": "propagated",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:621-662",
+      "reason": "Its own bar is halo, veil, edge width, and local coherence; replacement M1 appears only as an added blur control.",
+      "s2_action": "remove",
+      "s3_action": "remove"
+    },
+    "M4": {
+      "ruling": "propagated",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:667-697",
+      "reason": "Its own bar is flat patchwork and ghost rate; replacement M1 appears only in the control paragraph.",
+      "s2_action": "remove",
+      "s3_action": "remove"
+    },
+    "M5": {
+      "ruling": "intrinsic",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:704-743",
+      "reason": "Coverage is defined by source-band coherence and focus margin, so a detail-bearing test is part of the axis.",
+      "s2_action": "retain",
+      "s3_action": "retain"
+    },
+    "M6": {
+      "ruling": "intrinsic",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:750-779",
+      "reason": "Highlight-detail retention is an explicit member of the success bar.",
+      "s2_action": "retain",
+      "s3_action": "retain"
+    },
+    "M7": {
+      "ruling": "not_assigned",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:782-817",
+      "reason": "The source readiness row assigns no blocker (a); the bar is external-target colour fidelity.",
+      "s2_action": "not_applicable",
+      "s3_action": "not_applicable"
+    },
+    "M8": {
+      "ruling": "not_assigned",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:819-888",
+      "reason": "The source readiness row assigns no blocker (a); the bar is an exact source-support invariant.",
+      "s2_action": "not_applicable",
+      "s3_action": "not_applicable"
+    },
+    "M9": {
+      "ruling": "intrinsic",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:890-936",
+      "reason": "Empirical acuity truth is explicitly the future independently commissioned M1 condition.",
+      "s2_action": "retain",
+      "s3_action": "retain"
+    },
+    "M10": {
+      "ruling": "not_assigned",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:938-979",
+      "reason": "The source readiness row assigns no blocker (a); the bar uses external geometric truth.",
+      "s2_action": "not_applicable",
+      "s3_action": "not_applicable"
+    },
+    "M11": {
+      "ruling": "propagated",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:981-1036",
+      "reason": "Its numeric bar is elapsed time; replacement-M1 qualification enters through comparator quality qualification.",
+      "s2_action": "remove",
+      "s3_action": "remove"
+    },
+    "M12": {
+      "ruling": "not_assigned",
+      "citation": "docs/proposals/2026-09-sota-scorecard.md:1038-1103",
+      "reason": "The source readiness row assigns no blocker (a); the bar is memory and reproducibility.",
+      "s2_action": "not_applicable",
+      "s3_action": "not_applicable"
+    }
+  },
+  "matched_output_operationalization": {
+    "requirements": [
+      "identical hashed common linear input TIFF bytes",
+      "native-size 16-bit linear output",
+      "same dimensions, crop, bit depth, and frozen ICC",
+      "pass the frozen affine tone-ramp sentinel",
+      "pass native-scale geometry and site-retention gates",
+      "no output post-processing"
+    ],
+    "excluded_requirement": "No replacement-M1 score and no 98% information threshold.",
+    "citations": [
+      "docs/proposals/2026-08-sota-path.md:1975-1978",
+      "docs/proposals/2026-09-sota-scorecard.md:147-169",
+      "docs/proposals/2026-09-sota-scorecard.md:173-196",
+      "docs/proposals/2026-09-sota-scorecard.md:223-235"
+    ]
+  },
+  "scenarios": {
+    "S1": {
+      "name": "rule 4 in force as written",
+      "rule": "No blocker assignment is changed.",
+      "blockers_by_axis": {
+        "M1": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 423,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:491-560",
+            "reason": "The axis is the missing sharpening-safe information instrument itself.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M2": {
+          "blockers": [
+            "a",
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 424,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:579-615",
+            "reason": "Its own success bar is eta and a noise ratio; the future-M1 mode qualifier is rule-4 propagation.",
+            "s2_action": "replace_with_matched_output",
+            "s3_action": "remove"
+          }
+        },
+        "M3": {
+          "blockers": [
+            "a",
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 425,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:621-662",
+            "reason": "Its own bar is halo, veil, edge width, and local coherence; replacement M1 appears only as an added blur control.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M4": {
+          "blockers": [
+            "a",
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 426,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:667-697",
+            "reason": "Its own bar is flat patchwork and ghost rate; replacement M1 appears only in the control paragraph.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M5": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 427,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:704-743",
+            "reason": "Coverage is defined by source-band coherence and focus margin, so a detail-bearing test is part of the axis.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M6": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 428,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:750-779",
+            "reason": "Highlight-detail retention is an explicit member of the success bar.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M7": {
+          "blockers": [
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(b)(c)(d)**",
+          "source_line": 429,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:782-817",
+            "reason": "The source readiness row assigns no blocker (a); the bar is external-target colour fidelity.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M8": {
+          "blockers": [],
+          "source_class_cell": "**(e)**",
+          "source_line": 430,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:819-888",
+            "reason": "The source readiness row assigns no blocker (a); the bar is an exact source-support invariant.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M9": {
+          "blockers": [
+            "a",
+            "b",
+            "c"
+          ],
+          "source_class_cell": "**(a)(b)(c)**",
+          "source_line": 431,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:890-936",
+            "reason": "Empirical acuity truth is explicitly the future independently commissioned M1 condition.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M10": {
+          "blockers": [
+            "b",
+            "c"
+          ],
+          "source_class_cell": "**(b)(c)**",
+          "source_line": 432,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:938-979",
+            "reason": "The source readiness row assigns no blocker (a); the bar uses external geometric truth.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M11": {
+          "blockers": [
+            "a",
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 433,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:981-1036",
+            "reason": "Its numeric bar is elapsed time; replacement-M1 qualification enters through comparator quality qualification.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M12": {
+          "blockers": [],
+          "source_class_cell": "**(e), scheduled; formal value UNMEASURED**",
+          "source_line": 434,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:1038-1103",
+            "reason": "The source readiness row assigns no blocker (a); the bar is memory and reproducibility.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        }
+      },
+      "blocker_census": {
+        "a": {
+          "count": 8,
+          "axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M9",
+            "M11"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "b": {
+          "count": 10,
+          "axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M9",
+            "M10",
+            "M11"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "c": {
+          "count": 6,
+          "axes": [
+            "M1",
+            "M5",
+            "M6",
+            "M7",
+            "M9",
+            "M10"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "d": {
+          "count": 8,
+          "axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M11"
+          ],
+          "evidence_status": "VERIFIED"
+        }
+      },
+      "subset_table": [
+        {
+          "cleared": [],
+          "cleared_label": "nothing",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a"
+          ],
+          "cleared_label": "a",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b"
+          ],
+          "cleared_label": "b",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "c"
+          ],
+          "cleared_label": "c",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "d"
+          ],
+          "cleared_label": "d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b"
+          ],
+          "cleared_label": "a+b",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "c"
+          ],
+          "cleared_label": "a+c",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "d"
+          ],
+          "cleared_label": "a+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "c"
+          ],
+          "cleared_label": "b+c",
+          "measurable_count": 3,
+          "measurable_axes": [
+            "M8",
+            "M10",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "d"
+          ],
+          "cleared_label": "b+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "c",
+            "d"
+          ],
+          "cleared_label": "c+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "c"
+          ],
+          "cleared_label": "a+b+c",
+          "measurable_count": 4,
+          "measurable_axes": [
+            "M8",
+            "M9",
+            "M10",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "d"
+          ],
+          "cleared_label": "a+b+d",
+          "measurable_count": 6,
+          "measurable_axes": [
+            "M2",
+            "M3",
+            "M4",
+            "M8",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "c",
+            "d"
+          ],
+          "cleared_label": "a+c+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "c",
+            "d"
+          ],
+          "cleared_label": "b+c+d",
+          "measurable_count": 4,
+          "measurable_axes": [
+            "M7",
+            "M8",
+            "M10",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "cleared_label": "a+b+c+d",
+          "measurable_count": 12,
+          "measurable_axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M8",
+            "M9",
+            "M10",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        }
+      ],
+      "today": {
+        "cleared": [
+          "b"
+        ],
+        "open": [
+          "a",
+          "c",
+          "d"
+        ],
+        "scoreable_count": 2,
+        "scoreable_axes": [
+          "M8",
+          "M12"
+        ],
+        "evidence_status": "VERIFIED"
+      }
+    },
+    "S2": {
+      "name": "rule 4 narrowed to matched output",
+      "rule": "Comparator eligibility requires the same hashed common input; native-size 16-bit linear output; frozen ICC, tone-ramp, geometry, crop, dimensions, and bit depth; and no post-processing. It does not require replacement-M1 or a 98% information score. This substitutes matched output for M2's comparator-information qualification while leaving M5, M6, and M9 intrinsic detail requirements intact.",
+      "blockers_by_axis": {
+        "M1": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 423,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:491-560",
+            "reason": "The axis is the missing sharpening-safe information instrument itself.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M2": {
+          "blockers": [
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 424,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:579-615",
+            "reason": "Its own success bar is eta and a noise ratio; the future-M1 mode qualifier is rule-4 propagation.",
+            "s2_action": "replace_with_matched_output",
+            "s3_action": "remove"
+          }
+        },
+        "M3": {
+          "blockers": [
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 425,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:621-662",
+            "reason": "Its own bar is halo, veil, edge width, and local coherence; replacement M1 appears only as an added blur control.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M4": {
+          "blockers": [
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 426,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:667-697",
+            "reason": "Its own bar is flat patchwork and ghost rate; replacement M1 appears only in the control paragraph.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M5": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 427,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:704-743",
+            "reason": "Coverage is defined by source-band coherence and focus margin, so a detail-bearing test is part of the axis.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M6": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 428,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:750-779",
+            "reason": "Highlight-detail retention is an explicit member of the success bar.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M7": {
+          "blockers": [
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(b)(c)(d)**",
+          "source_line": 429,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:782-817",
+            "reason": "The source readiness row assigns no blocker (a); the bar is external-target colour fidelity.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M8": {
+          "blockers": [],
+          "source_class_cell": "**(e)**",
+          "source_line": 430,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:819-888",
+            "reason": "The source readiness row assigns no blocker (a); the bar is an exact source-support invariant.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M9": {
+          "blockers": [
+            "a",
+            "b",
+            "c"
+          ],
+          "source_class_cell": "**(a)(b)(c)**",
+          "source_line": 431,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:890-936",
+            "reason": "Empirical acuity truth is explicitly the future independently commissioned M1 condition.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M10": {
+          "blockers": [
+            "b",
+            "c"
+          ],
+          "source_class_cell": "**(b)(c)**",
+          "source_line": 432,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:938-979",
+            "reason": "The source readiness row assigns no blocker (a); the bar uses external geometric truth.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M11": {
+          "blockers": [
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 433,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:981-1036",
+            "reason": "Its numeric bar is elapsed time; replacement-M1 qualification enters through comparator quality qualification.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M12": {
+          "blockers": [],
+          "source_class_cell": "**(e), scheduled; formal value UNMEASURED**",
+          "source_line": 434,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:1038-1103",
+            "reason": "The source readiness row assigns no blocker (a); the bar is memory and reproducibility.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        }
+      },
+      "blocker_census": {
+        "a": {
+          "count": 4,
+          "axes": [
+            "M1",
+            "M5",
+            "M6",
+            "M9"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "b": {
+          "count": 10,
+          "axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M9",
+            "M10",
+            "M11"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "c": {
+          "count": 6,
+          "axes": [
+            "M1",
+            "M5",
+            "M6",
+            "M7",
+            "M9",
+            "M10"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "d": {
+          "count": 8,
+          "axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M11"
+          ],
+          "evidence_status": "VERIFIED"
+        }
+      },
+      "subset_table": [
+        {
+          "cleared": [],
+          "cleared_label": "nothing",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a"
+          ],
+          "cleared_label": "a",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b"
+          ],
+          "cleared_label": "b",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "c"
+          ],
+          "cleared_label": "c",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "d"
+          ],
+          "cleared_label": "d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b"
+          ],
+          "cleared_label": "a+b",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "c"
+          ],
+          "cleared_label": "a+c",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "d"
+          ],
+          "cleared_label": "a+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "c"
+          ],
+          "cleared_label": "b+c",
+          "measurable_count": 3,
+          "measurable_axes": [
+            "M8",
+            "M10",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "d"
+          ],
+          "cleared_label": "b+d",
+          "measurable_count": 6,
+          "measurable_axes": [
+            "M2",
+            "M3",
+            "M4",
+            "M8",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "c",
+            "d"
+          ],
+          "cleared_label": "c+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "c"
+          ],
+          "cleared_label": "a+b+c",
+          "measurable_count": 4,
+          "measurable_axes": [
+            "M8",
+            "M9",
+            "M10",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "d"
+          ],
+          "cleared_label": "a+b+d",
+          "measurable_count": 6,
+          "measurable_axes": [
+            "M2",
+            "M3",
+            "M4",
+            "M8",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "c",
+            "d"
+          ],
+          "cleared_label": "a+c+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "c",
+            "d"
+          ],
+          "cleared_label": "b+c+d",
+          "measurable_count": 8,
+          "measurable_axes": [
+            "M2",
+            "M3",
+            "M4",
+            "M7",
+            "M8",
+            "M10",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "cleared_label": "a+b+c+d",
+          "measurable_count": 12,
+          "measurable_axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M8",
+            "M9",
+            "M10",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        }
+      ],
+      "today": {
+        "cleared": [
+          "b"
+        ],
+        "open": [
+          "a",
+          "c",
+          "d"
+        ],
+        "scoreable_count": 2,
+        "scoreable_axes": [
+          "M8",
+          "M12"
+        ],
+        "evidence_status": "VERIFIED"
+      }
+    },
+    "S3": {
+      "name": "rule 4 removed",
+      "rule": "Remove blocker (a) only from axes where it is propagated. Retain it for M1, M5, M6, and M9 because their own definitions need detail or information truth.",
+      "blockers_by_axis": {
+        "M1": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 423,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:491-560",
+            "reason": "The axis is the missing sharpening-safe information instrument itself.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M2": {
+          "blockers": [
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 424,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:579-615",
+            "reason": "Its own success bar is eta and a noise ratio; the future-M1 mode qualifier is rule-4 propagation.",
+            "s2_action": "replace_with_matched_output",
+            "s3_action": "remove"
+          }
+        },
+        "M3": {
+          "blockers": [
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 425,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:621-662",
+            "reason": "Its own bar is halo, veil, edge width, and local coherence; replacement M1 appears only as an added blur control.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M4": {
+          "blockers": [
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 426,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:667-697",
+            "reason": "Its own bar is flat patchwork and ghost rate; replacement M1 appears only in the control paragraph.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M5": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 427,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:704-743",
+            "reason": "Coverage is defined by source-band coherence and focus margin, so a detail-bearing test is part of the axis.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M6": {
+          "blockers": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(c)(d)**",
+          "source_line": 428,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:750-779",
+            "reason": "Highlight-detail retention is an explicit member of the success bar.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M7": {
+          "blockers": [
+            "b",
+            "c",
+            "d"
+          ],
+          "source_class_cell": "**(b)(c)(d)**",
+          "source_line": 429,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:782-817",
+            "reason": "The source readiness row assigns no blocker (a); the bar is external-target colour fidelity.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M8": {
+          "blockers": [],
+          "source_class_cell": "**(e)**",
+          "source_line": 430,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:819-888",
+            "reason": "The source readiness row assigns no blocker (a); the bar is an exact source-support invariant.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M9": {
+          "blockers": [
+            "a",
+            "b",
+            "c"
+          ],
+          "source_class_cell": "**(a)(b)(c)**",
+          "source_line": 431,
+          "a_ruling": {
+            "ruling": "intrinsic",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:890-936",
+            "reason": "Empirical acuity truth is explicitly the future independently commissioned M1 condition.",
+            "s2_action": "retain",
+            "s3_action": "retain"
+          }
+        },
+        "M10": {
+          "blockers": [
+            "b",
+            "c"
+          ],
+          "source_class_cell": "**(b)(c)**",
+          "source_line": 432,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:938-979",
+            "reason": "The source readiness row assigns no blocker (a); the bar uses external geometric truth.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        },
+        "M11": {
+          "blockers": [
+            "b",
+            "d"
+          ],
+          "source_class_cell": "**(a)(b)(d)**",
+          "source_line": 433,
+          "a_ruling": {
+            "ruling": "propagated",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:981-1036",
+            "reason": "Its numeric bar is elapsed time; replacement-M1 qualification enters through comparator quality qualification.",
+            "s2_action": "remove",
+            "s3_action": "remove"
+          }
+        },
+        "M12": {
+          "blockers": [],
+          "source_class_cell": "**(e), scheduled; formal value UNMEASURED**",
+          "source_line": 434,
+          "a_ruling": {
+            "ruling": "not_assigned",
+            "citation": "docs/proposals/2026-09-sota-scorecard.md:1038-1103",
+            "reason": "The source readiness row assigns no blocker (a); the bar is memory and reproducibility.",
+            "s2_action": "not_applicable",
+            "s3_action": "not_applicable"
+          }
+        }
+      },
+      "blocker_census": {
+        "a": {
+          "count": 4,
+          "axes": [
+            "M1",
+            "M5",
+            "M6",
+            "M9"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "b": {
+          "count": 10,
+          "axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M9",
+            "M10",
+            "M11"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "c": {
+          "count": 6,
+          "axes": [
+            "M1",
+            "M5",
+            "M6",
+            "M7",
+            "M9",
+            "M10"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        "d": {
+          "count": 8,
+          "axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M11"
+          ],
+          "evidence_status": "VERIFIED"
+        }
+      },
+      "subset_table": [
+        {
+          "cleared": [],
+          "cleared_label": "nothing",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a"
+          ],
+          "cleared_label": "a",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b"
+          ],
+          "cleared_label": "b",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "c"
+          ],
+          "cleared_label": "c",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "d"
+          ],
+          "cleared_label": "d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b"
+          ],
+          "cleared_label": "a+b",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "c"
+          ],
+          "cleared_label": "a+c",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "d"
+          ],
+          "cleared_label": "a+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "c"
+          ],
+          "cleared_label": "b+c",
+          "measurable_count": 3,
+          "measurable_axes": [
+            "M8",
+            "M10",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "d"
+          ],
+          "cleared_label": "b+d",
+          "measurable_count": 6,
+          "measurable_axes": [
+            "M2",
+            "M3",
+            "M4",
+            "M8",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "c",
+            "d"
+          ],
+          "cleared_label": "c+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "c"
+          ],
+          "cleared_label": "a+b+c",
+          "measurable_count": 4,
+          "measurable_axes": [
+            "M8",
+            "M9",
+            "M10",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "d"
+          ],
+          "cleared_label": "a+b+d",
+          "measurable_count": 6,
+          "measurable_axes": [
+            "M2",
+            "M3",
+            "M4",
+            "M8",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "c",
+            "d"
+          ],
+          "cleared_label": "a+c+d",
+          "measurable_count": 2,
+          "measurable_axes": [
+            "M8",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "b",
+            "c",
+            "d"
+          ],
+          "cleared_label": "b+c+d",
+          "measurable_count": 8,
+          "measurable_axes": [
+            "M2",
+            "M3",
+            "M4",
+            "M7",
+            "M8",
+            "M10",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        },
+        {
+          "cleared": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "cleared_label": "a+b+c+d",
+          "measurable_count": 12,
+          "measurable_axes": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M8",
+            "M9",
+            "M10",
+            "M11",
+            "M12"
+          ],
+          "evidence_status": "VERIFIED"
+        }
+      ],
+      "today": {
+        "cleared": [
+          "b"
+        ],
+        "open": [
+          "a",
+          "c",
+          "d"
+        ],
+        "scoreable_count": 2,
+        "scoreable_axes": [
+          "M8",
+          "M12"
+        ],
+        "evidence_status": "VERIFIED"
+      }
+    }
+  }
+}
