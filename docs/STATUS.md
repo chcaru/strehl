@@ -3478,6 +3478,80 @@ a competitive shortfall.
    recommends closing it **before** any purchase, and I agree: it is free.
 4. **Then** the owner asks, in the order the table above now fixes.
 
+### 2.9.30 Blocker (d) has a free precondition nobody had checked
+
+Lane M132 ruled on the routes to `(d)` — the common-input Zerene/Helicon
+comparison that gates 8 of the 12 axes (`c8fa6076`). Three findings change the
+owner ask.
+
+**1. Both licences are silent on publishing a benchmark, and I asked because
+nobody had.** This was dispatched as *"possibly program-critical, believed never
+asked"*, and it was in fact never asked. The lane fetched both vendors' current
+terms with a browser user-agent, retained the pages, and audited the extracted
+bodies for benchmarking, comparative-testing, publication, competitive-
+development and reverse-engineering language. The result:
+
+> **No benchmark, comparative-testing, benchmark-result publication, or
+> competitive-product-development clause appears in the Zerene EULA.**
+
+**Silence is not permission, and the lane correctly declined to report it as
+permission.** The whole purpose of `(d)` is to *publish* a comparison. Spending
+$189 and then building eight axes on an unexamined assumption is precisely the
+kind of late-discovered defect this program keeps paying for. So there is now a
+**$0, five-minute precondition** on the purchase: ask the vendor in writing. A
+draft sits in `docs/OWNER-ACTIONS.md`.
+
+**2. The edition question is real, and the same email settles it.** Prosumer
+($189) carries a restriction that Professional ($289) does not:
+
+> Prosumer Edition can be used for educational instruction and preparation of
+> instructional materials. However, Prosumer Edition cannot be used to support
+> any other corporate, organizational, or government activity, including funded
+> research and documentation of scientific collections, or in connection with
+> any other activity that produces income or other tangible reward greater than
+> the cost of a Professional Edition license.
+
+Professional instead states *"There are no restrictions on the use of images
+produced by Professional Edition licenses"*. A personal, unfunded project reads
+as inside Prosumer and a public write-up is arguably *"preparation of
+instructional materials"* — but `strehl` publishes through a blog, and the
+reading changes if that blog ever carries income. **The extra $100 buys
+unambiguous clearance to publish the output images.** That is the owner's call,
+not mine; the email removes the guess either way.
+
+All three clauses were verified verbatim against the lane report before being
+quoted to the owner. Worth recording *how*: a plain string match failed on
+**both** files, because the quotes are Markdown blockquotes and the prose is
+line-wrapped. They only matched after stripping `>` markers and collapsing
+whitespace. This is the wrapped-prose trap in a new costume — the blockquote
+marker is itself an interruption, not just the line break.
+
+**3. Helicon can do what we need, but not in a shipping release.** Helicon Focus
+**9 Pro** has `Export Layers -> Aligned source images without transparency`,
+which is exactly the common-input export, and it is **cheaper** than Zerene at
+**$55 one-year / $200 lifetime**. But that capability exists only in **9.0.5
+Beta**; current stable **8.3.11** documents no master alignment-off switch. Its
+trial on this machine appears unused.
+
+**Ruling: reserve it.** Starting a 30-day trial now, before crop-early lands and
+before the capture session supplies the inputs, would burn the clock before
+there is anything to measure — which is *exactly* how the Zerene trial was
+wasted (`License category = TRIAL`, expired `2026-06-06`). Reconsider when
+Helicon 9 reaches stable release. **A depletable resource should be spent when
+the inputs are ready, not while scouting.**
+
+**4. The scorecard's naming of Zerene/Helicon is essential, not incidental.** The
+lane found no cheaper equal-standing comparator, which closes the question
+§2.9.26 left open when it corrected the "free upstream `focus-stack`" error. The
+scorecard stands as written.
+
+**Consolidated for an absent owner.** `docs/OWNER-ACTIONS.md` (`94879300`) is a
+new single page stating the three asks in the order the evidence now fixes them:
+send the email ($0), shoot the session ($0, 45-60 min, reaches `4 of 12`), then
+buy ($189 or $289, reaches `12 of 12`). It exists because the session has already
+crashed once and lost every running lane; a committed owner-facing page survives
+that, and a chat summary does not.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
