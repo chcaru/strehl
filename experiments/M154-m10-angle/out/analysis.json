@@ -1,0 +1,900 @@
+{
+  "schema_version": 3,
+  "generated_at_utc": "2026-09-04T14:16:59.366901+00:00",
+  "scan_started_at_utc": "2026-09-04T14:16:56.875260+00:00",
+  "repository_identity": {
+    "head": "7bb34024bc62a39919bf2de303f2d2a19976b058",
+    "stability_check": "VERIFIED: every scanned byte came from this immutable Git commit through git archive"
+  },
+  "self_tests": [
+    "valid anchored source fixture passed",
+    "planted rise-value defect failed",
+    "planted duplicate-anchor defect failed"
+  ],
+  "source_record": {
+    "path": "D:\\personal\\macro\\requests\\8-tilted-planar\\README.md",
+    "sha256": "3735dd46b11332e89badcc2614060a2b70a0aa0a9fbdcf32d1e78906720bfc51",
+    "line_number": 4,
+    "text": "Subject is a ruler tilted up (vertically) from left to right at an angle of approximately 10.26deg (measured about: 10cm run against 1.81cm rise). Left side is the closer part of the ruler to the lens and the focus bracket sweeps down to the lower side on the right.",
+    "run_cm": 10.0,
+    "rise_cm": 1.81,
+    "provenance_status": "MEASURED owner capture note; method, instrument, endpoints, repeatability, and uncertainty are not recorded"
+  },
+  "derivation": {
+    "nominal": {
+      "run_cm": 10.0,
+      "rise_cm": 1.81,
+      "slope": 0.181,
+      "theta_deg": 10.259461685473655,
+      "status": "DERIVED nominal from a MEASURED owner note whose uncertainty and instrument are unrecorded"
+    },
+    "geometry_convention": {
+      "theta_deg_if_10_cm_is_horizontal_run": 10.259461685473655,
+      "theta_deg_if_10_cm_is_distance_along_ruler": 10.428012387270385,
+      "relative_difference_tan_theta_vs_sin_theta": 0.016248493233815386,
+      "status": "DERIVED; the capture note uses the word 'run', supporting the horizontal-run interpretation, but does not define endpoints or the camera-relative coordinate frame"
+    },
+    "m10_truth_budget": {
+      "maximum_relative_slope_error": 0.025,
+      "required_true_slope_interval_if_nominal_is_frozen": [
+        0.17658536585365855,
+        0.18564102564102564
+      ],
+      "required_theta_interval_deg_if_nominal_is_frozen": [
+        10.01435733697968,
+        10.516726711547456
+      ],
+      "status": "DERIVED from the registered 2.5% truth-slope budget"
+    },
+    "m10_final_slope_bar": {
+      "maximum_relative_slope_error": 0.05,
+      "theta_interval_deg_if_nominal_is_frozen": [
+        9.78057970667593,
+        10.787069260590965
+      ],
+      "status": "DERIVED from the registered 5% final ruler-slope bar"
+    },
+    "precision_examples": {
+      "plus_or_minus_1_deg_worst_relative_slope_error": 0.11022603850384405,
+      "plus_or_minus_0.5_deg_worst_relative_slope_error": 0.05231674023030486,
+      "required_minus_deg": 0.24510434849397456,
+      "required_plus_deg": 0.2572650260738012,
+      "status": "DERIVED"
+    },
+    "conditional_display_precision_interval": {
+      "assumption": "ASSUMED only: 10 cm rounded to nearest 1 cm and 1.81 cm rounded to nearest 0.01 cm",
+      "run_cm_interval": [
+        9.5,
+        10.5
+      ],
+      "rise_cm_interval": [
+        1.8050000000000002,
+        1.815
+      ],
+      "slope_interval": [
+        0.17190476190476192,
+        0.19105263157894736
+      ],
+      "theta_interval_deg": [
+        9.754081236094011,
+        10.816165801227466
+      ],
+      "worst_relative_slope_error": 0.0529085872576176,
+      "qualifies_for_m10_truth_budget": false
+    },
+    "evidential_interval": {
+      "theta_interval_deg": null,
+      "reason": "The source says 'approximately' and 'measured about' but records no instrument, endpoint definition, repeatability, or uncertainty; no finite uncertainty interval is derivable.",
+      "status": "UNMEASURED"
+    }
+  },
+  "repository_inventory": {
+    "scope": {
+      "root": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+      "description": "Every regular tracked blob in the immutable Git commit, including binary files and committed experiment outputs",
+      "git_commit": "7bb34024bc62a39919bf2de303f2d2a19976b058",
+      "excluded_m154_paths": [
+        "docs/research/M154-m10-angle.md",
+        "experiments/M154-m10-angle/**"
+      ],
+      "matching_mode": "binary-safe byte search over git archive; no filename-suffix filter"
+    },
+    "tracked_blobs_scanned": 9508,
+    "bytes_scanned": 350327083,
+    "raw_10_26_substring_hit_count": 537,
+    "raw_10_26_substring_file_count": 126,
+    "hit_count": 80,
+    "file_count": 26,
+    "counts_by_token": {
+      "10.26": 73,
+      "theta_ext": 7
+    },
+    "counts_by_classification": {
+      "angle assertion": 3,
+      "approximate angle assertion": 7,
+      "capture identifier": 60,
+      "other exact numeric token": 3,
+      "theta_ext quantity": 7
+    },
+    "hits": [
+      {
+        "path": "docs/STATUS.md",
+        "line": 5072,
+        "column": 12,
+        "token": "theta_ext",
+        "classification": "theta_ext quantity",
+        "context": "record of `theta_ext` is the phrase *\"approximately 10.26 deg\"*, with no"
+      },
+      {
+        "path": "docs/STATUS.md",
+        "line": 932,
+        "column": 89,
+        "token": "10.26",
+        "classification": "approximate angle assertion",
+        "context": "* **M10 depth** \u2014 no depth product exists; the ruler record says only *\"approximately 10.26 deg\"*."
+      },
+      {
+        "path": "docs/STATUS.md",
+        "line": 5072,
+        "column": 53,
+        "token": "10.26",
+        "classification": "approximate angle assertion",
+        "context": "record of `theta_ext` is the phrase *\"approximately 10.26 deg\"*, with no"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 1051,
+        "column": 18,
+        "token": "theta_ext",
+        "classification": "theta_ext quantity",
+        "context": "`z_true=x*tan(theta_ext)` after one fitted origin only. `theta_ext` must come from"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 1051,
+        "column": 61,
+        "token": "theta_ext",
+        "classification": "theta_ext quantity",
+        "context": "`z_true=x*tan(theta_ext)` after one fitted origin only. `theta_ext` must come from"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 318,
+        "column": 46,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "| `requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl` | 120 | **HOLDOUT \u2014 QUALITY** | M5 depth coverage and conditional M10 physical-depth slope. |"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 319,
+        "column": 46,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "| `requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl` | 85 | **HOLDOUT \u2014 QUALITY** | Cross-aperture depth consistency. |"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 320,
+        "column": 46,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "| `requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl` | 65 | **HOLDOUT \u2014 QUALITY** | Cross-aperture depth consistency. |"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 403,
+        "column": 21,
+        "token": "10.26",
+        "classification": "approximate angle assertion",
+        "context": "as \u201capproximately 10.26 deg.\u201d Unless an independent record bounds that angle tightly"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 1041,
+        "column": 22,
+        "token": "10.26",
+        "classification": "angle assertion",
+        "context": "**Input.** The three 10.26-degree tilted-ruler stacks, the flat battery null, and an"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 1054,
+        "column": 4,
+        "token": "10.26",
+        "classification": "approximate angle assertion",
+        "context": "10.26 deg\u201d is a candidate value, not by itself traceable truth. No slope is fitted"
+      },
+      {
+        "path": "docs/research/M-PHASE0-LCA.md",
+        "line": 125,
+        "column": 80,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "| primary ruler | `D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl` | 65 |"
+      },
+      {
+        "path": "docs/research/SCORECARD-BASELINE.md",
+        "line": 34,
+        "column": 120,
+        "token": "10.26",
+        "classification": "approximate angle assertion",
+        "context": "| M10 | valid fraction, rank, errors, slope/null/confusion | no depth product; ruler record says only \u201capproximately 10.26 deg\u201d | **UNMEASURED** |"
+      },
+      {
+        "path": "docs/research/V-EYES.md",
+        "line": 212,
+        "column": 32,
+        "token": "10.26",
+        "classification": "other exact numeric token",
+        "context": "| 109MSDCF | **\u221212.16** | **+10.26** | sign flip, +22.4 |"
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/PREREGISTRATION.md",
+        "line": 122,
+        "column": 21,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "| `ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl` | 120 | 100 | f/5.6 | 4 s | 0.2738\u20130.2805 m |"
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/out/aperture-f11-measure.json",
+        "line": 5,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"capture_path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/out/aperture-f8-measure.json",
+        "line": 5,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"capture_path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/out/commission-initial-red.json",
+        "line": 99,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"file\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\\\\DSC00040.ARW\","
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/out/commission.json",
+        "line": 99,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"file\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\\\\DSC00040.ARW\","
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/out/primary-f5p6-measure.json",
+        "line": 5,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"capture_path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/src/commission.py",
+        "line": 40,
+        "column": 25,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "/ \"ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\""
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/src/measure.py",
+        "line": 38,
+        "column": 33,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "r\"\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\""
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/src/measure.py",
+        "line": 47,
+        "column": 33,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "r\"\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\""
+      },
+      {
+        "path": "experiments/M-PHASE0-CURV/src/measure.py",
+        "line": 56,
+        "column": 33,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "r\"\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\""
+      },
+      {
+        "path": "experiments/M-PHASE0-LCA/PREREGISTRATION.md",
+        "line": 80,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "| tilted metal ruler | `D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl` | 65 | known depth-gradient primary |"
+      },
+      {
+        "path": "experiments/M-PHASE0-LCA/out/measurement.json",
+        "line": 760,
+        "column": 81,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"root\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\""
+      },
+      {
+        "path": "experiments/M-PHASE0-LCA/out/measurement.json",
+        "line": 14676,
+        "column": 83,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M-PHASE0-LCA/src/measure.py",
+        "line": 93,
+        "column": 33,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "r\"\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\""
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1041,
+        "column": 33,
+        "token": "theta_ext",
+        "classification": "theta_ext quantity",
+        "context": "\" `z_true=x*tan(theta_ext)` after one fitted origin only. `theta_ext` must come from\","
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1041,
+        "column": 76,
+        "token": "theta_ext",
+        "classification": "theta_ext quantity",
+        "context": "\" `z_true=x*tan(theta_ext)` after one fitted origin only. `theta_ext` must come from\","
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1053,
+        "column": 118,
+        "token": "theta_ext",
+        "classification": "theta_ext quantity",
+        "context": "\"collapsed\": \"**Exact computation.** 1. Map ruler ticks to physical `x`; external truth is `z_true=x*tan(theta_ext)` after one fitted origin only. `theta_ext` must come from a measurement independent of image focus and be frozen with uncertainty small enough to contribute at most `2.5%` slope error. The README\u2019s \u201capproximately 10.26 deg\u201d is a candidate value, not by itself traceable truth. No slope is fitted from strehl\u2019s depth output. 2. Convert predicted depth to the same units using the declared capture model. 3. Report valid-pixel fraction, Spearman rank correlation, median and p95 abso"
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1053,
+        "column": 161,
+        "token": "theta_ext",
+        "classification": "theta_ext quantity",
+        "context": "\"collapsed\": \"**Exact computation.** 1. Map ruler ticks to physical `x`; external truth is `z_true=x*tan(theta_ext)` after one fitted origin only. `theta_ext` must come from a measurement independent of image focus and be frozen with uncertainty small enough to contribute at most `2.5%` slope error. The README\u2019s \u201capproximately 10.26 deg\u201d is a candidate value, not by itself traceable truth. No slope is fitted from strehl\u2019s depth output. 2. Convert predicted depth to the same units using the declared capture model. 3. Report valid-pixel fraction, Spearman rank correlation, median and p95 absolute error in both micrometres and measured"
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1025,
+        "column": 37,
+        "token": "10.26",
+        "classification": "angle assertion",
+        "context": "\"**Input.** The three 10.26-degree tilted-ruler stacks, the flat battery null, and an\","
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1032,
+        "column": 48,
+        "token": "10.26",
+        "classification": "angle assertion",
+        "context": "\"collapsed\": \"**Input.** The three 10.26-degree tilted-ruler stacks, the flat battery null, and an independently implemented non-planar synthetic two-layer target whose latent depths are hidden from the estimator. The ruler\u2019s 1/64-inch markings set lateral scale. The fresh tilted-slide unit is development-only planarity/order commissioning and cannot be promoted to score evidence after diagnostic use. At least 20 non-overlapping ruler strips and 10,000 target pixels must qualify.\""
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1044,
+        "column": 19,
+        "token": "10.26",
+        "classification": "approximate angle assertion",
+        "context": "\" 10.26 deg\u201d is a candidate value, not by itself traceable truth. No slope is fitted\","
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1053,
+        "column": 346,
+        "token": "10.26",
+        "classification": "approximate angle assertion",
+        "context": "\"collapsed\": \"**Exact computation.** 1. Map ruler ticks to physical `x`; external truth is `z_true=x*tan(theta_ext)` after one fitted origin only. `theta_ext` must come from a measurement independent of image focus and be frozen with uncertainty small enough to contribute at most `2.5%` slope error. The README\u2019s \u201capproximately 10.26 deg\u201d is a candidate value, not by itself traceable truth. No slope is fitted from strehl\u2019s depth output. 2. Convert predicted depth to the same units using the declared capture model. 3. Report valid-pixel fraction, Spearman rank correlation, median and p95 absolute error in both micrometres and measured focus-step equivalents, and fitted predicted/true slope ratio. 4. On the flat battery, report p95 depth range. On the synthetic two-layer target, report layer confusion and boundary bi"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/analysis.py",
+        "line": 44,
+        "column": 49,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "r\"requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\": \"HOLDOUT \u2014 QUALITY\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/analysis.py",
+        "line": 45,
+        "column": 49,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "r\"requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\": \"HOLDOUT \u2014 QUALITY\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/analysis.py",
+        "line": 46,
+        "column": 49,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "r\"requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\": \"HOLDOUT \u2014 QUALITY\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 7846,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 7850,
+        "column": 81,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 7959,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 7964,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 7970,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 7980,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 7984,
+        "column": 81,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 8093,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 8098,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 8104,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 8114,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 8118,
+        "column": 81,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 8227,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 8232,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 8238,
+        "column": 85,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"source\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 12257,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 12273,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-manifest.json",
+        "line": 12289,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-segments.csv",
+        "line": 138,
+        "column": 43,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,1,65,DSC00016.ARW,DSC00080.ARW,2026:08:29 22:48:04.475-07:00,2026:08:29 22:52:49.482-07:00,100,4,11,200,1,5,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-segments.csv",
+        "line": 139,
+        "column": 43,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,1,120,DSC00040.ARW,DSC00159.ARW,2026:08:29 22:15:12.922-07:00,2026:08:29 22:24:03.247-07:00,100,4,5.6,200,1,5,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-segments.csv",
+        "line": 140,
+        "column": 43,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,1,85,DSC00026.ARW,DSC00110.ARW,2026:08:29 22:38:11.254-07:00,2026:08:29 22:44:25.525-07:00,100,4,8,200,1,5,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 53,
+        "column": 43,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,65,DSC00016.ARW,DSC00080.ARW,2026:08:29 22:48:04.475-07:00,2026:08:29 22:52:49.482-07:00,285.007,True,True,True,4.457,4.478,60.0,100,4,11,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,,not_recoverable_from_metadata,1,2"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 53,
+        "column": 176,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,65,DSC00016.ARW,DSC00080.ARW,2026:08:29 22:48:04.475-07:00,2026:08:29 22:52:49.482-07:00,285.007,True,True,True,4.457,4.478,60.0,100,4,11,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,,not_recoverable_from_metadata,1,2500730880,0,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 53,
+        "column": 481,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,65,DSC00016.ARW,DSC00080.ARW,2026:08:29 22:48:04.475-07:00,2026:08:29 22:52:49.482-07:00,285.007,True,True,True,4.457,4.478,60.0,100,4,11,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl,,not_recoverable_from_metadata,1,2500730880,0,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 54,
+        "column": 43,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,120,DSC00040.ARW,DSC00159.ARW,2026:08:29 22:15:12.922-07:00,2026:08:29 22:24:03.247-07:00,530.325,True,True,True,4.46,4.497,60.0,100,4,5.6,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,,not_recoverable_from_metadata"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 54,
+        "column": 177,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,120,DSC00040.ARW,DSC00159.ARW,2026:08:29 22:15:12.922-07:00,2026:08:29 22:24:03.247-07:00,530.325,True,True,True,4.46,4.497,60.0,100,4,5.6,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,,not_recoverable_from_metadata,1,4872204288,0,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 54,
+        "column": 484,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,120,DSC00040.ARW,DSC00159.ARW,2026:08:29 22:15:12.922-07:00,2026:08:29 22:24:03.247-07:00,530.325,True,True,True,4.46,4.497,60.0,100,4,5.6,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl,,not_recoverable_from_metadata,1,4872204288,0,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 55,
+        "column": 43,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,85,DSC00026.ARW,DSC00110.ARW,2026:08:29 22:38:11.254-07:00,2026:08:29 22:44:25.525-07:00,374.271,True,True,True,4.459,4.483,60.0,100,4,8,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,,not_recoverable_from_metadata,1,33625"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 55,
+        "column": 175,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,85,DSC00026.ARW,DSC00110.ARW,2026:08:29 22:38:11.254-07:00,2026:08:29 22:44:25.525-07:00,374.271,True,True,True,4.459,4.483,60.0,100,4,8,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,,not_recoverable_from_metadata,1,3362598912,0,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/capture-stacks.csv",
+        "line": 55,
+        "column": 478,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,request,8-tilted-planar,inclined metal ruler,D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,85,DSC00026.ARW,DSC00110.ARW,2026:08:29 22:38:11.254-07:00,2026:08:29 22:44:25.525-07:00,374.271,True,True,True,4.459,4.483,60.0,100,4,8,200,0.273841307296975|0.277110541270397|0.280524516597463,On,Exposure Bracketing,7,INHERITED,yes,requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl,,not_recoverable_from_metadata,1,3362598912,0,VERIFIED"
+      },
+      {
+        "path": "experiments/M141-capture-inventory/holdout-register.json",
+        "line": 94,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/holdout-register.json",
+        "line": 106,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M141-capture-inventory/holdout-register.json",
+        "line": 118,
+        "column": 64,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"stack_id\": \"requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/M90-prnu/out/rho2-flat-on-ruler-cpl.txt",
+        "line": 17,
+        "column": 17,
+        "token": "10.26",
+        "classification": "other exact numeric token",
+        "context": "CatmullRom 10.26 18.02 31.98 45.52 56.89 69.27 83.34 92.67"
+      },
+      {
+        "path": "experiments/SCORECARD-BASELINE/out/INPUT-MANIFEST.json",
+        "line": 193,
+        "column": 81,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl\""
+      },
+      {
+        "path": "experiments/SCORECARD-BASELINE/out/INPUT-MANIFEST.json",
+        "line": 201,
+        "column": 81,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\""
+      },
+      {
+        "path": "experiments/SCORECARD-BASELINE/out/INPUT-MANIFEST.json",
+        "line": 209,
+        "column": 81,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "\"path\": \"D:\\\\personal\\\\macro\\\\requests\\\\8-tilted-planar\\\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl\""
+      },
+      {
+        "path": "experiments/SCORECARD-BASELINE/prepare.py",
+        "line": 85,
+        "column": 25,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "/ \"ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\","
+      },
+      {
+        "path": "experiments/SCORECARD-BASELINE/prepare.py",
+        "line": 89,
+        "column": 25,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "/ \"ruler-incline-ang10.26deg-inches-f8-sw7-cpl\","
+      },
+      {
+        "path": "experiments/SCORECARD-BASELINE/prepare.py",
+        "line": 93,
+        "column": 25,
+        "token": "10.26",
+        "classification": "capture identifier",
+        "context": "/ \"ruler-incline-ang10.26deg-inches-f11-sw7-cpl\","
+      },
+      {
+        "path": "experiments/m61-ptc-high-iso/data/rollup.txt",
+        "line": 13,
+        "column": 76,
+        "token": "10.26",
+        "classification": "other exact numeric token",
+        "context": "wrapped-text-1 100 0.8639 0.8931 0.161 2.36 10.26"
+      }
+    ],
+    "whitespace_collapsed_phrase_hits": [
+      {
+        "path": "docs/STATUS.md",
+        "line": 932,
+        "matched": "approximately 10.26 deg"
+      },
+      {
+        "path": "docs/STATUS.md",
+        "line": 5072,
+        "matched": "approximately 10.26 deg"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 403,
+        "matched": "approximately 10.26 deg"
+      },
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "line": 1053,
+        "matched": "approximately 10.26 deg"
+      },
+      {
+        "path": "docs/research/SCORECARD-BASELINE.md",
+        "line": 34,
+        "matched": "approximately 10.26 deg"
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "line": 1053,
+        "matched": "approximately 10.26 deg"
+      }
+    ],
+    "source_dimension_hits": [],
+    "path_hits": []
+  },
+  "git_history": {
+    "capture_identifier": [
+      {
+        "commit": "f0f63f71d802ab38ebfc5a776b3186dfd7fc7960",
+        "authored_at": "2026-09-02T20:03:41-07:00",
+        "subject": "M-PHASE0-LCA: preregister chromatic focus census"
+      },
+      {
+        "commit": "69af67be4e4d7eb84a339710abe3d3ad4e12098c",
+        "authored_at": "2026-09-02T20:04:14-07:00",
+        "subject": "Preregister M-PHASE0-CURV field-curvature census"
+      },
+      {
+        "commit": "d941f253da883b3e4e3829f1a13fcc8602f308b7",
+        "authored_at": "2026-09-02T20:14:22-07:00",
+        "subject": "Freeze commissioned CURV measurement instrument"
+      },
+      {
+        "commit": "e3d6811bd06dc28237b2416059165eca105092f3",
+        "authored_at": "2026-09-02T20:34:47-07:00",
+        "subject": "File C5 field-curvature verdict as narrowed"
+      },
+      {
+        "commit": "a50a6ce41e50013575e667bc9675310ba5ed1add",
+        "authored_at": "2026-09-02T20:37:20-07:00",
+        "subject": "M-PHASE0-LCA: freeze commissioned axial-CA instrument"
+      },
+      {
+        "commit": "994ecb48ead3ac9522e4d8307ef8a6768db50f81",
+        "authored_at": "2026-09-02T21:19:34-07:00",
+        "subject": "M-PHASE0-LCA: file not-robust chromatic focus verdict"
+      },
+      {
+        "commit": "90bced75910d77766bc5c0f4f3bac3dcf604bab0",
+        "authored_at": "2026-09-02T23:27:11-07:00",
+        "subject": "Preregister the SOTA scorecard"
+      },
+      {
+        "commit": "bc8f315a1d2a205633ca05e8b7ac21453da44f22",
+        "authored_at": "2026-09-03T00:04:31-07:00",
+        "subject": "SCORECARD-BASELINE: freeze independent bee instruments"
+      },
+      {
+        "commit": "cd5bf5cc4c0b26e1865dc672a1bac162f2a20154",
+        "authored_at": "2026-09-04T03:21:16-07:00",
+        "subject": "research: inventory macro capture corpus"
+      }
+    ],
+    "approximate_phrase": [
+      {
+        "commit": "90bced75910d77766bc5c0f4f3bac3dcf604bab0",
+        "authored_at": "2026-09-02T23:27:11-07:00",
+        "subject": "Preregister the SOTA scorecard"
+      },
+      {
+        "commit": "19e3819a8de3a1601387e3097940fc700000c77a",
+        "authored_at": "2026-09-03T00:13:05-07:00",
+        "subject": "SCORECARD-BASELINE: record first self-baseline"
+      },
+      {
+        "commit": "fbf56d433d2d31801d80722e45406e59f975ca37",
+        "authored_at": "2026-09-03T00:19:15-07:00",
+        "subject": "STATUS: baseline returns UNMEASURED on all twelve axes -- and names the product, not the instrument"
+      },
+      {
+        "commit": "1d04d937adf0f23d2c9a3713a956ff89d41d426f",
+        "authored_at": "2026-09-04T01:05:17-07:00",
+        "subject": "Audit scorecard bar well-formedness"
+      },
+      {
+        "commit": "be18747cefcd71771927283af1a9b166e38cd088",
+        "authored_at": "2026-09-04T05:56:57-07:00",
+        "subject": "STATUS 2.9.47: two-sitting capture ask, adapter TOCTOU, two errors of my own"
+      }
+    ],
+    "theta_quantity": [
+      {
+        "commit": "90bced75910d77766bc5c0f4f3bac3dcf604bab0",
+        "authored_at": "2026-09-02T23:27:11-07:00",
+        "subject": "Preregister the SOTA scorecard"
+      },
+      {
+        "commit": "1d04d937adf0f23d2c9a3713a956ff89d41d426f",
+        "authored_at": "2026-09-04T01:05:17-07:00",
+        "subject": "Audit scorecard bar well-formedness"
+      },
+      {
+        "commit": "be18747cefcd71771927283af1a9b166e38cd088",
+        "authored_at": "2026-09-04T05:56:57-07:00",
+        "subject": "STATUS 2.9.47: two-sitting capture ask, adapter TOCTOU, two errors of my own"
+      }
+    ]
+  },
+  "supplemental_working_tree_census": {
+    "path": "experiments/M154-m10-angle/out/working-tree-census.json",
+    "status": "MEASURED rolling census, not an atomic snapshot and not used for absence claims"
+  },
+  "script_access_scope": {
+    "external_files_read_by_this_script": [
+      "D:\\personal\\macro\\requests\\8-tilted-planar\\README.md"
+    ],
+    "external_capture_files_read_by_this_script": [],
+    "note": "This records this script's code path only; it is not an audit of the surrounding interactive session."
+  }
+}
