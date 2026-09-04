@@ -1,0 +1,62 @@
+{
+  "after": {
+    "D:\\edited\\macro": {
+      "enumeration": "recursive os.scandir including hidden/system entries",
+      "extension_counts": {
+        ".avif": 22,
+        ".jpg": 3,
+        ".tif": 362
+      },
+      "file_count": 387,
+      "path": "D:\\edited\\macro",
+      "path_size_mtime_sha256": "e5e6381f19342e5800247f96a7cf1668e622fe6410834fb3451908fd2c2bdc57",
+      "total_bytes": 141333902406
+    },
+    "D:\\personal\\macro": {
+      "enumeration": "recursive os.scandir including hidden/system entries",
+      "extension_counts": {
+        ".arw": 10509,
+        ".dng": 1,
+        ".log": 1,
+        ".md": 10,
+        ".png": 2,
+        ".xmp": 201
+      },
+      "file_count": 10724,
+      "path": "D:\\personal\\macro",
+      "path_size_mtime_sha256": "21cb3e0217772b2eb39e33f6f0d4e250e2c1ae7d592a38bf0063b792118de742",
+      "total_bytes": 487169829957
+    }
+  },
+  "all_trees_unchanged": true,
+  "before": {
+    "D:\\edited\\macro": {
+      "enumeration": "recursive os.scandir including hidden/system entries",
+      "extension_counts": {
+        ".avif": 22,
+        ".jpg": 3,
+        ".tif": 362
+      },
+      "file_count": 387,
+      "path": "D:\\edited\\macro",
+      "path_size_mtime_sha256": "e5e6381f19342e5800247f96a7cf1668e622fe6410834fb3451908fd2c2bdc57",
+      "total_bytes": 141333902406
+    },
+    "D:\\personal\\macro": {
+      "enumeration": "recursive os.scandir including hidden/system entries",
+      "extension_counts": {
+        ".arw": 10509,
+        ".dng": 1,
+        ".log": 1,
+        ".md": 10,
+        ".png": 2,
+        ".xmp": 201
+      },
+      "file_count": 10724,
+      "path": "D:\\personal\\macro",
+      "path_size_mtime_sha256": "21cb3e0217772b2eb39e33f6f0d4e250e2c1ae7d592a38bf0063b792118de742",
+      "total_bytes": 487169829957
+    }
+  },
+  "schema": "m152-readonly-verification-v1"
+}

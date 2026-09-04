@@ -1,0 +1,595 @@
+{
+  "arms": [
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.0,
+      "median_rho_edge": 1.0,
+      "median_v_e": 0.0,
+      "name": "synthetic_healthy_null",
+      "p99_h_e": 0.0,
+      "p99_v_e": 0.0,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0,
+      "proposed_side_max_detection_rate": 0.0,
+      "site_count": 500,
+      "verdict": "PASS"
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "median_h_e": false,
+        "median_v_e": true,
+        "p99_h_e": false,
+        "p99_v_e": true,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.05994337570598359,
+      "median_rho_edge": 0.7740274197027729,
+      "median_v_e": 0.002918918918922801,
+      "name": "planted_6pct_rim",
+      "p99_h_e": 0.05999853938117411,
+      "p99_v_e": 0.0029189189193000124,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "proposed_side_max_detection_rate": 0.0,
+      "site_count": 500,
+      "verdict": "FAIL"
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "median_h_e": false,
+        "median_v_e": true,
+        "p99_h_e": false,
+        "p99_v_e": true,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.05994337570598359,
+      "median_rho_edge": 0.6588118259605987,
+      "median_v_e": 0.002918918918922802,
+      "name": "planted_6pct_opposite_sign_rim",
+      "p99_h_e": 0.05999853938117411,
+      "p99_v_e": 0.0029189189193000124,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "proposed_side_max_detection_rate": 0.0,
+      "site_count": 500,
+      "verdict": "FAIL"
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "median_h_e": false,
+        "median_v_e": false,
+        "p99_h_e": false,
+        "p99_v_e": false,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.05997225722063503,
+      "median_rho_edge": 0.8870444075021274,
+      "median_v_e": 0.0600000000000798,
+      "name": "planted_6pct_200px_veil",
+      "p99_h_e": 0.05999949302994887,
+      "p99_v_e": 0.060000000007833586,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "proposed_side_max_detection_rate": 1.0,
+      "site_count": 500,
+      "verdict": "FAIL"
+    },
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "median_h_e": true,
+        "median_v_e": false,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.0,
+      "median_rho_edge": 0.956077460845514,
+      "median_v_e": 0.027243243243279466,
+      "name": "planted_6pct_one_sided_far_200px_veil",
+      "p99_h_e": 0.0,
+      "p99_v_e": 0.027243243246800126,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "proposed_side_max_detection_rate": 1.0,
+      "site_count": 500,
+      "verdict": "FAIL"
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "median_h_e": false,
+        "median_v_e": false,
+        "p99_h_e": false,
+        "p99_v_e": false,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.1198849484087694,
+      "median_rho_edge": 0.7945544173629487,
+      "median_v_e": 0.0600000000000798,
+      "name": "planted_6pct_rim_and_veil",
+      "p99_h_e": 0.11999809269832759,
+      "p99_v_e": 0.060000000007833586,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "proposed_side_max_detection_rate": 1.0,
+      "site_count": 500,
+      "verdict": "FAIL"
+    },
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.009884948408137492,
+      "median_rho_edge": 0.9959418189296511,
+      "median_v_e": 0.0050000000000066614,
+      "name": "planted_improvement_0_5pct_rim_and_veil",
+      "p99_h_e": 0.009998092697349402,
+      "p99_v_e": 0.0050000000006528164,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.005,
+      "proposed_side_max_detection_rate": 0.0,
+      "site_count": 500,
+      "verdict": "PASS"
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": false,
+        "median_h_e": false,
+        "median_v_e": true,
+        "p99_h_e": false,
+        "p99_v_e": true,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "median_edge_width_ratio": 1.7710278679724225,
+      "median_h_e": 0.13631504841997077,
+      "median_rho_edge": 0.03690652838074768,
+      "median_v_e": 7.661020579919304e-05,
+      "name": "planted_blur_guard",
+      "p99_h_e": 0.16607162926516464,
+      "p99_v_e": 0.00012957264674257323,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0,
+      "proposed_side_max_detection_rate": 0.0,
+      "site_count": 500,
+      "verdict": "FAIL"
+    }
+  ],
+  "assertions": {
+    "blur_guard_rejects_threefold_blur": true,
+    "improvement_reduces_h_by_at_least_5pp": true,
+    "improvement_reduces_v_by_at_least_5pp": true,
+    "one_sided_far_veil_detected_at_least_95pct": false,
+    "opposite_sign_rim_detected_at_least_95pct": true,
+    "positive_rim_detected_at_least_95pct": true,
+    "proposed_side_max_would_detect_one_sided_far_veil": true,
+    "raw_null_false_positive_at_most_1pct": true,
+    "synthetic_null_passes": true,
+    "veil_detected_at_least_95pct": true
+  },
+  "candidate_outputs_opened": 0,
+  "census_definition_sha256": "b2e872a6a8214d4fbe379287f52fc57b8f5e61f292aab4c30e96b11d49325879",
+  "census_manifest_sha256": "35d5058afc1f310923ba2a3e5bf0cd3b91b3eb2df0e8d4868c22099de7bcd38d",
+  "checker_definition_sha256": "882440eb073caba2c285f42b2baac0e92d49ad254d90d61a1e67eb188efc2221",
+  "checker_source_sha256": "be6c77eaee4996db1341115097384ff6c3716622fc2f9d7df53ba14e5574b809",
+  "commission_source_sha256": "39d01eb56f9d966aea96bb95728c37d76c1739135d2ac275650d320ea4ea342a",
+  "failed_assertions": [
+    "one_sided_far_veil_detected_at_least_95pct"
+  ],
+  "holdout_outputs_opened": 0,
+  "master_seed": 15220260904,
+  "schema": "m152-m3-checker-commission-v1",
+  "synthetic_site_count_per_arm": 500,
+  "untouched_raw_null": {
+    "affected_edge_count": 0,
+    "decoded_inputs": [
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "68063d6afc10fd7515648b2877c041c43005618a6d6add00a0d06f22fb7e7295",
+        "file": "DSC00018.ARW",
+        "high_rail_fraction": 0.0,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 37076992,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "ae22b73cb4b950fe91f8c9c6612b7d16dd22fed2395cbb2ed7a0a9ac904d2caa",
+        "file": "DSC00030.ARW",
+        "high_rail_fraction": 5.548260395764577e-05,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 38383616,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "ed58260fffe8b1253cdcaf00bac65a9a6d8cf4926c67ccaf11ab66422dc8da11",
+        "file": "DSC00076.ARW",
+        "high_rail_fraction": 3.0351533893679307e-07,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 37847040,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "182f734db7c738bdfb0da5badb5ffad529a0c2bd6ba6be19d18bf80a750ee759",
+        "file": "DSC00022.ARW",
+        "high_rail_fraction": 0.0,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 37277696,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "e94aa71e5ac09ada33c080531e5688ff38a7e6b255f121e1d6e4ef081565ab13",
+        "file": "DSC00072.ARW",
+        "high_rail_fraction": 1.535787615020173e-05,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 38301696,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "5dced40fac04c9c4ada1b13bbaa54f6f64826d7312104aaf69acf0e9c6d47205",
+        "file": "DSC00026.ARW",
+        "high_rail_fraction": 1.487225160790286e-05,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 37691392,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "e0b1e484788b7bf3aa5ae7c12c681bc0a5266250aec129c044bfbc4fba5cf936",
+        "file": "DSC00068.ARW",
+        "high_rail_fraction": 6.719829604060599e-05,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39002112,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "7e4433855cbde871f4fc0df683d596e982088850f1a53475a25907e162ae6f3a",
+        "file": "DSC00080.ARW",
+        "high_rail_fraction": 0.0,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 37548032,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "2a44e5a63c0f7754c9d9fae85ce935dcb49ea5c98720557f5870bef4ffd52761",
+        "file": "DSC00055.ARW",
+        "high_rail_fraction": 0.0001934606770383119,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 41512960,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "418059e23d099eb31e0dcda976c449f7772366d96912b4d1968b6b27608d8fc5",
+        "file": "DSC00063.ARW",
+        "high_rail_fraction": 0.00013779596387730405,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 40177664,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "44755659264471a90199ad542dbc98995ccfeca06a577cb943f5ec2f835efdbf",
+        "file": "DSC00035.ARW",
+        "high_rail_fraction": 0.00014653720563868368,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39591936,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "786c945d8dc654c1c7e6178fb66ca6ce8da80457d2705c13c3f8174d92850b49",
+        "file": "DSC00084.ARW",
+        "high_rail_fraction": 0.0,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 37351424,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "a4e5229a49aab6870694d3b26a9b68d1d4f4cb8b215179b488809c5ee2f1eba4",
+        "file": "DSC00039.ARW",
+        "high_rail_fraction": 0.00021944159005130137,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 40505344,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "50e847cd82c68d0d0944246735e73b34e05b178a227ed16a61a8502b7f401be5",
+        "file": "DSC00043.ARW",
+        "high_rail_fraction": 0.00021847034096670364,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 41107456,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "c40d76431395450770c78630a23e09bbe40c1dcb246f976491310d6968839c44",
+        "file": "DSC00059.ARW",
+        "high_rail_fraction": 0.0001677832793642592,
+        "iso": 100.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 41029632,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      }
+    ],
+    "false_positive_rate": 0.0,
+    "limitation": "identity inclusion tests checker quietness and coordinate plumbing; it does not commission external warp error",
+    "median_h_e": 0.0,
+    "median_v_e": 0.0,
+    "name": "untouched_raw_identity_null",
+    "p99_h_e": 0.0,
+    "p99_v_e": 0.0,
+    "pass": true,
+    "site_count": 50,
+    "source_capture": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+    "source_class": "CONTROL_NOT_HOLDOUT"
+  },
+  "verdict": "NOT_ADMITTED_COMMISSIONING_FAILED"
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "m152-m3-checker-definition-v1",
+  "site_population": {
+    "manifest": "out/census-manifest.json",
+    "manifest_sha256": "35d5058afc1f310923ba2a3e5bf0cd3b91b3eb2df0e8d4868c22099de7bcd38d",
+    "minimum_edges_overall": 500,
+    "minimum_edges_per_capture": 50,
+    "required_capture_ids": [
+      "m3-duck-tape",
+      "m3-chia",
+      "m3-flower-fern",
+      "m3-razor-control"
+    ],
+    "missing_or_nonfinite_output_site": "positive_infinity"
+  },
+  "normalization": {
+    "orientation": "input-manifest normal is dark-to-bright",
+    "source_plateaus_native_px": [
+      [-64, -48],
+      [48, 64]
+    ],
+    "step": "right plateau median minus left plateau median in the independently selected input normalization profile",
+    "minimum_step_sigma": 10.0
+  },
+  "halo": {
+    "support_abs_native_px": [2, 32],
+    "support_native_px": "2 <= abs(s) <= 32",
+    "formula": "max(max(output-source_upper, source_lower-output, 0))/source_step"
+  },
+  "veil": {
+    "support_abs_native_px": [16, 200],
+    "support_native_px": "16 <= abs(s) <= 200",
+    "reduction": "arithmetic mean over the union of both signed sides",
+    "formula": "mean(abs(output-far_reference))/source_step",
+    "one_sided_diagnostic": "also report each side separately, but the registered v_e is their pooled arithmetic mean"
+  },
+  "edge_width": {
+    "support_native_px": [-32, 32],
+    "definition": "linearly interpolated first dark-to-bright 10 and 90 percent crossings",
+    "ratio": "output 10-90 width divided by independently selected sharp-source width",
+    "invalid": "positive_infinity"
+  },
+  "rho_edge": {
+    "patch_size_native_px": 128,
+    "band_cycles_per_native_px": [0.15, 0.25],
+    "window": "separable Hann normalized to mean-square one",
+    "definition": "magnitude of summed complex cross-spectrum divided by the geometric mean of summed powers",
+    "invalid": 0.0
+  },
+  "known_blind_spot": {
+    "status": "COMMISSIONING_FAILURE",
+    "case": "a one-sided 6 percent veil occupying native offsets +33 through +232 is 200 px wide, misses h_e, and is diluted by the registered two-sided v_e mean",
+    "proposed_repair_not_in_registered_verdict": "replace v_e with max(v_e_negative_side,v_e_positive_side)"
+  },
+  "site_failure": {
+    "rule": "max(h_e,v_e) > 0.05",
+    "threshold_max_h_v": 0.05,
+    "strict": true
+  },
+  "aggregation": {
+    "percentile": "nearest-rank empirical quantile, one-based rank ceil(q*N), no interpolation",
+    "capture_weighting": "the frozen site manifest is pooled without post-output deletion",
+    "paired_p99": "a_e=max(h_e,v_e); choose the comparator having the lowest nearest-rank pooled p99(a_e), then compare Strehl p99(a_e) with that comparator p99(a_e) on the identical sites",
+    "wilson": "one-sided 95 percent upper confidence bound with z=1.6448536269514722"
+  },
+  "bars": {
+    "median_h_e_max": 0.01,
+    "median_v_e_max": 0.01,
+    "p99_h_e_max": 0.05,
+    "p99_v_e_max": 0.05,
+    "affected_point_rate_max": 0.01,
+    "affected_wilson_ucb95_max": 0.02,
+    "median_edge_width_ratio_min": 0.95,
+    "median_edge_width_ratio_max": 1.05,
+    "median_rho_edge_min": 0.9
+  }
+}

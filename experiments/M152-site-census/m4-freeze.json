@@ -1,0 +1,53 @@
+{
+  "schema": "m152-m4-operational-freeze-v1",
+  "status": "FROZEN_BEFORE_ANY_CANDIDATE_OR_COMPARATOR_OUTPUT",
+  "census_definition_sha256": "b2e872a6a8214d4fbe379287f52fc57b8f5e61f292aab4c30e96b11d49325879",
+  "census_manifest_sha256": "35d5058afc1f310923ba2a3e5bf0cd3b91b3eb2df0e8d4868c22099de7bcd38d",
+  "bee_background_path": "D:\\personal\\macro\\bee-1-cpl",
+  "noise_floor": {
+    "formula": "0.2943578255886622 * sigma_temporal(0,ISO) / usable_raw_range",
+    "sigma_temporal": "sqrt(g_measured*S+(RN_e*g_shipped)^2)/sqrt(2)",
+    "measured_band_p99_over_model_dark_sigma": 0.2943578255886622,
+    "normalized_linear_by_iso": {
+      "50": 1.26102285354196e-05,
+      "100": 1.26102285354196e-05,
+      "1000": 3.72061790502189e-05
+    },
+    "calibration_artifact": "out/noise-calibration.json",
+    "calibration_content_sha256": "47eaf0235c0492ffeabcd0098581f52f22a8d4b8a7241f743c61754476f06566"
+  },
+  "population": {
+    "scored_total": 500,
+    "flat_total": 250,
+    "edge_total": 250,
+    "flat_quotas": {
+      "medication-pill-cpl": 84,
+      "bee-1-cpl": 83,
+      "foam": 83
+    },
+    "edge_quotas": {
+      "requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl": 50,
+      "requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl": 50,
+      "requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl": 50,
+      "duck-tape-side-layers-cpl": 50,
+      "flower-bud-with-background-fern-cpl": 50
+    },
+    "commissioning_flat_quota": {
+      "coffee-bubbles": 100
+    },
+    "no_cross_capture_or_cross_category_substitution": true
+  },
+  "b99": {
+    "weight_distribution": "Dirichlet(1) over all input frames",
+    "draw_count": 1000,
+    "seed": 15240420260904,
+    "generator": "numpy.random.Generator(PCG64)",
+    "additional_members": [
+      "every single input frame",
+      "uniform mean"
+    ],
+    "percentile": "nearest-rank empirical p99",
+    "output_denominator": "max(B99,noise_floor)"
+  },
+  "scorecard_caveat": "The current M4 text calls all named flat inputs commissioning inputs while its success bar requires median Q_flat. Owner adoption of a scored flat population is required before an official score."
+}

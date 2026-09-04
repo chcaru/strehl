@@ -1,0 +1,1447 @@
+{
+  "any_capture_has_100_sites": false,
+  "capture_results": [
+    {
+      "all_frames_evaluated": false,
+      "all_frames_required": true,
+      "capture_contiguous": true,
+      "capture_id": "burned-slide-flat-et1s",
+      "decoded_inputs": [
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "4c1d114bab50115d8efaa233fb04519ecb6c6c19dc2149a7d5ed0f0ad93995f4",
+          "file": "DSC00016.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38002688,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "819b30d2e8ad40d88f8c9bd248c3248f15eb43ab8fe1df8dbd04f0ec3ba11b47",
+          "file": "DSC00017.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38031360,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "f53c568ad221ff4052d85e9a0884de8e255f032041ccd9dbdcc8cea6968f535b",
+          "file": "DSC00018.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38060032,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "4247b2cb851e30afe92f00d9a69b8eb0d9a27319986949bf961623e9f1bfb007",
+          "file": "DSC00019.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38088704,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "295379a2c478c25d6b9367f73bd2806bff137fc401927cd3046b77dd9c845878",
+          "file": "DSC00020.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38117376,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "69157462e41d487203c9d169e845c065335f5be1769a8610b26a00d8c63ce3e8",
+          "file": "DSC00021.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38133760,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "efdeeb5b8d7b69ad2fd14d9fddbb92358faabd80a1521cc0e1328bbe4bc428d5",
+          "file": "DSC00022.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38162432,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "aa8de35c49ccb7a499d0f7b64137d29e7e5ad1582fe67cd4dd5f6f1bbcf1388a",
+          "file": "DSC00023.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38191104,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "16697e0c7703f99b5cb5f4217ec6b4409bc3185affd46af111a9abb1a42f6ef7",
+          "file": "DSC00024.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38223872,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "a7cc82644f4884df91a30b2938818f1175a0eda3288f9cade2618be9458c1a47",
+          "file": "DSC00025.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38256640,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "944f4925beb3107b3a50edb1e738233428e0b75e71f50c12d1a8bb7983ef41bb",
+          "file": "DSC00026.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38293504,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "cb73ceedb636168c85c291c20797b9538622975072ae5144fc9da1eee401845d",
+          "file": "DSC00027.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38326272,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "e1e8c1a7a8121253e66e034b9dc4124f69cfa54589e3bbfae5a820d8ac44bb5c",
+          "file": "DSC00028.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38367232,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "c628eb6bbac6103049fb4c39bdd915e4ae868e578ab409c494ce4f2c93d8ebd8",
+          "file": "DSC00029.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38412288,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "2cef258a9ada3b2110f74af76bcaa462ffdb5e9dd0e0158ff185ab2eae0f9fd4",
+          "file": "DSC00030.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38449152,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "7504912cbf876a987c87455b7d1da70177e7bee5eb28bec293cef07afeea248f",
+          "file": "DSC00031.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38490112,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "790fe6f7a59d7b0d299397f0987e362e56f177f48cf762851443e401cf1a7336",
+          "file": "DSC00032.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38539264,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "1edafe72a35f29169eea9e712a0dc8274c45a865431b3940753998b5f2363bea",
+          "file": "DSC00033.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38592512,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "14518781df3292625cc5f70eb717561221372c75e5fc820a6c4174c135c0970e",
+          "file": "DSC00034.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38649856,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "6a45548e00253d83aa575e86509dea52915151647d336f6f22d0519822cc1eec",
+          "file": "DSC00035.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38711296,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "b920e16b10e4b776e9735296df363bc9da09ba635e648554c2b253f5b1ad645a",
+          "file": "DSC00036.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38772736,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "9ecfb27cf93c896e78817c1e76ebb80f2e6e7d33da35895dec8891cc193f0ab7",
+          "file": "DSC00037.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38825984,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "b8e06c94c2404c8c5d2f514d3f1069a8d344cad55bc11bc721369c80af464669",
+          "file": "DSC00038.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38883328,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "a26774ba192242c914a4771de160b5b47c7a59d5489e96486288922723c3a239",
+          "file": "DSC00039.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38928384,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "42c08feab194169c299aea89218207be052f679675b711ae1eddf91335f42a7a",
+          "file": "DSC00040.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38944768,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "c72b2601a290b96bbc00438c6789a43e4bd3988f98eeba45a5a6341d1b129630",
+          "file": "DSC00041.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38973440,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "0853ab0d40652278d55cb0860787c6d786a34b14f8f32d340c4bf05cfa75b860",
+          "file": "DSC00042.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38969344,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "1f23e3cfb141b0c2ded5f674778b2fc129e5ab061c720705d668e2da119930ce",
+          "file": "DSC00043.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38952960,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "d33046815dc4f3b8e7b0d7811b4a7a8fc7fbac719886af61b559c969a33f0be5",
+          "file": "DSC00044.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38932480,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "6719423fc0e3abad8e64f323797f5d67efe8873ec1fe71071cc8bd18e763bc3c",
+          "file": "DSC00045.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38899712,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "329c1f49d80ca1b1cd051dd3dc71d09f8b5009ea1c8d5a80e5865c157e096fb3",
+          "file": "DSC00046.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38871040,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "e3027a3361732b790dea61d926bef5b72b7e5b769d2f0ae354983778141466b3",
+          "file": "DSC00047.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38830080,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "dc1a434917c3646d7e2b810e0d0f2ecd61916ad2a67c7ee07bba7cbe3e18f30e",
+          "file": "DSC00048.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38793216,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "958c088b92143c7256606374e033e4a0abd207019c9a7bb76680ed8e8cb6e712",
+          "file": "DSC00049.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38764544,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "736447a24f8f53b25e11db00da21bbd2d680183205ba51e116c1f4abc10a53e0",
+          "file": "DSC00050.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38731776,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "e962b9aaf5552bb0f2e9e5f8f03b1463f4308042712c646ded03a1bf18c86acb",
+          "file": "DSC00051.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 38686720,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        }
+      ],
+      "eligible_site_count": 0,
+      "eligible_sites_quality_order": [],
+      "evidence_class": "BURNED_DEVELOPMENT_NOT_SCORABLE",
+      "first_failure_counts": {
+        "band_at_or_above_temporal_p99": 1768,
+        "high_rail_fraction": 0,
+        "low_rail_fraction": 0,
+        "signal_below_10_sigma": 0
+      },
+      "frozen_band_p99_over_model_dark_sigma": 0.2943578255886622,
+      "initial_candidate_count": 1768,
+      "inventory_frame_count": 60,
+      "logical_short_circuit_after_zero_survivors": true,
+      "noise_floor_normalized_linear": 1.261022853541959e-05,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+      "processed_frame_count": 36,
+      "quota": 100,
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+      "survivor_trajectory": [
+        {
+          "file": "DSC00016.ARW",
+          "frame_index_zero_based": 0,
+          "survivors": 98
+        },
+        {
+          "file": "DSC00017.ARW",
+          "frame_index_zero_based": 1,
+          "survivors": 89
+        },
+        {
+          "file": "DSC00018.ARW",
+          "frame_index_zero_based": 2,
+          "survivors": 81
+        },
+        {
+          "file": "DSC00019.ARW",
+          "frame_index_zero_based": 3,
+          "survivors": 78
+        },
+        {
+          "file": "DSC00020.ARW",
+          "frame_index_zero_based": 4,
+          "survivors": 70
+        },
+        {
+          "file": "DSC00021.ARW",
+          "frame_index_zero_based": 5,
+          "survivors": 66
+        },
+        {
+          "file": "DSC00022.ARW",
+          "frame_index_zero_based": 6,
+          "survivors": 59
+        },
+        {
+          "file": "DSC00023.ARW",
+          "frame_index_zero_based": 7,
+          "survivors": 54
+        },
+        {
+          "file": "DSC00024.ARW",
+          "frame_index_zero_based": 8,
+          "survivors": 49
+        },
+        {
+          "file": "DSC00025.ARW",
+          "frame_index_zero_based": 9,
+          "survivors": 37
+        },
+        {
+          "file": "DSC00026.ARW",
+          "frame_index_zero_based": 10,
+          "survivors": 28
+        },
+        {
+          "file": "DSC00027.ARW",
+          "frame_index_zero_based": 11,
+          "survivors": 21
+        },
+        {
+          "file": "DSC00028.ARW",
+          "frame_index_zero_based": 12,
+          "survivors": 12
+        },
+        {
+          "file": "DSC00029.ARW",
+          "frame_index_zero_based": 13,
+          "survivors": 10
+        },
+        {
+          "file": "DSC00030.ARW",
+          "frame_index_zero_based": 14,
+          "survivors": 8
+        },
+        {
+          "file": "DSC00031.ARW",
+          "frame_index_zero_based": 15,
+          "survivors": 6
+        },
+        {
+          "file": "DSC00032.ARW",
+          "frame_index_zero_based": 16,
+          "survivors": 2
+        },
+        {
+          "file": "DSC00033.ARW",
+          "frame_index_zero_based": 17,
+          "survivors": 2
+        },
+        {
+          "file": "DSC00034.ARW",
+          "frame_index_zero_based": 18,
+          "survivors": 2
+        },
+        {
+          "file": "DSC00035.ARW",
+          "frame_index_zero_based": 19,
+          "survivors": 2
+        },
+        {
+          "file": "DSC00036.ARW",
+          "frame_index_zero_based": 20,
+          "survivors": 2
+        },
+        {
+          "file": "DSC00037.ARW",
+          "frame_index_zero_based": 21,
+          "survivors": 2
+        },
+        {
+          "file": "DSC00038.ARW",
+          "frame_index_zero_based": 22,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00039.ARW",
+          "frame_index_zero_based": 23,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00040.ARW",
+          "frame_index_zero_based": 24,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00041.ARW",
+          "frame_index_zero_based": 25,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00042.ARW",
+          "frame_index_zero_based": 26,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00043.ARW",
+          "frame_index_zero_based": 27,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00044.ARW",
+          "frame_index_zero_based": 28,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00045.ARW",
+          "frame_index_zero_based": 29,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00046.ARW",
+          "frame_index_zero_based": 30,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00047.ARW",
+          "frame_index_zero_based": 31,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00048.ARW",
+          "frame_index_zero_based": 32,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00049.ARW",
+          "frame_index_zero_based": 33,
+          "survivors": 1
+        },
+        {
+          "file": "DSC00050.ARW",
+          "frame_index_zero_based": 34,
+          "survivors": 0
+        }
+      ]
+    },
+    {
+      "all_frames_evaluated": false,
+      "all_frames_required": true,
+      "capture_contiguous": true,
+      "capture_id": "burned-slide-flat-et2-5s",
+      "decoded_inputs": [
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "ea4517c9e2de824f8680dc05244373d07d8c57f7a2b69af8dc3becac5c6940bb",
+          "file": "DSC00020.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 39784448,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "ccc6f81e7a230098a95f0c8392c7d864793c17ba61fc361b609461dc3651c43a",
+          "file": "DSC00021.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 39825408,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "26f9568d5f015bbc3a30599b5133279f0ab17324639e94f128cb05fbfa273296",
+          "file": "DSC00022.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 39874560,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "80a4ac2d8ffa37dd8175f0528168fd6f25a01f308c269cf9e251a4b853da3e7f",
+          "file": "DSC00023.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 39915520,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "cc81ed8c129ac8d010d3db7781d45be29e5a9d9b12900faf4695caeac27f1d50",
+          "file": "DSC00024.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 39960576,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "a316d6bee36e2ef54f70a1db1c048546441820a7b1d4d2b31452f4cbb9522a48",
+          "file": "DSC00025.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 40001536,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "395a287f04f5f93aae95da1ed2b4462b7b69c9733b5c11f6dbc97278baf8d4f5",
+          "file": "DSC00026.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 40042496,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "005f3d742714bebcf713a481a016982c514a77a1735246b26c14849241e5211a",
+          "file": "DSC00027.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 40079360,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "9550e506f77f79d3d802e55ef5eca16105b0cfd599e69b80bb5a3756638473f8",
+          "file": "DSC00028.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 40124416,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "05357f8d7b3a46c831f6e6662cdd5629c881c5384b4c9aed0ccf3b2895b5507e",
+          "file": "DSC00029.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 40173568,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "5b9fbf1566ff9df32f578eb7c5424cc76215ea587d100e0518ac5f2f5e79c564",
+          "file": "DSC00030.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 40214528,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "bbf9fb3665b14e87d2b42487c5d7a356a8fb76e45ca49ad0fdb355090ffc2ca6",
+          "file": "DSC00031.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 40263680,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "8570175651618c47885bf2d09ef7796ebc2d551b0a800faf195df4a8cab24717",
+          "file": "DSC00032.ARW",
+          "high_rail_fraction": 0.0,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 40308736,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        }
+      ],
+      "eligible_site_count": 0,
+      "eligible_sites_quality_order": [],
+      "evidence_class": "BURNED_DEVELOPMENT_NOT_SCORABLE",
+      "first_failure_counts": {
+        "band_at_or_above_temporal_p99": 1768,
+        "high_rail_fraction": 0,
+        "low_rail_fraction": 0,
+        "signal_below_10_sigma": 0
+      },
+      "frozen_band_p99_over_model_dark_sigma": 0.2943578255886622,
+      "initial_candidate_count": 1768,
+      "inventory_frame_count": 61,
+      "logical_short_circuit_after_zero_survivors": true,
+      "noise_floor_normalized_linear": 1.261022853541959e-05,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+      "processed_frame_count": 13,
+      "quota": 100,
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+      "survivor_trajectory": [
+        {
+          "file": "DSC00020.ARW",
+          "frame_index_zero_based": 0,
+          "survivors": 56
+        },
+        {
+          "file": "DSC00021.ARW",
+          "frame_index_zero_based": 1,
+          "survivors": 51
+        },
+        {
+          "file": "DSC00022.ARW",
+          "frame_index_zero_based": 2,
+          "survivors": 39
+        },
+        {
+          "file": "DSC00023.ARW",
+          "frame_index_zero_based": 3,
+          "survivors": 36
+        },
+        {
+          "file": "DSC00024.ARW",
+          "frame_index_zero_based": 4,
+          "survivors": 32
+        },
+        {
+          "file": "DSC00025.ARW",
+          "frame_index_zero_based": 5,
+          "survivors": 24
+        },
+        {
+          "file": "DSC00026.ARW",
+          "frame_index_zero_based": 6,
+          "survivors": 17
+        },
+        {
+          "file": "DSC00027.ARW",
+          "frame_index_zero_based": 7,
+          "survivors": 12
+        },
+        {
+          "file": "DSC00028.ARW",
+          "frame_index_zero_based": 8,
+          "survivors": 7
+        },
+        {
+          "file": "DSC00029.ARW",
+          "frame_index_zero_based": 9,
+          "survivors": 5
+        },
+        {
+          "file": "DSC00030.ARW",
+          "frame_index_zero_based": 10,
+          "survivors": 2
+        },
+        {
+          "file": "DSC00031.ARW",
+          "frame_index_zero_based": 11,
+          "survivors": 0
+        }
+      ]
+    },
+    {
+      "all_frames_evaluated": false,
+      "all_frames_required": true,
+      "capture_contiguous": true,
+      "capture_id": "burned-slide-flat-et6s",
+      "decoded_inputs": [
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "5f42c238ed26cce413797bfb59c4256094a9003a4bb4c0e7316549001f253d50",
+          "file": "DSC00015.ARW",
+          "high_rail_fraction": 0.0371799005829437,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 42033152,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "cabba77f00826980a4aff6faf7745639b24a28185707e114418797ad5bbc82e4",
+          "file": "DSC00016.ARW",
+          "high_rail_fraction": 0.03758624691871228,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 42090496,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "b70c5809f7881adcff0fa654e59df2cf81b0a4fe9bf653f8513d63bb44f845ca",
+          "file": "DSC00017.ARW",
+          "high_rail_fraction": 0.03795453243097818,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 42143744,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "b480b9a2005e162e8a0b6b9fbc4df640c80ae924394c78fbf0326ba180854c57",
+          "file": "DSC00018.ARW",
+          "high_rail_fraction": 0.0383659778244409,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 42196992,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "6144b43befe7b2497c687659b9b1e4c85fc809fbff2108ff4c88ee9173bbce6e",
+          "file": "DSC00019.ARW",
+          "high_rail_fraction": 0.03875775542394051,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 42250240,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "8ce6845f1da722009f15153084898af07b065bf2f20936ab04aaee7ae54988fa",
+          "file": "DSC00020.ARW",
+          "high_rail_fraction": 0.039140124047933086,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 42299392,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "ee5801843f1b9fca439a2667ec62bb4e9e5a5d1e1a59383a84b65af9614276ac",
+          "file": "DSC00021.ARW",
+          "high_rail_fraction": 0.03952370673328141,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 42344448,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        },
+        {
+          "black_levels_dn": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "decoded_green_sha256": "e21dad8bdfc650575ce27c82118e6831952f950c44338cc8c7ca739bb688b545",
+          "file": "DSC00022.ARW",
+          "high_rail_fraction": 0.039974184199331395,
+          "iso": 100.0,
+          "low_rail_fraction": 0.0,
+          "size_bytes": 42389504,
+          "visible_shape_native_px": [
+            4688,
+            7028
+          ],
+          "white_level_dn": 16383
+        }
+      ],
+      "eligible_site_count": 0,
+      "eligible_sites_quality_order": [],
+      "evidence_class": "BURNED_DEVELOPMENT_NOT_SCORABLE",
+      "first_failure_counts": {
+        "band_at_or_above_temporal_p99": 1730,
+        "high_rail_fraction": 38,
+        "low_rail_fraction": 0,
+        "signal_below_10_sigma": 0
+      },
+      "frozen_band_p99_over_model_dark_sigma": 0.2943578255886622,
+      "initial_candidate_count": 1768,
+      "inventory_frame_count": 65,
+      "logical_short_circuit_after_zero_survivors": true,
+      "noise_floor_normalized_linear": 1.261022853541959e-05,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+      "processed_frame_count": 8,
+      "quota": 100,
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+      "survivor_trajectory": [
+        {
+          "file": "DSC00015.ARW",
+          "frame_index_zero_based": 0,
+          "survivors": 24
+        },
+        {
+          "file": "DSC00016.ARW",
+          "frame_index_zero_based": 1,
+          "survivors": 11
+        },
+        {
+          "file": "DSC00017.ARW",
+          "frame_index_zero_based": 2,
+          "survivors": 6
+        },
+        {
+          "file": "DSC00018.ARW",
+          "frame_index_zero_based": 3,
+          "survivors": 6
+        },
+        {
+          "file": "DSC00019.ARW",
+          "frame_index_zero_based": 4,
+          "survivors": 5
+        },
+        {
+          "file": "DSC00020.ARW",
+          "frame_index_zero_based": 5,
+          "survivors": 2
+        },
+        {
+          "file": "DSC00021.ARW",
+          "frame_index_zero_based": 6,
+          "survivors": 0
+        }
+      ]
+    }
+  ],
+  "definition_sha256": "b2e872a6a8214d4fbe379287f52fc57b8f5e61f292aab4c30e96b11d49325879",
+  "noise_calibration_content_sha256": "47eaf0235c0492ffeabcd0098581f52f22a8d4b8a7241f743c61754476f06566",
+  "purpose": "commissioning availability only; never scored",
+  "read_only_trees_unchanged": true,
+  "schema": "m152-supplemental-commissioning-census-v1"
+}
