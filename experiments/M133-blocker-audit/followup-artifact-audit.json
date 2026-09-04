@@ -1,0 +1,211 @@
+{
+  "m8": {
+    "result_path": "experiments\\M8-overshoot\\results.json",
+    "report_path": "docs\\research\\M8-overshoot.md",
+    "m8_r": {
+      "denominator": 6131678976,
+      "fraction": 0.010305688906307153,
+      "lower_violations": 32634423,
+      "max_abs_signed_excess": 586.2158203125,
+      "max_upper_signed_excess": 586.2158203125,
+      "min_lower_signed_excess": -240.0400390625,
+      "percent": 1.0305688906307153,
+      "upper_violations": 30556753,
+      "violations": 63191176
+    },
+    "m8_o": {
+      "denominator": 74173536,
+      "fraction": 0.013261441385240148,
+      "lower_violations": 976925,
+      "max_abs_signed_excess_linear": 1.0491852760314941,
+      "max_abs_signed_excess_u16_lsb": 68758.35706472397,
+      "max_upper_signed_excess_linear": 0.0037032901208461366,
+      "min_lower_signed_excess_linear": -1.0491852760314941,
+      "percent": 1.326144138524015,
+      "upper_violations": 6723,
+      "violations": 983648
+    },
+    "commissioning_passed": true,
+    "bars_pass": {
+      "m8_r_zero": false,
+      "m8_o_zero": false
+    },
+    "report_evidence_lines": {
+      "**Verdict: FAIL; no blocker.**": [
+        {
+          "start_line": 3,
+          "end_line": 3
+        }
+      ],
+      "I measured scorecard v1.7's M8 text": [
+        {
+          "start_line": 10,
+          "end_line": 10
+        }
+      ],
+      "Commissioning passed both directions:": [
+        {
+          "start_line": 37,
+          "end_line": 37
+        }
+      ],
+      "Aggregate M8-R is": [
+        {
+          "start_line": 55,
+          "end_line": 55
+        }
+      ],
+      "aggregate M8-O is": [
+        {
+          "start_line": 56,
+          "end_line": 56
+        }
+      ],
+      "registered source-hull invariant fails.": [
+        {
+          "start_line": 62,
+          "end_line": 62
+        }
+      ]
+    },
+    "status_evidence_lines": {
+      "**M8 is measured. It reads FAIL.**": [
+        {
+          "start_line": 1994,
+          "end_line": 1994
+        }
+      ],
+      "checked against that file before this section was written.": [
+        {
+          "start_line": 2005,
+          "end_line": 2005
+        }
+      ],
+      "M8 is the only axis with a value and it reads FAIL.": [
+        {
+          "start_line": 3380,
+          "end_line": 3381
+        }
+      ]
+    },
+    "comparative_governance_lines": {
+      "candidate comparative reading": [
+        {
+          "start_line": 133,
+          "end_line": 133
+        }
+      ],
+      "not an M8 score": [
+        {
+          "start_line": 133,
+          "end_line": 133
+        }
+      ],
+      "scorecard currently owns M8 as a strehl self-check": [
+        {
+          "start_line": 134,
+          "end_line": 134
+        }
+      ],
+      "Final controlled `focus-stack` result: `UNMEASURED`.": [
+        {
+          "start_line": 603,
+          "end_line": 603
+        }
+      ]
+    },
+    "ledger": {
+      "start_line": 844,
+      "end_line": 1103,
+      "m8comp_matches": []
+    }
+  },
+  "m12": {
+    "records_path": "experiments\\m12-scorecard\\out\\campaign-16bc3e3d\\records.jsonl",
+    "record_count": 133,
+    "expected_record_count": 133,
+    "by_kind": {
+      "modulo-scored": 24,
+      "modulo-warmup": 4,
+      "scored": 90,
+      "warmup": 15
+    },
+    "invalid_count": 0,
+    "registration_statuses": [
+      "operator-authorized-diagnostic"
+    ],
+    "coverage": {
+      "main_warmups": {
+        "actual": 15,
+        "expected": 15,
+        "missing": [],
+        "unexpected": []
+      },
+      "main_scored": {
+        "actual": 90,
+        "expected": 90,
+        "missing": [],
+        "unexpected": []
+      },
+      "modulo_warmups": {
+        "actual": 4,
+        "expected": 4,
+        "missing": [],
+        "unexpected": []
+      },
+      "modulo_scored": {
+        "actual": 24,
+        "expected": 24,
+        "missing": [],
+        "unexpected": []
+      }
+    },
+    "load_gate_counts": {
+      "missing": 133
+    },
+    "manifest_exists": {
+      "experiments\\m12-scorecard\\out\\RUN-MANIFEST.json": false,
+      "experiments\\m12-scorecard\\out\\RUN-MANIFEST.operator-diagnostic.json": true,
+      "experiments\\SCORECARD\\RUN-MANIFEST.json": false
+    },
+    "summary": {
+      "m12_d_pass": true,
+      "m12_s_pass": false,
+      "m12_s_distinct_hashes_by_n": {
+        "105": 5,
+        "299": 5,
+        "33": 5
+      },
+      "peak_gib_max": 35.53202438354492,
+      "peak_n299_over_peak_n33": 1.4489937322064963,
+      "six_gib_pass": false,
+      "modulo_spread": 0.017487048718701974,
+      "modulo_load_gate_verified": false,
+      "modulo_scorecard_verdict": "UNMEASURED"
+    },
+    "audit": {
+      "classification": "operator-authorized diagnostic; not a registrar-approved formal M12 reading",
+      "verified_load_gated_invocation_count": 0,
+      "sampling_protocol_exactly_achieved": false,
+      "worst_max_gap_ms": 1048.092800017912,
+      "maximum_missed_intervals": 6910,
+      "elapsed_seconds": 9379.637669,
+      "record_count": 133
+    },
+    "first_record": {
+      "line": 1,
+      "kind": "warmup",
+      "limit": 33,
+      "workers": 1,
+      "registration_status": "operator-authorized-diagnostic"
+    },
+    "last_record": {
+      "line": 133,
+      "kind": "modulo-scored",
+      "limit": 96,
+      "workers": 16,
+      "repetition": 6,
+      "registration_status": "operator-authorized-diagnostic"
+    }
+  }
+}

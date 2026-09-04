@@ -321,3 +321,327 @@ final “all three are required” roadmap. Non-scorecard considerations such as
 cost, owner availability, or an operational dependency could still justify
 the recorded `b → d → (a+c)` order; this audit did not assume or verify any
 such dependency.
+
+## 6. Follow-up: are M8 and M12 actually scored?
+
+**Q3 — VERIFIED: 1 of 12 axes has a produced-and-read score today: M8 is
+scored FAIL; M12 remains formally UNMEASURED.**
+
+This follow-up read existing files only. It did not invoke the M12 harness,
+run a stacker, or start a benchmark. The retained artifact parser is
+`experiments/M133-blocker-audit/audit_score_state.py`; its output is
+`experiments/M133-blocker-audit/followup-artifact-audit.json`. Documentation
+phrase checks use whitespace-collapsed regular expressions so wrapped prose is
+not missed.
+
+### Q1 — M8 actual result state
+
+#### Axis, readiness row, and bar
+
+The scorecard's at-a-glance row is:
+
+> ``| M8 | Invented values / source-hull certificate | Per-frame resampler-hull violations and final-output source-hull violations: each exactly `0.0000%`. |``
+> (`docs/proposals/2026-09-sota-scorecard.md:399`)
+
+The full §3.1 readiness row is:
+
+> `| M8 | **(e)** | The v1.4 source-hull invariant needs neither detail nor a comparator and may use the development-only flat slide. Its checker still must be commissioned before a result is admitted. |`
+> (`docs/proposals/2026-09-sota-scorecard.md:430`)
+
+The detailed success clause says:
+
+> **Success.** **PROPOSAL BAR (M8-O):** final-output violation fraction exactly
+> `0.0000%`. **SCORECARD ADDITION (M8-R):** resampler violation fraction exactly
+> `0.0000%`; the crop/reference identity arm also has zero violations. A missing
+> pre-clamp trace is `UNMEASURED`, not a pass.
+> (`docs/proposals/2026-09-sota-scorecard.md:863-866`)
+
+#### Has a score been produced and read?
+
+**VERIFIED — yes. M8 has a produced-and-read score, and it is FAIL.** The M8
+report identifies itself as the scorecard reading:
+
+> **Verdict: FAIL; no blocker.**
+> (`docs/research/M8-overshoot.md:3`)
+> I measured scorecard v1.7's M8 text
+> (`docs/research/M8-overshoot.md:10`)
+
+The checker was commissioned before the reading:
+
+> Commissioning passed both directions: fractional Catmull hard step
+> `28/252` violations, 14 each sign, extrema `-0.0625/+0.0625`; copy null
+> `0/252`, exact-copy error `0`; convex bilinear null `0/300`.
+> (`docs/research/M8-overshoot.md:37-40`)
+
+The actual score is nonzero on both mandatory censuses:
+
+> Aggregate M8-R is `63,191,176 / 6,131,678,976` (1.030569%);
+> aggregate M8-O is `983,648 / 74,173,536` (1.326144%)
+> (`docs/research/M8-overshoot.md:55-57`)
+> M8-R is decisively nonzero on every arm, so the registered source-hull
+> invariant fails.
+> (`docs/research/M8-overshoot.md:61-62`)
+
+The orchestrator then explicitly read it:
+
+> **M8 is measured. It reads FAIL.** After eleven closed gates and nine
+> refusals, an axis finally carries a value instead of a reason it cannot be
+> read.
+> (`docs/STATUS.md:1994-1995`)
+> `docs/research/M8-overshoot.md`, commit `76b3d9cc`. Every number above was
+> checked against that file before this section was written.
+> (`docs/STATUS.md:2004-2005`)
+
+**VERIFIED stale text:** the scorecard's front matter still says “No v1.7 score
+output has been read” and “0 measured / 12 unmeasured”
+(`docs/proposals/2026-09-sota-scorecard.md:7-14`), and its standing table still
+calls M8 “ready but unread”
+(`docs/proposals/2026-09-sota-scorecard.md:1152`). Those statements predate and
+conflict with the later committed result and explicit STATUS read above. This
+lane reports the conflict and does not edit either governing document.
+
+#### What stands in the way?
+
+**VERIFIED:** nothing remains to obtain an M8 score; it already exists. What
+remains is product work before M8 can pass. The attribution report separates
+two failures:
+
+> Changing only the warp-map resampler line, with every placement fixed, gives
+> bilinear M8-R **`0/6,131,678,976 = 0.000000%`**
+> (`docs/research/M8-overshoot.md:117-119`)
+> Therefore all 63,191,176 accepted M8-R violations are attributable to the
+> **Catmull-Rom gather**
+> (`docs/research/M8-overshoot.md:121-123`)
+> M8-O is a separate downstream failure, not the source of M8-R. Bilinear still
+> reads `980,097/74,173,536 = 1.321357%`
+> (`docs/research/M8-overshoot.md:128-131`)
+
+Thus an M8 pass needs both a resampler-side repair and the independently
+observed downstream M8-O repair, followed by a rerun of the already
+commissioned instrument. No compute estimate is needed to get a first M8
+score; that milestone is complete.
+
+#### Is `M8COMP` the scorecard M8?
+
+**VERIFIED — no, not as a score authority.** It uses the M8-O instrument family
+for a foreign/comparative question, but its own governance says:
+
+> Any result is a **candidate comparative reading**, not an M8 score. The
+> scorecard currently owns M8 as a strehl self-check and is read-only to this
+> lane.
+> (`docs/research/M8-COMPARATIVE.md:133-136`)
+
+Its retained and controlled foreign arms did not produce a score:
+
+> **Final verdict: exact comparative M8-O and its requested magnitude
+> distributions are UNMEASURED**
+> (`docs/research/M8-COMPARATIVE.md:3-6`)
+> **Final controlled `focus-stack` result: `UNMEASURED`.**
+> (`docs/research/M8-COMPARATIVE.md:603`)
+
+The report itself distinguishes that work from the existing score:
+
+> The only commissioned strehl reading remains the already-published,
+> **non-common-stack** development result; it was not repeated
+> (`docs/research/M8-COMPARATIVE.md:225-227`)
+
+Therefore the pristine-upstream `focus-stack` work was a provenance and
+comparative-contract lane related to M8's statistic, not a replacement for or
+the source of the scorecard M8 FAIL.
+
+### Q2 — M12 actual result state
+
+#### Axis, readiness row, and bar
+
+The scorecard's at-a-glance row is:
+
+> ``| M12 | Memory, determinism, and scaling invariance | Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; every fixed-worker repeat is byte-identical and the outputs at 1/2/4/8/16 workers are mutually byte-identical while 16 workers passes M11; N-mod-4 per-frame spread `<=2%`. |``
+> (`docs/proposals/2026-09-sota-scorecard.md:403`)
+
+The full §3.1 readiness row, including the requested context, is:
+
+> `| M12 | **(e), scheduled; formal value UNMEASURED** | Hashes and process-tree RSS need no detail, comparator or holdout. Existing out-of-protocol evidence diagnoses fixed-worker determinism as holding and cross-worker scaling invariance as failing, but the registered N/worker matrix still requires the reserved quiet host. |`
+> (`docs/proposals/2026-09-sota-scorecard.md:434`)
+> Thus M8 is the only complete quality axis ready now. M12 is scientifically
+> unblocked, but its complete registered run is deliberately deferred to a
+> quiet host.
+> (`docs/proposals/2026-09-sota-scorecard.md:436-437`)
+
+The detailed bar is:
+
+> **Success.** The proposal bars are warm peak `<=6 GiB` and byte invariance.
+> The **SCORECARD ADDITIONS** that make “flat” numeric are
+> `peak_N299/peak_N33<=1.10` and N-mod-4 per-frame spread `<=2%`. M12-D requires
+> exactly one distinct hash in every fixed-worker six-run cell. M12-S requires
+> exactly one distinct hash across all five worker counts at every N, and the
+> 16-worker output must simultaneously pass M11.
+> (`docs/proposals/2026-09-sota-scorecard.md:1064-1069`)
+
+#### Has a score been produced and read?
+
+**VERIFIED — no formal M12 score exists.** The only run manifest labels the
+campaign:
+
+> `"registration_status": "operator-authorized-diagnostic",`
+> (`experiments/m12-scorecard/out/RUN-MANIFEST.operator-diagnostic.json:3`)
+> `"scope": "Native-ARW shipping-path candidate measured at the owner's explicit 2026-09-03T19:14:34-07:00 instruction. Diagnostic, not a registrar-approved formal scorecard reading, because experiments/SCORECARD/RUN-MANIFEST.json is absent.",`
+> (`experiments/m12-scorecard/out/RUN-MANIFEST.operator-diagnostic.json:4`)
+
+The post-run audit agrees:
+
+> `"classification": "operator-authorized diagnostic; not a registrar-approved formal M12 reading",`
+> (`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:2`)
+
+No current documentation reads that campaign as a formal M12 result. The last
+explicit registrar ruling remains:
+
+> - **M12-D, fixed-worker determinism** -- diagnostic PASS, and it holds.
+> - **M12-S, cross-worker scaling invariance** -- diagnostic FAIL.
+> - Both formal sub-bars remain **UNMEASURED**. This is therefore still not the
+>   first scorecard reading.
+> (`docs/STATUS.md:1501-1504`)
+
+#### How much of the matrix has data?
+
+**VERIFIED — all of it.** The current artifacts refute the description of
+`campaign-16bc3e3d` as partial. The registered design is:
+
+> Run native ARWs at N=33/105/299 with workers 1/2/4/8/16, one warm-up then
+> six alternating-order scored repetitions per cell
+> (`docs/proposals/2026-09-sota-scorecard.md:1097-1099`)
+> Run N=96/97/98/99 at 16 workers with the same warm-up/six-sweep timing
+> protocol for the modulo bar.
+> (`docs/proposals/2026-09-sota-scorecard.md:1100-1101`)
+
+Mechanical parsing of all 133 JSONL records found:
+
+| Matrix component | Expected | Present | Missing |
+|---|---:|---:|---:|
+| N=33/105/299 × 5-worker warm-ups | 15 | 15 | 0 |
+| N=33/105/299 × 5 workers × 6 scored repetitions | 90 | 90 | 0 |
+| N=96/97/98/99 modulo warm-ups | 4 | 4 | 0 |
+| N=96/97/98/99 × 6 scored repetitions | 24 | 24 | 0 |
+| **Total** | **133** | **133 valid** | **0** |
+
+The retained audit records `"record_count": 133` and
+`"invalid_render_count": 0`
+(`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:446-498`).
+The independent parser reproduces the 133 expected/133 present breakdown with
+empty missing lists
+(`experiments/M133-blocker-audit/followup-artifact-audit.json:125-160`).
+The first record is a diagnostic N=33/W1 warm-up
+(`experiments/m12-scorecard/out/campaign-16bc3e3d/records.jsonl:1`); the final
+record is the sixth diagnostic N=96/W16 modulo repetition
+(`experiments/m12-scorecard/out/campaign-16bc3e3d/records.jsonl:133`).
+
+So the absent `out/RUN-MANIFEST.json` correctly means **no formal score
+closed**, but it does **not** mean the invocation matrix failed to run. A full
+diagnostic matrix ran.
+
+The current STATUS recovery note is therefore stale on data coverage:
+
+> M12's tree is not empty — it holds a 50 KB commissioned harness, a planted/
+> restored build pair, a preflight, and a partial campaign `16bc3e3d` with a
+> 546 KB `records.jsonl`. What is missing is the closing manifest, so **the
+> scored matrix never ran**.
+> (`docs/STATUS.md:3177-3180`)
+
+The missing-manifest conclusion remains correct for formal admission; “partial”
+and “never ran” do not match the current 133/133 diagnostic artifacts.
+
+#### What do the diagnostic data say?
+
+**VERIFIED diagnostic-only results:**
+
+- M12-D passes: all 15 fixed-worker cells contain six runs and one hash; the
+  artifact's aggregate is `"pass": true`
+  (`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:54-177`).
+- M12-S fails at every N: N=33, 105, and 299 each produced five distinct
+  cross-worker hashes
+  (`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:179-240`).
+- Sampled process-tree private commit reached `35.53202438354492 GiB`, and the
+  maximum 299/33 envelope was `1.4489937322064963`; both exceed the 6-GiB and
+  1.10 bars
+  (`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:256-264`).
+- The observed modulo spread was `0.017487048718701974`, below 2%, but its
+  scorecard verdict is `"UNMEASURED"`
+  (`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:424-427`).
+
+These values strongly predict a formal M12 FAIL, but the artifacts expressly
+deny them formal score status.
+
+#### What specifically is missing?
+
+1. **A pre-output formal scorecard freeze.** The contract says:
+
+   > Before any stacker runs, commit these files under
+   > `experiments/SCORECARD/`
+   > (`docs/proposals/2026-09-sota-scorecard.md:132-134`)
+   > `RUN-MANIFEST.json`: hardware, OS, power plan, program hashes, licences,
+   > versions, complete settings, worker count, cache state, and output contract
+   > (`docs/proposals/2026-09-sota-scorecard.md:139-140`)
+
+   The current filesystem has neither
+   `experiments/m12-scorecard/out/RUN-MANIFEST.json` nor
+   `experiments/SCORECARD/RUN-MANIFEST.json`; it has only the explicitly
+   diagnostic manifest
+   (`experiments/M133-blocker-audit/followup-artifact-audit.json:166-169`).
+
+2. **The reserved quiet host and its load evidence.** The campaign audit says
+   `"load_gate_applied": false`, `"preload_busy_measured": false`, and
+   `"verified_load_gated_invocation_count": 0`
+   (`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:7-18`).
+
+3. **The registered 10-ms memory cadence.** The scorecard requires process-tree
+   sampling every 10 ms (`docs/proposals/2026-09-sota-scorecard.md:1100`), but
+   the audit records `"sampling_protocol_exactly_achieved": false`, up to
+   `6910` missed intervals, and a worst gap of `1048.092800017912 ms`
+   (`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:243-348`).
+
+4. **A new admitted run.** **ASSUMED, conservatively and from the explicit
+   freeze-before-output rule:** the diagnostic campaign cannot be relabelled
+   after its outputs were read. The formal manifests and load gates must be
+   committed first, then the matrix rerun on the quiet host.
+
+The complete diagnostic campaign took `9379.637669` seconds, or 156.3 minutes
+(`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:445-446`).
+The program's retained estimate adds 11.1 minutes for pre-load gating and
+grants 210 uninterrupted minutes:
+
+> **210 uninterrupted minutes granted.** M12's own estimate, from a previously
+> measured 133-invocation matrix at `156.3` minutes plus `11.1` minutes of
+> pre-load gating
+> (`docs/STATUS.md:3097-3099`)
+
+**Compute estimate:** about 167.4 minutes measured plus closure/headroom; reserve
+the already-authorized 210-minute quiet-host window.
+
+### Q4 — Cheapest path from N scored axes to N+1
+
+**VERIFIED recommendation:** with N=1, the cheapest next score is M12. Do not
+buy Zerene to obtain the next score. Wait for a genuinely quiet host, commit
+the formal pre-output manifests and load gates, and rerun the 133-invocation
+M12 matrix inside the 210-minute reservation.
+
+M8 cannot increase the scored-axis count because it is already scored FAIL.
+M12 needs no purchase, no new capture, and no new metric implementation: its
+harness and controls are commissioned, and a complete diagnostic rehearsal
+already exists. The remaining cost is about 2.8 hours of measured run-plus-gate
+time inside the already reserved 3.5-hour exclusive host window, plus formal
+evidence closure.
+
+### Could not determine
+
+- **VERIFIED absence / could not determine identity:** the current milestone
+  allocation ledger contains no `M8COMP` row
+  (`AGENTS.md:844-1103`; mechanical result at
+  `experiments/M133-blocker-audit/followup-artifact-audit.json:117-121`).
+  Therefore its exact dispatch identity cannot be established from the ledger,
+  even though `M8-COMPARATIVE.md` conclusively establishes that its output is
+  not the scorecard M8 score.
+- **Could not determine:** whether the registrar would accept any fatal M12
+  sub-bar from the diagnostic campaign without a rerun. No such admission is
+  recorded; the campaign repeatedly labels itself non-formal, so this report
+  counts M12 as UNMEASURED and recommends the strict rerun.
+- **Could not determine:** the exact duration of the future admitted run. The
+  210-minute recommendation is an evidence-based reservation, not a guarantee.
