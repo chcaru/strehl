@@ -1,0 +1,67 @@
+{
+  "checks": [
+    {
+      "detail": 676,
+      "name": "direct predicate total",
+      "passed": true
+    },
+    {
+      "detail": 224,
+      "name": "score execution total",
+      "passed": true
+    },
+    {
+      "detail": 192,
+      "name": "physical controls total",
+      "passed": true
+    },
+    {
+      "detail": 1092,
+      "name": "full rehearsal total",
+      "passed": true
+    },
+    {
+      "detail": 128,
+      "name": "first release total",
+      "passed": true
+    },
+    {
+      "detail": 1092,
+      "name": "stages close at full total",
+      "passed": true
+    },
+    {
+      "detail": 123,
+      "name": "score gap remains 123",
+      "passed": true
+    },
+    {
+      "detail": "STAGED RELEASE: 128 frames",
+      "name": "required lead",
+      "passed": true
+    },
+    {
+      "detail": "successful path remains 1,092",
+      "name": "no successful-path reduction",
+      "passed": true
+    },
+    {
+      "detail": "one final acceptance look",
+      "name": "optional stopping controlled",
+      "passed": true
+    },
+    {
+      "detail": "development subject disjointness",
+      "name": "development unit remains disjoint",
+      "passed": true
+    },
+    {
+      "detail": "owner-facing replacement heading",
+      "name": "owner text present",
+      "passed": true
+    }
+  ],
+  "passed": 12,
+  "status": "PASS",
+  "total": 12
+}

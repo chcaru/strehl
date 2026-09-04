@@ -1,0 +1,179 @@
+{
+  "blocks": [
+    {
+      "category": "predicate_calibration",
+      "frames": 128,
+      "id": "tr_ab_calibration"
+    },
+    {
+      "category": "predicate_subject",
+      "frames": 128,
+      "id": "tr_reference_strips"
+    },
+    {
+      "category": "predicate_calibration",
+      "frames": 64,
+      "id": "tr_held_out_validation"
+    },
+    {
+      "category": "predicate_calibration",
+      "frames": 128,
+      "id": "tc0_ab_calibration"
+    },
+    {
+      "category": "predicate_subject",
+      "frames": 164,
+      "id": "tc0_dominance_witness"
+    },
+    {
+      "category": "score_execution",
+      "frames": 164,
+      "id": "tc0_candidate_stacks"
+    },
+    {
+      "category": "score_execution",
+      "frames": 60,
+      "id": "tc0_fixed_focus_witnesses"
+    },
+    {
+      "category": "physical_control",
+      "frames": 96,
+      "id": "tc0_sharp_control"
+    },
+    {
+      "category": "physical_control",
+      "frames": 96,
+      "id": "tc0_blur_control"
+    },
+    {
+      "category": "predicate_calibration",
+      "frames": 64,
+      "id": "tc0_held_out_validation"
+    }
+  ],
+  "categories": {
+    "direct_predicate_frames": 676,
+    "full_rehearsal_frames": 1092,
+    "physical_control_frames": 192,
+    "score_execution_frames": 224
+  },
+  "discarded_reductions": {
+    "estimator_only": 676,
+    "without_candidate_stacks": 928,
+    "without_physical_controls": 900,
+    "without_score_execution_package": 868
+  },
+  "headline": "STAGED RELEASE: 128 frames",
+  "intermittent_package_model": {
+    "detection_lost_if_duplicate_removed": "p(1-p)",
+    "one_package_detection": "p",
+    "symbol": "p",
+    "two_package_detection": "1-(1-p)^2"
+  },
+  "score": {
+    "corrected_combined_frames": 1215,
+    "rehearsal_gap": 123
+  },
+  "source": {
+    "path": "experiments\\M166-reference-dominance-rehearsal\\analysis.json",
+    "sha256": "d76ca7320cc40ccd6a7a05f302164673fcb47506b2532fd4949b59a40871509c"
+  },
+  "staging": {
+    "final_cumulative": 1092,
+    "first_stage_frames": 128,
+    "stages": [
+      {
+        "cumulative": 128,
+        "frames": 128,
+        "name": "TR-A/B calibration",
+        "remaining_if_abort_after_stage": 964,
+        "stage": 1
+      },
+      {
+        "cumulative": 160,
+        "frames": 32,
+        "name": "TR-S01",
+        "remaining_if_abort_after_stage": 932,
+        "stage": 2
+      },
+      {
+        "cumulative": 192,
+        "frames": 32,
+        "name": "TR-S02",
+        "remaining_if_abort_after_stage": 900,
+        "stage": 3
+      },
+      {
+        "cumulative": 224,
+        "frames": 32,
+        "name": "TR-S03",
+        "remaining_if_abort_after_stage": 868,
+        "stage": 4
+      },
+      {
+        "cumulative": 256,
+        "frames": 32,
+        "name": "TR-S04",
+        "remaining_if_abort_after_stage": 836,
+        "stage": 5
+      },
+      {
+        "cumulative": 320,
+        "frames": 64,
+        "name": "TR-V validation",
+        "remaining_if_abort_after_stage": 772,
+        "stage": 6
+      },
+      {
+        "cumulative": 448,
+        "frames": 128,
+        "name": "TC0-A/B calibration",
+        "remaining_if_abort_after_stage": 644,
+        "stage": 7
+      },
+      {
+        "cumulative": 558,
+        "frames": 110,
+        "name": "TC0-DOM-sw4-A/B",
+        "remaining_if_abort_after_stage": 534,
+        "stage": 8
+      },
+      {
+        "cumulative": 612,
+        "frames": 54,
+        "name": "TC0-DOM-sw10-A/B",
+        "remaining_if_abort_after_stage": 480,
+        "stage": 9
+      },
+      {
+        "cumulative": 836,
+        "frames": 224,
+        "name": "TC0 candidate package plus fixed-focus witnesses",
+        "remaining_if_abort_after_stage": 256,
+        "stage": 10
+      },
+      {
+        "cumulative": 932,
+        "frames": 96,
+        "name": "TC0 sharp control",
+        "remaining_if_abort_after_stage": 160,
+        "stage": 11
+      },
+      {
+        "cumulative": 1028,
+        "frames": 96,
+        "name": "TC0 blur control",
+        "remaining_if_abort_after_stage": 64,
+        "stage": 12
+      },
+      {
+        "cumulative": 1092,
+        "frames": 64,
+        "name": "TC0-V validation and final family",
+        "remaining_if_abort_after_stage": 0,
+        "stage": 13
+      }
+    ]
+  },
+  "status": "PASS"
+}

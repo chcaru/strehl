@@ -1,0 +1,80 @@
+{
+  "caught": 12,
+  "missing_anchor_guard_fired": true,
+  "mutations": [
+    {
+      "anchor": "\"direct_predicate_frames\": 676",
+      "caught": true,
+      "check": "direct predicate total",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"score_execution_frames\": 224",
+      "caught": true,
+      "check": "score execution total",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"physical_control_frames\": 192",
+      "caught": true,
+      "check": "physical controls total",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"full_rehearsal_frames\": 1092",
+      "caught": true,
+      "check": "full rehearsal total",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"first_stage_frames\": 128",
+      "caught": true,
+      "check": "first release total",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"final_cumulative\": 1092",
+      "caught": true,
+      "check": "stages close at full total",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"rehearsal_gap\": 123",
+      "caught": true,
+      "check": "score gap remains 123",
+      "target": "analysis"
+    },
+    {
+      "anchor": "STAGED RELEASE: 128 frames",
+      "caught": true,
+      "check": "required lead",
+      "target": "report"
+    },
+    {
+      "anchor": "The successful path remains exactly `1,092` registered frames.",
+      "caught": true,
+      "check": "no successful-path reduction",
+      "target": "report"
+    },
+    {
+      "anchor": "No interim look may produce `PASS`; the complete frozen family is accepted or refused exactly once, after all `1,092` frames.",
+      "caught": true,
+      "check": "optional stopping controlled",
+      "target": "report"
+    },
+    {
+      "anchor": "`D-REHEARSAL-01 \u2014 DEVELOPMENT; NEVER SCORE` remains the only subject class admitted to every rehearsal stage.",
+      "caught": true,
+      "check": "development unit remains disjoint",
+      "target": "report"
+    },
+    {
+      "anchor": "### Development rehearsal \u2014 one clean pass still needs 1,092 registered frames",
+      "caught": true,
+      "check": "owner text present",
+      "target": "report"
+    }
+  ],
+  "status": "PASS",
+  "total": 12
+}
