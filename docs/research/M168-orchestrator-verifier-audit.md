@@ -527,15 +527,16 @@ numbers.
 
 A safe repair cannot be another punctuation condition in `positions()`. The
 single overloaded `needle` cannot represent different STATUS/source literals,
-units, token kinds, contexts and rounding policies. Replace the positional tuple
-with this explicit contract:
+relations, units, token kinds, contexts and rounding policies. Replace the
+positional tuple with this explicit contract:
 
 ```python
 @dataclass(frozen=True)
 class SiteProbe:
     anchor: str
-    value: str
-    kind: Literal["literal", "decimal", "sha256"]
+    relation: str
+    value: str | None = None
+    value_kind: Literal["decimal", "sha256"] | None = None
     expected_count: int = 1
     rounding: Literal[None, "decimal-half-even"] = None
 
@@ -573,8 +574,10 @@ The required behavior is exact:
    `candidate.quantize(Decimal(1).scaleb(expected.as_tuple().exponent),
    rounding=ROUND_HALF_EVEN) == expected`.
 5. For `sha256`, require exactly 64 hex characters with non-hex boundaries.
-6. For `literal`, require the declared unique anchor and value; never scan the
-   concatenation of all sections.
+6. For prose-only claims, require the complete declared signed relation/polarity in
+   `relation` (for example, `does not fire`, not only
+   `IDENTITY_EQUIVALENT`). For numeric claims, require `relation` and `value`
+   inside the same anchored site. Never scan the concatenation of all sections.
 
 Replace the commissioning acceptance condition
 
