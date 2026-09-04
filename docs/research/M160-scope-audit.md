@@ -1,6 +1,127 @@
 # M160 scope audit — independent review of `6b966d8c`
 
-Status: **COMPLETE — `6b966d8c` REFUTED, OPERATIVE TEXT RECONCILED**
+Status: **COMPLETE — `6b966d8c` REFUTED; OPERATIVE TEXT AND F5/F6/F14 RECONCILED**
+
+## F5/F6/F14 follow-on reconciliation
+
+### F5 — two non-spliceable tracks
+
+The scorecard now defines two frozen contracts:
+
+- **Common merge** is the sole evidence path for the owner's SOTA sentence and all
+  seven publication gates. Strehl, licensed Zerene PMax, licensed Zerene DMap, and
+  the frozen best-known fork receive byte-identical linear TIFFs; Helicon receives
+  the same bytes when obtainable.
+- **Product native** starts from one frozen ARW manifest, lets each arm use its
+  frozen native stack path, and is labelled `PRODUCT_NATIVE_END_TO_END`. It must be
+  reported honestly and in full, but it cannot establish a competitive detail,
+  noise, clipping, or colour win or satisfy, rescue, veto, or alter an owner gate.
+
+Every result names its track, and no value, setting, or verdict may be spliced
+between them. M11's unchanged native CPU, hybrid, cold, live, and baseline bars
+remain product evidence; only the common-merge `>=2.00x` result and its retained
+cross-worker identity component gate publication. Full M12 remains a registered
+product-native disclosure, so it enters only all-axis measurement accounting and
+the `PASS` / `DISCLOSURE MISS` split, never an owner gate.
+
+### F6 — conditional high-frequency admission
+
+The permanent ban above `0.25 cyc/native px` is replaced by a conditional gate. A
+claim requires input-verified real contrast, an independently commissioned
+scene/alias/interpolation/sharpening/noise discriminator, and a stated physical
+optical/sampling ceiling. Commissioning must contain all three directions: a
+planted improvement that is rewarded, an untuned null that is not rewarded, and a
+planted degradation that is penalized.
+
+No licensed high-frequency instrument exists in v1.7. Consequently every current
+above-`0.25 cyc/native px` reading remains `UNLICENSED_GT_0.25`; M1 and M9 remain
+`UNMEASURED`. This changes future eligibility, not a present result.
+
+### F14 — independent M2 verdict and honest present status
+
+M2 is renamed **flat/defocused-ground noise**. M2, M4, and M8 retain independent
+axis verdicts: an M4 or M8 failure is published beside M2 but does not convert M2
+to `FAIL` or `UNMEASURED`, while an M2 pass excuses neither failure and licenses no
+detail claim. The already accepted same-output median-`Q_flat<=1.00` guard remains
+only as the narrow M4-derived anti-cheat component of the owner's M1/M2/M8 gate.
+
+The rename does not manufacture an instrument or a pass. M2 remains
+**INSTRUMENT VOID / UNMEASURED**. The scorecard preserves M159's adverse
+product-native diagnostic: DELIVER-V6 is `1.515208x` the fork's fractional box9
+residual, with `0 of 12` sites below one, while blur improves the existing
+statistic to `0.571215x`. The `98%` natural-detail qualification also remains
+unchanged.
+
+### F4/F14 overlap
+
+F4 and F14 targeted the same joint row. Commit `513ea3fe` had already replaced that
+row for the retained M4 anti-cheat ruling, so M158's shared replacement was not
+applied a second time and was not copied verbatim. The row was merged once: F14's
+independent M2/M4/M8 verdict language was added without discarding the accepted
+same-output `Q_flat` guard. The verifier requires exactly one merged row.
+
+### Forward verification
+
+`experiments/M160-scope-audit/verify_f5_f6_f14.py` reads the `513ea3fe` baseline
+and an optional committed result as raw `git show` bytes, decodes UTF-8 itself, and
+compares wrapped prose after per-line blockquote stripping and whitespace
+normalisation. Its result is:
+
+```text
+GROUP_SUM frequency total=16 passed=16 failed=0
+GROUP_SUM integrity total=36 passed=36 failed=0
+GROUP_SUM m2 total=24 passed=24 failed=0
+GROUP_SUM source total=6 passed=6 failed=0
+GROUP_SUM track total=26 passed=26 failed=0
+SUMMARY total=108 passed=108 failed=0 skipped=0 accounted=108
+VERDICT GREEN
+```
+
+The integrity group independently compares the two scorecard blobs. Changed
+top-level sections are exactly 0, 1, 3, 4, 6, 7, and 8; sections 2 and 5 are
+byte-identical. Every pre-existing results-table `FAIL` row remains byte-identical,
+all twelve at-a-glance rows and all twelve detailed success blocks retain their
+baseline numeric tokens, and M8 remains `FAIL` at M8-R `1.030569%` and M8-O
+`1.326144%` against exactly `0.0000%`.
+
+The historical reconciliation verifier and controls now default to the immutable
+`513ea3fe` blob, so their accepted 51-check / 12-control result remains reproducible
+after this follow-on amendment.
+
+### Commissioning
+
+Every mutation uses a unique exact full-line anchor, hard-errors unless it occurs
+once, verifies that the candidate differs, and runs only on a UTF-8 copy below
+`%TEMP%`.
+
+| Control | Anchor found | Exit | Expected named result | Result |
+| --- | --- | ---: | --- | --- |
+| product-native-satisfies-sota | yes | 1 | RED `track.sota-common-only` | PASS |
+| high-frequency-without-instrument | yes | 1 | RED `frequency.unlicensed-stays-unlicensed` | PASS |
+| m4-m8-converts-m2 | yes | 1 | RED `m2.disposition-independent` | PASS |
+| delete-improvement-control | yes | 1 | RED `frequency.improvement-control` | PASS |
+| allow-cross-track-splicing | yes | 1 | RED `track.scope-no-splicing` | PASS |
+| erase-m2-instrument-void | yes | 1 | RED `m2.instrument-void-card` | PASS |
+| hide-adverse-m2-reading | yes | 1 | RED `m2.adverse-residual` | PASS |
+| drop-retained-qflat | yes | 1 | RED `m2.disposition-qflat` | PASS |
+| erase-m8-fail | yes | 1 | RED `integrity.m8-fail` | PASS |
+| lower-m2-bar | yes | 1 | RED `m2.target` | PASS |
+| scope-reflow-benign | yes | 0 | GREEN | PASS |
+| frequency-reflow-benign | yes | 0 | GREEN | PASS |
+
+Result: **12/12 controls passed: 10 named RED controls and two benign GREEN
+controls.**
+
+### Judgment
+
+I found no evidence that any ruling is wrong. I did find and correct one wording
+collision while applying F5: saying that no product-native result could alter any
+top-level verdict contradicted the already accepted requirement to measure full M12
+as a product-native mandatory disclosure. The operative text now states the narrower
+and consistent rule: product-native evidence can never affect an **owner gate**;
+registered full-M12 evidence affects only disclosure completeness and the clean-pass
+versus `DISCLOSURE MISS` distinction. That is bookkeeping required by the earlier
+gate/disclosure decision, not a relaxation or a new gate.
 
 ## Reconciliation applied
 

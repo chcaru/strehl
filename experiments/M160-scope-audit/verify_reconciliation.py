@@ -14,6 +14,7 @@ PLAN = ROOT / "docs/proposals/2026-08-sota-path.md"
 SCORECARD = ROOT / "docs/proposals/2026-09-sota-scorecard.md"
 SCORECARD_PATH = "docs/proposals/2026-09-sota-scorecard.md"
 BASE_REV = "6b966d8c"
+RECONCILED_REV = "513ea3fe"
 
 OWNER_GATES = ("M1", "M2", "M3", "M8", "M9", "M10", "M11")
 DISCLOSURES = ("M4", "M5", "M6", "M7", "M12")
@@ -855,8 +856,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--plan", type=Path, default=PLAN)
     parser.add_argument("--before-rev", default=BASE_REV)
-    parser.add_argument("--after-rev")
-    parser.add_argument("--after-file", type=Path, default=SCORECARD)
+    parser.add_argument("--after-rev", default=RECONCILED_REV)
+    parser.add_argument("--after-file", type=Path)
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -864,9 +865,9 @@ def main() -> int:
         plan = read_utf8(args.plan.resolve())
         before = git_blob(args.before_rev, SCORECARD_PATH)
         after = (
-            git_blob(args.after_rev, SCORECARD_PATH)
-            if args.after_rev
-            else read_utf8(args.after_file.resolve())
+            read_utf8(args.after_file.resolve())
+            if args.after_file
+            else git_blob(args.after_rev, SCORECARD_PATH)
         )
         checks = audit(plan, before, after)
     except Exception as exc:
