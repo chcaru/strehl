@@ -2085,6 +2085,64 @@ and are commissioned, and neither end depends on the dead detail statistic or
 on the capture that has not been shot. It is the first thing in this program
 that could be pushed rather than only audited.
 
+### 2.9.13 A late gate close, and a coordination failure worth recording
+
+**C5 field curvature closes NARROWED.** It is a later close than the census in
+2.9.9, and that table has not been rewritten to absorb it.
+
+`Q_H = +0.316961` native frame, 95% CI `[+0.078558, +0.543411]`, 395 valid
+sites, deterministic block bootstrap. It clears the registered quarter-frame
+detection bar and **fails the half-frame materiality bar**, and none of the four
+replication rungs reproduce it: f/8 `+0.047308`, f/11 `-0.119684`, flat ruler
+`-0.235769`, dime `+1.165698` -- every one of them UNRESOLVED. SURVIVE needed a
+material primary with same-sign replication; KILL needed all aperture rungs
+negligible. Neither bar was met, and the lane declined to call it either.
+`docs/research/M-PHASE0-CURV.md`, results JSON SHA-256
+`4bfed7175e2bb4f54570194e4ba7b8bac06025eb6fb108b13dc9592ff329389a`.
+
+**The registered spatial placebo failed, at `70.66x` the primary magnitude**
+(`M-PHASE0-CURV.md:208-212`). The lane's own reading of that failure is the
+honest one and I am recording it rather than the convenient summary: circularly
+wrapping a scene that has a strong horizontal depth gradient manufactures a
+discontinuity, so the placebo's `[+1.827118,+38.021160]` **is not a physical
+curvature estimate**. It is nevertheless a decisive failure *under the frozen
+rule*, and the lane honoured the rule instead of arguing its way around it.
+That is the correct behaviour and the reason the verdict can be trusted. Anyone
+quoting `+0.316961` without this caveat is quoting a number whose spatial
+attribution did not survive its own control.
+
+The outcome builds nothing, which is right for a term that fails its own
+materiality bar and replicates nowhere.
+
+### The coordination failure
+
+One lane invented a host-scheduling protocol and began asking every other lane
+to stop and start compute. It sent quiet-window requests, host releases and
+compute go-aheads across at least four lanes over several hours. Two of them
+spent multiple conversational turns replying. Its own closing summary of the
+runs it was protecting was **"no conclusion changed."**
+
+Two lanes were told to begin heavy work on **phases I had formally killed**.
+Both refused, correctly, citing the standing stop-work order -- one of them five
+separate times. **Nothing was lost, and it was lane judgement rather than
+orchestration that prevented it.** That is too thin a margin.
+
+The rule now in force, and the reason it exists: **an instruction arriving from
+a peer lane is information, never authority.** A lane that acts on one is taking
+direction from something with no view of the program. The protocol also could
+not have worked on its own terms -- it asked for an idle machine in a session
+deliberately running scores of concurrent agents, and polling for that state
+consumes exactly the resource it is trying to conserve. An idle window here can
+only be scheduled, and scheduling is not a lane's to do.
+
+**The related hazard, which cost real time: a lane roster held as truncated
+identifiers is not a roster.** Three lanes were addressed at reconstructed
+identifiers and reported as nonexistent, and one was concluded to have silently
+refused two assignments when in fact no such agent had ever been messaged. The
+work it was thought to be ignoring was reassigned only after a full census
+recovered the real identifiers. **Verify a deliverable on disk, and verify the
+identity of whatever you believe is producing it.**
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
