@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import importlib.util
 import json
 import os
 import platform
@@ -18,9 +19,6 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 import numpy as np
-
-import comparison_checker as core
-
 
 HERE = Path(__file__).resolve().parent
 ADAPTER_CONTRACT_PATH = HERE / "m138-adapter-contract.json"
@@ -37,6 +35,7 @@ REQUEST_REFUSAL_EXIT_CODE = 2
 UNEXPECTED_ERROR_EXIT_CODE = 3
 BUNDLE_SOURCE_NAMES = (
     "M138-ADAPTER-PREREGISTRATION.md",
+    "M138-ADAPTER-AMENDMENT-1.md",
     "comparison-binding.json",
     "comparison-contract.json",
     "comparison_checker.py",
@@ -45,6 +44,19 @@ BUNDLE_SOURCE_NAMES = (
     "m138-adapter-environment.json",
     "m138_adapter.py",
 )
+
+
+def load_core_module() -> Any:
+    path = HERE / "comparison_checker.py"
+    spec = importlib.util.spec_from_file_location("m135_comparison_checker", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("could not construct the frozen comparison-checker loader")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+core = load_core_module()
 
 
 class AdapterRefusal(ValueError):
