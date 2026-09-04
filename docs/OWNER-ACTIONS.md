@@ -5,6 +5,44 @@ in `docs/STATUS.md` §2.9.28-2.9.52 and the lane reports named below.
 
 Maintained by the orchestrator. Last updated after lanes M157, M159, M160, M161.
 
+> # ⛔ HOLD — do not shoot yet. Read this first.
+>
+> **Status as of lane M164's identifiability ruling (commit `a78a901e`): Ask 2a
+> is on hold for a few hours while one question is settled. Please do not shoot
+> it until this banner is gone.**
+>
+> Ask 2a measures whether the reference optical state *samples* the subject at
+> least `2.0x` more finely than the scored state. **That test has just been
+> ruled necessary but not sufficient.** M164 constructed an explicit case in
+> which a design passes the sampling gate at the exact designed ratio
+> `2.031203x` and the reference is nevertheless **less informative** than the
+> scored path — `1.160964` bits against `1.660964`, a ratio of `0.698970`. Its
+> verdict on the sampling threshold, quoted from its committed report: *"There
+> is no identifiability discontinuity at exactly `2.0x`... The physical
+> information gate, not the integer-looking sampling threshold, decides the
+> theorem."*
+>
+> **Why that means "wait" rather than "never".** The route is not dead; its
+> admission contract changed. The replacement condition,
+> `REFERENCE_INFORMATION_DOMINANCE`, requires a *pre-render scored-path physical
+> witness* — repeat observations taken through the scored optical state — which
+> the current two-frame ask does not collect. **I do not yet know whether that
+> is an analysis change or a change to what must be photographed.** Lane M171
+> is answering exactly that question now.
+>
+> - If it is an **analysis** change, Ask 2a is unchanged and you should shoot
+>   the seven-step version below as written.
+> - If it is a **protocol** change, the frames you would shoot tonight would be
+>   the wrong frames, and the specification below changes before you shoot.
+>
+> **The reason I am stopping you rather than letting you shoot a cheap test:**
+> the ask requires you to break the rig down — remove the teleconverter, then
+> leave the whole assembly locked and unmoved. That state cannot be reassembled
+> identically later. Two frames are cheap; a rig teardown spent on a superseded
+> specification is not.
+>
+> Nothing else on this page is blocked by the hold.
+
 > # DO THIS FIRST — two frames, five minutes
 >
 > **If you read nothing else on this page, shoot Ask 2a** (full instructions
