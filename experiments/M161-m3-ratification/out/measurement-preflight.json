@@ -1,0 +1,86 @@
+{
+  "blockers": [
+    {
+      "code": "HOST_RESERVED",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\HOST-RELEASE.json",
+      "reason": "M153 release record is absent"
+    },
+    {
+      "code": "COMMON_INPUT_MANIFEST_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\INPUT-MANIFEST.json",
+      "reason": "the registered common linear input has not been supplied"
+    },
+    {
+      "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\strehl\\manifest.json",
+      "reason": "strehl"
+    },
+    {
+      "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\fork\\manifest.json",
+      "reason": "fork"
+    },
+    {
+      "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\zerene-pmax\\manifest.json",
+      "reason": "zerene-pmax"
+    },
+    {
+      "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\zerene-dmap\\manifest.json",
+      "reason": "zerene-dmap"
+    }
+  ],
+  "checker_definition_sha256": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+  "contract_sha256": "1cd503b225c9b9384208f75337deceb1a4b125130afb2acb53f2a432a678095c",
+  "host_release_record": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\HOST-RELEASE.json",
+  "optional_products": [
+    {
+      "exists": false,
+      "manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\helicon-a\\manifest.json",
+      "product_id": "helicon-a",
+      "role": "optional_comparator"
+    },
+    {
+      "exists": false,
+      "manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\helicon-b\\manifest.json",
+      "product_id": "helicon-b",
+      "role": "optional_comparator"
+    },
+    {
+      "exists": false,
+      "manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\helicon-c\\manifest.json",
+      "product_id": "helicon-c",
+      "role": "optional_comparator"
+    }
+  ],
+  "pixel_files_opened": 0,
+  "required_products": [
+    {
+      "exists": false,
+      "manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\strehl\\manifest.json",
+      "product_id": "strehl",
+      "role": "candidate"
+    },
+    {
+      "exists": false,
+      "manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\fork\\manifest.json",
+      "product_id": "fork",
+      "role": "required_comparator"
+    },
+    {
+      "exists": false,
+      "manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\zerene-pmax\\manifest.json",
+      "product_id": "zerene-pmax",
+      "role": "required_comparator"
+    },
+    {
+      "exists": false,
+      "manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification\\packages\\zerene-dmap\\manifest.json",
+      "product_id": "zerene-dmap",
+      "role": "required_comparator"
+    }
+  ],
+  "schema": "m161-m3-measurement-preflight-v1",
+  "verdict": "BLOCKED"
+}

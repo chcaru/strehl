@@ -1,0 +1,109 @@
+{
+  "schema": "m161-m3-preregistration-v1",
+  "status": "FROZEN_BEFORE_M3_OUTPUTS",
+  "candidate_outputs_opened": 0,
+  "comparator_outputs_opened": 0,
+  "holdout_capture_pixels_opened": 0,
+  "bar": {
+    "placeholder_value_fraction_of_local_source_step": 0.05,
+    "publication_gate": "maximum over all frozen scored sites of max(h_e,v_e) <= 0.05",
+    "typical_quality_gate": "median h_e <= 0.01 and median v_e <= 0.01",
+    "reason": "0.05 is the largest round threshold below the 0.0533 lower 95 percent bound of the confirmed 0.0634 merge-created rim; the matched no-merge upper 95 percent bound is 0.0033. No current M3 output was inspected to select it.",
+    "effect_on_existing_scorecard": "tightens it: the scorecard's p99 and one-percent prevalence tuple can admit up to five of 500 observed sites above 0.05, while the owner's word no cannot"
+  },
+  "instrument_changes_from_m152_v1": [
+    "v_e is max(v_e_negative_side,v_e_positive_side), not the pooled two-side mean",
+    "v_e uses the broad [-400,-320] and [320,400] source-plateau step; h_e and edge width retain the narrow [-64,-48] and [48,64] step",
+    "the owner-facing headline gate consumes the observed maximum max(h_e,v_e)",
+    "rho_edge remains a phase-consistency diagnostic; the 10-90 edge-width ratio is the non-compensating blur guard"
+  ],
+  "commissioning": {
+    "site_count_per_image_arm": 500,
+    "source_profiles_per_site": 8,
+    "master_seed": 16120260906,
+    "clean_noise_null": {
+      "noise_sigma_fraction_of_step": 0.002,
+      "required": [
+        "median v_e > 0",
+        "all M3 gates pass"
+      ],
+      "failure_action": "checker not admitted; do not raise thresholds after seeing a candidate"
+    },
+    "null_movement": {
+      "noise_sigma_fraction_of_step": 0.012,
+      "required": [
+        "median v_e exceeds the clean-noise null",
+        "at least one M3 gate fails"
+      ]
+    },
+    "degradation": {
+      "required_detection_rate": 0.95,
+      "plants": [
+        "6 percent positive rim",
+        "6 percent opposite-sign rim",
+        "6 percent two-sided 200-native-pixel veil",
+        "6 percent one-sided far veil",
+        "6 percent combined rim and veil"
+      ]
+    },
+    "improvement": {
+      "paired_from": "6 percent combined rim and veil",
+      "paired_to": "0.5 percent combined rim and veil",
+      "required": [
+        "median h_e decreases by at least 0.05",
+        "median v_e decreases by at least 0.05",
+        "improved arm passes"
+      ]
+    },
+    "blur_and_phase": {
+      "required": [
+        "Gaussian blur fails the edge-width guard",
+        "a translated patch fails rho_edge",
+        "the clean paired arm passes both"
+      ]
+    },
+    "sparse_headline_control": {
+      "plant": "one of 500 sites receives the one-sided 6 percent veil",
+      "required": [
+        "the exact headline maximum fails",
+        "the prior scorecard tuple without that maximum passes"
+      ]
+    },
+    "warp": {
+      "landmarks": 512,
+      "fit_holdout_split": "even indices fit; odd indices score",
+      "null": "identity plus independent 0.008-pixel coordinate noise must return nonzero residual and pass",
+      "degradation": "scale 1.0025, rotation 0.05 degrees, translation (+0.45,-0.30) must fail",
+      "improvement": "the fit-half inverse applied to held-out landmarks must pass all geometry limits",
+      "profile_guard": "a clean profile population with independently bounded residual shifts of +/-0.08 native pixel must pass, and the same residuals must not hide the one-sided 6 percent veil"
+    },
+    "admission_rule": "every listed assertion must pass in one run; otherwise NOT_ADMITTED_COMMISSIONING_FAILED"
+  },
+  "measurement": {
+    "required_products": [
+      "strehl",
+      "fork",
+      "zerene-pmax",
+      "zerene-dmap"
+    ],
+    "optional_products": [
+      "helicon-a",
+      "helicon-b",
+      "helicon-c"
+    ],
+    "required_input": "identical hashed native-size uncompressed 16-bit linear ProPhoto RGB D50 TIFFs",
+    "required_geometry": "input-derived scale disagreement <=0.10 percent, rotation disagreement <=0.02 degrees, and nontranslation residual <=0.10 output pixel RMS for every capture and arm",
+    "score": "absolute M3 gates plus strehl paired p99 no worse than the best required comparator",
+    "missing_requirement": "BLOCKED, never FAIL or PASS"
+  },
+  "host_lock": {
+    "owner": "M153",
+    "forbidden_until_release": [
+      "RAW decoding",
+      "rendering",
+      "profile-package construction",
+      "formal commissioning run",
+      "M3 score run"
+    ]
+  }
+}

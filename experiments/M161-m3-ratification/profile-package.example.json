@@ -1,0 +1,51 @@
+{
+  "schema": "m161-m3-profile-package-v1",
+  "product_id": "strehl",
+  "checker_definition_sha256": "replace-with-frozen-definition-sha256",
+  "census_manifest_sha256": "35d5058afc1f310923ba2a3e5bf0cd3b91b3eb2df0e8d4868c22099de7bcd38d",
+  "common_input": {
+    "same_hashed_tiffs_all_arms": true,
+    "linear_transfer_pass": true,
+    "native_size_pass": true,
+    "post_processing_none": true,
+    "strehl_adapter_identity_pass": true,
+    "input_manifest_sha256": "replace-with-lowercase-sha256",
+    "input_pixel_payload_set_sha256": "replace-with-lowercase-sha256",
+    "run_manifest_sha256": "replace-with-lowercase-sha256",
+    "output_sha256": "replace-with-lowercase-sha256"
+  },
+  "geometry_by_capture": {
+    "m3-duck-tape": {
+      "scale_disagreement_percent": 0.0,
+      "rotation_disagreement_degrees": 0.0,
+      "nontranslation_residual_rms_output_px": 0.0,
+      "input_only": true
+    },
+    "m3-chia": {
+      "scale_disagreement_percent": 0.0,
+      "rotation_disagreement_degrees": 0.0,
+      "nontranslation_residual_rms_output_px": 0.0,
+      "input_only": true
+    },
+    "m3-flower-fern": {
+      "scale_disagreement_percent": 0.0,
+      "rotation_disagreement_degrees": 0.0,
+      "nontranslation_residual_rms_output_px": 0.0,
+      "input_only": true
+    },
+    "m3-razor-control": {
+      "scale_disagreement_percent": 0.0,
+      "rotation_disagreement_degrees": 0.0,
+      "nontranslation_residual_rms_output_px": 0.0,
+      "input_only": true
+    }
+  },
+  "sites": [
+    {
+      "site_id": "M3-0001",
+      "capture_id": "m3-chia",
+      "payload": "sites/M3-0001.npz",
+      "sha256": "replace-with-lowercase-sha256"
+    }
+  ]
+}

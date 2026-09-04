@@ -1,0 +1,54 @@
+{
+  "schema": "m161-m3-measurement-contract-v1",
+  "host_release_record": "packages/HOST-RELEASE.json",
+  "host_release_rule": "No RAW decode, rendering, profile-package construction, commissioning run, or score run before an explicit M153 host-release record exists.",
+  "common_input": {
+    "input_manifest": "packages/INPUT-MANIFEST.json",
+    "site_manifest": "../M152-site-census/out/census-manifest.json",
+    "required_linear_format": "uncompressed native-size 16-bit linear ProPhoto RGB D50 TIFF",
+    "post_processing": "none",
+    "strehl_adapter_identity_required": true
+  },
+  "required_products": [
+    {
+      "product_id": "strehl",
+      "role": "candidate",
+      "manifest": "packages/strehl/manifest.json"
+    },
+    {
+      "product_id": "fork",
+      "role": "required_comparator",
+      "manifest": "packages/fork/manifest.json"
+    },
+    {
+      "product_id": "zerene-pmax",
+      "role": "required_comparator",
+      "manifest": "packages/zerene-pmax/manifest.json"
+    },
+    {
+      "product_id": "zerene-dmap",
+      "role": "required_comparator",
+      "manifest": "packages/zerene-dmap/manifest.json"
+    }
+  ],
+  "optional_products": [
+    {
+      "product_id": "helicon-a",
+      "role": "optional_comparator",
+      "manifest": "packages/helicon-a/manifest.json"
+    },
+    {
+      "product_id": "helicon-b",
+      "role": "optional_comparator",
+      "manifest": "packages/helicon-b/manifest.json"
+    },
+    {
+      "product_id": "helicon-c",
+      "role": "optional_comparator",
+      "manifest": "packages/helicon-c/manifest.json"
+    }
+  ],
+  "profile_package_schema": "m161-m3-profile-package-v1",
+  "measurement_output": "out/m3-score.json",
+  "holdout_rule": "Commissioning and all checker changes must be frozen before any required product package is opened."
+}

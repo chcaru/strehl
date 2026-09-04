@@ -1,0 +1,22 @@
+{
+  "schema": "m161-m3-freeze-manifest-v1",
+  "status": "PRE_OUTPUT",
+  "files": {
+    "commission_m3_v2.py": "342ea2d9064130117f9173ff2311a47465760519251f2c473f3a8ea8d34952da",
+    "m3-checker-definition-v2.json": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+    "m3_checker_v2.py": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda",
+    "measurement-contract.json": "1cd503b225c9b9384208f75337deceb1a4b125130afb2acb53f2a432a678095c",
+    "preflight.py": "7597ad2b8ab5f38976cf9c262949dc241fdef790405f41abc11b6871be46e4ad",
+    "preregistration.json": "faffb98d4f570b0c435b69fbae845fcfef992ac5c99c39d4f5cf056379345e1f",
+    "profile-package.example.json": "e7dd97c75dd0b68571c79cf475959f79e25bcb28bff817d73d1d849cb7249939",
+    "score_m3_packages.py": "8ab683aae13c3aaca8bc1a2acd12748b812dbd1b6564eda47c310d5f5694c842",
+    "test_m3_checker_v2.py": "452565825dece19648ec796b516475876ef56a4925744861f26b935c72ba83ab",
+    "verify_freeze.py": "6cf7bb96ada524666a14186be006b820cc250f253938394460a84b0484a695fc"
+  },
+  "upstream": {
+    "../M152-site-census/out/census-manifest.json": "35d5058afc1f310923ba2a3e5bf0cd3b91b3eb2df0e8d4868c22099de7bcd38d"
+  },
+  "candidate_outputs_opened_before_freeze": 0,
+  "comparator_outputs_opened_before_freeze": 0,
+  "holdout_capture_pixels_opened_before_freeze": 0
+}
