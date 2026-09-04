@@ -2493,6 +2493,66 @@ The lane has been told plainly that I would rather be publicly wrong than have
 a reading shaded toward my prior, and that it must not adjudicate its own
 result. An independent lane verifies before anything here is updated.
 
+### 2.9.19 The owner's new calibration set contains the arm the candidate programme never had
+
+`D:\personal\macro\requests\misc-diagnostic\high-res-calibration-slide-cpl`,
+delivered 2026-09-02, 657 ARW frames. I inventoried it myself. Its structure is
+not incidental -- it is a controlled experiment, and it supplies two things the
+program has been unable to construct.
+
+| stack | n | ET | f | ISO | captured |
+|---|---:|---|---|---|---|
+| `flat-sw4-cpl/flat-et6s-sw4-cpl` | 65 | `6 s` | 5.6 | 100 | 20:13:04 -- 20:20:19 |
+| `flat-sw4-cpl/flat-et2.5s-sw4-cpl` | 61 | `2.5 s` | 5.6 | 100 | 20:24:07 -- 20:27:06 |
+| `flat-sw4-cpl/flat-et1s-sw4-cpl` | 60 | `1 s` | 5.6 | 100 | 20:28:39 -- 20:30:05 |
+| `tilted-sw4-cpl` | 182 | `1 s` | 5.6 | 100 | 20:46:50 -- 20:51:13 |
+| `tilted-sw10-cpl` | 92 | `1 s` | 5.6 | 100 | 20:52:52 -- 20:55:04 |
+| `very-tilted-all-axis-sw10-cpl` | 197 | `1 s` | 5.6 | 100 | 20:57:12 -- 21:01:58 |
+
+All six are `7168x5120`, f/5.6, ISO 100, 200 mm.
+
+**1. A genuine optical improvement pair, requiring no new capture.**
+`tilted-sw4` and `tilted-sw10` are the same target, same optics, same exposure,
+captured 100 seconds apart. I verified from EXIF `FocusPosition2` that **both
+span the identical focus-encoder range `57..59`** -- one with **182** frames and
+one with **92**. The dense stack therefore samples the same depth interval
+roughly twice as finely, leaving less residual defocus at every depth.
+
+**That is a real optical improvement and it is not a filter.** It cannot be
+written as a common linear operator applied to the other stack, which is
+precisely what makes it the arm the program lacks. Every dead candidate was
+retired without such an arm ever being run (2.9.18), and the one statistic that
+did read genuine improvement, `Q25`, got the sign wrong at `0.977981`.
+
+**2. A real-noise ladder, on identical scene and focus positions.** The flat
+triple varies **only** exposure time: `6 s`, `2.5 s`, `1 s`, i.e. `log2(6) =
+2.585` stops of real photon SNR, not synthetic additive noise. This directly
+tests the failure that killed the Gaussian-equivalent shape conversion, which
+let extra white noise *improve* the score by median `13.0`--`16.2%`
+(`M-PHASE0-SLANTEDGE.md:286`). A detail statistic must not rank `1 s` above
+`6 s`.
+
+**3. A null.** A flat target has no depth variation, so an honest stacker should
+essentially reproduce the best single frame. Any "detail" a stacker adds on the
+flat triple is invention.
+
+**Holdout designation -- made deliberately, and conservatively.** The rule is
+that the holdout unit is subject plus uninterrupted capture session, and that
+reading an outcome on one member burns every member. This whole set was shot in
+one sitting, 20:13 -- 21:01, with gaps as short as 100 seconds and subject
+changes that are physical re-orientations of one slide. Rather than argue that
+the sub-blocks are separable and risk burning a holdout by a technicality, **I
+am designating the entire 2026-09-02 calibration-slide session as commissioning
+and development material, burned deliberately and knowingly.** It must not be
+used for any scored result.
+
+The cost is small and the benefit is decisive: a calibration slide is a
+diagnostic target, not the product domain, so scoring holdouts should come from
+real macro subjects regardless. The benefit is that instrument commissioning --
+which has been the program's blocker since FRC and slant-edge died -- can
+finally use a real improvement arm, a real noise ladder and a real null, on
+data that already exists.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
