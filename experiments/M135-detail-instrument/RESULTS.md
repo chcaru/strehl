@@ -242,36 +242,48 @@ commissioning threshold-key substitutions survived all 51 checks. Blur q95
 `0.95` passed when the strict `<0.90` lookup was changed to `1.10`;
 improvement q05 `1.00` passed when the strict `>1.10` lookup was changed to
 `0.90`. M149's full 32-entry manifest also had 19 hard anchor errors after the
-read-once restructuring. Those entries were unknown, not passing.
+read-once restructuring. M149 manually mapped all 19 to still-present
+predicates; they were confirmed present but not exercised by that stale
+manifest.
 
 **VERIFIED.** Amendment 8 makes both contract-key lookups named, tested
 production dependencies and adds marginal public-CLI controls at those exact
-values. The ordinary battery now passes `56 / 56`. The local helper suite
-kills `27 / 27` substantive mutations with its inert control green.
+values. Its ordinary battery passed `56 / 56`, and its local helper suite
+killed `27 / 27` substantive mutations with its inert control green.
+
+**VERIFIED.** Amendment 9 removes the remaining bypass rather than relying on
+parallel checks. The blur and improvement helpers no longer accept a numeric
+bar; both production and direct probes pass the complete commissioning config,
+and each helper selects its own contract key internally. Two altered-config
+mutations replace those selector calls with the current numeric literals and
+must fail. The ordinary battery now passes `58 / 58`; the local helper suite
+kills `29 / 29` substantive mutations with its inert control green.
 
 **VERIFIED.** All 19 stale M149 anchors map to still-present predicates; none
 was deleted. With the reanchored manifest, M149's unchanged harness applied
 all 32 entries, killed all `31 / 31` applied substantive mutations, reported
 **0 unapplied**, and kept the inert mutation green. Each threshold mutation
-failed both its exact-key probe and its marginal commissioning-output check.
+failed four direction-specific checks: its strict-bound helper probe, exact-key
+probe, altered-config probe, and marginal commissioning-output check. The blur
+and improvement failure sets are disjoint.
 
 **VERIFIED.** The post-amendment race sequence ran positive controls first.
 The vulnerable artifact and source fixtures reproduced at attempts 5/120 and
-8/120, respectively. The repaired artifact race then produced 63 registered
-snapshots and 65 refusals in 128 attempts; the repaired source race produced
-58 registered snapshots and 70 refusals. Neither repaired arm produced an
-unsafe result. The current M135 race harness also passed `7 / 7` with 128
-attempts per race.
+2/120, respectively, with the source sentinel executing. The repaired
+artifact race then produced 68 registered snapshots and 60 refusals in 128
+attempts; the repaired source race produced 74 registered snapshots and 54
+refusals. Neither repaired arm produced an unsafe result. The current M135
+race harness also passed `7 / 7` with 128 attempts per race.
 
 **VERIFIED.** The adapter SHA-256 is
-`daa8a24531343bf2ec75c31f1dbabd3b5594b88e792f4e6f3005cbc9cd5302d2`;
+`06e5c1abe9b8babdc28d52b8eff8570afcf154fd95096045eeedc19aa2f9d438`;
 the checker-bundle SHA-256 is
-`72951c1924d577c7a08d69d5ffcfc1c52816240068767e54cf67e4f4c5137593`;
+`9622002866241ccff4ef774ab74f117f5c38523ab86041d88923c58e75448b93`;
 and the canonical adapter-contract SHA-256 is
 `30453f8901c0b121a48771d35c9cf735da88358bb441794b918de77b267903e2`.
 The production description validates the bundle under isolated Python and
 reports `UNBOUND`. Therefore this is a commissioned consumer interface, not a
-physical detail result. M149 review of amendment 8 remains pending.
+physical detail result. M149 review of amendment 9 remains pending.
 
 ## Load-bearing negative diagnostics
 

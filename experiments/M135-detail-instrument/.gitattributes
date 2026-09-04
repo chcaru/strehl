@@ -21,3 +21,15 @@ m149-mutation-verification.json -text
 m149-mutation-control.json -text
 m149-artifact-race-control.json -text
 m149-source-race-control.json -text
+m138-adapter-description-run1-pre-config-path.json -text
+m138-adapter-verification-run7-pre-config-path.json -text
+m138-adapter-mutation-verification-run2-pre-config-path.json -text
+m138-adapter-race-verification-run2-pre-config-path.json -text
+m138-adapter-result-manifest-run3-pre-config-path.json -text
+m149-mutation-manifest-reanchored-run1-pre-config-path.json -text
+m149-mutation-verification-run1-pre-config-path.json -text
+m149-mutation-control-run1-pre-config-path.json -text
+m149-artifact-race-control-run1-pre-config-path.json -text
+m149-source-race-control-run1-pre-config-path.json -text
+m149-artifact-race-retest-run2-pre-config-path.json -text
+m149-source-race-retest-run2-pre-config-path.json -text

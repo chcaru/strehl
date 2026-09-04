@@ -1,15 +1,15 @@
 {
   "status": "PASS",
-  "citation_count": 141,
-  "citation_range_count": 165,
-  "verified_tags": 102,
+  "citation_count": 144,
+  "citation_range_count": 168,
+  "verified_tags": 103,
   "assumed_tags": 40,
   "d8_checks": 14,
   "flat_checks": 20,
   "comparison_checks": 14,
   "comparison_binding_state": "UNBOUND",
-  "adapter_checks": 56,
-  "adapter_local_mutations_killed": 27,
+  "adapter_checks": 58,
+  "adapter_local_mutations_killed": 29,
   "adapter_manifest_mutations_applied": 31,
   "adapter_manifest_mutations_killed": 31,
   "adapter_manifest_mutations_unapplied": 0,
@@ -17,6 +17,6 @@
   "m149_artifact_race_attempts": 128,
   "m149_source_race_attempts": 128,
   "adapter_binding_state": "UNBOUND",
-  "adapter_independent_review": "M149_SECOND_SEND_BACK_REPAIRED_AWAITING_REATTACK",
+  "adapter_independent_review": "M149_SECOND_SEND_BACK_CONFIG_PATH_REPAIRED_AWAITING_REATTACK",
   "findings": []
 }

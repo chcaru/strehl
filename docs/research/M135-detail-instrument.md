@@ -1217,8 +1217,9 @@ commissioning threshold-key mutations applied and survived all 51 checks.
 Blur q95 `0.95` passed after replacing the strict `<0.90` lookup with `1.10`;
 improvement q05 `1.00` passed after replacing the strict `>1.10` lookup with
 `0.90`. Nineteen other entries in M149's 32-entry manifest hard-refused because
-the read-once restructuring had moved their anchors. Those 19 were unknown,
-not passing
+the read-once restructuring had moved their anchors. M149 manually mapped all
+19 to still-present predicates; they were confirmed present but not exercised
+by the stale automated manifest
 (`experiments/M149-adapter-review/REATTACK-REPORT.md:19-69`;
 `experiments/M149-adapter-review/threshold-mutation-probe-repaired.json:1`;
 `experiments/M149-adapter-review/mutation-report-repaired.json:1`).
@@ -1227,26 +1228,38 @@ not passing
 dependencies, directly probes their exact `0.90` and `1.10` values, and adds a
 public-CLI commissioning request at the discriminating `0.95` and `1.00`
 values. Both output controls must remain false. It also adds a stale
-bundle-member refusal check. The current ordinary battery passes `56 / 56`;
-the local helper suite kills `27 / 27` substantive mutations and leaves its
+bundle-member refusal check. The amendment-8 ordinary battery passed `56 / 56`;
+the local helper suite killed `27 / 27` substantive mutations and left its
 inert mutation green
 (`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-8.md:1-84`;
+`experiments/M135-detail-instrument/m138-adapter-verification-run7-pre-config-path.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-mutation-verification-run2-pre-config-path.json:1`).
+
+**VERIFIED.** Amendment 9 removes the remaining test-only threshold bypass.
+The blur and improvement helpers no longer accept caller-supplied numeric bars.
+Production and direct probes pass the same complete commissioning config; each
+helper invokes its own production contract-key selector. Altered-config probes
+detect replacement of either selector with the current numeric literal. The
+current ordinary battery passes `58 / 58`; the local suite kills `29 / 29`
+substantive mutations and leaves its inert mutation green
+(`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-9.md:1-56`;
 `experiments/M135-detail-instrument/m138-adapter-verification.json:1`;
 `experiments/M135-detail-instrument/m138-adapter-mutation-verification.json:1`).
 
 **VERIFIED.** Every one of M149's 19 stale anchors maps to a current predicate;
 none was deleted. With the reanchored manifest, M149's unchanged harness
 applied all 32 entries: **31/31 applied substantive mutations killed, 0
-unapplied, one inert green**. Each threshold mutant failed both the exact-key
-probe and the marginal public-CLI output check
+unapplied, one inert green**. Each threshold mutant failed four
+direction-specific checks: strict-bound helper, exact-key, altered-config, and
+marginal public-CLI. The blur and improvement failure sets are disjoint
 (`experiments/M135-detail-instrument/m149-mutation-manifest-reanchored.json:1`;
 `experiments/M135-detail-instrument/m149-mutation-verification.json:1`).
 
 **VERIFIED.** The post-amendment race rerun was control-first. The vulnerable
 artifact fixture reproduced at attempt 5/120; the vulnerable source fixture
-reproduced with sentinel execution at attempt 8/120. Against amendment 8, 128
-artifact attempts split 63 registered snapshots and 65 refusals, while 128
-source attempts split 58 registered snapshots and 70 refusals. The current
+reproduced with sentinel execution at attempt 2/120. Against amendment 9, 128
+artifact attempts split 68 registered snapshots and 60 refusals, while 128
+source attempts split 74 registered snapshots and 54 refusals. The current
 M135 race harness also passed 7/7 at 128 attempts per race. No repaired arm
 produced an unsafe result
 (`experiments/M135-detail-instrument/m149-artifact-race-control.json:1`;

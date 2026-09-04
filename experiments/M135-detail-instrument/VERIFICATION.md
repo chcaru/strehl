@@ -101,7 +101,7 @@ capture, generator, preregistration, environment, and commissioning artifacts.
 
 ## M138 executable-adapter verification
 
-Status: **SELF-TESTED 56/56; LOCAL MUTATIONS 27/27; REANCHORED M149
+Status: **SELF-TESTED 58/58; LOCAL MUTATIONS 29/29; REANCHORED M149
 MUTATIONS 31/31 APPLIED AND KILLED, 0 UNAPPLIED; REPLACEMENT-RACE BATTERY
 7/7; PHYSICAL BINDING UNAVAILABLE; SECOND M149 SEND BACK REPAIRED, RE-REVIEW
 PENDING**
@@ -202,26 +202,36 @@ discriminating controls, blur q95 `0.95` incorrectly passed the strict `<0.90`
 bar when wired to `1.10`, and improvement q05 `1.00` incorrectly passed the
 strict `>1.10` bar when wired to `0.90`. Nineteen additional entries in M149's
 32-entry manifest did not apply because the read-once refactor had moved their
-anchors.
+anchors. M149's report manually mapped all 19 to still-present predicates;
+their stale automated status was unexercised, not missing or regressed.
 
 Amendment 8 names both contract-key selectors, directly probes their exact
 values, and adds public-CLI marginal fixtures requiring both commissioning
 Booleans to stay false. It also adds a stale bundle-member refusal check. The
-current ordinary battery passes 56/56. The local helper mutation suite now
-kills 27/27 substantive mutations with its inert mutation green.
+amendment-8 ordinary battery passed 56/56, and its local helper mutation suite
+killed 27/27 substantive mutations with its inert mutation green.
+
+Amendment 9 closes the remaining structural bypass. The blur and improvement
+helpers no longer accept caller-supplied numeric bars. Production and direct
+probes pass the same complete commissioning config, and the helpers call their
+respective contract-key selectors internally. Two altered-config mutations
+replace those selector calls with the current numeric literals. The current
+ordinary battery passes 58/58; the local helper mutation suite kills 29/29
+substantive mutations with its inert mutation green.
 
 `m149-mutation-manifest-reanchored.json` maps every one of M149's 19 stale
 anchors to a present current predicate; none is classified gone. M149's
 unchanged mutation harness applied all 32 entries from that manifest: all
 31/31 applied substantive mutations went red, zero entries were unapplied, and
-the inert control remained green. The two threshold mutants each failed both
-their exact-key probe and their marginal public-CLI control.
+the inert control remained green. Each threshold mutant failed four
+direction-specific checks: strict-bound helper, exact-key, altered-config, and
+marginal public-CLI. The blur and improvement failure sets are disjoint.
 
 M149's own race programs were then rerun control-first. The vulnerable
 artifact race reproduced at attempt 5/120 and the vulnerable source race,
-including sentinel execution, at attempt 8/120. Against amendment 8, 128
-artifact attempts split 63 registered snapshots and 65 refusals; 128 source
-attempts split 58 registered snapshots and 70 refusals. No repaired attempt
+including sentinel execution, at attempt 2/120. Against amendment 9, 128
+artifact attempts split 68 registered snapshots and 60 refusals; 128 source
+attempts split 74 registered snapshots and 54 refusals. No repaired attempt
 converted invalidity into `DETAIL_FAIL`, and no replacement source executed.
 The current M135 race harness also passed 7/7 with 128 attempts per race.
 This is a direct replay of the reviewer's mechanisms, not a substitute for
@@ -231,9 +241,9 @@ M149's next independent review.
 environment verification and reports:
 
 - adapter
-  `daa8a24531343bf2ec75c31f1dbabd3b5594b88e792f4e6f3005cbc9cd5302d2`;
+  `06e5c1abe9b8babdc28d52b8eff8570afcf154fd95096045eeedc19aa2f9d438`;
 - bundle
-  `72951c1924d577c7a08d69d5ffcfc1c52816240068767e54cf67e4f4c5137593`;
+  `9622002866241ccff4ef774ab74f117f5c38523ab86041d88923c58e75448b93`;
 - environment
   `c4b60a7988e31ab21d60958b7e3ef58279595b9f2ef53d1d4d794c316b6b9cc4`;
 - comparison rule
@@ -243,7 +253,7 @@ environment verification and reports:
 
 This verifies the adapter's executable and fail-closed interface locally. It
 does not close M149's separate-author review: the second `SEND BACK` has been
-repaired and awaits re-attack. It also does not commission physical
+repaired through amendment 9 and awaits re-attack. It also does not commission physical
 extraction, physical nuisance allowances, or a claim-bearing M1 decision.
 
 M138's own current adjudicator self-test also passed. Its independently
