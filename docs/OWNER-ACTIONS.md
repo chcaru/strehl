@@ -110,7 +110,8 @@ a bar of exactly `0.0000%`. The checker was commissioned in both directions
 before it ran, so the failure is real and not an instrument artifact.
 
 **Nothing you can buy or shoot fixes M8.** It is a software defect and it is
-being worked now.
+being worked now — and as of tonight there is **a repair with a price we can
+afford**. See the M137 row below.
 
 ---
 
@@ -121,9 +122,10 @@ No action needed on any of these. They cost nothing and need none of your time.
 | lane | what | why it matters |
 | --- | --- | --- |
 | **M130** | Build `crop-early` | Every one of the ten blocked axes carries blocker `(b)`. Nothing can be unlocked without this, and it is one of only two gates left on resuming *any* new build. |
-| **M137** | Clamped resampler — **partly good news** | M8 is the only axis we actually score, and it fails. Bilinear fixes it exactly but costs `0.3404` dex of real detail. A clamped kernel now scores **zero violations across 6,131,678,976 samples** — the open question is only what it costs in sharpness, which this settles. |
-| **M136** | The M8 bar itself | We appear to have been scoring the resampler for something it cannot control: at long exposures the output format physically cannot represent the value, so it is counted as a violation no matter what. Ruling on whether fixing that is honest or moving the goalposts. |
+| **M137** | Clamped resampler — **the answer came back good** | M8 is the only axis we actually score, and it fails. Bilinear fixes it exactly but costs `0.3404` dex of real detail. A clamped kernel scores **zero violations across 6,131,678,976 samples** *and* keeps **`99.76%`** of that detail — so hull compliance costs about a quarter of one percent of sharpness, not all of it. **The sharpness was not made of overshoot.** One control still outstanding before I call it settled. |
+| **M136** | The M8 bar itself — **ruled** | We were scoring the resampler for something it cannot control: at long exposures the output format physically cannot represent the correct value, so it counted as a violation no matter what. Ruling: fixing that is a **legitimate repair, not moving the goalposts** — and critically, the repaired bar **still fails our current code** (`31,148` violations) while a clean kernel scores zero. It still bites. |
 | **M12** | Formal memory/determinism run | Free, ~3.5 hours, no input from you. **Correctly waiting for M130** — `crop-early` changes the output bytes, so measuring now would just be thrown away. |
+| **M138** | Re-examining a design we declared dead | Phase 1 of the plan — the merge rule the whole roadmap was built on — was refuted in September and the plan has had no bridge at its first step ever since. I have one specific suspicion that the *test* that killed it was self-contradictory. Auditing that now, because if the refutation was wrong we threw away a year's direction, and if it was right we need to know the road ahead has to be designed from scratch. |
 
 ---
 
