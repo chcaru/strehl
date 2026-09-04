@@ -56,6 +56,24 @@ wasted, but it is early, and nothing is lost by spending it later.
 measurement problem, and it is mine to solve.** That work is now the top
 priority lane.
 
+> **Late addition, and it may be good news.** After writing the above I went and
+> read *your* plan rather than the scorecard derived from it, and
+> `2026-08-sota-path.md` **already specifies a detail instrument** — `D8`,
+> split-stack self-calibration, which it calls *"the best-commissioned
+> instrument in the corpus"* and reports as validated with planted blur
+> recovered at `0.9938–0.9974` and gain-invariance of `0.54%` against filters
+> that moved naive metrics `8.25×`. It works by splitting one stack into two
+> disjoint halves and measuring where they agree, **so it needs no new
+> photography and is not blocked on you either.**
+>
+> I am not calling this solved. There is real counter-evidence in our own
+> research notes that a metric of that family may be structurally blind to blur,
+> and both claims cannot be right. Two lanes are resolving it now — one on the
+> technical question, one on whether the scorecard silently dropped your plan's
+> answer. **If `D8` stands, the critical path is an integration job rather than a
+> research programme**, and the picture above is considerably too bleak. You will
+> get a straight answer either way.
+
 ---
 
 ## Where the program actually stands
