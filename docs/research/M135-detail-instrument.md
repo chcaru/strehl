@@ -1159,31 +1159,80 @@ verdict
 (`experiments/M135-detail-instrument/M138-ADAPTER-PREREGISTRATION.md:18-166`;
 `experiments/M135-detail-instrument/m138_adapter.py:313-380,469-685`).
 
-**VERIFIED.** After four frozen implementation amendments, the complete
-adapter battery passed `25 / 25`. It exercised valid pass and fail, flat-ROI
-and missing-flat internal invalidity, not-applicable capture handling,
-byte-stable output, both optical-direction controls, hash mutation,
-producer-Boolean and duplicate-capture refusal, and explicit unbound refusal.
-The amendment-1 run is retained at `24 / 25`; its only miss was a malformed
-test-only unbound hash, not a production decision. Amendment 3 additionally
-made the standalone bootstrap verify the bundle and environment before loading
-the local core or NumPy; M138's outer verifier already provided that ordering
-for the registered consumer path. A five-check tamper harness replaced the
-local core with a sentinel side effect under the stale bundle and verified
-that hash refusal occurred before the sentinel could execute. Amendment 4
-then removed the remaining cached-bytecode ambiguity by compiling the verified
-core source bytes directly. Its expanded `10 / 10` harness proved that a
-conventional loader executed a planted, timestamp-eligible poisoned `.pyc`
-while the adapter ignored it, and re-proved source-hash refusal before
-execution
-(`experiments/M135-detail-instrument/m138-adapter-verification.json:1`;
-`experiments/M135-detail-instrument/m138-adapter-bootstrap-verification.json:1`;
-`experiments/M135-detail-instrument/m138-adapter-verification-run2-failed.json:1`;
+**VERIFIED.** The pre-review implementation history remains available: the
+amendment-1 run was `24 / 25` because of a malformed test-only unbound hash;
+amendments 2-4 reached `25 / 25`, verified bundle-before-core ordering, and
+removed cached-bytecode ambiguity by compiling the then-verified source bytes
+directly. The expanded pre-review bootstrap battery passed `10 / 10`
+(`experiments/M135-detail-instrument/m138-adapter-verification-run2-failed.json:1`;
 `experiments/M135-detail-instrument/m138-adapter-verification-run3-pre-bootstrap.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-verification-run4-pre-source-loader.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-verification-run5-pre-m149.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-bootstrap-verification-run2-pre-m149.json:1`;
 `experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-1.md:1-24`;
 `experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-2.md:1-22`;
 `experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-3.md:1-25`;
 `experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-4.md:1-23`).
+
+**VERIFIED.** M149's independent fixture review returned `SEND BACK` with two
+CRITICAL, one HIGH, and two MEDIUM findings. The two critical findings shared
+one root cause: artifact and core files were hashed, closed, and later reopened
+for JSON parsing or execution. M149 demonstrated that replacement in that
+window could convert registered `INSTRUMENT_INVALID` into `DETAIL_FAIL /
+false`, or execute unregistered core bytes while truthfully reporting the
+registered bundle hash. Its mutations also showed that the nominal `25 / 25`
+suite did not prove 24 individual predicates could turn red. A passing count
+was therefore not coverage.
+
+**VERIFIED.** Amendment 5 imposes a read-once invariant. Each request,
+artifact, bundle manifest, and bundle member is captured as immutable bytes;
+the digest, JSON object, normalized text, and compiled core are all derived
+from that same snapshot. The core's own hash and JSON helpers are rebound to
+the verified snapshots. A replacement before capture produces a digest
+mismatch, and a replacement after capture cannot change the consumed bytes.
+That is the structural invariance argument: no scheduling assumption or finite
+race campaign is needed
+(`experiments/M135-detail-instrument/m138_adapter.py:35-124,315-391,430-477`;
+`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-5.md:1-77`).
+
+**VERIFIED.** The repaired ordinary battery passed `51 / 51` named checks and
+replayed byte-for-byte. Its 25 added probes cover the nested supplied-decision
+guard, exact environment equality, both request binding-hash comparisons,
+canonical terminal newline, and positive and negative arms for all 20
+commissioning predicates. The independent mutation harness then killed all
+`25 / 25` substantive guard mutations through their registered named failures,
+while an inert docstring mutation left every probe green. Amendment 6 retains
+the initial CRLF-anchor harness failure; amendment 7 retains the initial
+non-diagnostic hash mutant before both harness defects were corrected
+(`experiments/M135-detail-instrument/m138-adapter-verification.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-mutation-verification.json:1`;
+`experiments/M135-detail-instrument/m138_adapter_mutation.py:1-352`;
+`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-6.md:1-16`;
+`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-7.md:1-17`).
+
+**VERIFIED.** The persistent replacement-race harness passed `7 / 7`. Stable
+registered missing-flat input remained `INSTRUMENT_INVALID` with no Boolean;
+stable registered fail input remained `DETAIL_FAIL / false`; and stable
+replacement of either artifact or core refused nonzero with empty standard
+output. In 16 concurrent artifact attempts, 5 refused and 11 consumed the
+registered invalid snapshot. In 16 concurrent core attempts, 8 refused and 8
+consumed the registered core. No attempt emitted an unsafe conclusion or
+executed the replacement core sentinel. This exercises M149's two mechanisms,
+but M149's separate re-attack remains pending
+(`experiments/M135-detail-instrument/m138-adapter-race-verification.json:1`;
+`experiments/M135-detail-instrument/m138_adapter_race.py:1-377`).
+
+**VERIFIED.** M149's own `artifact_race.py` and `source_race.py` were also
+executed unchanged against the repaired source, using project-local work
+directories. The artifact test reproduced the exact historical
+`de4523fc…c574` registered-invalid and `2aca17c0…e84a` unregistered-fail
+fixtures, then observed 11 registered-invalid snapshots and 5 refusals in 16
+attempts without conversion. The source test observed 9 registered-core
+snapshots and 7 refusals in 16 attempts without its sentinel-plus-conversion
+condition. Both returned `PASS_NO_RACE_OBSERVED`. These are M135-run
+reproductions of M149's mechanisms, not M149 acceptance
+(`experiments/M135-detail-instrument/m149-artifact-race-retest.json:1`;
+`experiments/M135-detail-instrument/m149-source-race-retest.json:1`).
 
 **VERIFIED.** The checked-in physical binding remains `UNBOUND`; therefore
 M135 currently emits no claim-bearing `detail_pass` for M138. Phase 1 remains
@@ -1226,10 +1275,11 @@ outcome, not a detail failure.
   per-capture `10,000`-draw bounds at the `64`-site floor without becoming
   `UNDERPOWERED`. The comparison checker is frozen; the physical generator is
   not yet implemented or commissioned.
-- **ASSUMED.** Whether an independent author will reproduce the adapter's
-  25/25 interface battery and find no bundle, environment, request-shape, or
-  refusal-path defect. The adapter is self-tested but has not yet received the
-  rule-12 separate-author review.
+- **ASSUMED.** Whether M149's separate-author re-attack will find another
+  bundle, environment, request-shape, byte-binding, coverage, or refusal-path
+  defect. Its first review was `SEND BACK`; M135 repaired the demonstrated
+  defects and commissioned the repair locally, but does not count that as
+  independent acceptance.
 - **ASSUMED.** Whether `N=256` gives adequate rank and power for architecture B.
 - **ASSUMED.** Whether repeat-pair FRC, after independent A/B calibration,
   can drive the held-out flat/dark ring residual below a frozen bar on the
@@ -1272,8 +1322,8 @@ development captures do not contain those roles. M1 should remain
 `UNMEASURED` until the physical lineage and extraction rehearsal pass without
 changing the frozen bars.
 
-**VERIFIED.** M138 now has a stable interface to bind later, but not a result:
-the checked-in rule is hashable, per-capture, and fail-closed, while its
-physical binding is explicitly `UNBOUND`. The correct current Phase-1 state is
-therefore `BLOCKED_DETAIL_INSTRUMENT`, not `DETAIL_FAIL` and not
-`DETAIL_PASS`.
+**VERIFIED.** M138 has a repaired, locally commissioned interface to bind later,
+but not an independently re-accepted interface and not a result. The checked-in
+rule is hashable, per-capture, and fail-closed, while its physical binding is
+explicitly `UNBOUND`. The correct current Phase-1 state is therefore
+`BLOCKED_DETAIL_INSTRUMENT`, not `DETAIL_FAIL` and not `DETAIL_PASS`.

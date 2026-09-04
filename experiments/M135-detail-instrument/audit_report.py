@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import re
@@ -71,6 +72,11 @@ def main() -> None:
     adapter_verification = json.loads(
         (HERE / "m138-adapter-verification.json").read_text(encoding="utf-8")
     )
+    adapter_pre_m149_verification = json.loads(
+        (HERE / "m138-adapter-verification-run5-pre-m149.json").read_text(
+            encoding="utf-8"
+        )
+    )
     adapter_failed_verification = json.loads(
         (HERE / "m138-adapter-verification-run2-failed.json").read_text(
             encoding="utf-8"
@@ -81,8 +87,8 @@ def main() -> None:
             encoding="utf-8"
         )
     )
-    adapter_bootstrap_verification = json.loads(
-        (HERE / "m138-adapter-bootstrap-verification.json").read_text(
+    adapter_pre_m149_bootstrap = json.loads(
+        (HERE / "m138-adapter-bootstrap-verification-run2-pre-m149.json").read_text(
             encoding="utf-8"
         )
     )
@@ -108,6 +114,28 @@ def main() -> None:
     )
     adapter_description = json.loads(
         (HERE / "m138-adapter-description.json").read_text(encoding="utf-8")
+    )
+    adapter_source_text = (HERE / "m138_adapter.py").read_text(encoding="utf-8")
+    adapter_mutation = json.loads(
+        (HERE / "m138-adapter-mutation-verification.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    adapter_race = json.loads(
+        (HERE / "m138-adapter-race-verification.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    m149_artifact_race = json.loads(
+        (HERE / "m149-artifact-race-retest.json").read_text(encoding="utf-8")
+    )
+    m149_source_race = json.loads(
+        (HERE / "m149-source-race-retest.json").read_text(encoding="utf-8")
+    )
+    comparison_rerun = json.loads(
+        (HERE / "comparison-verification-rerun-m149.json").read_text(
+            encoding="utf-8"
+        )
     )
 
     citation_pattern = re.compile(
@@ -347,12 +375,20 @@ def main() -> None:
     adapter_checks = adapter_verification.get("checks", {})
     if (
         adapter_verification.get("status") != "PASS"
-        or adapter_verification.get("check_count") != 25
-        or adapter_verification.get("passed_check_count") != 25
+        or adapter_verification.get("check_count") != 51
+        or adapter_verification.get("passed_check_count") != 51
         or not isinstance(adapter_checks, dict)
         or set(adapter_checks.values()) != {True}
     ):
         findings.append({"kind": "adapter_verification"})
+    if (
+        adapter_pre_m149_verification.get("status") != "PASS"
+        or adapter_pre_m149_verification.get("check_count") != 25
+        or adapter_pre_m149_verification.get("passed_check_count") != 25
+        or set(adapter_pre_m149_verification.get("checks", {}).values())
+        != {True}
+    ):
+        findings.append({"kind": "adapter_pre_m149_verification_history"})
     failed_adapter_checks = adapter_failed_verification.get("checks", {})
     if (
         adapter_failed_verification.get("status") != "FAIL"
@@ -373,16 +409,69 @@ def main() -> None:
     ):
         findings.append({"kind": "adapter_pre_bootstrap_run_history"})
     if (
-        adapter_bootstrap_verification.get("status") != "PASS"
-        or adapter_bootstrap_verification.get("check_count") != 10
-        or adapter_bootstrap_verification.get("passed_check_count") != 10
-        or set(adapter_bootstrap_verification.get("checks", {}).values()) != {True}
-        or adapter_bootstrap_verification.get("adapter_sha256")
-        != raw_sha256(HERE / "m138_adapter.py")
-        or adapter_bootstrap_verification.get("bundle_sha256")
-        != raw_sha256(HERE / "m138-checker-bundle.json")
+        adapter_pre_m149_bootstrap.get("status") != "PASS"
+        or adapter_pre_m149_bootstrap.get("check_count") != 10
+        or adapter_pre_m149_bootstrap.get("passed_check_count") != 10
+        or set(adapter_pre_m149_bootstrap.get("checks", {}).values()) != {True}
     ):
-        findings.append({"kind": "adapter_bootstrap_verification"})
+        findings.append({"kind": "adapter_pre_m149_bootstrap_history"})
+    mutation_rows = adapter_mutation.get("mutations", [])
+    if (
+        adapter_mutation.get("status") != "PASS"
+        or adapter_mutation.get("base_probe_count") != 25
+        or adapter_mutation.get("base_probe_passed_count") != 25
+        or adapter_mutation.get("substantive_mutation_count") != 25
+        or adapter_mutation.get("killed_mutation_count") != 25
+        or adapter_mutation.get("inert_mutation_survived") is not True
+        or len(mutation_rows) != 25
+        or any(row.get("killed") is not True for row in mutation_rows)
+        or any(
+            row.get("expected_failed_check")
+            not in row.get("failed_checks", [])
+            for row in mutation_rows
+        )
+    ):
+        findings.append({"kind": "adapter_mutation_coverage"})
+    race_checks = adapter_race.get("checks", {})
+    if (
+        adapter_race.get("status") != "PASS"
+        or adapter_race.get("check_count") != 7
+        or adapter_race.get("passed_check_count") != 7
+        or set(race_checks.values()) != {True}
+        or adapter_race.get("artifact_race", {}).get("unsafe") != []
+        or adapter_race.get("core_race", {}).get("unsafe") != []
+    ):
+        findings.append({"kind": "adapter_race_verification"})
+    current_adapter_sha256 = raw_sha256(HERE / "m138_adapter.py")
+    if (
+        m149_artifact_race.get("status") != "PASS_NO_RACE_OBSERVED"
+        or m149_artifact_race.get("adapter_sha256") != current_adapter_sha256
+        or m149_artifact_race.get("baseline_is_invalid_without_boolean") is not True
+        or m149_artifact_race.get("historical_fixture_hashes_match") is not True
+        or m149_artifact_race.get("registered_invalid_artifact_sha256")
+        != "de4523fc4a1c41ced93da0c29a2aa2ea25062ae67248b1e09334d2d78bd7c574"
+        or m149_artifact_race.get("unregistered_fail_artifact_sha256")
+        != "2aca17c001945544ec60a85eff9a88763d5d77a808817f621673cda855e5e84a"
+        or m149_artifact_race.get("observed") is not None
+        or sum(m149_artifact_race.get("attempt_counts", {}).values()) != 16
+    ):
+        findings.append({"kind": "m149_artifact_race_retest"})
+    if (
+        m149_source_race.get("status") != "PASS_NO_RACE_OBSERVED"
+        or m149_source_race.get("adapter_sha256") != current_adapter_sha256
+        or m149_source_race.get("baseline_is_invalid_without_boolean") is not True
+        or m149_source_race.get("registered_core_sha256")
+        != "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b"
+        or m149_source_race.get("observed") is not None
+        or sum(m149_source_race.get("attempt_counts", {}).values()) != 16
+    ):
+        findings.append({"kind": "m149_source_race_retest"})
+    if (
+        comparison_rerun.get("status") != "PASS"
+        or len(comparison_rerun.get("checks", {})) != 14
+        or set(comparison_rerun.get("checks", {}).values()) != {True}
+    ):
+        findings.append({"kind": "comparison_rerun"})
     for label, artifact, expected_checks in (
         ("adapter_pre_source_run_history", adapter_pre_source_verification, 25),
         ("adapter_pre_source_bootstrap_history", adapter_pre_source_bootstrap, 5),
@@ -401,9 +490,12 @@ def main() -> None:
     ):
         findings.append({"kind": "adapter_contract_hash"})
     if (
-        adapter_manifest.get("status") != "PASS_INTERFACE_ONLY_PHYSICAL_UNBOUND"
+        adapter_manifest.get("status")
+        != "PASS_INTERFACE_ONLY_PHYSICAL_UNBOUND_PENDING_INDEPENDENT_REREVIEW"
         or adapter_manifest.get("physical_binding_state") != "UNBOUND"
         or adapter_manifest.get("claim_bearing_detail_decision_available") is not False
+        or adapter_manifest.get("independent_review_state")
+        != "M149_SEND_BACK_REPAIRED_AWAITING_REATTACK"
     ):
         findings.append({"kind": "adapter_manifest_overclaim"})
     for name, hashes in adapter_manifest.get("files", {}).items():
@@ -420,7 +512,9 @@ def main() -> None:
         findings.append({"kind": "adapter_contract_manifest"})
     adapter_verification_manifest = adapter_manifest.get("verification", {})
     if raw_sha256(HERE / "m138-adapter-verification.json") != (
-        adapter_verification_manifest.get("final", {}).get("raw_sha256")
+        adapter_verification_manifest.get("read_once_behavior", {}).get(
+            "raw_sha256"
+        )
     ):
         findings.append({"kind": "adapter_final_verification_hash"})
     if raw_sha256(HERE / "m138-adapter-verification-run2-failed.json") != (
@@ -433,10 +527,14 @@ def main() -> None:
         )
     ):
         findings.append({"kind": "adapter_pre_bootstrap_verification_hash"})
-    if raw_sha256(HERE / "m138-adapter-bootstrap-verification.json") != (
-        adapter_verification_manifest.get("bootstrap_order", {}).get("raw_sha256")
+    if raw_sha256(
+        HERE / "m138-adapter-bootstrap-verification-run2-pre-m149.json"
+    ) != (
+        adapter_verification_manifest.get("pre_m149_bootstrap", {}).get(
+            "raw_sha256"
+        )
     ):
-        findings.append({"kind": "adapter_bootstrap_verification_hash"})
+        findings.append({"kind": "adapter_pre_m149_bootstrap_hash"})
     if raw_sha256(HERE / "m138-adapter-verification-run4-pre-source-loader.json") != (
         adapter_verification_manifest.get("pre_source_loader_hardening", {}).get(
             "raw_sha256"
@@ -449,6 +547,30 @@ def main() -> None:
         "raw_sha256"
     ):
         findings.append({"kind": "adapter_pre_source_bootstrap_hash"})
+    if raw_sha256(HERE / "m138-adapter-verification-run5-pre-m149.json") != (
+        adapter_verification_manifest.get("pre_m149_behavior", {}).get("raw_sha256")
+    ):
+        findings.append({"kind": "adapter_pre_m149_verification_hash"})
+    if raw_sha256(HERE / "m138-adapter-mutation-verification.json") != (
+        adapter_verification_manifest.get("mutation_coverage", {}).get("raw_sha256")
+    ):
+        findings.append({"kind": "adapter_mutation_verification_hash"})
+    if raw_sha256(HERE / "m138-adapter-race-verification.json") != (
+        adapter_verification_manifest.get("replacement_races", {}).get("raw_sha256")
+    ):
+        findings.append({"kind": "adapter_race_verification_hash"})
+    if raw_sha256(HERE / "m149-artifact-race-retest.json") != (
+        adapter_verification_manifest.get("m149_artifact_race_retest", {}).get(
+            "raw_sha256"
+        )
+    ):
+        findings.append({"kind": "m149_artifact_race_retest_hash"})
+    if raw_sha256(HERE / "m149-source-race-retest.json") != (
+        adapter_verification_manifest.get("m149_source_race_retest", {}).get(
+            "raw_sha256"
+        )
+    ):
+        findings.append({"kind": "m149_source_race_retest_hash"})
     if (
         adapter_verification.get("adapter_sha256")
         != raw_sha256(HERE / "m138_adapter.py")
@@ -462,6 +584,28 @@ def main() -> None:
     ):
         findings.append({"kind": "adapter_bundle_schema"})
     else:
+        expected_bundle_files = {
+            "comparison_checker.py",
+            "m138_adapter.py",
+            "comparison-contract.json",
+            "comparison-binding.json",
+            "m138-adapter-environment.json",
+            "m138-adapter-contract.json",
+            "instrument.py",
+            "M138-ADAPTER-PREREGISTRATION.md",
+            *(f"M138-ADAPTER-AMENDMENT-{i}.md" for i in range(1, 8)),
+        }
+        bundle_files = {
+            ref.get("path") for ref in adapter_bundle.get("files", [])
+        }
+        if bundle_files != expected_bundle_files:
+            findings.append(
+                {
+                    "kind": "adapter_bundle_membership",
+                    "missing": sorted(expected_bundle_files - bundle_files),
+                    "unexpected": sorted(bundle_files - expected_bundle_files),
+                }
+            )
         for ref in adapter_bundle.get("files", []):
             path = HERE / ref.get("path", "")
             if not path.is_file() or raw_sha256(path) != ref.get("sha256"):
@@ -481,6 +625,58 @@ def main() -> None:
         or adapter_manifest.get("production_description") != adapter_description
     ):
         findings.append({"kind": "adapter_production_description"})
+    adapter_tree = ast.parse(adapter_source_text)
+    functions = {
+        node.name: node
+        for node in adapter_tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    forbidden_reopens = {
+        "read_bytes",
+        "read_text",
+        "open",
+        "file_sha256",
+        "normalized_text_sha256",
+        "load_json_object",
+    }
+    for function_name in (
+        "install_core_module",
+        "load_core_payload",
+        "common_output",
+        "refusal_object",
+        "process_evaluate",
+        "process_commission",
+    ):
+        function = functions.get(function_name)
+        if function is None:
+            findings.append(
+                {"kind": "adapter_read_once_function_missing", "function": function_name}
+            )
+            continue
+        called_names = {
+            node.func.attr
+            if isinstance(node.func, ast.Attribute)
+            else node.func.id
+            for node in ast.walk(function)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, (ast.Attribute, ast.Name))
+        }
+        reopened = sorted(called_names & forbidden_reopens)
+        if reopened:
+            findings.append(
+                {
+                    "kind": "adapter_verified_path_reopen",
+                    "function": function_name,
+                    "calls": reopened,
+                }
+            )
+    if (
+        "compile(source.data, str(source.path), \"exec\""
+        not in adapter_source_text
+        or "module.load_json = verified_load_json" not in adapter_source_text
+        or "verify_snapshot_digest(" not in adapter_source_text
+    ):
+        findings.append({"kind": "adapter_read_once_structure"})
 
     output = {
         "status": "PASS" if not findings else "FAIL",
@@ -496,11 +692,16 @@ def main() -> None:
         "comparison_checks": len(comparison_verification.get("checks", {})),
         "comparison_binding_state": comparison_binding.get("state"),
         "adapter_checks": len(adapter_checks),
-        "adapter_bootstrap_checks": len(
-            adapter_bootstrap_verification.get("checks", {})
+        "adapter_mutations_killed": adapter_mutation.get("killed_mutation_count"),
+        "adapter_race_checks": len(race_checks),
+        "m149_artifact_race_attempts": sum(
+            m149_artifact_race.get("attempt_counts", {}).values()
+        ),
+        "m149_source_race_attempts": sum(
+            m149_source_race.get("attempt_counts", {}).values()
         ),
         "adapter_binding_state": adapter_description.get("binding_state"),
-        "adapter_independent_review": "PENDING",
+        "adapter_independent_review": "SEND_BACK_REPAIRED_AWAITING_REATTACK",
         "findings": findings,
     }
     output_path = Path(__file__).resolve().parent / "audit.json"

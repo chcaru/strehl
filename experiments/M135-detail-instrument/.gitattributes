@@ -1,0 +1,12 @@
+# Raw-SHA-bound evidence must retain its exact committed line endings.
+m138-adapter-description.json -text
+m138-adapter-verification.json -text
+m138-adapter-mutation-verification.json -text
+m138-adapter-race-verification.json -text
+m138-adapter-result-manifest.json -text
+m138-adapter-verification-run5-pre-m149.json -text
+m138-adapter-bootstrap-verification-run2-pre-m149.json -text
+m138-adapter-result-manifest-run1-pre-m149.json -text
+m149-artifact-race-retest.json -text
+m149-source-race-retest.json -text
+comparison-verification-rerun-m149.json -text

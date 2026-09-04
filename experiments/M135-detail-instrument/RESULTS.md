@@ -191,15 +191,55 @@ execute a planted, timestamp-eligible poisoned cache and that this adapter
 ignored it, then re-proved pre-import source-hash refusal. The 24/25 and both
 pre-hardening 25/25 artifacts are retained.
 
+**VERIFIED.** M149's independent fixture review returned `SEND BACK`: two
+CRITICAL, one HIGH, and two MEDIUM defects. Both critical findings had one root
+cause. The adapter hashed an artifact or core file, closed it, and later
+reopened its path for parsing or execution. M149 demonstrated
+`INSTRUMENT_INVALID → DETAIL_FAIL / false` under artifact replacement and
+execution of unregistered core bytes while the output still reported the
+registered bundle hash. It also demonstrated that the 25-check suite did not
+cover 24 predicates.
+
+**VERIFIED.** Amendments 5-7 replace the reopen design with immutable
+read-once snapshots. Hashing, JSON parsing, and core compilation now consume
+the same bytes. A replacement before the read is a digest mismatch; a
+replacement after the read cannot alter consumption. Core hash and JSON
+helpers are rebound to the verified snapshots, so no verified path is reopened.
+This structural byte-identity argument does not depend on winning a race.
+
+**VERIFIED.** The repaired ordinary battery passed `51 / 51` named checks and
+replayed byte-for-byte. The separate mutation harness killed `25 / 25`
+substantive guard mutations, each through its registered named failure, while
+an inert source mutation remained green. Amendment 6 preserves the CRLF anchor
+failure and amendment 7 preserves the non-diagnostic `None`-dereference mutant
+before those harness defects were repaired.
+
+**VERIFIED.** The replacement-race harness passed `7 / 7`. Stable registered
+missing-flat input remained `INSTRUMENT_INVALID` without a Boolean, stable
+registered fail input remained `DETAIL_FAIL / false`, and stable replacement
+of either artifact or core refused nonzero with empty standard output. In 16
+concurrent artifact attempts it observed 5 refusals and 11 registered-invalid
+decisions; in 16 concurrent core attempts it observed 8 refusals and 8
+registered-core decisions. Neither campaign produced an unsafe conclusion or
+executed the replacement core sentinel.
+
+**VERIFIED.** M149's own two race programs were also run unchanged against the
+repair. Their exact artifact fixtures retained the historical
+`de4523fc…c574` and `2aca17c0…e84a` hashes. The artifact race produced 11
+registered-invalid decisions and 5 refusals in 16 attempts; the core race
+produced 9 registered-core decisions and 7 refusals. Both returned
+`PASS_NO_RACE_OBSERVED`. This direct fixture replay does not pre-empt M149's
+independent re-review.
+
 **VERIFIED.** The adapter SHA-256 is
-`6d4366533b2b12fc1e03c44d96faa1af3d7e89e6c6f35ed5420dd33b8e5e6290`;
+`09ff1e1456038e70780dc5564ec0f26c4e8264d40c6c4cb22b6214cfb1fce789`;
 the checker-bundle SHA-256 is
-`fa3f5135693766114aed6db58bfa74197236e5a51b454a421951f645cdcb27ea`;
+`56bc2990e7cf6b14988adf874b711f1bcf693c701116e21dfb7bd5f329e83945`;
 and the canonical adapter-contract SHA-256 is
 `30453f8901c0b121a48771d35c9cf735da88358bb441794b918de77b267903e2`.
 The production description validates the bundle under isolated Python and
 reports `UNBOUND`. Therefore this is a commissioned consumer interface, not a
-physical detail result. A separate-author review of the adapter remains
+physical detail result. M149 re-review of the repaired interface remains
 pending.
 
 ## Load-bearing negative diagnostics

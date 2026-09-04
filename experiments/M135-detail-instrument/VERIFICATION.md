@@ -101,8 +101,9 @@ capture, generator, preregistration, environment, and commissioning artifacts.
 
 ## M138 executable-adapter verification
 
-Status: **SELF-TESTED 25/25; PHYSICAL BINDING UNAVAILABLE; SEPARATE-AUTHOR
-REVIEW PENDING**
+Status: **SELF-TESTED 51/51; MUTATION-COMMISSIONED 25/25; REPLACEMENT-RACE
+BATTERY 7/7; PHYSICAL BINDING UNAVAILABLE; M149 SEND BACK REPAIRED, RE-REVIEW
+PENDING**
 
 The adapter preregistration and source were committed before behavioral
 execution. The first invocation failed at startup because ordinary sibling
@@ -123,45 +124,84 @@ rerun passed the same 25 checks. A further source review found that the
 standard loader could still execute an unbound cached `.pyc`. Amendment 4
 removed that loader and now compiles the already-verified core source bytes
 directly. The amendment-3 outputs were preserved, and the amendment-4 rerun
-passed the same 25 checks:
+passed the same 25 checks.
 
-- one request emitted valid `DETAIL_PASS → true` and
-  `DETAIL_FAIL → false` decisions;
-- a flat detailed ROI and a missing-flat payload each emitted
-  `INSTRUMENT_INVALID` with no Boolean;
-- an unregistered capture emitted no Boolean;
-- repeated evaluation and commissioning output was byte-identical;
-- the physical null, pre-noise blur, and planted pre-noise optical improvement
-  controls all moved in their registered directions;
-- missing-flat and artifact-hash mutation controls both refused;
-- wrong artifact hashes, supplied Booleans, and duplicate capture IDs exited
-  nonzero with no standard output; and
-- the unbound runtime exited nonzero with explicit `INSTRUMENT_UNBOUND` and no
-  standard output.
+M149's independent fixture-based review then found two CRITICAL, one HIGH, and
+two MEDIUM defects. The adapter hashed each artifact and the core source, closed
+the file, and later reopened the path for parsing or execution. A concurrent
+replacement could therefore turn a registered `INSTRUMENT_INVALID` payload into
+`DETAIL_FAIL → false`, or execute unregistered core bytes while reporting the
+registered bundle hash. The 25-check suite also counted outcomes without proving
+that its individual guards were capable of failing.
 
-`m138-adapter-verification.json` is the machine-readable 25/25 result;
+Amendment 5 changed the substrate, not the scientific contract. Every request,
+artifact, bundle manifest, and bundle member is now read exactly once into an
+immutable byte snapshot. The adapter hashes that snapshot, parses or compiles
+only that snapshot, and never reopens the verified path. The core's own JSON and
+hash helpers are rebound to the verified bundle snapshots. Thus a replacement
+before the read is rejected by its digest, while a replacement after the read
+cannot affect the consumed bytes. This is a structural guarantee, not an
+empirical timing assumption.
+
+The amended ordinary battery has 51 named checks. It retains the original
+behavior checks and adds direct probes for every formerly uncovered predicate:
+
+- valid `DETAIL_PASS → true` and `DETAIL_FAIL → false` decisions;
+- flat, missing-flat, and other internal-invalid states with no Boolean;
+- unregistered capture handling and request-level empty-stdout refusal;
+- nested supplied-decision rejection, exact environment equality, both request
+  binding-hash comparisons, and the canonical terminal newline;
+- positive and negative arms for all 20 commissioning predicates; and
+- byte-identical replay.
+
+`m138-adapter-verification.json` is the current machine-readable 51/51 result.
+`m138-adapter-verification-run5-pre-m149.json` preserves the final pre-review
+25/25 result;
 `m138-adapter-verification-run2-failed.json` preserves the 24/25 run.
 `m138-adapter-verification-run3-pre-bootstrap.json` preserves the
 pre-bootstrap-hardening 25/25 run.
 `m138-adapter-verification-run4-pre-source-loader.json` preserves the
 pre-source-loader-hardening 25/25 run.
-An immediate full replay reproduced the final verification artifact
+`m138-adapter-bootstrap-verification-run2-pre-m149.json` preserves the
+pre-review 10/10 bytecode/source bootstrap result, and the earlier 5/5
+pre-source-loader artifact remains retained.
+
+`m138_adapter_mutation.py` independently neutralizes 25 guards one at a time.
+Every substantive mutant made its registered named check fail, and one inert
+docstring mutation left all probes green. The result is 25/25 substantive
+mutations killed with the inert control surviving. Amendment 6 records the
+first harness failure: raw CRLF source did not match frozen LF anchors.
+Amendment 7 records the second: the initial hash-error mutant raised through an
+unrelated `None` dereference rather than turning the named check red. Both
+harness defects were frozen before repair; the final mutation artifact replayed
 byte-for-byte.
-`m138-adapter-bootstrap-verification.json` records an additional 10/10
-bootstrap test. It first built a timestamp-eligible poisoned `.pyc` and proved
-that a conventional source loader executed its sentinel while the adapter
-ignored it and emitted a valid description from the registered source. It then
-replaced `comparison_checker.py` with a second sentinel under the stale bundle;
-the adapter returned a machine-readable hash-mismatch refusal with empty
-standard output, and that sentinel did not exist. The earlier 5/5
-pre-source-loader artifact is also retained.
+
+`m138_adapter_race.py` reproduces both M149 replacement mechanisms. Stable
+registered missing-flat input remains `INSTRUMENT_INVALID` without a Boolean;
+stable registered fail input remains `DETAIL_FAIL → false`; stable replaced
+artifact and core inputs refuse nonzero with empty standard output, and the
+core sentinel never executes. Across 16 concurrent artifact attempts there were
+5 refusals and 11 registered-invalid decisions, with zero unsafe conclusions.
+Across 16 concurrent core attempts there were 8 refusals and 8 registered-core
+decisions, with zero sentinel executions or unsafe reports. All 7 named race
+checks passed.
+
+M149's own `artifact_race.py` and `source_race.py` were then run unchanged
+against the repaired M135 source, with project-local work directories. The
+artifact fixture reproduced M149's exact registered-invalid and unregistered-
+fail hashes, observed 11 registered-invalid decisions and 5 refusals in 16
+attempts, and observed no conversion. The source fixture observed 9
+registered-core decisions and 7 refusals in 16 attempts, with no sentinel-plus-
+conversion result. Both reports are `PASS_NO_RACE_OBSERVED`; this is a direct
+retest of the reviewer's mechanisms, not a substitute for M149's re-review.
+
 `m138-adapter-description.json` separately exercises production bundle and
 environment verification and reports:
 
 - adapter
-  `6d4366533b2b12fc1e03c44d96faa1af3d7e89e6c6f35ed5420dd33b8e5e6290`;
+  `09ff1e1456038e70780dc5564ec0f26c4e8264d40c6c4cb22b6214cfb1fce789`;
 - bundle
-  `fa3f5135693766114aed6db58bfa74197236e5a51b454a421951f645cdcb27ea`;
+  `56bc2990e7cf6b14988adf874b711f1bcf693c701116e21dfb7bd5f329e83945`;
 - environment
   `c4b60a7988e31ab21d60958b7e3ef58279595b9f2ef53d1d4d794c316b6b9cc4`;
 - comparison rule
@@ -170,8 +210,9 @@ environment verification and reports:
 - binding state `UNBOUND`.
 
 This verifies the adapter's executable and fail-closed interface. It does not
-constitute the rule-12 separate-author review and does not commission physical
-extraction, physical nuisance allowances, or a claim-bearing M1 decision.
+close M149's separate-author review: the first review was `SEND BACK`, the
+repair awaits re-attack. It also does not commission physical extraction,
+physical nuisance allowances, or a claim-bearing M1 decision.
 
 M138's own current adjudicator self-test also passed. Its independently
 maintained consumer path reported `M135-null-state=INSTRUMENT_INVALID`,

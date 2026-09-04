@@ -1,0 +1,182 @@
+{
+  "status": "PASS",
+  "checks": {
+    "unbound_blocks": true,
+    "unregistered_capture_is_not_applicable": true,
+    "exact_null_passes": true,
+    "improvement_passes": true,
+    "information_defect_fails": true,
+    "one_cell_transfer_defect_fails": true,
+    "unexplained_defect_fails": true,
+    "candidate_flat_failure_invalidates": true,
+    "legacy_flat_failure_invalidates": true,
+    "malformed_payloads_invalidate": true,
+    "inclusive_boundaries_pass": true,
+    "one_step_beyond_boundaries_fails": true,
+    "decision_exposes_rule_hashes": true,
+    "nondecisions_never_emit_boolean": true
+  },
+  "sample_decisions": {
+    "null": {
+      "schema": "m135-detail-comparison-decision-v1",
+      "rule_id": "m135-detail-pass-v1",
+      "contract_sha256": "247abd2024307aa43e7ab62edd7da23b8042ca98dedf6ca1a8eaac2d1510c249",
+      "checker_sha256": "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b",
+      "capture_id": "capture-applicable",
+      "status": "DETAIL_PASS",
+      "detail_pass": true,
+      "gates": {
+        "information_ratio_lower95": 1.0,
+        "transfer_ratio_lower95_by_cell": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "minimum_transfer_ratio_lower95": 1.0,
+        "unexplained_fraction_difference_upper95": 0.0,
+        "candidate_flat": {
+          "information_ratio": 0.0,
+          "reference_repeatable_power_ratio": 0.01,
+          "output_repeatable_power_ratio": 0.02
+        },
+        "legacy_flat": {
+          "information_ratio": 0.0,
+          "reference_repeatable_power_ratio": 0.01,
+          "output_repeatable_power_ratio": 0.02
+        },
+        "passes": {
+          "information_noninferiority": true,
+          "transfer_noninferiority_all_cells": true,
+          "unexplained_repeatability": true
+        }
+      }
+    },
+    "improvement": {
+      "schema": "m135-detail-comparison-decision-v1",
+      "rule_id": "m135-detail-pass-v1",
+      "contract_sha256": "247abd2024307aa43e7ab62edd7da23b8042ca98dedf6ca1a8eaac2d1510c249",
+      "checker_sha256": "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b",
+      "capture_id": "capture-applicable",
+      "status": "DETAIL_PASS",
+      "detail_pass": true,
+      "gates": {
+        "information_ratio_lower95": 1.2,
+        "transfer_ratio_lower95_by_cell": [
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1
+        ],
+        "minimum_transfer_ratio_lower95": 1.1,
+        "unexplained_fraction_difference_upper95": -0.05,
+        "candidate_flat": {
+          "information_ratio": 0.0,
+          "reference_repeatable_power_ratio": 0.01,
+          "output_repeatable_power_ratio": 0.02
+        },
+        "legacy_flat": {
+          "information_ratio": 0.0,
+          "reference_repeatable_power_ratio": 0.01,
+          "output_repeatable_power_ratio": 0.02
+        },
+        "passes": {
+          "information_noninferiority": true,
+          "transfer_noninferiority_all_cells": true,
+          "unexplained_repeatability": true
+        }
+      }
+    },
+    "information_defect": {
+      "schema": "m135-detail-comparison-decision-v1",
+      "rule_id": "m135-detail-pass-v1",
+      "contract_sha256": "247abd2024307aa43e7ab62edd7da23b8042ca98dedf6ca1a8eaac2d1510c249",
+      "checker_sha256": "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b",
+      "capture_id": "capture-applicable",
+      "status": "DETAIL_FAIL",
+      "detail_pass": false,
+      "gates": {
+        "information_ratio_lower95": 0.7,
+        "transfer_ratio_lower95_by_cell": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "minimum_transfer_ratio_lower95": 1.0,
+        "unexplained_fraction_difference_upper95": 0.0,
+        "candidate_flat": {
+          "information_ratio": 0.0,
+          "reference_repeatable_power_ratio": 0.01,
+          "output_repeatable_power_ratio": 0.02
+        },
+        "legacy_flat": {
+          "information_ratio": 0.0,
+          "reference_repeatable_power_ratio": 0.01,
+          "output_repeatable_power_ratio": 0.02
+        },
+        "passes": {
+          "information_noninferiority": false,
+          "transfer_noninferiority_all_cells": true,
+          "unexplained_repeatability": true
+        }
+      }
+    },
+    "not_applicable": {
+      "schema": "m135-detail-comparison-decision-v1",
+      "rule_id": "m135-detail-pass-v1",
+      "contract_sha256": "247abd2024307aa43e7ab62edd7da23b8042ca98dedf6ca1a8eaac2d1510c249",
+      "checker_sha256": "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b",
+      "capture_id": "capture-not-registered",
+      "status": "NOT_APPLICABLE",
+      "detail_pass": null,
+      "reason": "capture is absent from the frozen M135 detail ledger"
+    },
+    "unbound": {
+      "schema": "m135-detail-comparison-decision-v1",
+      "rule_id": "m135-detail-pass-v1",
+      "contract_sha256": "247abd2024307aa43e7ab62edd7da23b8042ca98dedf6ca1a8eaac2d1510c249",
+      "checker_sha256": "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b",
+      "capture_id": "capture-applicable",
+      "status": "INSTRUMENT_UNBOUND",
+      "detail_pass": null,
+      "reason": "physical M135 binding is UNBOUND"
+    }
+  }
+}
