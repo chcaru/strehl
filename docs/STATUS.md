@@ -3651,8 +3651,10 @@ M1 exists**, and the five comparative axes stay dead with the software bought,
 installed and running.
 
 `(a)` is required by **8 of the 12 axes**, and it is the only blocker that
-cannot be bought, captured, or built. **The program's critical path is a
-measurement problem.** That is a more honest and more useful statement of where
+cannot be bought or built. It *can* be captured -- but capture is a
+precondition of the instrument rather than a way around it (plan §16.3).
+**The program's critical path is a measurement problem whose one usable input
+is a photograph.** That is a more honest and more useful statement of where
 this stands than any count of axes.
 
 #### What follows
@@ -4311,10 +4313,16 @@ that cannot tell structure from noise cannot support a resolution claim**, and a
 resolution claim is the entire objective of Phase 3.
 
 That makes **M135, the replacement M1 detail instrument, unambiguously the
-program's critical path.** It is the one blocker that cannot be bought, shot, or
-coded around, and we now have two worked examples of exactly how it fails if
+program's critical path.** It is the one blocker that cannot be bought or coded
+around, and we now have two worked examples of exactly how it fails if
 built carelessly. **Whatever M135 produces must pass a flat null before any
 number it emits is quoted.**
+
+> **Superseded in part (plan §16.3).** "Cannot be shot around" was the wrong
+> shape. Capture does not defeat this blocker and does not bypass it: it
+> supplies the outside identifying information the only usable instrument
+> requires, making it a precondition. The ranking of the instrument as the
+> critical path is unchanged and strengthened.
 
 ### 2.9.40 Phase 1 was killed by a self-contradictory gate — the refutation is withdrawn
 
@@ -6480,9 +6488,11 @@ implementations**, and I am enumerating them rather than asserting a total,
 because I got this arithmetic wrong once already: `Q25` at `5.560744x`;
 **slant-edge, three independent builds**, all three failing; `S_25` at
 `1.028294x`; candidate 1 at `1.095732x`; FRC, by blindness; and **candidate 2**,
-killed on nonlinear tone this hour. Most died the same structural death:
-**no single-image high-frequency statistic can separate resolved detail from
-sharpening, because sharpening adds exactly the thing being measured.** `Q25` is the cleanest demonstration -- it rewarded an unsharp mask
+killed on nonlinear tone this hour. Most died through the same observed failure
+pattern: **among the candidates tested under the current output-only contract,
+no commissioned single-image high-frequency statistic separated resolved detail
+from sharpening. Without an external model, prior, or reference, those pixels
+do not universally certify latent signal provenance.** `Q25` is the cleanest demonstration -- it rewarded an unsharp mask
 `5.560744x` while reading a genuine optical improvement at `0.977981`, the
 **wrong sign**, with its tone-stability arms sitting at
 `0.999963 / 1.000000 / 0.999966`. A statistic can be perfectly invariant to

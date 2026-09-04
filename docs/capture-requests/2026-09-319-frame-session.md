@@ -181,9 +181,11 @@ version of this request.
 
 **The detail axis is the reason this session exists, and it is the one thing the
 previous version of this request could not have delivered.** Six candidate
-detail statistics have failed because no single-image measurement separates
-resolved detail from sharpening. The escape is an independently sampled,
-higher-magnification image of the same patch. The replacement 448-frame block
+detail statistics have failed. Under the current output-only observation
+contract, none has separated resolved detail from sharpening without an
+external model, prior, or reference. The current usable route supplies that
+external information with an independently sampled, higher-magnification image
+of the same patch. The replacement 448-frame block
 contains that 96-frame reference plus the independently calibrated TC0 scored
 passes, and it can only be shot while this rig is standing.
 
