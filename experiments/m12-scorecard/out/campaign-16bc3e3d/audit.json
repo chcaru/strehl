@@ -1,5 +1,22 @@
 {
   "classification": "operator-authorized diagnostic; not a registrar-approved formal M12 reading",
+  "host_load_validity": {
+    "assumption_based_invocation_count": 133,
+    "assumption_based_modulo_scored_count": 24,
+    "assumption_based_modulo_warmup_count": 4,
+    "during_run_external_busy_measured": false,
+    "load_gate_applied": false,
+    "preload_busy_measured": false,
+    "rejected_run_count": 0,
+    "required_future_gate": {
+      "during_run_external_busy_max": 0.1,
+      "preload_busy_max": 0.15,
+      "preload_sample_seconds": 5.0,
+      "source": "docs/research/M-PHASE0-PIPE.md lines 245-257"
+    },
+    "timing_verdict": "UNMEASURED",
+    "verified_load_gated_invocation_count": 0
+  },
   "commissioning": {
     "artifact": "projects\\strehl\\experiments\\m12-scorecard\\out\\commission.json",
     "hash_gate": {
@@ -403,7 +420,10 @@
         ]
       }
     },
-    "pass": true,
+    "load_gate_verified": false,
+    "observed_pass_without_load_gate": true,
+    "rejected_run_count": 0,
+    "scorecard_verdict": "UNMEASURED",
     "spread": 0.017487048718701974
   },
   "provenance": {
@@ -493,7 +513,7 @@
       "working_tree_source_used": false
     },
     "started_utc": "2026-09-04T02:17:50+00:00",
-    "summary_sha256": "AC464140B310392A9B84D555E191E9BF6FD5E00557B2CF98AF5F1E39C2AB31A6"
+    "summary_sha256": "D729DA183A9B8406E2ADEC8F8A6896EFBAE67C11552E9A887C36574FA12374D6"
   },
   "schema": 1
 }

@@ -181,7 +181,11 @@
       "98": 0.3352728693874325,
       "99": 0.33684174343414436
     },
-    "pass": true,
+    "load_gate_verified": false,
+    "observed_pass_without_load_gate": true,
+    "pass": false,
+    "rejected_run_count": 0,
+    "scorecard_verdict": "UNMEASURED",
     "spread": 0.017487048718701974
   },
   "schema": 1

@@ -1283,6 +1283,11 @@ def summarize(records_path: Path, output: Path) -> int:
         if len(valid_modulo_values) == len(MODULO_COUNTS)
         else None
     )
+    modulo_load_verified = (
+        len(modulo) == 6 * len(MODULO_COUNTS)
+        and all(row.get("load_gate_valid") is True for row in modulo)
+    )
+    observed_modulo_pass = modulo_spread is not None and modulo_spread <= 0.02
     result = {
         "schema": 1,
         "invalid_run_count": len(invalid),
@@ -1306,7 +1311,21 @@ def summarize(records_path: Path, output: Path) -> int:
         "modulo": {
             "best_wall_seconds_per_frame_by_n": best_per_frame,
             "spread": modulo_spread,
-            "pass": modulo_spread is not None and modulo_spread <= 0.02,
+            "observed_pass_without_load_gate": observed_modulo_pass,
+            "load_gate_verified": modulo_load_verified,
+            "rejected_run_count": sum(
+                row.get("load_gate_valid") is False
+                for row in records
+                if row.get("kind") in {"modulo-scored", "modulo-rejected"}
+            ),
+            "pass": observed_modulo_pass and modulo_load_verified,
+            "scorecard_verdict": (
+                "PASS"
+                if observed_modulo_pass and modulo_load_verified
+                else "FAIL"
+                if modulo_load_verified
+                else "UNMEASURED"
+            ),
         },
     }
     write_json(output, result)
