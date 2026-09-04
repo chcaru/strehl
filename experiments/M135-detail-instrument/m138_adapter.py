@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import importlib.metadata
 import importlib.util
 import json
 import os
@@ -17,8 +18,6 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
-
-import numpy as np
 
 HERE = Path(__file__).resolve().parent
 ADAPTER_CONTRACT_PATH = HERE / "m138-adapter-contract.json"
@@ -37,6 +36,7 @@ BUNDLE_SOURCE_NAMES = (
     "M138-ADAPTER-PREREGISTRATION.md",
     "M138-ADAPTER-AMENDMENT-1.md",
     "M138-ADAPTER-AMENDMENT-2.md",
+    "M138-ADAPTER-AMENDMENT-3.md",
     "comparison-binding.json",
     "comparison-contract.json",
     "comparison_checker.py",
@@ -47,17 +47,27 @@ BUNDLE_SOURCE_NAMES = (
 )
 
 
-def load_core_module() -> Any:
+_core: Any | None = None
+
+
+def install_core_module() -> Any:
+    global _core
+    if _core is not None:
+        return _core
     path = HERE / "comparison_checker.py"
     spec = importlib.util.spec_from_file_location("m135_comparison_checker", path)
     if spec is None or spec.loader is None:
         raise RuntimeError("could not construct the frozen comparison-checker loader")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return module
+    _core = module
+    return _core
 
 
-core = load_core_module()
+def require_core_module() -> Any:
+    if _core is None:
+        raise RuntimeError("frozen comparison checker was not installed")
+    return _core
 
 
 class AdapterRefusal(ValueError):
@@ -303,7 +313,7 @@ def current_environment() -> dict[str, Any]:
         "schema": "m135-checker-environment/v1",
         "python_implementation": platform.python_implementation(),
         "python_version": platform.python_version(),
-        "numpy_version": np.__version__,
+        "numpy_version": importlib.metadata.version("numpy"),
         "platform_system": platform.system(),
         "platform_machine": platform.machine(),
         "isolated_python_required": True,
@@ -369,17 +379,18 @@ def load_runtime() -> Runtime:
         raise AdapterRefusal(
             "INSTRUMENT_INVALID", "unsupported adapter contract schema"
         )
+    bundle_sha256 = validate_bundle()
+    environment_sha256 = validate_environment()
     try:
-        core_contract = core.load_json(CORE_CONTRACT_PATH)
-        core.validate_contract(core_contract)
-        binding = core.load_json(CORE_BINDING_PATH)
-        state = core.validate_binding_structure(binding, core_contract)
-    except (OSError, TypeError, ValueError, core.InvalidInstrument) as error:
+        module = install_core_module()
+        core_contract = module.load_json(CORE_CONTRACT_PATH)
+        module.validate_contract(core_contract)
+        binding = module.load_json(CORE_BINDING_PATH)
+        state = module.validate_binding_structure(binding, core_contract)
+    except (OSError, TypeError, ValueError, RuntimeError) as error:
         raise AdapterRefusal(
             "INSTRUMENT_INVALID", f"frozen core validation failed: {error}"
         ) from error
-    environment_sha256 = validate_environment()
-    bundle_sha256 = validate_bundle()
     return Runtime(
         adapter_contract=adapter_contract,
         core_contract=core_contract,
@@ -456,7 +467,8 @@ def load_core_payload(
 
 
 def core_decision(payload: dict[str, Any], runtime: Runtime) -> dict[str, Any]:
-    decision = core.adjudicate(payload, runtime.binding, runtime.core_contract)
+    module = require_core_module()
+    decision = module.adjudicate(payload, runtime.binding, runtime.core_contract)
     status = decision.get("status")
     if status == runtime.adapter_contract["evaluation"]["unbound_core_status"]:
         raise AdapterRefusal(
@@ -549,11 +561,14 @@ def process_evaluate(
 def information_quantiles(
     payload: dict[str, Any], runtime: Runtime
 ) -> tuple[float, float]:
-    values = np.asarray(payload["bootstrap"]["information_ratio"], dtype=np.float64)
+    module = require_core_module()
+    values = module.np.asarray(
+        payload["bootstrap"]["information_ratio"], dtype=module.np.float64
+    )
     method = runtime.adapter_contract["commissioning"]["quantile_method"]
     return (
-        float(np.quantile(values, 0.05, method=method)),
-        float(np.quantile(values, 0.95, method=method)),
+        float(module.np.quantile(values, 0.05, method=method)),
+        float(module.np.quantile(values, 0.95, method=method)),
     )
 
 
@@ -783,7 +798,8 @@ def synthetic_payload_for(
     transfer: float = 1.0,
     unexplained: float = 0.0,
 ) -> dict[str, Any]:
-    payload = core.synthetic_payload(
+    module = require_core_module()
+    payload = module.synthetic_payload(
         contract,
         binding,
         information=information,
@@ -865,8 +881,9 @@ def run_self_test() -> dict[str, Any]:
     checks: dict[str, bool] = {}
     try:
         scratch.mkdir()
-        contract = core.load_json(CORE_CONTRACT_PATH)
-        bound = core.synthetic_binding(contract)
+        module = require_core_module()
+        contract = module.load_json(CORE_CONTRACT_PATH)
+        bound = module.synthetic_binding(contract)
         capture_ids = (
             "capture-pass",
             "capture-fail",
@@ -1121,7 +1138,7 @@ def run_self_test() -> dict[str, Any]:
             and parsed_stderr(duplicate_run).get("status") == "INSTRUMENT_INVALID"
         )
 
-        unbound = core.load_json(CORE_BINDING_PATH)
+        unbound = module.load_json(CORE_BINDING_PATH)
         write_json(runtime / CORE_BINDING_PATH.name, unbound)
         write_bundle_manifest(runtime)
         unbound_request = copy.deepcopy(valid_request)
@@ -1212,6 +1229,15 @@ def main() -> int:
                 raise AdapterRefusal(
                     "INSTRUMENT_INVALID", "adapter contract hash drift"
                 )
+            validate_bundle()
+            validate_environment()
+            try:
+                install_core_module()
+            except (OSError, TypeError, ValueError, RuntimeError) as error:
+                raise AdapterRefusal(
+                    "INSTRUMENT_INVALID",
+                    f"frozen core bootstrap failed: {error}",
+                ) from error
             result = run_self_test()
             emit_json(result, args.output)
             return 0 if result["status"] == "PASS" else 1
