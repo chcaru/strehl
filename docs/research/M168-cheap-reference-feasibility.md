@@ -58,6 +58,8 @@ HIDDEN_OR_SYSTEM_FILES=0
 
 `D:\edited\macro` contains no RAW calibration source. `D:\personal\macro` contains no JSON or CSV acquisition/calibration manifest and no hidden files omitted by the ordinary listing.
 
+A full EXIF census found one camera-body key and one optical key across all 10,509 ARWs: `ILCE-7CM2`, `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter`, `200 mm`. Of 362 edited TIFFs, 357 carry that same camera/optical key and five carry no camera metadata. There is therefore no provenance-bearing second-body or bare-lens arm hidden in the supplied roots.
+
 ### 2.1 Same-site candidates do exist
 
 Direct EXIF reads identified plausible raw substrates:
