@@ -1,0 +1,97 @@
+{
+  "access_scope": "Read-only directory metadata and ARW names/counts/sizes only; no RAW decode, render, output, metric, or visual outcome was read.",
+  "captures": {
+    "bee-1-cpl": {
+      "count": 299,
+      "evidence_class": "HOLDOUT - PERFORMANCE",
+      "first": "DSC00001.ARW",
+      "last": "DSC00299.ARW",
+      "missing": [],
+      "path": "D:\\personal\\macro\\bee-1-cpl",
+      "total_arw_bytes": 11328233472,
+      "unexpected": []
+    },
+    "coffee-bean": {
+      "count": 105,
+      "evidence_class": "FIXED HISTORICAL BENCHMARK - NOT HOLDOUT",
+      "first": "DSC00016.ARW",
+      "last": "DSC00120.ARW",
+      "missing": [],
+      "path": "D:\\personal\\macro\\coffee-bean",
+      "total_arw_bytes": 4161077248,
+      "unexpected": []
+    }
+  },
+  "contract": {
+    "path": "experiments\\M153-m11-harness\\contract.json",
+    "schema": "m153-m11-contract-v1",
+    "scorecard_sha256": "D72160F57494ED1B3A07807EA0D7D6451B5E50D4630E0E6EEB093CED7D74CB28",
+    "sha256": "432145955E8525AFE3FB64FA33E7CF84E0EBD22988C1FC19E2C523AAA9526D15"
+  },
+  "evidence_tag": "VERIFIED_METADATA_ONLY",
+  "generated_utc": "2026-09-04T20:23:10.564299+00:00",
+  "guards": [
+    {
+      "failure": null,
+      "guard_id": "G02-capture-contract",
+      "name": "registered capture identity and evidence class",
+      "passed": true
+    },
+    {
+      "failure": null,
+      "guard_id": "G03-readonly-snapshot",
+      "name": "source snapshot is unchanged",
+      "passed": true
+    },
+    {
+      "failure": null,
+      "guard_id": "G03-readonly-snapshot",
+      "name": "source snapshot is unchanged",
+      "passed": true
+    }
+  ],
+  "holdout_ruling": {
+    "bee-1-cpl": "HOLDOUT - PERFORMANCE; not development material",
+    "coffee-bean": "FIXED HISTORICAL BENCHMARK - NOT HOLDOUT"
+  },
+  "readonly_snapshots": {
+    "bee-1-cpl": {
+      "after": {
+        "entry_count": 299,
+        "enumeration": "os.scandir including hidden/system entries (Get-ChildItem -Force semantics)",
+        "file_count": 299,
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "sha256": "74E649876A3F575CBCEA380A210C70DA1E1DE687B5110AE312EFD823BF64E0B4",
+        "total_bytes": 11328233472
+      },
+      "before": {
+        "entry_count": 299,
+        "enumeration": "os.scandir including hidden/system entries (Get-ChildItem -Force semantics)",
+        "file_count": 299,
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "sha256": "74E649876A3F575CBCEA380A210C70DA1E1DE687B5110AE312EFD823BF64E0B4",
+        "total_bytes": 11328233472
+      }
+    },
+    "coffee-bean": {
+      "after": {
+        "entry_count": 210,
+        "enumeration": "os.scandir including hidden/system entries (Get-ChildItem -Force semantics)",
+        "file_count": 210,
+        "path": "D:\\personal\\macro\\coffee-bean",
+        "sha256": "C00065200209D6781533D2C8041DB84781E724C188AC379DDE0204A57731EDC4",
+        "total_bytes": 4162068291
+      },
+      "before": {
+        "entry_count": 210,
+        "enumeration": "os.scandir including hidden/system entries (Get-ChildItem -Force semantics)",
+        "file_count": 210,
+        "path": "D:\\personal\\macro\\coffee-bean",
+        "sha256": "C00065200209D6781533D2C8041DB84781E724C188AC379DDE0204A57731EDC4",
+        "total_bytes": 4162068291
+      }
+    }
+  },
+  "schema": "m153-input-census-v1",
+  "status": "PASS"
+}

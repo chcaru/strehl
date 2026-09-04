@@ -1,0 +1,360 @@
+{
+  "async_child_pass": true,
+  "asynchronous_child": {
+    "manifest_sha256": "580285799437A5EEEC0273CBFA38BDE07A907E3C559EAE129883624346BD5532",
+    "output_sha256": "A2F531304774855A371A066D6194C83B4A526507A2C53B8AB554E40FF0DB32A1",
+    "pass": true,
+    "planted_child_delay_seconds": 0.075,
+    "process_count_total": 2,
+    "root_exit_to_tree_drain_seconds": 0.1182856,
+    "wall_seconds": 0.2221982
+  },
+  "contract": {
+    "path": "experiments\\M153-m11-harness\\contract.json",
+    "schema": "m153-m11-contract-v1",
+    "scorecard_sha256": "D72160F57494ED1B3A07807EA0D7D6451B5E50D4630E0E6EEB093CED7D74CB28",
+    "sha256": "432145955E8525AFE3FB64FA33E7CF84E0EBD22988C1FC19E2C523AAA9526D15"
+  },
+  "evidence_tag": "VERIFIED_SYNTHETIC_DEVELOPMENT_ONLY",
+  "flat_null": {
+    "arm_a_dispersion": {
+      "count": 6,
+      "mad": 0.0008118000000000014,
+      "maximum": 0.1067594,
+      "mean": 0.10093341666666666,
+      "median": 0.1021569,
+      "minimum": 0.0901231,
+      "range": 0.016636300000000007,
+      "relative_range": 0.18459529243889755,
+      "sample_sd": 0.005628284123395575,
+      "scaled_mad": 0.001203574680000002
+    },
+    "arm_b_dispersion": {
+      "count": 6,
+      "mad": 0.00037670000000000065,
+      "maximum": 0.1131417,
+      "mean": 0.10469616666666666,
+      "median": 0.1030446,
+      "minimum": 0.1026105,
+      "range": 0.010531200000000004,
+      "relative_range": 0.10263277149999274,
+      "sample_sd": 0.004152117856548229,
+      "scaled_mad": 0.0005584954200000009
+    },
+    "arms": {
+      "A": {
+        "definition": "synthetic_target sleep_ms=4.0",
+        "scored_wall_seconds": [
+          0.1019958,
+          0.102318,
+          0.1013903,
+          0.1067594,
+          0.1030139,
+          0.0901231
+        ]
+      },
+      "B": {
+        "definition": "synthetic_target sleep_ms=4.0",
+        "scored_wall_seconds": [
+          0.1027253,
+          0.1036103,
+          0.1131417,
+          0.1030926,
+          0.1029966,
+          0.1026105
+        ]
+      }
+    },
+    "decision": "NO_DETECTED_DIFFERENCE",
+    "held_fixed": [
+      "Python executable",
+      "synthetic target bytes",
+      "4x4 uint16 RGB TIFF payload",
+      "ICC",
+      "working volume",
+      "finalization and hash path",
+      "six alternating sweeps"
+    ],
+    "maximum_single_invocation_seconds": 0.1131417,
+    "only_difference": "none; output paths are per-run necessities",
+    "paired_differences_seconds_b_minus_a": [
+      0.0007295000000000079,
+      0.0012922999999999962,
+      0.011751399999999995,
+      -0.003666799999999998,
+      -1.730000000001175e-05,
+      0.012487399999999996
+    ],
+    "paired_interval": {
+      "confidence": 0.95,
+      "covers_no_difference": true,
+      "dispersion": {
+        "count": 6,
+        "mad": 0.002852950000000007,
+        "maximum": 0.012487399999999996,
+        "mean": 0.0037627499999999974,
+        "median": 0.001010900000000002,
+        "minimum": -0.003666799999999998,
+        "range": 0.016154199999999994,
+        "relative_range": null,
+        "sample_sd": 0.00670415940166998,
+        "scaled_mad": 0.00422978367000001
+      },
+      "estimate_seconds": 0.0037627499999999974,
+      "lower_seconds": -0.003273978311468273,
+      "method": "two-sided paired-mean t interval",
+      "no_difference_seconds": 0.0,
+      "pairs": 6,
+      "standard_error_seconds": 0.0027369616147290042,
+      "upper_seconds": 0.010799478311468267
+    },
+    "pass": true,
+    "schedule_guard": {
+      "failure": null,
+      "guard_id": "G13-schedule-complete",
+      "name": "warm-up and six alternating sweeps are complete",
+      "passed": true
+    }
+  },
+  "flat_null_pass": true,
+  "formal_plant_seconds": null,
+  "formal_scorecard_control": {
+    "reason": "M153 was ordered to run only sub-second synthetic workloads while M139 owns the timing host.",
+    "required_plant_seconds": 1.0,
+    "status": "NOT_RUN",
+    "tolerance_seconds": 0.05
+  },
+  "generated_utc": "2026-09-04T20:23:03.527591+00:00",
+  "host": {
+    "node": "Chris",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]"
+  },
+  "observed_plant_seconds": null,
+  "planted_effect": {
+    "arm_a_dispersion": {
+      "count": 6,
+      "mad": 0.001058499999999997,
+      "maximum": 0.1049759,
+      "mean": 0.1034087,
+      "median": 0.1038477,
+      "minimum": 0.100397,
+      "range": 0.004578899999999997,
+      "relative_range": 0.04560793649212623,
+      "sample_sd": 0.0017430975497659323,
+      "scaled_mad": 0.0015693320999999954
+    },
+    "arm_b_dispersion": {
+      "count": 6,
+      "mad": 0.0011278499999999858,
+      "maximum": 0.1888803,
+      "mean": 0.18525371666666668,
+      "median": 0.18456034999999998,
+      "minimum": 0.1830725,
+      "range": 0.005807800000000002,
+      "relative_range": 0.03172404375315791,
+      "sample_sd": 0.0021835288763070366,
+      "scaled_mad": 0.001672150409999979
+    },
+    "arms": {
+      "A": {
+        "definition": "synthetic_target sleep_ms=4.0",
+        "scored_wall_seconds": [
+          0.1025474,
+          0.100397,
+          0.1033479,
+          0.1048365,
+          0.1043475,
+          0.1049759
+        ]
+      },
+      "B": {
+        "definition": "synthetic_target sleep_ms=84.0",
+        "scored_wall_seconds": [
+          0.1830725,
+          0.1852181,
+          0.1837925,
+          0.1888803,
+          0.1839026,
+          0.1866563
+        ]
+      }
+    },
+    "held_fixed": [
+      "Python executable",
+      "synthetic target bytes",
+      "4x4 uint16 RGB TIFF payload",
+      "ICC",
+      "working volume",
+      "finalization and hash path",
+      "six alternating sweeps"
+    ],
+    "maximum_single_invocation_seconds": 0.1888803,
+    "only_difference": "arm B has 0.080000 seconds of planted in-process sleep",
+    "paired_differences_seconds_b_minus_a": [
+      0.0805251,
+      0.0848211,
+      0.08044459999999999,
+      0.0840438,
+      0.0795551,
+      0.0816804
+    ],
+    "paired_interval": {
+      "confidence": 0.95,
+      "covers_no_difference": false,
+      "dispersion": {
+        "count": 6,
+        "mad": 0.0011029000000000039,
+        "maximum": 0.0848211,
+        "mean": 0.08184501666666667,
+        "median": 0.08110275,
+        "minimum": 0.0795551,
+        "range": 0.005265999999999993,
+        "relative_range": 0.06619311646896293,
+        "sample_sd": 0.00212912582945834,
+        "scaled_mad": 0.0016351595400000056
+      },
+      "estimate_seconds": 0.08184501666666667,
+      "lower_seconds": 0.07961027266593544,
+      "method": "two-sided paired-mean t interval",
+      "no_difference_seconds": 0.0,
+      "pairs": 6,
+      "standard_error_seconds": 0.0008692119800588218,
+      "upper_seconds": 0.0840797606673979
+    },
+    "pass": true,
+    "planted_seconds": 0.08,
+    "recovered_seconds": 0.08184501666666667,
+    "schedule_guard": {
+      "failure": null,
+      "guard_id": "G13-schedule-complete",
+      "name": "warm-up and six alternating sweeps are complete",
+      "passed": true
+    },
+    "tolerance_seconds": 0.05
+  },
+  "real_timing_authorized": false,
+  "runtime": {
+    "python_executable": {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "sha256": "4D6F5F81A4BCA11191C4C7C6B43632694D0A4CE74E068619D8FDC161D469859A"
+    }
+  },
+  "schema": "m153-development-commission-v1",
+  "scope": "Sub-second synthetic commissioning only. This is not an M11 timing measurement and contains no capture output.",
+  "source_bindings": {
+    "acquisition-signature-commission-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\acquisition-signature-commission-template.json",
+      "sha256": "819D3C60C6CFE45295F2F03C8DB55E116CC7BE7C6032203F47C87D6FC01F2134"
+    },
+    "actual-reboot-receipt-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\actual-reboot-receipt-template.json",
+      "sha256": "4E0E373762DF960B0D725CF69E60C1532403CA48067946AE9C4F5FA31296C8D8"
+    },
+    "adapter-identity-commission-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\adapter-identity-commission-template.json",
+      "sha256": "10645870FDE182416714BEEA0F37CC4461CE7A5B89DDAEE6FD9805482C308FED"
+    },
+    "adapter-identity-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\adapter-identity-template.json",
+      "sha256": "448DE14B5C2E1DA75CCACECADCA8C0FDB127D72247F841A2CEB0B74AA1679940"
+    },
+    "campaign-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\campaign-template.json",
+      "sha256": "184A9C24B40F1E2F4EA0616D0E465C96BE2312480DE2D32A60D2405D9FDA2A17"
+    },
+    "live-replay-registration-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\live-replay-registration-template.json",
+      "sha256": "22E8DB7A15CCD5E829D43F409F674DD89B5A197F10FE490A5502DDF4DCF0CA70"
+    },
+    "live_replay.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\live_replay.py",
+      "sha256": "C347383F828A61DDDEC972FD0BA879092851EF36522A67E49C9ADA747EC0D7B2"
+    },
+    "m11_core.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\m11_core.py",
+      "sha256": "C995EA7B45E82D67C3FF45DFF0879F9BF6CE2DF548C085186BDFD0D8B5B1E803"
+    },
+    "m11_harness.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\m11_harness.py",
+      "sha256": "44B051DDB0DDF44E92C0AEEF8251D9FF7B98EDAEB38FF36C3C51AB9C46D077C6"
+    },
+    "m11_runtime.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\m11_runtime.py",
+      "sha256": "EAB0A69070BDC4E742A1A970170748AD8AD03AC95BF9284BFB2FC8E20F8C430B"
+    },
+    "m12-campaign-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\m12-campaign-template.json",
+      "sha256": "4F910C23A427E8AC66C26F5D63CDB55A2DBCE62BE7CC8E4ACFBB8C436F1213CF"
+    },
+    "m12-measurement-manifest-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\m12-measurement-manifest-template.json",
+      "sha256": "7744A93FF1C02E28E58CAF28382D23FD785CADB38B814CB4D2F7652361A3F18F"
+    },
+    "m12-worker16-export-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\m12-worker16-export-template.json",
+      "sha256": "CED2141422B74ECF60ECABF378582D19A617AADCEC36CCD84ED62B5413CE1085"
+    },
+    "m12-worker16-records-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\m12-worker16-records-template.json",
+      "sha256": "12BC415C084587ADC6AE8A0799FD918FB84F5F8E2260FBF686A6650CD9BAAB33"
+    },
+    "mutation_commission.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\mutation_commission.py",
+      "sha256": "59ECB8094310DF504320D6C18ED569CB47173233EE452C49C15611DF9DB84CB0"
+    },
+    "native-dimensions-commission-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\native-dimensions-commission-template.json",
+      "sha256": "1A25F0F8B22988223C71D2D6F264F03056838CC18AB1E3D0C92F5EAE1A2DD08D"
+    },
+    "native-dimensions-evidence-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\native-dimensions-evidence-template.json",
+      "sha256": "4EA8906F9CE7BF68A3CA977404A0580EDA3BCA0B6813487E78D43D73F0A6C525"
+    },
+    "observer-hash-control-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\observer-hash-control-template.json",
+      "sha256": "1007283D4D64E98C990EB3EBD84E012ABB9D991156CEA4B1B671A6FDCF594480"
+    },
+    "quality-checker-commission-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\quality-checker-commission-template.json",
+      "sha256": "4BA95DE495A10CC760380A91353CEBF23BAED238C207ECB9A249E3041D61E372"
+    },
+    "quality-corpus-evidence-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\quality-corpus-evidence-template.json",
+      "sha256": "42EFD8B9D26A751BD0B2804F743F58CA0416C47B1FE09690510C5739CD1F077A"
+    },
+    "quality-evidence-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\quality-evidence-template.json",
+      "sha256": "6A9F3FD5A3FB6002F816C75BFA488623FADCBBD4CA2E8493EC9DC4CB6552C664"
+    },
+    "quality-manifest-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\quality-manifest-template.json",
+      "sha256": "D1799604A774EE8CCF45FD139499C2AD6AC27B96585E0AD98857100D81C173AF"
+    },
+    "real-run-authorization-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\real-run-authorization-template.json",
+      "sha256": "7B75D934F7F035758AC6E8F60D2953E69C68FD7946AD76FF28BE0191C0A3BC0D"
+    },
+    "signed-acquisition-trace-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\signed-acquisition-trace-template.json",
+      "sha256": "4CCA76781C9D91245788214375865D243093A1D5BBBD3749591C4FBD0879C2E1"
+    },
+    "staged-input-manifest-template.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\staged-input-manifest-template.json",
+      "sha256": "ECAF2350EF909D6C6849FFC41A4430B622B0A15788025664B36918101E8D9D1C"
+    },
+    "synthetic_target.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\synthetic_target.py",
+      "sha256": "8D0A198B90E2491B0197E186D49A76FBE2FFE9FF0E837346094628E51EFC39A7"
+    },
+    "test_m11_harness.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\test_m11_harness.py",
+      "sha256": "CBA61521848F38BEF033CE812F6115841CAE30E17E2A9CE7616CABA26B217AD7"
+    },
+    "test_runtime.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\test_runtime.py",
+      "sha256": "F56E80BA978B1421BFD692F163E8A038632EE395EA0B341B1EEED82AEEE91C15"
+    }
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,9 @@
+{
+  "schema": "m153-live-replay-registration-v1",
+  "status": "UNBOUND",
+  "approved_by": null,
+  "approved_utc": null,
+  "contract_sha256": null,
+  "protocol_sha256": null,
+  "note": "Registrar approval binds the scorecard-v1.10 shutter-close/availability replay implementation; the separate acquisition trace must be owner-signed and checker-verified."
+}

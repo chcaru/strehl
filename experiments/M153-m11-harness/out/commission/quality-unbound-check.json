@@ -1,0 +1,30 @@
+{
+  "availability_by_mode": {
+    "fork-best-known": "UNDECLARED",
+    "helicon-a": "UNDECLARED",
+    "helicon-b": "UNDECLARED",
+    "helicon-c": "UNDECLARED",
+    "strehl-common-16": "UNDECLARED",
+    "zerene-dmap": "UNDECLARED",
+    "zerene-pmax": "UNDECLARED"
+  },
+  "mode_results": {},
+  "qualified_modes": [],
+  "qualified_modes_by_cell": {
+    "bee-1-cpl:N299": [],
+    "bee-1-cpl:N33": [],
+    "coffee-bean:N105": []
+  },
+  "reason": "the Strehl denominator and required comparators must be AVAILABLE; each optional Helicon mode must be AVAILABLE or record a non-empty UNAVAILABLE reason",
+  "source_manifest": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M153-m11-harness\\quality-manifest-template.json",
+    "sha256": "D1799604A774EE8CCF45FD139499C2AD6AC27B96585E0AD98857100D81C173AF"
+  },
+  "status": "UNMEASURED",
+  "strehl_qualified_by_cell": {
+    "bee-1-cpl:N299": false,
+    "bee-1-cpl:N33": false,
+    "coffee-bean:N105": false
+  },
+  "unavailable_optional_modes": {}
+}

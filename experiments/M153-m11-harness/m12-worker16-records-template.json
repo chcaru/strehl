@@ -1,0 +1,28 @@
+{
+  "format": "Reference the exact M11 JSONL record file; do not copy or transcribe it",
+  "required_records": "The exact M11 record file must contain one warmup plus scored repetitions 1-6 for common-merge strehl workers 1/2/4/8/16 at each N=33/105/299; this adapter exports its exact common-merge worker-16 cells",
+  "retained_m12_s_policy": "M11 compares common-merge scored repetition 1 as the pre-frozen canonical output across workers 1/2/4/8/16; product-native fixed-worker repeat determinism remains a separate M12 disclosure",
+  "record_schema": {
+    "schema": "m153-run-record-v1",
+    "evidence_tag": "MEASURED",
+    "accepted": true,
+    "segment": "comparative-warm",
+    "role": "strehl-common",
+    "stack_id": null,
+    "setting_id": null,
+    "count": null,
+    "workers": 16,
+    "phase": null,
+    "repetition": null,
+    "direction": null,
+    "settings_sha256": null,
+    "input_manifest_sha256": null,
+    "input_content_sha256": null,
+    "output": {
+      "path": null,
+      "output_sha256": null,
+      "pixel_sha256": null
+    },
+    "artifact_bindings": []
+  }
+}

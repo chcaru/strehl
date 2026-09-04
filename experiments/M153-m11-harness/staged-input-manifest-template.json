@@ -1,0 +1,46 @@
+{
+  "schema": "m153-staged-input-manifest-v1",
+  "kind": "native-arw-or-common-tiff",
+  "contract_sha256": null,
+  "census_sha256": null,
+  "stack_id": null,
+  "source_path": null,
+  "volume_id": null,
+  "ordered_input_sha256": null,
+  "image_contract": null,
+  "native_dimensions_evidence": {
+    "path": null,
+    "sha256": null
+  },
+  "decoder": {
+    "converter_id": null,
+    "artifacts": [
+      {
+        "role": "decoder-executable",
+        "path": null,
+        "sha256": null
+      }
+    ],
+    "settings": null,
+    "settings_sha256": null,
+    "deterministic_pattern_map": {
+      "path": null,
+      "sha256": null
+    }
+  },
+  "files": [
+    {
+      "name": null,
+      "bytes": null,
+      "sha256": null,
+      "pixel_sha256": null,
+      "source_name": null,
+      "source_path": null,
+      "source_bytes": null,
+      "source_mtime_ns": null,
+      "source_sha256": null,
+      "source_exif": {},
+      "source_exif_sha256": null
+    }
+  ]
+}

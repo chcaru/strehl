@@ -1,0 +1,17 @@
+{
+  "schema": "m153-acquisition-signature-checker-commission-v1",
+  "status": "NOT_RUN",
+  "checker_sha256": null,
+  "checker_bundle_sha256": null,
+  "scorecard_sha256": null,
+  "accepted_evidence_payload_sha256": null,
+  "verification_argv": [
+    null,
+    "{artifact}",
+    "{payload_sha256}"
+  ],
+  "verification_timeout_seconds": 120,
+  "mutations_killed": 0,
+  "mutations_total": 0,
+  "inert_survived": 0
+}

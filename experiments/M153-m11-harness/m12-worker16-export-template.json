@@ -1,0 +1,59 @@
+{
+  "schema": "m153-m12-worker16-export-v1",
+  "track": "common-merge",
+  "purpose": "Exact M11 common-merge worker-16 handoff for M12's joint M11 condition; not a substitute for M12 product-native disclosures",
+  "status": "UNMEASURED",
+  "worker16_status": "UNMEASURED",
+  "source_artifacts": [
+    {
+      "role": "campaign",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "role": "measurement-manifest",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "role": "worker16-records",
+      "path": null,
+      "sha256": null
+    }
+  ],
+  "worker16_cells": {
+    "33": {
+      "workers": 16,
+      "warmups": 1,
+      "scored_repetitions": 6,
+      "schedule_status": "UNMEASURED",
+      "settings_sha256": [],
+      "input_manifest_sha256": [],
+      "input_content_sha256": [],
+      "output_sha256": [],
+      "pixel_sha256": []
+    },
+    "105": {
+      "workers": 16,
+      "warmups": 1,
+      "scored_repetitions": 6,
+      "schedule_status": "UNMEASURED",
+      "settings_sha256": [],
+      "input_manifest_sha256": [],
+      "input_content_sha256": [],
+      "output_sha256": [],
+      "pixel_sha256": []
+    },
+    "299": {
+      "workers": 16,
+      "warmups": 1,
+      "scored_repetitions": 6,
+      "schedule_status": "UNMEASURED",
+      "settings_sha256": [],
+      "input_manifest_sha256": [],
+      "input_content_sha256": [],
+      "output_sha256": [],
+      "pixel_sha256": []
+    }
+  }
+}

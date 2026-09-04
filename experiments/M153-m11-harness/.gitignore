@@ -1,0 +1,4 @@
+work/
+out/campaign-*/
+*.pyc
+__pycache__/

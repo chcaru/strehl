@@ -1,0 +1,57 @@
+{
+  "schema": "m153-m11-quality-corpus-evidence-v1",
+  "evidence_tag": "UNMEASURED",
+  "verdict": "UNMEASURED",
+  "mode_id": null,
+  "scorecard_sha256": null,
+  "measured_commit": null,
+  "binary_sha256": null,
+  "executable_bundle_sha256": null,
+  "settings_sha256": null,
+  "output_contract_sha256": null,
+  "all_readings_hash_bound": false,
+  "no_timing_cell_setting_difference": false,
+  "quality_outputs": [],
+  "result": {
+    "common_input_transfer_geometry": "UNMEASURED",
+    "quality_gates": {
+      "M1": "UNMEASURED",
+      "M2": "UNMEASURED",
+      "M3": "UNMEASURED",
+      "M8": "UNMEASURED"
+    },
+    "replacement_m1": {
+      "instrument_status": "UNMEASURED",
+      "decision": "UNMEASURED"
+    },
+    "retained_m4": {
+      "population_counts": {
+        "medication-pill": 84,
+        "bee": 83,
+        "foam": 83
+      },
+      "invalid_tile_count": null,
+      "capture_median_q_flat": {
+        "medication-pill": null,
+        "bee": null,
+        "foam": null
+      },
+      "pooled_median_q_flat": null,
+      "eligible_site_channel_count": 750,
+      "transfer_failed_site_channels": null,
+      "gain_min": null,
+      "gain_max": null,
+      "residual_max": null,
+      "same_output_joint_tuple_verified": false
+    }
+  },
+  "checker_artifact": {
+    "path": null,
+    "sha256": null
+  },
+  "checker_support_artifacts": [],
+  "commission_artifact": {
+    "path": null,
+    "sha256": null
+  }
+}

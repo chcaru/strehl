@@ -1,0 +1,250 @@
+{
+  "schema": "m153-m11-contract-v1",
+  "scorecard": {
+    "path": "docs/proposals/2026-09-sota-scorecard.md",
+    "sha256": "D72160F57494ED1B3A07807EA0D7D6451B5E50D4630E0E6EEB093CED7D74CB28",
+    "success_clause_verbatim": null,
+    "success_clause_status": "DEFECT: scorecard v1.10 contains no M11 paragraph labelled Success.",
+    "operative_comparative_bar_verbatim": "The fastest-mode tie is product ID then mode ID. Strehl must have `R_c>=2.00` for each\nof `C33`, `C105`, and `C299`, and `R_pool>=2.00`. The per-capture envelope is\nintentional: no slow capture or favourable global mode can hide a miss."
+  },
+  "inputs": {
+    "bee-1-cpl": {
+      "source_path": "D:\\personal\\macro\\bee-1-cpl",
+      "evidence_class": "HOLDOUT - PERFORMANCE",
+      "first_file": "DSC00001.ARW",
+      "last_file": "DSC00299.ARW",
+      "frame_count": 299,
+      "registered_prefixes": [
+        33,
+        96,
+        97,
+        98,
+        99,
+        100,
+        299
+      ]
+    },
+    "coffee-bean": {
+      "source_path": "D:\\personal\\macro\\coffee-bean",
+      "evidence_class": "FIXED HISTORICAL BENCHMARK - NOT HOLDOUT",
+      "first_file": "DSC00016.ARW",
+      "last_file": "DSC00120.ARW",
+      "frame_count": 105,
+      "registered_prefixes": [
+        105
+      ]
+    }
+  },
+  "arms": {
+    "comparative": {
+      "input": "byte-identical uncompressed 16-bit linear ProPhoto RGB D50 TIFFs on one volume",
+      "settings": [
+        "strehl-common-1",
+        "strehl-common-2",
+        "strehl-common-4",
+        "strehl-common-8",
+        "strehl-common-16",
+        "zerene-pmax",
+        "zerene-dmap",
+        "fork-best-known",
+        "helicon-a",
+        "helicon-b",
+        "helicon-c"
+      ],
+      "required_comparator_modes": [
+        "zerene-pmax",
+        "zerene-dmap",
+        "fork-best-known"
+      ],
+      "optional_comparator_modes": [
+        "helicon-a",
+        "helicon-b",
+        "helicon-c"
+      ],
+      "optional_absence_rule": "each unavailable Helicon mode must be explicitly recorded with a non-empty reason; available optional modes enter the full quality envelope",
+      "quantity": "for each capture c, T_c=min_m(minimum comparator-mode wall), S_c=minimum 16-worker strehl wall, R_c=T_c/S_c; require every R_c>=2.00 and R_pool=sum_c(T_c)/sum_c(S_c)>=2.00, with product-ID then mode-ID ties; common-merge canonical output must also be byte-identical across workers 1/2/4/8/16",
+      "held_fixed": [
+        "ordered input TIFF bytes",
+        "input volume",
+        "native dimensions",
+        "16-bit depth",
+        "linear ICC",
+        "output contract",
+        "host",
+        "power plan",
+        "cache class",
+        "sweep positions"
+      ],
+      "allowed_difference": "program and frozen mode settings only; among strehl worker-ladder settings only the operational worker selection may differ"
+    },
+    "product": {
+      "input": "byte-identical staged copies of the original ARWs",
+      "settings": [
+        "candidate-cpu-16",
+        "candidate-hybrid",
+        "frozen-default-baseline"
+      ],
+      "held_fixed": [
+        "ordered ARW bytes",
+        "native dimensions",
+        "output contract",
+        "host",
+        "power plan",
+        "cache class",
+        "complete non-acceleration settings",
+        "sweep positions"
+      ],
+      "allowed_differences": {
+        "candidate-versus-baseline": "build hash only",
+        "cpu-versus-hybrid": "registered acceleration mode only"
+      },
+      "publication_role": "reported in full but cannot satisfy, rescue, fail, or otherwise alter the common-merge M11 publication verdict"
+    }
+  },
+  "timing_boundary": {
+    "start": "QPC immediately before suspended root-process creation",
+    "stop": "after Job Object process count reaches zero, TIFF exclusive-open flush/validation/hash, and invocation-manifest close/flush/hash",
+    "includes": [
+      "decode or common-input load",
+      "registration",
+      "stack",
+      "colour handling",
+      "write",
+      "descendants and asynchronous writes",
+      "deliverable validation and hashing",
+      "invocation manifest write, flush, close, and hash"
+    ],
+    "representation": "integer QueryPerformanceCounter ticks plus integer QueryPerformanceFrequency; subtract ticks before binary64 conversion",
+    "process_identity": "preverify and lock the frozen executable bundle before QPC start; retain each root/descendant canonical image path and its matching preverified SHA-256 without rereading executable contents inside the boundary; reject every image outside the bundle",
+    "stage_evidence": {
+      "native_product_required_numeric_stages": [
+        "decode",
+        "registration",
+        "fold",
+        "colour",
+        "write"
+      ],
+      "standard_banner": "M153_STAGE <name> wall_seconds=<number|unavailable> cpu_seconds=<number|unavailable> source=<id>",
+      "comparator_rule": "vendor stages may be unavailable with an explicit source/reason; native-RAW comparator timing then remains diagnostic and the common-TIFF arm remains competitive"
+    }
+  },
+  "schedule": {
+    "warmups_per_setting": 1,
+    "scored_repetitions": 6,
+    "order": "forward on odd sweeps, exact reverse on even sweeps",
+    "headline": "minimum per setting",
+    "dispersion": [
+      "all observations",
+      "minimum",
+      "median",
+      "maximum",
+      "range",
+      "MAD",
+      "scaled MAD",
+      "sample standard deviation",
+      "relative range"
+    ],
+    "rejection": "abort and invalidate the campaign if any member fails a condition gate; never keep half of a paired sweep"
+  },
+  "bars": {
+    "comparative_strehl_throughput_ratio_min": 2.0,
+    "comparative_pooled_throughput_ratio_min": 2.0,
+    "native_cpu_seconds_per_frame_max": 0.15,
+    "native_hybrid_seconds_per_frame_max": 0.06,
+    "cold_minus_warm_seconds_max": 20.0,
+    "live_after_frame_100_seconds_max": 10.0,
+    "candidate_over_default_warm_wall_max": 2.0,
+    "retained_cross_worker_distinct_canonical_output_hashes_max": 1
+  },
+  "verdict_policy": {
+    "publication_gate_components": [
+      "comparative",
+      "retained_m12_cross_worker_identity"
+    ],
+    "product_native_report_components": [
+      "native_cpu_16",
+      "native_hybrid",
+      "cold_overhead",
+      "live_first_100",
+      "candidate_default_baseline"
+    ]
+  },
+  "quality_qualification": {
+    "criterion_id": "scorecard-v1.10-m11-quality-corpus-and-timed-output-v1",
+    "source": "scorecard named sections 0.2 Joint anti-cheat constraints, 1.3 Output transfer and the tone sentinel, M4 retained component, and M11 Comparative statistic, qualification, and ties",
+    "rule": "require the Strehl 16-worker denominator, licensed Zerene PMax, licensed Zerene DMap, and the fresh best-known-source fork rebuild to qualify; record Helicon A/B/C availability and include every obtainable mode; one binary/settings fingerprint per timed mode must pass the common-input transfer/geometry contract, M1, M2, M3, M8, and the retained M4 250-tile flat-power-plus-transfer component on frozen quality-corpus outputs, and every timed output must independently pass its applicable controls",
+    "current_status": "SCORECARD_DEFINED",
+    "fail_closed": true
+  },
+  "external_checkers": {
+    "quality": {
+      "status": "UNBOUND",
+      "approved_bundle_sha256": []
+    },
+    "adapter_identity": {
+      "status": "UNBOUND",
+      "approved_bundle_sha256": []
+    },
+    "native_dimensions": {
+      "status": "UNBOUND",
+      "approved_bundle_sha256": []
+    },
+    "acquisition_trace": {
+      "status": "UNBOUND",
+      "approved_bundle_sha256": []
+    }
+  },
+  "conditions": {
+    "preload_host_busy_max": 0.15,
+    "during_external_busy_max": 0.1,
+    "sample_interval_ms": 10,
+    "preflight_seconds": 60,
+    "requires_dedicated_host": true,
+    "requires_m139_release": true,
+    "requires_fixed_power_plan": true,
+    "requires_bound_thermal_probe": true,
+    "requires_cpu_thermal_throttle_and_gpu_process_telemetry": true,
+    "hardware_probe_protocol": "one persistent hash-bound process emitting one flushed JSON object per 10 ms sample",
+    "gpu_process_allowlist": "predeclared OS display processes plus PIDs in the timed Job Object; any other GPU-using process invalidates the campaign",
+    "start_temperature": "campaign-predeclared closed interval",
+    "input_stability": "each invocation receives an owned private hard-link snapshot of exactly its timed prefix; all snapshot files are opened read-only without write/delete sharing from the preflight content hash through process-tree drain and the matching postflight content hash",
+    "execution_stability": "all existing-file argv entries are resolved against the actual execution cwd to canonical physical paths; every executable, script, support file, host probe, and generated live-replay specification is held open without write/delete sharing and hash-checked around use; cold preflight hashes use Windows FILE_FLAG_NO_BUFFERING",
+    "record_integrity": "a separately flushed content-addressed measurement receipt binds the complete run record, including the post-drain endpoint, wall time, telemetry, input checks, and condition checks",
+    "warm_cache": "one warm-up; shared OS/page cache warm; fresh private output, temp, application cache, and warp-map directories per invocation",
+    "cold_cache": "six predeclared actual-reboot cold/warm pairs per N and candidate CPU-16/hybrid setting; each pair has a unique current Windows BootId receipt, cold precedes its warm mate, and equivalent resets are rejected",
+    "cold_input_preflight": "all timed-input and timed-executable-bundle content hashing after reboot and before the cold member uses Windows FILE_FLAG_NO_BUFFERING; common-TIFF structural/pixel witnesses are reused only after the exact TIFF byte hash matches their frozen manifest",
+    "campaign_attempt_ledger": "a campaign-hash-keyed append-only ledger freezes one records path, chains before/after record-file hashes, and permanently invalidates any aborted or incomplete invocation attempt"
+  },
+  "commissioning": {
+    "development_null": "identical arms; paired 95% interval must cover 0 seconds",
+    "development_plant_seconds": 0.08,
+    "development_plant_tolerance_seconds": 0.05,
+    "formal_scorecard_plant_seconds": 1.0,
+    "formal_scorecard_tolerance_seconds": 0.05,
+    "async_child_required": true,
+    "formal_control_required_before_real_run": true
+  },
+  "live_replay": {
+    "status": "UNBOUND - signed trace and commissioned signature verifier required",
+    "definition": "fresh owned spool; stacker starts first; a signed acquisition trace supplies monotonic shutter-close and durable file-availability offsets; exclusive per-file read locks prohibit stacker access until each hash-verified source is atomically hard-linked into the spool and released at availability; the scored epoch is shutter close of frame 100 and the maximum of all six scored latencies must be <=10.0 seconds"
+  },
+  "m12_bridge": {
+    "counts": [
+      33,
+      105,
+      299
+    ],
+    "workers": 16,
+    "retained_worker_ladder": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "canonical_scored_repetition": 1,
+    "track": "common-merge",
+    "rule": "M11 PASS requires the canonical common-merge strehl output (frozen here as scored repetition 1) to be mutually byte-identical across workers 1/2/4/8/16 at N=33/105/299 and the common-merge worker-16 timing to pass the >=2.00x bar; within-worker six-repeat determinism is an M12 disclosure and does not gate M11. M12 may consume only settings and output/pixel hashes that match the exact M11 common-merge worker-16 cells and only when the M11 publication verdict is PASS"
+  },
+  "real_run_authorized": false
+}

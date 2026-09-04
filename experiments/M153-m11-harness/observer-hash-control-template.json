@@ -1,0 +1,9 @@
+{
+  "schema": "m153-observer-hash-control-v1",
+  "status": "UNMEASURED",
+  "observer_on_output_sha256": null,
+  "observer_off_output_sha256": null,
+  "observer_on_pixel_sha256": null,
+  "observer_off_pixel_sha256": null,
+  "note": "Bind measured observer-on/off output and highest-precision pixel hashes; PASS is accepted only when both pairs match."
+}

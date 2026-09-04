@@ -1,0 +1,80 @@
+{
+  "census_internal_checks_pass": true,
+  "checks": {
+    "all_guard_mutations_killed": true,
+    "census_contract_current": true,
+    "census_internal_checks_pass": true,
+    "commission_contract_current": true,
+    "commission_pass": true,
+    "commission_runtime_current": true,
+    "inert_mutation_survived": true,
+    "mutation_guard_set_current": true,
+    "mutation_pass": true,
+    "mutation_runtime_current": true,
+    "mutation_source_current": true,
+    "no_real_timing_in_commission": true,
+    "source_bindings_current": true
+  },
+  "commission": {
+    "formal_scorecard_control": {
+      "reason": "M153 was ordered to run only sub-second synthetic workloads while M139 owns the timing host.",
+      "required_plant_seconds": 1.0,
+      "status": "NOT_RUN",
+      "tolerance_seconds": 0.05
+    },
+    "path": "experiments\\M153-m11-harness\\out\\commission\\commission.json",
+    "sha256": "C8FE78983EC856CB0A767F7C7F9316AB6ABBB4E18BF2C2BE8AB31611B9FA2221",
+    "status": "PASS"
+  },
+  "contract": {
+    "path": "experiments\\M153-m11-harness\\contract.json",
+    "schema": "m153-m11-contract-v1",
+    "scorecard_sha256": "D72160F57494ED1B3A07807EA0D7D6451B5E50D4630E0E6EEB093CED7D74CB28",
+    "sha256": "432145955E8525AFE3FB64FA33E7CF84E0EBD22988C1FC19E2C523AAA9526D15"
+  },
+  "evidence_tag": "VERIFIED",
+  "formal_m11_verdict": "UNMEASURED",
+  "generated_utc": "2026-09-04T20:23:23.866412+00:00",
+  "guard_count": 20,
+  "guard_ids": [
+    "G01-owned-output",
+    "G02-capture-contract",
+    "G03-readonly-snapshot",
+    "G04-artifact-binding",
+    "G05-quality-qualified",
+    "G06-common-input-identity",
+    "G07-native-prefix",
+    "G08-settings-fingerprint",
+    "G09-process-tree-drained",
+    "G10-deliverable-finalized",
+    "G11-telemetry-complete",
+    "G12-controlled-conditions",
+    "G13-schedule-complete",
+    "G14-statistic-direction",
+    "G15-cold-receipt",
+    "G16-live-epoch",
+    "G17-m12-joint",
+    "G18-commissioning-required",
+    "G19-arm-symmetry",
+    "G20-aggregate-reduction"
+  ],
+  "input_census": {
+    "contract_sha256": "432145955E8525AFE3FB64FA33E7CF84E0EBD22988C1FC19E2C523AAA9526D15",
+    "path": "experiments\\M153-m11-harness\\out\\input-census.json",
+    "sha256": "22ED1AB2C9CDAB324D63CA7F7337E9F2A59A816471B28DA409F03D93A82A4A47",
+    "status": "PASS"
+  },
+  "mutation_commission": {
+    "inert_survived": 1,
+    "path": "experiments\\M153-m11-harness\\out\\commission\\mutation-commission.json",
+    "sha256": "2B27B2336FA8E65599A0DE74D8FEE66C1DCDBD8B28D3B93A3B20F300A97A0B26",
+    "status": "PASS",
+    "substantive_killed": 20,
+    "substantive_total": 20
+  },
+  "real_run_authorized_in_contract": false,
+  "real_timing_run_count": 0,
+  "schema": "m153-build-audit-v1",
+  "source_bindings_pass": true,
+  "status": "PASS"
+}

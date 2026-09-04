@@ -1,0 +1,18 @@
+{
+  "schema": "m153-native-dimensions-evidence-v1",
+  "evidence_tag": "UNMEASURED",
+  "verdict": "UNMEASURED",
+  "stack_id": null,
+  "source_files": [],
+  "active_height": null,
+  "active_width": null,
+  "checker_artifact": {
+    "path": null,
+    "sha256": null
+  },
+  "checker_support_artifacts": [],
+  "commission_artifact": {
+    "path": null,
+    "sha256": null
+  }
+}

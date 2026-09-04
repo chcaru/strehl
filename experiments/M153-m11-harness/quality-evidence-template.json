@@ -1,0 +1,28 @@
+{
+  "schema": "m153-transfer-evidence-v1",
+  "evidence_tag": "UNMEASURED",
+  "verdict": "UNMEASURED",
+  "capture_id": null,
+  "count": null,
+  "mode_id": null,
+  "axis": null,
+  "scorecard_sha256": null,
+  "measured_commit": null,
+  "binary_sha256": null,
+  "executable_bundle_sha256": null,
+  "settings_sha256": null,
+  "input_manifest_sha256": null,
+  "output_contract_sha256": null,
+  "output_sha256": null,
+  "pixel_sha256": null,
+  "checker_artifact": {
+    "path": null,
+    "sha256": null
+  },
+  "checker_support_artifacts": [],
+  "commission_artifact": {
+    "path": null,
+    "sha256": null
+  },
+  "result": null
+}

@@ -1,0 +1,198 @@
+{
+  "schema": "m153-m11-campaign-v1",
+  "status": "TEMPLATE_NOT_AUTHORIZED",
+  "contract": {
+    "path": "experiments/M153-m11-harness/contract.json",
+    "sha256": null
+  },
+  "measured_commit": null,
+  "baseline_frozen_before_candidate": false,
+  "retained_m12_s": {
+    "track": "common-merge",
+    "workers": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "canonical_scored_repetition": 1,
+    "within_worker_repeat_determinism_is_disclosure_only": true
+  },
+  "required_settings": {
+    "common_merge_strehl_workers": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "common_merge_strehl_16_quality_mode_id": "strehl-common-16",
+    "product_native_candidate_cpu_workers": [
+      16
+    ],
+    "product_native_hybrid_settings": 1,
+    "product_native_frozen_baselines": 1
+  },
+  "host": {
+    "dedicated": false,
+    "m139_released": false,
+    "power_plan": null,
+    "thermal_probe": {
+      "kind": "command",
+      "path": null,
+      "sha256": null,
+      "argv": []
+    },
+    "gpu_probe": {
+      "kind": "command",
+      "path": null,
+      "sha256": null,
+      "argv": [],
+      "source": null,
+      "interval_seconds": 0.01,
+      "output_protocol": "persistent-json-lines-v1",
+      "os_display_process_allowlist": []
+    }
+  },
+  "conditions": {
+    "preload_sample_seconds": 60.0,
+    "start_temperature_interval_c": [
+      null,
+      null
+    ],
+    "thermal_delta_max_c": null,
+    "observer_hash_control": {
+      "path": null,
+      "sha256": null
+    }
+  },
+  "inputs": {
+    "census_path": null,
+    "census_sha256": null
+  },
+  "quality_qualification": {
+    "path": null,
+    "sha256": null,
+    "status": "UNBOUND"
+  },
+  "common_tiff_adapter_identity": {
+    "path": null,
+    "sha256": null
+  },
+  "frozen_baseline": {
+    "binary_path": null,
+    "binary_sha256": null,
+    "settings_sha256": null,
+    "settings_payload": null
+  },
+  "setting_schema": {
+    "arm": null,
+    "role": null,
+    "mode_id": null,
+    "binary_path": null,
+    "binary_sha256": null,
+    "executable_artifacts": [],
+    "argv": [
+      "<bound-executable>",
+      "--input",
+      "{input_dir}",
+      "--count",
+      "{count}",
+      "--workers",
+      "{workers}",
+      "--acceleration",
+      "{acceleration_mode}",
+      "--output",
+      "{output}"
+    ],
+    "cwd": null,
+    "workers": null,
+    "worker_binding": {
+      "kind": "argv",
+      "flag": "--workers",
+      "name": null
+    },
+    "environment": {},
+    "settings_payload": {
+      "build": null,
+      "acceleration_mode": null,
+      "common": {}
+    },
+    "settings_sha256": null,
+    "output_contract": {
+      "height": null,
+      "width": null,
+      "samples_per_pixel": 3,
+      "bits_per_sample": 16,
+      "compression": "NONE",
+      "icc_sha256": null
+    },
+    "required_stages": [],
+    "numeric_stage_timings_required": []
+  },
+  "cell_schema": {
+    "stack_id": null,
+    "count": null,
+    "input_dir": null,
+    "input_manifest_path": null,
+    "input_manifest_sha256": null,
+    "settings": [],
+    "cadence_manifest": {
+      "path": null,
+      "sha256": null
+    },
+    "frames": []
+  },
+  "settings": {},
+  "segments": {
+    "comparative-warm": {
+      "cache_state": "WARM",
+      "cells": []
+    },
+    "comparative-cold": {
+      "cache_state": "COLD_RESET",
+      "cold_reset_provider": {
+        "purpose": "read and attest the current Windows BootId after an actual reboot; it must not simulate a cache reset",
+        "path": null,
+        "sha256": null,
+        "argv": [],
+        "timeout_seconds": null
+      },
+      "cells": []
+    },
+    "product-warm": {
+      "cache_state": "WARM",
+      "cells": []
+    },
+    "product-cold": {
+      "cache_state": "COLD_RESET",
+      "cold_reset_provider": {
+        "purpose": "read and attest the current Windows BootId after an actual reboot; it must not simulate a cache reset",
+        "path": null,
+        "sha256": null,
+        "argv": [],
+        "timeout_seconds": null
+      },
+      "cells": []
+    },
+    "live": {
+      "cache_state": "WARM",
+      "cells": []
+    }
+  },
+  "live_replay_registration": {
+    "path": null,
+    "sha256": null
+  },
+  "formal_commission": {
+    "path": null,
+    "sha256": null,
+    "status": "NOT_RUN"
+  },
+  "authorization": {
+    "real_run_requested": false,
+    "authorized_by": null,
+    "m139_host_release": false
+  }
+}

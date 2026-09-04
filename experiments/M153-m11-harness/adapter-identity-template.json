@@ -1,0 +1,28 @@
+{
+  "schema": "m153-strehl-common-adapter-identity-v1",
+  "status": "UNMEASURED",
+  "contract_sha256": null,
+  "candidate_binary_sha256": null,
+  "candidate_settings_sha256": null,
+  "checker_artifact": {
+    "path": null,
+    "sha256": null
+  },
+  "checker_support_artifacts": [],
+  "commission_artifact": {
+    "path": null,
+    "sha256": null
+  },
+  "captures": {
+    "bee-1-cpl": {
+      "input_manifest_sha256": null,
+      "common_pixel_sha256": [],
+      "internal_pixel_sha256": []
+    },
+    "coffee-bean": {
+      "input_manifest_sha256": null,
+      "common_pixel_sha256": [],
+      "internal_pixel_sha256": []
+    }
+  }
+}

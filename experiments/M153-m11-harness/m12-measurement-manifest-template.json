@@ -1,0 +1,42 @@
+{
+  "schema": "m153-m12-measurement-manifest-v1",
+  "m11_joint_track": "common-merge",
+  "status": "UNMEASURED",
+  "campaign": {
+    "path": null,
+    "sha256": null
+  },
+  "worker16_records": {
+    "path": null,
+    "sha256": null
+  },
+  "worker16_settings_sha256": {
+    "33": [],
+    "105": [],
+    "299": []
+  },
+  "input_manifests": {
+    "33": {
+      "path": null,
+      "sha256": null
+    },
+    "105": {
+      "path": null,
+      "sha256": null
+    },
+    "299": {
+      "path": null,
+      "sha256": null
+    }
+  },
+  "worker16_input_manifest_sha256": {
+    "33": null,
+    "105": null,
+    "299": null
+  },
+  "worker16_input_content_sha256": {
+    "33": null,
+    "105": null,
+    "299": null
+  }
+}

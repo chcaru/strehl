@@ -1,0 +1,23 @@
+{
+  "schema": "m153-signed-acquisition-trace-v1",
+  "evidence_tag": "UNMEASURED",
+  "verdict": "UNMEASURED",
+  "capture_id": "bee-1-cpl",
+  "capture_session_id": null,
+  "count": 100,
+  "frames": [],
+  "owner_signature": {
+    "signer": null,
+    "algorithm": null,
+    "signature": null
+  },
+  "checker_artifact": {
+    "path": null,
+    "sha256": null
+  },
+  "checker_support_artifacts": [],
+  "commission_artifact": {
+    "path": null,
+    "sha256": null
+  }
+}
