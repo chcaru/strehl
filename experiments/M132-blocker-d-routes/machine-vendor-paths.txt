@@ -1,0 +1,15 @@
+# Read-only vendor path inventory
+# UTC: 2026-09-04T07:30:28.7251948Z
+# Roots: C:\Program Files; C:\Program Files (x86); C:\Users\chris\AppData\Local; C:\Users\chris\AppData\Roaming; C:\Users\chris
+
+Root                           FullName                                                                                                                                                                                                                         LastWriteTime
+----                           --------                                                                                                                                                                                                                         -------------
+C:\Program Files               C:\Program Files\ZereneStacker                                                                                                                                                                                                   2026-05-08T03:13:31.4519301Z
+C:\Users\chris                 C:\Users\chris\AppData\Local\Temp\ZereneStacker                                                                                                                                                                                  2026-08-27T09:42:11.3046803Z
+C:\Users\chris                 C:\Users\chris\AppData\Roaming\Adobe\Lightroom\Modules\ZereneStacker.lrplugin                                                                                                                                                    2026-05-08T04:34:40.6595383Z
+C:\Users\chris                 C:\Users\chris\AppData\Roaming\ZereneStacker                                                                                                                                                                                     2026-05-09T20:46:22.9838679Z
+C:\Users\chris\AppData\Local   C:\Users\chris\AppData\Local\Temp\ZereneStacker                                                                                                                                                                                  2026-08-27T09:42:11.3046803Z
+C:\Users\chris\AppData\Roaming C:\Users\chris\AppData\Roaming\Adobe\Lightroom\Modules\ZereneStacker.lrplugin                                                                                                                                                    2026-05-08T04:34:40.6595383Z
+C:\Users\chris\AppData\Roaming C:\Users\chris\AppData\Roaming\ZereneStacker                                                                                                                                                                                     2026-05-09T20:46:22.9838679Z
+REGISTRY                       Zerene Stacker 1.04T2026-05-04-0750 |  | C:\Program Files\ZereneStacker\ | Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{3C69B65F-770A-444B-8F31-F1ABDAA9D000}_is1 
+

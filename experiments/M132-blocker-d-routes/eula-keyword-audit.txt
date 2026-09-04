@@ -1,0 +1,24 @@
+# EULA keyword audit
+# Generated from complete vendor-page EULA bodies retained beside this script.
+
+## Zerene Stacker
+URL: https://zerenesystems.com/cms/stacker/docs/licenseterms
+Snapshot: zerene-license.html
+SnapshotSha256: 25C879C722E415FA76F1EE56C7CE97D69C4773C7BFAE2D55A5522A8A12483FF7
+ExtractedParagraphs: 18
+ExtractedBodySha256: 7A41DB6805E7100872A8436ADA34AA0E30379B852664AA6EFF96CC9E34DDB40F
+benchmark/comparative-publication terms: 0 match(es)
+competitive-development terms: 0 match(es)
+reverse-engineering/source-discovery terms: 1 match(es)
+  - 6. OTHER RESTRICTIONS. You are not allowed to sell, resell, rent, or lease the SOFTWARE or allow it to be used by other people not permitted by the above terms. You are not allowed to modify, adapt, translate, reverse engineer, decompile, disassemble or otherwise attempt to discover the source code or algorithms of the Software. You are not allowed to circumvent the licensing mechanism, or to manipulate the SOFTWARE or its environment in such a way as to extend the free trial period.
+
+## Helicon Focus
+URL: https://www.heliconsoft.com/end-user-license-agreement-helicon-focus/
+Snapshot: helicon-eula.html
+SnapshotSha256: 8286EF240C5D583858230EAEBD3F25FFD27903538D6D4535E9C6F916E62D2E8A
+ExtractedParagraphs: 18
+ExtractedBodySha256: 6C379EFD1E835ECA5F7A0DFE98F1F650B0406A9F0FA4729C0871068E51F60F28
+benchmark/comparative-publication terms: 0 match(es)
+competitive-development terms: 0 match(es)
+reverse-engineering/source-discovery terms: 1 match(es)
+  - You agree not to take steps such as altering, decompiling, reverse assembling or reverse compiling to derive the source code or "look and feel" equivalent(s) of the SOFTWARE PRODUCT.

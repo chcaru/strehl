@@ -1,0 +1,38 @@
+[
+  {
+    "Name": "Helicon Focus",
+    "Query": "\"Helicon Focus\"",
+    "Since2020HitCount": 1261,
+    "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%22Helicon%20Focus%22%20AND%20FIRST_PDATE%3A%5B2020-01-01%20TO%202026-12-31%5D&format=json&pageSize=1"
+  },
+  {
+    "Name": "Zerene Stacker",
+    "Query": "\"Zerene Stacker\"",
+    "Since2020HitCount": 359,
+    "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%22Zerene%20Stacker%22%20AND%20FIRST_PDATE%3A%5B2020-01-01%20TO%202026-12-31%5D&format=json&pageSize=1"
+  },
+  {
+    "Name": "PICOLAY",
+    "Query": "PICOLAY",
+    "Since2020HitCount": 17,
+    "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=PICOLAY%20AND%20FIRST_PDATE%3A%5B2020-01-01%20TO%202026-12-31%5D&format=json&pageSize=1"
+  },
+  {
+    "Name": "CombineZP",
+    "Query": "CombineZP",
+    "Since2020HitCount": 73,
+    "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=CombineZP%20AND%20FIRST_PDATE%3A%5B2020-01-01%20TO%202026-12-31%5D&format=json&pageSize=1"
+  },
+  {
+    "Name": "Auto-Montage",
+    "Query": "\"Auto-Montage\" AND (image OR microscopy)",
+    "Since2020HitCount": 38,
+    "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%22Auto-Montage%22%20AND%20%28image%20OR%20microscopy%29%20AND%20FIRST_PDATE%3A%5B2020-01-01%20TO%202026-12-31%5D&format=json&pageSize=1"
+  },
+  {
+    "Name": "Adobe Photoshop focus stacking",
+    "Query": "\"focus stacking\" AND \"Adobe Photoshop\"",
+    "Since2020HitCount": 97,
+    "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%22focus%20stacking%22%20AND%20%22Adobe%20Photoshop%22%20AND%20FIRST_PDATE%3A%5B2020-01-01%20TO%202026-12-31%5D&format=json&pageSize=1"
+  }
+]

@@ -1,0 +1,13 @@
+# Read-only registry key/value search
+# UTC: 2026-09-04T07:44:00.3097250Z
+
+## reg query HKCU\Software /f Helicon /s
+ExitCode: 1
+
+End of search: 0 match(es) found.
+
+## reg query HKLM\Software /f Helicon /s
+ExitCode: 1
+
+End of search: 0 match(es) found.
+

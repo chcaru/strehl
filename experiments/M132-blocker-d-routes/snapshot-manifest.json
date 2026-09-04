@@ -1,0 +1,209 @@
+{
+  "generatedUtc": "2026-09-04T08:01:55.646682+00:00",
+  "priceContext": {
+    "checkedDate": "2026-09-04",
+    "helicon": "USD, checkout geolocated to United States/Washington; tax extra",
+    "zerene": "USD on global English vendor page; location-dependent tax extra"
+  },
+  "snapshots": [
+    {
+      "file": "helicon-help.html",
+      "url": "https://www.heliconsoft.com/focus/help/english/HeliconFocus.html",
+      "capturedUtc": "2026-09-04T07:28:47.181763+00:00",
+      "bytes": 89955,
+      "sha256": "5A95B7D9443C95940B1AF0C77402E144CE084812F4118ED3D18AF4BFB44414F3",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-help9.html",
+      "url": "https://www.heliconsoft.com/focus/help9/english/HeliconFocus.html",
+      "capturedUtc": "2026-09-04T07:43:42.766929+00:00",
+      "bytes": 114270,
+      "sha256": "0B002E66A51D38551823108916263C3870A6A1A921ED30C1A22A94D39EE9AF61",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-help-online.html",
+      "url": "https://www.heliconsoft.com/helicon-focus-help-online/",
+      "capturedUtc": "2026-09-04T07:43:14.966239+00:00",
+      "bytes": 50703,
+      "sha256": "2574FD9659E2C052516F0B34E604A6C9ABEE112F3671115462EF818B2C2F31B2",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-downloads.html",
+      "url": "https://www.heliconsoft.com/software-downloads/",
+      "capturedUtc": "2026-09-04T07:28:47.929500+00:00",
+      "bytes": 68030,
+      "sha256": "2371431E18AAE8FE70FF1EE535F7EDE612AC4FAAEA93E2F9622C2DD522E1E503",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-history-win.html",
+      "url": "https://www.heliconsoft.com/helicon-focus-history-of-changes-win/",
+      "capturedUtc": "2026-09-04T07:46:30.971632+00:00",
+      "bytes": 102898,
+      "sha256": "0932A6AB020E823C427D7B7DAB213AB3C4190680089D070D2A75AA845D4F06EA",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-focus9-product.html",
+      "url": "https://www.heliconsoft.com/helicon-focus-9/",
+      "capturedUtc": "2026-09-04T07:46:31.816187+00:00",
+      "bytes": 56365,
+      "sha256": "CE9371E10973F8CE67244B6CAC3D9E48B530D5B06364948D31C5083CED237B64",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-pricing.html",
+      "url": "https://www.heliconsoft.com/helicon-focus-licenses-paypro/",
+      "capturedUtc": "2026-09-04T07:28:49.117466+00:00",
+      "bytes": 60366,
+      "sha256": "6B6862D215B26F3E94E1C9007DBB5E7EBB8B6C403C5EA4775747224CB5ED1ABD",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-versions.html",
+      "url": "https://www.heliconsoft.com/helicon-focus-versions-licensing/",
+      "capturedUtc": "2026-09-04T07:28:49.657407+00:00",
+      "bytes": 70434,
+      "sha256": "82B01E7933EAD3B48126C209C6E3F547F2EFEDC304D64C0388951FFDB35A29A9",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-pro-1y-checkout.html",
+      "url": "https://store.payproglobal.com/checkout?products[1][id]=12367",
+      "capturedUtc": "2026-09-04T07:45:32.351554+00:00",
+      "bytes": 89549,
+      "sha256": "E7D63965F8282AE2315C3DCAA19F9558A97E94EB3E52F5739DB4ADD6D37CED25",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-pro-lifetime-checkout.html",
+      "url": "https://store.payproglobal.com/checkout?products[1][id]=12363",
+      "capturedUtc": "2026-09-04T07:45:37.916885+00:00",
+      "bytes": 89533,
+      "sha256": "8B041A960B44D6DCA66D3B34A8389CAF2789D05C7C5AC6832ADF78F951B66E95",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-eula.html",
+      "url": "https://www.heliconsoft.com/end-user-license-agreement-helicon-focus/",
+      "capturedUtc": "2026-09-04T07:28:52.265643+00:00",
+      "bytes": 50831,
+      "sha256": "8286EF240C5D583858230EAEBD3F25FFD27903538D6D4535E9C6F916E62D2E8A",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "helicon-disable-alignment-search-vendor.html",
+      "url": "https://www.heliconsoft.com/?s=disable%20alignment%20Helicon%20Focus",
+      "capturedUtc": "2026-09-04T07:47:02.539191+00:00",
+      "bytes": 45834,
+      "sha256": "21F84297823479798A8FEAB53C13BFC85BC5EA86A51718BD76BD5D2CE45338EB",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "zerene-purchasing.html",
+      "url": "https://zerenesystems.com/cms/stacker/docs/purchasing",
+      "capturedUtc": "2026-09-04T07:28:51.762090+00:00",
+      "bytes": 14543,
+      "sha256": "4EF76031C3E2C668C0CFC4998CA48DF864DE7B941326D8025E13101D5C5FA416",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "zerene-faq.html",
+      "url": "https://zerenesystems.com/cms/stacker/docs/faqlist",
+      "capturedUtc": "2026-09-04T07:28:46.305713+00:00",
+      "bytes": 137594,
+      "sha256": "0CD621CEF8E9225D00D3EBA7DB3C92EE3A56EDD7A51C2FF198991F395A95FAEE",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "zerene-license.html",
+      "url": "https://zerenesystems.com/cms/stacker/docs/licenseterms",
+      "capturedUtc": "2026-09-04T07:28:50.265708+00:00",
+      "bytes": 16135,
+      "sha256": "25C879C722E415FA76F1EE56C7CE97D69C4773C7BFAE2D55A5522A8A12483FF7",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "zerene-modificationhistory.html",
+      "url": "https://zerenesystems.com/cms/stacker/docs/modificationhistory",
+      "capturedUtc": "2026-09-04T07:28:51.156882+00:00",
+      "bytes": 139845,
+      "sha256": "4B627B702EADF67F610379A4E89519F545C504825C05E99252AFDDA9445F60B2",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "picolay-home.html",
+      "url": "https://www.picolay.de/",
+      "capturedUtc": "2026-09-04T07:41:34.055110+00:00",
+      "bytes": 5176,
+      "sha256": "F9792F1E21C2B89FD7368E52B1DE6C5E985A22B64F19CB78713D8384F07B195C",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "picolay-manuals.html",
+      "url": "https://www.picolay.de/manuals.htm",
+      "capturedUtc": "2026-09-04T07:41:47.396100+00:00",
+      "bytes": 1769,
+      "sha256": "978A02A1A374504EBE334AAECBFC4D608D38FAB6F199937BCB04DD8649F7AB14",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "picolay-manual-en.pdf",
+      "url": "https://www.picolay.de/picolay_helpfiles/Manual_PICOLAY_EN.pdf",
+      "capturedUtc": "2026-09-04T07:41:57.251878+00:00",
+      "bytes": 173198,
+      "sha256": "7B5A91678D05AE4C541CC689396DDEACDF2EDB91290370EFE2F749089AE3ADB2",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "affinity-focus-merge.html",
+      "url": "https://affinity.help/photo2/en-US.lproj/pages/FocusMerging/focusmerging.html",
+      "capturedUtc": "2026-09-04T07:41:28.296794+00:00",
+      "bytes": 4028,
+      "sha256": "68BC92830BDDFB760C4366C85A2F363278FCCAD75EF3BDB175D66DD02A1D6534",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "affinity-help-index.html",
+      "url": "https://affinity.help/photo2/en-US.lproj/index.html",
+      "capturedUtc": "2026-09-04T07:41:18.540452+00:00",
+      "bytes": 54481,
+      "sha256": "6D3D8F97B2F93BCD77F514695C9B73132DC9D0E4BEF62560A9AD3B98EDC03E17",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "canva-affinity-free.html",
+      "url": "https://www.canva.com/newsroom/news/affinity-free/",
+      "capturedUtc": "2026-09-04T07:51:28.097816+00:00",
+      "bytes": 350282,
+      "sha256": "649B865F2B9AD9BAAF2B16B33B76030512BEFDCCF76E4151870D9CDD6165ADBD",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "brecko-2014-europepmc.json",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI%3A10.3897%2Fzookeys.464.8615&format=json&pageSize=1&resultType=core",
+      "capturedUtc": "2026-09-04T07:54:31.971873+00:00",
+      "bytes": 5705,
+      "sha256": "72A67C928F2DD79FACDCA2927732004BE64766814D2B07C7545E88125828858C",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    }
+  ],
+  "derivedFiles": [
+    "canva-affinity-free.txt",
+    "picolay-manual-en.txt",
+    "eula-keyword-audit.txt",
+    "europe-pmc-stacker-counts.json"
+  ],
+  "localReadOnlyEvidence": [
+    "machine-helicon-additional-checks.json",
+    "machine-helicon-deep-search.txt",
+    "machine-helicon-registry-value-search.txt",
+    "machine-photoshop-state.txt",
+    "machine-vendor-paths.txt",
+    "zerene-installed-eula-check.txt",
+    "zerene-machine-state.txt"
+  ]
+}

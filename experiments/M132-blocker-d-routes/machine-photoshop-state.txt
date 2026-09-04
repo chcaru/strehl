@@ -1,0 +1,29 @@
+# Read-only Adobe product directory inventory
+# UTC: 2026-09-04T07:48:15.0801663Z
+## C:\Program Files\Adobe
+
+FullName                                               LastWriteTimeUtc
+--------                                               ----------------
+C:\Program Files\Adobe\Adobe Creative Cloud            5/10/2026 12:47:18 AM
+C:\Program Files\Adobe\Adobe Creative Cloud Experience 5/10/2026 12:47:58 AM
+C:\Program Files\Adobe\Adobe Lightroom CC              5/10/2026 12:50:01 AM
+C:\Program Files\Adobe\Adobe Lightroom Classic         5/10/2026 12:49:28 AM
+
+
+## C:\Program Files (x86)\Adobe
+
+FullName                                                     LastWriteTimeUtc
+--------                                                     ----------------
+C:\Program Files (x86)\Adobe\Adobe Creative Cloud            5/10/2026 12:47:17 AM
+C:\Program Files (x86)\Adobe\Adobe Creative Cloud Experience 11/11/2025 3:00:46 AM
+
+
+## uninstall entries
+
+DisplayName             DisplayVersion InstallLocation
+-----------             -------------- ---------------
+Adobe Creative Cloud    6.9.1.1        
+Adobe Lightroom         9.3.1          C:\Program Files\Adobe
+Adobe Lightroom Classic 15.3           C:\Program Files\Adobe
+
+

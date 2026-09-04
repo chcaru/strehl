@@ -1,0 +1,9 @@
+# Read-only installed Zerene EULA corroboration
+# UTC: 2026-09-04T07:55:13.916501+00:00
+InstalledPath: C:\Program Files\ZereneStacker\License.txt
+InstalledExists: True
+InstalledSha256: A0CBE8AB702D46B9C16B43EBB1C166889E237D5C3215C8712B8D2DD158B06E7A
+VendorUrl: https://zerenesystems.com/cms/stacker/docs/licenseterms
+RelevantClausesCompared: 1 through 7 (trial, edition scope, copying, key distribution, reverse engineering, telemetry)
+RelevantClausesNormalizedEqual: True
+Note: The full files are not byte-identical; vendor section 10 has a newer component list. Clauses 1-7 used in this report match.

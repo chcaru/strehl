@@ -1,0 +1,7 @@
+docs: rule on blocker d comparator routes
+
+Document the verified Zerene route, Helicon stable/beta capability split,
+machine trial state, licence publication terms, and comparator alternatives.
+Retain vendor snapshots and reproducible evidence audits for the ruling.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

@@ -1,0 +1,4 @@
+# Read-only Helicon filename and registry-key search
+# UTC: 2026-09-04T07:32:18.0716531Z
+# Roots: C:\Program Files; C:\Program Files (x86); C:\Users\chris\AppData\Local; C:\Users\chris\AppData\Roaming; C:\Users\chris; HKCU:\Software; HKLM:\Software
+# Matches: 0

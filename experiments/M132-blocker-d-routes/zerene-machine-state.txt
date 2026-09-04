@@ -1,0 +1,20 @@
+{
+  "CheckedUtc": "2026-09-04T07:33:17.4010854Z",
+  "UninstallDisplayName": "Zerene Stacker 1.04T2026-05-04-0750",
+  "InstallLocation": "C:\\Program Files\\ZereneStacker\\",
+  "Executable": "C:\\Program Files\\ZereneStacker\\zerenstk.exe",
+  "AppDataState": "C:\\Users\\chris\\AppData\\Roaming\\ZereneStacker",
+  "LicenseKeyTxtExists": false,
+  "CandidateStateLicenseFiles": [],
+  "LogPath": "C:\\Users\\chris\\AppData\\Roaming\\ZereneStacker\\LastNormalLog.txt",
+  "LogLastWriteTimeUtc": "2026-05-09T22:27:52.9146773Z",
+  "LogSha256": "FE375961E0D76A18B64F19C14D06FE633D9246ECDF50E77704AFCCF302F9492C"
+}
+
+Exact matched log lines (PowerShell line numbering):
+line 70: 0.431: trial.info=1.0,1778210014628,9b39f19827d162b7a3dc867110f8777a
+line 71: 0.448: license 83ced522295099724b84c81abbb79f3199726fd7 expires on Sat Jun 06 20:13:34 PDT 2026
+line 72: 0.449: now = Sat May 09 13:46:23 PDT 2026
+line 73: 0.449: relevant = true
+line 74: 0.449: Using default license key
+line 75: 0.450: License category = TRIAL
