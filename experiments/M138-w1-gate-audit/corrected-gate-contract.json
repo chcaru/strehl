@@ -1,25 +1,35 @@
 {
-  "schema": 1,
-  "status": "PREREGISTERED_NO_CAMPAIGN_EXECUTED",
+  "schema": 2,
+  "status": "DRAFT_PENDING_SECOND_INDEPENDENT_REVIEW",
+  "activation": {
+    "required_status": "FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION",
+    "independent_review": null,
+    "frozen_commit": null,
+    "rule": "No corrected-gate candidate output may be generated while status is DRAFT_PENDING_SECOND_INDEPENDENT_REVIEW."
+  },
   "numeric_evidence_tags": {
     "preregistered": "VERIFIED-PREREGISTERED",
     "inherited": "INHERITED",
+    "verified": "VERIFIED",
     "estimate": "VERIFIED-ESTIMATE"
   },
   "source_baseline": {
-    "git_head_at_authoring": "6712449e9defdd93e301c6ed5dcd949a3c17c4b6",
+    "git_head_at_repair_start": "63f8fbe95f56cdca3be221b8f8e4d85268ca06ff",
     "files": {
       "crates/strehl-core/src/merge.rs": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
       "crates/strehl-core/src/pyramid.rs": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47",
       "docs/proposals/2026-09-phase1-design.md": "497ba0edbd093e333acb06dff8621485b1259e35a5c7efe8458ee011a10f32f5",
       "docs/research/M62-sqrt-n.md": "2d752281728a3b51a930e687c8889aedef5120eb0d6655cd26dfd18828e94597",
       "experiments/M135-detail-instrument/PREREGISTRATION.md": "7f584ae5b4437dfc4c592248ca27ce8d7d2afc4b1e953d8d9bffd3e9f3e8e807",
-      "experiments/M135-detail-instrument/instrument.py": "b20edd39d02c5483afb3f8c1f57c3913ced25a7258a638c79f514d0bcba37ebc",
+      "experiments/M135-detail-instrument/instrument.py": "264d035331ffbb7e982449b675d88724c566b2f88cd251b08d215dcca2c6823c",
       "experiments/PHASE1-DESIGN/PREREGISTRATION.md": "a42f54c92b06711d9a70870d6c2c3bed80ec3e9c48fc14be22ef9f1067ad0d32",
       "experiments/PHASE1-DESIGN/measure.py": "9a7e2682c8c24d46c66fbbf7e3444ce43415e8535c58fadd1323cac58781310b",
       "experiments/PHASE1-DESIGN/reference.py": "aa613796fada0b282a919c6e55baf9b9113b0d3a0fa1b4d7bec4b1d9888a36f2",
       "experiments/PHASE1-DESIGN/results/gate.json": "455b6bfb37ed24584e8aea974aa905d2551c9b426101012b5619176eec1bb8ce",
       "experiments/PHASE1-DESIGN/results/run.json": "5435de01c384b937ffedc99519e2571c73179562c84f9ea10f35e14af71fbf7f"
+    },
+    "historical_blobs": {
+      "f5658e5d:docs/proposals/2026-09-phase1-design.md": "93029c6581add822b2c6bc1e890578ba89e48c0177665857e295ea5882ad2982"
     }
   },
   "threshold_coordinate": {
@@ -80,13 +90,15 @@
     ],
     "maximum_absolute_admission_error": 0.03,
     "physical_null_minimum_sites_per_stratum": 256,
-    "physical_null_interval_confidence": 0.99,
+    "physical_null_familywise_confidence": 0.99,
+    "physical_null_sessions": null,
     "focus_offset_sigma_anchors": [
       0.0,
       1.0,
       2.0,
       4.0
     ],
+    "focus_power_checkpoint": 0.5,
     "required_band_indices": [
       0,
       1,
@@ -108,37 +120,79 @@
   },
   "detail_instrument": {
     "binding_state": "UNBOUND",
-    "required_provider": "M135 truth-referenced certificate",
-    "minimum_sites": 64,
-    "required_inputs": [
-      "R1",
-      "R2",
-      "Y1",
-      "Y2"
+    "provider": "M135",
+    "interface_schema": "m135-m138-checker/v1",
+    "bundle_manifest_schema": "m135-checker-bundle/v1",
+    "checker_entrypoint": null,
+    "checker_bundle_manifest": null,
+    "environment_manifest": null,
+    "physical_preregistration": null,
+    "comparison_rule": null,
+    "commissioning_request": null,
+    "required_commissioning_controls": [
+      "physical_null_stays_null",
+      "pre_noise_blur_lowers_information",
+      "pre_noise_optical_improvement_raises_information",
+      "missing_flat_control_refuses",
+      "artifact_hash_mutation_refuses"
     ],
-    "required_outputs": [
-      "status",
-      "information_bits_per_site",
-      "transfer",
-      "unexplained_fraction",
-      "noise_to_explained"
+    "evaluate_command": [
+      "{python}",
+      "-I",
+      "{checker}",
+      "--m138-evaluate",
+      "{request}"
     ],
-    "required_comparison_output": "detail_pass",
-    "preregistration_sha256": null,
-    "physical_commissioning_sha256": null,
-    "checker_sha256": null,
-    "binding_rule": "A separately frozen physical M135 preregistration, physical commissioning artifact, comparison rule, and checker must replace UNBOUND before any corrected-gate candidate render.",
-    "evidence_tag": "INHERITED"
+    "commission_command": [
+      "{python}",
+      "-I",
+      "{checker}",
+      "--m138-commission",
+      "{request}"
+    ],
+    "binding_rule": "All six artifact references, the exact comparison rule, and every required commissioning control must be hash-bound before any candidate render. The adjudicator executes the checker; cached detail_pass values are forbidden.",
+    "evidence_tag": "VERIFIED-PREREGISTERED"
   },
   "noise_instrument": {
-    "kind": "paired-static-repeat temporal-power",
-    "minimum_sites": 64,
-    "power_ratio_upper95": 0.9,
-    "cfa_planes": [
+    "binding_state": "UNBOUND",
+    "estimand": "per-capture/per-CFA ratio of arithmetic mean paired-repeat temporal power",
+    "natural_null_power_ratio": 1.0,
+    "pass_rule": "every simultaneous one-sided upper confidence bound is strictly below 1.0",
+    "reported_effect": "minimum guaranteed RMS reduction = 1 - sqrt(max simultaneous upper power-ratio bound)",
+    "familywise_confidence": 0.95,
+    "bootstrap_replicates": 8192,
+    "bootstrap_seed": 138138,
+    "power_target": 0.95,
+    "power_target_derivation": "symmetric familywise error budget alpha=beta=0.05",
+    "effect_requirement_schema": "m138-noise-effect-requirement/v1",
+    "required_effect_authority": "OWNER_APPROVED_REQUIREMENT",
+    "required_rms_reduction": null,
+    "effect_requirement": null,
+    "pilot_evidence": null,
+    "selected_sites_per_capture": null,
+    "required_power_analysis_outputs": [
+      "power_at_64_sites",
+      "power_at_selected_sites",
+      "selected_sites_per_capture",
+      "required_rms_reduction"
+    ],
+    "required_cfa_planes": [
       "R",
       "G1",
       "G2",
       "B"
+    ],
+    "binding_rule": "A candidate-independent four-burst pilot and an externally justified minimum RMS effect must be bound before output generation. Sixty-four sites remain the lowest admissible count but are evaluated rather than presumed sufficient; selected_sites_per_capture must have a Monte Carlo lower confidence bound reaching power_target for both full capture-by-plane conjunctions.",
+    "evidence_tag": "VERIFIED-PREREGISTERED"
+  },
+  "hull_instrument": {
+    "measurement_stage": "PRE_CLAMP_RECONSTRUCTION",
+    "maximum_excess_dn": 1.0,
+    "post_clamp_evidence_forbidden": true,
+    "required_arrays_per_plane": [
+      "reconstructed_preclamp_quantized_dn",
+      "aligned_input_min_dn",
+      "aligned_input_max_dn"
     ],
     "evidence_tag": "INHERITED"
   },
@@ -146,23 +200,46 @@
     "binding_state": "UNBOUND",
     "development": null,
     "holdout": null,
-    "binding_rule": "Freeze exact detail, noise, and hull capture-family IDs before any corrected-gate candidate render.",
+    "binding_rule": "Freeze exact detail, noise, and hull capture-family IDs plus temporal site IDs before any corrected-gate candidate render.",
     "evidence_tag": "VERIFIED-PREREGISTERED"
   },
-  "output_gate": {
-    "bootstrap_replicates": 8192,
-    "bootstrap_seed": 138138,
-    "interval_quantiles": [
-      0.025,
-      0.975
+  "evidence_contract": {
+    "result_schema": "m138-result/v2",
+    "standardisation_schema": "m138-standardisation-evidence/v2",
+    "commissioning_schema": "m138-commissioning-evidence/v2",
+    "development_schema": "m138-development-evidence/v2",
+    "holdout_schema": "m138-holdout-evidence/v2",
+    "noise_schema": "m138-temporal-power-evidence/v2",
+    "hull_schema": "m138-preclamp-hull-evidence/v2",
+    "artifact_reference_fields": [
+      "path",
+      "sha256"
     ],
-    "maximum_hull_excess_dn": 1.0,
+    "forbidden_supplied_conclusions": [
+      "seal_valid",
+      "detail_pass",
+      "detail_pass_by_capture",
+      "noise_power_upper95_by_capture",
+      "maximum_hull_excess_dn_by_capture",
+      "standardisation_pass",
+      "commissioning_pass"
+    ],
+    "rule": "The result manifest contains only hash-bound artifact references. The adjudicator opens them and recomputes every gate decision."
+  },
+  "output_gate": {
     "width_role": "DIAGNOSTIC_ONLY",
-    "required_commissioning_flags": [
-      "null_stays_null",
-      "defect_lowers_score",
-      "improvement_raises_score",
-      "checker_mutations_rejected"
+    "required_commissioning_controls": [
+      "standardisation_null",
+      "standardisation_wrong_stack_defect",
+      "standardisation_omitted_warp_defect",
+      "standardisation_repair_improves_score",
+      "noise_null",
+      "noise_inflation_defect",
+      "noise_averaging_improvement",
+      "noise_common_scene_placebo",
+      "missing_artifact_refusal",
+      "hash_mutation_refusal",
+      "postclamp_hull_refusal"
     ],
     "evidence_tag": "VERIFIED-PREREGISTERED"
   },
@@ -175,16 +252,13 @@
     "go": "PHASE1_GO"
   },
   "cost": {
-    "authoring_host_physical_cores": 16,
-    "authoring_host_logical_processors": 32,
-    "authoring_host_ram_gib": 61.6,
-    "frozen_width_only_seconds": 263.6871026000008,
-    "frozen_width_only_frames": 161,
-    "exclusive_wall_hours": 16.0,
-    "shared_host_wall_hours": 24.0,
-    "requested_cpu_threads": 8,
-    "requested_memory_gib": 16,
-    "maximum_thresholds_per_render_batch": 8,
-    "evidence_tag": "VERIFIED-ESTIMATE"
+    "status": "UNSUPPORTED_PENDING_REPRESENTATIVE_BENCHMARK",
+    "calibration_unit_seconds": null,
+    "render_unit_seconds": null,
+    "detail_checker_unit_seconds": null,
+    "exclusive_wall_hours": null,
+    "shared_host_wall_hours": null,
+    "benchmark_rule": "Before scheduling, benchmark one complete calibration cell, one full-resolution disposable non-scored render arm, and one M135/noise/hull scoring arm in alternating order; scale only by the frozen manifest counts and report uncertainty.",
+    "evidence_tag": "VERIFIED"
   }
 }

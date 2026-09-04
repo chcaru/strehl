@@ -1,638 +1,648 @@
-# M138 corrected W1 gate preregistration
+# M138 corrected W1 gate draft
 
-Status: **PREREGISTERED BEFORE CORRECTED-GATE OUTCOME GENERATION.**
+Status: **SEND BACK REPAIRS COMPLETE; NOT FROZEN.**
 
-This is a specification, not a campaign result. No corrected admission arm,
-physical detail score, or replacement-gate verdict was generated while writing
-it. The first path-scoped commit containing this document,
-`corrected-gate-contract.json`, and `adjudicate.py` is the design seal. A
-separate lane must review that seal before activation.
+This document is a specification, not a campaign result. No corrected-gate
+candidate output was generated while repairing it. Commit `7fb925bf` is not a
+design seal: independent review rejected that draft. A later commit may change
+`corrected-gate-contract.json` from
+`DRAFT_PENDING_SECOND_INDEPENDENT_REVIEW` to
+`FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION` only after a second
+independent review, all currently unbound inputs, and the cost benchmark are
+present. Until then, `adjudicate.py --result ...` returns
+`INSTRUMENT_INVALID`.
 
-I am both the author of the M138 audit and this replacement specification. That
-conflict is not waived. The specification is therefore accompanied by pinned
-source hashes, explicit source anchors, a machine-readable contract, and a
-reference adjudicator. Author self-checks do not count as the required
-independent review.
+I am both the author of the original M138 audit and this replacement
+specification. That conflict remains. Source hashes, exact evidence schemas,
+executable recomputation, and a required independent review constrain it; they
+do not make author self-review independent.
 
 ## Evidence tags
 
 - **[VERIFIED]**: read or computed directly in this work.
 - **[INHERITED]**: taken from an existing committed source.
-- **[VERIFIED—PREREGISTERED]**: fixed here before corrected-gate outcomes; this
-  is a design value, not a measurement.
-- **[VERIFIED—ESTIMATE]**: calculated scheduling estimate, not measured campaign
-  runtime.
+- **[VERIFIED—PREREGISTERED]**: fixed here before corrected-gate outcomes; a
+  design value, not a measurement.
+- **[VERIFIED—ESTIMATE]**: an estimate rather than measured campaign runtime.
 
-A tag on a heading or table applies to every numeric value beneath it. File
-line locations, hashes, schema versions, identifiers, and mathematical
-subscripts are identifiers rather than quantitative findings.
+A tag on a heading or paragraph applies to every numeric value beneath it.
+File line locations, commit identifiers, hashes, schema versions, list
+ordinals, and mathematical subscripts are identifiers rather than quantitative
+findings.
 
-## Actual goal and chosen approach
+## Review disposition
 
-The goal is to test whether one globally meaningful admission setting produces
-a real output Pareto improvement, not whether it reproduces another
-algorithm's internal width.
+The review left the structural rule intact:
 
-Two approaches were considered:
+- width is diagnostic rather than dispositive;
+- calibration and instrument failures cannot refute the merge;
+- one globally meaningful admission coordinate is selected on development and
+  confirmed once on sealed holdout; and
+- a refutation is scoped to the registered implementation and evidence deck.
 
-1. repair the analytic variance and retain a globally interpreted raw `k`; or
-2. calibrate the complete selected-winner gap onto a common null-compatibility
-   quantile and expose one global quantile threshold.
+This repair changes the unsupported temporal threshold, replaces assertion
+adjudication with evidence adjudication, fixes the hull stage, makes the M135
+interface executable and hash-bound, withdraws the unsupported cost estimate,
+and removes the premature freeze.
 
-The second is specified. The first loses because even a better pairwise
-variance does not remove the order statistic induced by choosing the maximum
-over the stack. The current core itself records that a fixed threshold against
-a maximum is stack-size dependent
-(`crates/strehl-core/src/merge.rs:421-427`). End-to-end calibration can include
-the exact stack size, winner selection, warp, signal level, and residual
-non-Gaussianity without pretending that a pairwise denominator solved them.
+## Existing behavior and provenance
 
-What would make this specification wrong is explicit:
-
-- the calibrated coordinate still fails per-stratum null coverage;
-- its power does not increase with a known focus separation;
-- the physical M135 path cannot produce an eligible certificate;
-- the temporal-noise instrument cannot distinguish injected noise from known
-  averaging; or
-- no global output-quality operating point survives development and sealed
-  confirmation.
-
-The first four are instrument failures and leave Phase 1 untested. The last is
-a design refutation.
-
-## Existing behavior this specification replaces
-
-The existing candidate chooses a raw-energy maximum and divides each
-winner-to-frame gap by the square root of two plug-in variance terms
+The existing candidate chooses a raw-energy maximum and forms each
+winner-to-frame gap from two plug-in variance terms
 (`experiments/PHASE1-DESIGN/measure.py:171-180`). Its legacy comparator changes
 soft-power exponent by band
-(`experiments/PHASE1-DESIGN/measure.py:129-141`). The candidate and legacy
+(`experiments/PHASE1-DESIGN/measure.py:129-141`). Candidate and legacy
 variance fields are ordinary Gaussian pyramids multiplied by scalar transfer
 factors (`experiments/PHASE1-DESIGN/measure.py:235-250`); the corresponding
-Rust helper explicitly carries variance with the image Gaussian reducer
+Rust helper carries variance with the image Gaussian reducer
 (`crates/strehl-core/src/pyramid.rs:372-384`).
 
-The old preregistration applied a per-band/per-ROI width predicate, then stated
-that only width survivors were rendered
-(`experiments/PHASE1-DESIGN/PREREGISTRATION.md:167-203`). The implementation
-does exactly that with a conditional render
-(`experiments/PHASE1-DESIGN/measure.py:568-575`). The proposal likewise
-defines width before the output bars
-(`docs/proposals/2026-09-phase1-design.md:312-316`) and maps an empty width
-intersection directly to `NO_COMMON_K`
+The withdrawn preregistration applied a per-band/per-ROI width predicate before
+rendering (`experiments/PHASE1-DESIGN/PREREGISTRATION.md:167-203`), and its
+implementation renders output only after that filter
+(`experiments/PHASE1-DESIGN/measure.py:568-575`). The proposal defines width
+before output quality (`docs/proposals/2026-09-phase1-design.md:312-316`) and
+maps an empty width intersection to `NO_COMMON_K`
 (`docs/proposals/2026-09-phase1-design.md:340-350`).
 
-The current calibration fits coarse-band transfer factors jointly
+The current calibration fits coarse-band transfer jointly
 (`experiments/PHASE1-DESIGN/reference.py:625-633`), records per-frame coverage
-but gates on pooled coverage
+but gates pooled coverage
 (`experiments/PHASE1-DESIGN/reference.py:666-727`;
-`experiments/PHASE1-DESIGN/reference.py:1052-1064`), and runs its
-Poisson–Gaussian exercise through a one-band pyramid
+`experiments/PHASE1-DESIGN/reference.py:1052-1064`), and exercises its
+Poisson–Gaussian control through one pyramid band
 (`experiments/PHASE1-DESIGN/reference.py:1080-1134`).
 
-Those are source facts, not recollections from the audit conversation. The
-exact source bytes are pinned in `corrected-gate-contract.json`.
+### Why the old temporal constant is withdrawn
 
-## Corrected gate rule
+**[INHERITED]** The `0.90` number first appears as an authored flat-power
+acceptance constant in
+`f5658e5d:docs/proposals/2026-09-phase1-design.md:280-286`. The frozen
+commissioning later placed its quiet and noisy synthetic powers at `0.70` and
+`1.20`, respectively
+(`experiments/PHASE1-DESIGN/reference.py:1135-1200`). It therefore tested
+direction far from the `0.90` boundary; it did not calibrate that boundary.
+Nothing found here shows that `0.90` was selected from `NO_COMMON_K`
+survivors, and this repair makes no such accusation.
+
+**[VERIFIED]** `sqrt(0.90)=0.948683298051`, so the old power bar required only a
+`5.131670195%` RMS reduction. A `10%` RMS reduction would instead imply a
+power ratio of `(1-0.10)^2=0.81`. Those conversions expose the physical
+meaning; they do not authorize either effect size.
+
+The prior draft copied `0.90` from a spatial shared-green band-power statistic
+into a per-CFA temporal-power statistic. Those estimands are not interchangeable.
+The copied constant and the prior unchanged-constant defence are withdrawn.
+
+## Corrected merge coordinate
 
 ### Width is diagnostic, never dispositive
 
 `n_eff`, singleton fraction, below-floor fraction, and candidate/legacy width
-ratios must still be emitted for every capture, band, ROI, and threshold. They
-may diagnose mechanism, unexpected collapse, or product behavior. They do not
-remove an arm from rendering, alter a confidence interval, choose the global
-threshold, or change a verdict.
+ratios are emitted for every capture, band, ROI, and threshold. They may
+diagnose mechanism or collapse. They do not remove an arm from rendering,
+change a confidence interval, choose the threshold, or alter a verdict.
 
-This is a demotion, not deletion. The old **[INHERITED] ±5%** comparator-width
-condition is retained in the result file as a labelled historical diagnostic.
-It has no Boolean field consumed by the adjudicator.
+The old **[INHERITED] `±5%`** width window remains only as a labelled historical
+diagnostic. No adjudicator branch reads it.
 
-### The globally meaningful coordinate
+### Globally meaningful admission coordinate — [VERIFIED—PREREGISTERED]
 
-**[VERIFIED—PREREGISTERED]** For every non-winner frame, retain the observed
-energy gap:
+For each non-winner frame retain the observed energy gap:
 
 ```text
 D_i = E_w - E_i
 ```
 
-Do not claim that `D_i / sqrt(sigma2_Ew + sigma2_Ei)` is already pivotal.
-Instead, build a calibration distribution from independent equal-focus trials
-that execute the complete decision path, including source-level
-Poisson–Gaussian draws, affine pull, shared-green construction, variance
-stabilisation, every Laplacian band, energy smoothing, and selection of the
-winner from the exact stack size.
+Do not treat `D_i / sqrt(sigma2_Ew + sigma2_Ei)` as already pivotal. Build an
+independent equal-focus calibration distribution through the complete decision
+path: source-level Poisson–Gaussian draws, affine pull, shared-green
+construction, variance stabilisation, every Laplacian band, energy smoothing,
+and winner selection from the exact stack size.
 
-For the applicable frozen stratum, let `D^(1)...D^(M)` be the calibration
-gaps. The non-winner compatibility coordinate is:
+For the frozen nuisance stratum, with calibration gaps
+`D^(1)...D^(M)`, define:
 
 ```text
 u_i = (1 + count(D^(j) <= D_i)) / (M + 1)
 ```
 
-Equal scores use the conservative upper rank. The winner is admitted
-explicitly. The existing below-floor arithmetic-mean fallback remains
-unchanged (`experiments/PHASE1-DESIGN/measure.py:407-422`).
-Calibration rows for a frame role retain only trials in which that role is not
-the winner; generation continues until the registered non-winner count is
-reached. Winner observations never enter the non-winner empirical CDF.
+Equal scores take the conservative upper rank. The winner is explicitly
+admitted. Calibration retains a frame-role row only when that role is not the
+selected winner. The below-floor arithmetic-mean fallback remains the one in
+`experiments/PHASE1-DESIGN/measure.py:407-422`.
 
-Admit a non-winner iff:
-
-```text
-u_i <= tau
-```
-
-`tau` is the only product operating parameter. Band, exact stack size, frame
-warp, sensor-noise mode, signal stratum, and positive-signal stratum are
-nuisance coordinates of the frozen calibration bank, not independently
+Admit a non-winner iff `u_i <= tau`. `tau` is the sole operating parameter.
+Band, stack size, frame warp, gain mode, signal quartile, and positive-signal
+stratum index a frozen calibration distribution; they are not independently
 selectable thresholds.
 
-For an implementation that must expose a sigma-like name, the equivalent
-interior coordinate is **[VERIFIED—PREREGISTERED]**
-`k_cal=Phi_inverse(tau)`. It is a reparameterisation of the same one global
-probability threshold, not permission for a per-band or per-capture `k`.
-The raw `k` from the withdrawn gate is not retained because its denominator
-never established that common probability meaning.
-
-The bank generator is one frozen algorithm. Capture identity is provenance,
-not a fitted feature: only predeclared physical nuisance inputs may change its
-distribution. No candidate image, quality score, width result, or legacy
-comparison may enter calibration. This is standardisation conditional on known
-measurement geometry, not a per-capture operating threshold.
-
-### Frozen threshold family — [VERIFIED—PREREGISTERED]
+The registered threshold grid is:
 
 ```text
 tau = 0.00, 0.01, 0.02, ..., 1.00
 ```
 
-`tau=0.00` admits only the winner outside the below-floor fallback.
-`tau=1.00` admits every finite frame. Every arm is rendered and scored.
-There is no width preselection, interpolation, post-outcome extension, or
-per-capture/per-band `tau`.
-
-An arm is robustly passing only when it and its immediate
-**[VERIFIED—PREREGISTERED] 0.01** neighbors all pass. Thus an isolated grid
-point cannot become the product setting. Among robustly passing centers,
-select the greatest `tau`, which is the most averaging compatible with every
-output-quality bar. The endpoints are controls and cannot be selected as
-centers.
+The endpoint `0.00` admits only the winner outside fallback, and `1.00` admits
+every finite frame. Every arm is rendered. A selectable center and both
+immediate `0.01` neighbors must pass; the greatest passing center is selected.
 
 ## Standardisation repairs
 
-Every listed defect is **blocking**. A failure here returns
-`INSTRUMENT_INVALID`; it is not evidence against Phase 1.
+Every heading marked BLOCKING returns `INSTRUMENT_INVALID` on failure. It does
+not return a Phase-1 refutation.
 
 ### Pooled-only coverage gating — BLOCKING
 
-**Fix.** Validate each frozen stratum separately. A stratum key contains:
-
-- capture-manifest hash;
-- band;
-- exact stack size;
-- candidate frame ordinal;
-- sensor gain mode;
-- input-only signal quartile; and
-- positive-signal anchor.
-
-The pair signal coordinate is
-`r=(q_w+q_i)/(F_w+F_i)`. **[VERIFIED—PREREGISTERED]** Assign it without
-interpolation to the left-closed bins
+**[VERIFIED—PREREGISTERED]** A calibration cell is keyed by manifest hash,
+exact stack size, frame ordinal, band, gain mode, input-only signal quartile,
+and positive-signal anchor. The positive-signal coordinate
+`r=(q_w+q_i)/(F_w+F_i)` uses left-closed bins
 `[0,0.25)`, `[0.25,1)`, `[1,4)`, `[4,16)`, and `[16,+infinity)`, represented
-by calibration anchors `[0,0.5,2,8,32]`. The calibration generator targets
-each anchor, then retains simulated observations by their resulting bin.
+by anchors `[0,0.5,2,8,32]`.
 
-The calibration simulation uses every actual frozen affine transform in the
-capture manifest. It separates **[VERIFIED—PREREGISTERED] two** sensor gain
-modes and **[VERIFIED—PREREGISTERED] four** input-only signal quantiles. A
-missing or under-populated key is an instrument failure; it may not be repaired
-by pooling with another frame, band, or capture.
+Use `4,095` calibration trials and an independent `8,192` validation trials
+per cell. At checkpoints
+`[0.01,0.05,0.25,0.50,0.75,0.95,0.99]`, the sealed evidence contains every
+trial's `u`, not a PASS flag or reported error. The adjudicator counts
+`u<=checkpoint` and recomputes each rate. Every cell must have maximum absolute
+error `<=0.03`; pooled summaries are not accepted.
 
-**[VERIFIED—PREREGISTERED]** Use `4,095` calibration trials and an independent
-`8,192` validation trials per generated calibration cell. One simulated stack
-supplies the winner and every frame-role gap for that cell; frame-role
-validation does not rerun the stack. At compatibility
-checkpoints
-`[0.01, 0.05, 0.25, 0.50, 0.75, 0.95, 0.99]`, every non-winner frame's
-empirical admission rate must differ from the checkpoint by no more than
-`0.03`. Report the maximum error and the full curve for every key. No pooled
-summary can substitute for a failed key.
-
-Synthetic calibration alone is insufficient. The static-repeat physical deck
-must also expose at least **[VERIFIED—PREREGISTERED] 256** non-overlapping
-support-separated sites in every band/gain/session stratum. At every registered
-compatibility checkpoint, a simultaneous
-**[VERIFIED—PREREGISTERED] 99%** binomial interval for physical admission must
-contain the nominal rate. Bands, gain modes, and sessions are judged
-separately; a pooled pass cannot rescue one failed stratum.
-Use two-sided Clopper–Pearson intervals with Bonferroni allocation
-**[VERIFIED—PREREGISTERED] `alpha_cell=0.01/C`**, where `C` is the complete
-pre-output count of physical stratum/checkpoint predicates.
+The physical static-repeat null separately supplies every registered
+session/band/gain cell. Each has at least `256` support-separated sites. A
+Bonferroni simultaneous `99%` Wilson interval, with
+`alpha_cell=0.01/C` over the complete registered predicate family, must contain
+every nominal checkpoint. The interval is recomputed from trial-level physical
+`u` values. Session, band, and gain cells cannot rescue one another.
 
 ### Positive-`q` commissioning — BLOCKING
 
-**Fix.** Equal-focus trials must contain coherent signal shared by every frame,
-not only zero-mean noise. **[VERIFIED—PREREGISTERED]** The frozen
-`q/F` anchors are `[0, 0.5, 2, 8, 32]`. Each anchor is generated before fresh
-frame noise is drawn and is validated under the same per-stratum coverage rule.
-
-Power is separate from calibration. **[VERIFIED—PREREGISTERED]** Give one
-non-winner a true focus deficit of `[0, 1, 2, 4]` unselected standard
-deviations while leaving all nuisance variables fixed. Its admission
-probability must decrease strictly at each step, with independently bootstrapped
-**[VERIFIED—PREREGISTERED] 99%** intervals that do not overlap between adjacent
-steps. A statistic with calibrated nulls but no separation power fails.
+**[VERIFIED—PREREGISTERED]** Equal-focus trials carry coherent signal at all
+anchors `[0,0.5,2,8,32]`. For every calibration cell, a non-winner receives
+focus deficits `[0,1,2,4]` in unselected standard-deviation units while
+nuisance variables remain fixed. Recomputed `99%` Wilson intervals for
+admission probability must fall strictly and not overlap between adjacent
+steps. A calibrated null with no separation power fails.
 
 ### All-band Poisson–Gaussian control — BLOCKING
 
-**Fix.** Generate noise before the warp and decision transform, using the
-registered sensor model and both sensor gain modes. Run the complete
-**[VERIFIED—PREREGISTERED] seven-band** path and report each band separately.
-Exercise all **[VERIFIED—PREREGISTERED] four** CFA planes for propagated
-variance and shared green for the admission decision. Each input-only signal
-quartile and every actual warp lattice must appear in the result ledger.
-
-The current one-band control is not reusable as evidence for the other bands;
-its one-band construction is visible at
-`experiments/PHASE1-DESIGN/reference.py:1080-1134`.
+**[VERIFIED—PREREGISTERED]** Generate noise before warp and decision
+transforms. Exercise bands `[0,1,2,3,4,5,6]`, both gain modes, all input-only
+signal quartiles, all positive-signal anchors, every frame role, and the four
+CFA planes `R`, `G1`, `G2`, and `B`. Shared green drives admission; the
+per-plane paths remain evidence for noise propagation and output checks. The
+current one-band construction cannot stand in for this requirement
+(`experiments/PHASE1-DESIGN/reference.py:1080-1134`).
 
 ### Approximate variance propagation — BLOCKING
 
-**Chosen fix.** Remove analytic `sigma2_E` from the load-bearing definition of
-the global threshold. The authoritative standardisation is the independently
-validated empirical rank of the complete selected gap `D_i`. Because each
-calibration draw goes through the actual warp, transform, pyramid, and energy
-operator, filter-induced covariance and spatially varying noise are present in
-the reference distribution rather than represented by a scalar `beta`.
+The authoritative standardisation is the independently validated empirical
+rank of the complete selected gap. Analytic `sigma2_E` may be emitted only as
+`sigma2_E_approx`; it cannot choose a stratum or enter a verdict. Passing each
+draw through the actual warp, transform, pyramid, and energy operator carries
+filter covariance and spatially varying noise into the reference distribution.
 
-The existing analytic value may be retained only as
-`sigma2_E_approx` in diagnostics. It may not select a calibration stratum or
-enter the verdict.
-
-**Advisable, not blocking once the empirical calibration passes:** implement a
-fast moment predictor using squared filter coefficients and covariance
-propagation, and compare it with the empirical bank. It may replace the bank
-only under a new preregistration that meets the same per-stratum calibration
-bar. This avoids making an unverified analytic shortcut load-bearing again.
+An analytic covariance-aware predictor is advisable for product cost, but it
+is not load-bearing until a new preregistration proves the same per-cell
+coverage.
 
 ### Selected-winner and stack-size calibration — BLOCKING
 
-**Fix.** Every calibration trial creates all frames for the exact manifest
-stack size, runs the same winner tie-break as the candidate, and forms gaps
-only after that maximum is selected. Calibration is indexed by exact stack
-size; interpolation or reuse from a different `N` is forbidden in this gate.
-A new holdout stack size therefore requires its bank to be generated and
-sealed before its candidate output is rendered.
-
-Coverage of an arbitrary unselected pair is not an accepted substitute. This
-directly addresses the maximum-over-stack behavior documented at
+Every trial creates the exact manifest stack, applies the production winner
+tie-break, and forms gaps only after selecting that maximum. Banks are indexed
+by exact stack size. Interpolation or reuse from another stack size is
+forbidden. This addresses the maximum-over-stack dependence documented at
 `crates/strehl-core/src/merge.rs:421-427`.
 
 ## Output-quality instruments
 
 ### Capture roles
 
-The captures already consumed by the withdrawn W1 may be rerendered as
-development diagnostics. They may contribute width, singleton, fallback,
-finite-value, and hull records, but they cannot manufacture the independent
-truth/reference roles required below.
+Withdrawn-W1 captures may provide diagnostics only. Development requires a
+disposable physical M135 rehearsal family and an independent static-repeat
+family. Holdout requires fresh subject/session families for both roles. A
+pre-output amendment must bind exact capture IDs, role membership, temporal
+site IDs, transforms, exclusions, and artifact hashes. Development and holdout
+families must be disjoint.
 
-The scored development deck requires a disposable physical M135 rehearsal
-family and an independently captured static-repeat family. The scored holdout
-requires fresh subject/session families for both roles. Exact paths, frame
-counts, and family identities are deliberately not guessed here; they become
-binding only through the pre-output capture-ledger amendment. If those inputs
-do not exist, the gate is blocked rather than weakened onto the old natural
-ROIs.
+### M135 executable interface
 
-### Detail: hard dependency on M135
-
-This gate does not invent another detail statistic.
-
-The required provider is the M135 non-compensating truth-referenced
-certificate. Its registered estimator consumes two independent reference
-realisations and two independent output realisations
-(`experiments/M135-detail-instrument/PREREGISTRATION.md:26-53`) and emits an
-eligibility status, information, transfer, unexplained-repeatability, and noise
-coordinates (`experiments/M135-detail-instrument/instrument.py:152-218`).
-Its synthetic battery already specifies both a blur defect and a genuine
-optical improvement
+The gate does not invent another detail statistic. M135's estimator requires
+two independent references and two independent outputs
+(`experiments/M135-detail-instrument/PREREGISTRATION.md:26-53`), returns
+eligibility, information, transfer, unexplained-repeatability, and noise
+coordinates (`experiments/M135-detail-instrument/instrument.py:207-260`), and
+already requires both a blur defect and planted optical improvement
 (`experiments/M135-detail-instrument/PREREGISTRATION.md:127-149`).
 
-The present M135 preregistration explicitly limits itself to synthetic
-estimator commissioning and does not qualify a physical reference path
-(`experiments/M135-detail-instrument/PREREGISTRATION.md:7-12`). Therefore this
-contract is deliberately `UNBOUND`.
+The existing M135 scope is synthetic and does not qualify a physical path
+(`experiments/M135-detail-instrument/PREREGISTRATION.md:7-12`). The M138
+contract therefore remains `UNBOUND`.
 
-Before any corrected-gate candidate render, an amendment must freeze:
+Before any candidate render, M135 must provide and M138 must bind all of:
 
-1. the physical M135 preregistration commit and file hash;
-2. the physical commissioning artifact and PASS state;
-3. the M135 comparison-checker hash;
-4. the exact output-quality comparison rule returning `detail_pass`; and
-5. the development/holdout capture-family ledger.
+1. `physical_preregistration`: path and SHA-256;
+2. `checker_entrypoint`: executable Python path and SHA-256;
+3. `checker_bundle_manifest`: path and SHA-256 covering every transitive source
+   and calibration dependency;
+4. `environment_manifest`: Python and dependency versions, path and SHA-256;
+5. `comparison_rule`: the exact candidate-versus-legacy rule, path and SHA-256;
+6. `commissioning_request`: raw physical control artifacts, path and SHA-256;
+   and
+7. exact development and holdout detail-capture IDs.
 
-That amendment may bind a rule already frozen by M135. It may not invent,
-relax, or tune a detail margin from Phase-1 output. Without the binding, the
-only verdict is `BLOCKED_DETAIL_INSTRUMENT`. The binding must also revise the
-reference adjudicator to recompute `detail_pass` through the bound checker; a
-Boolean supplied by a result file is not admissible evidence.
+The checker interface schema is `m135-m138-checker/v1`. M138 invokes:
 
-This document deliberately does not transplant the withdrawn
-**[INHERITED] `0.95`** cross-power ratio onto `J_TR`, `T_TR`, or `U_TR`.
-Those coordinates have different units and failure directions. The physical
-M135 lane must derive and freeze its comparison rule from its own
-commissioning and power analysis before seeing any Phase-1 candidate output.
-That is a dependency, not discretion available after the run
-(`experiments/PHASE1-DESIGN/measure.py:29-31`).
+```text
+python -I CHECKER --m138-commission REQUEST
+python -I CHECKER --m138-evaluate REQUEST
+```
 
-The same pre-output amendment must change `capture_ledgers.binding_state` to
-`BOUND` and list every development and holdout capture ID under its detail,
-noise, and hull roles. The adjudicator requires exact equality with those
-lists; a result cannot omit a difficult capture by redefining its own ledger.
+An evaluation request has this required envelope:
 
-### Noise: paired-static-repeat temporal power
+```json
+{
+  "schema": "m135-m138-evaluate-request/v1",
+  "capture_ids": ["..."],
+  "artifacts": [{"path": "...", "sha256": "..."}],
+  "binding_hashes": {
+    "checker_bundle_manifest_sha256": "...",
+    "environment_manifest_sha256": "...",
+    "physical_preregistration_sha256": "...",
+    "comparison_rule_sha256": "..."
+  },
+  "comparisons": ["M135-defined raw capture bundles"]
+}
+```
 
-**[VERIFIED—PREREGISTERED]** The noise instrument uses two independently
-captured static-repeat bursts of the same latent and acquisition settings.
-Candidate and legacy each render both bursts from identical inputs. For mode
-`m`, site `s`, and CFA plane `c`:
+A commissioning request uses schema
+`m135-m138-commission-request/v1` and the same artifact-reference form. Its
+payload supplies the physical null, pre-noise blur, pre-noise optical
+improvement, missing-flat, and hash-mutation cases defined by M135's own
+physical preregistration.
+
+The adjudicator opens and verifies each request artifact before execution. The
+checker emits exactly one JSON object to standard output:
+
+```json
+{
+  "schema": "m135-m138-checker/v1",
+  "checker_sha256": "...",
+  "checker_bundle_manifest_sha256": "...",
+  "environment_manifest_sha256": "...",
+  "physical_preregistration_sha256": "...",
+  "comparison_rule_sha256": "...",
+  "request_sha256": "...",
+  "detail_pass_by_capture": {"capture-id": true}
+}
+```
+
+Commissioning replaces `detail_pass_by_capture` with a `controls` object whose
+keys exactly equal the required control list in
+`corrected-gate-contract.json`. A nonzero process exit, extra/missing capture,
+missing artifact, hash mismatch, wrong schema, or missing control is
+`INSTRUMENT_INVALID`. The checker-bundle manifest itself is opened, and every
+transitive source listed in it is hash-verified. The bound checker must reject
+an environment that differs from its environment manifest. Cached or
+campaign-supplied `detail_pass` values are forbidden.
+
+Physical commissioning must execute and pass:
+
+- a physical null;
+- a pre-noise blur that lowers the information coordinate;
+- a pre-noise optical improvement that raises it;
+- missing-flat-control refusal; and
+- artifact-hash-mutation refusal.
+
+The positive plant is therefore an executable obligation, not prose. Its
+magnitude and decision rule belong to M135's physical preregistration and may
+not be chosen after Phase-1 output exists. Until every binding exists and the
+adjudicator executes both checker modes, the only detail verdict is
+`BLOCKED_DETAIL_INSTRUMENT`.
+
+### Temporal noise: paired-repeat power — [VERIFIED—PREREGISTERED]
+
+For mode `m`, site `s`, and CFA plane `c`, use two independently captured
+static-repeat outputs:
 
 ```text
 P_m,s,c = 0.5 * mean((Y_m,1 - Y_m,2)^2)
-R_s,c   = P_candidate,s,c / P_legacy,s,c
+R_c     = mean_s(P_candidate,s,c) / mean_s(P_legacy,s,c)
+theta_c = log(R_c)
 ```
 
-The scene cancels in the repeat difference. This measures temporal output
-power rather than spatial texture. The arithmetic rationale for a static
-burst and its known averaging truth is established independently in
-`docs/research/M62-sqrt-n.md:32-45`. That report also states that its physical
-real-capture branch was not run
-(`docs/research/M62-sqrt-n.md:64-70`), so a new physical repeat deck remains a
-required input rather than inherited evidence.
+The scene cancels in the repeat difference. This is temporal output power, not
+spatial band energy. The independent arithmetic rationale is in
+`docs/research/M62-sqrt-n.md:32-45`; its physical branch was not run
+(`docs/research/M62-sqrt-n.md:64-70`), so it supplies arithmetic rather than
+physical qualification.
 
-**[VERIFIED—PREREGISTERED]** Each deck must contain at least `64` guarded,
-non-overlapping sites. **[INHERITED]** For every capture family and each of
-`R`, `G1`, `G2`, and `B`, the paired-site bootstrap
-`upper95(P_candidate/P_legacy)` must be `<=0.90`. The value is inherited from
-the original output bar, not chosen from corrected outcomes; the old constants
-are visible at `experiments/PHASE1-DESIGN/measure.py:29-31`.
+#### No replacement effect-size constant
 
-Input-only registration, clipping, exposure, frame count, and site eligibility
-are frozen before either output. A failed repeat-geometry check returns an
-instrument error, never a favorable low-noise value.
+**[VERIFIED—PREREGISTERED]** The temporal decision boundary is `1.0`, the
+estimand's natural no-improvement null. For one arm, resample paired site
+indices within each capture, using the same resample for all four CFA planes.
+For bootstrap replicate `b` and capture-plane cell `j`, compute
+`e_bj=theta_bj-theta_j`. Let `q` be the `95th` percentile of
+`max_j(e_bj)` over `8,192` deterministic replicates. Then:
 
-### Output integrity
+```text
+U_j = exp(theta_j + q)
+```
 
-Every arm must also:
+The arm passes temporal noise iff every `U_j < 1.0`. This is a simultaneous
+one-sided `95%` family bound across all registered captures and all four
+planes. Report the physically interpretable guaranteed RMS reduction:
 
-- contain only finite outputs and metric inputs;
-- use the same linear-DN reconstruction and output pipeline as legacy;
-- apply no arm-specific postfilter; and
-- remain within **[INHERITED] 1 DN** of the independently recomputed
-  aligned-input hull.
+```text
+delta_guaranteed = 1 - sqrt(max_j(U_j))
+```
 
-These are hard gates, not compensating scores.
+No positive magnitude is claimed beyond that lower bound. This is a strict
+Pareto-superiority test, not a disguised `0.90` replacement.
+The resampler is NumPy `default_rng`/PCG64 with seed `138138` mixed with the
+arm label by SHA-256; quantiles use method `higher`.
 
-## Preregistered pass/fail rule
+#### Power and site-count binding
+
+The old `64`-site minimum is withdrawn as an assumption of adequacy. It remains
+the lowest admissible count, but it has no demonstrated power for this
+estimand or for the four-plane/all-capture conjunction.
+
+Before freeze, acquire a candidate-independent pilot with four independent
+legacy repeat bursts per matched capture condition. The two disjoint burst
+pairs provide `P_A` and `P_B` under the null. The pilot must expose at least
+`64` support-separated sites so the old proposal can be evaluated rather than
+presumed.
+
+An owner-approved effect requirement must state the smallest RMS reduction
+worth detecting, `delta_required`, before candidate output. The requirement
+schema is `m138-noise-effect-requirement/v1`; it must contain the physical claim
+text, `authority=OWNER_APPROVED_REQUIREMENT`, and a hash-bound approval
+artifact. A bare number in the contract is invalid. The corresponding planted
+power shift is derived, not authored:
+
+```text
+R_required = (1 - delta_required)^2
+log_shift  = 2 * log(1 - delta_required)
+```
+
+Using the same max-statistic resampling and the complete development or
+holdout capture-by-plane conjunction, estimate the probability that all
+simultaneous upper bounds fall below `1.0`. The familywise type-I budget is
+`alpha=0.05`. Because a false refutation is no less serious than a false GO,
+the type-II budget is set symmetrically to `beta=0.05`, hence required power
+`0.95`. The one-sided `95%` Wilson lower bound on simulated power, not its
+point estimate, must be `>=0.95`.
+
+The power artifact must report power at exactly `64` sites and at the selected
+site count. The selected count is frozen into every site ledger and must meet
+the power rule for both the full development conjunction and the full holdout
+conjunction. If no available count meets it, or if `delta_required` has no
+external provenance, the result is `INSTRUMENT_INVALID`; a convenient effect
+or threshold may not be invented.
+
+At this draft's authoring, `delta_required`, the physical pilot, and the
+power-qualified site count do not exist. The temporal instrument is therefore
+intentionally `UNBOUND`.
+
+### Hull: PRE-CLAMP reconstruction
+
+The old implementation collapses the pyramid and immediately clips it to the
+aligned-input hull (`experiments/PHASE1-DESIGN/measure.py:443-460`). A
+post-clamp check would therefore be nearly tautological.
+
+**[VERIFIED—PREREGISTERED]** The corrected stage measures the quantized
+linear-DN reconstruction before the aligned-input clamp:
+
+```text
+z_q = output_quantize_without_hull_or_sensor_clamp(collapse(levels))
+d_hull = max(lo - z_q, 0, z_q - hi)
+max(d_hull) <= 1 DN
+```
+
+The ordering is explicit: collapse, apply the delivered format's rounding in
+floating storage, measure against independently recomputed aligned-input
+minimum/maximum, then apply the production clamp. Evidence labelled
+`POST_CLAMP` is `INSTRUMENT_INVALID`. The interpretation is a bound on
+unconstrained reconstruction overshoot; it cannot be passed merely because the
+shipping output was clipped. The **[INHERITED] `1 DN`** tolerance retains its comparator-independent
+provenance from the original design
+(`docs/proposals/2026-09-phase1-design.md:226-230`).
+
+## Raw sealed evidence contract
+
+The top-level `m138-result/v2` file contains only the exact contract hash and
+hash-bound references to standardisation, commissioning, development, and
+optional holdout artifacts. Every reference is `{path, sha256}`. Paths are
+relative and must remain inside the sealed result tree.
+
+The adjudicator itself:
+
+- opens every referenced artifact and verifies SHA-256 before use;
+- recomputes every standardisation checkpoint rate from trial-level
+  compatibility values;
+- checks every manifest/frame/band/gain/signal/positive-signal cell;
+- recomputes physical-null intervals and focus-power ordering;
+- reads paired temporal site powers and recomputes simultaneous confidence
+  bounds;
+- reads pre-clamp reconstruction and input-hull arrays and recomputes maximum
+  excess;
+- verifies candidate and legacy postprocess bundle hashes are identical;
+- executes the bound M135 checker on hash-verified raw requests; and
+- rejects old-style supplied conclusions such as `seal_valid`, `detail_pass`,
+  `noise_power_upper95_by_capture`, and
+  `maximum_hull_excess_dn_by_capture`.
+
+A missing required artifact, hash mismatch, malformed array, omitted
+capture/plane/cell, post-clamp hull record, stale M135 hash, or extra supplied
+conclusion returns `INSTRUMENT_INVALID`. It can never become a quality failure
+or a GO.
+
+## Pass/fail rule
 
 ### Freeze order
 
-1. Commit this specification, contract, and adjudicator.
-2. Obtain independent design review.
-3. Bind and hash the physically commissioned M135 rule.
-4. Freeze standardisation seeds, capture manifests, all transforms, static
-   repeat sites, M135 sites, exclusions, decoder versions, and output hashes.
-5. Commission standardisation and both output instruments.
-6. Render every development `tau` arm.
-7. Select and commit the one global `tau`.
-8. Open the sealed holdout once and render only legacy plus the selected
-   candidate.
+1. Commit this repaired draft.
+2. Obtain the second independent review.
+3. Bind the external temporal effect requirement and four-burst pilot.
+4. Bind the power-qualified temporal site count.
+5. Bind the physical M135 checker, dependency bundle, rule, environment, and
+   bidirectional commissioning request.
+6. Bind disjoint development/holdout role and site ledgers.
+7. Run and record the representative cost benchmark.
+8. Change the contract to
+   `FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION`, bind the review artifact
+   and frozen commit, and commit that activation without candidate output.
+9. Commission the standardisation and output instruments from raw evidence.
+10. Render and score every development `tau` arm.
+11. Select and commit the one global `tau`.
+12. Open holdout once and render only legacy plus that selected candidate.
 
-No candidate output may exist before step 4. No holdout output may exist before
-step 7.
+No candidate output may exist before the activation commit. No holdout output
+may exist before selection.
 
-### Development arm
+### Development — [VERIFIED—PREREGISTERED]
 
-For one `tau`, `OUTPUT_PASS(tau)` is true iff all of these are true on every
-applicable development capture:
+For one `tau`, `OUTPUT_PASS(tau)` is true iff, on every registered development
+capture:
 
-1. the bound M135 checker returns `detail_pass`;
-2. every CFA-plane temporal-power `upper95` is
-   **[INHERITED] `<=0.90`**;
-3. maximum hull excess is **[INHERITED] `<=1 DN`**;
-4. all required values are finite; and
-5. candidate and legacy output-pipeline hashes identify the same
-   non-postfiltered pipeline.
+1. the freshly executed, hash-bound M135 checker passes detail;
+2. every recomputed simultaneous temporal-power upper bound is `<1.0`;
+3. every recomputed pre-clamp hull excess is `<=1 DN`;
+4. all raw evidence values are finite; and
+5. candidate and legacy use byte-identical postprocess bundles and no
+   arm-specific postfilter.
 
-There is no averaging across captures or criteria. One win cannot compensate
-for one loss.
+There is no averaging across captures, planes, or criteria. A robust center
+requires `OUTPUT_PASS` at itself and its immediate `±0.01` neighbors. Select
+the greatest robust center. The endpoints are controls and cannot be centers.
 
-Let `j` index the **[VERIFIED—PREREGISTERED] 101-point** threshold grid.
-A robust center is:
+### Holdout
 
-```text
-ROBUST(j) = OUTPUT_PASS(j-1) and OUTPUT_PASS(j) and OUTPUT_PASS(j+1)
-```
+Render only the selected global `tau`. The same `OUTPUT_PASS` rule applies to
+the exact sealed holdout ledger. A changed threshold, site, exclusion, checker,
+pipeline, or artifact hash returns `INSTRUMENT_INVALID`.
 
-Only **[VERIFIED—PREREGISTERED] indices 1 through 99** can be centers.
-If at least one robust center exists, select the greatest center and freeze it.
-
-### Holdout arm
-
-The holdout receives only the selected global `tau`; it is not swept. It passes
-iff the same `OUTPUT_PASS` rule passes on every sealed holdout capture. A
-different threshold, changed site, changed metric, added exclusion, or changed
-instrument hash is `INSTRUMENT_INVALID`.
-
-### Deterministic verdict table
+### Deterministic verdicts
 
 | Condition | Verdict | Meaning |
 |---|---|---|
-| Seal, input, standardisation, or bidirectional commissioning failure | `INSTRUMENT_INVALID` | No Phase-1 inference |
-| Physical M135 binding absent or invalid | `BLOCKED_DETAIL_INSTRUMENT` | No Phase-1 inference |
-| Instruments valid; no robust development center | `PHASE1_REFUTED_NO_GLOBAL_OUTPUT_OPERATING_POINT` | Phase-1 candidate family refuted |
-| Robust center selected; holdout not yet opened | `AWAITING_HOLDOUT` | No final verdict |
-| Selected center fails any holdout output bar | `PHASE1_REFUTED_HOLDOUT` | Phase-1 version refuted |
-| Selected center passes every holdout output bar | `PHASE1_GO` | Phase-1 may proceed to integration |
+| Draft contract, absent artifact, hash mismatch, failed standardisation, failed bidirectional commissioning, unsupported temporal power, or unsupported cost | `INSTRUMENT_INVALID` | No Phase-1 inference |
+| Physical M135 binding absent | `BLOCKED_DETAIL_INSTRUMENT` | No Phase-1 inference |
+| Valid instruments; no robust development center | `PHASE1_REFUTED_NO_GLOBAL_OUTPUT_OPERATING_POINT` | Frozen Phase-1 candidate family refuted |
+| Robust center selected; holdout unopened | `AWAITING_HOLDOUT` | No final verdict |
+| Selected center fails any holdout output requirement | `PHASE1_REFUTED_HOLDOUT` | Frozen Phase-1 version refuted |
+| Selected center passes every holdout output requirement | `PHASE1_GO` | Phase-1 may proceed to integration |
 
-These are the only scientific verdicts. A failure of calibration cannot be
-reported as a merge failure.
+A genuine refutation exists only after all instruments, power, evidence,
+hashes, cost benchmark, and freeze are valid, and then either no
+three-adjacent development interval passes or the selected threshold fails
+holdout.
 
-### What genuinely refutes Phase 1
+## Why this is not a weaker bar
 
-After every instrument is valid and frozen, either of these results is a
-genuine refutation:
+Removing the **[INHERITED] `0.90`** value does not silently replace it with a
+friendlier number. The
+repaired gate asks the exact Pareto question: whether temporal power is
+strictly lower while independently referenced detail and pre-clamp integrity
+survive. The simultaneous upper bound must clear the natural null in every
+capture and CFA plane. The guaranteed RMS reduction is reported rather than
+hidden behind a power ratio.
 
-1. no three-adjacent-arm interval satisfies all development output-quality
-   requirements; or
-2. the single selected global threshold fails any sealed holdout
-   output-quality requirement.
+The gate cannot refute Phase 1 unless a separately justified RMS target is
+shown detectable at the frozen site count. It cannot return GO unless the
+observed improvement itself clears the simultaneous no-improvement boundary.
+A stronger product claim, such as a specified minimum RMS reduction, requires
+its own external requirement and cannot be inferred from this GO.
 
-The refutation is scoped to the frozen implementation, calibration method,
-threshold family, and capture ledger. It does not claim a theorem about every
-real-valued threshold outside that registered family.
-
-## Why this is not a weaker gate
-
-- The **[INHERITED] `0.90`** temporal-noise power ceiling is unchanged.
-- The old synthetic-only detail cross-power check is retired. The gate is
-  fail-closed until a physically commissioned truth-referenced certificate is
-  bound
-  (`experiments/PHASE1-DESIGN/reference.py:1143-1185`).
-- One threshold still serves every capture, band, and ROI.
-- Every arm is rendered; none is excused by width.
-- An isolated pass is rejected by the **[VERIFIED—PREREGISTERED] ±0.01**
-  robustness requirement.
-- A development pass must survive a separately sealed holdout.
-- Winner selection, exact stack size, positive signal, all bands, and
-  Poisson–Gaussian noise become blocking calibration requirements.
-
-An average-everything arm can win the temporal-noise coordinate but remains
-exposed to M135's detail/transfer veto. A winner-take-all arm can preserve
-detail but remains exposed to temporal-noise power. Removing legacy-width
-equality removes a comparator-equivalence condition; it does not lower either
-output-quality requirement.
+Average-everything remains exposed to M135's detail/transfer veto.
+Winner-take-all remains exposed to the temporal superiority test. Width removes
+no arm. The physically commissioned detail instrument is stricter than the
+withdrawn synthetic cross-power test
+(`experiments/PHASE1-DESIGN/reference.py:1135-1200`).
 
 ## Commissioning in both directions
 
-No instrument or checker may pass with only a degradation plant.
+### Standardisation — [VERIFIED—PREREGISTERED]
 
-### Standardisation coordinate — [VERIFIED—PREREGISTERED]
+- Null evidence must satisfy every recomputed checkpoint.
+- A wrong-stack bank and an omitted-warp-correlation bank must each push at
+  least one cell beyond absolute error `0.03`.
+- The repaired bank's score
+  `S_cal=0.03-maximum_absolute_admission_error` must exceed both defective
+  scores and be nonnegative.
+- The focus-deficit ladder `[0,1,2,4]` must show ordered separation.
 
-- **Null:** equal-focus trials must meet the per-stratum admission error
-  `<=0.03`.
-- **Defect:** use the wrong stack-size calibration bank and separately omit
-  warp-induced correlation; each plant must make at least one registered
-  stratum fail.
-- **Improvement:** apply the registered selected-winner calibration to those
-  same plants. Define calibration score
-  `S_cal = 0.03 - maximum_absolute_admission_error`; it must increase relative
-  to each defective arm and become nonnegative.
-- **Power:** the `[0,1,2,4]` focus-deficit ladder must be strictly ordered.
+### M135
 
-### Detail coordinate
+The adjudicator runs `--m138-commission` and requires the physical null, blur
+defect, optical improvement, missing-flat refusal, and hash-mutation refusal.
+Both directions are mandatory. No cached PASS field is read.
 
-The bound M135 physical campaign must preserve its own bidirectional contract.
-At minimum, pre-noise blur must lower its information coordinate and planted
-optical improvement must raise it. The existing estimator preregistration
-already makes both mandatory
-(`experiments/M135-detail-instrument/PREREGISTRATION.md:127-149`).
+### Temporal noise — [VERIFIED—PREREGISTERED]
 
-### Temporal-noise coordinate — [VERIFIED—PREREGISTERED]
+Define `S_noise=-max_j(log(R_j))`, so larger is better.
 
-Define `S_noise = -log(P_candidate/P_legacy)`, so higher is better.
+- The four-burst null and a common-scene placebo must have simultaneous
+  two-sided `95%` intervals containing `1.0` in every cell.
+- Scaling one pair's temporal residual by `(1+delta_required)` must lower
+  `S_noise` and fail superiority.
+- Replacing one pair by the mean of independent realizations, or equivalently
+  applying the registered `(1-delta_required)` RMS plant, must raise
+  `S_noise` and pass superiority at the commissioned site count.
+- Suppressing the improvement evidence, deleting any artifact, mutating a
+  hash, or relabelling post-clamp hull values as pre-clamp must make the
+  adjudicator refuse.
 
-- **Null:** identical noise laws and merge laws must bracket zero.
-- **Defect:** add fresh independent noise to each candidate repeat;
-  `S_noise` must decrease with non-overlapping `99%` intervals.
-- **Improvement:** replace each candidate repeat by the mean of two independent
-  realizations before differencing; `S_noise` must increase with
-  non-overlapping `99%` intervals.
-- **Common-scene placebo:** add the same deterministic scene term to both
-  repeats; the score must remain inside the null interval.
+`python experiments\M138-w1-gate-audit\adjudicate.py --self-test` executes
+non-campaign null, defect, improvement, missing-artifact, hash-mutation,
+supplied-Boolean, post-clamp, refutation, holdout, and width-irrelevance
+controls.
 
-### Adjudicator
+## Cost
 
-The reference checker must observe:
+Status: **UNSUPPORTED.**
 
-- a fully passing synthetic result reaching `PHASE1_GO`;
-- missing improvement evidence reaching `INSTRUMENT_INVALID`;
-- no robust development interval reaching
-  `PHASE1_REFUTED_NO_GLOBAL_OUTPUT_OPERATING_POINT`;
-- a holdout bar miss reaching `PHASE1_REFUTED_HOLDOUT`; and
-- arbitrary width-diagnostic corruption leaving the verdict unchanged.
-
-`python experiments\M138-w1-gate-audit\adjudicate.py --self-test` performs
-those non-campaign controls.
-
-## Result contract
-
-`corrected-gate-contract.json` is normative. A campaign result must contain:
-
-- all source, program, manifest, calibration-bank, M135, and site hashes;
-- development and holdout role ledgers exactly matching the bound contract;
-- the complete standardisation ledger, including every failed stratum;
-- all **[VERIFIED—PREREGISTERED] 101** development arms;
-- raw M135 inputs or the independently reproducible certificate payload;
-- paired static-repeat site powers for every CFA plane;
-- hull and finite-value checks;
-- every width diagnostic; and
-- the selected threshold and holdout record, if reached.
-
-`adjudicate.py --result <file>` is the reference verdict implementation.
-Another implementation is required for independent review; agreement with
-this script alone is not independent verification.
-
-## Wall-clock and contention
-
-The frozen old width-only run took **[VERIFIED] 263.6871026 seconds** over
-**[VERIFIED] 161 frames** and rendered no Pareto output
+The old width-only run took **[VERIFIED] `263.6871026000008` seconds** over
+**[VERIFIED] `161` frames**, but rendered no Pareto output
 (`experiments/PHASE1-DESIGN/results/gate.json:1`;
-`experiments/PHASE1-DESIGN/results/run.json:1`).
-The authoring host reports **[VERIFIED] 16 physical cores**, **[VERIFIED] 32
-logical processors**, and **[VERIFIED] 61.6 GiB** of RAM.
+`experiments/PHASE1-DESIGN/results/run.json:1`). It cannot support the prior
+**[INHERITED] `10/4/2`-hour** allocation, which is withdrawn.
 
-After the physical M135 and static-repeat inputs exist, reserve:
+The current instruction forbids RAW decoding and build workloads, so no
+representative render benchmark was run. Before activation, benchmark:
 
-| Work | Exclusive-host estimate |
-|---|---:|
-| Standardisation bank plus disjoint validation | **[VERIFIED—ESTIMATE] 10 hours** |
-| Development rendering and scoring | **[VERIFIED—ESTIMATE] 4 hours** |
-| Selected-threshold holdout | **[VERIFIED—ESTIMATE] 2 hours** |
-| Total | **[VERIFIED—ESTIMATE] 16 hours** |
+- one complete calibration cell at a frozen production stack size;
+- one full-resolution disposable, non-scored legacy/candidate render pair;
+  and
+- one complete M135/noise/pre-clamp-hull scoring arm.
 
-On the shared five-lane host, schedule **[VERIFIED—ESTIMATE] 24 wall-hours**,
-assuming **[VERIFIED—ESTIMATE] 50%** contention overhead. Reserve
-**[VERIFIED—ESTIMATE] 8 CPU threads** and
-**[VERIFIED—ESTIMATE] 16 GiB** committed memory. Render no more than
-**[VERIFIED—ESTIMATE] 8 thresholds** per batch and discard full images after
-site statistics and hashes are durable.
+Use alternating order and the repository timing rule, record warm repetitions
+and uncertainty, then scale only by the exact bound counts of calibration
+cells, development arms, and holdout arms. Until that artifact is bound,
+`cost.status` remains `UNSUPPORTED_PENDING_REPRESENTATIVE_BENCHMARK`, no
+wall-clock estimate is claimed, and the adjudicator refuses campaign results.
 
-The campaign contends for CPU, memory bandwidth, RAM, and RAW-read bandwidth.
-It does not require GPU or network service. Do not co-schedule its calibration
-bank or RAW decode phases with another full-resolution experiment or release
-build. Physical capture/acquisition time is not included.
+## Could not determine — [VERIFIED]
 
-## Could not determine
-
-1. Whether M135's physical path will commission or what comparison rule it
-   will freeze.
-2. Whether the required physical random-code and static-repeat capture
-   families already exist.
-3. Whether any registered global `tau` will pass.
-4. The actual campaign runtime; the cost above is a scheduling estimate based
-   on the frozen width-only runtime and the specified workload.
-5. Whether the calibration bank is cheap enough for a production
-   implementation. This preregistration tests the merge law; product
-   acceleration may follow only without changing decisions.
-6. Performance outside the registered stack sizes and capture families.
+1. The smallest RMS improvement the program intends Phase 1 to claim. No
+   external requirement was available, so `delta_required` remains unbound.
+2. The power at `64` sites or the required site count. No qualifying four-burst
+   physical pilot exists in the reviewed inputs.
+3. Whether M135's physical path, positive improvement plant, and comparison
+   checker will commission.
+4. Exact development and holdout capture/site ledgers.
+5. Campaign wall-clock and contention. The only existing timing omitted the
+   work this gate now requires.
+6. Whether any global `tau` passes. No campaign was run.
 
 ## Source-anchor checklist
 
-The companion checker verifies all of these ranges against the pinned source
-hashes:
+The reference checker verifies these ranges against pinned bytes:
 
+- `f5658e5d:docs/proposals/2026-09-phase1-design.md:280-286`
 - `experiments/PHASE1-DESIGN/measure.py:29-31`
 - `experiments/PHASE1-DESIGN/measure.py:129-141`
 - `experiments/PHASE1-DESIGN/measure.py:171-180`
 - `experiments/PHASE1-DESIGN/measure.py:235-250`
 - `experiments/PHASE1-DESIGN/measure.py:407-422`
+- `experiments/PHASE1-DESIGN/measure.py:443-460`
 - `experiments/PHASE1-DESIGN/measure.py:568-575`
 - `experiments/PHASE1-DESIGN/reference.py:625-633`
 - `experiments/PHASE1-DESIGN/reference.py:666-727`
 - `experiments/PHASE1-DESIGN/reference.py:1052-1064`
 - `experiments/PHASE1-DESIGN/reference.py:1080-1134`
-- `experiments/PHASE1-DESIGN/reference.py:1143-1185`
+- `experiments/PHASE1-DESIGN/reference.py:1135-1200`
 - `crates/strehl-core/src/pyramid.rs:372-384`
 - `crates/strehl-core/src/merge.rs:421-427`
 - `experiments/M135-detail-instrument/PREREGISTRATION.md:7-12`
 - `experiments/M135-detail-instrument/PREREGISTRATION.md:26-53`
 - `experiments/M135-detail-instrument/PREREGISTRATION.md:127-149`
-- `experiments/M135-detail-instrument/instrument.py:152-218`
+- `experiments/M135-detail-instrument/instrument.py:207-260`
 - `docs/research/M62-sqrt-n.md:32-45`
 - `docs/research/M62-sqrt-n.md:64-70`
+- `docs/proposals/2026-09-phase1-design.md:226-230`
 - `docs/proposals/2026-09-phase1-design.md:312-316`
 - `docs/proposals/2026-09-phase1-design.md:340-350`
 - `experiments/PHASE1-DESIGN/PREREGISTRATION.md:167-203`
