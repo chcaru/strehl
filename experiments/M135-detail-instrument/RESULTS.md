@@ -231,16 +231,47 @@ produced 9 registered-core decisions and 7 refusals. Both returned
 `PASS_NO_RACE_OBSERVED`. This direct fixture replay does not pre-empt M149's
 independent re-review.
 
+**VERIFIED.** M149's re-attack at commit `714f38c6` accepted the race repair:
+its vulnerable controls reproduced both defects, while 512 repaired attempts
+per race exercised both exit paths without conversion or sentinel execution.
+It independently reproduced the 25/25 local mutation result and the 7/7 race
+result.
+
+**VERIFIED.** The same re-attack returned a second `SEND BACK`. Both
+commissioning threshold-key substitutions survived all 51 checks. Blur q95
+`0.95` passed when the strict `<0.90` lookup was changed to `1.10`;
+improvement q05 `1.00` passed when the strict `>1.10` lookup was changed to
+`0.90`. M149's full 32-entry manifest also had 19 hard anchor errors after the
+read-once restructuring. Those entries were unknown, not passing.
+
+**VERIFIED.** Amendment 8 makes both contract-key lookups named, tested
+production dependencies and adds marginal public-CLI controls at those exact
+values. The ordinary battery now passes `56 / 56`. The local helper suite
+kills `27 / 27` substantive mutations with its inert control green.
+
+**VERIFIED.** All 19 stale M149 anchors map to still-present predicates; none
+was deleted. With the reanchored manifest, M149's unchanged harness applied
+all 32 entries, killed all `31 / 31` applied substantive mutations, reported
+**0 unapplied**, and kept the inert mutation green. Each threshold mutation
+failed both its exact-key probe and its marginal commissioning-output check.
+
+**VERIFIED.** The post-amendment race sequence ran positive controls first.
+The vulnerable artifact and source fixtures reproduced at attempts 5/120 and
+8/120, respectively. The repaired artifact race then produced 63 registered
+snapshots and 65 refusals in 128 attempts; the repaired source race produced
+58 registered snapshots and 70 refusals. Neither repaired arm produced an
+unsafe result. The current M135 race harness also passed `7 / 7` with 128
+attempts per race.
+
 **VERIFIED.** The adapter SHA-256 is
-`09ff1e1456038e70780dc5564ec0f26c4e8264d40c6c4cb22b6214cfb1fce789`;
+`daa8a24531343bf2ec75c31f1dbabd3b5594b88e792f4e6f3005cbc9cd5302d2`;
 the checker-bundle SHA-256 is
-`56bc2990e7cf6b14988adf874b711f1bcf693c701116e21dfb7bd5f329e83945`;
+`72951c1924d577c7a08d69d5ffcfc1c52816240068767e54cf67e4f4c5137593`;
 and the canonical adapter-contract SHA-256 is
 `30453f8901c0b121a48771d35c9cf735da88358bb441794b918de77b267903e2`.
 The production description validates the bundle under isolated Python and
 reports `UNBOUND`. Therefore this is a commissioned consumer interface, not a
-physical detail result. M149 re-review of the repaired interface remains
-pending.
+physical detail result. M149 review of amendment 8 remains pending.
 
 ## Load-bearing negative diagnostics
 

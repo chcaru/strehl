@@ -77,6 +77,11 @@ def main() -> None:
             encoding="utf-8"
         )
     )
+    adapter_pre_threshold_verification = json.loads(
+        (
+            HERE / "m138-adapter-verification-run6-pre-threshold-fix.json"
+        ).read_text(encoding="utf-8")
+    )
     adapter_failed_verification = json.loads(
         (HERE / "m138-adapter-verification-run2-failed.json").read_text(
             encoding="utf-8"
@@ -121,10 +126,37 @@ def main() -> None:
             encoding="utf-8"
         )
     )
+    adapter_pre_threshold_mutation = json.loads(
+        (
+            HERE / "m138-adapter-mutation-verification-run1-pre-threshold-fix.json"
+        ).read_text(encoding="utf-8")
+    )
     adapter_race = json.loads(
         (HERE / "m138-adapter-race-verification.json").read_text(
             encoding="utf-8"
         )
+    )
+    adapter_pre_threshold_race = json.loads(
+        (
+            HERE / "m138-adapter-race-verification-run1-pre-threshold-fix.json"
+        ).read_text(encoding="utf-8")
+    )
+    m149_reanchor_manifest = json.loads(
+        (HERE / "m149-mutation-manifest-reanchored.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    m149_mutation = json.loads(
+        (HERE / "m149-mutation-verification.json").read_text(encoding="utf-8")
+    )
+    m149_mutation_control = json.loads(
+        (HERE / "m149-mutation-control.json").read_text(encoding="utf-8")
+    )
+    m149_artifact_control = json.loads(
+        (HERE / "m149-artifact-race-control.json").read_text(encoding="utf-8")
+    )
+    m149_source_control = json.loads(
+        (HERE / "m149-source-race-control.json").read_text(encoding="utf-8")
     )
     m149_artifact_race = json.loads(
         (HERE / "m149-artifact-race-retest.json").read_text(encoding="utf-8")
@@ -375,12 +407,33 @@ def main() -> None:
     adapter_checks = adapter_verification.get("checks", {})
     if (
         adapter_verification.get("status") != "PASS"
-        or adapter_verification.get("check_count") != 51
-        or adapter_verification.get("passed_check_count") != 51
+        or adapter_verification.get("check_count") != 56
+        or adapter_verification.get("passed_check_count") != 56
         or not isinstance(adapter_checks, dict)
         or set(adapter_checks.values()) != {True}
+        or adapter_checks.get("guard_commission_blur_contract_threshold")
+        is not True
+        or adapter_checks.get(
+            "guard_commission_improvement_contract_threshold"
+        )
+        is not True
+        or adapter_checks.get(
+            "commission_blur_threshold_rejects_marginal_control"
+        )
+        is not True
+        or adapter_checks.get(
+            "commission_improvement_threshold_rejects_marginal_control"
+        )
+        is not True
+        or adapter_checks.get("bundle_member_hash_refuses") is not True
     ):
         findings.append({"kind": "adapter_verification"})
+    if (
+        adapter_pre_threshold_verification.get("status") != "PASS"
+        or adapter_pre_threshold_verification.get("check_count") != 51
+        or adapter_pre_threshold_verification.get("passed_check_count") != 51
+    ):
+        findings.append({"kind": "adapter_pre_threshold_verification_history"})
     if (
         adapter_pre_m149_verification.get("status") != "PASS"
         or adapter_pre_m149_verification.get("check_count") != 25
@@ -418,12 +471,12 @@ def main() -> None:
     mutation_rows = adapter_mutation.get("mutations", [])
     if (
         adapter_mutation.get("status") != "PASS"
-        or adapter_mutation.get("base_probe_count") != 25
-        or adapter_mutation.get("base_probe_passed_count") != 25
-        or adapter_mutation.get("substantive_mutation_count") != 25
-        or adapter_mutation.get("killed_mutation_count") != 25
+        or adapter_mutation.get("base_probe_count") != 27
+        or adapter_mutation.get("base_probe_passed_count") != 27
+        or adapter_mutation.get("substantive_mutation_count") != 27
+        or adapter_mutation.get("killed_mutation_count") != 27
         or adapter_mutation.get("inert_mutation_survived") is not True
-        or len(mutation_rows) != 25
+        or len(mutation_rows) != 27
         or any(row.get("killed") is not True for row in mutation_rows)
         or any(
             row.get("expected_failed_check")
@@ -432,6 +485,13 @@ def main() -> None:
         )
     ):
         findings.append({"kind": "adapter_mutation_coverage"})
+    if (
+        adapter_pre_threshold_mutation.get("status") != "PASS"
+        or adapter_pre_threshold_mutation.get("substantive_mutation_count") != 25
+        or adapter_pre_threshold_mutation.get("killed_mutation_count") != 25
+        or adapter_pre_threshold_mutation.get("inert_mutation_survived") is not True
+    ):
+        findings.append({"kind": "adapter_pre_threshold_mutation_history"})
     race_checks = adapter_race.get("checks", {})
     if (
         adapter_race.get("status") != "PASS"
@@ -440,9 +500,149 @@ def main() -> None:
         or set(race_checks.values()) != {True}
         or adapter_race.get("artifact_race", {}).get("unsafe") != []
         or adapter_race.get("core_race", {}).get("unsafe") != []
+        or adapter_race.get("artifact_race", {}).get("attempts") != 128
+        or adapter_race.get("core_race", {}).get("attempts") != 128
     ):
         findings.append({"kind": "adapter_race_verification"})
+    if (
+        adapter_pre_threshold_race.get("status") != "PASS"
+        or adapter_pre_threshold_race.get("check_count") != 7
+        or adapter_pre_threshold_race.get("passed_check_count") != 7
+    ):
+        findings.append({"kind": "adapter_pre_threshold_race_history"})
     current_adapter_sha256 = raw_sha256(HERE / "m138_adapter.py")
+    expected_old_anchor_ids = {
+        "artifact-hash-guard",
+        "byte-replay-guard",
+        "common-binding-hash-guard",
+        "physical-binding-hash-guard",
+        "environment-match-guard",
+        "commission-null-lower-bound",
+        "commission-missing-flat-reason",
+        "bundle-member-verification",
+        "null-invalid-refusal",
+        "null-status",
+        "null-center-q05",
+        "null-center-q95",
+        "null-upper",
+        "blur-invalid-refusal",
+        "blur-status",
+        "improvement-invalid-refusal",
+        "improvement-status",
+        "missing-not-applicable-refusal",
+        "missing-status",
+    }
+    reconciliation_rows = m149_reanchor_manifest.get("reconciliations", [])
+    manifest_mutations = m149_reanchor_manifest.get("behavioral_mutations", [])
+    if (
+        m149_reanchor_manifest.get("entry_count") != 32
+        or m149_reanchor_manifest.get("substantive_entry_count") != 31
+        or m149_reanchor_manifest.get("inert_entry_count") != 1
+        or m149_reanchor_manifest.get("previous_anchor_error_count") != 19
+        or m149_reanchor_manifest.get("reconciled_present_count") != 19
+        or m149_reanchor_manifest.get("reconciled_gone_count") != 0
+        or m149_reanchor_manifest.get("adapter_sha256") != current_adapter_sha256
+        or {row.get("id") for row in reconciliation_rows}
+        != expected_old_anchor_ids
+        or any(row.get("disposition") != "present" for row in reconciliation_rows)
+        or len(manifest_mutations) != 32
+    ):
+        findings.append({"kind": "m149_reanchor_manifest"})
+    normalized_adapter_source = adapter_source_text.replace("\r\n", "\n").replace(
+        "\r", "\n"
+    )
+    for row in manifest_mutations:
+        anchor = row.get("anchor")
+        if not isinstance(anchor, str) or normalized_adapter_source.count(anchor) != 1:
+            findings.append(
+                {"kind": "m149_reanchor_count", "mutation": row.get("id")}
+            )
+            continue
+        line = normalized_adapter_source[: normalized_adapter_source.index(anchor)].count(
+            "\n"
+        ) + 1
+        if (
+            row.get("current_path")
+            != "experiments/M135-detail-instrument/m138_adapter.py"
+            or row.get("current_line") != line
+            or row.get("predicate_disposition") != "present"
+        ):
+            findings.append(
+                {"kind": "m149_reanchor_location", "mutation": row.get("id")}
+            )
+    m149_mutation_rows = m149_mutation.get("results", [])
+    applied_substantive = [
+        row
+        for row in m149_mutation_rows
+        if row.get("load_bearing_expectation") == "RED"
+        and row.get("result") != "ANCHOR_ERROR"
+    ]
+    killed_substantive = [
+        row for row in applied_substantive if row.get("result") == "RED"
+    ]
+    if (
+        m149_mutation.get("status") != "PASS_ALL_SUBSTANTIVE_RED"
+        or m149_mutation.get("mutation_count") != 32
+        or m149_mutation.get("anchor_errors") != []
+        or m149_mutation.get("surviving_substantive_mutations") != []
+        or m149_mutation.get("inert_control_failures") != []
+        or len(applied_substantive) != 31
+        or len(killed_substantive) != 31
+    ):
+        findings.append({"kind": "m149_reanchored_mutation_coverage"})
+    threshold_results = {
+        row.get("id"): row for row in m149_mutation_rows
+    }
+    if not {
+        "commission_blur_threshold_rejects_marginal_control",
+        "guard_commission_blur_contract_threshold",
+    }.issubset(
+        set(threshold_results.get("commission-blur-threshold", {}).get(
+            "failed_checks", []
+        ))
+    ):
+        findings.append({"kind": "m149_blur_threshold_mutation"})
+    if not {
+        "commission_improvement_threshold_rejects_marginal_control",
+        "guard_commission_improvement_contract_threshold",
+    }.issubset(
+        set(threshold_results.get("commission-improvement-threshold", {}).get(
+            "failed_checks", []
+        ))
+    ):
+        findings.append({"kind": "m149_improvement_threshold_mutation"})
+    if (
+        m149_mutation_control.get("status") != "FAIL_SURVIVORS"
+        or m149_mutation_control.get("mutation_count") != 32
+        or m149_mutation_control.get("anchor_errors") != []
+        or m149_mutation_control.get("inert_control_failures") != []
+        or not {
+            "commission-blur-threshold",
+            "commission-improvement-threshold",
+        }.issubset(
+            set(
+                m149_mutation_control.get(
+                    "surviving_substantive_mutations", []
+                )
+            )
+        )
+    ):
+        findings.append({"kind": "m149_mutation_positive_control"})
+    for label, control, sentinel_required in (
+        ("artifact", m149_artifact_control, False),
+        ("source", m149_source_control, True),
+    ):
+        observed = control.get("observed")
+        if (
+            control.get("status") != "FAIL_RACE_REPRODUCED"
+            or control.get("baseline_is_invalid_without_boolean") is not True
+            or not isinstance(observed, dict)
+            or (
+                sentinel_required
+                and observed.get("sentinel_executed") is not True
+            )
+        ):
+            findings.append({"kind": f"m149_{label}_race_positive_control"})
     if (
         m149_artifact_race.get("status") != "PASS_NO_RACE_OBSERVED"
         or m149_artifact_race.get("adapter_sha256") != current_adapter_sha256
@@ -453,7 +653,11 @@ def main() -> None:
         or m149_artifact_race.get("unregistered_fail_artifact_sha256")
         != "2aca17c001945544ec60a85eff9a88763d5d77a808817f621673cda855e5e84a"
         or m149_artifact_race.get("observed") is not None
-        or sum(m149_artifact_race.get("attempt_counts", {}).values()) != 16
+        or sum(m149_artifact_race.get("attempt_counts", {}).values()) != 128
+        or any(
+            m149_artifact_race.get("attempt_counts", {}).get(key, 0) == 0
+            for key in ("exit-0", "exit-2")
+        )
     ):
         findings.append({"kind": "m149_artifact_race_retest"})
     if (
@@ -463,7 +667,11 @@ def main() -> None:
         or m149_source_race.get("registered_core_sha256")
         != "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b"
         or m149_source_race.get("observed") is not None
-        or sum(m149_source_race.get("attempt_counts", {}).values()) != 16
+        or sum(m149_source_race.get("attempt_counts", {}).values()) != 128
+        or any(
+            m149_source_race.get("attempt_counts", {}).get(key, 0) == 0
+            for key in ("exit-0", "exit-2")
+        )
     ):
         findings.append({"kind": "m149_source_race_retest"})
     if (
@@ -489,15 +697,52 @@ def main() -> None:
         != "30453f8901c0b121a48771d35c9cf735da88358bb441794b918de77b267903e2"
     ):
         findings.append({"kind": "adapter_contract_hash"})
+    expected_coverage_summary = {
+        "ordinary_checks": 56,
+        "local_substantive_mutations_applied": 27,
+        "local_substantive_mutations_killed": 27,
+        "m149_manifest_entries": 32,
+        "m149_substantive_mutations_applied": 31,
+        "m149_substantive_mutations_killed": 31,
+        "m149_manifest_entries_unapplied": 0,
+        "m149_inert_mutations_green": 1,
+    }
     if (
-        adapter_manifest.get("status")
-        != "PASS_INTERFACE_ONLY_PHYSICAL_UNBOUND_PENDING_INDEPENDENT_REREVIEW"
+        adapter_manifest.get("schema")
+        != "m135-m138-adapter-result-manifest-v3"
+        or adapter_manifest.get("status")
+        != "PASS_INTERFACE_ONLY_PHYSICAL_UNBOUND_M149_THRESHOLD_REPAIR_AWAITING_REVIEW"
         or adapter_manifest.get("physical_binding_state") != "UNBOUND"
         or adapter_manifest.get("claim_bearing_detail_decision_available") is not False
         or adapter_manifest.get("independent_review_state")
-        != "M149_SEND_BACK_REPAIRED_AWAITING_REATTACK"
+        != "M149_SECOND_SEND_BACK_REPAIRED_AWAITING_REATTACK"
+        or adapter_manifest.get("coverage_summary") != expected_coverage_summary
     ):
         findings.append({"kind": "adapter_manifest_overclaim"})
+    required_result_files = {
+        "M138-ADAPTER-AMENDMENT-8.md",
+        "m138_adapter.py",
+        "m138-checker-bundle.json",
+        "m138-adapter-description.json",
+        "m138-adapter-verification.json",
+        "m138-adapter-mutation-verification.json",
+        "m138-adapter-race-verification.json",
+        "m149-mutation-manifest-reanchored.json",
+        "m149-mutation-verification.json",
+        "m149-mutation-control.json",
+        "m149-artifact-race-control.json",
+        "m149-source-race-control.json",
+        "m149-artifact-race-retest.json",
+        "m149-source-race-retest.json",
+        "m138-adapter-verification-run6-pre-threshold-fix.json",
+        "m138-adapter-mutation-verification-run1-pre-threshold-fix.json",
+        "m138-adapter-race-verification-run1-pre-threshold-fix.json",
+        "m138-adapter-result-manifest-run2-pre-threshold-fix.json",
+    }
+    if not required_result_files.issubset(
+        set(adapter_manifest.get("files", {}))
+    ):
+        findings.append({"kind": "adapter_manifest_missing_file"})
     for name, hashes in adapter_manifest.get("files", {}).items():
         path = HERE / name
         if not path.is_file() or raw_sha256(path) != hashes.get("raw_sha256"):
@@ -571,6 +816,29 @@ def main() -> None:
         )
     ):
         findings.append({"kind": "m149_source_race_retest_hash"})
+    for name, key in (
+        (
+            "m138-adapter-verification-run6-pre-threshold-fix.json",
+            "pre_threshold_behavior",
+        ),
+        (
+            "m138-adapter-mutation-verification-run1-pre-threshold-fix.json",
+            "pre_threshold_local_mutation",
+        ),
+        (
+            "m138-adapter-race-verification-run1-pre-threshold-fix.json",
+            "pre_threshold_race",
+        ),
+        ("m149-mutation-manifest-reanchored.json", "m149_reanchored_manifest"),
+        ("m149-mutation-verification.json", "m149_reanchored_mutation"),
+        ("m149-mutation-control.json", "m149_mutation_positive_control"),
+        ("m149-artifact-race-control.json", "m149_artifact_race_control"),
+        ("m149-source-race-control.json", "m149_source_race_control"),
+    ):
+        if raw_sha256(HERE / name) != adapter_verification_manifest.get(
+            key, {}
+        ).get("raw_sha256"):
+            findings.append({"kind": f"{key}_hash"})
     if (
         adapter_verification.get("adapter_sha256")
         != raw_sha256(HERE / "m138_adapter.py")
@@ -593,7 +861,7 @@ def main() -> None:
             "m138-adapter-contract.json",
             "instrument.py",
             "M138-ADAPTER-PREREGISTRATION.md",
-            *(f"M138-ADAPTER-AMENDMENT-{i}.md" for i in range(1, 8)),
+            *(f"M138-ADAPTER-AMENDMENT-{i}.md" for i in range(1, 9)),
         }
         bundle_files = {
             ref.get("path") for ref in adapter_bundle.get("files", [])
@@ -692,7 +960,14 @@ def main() -> None:
         "comparison_checks": len(comparison_verification.get("checks", {})),
         "comparison_binding_state": comparison_binding.get("state"),
         "adapter_checks": len(adapter_checks),
-        "adapter_mutations_killed": adapter_mutation.get("killed_mutation_count"),
+        "adapter_local_mutations_killed": adapter_mutation.get(
+            "killed_mutation_count"
+        ),
+        "adapter_manifest_mutations_applied": len(applied_substantive),
+        "adapter_manifest_mutations_killed": len(killed_substantive),
+        "adapter_manifest_mutations_unapplied": len(
+            m149_mutation.get("anchor_errors", [])
+        ),
         "adapter_race_checks": len(race_checks),
         "m149_artifact_race_attempts": sum(
             m149_artifact_race.get("attempt_counts", {}).values()
@@ -701,7 +976,9 @@ def main() -> None:
             m149_source_race.get("attempt_counts", {}).values()
         ),
         "adapter_binding_state": adapter_description.get("binding_state"),
-        "adapter_independent_review": "SEND_BACK_REPAIRED_AWAITING_REATTACK",
+        "adapter_independent_review": (
+            "M149_SECOND_SEND_BACK_REPAIRED_AWAITING_REATTACK"
+        ),
         "findings": findings,
     }
     output_path = Path(__file__).resolve().parent / "audit.json"

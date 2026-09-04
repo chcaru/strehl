@@ -1195,44 +1195,65 @@ race campaign is needed
 (`experiments/M135-detail-instrument/m138_adapter.py:35-124,315-391,430-477`;
 `experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-5.md:1-77`).
 
-**VERIFIED.** The repaired ordinary battery passed `51 / 51` named checks and
-replayed byte-for-byte. Its 25 added probes cover the nested supplied-decision
-guard, exact environment equality, both request binding-hash comparisons,
-canonical terminal newline, and positive and negative arms for all 20
-commissioning predicates. The independent mutation harness then killed all
-`25 / 25` substantive guard mutations through their registered named failures,
-while an inert docstring mutation left every probe green. Amendment 6 retains
-the initial CRLF-anchor harness failure; amendment 7 retains the initial
-non-diagnostic hash mutant before both harness defects were corrected
-(`experiments/M135-detail-instrument/m138-adapter-verification.json:1`;
-`experiments/M135-detail-instrument/m138-adapter-mutation-verification.json:1`;
-`experiments/M135-detail-instrument/m138_adapter_mutation.py:1-352`;
+**VERIFIED.** Amendments 5-7 produced a `51 / 51` ordinary battery and a
+`25 / 25` named helper-mutation result. Amendment 6 retains the initial
+CRLF-anchor harness failure; amendment 7 retains the initial non-diagnostic
+hash mutant. Those exact pre-threshold artifacts remain preserved
+(`experiments/M135-detail-instrument/m138-adapter-verification-run6-pre-threshold-fix.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-mutation-verification-run1-pre-threshold-fix.json:1`;
 `experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-6.md:1-16`;
 `experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-7.md:1-17`).
 
-**VERIFIED.** The persistent replacement-race harness passed `7 / 7`. Stable
-registered missing-flat input remained `INSTRUMENT_INVALID` with no Boolean;
-stable registered fail input remained `DETAIL_FAIL / false`; and stable
-replacement of either artifact or core refused nonzero with empty standard
-output. In 16 concurrent artifact attempts, 5 refused and 11 consumed the
-registered invalid snapshot. In 16 concurrent core attempts, 8 refused and 8
-consumed the registered core. No attempt emitted an unsafe conclusion or
-executed the replacement core sentinel. This exercises M149's two mechanisms,
-but M149's separate re-attack remains pending
-(`experiments/M135-detail-instrument/m138-adapter-race-verification.json:1`;
-`experiments/M135-detail-instrument/m138_adapter_race.py:1-377`).
+**VERIFIED.** M149's independent re-attack accepted the read-once mechanism.
+Its vulnerable controls first reproduced the artifact and source races; the
+repaired tree then ran 512 attempts per race, with both exit paths exercised
+and no invalid-to-fail conversion or sentinel execution. M149 independently
+reproduced M135's 25/25 mutation and 7/7 race reports. The two CRITICAL TOCTOU
+defects are therefore closed
+(`experiments/M149-adapter-review/REATTACK-REPORT.md:1-36,76-103`).
 
-**VERIFIED.** M149's own `artifact_race.py` and `source_race.py` were also
-executed unchanged against the repaired source, using project-local work
-directories. The artifact test reproduced the exact historical
-`de4523fc…c574` registered-invalid and `2aca17c0…e84a` unregistered-fail
-fixtures, then observed 11 registered-invalid snapshots and 5 refusals in 16
-attempts without conversion. The source test observed 9 registered-core
-snapshots and 7 refusals in 16 attempts without its sentinel-plus-conversion
-condition. Both returned `PASS_NO_RACE_OBSERVED`. These are M135-run
-reproductions of M149's mechanisms, not M149 acceptance
-(`experiments/M135-detail-instrument/m149-artifact-race-retest.json:1`;
-`experiments/M135-detail-instrument/m149-source-race-retest.json:1`).
+**VERIFIED.** The same re-attack returned a second `SEND BACK`: both
+commissioning threshold-key mutations applied and survived all 51 checks.
+Blur q95 `0.95` passed after replacing the strict `<0.90` lookup with `1.10`;
+improvement q05 `1.00` passed after replacing the strict `>1.10` lookup with
+`0.90`. Nineteen other entries in M149's 32-entry manifest hard-refused because
+the read-once restructuring had moved their anchors. Those 19 were unknown,
+not passing
+(`experiments/M149-adapter-review/REATTACK-REPORT.md:19-69`;
+`experiments/M149-adapter-review/threshold-mutation-probe-repaired.json:1`;
+`experiments/M149-adapter-review/mutation-report-repaired.json:1`).
+
+**VERIFIED.** Amendment 8 makes both contract-key selectors named production
+dependencies, directly probes their exact `0.90` and `1.10` values, and adds a
+public-CLI commissioning request at the discriminating `0.95` and `1.00`
+values. Both output controls must remain false. It also adds a stale
+bundle-member refusal check. The current ordinary battery passes `56 / 56`;
+the local helper suite kills `27 / 27` substantive mutations and leaves its
+inert mutation green
+(`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-8.md:1-84`;
+`experiments/M135-detail-instrument/m138-adapter-verification.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-mutation-verification.json:1`).
+
+**VERIFIED.** Every one of M149's 19 stale anchors maps to a current predicate;
+none was deleted. With the reanchored manifest, M149's unchanged harness
+applied all 32 entries: **31/31 applied substantive mutations killed, 0
+unapplied, one inert green**. Each threshold mutant failed both the exact-key
+probe and the marginal public-CLI output check
+(`experiments/M135-detail-instrument/m149-mutation-manifest-reanchored.json:1`;
+`experiments/M135-detail-instrument/m149-mutation-verification.json:1`).
+
+**VERIFIED.** The post-amendment race rerun was control-first. The vulnerable
+artifact fixture reproduced at attempt 5/120; the vulnerable source fixture
+reproduced with sentinel execution at attempt 8/120. Against amendment 8, 128
+artifact attempts split 63 registered snapshots and 65 refusals, while 128
+source attempts split 58 registered snapshots and 70 refusals. The current
+M135 race harness also passed 7/7 at 128 attempts per race. No repaired arm
+produced an unsafe result
+(`experiments/M135-detail-instrument/m149-artifact-race-control.json:1`;
+`experiments/M135-detail-instrument/m149-source-race-control.json:1`;
+`experiments/M135-detail-instrument/m149-artifact-race-retest.json:1`;
+`experiments/M135-detail-instrument/m149-source-race-retest.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-race-verification.json:1`).
 
 **VERIFIED.** The checked-in physical binding remains `UNBOUND`; therefore
 M135 currently emits no claim-bearing `detail_pass` for M138. Phase 1 remains
@@ -1275,11 +1296,12 @@ outcome, not a detail failure.
   per-capture `10,000`-draw bounds at the `64`-site floor without becoming
   `UNDERPOWERED`. The comparison checker is frozen; the physical generator is
   not yet implemented or commissioned.
-- **ASSUMED.** Whether M149's separate-author re-attack will find another
-  bundle, environment, request-shape, byte-binding, coverage, or refusal-path
-  defect. Its first review was `SEND BACK`; M135 repaired the demonstrated
-  defects and commissioned the repair locally, but does not count that as
-  independent acceptance.
+- **ASSUMED.** Whether M149's next separate-author re-attack will find another
+  bundle, environment, request-shape, byte-binding, threshold-wiring,
+  coverage, or refusal-path defect. Its second review was `SEND BACK`; M135
+  repaired the demonstrated threshold and stale-anchor defects and
+  commissioned the repair locally, but does not count that as independent
+  acceptance.
 - **ASSUMED.** Whether `N=256` gives adequate rank and power for architecture B.
 - **ASSUMED.** Whether repeat-pair FRC, after independent A/B calibration,
   can drive the held-out flat/dark ring residual below a frozen bar on the

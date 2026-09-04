@@ -101,8 +101,9 @@ capture, generator, preregistration, environment, and commissioning artifacts.
 
 ## M138 executable-adapter verification
 
-Status: **SELF-TESTED 51/51; MUTATION-COMMISSIONED 25/25; REPLACEMENT-RACE
-BATTERY 7/7; PHYSICAL BINDING UNAVAILABLE; M149 SEND BACK REPAIRED, RE-REVIEW
+Status: **SELF-TESTED 56/56; LOCAL MUTATIONS 27/27; REANCHORED M149
+MUTATIONS 31/31 APPLIED AND KILLED, 0 UNAPPLIED; REPLACEMENT-RACE BATTERY
+7/7; PHYSICAL BINDING UNAVAILABLE; SECOND M149 SEND BACK REPAIRED, RE-REVIEW
 PENDING**
 
 The adapter preregistration and source were committed before behavioral
@@ -143,8 +144,8 @@ before the read is rejected by its digest, while a replacement after the read
 cannot affect the consumed bytes. This is a structural guarantee, not an
 empirical timing assumption.
 
-The amended ordinary battery has 51 named checks. It retains the original
-behavior checks and adds direct probes for every formerly uncovered predicate:
+The amendment-5 ordinary battery had 51 named checks. It retained the original
+behavior checks and added direct probes for every formerly uncovered predicate:
 
 - valid `DETAIL_PASS → true` and `DETAIL_FAIL → false` decisions;
 - flat, missing-flat, and other internal-invalid states with no Boolean;
@@ -154,7 +155,8 @@ behavior checks and adds direct probes for every formerly uncovered predicate:
 - positive and negative arms for all 20 commissioning predicates; and
 - byte-identical replay.
 
-`m138-adapter-verification.json` is the current machine-readable 51/51 result.
+`m138-adapter-verification-run6-pre-threshold-fix.json` preserves that 51/51
+result.
 `m138-adapter-verification-run5-pre-m149.json` preserves the final pre-review
 25/25 result;
 `m138-adapter-verification-run2-failed.json` preserves the 24/25 run.
@@ -166,17 +168,19 @@ pre-source-loader-hardening 25/25 run.
 pre-review 10/10 bytecode/source bootstrap result, and the earlier 5/5
 pre-source-loader artifact remains retained.
 
-`m138_adapter_mutation.py` independently neutralizes 25 guards one at a time.
+The pre-threshold `m138_adapter_mutation.py` independently neutralized 25
+guards one at a time.
 Every substantive mutant made its registered named check fail, and one inert
 docstring mutation left all probes green. The result is 25/25 substantive
 mutations killed with the inert control surviving. Amendment 6 records the
 first harness failure: raw CRLF source did not match frozen LF anchors.
 Amendment 7 records the second: the initial hash-error mutant raised through an
 unrelated `None` dereference rather than turning the named check red. Both
-harness defects were frozen before repair; the final mutation artifact replayed
-byte-for-byte.
+harness defects were frozen before repair; that mutation artifact is preserved
+as `m138-adapter-mutation-verification-run1-pre-threshold-fix.json`.
 
-`m138_adapter_race.py` reproduces both M149 replacement mechanisms. Stable
+The pre-threshold `m138_adapter_race.py` artifact reproduced both M149
+replacement mechanisms. Stable
 registered missing-flat input remains `INSTRUMENT_INVALID` without a Boolean;
 stable registered fail input remains `DETAIL_FAIL → false`; stable replaced
 artifact and core inputs refuse nonzero with empty standard output, and the
@@ -186,22 +190,50 @@ Across 16 concurrent core attempts there were 8 refusals and 8 registered-core
 decisions, with zero sentinel executions or unsafe reports. All 7 named race
 checks passed.
 
-M149's own `artifact_race.py` and `source_race.py` were then run unchanged
-against the repaired M135 source, with project-local work directories. The
-artifact fixture reproduced M149's exact registered-invalid and unregistered-
-fail hashes, observed 11 registered-invalid decisions and 5 refusals in 16
-attempts, and observed no conversion. The source fixture observed 9
-registered-core decisions and 7 refusals in 16 attempts, with no sentinel-plus-
-conversion result. Both reports are `PASS_NO_RACE_OBSERVED`; this is a direct
-retest of the reviewer's mechanisms, not a substitute for M149's re-review.
+M149 re-attacked those repairs at commit `714f38c6`. Its positive controls
+reproduced both old races, while 512 repaired attempts per race exercised both
+exit paths without an unsafe result. It independently reproduced the local
+25/25 mutation result and 7/7 race result. The two CRITICAL races are therefore
+closed.
+
+That re-attack returned a second `SEND BACK` for threshold coverage. Both
+contract-key substitutions applied cleanly and passed all 51 checks. On
+discriminating controls, blur q95 `0.95` incorrectly passed the strict `<0.90`
+bar when wired to `1.10`, and improvement q05 `1.00` incorrectly passed the
+strict `>1.10` bar when wired to `0.90`. Nineteen additional entries in M149's
+32-entry manifest did not apply because the read-once refactor had moved their
+anchors.
+
+Amendment 8 names both contract-key selectors, directly probes their exact
+values, and adds public-CLI marginal fixtures requiring both commissioning
+Booleans to stay false. It also adds a stale bundle-member refusal check. The
+current ordinary battery passes 56/56. The local helper mutation suite now
+kills 27/27 substantive mutations with its inert mutation green.
+
+`m149-mutation-manifest-reanchored.json` maps every one of M149's 19 stale
+anchors to a present current predicate; none is classified gone. M149's
+unchanged mutation harness applied all 32 entries from that manifest: all
+31/31 applied substantive mutations went red, zero entries were unapplied, and
+the inert control remained green. The two threshold mutants each failed both
+their exact-key probe and their marginal public-CLI control.
+
+M149's own race programs were then rerun control-first. The vulnerable
+artifact race reproduced at attempt 5/120 and the vulnerable source race,
+including sentinel execution, at attempt 8/120. Against amendment 8, 128
+artifact attempts split 63 registered snapshots and 65 refusals; 128 source
+attempts split 58 registered snapshots and 70 refusals. No repaired attempt
+converted invalidity into `DETAIL_FAIL`, and no replacement source executed.
+The current M135 race harness also passed 7/7 with 128 attempts per race.
+This is a direct replay of the reviewer's mechanisms, not a substitute for
+M149's next independent review.
 
 `m138-adapter-description.json` separately exercises production bundle and
 environment verification and reports:
 
 - adapter
-  `09ff1e1456038e70780dc5564ec0f26c4e8264d40c6c4cb22b6214cfb1fce789`;
+  `daa8a24531343bf2ec75c31f1dbabd3b5594b88e792f4e6f3005cbc9cd5302d2`;
 - bundle
-  `56bc2990e7cf6b14988adf874b711f1bcf693c701116e21dfb7bd5f329e83945`;
+  `72951c1924d577c7a08d69d5ffcfc1c52816240068767e54cf67e4f4c5137593`;
 - environment
   `c4b60a7988e31ab21d60958b7e3ef58279595b9f2ef53d1d4d794c316b6b9cc4`;
 - comparison rule
@@ -209,10 +241,10 @@ environment verification and reports:
   and
 - binding state `UNBOUND`.
 
-This verifies the adapter's executable and fail-closed interface. It does not
-close M149's separate-author review: the first review was `SEND BACK`, the
-repair awaits re-attack. It also does not commission physical extraction,
-physical nuisance allowances, or a claim-bearing M1 decision.
+This verifies the adapter's executable and fail-closed interface locally. It
+does not close M149's separate-author review: the second `SEND BACK` has been
+repaired and awaits re-attack. It also does not commission physical
+extraction, physical nuisance allowances, or a claim-bearing M1 decision.
 
 M138's own current adjudicator self-test also passed. Its independently
 maintained consumer path reported `M135-null-state=INSTRUMENT_INVALID`,

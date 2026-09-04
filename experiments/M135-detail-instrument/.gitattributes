@@ -18,7 +18,6 @@ m149-artifact-race-retest-run1-pre-threshold-fix.json -text
 m149-source-race-retest-run1-pre-threshold-fix.json -text
 m149-mutation-manifest-reanchored.json -text
 m149-mutation-verification.json -text
+m149-mutation-control.json -text
 m149-artifact-race-control.json -text
 m149-source-race-control.json -text
-m149-artifact-race-repaired.json -text
-m149-source-race-repaired.json -text
