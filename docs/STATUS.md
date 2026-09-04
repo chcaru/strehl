@@ -2598,6 +2598,68 @@ in the speed programme, not the detail axis. It closes a planned build item and
 protects future effort, but it does not move the headline clause, which remains
 blocked on an instrument (3.1, 2.9.16--2.9.19).
 
+### 2.9.21 The comparator contract can be manufactured, and identity placement defines the hard problem away
+
+`docs/research/M8-COMPARATIVE-PROTOCOL.md`, 756 lines, commit `63846d43`.
+Specification only; no render was made and no holdout opened. **Decision: the
+contract can be manufactured under full input control.** 2.9.16 recorded that
+all nine retained comparator renders are `UNMEASURED` because none supplies
+per-frame placement or a common linear domain. Rather than recover that
+evidence, the protocol makes it trivial.
+
+| candidate | disposition |
+|---|---|
+| Zerene PMax | conditionally manufacturable; needs a valid **Professional** licence and all pixel gates |
+| Zerene DMap | conditionally manufacturable as a separately preregistered project |
+| retained `focus-stack` CLI | conditionally manufacturable via its documented `--no-align` bypass |
+| Helicon Focus | **not admitted** -- no verified bypass and no tagged-linear output contract |
+
+**The consequence is better than the discriminator I asked for.** Pre-warped
+frames are delivered on one common integer grid and the stacker is forbidden to
+align, crop, rotate, scale, shift, brightness-match or reinterpret them. At that
+boundary, in the lane's words, *"the placement of every frame is the identity,
+the interpolation support is one source pixel, and the resampler negative mass
+is zero."*
+
+**With zero negative mass there is no lawful excursion at all.** The phase-exact
+bound that occupied 2.9.16 -- and the `0.28125` ceiling that replaced my wrong
+`~6%` -- does not need solving in this configuration. It is *defined away*. Any
+excursion beyond the source hull is invention, without appeal to a kernel bound.
+
+**The claim stays narrow, and a limitation was added that I had missed.**
+`M8-O can establish invention. It cannot name the inventor` survives unchanged:
+even with alignment removed as an explanation, an excursion may come from
+pyramid reconstruction, local contrast, deconvolution, a non-convex merge,
+sharpening, or an omitted transform. The lane then added, correctly:
+
+> This is a controlled merge audit, not a default-settings product benchmark.
+> Disabling a comparator's normal alignment deliberately removes one part of its
+> product.
+
+That sentence must survive into any published claim. We would be auditing a
+merge, not beating a shipping application at its own job, and saying otherwise
+would be dishonest. A checkbox is likewise not evidence: the run is
+`UNMEASURED` if the stacker cannot prove the pixel planes it used, if the output
+grid fails the geometry witness, or if the output lacks the frozen linear
+profile.
+
+**Blocked on the owner: the Zerene arms.** The registered build is Zerene
+Stacker `1.04 Build T2026-05-04-0750`. The current trial is **expired** and
+cannot save either the output or the adjusted-input evidence, and a
+**Professional** licence is specifically required for the Save Adjusted Input
+Images export that the comparator-adjusted-plane check depends on. No bypass
+will be attempted. This is a purchase decision and it is now with the owner. The
+governing proposal names licensed Zerene PMax *and* DMap as the comparator
+(`2026-08-sota-path.md:1536`), so this bears directly on the headline claim.
+
+**Not blocked, and executing: the `focus-stack` arm**, which needs no licence.
+As registrar I granted it `tilted-sw10-cpl`, 92 frames, from the burned
+2026-09-02 session -- a tilted planar target with genuine depth and simple
+geometry. `tilted-sw4` is withheld as one half of the improvement pair and the
+flat triple is assigned elsewhere; that is a coordination boundary, not a
+holdout one. If a control fails the lane stops at `UNMEASURED`, which on this
+lane's record is a promise rather than a hope.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
