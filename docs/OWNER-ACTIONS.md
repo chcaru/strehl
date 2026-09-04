@@ -236,10 +236,67 @@ built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 
 ---
 
-## Ask 2 — the capture session. **$0, 45-60 minutes.** *Now the most valuable thing you can do.*
+## Ask 2 — the capture session. **$0.** *Do not shoot yet. One tool has to exist first.*
 
-Clears blocker `(c)`, which with `crop-early` reaches **`3 of 12`** (M8, M10,
-M12).
+> **STOP — this changed after the section below was written, and the change is
+> blocking.** The lane that designed the instrument this session feeds (M135)
+> has ruled that **you should not shoot until an in-field preflight exists**,
+> and I agree with its reasoning. The session is still the most valuable thing
+> you can do; it is simply not yet safe to do it. **I am having the preflight
+> built now.** I will tell you the moment it is ready. Nothing here asks
+> anything of you today — read § *The blocking finding* below if you want the
+> reason, and otherwise wait for me.
+
+### The blocking finding — why shooting tonight could waste the whole session
+
+The design compares two optical states of your rig: a **reference** state with
+the teleconverter fitted at about `2.7015x`, and the **TC0** state with it
+removed at a target of `1.32x`, ceiling `1.33x`. The instrument requires the
+reference to oversample the test by at least `2.0x`. As designed that ratio is
+`2.7015 / 1.33 = 2.0312x` — a margin of **`0.0312x`, or 1.54% relative**.
+
+You set that magnification **by hand**. M135's ruling is blunt: **`1.54%` is not
+enough for blind hand-setting.** Placement repeatability here is `UNMEASURED`,
+and the one figure that looked reassuring — M84b's `0.188%` statistical and
+`~0.36%` absolute — measures *recovery*, not *placement*, so it does not cover
+this.
+
+**Why that is dangerous rather than merely tight:** M141 established that
+physical reproduction ratio is metadata-recoverable for **0 of 68** of your
+existing stacks. So if the achieved scale lands more than `1.54%` low, **nothing
+in the files announces it.** You would shoot the full session, and the problem
+would surface only later, with the session already spent.
+
+**The good news, and the reason this is a delay rather than a redesign.** Both
+optical states image the same coplanar grid. The gate is therefore a *ratio* of
+two magnifications measured against that one grid — and in a ratio the grid
+pitch, the sensor pixel pitch and the EXIF reporting all **cancel**. I checked
+that argument independently and it holds. So the achieved ratio is measurable
+from the frames themselves, with no absolute calibration required. It just has
+to be measured **before** you commit to the session rather than after, which is
+exactly what the preflight is for: shoot one grid frame in each state, run one
+command, and it tells you `PASS` or `FAIL` with the direction to adjust.
+
+### M135's other capture decisions, now settled
+
+These answer the four questions that were holding the session:
+
+| Question | Ruling |
+|---|---|
+| Teleconverter | **On** for the reference passes, **off** for TC0. |
+| Magnification | Retain **`1.32x`** target, **`1.33x`** ceiling — *conditional on the preflight passing.* |
+| Frame count | **891 registered frames** — this is the real number, not 448. |
+| The committed 603-frame request | **Superseded.** |
+| Stabilisation | **IBIS and OSS off throughout** — consistent with finding 1 below. |
+
+**Action item on me, not you:** the protocol document
+`docs/capture-requests/2026-09-319-frame-session.md` still describes the
+superseded session. **Do not shoot from it in its current state.** I will
+reconcile it against the 891-frame design before I tell you the session is
+ready, so that what you shoot from is a single unambiguous document.
+
+Once cleared, this session clears blocker `(c)`, which with `crop-early` reaches
+**`3 of 12`** (M8, M10, M12).
 
 **But its real value is larger than that number.** The session is also where the
 *inputs* for the detail instrument come from — the dense checker-only reference,
@@ -455,7 +512,15 @@ starting it now would burn a 30-day clock before the inputs are ready, which is
 exactly how the Zerene trial was wasted. **Reserve it. Reconsider when Helicon 9
 reaches stable release.**
 
-## Ask 4 — one definitional call that is worth four axes. **$0, and it is genuinely yours to make.**
+## Ask 4 — one definitional call. **$0, and it is genuinely yours to make.** *Correction: it is not worth four axes. I was wrong.*
+
+> **CORRECTION, and it is to my own argument.** When I first wrote this ask I
+> told you rule 4 was costing you four scoreable axes. **That was false**, and
+> an independent audit (M146, `docs/research/M146-unlock-audit.md`, commit
+> `68ea3b95`) established it. I have rewritten the section below to the honest
+> version. The question is still real and still yours — but the prize I
+> attached to it does not exist, and you should not decide this expecting to
+> gain four axes.
 
 **The situation.** I wrote a rule into the scorecard that is not in your plan. It
 is rule 4, and an independent audit confirmed it appears nowhere in
@@ -470,30 +535,53 @@ or memory bar only if it **(i)** passes an input/output transfer audit **and**
 that capture. The intent was to stop a deliberately blurred, fast, quiet mode
 from becoming the yardstick.
 
-**What it costs.** Conjunct **(ii)** needs the detail instrument we do not yet
-have. So it propagates that blocker to four axes that do not otherwise need it.
-A mechanical re-derivation of all sixteen blocker subsets
-(`experiments/M140-readiness/readiness.json`) is unambiguous: blocker `(a)` is
-**intrinsic** only to M1, M5, M6 and M9, and **propagated by my rule alone** to
-M2, M3, M4 and M11.
+**What it costs — the corrected version.** Conjunct **(ii)** needs the detail
+instrument we do not yet have, so rule 4 does attach that blocker to four axes.
+**What I got wrong is the claim that rule 4 is the *only* thing attaching it.**
+It is not. Those axes are coupled to the detail instrument through clauses that
+have nothing to do with my rule, and removing my rule leaves the couplings
+standing.
+
+**M11 is the cleanest refutation, and it was my own sharpest example.** I told
+you M11 was blocked "purely because I said a comparator must be
+quality-qualified first." That is wrong on the literal document. The scorecard's
+comparator-envelope definition says *"For speed it is the fastest mode that
+passes the complete quality scorecard"* (`:245-246`), and M11's own computation
+step 7 independently repeats *"the fastest mode that passes all quality gates"*
+(`:1089-1090`). **Neither clause is rule 4.** I verified both directly. Strike
+rule 4 tomorrow and M11 is still blocked, because M11's own bar demands a
+quality-qualified comparator in its own words. M2, M3 and M4 have comparable
+independent couplings.
 
 | | rule 4 as written | rule 4 narrowed or removed |
 |---|---|---|
-| comparator bought | **2 axes** | **6 axes** |
-| comparator + capture | **4 axes** | **8 axes** |
+| comparator bought | **2 axes** | **2 axes** — *no change* |
+| comparator + capture | **4 axes** | **4 axes** — *no change* |
 
-**Same money, same shooting, four more axes.** M11 is the sharpest example: its
-own bar is elapsed time. Speed does not need a detail instrument to be measured.
-It is blocked purely because I said a comparator must be quality-qualified
-first.
+**So the honest position: narrowing rule 4 unlocks nothing today.** M146 tested
+all four axes against the archive and returned `NEEDS_NEW_CAPTURE` or
+`BLOCKED_FOR_ANOTHER_REASON` for every one. That is a genuinely useful negative:
+it means **Ask 3's advice to wait on the $925 is correct and now independently
+confirmed**, and it means you are not losing anything by leaving rule 4 alone
+while the detail instrument is built.
 
-**The part I got wrong, stated plainly.** I originally justified rule 4 as
-rigour. It is not. Because rule 3 already picks the comparator in the
-*comparator-favouring* direction — the fastest for speed, the quietest for noise
-— excluding degenerate modes makes every affected bar **easier for us, not
-harder**. Rule 4 buys *fairness*, and it pays for it in scoreability. That is a
-reasonable trade to want, but it is not the trade I first described, and you
-should judge it on the honest version.
+**Why I am still asking.** Rule 4 remains an unratified rule I inserted into
+your scorecard, and it still changes what a passing claim *means* even though it
+no longer changes what is scoreable today. It is a question about what counts as
+a fair comparison, and that is a judgement about the claim you want to make
+rather than a fact I can measure. It just is not urgent, and it is not worth
+four axes.
+
+**The part I got wrong the first time, which still stands.** I originally
+justified rule 4 as rigour. It is not. Because rule 3 already picks the
+comparator in the *comparator-favouring* direction — the fastest for speed, the
+quietest for noise — excluding degenerate modes makes every affected bar
+**easier for us, not harder**. Rule 4 buys *fairness*, and it pays for it in
+scoreability. That much was true when I wrote it and is still true.
+
+**Two errors in one ask is worth noting.** I over-claimed the benefit and I
+mis-stated the mechanism, and in both cases a lane found it rather than my own
+review. I would rather show you that than quietly rewrite the section.
 
 ### What I recommend: publish both, and decide nothing
 
