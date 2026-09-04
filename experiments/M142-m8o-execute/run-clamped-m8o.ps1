@@ -19,9 +19,10 @@ $Protocol = "M136 clamped-Catmull-Rom representable-domain M8-O v1"
 $VerifierProtocol = "M136 independent verifier v1"
 $SourceCommit = $SourceCommit.ToLowerInvariant()
 $RequiredCommit = "248178b921f98ec1f13ea4c07d30fa68ace787a0"
-$RequiredVerifierCommit = "636d3f57"
-$RequiredVerifierSha256 = "CAC0E96943DAB44CA1E5FC3B6A2FD8315868290509EE2632861B48157A012401"
-$RequiredVerifierCommissionSha256 = "35777789168C5751EFD8584393A314BE5EA4A827636D621A0CDDA494B65B191F"
+$RequiredVerifierCommit = "e5489d64"
+$RequiredVerifierCommissionCommit = "9dbfedbd"
+$RequiredVerifierSha256 = "2AA3789060D9885A63EC9DF16CC8933492466185EF549241F69BA852A85CC9F7"
+$RequiredVerifierCommissionSha256 = "5FEC854466CC31C215458C16C9868EBFDE6A46E05D1839EE85FB3BD15EDA9865"
 
 $Experiment = [IO.Path]::GetFullPath($PSScriptRoot)
 $Repo = [IO.Path]::GetFullPath((Join-Path $Experiment "..\.."))
@@ -412,7 +413,7 @@ function Assert-Prerequisites {
         throw "M136 verifier differs from final commit $RequiredVerifierCommit"
     }
     if ((Get-Sha256 $VerifierCommission) -cne $RequiredVerifierCommissionSha256) {
-        throw "M136 commissioning report differs from final commit $RequiredVerifierCommit"
+        throw "M136 commissioning report differs from final commit $RequiredVerifierCommissionCommit"
     }
     $resolvedCommit = Get-CommandText -File "git" -Arguments @(
         "-C", $Repo, "rev-parse", "$SourceCommit`^{commit}"
