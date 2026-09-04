@@ -213,7 +213,8 @@ function Export-Snapshot {
     $tar = Join-Path $Out $ArchiveName
     Reset-OutputPath $tar
     $arguments = @(
-        "-C", $Repo, "archive", "--format=tar", "--output=$tar", $Commit, "--"
+        "-c", "core.autocrlf=false", "-C", $Repo, "archive", "--format=tar",
+        "--output=$tar", $Commit, "--"
     ) + $Paths
     Invoke-Checked "git" $arguments
     Invoke-Checked "tar" @("-xf", $tar, "-C", $Destination)
@@ -348,8 +349,8 @@ function Invoke-Prepare {
         "Cargo.toml", "Cargo.lock", "rust-toolchain.toml", "crates",
         "experiments/M8-overshoot"
     )
-    Assert-Hash $Checker "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89"
-    Assert-Hash $Injector "EB80E1EB5F44B0AAD0B17C165179E91976CAB8BF019604EC9269ACAC5E435913"
+    Assert-Hash $Checker "3E6048C25B56B357DC694C32DEE943EAA18AE88B748C9B0FE6B578A9E4251780"
+    Assert-Hash $Injector "37B7FCF6246288AC43A95A701FCE82D252ED6F157C8BED1C0A8C7322C7FDFA80"
     Assert-Hash $Hook "D6DB609AC725A89377EAF9B0272E8ED62E69AC12E840F6DD89416B7E044A2E0D"
 
     Reset-OutputPath $FixtureTarget

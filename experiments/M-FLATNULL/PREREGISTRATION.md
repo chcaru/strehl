@@ -68,9 +68,16 @@ The unchanged M8 implementation is pinned to commit
 
 | file | SHA-256 |
 |---|---|
-| `experiments/M8-overshoot/checker.py` | `B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89` |
-| `experiments/M8-overshoot/inject_trace.py` | `EB80E1EB5F44B0AAD0B17C165179E91976CAB8BF019604EC9269ACAC5E435913` |
+| `experiments/M8-overshoot/checker.py` | `3E6048C25B56B357DC694C32DEE943EAA18AE88B748C9B0FE6B578A9E4251780` |
+| `experiments/M8-overshoot/inject_trace.py` | `37B7FCF6246288AC43A95A701FCE82D252ED6F157C8BED1C0A8C7322C7FDFA80` |
 | `experiments/M8-overshoot/m8_trace.rs` | `D6DB609AC725A89377EAF9B0272E8ED62E69AC12E840F6DD89416B7E044A2E0D` |
+
+These are SHA-256 hashes of the committed LF-normalized Git blobs. A first
+preparation attempt stopped before commissioning or target output because
+Windows `core.autocrlf` made the default archive extraction disagree with this
+immutable representation. The harness now invokes
+`git -c core.autocrlf=false archive`; no predicate, source commit, tool commit,
+or target treatment changed.
 
 The checker remains producer-independent: the trace supplies source values,
 gathered values, and placement coefficients, never a hull or verdict.
