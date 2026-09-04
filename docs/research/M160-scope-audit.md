@@ -1,6 +1,120 @@
 # M160 scope audit — independent review of `6b966d8c`
 
-Status: **COMPLETE — CLAIM D REFUTED**
+Status: **COMPLETE — `6b966d8c` REFUTED, OPERATIVE TEXT RECONCILED**
+
+## Reconciliation applied
+
+The scorecard now implements the owner's three decisions in operative text rather
+than only in amendment prose.
+
+### Publication states
+
+- The owner gates are exactly `M1`, `M2`, `M3`, `M8`, `M9`, `M10`, and `M11`.
+- `M4`, `M5`, `M6`, `M7`, and `M12` are mandatory disclosures. Every one must be
+  measured and published, and every miss must be stated prominently.
+- `PASS — SOTA under scorecard v1.7` is reserved for a clean result: all seven owner
+  gates pass, including their two retained anti-cheat components, and all five
+  disclosure axes pass.
+- `DISCLOSURE MISS — owner's seven-axis SOTA claim supported` is the distinct state
+  for seven passing owner gates plus a full-axis disclosure miss. It is explicitly
+  neither `PASS` nor `FAIL`, and its headline must name every miss, value, and bar.
+- `FAIL` is limited to a missed owner gate or retained anti-cheat component.
+- `UNMEASURED` applies when required evidence is incomplete. All twelve axes remain
+  mandatory measurements; optional Helicon absence or invalidity is non-fatal.
+
+### Retained anti-cheat components
+
+The full M4 and M12 axes remain disclosures. Two narrower components protect claims
+the owner actually made:
+
+1. The same output bytes and settings used for M1/M2/M8 must have median
+   `Q_flat<=1.00`. M4's failed-site, ghost-ratio, and comparator bars do not gate the
+   owner's verdict.
+2. The fixed-width outputs at 1/2/4/8/16 workers must be mutually byte-identical, and
+   the 16-worker output must meet M11. M12's fixed-worker-repeat, memory, N-scaling,
+   and N-mod-4 bars do not gate the owner's verdict.
+
+The document now states why this split is necessary: dropping the components permits
+a named claim to be bought by a cheat, while retaining either full axis contradicts
+the seven-axis scope.
+
+### Comparator contract
+
+The required comparator set is now consistently:
+
+- licensed Zerene Stacker PMax;
+- licensed Zerene Stacker DMap;
+- the fork at its frozen best-known build.
+
+The fork settings entry requires its version/source commit, source-tree hash,
+toolchain and dependency lock, compiler flags, binary SHA-256, and complete frozen
+settings manifest. The common-input rule, readiness blocker, speed qualification,
+results schema, and public sentence all include the fork. Helicon is qualified
+`when obtainable` throughout operative text; its absence or invalidity is recorded
+and excluded rather than made fatal.
+
+### Forward verification
+
+`experiments/M160-scope-audit/verify_reconciliation.py` reads the predecessor and
+reconciled scorecard blobs as bytes through `git show` and decodes UTF-8 itself when
+run with `--after-rev`. Its reconciled result is:
+
+```text
+CHECKS total=51 passed=51 failed=0 skipped=0 accounted=51
+GROUP source total=3 passed=3 failed=0
+GROUP gate total=13 passed=13 failed=0
+GROUP anti total=11 passed=11 failed=0
+GROUP comparator total=15 passed=15 failed=0
+GROUP integrity total=9 passed=9 failed=0
+VERDICT GREEN
+```
+
+The integrity group confirms:
+
+- changed top-level sections are exactly 0, 1, 3, 4, 6, 7, and 8;
+- the preamble and sections 2 and 5 are byte-identical;
+- §§1.1, 1.3, 1.5, 1.6, and 3.2 are byte-identical;
+- the complete M1, M2, M3, M9, and M10 cards are byte-identical;
+- all twelve at-a-glance registered-bar rows and all twelve detailed `Success`
+  blocks are byte-identical;
+- every pre-existing scoreboard value and standing is preserved while the fork
+  column is added; and
+- M8 remains `FAIL` on M8-R `1.030569%` and M8-O `1.326144%` against `0.0000%`.
+
+### Reconciliation commissioning
+
+All mutations use unique exact full-line anchors, hard-error unless the anchor occurs
+exactly once, verify that the candidate differs from the baseline, and run only on
+UTF-8 copies below `%TEMP%`.
+
+| Control | Anchor found | Expected result | Result |
+| --- | --- | --- | --- |
+| remandate-unnamed-axis | yes | RED `gate.disclosure-split` | PASS |
+| delete-m4-anti-cheat-component | yes | RED `anti.m4-flat-power-component` | PASS |
+| delete-m12-anti-cheat-component | yes | RED `anti.m12-cross-worker-component` | PASS |
+| drop-fork-from-common-input | yes | RED `comparator.common-input-required-set` | PASS |
+| make-helicon-mandatory | yes | RED `gate.helicon-not-unmeasured` | PASS |
+| drop-fork-binary-hash | yes | RED `comparator.fork-freeze-protocol` | PASS |
+| drop-fork-scoreboard-column | yes | RED `comparator.scoreboard-schema` | PASS |
+| collapse-disclosure-miss-into-pass | yes | RED `gate.disclosure-miss-distinct` | PASS |
+| retract-m8-fail | yes | RED `integrity.m8-fail-preserved` | PASS |
+| lower-m2-comparator-bar | yes | RED `integrity.at-glance-bars-unchanged` | PASS |
+| benign-required-set-rewrap | yes | GREEN | PASS |
+| benign-disclosure-role-paragraph-break | yes | GREEN | PASS |
+
+Result: **12/12 controls passed: 10 named RED controls and 2 benign GREEN
+controls.**
+
+### Judgment check
+
+I found no evidence that any of the three decisions is wrong. The required
+clarification was not a fourth decision: a disclosure axis must be measured before a
+run verdict can issue, but a measured disclosure miss changes the verdict to
+`DISCLOSURE MISS` rather than negating the owner's sentence. This preserves mandatory
+measurement without silently restoring the five full axes as owner gates.
+
+The remainder of this report records the independent audit of predecessor commit
+`6b966d8c` that motivated the reconciliation.
 
 ## Verdicts
 
@@ -198,10 +312,10 @@ operative text.
     The only permitted public sentence omits the required fork and presents
     optional Helicon as part of the core comparator statement.
 
-## Required reconciliation
+## Required reconciliation (applied)
 
-The amendment cannot be made internally consistent by one more disclaimer.
-The operative rules must be changed:
+The predecessor amendment could not be made internally consistent by one more
+disclaimer. The reconciliation above applies these required changes:
 
 1. Replace “every primary metric” and “any commissioned primary gate” with the
    explicit owner-required set M1, M2, M3, M8, M9, M10 and M11; retain the other
@@ -221,7 +335,7 @@ The operative rules must be changed:
 6. Rewrite the public unknown-position sentence around Zerene plus the frozen
    fork; mention Helicon separately as optional.
 
-## Why the author's verifier passed
+## Why the predecessor author's verifier passed
 
 `experiments/ORCH-verify/v-scope.ps1` reports 35/35 because it checks that the
 new amendment says the intended things, not whether operative text elsewhere

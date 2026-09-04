@@ -77,7 +77,7 @@ independently calibrated trust and depth products.** It is not an average, a wei
 score, or “wins most axes.”
 
 > **AMENDMENT — publication scope corrected to the owner's sentence, and Helicon
-> restored to optional.** This paragraph previously read *"passes every primary bar
+> restored to "when obtainable".** This paragraph previously read *"passes every primary bar
 > below against licensed Zerene Stacker and Helicon Focus ... and meeting the
 > registered resource bars."* That was wrong in two independent ways, both of which
 > made this document harder to satisfy than the plan it derives from.
@@ -91,19 +91,22 @@ score, or “wins most axes.”
 > **M9** and **M10** (*"D2/D8/A5/C5"*), and **M11** (*"existing harness"*). I verified
 > this directly against the sentence rather than accepting the audit's summary.
 > **M4, M5, M6, M7 and M12 are named by no clause of it**, yet this document made all
-> five fatal to publication. They are retained below as engineering gates and are
-> marked `SCORECARD ADDITION`; **they are not prerequisites for the owner's claim**,
-> and a report may not withhold the owner's sentence on their account.
+> five fatal to publication. Their full-axis bars are retained below as **mandatory
+> disclosures** and are marked `SCORECARD ADDITION`; **they are not independent
+> prerequisites for the owner's claim**. The narrower M4 flat-power and M12
+> cross-worker byte-identity components retained in §0.2 are anti-cheat protections
+> for named axes, not reinstatement of the full M4 or M12 bars.
 >
-> **(ii) Helicon was never mandatory.** The plan pins comparators as *"licensed Zerene
+> **(ii) Helicon, when obtainable, was never mandatory.** The plan pins comparators as *"licensed Zerene
 > (PMax **and** DMap ...), the fork rebuilt at its best-known build ..., Helicon if
 > obtainable"*, and its purchase instruction names only Zerene, at *"Prosumer ($189)
-> or Professional ($289)"*. Requiring Helicon made comparator blocker `(d)` fatal on
-> eight axes for a product the owner never mandated. **The required comparator set is
-> licensed Zerene Stacker plus the fork at its best-known build**; Helicon is included
-> when obtainable, and its absence is recorded rather than fatal. The fork's omission
-> from this document's comparator list is itself a drift (M158 finding 9) and is
-> corrected by this amendment.
+> or Professional ($289)"*. Treating Helicon as required despite "when obtainable"
+> made comparator blocker `(d)` fatal on eight axes for a product the owner never
+> mandated. **The required comparator set is licensed Zerene Stacker PMax, licensed
+> Zerene Stacker DMap, and the fork at its frozen best-known build**. Helicon, when
+> obtainable, is an additional comparator; its absence is recorded rather than fatal.
+> The fork's omission from this document's comparator list is itself a drift (M158
+> finding 9) and is corrected by this amendment.
 >
 > **What this amendment does not do.** It lowers no bar, retracts no `FAIL`, and makes
 > no axis passable that was failing on its merits — M8 still reads `FAIL`, on M8-R at
@@ -116,12 +119,23 @@ document’s proposed completions, not claims that the governing proposal alread
 
 ### 0.1 Decision rule
 
-1. Every primary metric is a hard gate. No win compensates for a loss.
-2. `UNMEASURED`, an uncommissioned checker, an invalid comparator arm, or an
-   under-powered capture blocks a SOTA claim; it is not a pass or a loss.
-3. A comparative quality gate uses the **best qualifying comparator envelope**:
-   Zerene PMax, Zerene DMap, and Helicon Methods A, B, and C, each at its frozen
-   factory setting and with user post-processing disabled. “Best” is chosen in the
+1. The publication gates are exactly `M1`, `M2`, `M3`, `M8`, `M9`, `M10`, and
+   `M11`. Every one is hard; no win compensates for a loss. `M4`, `M5`, `M6`, `M7`,
+   and `M12` are mandatory disclosures, not independent publication gates: every
+   one must still be measured, published in the results table, and any miss stated
+   prominently and without softening.
+2. A verdict requires measurements for all twelve axes. When no owner gate, including
+   its retained anti-cheat component, has failed, an uncommissioned checker, an
+   invalid required-comparator arm, an under-powered required capture, or any other
+   missing required measurement makes the run `UNMEASURED`; it is not a pass or a
+   loss. A measured owner-gate failure retains `FAIL` precedence under §8. Helicon,
+   when obtainable, must follow the same protocol, but its absence is recorded and is
+   never a reason for `UNMEASURED`.
+3. A comparative quality gate uses the **best qualifying comparator envelope**.
+   The required set is exactly licensed Zerene Stacker PMax, licensed Zerene
+   Stacker DMap, and the fork at its frozen best-known build. Helicon Methods A, B,
+   and C are added when obtainable. Every included mode uses its frozen setting
+   with user post-processing disabled. “Best” is chosen in the
    comparator-favouring direction for each metric.
 4. Once a replacement M1 is admitted, a comparator mode may define a noise, artifact,
    speed, or memory envelope only if it passes the input/output transfer audit and
@@ -151,18 +165,14 @@ document’s proposed completions, not claims that the governing proposal alread
    > `68ea3b95`) tested all four propagated axes against the archive and returned
    > `NEEDS_NEW_CAPTURE` or `BLOCKED_FOR_ANOTHER_REASON` for every one. The
    > propagation above is real but it is **not exclusive**: those axes reach the
-   > detail instrument through clauses that are not rule 4, so striking rule 4
-   > leaves the couplings standing. M11 is the cleanest case -- the
-   > comparator-envelope definition requires *"the fastest mode that passes the
-   > complete quality scorecard"* (the comparator-envelope clause), and M11's own
-   > computation step 7 independently repeats *"the fastest mode that passes all
-   > quality gates"* (M11 "Exact computation", step 7).
-   > Neither clause is rule 4. Both quotations were re-verified against this file
-   > directly rather than taken from the owner page, which cited them as
-   > `:245-246` and `:1089-1090` -- stale by `+21` and `+42` lines. **Cite the
-   > named clause, not the line number.** Writing this very correction moved both
-   > targets a further `+5`, and a checker that only asks whether a quotation
-   > still exists reads green while its pointer rots.
+   > detail instrument through clauses that are not rule 4. A later independent
+   > audit found that the comparator-envelope clause and M11 computation also
+   > required every quality axis. This reconciliation narrows both clauses to the
+   > applicable owner-required gates and the retained §0.2 anti-cheat components.
+   > Full M4, M5, M6, M7, and M12 results remain mandatory disclosures, but they do
+   > not become owner gates through comparator qualification. **Cite these named
+   > clauses, not line numbers**; repeated edits have already demonstrated that a
+   > quotation-presence check can stay green while a line pointer rots.
    >
    > | cleared | rule 4 as written | rule 4 narrowed or removed |
    > |---|---|---|
@@ -187,19 +197,30 @@ document’s proposed completions, not claims that the governing proposal alread
 
 ### 0.2 Joint anti-cheat constraints
 
-The bars remain hard gates, but the natural tradeoffs below are scored and published
-as **joint tuples from the same output bytes and settings**. No program may submit one
-render for one member and another render for its opposite. The per-axis comparator
-envelope remains an additional conservative bar; Pareto plots use each actual
-program/mode as one point and never splice modes into a fictional point.
+The seven owner-axis bars remain hard gates. The full M4, M5, M6, M7, and M12
+axis bars are mandatory disclosures, not independent gates. The natural tradeoffs
+below are scored and published as **joint tuples from the same output bytes and
+settings**. No program may submit one render for one member and another render for
+its opposite. The per-axis comparator envelope remains an additional conservative
+bar; Pareto plots use each actual program/mode as one point and never splice modes
+into a fictional point.
 
 | Joint constraint | Cheat and opposed movement | Binding rule |
 | --- | --- | --- |
-| M1 information + M2 noise + M4 flat power + M8 hull | Harder averaging can lower noise by losing information; sharpening can flatter transfer while increasing flat power or leaving the source hull. | M1 presently has no admissible statistic. When it is replaced, publish the replacement detail value with `(eta, Q_flat, M8-R, M8-O)` from the same output and pass every bar simultaneously. Until then neither a noise-only nor a detail claim is valid. |
-| M3 boundary integrity + local source coherence/width | Blur can hide a halo or veil while widening the edge and reducing agreement with the independently sharp source. | The same boundary render must pass M3's width bar and M5's local `rho_best>=0.90`; the build must also pass a future commissioned M1 on independent-repeat captures. |
-| M6 clipping + §1.3 transfer + M5 highlight coherence | Darkening/tone compression avoids clipping; smoothing hides clipped texture. | The same output must pass the ramp, clipping, and highlight-coherence bars. |
+| M1 information + M2 noise + M8 hull + retained M4 flat-power component | Harder averaging can lower noise by losing information; sharpening can flatter transfer while increasing flat power or leaving the source hull. | M1 presently has no admissible statistic. When it is replaced, publish the replacement detail value with `(eta, Q_flat, M8-R, M8-O)` from the same output bytes and settings. That output must pass M1, M2, and M8 and must have median `Q_flat<=1.00`. This retained M4 component is only the flat-power tell; M4's failed-site rate, ghost-ratio, and comparator bars remain mandatory disclosures and do not gate the owner's verdict. Until M1 is admitted, neither a noise-only nor a detail claim is valid. |
+| M3 boundary integrity + local source coherence/width | Blur can hide a halo or veil while widening the edge and reducing agreement with the independently sharp source. | The same boundary render must pass M3's width and local `rho_best>=0.90` bars; that local coherence is an M3 anti-blur component, not the full M5 axis. The build must also pass the independently commissioned M1 gate. |
+| M6 clipping + §1.3 transfer + M5 highlight coherence | Darkening/tone compression avoids clipping; smoothing hides clipped texture. | Measure and publish the ramp, clipping, and highlight-coherence tuple from the same output. M5 and M6 remain mandatory disclosures; their misses produce `DISCLOSURE MISS`, not `FAIL`, when all seven owner gates pass, including their retained anti-cheat components. |
 | M9 false certification + M9 coverage | Universal confidence overclaims; universal refusal obtains perfect precision by saying nothing. | Publish `(false_certification, true_band_coverage)` from one map; both bars must pass. |
-| M11 runtime + M12 determinism/scaling invariance/memory | Serial execution can make fixed-worker runs deterministic by abandoning the speed claim. | The primary CPU result is the 16-worker output; it must meet M11, reproduce at fixed width, and be byte-identical to 1/2/4/8-worker outputs while meeting M12. |
+| M11 runtime + retained M12 cross-worker byte identity | Serial execution can buy determinism by abandoning the speed claim, while worker-dependent output can make the fast arm a different product. | The primary CPU result is the 16-worker output and must meet M11. On the same fixed-width input, the outputs at 1, 2, 4, 8, and 16 workers must be mutually byte-identical. That cross-worker ladder is the only M12-derived publication-gate component; M12's fixed-worker repeat, memory, N-scaling, and N-mod-4 bars remain mandatory disclosures. |
+
+The retained M4 and M12 components protect the owner's own sentence from being
+satisfied by a cheat; they are not extra independent goals. Dropping the flat-power
+tell would allow a nominally hull-safe output to satisfy “zero invented structure”
+while flat power balloons. Dropping cross-worker byte identity would allow the timed
+16-worker arm to be a different product from the slower arms. Conversely, retaining
+the full M4 or M12 axes as prerequisites would contradict the seven-axis scope. The
+narrow components above are therefore the only requirements carried into the owner
+gates; every other M4 and M12 bar remains a mandatory disclosure.
 
 This opposed-pair framing is not universal. M7 colour has an external target, M10
 depth has physical/hidden truth, and M8 has an exact independently reconstructed
@@ -240,10 +261,12 @@ Competitive quality is measured only at a common merge boundary:
    correction, lens correction, local contrast, gamut compression, and output resize.
 4. Strip development tags from the derivative and embed only the frozen linear ICC,
    provenance, and source hash. Hash the pixel payload and whole TIFF.
-5. Zerene, Helicon, and strehl must receive the exact same TIFF bytes. A strehl TIFF
+5. Licensed Zerene Stacker PMax, licensed Zerene Stacker DMap, the fork at its frozen
+   best-known build, and strehl must receive the exact same TIFF bytes. Helicon
+   Methods A, B, and C, when obtainable, must receive those bytes too. A strehl TIFF
    adapter or a bit-for-bit hash identity at strehl’s internal pre-merge linear-frame
    boundary is a prerequisite. Until one exists, **competitive quality remains
-   UNMEASURED**; feeding TIFFs only to the commercial tools is forbidden.
+   UNMEASURED**; feeding TIFFs only to the comparators is forbidden.
 
 This deliberately separates the fair merge comparison from a native-RAW product run.
 A native-RAW run is reported as a product diagnostic but cannot establish a
@@ -277,28 +300,42 @@ arm. It would change the shared input hash or fail the ramp.
 
 ### 1.4 Comparator settings
 
-Use the newest generally available stable release of each product on the
-`RUN-MANIFEST.json` freeze date. Freeze its version, installer/binary hash, licence,
-and screenshots/export of every relevant setting before the first scored output; do
-not choose among old/new releases after viewing results.
+For licensed shipping products, use the newest generally available stable release on
+the `RUN-MANIFEST.json` freeze date. Use the fork only at the best-known build frozen
+by the protocol below. Freeze every included comparator's version, binary hash,
+licence where applicable, and screenshots/export of every relevant setting before
+the first scored output; do not choose among releases, builds, or settings after
+viewing results.
 
 - **Zerene Stacker:** licensed current shipping build; automatic PMax and automatic
   DMap; no retouching; output contrast/brightness/sharpening at neutral/off.
-- **Helicon Focus:** licensed current shipping build; Methods A, B, and C at factory
-  defaults; no retouching; built-in post-sharpening, denoising, and auto-adjustment
-  neutral/off.
+- **Fork:** rebuild the best-known source revision before scoring. Freeze and record
+  its version and source commit, source-tree hash, toolchain and dependency lock,
+  compiler flags, final binary SHA-256, and a complete settings manifest. Select that
+  build and one fixed setting preset before any scored output; no per-subject tuning
+  or post-result rebuild is allowed.
+- **Helicon Focus, when obtainable:** licensed current shipping build; Methods A, B,
+  and C at factory defaults; no retouching; built-in post-sharpening, denoising, and
+  auto-adjustment neutral/off.
 - **strehl:** the shipping default at the scored commit; no per-subject environment
   overrides or experimental quality flags.
 
 If a named control is unavailable in a particular version, record the exact UI and
-exclude that mode. If either product cannot produce a linear output that passes §1.3,
-the named-comparator requirement is unmet and the SOTA verdict remains `UNMEASURED`.
-No expert hand retouch is admitted because it has no reproducible operating point.
+exclude that mode. If any required arm — Zerene PMax, Zerene DMap, or the fork at its
+frozen best-known build — cannot produce a linear output that passes §1.3, the
+named-comparator requirement is unmet and the dependent comparative axes remain
+`UNMEASURED`; the run-level verdict follows §8.
+Helicon, when obtainable, must pass the same transfer rule; when it is unobtainable,
+record that absence and continue. If an obtainable Helicon arm is invalid, record and
+exclude it rather than changing the required-comparator verdict. No expert hand
+retouch is admitted because it has no reproducible operating point.
 
 For higher-is-better metrics, the comparator envelope is the maximum qualifying value
 over all registered modes. For lower-is-better metrics it is the minimum. For speed it
-is the fastest mode that passes the complete quality scorecard. This is intentionally
-conservative toward strehl.
+is the fastest mode that passes `M1`, `M2`, `M3`, and `M8` plus the retained M4
+flat-power anti-cheat component at identical output conditions. `M9` and `M10` are
+strehl output obligations, not comparator capabilities. This is intentionally
+conservative toward strehl without making a disclosure axis an independent gate.
 
 ### 1.5 Geometry and exclusions
 
@@ -475,7 +512,14 @@ viewed.
 
 ## 3. Scorecard at a glance
 
-| ID | Primary metric | Success bar |
+Publication roles are fixed before any score is read. `M1`, `M2`, `M3`, `M8`, `M9`,
+`M10`, and `M11` are **OWNER GATES**. `M4`, `M5`, `M6`, `M7`, and `M12` are
+**MANDATORY DISCLOSURES**: their complete values and misses must be published, but
+their full-axis bars do not independently decide the owner's claim. Only the
+same-output M4 median-`Q_flat` component and the M12 1/2/4/8/16-worker byte-identity
+component cross into owner gates under §0.2.
+
+| ID | Metric | Success bar |
 | --- | --- | --- |
 | M1 | Sharpening-safe resolved information | **NO ADMISSIBLE BAR — WITHDRAWN.** `f_licensed` is blind; native `S_25` fails sharpening and tone, while tone-hardened derivatives reverse the optical controls. |
 | M2 | Noise efficiency at matched information | Cross-fit efficiency `<=1.10`; 95% upper bound of strehl / quietest qualifying comparator `<=0.950`. |
@@ -502,9 +546,11 @@ completions — including freezing D5's “roughly 2x” as `<=2.00` — are
 This table separates scientific blockers from the baseline's single pre-metric
 refusal. Codes are the owner's requested categories: **(a)** missing admissible
 detail instrument, **(b)** unresolved native-scale/`cover=scale` geometry,
-**(c)** missing or under-powered capture, **(d)** unavailable common-input
-Zerene/Helicon output, and **(e)** scientifically measurable now. An **(e)** does not
-mean a result has been run.
+**(c)** missing or under-powered capture, **(d)** unavailable common-input output
+from licensed Zerene PMax, licensed Zerene DMap, or the fork at its frozen best-known
+build, and **(e)** scientifically measurable now. Helicon, when obtainable, is
+recorded separately and never supplies blocker `(d)`. An **(e)** does not mean a
+result has been run.
 
 | Axis | Class | What can and cannot be measured now |
 |---|---|---|
@@ -784,6 +830,12 @@ Any checker that convicts the raw null is not admitted.
 
 ### M4 — non-edge artifact rate
 
+**Publication role: MANDATORY DISCLOSURE.** Full M4 must be measured and published.
+Only median `Q_flat<=1.00`, computed from the same output bytes and settings as the
+M1/M2/M8 claim, is retained as that named claim's flat-power anti-cheat component.
+The failed-site, ghost-ratio, and comparator bars below do not independently gate the
+owner's verdict.
+
 **What it measures and why.** Spatially varying frame election can manufacture
 20–60 px patchwork on flat ground, while bad registration can create double contours.
 Neither is adequately represented by a single “halo” number.
@@ -820,6 +872,9 @@ changing its spatial spectrum, demonstrating that the edge arm is not merely a
 texture detector.
 
 ### M5 — depth-of-field coverage and stack failures
+
+**Publication role: MANDATORY DISCLOSURE.** Full M5 must be measured and published;
+its miss is reported as `DISCLOSURE MISS` when every owner gate passes.
 
 **What it measures and why.** A stack may be sharp where it succeeds yet leave focus
 holes, choose the wrong depth, lose a thin layer, or crop away difficult regions.
@@ -867,6 +922,9 @@ resolution gate.
 
 ### M6 — recoverable highlight and shadow retention
 
+**Publication role: MANDATORY DISCLOSURE.** Full M6 must be measured and published;
+its miss is reported as `DISCLOSURE MISS` when every owner gate passes.
+
 **What it measures and why.** A focus stacker sees different blur discs and sometimes
 different valid exposures at each pixel. It should recover an unsaturated contributor
 instead of clipping a highlight or crushing a shadow.
@@ -898,6 +956,9 @@ mid-grey gain must remain within `0.5%` and the 99th-percentile linear luminance
 be recovered within `0.1 percentage point`; a darkened arm must fail §1.3.
 
 ### M7 — colour fidelity
+
+**Publication role: MANDATORY DISCLOSURE.** Full M7 must be measured and published;
+its miss is reported as `DISCLOSURE MISS` when every owner gate passes.
 
 **What it measures and why.** Frame-dependent white balance, per-channel focus
 selection, clipping, and chromatic registration can make seams or move real colours
@@ -1071,9 +1132,11 @@ placements and raw value traces and imports neither strehl's sampler nor its
 contributor/hull code. A synthetic hard step at a frozen fractional phase must cause
 at least one Catmull-Rom M8-R violation; copy and convex-bilinear nulls must produce
 zero. Every sample deliberately planted at `hi+32*tau` or `lo-32*tau` must be found.
-The crop/reference identity arm must produce zero. A future M1, M5 and M6 are the
-opposed controls against buying an overall quality verdict through clamping; while M1
-is absent, M8 may prove only this internal invariant, not SOTA.
+The crop/reference identity arm must produce zero. A future M1 and the retained M4
+median-`Q_flat<=1.00` component are the owner-gate controls against buying the hull
+result through sharpening or clamping. M5 and M6 remain mandatory disclosures that
+expose any accompanying coverage or dynamic-range cost. While M1 is absent, M8 may
+prove only this internal invariant, not SOTA.
 
 ### M9 — acuity and effective-sample certificate calibration
 
@@ -1209,8 +1272,10 @@ the first 33 bee frames; and bee prefixes N=96/97/98/99 for the modulo ladder.
    with CPU time, busy fraction, GPU utilisation, bytes read/written, and per-stage
    banners. Cold and warm are separate.
 6. Monitor the whole process tree; wait for all children and asynchronous writes.
-7. Comparator speed uses the fastest mode that passes all quality gates at identical
-   dimensions, bit depth, ICC, and common input.
+7. Comparator speed uses the fastest mode that passes `M1`, `M2`, `M3`, and `M8`
+   plus the retained median-`Q_flat<=1.00` anti-cheat component at identical
+   dimensions, bit depth, ICC, and common input. The full M4, M5, M6, M7, and M12
+   bars do not select the M11 comparator.
 
 **Success.** **PROPOSAL BARS:** warm common-input strehl throughput `>=2.00x` the
 best comparator; native-RAW CPU-only at 16 workers `<=0.15 s/frame`; hybrid
@@ -1233,6 +1298,12 @@ timer. A cold arm must begin after a documented reboot or equivalent machine-wid
 cache reset on a dedicated benchmark host.
 
 ### M12 — memory, determinism, and scaling invariance
+
+**Publication role: MANDATORY DISCLOSURE.** Full M12 must be measured and published.
+Only mutually byte-identical output across the fixed-width 1/2/4/8/16-worker ladder,
+with the 16-worker output meeting M11, is retained as M11's anti-cheat component.
+Fixed-worker repeats, memory, N-scaling, and N-mod-4 remain disclosure bars and do not
+independently gate the owner's verdict.
 
 **What it measures and why.** Deep stacks must remain bounded and reproducible.
 Worker-count dependence or hidden spill can make a fast-looking configuration
@@ -1337,20 +1408,20 @@ explained 94.8%, 109.9%, and 267.1% of the apparent three-band gaps
 (`docs/research/V-HEADTOHEAD2.md` lines 23–27 and 57–70). The correct present
 competitive statement is **unknown**.
 
-| ID | Metric | strehl | Zerene Stacker | Helicon Focus | Current standing |
-| --- | --- | --- | --- | --- | --- |
-| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | CAND1 is killed; no admissible instrument or active bar remains, and fresh matched captures are absent. |
-| M2 | Noise efficiency | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Prior numbers were not produced under this matched-information protocol. |
-| M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | VEIL2 stops the A2 build premise but does not measure M3; full-reach sites and its checker remain absent. |
-| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.7 site manifest or control run exists. |
-| M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
-| M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
-| M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | LCA confirms an axial effect but licenses no correction and is not colour fidelity; traceable target absent. |
-| M8 | Independent source-hull census | **FAIL** — M8-R `1.030569%`, M8-O `1.326144%` against a bar of exactly `0.0000%` | **UNMEASURED** | **UNMEASURED** | **READ AND ADMITTED `76b3d9cc`**, superseding the prior UNMEASURED cell. Checker commissioned in both directions before the reading. M8-R is 100% attributable to the Catmull-Rom gather; bilinear gives `0/6,131,678,976` but costs 0.3404 dex of band detail. M8-O is a separate downstream failure. See `docs/research/M8-overshoot.md`. |
-| M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
-| M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
-| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | D11 decode and D15 storage component gates PASS; the complete product/comparator v1.7 run is absent. |
-| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.7 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
+| ID | Metric | strehl | Zerene Stacker (PMax + DMap) | Fork (frozen best-known build) | Helicon Focus (when obtainable) | Current standing |
+| --- | --- | --- | --- | --- | --- | --- |
+| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | CAND1 is killed; no admissible instrument or active bar remains, and fresh matched captures are absent. |
+| M2 | Noise efficiency | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Prior numbers were not produced under this matched-information protocol. |
+| M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | VEIL2 stops the A2 build premise but does not measure M3; full-reach sites and its checker remain absent. |
+| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.7 site manifest or control run exists. |
+| M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
+| M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
+| M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | LCA confirms an axial effect but licenses no correction and is not colour fidelity; traceable target absent. |
+| M8 | Independent source-hull census | **FAIL** — M8-R `1.030569%`, M8-O `1.326144%` against a bar of exactly `0.0000%` | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **READ AND ADMITTED `76b3d9cc`**, superseding the prior UNMEASURED cell. Checker commissioned in both directions before the reading. M8-R is 100% attributable to the Catmull-Rom gather; bilinear gives `0/6,131,678,976` but costs 0.3404 dex of band detail. M8-O is a separate downstream failure. See `docs/research/M8-overshoot.md`. |
+| M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
+| M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
+| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | D11 decode and D15 storage component gates PASS; the complete product/comparator v1.7 run is absent. |
+| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.7 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -1366,9 +1437,11 @@ The proposal is authoritative about direction, but these parts cannot stand as w
    independent votes.
 3. **The comparator prerequisite is larger than a licence/export.** The proposal says
    the scorecard needs a Zerene licence, chart/export, and sharp subject
-   (`2026-08-sota-path.md` lines 183–187). It also needs a common linear merge boundary
-   in strehl. Without that, repeating the old RAW-versus-developed-TIFF asymmetry is
-   unavoidable.
+   (`2026-08-sota-path.md` lines 183–187). The operative required arms are licensed
+   Zerene PMax, licensed Zerene DMap, and the fork at its frozen best-known build;
+   Helicon is added when obtainable. Every included arm also needs a common linear
+   merge boundary in strehl. Without that, repeating the old
+   RAW-versus-developed-TIFF asymmetry is unavoidable.
 4. **Colour fidelity is unspecified and presently uncapturable.** D7 discusses ICC,
    soft proof, and tone policy but names no traceable target, DeltaE computation, or
    bar. Natural subjects cannot close that gap.
@@ -1394,44 +1467,54 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 ### 7.1 Disposition of the independent opposed-pair stress test
 
 - **Accepted:** noise and information must be quoted jointly from the same output;
-  confidence precision and coverage are an opposed pair; and determinism must be
-  demonstrated at the worker count that also meets runtime.
+  confidence precision and coverage are an opposed pair; and the fixed-width
+  1/2/4/8/16-worker outputs must be mutually byte-identical, with the 16-worker output
+  also meeting runtime.
 - **Accepted with correction:** “averaging fails MTF” becomes “averaging must fail a
   future commissioned sharpening-safe information constraint.” Standalone MTF remains
   inadmissible, and v1.7 has no such instrument.
-- **Accepted with correction:** a future detail instrument, M4, and M8 should bracket
-  sharpening together. Hull is corroborative, not guaranteed: a mild or explicitly
-  clamped sharpening pass can remain inside the hull, so hull alone is not the
-  opposite of sharpening.
+- **Accepted with correction:** a future detail instrument, M8, and the retained M4
+  median-`Q_flat<=1.00` component should bracket sharpening together on the same
+  output. Full M4 remains a mandatory disclosure. Hull is corroborative, not
+  guaranteed: a mild or explicitly clamped sharpening pass can remain inside the
+  hull, so hull alone is not the opposite of sharpening.
 - **Rejected:** making every metric a Pareto pair. Colour and physical depth have
   external truths, while the source hull is an invariant; forced opposites would be
   weaker than their independent controls.
 - **Rejected:** assuming a fixed detail/noise tradeoff slope. A genuinely better
-  algorithm may improve both. The scorecard requires simultaneous bars and reports
-  Pareto points, but does not encode the phase-1 lane's internal acceptance numbers.
+  algorithm may improve both. The scorecard requires simultaneous owner-gate bars
+  and the retained anti-cheat components, and reports every disclosure-axis value and
+  Pareto point, but does not encode the phase-1 lane's internal acceptance numbers.
 
 ## 8. Publication rule
 
 A result report must reproduce this scorecard verbatim by hash, publish every invalid
 and refused arm, include commands and complete manifests, and state the verdict as:
 
-- `PASS — SOTA under scorecard v1.7` is unavailable because M1 has no admitted
-  instrument or bar; a later pre-results revision with a commissioned M1 is required;
-- `FAIL`, when any commissioned primary gate misses;
-- `UNMEASURED`, when any required metric, capture, comparator, or instrument is absent
-  or invalid.
+- `PASS — SOTA under scorecard v1.7`, only when all seven owner gates pass, including
+  the retained M4 flat-power component within M1/M2/M8 and the retained M12
+  cross-worker byte-identity component within M11, all five mandatory disclosure
+  axes are measured, and all five meet their complete registered bars. This is the
+  only clean pass. It is unavailable now because M1 has no admitted instrument or
+  bar; a later pre-results revision with a commissioned M1 is required.
+- `DISCLOSURE MISS — owner's seven-axis SOTA claim supported`, when all seven owner
+  gates pass, including their retained anti-cheat components, and all five mandatory
+  disclosure axes are measured, but at least one full disclosure-axis bar misses.
+  This state is **neither `PASS` nor `FAIL`**. The verdict headline and every public
+  summary must name each missed axis, its value, and its bar without euphemism,
+  omission, or a standalone “SOTA” shorthand.
+- `FAIL — owner's seven-axis SOTA claim not supported`, when any commissioned owner
+  gate misses, including either retained anti-cheat component within its named gate.
+  A full-axis M4, M5, M6, M7, or M12 miss alone never triggers `FAIL`.
+- `UNMEASURED`, when no owner gate, including its retained anti-cheat component, has
+  failed but any required axis measurement, capture, instrument, or required
+  comparator arm is absent or invalid. All twelve axes are required measurements.
+  Helicon, when obtainable, is reported under the same protocol, but its absence or
+  invalidity never triggers `UNMEASURED`.
 
 Until such a report exists, the only defensible public sentence is:
 
-> **strehl’s competitive position against Zerene Stacker and Helicon Focus is
-> unknown.**
-
-> **AMENDMENT — what "required" means here.** Consistent with the §0 amendment, the
-> metrics whose absence forces `UNMEASURED` for the **owner's end-state sentence** are
-> the seven it names: `M1`, `M2`, `M3`, `M8`, `M9`, `M10`, `M11`. `M4`, `M5`, `M6`,
-> `M7` and `M12` are this document's additions. Their results **must still be
-> published**, and a miss on any of them must be stated plainly in the report — but it
-> does not by itself convert the owner's verdict to `UNMEASURED`, because the owner's
-> sentence does not rest on them. A report that suppressed the owner's sentence over
-> an axis the owner never named would be reporting this document's opinion as the
-> owner's requirement, which is the precise failure M158 audited.
+> **strehl’s competitive position against the required comparators — licensed Zerene
+> Stacker PMax, licensed Zerene Stacker DMap, and the fork at its frozen best-known
+> build — is unknown. Helicon Focus, when obtainable, is an additional optional
+> comparator and its result is reported separately.**
