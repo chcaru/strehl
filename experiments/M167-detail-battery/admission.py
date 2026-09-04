@@ -242,7 +242,23 @@ def verify_freeze() -> dict[str, object]:
 def audit_candidate_source() -> dict[str, object]:
     source = CANDIDATE_PATH.read_text(encoding="utf-8")
     tree = ast.parse(source)
-    module_bound_names = set()
+    mutable_module_declarations = []
+
+    def statically_immutable(node: ast.AST | None) -> bool:
+        if node is None:
+            return True
+        if isinstance(node, ast.Constant):
+            return True
+        if isinstance(node, ast.Tuple):
+            return all(statically_immutable(item) for item in node.elts)
+        if isinstance(node, ast.UnaryOp):
+            return statically_immutable(node.operand)
+        if isinstance(node, ast.BinOp):
+            return statically_immutable(
+                node.left
+            ) and statically_immutable(node.right)
+        return False
+
     for statement in tree.body:
         if isinstance(statement, (ast.Assign, ast.AnnAssign)):
             targets = (
@@ -250,9 +266,21 @@ def audit_candidate_source() -> dict[str, object]:
                 if isinstance(statement, ast.Assign)
                 else [statement.target]
             )
+            value = statement.value
             for target in targets:
                 if isinstance(target, ast.Name):
-                    module_bound_names.add(target.id)
+                    if not statically_immutable(value):
+                        mutable_module_declarations.append(target.id)
+                else:
+                    mutable_module_declarations.append(ast.unparse(target))
+        elif isinstance(statement, ast.AugAssign):
+            mutable_module_declarations.append(
+                ast.unparse(statement.target)
+            )
+        elif isinstance(statement, ast.ClassDef):
+            mutable_module_declarations.append(
+                f"class:{statement.name}"
+            )
 
     def root_name(node: ast.AST) -> str | None:
         while isinstance(node, (ast.Attribute, ast.Subscript)):
@@ -280,14 +308,9 @@ def audit_candidate_source() -> dict[str, object]:
             mutable_state_hits.extend(node.names)
         elif isinstance(node, ast.AugAssign):
             target_root = root_name(node.target)
-            if (
-                target_root is not None
-                and (
-                    isinstance(node.target, ast.Name)
-                    or target_root in module_bound_names
-                )
-            ):
-                mutable_state_hits.append(target_root)
+            mutable_state_hits.append(
+                target_root or ast.unparse(node.target)
+            )
         elif isinstance(node, (ast.Assign, ast.AnnAssign)):
             targets = (
                 node.targets
@@ -296,11 +319,10 @@ def audit_candidate_source() -> dict[str, object]:
             )
             for target in targets:
                 target_root = root_name(target)
-                if (
-                    not isinstance(target, ast.Name)
-                    and target_root in module_bound_names
-                ):
-                    mutable_state_hits.append(str(target_root))
+                if not isinstance(target, ast.Name):
+                    mutable_state_hits.append(
+                        target_root or ast.unparse(target)
+                    )
         elif (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Attribute)
@@ -322,13 +344,24 @@ def audit_candidate_source() -> dict[str, object]:
             }
         ):
             target_root = root_name(node.func.value)
-            if target_root in module_bound_names:
-                mutable_state_hits.append(str(target_root))
+            mutable_state_hits.append(
+                target_root or ast.unparse(node.func.value)
+            )
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             if node.name == "score":
                 score_signature = {
+                    "positional_only": [
+                        arg.arg for arg in node.args.posonlyargs
+                    ],
                     "positional": [arg.arg for arg in node.args.args],
                     "defaults": len(node.args.defaults),
+                    "keyword_only": [
+                        arg.arg for arg in node.args.kwonlyargs
+                    ],
+                    "keyword_defaults": sum(
+                        value is not None
+                        for value in node.args.kw_defaults
+                    ),
                     "vararg": (
                         node.args.vararg.arg if node.args.vararg else None
                     ),
@@ -358,8 +391,11 @@ def audit_candidate_source() -> dict[str, object]:
         }
     )
     exact_signature = score_signature == {
+        "positional_only": [],
         "positional": ["image"],
         "defaults": 0,
+        "keyword_only": [],
+        "keyword_defaults": 0,
         "vararg": None,
         "kwarg": None,
     }
@@ -368,7 +404,9 @@ def audit_candidate_source() -> dict[str, object]:
         "score_accepts_only_observation": exact_signature,
         "no_arm_vocabulary": not strings,
         "no_dynamic_or_reflective_calls": not dangerous_calls,
-        "no_mutable_global_state": not mutable_state_hits,
+        "no_mutable_global_state": (
+            not mutable_state_hits and not mutable_module_declarations
+        ),
     }
     return {
         "passed": all(checks.values()),
@@ -379,6 +417,9 @@ def audit_candidate_source() -> dict[str, object]:
         "arm_vocabulary_hits": sorted(set(strings)),
         "dangerous_calls": dangerous_calls,
         "mutable_state_hits": sorted(set(mutable_state_hits)),
+        "mutable_module_declarations": sorted(
+            set(mutable_module_declarations)
+        ),
     }
 
 
@@ -622,7 +663,7 @@ def run_packet(encoded: bytes, root: Path) -> dict[str, object]:
                 *(f"{key}={value}" for key, value in sorted(environment.items())),
                 str(root),
             ]
-        ).lower()
+        ).lower().replace("-", "_").replace(".", "p")
         leaked_terms = sorted(
             {term for term in ARM_TERMS if term in visible_blob}
         )
