@@ -1,10 +1,35 @@
 # Capture request: 383 claim frames + 60 witnesses + 160 reference = 603 for M1, M5 and M9
 
-Status: REQUESTED — awaiting owner
-Owner of this file: orchestrator
+Status: **FROZEN — FINAL SHOOT PROCEDURE**
+Owning lane: **lane-FRC**
+Approver: **orchestrator**
 Raised: 2026-09
 Amended: 2026-09 (Sony A7C II automated-bracketing protocol)
 Amended: 2026-09 (truth-reference block; main sweeps pinned to 1.30× reproduction)
+Frozen: 2026-09-03
+
+## STANDING EQUIPMENT CONSTRAINT — OWNER-SUPPLIED — DO NOT REOPEN
+
+The owner directly confirmed that macro captures use **in-camera Focus Bracket
+on the Sony A7C II**. The camera drives each complete focus ladder and fires
+one exposure per node. It cannot expose A and B back-to-back at one node before
+advancing. Per-node A/B pairing was proposed twice during review; it is
+unavailable on this body and must not be proposed again.
+
+The executable protocol is therefore the automated whole-pass procedure below.
+No lane may change frame counts, shot order, settings, or gates without explicit
+orchestrator authorisation. A newly discovered invalidating defect must be
+reported, not silently edited.
+
+## Frame-count changelog
+
+| Version | Count | Disposition |
+| --- | ---: | --- |
+| Original request | 319 | 255 focus frames + four 16-frame calibration groups; insufficient calibration reserve |
+| Witness-first amendment | 407 | 383 claim/calibration frames + 24 reset witnesses; witnesses could not observe endpoints or interior nodes |
+| Paired-node proposal | 383 | Removed witnesses by interleaving A/B at every node; withdrawn because the A7C II cannot execute it |
+| Automated-bracket amendment | 443 | Restored complete A/B passes and added 60 reset/start/end witnesses |
+| **Frozen request** | **603** | 443-frame automated-bracket session + 160-frame truth-reference block |
 
 ---
 
@@ -40,13 +65,16 @@ dark-frame settling discards:
 - **383 claim/calibration frames:** 255 focus + 128 calibration.
 - **60 fixed-focus witness frames:** 12 reset pre-flight + 48 start/end
   sentinels around the four automated passes.
-- **443 acquired session frames total.**
-- One throwaway histogram exposure comes first and is not part of the 443.
+- **160 truth-reference frames:** 96 fixed-focus scene frames + 32 independent
+  flats + 32 warmed darks.
+- **603 acquired session frames total.**
+- One throwaway histogram exposure comes first and is not part of the 603.
 
-The four discarded settling darks are still counted among the 443 shutter
-releases. The owner-approved 319 -> 383 amendment is the calibration increase;
-the additional 60 are the evidence needed to decide whether two automated
-ladders may be paired.
+The four discarded settling darks are still counted among the 603 acquired
+session frames. Including the throwaway exposure, the complete procedure is
+**604 shutter releases**. The owner-approved 319 -> 383 amendment is the main
+calibration increase; the 60 witnesses and 160 reference frames are the
+eligibility and truth evidence.
 
 **Before the first session frame:** confirm the G0-G3 reader has passed its
 development-data dry run without changing the bars below. Then take the
@@ -60,8 +88,9 @@ code. Two lanes arrived at the required session independently and from
 different requirements, and they specified the same 319 claim frames. Review
 retained their 255 focus frames but doubled the four calibration groups, making
 **383 claim/calibration frames**. Automated-bracket eligibility adds 60 fixed
-witnesses, for 443 session frames. This document is the single consolidated
-request. It is written to be followed at the bench.
+witnesses, and the final truth block adds 160, for 603 acquired session frames.
+This document is the single consolidated request. It is written to be followed
+at the bench.
 
 **What is wrong with every capture we currently hold:** in-body stabilisation
 was on, and there are no calibrated frame-for-frame same-focus repeats. IBIS
@@ -475,7 +504,7 @@ rear-screen brightness.
 
 While you are there, confirm the nonperiodic patch fills enough of the frame
 (see *The patch must be physically large enough*). This test exposure is not
-one of the 443 acquired session frames. After it passes, run P0/P1 and obtain
+one of the 603 acquired session frames. After it passes, run P0/P1 and obtain
 the pre-flight verdict before starting `sw4-A`.
 
 ## Checks on arrival
