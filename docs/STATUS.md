@@ -4470,6 +4470,73 @@ samples. If clamped M8-O also returns `V=0`, **M8 becomes the first passing axis
 in the program.** If it returns anything else it is a FAIL under a rule I can no
 longer argue with — which is exactly why the rule was written first.
 
+### 2.9.43 The rule I invented is worth four axes, and the scorecard is repaired prospectively (M140, orchestrator, 2026-09-05)
+
+**M140 commit `b1fda0cf`**; artifact `experiments/M140-readiness/readiness.json`,
+report `docs/research/M140-readiness.md`.
+
+**My hypothesis was refuted, and I am recording that first.** I dispatched M140
+believing that clearing blocker `(b)` plus withdrawing decision rule 4 might
+make axes scoreable *today*. It does not. **With only `(b)` cleared, all three
+rule-4 scenarios leave exactly `M8` and `M12` scoreable and `0 of 12` passing.**
+Amendment 2's published conjunctive table also **reproduces exactly** under
+mechanical re-derivation, so that finding stands unamended.
+
+**But the rule has a price, and it is large.** M140 ruled per axis, with a
+citation to each axis's own definition, whether blocker `(a)` is *intrinsic* or
+merely *propagated* by rule 4:
+
+- **Intrinsic** — the axis itself needs a detail instrument: `M1`, `M5`, `M6`, `M9`.
+- **Propagated** — the axis's own success bar never mentions detail; rule 4 put
+  `(a)` there: `M2`, `M3`, `M4`, `M11`.
+
+| cleared | rule 4 as written | rule 4 narrowed or removed |
+|---|---|---|
+| `b+d` | **2** | **6** |
+| `b+c+d` | **4** | **8** |
+
+**Same purchase, same capture session, four more axes.** For M4 the
+replacement-M1 requirement appears only in a *control paragraph*; for M3 it
+appears only as *"an added blur control"*; for M2 it is a "future-M1 mode
+qualifier" bolted onto a bar that is otherwise an efficiency and noise ratio.
+
+**M140 independently reached the same first-PASS route I had already dispatched:**
+complete the clamped-Catmull M8-O census. It also notes that **M12 already
+diagnostically predicts failure**, which tempers the value of the M139 campaign
+now running — M12 is *scoreable*, not *winnable*.
+
+**Scorecard repaired, commit `a94f0160`, 46/46 checks.** Four changes, every one
+made with the original text retained rather than replaced:
+
+1. **M8-O v1.5 registered prospectively.** M142 is implementing the measurement
+   right now, so **this was the only legitimate moment**: the identical edit made
+   after the number arrives is goalpost-moving. The v1.4 bar and the original M8
+   **FAIL** are both retained and explicitly not vacated. The normative text is
+   *referenced, not copied* — pinned at git blob
+   `86291032355f1d6466e2357b1224d78d9716c80c` — so the bar has exactly one
+   canonical site and cannot drift between two transcriptions.
+2. **COVER superseded** by M130. `(b)` is **CLEARED**; `DEFAULT_COVER_MODE`
+   remains `Scale`, so the row licenses geometry, not a default change.
+3. **Phase 1 / W1 withdrawn**, with the unsatisfiable-by-construction mechanism
+   recorded in the row itself.
+4. **Rule 4 labelled `SCORECARD ADDITION — UNRATIFIED`.** Its wording is
+   byte-identical before and after; only an annotation was added. The checker
+   asserts this rather than trusting it.
+
+**Handed to the owner as a decision, commit `9e095cf7`.** I did not pick.
+**I am the interested party** — the stricter rule makes the eventual SOTA claim
+stronger while costing *him* the axes — so the page states the honest case on
+both sides, discloses that incentive in those words, and asks him to keep,
+narrow or drop it. It also says plainly that nothing changes today, so there is
+no rush.
+
+**Running tally of authored-constraint defects: four.** `NO_COMMON_K`, decision
+rule 4, the Zerene reasoning that rested on it, and now the four propagated
+`(a)` assignments. Every one had sat in a document long enough to read as an
+external fact. **This is the program's most reliable failure mode and it is not
+a coincidence — it is what happens when the author of a bar is also the party
+graded by it.**
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
