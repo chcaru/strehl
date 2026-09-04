@@ -243,9 +243,60 @@ built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 > has ruled that **you should not shoot until an in-field preflight exists**,
 > and I agree with its reasoning. The session is still the most valuable thing
 > you can do; it is simply not yet safe to do it. **I am having the preflight
-> built now.** I will tell you the moment it is ready. Nothing here asks
-> anything of you today — read § *The blocking finding* below if you want the
-> reason, and otherwise wait for me.
+> built now.** I will tell you the moment it is ready. **There is now one small
+> thing you can do that genuinely helps: see § *Ask 2a* immediately below — two
+> frames, five minutes, and it is what lets the preflight be trusted at the
+> ratio that matters.** Read § *The blocking finding* if you want the full
+> reason for the stop.
+
+### Ask 2a — **two frames. Five minutes. This is the one thing you can usefully shoot right now.**
+
+> **This is new, it is cheap, and it unblocks the most expensive thing on the
+> board.** It is not the session. It is two exposures of a flat target, and it
+> is the difference between the 891-frame session being shootable and being
+> guesswork.
+
+**What to shoot:**
+
+1. The calibration slide, **converter fitted**, at **maximum reproduction**. One frame.
+2. **The same slide, physically unmoved**, **converter removed**, focused to
+   about **`1.32x`**. One frame.
+
+Nothing else. Same slide, same position, same lighting, flat and square to the
+sensor. The slide **must not move between the two frames** — the whole
+measurement depends on both frames seeing one coplanar grid.
+
+**Why this is needed, and why nothing in the corpus can substitute.** The
+preflight measures the *ratio* of the two states' sampling. To trust it at the
+ratio that matters, it has to be tested at that ratio on real optics. It cannot
+be: **every frame you have ever shot was taken through the teleconverter.** I
+checked this myself rather than taking it on report — across the full inventory
+of **10,509 ARWs**, every lens string reads
+`FE 100mm F2.8 Macro GM OSS + 2X Teleconverter` and every focal length reads
+`200 mm`. **There is not one bare-lens frame in the archive.** The TC0 state the
+design depends on is an optical configuration your rig has never been recorded
+in.
+
+**What it settles.** The preflight already works. On a real null — two
+consecutive frames of one unchanged setup — it recovered the true ratio of
+`1.0` to within **`0.0353%`**, produced an interval that contains the truth, and
+**correctly refused**, in **21.7 seconds** on full-resolution RAW. Against a
+synthetic `2.0312x` plant it recovered `2.0312251532`, an error of
+**`0.00124%`**.
+
+**But the synthetic result is not proof and I will not present it as one.**
+Making a synthetic `2x` frame means resampling a real one, and resampling injects
+interpolation blur into exactly the quantity being measured. The lane that built
+it says so plainly and I agree: the synthetic pass *is not yet a commissioned
+gate*. Two real frames replace an argument with a measurement.
+
+**What it costs you if you skip it.** The session is 891 frames in one
+uninterrupted sitting. If the magnification is fractionally off, nothing
+announces it at the time — reproduction ratio is not recoverable from metadata
+for any of your 68 existing stacks — and it surfaces only in analysis, after the
+sitting is gone.
+
+**No rush and no deadline.** Whenever you are next at the rig.
 
 ### The blocking finding — why shooting tonight could waste the whole session
 
