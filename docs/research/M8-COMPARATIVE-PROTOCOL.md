@@ -836,3 +836,19 @@ Sources:
 
 * <https://zerenesystems.com/cms/stacker/docs/purchasing>
 * <https://zerenesystems.com/cms/stacker/docs/faqlist>
+
+## 16. Open-source evidence amendment
+
+For an open-source comparator, audited source plus binary provenance can be
+stronger than a vendor adjusted-input export for establishing the operator
+path. Source can prove that a true bypass omits a transform or that an exact
+identity reaches an integer-phase resampler; an export only proves what a
+vendor chose to serialize after processing. Source evidence does not replace
+the executable controls, output-domain checks, or the requirement that the
+full `N=92`, `3392x2262` identity control complete.
+
+The exact source audit, diagnostic matrix, load gate, and free-comparator
+survey are preregistered in
+`experiments/M8-COMPARATIVE-CONTROLLED/SOURCE-AUDIT-PREREGISTRATION.md`.
+Diagnostics are not scorecard or quality evidence. A reduced diagnostic can
+localize the prior `cv::histPrepareImages` crash, but cannot admit a subject.

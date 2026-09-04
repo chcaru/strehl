@@ -10,3 +10,6 @@
 /controls/blocks/
 /*.m8site
 /__pycache__/
+/diagnostics/**/input/
+/diagnostics/**/*.tif
+/diagnostics/**/work/
