@@ -1,0 +1,13 @@
+{
+  "schema": "m165-temperature-log-v1",
+  "status": "UNFROZEN",
+  "device_id": "REQUIRED",
+  "mount_location": "REQUIRED-FIXED-BODY-LOCATION",
+  "unit": "celsius",
+  "samples": [
+    {
+      "timestamp_utc": "REQUIRED-ISO-8601",
+      "temperature_c": 0.0
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "m165-stage0m-class-derivation-v1",
+  "status": "DERIVED_AND_COMMISSIONED",
+  "class_counts": {
+    "dark_temperature_classes_per_sitting": 2,
+    "flat_focus_classes_per_sitting": 2,
+    "fitted_maps_per_optical_state": 2,
+    "fitted_maps_per_sitting": 4,
+    "partition": "one temperature class and one focus-schedule class for each of converter-on and tc0"
+  },
+  "temperature_tolerance": {
+    "maximum_absolute_delta_c": 0.5,
+    "maximum_sample_age_s": 10.0,
+    "maximum_probe_calibration_uncertainty_c": 0.2,
+    "dark_current_doubling_interval_c": [
+      6.0,
+      7.0
+    ],
+    "relative_dark_current_change_at_half_degree": [
+      0.050756638653219444,
+      0.05946309435929531
+    ],
+    "thermal_component_e_per_s": 15.4,
+    "gain_dn_per_e": 0.224103,
+    "thermal_component_dn_at_1s": 3.4511862,
+    "derived_thermal_delta_dn_at_half_degree": [
+      0.17517061087837754,
+      0.2052182106620978
+    ],
+    "held_out_dark_common_rms_maximum_dn": 0.3,
+    "sources": [
+      "docs/research/M4-fpn-measured.md:633",
+      "docs/research/M101-defect.md:469-475",
+      "docs/research/M71-flat-fields.md:P5"
+    ]
+  },
+  "focus_class": {
+    "domain_normalized": [
+      0.0,
+      1.0
+    ],
+    "fit_position_normalized": 0.5,
+    "fit_position_abs_tolerance": 0.05,
+    "validation_endpoint_abs_tolerance": 0.05,
+    "interpolation": "forbidden",
+    "measured_prnu_rms_fraction": 0.003096,
+    "measured_stable_variance_fraction_lower_bound": 0.914,
+    "derived_unstable_prnu_rms_fraction_upper_bound": 0.0009079254242502518,
+    "held_out_flat_common_rms_maximum_fraction": 0.0015,
+    "source": "docs/research/M71-flat-fields.md:P1,P4"
+  },
+  "capture_count_precision": {
+    "flat_frames_per_group": 32,
+    "predicted_flat_master_rms_fraction": 0.00084,
+    "dark_frames_acquired_per_group": 32,
+    "dark_settling_frames_excluded": 2,
+    "dark_frames_usable": 30,
+    "predicted_dark_master_floor_dn": 0.16,
+    "source": "docs/research/M-FRC-VIABILITY.md:155-168"
+  },
+  "commissioned_clean_null": {
+    "dark_common_rms_dn": 0.18996298731516123,
+    "flat_common_rms_fraction": 0.0008310105222983666,
+    "flat_endpoint_near_common_rms_fraction": 0.001176641423165875,
+    "maximum_dark_ring_coherence": 0.0381271680597472,
+    "maximum_flat_ring_coherence": 0.02344421065066759
+  },
+  "owner_count_consequence": {
+    "m1_rehearsal_registered_frames": 896,
+    "m1_score_registered_frames": 704,
+    "stage0_plus_rehearsal_plus_score": 1602,
+    "including_known_histogram_release": 1603,
+    "combined_m1_m5_m9_total": 1917,
+    "source": "docs/research/M164-m1-staged-capture.md:743-779"
+  }
+}

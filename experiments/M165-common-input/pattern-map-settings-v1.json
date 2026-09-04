@@ -1,0 +1,136 @@
+{
+  "schema": "m165-pattern-map-settings-v1",
+  "estimator": {
+    "id": "m165-dark-flat-map",
+    "version": "1.0.0"
+  },
+  "capture_counts": {
+    "dark_frames_acquired_per_group": 32,
+    "dark_settling_frames_excluded": 2,
+    "dark_frames_minimum_usable": 30,
+    "flat_frames_acquired_per_group": 32,
+    "flat_frames_minimum_usable": 32,
+    "groups_per_class": {
+      "dark_fit_a": 1,
+      "dark_fit_b": 1,
+      "dark_validation": 1,
+      "flat_fit_a": 1,
+      "flat_fit_b": 1,
+      "flat_validation": 1
+    }
+  },
+  "cardinality": {
+    "dark_temperature_classes_per_sitting": 2,
+    "flat_focus_classes_per_sitting": 2,
+    "optical_states": [
+      "converter-on",
+      "tc0"
+    ],
+    "fitted_maps_per_optical_state": 2,
+    "fit_lineages": [
+      "A",
+      "B"
+    ],
+    "validation_lineage": "V",
+    "dark_temperature_class_partition": "exactly-one-per-optical-state-per-sitting",
+    "flat_focus_class_partition": "exactly-one-per-optical-state-per-sitting",
+    "class_overflow_rule": "refuse-and-recapture-the-optical-state-package; never add a post-hoc class",
+    "map_key": [
+      "session_id",
+      "optical_state_id",
+      "lineage_id",
+      "temperature_class_id",
+      "focus_class_id"
+    ],
+    "one_map_interpretation": "exactly one fitted map per map_key; no fitted map is shared across A/B, optical state, sitting, temperature class, or focus class"
+  },
+  "camera_match": {
+    "common": {
+      "make": "SONY",
+      "model": "ILCE-7CM2",
+      "iso_speed": 100.0,
+      "iso_abs_tolerance": 0.0,
+      "exposure_time_s": 1.0,
+      "exposure_abs_tolerance_s": 0.0005,
+      "f_number": 5.6,
+      "f_number_abs_tolerance": 0.05,
+      "raw_mode": "14-bit-uncompressed",
+      "shutter_mode": "electronic-first-curtain",
+      "steadyshot": "off",
+      "lens_oss": "off"
+    },
+    "by_optical_state": {
+      "converter-on": {
+        "lens_model": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+        "focal_length_mm": 200.0,
+        "focal_length_abs_tolerance_mm": 0.5
+      },
+      "tc0": {
+        "lens_model": "FE 100mm F2.8 Macro GM OSS",
+        "focal_length_mm": 100.0,
+        "focal_length_abs_tolerance_mm": 0.5
+      }
+    }
+  },
+  "temperature_class": {
+    "id_rule": "{session_id}:{optical_state_id}:temperature",
+    "center_rule": "temperature sample referenced by dark_a capture_index 0",
+    "witness_kind": "external-contact-probe",
+    "unit": "celsius",
+    "maximum_calibration_uncertainty_c": 0.2,
+    "maximum_sample_age_s": 10.0,
+    "maximum_absolute_delta_c": 0.5,
+    "interpolation": "forbidden",
+    "continuous_camera_power_required": true
+  },
+  "focus_class": {
+    "id_rule": "{session_id}:{optical_state_id}:focus",
+    "kind": "exact-schedule-domain",
+    "fit_position_normalized": 0.5,
+    "fit_position_abs_tolerance": 0.05,
+    "validation_endpoint_positions": [
+      0.0,
+      1.0
+    ],
+    "validation_endpoint_abs_tolerance": 0.05,
+    "validation_frames_per_endpoint": 16,
+    "application_domain_normalized": [
+      0.0,
+      1.0
+    ],
+    "schedule_membership_abs_tolerance": 1e-09,
+    "interpolation": "forbidden",
+    "focus_position_2_role": "corroboration-only-not-a-metric-axis"
+  },
+  "estimation": {
+    "dark_reduction": "arithmetic-mean-after-two-frame-settling-exclusion",
+    "flat_frame_normalization": "per-cfa-plane-local-smooth-ratio",
+    "map_scope": "high-frequency sensor-space offset and gain only; the smooth optical field is not corrected",
+    "flat_smooth_filter": {
+      "kind": "triple-reflect-box",
+      "width_plane_pixels": 61
+    },
+    "gain_minimum": 0.5,
+    "gain_maximum": 2.0,
+    "flat_plane_mean_minimum_dn": 8000.0,
+    "flat_plane_mean_maximum_dn": 12000.0,
+    "flat_clipped_fraction_maximum": 0.0001,
+    "flat_input_highpass_rms_maximum": 0.02
+  },
+  "held_out_validation": {
+    "dark_residual_statistic": "per-CFA-plane-demeaned corrected DN; split means use map A on even and map B on odd usable V frames",
+    "flat_residual_statistic": "corrected divided by its per-CFA-plane 61-pixel triple-reflect-box field minus one; split means use map A on even and map B on odd V frames",
+    "common_rms_statistic": "RMS of one half the sum of the two split means over every active photosite",
+    "ring_coherence_statistic": "maximum of zero and real cross-power coherence over admitted Hann-windowed radial rings and all complete CFA-plane tiles",
+    "dark_common_rms_maximum_dn": 0.3,
+    "flat_common_rms_maximum_fraction": 0.0015,
+    "flat_endpoint_common_rms_maximum_fraction": 0.0025,
+    "maximum_positive_ring_coherence": 0.05,
+    "tile_size_plane_pixels": 128,
+    "radial_ring_count": 12,
+    "minimum_frequency_cycles_per_plane_pixel": 0.015625,
+    "maximum_frequency_cycles_per_plane_pixel": 0.5,
+    "minimum_modes_per_ring": 128,
+    "split_rule": "capture-index-parity-after-dark-settling-exclusion"
+  }
+}

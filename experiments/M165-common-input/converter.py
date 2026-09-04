@@ -2,16 +2,19 @@
 """Frozen LibRaw common-merge converter and strict TIFF inspector.
 
 The renderer is deliberately fail-closed. It will not render without a frozen,
-matching sensor-space pattern map made from non-empty independent dark and flat
-source sets. It writes a deliberately small TIFF dialect that is independently
-parsed by the Rust adapter in ``strehl-raw``.
+held-out-validated sensor-space pattern map made from non-empty independent dark
+and flat source sets, plus an external capture context that proves physical-body,
+temperature-class, and focus-domain membership. It writes a deliberately small
+TIFF dialect that is independently parsed by the Rust adapter in ``strehl-raw``.
 """
 
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import platform
@@ -22,11 +25,14 @@ import sys
 from typing import Any, BinaryIO, Iterable
 
 CONVERTER_ID = "m165-libraw-common-linear"
-CONVERTER_VERSION = "1.1.0"
+CONVERTER_VERSION = "1.2.0"
 SETTINGS_SCHEMA = "m165-common-input-settings-v1"
 FREEZE_SCHEMA = "m165-converter-freeze-v1"
-PATTERN_SCHEMA = "m165-sensor-pattern-map-v1"
-MANIFEST_SCHEMA = "m165-common-input-manifest-v2"
+PATTERN_SCHEMA = "m165-sensor-pattern-map-v2"
+SOURCE_CONTEXT_SCHEMA = "m165-source-capture-context-v1"
+PATTERN_ESTIMATOR_FREEZE_SCHEMA = "m165-pattern-map-estimator-freeze-v1"
+PATTERN_VALIDATION_SCHEMA = "m165-pattern-map-validation-v1"
+MANIFEST_SCHEMA = "m165-common-input-manifest-v3"
 INSPECTION_SCHEMA = "m165-common-tiff-inspection-v1"
 CONSUMER_REGISTRY_SCHEMA = "m165-common-input-consumer-registry-v1"
 CONSUMER_RECEIPT_SCHEMA = "m165-common-input-consumer-receipt-v1"
@@ -884,6 +890,629 @@ def inspect_common_tiff(path: Path) -> dict[str, Any]:
     }
 
 
+def _pattern_artifact_path(base_path: Path, value: Any, label: str) -> Path:
+    if not isinstance(value, str) or not value:
+        raise ContractFailure(
+            "PATTERN_MAP_MANIFEST_INVALID", f"{label} must be a non-empty path"
+        )
+    path = Path(value)
+    if not path.is_absolute():
+        path = base_path.parent / path
+    return path.resolve()
+
+
+def _nonempty_string(value: Any, label: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise ContractFailure(
+            "PATTERN_MAP_MANIFEST_INVALID", f"{label} must be a non-empty string"
+        )
+    return value
+
+
+def _parse_utc(value: Any, label: str) -> datetime:
+    if not isinstance(value, str) or not value:
+        raise ContractFailure("SOURCE_CONTEXT_INVALID", f"{label} is absent")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_INVALID", f"{label} is not ISO-8601: {value!r}"
+        ) from exc
+    if parsed.utcoffset() is None:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_INVALID", f"{label} must include a UTC offset"
+        )
+    return parsed
+
+
+def _finite_number(value: Any, label: str) -> float:
+    try:
+        result = float(value)
+    except (TypeError, ValueError) as exc:
+        raise ContractFailure(
+            "EXTERNAL_CAPTURE_RECORD_INVALID", f"{label} must be numeric"
+        ) from exc
+    if not math.isfinite(result):
+        raise ContractFailure(
+            "EXTERNAL_CAPTURE_RECORD_INVALID", f"{label} must be finite"
+        )
+    return result
+
+
+def validate_physical_body_artifact(
+    reference_path: Path, body: Any
+) -> dict[str, Any]:
+    if not isinstance(body, dict):
+        raise ContractFailure(
+            "PHYSICAL_BODY_WITNESS_INVALID", "physical_body must be an object"
+        )
+    body_id = _nonempty_string(body.get("id"), "physical body id")
+    if body.get("witness_kind") not in {
+        None,
+        "m165-physical-body-witness-v1",
+    }:
+        raise ContractFailure(
+            "PHYSICAL_BODY_WITNESS_INVALID",
+            "physical body witness kind is not m165-physical-body-witness-v1",
+        )
+    witness_path = _pattern_artifact_path(
+        reference_path, body.get("witness_path"), "physical body witness"
+    )
+    witness_sha = check_hash(
+        str(body.get("witness_sha256", "")), "physical body witness"
+    )
+    if not witness_path.is_file() or hash_file(witness_path) != witness_sha:
+        raise ContractFailure(
+            "PHYSICAL_BODY_WITNESS_INVALID",
+            "physical body witness is absent or changed",
+        )
+    witness = load_json(witness_path, "physical body witness")
+    if (
+        witness.get("schema") != "m165-physical-body-witness-v1"
+        or witness.get("status") != "FROZEN"
+        or witness.get("physical_body_id") != body_id
+    ):
+        raise ContractFailure(
+            "PHYSICAL_BODY_WITNESS_INVALID",
+            "physical body witness schema or identity does not match",
+        )
+    _nonempty_string(
+        witness.get("observation_method"), "physical body observation method"
+    )
+    check_hash(
+        str(witness.get("evidence_sha256", "")),
+        "physical body witness evidence",
+    )
+    _parse_utc(witness.get("recorded_at_utc"), "body witness recorded_at_utc")
+    _nonempty_string(witness.get("recorder"), "physical body witness recorder")
+    return {
+        "id": body_id,
+        "witness_path": str(witness_path),
+        "witness_sha256": witness_sha,
+        "witness": witness,
+    }
+
+
+def validate_capture_record_artifact(
+    reference_path: Path,
+    record_path_value: Any,
+    record_sha_value: Any,
+    session_id: str,
+    optical_state_id: str,
+    physical_body_id: str,
+    expected_state: dict[str, Any],
+) -> dict[str, Any]:
+    record_path = _pattern_artifact_path(
+        reference_path, record_path_value, "physical capture record"
+    )
+    record_sha = check_hash(
+        str(record_sha_value or ""), "physical capture record"
+    )
+    if not record_path.is_file() or hash_file(record_path) != record_sha:
+        raise ContractFailure(
+            "PHYSICAL_CAPTURE_RECORD_INVALID",
+            "physical capture record is absent or changed",
+        )
+    record = load_json(record_path, "physical capture record")
+    if (
+        record.get("schema") != "m165-physical-capture-record-v1"
+        or record.get("status") != "FROZEN"
+        or record.get("session_id") != session_id
+        or record.get("optical_state_id") != optical_state_id
+        or record.get("physical_body_id") != physical_body_id
+        or any(record.get(key) != value for key, value in expected_state.items())
+        or record.get("camera_power_continuous") is not True
+        or record.get("dark_lens_capped_and_light_sealed") is not True
+        or record.get("aperture_marking") != "f/5.6"
+    ):
+        raise ContractFailure(
+            "PHYSICAL_CAPTURE_RECORD_INVALID",
+            "physical capture record does not match the source class",
+        )
+    _nonempty_string(
+        record.get("lens_and_converter_identity"),
+        "physical capture lens/converter identity",
+    )
+    _parse_utc(
+        record.get("operator_recorded_at_utc"),
+        "physical capture operator_recorded_at_utc",
+    )
+    return {
+        "path": str(record_path),
+        "sha256": record_sha,
+        "record": record,
+    }
+
+
+def validate_temperature_artifacts(
+    reference_path: Path,
+    witness: Any,
+    maximum_calibration_uncertainty_c: float | None = None,
+) -> dict[str, Any]:
+    if not isinstance(witness, dict):
+        raise ContractFailure(
+            "TEMPERATURE_WITNESS_INVALID", "temperature witness must be an object"
+        )
+    device_id = _nonempty_string(
+        witness.get("device_id"), "temperature witness device_id"
+    )
+    mount_location = _nonempty_string(
+        witness.get("mount_location"), "temperature witness mount_location"
+    )
+    calibration_path = _pattern_artifact_path(
+        reference_path,
+        witness.get("calibration_path"),
+        "temperature probe calibration",
+    )
+    calibration_sha = check_hash(
+        str(witness.get("calibration_sha256", "")),
+        "temperature probe calibration",
+    )
+    if (
+        not calibration_path.is_file()
+        or hash_file(calibration_path) != calibration_sha
+    ):
+        raise ContractFailure(
+            "TEMPERATURE_WITNESS_INVALID",
+            "temperature probe calibration is absent or changed",
+        )
+    calibration = load_json(calibration_path, "temperature probe calibration")
+    uncertainty = _finite_number(
+        calibration.get("uncertainty_c"), "temperature calibration uncertainty"
+    )
+    if (
+        calibration.get("schema") != "m165-temperature-probe-calibration-v1"
+        or calibration.get("status") != "FROZEN"
+        or calibration.get("device_id") != device_id
+        or uncertainty < 0.0
+    ):
+        raise ContractFailure(
+            "TEMPERATURE_WITNESS_INVALID",
+            "temperature probe calibration schema or identity is invalid",
+        )
+    if (
+        maximum_calibration_uncertainty_c is not None
+        and uncertainty > maximum_calibration_uncertainty_c
+    ):
+        raise ContractFailure(
+            "TEMPERATURE_WITNESS_INVALID",
+            f"temperature calibration uncertainty {uncertainty} C exceeds "
+            f"{maximum_calibration_uncertainty_c} C",
+        )
+    _parse_utc(
+        calibration.get("calibrated_at_utc"),
+        "temperature calibration calibrated_at_utc",
+    )
+    _nonempty_string(
+        calibration.get("reference"), "temperature calibration reference"
+    )
+
+    log_path = _pattern_artifact_path(
+        reference_path, witness.get("log_path"), "temperature log"
+    )
+    log_sha = check_hash(str(witness.get("log_sha256", "")), "temperature log")
+    if not log_path.is_file() or hash_file(log_path) != log_sha:
+        raise ContractFailure(
+            "TEMPERATURE_WITNESS_INVALID", "temperature log is absent or changed"
+        )
+    log = load_json(log_path, "temperature log")
+    samples = log.get("samples")
+    if (
+        log.get("schema") != "m165-temperature-log-v1"
+        or log.get("status") != "FROZEN"
+        or log.get("device_id") != device_id
+        or log.get("mount_location") != mount_location
+        or log.get("unit") != "celsius"
+        or not isinstance(samples, list)
+        or not samples
+    ):
+        raise ContractFailure(
+            "TEMPERATURE_WITNESS_INVALID",
+            "temperature log schema or identity is invalid",
+        )
+    previous: datetime | None = None
+    normalized_samples: list[dict[str, Any]] = []
+    for index, sample in enumerate(samples):
+        if not isinstance(sample, dict):
+            raise ContractFailure(
+                "TEMPERATURE_WITNESS_INVALID",
+                f"temperature sample {index} must be an object",
+            )
+        timestamp = _parse_utc(
+            sample.get("timestamp_utc"), f"temperature sample {index} timestamp"
+        )
+        temperature_c = _finite_number(
+            sample.get("temperature_c"), f"temperature sample {index}"
+        )
+        if previous is not None and timestamp <= previous:
+            raise ContractFailure(
+                "TEMPERATURE_WITNESS_INVALID",
+                "temperature samples must be strictly increasing in time",
+            )
+        previous = timestamp
+        normalized_samples.append(
+            {
+                **sample,
+                "parsed_timestamp": timestamp,
+                "temperature_c": temperature_c,
+            }
+        )
+    return {
+        "device_id": device_id,
+        "mount_location": mount_location,
+        "calibration_path": str(calibration_path),
+        "calibration_sha256": calibration_sha,
+        "calibration_uncertainty_c": uncertainty,
+        "log_path": str(log_path),
+        "log_sha256": log_sha,
+        "samples": normalized_samples,
+    }
+
+
+def validate_focus_schedule_artifact(
+    reference_path: Path,
+    schedule_path_value: Any,
+    schedule_sha_value: Any,
+    session_id: str,
+    optical_state_id: str,
+    focus_class_id: str,
+) -> dict[str, Any]:
+    schedule_path = _pattern_artifact_path(
+        reference_path, schedule_path_value, "focus schedule"
+    )
+    schedule_sha = check_hash(str(schedule_sha_value or ""), "focus schedule")
+    if not schedule_path.is_file() or hash_file(schedule_path) != schedule_sha:
+        raise ContractFailure(
+            "FOCUS_SCHEDULE_INVALID", "focus schedule is absent or changed"
+        )
+    schedule = load_json(schedule_path, "focus schedule")
+    positions = schedule.get("subject_positions_normalized")
+    if (
+        schedule.get("schema") != "m165-focus-schedule-v1"
+        or schedule.get("status") != "FROZEN"
+        or schedule.get("session_id") != session_id
+        or schedule.get("optical_state_id") != optical_state_id
+        or schedule.get("focus_class_id") != focus_class_id
+        or schedule.get("coordinate")
+        != "normalized-registered-schedule-position"
+        or schedule.get("domain") != [0.0, 1.0]
+        or not isinstance(positions, list)
+        or not positions
+    ):
+        raise ContractFailure(
+            "FOCUS_SCHEDULE_INVALID",
+            "focus schedule schema, identity, or subject positions are invalid",
+        )
+    _nonempty_string(schedule.get("direction"), "focus schedule direction")
+    _nonempty_string(schedule.get("reset_method"), "focus schedule reset method")
+    normalized_positions = [
+        _finite_number(value, f"focus schedule position {index}")
+        for index, value in enumerate(positions)
+    ]
+    if any(not 0.0 <= value <= 1.0 for value in normalized_positions):
+        raise ContractFailure(
+            "FOCUS_SCHEDULE_INVALID",
+            "focus schedule positions must lie in [0,1]",
+        )
+    return {
+        "path": str(schedule_path),
+        "sha256": schedule_sha,
+        "schedule": schedule,
+        "subject_positions_normalized": normalized_positions,
+    }
+
+
+def validate_source_context(path: Path, source_sha256: str) -> dict[str, Any]:
+    context = load_json(path, "source capture context")
+    if (
+        context.get("schema") != SOURCE_CONTEXT_SCHEMA
+        or context.get("status") != "FROZEN"
+    ):
+        raise ContractFailure(
+            "SOURCE_CONTEXT_NOT_FROZEN",
+            f"source context must be frozen {SOURCE_CONTEXT_SCHEMA}",
+        )
+    expected_source = check_hash(
+        str(context.get("source_sha256", "")), "source context source"
+    )
+    if expected_source != source_sha256:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_SOURCE_MISMATCH",
+            f"context source hash {expected_source} != RAW hash {source_sha256}",
+        )
+    _nonempty_string(context.get("session_id"), "source context session_id")
+    _nonempty_string(
+        context.get("optical_state_id"), "source context optical_state_id"
+    )
+    if context.get("lineage_id") not in {"A", "B"}:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_INVALID", "source context lineage_id must be A or B"
+        )
+    body = validate_physical_body_artifact(path, context.get("physical_body"))
+    state = context.get("capture_state")
+    expected_state = {
+        "raw_mode": "14-bit-uncompressed",
+        "shutter_mode": "electronic-first-curtain",
+        "steadyshot": "off",
+        "lens_oss": "off",
+    }
+    if state != expected_state:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_CAPTURE_STATE_MISMATCH",
+            f"capture state must be {expected_state!r}",
+        )
+    capture_record = validate_capture_record_artifact(
+        path,
+        context.get("capture_record_path"),
+        context.get("capture_record_sha256"),
+        context["session_id"],
+        context["optical_state_id"],
+        body["id"],
+        expected_state,
+    )
+
+    temperature = context.get("temperature_witness")
+    if not isinstance(temperature, dict):
+        raise ContractFailure(
+            "SOURCE_CONTEXT_INVALID", "temperature_witness must be an object"
+        )
+    _nonempty_string(temperature.get("class_id"), "temperature_witness.class_id")
+    temperature_artifacts = validate_temperature_artifacts(path, temperature)
+    samples = temperature_artifacts["samples"]
+    sample_index = temperature.get("sample_index")
+    if (
+        not isinstance(samples, list)
+        or not isinstance(sample_index, int)
+        or sample_index < 0
+        or sample_index >= len(samples)
+        or not isinstance(samples[sample_index], dict)
+    ):
+        raise ContractFailure(
+            "SOURCE_CONTEXT_TEMPERATURE_SAMPLE_INVALID",
+            "temperature sample index is outside the frozen log",
+        )
+    sample = samples[sample_index]
+    try:
+        sample_temperature = float(sample["temperature_c"])
+        declared_temperature = float(temperature["sample_temperature_c"])
+        declared_age = float(temperature["sample_age_s"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_TEMPERATURE_SAMPLE_INVALID",
+            "temperature sample values are absent or non-numeric",
+        ) from exc
+    if (
+        not all(
+            value == value and abs(value) != float("inf")
+            for value in (sample_temperature, declared_temperature, declared_age)
+        )
+        or sample_temperature != declared_temperature
+        or declared_age < 0.0
+    ):
+        raise ContractFailure(
+            "SOURCE_CONTEXT_TEMPERATURE_SAMPLE_INVALID",
+            "declared temperature sample does not match the frozen log",
+        )
+    captured_at = _parse_utc(context.get("captured_at_utc"), "captured_at_utc")
+    sampled_at = sample["parsed_timestamp"]
+    actual_age = abs((captured_at - sampled_at).total_seconds())
+    if abs(actual_age - declared_age) > 1e-6:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_TEMPERATURE_SAMPLE_INVALID",
+            f"declared sample age {declared_age} != timestamp age {actual_age}",
+        )
+
+    focus = context.get("focus_state")
+    if not isinstance(focus, dict):
+        raise ContractFailure("SOURCE_CONTEXT_INVALID", "focus_state must be an object")
+    focus_class_id = _nonempty_string(
+        focus.get("class_id"), "focus_state.class_id"
+    )
+    schedule = validate_focus_schedule_artifact(
+        path,
+        focus.get("schedule_path"),
+        focus.get("schedule_sha256"),
+        context["session_id"],
+        context["optical_state_id"],
+        focus_class_id,
+    )
+    try:
+        position = float(focus["position_normalized"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_FOCUS_INVALID", "focus position must be numeric"
+        ) from exc
+    if not 0.0 <= position <= 1.0:
+        raise ContractFailure(
+            "SOURCE_CONTEXT_FOCUS_INVALID",
+            f"focus position {position} is outside the normalized domain [0,1]",
+        )
+    if not any(
+        abs(position - scheduled) <= 1e-9
+        for scheduled in schedule["subject_positions_normalized"]
+    ):
+        raise ContractFailure(
+            "SOURCE_CONTEXT_FOCUS_INVALID",
+            f"focus position {position} is absent from the frozen schedule",
+        )
+    return {
+        **context,
+        "context_path": str(path.resolve()),
+        "context_sha256": hash_file(path),
+        "physical_body": body,
+        "capture_record_path": capture_record["path"],
+        "capture_record_sha256": capture_record["sha256"],
+        "temperature_calibration_path": temperature_artifacts["calibration_path"],
+        "temperature_calibration_uncertainty_c": temperature_artifacts[
+            "calibration_uncertainty_c"
+        ],
+        "temperature_log_path": temperature_artifacts["log_path"],
+        "temperature_log_sha256": temperature_artifacts["log_sha256"],
+        "temperature_sample_temperature_c": sample_temperature,
+        "temperature_sample_age_s": actual_age,
+        "focus_schedule_path": schedule["path"],
+        "focus_schedule_sha256": schedule["sha256"],
+        "focus_position_normalized": position,
+    }
+
+
+def _validate_camera_match(
+    actual: dict[str, Any], expected: Any, source_path: Path
+) -> None:
+    if not isinstance(expected, dict):
+        raise ContractFailure(
+            "PATTERN_MAP_CAMERA_MISMATCH", "capture_match must be an object"
+        )
+    for key in ("make", "model", "lens_model"):
+        if actual.get(key) != expected.get(key):
+            raise ContractFailure(
+                "PATTERN_MAP_CAMERA_MISMATCH",
+                f"{key} {actual.get(key)!r} != {expected.get(key)!r} ({source_path})",
+            )
+    numeric = (
+        ("iso_speed", "iso_abs_tolerance"),
+        ("exposure_time_s", "exposure_abs_tolerance_s"),
+        ("f_number", "f_number_abs_tolerance"),
+        ("focal_length_mm", "focal_length_abs_tolerance_mm"),
+    )
+    for key, tolerance_key in numeric:
+        try:
+            observed = float(actual[key])
+            wanted = float(expected[key])
+            tolerance = float(expected[tolerance_key])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ContractFailure(
+                "PATTERN_MAP_CAMERA_MISMATCH",
+                f"{key}/{tolerance_key} is absent or non-numeric",
+            ) from exc
+        if tolerance < 0.0 or abs(observed - wanted) > tolerance:
+            raise ContractFailure(
+                "PATTERN_MAP_CAMERA_MISMATCH",
+                f"{key} {observed} is outside {wanted} +/- {tolerance} ({source_path})",
+            )
+
+
+def _verify_pattern_estimator(
+    manifest_path: Path, estimator: Any
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    if not isinstance(estimator, dict):
+        raise ContractFailure(
+            "PATTERN_MAP_ESTIMATOR_ABSENT", "estimator must be an object"
+        )
+    _nonempty_string(estimator.get("id"), "pattern-map estimator id")
+    _nonempty_string(estimator.get("version"), "pattern-map estimator version")
+    expected_bundle = check_hash(
+        str(estimator.get("executable_sha256", "")),
+        "pattern-map estimator executable",
+    )
+    freeze_path = _pattern_artifact_path(
+        manifest_path, estimator.get("freeze_path"), "estimator freeze"
+    )
+    expected_freeze = check_hash(
+        str(estimator.get("freeze_sha256", "")), "estimator freeze"
+    )
+    if not freeze_path.is_file() or hash_file(freeze_path) != expected_freeze:
+        raise ContractFailure(
+            "PATTERN_MAP_ESTIMATOR_FREEZE_MISMATCH",
+            "estimator freeze is absent or its hash differs",
+        )
+    freeze = load_json(freeze_path, "pattern-map estimator freeze")
+    frozen_estimator = freeze.get("estimator", {})
+    frozen_members = frozen_estimator.get("bundle_members")
+    if (
+        freeze.get("schema") != PATTERN_ESTIMATOR_FREEZE_SCHEMA
+        or freeze.get("status") != "FROZEN"
+        or frozen_estimator.get("id") != estimator["id"]
+        or frozen_estimator.get("version") != estimator["version"]
+        or frozen_estimator.get("executable_bundle_sha256") != expected_bundle
+        or not isinstance(frozen_members, dict)
+        or hash_bytes(canonical_json(frozen_members)) != expected_bundle
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_ESTIMATOR_FREEZE_MISMATCH",
+            "estimator freeze identity does not match the map manifest",
+        )
+    artifacts = freeze.get("artifacts")
+    if not isinstance(artifacts, dict) or not artifacts:
+        raise ContractFailure(
+            "PATTERN_MAP_ESTIMATOR_FREEZE_MISMATCH",
+            "estimator freeze has no artifact inventory",
+        )
+    for name, record in artifacts.items():
+        if not isinstance(record, dict):
+            raise ContractFailure(
+                "PATTERN_MAP_ESTIMATOR_FREEZE_MISMATCH",
+                f"estimator artifact {name!r} is malformed",
+            )
+        artifact_path = _pattern_artifact_path(
+            freeze_path, record.get("path"), f"estimator artifact {name}"
+        )
+        expected_hash = check_hash(
+            str(record.get("sha256", "")), f"estimator artifact {name}"
+        )
+        if not artifact_path.is_file() or hash_file(artifact_path) != expected_hash:
+            raise ContractFailure(
+                "PATTERN_MAP_ESTIMATOR_FREEZE_MISMATCH",
+                f"estimator artifact {name!r} is absent or changed",
+            )
+    settings_path = _pattern_artifact_path(
+        manifest_path, estimator.get("settings_path"), "pattern-map settings"
+    )
+    expected_settings = check_hash(
+        str(estimator.get("settings_sha256", "")), "pattern-map settings"
+    )
+    if not settings_path.is_file() or hash_file(settings_path) != expected_settings:
+        raise ContractFailure(
+            "PATTERN_MAP_SETTINGS_MISMATCH",
+            "pattern-map settings are absent or changed",
+        )
+    settings = load_json(settings_path, "pattern-map settings")
+    if (
+        settings.get("schema") != "m165-pattern-map-settings-v1"
+        or settings.get("estimator")
+        != {"id": estimator["id"], "version": estimator["version"]}
+        or frozen_members.get("settings_sha256") != expected_settings
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_SETTINGS_MISMATCH", "pattern-map settings schema is invalid"
+        )
+    return freeze, settings
+
+
+def _pattern_hash_list(value: Any, label: str, exact_count: int) -> list[str]:
+    if not isinstance(value, list) or len(value) != exact_count:
+        raise ContractFailure(
+            "PATTERN_MAP_SOURCE_COUNT_MISMATCH",
+            f"{label} must contain exactly {exact_count} hashes",
+        )
+    hashes = [check_hash(str(item), f"{label} source {index}") for index, item in enumerate(value)]
+    if len(set(hashes)) != len(hashes):
+        raise ContractFailure(
+            "PATTERN_MAP_SOURCES_NOT_INDEPENDENT", f"{label} contains duplicate hashes"
+        )
+    return hashes
+
+
 def validate_pattern_manifest(
     manifest_path: Path,
     map_path: Path,
@@ -891,6 +1520,7 @@ def validate_pattern_manifest(
     camera_metadata: dict[str, Any],
     source_sha256: str,
     source_path: Path,
+    source_context: dict[str, Any],
 ) -> tuple[dict[str, Any], Any, Any]:
     np, _ = import_runtime()
     manifest = load_json(manifest_path, "pattern-map manifest")
@@ -898,34 +1528,251 @@ def validate_pattern_manifest(
         raise ContractFailure(
             "PATTERN_MAP_NOT_FROZEN", "pattern-map manifest is absent or not FROZEN"
         )
-    darks = manifest.get("independent_dark_source_sha256", [])
-    flats = manifest.get("independent_flat_source_sha256", [])
-    if not isinstance(darks, list) or not darks or not isinstance(flats, list) or not flats:
+    if manifest.get("lineage_id") not in {"A", "B"}:
         raise ContractFailure(
-            "PATTERN_MAP_SOURCES_ABSENT",
-            "pattern map must bind non-empty independent dark and flat source sets",
+            "PATTERN_MAP_MANIFEST_INVALID", "pattern-map lineage_id must be A or B"
         )
-    for index, value in enumerate(darks):
-        check_hash(str(value), f"dark source {index}")
-    for index, value in enumerate(flats):
-        check_hash(str(value), f"flat source {index}")
-    dark_set = {str(value).lower() for value in darks}
-    flat_set = {str(value).lower() for value in flats}
-    if dark_set & flat_set or source_sha256 in dark_set | flat_set:
+    for key in ("map_id", "session_id", "optical_state_id"):
+        _nonempty_string(manifest.get(key), f"pattern-map {key}")
+    capture_manifest_sha = check_hash(
+        str(manifest.get("capture_manifest_sha256", "")),
+        "pattern-map capture manifest",
+    )
+
+    _, estimator_settings = _verify_pattern_estimator(
+        manifest_path, manifest.get("estimator")
+    )
+    counts = estimator_settings.get("capture_counts", {})
+    dark_count = int(counts.get("dark_frames_minimum_usable", -1))
+    flat_count = int(counts.get("flat_frames_minimum_usable", -1))
+    if dark_count <= 0 or flat_count <= 0:
+        raise ContractFailure(
+            "PATTERN_MAP_SETTINGS_MISMATCH",
+            "pattern-map settings do not define positive usable counts",
+        )
+    darks = _pattern_hash_list(
+        manifest.get("independent_dark_source_sha256"),
+        "fitted dark",
+        dark_count,
+    )
+    flats = _pattern_hash_list(
+        manifest.get("independent_flat_source_sha256"),
+        "fitted flat",
+        flat_count,
+    )
+    excluded = _pattern_hash_list(
+        manifest.get("excluded_settling_dark_source_sha256"),
+        "excluded settling dark",
+        int(counts.get("dark_settling_frames_excluded", -1)),
+    )
+    validation = manifest.get("held_out_validation")
+    if not isinstance(validation, dict):
+        raise ContractFailure(
+            "PATTERN_MAP_VALIDATION_ABSENT",
+            "held_out_validation must be an object",
+        )
+    validation_darks = _pattern_hash_list(
+        validation.get("dark_source_sha256"),
+        "held-out dark",
+        dark_count,
+    )
+    validation_flats = _pattern_hash_list(
+        validation.get("flat_source_sha256"),
+        "held-out flat",
+        flat_count,
+    )
+    all_calibration = darks + flats + excluded + validation_darks + validation_flats
+    if len(set(all_calibration)) != len(all_calibration) or source_sha256 in set(
+        all_calibration
+    ):
         raise ContractFailure(
             "PATTERN_MAP_SOURCES_NOT_INDEPENDENT",
-            "dark, flat, and subject source sets must be disjoint",
+            "fitted, excluded, held-out, and subject source sets must be disjoint",
         )
-    estimator = manifest.get("estimator", {})
-    if not estimator.get("id") or not estimator.get("version"):
+
+    body = manifest.get("physical_body")
+    context_body = source_context.get("physical_body")
+    if not isinstance(body, dict) or not isinstance(context_body, dict):
         raise ContractFailure(
-            "PATTERN_MAP_ESTIMATOR_ABSENT",
-            "pattern map must name its estimator and version",
+            "PATTERN_MAP_BODY_MISMATCH", "physical body records are absent"
         )
-    check_hash(
-        str(estimator.get("executable_sha256", "")),
-        "pattern-map estimator executable",
+    expected_body_witness = check_hash(
+        str(body.get("witness_sha256", "")), "pattern-map body witness"
     )
+    if (
+        body.get("id") != context_body.get("id")
+        or expected_body_witness
+        != check_hash(
+            str(context_body.get("witness_sha256", "")), "source body witness"
+        )
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_BODY_MISMATCH",
+            "source physical-body identity differs from the map",
+        )
+    if (
+        manifest["session_id"] != source_context.get("session_id")
+        or manifest["optical_state_id"] != source_context.get("optical_state_id")
+        or manifest["lineage_id"] != source_context.get("lineage_id")
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_LINEAGE_MISMATCH",
+            "source session, optical state, or A/B lineage differs from the map",
+        )
+    expected_capture_record = check_hash(
+        str(manifest.get("capture_record_sha256", "")), "physical capture record"
+    )
+    flat_field_record_sha = check_hash(
+        str(manifest.get("flat_field_record_sha256", "")),
+        "flat-field state record",
+    )
+    if expected_capture_record != check_hash(
+        str(source_context.get("capture_record_sha256", "")),
+        "source physical capture record",
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_CAPTURE_RECORD_MISMATCH",
+            "source physical capture record differs from the map",
+        )
+    capture_match = manifest.get("capture_match")
+    _validate_camera_match(camera_metadata, capture_match, source_path)
+    expected_state = {
+        key: capture_match.get(key)
+        for key in ("raw_mode", "shutter_mode", "steadyshot", "lens_oss")
+    }
+    if source_context.get("capture_state") != expected_state:
+        raise ContractFailure(
+            "PATTERN_MAP_CAPTURE_RECORD_MISMATCH",
+            "source capture state differs from the frozen map state",
+        )
+
+    temperature_class = manifest.get("temperature_class")
+    context_temperature = source_context.get("temperature_witness")
+    if not isinstance(temperature_class, dict) or not isinstance(
+        context_temperature, dict
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_TEMPERATURE_MISMATCH",
+            "temperature class or source witness is absent",
+        )
+    class_witness = temperature_class.get("witness")
+    if not isinstance(class_witness, dict):
+        raise ContractFailure(
+            "PATTERN_MAP_TEMPERATURE_MISMATCH",
+            "temperature class witness is absent",
+        )
+    center_sample_index = temperature_class.get("center_sample_index")
+    if not isinstance(center_sample_index, int) or center_sample_index < 0:
+        raise ContractFailure(
+            "PATTERN_MAP_TEMPERATURE_MISMATCH",
+            "temperature center sample index is invalid",
+        )
+    identity_keys = ("device_id", "mount_location", "calibration_sha256", "log_sha256")
+    expected_temperature_id = estimator_settings.get("temperature_class", {}).get(
+        "id_rule", ""
+    ).format(
+        session_id=manifest["session_id"],
+        optical_state_id=manifest["optical_state_id"],
+    )
+    if (
+        temperature_class.get("id") != expected_temperature_id
+        or temperature_class.get("id") != context_temperature.get("class_id")
+        or any(
+            class_witness.get(key) != context_temperature.get(key)
+            for key in identity_keys
+        )
+        or class_witness.get("kind")
+        != estimator_settings.get("temperature_class", {}).get("witness_kind")
+        or temperature_class.get("interpolation") != "forbidden"
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_TEMPERATURE_MISMATCH",
+            "source temperature witness does not identify the frozen class",
+        )
+    try:
+        center_c = float(temperature_class["center_c"])
+        tolerance_c = float(temperature_class["maximum_absolute_delta_c"])
+        sample_c = float(source_context["temperature_sample_temperature_c"])
+        maximum_age = float(class_witness["maximum_sample_age_s"])
+        maximum_uncertainty = float(
+            class_witness["maximum_calibration_uncertainty_c"]
+        )
+        sample_age = float(source_context["temperature_sample_age_s"])
+        actual_uncertainty = float(
+            source_context["temperature_calibration_uncertainty_c"]
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ContractFailure(
+            "PATTERN_MAP_TEMPERATURE_MISMATCH",
+            "temperature class values are absent or non-numeric",
+        ) from exc
+    frozen_temperature = estimator_settings.get("temperature_class", {})
+    if (
+        tolerance_c != float(frozen_temperature.get("maximum_absolute_delta_c", -1))
+        or maximum_age != float(frozen_temperature.get("maximum_sample_age_s", -1))
+        or maximum_uncertainty
+        != float(frozen_temperature.get("maximum_calibration_uncertainty_c", -1))
+        or actual_uncertainty > maximum_uncertainty
+        or abs(sample_c - center_c) > tolerance_c
+        or sample_age > maximum_age
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_TEMPERATURE_MISMATCH",
+            f"source temperature {sample_c} C / age {sample_age} s is outside "
+            f"{center_c} +/- {tolerance_c} C and age <= {maximum_age} s",
+        )
+
+    focus_class = manifest.get("focus_class")
+    context_focus = source_context.get("focus_state")
+    if not isinstance(focus_class, dict) or not isinstance(context_focus, dict):
+        raise ContractFailure(
+            "PATTERN_MAP_FOCUS_MISMATCH", "focus class or source focus state is absent"
+        )
+    expected_schedule = check_hash(
+        str(focus_class.get("schedule_sha256", "")), "pattern-map focus schedule"
+    )
+    expected_focus_id = estimator_settings.get("focus_class", {}).get(
+        "id_rule", ""
+    ).format(
+        session_id=manifest["session_id"],
+        optical_state_id=manifest["optical_state_id"],
+    )
+    frozen_focus = estimator_settings.get("focus_class", {})
+    if (
+        focus_class.get("id") != expected_focus_id
+        or focus_class.get("id") != context_focus.get("class_id")
+        or expected_schedule
+        != check_hash(
+            str(context_focus.get("schedule_sha256", "")), "source focus schedule"
+        )
+        or expected_schedule != source_context.get("focus_schedule_sha256")
+        or focus_class.get("interpolation") != "forbidden"
+        or focus_class.get("domain_normalized")
+        != frozen_focus.get("application_domain_normalized")
+        or focus_class.get("fit_position_normalized")
+        != frozen_focus.get("fit_position_normalized")
+        or focus_class.get("fit_position_abs_tolerance")
+        != frozen_focus.get("fit_position_abs_tolerance")
+        or focus_class.get("validation_endpoint_abs_tolerance")
+        != frozen_focus.get("validation_endpoint_abs_tolerance")
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_FOCUS_MISMATCH",
+            "source focus class or schedule differs from the map",
+        )
+    domain = focus_class.get("domain_normalized")
+    position = float(source_context["focus_position_normalized"])
+    if (
+        not isinstance(domain, list)
+        or len(domain) != 2
+        or [float(value) for value in domain] != [0.0, 1.0]
+        or not float(domain[0]) <= position <= float(domain[1])
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_FOCUS_MISMATCH",
+            f"source focus position {position} is outside the frozen class domain",
+        )
+
     expected_map = check_hash(str(manifest.get("map_npz_sha256", "")), "pattern map")
     actual_map = hash_file(map_path)
     if actual_map != expected_map:
@@ -938,13 +1785,6 @@ def validate_pattern_manifest(
         raise ContractFailure(
             "PATTERN_MAP_SHAPE_MISMATCH",
             f"map shape {manifest.get('active_shape')} != RAW visible shape {list(visible.shape)}",
-        )
-    capture_match = manifest.get("capture_match", {})
-    if capture_match != camera_metadata:
-        raise ContractFailure(
-            "PATTERN_MAP_CAMERA_MISMATCH",
-            f"map capture match {capture_match!r} != source metadata "
-            f"{camera_metadata!r} ({source_path})",
         )
     expected_sensor = sensor_fingerprint(raw)
     if manifest.get("sensor_fingerprint") != expected_sensor:
@@ -971,6 +1811,65 @@ def validate_pattern_manifest(
             "PATTERN_MAP_ARRAY_DECLARATION_MISMATCH",
             f"array declaration must be {expected_arrays!r}",
         )
+
+    result_path = _pattern_artifact_path(
+        manifest_path, validation.get("result_path"), "held-out validation result"
+    )
+    expected_result = check_hash(
+        str(validation.get("result_sha256", "")), "held-out validation result"
+    )
+    if not result_path.is_file() or hash_file(result_path) != expected_result:
+        raise ContractFailure(
+            "PATTERN_MAP_VALIDATION_MISMATCH",
+            "held-out validation result is absent or changed",
+        )
+    result = load_json(result_path, "held-out validation result")
+    if (
+        result.get("schema") != PATTERN_VALIDATION_SCHEMA
+        or result.get("status") != "PASS"
+        or result.get("session_id") != manifest["session_id"]
+        or result.get("optical_state_id") != manifest["optical_state_id"]
+        or result.get("temperature_class_id") != temperature_class.get("id")
+        or result.get("focus_class_id") != focus_class.get("id")
+        or result.get("capture_manifest_sha256") != capture_manifest_sha
+        or result.get("flat_field_record_sha256") != flat_field_record_sha
+        or result.get("estimator_executable_sha256")
+        != manifest.get("estimator", {}).get("executable_sha256")
+        or result.get("settings_sha256")
+        != manifest.get("estimator", {}).get("settings_sha256")
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_VALIDATION_FAILED",
+            "held-out validation is absent, failed, or belongs to another class",
+        )
+    maps = result.get("maps")
+    if (
+        not isinstance(maps, dict)
+        or set(maps) != {"A", "B"}
+        or not all(isinstance(maps.get(lineage), dict) for lineage in ("A", "B"))
+        or maps["A"].get("sha256") == maps["B"].get("sha256")
+        or not isinstance(maps.get(manifest["lineage_id"]), dict)
+        or maps[manifest["lineage_id"]].get("sha256") != actual_map
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_VALIDATION_MISMATCH",
+            "held-out validation does not bind this map hash",
+        )
+    expected_validation_settings = estimator_settings.get("held_out_validation")
+    if (
+        result.get("thresholds") != expected_validation_settings
+        or validation.get("thresholds") != expected_validation_settings
+        or result.get("held_out_dark_source_sha256") != validation_darks
+        or result.get("held_out_flat_source_sha256") != validation_flats
+        or not isinstance(result.get("checks"), dict)
+        or not result["checks"]
+        or not all(value is True for value in result["checks"].values())
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_VALIDATION_FAILED",
+            "held-out validation thresholds or checks are not the frozen passing set",
+        )
+
     try:
         with np.load(map_path, allow_pickle=False) as arrays:
             if set(arrays.files) != {"gain", "offset_dn"}:
@@ -995,6 +1894,20 @@ def validate_pattern_manifest(
         raise ContractFailure("PATTERN_MAP_SHAPE_MISMATCH", "map array shape mismatch")
     if not np.all(np.isfinite(gain)) or not np.all(gain > 0):
         raise ContractFailure("PATTERN_MAP_VALUES_INVALID", "all gains must be finite and > 0")
+    gain_minimum = float(estimator_settings.get("estimation", {}).get("gain_minimum", 0.0))
+    gain_maximum = float(estimator_settings.get("estimation", {}).get("gain_maximum", 0.0))
+    if (
+        not math.isfinite(gain_minimum)
+        or not math.isfinite(gain_maximum)
+        or gain_minimum <= 0.0
+        or gain_maximum < gain_minimum
+        or np.any(gain < gain_minimum)
+        or np.any(gain > gain_maximum)
+    ):
+        raise ContractFailure(
+            "PATTERN_MAP_VALUES_INVALID",
+            f"gain values must lie in [{gain_minimum},{gain_maximum}]",
+        )
     if not np.all(np.isfinite(offset)):
         raise ContractFailure("PATTERN_MAP_VALUES_INVALID", "all offsets must be finite")
     return manifest, gain, offset
@@ -1172,6 +2085,7 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
     output_path = Path(args.output)
     pattern_path = Path(args.pattern_map)
     pattern_manifest_path = Path(args.pattern_manifest)
+    source_context_path = Path(args.capture_context)
     consumer_registry_path = Path(args.consumer_registry)
     settings = validate_settings(settings_path)
     freeze = verify_freeze(freeze_path, settings_path, icc_path)
@@ -1187,6 +2101,7 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
 
     np, rawpy = import_runtime()
     source_sha = hash_file(source_path)
+    source_context = validate_source_context(source_context_path, source_sha)
     camera_metadata = read_camera_metadata(source_path)
     with rawpy.imread(str(source_path)) as raw:
         metadata = raw_metadata(raw, camera_metadata)
@@ -1197,6 +2112,7 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
             camera_metadata,
             source_sha,
             source_path,
+            source_context,
         )
         black = metadata["black_levels"]
         whites = metadata["white_levels"]
@@ -1257,6 +2173,9 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
             "path": str(source_path.resolve()),
             "sha256": source_sha,
             "metadata": metadata,
+            "capture_context_path": str(source_context_path.resolve()),
+            "capture_context_sha256": source_context["context_sha256"],
+            "capture_context": source_context,
         },
         "converter": {
             "id": CONVERTER_ID,
@@ -1345,6 +2264,7 @@ def parse_args() -> argparse.Namespace:
     render_parser.add_argument("--freeze", required=True)
     render_parser.add_argument("--pattern-map", required=True)
     render_parser.add_argument("--pattern-manifest", required=True)
+    render_parser.add_argument("--capture-context", required=True)
     render_parser.add_argument("--consumer-registry", required=True)
     return parser.parse_args()
 

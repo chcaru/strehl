@@ -1,0 +1,117 @@
+{
+  "schema": "m165-pattern-map-capture-v1",
+  "status": "UNFROZEN",
+  "session_id": "REQUIRED-UNIQUE-SITTING-ID",
+  "optical_state_id": "converter-on-or-tc0",
+  "physical_body": {
+    "id": "REQUIRED-OWNER-ASSIGNED-BODY-ID",
+    "witness_kind": "m165-physical-body-witness-v1",
+    "witness_path": "REQUIRED",
+    "witness_sha256": "REQUIRED"
+  },
+  "capture_record": {
+    "path": "REQUIRED-FROZEN-BENCH-RECORD",
+    "sha256": "REQUIRED"
+  },
+  "flat_field_record": {
+    "path": "REQUIRED-FROZEN-FLAT-FIELD-STATE-RECORD",
+    "sha256": "REQUIRED"
+  },
+  "camera_match": {
+    "make": "SONY",
+    "model": "ILCE-7CM2",
+    "iso_speed": 100.0,
+    "iso_abs_tolerance": 0.0,
+    "exposure_time_s": 1.0,
+    "exposure_abs_tolerance_s": 0.0005,
+    "f_number": 5.6,
+    "f_number_abs_tolerance": 0.05,
+    "lens_model": "REQUIRED-FOR-OPTICAL-STATE",
+    "focal_length_mm": 0.0,
+    "focal_length_abs_tolerance_mm": 0.5,
+    "raw_mode": "14-bit-uncompressed",
+    "shutter_mode": "electronic-first-curtain",
+    "steadyshot": "off",
+    "lens_oss": "off"
+  },
+  "temperature_class": {
+    "id": "SESSION-ID:OPTICAL-STATE-ID:temperature",
+    "center_c": 0.0,
+    "center_sample_index": 0,
+    "maximum_absolute_delta_c": 0.5,
+    "interpolation": "forbidden",
+    "witness": {
+      "kind": "external-contact-probe",
+      "device_id": "REQUIRED",
+      "mount_location": "REQUIRED-FIXED-BODY-LOCATION",
+      "calibration_path": "REQUIRED",
+      "calibration_sha256": "REQUIRED",
+      "maximum_calibration_uncertainty_c": 0.2,
+      "log_path": "REQUIRED",
+      "log_sha256": "REQUIRED",
+      "maximum_sample_age_s": 10.0
+    }
+  },
+  "focus_class": {
+    "id": "SESSION-ID:OPTICAL-STATE-ID:focus",
+    "schedule_path": "REQUIRED",
+    "schedule_sha256": "REQUIRED",
+    "domain_normalized": [
+      0.0,
+      1.0
+    ],
+    "fit_position_normalized": 0.5,
+    "fit_position_abs_tolerance": 0.05,
+    "validation_endpoint_abs_tolerance": 0.05,
+    "interpolation": "forbidden"
+  },
+  "sensor_fingerprint": {
+    "active_shape": [
+      0,
+      0
+    ],
+    "raw_shape": [
+      0,
+      0
+    ],
+    "black_levels": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "white_levels": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "raw_pattern": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "color_description": "RGBG"
+  },
+  "groups": {
+    "dark_a": [],
+    "flat_a": [],
+    "dark_b": [],
+    "flat_b": [],
+    "dark_v": [],
+    "flat_v": []
+  },
+  "source_record_shape": {
+    "path": "REQUIRED-ARW-PATH",
+    "sha256": "REQUIRED",
+    "capture_index": 0,
+    "captured_at_utc": "REQUIRED-ISO-8601",
+    "temperature_sample_index": 0,
+    "focus_position_normalized": null
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "bits_per_sample": [
+    16,
+    16,
+    16
+  ],
+  "compression": 1,
+  "file_sha256": "a1ec6e639bda27d204fdb27dc5dbb9ed5afdee834ac9acad0595a2fdd181fe66",
+  "height": 5,
+  "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+  "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\out\\commission\\identity-baseline.tiff",
+  "photometric": 2,
+  "pixel_payload_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+  "planar_configuration": 1,
+  "provenance": {
+    "converter_executable_sha256": "cfb71ae59c321366467cbfa915c10e2071a7ce13e3fd6a1eb23a5b00bcd699fc",
+    "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+    "pattern_manifest_sha256": "a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2",
+    "pattern_map_sha256": "880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654",
+    "schema": "m165-common-input-provenance-v1",
+    "settings_sha256": "dcce8eda23287d19aaf9992782f8d3f845726773edcae67de53a9d4e962d930a",
+    "source_sha256": "25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a"
+  },
+  "rows_per_strip": 5,
+  "sample_format": [
+    1,
+    1,
+    1
+  ],
+  "schema": "m165-common-tiff-inspection-v1",
+  "status": "PASS",
+  "strip_byte_count": 210,
+  "strip_count": 1,
+  "strip_offset": 1312,
+  "width": 7
+}

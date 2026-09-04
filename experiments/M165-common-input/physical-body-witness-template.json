@@ -1,0 +1,9 @@
+{
+  "schema": "m165-physical-body-witness-v1",
+  "status": "UNFROZEN",
+  "physical_body_id": "REQUIRED-OWNER-ASSIGNED-BODY-ID",
+  "observation_method": "operator-read-physical-body-label",
+  "evidence_sha256": "REQUIRED-HASH-OF-PRIVATE-CONTEMPORANEOUS-LABEL-RECORD",
+  "recorded_at_utc": "REQUIRED-ISO-8601",
+  "recorder": "REQUIRED"
+}

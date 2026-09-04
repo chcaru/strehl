@@ -1,0 +1,22 @@
+{
+  "schema": "m165-pattern-map-sitting-v1",
+  "status": "UNFROZEN",
+  "session_id": "REQUIRED-UNIQUE-SITTING-ID",
+  "settings_sha256": "REQUIRED",
+  "classes": [
+    {
+      "optical_state_id": "converter-on",
+      "temperature_class_id": "SESSION-ID:converter-on:temperature",
+      "focus_class_id": "SESSION-ID:converter-on:focus",
+      "capture_manifest_path": "REQUIRED",
+      "capture_manifest_sha256": "REQUIRED"
+    },
+    {
+      "optical_state_id": "tc0",
+      "temperature_class_id": "SESSION-ID:tc0:temperature",
+      "focus_class_id": "SESSION-ID:tc0:focus",
+      "capture_manifest_path": "REQUIRED",
+      "capture_manifest_sha256": "REQUIRED"
+    }
+  ]
+}

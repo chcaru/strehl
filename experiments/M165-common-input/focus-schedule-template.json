@@ -1,0 +1,20 @@
+{
+  "schema": "m165-focus-schedule-v1",
+  "status": "UNFROZEN",
+  "session_id": "REQUIRED-UNIQUE-SITTING-ID",
+  "optical_state_id": "converter-on-or-tc0",
+  "focus_class_id": "REQUIRED",
+  "coordinate": "normalized-registered-schedule-position",
+  "domain": [
+    0.0,
+    1.0
+  ],
+  "direction": "REQUIRED",
+  "reset_method": "REQUIRED",
+  "fit_position_normalized": 0.5,
+  "validation_endpoint_positions": [
+    0.0,
+    1.0
+  ],
+  "subject_positions_normalized": []
+}

@@ -1,17 +1,61 @@
 {
-  "schema": "m165-sensor-pattern-map-v1",
+  "schema": "m165-sensor-pattern-map-v2",
   "status": "UNFROZEN",
+  "map_id": "REQUIRED",
+  "session_id": "REQUIRED-UNIQUE-SITTING-ID",
+  "optical_state_id": "converter-on-or-tc0",
+  "lineage_id": "A-or-B",
+  "capture_manifest_sha256": "REQUIRED",
+  "physical_body": {
+    "id": "REQUIRED-OWNER-ASSIGNED-BODY-ID",
+    "witness_sha256": "REQUIRED"
+  },
+  "capture_record_sha256": "REQUIRED",
+  "flat_field_record_sha256": "REQUIRED",
   "capture_match": {
-    "make": "REQUIRED",
-    "model": "REQUIRED",
-    "iso_speed": 0.0,
-    "serial_number": null,
-    "exposure_time_s": 0.0,
-    "f_number": 0.0,
-    "lens_model": "REQUIRED",
+    "make": "SONY",
+    "model": "ILCE-7CM2",
+    "iso_speed": 100.0,
+    "iso_abs_tolerance": 0.0,
+    "exposure_time_s": 1.0,
+    "exposure_abs_tolerance_s": 0.0005,
+    "f_number": 5.6,
+    "f_number_abs_tolerance": 0.05,
+    "lens_model": "REQUIRED-FOR-OPTICAL-STATE",
     "focal_length_mm": 0.0,
-    "focus_distance_m": null,
-    "camera_temperature_c": null
+    "focal_length_abs_tolerance_mm": 0.5,
+    "raw_mode": "14-bit-uncompressed",
+    "shutter_mode": "electronic-first-curtain",
+    "steadyshot": "off",
+    "lens_oss": "off"
+  },
+  "temperature_class": {
+    "id": "REQUIRED",
+    "center_c": 0.0,
+    "center_sample_index": 0,
+    "maximum_absolute_delta_c": 0.5,
+    "interpolation": "forbidden",
+    "witness": {
+      "kind": "external-contact-probe",
+      "device_id": "REQUIRED",
+      "mount_location": "REQUIRED-FIXED-BODY-LOCATION",
+      "calibration_sha256": "REQUIRED",
+      "maximum_calibration_uncertainty_c": 0.2,
+      "log_sha256": "REQUIRED",
+      "maximum_sample_age_s": 10.0
+    }
+  },
+  "focus_class": {
+    "id": "REQUIRED",
+    "schedule_sha256": "REQUIRED",
+    "domain_normalized": [
+      0.0,
+      1.0
+    ],
+    "fit_position_normalized": 0.5,
+    "fit_position_abs_tolerance": 0.05,
+    "validation_endpoint_abs_tolerance": 0.05,
+    "interpolation": "forbidden"
   },
   "sensor_fingerprint": {
     "active_shape": [
@@ -69,10 +113,22 @@
   },
   "map_npz_sha256": "REQUIRED",
   "estimator": {
-    "id": "REQUIRED",
-    "version": "REQUIRED",
-    "executable_sha256": "REQUIRED"
+    "id": "m165-dark-flat-map",
+    "version": "1.0.0",
+    "executable_sha256": "REQUIRED",
+    "freeze_path": "pattern-map-estimator-freeze-v1.json",
+    "freeze_sha256": "REQUIRED",
+    "settings_path": "pattern-map-settings-v1.json",
+    "settings_sha256": "REQUIRED"
   },
   "independent_dark_source_sha256": [],
-  "independent_flat_source_sha256": []
+  "excluded_settling_dark_source_sha256": [],
+  "independent_flat_source_sha256": [],
+  "held_out_validation": {
+    "result_path": "REQUIRED",
+    "result_sha256": "REQUIRED",
+    "dark_source_sha256": [],
+    "flat_source_sha256": [],
+    "thresholds": {}
+  }
 }

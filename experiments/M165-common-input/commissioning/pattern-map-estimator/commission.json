@@ -1,0 +1,1061 @@
+{
+  "checks": {
+    "clean_null_passes": true,
+    "map_files_are_distinct": true,
+    "null_moves_under_disturbance": true,
+    "planted_degradation_fails": true,
+    "planted_improvement_passes": true,
+    "stage0m_contract_passes": true
+  },
+  "estimator": {
+    "executable_sha256": "7bc94f2d11976e512cb72face86fbf9deb6bf355592781b2c6aa64c203c37b73",
+    "freeze_sha256": "220764ec19f1b1d6b06e9b51cb1b069bbe07dd9aa8c8f9b8a2eb5de4e32eb86e",
+    "id": "m165-dark-flat-map",
+    "settings_sha256": "a9fbd14556316550dd50a9eb3c18797c46a4674035aed7fffabd174df920e715",
+    "version": "1.0.0"
+  },
+  "maps": {
+    "A": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\pattern-map-estimator\\commission-map-A.npz",
+      "sha256": "15a9bd1b8a9fe1edb9fc5bcb2763a0a6877c478dbdcea9154761c1ff2e7a4a9c"
+    },
+    "B": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\pattern-map-estimator\\commission-map-B.npz",
+      "sha256": "e4959eaedb02260cdbc43e8011a5ba876fe7a5a01a1f2915e7646208fcd74ce6"
+    }
+  },
+  "movable_null": {
+    "clean": {
+      "checks": {
+        "dark_common_rms": true,
+        "dark_count": true,
+        "dark_ring_coherence": true,
+        "flat_common_rms": true,
+        "flat_count": true,
+        "flat_far_common_rms": true,
+        "flat_near_common_rms": true,
+        "flat_ring_coherence": true
+      },
+      "dark": {
+        "common_rms_dn": 0.18996298731516123,
+        "ring": {
+          "maximum_positive_coherence": 0.0381271680597472,
+          "rings": [
+            {
+              "coherence": 0.0381271680597472,
+              "frequency_max": 0.055989583333333336,
+              "frequency_min": 0.015625,
+              "index": 0,
+              "modes": 5248
+            },
+            {
+              "coherence": -0.03477822949543912,
+              "frequency_max": 0.09635416666666667,
+              "frequency_min": 0.055989583333333336,
+              "index": 1,
+              "modes": 10560
+            },
+            {
+              "coherence": -0.009063550189923027,
+              "frequency_max": 0.13671875,
+              "frequency_min": 0.09635416666666667,
+              "index": 2,
+              "modes": 16064
+            },
+            {
+              "coherence": 0.011749647094986613,
+              "frequency_max": 0.17708333333333334,
+              "frequency_min": 0.13671875,
+              "index": 3,
+              "modes": 20672
+            },
+            {
+              "coherence": -0.0015206275015841439,
+              "frequency_max": 0.21744791666666669,
+              "frequency_min": 0.17708333333333334,
+              "index": 4,
+              "modes": 26688
+            },
+            {
+              "coherence": 0.0010715638047818295,
+              "frequency_max": 0.2578125,
+              "frequency_min": 0.21744791666666669,
+              "index": 5,
+              "modes": 31424
+            },
+            {
+              "coherence": 0.0026813811524535524,
+              "frequency_max": 0.29817708333333337,
+              "frequency_min": 0.2578125,
+              "index": 6,
+              "modes": 37888
+            },
+            {
+              "coherence": 0.00830170209222763,
+              "frequency_max": 0.3385416666666667,
+              "frequency_min": 0.29817708333333337,
+              "index": 7,
+              "modes": 42944
+            },
+            {
+              "coherence": -0.0019284175337260698,
+              "frequency_max": 0.37890625,
+              "frequency_min": 0.3385416666666667,
+              "index": 8,
+              "modes": 47808
+            },
+            {
+              "coherence": 0.00028470216230125567,
+              "frequency_max": 0.41927083333333337,
+              "frequency_min": 0.37890625,
+              "index": 9,
+              "modes": 53056
+            },
+            {
+              "coherence": -0.005802525383803905,
+              "frequency_max": 0.4596354166666667,
+              "frequency_min": 0.41927083333333337,
+              "index": 10,
+              "modes": 59072
+            },
+            {
+              "coherence": -0.0030851508774242978,
+              "frequency_max": 0.5,
+              "frequency_min": 0.4596354166666667,
+              "index": 11,
+              "modes": 63424
+            }
+          ],
+          "tile_count": 64,
+          "tile_size_plane_pixels": 128
+        },
+        "split_counts": [
+          15,
+          15
+        ]
+      },
+      "flat": {
+        "common_rms_fraction": 0.0008310105222983666,
+        "endpoint_common_rms_fraction": {
+          "far": 0.0011752010169576751,
+          "near": 0.001176641423165875
+        },
+        "ring": {
+          "maximum_positive_coherence": 0.02344421065066759,
+          "rings": [
+            {
+              "coherence": 0.02344421065066759,
+              "frequency_max": 0.055989583333333336,
+              "frequency_min": 0.015625,
+              "index": 0,
+              "modes": 5248
+            },
+            {
+              "coherence": 0.009290121076185565,
+              "frequency_max": 0.09635416666666667,
+              "frequency_min": 0.055989583333333336,
+              "index": 1,
+              "modes": 10560
+            },
+            {
+              "coherence": -0.015482028137299257,
+              "frequency_max": 0.13671875,
+              "frequency_min": 0.09635416666666667,
+              "index": 2,
+              "modes": 16064
+            },
+            {
+              "coherence": 0.004292893598926314,
+              "frequency_max": 0.17708333333333334,
+              "frequency_min": 0.13671875,
+              "index": 3,
+              "modes": 20672
+            },
+            {
+              "coherence": -0.007499037413152302,
+              "frequency_max": 0.21744791666666669,
+              "frequency_min": 0.17708333333333334,
+              "index": 4,
+              "modes": 26688
+            },
+            {
+              "coherence": -0.007989551504128382,
+              "frequency_max": 0.2578125,
+              "frequency_min": 0.21744791666666669,
+              "index": 5,
+              "modes": 31424
+            },
+            {
+              "coherence": -0.004309225315799265,
+              "frequency_max": 0.29817708333333337,
+              "frequency_min": 0.2578125,
+              "index": 6,
+              "modes": 37888
+            },
+            {
+              "coherence": 0.008661221055933489,
+              "frequency_max": 0.3385416666666667,
+              "frequency_min": 0.29817708333333337,
+              "index": 7,
+              "modes": 42944
+            },
+            {
+              "coherence": 0.004265781592206008,
+              "frequency_max": 0.37890625,
+              "frequency_min": 0.3385416666666667,
+              "index": 8,
+              "modes": 47808
+            },
+            {
+              "coherence": -0.001423951228066901,
+              "frequency_max": 0.41927083333333337,
+              "frequency_min": 0.37890625,
+              "index": 9,
+              "modes": 53056
+            },
+            {
+              "coherence": -0.002455653115726953,
+              "frequency_max": 0.4596354166666667,
+              "frequency_min": 0.41927083333333337,
+              "index": 10,
+              "modes": 59072
+            },
+            {
+              "coherence": -0.006123136584170974,
+              "frequency_max": 0.5,
+              "frequency_min": 0.4596354166666667,
+              "index": 11,
+              "modes": 63424
+            }
+          ],
+          "tile_count": 64,
+          "tile_size_plane_pixels": 128
+        },
+        "split_counts": [
+          16,
+          16
+        ]
+      },
+      "status": "PASS",
+      "thresholds": {
+        "common_rms_statistic": "RMS of one half the sum of the two split means over every active photosite",
+        "dark_common_rms_maximum_dn": 0.3,
+        "dark_residual_statistic": "per-CFA-plane-demeaned corrected DN; split means use map A on even and map B on odd usable V frames",
+        "flat_common_rms_maximum_fraction": 0.0015,
+        "flat_endpoint_common_rms_maximum_fraction": 0.0025,
+        "flat_residual_statistic": "corrected divided by its per-CFA-plane 61-pixel triple-reflect-box field minus one; split means use map A on even and map B on odd V frames",
+        "maximum_frequency_cycles_per_plane_pixel": 0.5,
+        "maximum_positive_ring_coherence": 0.05,
+        "minimum_frequency_cycles_per_plane_pixel": 0.015625,
+        "minimum_modes_per_ring": 128,
+        "radial_ring_count": 12,
+        "ring_coherence_statistic": "maximum of zero and real cross-power coherence over admitted Hann-windowed radial rings and all complete CFA-plane tiles",
+        "split_rule": "capture-index-parity-after-dark-settling-exclusion",
+        "tile_size_plane_pixels": 128
+      }
+    },
+    "disturbed_without_correction": {
+      "checks": {
+        "dark_common_rms": false,
+        "dark_count": true,
+        "dark_ring_coherence": false,
+        "flat_common_rms": false,
+        "flat_count": true,
+        "flat_far_common_rms": false,
+        "flat_near_common_rms": false,
+        "flat_ring_coherence": false
+      },
+      "dark": {
+        "common_rms_dn": 1.8128220844017453,
+        "ring": {
+          "maximum_positive_coherence": 0.9992141550763418,
+          "rings": [
+            {
+              "coherence": 0.6243395564063,
+              "frequency_max": 0.055989583333333336,
+              "frequency_min": 0.015625,
+              "index": 0,
+              "modes": 5248
+            },
+            {
+              "coherence": 0.9992141550763418,
+              "frequency_max": 0.09635416666666667,
+              "frequency_min": 0.055989583333333336,
+              "index": 1,
+              "modes": 10560
+            },
+            {
+              "coherence": 0.9989160262323108,
+              "frequency_max": 0.13671875,
+              "frequency_min": 0.09635416666666667,
+              "index": 2,
+              "modes": 16064
+            },
+            {
+              "coherence": 0.6245218815370897,
+              "frequency_max": 0.17708333333333334,
+              "frequency_min": 0.13671875,
+              "index": 3,
+              "modes": 20672
+            },
+            {
+              "coherence": 0.6251732808195815,
+              "frequency_max": 0.21744791666666669,
+              "frequency_min": 0.17708333333333334,
+              "index": 4,
+              "modes": 26688
+            },
+            {
+              "coherence": 0.6349192989586245,
+              "frequency_max": 0.2578125,
+              "frequency_min": 0.21744791666666669,
+              "index": 5,
+              "modes": 31424
+            },
+            {
+              "coherence": 0.6314243088405194,
+              "frequency_max": 0.29817708333333337,
+              "frequency_min": 0.2578125,
+              "index": 6,
+              "modes": 37888
+            },
+            {
+              "coherence": 0.623710830885185,
+              "frequency_max": 0.3385416666666667,
+              "frequency_min": 0.29817708333333337,
+              "index": 7,
+              "modes": 42944
+            },
+            {
+              "coherence": 0.6323234728022039,
+              "frequency_max": 0.37890625,
+              "frequency_min": 0.3385416666666667,
+              "index": 8,
+              "modes": 47808
+            },
+            {
+              "coherence": 0.634389779793248,
+              "frequency_max": 0.41927083333333337,
+              "frequency_min": 0.37890625,
+              "index": 9,
+              "modes": 53056
+            },
+            {
+              "coherence": 0.627867771631765,
+              "frequency_max": 0.4596354166666667,
+              "frequency_min": 0.41927083333333337,
+              "index": 10,
+              "modes": 59072
+            },
+            {
+              "coherence": 0.6263893865599846,
+              "frequency_max": 0.5,
+              "frequency_min": 0.4596354166666667,
+              "index": 11,
+              "modes": 63424
+            }
+          ],
+          "tile_count": 64,
+          "tile_size_plane_pixels": 128
+        },
+        "split_counts": [
+          15,
+          15
+        ]
+      },
+      "flat": {
+        "common_rms_fraction": 0.006220506563258373,
+        "endpoint_common_rms_fraction": {
+          "far": 0.006276472112614334,
+          "near": 0.0062750020303830945
+        },
+        "ring": {
+          "maximum_positive_coherence": 0.976904759532404,
+          "rings": [
+            {
+              "coherence": 0.9640587956640363,
+              "frequency_max": 0.055989583333333336,
+              "frequency_min": 0.015625,
+              "index": 0,
+              "modes": 5248
+            },
+            {
+              "coherence": 0.9648166009314373,
+              "frequency_max": 0.09635416666666667,
+              "frequency_min": 0.055989583333333336,
+              "index": 1,
+              "modes": 10560
+            },
+            {
+              "coherence": 0.9641130595166522,
+              "frequency_max": 0.13671875,
+              "frequency_min": 0.09635416666666667,
+              "index": 2,
+              "modes": 16064
+            },
+            {
+              "coherence": 0.9619545649157137,
+              "frequency_max": 0.17708333333333334,
+              "frequency_min": 0.13671875,
+              "index": 3,
+              "modes": 20672
+            },
+            {
+              "coherence": 0.976904759532404,
+              "frequency_max": 0.21744791666666669,
+              "frequency_min": 0.17708333333333334,
+              "index": 4,
+              "modes": 26688
+            },
+            {
+              "coherence": 0.9735032983453265,
+              "frequency_max": 0.2578125,
+              "frequency_min": 0.21744791666666669,
+              "index": 5,
+              "modes": 31424
+            },
+            {
+              "coherence": 0.9627304320993397,
+              "frequency_max": 0.29817708333333337,
+              "frequency_min": 0.2578125,
+              "index": 6,
+              "modes": 37888
+            },
+            {
+              "coherence": 0.9631606272006905,
+              "frequency_max": 0.3385416666666667,
+              "frequency_min": 0.29817708333333337,
+              "index": 7,
+              "modes": 42944
+            },
+            {
+              "coherence": 0.9633098634694911,
+              "frequency_max": 0.37890625,
+              "frequency_min": 0.3385416666666667,
+              "index": 8,
+              "modes": 47808
+            },
+            {
+              "coherence": 0.9618220220535824,
+              "frequency_max": 0.41927083333333337,
+              "frequency_min": 0.37890625,
+              "index": 9,
+              "modes": 53056
+            },
+            {
+              "coherence": 0.9629592766816688,
+              "frequency_max": 0.4596354166666667,
+              "frequency_min": 0.41927083333333337,
+              "index": 10,
+              "modes": 59072
+            },
+            {
+              "coherence": 0.9630352550026955,
+              "frequency_max": 0.5,
+              "frequency_min": 0.4596354166666667,
+              "index": 11,
+              "modes": 63424
+            }
+          ],
+          "tile_count": 64,
+          "tile_size_plane_pixels": 128
+        },
+        "split_counts": [
+          16,
+          16
+        ]
+      },
+      "status": "FAIL",
+      "thresholds": {
+        "common_rms_statistic": "RMS of one half the sum of the two split means over every active photosite",
+        "dark_common_rms_maximum_dn": 0.3,
+        "dark_residual_statistic": "per-CFA-plane-demeaned corrected DN; split means use map A on even and map B on odd usable V frames",
+        "flat_common_rms_maximum_fraction": 0.0015,
+        "flat_endpoint_common_rms_maximum_fraction": 0.0025,
+        "flat_residual_statistic": "corrected divided by its per-CFA-plane 61-pixel triple-reflect-box field minus one; split means use map A on even and map B on odd V frames",
+        "maximum_frequency_cycles_per_plane_pixel": 0.5,
+        "maximum_positive_ring_coherence": 0.05,
+        "minimum_frequency_cycles_per_plane_pixel": 0.015625,
+        "minimum_modes_per_ring": 128,
+        "radial_ring_count": 12,
+        "ring_coherence_statistic": "maximum of zero and real cross-power coherence over admitted Hann-windowed radial rings and all complete CFA-plane tiles",
+        "split_rule": "capture-index-parity-after-dark-settling-exclusion",
+        "tile_size_plane_pixels": 128
+      }
+    }
+  },
+  "planted_degradation": {
+    "checks": {
+      "dark_common_rms": false,
+      "dark_count": true,
+      "dark_ring_coherence": false,
+      "flat_common_rms": false,
+      "flat_count": true,
+      "flat_far_common_rms": false,
+      "flat_near_common_rms": false,
+      "flat_ring_coherence": false
+    },
+    "dark": {
+      "common_rms_dn": 3.6126433805677314,
+      "ring": {
+        "maximum_positive_coherence": 0.999711036502368,
+        "rings": [
+          {
+            "coherence": 0.8242146373847756,
+            "frequency_max": 0.055989583333333336,
+            "frequency_min": 0.015625,
+            "index": 0,
+            "modes": 5248
+          },
+          {
+            "coherence": 0.999711036502368,
+            "frequency_max": 0.09635416666666667,
+            "frequency_min": 0.055989583333333336,
+            "index": 1,
+            "modes": 10560
+          },
+          {
+            "coherence": 0.9995889030762637,
+            "frequency_max": 0.13671875,
+            "frequency_min": 0.09635416666666667,
+            "index": 2,
+            "modes": 16064
+          },
+          {
+            "coherence": 0.8186916698477432,
+            "frequency_max": 0.17708333333333334,
+            "frequency_min": 0.13671875,
+            "index": 3,
+            "modes": 20672
+          },
+          {
+            "coherence": 0.8115927028990529,
+            "frequency_max": 0.21744791666666669,
+            "frequency_min": 0.17708333333333334,
+            "index": 4,
+            "modes": 26688
+          },
+          {
+            "coherence": 0.8189054869135238,
+            "frequency_max": 0.2578125,
+            "frequency_min": 0.21744791666666669,
+            "index": 5,
+            "modes": 31424
+          },
+          {
+            "coherence": 0.8180210322449992,
+            "frequency_max": 0.29817708333333337,
+            "frequency_min": 0.2578125,
+            "index": 6,
+            "modes": 37888
+          },
+          {
+            "coherence": 0.81536418285476,
+            "frequency_max": 0.3385416666666667,
+            "frequency_min": 0.29817708333333337,
+            "index": 7,
+            "modes": 42944
+          },
+          {
+            "coherence": 0.8185417085341741,
+            "frequency_max": 0.37890625,
+            "frequency_min": 0.3385416666666667,
+            "index": 8,
+            "modes": 47808
+          },
+          {
+            "coherence": 0.8204467177368128,
+            "frequency_max": 0.41927083333333337,
+            "frequency_min": 0.37890625,
+            "index": 9,
+            "modes": 53056
+          },
+          {
+            "coherence": 0.8178098465788547,
+            "frequency_max": 0.4596354166666667,
+            "frequency_min": 0.41927083333333337,
+            "index": 10,
+            "modes": 59072
+          },
+          {
+            "coherence": 0.8171131093247169,
+            "frequency_max": 0.5,
+            "frequency_min": 0.4596354166666667,
+            "index": 11,
+            "modes": 63424
+          }
+        ],
+        "tile_count": 64,
+        "tile_size_plane_pixels": 128
+      },
+      "split_counts": [
+        15,
+        15
+      ]
+    },
+    "flat": {
+      "common_rms_fraction": 0.012371381902553567,
+      "endpoint_common_rms_fraction": {
+        "far": 0.012398821805573711,
+        "near": 0.012399714758746629
+      },
+      "ring": {
+        "maximum_positive_coherence": 0.9911898689201892,
+        "rings": [
+          {
+            "coherence": 0.9862479767403862,
+            "frequency_max": 0.055989583333333336,
+            "frequency_min": 0.015625,
+            "index": 0,
+            "modes": 5248
+          },
+          {
+            "coherence": 0.9864327637983942,
+            "frequency_max": 0.09635416666666667,
+            "frequency_min": 0.055989583333333336,
+            "index": 1,
+            "modes": 10560
+          },
+          {
+            "coherence": 0.9864525403004412,
+            "frequency_max": 0.13671875,
+            "frequency_min": 0.09635416666666667,
+            "index": 2,
+            "modes": 16064
+          },
+          {
+            "coherence": 0.9853459403968612,
+            "frequency_max": 0.17708333333333334,
+            "frequency_min": 0.13671875,
+            "index": 3,
+            "modes": 20672
+          },
+          {
+            "coherence": 0.9911898689201892,
+            "frequency_max": 0.21744791666666669,
+            "frequency_min": 0.17708333333333334,
+            "index": 4,
+            "modes": 26688
+          },
+          {
+            "coherence": 0.98991904973433,
+            "frequency_max": 0.2578125,
+            "frequency_min": 0.21744791666666669,
+            "index": 5,
+            "modes": 31424
+          },
+          {
+            "coherence": 0.9858655482547951,
+            "frequency_max": 0.29817708333333337,
+            "frequency_min": 0.2578125,
+            "index": 6,
+            "modes": 37888
+          },
+          {
+            "coherence": 0.9858627726319611,
+            "frequency_max": 0.3385416666666667,
+            "frequency_min": 0.29817708333333337,
+            "index": 7,
+            "modes": 42944
+          },
+          {
+            "coherence": 0.9859854840660058,
+            "frequency_max": 0.37890625,
+            "frequency_min": 0.3385416666666667,
+            "index": 8,
+            "modes": 47808
+          },
+          {
+            "coherence": 0.9856556426450988,
+            "frequency_max": 0.41927083333333337,
+            "frequency_min": 0.37890625,
+            "index": 9,
+            "modes": 53056
+          },
+          {
+            "coherence": 0.9855841279009645,
+            "frequency_max": 0.4596354166666667,
+            "frequency_min": 0.41927083333333337,
+            "index": 10,
+            "modes": 59072
+          },
+          {
+            "coherence": 0.9857852282284049,
+            "frequency_max": 0.5,
+            "frequency_min": 0.4596354166666667,
+            "index": 11,
+            "modes": 63424
+          }
+        ],
+        "tile_count": 64,
+        "tile_size_plane_pixels": 128
+      },
+      "split_counts": [
+        16,
+        16
+      ]
+    },
+    "status": "FAIL",
+    "thresholds": {
+      "common_rms_statistic": "RMS of one half the sum of the two split means over every active photosite",
+      "dark_common_rms_maximum_dn": 0.3,
+      "dark_residual_statistic": "per-CFA-plane-demeaned corrected DN; split means use map A on even and map B on odd usable V frames",
+      "flat_common_rms_maximum_fraction": 0.0015,
+      "flat_endpoint_common_rms_maximum_fraction": 0.0025,
+      "flat_residual_statistic": "corrected divided by its per-CFA-plane 61-pixel triple-reflect-box field minus one; split means use map A on even and map B on odd V frames",
+      "maximum_frequency_cycles_per_plane_pixel": 0.5,
+      "maximum_positive_ring_coherence": 0.05,
+      "minimum_frequency_cycles_per_plane_pixel": 0.015625,
+      "minimum_modes_per_ring": 128,
+      "radial_ring_count": 12,
+      "ring_coherence_statistic": "maximum of zero and real cross-power coherence over admitted Hann-windowed radial rings and all complete CFA-plane tiles",
+      "split_rule": "capture-index-parity-after-dark-settling-exclusion",
+      "tile_size_plane_pixels": 128
+    }
+  },
+  "planted_improvement": {
+    "checks": {
+      "dark_common_rms": true,
+      "dark_count": true,
+      "dark_ring_coherence": true,
+      "flat_common_rms": true,
+      "flat_count": true,
+      "flat_far_common_rms": true,
+      "flat_near_common_rms": true,
+      "flat_ring_coherence": true
+    },
+    "dark": {
+      "common_rms_dn": 0.23291129972098365,
+      "ring": {
+        "maximum_positive_coherence": 0.018499327127059973,
+        "rings": [
+          {
+            "coherence": -0.00868902981103877,
+            "frequency_max": 0.055989583333333336,
+            "frequency_min": 0.015625,
+            "index": 0,
+            "modes": 5248
+          },
+          {
+            "coherence": 0.018499327127059973,
+            "frequency_max": 0.09635416666666667,
+            "frequency_min": 0.055989583333333336,
+            "index": 1,
+            "modes": 10560
+          },
+          {
+            "coherence": 0.0030332619148361766,
+            "frequency_max": 0.13671875,
+            "frequency_min": 0.09635416666666667,
+            "index": 2,
+            "modes": 16064
+          },
+          {
+            "coherence": 0.0023745368423094696,
+            "frequency_max": 0.17708333333333334,
+            "frequency_min": 0.13671875,
+            "index": 3,
+            "modes": 20672
+          },
+          {
+            "coherence": -0.009278618887263874,
+            "frequency_max": 0.21744791666666669,
+            "frequency_min": 0.17708333333333334,
+            "index": 4,
+            "modes": 26688
+          },
+          {
+            "coherence": -0.005315847985669646,
+            "frequency_max": 0.2578125,
+            "frequency_min": 0.21744791666666669,
+            "index": 5,
+            "modes": 31424
+          },
+          {
+            "coherence": -0.0016497709567438183,
+            "frequency_max": 0.29817708333333337,
+            "frequency_min": 0.2578125,
+            "index": 6,
+            "modes": 37888
+          },
+          {
+            "coherence": -0.006656346589681412,
+            "frequency_max": 0.3385416666666667,
+            "frequency_min": 0.29817708333333337,
+            "index": 7,
+            "modes": 42944
+          },
+          {
+            "coherence": -0.0020166569553676334,
+            "frequency_max": 0.37890625,
+            "frequency_min": 0.3385416666666667,
+            "index": 8,
+            "modes": 47808
+          },
+          {
+            "coherence": 0.005444426484687799,
+            "frequency_max": 0.41927083333333337,
+            "frequency_min": 0.37890625,
+            "index": 9,
+            "modes": 53056
+          },
+          {
+            "coherence": -0.004506472261782173,
+            "frequency_max": 0.4596354166666667,
+            "frequency_min": 0.41927083333333337,
+            "index": 10,
+            "modes": 59072
+          },
+          {
+            "coherence": -0.009120461745062716,
+            "frequency_max": 0.5,
+            "frequency_min": 0.4596354166666667,
+            "index": 11,
+            "modes": 63424
+          }
+        ],
+        "tile_count": 64,
+        "tile_size_plane_pixels": 128
+      },
+      "split_counts": [
+        15,
+        15
+      ]
+    },
+    "flat": {
+      "common_rms_fraction": 0.0010164606041796777,
+      "endpoint_common_rms_fraction": {
+        "far": 0.0013121599898003702,
+        "near": 0.0013138862701629922
+      },
+      "ring": {
+        "maximum_positive_coherence": 0.026700890638301767,
+        "rings": [
+          {
+            "coherence": 0.026700890638301767,
+            "frequency_max": 0.055989583333333336,
+            "frequency_min": 0.015625,
+            "index": 0,
+            "modes": 5248
+          },
+          {
+            "coherence": 0.01903603656664596,
+            "frequency_max": 0.09635416666666667,
+            "frequency_min": 0.055989583333333336,
+            "index": 1,
+            "modes": 10560
+          },
+          {
+            "coherence": -0.006129665663410552,
+            "frequency_max": 0.13671875,
+            "frequency_min": 0.09635416666666667,
+            "index": 2,
+            "modes": 16064
+          },
+          {
+            "coherence": 0.010065534577903521,
+            "frequency_max": 0.17708333333333334,
+            "frequency_min": 0.13671875,
+            "index": 3,
+            "modes": 20672
+          },
+          {
+            "coherence": -0.0036587118576099395,
+            "frequency_max": 0.21744791666666669,
+            "frequency_min": 0.17708333333333334,
+            "index": 4,
+            "modes": 26688
+          },
+          {
+            "coherence": -0.004949218279882137,
+            "frequency_max": 0.2578125,
+            "frequency_min": 0.21744791666666669,
+            "index": 5,
+            "modes": 31424
+          },
+          {
+            "coherence": 0.01704540137711067,
+            "frequency_max": 0.29817708333333337,
+            "frequency_min": 0.2578125,
+            "index": 6,
+            "modes": 37888
+          },
+          {
+            "coherence": -0.006229259630274097,
+            "frequency_max": 0.3385416666666667,
+            "frequency_min": 0.29817708333333337,
+            "index": 7,
+            "modes": 42944
+          },
+          {
+            "coherence": -0.006342421245433294,
+            "frequency_max": 0.37890625,
+            "frequency_min": 0.3385416666666667,
+            "index": 8,
+            "modes": 47808
+          },
+          {
+            "coherence": -0.00485794073119728,
+            "frequency_max": 0.41927083333333337,
+            "frequency_min": 0.37890625,
+            "index": 9,
+            "modes": 53056
+          },
+          {
+            "coherence": 0.008147490378020424,
+            "frequency_max": 0.4596354166666667,
+            "frequency_min": 0.41927083333333337,
+            "index": 10,
+            "modes": 59072
+          },
+          {
+            "coherence": 0.005247683534676396,
+            "frequency_max": 0.5,
+            "frequency_min": 0.4596354166666667,
+            "index": 11,
+            "modes": 63424
+          }
+        ],
+        "tile_count": 64,
+        "tile_size_plane_pixels": 128
+      },
+      "split_counts": [
+        16,
+        16
+      ]
+    },
+    "status": "PASS",
+    "thresholds": {
+      "common_rms_statistic": "RMS of one half the sum of the two split means over every active photosite",
+      "dark_common_rms_maximum_dn": 0.3,
+      "dark_residual_statistic": "per-CFA-plane-demeaned corrected DN; split means use map A on even and map B on odd usable V frames",
+      "flat_common_rms_maximum_fraction": 0.0015,
+      "flat_endpoint_common_rms_maximum_fraction": 0.0025,
+      "flat_residual_statistic": "corrected divided by its per-CFA-plane 61-pixel triple-reflect-box field minus one; split means use map A on even and map B on odd V frames",
+      "maximum_frequency_cycles_per_plane_pixel": 0.5,
+      "maximum_positive_ring_coherence": 0.05,
+      "minimum_frequency_cycles_per_plane_pixel": 0.015625,
+      "minimum_modes_per_ring": 128,
+      "radial_ring_count": 12,
+      "ring_coherence_statistic": "maximum of zero and real cross-power coherence over admitted Hann-windowed radial rings and all complete CFA-plane tiles",
+      "split_rule": "capture-index-parity-after-dark-settling-exclusion",
+      "tile_size_plane_pixels": 128
+    }
+  },
+  "schema": "m165-pattern-map-commission-v1",
+  "stage0m_contract": {
+    "baseline": {
+      "capture_manifest_sha256": "f6acbdb830281a05f6befb29976e4e403ba53771da9f37352e2e29218268b154",
+      "dark_temperature_class_count": 2,
+      "fitted_map_count": 4,
+      "flat_focus_class_count": 2,
+      "map_sha256": "ba9c45fcffc63cf232de818ba4c0fc07a8e1bbab38ac45b660ee7f7c6e57a39e",
+      "map_validation": {
+        "schema": "m165-pattern-map-package-v1",
+        "status": "PASS"
+      },
+      "sitting_manifest_sha256": "7fecbe85c77deab4b5d5ed11e2505199feaa3d4f7533ef128294f7c8edf39733",
+      "source_context_sha256": "6e647456260380d7b9ec952626d48d9538e9d5e16b36237ca274da57dbffed16"
+    },
+    "checks": {
+      "body_mismatch_refused": true,
+      "capture_contract_passes": true,
+      "count_mismatch_refused": true,
+      "failed_held_out_result_refused": true,
+      "flat_field_lineage_mismatch_refused": true,
+      "focus_mismatch_refused": true,
+      "malformed_cli_degrades_to_fail": true,
+      "map_body_mismatch_refused": true,
+      "map_contract_passes": true,
+      "map_focus_schedule_mismatch_refused": true,
+      "map_temperature_mismatch_refused": true,
+      "sitting_cardinality_mismatch_refused": true,
+      "sitting_contract_passes": true,
+      "sitting_shared_source_refused": true,
+      "temperature_mismatch_refused": true
+    },
+    "refusals": {
+      "capture_body": {
+        "failure_class": "PHYSICAL_BODY_WITNESS_INVALID",
+        "reason": "physical body witness schema or identity does not match",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "capture_count": {
+        "failure_class": "PATTERN_CAPTURE_COUNT_MISMATCH",
+        "reason": "dark_b must contain exactly 32 frames",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "capture_flat_field": {
+        "failure_class": "PATTERN_CAPTURE_FLAT_FIELD_INVALID",
+        "reason": "flat_b does not record the frozen diffuser action/field check",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "capture_focus": {
+        "failure_class": "PATTERN_CAPTURE_FOCUS_MISMATCH",
+        "reason": "flat_a must be within 0.5 +/- 0.05",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "capture_temperature": {
+        "failure_class": "PATTERN_CAPTURE_TEMPERATURE_MISMATCH",
+        "reason": "dark_v[7] temperature 20.6 C / age 0.0 s is outside the class",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "malformed_cli": {
+        "exit_code": 1,
+        "report": {
+          "failure_class": "INVALID_JSON",
+          "reason": "cannot read pattern-map capture manifest C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\pattern-map-estimator\\_contract-work\\capture-malformed.json: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+          "schema": "m165-pattern-map-capture-v1",
+          "status": "FAIL"
+        }
+      },
+      "map_body": {
+        "failure_class": "PATTERN_MAP_BODY_MISMATCH",
+        "reason": "source physical-body identity differs from the map",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "map_focus_schedule": {
+        "failure_class": "PATTERN_MAP_FOCUS_MISMATCH",
+        "reason": "source focus class or schedule differs from the map",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "map_held_out_result": {
+        "failure_class": "PATTERN_MAP_VALIDATION_FAILED",
+        "reason": "held-out validation is absent, failed, or belongs to another class",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "map_temperature": {
+        "failure_class": "PATTERN_MAP_TEMPERATURE_MISMATCH",
+        "reason": "source temperature 20.6 C / age 0.0 s is outside 20.0 +/- 0.5 C and age <= 10.0 s",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "sitting_cardinality": {
+        "failure_class": "PATTERN_SITTING_CARDINALITY_MISMATCH",
+        "reason": "sitting must contain exactly two optical-state classes",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      },
+      "sitting_shared_source": {
+        "failure_class": "PATTERN_SITTING_SOURCES_NOT_INDEPENDENT",
+        "reason": "a calibration source is shared across optical states",
+        "schema": "m165-pattern-map-package-v1",
+        "status": "FAIL"
+      }
+    },
+    "status": "PASS"
+  },
+  "status": "PASS",
+  "synthetic_shape": [
+    1024,
+    1024
+  ]
+}

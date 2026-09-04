@@ -1,0 +1,41 @@
+{
+  "schema": "m165-source-capture-context-v1",
+  "status": "UNFROZEN",
+  "source_sha256": "REQUIRED",
+  "captured_at_utc": "REQUIRED-ISO-8601",
+  "session_id": "REQUIRED-UNIQUE-SITTING-ID",
+  "optical_state_id": "converter-on-or-tc0",
+  "lineage_id": "A-or-B",
+  "physical_body": {
+    "id": "REQUIRED-OWNER-ASSIGNED-BODY-ID",
+    "witness_kind": "m165-physical-body-witness-v1",
+    "witness_path": "REQUIRED",
+    "witness_sha256": "REQUIRED"
+  },
+  "capture_record_path": "REQUIRED",
+  "capture_record_sha256": "REQUIRED",
+  "capture_state": {
+    "raw_mode": "14-bit-uncompressed",
+    "shutter_mode": "electronic-first-curtain",
+    "steadyshot": "off",
+    "lens_oss": "off"
+  },
+  "temperature_witness": {
+    "class_id": "REQUIRED",
+    "device_id": "REQUIRED",
+    "mount_location": "REQUIRED-FIXED-BODY-LOCATION",
+    "calibration_path": "REQUIRED",
+    "calibration_sha256": "REQUIRED",
+    "log_path": "REQUIRED",
+    "log_sha256": "REQUIRED",
+    "sample_index": 0,
+    "sample_temperature_c": 0.0,
+    "sample_age_s": 0.0
+  },
+  "focus_state": {
+    "class_id": "REQUIRED",
+    "schedule_path": "REQUIRED",
+    "schedule_sha256": "REQUIRED",
+    "position_normalized": 0.0
+  }
+}

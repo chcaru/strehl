@@ -1,0 +1,11 @@
+{
+  "schema": "m165-pattern-map-determinism-v1",
+  "status": "PASS",
+  "estimator_executable_sha256": "7bc94f2d11976e512cb72face86fbf9deb6bf355592781b2c6aa64c203c37b73",
+  "commission_report_sha256": "b37a73db16dcfcaf4c7f9992d78d12ac7635c8f8937ed3e8eacb134168f3b7f9",
+  "map_a_sha256": "15a9bd1b8a9fe1edb9fc5bcb2763a0a6877c478dbdcea9154761c1ff2e7a4a9c",
+  "map_b_sha256": "e4959eaedb02260cdbc43e8011a5ba876fe7a5a01a1f2915e7646208fcd74ce6",
+  "report_byte_stable": true,
+  "map_a_byte_stable": true,
+  "map_b_byte_stable": true
+}

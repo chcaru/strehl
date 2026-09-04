@@ -2,7 +2,7 @@
   "artifacts": {
     "converter_script": {
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\converter.py",
-      "sha256": "b99518cb0338bd75b84aac96cf56ffabd87e9b9ea3e91118e96dfd5f75664b5a"
+      "sha256": "a515a39895c3d1d27adebaecc07fab529f3aa7b3c1ef0dcb12cf417b5367a481"
     },
     "exiftool_executable": {
       "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\ExifTool\\ExifTool.exe",
@@ -35,7 +35,7 @@
     },
     "settings": {
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\settings-v1.json",
-      "sha256": "f90a318063a81ccd95049cccad4e7bd454d08294172af30d8acd6ef306047a42"
+      "sha256": "dcce8eda23287d19aaf9992782f8d3f845726773edcae67de53a9d4e962d930a"
     }
   },
   "complete_freeze_invocation": [
@@ -52,8 +52,8 @@
   "converter": {
     "bundle_members": {
       "converter_id": "m165-libraw-common-linear",
-      "converter_script_sha256": "b99518cb0338bd75b84aac96cf56ffabd87e9b9ea3e91118e96dfd5f75664b5a",
-      "converter_version": "1.1.0",
+      "converter_script_sha256": "a515a39895c3d1d27adebaecc07fab529f3aa7b3c1ef0dcb12cf417b5367a481",
+      "converter_version": "1.2.0",
       "exiftool_executable_sha256": "ce389bf0eff9f2e2aae21eb7d85e1f255d243bb9a2ddfed8da65f106ccba87e6",
       "exiftool_version": "13.58",
       "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
@@ -66,11 +66,11 @@
       "rawpy_extension_sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897",
       "rawpy_module_sha256": "24a06e984ef21c4c01569105f862c347f8a92446ec361c40835aa15dfa921eff",
       "rawpy_version": "0.27.0",
-      "settings_sha256": "f90a318063a81ccd95049cccad4e7bd454d08294172af30d8acd6ef306047a42"
+      "settings_sha256": "dcce8eda23287d19aaf9992782f8d3f845726773edcae67de53a9d4e962d930a"
     },
-    "executable_bundle_sha256": "09987d67aee229b6075001748bcd20f17b0cf47e0e42f238a9fc8940595fd95d",
+    "executable_bundle_sha256": "cfb71ae59c321366467cbfa915c10e2071a7ce13e3fd6a1eb23a5b00bcd699fc",
     "id": "m165-libraw-common-linear",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "icc_inspection": {
     "data_color_space": "RGB ",

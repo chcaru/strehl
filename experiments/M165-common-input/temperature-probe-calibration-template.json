@@ -1,0 +1,8 @@
+{
+  "schema": "m165-temperature-probe-calibration-v1",
+  "status": "UNFROZEN",
+  "device_id": "REQUIRED",
+  "calibrated_at_utc": "REQUIRED-ISO-8601",
+  "reference": "REQUIRED",
+  "uncertainty_c": 0.0
+}

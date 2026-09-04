@@ -1,334 +1,420 @@
-# M165 — common linear input and Strehl byte-identity boundary
+# M165 — common linear input, pattern-map gate, and Strehl byte identity
 
 ## Verdict
 
-**Infrastructure: commissioned. Competitive package: not yet renderable.**
+**Stage 0M is closed in software. The competitive package is still
+`UNMEASURED`.**
 
-M165 now provides a frozen LibRaw-based converter, a deterministic minimal TIFF
-writer, a strict Rust TIFF adapter, and a fail-closed identity verifier. On the
-commissioning fixture, the TIFF pixel bytes, decoded internal `u16` bytes, and the
-exact `f32` planes passed to `strehl_core::pyramid::BandMerge::add_frame` all hash to
-the same value.
+M165 now provides:
 
-That is not a competitive result. No eligible deterministic-pattern map made from
-independent matching dark and flat captures exists. The converter therefore refuses
-to emit a common-merge TIFF. Separately, no complete consumer freeze can yet be
-created because the fork has no reproducible binary. No campaign/common-input
-identity can therefore be tested. Per the live scorecard, **M1 and M9 remain
-`UNMEASURED`**. All downstream competitive work must continue to treat the
-common-merge package as absent.
+- a frozen LibRaw common-merge converter;
+- a deterministic uncompressed linear ProPhoto D50 TIFF writer;
+- a strict Strehl TIFF adapter and pre-merge byte-identity verifier;
+- a frozen A/B dark/flat estimator with a never-fitted V validation block;
+- enforceable two-class-per-sitting cardinality;
+- external physical-body, temperature, focus-schedule, and flat-field-state
+  provenance; and
+- fail-closed synthetic commissioning for the estimator and every new refusal
+  boundary.
 
-The governing text was re-read after its two-track amendment:
-`docs/proposals/2026-09-sota-scorecard.md` §1.2. The copy used for the final audit had
-SHA-256 `7128f9bbc9cdab2012a5c0829dbb54683eafe3886854bc54e7375af8bfd72f87`;
-the hash is independently recorded in
-`experiments/M165-common-input/out/independent-hash-audit.json`. Section 1.2 names
-common-merge as the sole publication track, makes the missing map fatal to M1/M9,
-and requires either a Strehl TIFF adapter or hash identity at the internal pre-merge
-boundary (`2026-09-sota-scorecard.md:288-320`).
+No eligible real calibration capture exists. Therefore no real pattern map, no
+campaign common-merge TIFF, and no campaign Strehl byte-identity result exists.
+Per the live `docs/proposals/2026-09-sota-scorecard.md` §1.2, M1 remains
+`UNMEASURED`; M9 remains `DEFINITION_BLOCKED_M1_TRUTH` and additionally lacks
+the same calibration input. Stage 0M closes the zero-frame
+design/implementation gate; it does not manufacture the missing photons.
+
+The class count is now frozen at **two dark-temperature classes and two
+flat-focus classes per sitting**: one of each for `converter-on`, and one of each
+for `tc0`. Each optical state has independent A and B fitted maps plus a shared,
+never-fitted V block, so one sitting produces four fitted maps. M164's `1,602`
+registered-frame M1-only total (`1,603` including its known histogram release)
+and `1,917` combined M1/M5/M9 total are no longer conditional on M165 class
+counts. They are **not globally owner-final** because M164 records other open
+release conditions and an unresolved possible live-ratio shutter release.
+
+## Governing contract re-read
+
+The live source was re-read rather than relying on the assignment summary:
+
+- `docs/proposals/2026-09-sota-scorecard.md` §1.2 defines common-merge as the
+  sole publication track and requires one frozen matching deterministic-pattern
+  correction before M1 can be measured; M9 is separately definition-blocked
+  and also lacks that calibration input.
+- `docs/research/M164-m1-staged-capture.md` §2, Stage 0M, and *Proposed
+  pattern-map capture unit* define the zero-frame release gate and the six
+  `DARK-A/FLAT-A/DARK-B/FLAT-B/DARK-V/FLAT-V` groups.
+- M164's current file hash is recorded in
+  `experiments/M165-common-input/out/independent-hash-audit.json`; M165 did not
+  edit it or any proposal/capture-request/status file.
 
 ## What already existed and was reused
 
-1. **A partial LibRaw audit, not a contract renderer.**
-   `docs/research/SCORECARD-BASELINE.md:14-17,23-35,68-89` and
-   `experiments/SCORECARD-BASELINE/out/INPUT-MANIFEST.json` had already identified
-   rawpy/LibRaw, recorded source hashes and explicit linear-development settings,
-   found matching bee darks/flats `0/0`, and stated that the ProPhoto TIFF adapter
-   was absent. M165 retained its explicit-settings and separate-hash approach.
-2. **Manifest shapes.**
-   `experiments/M153-m11-harness/staged-input-manifest-template.json` already had
-   fields for source, decoder artifacts, settings, deterministic pattern map, TIFF
-   hash, and pixel hash.
-   `experiments/M153-m11-harness/adapter-identity-template.json` already required
-   paired common-pixel/internal-pixel hashes. M165 implemented those fields rather
-   than introducing an incompatible evidence vocabulary.
-3. **The blocker was independently reproduced.**
-   `docs/research/M161-m3-ratification.md:4-9,182-188` records the missing
-   common-input package and adapter as an M3 blocker.
-4. **Strehl's existing boundary was located rather than replaced.**
-   `strehl_raw::decode` returns a mosaiced `u16` CFA `Frame`
-   (`crates/strehl-raw/src/lib.rs:74-99,252-343`). The shipping pyramid path then
-   extracts four half-resolution CFA planes in
-   `crates/strehl-cli/src/merge_cmd.rs:4500-4910`. There was no RGB TIFF input.
-   M165 reused the existing generic `BandMerge`, which accepts an arbitrary plane
-   count, for the adapter's actual merge-ingestion commissioning.
-5. **Flat-field work was useful evidence but not a reusable map.**
-   M71 measured PRNU and retained flat-analysis arrays, but did not emit the paired
-   dark-offset plus flat-gain map demanded by §1.2. The measured file census is in
-   `experiments/M165-common-input/out/pattern-map-audit.json`.
-6. **The fork is not currently a runnable consumer.**
-   `docs/research/M162-noise-regression.md` §1-§2, committed at `ed5fa20b`,
-   establishes that its archived output consumed 105 Lightroom-developed TIFFs,
-   has no producing executable or source revision bound to it, and cannot stand in
-   for a common-input rerun. The first retained source commit is
-   `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`.
+1. **A partial LibRaw audit and manifest vocabulary.**
+   `docs/research/SCORECARD-BASELINE.md`,
+   `experiments/SCORECARD-BASELINE/out/INPUT-MANIFEST.json`, and
+   `experiments/M153-m11-harness/{staged-input-manifest-template.json,
+   adapter-identity-template.json}` already established explicit development
+   settings, separate file/payload hashes, and the absence of matching maps.
+2. **The Strehl merge boundary.** `strehl_raw::decode` and the existing generic
+   `strehl_core::pyramid::BandMerge` supplied the internal boundary. M165 added
+   a strict RGB TIFF adapter rather than replacing the merge core.
+3. **A measured flat normalizer.** M71's 61-plane-pixel, three-pass reflected
+   box surface was reused. M71 measured green PRNU at `0.3096%`, spectrally
+   white, and at least `91.4%` stable in variance across a much larger
+   focus/filter/shutter change (`docs/research/M71-flat-fields.md`, P1, P3,
+   P4). M71 also showed why infinity-focus vignetting must not be imported into
+   macro captures.
+4. **Calibration-count evidence.** `docs/research/M-FRC-VIABILITY.md` §1.4
+   predicts `0.084%` relative RMS for a 32-frame, 10000-DN flat master and
+   about `0.16 DN` for 30 usable darks after the two-frame settling discard.
+   Its §7 also shows why A and B may not share a fitted master.
+5. **The residual correlation bar.** M135 requires disjoint A/B calibration,
+   no sharing across optical states, and blank-residual correlation `<=0.05`
+   (`docs/research/M135-detail-instrument.md` §3 and §6).
+6. **Temperature evidence.** M4 records the 6–7 °C dark-current doubling rule
+   (`M4-fpn-measured.md:633`); M101 measures a `15.4 e-/s` thermal component
+   (`M101-defect.md` §4.2); M71 measures approximately `0.224103 DN/e-` from
+   its two green gains.
+7. **No reusable real map.** M71 retained flat-analysis arrays, but no paired
+   1-second dark offset plus matching flat gain map. The M2/M16 audits likewise
+   contain no eligible map. The census remains in
+   `out/pattern-map-audit.json`.
+8. **Comparator provenance.** M162 established that the archived fork result
+   used Lightroom-developed TIFFs and has no producing executable. M165 retained
+   the comparator-agnostic registry and first-class consumer executable hash;
+   none of the Stage 0M work changes the Strehl byte-identity method.
 
-## What was built
+## Implemented artifacts
 
-| Artifact | Role |
+| Artifact | Purpose |
 |---|---|
-| `experiments/M165-common-input/converter.py` | Fail-closed converter, frozen ICC generator/inspector, deterministic TIFF writer/inspector, pattern-map validator, and manifest writer. |
-| `experiments/M165-common-input/.gitattributes` | Pins evidence text to LF and fixture/profile payloads to binary so committed hashes survive checkout. |
-| `experiments/M165-common-input/settings-v1.json` | Exact v1 conversion settings. |
-| `experiments/M165-common-input/converter-freeze-v1.json` | Converter/runtime freeze made before any render attempt. |
-| `experiments/M165-common-input/linear-prophoto-d50-v1.icc` | Deterministically generated linear ProPhoto/ROMM RGB D50 ICC v2 profile. |
-| `experiments/M165-common-input/pattern-map-manifest-template.json` | Required map/source/capture/estimator contract; deliberately `UNFROZEN`. |
-| `experiments/M165-common-input/consumer-registry-template.json` | Arbitrary-length consumer freeze with a first-class executable hash per consumer. |
-| `experiments/M165-common-input/consumer-registry-fork-blocked.json` | Fail-closed record of the fork's known source pin and missing producing binary. |
-| `experiments/M165-common-input/consumer-receipt-template.json` | Per-run binding from one frozen consumer binary to the exact TIFF file and pixel hashes it received. |
-| `crates/strehl-raw/src/common_tiff.rs` | Strict TIFF parser, payload/internal hashing, provenance checks, and RGB merge-plane adapter. |
-| `crates/strehl-cli/src/bin/strehl-common-input.rs` | Fail-closed verifier; optionally passes the hashed planes into the actual core `BandMerge`. |
-| `experiments/M165-common-input/commission.py` | Null, mutation, repair, malformed-input, pattern degradation, and pattern improvement commissioning. |
-| `experiments/M165-common-input/development_probe.py` | One-frame in-memory probe on a burned development RAW; cannot emit a TIFF. |
-| `experiments/M165-common-input/out/` | Machine-readable freeze, preflight, commissioning, development-probe, pattern-audit, and independent-hash evidence. |
+| `converter.py` | Converter `1.2.0`; v2 pattern-map and v3 common-input validation; physical body, temperature, focus schedule, held-out result, and source-context enforcement. |
+| `pattern_map_estimator.py` | Streaming dark/flat estimator, deterministic NPZ writer, A/B fit, V-block validator, sitting/cardinality validator, and synthetic commissioning. |
+| `pattern-map-settings-v1.json` | Exact class counts, tolerances, estimator, statistics, thresholds, and refusal policy. |
+| `pattern-map-estimator-freeze-v1.json` | Hash freeze for estimator source, converter source, settings, Python, NumPy, rawpy/LibRaw, and ExifTool. |
+| `pattern-map-sitting-template.json` | Exactly two optical-state classes and four fitted maps per sitting. |
+| `pattern-map-capture-template.json` | Six disjoint 32-frame groups, sensor fingerprint, physical records, and class definitions. |
+| `physical-body-witness-template.json` | Owner-assigned body ID bound to a private contemporaneous evidence hash. |
+| `capture-record-template.json` | Power, shutter, stabilization, lens/converter, aperture, and dark light-seal record. |
+| `flat-field-record-template.json` | Three independently named A/B/V diffuser states; B and V require a move or rotation. |
+| `temperature-probe-calibration-template.json` | Probe identity, reference, timestamp, and uncertainty. |
+| `temperature-log-template.json` | Strictly time-ordered external contact-probe samples. |
+| `focus-schedule-template.json` | Hash-frozen normalized subject schedule, direction, reset method, fit point, and validation endpoints. |
+| `source-capture-context-template.json` | Per-ARW binding to the body/capture/temperature/focus artifacts and exact schedule position. |
+| `pattern-map-manifest-template.json` | A or B map, fitted sources, excluded darks, V sources/result, estimator freeze, and all class identities. |
+| `commissioning/pattern-map-estimator/commission.json` | Stage 0M algorithm and schema/refusal commissioning evidence. |
+| `out/pattern-map-determinism.json` | Byte-stable repeat of the commissioning report and both generated NPZ maps. |
+| `out/stage0m-class-derivation.json` | Machine-readable class/tolerance arithmetic and M164 count consequence. |
 
-The renderer is at `converter.py:1167`; it validates the frozen converter, consumer
-registry, and map before pixel development. Consumer validation is at
-`converter.py:441-686`; the TIFF writer and independent Python parser begin at
-`converter.py:687`. The strict Rust parser and identity boundary are at
-`common_tiff.rs:97-430`; the actual core-ingestion probe is at
-`strehl-common-input.rs:135-165`.
+## Stage 0M closure
 
-## Converter freeze
+| M164 requirement | Closure |
+|---|---|
+| Estimator and exact residual statistic | Implemented and source-hash frozen. |
+| Held-out threshold and minimum count | 32 acquired per group; first two darks excluded; 30 dark and 32 flat usable; exact RMS/coherence bars frozen below. |
+| One-map ambiguity | “One” means one immutable fitted map per `(session, optical state, A/B lineage, temperature class, focus class)`. A literal campaign-wide map is forbidden. |
+| Focus classes or interpolation | One exact schedule-domain class per optical state; no interpolation; middle-fit and held-out near/far endpoint challenge. |
+| Temperature witness/tolerance | Calibrated external contact probe, fixed mount, first `DARK-A` sample as center, age `<=10 s`, delta `<=0.5 °C`, no interpolation. |
+| Manifest binding | Sitting, capture, body, bench state, flat-field state, temperature calibration/log, focus schedule, source hashes, estimator freeze, map bytes, and held-out result are all hashed and validated. |
 
-`converter-freeze-v1.json` records:
+The gate is satisfiable with zero new frames because it freezes the method and
+schemas, not a fitted map. Real map production remains impossible until the
+registered captures exist.
 
-- converter ID/version: `m165-libraw-common-linear` `1.1.0`;
-- Python `3.12.10`;
-- rawpy `0.27.0`;
-- LibRaw `0.22.1`;
-- NumPy `2.4.4`;
-- ExifTool `13.58`;
-- rawpy native extension SHA-256
-  `51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897`;
-- converter source SHA-256
-  `b99518cb0338bd75b84aac96cf56ffabd87e9b9ea3e91118e96dfd5f75664b5a`;
+### Cardinality
+
+The enforced sitting manifest accepts exactly:
+
+- one `converter-on` temperature class;
+- one `tc0` temperature class;
+- one `converter-on` focus-schedule class;
+- one `tc0` focus-schedule class; and
+- A and B fitted maps in each optical state.
+
+Class IDs are canonical:
+
+```text
+{session_id}:{optical_state_id}:temperature
+{session_id}:{optical_state_id}:focus
+```
+
+No fitted source may cross A/B, optical state, or sitting. The V sources are
+shared only as never-fitted validation data. A tolerance miss is a typed STOP
+and recapture of that optical-state package, not permission to add a post-hoc
+class. This is what makes the count genuinely frozen rather than advisory.
+
+### Dark-temperature class and tolerance
+
+**Frozen count: two per sitting, one per optical state.**
+
+The reason is lineage, not an assertion that removing the converter changes
+dark current. M135 forbids sharing calibration across optical states, and the
+converter-on and TC0 packages occur at different times. Within each optical
+state, A, B, V, and subject frames must remain inside one class while the body
+stays continuously powered.
+
+The class center is the external sample referenced by `DARK-A` capture index
+zero. Every registered frame must have a probe sample no older than `10 s` and
+within `+/-0.5 °C`; interpolation is forbidden. The probe calibration
+uncertainty must be `<=0.2 °C`.
+
+The tolerance is conservative but not magic. A half-degree change under a
+6–7 °C doubling law changes dark current by `5.076%` to `5.946%`. Applying
+that to M101's `15.4 e-/s` thermal component and M71's mean green gain gives a
+derived 1-second change of `0.1752` to `0.2052 DN`, below the frozen
+`0.30 DN` held-out dark RMS bar. The external body reading is only a proxy for
+sensor temperature; passing `DARK-V` is therefore load-bearing.
+
+### Flat-focus class and tolerance
+
+**Frozen count: two per sitting, one exact schedule-domain class per optical
+state.**
+
+The map estimates high-frequency sensor-space gain only. Each flat is divided
+by its own per-CFA-plane 61-pixel triple-reflected-box smooth field, so the
+low-frequency optical field is retained rather than turned into a forbidden
+lens/vignetting correction. `FLAT-A` and `FLAT-B` are fitted at normalized
+schedule position `0.5 +/- 0.05`. `FLAT-V` contains 16 frames within `0.05` of
+the near endpoint and 16 within `0.05` of the far endpoint. Subject sources
+must name an exact entry in the hashed `[0,1]` schedule; interpolation is
+forbidden. Sony `FocusPosition2` is corroboration only because its reported
+steps are too coarse to define the macro axis.
+
+One class per optical state is justified by M71's measured lower bound that
+`91.4%` of PRNU variance survives a much larger focus/filter/shutter change.
+Combining that lower bound with `0.3096%` PRNU gives a conservative derived
+upper bound of `0.0908%` RMS for the unstable component, below the `0.15%`
+held-out all-position bar. This is only prior justification for trying one
+class. The real near/far V block can still reject it.
+
+### Estimator and held-out statistic
+
+For each A or B lineage:
+
+1. discard dark capture indices zero and one;
+2. subtract LibRaw's per-CFA black level and arithmetic-mean the remaining 30
+   darks into `offset_dn`;
+3. subtract black plus that offset from each of 32 flats;
+4. divide each CFA plane by its own 61-plane-pixel, three-pass reflected-box
+   smooth field;
+5. arithmetic-mean the normalized flats and invert the mean into `gain`; and
+6. write `gain` and `offset_dn` as deterministic uncompressed float32 NPY
+   members inside an NPZ.
+
+Application is:
+
+```text
+corrected = black + clip((raw - black - offset_dn) * gain, 0, white - black)
+```
+
+Validation never fits V. After the two dark settling exclusions, capture-index
+parity creates 15/15 dark halves. Flat parity creates 16/16 halves, including
+8/8 at each focus endpoint. Map A corrects the even half and map B the odd
+half. The exact frozen checks are:
+
+- RMS of half the sum of the two split dark means: `<=0.30 DN`;
+- the analogous normalized flat RMS over all positions: `<=0.0015`;
+- normalized flat RMS at each endpoint: `<=0.0025`; and
+- maximum positive real cross-power coherence: `<=0.05` in every admitted one
+  of 12 Hann-windowed radial rings over complete 128-plane-pixel CFA tiles,
+  from `0.015625` through `0.5` cycles per plane pixel, with at least 128
+  modes.
+
+The RMS includes finite temporal/master noise; it is not mislabeled as a pure
+common-mode estimate. The ring statistic supplies the cross-lineage
+common-pattern test. The settings file spells out both formulas, and the
+estimator source hash freezes their implementation.
+
+## Frozen estimator and commissioning
+
+`pattern-map-estimator-freeze-v1.json` records:
+
+- estimator `m165-dark-flat-map` `1.0.0`;
+- rawpy `0.27.0`, LibRaw `0.22.1`, NumPy `2.4.4`, Python `3.12.10`, and
+  ExifTool `13.58`;
+- estimator source SHA-256
+  `9b22970ac16624c58c550e1211dec499b172c3ca43c5af2a2ecaa8e27a5755ae`;
 - settings SHA-256
-  `1f9f39570b0ad5ab3cce6f41561870ba0e8d42efa4c4e97e74ce187ec4bd320f`;
-- ICC SHA-256
-  `16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef`;
-- composite executable-bundle SHA-256
-  `09987d67aee229b6075001748bcd20f17b0cf47e0e42f238a9fc8940595fd95d`.
+  `a9fbd14556316550dd50a9eb3c18797c46a4674035aed7fffabd174df920e715`;
+- executable-bundle SHA-256
+  `7bc94f2d11976e512cb72face86fbf9deb6bf355592781b2c6aa64c203c37b73`.
 
-The bundle digest covers the converter source, Python executable, rawpy Python
-module and native extension, NumPy module and native extension, ExifTool executable,
-settings, ICC, and all reported versions. `render` recomputes every member and
-refuses a mismatch before touching the source pixels.
+The commissioning report SHA-256 is
+`b37a73db16dcfcaf4c7f9992d78d12ac7635c8f8937ed3e8eacb134168f3b7f9`
+and its status is `PASS`.
 
-## Frozen conversion and TIFF contract
+| Arm | Dark common RMS | Flat common RMS | Maximum dark / flat ring coherence | Verdict |
+|---|---:|---:|---:|---|
+| Clean movable null | `0.189963 DN` | `0.083101%` | `0.038127 / 0.023444` | PASS |
+| Same null plus real fixed offset/gain disturbance, no correction | `1.812823 DN` | `0.622051%` | `0.999214 / 0.976905` | FAIL |
+| Planted wrong-sign correction | `3.612643 DN` | `1.237138%` | above the frozen bars | FAIL |
+| Estimated A/B correction | `0.232911 DN` | `0.101646%` | `0.018499 / 0.026701` | PASS |
 
-### Sensor and development order
+The clean endpoint flat RMS values were `0.117664%` near and `0.117520%` far.
+After estimated correction they were `0.131389%` and `0.131216%`; both passed
+the `0.25%` endpoint bar. The improvement is real relative to the disturbed
+uncorrected arm: dark RMS fell `1.812823 -> 0.232911 DN` and flat RMS fell
+`0.622051% -> 0.101646%`.
 
-For each source, the renderer:
+The contract battery also passed:
 
-1. hashes the ARW;
-2. reads make/model/ISO/exposure/aperture/lens/focal length and available
-   serial/focus-distance/temperature fields without consulting an XMP;
-3. verifies a frozen pattern-map manifest, disjoint non-empty dark/flat source
-   sets, estimator executable hash, capture match, sensor fingerprint, map hash,
-   shape, float32 types, finite offsets, and positive gains
-   (`converter.py:887-1002`);
-4. computes, in sensor coordinates,
-   `black + clip((raw - black - offset_dn) * gain, 0, white - black)`, with
-   `numpy.rint` to `u16`;
-5. tells LibRaw explicitly that total black is
-   `user_black=0 + user_cblack=[camera channel levels]`, and supplies the camera
-   white as `user_sat`;
-6. applies recorded camera WB, one LibRaw camera-to-ProPhoto conversion, AHD once,
-   16-bit output, `gamma=(1,1)`, and no rotation or resize.
+- valid capture and two-class sitting manifests;
+- exact `2` dark / `2` flat classes and `4` fitted maps;
+- rejection of a missing class and a source shared across optical states;
+- rejection of body mismatch, `+0.6 °C` temperature mismatch, focus mismatch,
+  wrong group count, and a flat B state without a diffuser move;
+- valid map/source-context matching;
+- rejection of map/body, map/temperature, and map/focus-schedule mismatch;
+- rejection of a failed held-out result; and
+- malformed JSON returning exit `1` with a persistent `status=FAIL` record.
 
-Auto WB, auto brightness, exposure shift, maximum auto-adjustment, FBDD/wavelet/
-median denoising, chromatic-aberration scaling, bad-pixel repair, and every
-sidecar-driven or cosmetic development operation are disabled in
-`settings-v1.json` and enforced by the frozen postprocess argument builder.
+A second complete run produced byte-identical report and map artifacts:
 
-### TIFF encoding
+- report
+  `b37a73db16dcfcaf4c7f9992d78d12ac7635c8f8937ed3e8eacb134168f3b7f9`;
+- synthetic map A
+  `15a9bd1b8a9fe1edb9fc5bcb2763a0a6877c478dbdcea9154761c1ff2e7a4a9c`;
+- synthetic map B
+  `e4959eaedb02260cdbc43e8011a5ba876fe7a5a01a1f2915e7646208fcd74ce6`.
 
-The writer emits little-endian classic TIFF with one full-image, row-major,
-interleaved RGB strip. The only IFD entries are the structural fields,
-`ImageDescription` canonical provenance, and `ICCProfile`. Compression is `1`
-(none), `BitsPerSample=[16,16,16]`, `SampleFormat=[1,1,1]`,
-`PhotometricInterpretation=2`, and `PlanarConfiguration=1`.
+The NPZ fixtures are ignored generated artifacts; the committed report,
+settings, source, freeze, and determinism record reproduce and bind them.
 
-The rendered envelope is `m165-common-input-manifest-v2`; its consumer registry is
-`m165-common-input-consumer-registry-v1`, and per-consumer execution records use
-`m165-common-input-consumer-receipt-v1`.
+## Held-out construction
 
-The manifest binds:
+**Use dedicated V blocks from the same continuously powered sitting. Do not use
+a separate validation sitting.**
 
-- source ARW path/hash and measured capture/sensor metadata;
-- converter ID/version, executable-bundle hash, freeze file/hash, complete
-  invocation, cwd, settings and settings hash;
-- pattern NPZ path/hash, pattern manifest path/hash, capture match, calibration
-  source hashes, and estimator identity;
-- output dimensions, structural TIFF values, ICC hash, pixel-payload hash, and
-  whole-file hash.
-- one arbitrary-length frozen consumer registry, its whole-file hash, and for
-  every consumer its unique ID, role, required status, implementation kind,
-  version, first-class executable path/size/SHA-256, canonical settings hash,
-  invocation template, exact-byte input contract, and optional source/build pins.
+The V frames need their own blocks because they must never contribute to either
+fit. They should remain in the same sitting because the map is explicitly keyed
+to session, optical state, temperature class, and focus schedule. A separate
+sitting would add an uncontrolled thermal/session change and validate a
+different estimand. M164's Stage 2 and Stage 5 construction is therefore right:
+dedicated same-sitting V blocks, with moved/rotated diffuser state and temporal
+bracketing, are independent validation without breaking the match.
 
-The embedded canonical provenance binds source, converter, settings, ICC, map, and
-map-manifest hashes. The Rust verifier requires every one of those bindings as well
-as the expected file, payload, and ICC hashes.
+## Converter and TIFF contract
 
-Consumer identity is deliberately bound in the input manifest, not embedded in the
-TIFF. A consumer roster is run provenance, not pixel provenance: adding a fourth
-consumer must not change the bytes everyone receives. The registry is frozen and
-hashed before rendering; the rendered input manifest records that hash and the
-validated normalized entries. A per-consumer receipt then binds the same registry,
-consumer executable/settings hashes, input-manifest hash, TIFF file hash, TIFF pixel
-hash, invocation, and consumer output hash. The list has no expected cardinality or
-hard-coded product names.
+The amended converter is `m165-libraw-common-linear` `1.2.0`. Its frozen bundle
+SHA-256 is
+`cfb71ae59c321366467cbfa915c10e2071a7ce13e3fd6a1eb23a5b00bcd699fc`;
+the converter source SHA-256 is
+`a515a39895c3d1d27adebaecc07fab529f3aa7b3c1ef0dcb12cf417b5367a481`;
+settings SHA-256 is
+`dcce8eda23287d19aaf9992782f8d3f845726773edcae67de53a9d4e962d930a`;
+ICC SHA-256 remains
+`16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef`.
 
-For a `source-build` consumer, validation additionally requires a full 40-hex source
-revision and a separately hashed build manifest. Thus a future fork rerun must bind
-both `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6` (or a deliberately selected later
-pin) and the exact executable that was actually run. The historical May 10 output
-cannot satisfy that field.
+The v3 common-input manifest requires the v2 map plus a per-source capture
+context. It checks the actual body witness/capture record/temperature
+calibration/log/focus schedule artifacts, not merely free-form IDs. It also
+requires the map's exact source cardinality, A/B lineage, sitting class,
+sensor fingerprint, deterministic NPZ hash/types/shape/range, estimator
+freeze, and passing V result before altering RAW pixels.
 
-## Measured TIFF properties
+The measured output contract remains:
 
-No production/common-merge TIFF exists, so no production property is marked PASS.
-The following measurements establish that the implementation emits the required
-representation when given admissible inputs:
+| Property | Measured result |
+|---|---|
+| 16-bit | `BitsPerSample=[16,16,16]`, unsigned |
+| Linear | ICC RGB TRCs all `1.0`; LibRaw `gamma=(1,1)` |
+| ProPhoto D50 | ICC RGB/XYZ matrix and D50 media/header white inspected |
+| Uncompressed | TIFF `Compression=1` |
+| Native dimensions | burned one-frame probe produced `[4688,7028,3]` from a `7028 x 4688` active image |
+| Development tags | strict allowlist; an unlisted tag is a Rust test refusal |
 
-| Property | Measured result | Evidence |
-|---|---|---|
-| 16-bit unsigned RGB | `BitsPerSample=[16,16,16]`, `SampleFormat=[1,1,1]` | `out/commission/identity-baseline.json` |
-| Linear transfer | ICC `rTRC=gTRC=bTRC=1.0`; development probe uses `gamma=(1,1)` | `converter-freeze-v1.json`, `settings-v1.json` |
-| ProPhoto RGB, D50 | ICC data space `RGB`, PCS `XYZ`; header white `[0.9642028809,1,0.8249053955]`; ROMM matrix tags measured from the profile | `converter-freeze-v1.json` |
-| Uncompressed | TIFF `Compression=1` | `out/commission/identity-baseline.json` |
-| Interleaved | TIFF `PlanarConfiguration=1` | same |
-| Native dimensions | burned RAW active dimensions `7028 x 4688`; in-memory output shape `[4688,7028,3]` | `out/development-raw-probe.json` |
-| Development tags stripped | strict allowlist accepts exactly 11 structural tags plus provenance and ICC; an unlisted tag is a tested rejection | `common_tiff.rs`, Rust tests |
-
-The one-frame development probe used only the burned calibration-slide source:
-
-`D:\personal\macro\requests\misc-diagnostic\high-res-calibration-slide-cpl\tilted-sw4-cpl\DSC00031.ARW`
-
-Its independently checked source SHA-256 is
-`1b9ad0bac914f017aee35dc36ccec9a69d3f8c8284c604ff9bce0cc9bcd2d38a`.
-Measured levels were black `[512,512,512,512]`, white
-`[15360,15360,15360,15360]`, and as-shot WB
-`[2823,1024,1533,1024]`. The no-map in-memory result was contiguous `uint16`
-at `7028 x 4688`, with byte SHA-256
+The one-frame development probe remains
+`DEVELOPMENT_ONLY_NONCONTRACT`, applied no map, emitted no TIFF, and used only
+the burned calibration-slide source. Its output byte hash remained
 `27dbd01c5fcfd15ebbf89b059faca9e015b6aaea06b75ae30210cbea3c4179cf`.
-It is explicitly labelled `DEVELOPMENT_ONLY_NONCONTRACT`, wrote no TIFF, and may
-not be scored.
 
 ## Strehl byte identity
 
-### What is proven
-
-The commissioned 7 x 5 synthetic TIFF has:
+The current 7 x 5 synthetic TIFF has:
 
 - whole-file SHA-256
-  `ff2ced74ea786caf45aa5fc433e4c493cc83e91a2f76639a97647a379b45ad59`;
-- pixel-payload SHA-256
+  `a1ec6e639bda27d204fdb27dc5dbb9ed5afdee834ac9acad0595a2fdd181fe66`;
+- TIFF pixel-payload SHA-256
   `17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b`;
-- Rust-decoded internal `u16` SHA-256: the same
-  `17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b`;
-- hash reconstructed from the exact `f32` RGB plane allocations passed to
-  `BandMerge::add_frame`: the same
-  `17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b`.
+- Rust-decoded internal `u16` SHA-256: the same; and
+- bytes reconstructed from the exact `f32` RGB plane allocations passed to
+  `BandMerge::add_frame`: the same.
 
-`core_merge_exercised=true` proves those hashed allocations were accepted by the
-actual Strehl core merge, not merely compared inside a standalone TIFF parser. The
-commissioned verifier binary SHA-256 is
-`a90ff446914376062489f7f25cddd548298d8c803fee47e5e8d6664dadc9791f`.
-PowerShell/.NET independently recomputed the whole-file and strip-payload hashes;
-all cross-checks pass in `out/independent-hash-audit.json`.
+`core_merge_exercised=true` proves the allocations entered the real generic
+merge core. The commissioned verifier binary SHA-256 is
+`846bc33be7b64ea36260918311e7ab2cdce629de4a0aeb1df23373f9ec60a7f5`.
+The comparator registry remains arbitrary-length with a first-class executable
+hash for every consumer, including a future rebuilt fork.
 
-### What is not proven
+Identity sensitivity remains commissioned:
 
-There is no admissible campaign TIFF. Therefore campaign identity is
-**NOT YET TESTABLE**, not `PROVEN`. The adapter is a separately invokable
-common-input boundary; the shipping `strehl stack` ARW path remains CFA-specific.
-Alignment, RGB noise modelling, and a production RGB-output path still need a
-frozen common-track integration before a competitive stack can run.
+- flipping one inert TIFF bit preserved the payload hash, changed the whole
+  file hash to
+  `5ad1294276ec56a0bc0a7e07f3b210d6d9a91f8471267e16f6e2cb6f50a794f4`,
+  and failed;
+- changing one pixel sample from `1000` to `1001` changed the payload hash to
+  `f229a267899a682ab9b4fffd8533c1429aa893d6f236224ee7d1f5cd43abbd68`
+  and failed; and
+- restoring the bytes passed.
 
-**STREHL BYTE IDENTITY IMPACT: NONE.** Consumer registration does not alter the
-TIFF or the Strehl payload/internal/pre-merge hash proof. It adds a separate frozen
-record that identifies which Strehl executable consumed that TIFF.
+**STREHL BYTE IDENTITY IMPACT: NONE.** Stage 0M adds the provenance required to
+admit a map. It does not change the byte-identity boundary or its result.
+Campaign identity remains **NOT YET TESTABLE** until real maps and TIFFs exist.
 
-## Commissioning
+## Capture requirement and totals
 
-`experiments/M165-common-input/out/commission/commission.json` is `PASS`.
+For each optical state in each sitting, acquire exactly:
 
-| Arm | Measured result |
-|---|---|
-| Valid baseline | PASS; payload, internal `u16`, pre-merge `f32`, and actual core-ingestion hashes identical. |
-| Movable null | Undisturbed correction error `0.0 DN`; planted fixed-pattern disturbance with null correction `7.025 DN` mean absolute error. |
-| Planted degradation | Wrong-sign/inverse map increased error to `14.1875 DN`. |
-| Planted improvement | Correct map reduced error from `7.025 DN` to `0.0 DN`. |
-| Single flipped bit | Bit `0x01` at inert TIFF padding byte offset `172`; payload hash stayed `17258e…`, file hash moved to `5b4c5b120429eec091bc7486edcce3fa4448525c01d20d4133b2b4506383a26f`; verifier returned `FAIL`. |
-| One-LSB pixel change | First sample `1000 -> 1001` at offset `1312`; payload hash moved to `f229a267899a682ab9b4fffd8533c1429aa893d6f236224ee7d1f5cd43abbd68`, file hash to `74bac69bdf27946a0f1a61cfa7129e1d1c5284b7fba8d922bed4ba10c354aec8`; verifier returned `FAIL`. |
-| Repaired input | Restoring the baseline bytes returned `PASS`. |
-| Malformed TIFF | Exit `1` with structured `status=FAIL`; no throw escaped. |
-| Comparator-count null | Valid 3-consumer and 4-consumer registries with the same registry ID both passed; adding only the fourth record moved the registry hash from `6af02e0600fc7f397895b13c4c6ca64cb778c8431bcefe0a69ac4a6513541b29` to `1ce07bb34d980259295ba798bf9e02fe87f75165c4c7c73534b4fa5b3b478cf6`. |
-| Empty-required-set guard | A registry with consumers but none marked required produced `CONSUMER_REGISTRY_NO_REQUIRED_CONSUMERS`. |
-| Consumer planted degradation | A one-bit mutation of the fourth executable produced `CONSUMER_EXECUTABLE_HASH_MISMATCH`. |
-| Consumer planted improvement | Restoring the fourth executable returned the same 4-consumer registry to PASS. |
+| Group | Acquired | Used |
+|---|---:|---:|
+| `DARK-A` | 32 | 30 after settling |
+| `FLAT-A` | 32 | 32 |
+| `DARK-B` | 32 | 30 after settling |
+| `FLAT-B` | 32 | 32 |
+| `DARK-V` | 32 | 30 after settling, never fitted |
+| `FLAT-V` | 32 | 32, never fitted |
 
-## Pattern-map finding and required capture
+That is 192 calibration frames per optical state and 384 across the two
+required optical states. M164 distributes those blocks across its stages; M165
+does not alter its arithmetic.
 
-`out/pattern-map-audit.json` records:
+If either optical-state package cannot remain inside the frozen temperature
+class or its near/far V block rejects focus portability, the result is STOP /
+`UNMEASURED`. Adding a third class after seeing the failure is forbidden.
 
-- M71: 250 `.npy` arrays, including 72 per-plane flat means, but zero
-  dark/bias/DSNU arrays, zero gain arrays, and zero `.npz` correction maps;
-- M2 and M16: zero candidate persisted pattern-map artifacts;
-- independent baseline preflight: matching 1.6 s darks/flats `0/0`
-  (`SCORECARD-BASELINE.md:23-35`).
+## Validation
 
-Those are useful calibration studies, not the required frozen map. Nothing was
-substituted or inferred.
-
-To unblock the measured development source, capture independent darks on the same
-physical ILCE-7CM2 body at ISO 100, 1 s, and matched sensor temperature, plus
-independent spatially uniform flats at ISO 100, 1 s, f/5.6 with the FE 100 mm F2.8
-Macro GM OSS + 2x teleconverter at 200 mm and the same focus/optical geometry.
-Capture identity must include a physical body identifier because this ARW exposes no
-serial number. Use disjoint estimation and held-out validation blocks, freeze the
-map estimator before fitting, and retain every source hash. Each scored stack with
-different exposure/ISO/temperature or lens/aperture/focus geometry needs its own
-matching calibration or an independently validated interpolation rule. No frame
-count is invented here; it must be preregistered from the desired held-out residual
-precision.
-
-## Validation and operational status
-
+- Pattern-map commissioning: **PASS**.
+- Stage 0M manifest/refusal battery: **PASS**.
+- Deterministic estimator repeat: **PASS**.
+- `python -m py_compile` for converter and estimator: **PASS**.
 - `cargo test -p strehl-raw common_tiff -- --nocapture`: **4 passed**.
 - `cargo build -p strehl-cli --bin strehl-common-input`: **PASS**.
-- `cargo clippy -p strehl-raw --lib --no-deps -- -D warnings`: **PASS**.
-- CLI clippy could not reach the new binary because an existing warning in
-  `crates/strehl-cli/build.rs:101` is promoted to error; the targeted build passes.
-- Python `py_compile`: **PASS** for converter, commissioning, and development probe.
-- Missing-map render preflight: expected exit `1`,
-  `failure_class=PATTERN_MAP_REQUIRED`, and no TIFF created
-  (`out/campaign-preflight.json`).
-- Fork consumer preflight: expected exit `1`,
-  `failure_class=CONSUMER_REGISTRY_NOT_FROZEN`
-  (`out/consumer-registry-preflight.json`).
-- Independent hash audit: **PASS**.
+- Common-input TIFF commissioning: **PASS**.
+- Missing-map render: exit `1`, `PATTERN_MAP_REQUIRED`, no TIFF created.
+- Blocked fork registry: exit `1`, `CONSUMER_REGISTRY_NOT_FROZEN`.
+- Independent .NET/Python/Rust hash audit: **PASS**.
 
-**Blocked on compute: NO.** The current blockers are missing calibration photons and
-the fork's missing reproducible executable, not host capacity. Once both freezes
-exist, the full-stack common-TIFF render and per-frame core identity run will be bulk
-decode/I/O and must wait for a released quiet window.
+**Blocked on compute: NO.** No bulk decode was launched. The only real RAW work
+was the previously authorized one-frame burned-development probe. Fitting real
+full-resolution maps and rendering a campaign will require both new
+calibration captures and a released quiet compute window.
 
 ## Residual doubt
 
-1. No real common-merge TIFF or common-input stack exists; campaign byte identity is
-   unmeasured.
-2. The adapter reaches the actual generic `BandMerge`, but the shipping CLI remains
-   a four-plane CFA pipeline. Common-track RGB registration, noise variance, output,
-   and directory orchestration are not yet integrated.
-3. The ARW does not expose body serial or sensor temperature through the available
-   metadata. Future calibration must record physical-body identity and temperature
-   independently.
-4. No comparator has consumed these fixture bytes. The fixture proves the Strehl
-   boundary and verifier sensitivity only.
-5. The fork's archived output remains useful historical evidence only. Until a
-   source-built executable is hashed and registered, it cannot be a common-input
-   consumer.
+1. The thresholds are frozen from prior measured noise/PRNU evidence and
+   synthetic commissioning; a real 33 MP V block may still reject them.
+2. External body temperature is a proxy, not a sensor-junction measurement.
+   The held-out dark residual is intentionally the final authority.
+3. One focus class per optical state is a tested design, not a guaranteed
+   physical fact. A failed endpoint V block requires a newly preregistered
+   multi-class design and new captures.
+4. No eligible pattern-map photons exist, so no real map or common TIFF has
+   passed this chain.
+5. The adapter reaches the generic merge core, but the shipping `strehl stack`
+   command remains a CFA-native path; common-track RGB registration, noise
+   modelling, output, and directory orchestration remain separate integration
+   work.
+6. The fork still lacks a rebuilt, hashed executable and therefore remains a
+   blocked common-merge consumer.

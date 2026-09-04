@@ -1,0 +1,76 @@
+{
+  "artifacts": {
+    "converter_script": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\converter.py",
+      "sha256": "a515a39895c3d1d27adebaecc07fab529f3aa7b3c1ef0dcb12cf417b5367a481"
+    },
+    "estimator_script": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\pattern_map_estimator.py",
+      "sha256": "9b22970ac16624c58c550e1211dec499b172c3ca43c5af2a2ecaa8e27a5755ae"
+    },
+    "exiftool_executable": {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\ExifTool\\ExifTool.exe",
+      "sha256": "ce389bf0eff9f2e2aae21eb7d85e1f255d243bb9a2ddfed8da65f106ccba87e6",
+      "version": "13.58"
+    },
+    "numpy_extension": {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\_core\\_multiarray_umath.cp312-win_amd64.pyd",
+      "sha256": "f4523c2dfe641a904605029ce4a5046388bd61b18afc0594d34018b5e6d848f8"
+    },
+    "numpy_module": {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\__init__.py",
+      "sha256": "b16a4f347c6583c878e1973a208564e01686b79cc70911ad0157e05d8eecda37"
+    },
+    "python_executable": {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+    },
+    "rawpy_extension": {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\_rawpy.cp312-win_amd64.pyd",
+      "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+    },
+    "rawpy_module": {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\__init__.py",
+      "sha256": "24a06e984ef21c4c01569105f862c347f8a92446ec361c40835aa15dfa921eff"
+    },
+    "settings": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\pattern-map-settings-v1.json",
+      "sha256": "a9fbd14556316550dd50a9eb3c18797c46a4674035aed7fffabd174df920e715"
+    }
+  },
+  "complete_freeze_invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\pattern_map_estimator.py",
+    "freeze",
+    "--settings",
+    "experiments\\M165-common-input\\pattern-map-settings-v1.json",
+    "--out",
+    "experiments\\M165-common-input\\pattern-map-estimator-freeze-v1.json"
+  ],
+  "estimator": {
+    "bundle_members": {
+      "converter_script_sha256": "a515a39895c3d1d27adebaecc07fab529f3aa7b3c1ef0dcb12cf417b5367a481",
+      "estimator_id": "m165-dark-flat-map",
+      "estimator_script_sha256": "9b22970ac16624c58c550e1211dec499b172c3ca43c5af2a2ecaa8e27a5755ae",
+      "estimator_version": "1.0.0",
+      "exiftool_executable_sha256": "ce389bf0eff9f2e2aae21eb7d85e1f255d243bb9a2ddfed8da65f106ccba87e6",
+      "exiftool_version": "13.58",
+      "libraw_version": "0.22.1",
+      "numpy_extension_sha256": "f4523c2dfe641a904605029ce4a5046388bd61b18afc0594d34018b5e6d848f8",
+      "numpy_module_sha256": "b16a4f347c6583c878e1973a208564e01686b79cc70911ad0157e05d8eecda37",
+      "numpy_version": "2.4.4",
+      "python_executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "python_version": "3.12.10",
+      "rawpy_extension_sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897",
+      "rawpy_module_sha256": "24a06e984ef21c4c01569105f862c347f8a92446ec361c40835aa15dfa921eff",
+      "rawpy_version": "0.27.0",
+      "settings_sha256": "a9fbd14556316550dd50a9eb3c18797c46a4674035aed7fffabd174df920e715"
+    },
+    "executable_bundle_sha256": "7bc94f2d11976e512cb72face86fbf9deb6bf355592781b2c6aa64c203c37b73",
+    "id": "m165-dark-flat-map",
+    "version": "1.0.0"
+  },
+  "schema": "m165-pattern-map-estimator-freeze-v1",
+  "status": "FROZEN",
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "m165-flat-field-state-record-v1",
+  "status": "UNFROZEN",
+  "session_id": "REQUIRED-UNIQUE-SITTING-ID",
+  "optical_state_id": "converter-on-or-tc0",
+  "states": {
+    "flat_a": {
+      "state_id": "REQUIRED-UNIQUE",
+      "diffuser_moved_or_rotated_since_previous": false,
+      "spatially_uniform_unresolved_field_verified": true,
+      "recorded_at_utc": "REQUIRED-ISO-8601"
+    },
+    "flat_b": {
+      "state_id": "REQUIRED-UNIQUE",
+      "diffuser_moved_or_rotated_since_previous": true,
+      "spatially_uniform_unresolved_field_verified": true,
+      "recorded_at_utc": "REQUIRED-ISO-8601"
+    },
+    "flat_v": {
+      "state_id": "REQUIRED-UNIQUE",
+      "diffuser_moved_or_rotated_since_previous": true,
+      "spatially_uniform_unresolved_field_verified": true,
+      "recorded_at_utc": "REQUIRED-ISO-8601"
+    }
+  }
+}

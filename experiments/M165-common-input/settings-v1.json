@@ -2,7 +2,7 @@
   "schema": "m165-common-input-settings-v1",
   "converter": {
     "id": "m165-libraw-common-linear",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "sensor_linearization": {
     "black_levels": "LibRaw per-channel camera metadata, explicitly supplied as user_cblack",

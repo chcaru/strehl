@@ -1,6 +1,6 @@
 {
   "failure_class": "PATTERN_MAP_REQUIRED",
   "reason": "common-merge rendering is forbidden without a frozen matching dark/flat pattern map",
-  "schema": "m165-common-input-manifest-v2",
+  "schema": "m165-common-input-manifest-v3",
   "status": "FAIL"
 }

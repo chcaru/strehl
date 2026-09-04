@@ -1,0 +1,16 @@
+{
+  "schema": "m165-physical-capture-record-v1",
+  "status": "UNFROZEN",
+  "session_id": "REQUIRED-UNIQUE-SITTING-ID",
+  "optical_state_id": "converter-on-or-tc0",
+  "physical_body_id": "REQUIRED-OWNER-ASSIGNED-BODY-ID",
+  "raw_mode": "14-bit-uncompressed",
+  "shutter_mode": "electronic-first-curtain",
+  "steadyshot": "off",
+  "lens_oss": "off",
+  "camera_power_continuous": true,
+  "dark_lens_capped_and_light_sealed": true,
+  "lens_and_converter_identity": "REQUIRED",
+  "aperture_marking": "f/5.6",
+  "operator_recorded_at_utc": "REQUIRED-ISO-8601"
+}
