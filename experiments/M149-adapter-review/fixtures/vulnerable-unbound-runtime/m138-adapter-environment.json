@@ -1,0 +1,9 @@
+{
+  "schema": "m135-checker-environment/v1",
+  "python_implementation": "CPython",
+  "python_version": "3.12.10",
+  "numpy_version": "2.4.4",
+  "platform_system": "Windows",
+  "platform_machine": "AMD64",
+  "isolated_python_required": true
+}

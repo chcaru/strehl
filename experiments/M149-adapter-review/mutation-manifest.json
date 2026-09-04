@@ -1,0 +1,372 @@
+{
+  "schema": "m149-adapter-mutation-manifest-v1",
+  "baseline_adapter_sha256": "6d4366533b2b12fc1e03c44d96faa1af3d7e89e6c6f35ed5420dd33b8e5e6290",
+  "behavioral_mutations": [
+    {
+      "id": "inert-control",
+      "file": "m138_adapter.py",
+      "anchor": "\"\"\"Hash-bound M138 adapter for the frozen M135 per-capture checker.\"\"\"",
+      "replacement": "\"\"\"Hash-bound M138 adapter for the frozen M135 per-capture checker.\"\"\"\n# M149 inert control: behavior unchanged",
+      "anchor_expected_count": 1,
+      "substantive": false,
+      "load_bearing_expectation": "GREEN",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "recursive-supplied-decision-guard",
+      "file": "m138_adapter.py",
+      "anchor": "            if key in forbidden:",
+      "replacement": "            if False and key in forbidden:",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "duplicate-capture-guard",
+      "file": "m138_adapter.py",
+      "anchor": "        or len(set(capture_ids)) != len(capture_ids)",
+      "replacement": "        or False  # M149 neutered duplicate guard",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_24_OF_25",
+      "observed_failed_checks": [
+        "duplicate_capture_refuses"
+      ]
+    },
+    {
+      "id": "invalid-no-boolean-guard",
+      "file": "m138_adapter.py",
+      "anchor": "            states[capture_id] = str(invalid_output)",
+      "replacement": "            states[capture_id] = str(invalid_output)\n            passes[capture_id] = False  # M149 coerced invalid to scientific false",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_23_OF_25",
+      "observed_failed_checks": [
+        "invalid_states_have_no_boolean",
+        "not_applicable_is_invalid_without_boolean"
+      ]
+    },
+    {
+      "id": "unbound-refusal-guard",
+      "file": "m138_adapter.py",
+      "anchor": "    if runtime.binding_state == \"UNBOUND\":",
+      "replacement": "    if False and runtime.binding_state == \"UNBOUND\":",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_24_OF_25",
+      "observed_failed_checks": [
+        "unbound_status_is_explicit"
+      ]
+    },
+    {
+      "id": "artifact-hash-guard",
+      "file": "m138_adapter.py",
+      "anchor": "    if observed != row[\"sha256\"]:",
+      "replacement": "    if False and observed != row[\"sha256\"]:",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_EXIT_3",
+      "note": "Self-test expected refusal JSON but the bad-hash subprocess proceeded, causing its parser assertion."
+    },
+    {
+      "id": "valid-boolean-map",
+      "file": "m138_adapter.py",
+      "anchor": "            passes[capture_id] = bool(accepted[status])",
+      "replacement": "            passes[capture_id] = True  # M149 breaks DETAIL_FAIL mapping",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_24_OF_25",
+      "observed_failed_checks": [
+        "valid_boolean_map_pass_and_fail"
+      ]
+    },
+    {
+      "id": "valid-state-map",
+      "file": "m138_adapter.py",
+      "anchor": "            states[capture_id] = str(status)",
+      "replacement": "            states[capture_id] = \"DETAIL_PASS\"  # M149 breaks fail state",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_24_OF_25",
+      "observed_failed_checks": [
+        "valid_state_map_complete"
+      ]
+    },
+    {
+      "id": "bound-output-checker-hash",
+      "file": "m138_adapter.py",
+      "anchor": "    return {\n        \"schema\": runtime.adapter_contract[\"interface_schema\"],\n        \"checker_sha256\": runtime.checker_sha256,",
+      "replacement": "    return {\n        \"schema\": runtime.adapter_contract[\"interface_schema\"],\n        \"checker_sha256\": \"0\" * 64,",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_24_OF_25",
+      "observed_failed_checks": [
+        "valid_output_hashes_bound"
+      ]
+    },
+    {
+      "id": "byte-replay-guard",
+      "file": "m138_adapter.py",
+      "anchor": "        \"request_sha256\": file_sha256(request_path),",
+      "replacement": "        \"request_sha256\": file_sha256(request_path),\n        \"m149_nonce\": os.urandom(8).hex(),",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_23_OF_25",
+      "observed_failed_checks": [
+        "commission_output_byte_stable",
+        "repeat_output_byte_stable"
+      ]
+    },
+    {
+      "id": "common-binding-hash-guard",
+      "file": "m138_adapter.py",
+      "anchor": "        if hashes[field] != value:",
+      "replacement": "        if False and hashes[field] != value:",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "physical-binding-hash-guard",
+      "file": "m138_adapter.py",
+      "anchor": "    if hashes[\"physical_preregistration_sha256\"] != physical_hash:",
+      "replacement": "    if False and hashes[\"physical_preregistration_sha256\"] != physical_hash:",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "environment-match-guard",
+      "file": "m138_adapter.py",
+      "anchor": "    if manifest != expected:",
+      "replacement": "    if False and manifest != expected:",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "canonical-key-sort",
+      "file": "m138_adapter.py",
+      "anchor": "        sort_keys=True,",
+      "replacement": "        sort_keys=False,",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "RED_EXIT_2",
+      "note": "Adapter refused at bootstrap with adapter contract hash drift."
+    },
+    {
+      "id": "terminal-newline",
+      "file": "m138_adapter.py",
+      "anchor": "    return canonical_json_bytes(value) + b\"\\n\"",
+      "replacement": "    return canonical_json_bytes(value)",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "commission-null-lower-bound",
+      "file": "m138_adapter.py",
+      "anchor": "            and null_q05 >= float(null_low)",
+      "replacement": "            and True  # M149 removed null lower bound",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "commission-blur-threshold",
+      "file": "m138_adapter.py",
+      "anchor": "                    \"pre_noise_blur_information_ratio_q95_strictly_below\"",
+      "replacement": "                    \"pre_noise_optical_improvement_information_ratio_q05_strictly_above\"",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "commission-improvement-threshold",
+      "file": "m138_adapter.py",
+      "anchor": "                    \"pre_noise_optical_improvement_information_ratio_q05_strictly_above\"",
+      "replacement": "                    \"pre_noise_blur_information_ratio_q95_strictly_below\"",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "commission-missing-flat-reason",
+      "file": "m138_adapter.py",
+      "anchor": "            and \"flat control is missing\" in missing_reason",
+      "replacement": "            and True  # M149 removed reason guard",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "commission-hash-control",
+      "file": "m138_adapter.py",
+      "anchor": "        \"artifact_hash_mutation_refuses\": hash_mutation_refused,",
+      "replacement": "        \"artifact_hash_mutation_refuses\": True,",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "bundle-member-verification",
+      "file": "m138_adapter.py",
+      "anchor": "        verify_artifact_ref(ref, base=HERE, root=HERE, label=label)",
+      "replacement": "        pass  # M149 removed bundle member verification",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25",
+      "note": "Ordinary 25-check suite stayed green; separate bootstrap sentinel executed and therefore this guard is covered only by the bootstrap harness."
+    },
+    {
+      "id": "null-invalid-refusal",
+      "file": "m138_adapter.py",
+      "anchor": "    if null_decision.get(\"status\") in invalid_statuses:",
+      "replacement": "    if False and null_decision.get(\"status\") in invalid_statuses:",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "null-status",
+      "file": "m138_adapter.py",
+      "anchor": "            null_decision.get(\"status\") == \"DETAIL_PASS\"",
+      "replacement": "            True",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "null-center-q05",
+      "file": "m138_adapter.py",
+      "anchor": "            and null_q05 <= 1.0",
+      "replacement": "            and True",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "null-center-q95",
+      "file": "m138_adapter.py",
+      "anchor": "            and null_q95 >= 1.0",
+      "replacement": "            and True",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "null-upper",
+      "file": "m138_adapter.py",
+      "anchor": "            and null_q95 <= float(null_high)",
+      "replacement": "            and True",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "blur-invalid-refusal",
+      "file": "m138_adapter.py",
+      "anchor": "    if blur_decision.get(\"status\") in invalid_statuses:",
+      "replacement": "    if False and blur_decision.get(\"status\") in invalid_statuses:",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "blur-status",
+      "file": "m138_adapter.py",
+      "anchor": "            blur_decision.get(\"status\") == \"DETAIL_FAIL\"",
+      "replacement": "            True",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "improvement-invalid-refusal",
+      "file": "m138_adapter.py",
+      "anchor": "    if improvement_decision.get(\"status\") in invalid_statuses:",
+      "replacement": "    if False and improvement_decision.get(\"status\") in invalid_statuses:",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "improvement-status",
+      "file": "m138_adapter.py",
+      "anchor": "            improvement_decision.get(\"status\") == \"DETAIL_PASS\"",
+      "replacement": "            True",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "missing-not-applicable-refusal",
+      "file": "m138_adapter.py",
+      "anchor": "    if missing_status == \"NOT_APPLICABLE\":",
+      "replacement": "    if False and missing_status == \"NOT_APPLICABLE\":",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    },
+    {
+      "id": "missing-status",
+      "file": "m138_adapter.py",
+      "anchor": "            missing_status == \"INSTRUMENT_INVALID\"",
+      "replacement": "            True",
+      "anchor_expected_count": 1,
+      "substantive": true,
+      "load_bearing_expectation": "RED",
+      "observed_original": "GREEN_25_OF_25"
+    }
+  ],
+  "special_bootstrap_mutations": [
+    {
+      "id": "bootstrap-direct-source-loader",
+      "file": "m138_adapter.py",
+      "anchor_expected_count": 1,
+      "anchor": "        code = compile(path.read_bytes(), str(path), \"exec\", dont_inherit=True)\n        module = types.ModuleType(\"m135_comparison_checker\")\n        module.__file__ = str(path)\n        module.__package__ = \"\"\n        exec(code, module.__dict__)",
+      "replacement": "        import importlib.util\n        spec = importlib.util.spec_from_file_location(\"m135_comparison_checker\", path)\n        if spec is None or spec.loader is None:\n            raise RuntimeError(\"could not create standard source loader\")\n        module = importlib.util.module_from_spec(spec)\n        spec.loader.exec_module(module)",
+      "expected_behavior": "A timestamp-eligible poisoned pyc executes in the mutant; original adapter ignores it.",
+      "observed_original": "MUTANT_EXIT_3_POISON_SENTINEL_TRUE; ORIGINAL_EXIT_0_POISON_SENTINEL_FALSE"
+    },
+    {
+      "id": "bootstrap-bundle-member-verification",
+      "file": "m138_adapter.py",
+      "anchor_expected_count": 1,
+      "anchor": "        verify_artifact_ref(ref, base=HERE, root=HERE, label=label)",
+      "replacement": "        pass  # M149 neutered bundle member hash verification",
+      "expected_behavior": "A stale-hash tampered comparison_checker.py sentinel executes in the mutant.",
+      "observed_original": "MUTANT_EXIT_0_SENTINEL_TRUE; ORIGINAL_EXIT_2_SENTINEL_FALSE"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "schema": "m135-detail-comparison-contract-v1",
+  "status": "PHYSICAL_UNBOUND",
+  "rule_id": "m135-detail-pass-v1",
+  "decision_statuses": {
+    "pass": "DETAIL_PASS",
+    "fail": "DETAIL_FAIL",
+    "not_applicable": "NOT_APPLICABLE",
+    "instrument_unbound": "INSTRUMENT_UNBOUND",
+    "instrument_invalid": "INSTRUMENT_INVALID"
+  },
+  "detail_pass_values": {
+    "DETAIL_PASS": true,
+    "DETAIL_FAIL": false,
+    "NOT_APPLICABLE": null,
+    "INSTRUMENT_UNBOUND": null,
+    "INSTRUMENT_INVALID": null
+  },
+  "scope": {
+    "decision_unit": "one registered capture",
+    "cross_capture_averaging": false,
+    "minimum_sites": 64,
+    "frequencies_cyc_per_native_px": [
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.15,
+      0.15,
+      0.15,
+      0.15,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "angles_deg": [
+      0.0,
+      22.5,
+      45.0,
+      67.5,
+      0.0,
+      22.5,
+      45.0,
+      67.5,
+      0.0,
+      22.5,
+      45.0,
+      67.5,
+      0.0,
+      22.5,
+      45.0,
+      67.5
+    ]
+  },
+  "required_capture_roles": [
+    "R1",
+    "R2",
+    "candidate_Y1",
+    "candidate_Y2",
+    "legacy_Y1",
+    "legacy_Y2",
+    "flat_R1",
+    "flat_R2",
+    "candidate_flat_Y1",
+    "candidate_flat_Y2",
+    "legacy_flat_Y1",
+    "legacy_flat_Y2"
+  ],
+  "required_mode_status": "OK",
+  "flat_control": {
+    "required_status": "NO_DETAIL",
+    "maximum_information_ratio": 0.1,
+    "maximum_reference_repeatable_power_ratio": 0.25,
+    "maximum_output_repeatable_power_ratio": 0.1
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260902,
+    "paired_site_resampling": true,
+    "capture_count": 1,
+    "lower_quantile": 0.05,
+    "upper_quantile": 0.95,
+    "quantile_method": "linear"
+  },
+  "hard_gates": {
+    "minimum_information_ratio_lower95": 0.98,
+    "minimum_transfer_ratio_lower95_per_cell": 0.98,
+    "maximum_unexplained_fraction_difference_upper95": 0.02
+  },
+  "required_binding_hashes": [
+    "physical_preregistration_sha256",
+    "physical_commissioning_sha256",
+    "payload_generator_sha256",
+    "instrument_normalized_sha256"
+  ],
+  "required_capture_hashes": [
+    "site_manifest_sha256",
+    "reference_manifest_sha256",
+    "flat_manifest_sha256",
+    "tone_witness_sha256",
+    "extraction_config_sha256"
+  ],
+  "current_estimator_normalized_sha256": "b2243292d92b8edc386b11b68e01740d0365bc4d633d728771d421be0732bbf1",
+  "physical_binding_rule": "No DETAIL_PASS or DETAIL_FAIL is claim-bearing until a PHYSICAL_BOUND binding and physical commissioning PASS are frozen before candidate outputs. An unbound rule returns INSTRUMENT_UNBOUND.",
+  "consumer_rule": "A consumer must invoke the bound checker on one payload per registered capture. It must not accept a supplied Boolean, average captures, map NOT_APPLICABLE or instrument states to DETAIL_FAIL, or choose thresholds."
+}

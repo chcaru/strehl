@@ -1,0 +1,112 @@
+{
+  "schema": "m149-adapter-review-report-v1",
+  "lane": "M149",
+  "reviewed_lane": "M135",
+  "verdict": "SEND_BACK",
+  "reviewed_adapter_sha256": "6d4366533b2b12fc1e03c44d96faa1af3d7e89e6c6f35ed5420dd33b8e5e6290",
+  "reviewed_production_bundle_sha256": "fa3f5135693766114aed6db58bfa74197236e5a51b454a421951f645cdcb27ea",
+  "critical_defects": [
+    {
+      "id": "artifact-hash-use-toctou",
+      "paths": [
+        "m138_adapter.py:256",
+        "m138_adapter.py:469"
+      ],
+      "reproduced": true,
+      "registered_invalid_artifact_sha256": "de4523fc4a1c41ced93da0c29a2aa2ea25062ae67248b1e09334d2d78bd7c574",
+      "unregistered_fail_artifact_sha256": "2aca17c001945544ec60a85eff9a88763d5d77a808817f621673cda855e5e84a",
+      "request_sha256": "7bdff42588cef3c63661656864f63c3348d1a05e8b574a64f49be616863a2324",
+      "observed": {
+        "attempt": 14,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "{\"checker_bundle_manifest_sha256\":\"437f04984bdbf70c0ad4f7daa0db70ffdb8866693b7268b4c10d2b180b3cb657\",\"checker_sha256\":\"6d4366533b2b12fc1e03c44d96faa1af3d7e89e6c6f35ed5420dd33b8e5e6290\",\"comparison_rule_sha256\":\"88741cec6756392d5e8f892f8be8e6be299f55de1d6525dff08718eb19dedc4f\",\"detail_pass_by_capture\":{\"invalid\":false},\"detail_state_by_capture\":{\"invalid\":\"DETAIL_FAIL\"},\"environment_manifest_sha256\":\"c4b60a7988e31ab21d60958b7e3ef58279595b9f2ef53d1d4d794c316b6b9cc4\",\"physical_preregistration_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"request_sha256\":\"7bdff42588cef3c63661656864f63c3348d1a05e8b574a64f49be616863a2324\",\"schema\":\"m135-m138-checker/v1\"}\n"
+      }
+    },
+    {
+      "id": "core-source-hash-use-toctou",
+      "paths": [
+        "m138_adapter.py:58",
+        "m138_adapter.py:365"
+      ],
+      "reproduced": true,
+      "registered_core_sha256": "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b",
+      "unregistered_core_sha256": "9da8efe6f6d89fecd3e91bec2659fa982c3555a556a2f9838c000e22b1d957ee",
+      "request_sha256": "0621ee8f37d8d97cd07c34fbd8bbfc2734774921bf485a47be11afd70b102ef2",
+      "observed": {
+        "attempt": 5,
+        "returncode": 0,
+        "sentinel_executed": true,
+        "stderr": "",
+        "stdout": "{\"checker_bundle_manifest_sha256\":\"437f04984bdbf70c0ad4f7daa0db70ffdb8866693b7268b4c10d2b180b3cb657\",\"checker_sha256\":\"6d4366533b2b12fc1e03c44d96faa1af3d7e89e6c6f35ed5420dd33b8e5e6290\",\"comparison_rule_sha256\":\"88741cec6756392d5e8f892f8be8e6be299f55de1d6525dff08718eb19dedc4f\",\"detail_pass_by_capture\":{\"invalid\":false},\"detail_state_by_capture\":{\"invalid\":\"DETAIL_FAIL\"},\"environment_manifest_sha256\":\"c4b60a7988e31ab21d60958b7e3ef58279595b9f2ef53d1d4d794c316b6b9cc4\",\"physical_preregistration_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"request_sha256\":\"0621ee8f37d8d97cd07c34fbd8bbfc2734774921bf485a47be11afd70b102ef2\",\"schema\":\"m135-m138-checker/v1\"}\n"
+      }
+    }
+  ],
+  "mutation_summary": {
+    "status": "FAIL_SURVIVORS",
+    "mutation_count": 32,
+    "surviving_substantive_mutations": [
+      "recursive-supplied-decision-guard",
+      "common-binding-hash-guard",
+      "physical-binding-hash-guard",
+      "environment-match-guard",
+      "terminal-newline",
+      "commission-null-lower-bound",
+      "commission-blur-threshold",
+      "commission-improvement-threshold",
+      "commission-missing-flat-reason",
+      "commission-hash-control",
+      "bundle-member-verification",
+      "null-invalid-refusal",
+      "null-status",
+      "null-center-q05",
+      "null-center-q95",
+      "null-upper",
+      "blur-invalid-refusal",
+      "blur-status",
+      "improvement-invalid-refusal",
+      "improvement-status",
+      "missing-not-applicable-refusal",
+      "missing-status"
+    ],
+    "anchor_errors": [],
+    "inert_control_failures": []
+  },
+  "bootstrap_summary": {
+    "status": "PASS",
+    "checks": {
+      "bundle_guard_mutant_executes_tampered_core": true,
+      "direct_loader_mutant_executes_poisoned_bytecode": true,
+      "poisoned_bytecode_exists": true,
+      "registered_adapter_ignores_poisoned_bytecode": true,
+      "standard_source_loader_executes_poisoned_bytecode": true,
+      "static_tamper_original_refuses_before_execution": true
+    }
+  },
+  "artifacts": {
+    "README.md": {
+      "sha256": "51716efe1265474d6eb8a6c756e12c10cf84f7499b68ef03be67f932bafac73f"
+    },
+    "REPORT.md": {
+      "sha256": "8418103ad1f3ff09b414f1d8d0e6fd09ec2e33932482bd0afe1002aa3b6594a8"
+    },
+    "mutation-manifest.json": {
+      "sha256": "0ad619af28884797ceeadb0d6979b8cf341f0bfa43eee4a54118efc14bd394b3"
+    },
+    "mutation-report-original.json": {
+      "sha256": "b61c39ec4dc7448931a50a4eeeb8e20d79bad4fff160cf262da7695a18736746"
+    },
+    "artifact-race-report-original.json": {
+      "sha256": "942b1b002bf2ea4bcd2f38fad6579b1cec212e624febf298f36435f1db80f1ed"
+    },
+    "source-race-report-original.json": {
+      "sha256": "45c4329cb2f3fe42414731de615666084e8736fd17b13af25f39ef170e5741ee"
+    },
+    "bootstrap-mutation-report-original.json": {
+      "sha256": "1060a83e96bed63e34bc939fd6c843f93b30734aaa4a64c8c03e959577cfbdbf"
+    },
+    "fixture-manifest.json": {
+      "sha256": "2f7ac0d2879be791d7d87bede7899ae180025a4a53caf7497048976ee0df894a"
+    }
+  }
+}
