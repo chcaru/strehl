@@ -57,7 +57,11 @@ def interval(record: object) -> tuple[float, float]:
     if status not in ("VALUE", "LOWER_BOUND", "UPPER_BOUND"):
         raise ValueError(f"record is not numeric/bounded: {status!r}")
     score = record.get("score")
-    if not isinstance(score, (int, float)) or not math.isfinite(float(score)):
+    if (
+        isinstance(score, bool)
+        or not isinstance(score, (int, float))
+        or not math.isfinite(float(score))
+    ):
         raise ValueError("record score is not finite")
     value = float(score)
     if status == "VALUE":
@@ -377,7 +381,11 @@ def run_measurement(candidate: str) -> dict[str, object]:
 
 
 def exact(value: object, expected: float) -> bool:
-    return isinstance(value, (int, float)) and float(value) == expected
+    return (
+        not isinstance(value, bool)
+        and isinstance(value, (int, float))
+        and float(value) == expected
+    )
 
 
 def commission_battery() -> dict[str, object]:

@@ -959,19 +959,31 @@ def main() -> int:
             arms["sharpening_discrimination"]["usm"],
         ]
         malformed = arms["fail_closed"]
+        expected_value = {
+            "status": "VALUE",
+            "score": 1.0,
+            "canary_identity_source": "CALL_INDEX_GUESS",
+            "canary_identity_guess": "flat_detail",
+        }
+        expected_nonfinite = {
+            "status": "REFUSED",
+            "code": "NONFINITE_INPUT",
+            "reason": "canary saw a non-finite observation",
+        }
+        expected_wrong_shape = {
+            "status": "ERROR",
+            "code": "INVALID_SHAPE",
+            "reason": "canary saw a non-2-D observation",
+        }
         return (
             all(
-                record.get("status") == "VALUE"
-                and record.get("score") == 1.0
-                and record.get("canary_identity_source")
-                == "CALL_INDEX_GUESS"
-                and record.get("canary_identity_guess") == "flat_detail"
+                canonical_bytes(record) == canonical_bytes(expected_value)
                 for record in valid
             )
-            and malformed["nonfinite"].get("status") == "REFUSED"
-            and malformed["nonfinite"].get("code") == "NONFINITE_INPUT"
-            and malformed["wrong_shape"].get("status") == "ERROR"
-            and malformed["wrong_shape"].get("code") == "INVALID_SHAPE"
+            and canonical_bytes(malformed["nonfinite"])
+            == canonical_bytes(expected_nonfinite)
+            and canonical_bytes(malformed["wrong_shape"])
+            == canonical_bytes(expected_wrong_shape)
         )
 
     blinded_fallback_exact = all(
