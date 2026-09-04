@@ -2360,6 +2360,70 @@ replacement pair must differ in exactly one controlled variable, with
 sharpening applied downstream of a common merge so the hull is shared by
 construction.
 
+### 2.9.17 Two lanes converge: the shipped default is the geometrically worse mode
+
+`docs/research/M-COVER-NATIVE.md`, 338 lines, commit `40dee98a`. This lane
+measured native-geometry behaviour with **no knowledge of the border
+diagnosis**, and it arrived at the same place from the opposite direction.
+
+**Q1, MEASURED: Crop is the faithful mode, by roughly an order of magnitude.**
+
+| arm | scale disagreement |
+|---|---:|
+| Scale (shipped default) | `0.2901` -- `0.4619%` magnification failure |
+| Crop, eight arms | `0.0174` -- `0.0231%`, rotation within `0.02` degrees |
+
+The frozen ECC estimator was unchanged and its Scale control reproduced
+byte-for-byte, so this is not an artifact of a re-tuned instrument.
+
+**Q2, VERIFIED: and yet the scorecard still keeps Scale** -- because the
+`COVER / default path` row rests on the Crop safe inset retaining only
+**`64.6047%`**, below the `80%` gate.
+
+**That is the number lane-BORDER has just traced to a bug.** So the two lanes
+compose into a single statement:
+
+> strehl ships the mode with up to `0.46%` magnification error, and rejects the
+> mode measured at `0.02%`, on the strength of a retention figure produced by
+> late-crop boundary poisoning.
+
+If the crop-early fix lands as predicted (`96.22496%`, against the same `80%`
+gate) then the sole quantitative justification for the current default
+disappears, and it disappears in favour of the mode that is independently ~20x
+better on scale fidelity and byte-exact at `0` DN across `24,580,566` samples.
+**This is now the most consequential open build in the program.**
+
+**Unit reconciliation -- the open question from 2.9.14 is closed.** I verified
+that the border lane's plane is exactly half native in each axis:
+`7032 / 3516 = 2.0` and `4688 / 2344 = 2.0`. The border work is on a
+**2x-binned** plane, so its `8 px` is `16 px` native and its `256 px` is
+`512 px` native. The retention *ratio* is scale-invariant --
+`3454*2296/(3516*2344)` and `6908*4592/(7032*4688)` are both exactly
+`0.9622496` -- so the prediction and the gate comparison survive the unit
+change unaltered. The 2x binning hypothesis recorded in 2.9.14 was correct.
+
+**One discrepancy I could not close, and am not hiding.** I could not
+reproduce `64.6047%` exactly as a symmetric inset on either plane: `275 px`
+half-plane gives `0.645635`; `549`/`550 px` native gives
+`0.646213`/`0.645635`. The right neighbourhood, not an exact match. So the
+retention figure is *consistent with* a ~256--275 px half-plane inset but is
+probably not a uniform margin of the quoted value. lane-COVER has been asked
+either to derive it exactly from its real definition or to state how that
+definition differs, because the answer changes how post-fix retention must be
+computed to be comparable with the gate.
+
+**Two further cautions carried from the lane's own text, not softened.** First,
+Q2's answer to "does this unblock formal scoring" is **no** on a second and
+independent ground: every Crop TIFF is smaller than the required native
+`7032 x 4688` output, and native-size fails 8/8. A crop is inherently smaller
+than the plane, so a rule demanding native size *mandates* Scale -- that rule
+needs revisiting on its own merits, separately from the `80%` gate. Second,
+the lane reported that an inherited four-tile residual reader **fails a
+pure-translation null**, so its `0.3162`--`1.4765 px` values are diagnostics
+and not an admitted 8/8 residual failure. Its negative answer does not rest on
+them. A lane that disowns its own supporting numbers when they fail a null is
+behaving correctly.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
