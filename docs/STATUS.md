@@ -2553,6 +2553,51 @@ which has been the program's blocker since FRC and slant-edge died -- can
 finally use a real improvement arm, a real noise ladder and a real null, on
 data that already exists.
 
+### 2.9.20 D13 is false, and the lane deleted its own build rather than ship it behind a flag
+
+`docs/research/M-PHASE0-PIPE.md`, 265 lines, commits `75c8978a`, `1b5cebb4`,
+`04976c0e`. A proposal build item is now closed by measurement rather than by
+opinion, and the method is the best-behaved this program has seen.
+
+**The claim under test**, quoted from the lane's own operationalisation of
+D13: *"Pyramid folding continues scaling beyond eight workers on an idle
+16-core machine sufficiently to justify worker-count-independent reduction and
+memory redesign."* The proposal supplies **no numerical D13 threshold**, so the
+lane set its own before measuring -- at least `1.20x` from 8 to 16 workers on
+**both** stacks, with saturation defined as the first doubling below `1.10x` on
+both -- and froze them in a preregistration at `867c6041`.
+
+**Result: D13 is FALSE.** On two real 64-frame stacks the fold's first doubling
+below `1.10x` is 8 to 16 workers: **`1.082x`** on `112MSDCF` and **`1.078x`** on
+`bee-3-cpl`. Decode saturates at 16 threads; **the fold saturates one doubling
+earlier, at eight workers.** The premise for worker-count-independent reduction
+and the associated memory redesign therefore does not hold, and that work is
+not worth doing.
+
+**The part worth imitating.** The lane did not stop at the scaling curve. It
+**implemented** the bounded decode-to-fold rendezvous, proved it
+**byte-identical**, measured it at **`1.3%` and `2.1%` slower** best-of-five on
+the two stacks, found it failed the preregistered `1.05x` retention bar, and
+**removed it rather than shipping it behind a flag.** A correct implementation
+that loses on measurement is dead code with a switch on it; deleting it is the
+right call and it is rarely made.
+
+It also refused its own convenient evidence: an untracked pre-commit scratch
+tree was explicitly rejected as provenance because it omitted the very files
+under test. And it ran ascending *and* descending worker sweeps under a load
+gate of `<=15%` pre-load and `<=10%` during-run external busy after subtracting
+child CPU -- so drift in host conditions would surface as a discrepancy rather
+than as a result. **That is how a timing measurement is taken on a shared
+host**, and I have since made it the standing rule for this program, in place
+of lanes asking one another to idle.
+
+Host: Ryzen 9 9950X3D, 16C/32T, Windows 11 build 26200, 61.6 GiB.
+
+**Bearing on the SOTA claim: none directly, and that is worth saying.** D13 sits
+in the speed programme, not the detail axis. It closes a planned build item and
+protects future effort, but it does not move the headline clause, which remains
+blocked on an instrument (3.1, 2.9.16--2.9.19).
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
