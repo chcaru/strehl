@@ -1,0 +1,179 @@
+{
+  "baseline_green": {
+    "m8_o_violations": 0,
+    "m8_r_violations": 0,
+    "output_sha256": "1DC4F5BE9CB8E384C489AE6398BD0514E66B62B6AA1E485DA1887F23F245C6B6",
+    "status": "PASS",
+    "violations": []
+  },
+  "commissioning": "both directions",
+  "degradation_plant": {
+    "landed": {
+      "new_line": "  \"encoded_r\": 65534,",
+      "occurrences": 1,
+      "old_line": "  \"encoded_r\": 65535,",
+      "sha256_after": "91D85E433CA249BA0666006A16789F29A4B24DBDB3DCBD075F787C10C509AA68",
+      "sha256_before": "241C5E5632AD47C681F5E30A033FF6C28997A6075780CCB617EE960042BB551A"
+    },
+    "result": {
+      "m8_o_violations": 1,
+      "m8_r_violations": 0,
+      "output_sha256": "803B5B42DF35D97649F7D4B9286B5ABEEE568B769C92AB2CAC260374FD5598B9",
+      "status": "FAIL",
+      "violations": [
+        {
+          "channel": "R",
+          "direction": -1,
+          "encoded": 65534,
+          "x": 2,
+          "y": 3
+        }
+      ]
+    }
+  },
+  "fail_closed": {
+    "duplicate_frame_site": "duplicate trace-v3 frame/site (0, (0, 0))",
+    "missing_frame_site": "incomplete trace set: missing=[(0, (0, 0))], extra=[]",
+    "producer_supplied_hull_ignored": true,
+    "trace_v2": "m8-trace-v3-p1-f00000000-6bd692026572af92d2f847a5a78e0353d19f9afeab3960a73934ab9854613004-s00-aafa794a32a78cdc54bc02ce5b030ff3ace038494d7ad1ee4b2516d64e2bc904.m8site: requires trace-v3 b'M8SITE03', got magic=b'M8SITE03', version=2",
+    "wrong_crop_origin": "commission-crop: trace crop (0, 0, 9, 9) != independently reconstructed (4, 4, 9, 9)"
+  },
+  "green_pairing_case": {
+    "encoded_output": 0,
+    "independent_site_interval": [
+      0.0,
+      1.0
+    ],
+    "independent_site_violation": false,
+    "same_frame_interval": [
+      0.5,
+      0.5
+    ],
+    "same_frame_violation": true
+  },
+  "improvement_plant": {
+    "landed": {
+      "new_line": "  \"encoded_r\": 65535,",
+      "occurrences": 1,
+      "old_line": "  \"encoded_r\": 65534,",
+      "sha256_after": "241C5E5632AD47C681F5E30A033FF6C28997A6075780CCB617EE960042BB551A",
+      "sha256_before": "91D85E433CA249BA0666006A16789F29A4B24DBDB3DCBD075F787C10C509AA68"
+    },
+    "result": {
+      "m8_o_violations": 0,
+      "m8_r_violations": 0,
+      "output_sha256": "1DC4F5BE9CB8E384C489AE6398BD0514E66B62B6AA1E485DA1887F23F245C6B6",
+      "status": "PASS",
+      "violations": []
+    }
+  },
+  "independence": {
+    "forbidden_imports": [],
+    "imports": [
+      "__future__",
+      "argparse",
+      "ast",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "math",
+      "numpy",
+      "os",
+      "pathlib",
+      "re",
+      "shutil",
+      "struct",
+      "sys",
+      "tifffile",
+      "typing"
+    ]
+  },
+  "interval_containment": {
+    "cases": 4096,
+    "misses": 0,
+    "scalar_samples": 69556,
+    "seed": 136
+  },
+  "numeric_cases": {
+    "convex_bilinear_green": {
+      "H": 0.8,
+      "L": 0.2,
+      "encoded": 32768,
+      "expected_violations": 0,
+      "observed_violations": 0
+    },
+    "copy_green": {
+      "H": 0.4,
+      "L": 0.4,
+      "encoded": 26214,
+      "expected_violations": 0,
+      "observed_violations": 0
+    },
+    "in_range_high_red": {
+      "H": 0.8,
+      "L": 0.2,
+      "encoded": 58982,
+      "expected_violations": 1,
+      "observed_violations": 1
+    },
+    "in_range_low_red": {
+      "H": 0.8,
+      "L": 0.2,
+      "encoded": 6554,
+      "expected_violations": 1,
+      "observed_violations": 1
+    },
+    "unrepresentable_high_at_rail_green": {
+      "H": 1.0,
+      "L": 1.0,
+      "encoded": 65535,
+      "expected_violations": 0,
+      "observed_violations": 0
+    },
+    "unrepresentable_high_off_rail_red": {
+      "H": 1.0,
+      "L": 1.0,
+      "encoded": 65534,
+      "expected_violations": 1,
+      "observed_violations": 1
+    },
+    "unrepresentable_low_at_rail_green": {
+      "H": 0.0,
+      "L": 0.0,
+      "encoded": 0,
+      "expected_violations": 0,
+      "observed_violations": 0
+    },
+    "unrepresentable_low_off_rail_red": {
+      "H": 0.0,
+      "L": 0.0,
+      "encoded": 1,
+      "expected_violations": 1,
+      "observed_violations": 1
+    }
+  },
+  "preregistration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\clamped-m8o-preregistration.json",
+    "sha256": "B656EFB9D2BFEA4B8CF5DD67BE63A9CD7D6930F6B302C7EF93E9E1DF7529BCEB"
+  },
+  "prospective_interpretation": {
+    "commit": "746cc38a",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\prospective-interpretations.md",
+    "sha256": "8F827FAD6C2A218B473FAFD9287F95E3321E880FF2B36E2D877DC64DC4783C12"
+  },
+  "protocol": "M136 independent verifier v1",
+  "quantizer_case": {
+    "green_violation": false,
+    "intermediate_u16": 1013,
+    "pre_final_interval": [
+      0.0611572265625,
+      0.0611572265625
+    ],
+    "red_violation": true
+  },
+  "status": "PASS",
+  "verifier": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier_m136.py",
+    "sha256": "F599C47318DAC201A2CA7AB45C5AC991F0376E94B71769B08C9088998A639993"
+  }
+}
