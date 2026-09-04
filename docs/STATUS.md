@@ -4828,6 +4828,139 @@ which is why M142 is held from compiling rather than merely asked to be polite.
 
 ---
 
+### 2.9.46 Phase 1's gate can fail, which is the news, and four ways it can be told what to conclude
+
+M138's rebuilt W1 gate went through a second independent review (M148, a lane
+that wrote neither the specification nor the first review) and I commissioned its
+self-test myself. The two produced different findings and both matter.
+
+#### 2.9.46.1 The gate can fail, and this is the first such confirmation in the program
+
+Every previous bar this program has examined turned out to be one that could not
+bite. This one bites. M148 did not read the gate, it drove it:
+
+| driven condition | verdict returned |
+| --- | --- |
+| `R = 0.50` in every capture and plane | `PHASE1_GO`, `selected_tau` `0.99` |
+| `R = 1.00` in every plane | `PHASE1_REFUTED_NO_GLOBAL_OUTPUT_OPERATING_POINT` |
+| three planes at `0.50`, one plane at `1.00` | same refutation |
+
+One non-improving plane fails the arm, so the conjunction across planes is real
+rather than decorative, and exact no-improvement does not pass. M148 also found
+the `1.0` boundary is derived from the estimand — it is the natural
+no-improvement power ratio — rather than copied from another statistic.
+
+**So the removal of `0.90` did not over-correct into an unfalsifiable rule.**
+That was the specific risk I asked the second reviewer to hunt, because a lane
+that has just been criticised for an invented constant has every incentive to
+replace it with something that can never be violated. It did not.
+
+#### 2.9.46.2 Four blockers, and they are one defect wearing four hats
+
+M148 demonstrated each by execution rather than by reading:
+
+1. Scored temporal powers are submitted arrays disconnected from the
+   hash-verified artifacts. Fed **the same `artifact.bin`** as every candidate
+   and legacy output while asserting a `0.50` power ratio, the adjudicator
+   returned `PHASE1_GO`.
+2. The four-burst pilot checks `len(source_outputs) == 4` and nothing more. One
+   file repeated four times certified production power
+   `0.9996698425050481`, enough to falsely certify 64 sites.
+3. The specification requires the inflation plant to fail superiority; the code
+   checks only that its score is lower than the null. An inflation control with
+   `passes_superiority=true` was accepted and the run ended `PHASE1_GO`.
+4. Cost qualification is a status-string check. All five cost measurements
+   `null` with `status == "BENCHMARKED"` reached `PHASE1_GO`.
+
+I sent these back as **one** finding, not four, because they share a mechanism:
+*the adjudicator reads the claim rather than the evidence.* In each case a
+reference is checked for existence, or a status field for its string value, and
+then a submitted number carries the verdict. That is structurally what killed
+`NO_COMMON_K` — an empty candidate set read as an answered question rather than
+an unasked one — and structurally what the `0.90` constant was. The instruction
+back is a rule rather than a checklist: **no submitted scalar, array or status
+string may carry a verdict; every scored quantity must be recomputed by the
+adjudicator from a hash-bound artifact, and references required to be
+independent must be verified distinct.** Rejecting duplicate references kills
+the first two together and is the cheapest change on the list.
+
+#### 2.9.46.3 A self-test that does not cover its own guards
+
+Separately from M148, I commissioned M138's `--self-test` by copying the lane
+directory to `%TEMP%` and deleting one guard at a time, each mutation anchored on
+a unique full-line string with a hard error if the anchor failed to land.
+
+| planted defect | self-test |
+| --- | --- |
+| removed the `if invalid_captures: raise` refusal | **exit 1, caught** |
+| removed the "coerced invalid to a Boolean" rejection | exit 0, **green** |
+| let an unknown state through as valid | exit 0, **green** |
+| inert comment-only edit (control) | exit 0, green as required |
+
+Restoring returned it to green, so the harness itself is sound.
+
+**The guards are not broken.** M148 reached all three by external probe and each
+fired: `INVALID_WITH_FALSE` returned *"M135 coerced internally invalid
+detail-development to a Boolean"*, and `LITERAL_NULL_WITH_FALSE` returned *"M135
+returned unknown state for detail-development: None"*. Both refused as
+`INSTRUMENT_INVALID`. What is missing is *coverage*: two of the three guards are
+exercised by nobody's test. The self-test is what gets re-run after every future
+edit, so a guard it does not cover can be deleted later and nothing goes red.
+This is the same lesson as the notebook render checks — a check that has never
+fired may be a silent no-op — arriving here as a check that exists, works, and
+is untested.
+
+#### 2.9.46.4 The fifth bar that cannot bite, and why the fix is not a number
+
+M148's sharpest observation is that with enough independent sites, an
+arbitrarily small genuine reduction clears `upper95 < 1.0`. It is a strict
+superiority test, not a minimum-effect test.
+
+I worked out what this means at source rather than accepting the framing, and it
+is narrower than it first appears. The gate's ratio is **candidate over legacy**
+— strehl's new merge against strehl's existing merge. Scorecard M2, the SOTA
+noise axis, is a different question against a different reference:
+`UCB95(sigma_strehl / min(sigma_comparator)) <= 0.950` plus `eta <= 1.10`
+(`2026-09-sota-scorecard.md:633-635`), which is strehl against a *shipping
+comparator*, carrying a 5% margin. **So M2 already has the minimum effect the
+W1 gate lacks, and W1 must not adopt `0.950`** — that would be copying a
+constant across a change of both estimand and reference, which is the precise
+error M135 flagged on `delta_J` and the precise error `0.90` already was.
+
+The real defect is this. The pre-repair W1 rule was an `<=0.90` temporal-power
+ceiling (`2026-08-sota-path.md:2521`), tagged `[INHERITED]` and suspected of
+contamination against the withdrawn `NO_COMMON_K` survivor set. Removing it was
+correct. But removing it deleted the contaminated *number* **and the concept it
+encoded** — a minimum effect size — leaving a pure significance test in its
+place. Phase 1 can now issue `GO` on an improvement too small to matter, and
+nothing downstream will notice, because a `GO` currently carries no effect size
+at all.
+
+The instruction back is therefore not a new constant. It is that the achieved
+effect size and its simultaneous interval become **mandatory, recomputed
+components of the verdict**, that a `GO` be unreadable without them, that the
+preregistration state plainly that `PHASE1_GO` licenses no claim about scorecard
+M2, and that the minimum effect be **named and left unbound** until a physical
+pilot can bind it. That preserves what `0.90` was for while discarding what was
+wrong with it.
+
+Counting the instances so far: `NO_COMMON_K` unsatisfiable by construction; the
+comparator envelope admitting no comparator; a detail statistic scoring a
+nearly-flat region above a detailed one; the M7 seam p99 returning exactly `0.0`
+against a planted `4.07 DeltaE00` defect; and now a Phase-1 gate with no effect
+size. **Five.** The recurring shape is not carelessness — each was written by a
+competent lane — it is that a bar is easy to state and hard to make bite, and
+that nothing reveals which one you have except deliberately trying to defeat it.
+
+#### 2.9.46.5 Position
+
+**Unchanged: `0 of 12`.** Nothing scored this segment. What changed is that the
+gate standing in front of Phase 1 is now known to be capable of failing, which
+is a precondition for its eventual pass meaning anything, and four ways of
+talking it into a pass are on their way to being closed.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 
