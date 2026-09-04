@@ -873,9 +873,10 @@ standing.
 you M11 was blocked "purely because I said a comparator must be
 quality-qualified first." That is wrong on the literal document. The scorecard's
 comparator-envelope definition says *"For speed it is the fastest mode that
-passes the complete quality scorecard"* (line `267` at this edit), and M11's own
-computation step 7 independently repeats *"the fastest mode that passes all
-quality gates"* (line `1162` at this edit). **Neither clause is rule 4.** I
+passes the complete quality scorecard"* (the comparator-envelope clause), and
+M11's own computation step 7 independently repeats *"the fastest mode that
+passes all quality gates"* (M11 "Exact computation", step 7). **Neither clause
+is rule 4.** I
 re-verified both against the scorecard directly; cite the named clause rather
 than the line number, which drifts with every insertion. Strike
 rule 4 tomorrow and M11 is still blocked, because M11's own bar demands a

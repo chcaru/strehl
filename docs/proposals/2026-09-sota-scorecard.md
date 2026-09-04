@@ -121,9 +121,9 @@ document’s proposed completions, not claims that the governing proposal alread
    > detail instrument through clauses that are not rule 4, so striking rule 4
    > leaves the couplings standing. M11 is the cleanest case -- the
    > comparator-envelope definition requires *"the fastest mode that passes the
-   > complete quality scorecard"* (the comparator-envelope clause, line `267` at
-   > this edit), and M11's own computation step 7 independently repeats *"the
-   > fastest mode that passes all quality gates"* (line `1162` at this edit).
+   > complete quality scorecard"* (the comparator-envelope clause), and M11's own
+   > computation step 7 independently repeats *"the fastest mode that passes all
+   > quality gates"* (M11 "Exact computation", step 7).
    > Neither clause is rule 4. Both quotations were re-verified against this file
    > directly rather than taken from the owner page, which cited them as
    > `:245-246` and `:1089-1090` -- stale by `+21` and `+42` lines. **Cite the
@@ -336,9 +336,9 @@ other wording implies holdout status.
 | `requests\7-aperture-pairs\fabric-weave-f5.6-sw5-cpl` | 210; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Natural oriented high-frequency and colour-seam stress. |
 | `requests\7-aperture-pairs\fabric-weave-f8-sw5-cpl` | 150; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Aperture robustness. |
 | `requests\7-aperture-pairs\fabric-weave-f11-sw5-cpl` | 109; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Aperture robustness / diffraction control. |
-| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl` | 120 | **HOLDOUT — QUALITY** | M5 depth coverage and conditional M10 physical-depth slope. |
-| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f8-sw7-cpl` | 85 | **HOLDOUT — QUALITY** | Cross-aperture depth consistency. |
-| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f11-sw7-cpl` | 65 | **HOLDOUT — QUALITY** | Cross-aperture depth consistency. |
+| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl` | 120 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Outcome already read by M-PHASE0-CURV (`:167`, `+0.316961 [+0.078558,+0.543411]`, DETECTED-SMALL). Was M5 depth coverage and conditional M10 slope; M10 now needs a fresh metrology-backed unit. |
+| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f8-sw7-cpl` | 85 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Outcome already read by M-PHASE0-CURV (`:168`, `+0.047308 [-0.265968,+0.261226]`, UNRESOLVED). |
+| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f11-sw7-cpl` | 65 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Outcome already read by M-PHASE0-CURV (`:169`) *and* M-PHASE0-LCA (`:125,181`, the "primary ruler"). |
 | `requests\12-bee-iso-var-no-bracket-32-repeat-diff-light` | 576 total | **HOLDOUT — QUALITY** | Independent repeated exposures for M1/M2/M9. Bright ISO 100 is `DSC00328.ARW`–`DSC00359.ARW`; second-light ISO 100 is `DSC00584.ARW`–`DSC00615.ARW`, 32 each, 1.6 s, f/5.6. |
 | `requests\10-paper-iso-var` | 110 total | **CONTROL — NOT HOLDOUT** | Flat/noise transfer control. ISO 100, 1/8 s is `DSC00245.ARW`–`DSC00249.ARW`. The actual EXIF census includes ISO 250 although the README list omits it. |
 | `requests\6-11-extended-dark-frames` | 506 | **CONTROL — NOT HOLDOUT** | Independent temporal-noise and fixed-pattern floor; never an image-quality subject. |
@@ -420,11 +420,19 @@ CIELAB values. M7 is therefore registered now but cannot be scored until a tilte
 ColorChecker Classic or Digital SG, grey card, illuminant measurement, and darks are
 captured. Natural-object agreement is not colour fidelity.
 
-The tilted ruler is sufficient for M5 coverage, but its README records the angle only
-as “approximately 10.26 deg.” Unless an independent record bounds that angle tightly
-enough for M10’s 2.5% truth-uncertainty gate, the physical-scale part of M10 also
-requires a new metrology capture. Image-derived focus may not be used to certify the
-angle it is being tested against.
+The tilted ruler is **burned, not holdout**: M-PHASE0-CURV read outcomes from all
+three apertures (`:167-169`) and M-PHASE0-LCA from the f/11 stack (`:125,181`),
+before this scorecard labelled them holdout. Separately, its README records the
+angle only as “approximately 10.26 deg”, derived from an about-`10 cm` run against
+an about-`1.81 cm` rise, with no instrument, least count, endpoint definition,
+repeatability, camera-relative frame or uncertainty recorded. **M10 therefore
+requires a fresh metrology-backed ruler unit on both counts** — the old unit cannot
+score because it is burned, and its angle would not qualify even if it were clean.
+M154 derives the admissible band around the nominal as `-0.245/+0.257 deg`
+(`[10.014357337, 10.516726712] deg`): an angle known to `+/-1 deg` yields
+`11.022604%` slope error and one rounded to the nearest degree yields `5.231674%`,
+against a `2.5%` truth allocation. Degree-level knowledge is therefore not enough.
+Image-derived focus may not be used to certify the angle it is being tested against.
 
 The high-resolution slide currently has no committed target-pitch certificate or
 external flat/tilted pose measurement. Its development unit may commission M10
@@ -1089,7 +1097,11 @@ unlabelled frame index (`2026-08-sota-path.md` lines 192–197). A focus stacker
 map is useful only if its ordering, scale, and uncertainty survive an external
 geometric truth.
 
-**Input.** The three 10.26-degree tilted-ruler stacks, the flat battery null, and an
+**Input.** A **fresh, untouched tilted-ruler unit** whose camera-relative pose and
+angular uncertainty are measured externally and frozen before any output is read.
+The three original `10.26`-degree stacks are **burned** — M-PHASE0-CURV and
+M-PHASE0-LCA already read outcomes from them — and are development-only. Also the
+flat battery null, and an
 independently implemented non-planar synthetic two-layer target whose latent depths
 are hidden from the estimator. The ruler’s 1/64-inch markings set lateral scale. The
 fresh tilted-slide unit is development-only planarity/order commissioning and cannot
@@ -1098,8 +1110,13 @@ strips and 10,000 target pixels must qualify.
 
 **Exact computation.**
 
-1. Map ruler ticks to physical `x`; external truth is
-   `z_true=x*tan(theta_ext)` after one fitted origin only. `theta_ext` must come from
+1. Map ruler ticks to tick arclength `s` measured along the inclined ruler face.
+   External truth is `z_true = s*sin(theta_ext)` after one fitted origin only;
+   equivalently `z_true = x*tan(theta_ext)` **where `x = s*cos(theta_ext)` is the
+   externally calibrated lateral projection**. Those two forms agree only under that
+   definition of `x`; leaving `x` undefined was a real ambiguity (M154), because
+   reading `x` as arclength instead of projection inflates the truth slope by
+   `1/cos(theta_ext)`. `theta_ext` must come from
    a measurement independent of image focus and be frozen with uncertainty small
    enough to contribute at most `2.5%` slope error. The README’s “approximately
    10.26 deg” is a candidate value, not by itself traceable truth. No slope is fitted
