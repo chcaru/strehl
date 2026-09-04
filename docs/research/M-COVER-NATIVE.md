@@ -2,22 +2,28 @@
 
 ## Answer
 
-**MEASURED — Q1: no, the complete §1.5 geometry gate does not clear.** The
-shipped `CoverMode::Crop` removes the Scale arm's 0.2901–0.4619% magnification
-failure: all eight Crop arms measure 0.0174–0.0231% scale disagreement and
-remain within 0.02 degrees rotation. But all eight fail the separately required
-`<=0.10 output px RMS` non-translation residual, at 0.3162–1.4765 px. The M1
-geometry prerequisite therefore remains blocked.
+**MEASURED — Q1: yes, Crop passes the specific native-scale rule.** The shipped
+`CoverMode::Crop` removes the Scale arm's 0.2901–0.4619% magnification failure:
+all eight Crop arms measure 0.0174–0.0231% scale disagreement and remain within
+0.02 degrees rotation. The frozen ECC estimator was unchanged and its Scale
+control reproduced byte-for-byte.
 
-**VERIFIED/DERIVED — Q2: Crop also violates the native-size output contract.**
-Every TIFF is a same-pitch, unity-scale crop large enough to contain 100% of
-the frozen common overlap, with 100% site survival and 0.0 percentage-point
-differential attrition. Scientifically, that establishes a fixed common region
-that can be compared after the permitted translation removal. Formally, the
-current scorecard says every program must emit a native-size TIFF; Crop emits
-smaller TIFFs. The absent common-ProPhoto-TIFF adapter, unmeasured comparator
-render geometry, non-landmark rejection-only ECC audit, and residual failures
-independently keep the comparison `UNMEASURED`.
+**VERIFIED/DERIVED — Q2: Crop fails a different hard prerequisite.** Every TIFF
+is a same-pitch, unity-scale crop, but every TIFF is smaller than the required
+native `7032 x 4688` program output. Geometric array containment retains the
+whole frozen common rectangle and every frozen site, but that is not a
+clean-pixel certificate: the current scorecard's already-closed `COVER /
+default path` row keeps Scale because the separately measured Crop safe inset
+retained only 64.6047%, below 80%, and no general safe inset was established.
+This lane did not duplicate that border measurement.
+
+Independent review also found that the inherited four-tile residual reader
+fails a pure-translation null. Its recorded 0.3162–1.4765 px values therefore
+remain diagnostics, not an admitted 8/8 residual failure. The formal negative
+answer does not depend on them: native-size fails 8/8, the common-ProPhoto-TIFF
+adapter and comparator geometry remain absent, and the current scorecard's
+`### M1 — WITHDRAWN: no admissible detail instrument` has no active statistic
+or bar.
 
 This report covers Q1 and Q2 only. Q3 and Q4 were not started.
 
@@ -121,31 +127,50 @@ count was set to 6.
 **MEASURED.** `audit_geometry.OUT` alone was rebound to this lane's `out` and
 `audit_geometry.WORK` to the frozen baseline `work`; unchanged
 `audit_geometry.main()` then executed all eight inherited `PAIRS`. The Scale
-columns are the committed frozen readings. The Crop residual calls unchanged
-`measure.output_luma` and `measure.geometry`; the returned aligned image was
-removed before JSON.
+columns are the committed frozen readings.
 
-| Arm | Scale ECC scale | Crop ECC scale | Crop rotation | Scale residual RMS px | Crop residual RMS px | §1.5 Crop geometry |
-|---|---:|---:|---:|---:|---:|---|
-| `m1-bright-a12` | 0.294655% | 0.017553% | -0.000704 deg | 3.343651 | 0.663325 | FAIL residual |
-| `m1-bright-b12` | 0.301891% | 0.017422% | -0.003205 deg | 3.083829 | 1.170470 | FAIL residual |
-| `m1-second-a12` | 0.290072% | 0.020748% | +0.000216 deg | 3.593049 | 0.678233 | FAIL residual |
-| `m1-second-b12` | 0.290358% | 0.021350% | -0.001268 deg | 3.187475 | 0.489898 | FAIL residual |
-| `m2-bright-first16` | 0.337678% | 0.023079% | +0.002455 deg | 5.053711 | 1.476482 | FAIL residual |
-| `m2-bright-second16` | 0.299185% | 0.018739% | -0.002527 deg | 3.266497 | 0.800000 | FAIL residual |
-| `m2-second-first16` | 0.461888% | 0.021416% | +0.000001 deg | 5.094114 | 0.911043 | FAIL residual |
-| `m2-second-second16` | 0.299620% | 0.018310% | +0.000529 deg | 3.445287 | 0.316228 | FAIL residual |
+| Arm | Scale ECC scale | Crop ECC scale | Crop rotation | §1.5 scale/rotation |
+|---|---:|---:|---:|---|
+| `m1-bright-a12` | 0.294655% | 0.017553% | -0.000704 deg | PASS |
+| `m1-bright-b12` | 0.301891% | 0.017422% | -0.003205 deg | PASS |
+| `m1-second-a12` | 0.290072% | 0.020748% | +0.000216 deg | PASS |
+| `m1-second-b12` | 0.290358% | 0.021350% | -0.001268 deg | PASS |
+| `m2-bright-first16` | 0.337678% | 0.023079% | +0.002455 deg | PASS |
+| `m2-bright-second16` | 0.299185% | 0.018739% | -0.002527 deg | PASS |
+| `m2-second-first16` | 0.461888% | 0.021416% | +0.000001 deg | PASS |
+| `m2-second-second16` | 0.299620% | 0.018310% | +0.000529 deg | PASS |
 
 **MEASURED verdicts:**
 
 - Scale disagreement `<=0.10%`: PASS, 8/8 Crop arms.
 - Rotation disagreement `<=0.02 deg`: PASS, 8/8 Crop arms.
-- Non-translation residual `<=0.10 output px RMS`: FAIL, 0/8 Crop arms.
-- Complete §1.5 geometry conjunction: FAIL, 0/8.
+- Non-translation residual `<=0.10 output px RMS`: **UNMEASURED by an
+  admitted instrument**.
+- Complete §1.5 geometry conjunction: **UNMEASURED**, not a pass.
 
-The residual instrument removes a global translation with the frozen Fourier
-phase-ramp path and measures four local translation residuals; it does not
-replace the frozen post-score ECC with a new fitted-landmark implementation.
+The separate inherited residual reader was not commissioned by the ECC tests
+above. Independent review planted pure translations into that exact reader:
+`+2.0 px` in x returned `0.509902 px RMS`, and `(y=+1.35,x=-0.6) px` returned
+`0.200000 px RMS`, both false failures after translation should have been
+removed. Its executed values are retained as diagnostics:
+
+| Arm | Scale residual diagnostic | Crop residual diagnostic |
+|---|---:|---:|
+| `m1-bright-a12` | 3.343651 px | 0.663325 px |
+| `m1-bright-b12` | 3.083829 px | 1.170470 px |
+| `m1-second-a12` | 3.593049 px | 0.678233 px |
+| `m1-second-b12` | 3.187475 px | 0.489898 px |
+| `m2-bright-first16` | 5.053711 px | 1.476482 px |
+| `m2-bright-second16` | 3.266497 px | 0.800000 px |
+| `m2-second-first16` | 5.094114 px | 0.911043 px |
+| `m2-second-second16` | 3.445287 px | 0.316228 px |
+
+An independent alternative landmark audit re-chose the estimator on three
+arms. It corroborated the scale verdict at `0.009502%`, `0.010331%`, and
+`0.041621%`. Its post-similarity residual diagnostics were `0.690`, `0.421`,
+and `0.999 px`, but that audit was not a preregistered replacement scorecard
+instrument and is not promoted. Its persisted readings and nulls are in
+`out/INDEPENDENT-VERIFICATION.json`.
 
 ## Crop outputs and integer scene mapping
 
@@ -175,16 +200,20 @@ The corresponding full-resolution Crop rectangles in `(y,x,h,w)` are:
 - `(8,12,4672,7008)` for `m2-bright-first16`;
 - `(12,16,4664,7000)` for `m2-second-first16`.
 
-**DERIVED:** every rectangle contains the complete registered common-input
-rectangle `(40,58,4608,6912)`, so retained common overlap is exactly 100.0% in
-every arm. The unchanged `output_luma` centre slice starts at scene coordinate
-`(40,60)` in every Crop arm, two pixels right of the input-manifest origin.
-That fixed 2 px translation is explicitly measurable and removable by the
-scorecard-permitted analytic translation step; no scale or metric resampling is
-needed. The exact registered `(40,58)` region also remains present in every
-output.
+**DERIVED:** every output rectangle is large enough to contain the complete
+registered array rectangle `(40,58,4608,6912)`, so geometric common-overlap
+containment is 100.0% in every arm. The unchanged `output_luma` centre slice
+starts at array index `(40,60)`.
 
-## Site survival
+Independent review found that these are not one proven physical coordinate
+frame: the rawpy visible input is 7028 px wide while strehl's active output
+frame is 7032 px wide. The apparent two-pixel offset is therefore index
+arithmetic, not a measured fixed scene translation. The containment conclusion
+survives the unquantified four-pixel frame-width difference because the
+smallest horizontal margin is 42 px and the vertical frames agree, but exact
+scene-coordinate identity remains unmeasured.
+
+## Geometric site containment
 
 **DERIVED from the verified integer rectangles and frozen site manifest.**
 
@@ -195,9 +224,12 @@ output.
 | M2 bright (`first16`, `second16`) | 455 | 100.0%, 100.0% | 0.0 pp |
 | M2 second light (`first16`, `second16`) | 455 | 100.0%, 100.0% | 0.0 pp |
 
-Thus the `>=80%` site-survival and `<=2 pp` differential-attrition clauses
-pass. This is a geometric survival claim only; it does not certify the Crop
-outer pixels.
+Thus raw rectangle containment is 100.0% and geometric differential attrition
+is 0.0 pp. This does **not** establish formal clean-site survival. The current
+scorecard's closed COVER row records only 64.6047% retained after the
+separately measured safe inset on `109MSDCF`, and its second subject established
+no general inset. Those numbers are prior evidence, not measurements on these
+bee arms; live `M-COVER-BORDER` owns the unresolved border mechanism.
 
 ## Q2 — actual current scorecard rules
 
@@ -222,6 +254,11 @@ The current file states:
   residual `<=0.10 output px RMS`.
 - lines 233–235: `>=80%` identical site survival and no more than `2 percentage
   points` differential attrition.
+- line 458, the `COVER / default path` row: “**CLOSED — keep Scale.**” Its
+  recorded safe inset leaves 64.6047% retained area against 80%, and Crop is
+  not licensed as the default.
+- line 491: “### M1 — WITHDRAWN: no admissible detail instrument”; line 516
+  states that the `S_25` requirement is withdrawn rather than weakened.
 
 ### Per-clause verdict
 
@@ -232,13 +269,15 @@ The current file states:
 | §1.3 native-size program output | **FAIL 8/8** | Crop outputs are `7000–7012 x 4664–4672`, not `7032 x 4688`. |
 | §1.3 no resized post-output | **PASS for this path** | Crop is integer addressing at unity pitch; no output resize/upsample occurs. |
 | §1.5 native scale / hard resize invalidation | **PASS 8/8 as rejection audit** | ECC scale is 0.0174–0.0231%; banners state unity scale and no coverage scale. |
-| §1.5 fixed common-overlap FOV `>=99%` | **PASS 8/8** | Exact integer containment gives 100.0%. |
-| §1.5 analytic translation / no metric resampling | **PASS for this geometry procedure** | The residual path uses the frozen Fourier translation; centre/common extraction is slicing. No frequency score was run. |
+| §1.5 fixed common-overlap FOV `>=99%` | **GEOMETRIC PASS 8/8** | Array containment gives 100.0%; exact rawpy-to-strehl scene-frame identity is unmeasured. |
+| §1.5 analytic translation / no metric resampling | **PASS for the ECC procedure** | ECC fits translation without resampling a frequency score. The inherited residual reader is not admitted. |
 | §1.5 scale `<=0.10%`, rotation `<=0.02 deg` | **PASS 8/8** | Table above. |
-| §1.5 non-translation residual `<=0.10 px` | **FAIL 8/8** | 0.3162–1.4765 px RMS. |
-| §1.5 sites `>=80%`, differential attrition `<=2 pp` | **PASS** | 100.0% survival, 0.0 pp differential attrition. |
+| §1.5 non-translation residual `<=0.10 px` | **UNMEASURED** | The inherited reader reports 0.3162–1.4765 px but fails pure-translation nulls. |
+| §1.5 sites `>=80%`, differential attrition `<=2 pp` | **GEOMETRIC CONTAINMENT PASS; FORMAL CLEAN-SITE STATUS UNMEASURED** | Raw containment is 100.0% / 0.0 pp; Crop's border-safe inset does not have a transferable certificate. |
+| Current M1 card | **WITHDRAWN** | `### M1 — WITHDRAWN: no admissible detail instrument`; no active statistic or bar exists. |
+| Current COVER/default gate | **CLOSED — keep Scale** | The scorecard records Crop retained area 64.6047% after its evidenced safe inset, below 80%, with no general safe inset. |
 | Formal comparability to a full-frame comparator | **UNMEASURED / not admitted** | Native-size output fails; comparator render geometry was not measured; common-TIFF adapter remains absent; the ECC audit is not literal input-landmark scoring. |
-| Scientific comparability of the shared crop | **ARGUED yes, conditionally** | Exact same-pitch scene mapping and 100% fixed-overlap/site containment permit a common crop after translation removal, but this does not waive formal scorecard clauses or certify borders. |
+| Scientific comparability of the shared crop | **ARGUED possible, not established** | Same-pitch array overlap exists, but exact scene-frame mapping, admitted residual, and clean-border site survival remain unresolved. |
 
 ## Prior-art boundary
 
@@ -258,6 +297,8 @@ The current file states:
   resampling.
 - `SCORECARD-BASELINE.md` records the original Scale geometry rejection and
   absent common-TIFF adapter.
+- Current scorecard §3.2 already records `COVER / default path` as
+  `CLOSED — keep Scale`; this lane does not reopen that decision.
 - Live `M-COVER-BORDER` owns border contamination. This phase did not open its
   results as a new measurement and did not implement a border-profile
   instrument.
@@ -276,8 +317,10 @@ No `M8-overshoot` content was read or duplicated.
 - **LIMITED:** the ECC audit is whole-image, downsampled, affine, and
   post-score rejection-only, whereas current §1.5 literally names
   input-derived landmarks.
-- **MEASURED failure:** the unchanged four-tile residual instrument rejects all
-  eight Crop arms even though the ECC scale/rotation estimates pass.
+- **UNMEASURED:** the unchanged four-tile residual reader reports nonzero
+  residuals but fails pure-translation nulls and cannot license an 8/8 failure.
+- **CURRENT SCORECARD:** M1 is withdrawn for lack of an admissible statistic and
+  bar, independently of this geometry result.
 - **DEVIATION:** concurrent ignored-file growth under protected
   `experiments\M8-overshoot` prevents a whole-tree “unchanged” claim for that
   path; frozen inputs, caches, tracked protected state, and all owned outputs
@@ -285,8 +328,10 @@ No `M8-overshoot` content was read or duplicated.
 
 ## Ruling
 
-**MEASURED/VERIFIED: the M1 geometry gate does not unblock.** Crop fixes the
-specific native-scale magnification failure and preserves the complete frozen
-overlap/sites at native pitch, but it fails the 0.10 px residual in every arm
-and fails the scorecard's native-size program-output clause in every arm.
+**MEASURED/VERIFIED: Crop fixes the specific native-scale magnification
+failure, but it does not unblock M1.** Every Crop arm passes the frozen
+scale/rotation audit and every Crop arm fails the native-size program-output
+clause. Residual geometry and clean-site survival remain unmeasured by an
+admitted instrument, the current COVER gate remains closed, the common-input
+adapter/comparator arms remain absent, and current M1 has no statistic or bar.
 Formal competitive comparison remains `UNMEASURED`.

@@ -1,0 +1,131 @@
+{
+  "verdict": "DEFECTS_FOUND_CONCLUSION_SURVIVES",
+  "scope": "Phase A Q1/Q2 only; existing TIFFs and committed artifacts; no rerender",
+  "confirmed": {
+    "scale_control_sha256": "3d46f11413e5cf37bdeb730eb6faf66c266ac52107e1b5af1e032052080d16bc",
+    "scale_control_matches_frozen": true,
+    "crop_scale_pass_arms": 8,
+    "crop_rotation_pass_arms": 8,
+    "crop_native_size_fail_arms": 8,
+    "crop_dimensions_match_banners": true,
+    "frozen_estimator_unchanged": true,
+    "section_1_5_current_matches_frozen": true,
+    "owned_commits_are_path_scoped": true
+  },
+  "alternate_scale_diagnostics": [
+    {
+      "arm": "m1-bright-a12",
+      "scale_disagreement_percent": 0.009502,
+      "rotation_deg": 0.000488,
+      "translation_only_rms_px": 0.835,
+      "similarity_rms_px": 0.690
+    },
+    {
+      "arm": "m2-second-second16",
+      "scale_disagreement_percent": 0.010331,
+      "rotation_deg": -0.000734,
+      "translation_only_rms_px": 0.548,
+      "similarity_rms_px": 0.421
+    },
+    {
+      "arm": "m2-bright-first16",
+      "scale_disagreement_percent": 0.041621,
+      "rotation_deg": 0.000240,
+      "translation_only_rms_px": 1.350,
+      "similarity_rms_px": 0.999
+    }
+  ],
+  "alternate_diagnostic_nulls": [
+    {
+      "case": "identity",
+      "translation_only_rms_px": 0.000,
+      "similarity_rms_px": 0.000
+    },
+    {
+      "case": "pure_translation_x_2_px",
+      "translation_only_rms_px": 0.068,
+      "similarity_rms_px": 0.065
+    },
+    {
+      "case": "pure_translation_y_1_35_x_minus_0_6_px",
+      "translation_only_rms_px": 0.125,
+      "similarity_rms_px": 0.122
+    }
+  ],
+  "frozen_residual_reader_nulls": [
+    {
+      "case": "identity",
+      "reported_rms_px": 0.000000,
+      "scorecard_pass": true
+    },
+    {
+      "case": "pure_translation_x_2_px",
+      "recovered_global_translation_yx": [
+        0.0,
+        -0.8
+      ],
+      "reported_rms_px": 0.509902,
+      "scorecard_pass": false
+    },
+    {
+      "case": "pure_translation_y_1_35_x_minus_0_6_px",
+      "recovered_global_translation_yx": [
+        -0.8,
+        0.4
+      ],
+      "reported_rms_px": 0.200000,
+      "scorecard_pass": false
+    }
+  ],
+  "defects": [
+    {
+      "severity": "HIGH",
+      "finding": "The inherited measure.geometry residual reader fails pure-translation nulls, so its 8/8 residual FAIL classification is not admitted."
+    },
+    {
+      "severity": "MEDIUM",
+      "finding": "The current scorecard withdraws M1 because no admissible detail statistic or bar exists."
+    },
+    {
+      "severity": "MEDIUM",
+      "finding": "The current scorecard already closes the Crop default branch because the separately measured safe inset retained 64.6047%, below the 80% site floor."
+    },
+    {
+      "severity": "LOW_MEDIUM",
+      "finding": "The rawpy input crop and strehl output rectangle use frames whose widths differ by four pixels; array containment is robust, but the claimed exact fixed two-pixel physical translation was not measured."
+    }
+  ],
+  "admission": {
+    "frozen_ecc_scale_reader_admitted_for_rejection": true,
+    "frozen_residual_reader_admitted": false,
+    "alternate_residual_reader_admitted": false,
+    "reason": "The alternate reader corroborates non-similarity residual on three arms but was an independent audit, not a preregistered commissioned scorecard instrument."
+  },
+  "supersedes_artifact_interpretations": [
+    {
+      "artifact": "Q1-RESULTS.json",
+      "field": "rows[*].crop_non_translation.status",
+      "stored_value": "MEASURED",
+      "correct_interpretation": "EXECUTED_DIAGNOSTIC_UNADMITTED"
+    },
+    {
+      "artifact": "Q1-RESULTS.json",
+      "field": "all_crop_geometry_clauses_pass",
+      "stored_value": false,
+      "correct_interpretation": "UNMEASURED because the residual limb has no admitted reader"
+    },
+    {
+      "artifact": "Q2-GEOMETRY.json",
+      "field": "rows[*].exact_integer_scene_mapping_established",
+      "stored_value": true,
+      "correct_interpretation": "Exact 2x crop-rectangle array mapping only; physical rawpy-to-strehl scene-frame identity is unmeasured"
+    }
+  ],
+  "phase_a_ruling": {
+    "crop_passes_specific_native_scale_rule": true,
+    "crop_is_native_size": false,
+    "formal_m1_unblocked": false,
+    "primary_formal_blocker_measured_here": "Every Crop TIFF is smaller than the required 7032x4688 native-size output.",
+    "residual_status": "UNMEASURED_BY_ADMITTED_INSTRUMENT"
+  }
+}

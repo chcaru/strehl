@@ -87,6 +87,48 @@ def main() -> int:
         "differential attrition exceeded 2pp",
     )
 
+    independent = run.read_json(run.OUT / "INDEPENDENT-VERIFICATION.json")
+    require(
+        independent["verdict"] == "DEFECTS_FOUND_CONCLUSION_SURVIVES",
+        "independent Phase A verdict moved",
+    )
+    require(
+        independent["phase_a_ruling"]["crop_passes_specific_native_scale_rule"],
+        "independent review no longer confirms the Crop scale pass",
+    )
+    require(
+        not independent["phase_a_ruling"]["crop_is_native_size"],
+        "independent review unexpectedly calls Crop native-size",
+    )
+    require(
+        not independent["admission"]["frozen_residual_reader_admitted"],
+        "known-bad residual reader was promoted",
+    )
+    require(
+        independent["phase_a_ruling"]["residual_status"]
+        == "UNMEASURED_BY_ADMITTED_INSTRUMENT",
+        "residual status moved without a commissioned replacement",
+    )
+    require(
+        len(independent["supersedes_artifact_interpretations"]) == 3,
+        "known semantic collisions are no longer explicitly superseded",
+    )
+    require(
+        q1["all_crop_geometry_clauses_pass"] is False,
+        "legacy Q1 aggregate moved; review its superseding interpretation",
+    )
+    require(
+        all(
+            row["crop_non_translation"]["status"] == "MEASURED"
+            for row in q1["rows"]
+        ),
+        "legacy residual status moved; review its superseding interpretation",
+    )
+    require(
+        all(row["exact_integer_scene_mapping_established"] for row in q2["rows"]),
+        "legacy array-mapping field moved; review its superseding interpretation",
+    )
+
     provenance = run.read_json(run.OUT / "PROVENANCE-AUDIT.json")
     require(
         provenance["owned_read_only_input_guards_pass"],
@@ -107,7 +149,7 @@ def main() -> int:
             "warning: protected filesystem metadata changed concurrently: "
             + ", ".join(changed)
         )
-    print("post-render Q1/Q2 verification passed")
+    print("post-render Q1/Q2 artifact verification passed; residual remains unmeasured")
     return 0
 
 
