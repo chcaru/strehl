@@ -19,7 +19,7 @@ replaced.*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
-| **0** | **§35** — the **319-frame session**: your grid **plus a coplanar patch of fine matte paper / fabric fibres**, **IBIS and OSS OFF**, two independent `sw4` passes, two independent `sw10` passes, a dense `sw1` reference, 32 flats, 32 darks | ~1 sitting | **Supersedes §30 as the capture that unblocks the SOTA claim.** It is the only thing standing between here and a *measured* detail axis: M1, M5 and M9 all unblock together. **No purchase needed** — certification turned out not to be load-bearing. **Confirmed 2026-09: you are shooting this.** |
+| **0** | **§35** — the **407-frame session** (**amended, was 319**): your grid **plus a coplanar patch of fine matte paper / fabric fibres**, **IBIS and OSS OFF**, two independent `sw4` passes, two independent `sw10` passes, a dense `sw1` reference, **24 locked-focus witness frames**, and **doubled calibration — 32 flats + 32 darks per pass** | ~1 sitting | **Supersedes §30 as the capture that unblocks the SOTA claim.** It is the only thing standing between here and a *measured* detail axis: M1, M5 and M9 all unblock together. **No purchase needed** — certification turned out not to be load-bearing. **Confirmed 2026-09: you are shooting this.** |
 | **1** | **§24** — flat, **achromatic** (grey/black/white, *no colour in the target*), **corner-to-corner** detail, square-on and never moved, shot **normal + red + green + blue** (gels or coloured light) | ~10 min | **Design changed again overnight, and it is now a controlled experiment.** The spectral hypothesis I built this on was tested against eight of your existing stacks and **the correlation came out backwards** (rho −0.69, n=8). What survived is bigger: the correction really does vary by subject, **27.3%** against a 19.5 ppm noise floor, cause unknown. Four rival explanations died on your existing data; aperture and the teleconverter died on your EXIF (**every `-cpl` stack is f/5.6 + 2× TC — there is no aperture variation among the CPL stacks**, so no teleconverter set is needed). A **flat** target makes the stacker a measured 4.8 ppm no-op, so what this sees is optics. See below. |
 | **2** | **§26** — a **bright** subject against a **deeply defocused dark** background, exposed **1–2 stops down** so nothing clips, 100–300 frames | ~1 afternoon | **The halo.** As of last night the rim around every edge in your renders has a measured fingerprint — it is exactly as wide as the software's frame-choosing window — but **two explanations survive that predict the same thing on every stack you already own.** They differ only on bright-object-on-dark-ground edges, and your corpus contains **5** usable ones. This is the capture that separates them, and the halo is the largest visible defect in your pictures. |
 | **3** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
@@ -3930,20 +3930,30 @@ marked aperture than the project had been assuming.
 
 ---
 
-## 35. The 319-frame session -- REQUESTED 2026-09, one sitting, and it is the capture that unblocks the SOTA claim
+## 35. The 407-frame session -- REQUESTED 2026-09, one sitting, and it is the capture that unblocks the SOTA claim
 
 **Confirmed: the owner is shooting this within a few days, using fine matte
 paper / fabric fibres as the nonperiodic patch.**
 
-Bench sheet, same content, printable:
+> **AMENDED 2026-09 -- was 319 frames, now 407.** Review found the original
+> specification insufficient in four ways, each of which could have made the
+> session unusable *after* it was shot: two sweeps from one reset do not
+> guarantee matched focus nodes; frame count is not site count; a shared
+> calibration master correlates the two passes; and settling was never specified
+> apart from shooting cadence. **The bench sheet below is the authoritative
+> version and this section is a summary of it.** Where they disagree, the bench
+> sheet wins.
+
+Bench sheet, authoritative and printable:
 [`docs/capture-requests/2026-09-319-frame-session.md`](capture-requests/2026-09-319-frame-session.md).
 
 ### Why you are being asked
 
 Three scorecard axes -- **M1 (detail), M5 and M9** -- are blocked on data, not
 on code. Two lanes derived the required session independently, from different
-requirements, and specified the **same 319 frames**. This is the consolidated
-request, and it replaces the older detail-capture asks.
+requirements, and specified the **same 319 frames**. That figure was later
+reviewed and amended upward to **407**. This is the consolidated request, and it
+replaces the older detail-capture asks.
 
 **The single defect it fixes: every capture in the corpus was shot with IBIS
 on.** In-body stabilisation introduces a small per-frame geometric change that
@@ -3984,21 +3994,36 @@ carry its own answer."** A bare grid is predictable, so a program can score well
 on it without resolving anything. The patch must not shift between passes and
 must sit *in the same plane* as the grid, not behind it.
 
-**The blocks -- 319 frames total:**
+**The blocks -- 407 frames total:**
 
 | Block | Frames | Purpose |
 | --- | ---: | --- |
+| witness 1 | 6 | **locked focus** at the reset position, immediately before `sw4-A` |
 | `sw4-A` | 55 | step width 4, pass A |
+| witness 2 | 6 | **locked focus** at the reset position, immediately before `sw4-B` |
 | `sw4-B` | 55 | step width 4, pass B -- an independent repeat of A |
 | `sw1` checker-only | 91 | dense reference. **Never feed this to a stacker.** |
+| witness 3 | 6 | **locked focus** at the reset position, immediately before `sw10-A` |
 | `sw10-A` | 27 | step width 10, pass A |
+| witness 4 | 6 | **locked focus** at the reset position, immediately before `sw10-B` |
 | `sw10-B` | 27 | step width 10, pass B -- an independent repeat of A |
-| flats | 32 | |
-| darks | 32 | |
-| **total** | **319** | |
+| flats A | 32 | for the A passes only |
+| flats B | 32 | for the B passes only -- **diffuser moved or rotated between groups** |
+| darks A | 32 | for the A passes only |
+| darks B | 32 | for the B passes only |
+| **image frames** | **383** | |
+| **witness frames** | **24** | |
+| **total** | **407** | |
 
 The A/B pairs are the whole point: two independent passes over identical
 geometry and exposure are what make a repeat-pair instrument possible at all.
+
+**The witness frames are what make that pairing defensible.** He shoots with
+in-camera focus bracketing, so the camera drives the focus ladder and A and B
+cannot be interleaved at each node. Six locked-focus frames before each pass let
+us verify afterwards that the two ladders actually coincided. An earlier session
+died on exactly this, at a registration residual of `0.107703` against a `0.10`
+native-pixel bar.
 
 **Settings.** A7C II, FE 100mm Macro GM + 2x TC at 200 mm. M mode, **ISO 100,
 1 s, f/5.6**, identical for every frame in every block including both passes.
