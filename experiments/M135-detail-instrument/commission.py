@@ -276,13 +276,18 @@ def refusal_trials() -> dict[str, dict]:
     rng = np.random.default_rng(MASTER_SEED + 77_000_000)
     base_capture, components = make_capture(rng)
 
-    flat_shape = base_capture.reference_a.shape
-    flat_signal = np.zeros(flat_shape, dtype=np.complex128)
-    flat_capture, _ = make_capture(rng, signal=flat_signal)
+    flat_results = []
+    periodic_results = []
+    for _ in range(TRIALS):
+        flat_shape = base_capture.reference_a.shape
+        flat_signal = np.zeros(flat_shape, dtype=np.complex128)
+        flat_capture, _ = make_capture(rng, signal=flat_signal)
+        flat_results.append(score_arm(flat_capture))
 
-    template = complex_normal(rng, (1, len(FREQUENCIES)), 1.0)
-    periodic_signal = np.repeat(template, SITE_COUNT, axis=0)
-    periodic_capture, _ = make_capture(rng, signal=periodic_signal)
+        template = complex_normal(rng, (1, len(FREQUENCIES)), 1.0)
+        periodic_signal = np.repeat(template, SITE_COUNT, axis=0)
+        periodic_capture, _ = make_capture(rng, signal=periodic_signal)
+        periodic_results.append(score_arm(periodic_capture))
 
     all_components = np.concatenate(
         [
@@ -314,8 +319,20 @@ def refusal_trials() -> dict[str, dict]:
     shared_reference_capture = replace(base_capture, calibration_correlation=0.20)
 
     return {
-        "flat": score_arm(flat_capture),
-        "periodic": score_arm(periodic_capture),
+        "flat": {
+            "status_counts": {
+                status: sum(r["status"] == status for r in flat_results)
+                for status in sorted({r["status"] for r in flat_results})
+            },
+            "first_diagnostic": flat_results[0],
+        },
+        "periodic": {
+            "status_counts": {
+                status: sum(r["status"] == status for r in periodic_results)
+                for status in sorted({r["status"] for r in periodic_results})
+            },
+            "first_diagnostic": periodic_results[0],
+        },
         "clipping": score_arm(clipped_capture),
         "quantization": score_arm(quantized_capture),
         "shared_reference": score_arm(shared_reference_capture),
@@ -455,8 +472,9 @@ def main() -> None:
             abs(summaries["angle"]["maximum"] - 1.0),
         )
         <= 1e-10,
-        "C14_flat": refusals["flat"]["status"] == "NO_DETAIL",
-        "C15_periodic": refusals["periodic"]["status"] == "NO_DETAIL",
+        "C14_flat": refusals["flat"]["status_counts"] == {"NO_DETAIL": TRIALS},
+        "C15_periodic": refusals["periodic"]["status_counts"]
+        == {"NO_DETAIL": TRIALS},
         "C16_permutation": all(s != "OK" for s in statuses["permutation"]),
         "C17_clipping": refusals["clipping"]["status"] == "NONLINEAR_OUTPUT",
         "C18_quantization": refusals["quantization"]["status"] == "LOW_BIT_DEPTH",
