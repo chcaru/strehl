@@ -805,6 +805,77 @@ def evaluate_gather_trade(
     }
 
 
+def evaluate_gate_trade(
+    scored: dict[str, Any], gate2: str, gate4p5: str, seed: int
+) -> dict[str, Any]:
+    residual = ratio_record(
+        paired_values(
+            scored,
+            gate2,
+            gate4p5,
+            "flat_sites",
+            "fractional_box9_residual",
+        ),
+        gate2,
+        gate4p5,
+        seed,
+    )
+    detail = ratio_record(
+        paired_values(
+            scored,
+            gate2,
+            gate4p5,
+            "detail_sites",
+            "structure_proxy",
+        ),
+        gate2,
+        gate4p5,
+        seed + 1,
+    )
+    mean_ratio = ratio_record(
+        paired_values(
+            scored,
+            gate2,
+            gate4p5,
+            "detail_sites",
+            "linear_green_mean",
+        ),
+        gate2,
+        gate4p5,
+        seed + 2,
+    )
+    clipping = clipping_guard(scored, gate2, gate4p5)
+    residual_cost = (
+        residual["median"] >= 1.10
+        and residual["bootstrap_95pct_interval_for_site_median"][0] > 1.0
+    )
+    detail_gain = (
+        detail["median"] >= 1.10
+        and detail["bootstrap_95pct_interval_for_site_median"][0] > 1.0
+    )
+    gain_holds = 0.99 <= mean_ratio["median"] <= 1.01
+    return {
+        "residual_gate2_over_gate4p5": residual,
+        "detail_gate2_over_gate4p5": detail,
+        "linear_mean_gate2_over_gate4p5": mean_ratio,
+        "clipping_guard": clipping,
+        "checks": {
+            "material_residual_cost": residual_cost,
+            "material_detail_proxy_gain": detail_gain,
+            "linear_mean_holds": gain_holds,
+            "no_added_clipping": clipping["passed"],
+        },
+        "admissible_trade": (
+            residual_cost and detail_gain and gain_holds and clipping["passed"]
+        ),
+        "scope": (
+            "The proxy cannot exclude dense low-contrast texture loss. A quieter "
+            "gate-4.5 arm with no detected proxy loss is attribution, not proof "
+            "that the deliberately retained gate-2.0 policy regressed."
+        ),
+    }
+
+
 def factorial_interaction(
     scored: dict[str, Any], section: str, field: str, seed: int
 ) -> dict[str, Any]:
@@ -892,6 +963,26 @@ def make_markdown(result: dict[str, Any]) -> str:
             f"| `{candidate}` | `{residual:.6f}x` | `{detail:.6f}x` | "
             f"**{record['admissible_regression_fix']}** |"
         )
+    lines.extend(
+        [
+            "",
+            "## Gate-policy attribution",
+            "",
+            "Gate `4.5` is a policy counterfactual, not an eligible regression "
+            "reversion. Gate `2.0` was deliberately retained for low-contrast "
+            "detail that this proxy can miss.",
+            "",
+            "| residual g2/g4.5 | detail g2/g4.5 | admissible trade |",
+            "|---:|---:|---|",
+        ]
+    )
+    gate_trade = result["gate_trade_test"]
+    gate_residual = gate_trade["residual_gate2_over_gate4p5"]["median"]
+    gate_detail = gate_trade["detail_gate2_over_gate4p5"]["median"]
+    lines.append(
+        f"| `{gate_residual:.6f}x` | `{gate_detail:.6f}x` | "
+        f"**{gate_trade['admissible_trade']}** |"
+    )
     lines.extend(
         [
             "",
@@ -1017,10 +1108,19 @@ def run_analysis(
             historical_geometry,
         )
 
+    gate_counterfactual = evaluate_reversion(
+        scored, "v6-g4p5-full", "v6-g2-full", BOOTSTRAP_SEED + 10
+    )
+    gate_counterfactual["passes_reversion_checks"] = gate_counterfactual[
+        "admissible_regression_fix"
+    ]
+    gate_counterfactual["eligible_for_regression_verdict"] = False
+    gate_counterfactual["admissible_regression_fix"] = False
+    gate_counterfactual["ineligible_reason"] = (
+        "Gate 2.0 was deliberately retained for low-contrast detail that the "
+        "commissioned proxy cannot exclude."
+    )
     regression_tests = {
-        "v6-g4p5-full": evaluate_reversion(
-            scored, "v6-g4p5-full", "v6-g2-full", BOOTSTRAP_SEED + 10
-        ),
         "v6-g2-full-white-floor": evaluate_reversion(
             scored,
             "v6-g2-full-white-floor",
@@ -1033,6 +1133,17 @@ def run_analysis(
     }
     gate_plane_test = evaluate_reversion(
         scored, "v6-g4p5-plane", "v6-g2-plane", BOOTSTRAP_SEED + 40
+    )
+    gate_plane_test["passes_reversion_checks"] = gate_plane_test[
+        "admissible_regression_fix"
+    ]
+    gate_plane_test["eligible_for_regression_verdict"] = False
+    gate_plane_test["admissible_regression_fix"] = False
+    gate_plane_test["ineligible_reason"] = gate_counterfactual[
+        "ineligible_reason"
+    ]
+    gate_trade_test = evaluate_gate_trade(
+        scored, "v6-g2-full", "v6-g4p5-full", BOOTSTRAP_SEED + 45
     )
     gather_trade_tests = {
         "gate-2.0": evaluate_gather_trade(
@@ -1067,6 +1178,8 @@ def run_analysis(
         for gate, record in gather_trade_tests.items()
         if record["admissible_trade"]
     ]
+    if gate_trade_test["admissible_trade"]:
+        admissible_trades.append("gate-2.0-policy")
     if not baseline_reproduction["pixel_identical"]:
         verdict = "UNRESOLVED"
         verdict_reason = "the M162 baseline did not reproduce DELIVER-V6 pixels"
@@ -1082,8 +1195,8 @@ def run_analysis(
     elif admissible_trades:
         verdict = "TRADE"
         verdict_reason = (
-            "no admissible quieter reversion was found and full-resolution "
-            "gather paid residual for a material structure-proxy gain"
+            "no admissible regression reversion was found and at least one "
+            "deliberate policy paid residual for a material structure-proxy gain"
         )
     else:
         verdict = "UNRESOLVED"
@@ -1113,6 +1226,8 @@ def run_analysis(
         "current_warpmap_sha256": next(iter(current_warpmaps)),
         "detail_selection": detail_selection,
         "arms": scored,
+        "gate_4p5_counterfactual": gate_counterfactual,
+        "gate_trade_test": gate_trade_test,
         "regression_tests": regression_tests,
         "gate_4p5_plane_corroboration": gate_plane_test,
         "gather_trade_tests": gather_trade_tests,

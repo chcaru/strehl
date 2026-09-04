@@ -370,7 +370,7 @@ try {
                 name = "v6-g4p5-full"
                 args = @("--srgb", "--pyramid-gate", "4.5")
                 env = @{}
-                note = "gate-only reversion at full-resolution gather"
+                note = "gate-policy counterfactual at full-resolution gather; not an automatic regression reversion"
             },
             @{
                 name = "v6-g2-plane"
@@ -382,7 +382,7 @@ try {
                 name = "v6-g4p5-plane"
                 args = @("--srgb", "--pyramid-gate", "4.5")
                 env = @{ STREHL_FULLRES_GATHER = "0" }
-                note = "SHIP-V2-like gate and plane gather in the current binary"
+                note = "reported SHIP-V2-like gate and plane gather in the current binary; deployed argv is not recovered"
             },
             @{
                 name = "v6-g2-full-white-floor"
@@ -416,7 +416,7 @@ try {
             $sourceManifestHash `
             @("--merge", "pyramid", "--pyramid-gate", "4.5", "--srgb", "--auto-exposure") `
             @{} `
-            "nearest retained SHIP-V2 reconstruction; not the archived comparator producer"
+            "report-based SHIP-V2 reconstruction; deployed argv unavailable; not the archived comparator producer"
     }
 }
 finally {
