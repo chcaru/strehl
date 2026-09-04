@@ -1,0 +1,9 @@
+{
+  "dimensions": [
+    128,
+    96
+  ],
+  "purpose": "consumer admission, not quality measurement",
+  "schema": "m165-fork-development-source-v1",
+  "status": "DEVELOPMENT_ONLY_SYNTHETIC"
+}

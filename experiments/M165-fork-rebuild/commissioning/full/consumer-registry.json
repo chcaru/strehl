@@ -1,0 +1,217 @@
+{
+  "consumers": [
+    {
+      "attestation_schemas": [
+        "m165-strehl-common-input-identity-v1"
+      ],
+      "consumer_id": "strehl",
+      "executable_bundle": [
+        {
+          "bytes": 800768,
+          "label": "strehl-common-input.exe",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\strehl-common-input.exe",
+          "sha256": "8e807de32b63859fe0a00fa81a791b08b70cbbca57bd1ee5195eaab0bd811a2b"
+        }
+      ],
+      "executable_bundle_sha256": "1bf41f54da984a2b6ba482f4f0a20cf08fd9020cd32f88a807fdc3ca6729c1ca",
+      "executable_bytes": 800768,
+      "executable_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\strehl-common-input.exe",
+      "executable_sha256": "8e807de32b63859fe0a00fa81a791b08b70cbbca57bd1ee5195eaab0bd811a2b",
+      "implementation_kind": "native-executable",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\strehl-common-input.exe",
+        "--tiff",
+        "{input_tiff}",
+        "--report",
+        "{attestation_path}",
+        "--file-sha256",
+        "{file_sha256}",
+        "--pixel-sha256",
+        "{pixel_payload_sha256}",
+        "--icc-sha256",
+        "{icc_sha256}",
+        "--source-sha256",
+        "{source_sha256}",
+        "--converter-sha256",
+        "{converter_sha256}",
+        "--settings-sha256",
+        "{settings_sha256}",
+        "--pattern-map-sha256",
+        "{pattern_map_sha256}",
+        "--pattern-manifest-sha256",
+        "{pattern_manifest_sha256}",
+        "--exercise-core-merge"
+      ],
+      "required": true,
+      "role": "candidate",
+      "settings": {
+        "core_merge": true,
+        "mode": "common-input-identity"
+      },
+      "settings_sha256": "55e47611d959e77807df540a5913b75dd09cc39c46e0fb64e199726817261b03",
+      "status": "FROZEN",
+      "version": "development-build"
+    },
+    {
+      "attestation_schemas": [],
+      "blocker": "Licensed Zerene PMax is required. The installed trial expired 2026-06-06, so it cannot emit an admissible consumer receipt.",
+      "consumer_id": "zerene-pmax",
+      "implementation_kind": "installed-binary",
+      "required": true,
+      "role": "comparator",
+      "status": "BLOCKED_LICENSE_EXPIRED",
+      "version": "1.04T2026-05-04-0750"
+    },
+    {
+      "attestation_schemas": [],
+      "blocker": "Licensed Zerene DMap is required. The installed trial expired 2026-06-06, so it cannot emit an admissible consumer receipt.",
+      "consumer_id": "zerene-dmap",
+      "implementation_kind": "installed-binary",
+      "required": true,
+      "role": "comparator",
+      "status": "BLOCKED_LICENSE_EXPIRED",
+      "version": "1.04T2026-05-04-0750"
+    },
+    {
+      "attestation_schemas": [
+        "m165-consumer-input-attestation-v1"
+      ],
+      "build_manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\build-freeze.json",
+      "build_manifest_sha256": "ccc80840ba2f7971cc5e78df7422d0840032e843d57c9757597783532859a5a2",
+      "consumer_id": "focus-stack-fork",
+      "executable_bundle": [
+        {
+          "bytes": 271360,
+          "label": "focus-stack.exe",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        },
+        {
+          "bytes": 67995648,
+          "label": "opencv_world4130.dll",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\opencv_world4130.dll",
+          "sha256": "d6ad6fcc7908e8e90625fa8614d0480b111d7cc887054ed01a3ed2ad5f872d79"
+        },
+        {
+          "bytes": 643512,
+          "label": "msvcp140.dll",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\msvcp140.dll",
+          "sha256": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca"
+        },
+        {
+          "bytes": 178616,
+          "label": "vcruntime140.dll",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\vcruntime140.dll",
+          "sha256": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7"
+        },
+        {
+          "bytes": 50112,
+          "label": "vcruntime140_1.dll",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\vcruntime140_1.dll",
+          "sha256": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e"
+        },
+        {
+          "bytes": 374200,
+          "label": "concrt140.dll",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\concrt140.dll",
+          "sha256": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e"
+        },
+        {
+          "bytes": 104952,
+          "label": "python-executable",
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+        },
+        {
+          "bytes": 19592,
+          "label": "fork-consumer-adapter",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\fork_consumer.py",
+          "sha256": "3519e8b20dd8fd779ae419abe262fb67dc6f6e4c23fbafaa55267d0492b76f79"
+        },
+        {
+          "bytes": 13841,
+          "label": "fork-build-freeze",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\build-freeze.json",
+          "sha256": "ccc80840ba2f7971cc5e78df7422d0840032e843d57c9757597783532859a5a2"
+        },
+        {
+          "bytes": 29124,
+          "label": "fork-source-pin",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\source-pin.json",
+          "sha256": "f883a1c80d83fec83f3ada3381b9cc07acfe4d8b2e2cb2a0b7b07915f1bb7577"
+        }
+      ],
+      "executable_bundle_sha256": "588c63c2d5690d1329ad9a8e0ab42e249a8263032f4dced9ed30e7de49c87847",
+      "executable_bytes": 271360,
+      "executable_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+      "executable_sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac",
+      "implementation_kind": "reproducible-source-build-with-locked-adapter",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\fork_consumer.py",
+        "--consumer-id",
+        "focus-stack-fork",
+        "--executable",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+        "--executable-sha256",
+        "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac",
+        "--input",
+        "{input_tiff}",
+        "--output",
+        "{output_path}",
+        "--attestation",
+        "{attestation_path}"
+      ],
+      "required": true,
+      "role": "comparator",
+      "settings": {
+        "alignment": "none",
+        "batchsize": 2,
+        "consistency": 0,
+        "contrast_matching": false,
+        "denoise": 0,
+        "development_only": true,
+        "input_colorspace": "none",
+        "input_path_occurrences": 2,
+        "known_color_limitation": "Pinned source has no ProPhoto input mode. Integer TIFFs bypass its input color conversion, and the embedded ICC is not interpreted.",
+        "opencl": false,
+        "output_bitdepth": 16,
+        "output_colorspace": "srgb",
+        "quality_comparison": false,
+        "threads": 1,
+        "whitebalance_matching": false
+      },
+      "settings_sha256": "cdaa613950116eebf1d2e805c7990c9fb55f54e3bbd1c56ebde255d456617cc6",
+      "source_manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196",
+      "source_revision": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+      "source_tree_sha1": "543b825e325f959ed15c10032d2b8156f11070cc",
+      "status": "FROZEN",
+      "version": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6"
+    },
+    {
+      "attestation_schemas": [],
+      "blocker": "No local Helicon installation is present. The live scorecard counts this as optional absence.",
+      "consumer_id": "helicon-focus",
+      "implementation_kind": "installed-binary",
+      "required": false,
+      "role": "optional-comparator",
+      "status": "OPTIONAL_ABSENT",
+      "version": null
+    }
+  ],
+  "registry_id": "m165-real-consumer-roster-development",
+  "schema": "m165-common-input-consumer-registry-v1",
+  "status": "BLOCKED",
+  "track": "common-merge",
+  "version": "1"
+}

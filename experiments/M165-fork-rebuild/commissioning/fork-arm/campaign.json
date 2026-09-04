@@ -1,0 +1,15 @@
+{
+  "campaign_id": "m165-fork-arm-commission",
+  "consumer_gate_bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+  "consumer_registry_sha256": "aaab5f81992defaa0cdbd487daac71693de9ad2529bdf03783474abaa2a8ccda",
+  "inputs": [
+    {
+      "input_id": "development-common",
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\input\\development-common.manifest.json",
+      "manifest_sha256": "dbfe15e2e0b00b90408d22d9c98cd4e59f23c1cce18d18aa5cb0acf1083906d7"
+    }
+  ],
+  "schema": "m165-common-input-campaign-v1",
+  "status": "FROZEN",
+  "track": "common-merge"
+}

@@ -1,0 +1,151 @@
+{
+  "commissioning_only": true,
+  "complete_invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\fork_consumer.py",
+    "--consumer-id",
+    "focus-stack-fork",
+    "--executable",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+    "--executable-sha256",
+    "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac",
+    "--input",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff",
+    "--attestation",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\attestations\\focus-stack-fork.json"
+  ],
+  "consumer_executable": {
+    "bytes": 271360,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+    "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+  },
+  "consumer_id": "focus-stack-fork",
+  "consumer_invocation": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+    "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff",
+    "--threads=1",
+    "--batchsize=2",
+    "--no-opencl",
+    "--no-align",
+    "--no-whitebalance",
+    "--no-contrast",
+    "--consistency=0",
+    "--denoise=0",
+    "--input-colorspace=none",
+    "--output-colorspace=srgb",
+    "--output-bitdepth=16",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff"
+  ],
+  "exit_code": 0,
+  "input_file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+  "input_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+  "input_path_occurrences_in_consumer_invocation": 2,
+  "input_pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+  "locked_handoff": {
+    "api": "CreateFileW",
+    "desired_access": "GENERIC_READ",
+    "file_information_after": {
+      "file_index": 6473924466273190,
+      "file_size": 75040,
+      "last_write_filetime": 134330252382000061,
+      "volume_serial_number": 4138976490
+    },
+    "file_information_before": {
+      "file_index": 6473924466273190,
+      "file_size": 75040,
+      "last_write_filetime": 134330252382000061,
+      "volume_serial_number": 4138976490
+    },
+    "held_through_consumer_exit": true,
+    "metadata_unchanged": true,
+    "share_mode": "FILE_SHARE_READ"
+  },
+  "outputs": [
+    {
+      "bytes": 7020,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff",
+      "sha256": "68139558bb33a795d1fb7a5aaf007bf56b70f22c360b55a23542052d85cc4fed"
+    }
+  ],
+  "pixel_payload_hash": {
+    "algorithm": "sha256-concatenated-ranges-in-listed-order",
+    "ranges": [
+      {
+        "end_exclusive": 75040,
+        "start": 1312
+      }
+    ]
+  },
+  "process_stderr": "[ WARN:0@0.005] global loadsave.cpp:1140 cv::imwrite_ An unsupported key(1) was specified and has been ignored.\n",
+  "process_stderr_sha256": "cdbaae1d6adaac5bdeee6976e3f40e8786e401479e723bcf7419ef56403ee65d",
+  "process_stdout": "[  1/ 15] Load C:\\dev\\blog\\death-of-software\\proje\n[  2/ 15] Grayscale C:\\dev\\blog\\death-of-software\\\n[  3/ 15] Align development-common.tiff to develop\n[  4/ 15] Grayscale aligned_development-common.tif\n[  5/ 15] Forward-wavelet aligned_development-comm\n[  6/ 15] Load C:\\dev\\blog\\death-of-software\\proje\n[  7/ 15] Grayscale C:\\dev\\blog\\death-of-software\\\n[  8/ 15] Align development-common.tiff to develop\n[  9/ 15] Grayscale aligned_development-common.tif\n[ 10/ 15] Forward-wavelet aligned_development-comm\n[ 11/ 15] Merge 2 images                          \n[ 12/ 15] Build color reassignment map from 2 imag\n[ 13/ 15] Inverse-wavelet merge_result.jpg        \n[ 14/ 15] Reassign pixel values                   \n[ 15/ 15] Save C:\\dev\\blog\\death-of-software\\proje\n\nSaved to C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff\n",
+  "process_stdout_sha256": "292bdc0663d5f896a13bdcab011c38e3ab40ab69e80b575786ec68030e10f53e",
+  "read_contract": {
+    "artifact_read_count": 1,
+    "hash_and_parse_same_memory": true
+  },
+  "schema": "m165-consumer-input-attestation-v1",
+  "status": "PASS",
+  "tiff": {
+    "bits_per_sample": [
+      16,
+      16,
+      16
+    ],
+    "compression": 1,
+    "file_bytes": 75040,
+    "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+    "height": 96,
+    "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+    "photometric": 2,
+    "pixel_payload_bytes": 73728,
+    "pixel_payload_hash": {
+      "algorithm": "sha256-concatenated-ranges-in-listed-order",
+      "ranges": [
+        {
+          "end_exclusive": 75040,
+          "start": 1312
+        }
+      ]
+    },
+    "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+    "planar_configuration": 1,
+    "provenance": {
+      "converter_executable_sha256": "cfb71ae59c321366467cbfa915c10e2071a7ce13e3fd6a1eb23a5b00bcd699fc",
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "pattern_manifest_sha256": "a8c2a02c84d1c3e0d9cfcaa7254b91e5c55c662d5032e627c4751dd7af68d65b",
+      "pattern_map_sha256": "2aeb6c09d761cd5251a33d9bd5c645a0661713b9aef2bce404549aeca1b978c6",
+      "schema": "m165-common-input-provenance-v1",
+      "settings_sha256": "dcce8eda23287d19aaf9992782f8d3f845726773edcae67de53a9d4e962d930a",
+      "source_sha256": "ee0a4a8d87244f324388b5c8033530d74174d6e6737bb9f627579538f51730a9"
+    },
+    "sample_format": [
+      1,
+      1,
+      1
+    ],
+    "strip_count": 1,
+    "whole_file_hash": {
+      "algorithm": "sha256",
+      "ranges": [
+        {
+          "end_exclusive": 75040,
+          "start": 0
+        }
+      ]
+    },
+    "width": 128
+  },
+  "whole_file_hash": {
+    "algorithm": "sha256",
+    "ranges": [
+      {
+        "end_exclusive": 75040,
+        "start": 0
+      }
+    ]
+  }
+}

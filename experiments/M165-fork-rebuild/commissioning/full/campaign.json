@@ -1,0 +1,15 @@
+{
+  "campaign_id": "m165-real-consumer-roster-development",
+  "consumer_gate_bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+  "consumer_registry_sha256": "b2528da485c7bdb68d15a19b11fe8a7b0999793f2a4e33bafc27939c226ae8a8",
+  "inputs": [
+    {
+      "input_id": "development-common",
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.manifest.json",
+      "manifest_sha256": "0a99e2f785c98946912fee4b4a0c873784b897d39efbfd4f0f3ea926c2df0ea9"
+    }
+  ],
+  "schema": "m165-common-input-campaign-v1",
+  "status": "FROZEN",
+  "track": "common-merge"
+}

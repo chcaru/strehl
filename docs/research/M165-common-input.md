@@ -2,8 +2,9 @@
 
 ## Verdict
 
-**Stage 0M is closed in software. The new Stage 0C consumer-boundary gate is
-commissioned in software. The real competitive package is still
+**Stage 0M is closed in software. The Stage 0C consumer-boundary gate is
+commissioned in software, and the fresh retained-source fork arm now passes
+development common-input admission. The real competitive package is still
 `UNMEASURED`.**
 
 M165 now provides:
@@ -17,10 +18,12 @@ M165 now provides:
   provenance; and
 - a frozen, fail-closed consumer-boundary gate that independently hashes and
   parses one in-memory read of every TIFF, validates consumer-side receipts,
-  and partitions every input and consumer/input pair into counted outcomes.
+  and partitions every input and consumer/input pair into counted outcomes; and
+- a source-pinned, host-locally bit-reproducible rebuild of the retained
+  `focus-stack` fork plus a locked one-read consumer adapter.
 
 No eligible real calibration capture exists. Therefore no real pattern map, no
-campaign common-merge TIFF, and no campaign Strehl byte-identity result exists.
+campaign common-merge TIFF, and no campaign consumer-identity result exists.
 Per the live `docs/proposals/2026-09-sota-scorecard.md` §1.2, M1 remains
 `UNMEASURED`; M9 remains `DEFINITION_BLOCKED_M1_TRUTH` and additionally lacks
 the same calibration input. Stage 0M closes the zero-frame
@@ -56,7 +59,8 @@ The required common-merge consumers are:
 2. licensed Zerene PMax;
 3. licensed Zerene DMap; and
 4. a fresh rebuild of the retained fork source, commit-pinned and
-   executable-hash frozen.
+   executable-hash frozen. This arm is now satisfied on development input by
+   the rebuild documented below.
 
 Helicon is additional **when obtainable**. Its absence is counted and reported
 but is not fatal. Omitting the required fork while treating Helicon as required
@@ -90,9 +94,9 @@ This gate does not turn an externally supplied receipt into proof by assertion.
 It reopens neither a path for hashing nor parsing: one cache owns every artifact
 read. The receipt producer independently performs the same one-read hash and
 parse, and the consumer attestation supplies the third comparison. Strehl's
-attestation is its Rust identity report. A future opaque-product adapter must
-emit the standard attestation from a locked handoff; no such Zerene or Helicon
-attestation is claimed here.
+attestation is its Rust identity report. The rebuilt fork now emits the
+standard attestation from a locked handoff. No Zerene or Helicon attestation is
+claimed here.
 
 The operational sequence is:
 
@@ -154,9 +158,10 @@ The live source was re-read rather than relying on the assignment summary:
    contain no eligible map. The census remains in
    `out/pattern-map-audit.json`.
 8. **Comparator provenance.** M162 established that the archived fork result
-   used Lightroom-developed TIFFs and has no producing executable. M165 retained
-   the comparator-agnostic registry and first-class consumer executable hash;
-   none of the Stage 0M work changes the Strehl byte-identity method.
+   used Lightroom-developed TIFFs and has no producing executable. M165 reused
+   the comparator-agnostic registry and first-class consumer executable hash,
+   then rebuilt the nearest retained source revision without claiming it was
+   the archived producer. None of this changes the Strehl byte-identity method.
 
 ## Implemented artifacts
 
@@ -188,7 +193,11 @@ The live source was re-read rather than relying on the assignment summary:
 | `consumer_fixture.py` | Commissioning-only independently reading consumer; never a comparator result. |
 | `commission_consumer_gate.py` | Reproducible Stage 0C clean, mutation, restoration, missing-receipt, and malformed-input battery. |
 | `commissioning/consumer-gate/commission.json` | Stage 0C commissioning report. |
-| `audit_consumer_readiness.py` / `out/consumer-readiness.json` | Current machine consumer partition and precise blockers. |
+| `audit_consumer_readiness.py` / `out/consumer-readiness.json` | Pre-rebuild machine consumer partition and precise blockers. |
+| `experiments/M165-fork-rebuild/freeze_fork_source.py` / `source-pin.json` | Raw-Git-object source freeze for the selected retained fork revision. |
+| `experiments/M165-fork-rebuild/build_fork.py` / `build-freeze.json` | Two-clean-path reproducible Windows build, toolchain/dependency lock, runtime bundle, and pre-render executable freeze. |
+| `experiments/M165-fork-rebuild/fork_consumer.py` | Independent TIFF parser, one-read SHA-256, Win32 read-only locked handoff, actual fork invocation, and fail-closed standard attestation. |
+| `experiments/M165-fork-rebuild/commission_fork_arm.py` / `commissioning/commission.json` | Truthful full-roster admission plus isolated clean/RED/repair commissioning of the real fork arm. |
 
 ## Stage 0M closure
 
@@ -425,10 +434,10 @@ The current 7 x 5 synthetic TIFF has:
   `BandMerge::add_frame`: the same.
 
 `core_merge_exercised=true` proves the allocations entered the real generic
-merge core. The commissioned verifier binary SHA-256 is
+merge core. The original Stage 0M commissioned verifier binary SHA-256 is
 `846bc33be7b64ea36260918311e7ab2cdce629de4a0aeb1df23373f9ec60a7f5`.
 The comparator registry remains arbitrary-length with a first-class executable
-hash for every consumer, including a future rebuilt fork.
+hash for every consumer, including the rebuilt fork below.
 
 Identity sensitivity remains commissioned:
 
@@ -502,9 +511,10 @@ A separate registry with every required consumer deliberately blocked produced
 The Stage 0C commission report SHA-256 is
 `576d4e198131371be579abda2752d86cbfa0677c42bec845d6f35a4345b426c4`.
 
-### Real consumer readiness
+### Pre-rebuild consumer readiness (superseded snapshot)
 
-**VERIFIED BY RUNNING.** The machine audit partitions all four required modes:
+**VERIFIED BY RUNNING.** Before the fork rebuild, the machine audit partitioned
+all four required modes:
 
 | Required consumer | Outcome | Direct evidence |
 |---|---|---|
@@ -525,11 +535,12 @@ or frozen for scoring.
 The persisted readiness report SHA-256 is
 `843481fb3097ff431967aa6f7cd90c17ccfebecac9f8d1b1f2dee286f6f74de8`.
 
-**INFERRED BY READING.** M162 establishes that the fork has no admissible
-producer binary. The exact unblock is a fresh build of retained commit
+**INFERRED BY READING.** M162 established that the archived fork has no
+admissible producer binary. The exact unblock was a fresh build of retained commit
 `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`, with source tree, toolchain,
 dependency lock, compiler flags, settings, invocation, and final executable
-SHA-256 frozen before rendering.
+SHA-256 frozen before rendering. That rebuild is now complete below; this
+earlier audit remains useful only as the before-state.
 
 **VERIFIED BY RUNNING, TARGETED PATH PROBE.** No Helicon executable was found
 at the four documented Windows installation paths. **INFERRED BY READING.**
@@ -540,13 +551,162 @@ blocker.
 **INFERRED BY READING.** The precise owner ask for Zerene is: after written
 permission to publish the black-box comparison, buy Prosumer for `$189` plus
 tax if this remains eligible personal/unfunded use; otherwise buy Professional
-for `$289` plus tax. Do not buy Helicon to clear Stage 0C. Separately assign the
-fork rebuild above.
+for `$289` plus tax. Do not buy Helicon to clear Stage 0C.
 
-**REAL STAGE 0C VERDICT: BLOCKED.** The receipt machinery is commissioned, but
-there is no eligible pattern map, no real common-input campaign, no licensed
-Zerene output, and no rebuilt fork. Consequently there are no real
-consumer-side file or payload hashes to quote.
+**PRE-REBUILD STAGE 0C VERDICT: BLOCKED.** This snapshot predates the fork
+work below.
+
+### Fresh retained-source fork arm
+
+#### Revision selection
+
+**VERIFIED BY RUNNING.** The selected revision is
+`4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`, the root and earliest retained
+`focus-stack` source commit in `C:\dev\macro`. Its commit time is
+`2026-05-10T19:56:59-07:00`. The archived best-run log at
+`C:\dev\macro\out\coffee-bean\stack.log` has SHA-256
+`cfc2837ca87219f0150e14e2151d3f89fe81ade9920f5dbfc082cfb6369ab283`
+and last-write time `2026-05-10T23:45:16.3564650Z`; the selected commit is
+approximately three hours twelve minutes later. The next retained revision,
+`412d1b5226f69b186a6e8b8ef91b4befa3c55664`, changes 27 `focus-stack`
+files by 1,582 insertions and 154 deletions.
+
+**INFERRED FROM THAT EVIDENCE.** `4bc7f95e...` is the nearest and
+least-confounded retained source snapshot, so it is the best-supported rebuild
+target. It is **not** claimed to be the archived producer. The machine-readable
+selection evidence is `experiments/M165-fork-rebuild/revision-selection.json`.
+
+#### Source and executable freeze
+
+**VERIFIED BY RUNNING.** `freeze_fork_source.py` read Git objects directly,
+not the mutable external worktree. The frozen `focus-stack` subtree is Git
+SHA-1 `543b825e325f959ed15c10032d2b8156f11070cc`, containing 103 files and
+14,961,176 bytes. Its canonical per-blob manifest SHA-256 is
+`494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196`;
+`source-pin.json` itself is
+`f883a1c80d83fec83f3ada3381b9cc07acfe4d8b2e2cb2a0b7b07915f1bb7577`.
+Regenerating the pin with the same frozen timestamp reproduced that file byte
+for byte.
+
+`build_fork.py` extracted those exact blobs into two clean, different source
+and build paths. Both builds emitted the same 271,360-byte executable:
+
+```text
+SHA-256 691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac
+byte differences between clean builds: 0
+```
+
+The formal verdict is
+`BIT_REPRODUCIBLE_TWO_CLEAN_PATHS_SAME_HOST`. Cross-host reproducibility was
+not tested. The executable hash covers `[0,file_size)`. It was frozen at
+`2026-09-04T19:40:58.497473+00:00` before any image render; the only
+pre-freeze executions were `--version`. The version banner binds the selected
+commit and reports OpenCV `4.13.0`.
+
+The frozen toolchain is MSVC `19.44.35226.0`, linker/NMake
+`14.44.35226.0`, VC tools `14.44.35207`, CMake `3.31.6-msvc6`, and Windows
+SDK `10.0.26100.0`. The decisive flags are `/Brepro`,
+`/experimental:deterministic`, a commit-valued `GIT_VERSION`, and
+`/pathmap:<source>=C:\m165\focus-stack`, with `/Brepro` on executable and
+static linkers. The bundle includes the executable, OpenCV, and four MSVC
+runtime DLLs; its canonical SHA-256 is
+`4b9d4c310a16294bcc46ee5b947aec02cbdba9887787af017018071dd9455150`.
+`build-freeze.json` binds every tool/dependency byte hash and has SHA-256
+`ccc80840ba2f7971cc5e78df7422d0840032e843d57c9757597783532859a5a2`.
+
+The reproducer is:
+
+```text
+python experiments\M165-fork-rebuild\freeze_fork_source.py ^
+  --repo C:\dev\macro ^
+  --commit 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6 ^
+  --frozen-utc 2026-09-04T19:25:44.711441+00:00 ^
+  --out experiments\M165-fork-rebuild\source-pin.json
+
+python experiments\M165-fork-rebuild\build_fork.py ^
+  --repo C:\dev\macro ^
+  --commit 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6 ^
+  --source-pin experiments\M165-fork-rebuild\source-pin.json ^
+  --vcvars "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" ^
+  --opencv-build C:\dev\macro\deps\opencv\build ^
+  --work experiments\M165-fork-rebuild\work\repro ^
+  --bin experiments\M165-fork-rebuild\bin ^
+  --frozen-utc 2026-09-04T19:40:58.497473+00:00 ^
+  --out experiments\M165-fork-rebuild\build-freeze.json
+```
+
+#### Real fork consumer admission
+
+**VERIFIED BY RUNNING — development input only, not a quality comparison.**
+The rebuilt executable consumed one generated 128 x 96 common TIFF twice, as
+required by its two-input CLI, and returned exit `0` with a 7,020-byte output
+whose SHA-256 is
+`68139558bb33a795d1fb7a5aaf007bf56b70f22c360b55a23542052d85cc4fed`.
+The input measured 75,040 bytes, `BitsPerSample=[16,16,16]`,
+`Compression=1`, and contained the frozen linear ProPhoto D50 ICC.
+
+`fork_consumer.py` is independent of the Stage 0C TIFF parser. It opened the
+input once with Win32 `CreateFileW`, `GENERIC_READ`, and `FILE_SHARE_READ`;
+hashed and parsed the same in-memory bytes; held that handle through child
+exit; and verified unchanged volume/file identity, size, and last-write
+metadata before and after consumption. Converter manifest, locked adapter, and
+Stage 0C gate independently agreed:
+
+| Range | SHA-256 |
+|---|---|
+| Whole TIFF `[0,75040)` | `b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b` |
+| Pixel payload strip `[1312,75040)` | `fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15` |
+
+The truthful five-consumer registry counted every result:
+
+- required: `2 PASS + 0 FAIL + 0 MISSING + 2 BLOCKED = 4`;
+- optional: `1 OPTIONAL_ABSENT = 1`;
+- all consumer/input pairs: `2 PASS + 2 BLOCKED + 1 OPTIONAL_ABSENT = 5`;
+- input: `1 BLOCKED = 1`, because both Zerene modes remain unavailable.
+
+Both passing required pairs are real: Strehl and the rebuilt fork. Both blocked
+pairs are licensed Zerene PMax and DMap. The full roster therefore correctly
+remains `FAIL/BLOCKED`, rather than turning a partial prerequisite into a
+scorecard pass. The roster uses an M165-local frozen copy of the Strehl
+verifier, SHA-256
+`8e807de32b63859fe0a00fa81a791b08b70cbbca57bd1ee5195eaab0bd811a2b`,
+rather than the concurrently mutable Cargo target path. Its gate artifact
+SHA-256 is
+`f44625bd8bb8ed53960b9dc6d1a37385510fba9c577030ec81cf2a98d554ce2f`.
+
+The isolated fork-arm null passed `1 PASS = 1`. The mutation helper first
+hard-failed on an absent anchor, then replaced the unique full line
+
+```text
+"input_file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+->
+"input_file_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+```
+
+and the gate went RED as `RECEIPT_INPUT_HASH_MISMATCH`,
+`0 PASS + 1 FAIL = 1`. Restoring the exact original receipt bytes returned
+`1 PASS = 1`; the baseline and repaired gate files are byte-identical with
+SHA-256
+`d8f16887750c71e53c819c269bdada18810103a5f8d524e9ca98f4bbedae3e69`.
+Supplying the adapter a wrong executable hash separately exited `1`, persisted
+`FAIL / EXECUTABLE_HASH_MISMATCH`, and created no output. The complete
+commission report is `PASS`, SHA-256
+`e22a787fa3276dd6def780aa13734ac1a597c3ca7063249825a4b221697c28ca`.
+
+**STREHL BYTE IDENTITY IMPACT: NONE.** The fork is an additional registered
+consumer; it does not change Strehl's already commissioned internal boundary.
+
+**CURRENT REAL STAGE 0C VERDICT: BLOCKED.** The fork engineering blocker is
+closed. The remaining blockers are licensed Zerene PMax and DMap plus an
+eligible calibrated campaign capture.
+
+**Residual color limitation.** The pinned fork has no ProPhoto input mode.
+Its 16-bit integer TIFF path passes decoded samples through without input-color
+conversion and does not interpret the embedded ICC. Exact file-byte admission
+is proven; color-semantic equivalence and output-transfer suitability are not.
+This is inferred directly from the pinned `src/colormgmt.cc`:
+`parse_input_colorspace` admits only auto/none/linear-Rec.2020/linear-sRGB/sRGB,
+and `normalise_loaded_image` returns `CV_16U` input unchanged.
 
 ## Capture requirement and totals
 
@@ -597,14 +757,27 @@ class or its near/far V block rejects focus portability, the result is STOP /
 - Stage 0C malformed campaign: exit `1`, persisted `FAIL / JSON_INVALID`.
 - Stage 0C receipt-record CLI reproduced the library-generated receipt byte for
   byte.
-- Current consumer-readiness audit: exit `1`, persisted `BLOCKED`, required
+- Pre-rebuild consumer-readiness audit: exit `1`, persisted `BLOCKED`, required
   consumer partition balanced `4/4`.
+- Fork source pin regeneration: **byte-identical PASS**.
+- Fork two-clean-path build: **PASS**, zero differing executable bytes.
+- Frozen fork executable: 271,360 bytes, SHA-256
+  `691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac`.
+- Fork locked-handoff consumer run: exit `0`; converter, adapter, and gate
+  whole-file and payload hashes all agreed.
+- Truthful current development roster: `2 PASS + 2 BLOCKED = 4` required
+  pairs; `1 OPTIONAL_ABSENT = 1`; every partition balanced.
+- Fork-arm unique-line receipt mutation: **FAIL as required** with
+  `RECEIPT_INPUT_HASH_MISMATCH`, exactly `1/1` pair failed.
+- Fork-arm exact repair: **PASS**, exactly `1/1` pair passed.
+- Fork adapter wrong-executable-hash probe: exit `1`, persisted
+  `FAIL / EXECUTABLE_HASH_MISMATCH`, no output.
 
 **Blocked on compute: NO.** No bulk decode was launched. The only real RAW work
 remains the one-frame burned-development probe. Under the standing host policy,
 deterministic fitting/rendering may proceed under load when inputs exist;
 absolute timing remains quarantined. The present blockers are missing physical
-inputs, licence, and fork build, not host scheduling.
+inputs and licensed Zerene modes, not host scheduling or the fork build.
 
 ## Residual doubt
 
@@ -621,12 +794,13 @@ inputs, licence, and fork build, not host scheduling.
    command remains a CFA-native path; common-track RGB registration, noise
    modelling, output, and directory orchestration remain separate integration
    work.
-6. The fork still lacks a rebuilt, hashed executable and therefore remains a
-   blocked common-merge consumer.
-7. The Stage 0C standard attestation is commissioned with controlled fixtures,
-   but no opaque-product locked-handoff adapter has yet emitted a real Zerene
-   or Helicon receipt. The gate refuses their absence; it does not infer
-   consumption from an output file.
-8. Stage 0C proves exact-byte admission, not that a closed-source consumer uses
-   every admitted sample internally. That stronger semantic claim would
-   require vendor instrumentation unavailable here.
+6. The fork executable is reproducible across two clean paths on this host;
+   cross-host bit reproducibility is not yet measured.
+7. The pinned fork's 16-bit input path ignores the embedded ProPhoto ICC. The
+   byte contract passes, but color-semantic equivalence remains unproved.
+8. The Stage 0C standard attestation now has a real fork locked-handoff result,
+   but no Zerene or Helicon receipt. The gate refuses their absence; it does
+   not infer consumption from an output file.
+9. Stage 0C proves exact-byte admission at the locked file boundary, not that
+   an opaque consumer uses every admitted sample internally. That stronger
+   semantic claim would require instrumentation the fork does not expose.

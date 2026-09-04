@@ -1,0 +1,135 @@
+{
+  "artifact_read_audit": {
+    "all_artifacts_read_at_most_once": true,
+    "maximum_reads_per_artifact": 1,
+    "read_counts": {
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer-gate-freeze-v1.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_gate.py": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\concrt140.dll": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\msvcp140.dll": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\opencv_world4130.dll": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\vcruntime140.dll": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\vcruntime140_1.dll": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\build-freeze.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\campaign.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\consumer-registry.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\input\\development-common.manifest.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\receipts\\focus-stack-fork\\development-common.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\attestations\\focus-stack-fork.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\fork_consumer.py": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\source-pin.json": 1
+    },
+    "unique_artifacts_read": 19
+  },
+  "campaign": {
+    "campaign_id": "m165-fork-arm-commission",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\campaign.json",
+    "sha256": "5805205d722d4cf1a3b645979bf6b5a85052b70c26a2cc59b3e43af1bc791eb1"
+  },
+  "consumer_registry": {
+    "consumer_count": 1,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\consumer-registry.json",
+    "required_consumer_count": 1,
+    "sha256": "aaab5f81992defaa0cdbd487daac71693de9ad2529bdf03783474abaa2a8ccda",
+    "status": "FROZEN"
+  },
+  "gate_freeze": {
+    "bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer-gate-freeze-v1.json",
+    "sha256": "339026c99c444abf2f30a676b1eaba18cc41e459a27947ce448d66e5d8950175"
+  },
+  "hash_contract": {
+    "algorithm": "SHA-256",
+    "pixel_payload_bytes": "concatenation of TIFF strip byte ranges in scan order",
+    "same_memory_rule": "each artifact is read once; hashes and parsing consume that same cached byte string",
+    "whole_file_bytes": "[0,file_size)"
+  },
+  "inputs": [
+    {
+      "input_id": "development-common",
+      "outcome": "PASS",
+      "required_pair_outcomes": {
+        "PASS": 1
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "consumer_id": "focus-stack-fork",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\attestations\\focus-stack-fork.json",
+        "attestation_schema": "m165-consumer-input-attestation-v1",
+        "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+        "outputs": [
+          {
+            "bytes": 7020,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff",
+            "sha256": "68139558bb33a795d1fb7a5aaf007bf56b70f22c360b55a23542052d85cc4fed"
+          }
+        ],
+        "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\receipts\\focus-stack-fork\\development-common.json"
+      },
+      "input_id": "development-common",
+      "outcome": "PASS",
+      "required": true
+    }
+  ],
+  "schema": "m165-common-input-consumer-gate-v1",
+  "status": "PASS",
+  "summary": {
+    "all_consumer_input_pairs": {
+      "counted_sum": 1,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 0,
+        "PASS": 1
+      },
+      "partition_balanced": true,
+      "total_examined": 1
+    },
+    "all_partitions_balanced": true,
+    "inputs": {
+      "counted_sum": 1,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "PASS": 1
+      },
+      "partition_balanced": true,
+      "total_examined": 1
+    },
+    "optional_consumer_input_pairs": {
+      "counted_sum": 0,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 0,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 0
+    },
+    "required_consumer_input_pairs": {
+      "counted_sum": 1,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 0,
+        "PASS": 1
+      },
+      "partition_balanced": true,
+      "total_examined": 1
+    }
+  },
+  "track": "common-merge"
+}

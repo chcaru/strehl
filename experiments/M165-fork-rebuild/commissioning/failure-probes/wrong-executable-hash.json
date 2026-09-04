@@ -1,0 +1,6 @@
+{
+  "failure_class": "EXECUTABLE_HASH_MISMATCH",
+  "reason": "consumer executable is 691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac, expected 0000000000000000000000000000000000000000000000000000000000000000",
+  "schema": "m165-consumer-input-attestation-v1",
+  "status": "FAIL"
+}

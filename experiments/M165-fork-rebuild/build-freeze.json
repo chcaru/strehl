@@ -1,0 +1,295 @@
+{
+  "build_recipe": {
+    "build_script": {
+      "bytes": 18038,
+      "label": "build_fork.py",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\build_fork.py",
+      "sha256": "188f23b063e8f2c433f99da7cd99e4fbeafe06c9a943fd2d87a41e6f277d915f"
+    },
+    "build_tests": false,
+    "canonical_source_path": "C:\\m165\\focus-stack",
+    "compiler_flags": [
+      "/Brepro",
+      "/experimental:deterministic",
+      "/EHsc",
+      "/wd4005",
+      "/DGIT_VERSION=\\\"4bc7f95e448cf20ee2bdd758403ec43e2612a1c6\\\"",
+      "/pathmap:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-a=C:\\m165\\focus-stack"
+    ],
+    "configuration": "Release",
+    "executable_linker_flags": [
+      "/Brepro"
+    ],
+    "generator": "NMake Makefiles",
+    "source_date_epoch": 1778468219,
+    "static_linker_flags": [
+      "/Brepro"
+    ]
+  },
+  "dependencies": {
+    "opencv_import_library": {
+      "bytes": 3741274,
+      "label": "opencv_world4130.lib",
+      "path": "C:\\dev\\macro\\deps\\opencv\\build\\x64\\vc16\\lib\\opencv_world4130.lib",
+      "sha256": "34a75dd03b4a35ef8660f0cf53e351740b4d256e87c803791a34721e97fcd817"
+    },
+    "opencv_version": "4.13.0",
+    "runtime_bundle": [
+      {
+        "bytes": 271360,
+        "label": "focus-stack.exe",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+        "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+      },
+      {
+        "bytes": 67995648,
+        "label": "opencv_world4130.dll",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\opencv_world4130.dll",
+        "sha256": "d6ad6fcc7908e8e90625fa8614d0480b111d7cc887054ed01a3ed2ad5f872d79"
+      },
+      {
+        "bytes": 643512,
+        "label": "msvcp140.dll",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\msvcp140.dll",
+        "sha256": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca"
+      },
+      {
+        "bytes": 178616,
+        "label": "vcruntime140.dll",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\vcruntime140.dll",
+        "sha256": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7"
+      },
+      {
+        "bytes": 50112,
+        "label": "vcruntime140_1.dll",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\vcruntime140_1.dll",
+        "sha256": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e"
+      },
+      {
+        "bytes": 374200,
+        "label": "concrt140.dll",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\concrt140.dll",
+        "sha256": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e"
+      }
+    ],
+    "runtime_bundle_sha256": "4b9d4c310a16294bcc46ee5b947aec02cbdba9887787af017018071dd9455150",
+    "system_dependencies_not_bundled": [
+      "Windows API-set DLLs",
+      "KERNEL32.dll",
+      "USER32.dll",
+      "GDI32.dll",
+      "ADVAPI32.dll",
+      "ole32.dll",
+      "OLEAUT32.dll",
+      "COMDLG32.dll",
+      "WS2_32.dll",
+      "MFPlat.dll",
+      "MF.dll",
+      "MFReadWrite.dll",
+      "dxgi.dll",
+      "d3d11.dll",
+      "SHLWAPI.dll"
+    ]
+  },
+  "freeze_order": {
+    "executable_hash_recorded_before_rendering": true,
+    "pre_freeze_executions": [
+      "--version"
+    ]
+  },
+  "frozen_executable": {
+    "bytes": 271360,
+    "label": "focus-stack.exe",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+    "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+  },
+  "frozen_utc": "2026-09-04T19:40:58.497473+00:00",
+  "hash_contract": {
+    "algorithm": "SHA-256",
+    "bytes": "[0,file_size)"
+  },
+  "reproducibility": {
+    "build_count": 2,
+    "builds": [
+      {
+        "build_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "--build",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a",
+          "--config",
+          "Release"
+        ],
+        "build_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a",
+        "compiler_environment_flags": [
+          "/Brepro",
+          "/experimental:deterministic",
+          "/EHsc",
+          "/wd4005",
+          "/DGIT_VERSION=\\\"4bc7f95e448cf20ee2bdd758403ec43e2612a1c6\\\"",
+          "/pathmap:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-a=C:\\m165\\focus-stack"
+        ],
+        "configure_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "-S",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-a",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a",
+          "-G",
+          "NMake Makefiles",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_TESTS=OFF",
+          "-DOpenCV_DIR=C:\\dev\\macro\\deps\\opencv\\build",
+          "-DCMAKE_EXE_LINKER_FLAGS=/Brepro",
+          "-DCMAKE_STATIC_LINKER_FLAGS=/Brepro"
+        ],
+        "executable": {
+          "bytes": 271360,
+          "label": "focus-stack build a",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a\\focus-stack.exe",
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        },
+        "label": "a",
+        "log": {
+          "bytes": 3983,
+          "label": "build a log",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a.log",
+          "sha256": "f3e6bce3509e356a22ca681b6be8a96ff254d8a097cf194cede1b37b9f34689d"
+        },
+        "source_check": {
+          "file_count": 103,
+          "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196"
+        },
+        "source_date_epoch": 1778468219,
+        "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-a",
+        "version_banner": [
+          "focus-stack 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6, built 1 1",
+          "Compiled with OpenCV version 4.13.0"
+        ]
+      },
+      {
+        "build_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "--build",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b",
+          "--config",
+          "Release"
+        ],
+        "build_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b",
+        "compiler_environment_flags": [
+          "/Brepro",
+          "/experimental:deterministic",
+          "/EHsc",
+          "/wd4005",
+          "/DGIT_VERSION=\\\"4bc7f95e448cf20ee2bdd758403ec43e2612a1c6\\\"",
+          "/pathmap:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-b=C:\\m165\\focus-stack"
+        ],
+        "configure_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "-S",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-b",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b",
+          "-G",
+          "NMake Makefiles",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_TESTS=OFF",
+          "-DOpenCV_DIR=C:\\dev\\macro\\deps\\opencv\\build",
+          "-DCMAKE_EXE_LINKER_FLAGS=/Brepro",
+          "-DCMAKE_STATIC_LINKER_FLAGS=/Brepro"
+        ],
+        "executable": {
+          "bytes": 271360,
+          "label": "focus-stack build b",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b\\focus-stack.exe",
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        },
+        "label": "b",
+        "log": {
+          "bytes": 3983,
+          "label": "build b log",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b.log",
+          "sha256": "739b1d453abdca48e9d09d7720ecc8d1813d0f3249071f1b1b497d36624e4b1b"
+        },
+        "source_check": {
+          "file_count": 103,
+          "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196"
+        },
+        "source_date_epoch": 1778468219,
+        "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-b",
+        "version_banner": [
+          "focus-stack 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6, built 1 1",
+          "Compiled with OpenCV version 4.13.0"
+        ]
+      }
+    ],
+    "byte_identical": true,
+    "differing_bytes": 0,
+    "verdict": "BIT_REPRODUCIBLE_TWO_CLEAN_PATHS_SAME_HOST"
+  },
+  "schema": "m165-fork-build-freeze-v1",
+  "source": {
+    "commit_sha1": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+    "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196",
+    "source_pin_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\source-pin.json",
+    "source_pin_sha256": "f883a1c80d83fec83f3ada3381b9cc07acfe4d8b2e2cb2a0b7b07915f1bb7577",
+    "tree_sha1": "543b825e325f959ed15c10032d2b8156f11070cc"
+  },
+  "status": "FROZEN",
+  "toolchain": {
+    "cl": {
+      "bytes": 677968,
+      "label": "cl.exe",
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+      "sha256": "a80f5e7a24049a8f9a8931f83fc3d13ca417ad901e074c50cca71fcb12ba10be"
+    },
+    "cmake": {
+      "bytes": 11307584,
+      "label": "cmake.exe",
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+      "sha256": "6fe2e6431b45cf32b9b2f3e50a8efae046a2366eb34d0fb36da027cf56102aec"
+    },
+    "cmake_version": "cmake version 3.31.6-msvc6",
+    "compiler_probe": [
+      "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35226 for x64",
+      "Copyright (C) Microsoft Corporation.  All rights reserved.",
+      "",
+      "Compiler Passes:",
+      " C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe:        Version 19.44.35226.0",
+      " C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\c1.dll:        Version 19.44.35226.0",
+      " C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\c1xx.dll:      Version 19.44.35226.0",
+      " C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\c2.dll:        Version 19.44.35226.0",
+      " C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\c1xx.dll:      Version 19.44.35226.0",
+      " C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\link.exe:      Version 14.44.35226.0",
+      " C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\mspdb140.dll:  Version 14.44.35226.0",
+      " C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\1033\\clui.dll: Version 19.44.35226.0",
+      "",
+      "cl : Command line error D8003 : missing source filename"
+    ],
+    "lib": {
+      "bytes": 23608,
+      "label": "lib.exe",
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\lib.exe",
+      "sha256": "0185f55b7f5eb8752f3de620cd4018126a91d4adf6f02ae16623315f7800411a"
+    },
+    "link": {
+      "bytes": 3252808,
+      "label": "link.exe",
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\link.exe",
+      "sha256": "e388eb34fe4d280633609f6acec12a3e73c288f8b69ce402c3d24c0d0f5524f3"
+    },
+    "nmake": {
+      "bytes": 134784,
+      "label": "nmake.exe",
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\nmake.exe",
+      "sha256": "e6adaf84fcbe63c4d9913cf4fc614db5e733d7839e0232484ff004fba8614910"
+    },
+    "vc_tools_version": "14.44.35207",
+    "vcvars64": {
+      "bytes": 39,
+      "label": "vcvars64.bat",
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Auxiliary\\Build\\vcvars64.bat",
+      "sha256": "6b516d8fcf543c14b2d861e1f45661e0029230fe0dc48e86ce78522801822209"
+    },
+    "windows_sdk_version": "10.0.26100.0\\"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "consumer_registry": {
+    "sha256": "b2528da485c7bdb68d15a19b11fe8a7b0999793f2a4e33bafc27939c226ae8a8"
+  },
+  "converter": {
+    "executable_sha256": "cfb71ae59c321366467cbfa915c10e2071a7ce13e3fd6a1eb23a5b00bcd699fc",
+    "settings_sha256": "dcce8eda23287d19aaf9992782f8d3f845726773edcae67de53a9d4e962d930a"
+  },
+  "eligibility": "DEVELOPMENT_ONLY_SYNTHETIC_NEVER_SCORE",
+  "output": {
+    "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+    "height": 96,
+    "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+    "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+    "width": 128
+  },
+  "pattern_map": {
+    "manifest_sha256": "a8c2a02c84d1c3e0d9cfcaa7254b91e5c55c662d5032e627c4751dd7af68d65b",
+    "sha256": "2aeb6c09d761cd5251a33d9bd5c645a0661713b9aef2bce404549aeca1b978c6"
+  },
+  "schema": "m165-common-input-manifest-v3",
+  "source": {
+    "sha256": "ee0a4a8d87244f324388b5c8033530d74174d6e6737bb9f627579538f51730a9"
+  },
+  "status": "RENDERED",
+  "track": "common-merge"
+}

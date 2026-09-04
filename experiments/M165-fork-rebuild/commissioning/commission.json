@@ -1,0 +1,520 @@
+{
+  "checks": {
+    "adapter_failure_persists_fail_record": true,
+    "all_gate_artifacts_one_read": true,
+    "converter_adapter_gate_hashes_agree": true,
+    "exact_receipt_restore_recovers_pass": true,
+    "fork_arm_baseline_passes": true,
+    "fork_one_read_hash_and_parse": true,
+    "fork_pair_passes_in_truthful_roster": true,
+    "fork_process_completed_and_emitted_output": true,
+    "fork_received_input_path_twice": true,
+    "locked_handoff_metadata_stable": true,
+    "missing_mutation_anchor_hard_errors": true,
+    "source_and_executable_frozen_before_render": true,
+    "truthful_roster_partition_balanced": true,
+    "two_clean_builds_are_byte_identical": true,
+    "unique_full_line_mutation_goes_red": true
+  },
+  "commissioned_fork_arm": {
+    "baseline": {
+      "gate": {
+        "bytes": 6306,
+        "label": "fork arm baseline",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\baseline-gate.json",
+        "sha256": "d8f16887750c71e53c819c269bdada18810103a5f8d524e9ca98f4bbedae3e69"
+      },
+      "summary": {
+        "all_consumer_input_pairs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 1
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        },
+        "all_partitions_balanced": true,
+        "inputs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "PASS": 1
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        },
+        "optional_consumer_input_pairs": {
+          "counted_sum": 0,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 0
+          },
+          "partition_balanced": true,
+          "total_examined": 0
+        },
+        "required_consumer_input_pairs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 1
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        }
+      }
+    },
+    "planted_degradation": {
+      "failure_class": "RECEIPT_INPUT_HASH_MISMATCH",
+      "gate": {
+        "bytes": 5157,
+        "label": "fork arm degraded",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\degraded-gate.json",
+        "sha256": "c6398256bec7681d68fb76202a84dc4cb94f4d4f394659fb40b4f8f070d135c6"
+      },
+      "mutation": {
+        "missing_anchor_hard_error": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\receipts\\focus-stack-fork\\development-common.json",
+        "unique_full_line_after": "  \"input_file_sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\",",
+        "unique_full_line_before": "  \"input_file_sha256\": \"b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b\","
+      },
+      "summary": {
+        "all_consumer_input_pairs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 1,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 0
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        },
+        "all_partitions_balanced": true,
+        "inputs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 1,
+            "MISSING": 0,
+            "PASS": 0
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        },
+        "optional_consumer_input_pairs": {
+          "counted_sum": 0,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 0
+          },
+          "partition_balanced": true,
+          "total_examined": 0
+        },
+        "required_consumer_input_pairs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 1,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 0
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        }
+      }
+    },
+    "planted_improvement": {
+      "action": "restore exact original receipt bytes",
+      "gate": {
+        "bytes": 6306,
+        "label": "fork arm repaired",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\fork-arm\\repaired-gate.json",
+        "sha256": "d8f16887750c71e53c819c269bdada18810103a5f8d524e9ca98f4bbedae3e69"
+      },
+      "summary": {
+        "all_consumer_input_pairs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 1
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        },
+        "all_partitions_balanced": true,
+        "inputs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "PASS": 1
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        },
+        "optional_consumer_input_pairs": {
+          "counted_sum": 0,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 0
+          },
+          "partition_balanced": true,
+          "total_examined": 0
+        },
+        "required_consumer_input_pairs": {
+          "counted_sum": 1,
+          "counts": {
+            "BLOCKED": 0,
+            "FAIL": 0,
+            "MISSING": 0,
+            "OPTIONAL_ABSENT": 0,
+            "PASS": 1
+          },
+          "partition_balanced": true,
+          "total_examined": 1
+        }
+      }
+    }
+  },
+  "eligibility": "DEVELOPMENT_ONLY; NOT A QUALITY SCORE",
+  "fail_closed_probe": {
+    "attestation": {
+      "bytes": 298,
+      "label": "wrong executable hash attestation",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\failure-probes\\wrong-executable-hash.json",
+      "sha256": "db1ab6909e7086887ece4059fed860ccc695045079c9b73b335de751015a785e"
+    },
+    "exit_code": 1,
+    "failure_class": "EXECUTABLE_HASH_MISMATCH",
+    "output_created": false
+  },
+  "fork_run": {
+    "adapter_exit_code": 0,
+    "attestation": {
+      "bytes": 6841,
+      "label": "fork attestation",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\attestations\\focus-stack-fork.json",
+      "sha256": "d1bd0b660533f3b6bcf09a8f9205b246df27b140cd05f0ebe0ec0ca4d7c3d79b"
+    },
+    "consumer_invocation": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+      "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff",
+      "--threads=1",
+      "--batchsize=2",
+      "--no-opencl",
+      "--no-align",
+      "--no-whitebalance",
+      "--no-contrast",
+      "--consistency=0",
+      "--denoise=0",
+      "--input-colorspace=none",
+      "--output-colorspace=srgb",
+      "--output-bitdepth=16",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff"
+    ],
+    "locked_handoff": {
+      "api": "CreateFileW",
+      "desired_access": "GENERIC_READ",
+      "file_information_after": {
+        "file_index": 6473924466273190,
+        "file_size": 75040,
+        "last_write_filetime": 134330252382000061,
+        "volume_serial_number": 4138976490
+      },
+      "file_information_before": {
+        "file_index": 6473924466273190,
+        "file_size": 75040,
+        "last_write_filetime": 134330252382000061,
+        "volume_serial_number": 4138976490
+      },
+      "held_through_consumer_exit": true,
+      "metadata_unchanged": true,
+      "share_mode": "FILE_SHARE_READ"
+    },
+    "output": {
+      "bytes": 7020,
+      "label": "fork output",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff",
+      "sha256": "68139558bb33a795d1fb7a5aaf007bf56b70f22c360b55a23542052d85cc4fed"
+    }
+  },
+  "frozen_executable": {
+    "bytes": 271360,
+    "label": "focus-stack.exe",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+    "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+  },
+  "input_identity": {
+    "all_three_agree": true,
+    "converter_manifest": {
+      "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+      "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15"
+    },
+    "fork_locked_adapter": {
+      "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+      "pixel_payload_hash": {
+        "algorithm": "sha256-concatenated-ranges-in-listed-order",
+        "ranges": [
+          {
+            "end_exclusive": 75040,
+            "start": 1312
+          }
+        ]
+      },
+      "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+      "whole_file_hash": {
+        "algorithm": "sha256",
+        "ranges": [
+          {
+            "end_exclusive": 75040,
+            "start": 0
+          }
+        ]
+      }
+    },
+    "hash_algorithm": "SHA-256",
+    "pixel_payload_range": "concatenation of TIFF strip ranges in scan order",
+    "stage0c_gate": {
+      "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+      "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15"
+    },
+    "whole_file_range": "[0,file_size)"
+  },
+  "known_limitations": [
+    "The development input is synthetic and cannot produce a quality score or qualify a real campaign.",
+    "The pinned fork has no ProPhoto D50 input mode. Its 16-bit input path bypasses input-color conversion and does not interpret the embedded ICC, so exact-byte admission is proven but color-semantic equivalence is not.",
+    "The adapter proves the locked file bytes supplied at the consumer boundary. The opaque executable does not expose an internal sample hash.",
+    "The complete Stage 0C roster remains blocked by expired Zerene PMax and DMap licences and by missing eligible campaign captures."
+  ],
+  "measurement_class": "deterministic correctness; no wall-clock result",
+  "reproducibility": {
+    "build_count": 2,
+    "builds": [
+      {
+        "build_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "--build",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a",
+          "--config",
+          "Release"
+        ],
+        "build_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a",
+        "compiler_environment_flags": [
+          "/Brepro",
+          "/experimental:deterministic",
+          "/EHsc",
+          "/wd4005",
+          "/DGIT_VERSION=\\\"4bc7f95e448cf20ee2bdd758403ec43e2612a1c6\\\"",
+          "/pathmap:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-a=C:\\m165\\focus-stack"
+        ],
+        "configure_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "-S",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-a",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a",
+          "-G",
+          "NMake Makefiles",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_TESTS=OFF",
+          "-DOpenCV_DIR=C:\\dev\\macro\\deps\\opencv\\build",
+          "-DCMAKE_EXE_LINKER_FLAGS=/Brepro",
+          "-DCMAKE_STATIC_LINKER_FLAGS=/Brepro"
+        ],
+        "executable": {
+          "bytes": 271360,
+          "label": "focus-stack build a",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a\\focus-stack.exe",
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        },
+        "label": "a",
+        "log": {
+          "bytes": 3983,
+          "label": "build a log",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-a.log",
+          "sha256": "f3e6bce3509e356a22ca681b6be8a96ff254d8a097cf194cede1b37b9f34689d"
+        },
+        "source_check": {
+          "file_count": 103,
+          "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196"
+        },
+        "source_date_epoch": 1778468219,
+        "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-a",
+        "version_banner": [
+          "focus-stack 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6, built 1 1",
+          "Compiled with OpenCV version 4.13.0"
+        ]
+      },
+      {
+        "build_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "--build",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b",
+          "--config",
+          "Release"
+        ],
+        "build_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b",
+        "compiler_environment_flags": [
+          "/Brepro",
+          "/experimental:deterministic",
+          "/EHsc",
+          "/wd4005",
+          "/DGIT_VERSION=\\\"4bc7f95e448cf20ee2bdd758403ec43e2612a1c6\\\"",
+          "/pathmap:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-b=C:\\m165\\focus-stack"
+        ],
+        "configure_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "-S",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-b",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b",
+          "-G",
+          "NMake Makefiles",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_TESTS=OFF",
+          "-DOpenCV_DIR=C:\\dev\\macro\\deps\\opencv\\build",
+          "-DCMAKE_EXE_LINKER_FLAGS=/Brepro",
+          "-DCMAKE_STATIC_LINKER_FLAGS=/Brepro"
+        ],
+        "executable": {
+          "bytes": 271360,
+          "label": "focus-stack build b",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b\\focus-stack.exe",
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        },
+        "label": "b",
+        "log": {
+          "bytes": 3983,
+          "label": "build b log",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\build-b.log",
+          "sha256": "739b1d453abdca48e9d09d7720ecc8d1813d0f3249071f1b1b497d36624e4b1b"
+        },
+        "source_check": {
+          "file_count": 103,
+          "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196"
+        },
+        "source_date_epoch": 1778468219,
+        "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\work\\repro\\source-b",
+        "version_banner": [
+          "focus-stack 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6, built 1 1",
+          "Compiled with OpenCV version 4.13.0"
+        ]
+      }
+    ],
+    "byte_identical": true,
+    "differing_bytes": 0,
+    "verdict": "BIT_REPRODUCIBLE_TWO_CLEAN_PATHS_SAME_HOST"
+  },
+  "schema": "m165-fork-consumer-commission-v1",
+  "source": {
+    "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196",
+    "revision": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+    "source_pin_sha256": "f883a1c80d83fec83f3ada3381b9cc07acfe4d8b2e2cb2a0b7b07915f1bb7577",
+    "tree_sha1": "543b825e325f959ed15c10032d2b8156f11070cc"
+  },
+  "status": "PASS",
+  "truthful_full_roster": {
+    "fork_pair": {
+      "consumer_id": "focus-stack-fork",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\attestations\\focus-stack-fork.json",
+        "attestation_schema": "m165-consumer-input-attestation-v1",
+        "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+        "outputs": [
+          {
+            "bytes": 7020,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\outputs\\focus-stack-fork.tiff",
+            "sha256": "68139558bb33a795d1fb7a5aaf007bf56b70f22c360b55a23542052d85cc4fed"
+          }
+        ],
+        "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\receipts\\focus-stack-fork\\development-common.json"
+      },
+      "input_id": "development-common",
+      "outcome": "PASS",
+      "required": true
+    },
+    "gate": {
+      "bytes": 8795,
+      "label": "full roster gate",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\gate.json",
+      "sha256": "f44625bd8bb8ed53960b9dc6d1a37385510fba9c577030ec81cf2a98d554ce2f"
+    },
+    "status": "FAIL",
+    "summary": {
+      "all_consumer_input_pairs": {
+        "counted_sum": 5,
+        "counts": {
+          "BLOCKED": 2,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 1,
+          "PASS": 2
+        },
+        "partition_balanced": true,
+        "total_examined": 5
+      },
+      "all_partitions_balanced": true,
+      "inputs": {
+        "counted_sum": 1,
+        "counts": {
+          "BLOCKED": 1,
+          "FAIL": 0,
+          "MISSING": 0,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 1
+      },
+      "optional_consumer_input_pairs": {
+        "counted_sum": 1,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 1,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 1
+      },
+      "required_consumer_input_pairs": {
+        "counted_sum": 4,
+        "counts": {
+          "BLOCKED": 2,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 0,
+          "PASS": 2
+        },
+        "partition_balanced": true,
+        "total_examined": 4
+      }
+    }
+  }
+}
