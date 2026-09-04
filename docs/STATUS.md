@@ -2917,6 +2917,71 @@ truth instrument. The program has enough measurements. It has no way to say
 "better," and until it does, every additional measurement is a more precise
 description of a stacker nobody can show is improving.
 
+### 2.9.26 The blockers are conjunctive, which is why nothing has moved
+
+I counted the scorecard's own readiness table rather than reasoning about it.
+`docs/proposals/2026-09-sota-scorecard.md:415-418` defines the codes: **(a)**
+missing admissible detail instrument, **(b)** unresolved
+native-scale/`cover=scale` geometry, **(c)** missing or under-powered capture,
+**(d)** unavailable common-input Zerene/Helicon output, **(e)** measurable now.
+Parsing §3.1's twelve rows mechanically:
+
+| code | blocks | axes |
+|---|---|---|
+| **(b)** geometry | **10** | M1 M2 M3 M4 M5 M6 M7 M9 M10 M11 |
+| **(a)** detail instrument | 8 | M1 M2 M3 M4 M5 M6 M9 M11 |
+| **(d)** comparator | 8 | M1 M2 M3 M4 M5 M6 M7 M11 |
+| **(c)** capture | 6 | M1 M5 M6 M7 M9 M10 |
+| **(e)** measurable now | 2 | M8, M12 |
+
+**`(b)` is the largest single blocker in the program and I had not noticed.**
+
+**Then the result that explains the last six days.** I computed which axes
+become measurable under every combination of removals:
+
+| cleared | axes measurable |
+|---|---|
+| nothing -- today | **2 of 12** (M8, M12) |
+| any **one** of a, b, d | **2** |
+| any **two** -- `b+d`, `a+b` | **2** |
+| **`a+b+d`** | **6** (adds M2 M3 M4 M11) |
+| **`a+b+c+d`** | **12** |
+
+**The blockers are conjunctive. No single fix unlocks a single axis.** Clearing
+the largest blocker in the program, alone, changes the scoreboard by nothing.
+
+That is not a discipline problem and no amount of lane throughput would have
+hidden it. It is the honest reason the program can produce 283 `docs/` commits
+and 425 `experiments/` commits in a week (§2.9.25) and still show a scoreboard
+reading `2 of 12`. **Every lane working a single blocker in isolation was
+producing exactly zero axis movement, correctly.**
+
+**The roadmap this yields is three items, and it fits on one line each.**
+
+1. **`(b)` -- build crop-early.** Pure software, no capture, no purchase.
+   Authorised, with a registered prediction of `96.22496%` retained area
+   against the `80%` gate, replacing the `64.6047%` that late-crop boundary
+   poisoning produced (`STATUS:2390-2394`). **It has not been written**: zero
+   hits for `crop_early`/`crop-early`/`CropEarly` across every `.rs` file in
+   `crates/`. The program record calls it *"the most consequential open build
+   in the program"* and it has sat unbuilt for six days. lane-COVER has been
+   redirected off border measurement onto it.
+2. **`(d)` -- build pristine upstream `PetteriAimonen/focus-stack`.** Free, MIT,
+   third-party, readable source. Newly available because §2.9.24 established
+   the existing comparator was our own fork. No owner action, no licence.
+3. **`(a)`+`(c)` -- shoot one capture session.** lane-TRUTH's `GO` needs a
+   160-frame higher-magnification reference block, the sweeps pinned to 1.30x,
+   the 2x Viltrox installed throughout. That single session supplies the truth
+   instrument **and** the missing captures. It is the only item requiring the
+   owner, and it is the master key: `a+b+d` is `6 of 12`, and adding the
+   capture is `12 of 12`.
+
+**So the answer to "how far toward SOTA" is `2 of 12` axes measurable, none of
+them the detail axis, and the distance to `12 of 12` is two software items and
+one afternoon at the bench.** That is a far better position than "six days
+without a quality change" suggests, but only because the work is now correctly
+aimed -- and it was not aimed this way this morning.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
