@@ -1,0 +1,2405 @@
+{
+  "by_function": {
+    "<module>": 1,
+    "achieved_effect_payload": 6,
+    "adjudicate_result": 18,
+    "bootstrap_noise": 1,
+    "checked_distinct_refs": 4,
+    "checked_ref": 6,
+    "checked_unique_strings": 1,
+    "commission_m135": 3,
+    "compatibility_values": 1,
+    "evaluate_hull": 5,
+    "evaluate_m135": 12,
+    "finite_positive_samples": 1,
+    "load_arm_evidence": 3,
+    "load_json": 2,
+    "main": 6,
+    "noise_acceptance_upper": 2,
+    "one_sided_wilson_lower": 1,
+    "parse_noise_cells": 9,
+    "parse_noise_pilot": 9,
+    "pilot_power": 1,
+    "powers_from_extractor_output": 6,
+    "reject_supplied_conclusions": 3,
+    "run_m135_checker": 4,
+    "run_temporal_extractor": 3,
+    "tau_keys": 1,
+    "transform_noise_cells": 3,
+    "valid_ledger": 8,
+    "validate_achieved_effect_output": 11,
+    "validate_commissioning": 7,
+    "validate_contract": 44,
+    "validate_document": 3,
+    "validate_frozen_bindings": 6,
+    "validate_go_output": 5,
+    "validate_noise_commissioning_summaries": 2,
+    "validate_sources": 6,
+    "validate_standardisation": 20,
+    "verify_cost_binding": 14,
+    "verify_detail_binding": 3,
+    "verify_noise_binding": 13,
+    "verify_pipeline": 2,
+    "verify_ref_list": 1,
+    "verify_temporal_extractor_binding": 2,
+    "wilson_interval": 2
+  },
+  "by_kind": {
+    "comprehension-if": 3,
+    "if": 255,
+    "ifexp": 3
+  },
+  "definition": "statement-level executable decision guards in production adjudicator and CLI; excludes fixture builders and run_self_test",
+  "guards": [
+    {
+      "expression": "path.suffix == \".gz\"",
+      "function": "load_json",
+      "id": 1,
+      "kind": "if",
+      "line": 144,
+      "test_end_line": 144,
+      "test_line": 144
+    },
+    {
+      "expression": "not isinstance(value, dict)",
+      "function": "load_json",
+      "id": 2,
+      "kind": "if",
+      "line": 149,
+      "test_end_line": 149,
+      "test_line": 149
+    },
+    {
+      "expression": "not 0 <= successes <= trials or trials <= 0",
+      "function": "wilson_interval",
+      "id": 3,
+      "kind": "if",
+      "line": 181,
+      "test_end_line": 181,
+      "test_line": 181
+    },
+    {
+      "expression": "not 0.0 < confidence < 1.0",
+      "function": "wilson_interval",
+      "id": 4,
+      "kind": "if",
+      "line": 183,
+      "test_end_line": 183,
+      "test_line": 183
+    },
+    {
+      "expression": "not 0 <= successes <= trials or trials <= 0",
+      "function": "one_sided_wilson_lower",
+      "id": 5,
+      "kind": "if",
+      "line": 198,
+      "test_end_line": 198,
+      "test_line": 198
+    },
+    {
+      "expression": "(start, stop, step) != (0, 100, 1)",
+      "function": "tau_keys",
+      "id": 6,
+      "kind": "if",
+      "line": 217,
+      "test_end_line": 217,
+      "test_line": 217
+    },
+    {
+      "expression": "contract.get(\"schema\") != 4",
+      "function": "validate_contract",
+      "id": 7,
+      "kind": "if",
+      "line": 223,
+      "test_end_line": 223,
+      "test_line": 223
+    },
+    {
+      "expression": "contract.get(\"status\") not in {\n        \"DRAFT_PENDING_THIRD_INDEPENDENT_REVIEW\",\n        \"FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION\",\n    }",
+      "function": "validate_contract",
+      "id": 8,
+      "kind": "if",
+      "line": 225,
+      "test_end_line": 228,
+      "test_line": 225
+    },
+    {
+      "expression": "contract[\"output_gate\"].get(\"width_role\") != \"DIAGNOSTIC_ONLY\"",
+      "function": "validate_contract",
+      "id": 9,
+      "kind": "if",
+      "line": 230,
+      "test_end_line": 230,
+      "test_line": 230
+    },
+    {
+      "expression": "contract[\"hull_instrument\"].get(\"measurement_stage\")\n        != \"PRE_CLAMP_RECONSTRUCTION\"",
+      "function": "validate_contract",
+      "id": 10,
+      "kind": "if",
+      "line": 232,
+      "test_end_line": 234,
+      "test_line": 233
+    },
+    {
+      "expression": "contract[\"hull_instrument\"].get(\"post_clamp_evidence_forbidden\") is not True",
+      "function": "validate_contract",
+      "id": 11,
+      "kind": "if",
+      "line": 237,
+      "test_end_line": 237,
+      "test_line": 237
+    },
+    {
+      "expression": "float(contract[\"noise_instrument\"][\"natural_null_power_ratio\"]) != 1.0",
+      "function": "validate_contract",
+      "id": 12,
+      "kind": "if",
+      "line": 239,
+      "test_end_line": 239,
+      "test_line": 239
+    },
+    {
+      "expression": "contract[\"noise_instrument\"].get(\"power_ratio_upper95\") is not None",
+      "function": "validate_contract",
+      "id": 13,
+      "kind": "if",
+      "line": 241,
+      "test_end_line": 241,
+      "test_line": 241
+    },
+    {
+      "expression": "tau_keys(contract)[0] != \"0.00\" or tau_keys(contract)[-1] != \"1.00\"",
+      "function": "validate_contract",
+      "id": 14,
+      "kind": "if",
+      "line": 243,
+      "test_end_line": 243,
+      "test_line": 243
+    },
+    {
+      "expression": "int(contract[\"threshold_coordinate\"][\"robust_neighbour_steps\"]) != 1",
+      "function": "validate_contract",
+      "id": 15,
+      "kind": "if",
+      "line": 245,
+      "test_end_line": 245,
+      "test_line": 245
+    },
+    {
+      "expression": "detail.get(\"valid_decision_states\") != [\"DETAIL_PASS\", \"DETAIL_FAIL\"]",
+      "function": "validate_contract",
+      "id": 16,
+      "kind": "if",
+      "line": 248,
+      "test_end_line": 248,
+      "test_line": 248
+    },
+    {
+      "expression": "detail.get(\"invalid_decision_state\") != \"INSTRUMENT_INVALID\"",
+      "function": "validate_contract",
+      "id": 17,
+      "kind": "if",
+      "line": 250,
+      "test_end_line": 250,
+      "test_line": 250
+    },
+    {
+      "expression": "contract[\"status\"] == \"FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION\"",
+      "function": "validate_contract",
+      "id": 18,
+      "kind": "if",
+      "line": 252,
+      "test_end_line": 252,
+      "test_line": 252
+    },
+    {
+      "expression": "not isinstance(contract[\"activation\"].get(\"independent_review\"), dict)",
+      "function": "validate_contract",
+      "id": 19,
+      "kind": "if",
+      "line": 253,
+      "test_end_line": 253,
+      "test_line": 253
+    },
+    {
+      "expression": "not HEX40.fullmatch(str(contract[\"activation\"].get(\"frozen_commit\", \"\")))",
+      "function": "validate_contract",
+      "id": 20,
+      "kind": "if",
+      "line": 255,
+      "test_end_line": 255,
+      "test_line": 255
+    },
+    {
+      "expression": "contract[\"noise_instrument\"].get(\"binding_state\") != \"BOUND\"",
+      "function": "validate_contract",
+      "id": 21,
+      "kind": "if",
+      "line": 257,
+      "test_end_line": 257,
+      "test_line": 257
+    },
+    {
+      "expression": "contract[\"capture_ledgers\"].get(\"binding_state\") != \"BOUND\"",
+      "function": "validate_contract",
+      "id": 22,
+      "kind": "if",
+      "line": 259,
+      "test_end_line": 259,
+      "test_line": 259
+    },
+    {
+      "expression": "contract[\"cost\"].get(\"binding_state\") != \"BOUND\"",
+      "function": "validate_contract",
+      "id": 23,
+      "kind": "if",
+      "line": 261,
+      "test_end_line": 261,
+      "test_line": 261
+    },
+    {
+      "expression": "noise.get(\"commissioning_transforms\") != {\n        \"null\": \"IDENTITY\",\n        \"inflation_defect\": \"DOUBLE_CANDIDATE_TEMPORAL_POWER\",\n        \"averaging_improvement\": \"HALVE_CANDIDATE_TEMPORAL_POWER\",\n        \"common_scene_placebo\": (\"ADD_IDENTICAL_SCENE_TERM_TO_BOTH_CANDIDATE_REPEATS\"),\n    }",
+      "function": "validate_contract",
+      "id": 24,
+      "kind": "if",
+      "line": 264,
+      "test_end_line": 269,
+      "test_line": 264
+    },
+    {
+      "expression": "noise.get(\"reference\") != \"LEGACY_STREHL\"",
+      "function": "validate_contract",
+      "id": 25,
+      "kind": "if",
+      "line": 271,
+      "test_end_line": 271,
+      "test_line": 271
+    },
+    {
+      "expression": "noise.get(\"scorecard_m2_claim\") != \"NOT_LICENSED\"",
+      "function": "validate_contract",
+      "id": 26,
+      "kind": "if",
+      "line": 273,
+      "test_end_line": 273,
+      "test_line": 273
+    },
+    {
+      "expression": "noise.get(\"minimum_effect_symbol\") != \"delta_required\"",
+      "function": "validate_contract",
+      "id": 27,
+      "kind": "if",
+      "line": 275,
+      "test_end_line": 275,
+      "test_line": 275
+    },
+    {
+      "expression": "noise.get(\"unbound_minimum_effect_claim\") != \"DIRECTION_ONLY\"",
+      "function": "validate_contract",
+      "id": 28,
+      "kind": "if",
+      "line": 277,
+      "test_end_line": 277,
+      "test_line": 277
+    },
+    {
+      "expression": "noise.get(\"scorecard_m2_reference\") != \"SHIPPING_COMPARATOR\"",
+      "function": "validate_contract",
+      "id": 29,
+      "kind": "if",
+      "line": 279,
+      "test_end_line": 279,
+      "test_line": 279
+    },
+    {
+      "expression": "noise.get(\"power_analysis_requirement\")\n        != \"REQUIRED_ONLY_WHEN_MINIMUM_EFFECT_BOUND\"",
+      "function": "validate_contract",
+      "id": 30,
+      "kind": "if",
+      "line": 281,
+      "test_end_line": 283,
+      "test_line": 282
+    },
+    {
+      "expression": "noise.get(\"minimum_effect_binding_state\") not in {\"UNBOUND\", \"BOUND\"}",
+      "function": "validate_contract",
+      "id": 31,
+      "kind": "if",
+      "line": 286,
+      "test_end_line": 286,
+      "test_line": 286
+    },
+    {
+      "expression": "noise.get(\"minimum_effect_binding_state\") == \"UNBOUND\" and any(\n        noise.get(field) is not None\n        for field in (\n            \"required_rms_reduction\",\n            \"effect_requirement\",\n            \"pilot_evidence\",\n        )\n    )",
+      "function": "validate_contract",
+      "id": 32,
+      "kind": "if",
+      "line": 288,
+      "test_end_line": 295,
+      "test_line": 288
+    },
+    {
+      "expression": "noise.get(\"effect_output_schema\") != \"m138-achieved-temporal-effect/v1\"",
+      "function": "validate_contract",
+      "id": 33,
+      "kind": "if",
+      "line": 297,
+      "test_end_line": 297,
+      "test_line": 297
+    },
+    {
+      "expression": "noise.get(\"required_go_effect_phases\") != [\"development\", \"holdout\"]",
+      "function": "validate_contract",
+      "id": 34,
+      "kind": "if",
+      "line": 299,
+      "test_end_line": 299,
+      "test_line": 299
+    },
+    {
+      "expression": "noise.get(\"required_effect_cell_fields\") != [\n        \"estimated_power_ratio\",\n        \"simultaneous_confidence_lower\",\n        \"simultaneous_confidence_upper\",\n        \"simultaneous_one_sided_upper\",\n    ]",
+      "function": "validate_contract",
+      "id": 35,
+      "kind": "if",
+      "line": 301,
+      "test_end_line": 306,
+      "test_line": 301
+    },
+    {
+      "expression": "contract[\"evidence_contract\"].get(\"adjudication_output_schema\")\n        != \"m138-adjudication/v2\"",
+      "function": "validate_contract",
+      "id": 36,
+      "kind": "if",
+      "line": 308,
+      "test_end_line": 310,
+      "test_line": 309
+    },
+    {
+      "expression": "contract[\"evidence_contract\"].get(\"rule\")\n        != \"No submitted scalar, array, or status string may carry a verdict. \"\n        \"Every quantity the gate scores must be recomputed by the adjudicator \"\n        \"from a hash-bound artifact, and every artifact reference that is \"\n        \"required to be independent must be verified distinct.\"",
+      "function": "validate_contract",
+      "id": 37,
+      "kind": "if",
+      "line": 313,
+      "test_end_line": 318,
+      "test_line": 314
+    },
+    {
+      "expression": "\"status\" in contract[\"cost\"]",
+      "function": "validate_contract",
+      "id": 38,
+      "kind": "if",
+      "line": 321,
+      "test_end_line": 321,
+      "test_line": 321
+    },
+    {
+      "expression": "test_mode",
+      "function": "validate_contract",
+      "id": 39,
+      "kind": "if",
+      "line": 323,
+      "test_end_line": 323,
+      "test_line": 323
+    },
+    {
+      "expression": "standard[\"required_band_indices\"] != list(range(7))",
+      "function": "validate_contract",
+      "id": 40,
+      "kind": "if",
+      "line": 326,
+      "test_end_line": 326,
+      "test_line": 326
+    },
+    {
+      "expression": "standard[\"coverage_checkpoints\"] != [\n        0.01,\n        0.05,\n        0.25,\n        0.5,\n        0.75,\n        0.95,\n        0.99,\n    ]",
+      "function": "validate_contract",
+      "id": 41,
+      "kind": "if",
+      "line": 328,
+      "test_end_line": 336,
+      "test_line": 328
+    },
+    {
+      "expression": "int(standard[\"calibration_replicates\"]) != 4095",
+      "function": "validate_contract",
+      "id": 42,
+      "kind": "if",
+      "line": 338,
+      "test_end_line": 338,
+      "test_line": 338
+    },
+    {
+      "expression": "int(standard[\"validation_replicates\"]) != 8192",
+      "function": "validate_contract",
+      "id": 43,
+      "kind": "if",
+      "line": 340,
+      "test_end_line": 340,
+      "test_line": 340
+    },
+    {
+      "expression": "float(standard[\"maximum_absolute_admission_error\"]) != 0.03",
+      "function": "validate_contract",
+      "id": 44,
+      "kind": "if",
+      "line": 342,
+      "test_end_line": 342,
+      "test_line": 342
+    },
+    {
+      "expression": "int(standard[\"physical_null_minimum_sites_per_stratum\"]) != 256",
+      "function": "validate_contract",
+      "id": 45,
+      "kind": "if",
+      "line": 344,
+      "test_end_line": 344,
+      "test_line": 344
+    },
+    {
+      "expression": "float(standard[\"physical_null_familywise_confidence\"]) != 0.99",
+      "function": "validate_contract",
+      "id": 46,
+      "kind": "if",
+      "line": 346,
+      "test_end_line": 346,
+      "test_line": 346
+    },
+    {
+      "expression": "float(standard[\"focus_power_checkpoint\"]) != 0.5",
+      "function": "validate_contract",
+      "id": 47,
+      "kind": "if",
+      "line": 348,
+      "test_end_line": 348,
+      "test_line": 348
+    },
+    {
+      "expression": "float(noise[\"familywise_confidence\"]) != 0.95",
+      "function": "validate_contract",
+      "id": 48,
+      "kind": "if",
+      "line": 350,
+      "test_end_line": 350,
+      "test_line": 350
+    },
+    {
+      "expression": "float(noise[\"power_target\"]) != 0.95",
+      "function": "validate_contract",
+      "id": 49,
+      "kind": "if",
+      "line": 352,
+      "test_end_line": 352,
+      "test_line": 352
+    },
+    {
+      "expression": "int(noise[\"bootstrap_replicates\"]) != 8192",
+      "function": "validate_contract",
+      "id": 50,
+      "kind": "if",
+      "line": 354,
+      "test_end_line": 354,
+      "test_line": 354
+    },
+    {
+      "expression": "not path.exists()",
+      "function": "validate_sources",
+      "id": 51,
+      "kind": "if",
+      "line": 361,
+      "test_end_line": 361,
+      "test_line": 361
+    },
+    {
+      "expression": "got != expected",
+      "function": "validate_sources",
+      "id": 52,
+      "kind": "if",
+      "line": 364,
+      "test_end_line": 364,
+      "test_line": 364
+    },
+    {
+      "expression": "got != expected",
+      "function": "validate_sources",
+      "id": 53,
+      "kind": "if",
+      "line": 374,
+      "test_end_line": 374,
+      "test_line": 374
+    },
+    {
+      "expression": "first < 1 or last > len(lines)",
+      "function": "validate_sources",
+      "id": 54,
+      "kind": "if",
+      "line": 378,
+      "test_end_line": 378,
+      "test_line": 378
+    },
+    {
+      "expression": "needle not in \"\\n\".join(lines[first - 1 : last])",
+      "function": "validate_sources",
+      "id": 55,
+      "kind": "if",
+      "line": 382,
+      "test_end_line": 382,
+      "test_line": 382
+    },
+    {
+      "expression": "needle not in \"\\n\".join(lines[first - 1 : last])",
+      "function": "validate_sources",
+      "id": 56,
+      "kind": "if",
+      "line": 389,
+      "test_end_line": 389,
+      "test_line": 389
+    },
+    {
+      "expression": "\" \".join(required.split()) not in collapsed",
+      "function": "validate_document",
+      "id": 57,
+      "kind": "if",
+      "line": 399,
+      "test_end_line": 399,
+      "test_line": 399
+    },
+    {
+      "expression": "citation not in text",
+      "function": "validate_document",
+      "id": 58,
+      "kind": "if",
+      "line": 405,
+      "test_end_line": 405,
+      "test_line": 405
+    },
+    {
+      "expression": "citation not in text",
+      "function": "validate_document",
+      "id": 59,
+      "kind": "if",
+      "line": 409,
+      "test_end_line": 409,
+      "test_line": 409
+    },
+    {
+      "expression": "not isinstance(ref, dict) or set(ref) != {\"path\", \"sha256\"}",
+      "function": "checked_ref",
+      "id": 60,
+      "kind": "if",
+      "line": 419,
+      "test_end_line": 419,
+      "test_line": 419
+    },
+    {
+      "expression": "not isinstance(relative, str) or not relative or Path(relative).is_absolute()",
+      "function": "checked_ref",
+      "id": 61,
+      "kind": "if",
+      "line": 423,
+      "test_end_line": 423,
+      "test_line": 423
+    },
+    {
+      "expression": "not isinstance(expected, str) or not HEX64.fullmatch(expected)",
+      "function": "checked_ref",
+      "id": 62,
+      "kind": "if",
+      "line": 425,
+      "test_end_line": 425,
+      "test_line": 425
+    },
+    {
+      "expression": "path != root and root not in path.parents",
+      "function": "checked_ref",
+      "id": 63,
+      "kind": "if",
+      "line": 429,
+      "test_end_line": 429,
+      "test_line": 429
+    },
+    {
+      "expression": "not path.is_file()",
+      "function": "checked_ref",
+      "id": 64,
+      "kind": "if",
+      "line": 431,
+      "test_end_line": 431,
+      "test_line": 431
+    },
+    {
+      "expression": "got != expected",
+      "function": "checked_ref",
+      "id": 65,
+      "kind": "if",
+      "line": 434,
+      "test_end_line": 434,
+      "test_line": 434
+    },
+    {
+      "expression": "not isinstance(refs, list) or not refs",
+      "function": "verify_ref_list",
+      "id": 66,
+      "kind": "if",
+      "line": 455,
+      "test_end_line": 455,
+      "test_line": 455
+    },
+    {
+      "expression": "not isinstance(refs, list) or len(refs) != expected_count",
+      "function": "checked_distinct_refs",
+      "id": 67,
+      "kind": "if",
+      "line": 470,
+      "test_end_line": 470,
+      "test_line": 470
+    },
+    {
+      "expression": "len(set(resolved)) != len(resolved)",
+      "function": "checked_distinct_refs",
+      "id": 68,
+      "kind": "if",
+      "line": 477,
+      "test_end_line": 477,
+      "test_line": 477
+    },
+    {
+      "expression": "distinct_hashes",
+      "function": "checked_distinct_refs",
+      "id": 69,
+      "kind": "if",
+      "line": 479,
+      "test_end_line": 479,
+      "test_line": 479
+    },
+    {
+      "expression": "len(set(hashes)) != len(hashes)",
+      "function": "checked_distinct_refs",
+      "id": 70,
+      "kind": "if",
+      "line": 481,
+      "test_end_line": 481,
+      "test_line": 481
+    },
+    {
+      "expression": "not isinstance(values, list)\n        or len(values) != count\n        or any(not isinstance(value, str) or not value for value in values)\n        or len(set(values)) != count",
+      "function": "checked_unique_strings",
+      "id": 71,
+      "kind": "if",
+      "line": 487,
+      "test_end_line": 491,
+      "test_line": 488
+    },
+    {
+      "expression": "isinstance(value, dict)",
+      "function": "reject_supplied_conclusions",
+      "id": 72,
+      "kind": "if",
+      "line": 500,
+      "test_end_line": 500,
+      "test_line": 500
+    },
+    {
+      "expression": "key in forbidden",
+      "function": "reject_supplied_conclusions",
+      "id": 73,
+      "kind": "if",
+      "line": 502,
+      "test_end_line": 502,
+      "test_line": 502
+    },
+    {
+      "expression": "isinstance(value, list)",
+      "function": "reject_supplied_conclusions",
+      "id": 74,
+      "kind": "if",
+      "line": 505,
+      "test_end_line": 505,
+      "test_line": 505
+    },
+    {
+      "expression": "not isinstance(ledger, dict)",
+      "function": "valid_ledger",
+      "id": 75,
+      "kind": "if",
+      "line": 511,
+      "test_end_line": 511,
+      "test_line": 511
+    },
+    {
+      "expression": "not isinstance(detail, list) or not detail or len(detail) != len(set(detail))",
+      "function": "valid_ledger",
+      "id": 76,
+      "kind": "if",
+      "line": 516,
+      "test_end_line": 516,
+      "test_line": 516
+    },
+    {
+      "expression": "not isinstance(hull, list) or not hull or len(hull) != len(set(hull))",
+      "function": "valid_ledger",
+      "id": 77,
+      "kind": "if",
+      "line": 518,
+      "test_end_line": 518,
+      "test_line": 518
+    },
+    {
+      "expression": "not isinstance(noise, dict) or not noise",
+      "function": "valid_ledger",
+      "id": 78,
+      "kind": "if",
+      "line": 520,
+      "test_end_line": 520,
+      "test_line": 520
+    },
+    {
+      "expression": "any(not isinstance(value, str) or not value for value in values)",
+      "function": "valid_ledger",
+      "id": 79,
+      "kind": "if",
+      "line": 523,
+      "test_end_line": 523,
+      "test_line": 523
+    },
+    {
+      "expression": "not isinstance(capture, str) or not capture",
+      "function": "valid_ledger",
+      "id": 80,
+      "kind": "if",
+      "line": 526,
+      "test_end_line": 526,
+      "test_line": 526
+    },
+    {
+      "expression": "not isinstance(sites, list)\n            or not sites\n            or len(sites) != len(set(sites))\n            or any(not isinstance(site, str) or not site for site in sites)",
+      "function": "valid_ledger",
+      "id": 81,
+      "kind": "if",
+      "line": 528,
+      "test_end_line": 532,
+      "test_line": 529
+    },
+    {
+      "expression": "selected_sites is not None and len(sites) != selected_sites",
+      "function": "valid_ledger",
+      "id": 82,
+      "kind": "if",
+      "line": 535,
+      "test_end_line": 535,
+      "test_line": 535
+    },
+    {
+      "expression": "array.ndim != 1\n        or len(array) != trials\n        or not np.all(np.isfinite(array))\n        or np.any(array < 0.0)\n        or np.any(array > 1.0)",
+      "function": "compatibility_values",
+      "id": 83,
+      "kind": "if",
+      "line": 550,
+      "test_end_line": 555,
+      "test_line": 551
+    },
+    {
+      "expression": "document.get(\"schema\")\n        != contract[\"evidence_contract\"][\"standardisation_schema\"]",
+      "function": "validate_standardisation",
+      "id": 84,
+      "kind": "if",
+      "line": 583,
+      "test_end_line": 585,
+      "test_line": 584
+    },
+    {
+      "expression": "int(document.get(\"calibration_replicates\", -1)) != int(\n        cfg[\"calibration_replicates\"]\n    )",
+      "function": "validate_standardisation",
+      "id": 85,
+      "kind": "if",
+      "line": 588,
+      "test_end_line": 590,
+      "test_line": 588
+    },
+    {
+      "expression": "int(document.get(\"validation_replicates\", -1)) != int(\n        cfg[\"validation_replicates\"]\n    )",
+      "function": "validate_standardisation",
+      "id": 86,
+      "kind": "if",
+      "line": 592,
+      "test_end_line": 594,
+      "test_line": 592
+    },
+    {
+      "expression": "document.get(\"winner_selection\") != \"PRODUCTION_EXACT_STACK\"",
+      "function": "validate_standardisation",
+      "id": 87,
+      "kind": "if",
+      "line": 596,
+      "test_end_line": 596,
+      "test_line": 596
+    },
+    {
+      "expression": "document.get(\"noise_stage\") != \"POISSON_GAUSSIAN_BEFORE_WARP\"",
+      "function": "validate_standardisation",
+      "id": 88,
+      "kind": "if",
+      "line": 600,
+      "test_end_line": 600,
+      "test_line": 600
+    },
+    {
+      "expression": "not isinstance(manifests, list) or not manifests",
+      "function": "validate_standardisation",
+      "id": 89,
+      "kind": "if",
+      "line": 618,
+      "test_end_line": 618,
+      "test_line": 618
+    },
+    {
+      "expression": "not HEX64.fullmatch(digest) or stack_size < 2 or digest in manifest_sizes",
+      "function": "validate_standardisation",
+      "id": 90,
+      "kind": "if",
+      "line": 624,
+      "test_end_line": 624,
+      "test_line": 624
+    },
+    {
+      "expression": "not isinstance(cells, list)",
+      "function": "validate_standardisation",
+      "id": 91,
+      "kind": "if",
+      "line": 642,
+      "test_end_line": 642,
+      "test_line": 642
+    },
+    {
+      "expression": "key in seen",
+      "function": "validate_standardisation",
+      "id": 92,
+      "kind": "if",
+      "line": 659,
+      "test_end_line": 659,
+      "test_line": 659
+    },
+    {
+      "expression": "not isinstance(focus, list) or len(focus) != len(offsets)",
+      "function": "validate_standardisation",
+      "id": 93,
+      "kind": "if",
+      "line": 669,
+      "test_end_line": 669,
+      "test_line": 669
+    },
+    {
+      "expression": "got_offsets != offsets",
+      "function": "validate_standardisation",
+      "id": 94,
+      "kind": "if",
+      "line": 672,
+      "test_end_line": 672,
+      "test_line": 672
+    },
+    {
+      "expression": "not all(\n            next_interval[1] < previous_interval[0]\n            for previous_interval, next_interval in zip(intervals, intervals[1:])\n        )",
+      "function": "validate_standardisation",
+      "id": 95,
+      "kind": "if",
+      "line": 686,
+      "test_end_line": 689,
+      "test_line": 686
+    },
+    {
+      "expression": "seen != required",
+      "function": "validate_standardisation",
+      "id": 96,
+      "kind": "if",
+      "line": 691,
+      "test_end_line": 691,
+      "test_line": 691
+    },
+    {
+      "expression": "not isinstance(sessions, list) or not sessions",
+      "function": "validate_standardisation",
+      "id": 97,
+      "kind": "if",
+      "line": 699,
+      "test_end_line": 699,
+      "test_line": 699
+    },
+    {
+      "expression": "not isinstance(physical, list)",
+      "function": "validate_standardisation",
+      "id": 98,
+      "kind": "if",
+      "line": 702,
+      "test_end_line": 702,
+      "test_line": 702
+    },
+    {
+      "expression": "key in physical_seen",
+      "function": "validate_standardisation",
+      "id": 99,
+      "kind": "if",
+      "line": 721,
+      "test_end_line": 721,
+      "test_line": 721
+    },
+    {
+      "expression": "values.ndim != 1\n            or len(values) < minimum_sites\n            or not np.all(np.isfinite(values))\n            or np.any(values < 0.0)\n            or np.any(values > 1.0)",
+      "function": "validate_standardisation",
+      "id": 100,
+      "kind": "if",
+      "line": 725,
+      "test_end_line": 730,
+      "test_line": 726
+    },
+    {
+      "expression": "not lower <= checkpoint <= upper",
+      "function": "validate_standardisation",
+      "id": 101,
+      "kind": "if",
+      "line": 737,
+      "test_end_line": 737,
+      "test_line": 737
+    },
+    {
+      "expression": "physical_seen != physical_required",
+      "function": "validate_standardisation",
+      "id": 102,
+      "kind": "if",
+      "line": 741,
+      "test_end_line": 741,
+      "test_line": 741
+    },
+    {
+      "expression": "require_pass and maximum_error > float(cfg[\"maximum_absolute_admission_error\"])",
+      "function": "validate_standardisation",
+      "id": 103,
+      "kind": "if",
+      "line": 743,
+      "test_end_line": 743,
+      "test_line": 743
+    },
+    {
+      "expression": "binding.get(\"binding_state\") != \"BOUND\"",
+      "function": "verify_detail_binding",
+      "id": 104,
+      "kind": "if",
+      "line": 765,
+      "test_end_line": 765,
+      "test_line": 765
+    },
+    {
+      "expression": "bundle.get(\"schema\") != binding[\"bundle_manifest_schema\"]",
+      "function": "verify_detail_binding",
+      "id": 105,
+      "kind": "if",
+      "line": 785,
+      "test_end_line": 785,
+      "test_line": 785
+    },
+    {
+      "expression": "sha256(paths[\"checker_entrypoint\"]) not in {\n        ref[\"sha256\"] for ref in bundle[\"files\"]\n    }",
+      "function": "verify_detail_binding",
+      "id": 106,
+      "kind": "if",
+      "line": 793,
+      "test_end_line": 795,
+      "test_line": 793
+    },
+    {
+      "expression": "mode == \"commission\"",
+      "function": "run_m135_checker",
+      "id": 107,
+      "kind": "ifexp",
+      "line": 813,
+      "test_end_line": 813,
+      "test_line": 813
+    },
+    {
+      "expression": "completed.returncode != 0",
+      "function": "run_m135_checker",
+      "id": 108,
+      "kind": "if",
+      "line": 824,
+      "test_end_line": 824,
+      "test_line": 824
+    },
+    {
+      "expression": "output.get(\"schema\") != contract[\"detail_instrument\"][\"interface_schema\"]",
+      "function": "run_m135_checker",
+      "id": 109,
+      "kind": "if",
+      "line": 847,
+      "test_end_line": 847,
+      "test_line": 847
+    },
+    {
+      "expression": "output.get(field) != expected",
+      "function": "run_m135_checker",
+      "id": 110,
+      "kind": "if",
+      "line": 850,
+      "test_end_line": 850,
+      "test_line": 850
+    },
+    {
+      "expression": "request.get(\"schema\") != \"m135-m138-commission-request/v1\"",
+      "function": "commission_m135",
+      "id": 111,
+      "kind": "if",
+      "line": 865,
+      "test_end_line": 865,
+      "test_line": 865
+    },
+    {
+      "expression": "not isinstance(controls, dict) or set(controls) != expected",
+      "function": "commission_m135",
+      "id": 112,
+      "kind": "if",
+      "line": 871,
+      "test_end_line": 871,
+      "test_line": 871
+    },
+    {
+      "expression": "not all(controls[name] is True for name in expected)",
+      "function": "commission_m135",
+      "id": 113,
+      "kind": "if",
+      "line": 873,
+      "test_end_line": 873,
+      "test_line": 873
+    },
+    {
+      "expression": "request_hash not in cache",
+      "function": "evaluate_m135",
+      "id": 114,
+      "kind": "if",
+      "line": 890,
+      "test_end_line": 890,
+      "test_line": 890
+    },
+    {
+      "expression": "request.get(\"schema\") != \"m135-m138-evaluate-request/v1\"",
+      "function": "evaluate_m135",
+      "id": 115,
+      "kind": "if",
+      "line": 896,
+      "test_end_line": 896,
+      "test_line": 896
+    },
+    {
+      "expression": "request.get(\"capture_ids\") != expected_captures",
+      "function": "evaluate_m135",
+      "id": 116,
+      "kind": "if",
+      "line": 898,
+      "test_end_line": 898,
+      "test_line": 898
+    },
+    {
+      "expression": "not isinstance(states, dict) or set(states) != set(expected_captures)",
+      "function": "evaluate_m135",
+      "id": 117,
+      "kind": "if",
+      "line": 909,
+      "test_end_line": 909,
+      "test_line": 909
+    },
+    {
+      "expression": "not isinstance(passes, dict)",
+      "function": "evaluate_m135",
+      "id": 118,
+      "kind": "if",
+      "line": 911,
+      "test_end_line": 911,
+      "test_line": 911
+    },
+    {
+      "expression": "state == invalid_state",
+      "function": "evaluate_m135",
+      "id": 119,
+      "kind": "if",
+      "line": 919,
+      "test_end_line": 919,
+      "test_line": 919
+    },
+    {
+      "expression": "capture_id in passes",
+      "function": "evaluate_m135",
+      "id": 120,
+      "kind": "if",
+      "line": 920,
+      "test_end_line": 920,
+      "test_line": 920
+    },
+    {
+      "expression": "state not in valid_states",
+      "function": "evaluate_m135",
+      "id": 121,
+      "kind": "if",
+      "line": 926,
+      "test_end_line": 926,
+      "test_line": 926
+    },
+    {
+      "expression": "type(passes.get(capture_id)) is not bool",
+      "function": "evaluate_m135",
+      "id": 122,
+      "kind": "if",
+      "line": 932,
+      "test_end_line": 932,
+      "test_line": 932
+    },
+    {
+      "expression": "passes[capture_id] is not expected_boolean",
+      "function": "evaluate_m135",
+      "id": 123,
+      "kind": "if",
+      "line": 934,
+      "test_end_line": 934,
+      "test_line": 934
+    },
+    {
+      "expression": "set(passes) != valid_captures",
+      "function": "evaluate_m135",
+      "id": 124,
+      "kind": "if",
+      "line": 936,
+      "test_end_line": 936,
+      "test_line": 936
+    },
+    {
+      "expression": "invalid_captures",
+      "function": "evaluate_m135",
+      "id": 125,
+      "kind": "if",
+      "line": 938,
+      "test_end_line": 938,
+      "test_line": 938
+    },
+    {
+      "expression": "bundle.get(\"schema\") != binding[\"extractor_bundle_manifest_schema\"]",
+      "function": "verify_temporal_extractor_binding",
+      "id": 126,
+      "kind": "if",
+      "line": 966,
+      "test_end_line": 966,
+      "test_line": 966
+    },
+    {
+      "expression": "sha256(paths[\"extractor_entrypoint\"]) not in {\n        ref[\"sha256\"] for ref in bundle[\"files\"]\n    }",
+      "function": "verify_temporal_extractor_binding",
+      "id": 127,
+      "kind": "if",
+      "line": 974,
+      "test_end_line": 976,
+      "test_line": 974
+    },
+    {
+      "expression": "mode == \"PILOT\"",
+      "function": "run_temporal_extractor",
+      "id": 128,
+      "kind": "ifexp",
+      "line": 995,
+      "test_end_line": 995,
+      "test_line": 995
+    },
+    {
+      "expression": "completed.returncode != 0",
+      "function": "run_temporal_extractor",
+      "id": 129,
+      "kind": "if",
+      "line": 1008,
+      "test_end_line": 1008,
+      "test_line": 1008
+    },
+    {
+      "expression": "output.get(field) != value",
+      "function": "run_temporal_extractor",
+      "id": 130,
+      "kind": "if",
+      "line": 1027,
+      "test_end_line": 1027,
+      "test_line": 1027
+    },
+    {
+      "expression": "output.get(\"site_ids\") != expected_sites",
+      "function": "powers_from_extractor_output",
+      "id": 131,
+      "kind": "if",
+      "line": 1040,
+      "test_end_line": 1040,
+      "test_line": 1040
+    },
+    {
+      "expression": "not isinstance(rows, dict) or set(rows) != set(planes)",
+      "function": "powers_from_extractor_output",
+      "id": 132,
+      "kind": "if",
+      "line": 1046,
+      "test_end_line": 1046,
+      "test_line": 1046
+    },
+    {
+      "expression": "not isinstance(pairs, dict) or set(pairs) != set(pair_names)",
+      "function": "powers_from_extractor_output",
+      "id": 133,
+      "kind": "if",
+      "line": 1053,
+      "test_end_line": 1053,
+      "test_line": 1053
+    },
+    {
+      "expression": "not isinstance(row, dict) or set(row) != {\n                \"squared_difference_sum\",\n                \"sample_count\",\n            }",
+      "function": "powers_from_extractor_output",
+      "id": 134,
+      "kind": "if",
+      "line": 1060,
+      "test_end_line": 1063,
+      "test_line": 1060
+    },
+    {
+      "expression": "sums.ndim != 1\n                or len(sums) != len(expected_sites)\n                or counts.shape != sums.shape\n                or not np.all(np.isfinite(sums))\n                or np.any(sums <= 0.0)\n                or not np.issubdtype(counts.dtype, np.integer)\n                or np.any(counts <= 0)",
+      "function": "powers_from_extractor_output",
+      "id": 135,
+      "kind": "if",
+      "line": 1070,
+      "test_end_line": 1077,
+      "test_line": 1071
+    },
+    {
+      "expression": "not np.all(np.isfinite(powers)) or np.any(powers <= 0.0)",
+      "function": "powers_from_extractor_output",
+      "id": 136,
+      "kind": "if",
+      "line": 1084,
+      "test_end_line": 1084,
+      "test_line": 1084
+    },
+    {
+      "expression": "set(document) != {\"schema\", \"captures\"}",
+      "function": "parse_noise_cells",
+      "id": 137,
+      "kind": "if",
+      "line": 1105,
+      "test_end_line": 1105,
+      "test_line": 1105
+    },
+    {
+      "expression": "document.get(\"schema\") != contract[\"evidence_contract\"][\"noise_schema\"]",
+      "function": "parse_noise_cells",
+      "id": 138,
+      "kind": "if",
+      "line": 1107,
+      "test_end_line": 1107,
+      "test_line": 1107
+    },
+    {
+      "expression": "not isinstance(captures, dict) or set(captures) != set(expected_noise)",
+      "function": "parse_noise_cells",
+      "id": 139,
+      "kind": "if",
+      "line": 1110,
+      "test_end_line": 1110,
+      "test_line": 1110
+    },
+    {
+      "expression": "not isinstance(capture, dict) or set(capture) != {\n            \"site_ids\",\n            \"site_manifest\",\n            \"source_capture_ids\",\n            \"source_captures\",\n            \"candidate_outputs\",\n            \"legacy_outputs\",\n        }",
+      "function": "parse_noise_cells",
+      "id": 140,
+      "kind": "if",
+      "line": 1118,
+      "test_end_line": 1125,
+      "test_line": 1118
+    },
+    {
+      "expression": "capture.get(\"site_ids\") != expected_sites",
+      "function": "parse_noise_cells",
+      "id": 141,
+      "kind": "if",
+      "line": 1127,
+      "test_end_line": 1127,
+      "test_line": 1127
+    },
+    {
+      "expression": "seen_source_ids.intersection(source_ids)",
+      "function": "parse_noise_cells",
+      "id": 142,
+      "kind": "if",
+      "line": 1138,
+      "test_end_line": 1138,
+      "test_line": 1138
+    },
+    {
+      "expression": "seen_source_hashes.intersection(source_hashes)",
+      "function": "parse_noise_cells",
+      "id": 143,
+      "kind": "if",
+      "line": 1152,
+      "test_end_line": 1152,
+      "test_line": 1152
+    },
+    {
+      "expression": "len({path.resolve() for path in candidate_paths + legacy_paths}) != 4",
+      "function": "parse_noise_cells",
+      "id": 144,
+      "kind": "if",
+      "line": 1173,
+      "test_end_line": 1173,
+      "test_line": 1173
+    },
+    {
+      "expression": "seen_output_paths.intersection(resolved_outputs)",
+      "function": "parse_noise_cells",
+      "id": 145,
+      "kind": "if",
+      "line": 1178,
+      "test_end_line": 1178,
+      "test_line": 1178
+    },
+    {
+      "expression": "transform in {\"IDENTITY\", \"ADD_IDENTICAL_SCENE_TERM_TO_BOTH_CANDIDATE_REPEATS\"}",
+      "function": "transform_noise_cells",
+      "id": 146,
+      "kind": "if",
+      "line": 1210,
+      "test_end_line": 1210,
+      "test_line": 1210
+    },
+    {
+      "expression": "transform == \"DOUBLE_CANDIDATE_TEMPORAL_POWER\"",
+      "function": "transform_noise_cells",
+      "id": 147,
+      "kind": "if",
+      "line": 1212,
+      "test_end_line": 1212,
+      "test_line": 1212
+    },
+    {
+      "expression": "transform == \"HALVE_CANDIDATE_TEMPORAL_POWER\"",
+      "function": "transform_noise_cells",
+      "id": 148,
+      "kind": "if",
+      "line": 1214,
+      "test_end_line": 1214,
+      "test_line": 1214
+    },
+    {
+      "expression": "cfg[\"minimum_effect_binding_state\"] == \"UNBOUND\"",
+      "function": "noise_acceptance_upper",
+      "id": 149,
+      "kind": "if",
+      "line": 1231,
+      "test_end_line": 1231,
+      "test_line": 1231
+    },
+    {
+      "expression": "not isinstance(required_rms, (int, float)) or not 0.0 < required_rms < 1.0",
+      "function": "noise_acceptance_upper",
+      "id": 150,
+      "kind": "if",
+      "line": 1234,
+      "test_end_line": 1234,
+      "test_line": 1234
+    },
+    {
+      "expression": "any(len(row[\"candidate\"]) != size for row in capture_cells)",
+      "function": "bootstrap_noise",
+      "id": 151,
+      "kind": "if",
+      "line": 1257,
+      "test_end_line": 1257,
+      "test_line": 1257
+    },
+    {
+      "expression": "not isinstance(cells, dict) or set(cells) != expected_captures",
+      "function": "achieved_effect_payload",
+      "id": 152,
+      "kind": "if",
+      "line": 1304,
+      "test_end_line": 1304,
+      "test_line": 1304
+    },
+    {
+      "expression": "not isinstance(planes, dict) or set(planes) != expected_planes",
+      "function": "achieved_effect_payload",
+      "id": 153,
+      "kind": "if",
+      "line": 1307,
+      "test_end_line": 1307,
+      "test_line": 1307
+    },
+    {
+      "expression": "not isinstance(row, dict) or set(row) != set(\n                cfg[\"required_effect_cell_fields\"]\n            )",
+      "function": "achieved_effect_payload",
+      "id": 154,
+      "kind": "if",
+      "line": 1312,
+      "test_end_line": 1314,
+      "test_line": 1312
+    },
+    {
+      "expression": "not all(\n                    math.isfinite(value)\n                    for value in (estimate, lower, upper, decision_upper)\n                )\n                or min(estimate, lower, upper, decision_upper) <= 0.0\n                or not lower <= estimate <= upper",
+      "function": "achieved_effect_payload",
+      "id": 155,
+      "kind": "if",
+      "line": 1322,
+      "test_end_line": 1328,
+      "test_line": 1323
+    },
+    {
+      "expression": "minimum_state == \"UNBOUND\"",
+      "function": "achieved_effect_payload",
+      "id": 156,
+      "kind": "if",
+      "line": 1335,
+      "test_end_line": 1335,
+      "test_line": 1335
+    },
+    {
+      "expression": "not isinstance(required_rms, (int, float))",
+      "function": "achieved_effect_payload",
+      "id": 157,
+      "kind": "if",
+      "line": 1344,
+      "test_end_line": 1344,
+      "test_line": 1344
+    },
+    {
+      "expression": "not isinstance(payload, dict) or set(payload) != {\n        \"schema\",\n        \"estimand\",\n        \"reference\",\n        \"decision_boundary\",\n        \"familywise_confidence\",\n        \"interval_method\",\n        \"decision_bound_method\",\n        \"by_capture_and_plane\",\n        \"maximum_simultaneous_one_sided_upper\",\n        \"minimum_guaranteed_rms_reduction\",\n        \"minimum_effect\",\n        \"scorecard_m2\",\n    }",
+      "function": "validate_achieved_effect_output",
+      "id": 158,
+      "kind": "if",
+      "line": 1386,
+      "test_end_line": 1399,
+      "test_line": 1386
+    },
+    {
+      "expression": "payload[\"schema\"] != cfg[\"effect_output_schema\"]\n        or payload[\"estimand\"] != \"P_candidate / P_legacy\"\n        or payload[\"reference\"] != \"LEGACY_STREHL\"\n        or float(payload[\"decision_boundary\"]) != 1.0\n        or float(payload[\"familywise_confidence\"])\n        != float(cfg[\"familywise_confidence\"])\n        or payload[\"interval_method\"] != \"SIMULTANEOUS_TWO_SIDED_MAX_ABSOLUTE_BOOTSTRAP\"\n        or payload[\"decision_bound_method\"] != \"SIMULTANEOUS_ONE_SIDED_MAX_BOOTSTRAP\"",
+      "function": "validate_achieved_effect_output",
+      "id": 159,
+      "kind": "if",
+      "line": 1401,
+      "test_end_line": 1409,
+      "test_line": 1402
+    },
+    {
+      "expression": "not isinstance(cells, dict) or set(cells) != set(expected_noise)",
+      "function": "validate_achieved_effect_output",
+      "id": 160,
+      "kind": "if",
+      "line": 1413,
+      "test_end_line": 1413,
+      "test_line": 1413
+    },
+    {
+      "expression": "not isinstance(planes, dict) or set(planes) != required_planes",
+      "function": "validate_achieved_effect_output",
+      "id": 161,
+      "kind": "if",
+      "line": 1418,
+      "test_end_line": 1418,
+      "test_line": 1418
+    },
+    {
+      "expression": "not isinstance(row, dict) or set(row) != set(\n                cfg[\"required_effect_cell_fields\"]\n            )",
+      "function": "validate_achieved_effect_output",
+      "id": 162,
+      "kind": "if",
+      "line": 1423,
+      "test_end_line": 1425,
+      "test_line": 1423
+    },
+    {
+      "expression": "not all(\n                    math.isfinite(value)\n                    for value in (estimate, lower, upper, decision_upper)\n                )\n                or min(estimate, lower, upper, decision_upper) <= 0.0\n                or not lower <= estimate <= upper",
+      "function": "validate_achieved_effect_output",
+      "id": 163,
+      "kind": "if",
+      "line": 1433,
+      "test_end_line": 1439,
+      "test_line": 1434
+    },
+    {
+      "expression": "not math.isfinite(reported_maximum)\n        or not math.isclose(\n            reported_maximum,\n            maximum_upper,\n            rel_tol=1e-12,\n            abs_tol=1e-12,\n        )\n        or not math.isclose(\n            reported_rms,\n            1.0 - math.sqrt(maximum_upper),\n            rel_tol=1e-12,\n            abs_tol=1e-12,\n        )",
+      "function": "validate_achieved_effect_output",
+      "id": 164,
+      "kind": "if",
+      "line": 1448,
+      "test_end_line": 1461,
+      "test_line": 1449
+    },
+    {
+      "expression": "not isinstance(minimum, dict)\n        or set(minimum)\n        != {\n            \"symbol\",\n            \"binding_state\",\n            \"required_rms_reduction\",\n            \"required_power_ratio_upper\",\n            \"claim\",\n        }\n        or minimum.get(\"symbol\") != cfg[\"minimum_effect_symbol\"]\n        or minimum.get(\"binding_state\") != cfg[\"minimum_effect_binding_state\"]",
+      "function": "validate_achieved_effect_output",
+      "id": 165,
+      "kind": "if",
+      "line": 1465,
+      "test_end_line": 1476,
+      "test_line": 1466
+    },
+    {
+      "expression": "minimum[\"binding_state\"] == \"UNBOUND\" and (\n        minimum[\"required_rms_reduction\"] is not None\n        or minimum[\"required_power_ratio_upper\"] is not None\n        or minimum[\"claim\"] != \"DIRECTION_ONLY\"\n    )",
+      "function": "validate_achieved_effect_output",
+      "id": 166,
+      "kind": "if",
+      "line": 1479,
+      "test_end_line": 1483,
+      "test_line": 1479
+    },
+    {
+      "expression": "minimum[\"binding_state\"] == \"BOUND\" and (\n        not isinstance(minimum[\"required_rms_reduction\"], (int, float))\n        or float(minimum[\"required_rms_reduction\"])\n        != float(cfg[\"required_rms_reduction\"])\n        or not isinstance(minimum[\"required_power_ratio_upper\"], (int, float))\n        or not math.isclose(\n            float(minimum[\"required_power_ratio_upper\"]),\n            noise_acceptance_upper(contract),\n            rel_tol=1e-12,\n            abs_tol=1e-12,\n        )\n        or minimum[\"claim\"] != \"PREREGISTERED_MINIMUM_EFFECT_MET\"\n    )",
+      "function": "validate_achieved_effect_output",
+      "id": 167,
+      "kind": "if",
+      "line": 1485,
+      "test_end_line": 1497,
+      "test_line": 1485
+    },
+    {
+      "expression": "not isinstance(scorecard, dict)\n        or set(scorecard) != {\"licensed\", \"reference\", \"reason\"}\n        or scorecard.get(\"licensed\") is not False\n        or scorecard.get(\"reference\") != cfg[\"scorecard_m2_reference\"]\n        or not isinstance(scorecard.get(\"reason\"), str)\n        or not scorecard[\"reason\"].strip()",
+      "function": "validate_achieved_effect_output",
+      "id": 168,
+      "kind": "if",
+      "line": 1500,
+      "test_end_line": 1506,
+      "test_line": 1501
+    },
+    {
+      "expression": "not isinstance(output, dict) or set(output) != {\n        \"schema\",\n        \"verdict\",\n        \"selected_tau\",\n        \"achieved_effect\",\n    }",
+      "function": "validate_go_output",
+      "id": 169,
+      "kind": "if",
+      "line": 1516,
+      "test_end_line": 1521,
+      "test_line": 1516
+    },
+    {
+      "expression": "output[\"schema\"] != contract[\"evidence_contract\"][\"adjudication_output_schema\"]\n        or output[\"verdict\"] != contract[\"verdicts\"][\"go\"]",
+      "function": "validate_go_output",
+      "id": 170,
+      "kind": "if",
+      "line": 1523,
+      "test_end_line": 1525,
+      "test_line": 1524
+    },
+    {
+      "expression": "not isinstance(effects, dict) or set(effects) != set(\n        contract[\"noise_instrument\"][\"required_go_effect_phases\"]\n    )",
+      "function": "validate_go_output",
+      "id": 171,
+      "kind": "if",
+      "line": 1529,
+      "test_end_line": 1531,
+      "test_line": 1529
+    },
+    {
+      "expression": "float(effects[phase][\"maximum_simultaneous_one_sided_upper\"]) >= float(\n            contract[\"noise_instrument\"][\"natural_null_power_ratio\"]\n        )",
+      "function": "validate_go_output",
+      "id": 172,
+      "kind": "if",
+      "line": 1539,
+      "test_end_line": 1541,
+      "test_line": 1539
+    },
+    {
+      "expression": "contract[\"noise_instrument\"][\n            \"minimum_effect_binding_state\"\n        ] == \"BOUND\" and float(\n            effects[phase][\"maximum_simultaneous_one_sided_upper\"]\n        ) > noise_acceptance_upper(contract)",
+      "function": "validate_go_output",
+      "id": 173,
+      "kind": "if",
+      "line": 1543,
+      "test_end_line": 1547,
+      "test_line": 1543
+    },
+    {
+      "expression": "set(document) != {\"schema\", \"captures\"}",
+      "function": "parse_noise_pilot",
+      "id": 174,
+      "kind": "if",
+      "line": 1564,
+      "test_end_line": 1564,
+      "test_line": 1564
+    },
+    {
+      "expression": "document.get(\"schema\") != contract[\"noise_instrument\"][\"pilot_request_schema\"]",
+      "function": "parse_noise_pilot",
+      "id": 175,
+      "kind": "if",
+      "line": 1566,
+      "test_end_line": 1566,
+      "test_line": 1566
+    },
+    {
+      "expression": "not isinstance(captures, dict) or not captures",
+      "function": "parse_noise_pilot",
+      "id": 176,
+      "kind": "if",
+      "line": 1569,
+      "test_end_line": 1569,
+      "test_line": 1569
+    },
+    {
+      "expression": "not isinstance(capture, dict) or set(capture) != {\n            \"target_capture_id\",\n            \"site_ids\",\n            \"site_manifest\",\n            \"source_capture_ids\",\n            \"source_outputs\",\n        }",
+      "function": "parse_noise_pilot",
+      "id": 177,
+      "kind": "if",
+      "line": 1576,
+      "test_end_line": 1582,
+      "test_line": 1576
+    },
+    {
+      "expression": "not isinstance(target_capture_id, str) or not target_capture_id",
+      "function": "parse_noise_pilot",
+      "id": 178,
+      "kind": "if",
+      "line": 1585,
+      "test_end_line": 1585,
+      "test_line": 1585
+    },
+    {
+      "expression": "seen_source_ids.intersection(source_ids)",
+      "function": "parse_noise_pilot",
+      "id": 179,
+      "kind": "if",
+      "line": 1592,
+      "test_end_line": 1592,
+      "test_line": 1592
+    },
+    {
+      "expression": "seen_source_paths.intersection(resolved)",
+      "function": "parse_noise_pilot",
+      "id": 180,
+      "kind": "if",
+      "line": 1605,
+      "test_end_line": 1605,
+      "test_line": 1605
+    },
+    {
+      "expression": "seen_source_hashes.intersection(hashes)",
+      "function": "parse_noise_pilot",
+      "id": 181,
+      "kind": "if",
+      "line": 1607,
+      "test_end_line": 1607,
+      "test_line": 1607
+    },
+    {
+      "expression": "not isinstance(sites, list)\n            or len(sites) < 64\n            or len(sites) != len(set(sites))\n            or any(not isinstance(site, str) or not site for site in sites)",
+      "function": "parse_noise_pilot",
+      "id": 182,
+      "kind": "if",
+      "line": 1612,
+      "test_end_line": 1616,
+      "test_line": 1613
+    },
+    {
+      "expression": "sites < 1 or any(len(cell[\"candidate\"]) < sites for cell in cells)",
+      "function": "pilot_power",
+      "id": 183,
+      "kind": "if",
+      "line": 1659,
+      "test_end_line": 1659,
+      "test_line": 1659
+    },
+    {
+      "expression": "cfg.get(\"binding_state\") != \"BOUND\"",
+      "function": "verify_noise_binding",
+      "id": 184,
+      "kind": "if",
+      "line": 1703,
+      "test_end_line": 1703,
+      "test_line": 1703
+    },
+    {
+      "expression": "not isinstance(sites, int) or sites < 64",
+      "function": "verify_noise_binding",
+      "id": 185,
+      "kind": "if",
+      "line": 1707,
+      "test_end_line": 1707,
+      "test_line": 1707
+    },
+    {
+      "expression": "minimum_state == \"UNBOUND\"",
+      "function": "verify_noise_binding",
+      "id": 186,
+      "kind": "if",
+      "line": 1713,
+      "test_end_line": 1713,
+      "test_line": 1713
+    },
+    {
+      "expression": "any(value is not None for value in (rms, requirement_ref, pilot_ref))",
+      "function": "verify_noise_binding",
+      "id": 187,
+      "kind": "if",
+      "line": 1714,
+      "test_end_line": 1714,
+      "test_line": 1714
+    },
+    {
+      "expression": "not isinstance(rms, (int, float)) or not 0.0 < float(rms) < 1.0",
+      "function": "verify_noise_binding",
+      "id": 188,
+      "kind": "if",
+      "line": 1726,
+      "test_end_line": 1726,
+      "test_line": 1726
+    },
+    {
+      "expression": "requirement.get(\"schema\") != cfg[\"effect_requirement_schema\"]",
+      "function": "verify_noise_binding",
+      "id": 189,
+      "kind": "if",
+      "line": 1734,
+      "test_end_line": 1734,
+      "test_line": 1734
+    },
+    {
+      "expression": "float(requirement.get(\"required_rms_reduction\", math.nan)) != float(rms)",
+      "function": "verify_noise_binding",
+      "id": 190,
+      "kind": "if",
+      "line": 1736,
+      "test_end_line": 1736,
+      "test_line": 1736
+    },
+    {
+      "expression": "requirement.get(\"authority\") != cfg[\"required_effect_authority\"]",
+      "function": "verify_noise_binding",
+      "id": 191,
+      "kind": "if",
+      "line": 1738,
+      "test_end_line": 1738,
+      "test_line": 1738
+    },
+    {
+      "expression": "not isinstance(requirement.get(\"claim_text\"), str)\n        or not requirement[\"claim_text\"].strip()",
+      "function": "verify_noise_binding",
+      "id": 192,
+      "kind": "if",
+      "line": 1746,
+      "test_end_line": 1748,
+      "test_line": 1747
+    },
+    {
+      "expression": "prior != cell[\"target_capture_id\"]",
+      "function": "verify_noise_binding",
+      "id": 193,
+      "kind": "if",
+      "line": 1767,
+      "test_end_line": 1767,
+      "test_line": 1767
+    },
+    {
+      "expression": "len(pilot_targets) != len(set(pilot_targets))\n        or set(pilot_targets) != required_targets",
+      "function": "verify_noise_binding",
+      "id": 194,
+      "kind": "if",
+      "line": 1773,
+      "test_end_line": 1775,
+      "test_line": 1774
+    },
+    {
+      "expression": "cell[\"target_capture_id\"] in target_ids",
+      "function": "verify_noise_binding",
+      "id": 195,
+      "kind": "comprehension-if",
+      "line": 1783,
+      "test_end_line": 1783,
+      "test_line": 1783
+    },
+    {
+      "expression": "selected_power[phase][\"lower_confidence_power\"] < float(cfg[\"power_target\"])",
+      "function": "verify_noise_binding",
+      "id": 196,
+      "kind": "if",
+      "line": 1799,
+      "test_end_line": 1799,
+      "test_line": 1799
+    },
+    {
+      "expression": "array.ndim != 1\n        or len(array) < minimum\n        or not np.all(np.isfinite(array))\n        or np.any(array <= 0.0)",
+      "function": "finite_positive_samples",
+      "id": 197,
+      "kind": "if",
+      "line": 1815,
+      "test_end_line": 1819,
+      "test_line": 1816
+    },
+    {
+      "expression": "cfg.get(\"binding_state\") != \"BOUND\"",
+      "function": "verify_cost_binding",
+      "id": 198,
+      "kind": "if",
+      "line": 1830,
+      "test_end_line": 1830,
+      "test_line": 1830
+    },
+    {
+      "expression": "bundle.get(\"schema\") != cfg[\"runner_bundle_schema\"]",
+      "function": "verify_cost_binding",
+      "id": 199,
+      "kind": "if",
+      "line": 1849,
+      "test_end_line": 1849,
+      "test_line": 1849
+    },
+    {
+      "expression": "sha256(paths[\"benchmark_runner\"]) not in {\n        ref[\"sha256\"] for ref in bundle[\"files\"]\n    }",
+      "function": "verify_cost_binding",
+      "id": 200,
+      "kind": "if",
+      "line": 1857,
+      "test_end_line": 1859,
+      "test_line": 1857
+    },
+    {
+      "expression": "set(workload) != {\"schema\", \"units\"}",
+      "function": "verify_cost_binding",
+      "id": 201,
+      "kind": "if",
+      "line": 1863,
+      "test_end_line": 1863,
+      "test_line": 1863
+    },
+    {
+      "expression": "workload.get(\"schema\") != cfg[\"workload_schema\"]",
+      "function": "verify_cost_binding",
+      "id": 202,
+      "kind": "if",
+      "line": 1865,
+      "test_end_line": 1865,
+      "test_line": 1865
+    },
+    {
+      "expression": "not isinstance(units, dict)\n        or set(units) != required_counts\n        or any(\n            not isinstance(units[name], list)\n            or not units[name]\n            or len(units[name]) != len(set(units[name]))\n            or any(not isinstance(unit, str) or not unit for unit in units[name])\n            for name in units\n        )",
+      "function": "verify_cost_binding",
+      "id": 203,
+      "kind": "if",
+      "line": 1874,
+      "test_end_line": 1883,
+      "test_line": 1875
+    },
+    {
+      "expression": "set(benchmark) != {\n        \"schema\",\n        \"runner_sha256\",\n        \"runner_bundle_sha256\",\n        \"environment_sha256\",\n        \"workload_sha256\",\n        \"render_orders\",\n        \"measurements\",\n    }",
+      "function": "verify_cost_binding",
+      "id": 204,
+      "kind": "if",
+      "line": 1889,
+      "test_end_line": 1897,
+      "test_line": 1889
+    },
+    {
+      "expression": "benchmark.get(\"schema\") != cfg[\"benchmark_schema\"]",
+      "function": "verify_cost_binding",
+      "id": 205,
+      "kind": "if",
+      "line": 1899,
+      "test_end_line": 1899,
+      "test_line": 1899
+    },
+    {
+      "expression": "benchmark.get(field) != expected",
+      "function": "verify_cost_binding",
+      "id": 206,
+      "kind": "if",
+      "line": 1908,
+      "test_end_line": 1908,
+      "test_line": 1908
+    },
+    {
+      "expression": "not isinstance(orders, list)\n        or len(orders) != len(cfg[\"required_render_orders\"])\n        or set(orders) != set(cfg[\"required_render_orders\"])",
+      "function": "verify_cost_binding",
+      "id": 207,
+      "kind": "if",
+      "line": 1911,
+      "test_end_line": 1914,
+      "test_line": 1912
+    },
+    {
+      "expression": "not isinstance(measurements, dict) or set(measurements) != required_measurements",
+      "function": "verify_cost_binding",
+      "id": 208,
+      "kind": "if",
+      "line": 1919,
+      "test_end_line": 1919,
+      "test_line": 1919
+    },
+    {
+      "expression": "contention < 1.0",
+      "function": "verify_cost_binding",
+      "id": 209,
+      "kind": "if",
+      "line": 1938,
+      "test_end_line": 1938,
+      "test_line": 1938
+    },
+    {
+      "expression": "not isinstance(reported_exclusive, (int, float))\n        or not math.isfinite(float(reported_exclusive))\n        or not math.isclose(\n            float(reported_exclusive), exclusive_hours, rel_tol=1e-12, abs_tol=1e-12\n        )",
+      "function": "verify_cost_binding",
+      "id": 210,
+      "kind": "if",
+      "line": 1944,
+      "test_end_line": 1949,
+      "test_line": 1945
+    },
+    {
+      "expression": "not isinstance(reported_shared, (int, float))\n        or not math.isfinite(float(reported_shared))\n        or not math.isclose(\n            float(reported_shared), shared_hours, rel_tol=1e-12, abs_tol=1e-12\n        )",
+      "function": "verify_cost_binding",
+      "id": 211,
+      "kind": "if",
+      "line": 1952,
+      "test_end_line": 1957,
+      "test_line": 1953
+    },
+    {
+      "expression": "contract[\"status\"] != contract[\"activation\"][\"required_status\"]",
+      "function": "validate_frozen_bindings",
+      "id": 212,
+      "kind": "if",
+      "line": 1970,
+      "test_end_line": 1970,
+      "test_line": 1970
+    },
+    {
+      "expression": "not HEX40.fullmatch(str(contract[\"activation\"].get(\"frozen_commit\", \"\")))",
+      "function": "validate_frozen_bindings",
+      "id": 213,
+      "kind": "if",
+      "line": 1978,
+      "test_end_line": 1978,
+      "test_line": 1978
+    },
+    {
+      "expression": "ledgers.get(\"binding_state\") != \"BOUND\"",
+      "function": "validate_frozen_bindings",
+      "id": 214,
+      "kind": "if",
+      "line": 1983,
+      "test_end_line": 1983,
+      "test_line": 1983
+    },
+    {
+      "expression": "not valid_ledger(ledgers.get(\"development\"), selected_sites)",
+      "function": "validate_frozen_bindings",
+      "id": 215,
+      "kind": "if",
+      "line": 1985,
+      "test_end_line": 1985,
+      "test_line": 1985
+    },
+    {
+      "expression": "not valid_ledger(ledgers.get(\"holdout\"), selected_sites)",
+      "function": "validate_frozen_bindings",
+      "id": 216,
+      "kind": "if",
+      "line": 1987,
+      "test_end_line": 1987,
+      "test_line": 1987
+    },
+    {
+      "expression": "not ledgers_are_disjoint(ledgers[\"development\"], ledgers[\"holdout\"])",
+      "function": "validate_frozen_bindings",
+      "id": 217,
+      "kind": "if",
+      "line": 1989,
+      "test_end_line": 1989,
+      "test_line": 1989
+    },
+    {
+      "expression": "not isinstance(pipeline, dict) or set(pipeline) != {\n        \"candidate_merge\",\n        \"legacy_merge\",\n        \"candidate_postprocess\",\n        \"legacy_postprocess\",\n    }",
+      "function": "verify_pipeline",
+      "id": 218,
+      "kind": "if",
+      "line": 2005,
+      "test_end_line": 2010,
+      "test_line": 2005
+    },
+    {
+      "expression": "sha256(candidate_post) != sha256(legacy_post)",
+      "function": "verify_pipeline",
+      "id": 219,
+      "kind": "if",
+      "line": 2031,
+      "test_end_line": 2031,
+      "test_line": 2031
+    },
+    {
+      "expression": "document.get(\"schema\") != contract[\"evidence_contract\"][\"hull_schema\"]",
+      "function": "evaluate_hull",
+      "id": 220,
+      "kind": "if",
+      "line": 2047,
+      "test_end_line": 2047,
+      "test_line": 2047
+    },
+    {
+      "expression": "document.get(\"measurement_stage\") != cfg[\"measurement_stage\"]",
+      "function": "evaluate_hull",
+      "id": 221,
+      "kind": "if",
+      "line": 2049,
+      "test_end_line": 2049,
+      "test_line": 2049
+    },
+    {
+      "expression": "not isinstance(captures, dict) or set(captures) != set(expected_captures)",
+      "function": "evaluate_hull",
+      "id": 222,
+      "kind": "if",
+      "line": 2052,
+      "test_end_line": 2052,
+      "test_line": 2052
+    },
+    {
+      "expression": "not isinstance(rows, dict) or set(rows) != set(planes)",
+      "function": "evaluate_hull",
+      "id": 223,
+      "kind": "if",
+      "line": 2070,
+      "test_end_line": 2070,
+      "test_line": 2070
+    },
+    {
+      "expression": "reconstructed.ndim != 1\n                or lower.shape != reconstructed.shape\n                or upper.shape != reconstructed.shape\n                or len(reconstructed) == 0\n                or not np.all(np.isfinite(reconstructed))\n                or not np.all(np.isfinite(lower))\n                or not np.all(np.isfinite(upper))\n                or np.any(lower > upper)",
+      "function": "evaluate_hull",
+      "id": 224,
+      "kind": "if",
+      "line": 2079,
+      "test_end_line": 2087,
+      "test_line": 2080
+    },
+    {
+      "expression": "set(arm) - allowed or not {\n        \"pipeline\",\n        \"m135_request\",\n        \"noise_evidence\",\n        \"hull_evidence\",\n    }.issubset(arm)",
+      "function": "load_arm_evidence",
+      "id": 225,
+      "kind": "if",
+      "line": 2121,
+      "test_end_line": 2126,
+      "test_line": 2121
+    },
+    {
+      "expression": "noise_hash not in caches[\"noise\"]",
+      "function": "load_arm_evidence",
+      "id": 226,
+      "kind": "if",
+      "line": 2145,
+      "test_end_line": 2145,
+      "test_line": 2145
+    },
+    {
+      "expression": "hull_hash not in caches[\"hull\"]",
+      "function": "load_arm_evidence",
+      "id": 227,
+      "kind": "if",
+      "line": 2166,
+      "test_end_line": 2166,
+      "test_line": 2166
+    },
+    {
+      "expression": "not (\n        np.all(null[\"lower_two_sided\"] <= 1.0)\n        and np.all(null[\"upper_two_sided\"] >= 1.0)\n        and np.all(placebo[\"lower_two_sided\"] <= 1.0)\n        and np.all(placebo[\"upper_two_sided\"] >= 1.0)\n    )",
+      "function": "validate_noise_commissioning_summaries",
+      "id": 228,
+      "kind": "if",
+      "line": 2185,
+      "test_end_line": 2190,
+      "test_line": 2185
+    },
+    {
+      "expression": "not (\n        summaries[\"inflation_defect\"][\"score\"] < null[\"score\"]\n        and not summaries[\"inflation_defect\"][\"passes_superiority\"]\n        and summaries[\"averaging_improvement\"][\"score\"] > null[\"score\"]\n        and summaries[\"averaging_improvement\"][\"passes_superiority\"]\n    )",
+      "function": "validate_noise_commissioning_summaries",
+      "id": 229,
+      "kind": "if",
+      "line": 2192,
+      "test_end_line": 2197,
+      "test_line": 2192
+    },
+    {
+      "expression": "document.get(\"schema\") != contract[\"evidence_contract\"][\"commissioning_schema\"]",
+      "function": "validate_commissioning",
+      "id": 230,
+      "kind": "if",
+      "line": 2214,
+      "test_end_line": 2214,
+      "test_line": 2214
+    },
+    {
+      "expression": "not isinstance(controls, dict) or set(controls) != {\n        \"null\",\n        \"wrong_stack_defect\",\n        \"omitted_warp_defect\",\n    }",
+      "function": "validate_commissioning",
+      "id": 231,
+      "kind": "if",
+      "line": 2217,
+      "test_end_line": 2221,
+      "test_line": 2217
+    },
+    {
+      "expression": "controls[\"null\"] != main_standard_ref",
+      "function": "validate_commissioning",
+      "id": 232,
+      "kind": "if",
+      "line": 2223,
+      "test_end_line": 2223,
+      "test_line": 2223
+    },
+    {
+      "expression": "not (\n        scores[\"null\"] >= 0.0\n        and scores[\"null\"] > scores[\"wrong_stack_defect\"]\n        and scores[\"null\"] > scores[\"omitted_warp_defect\"]\n        and scores[\"wrong_stack_defect\"] < 0.0\n        and scores[\"omitted_warp_defect\"] < 0.0\n    )",
+      "function": "validate_commissioning",
+      "id": 233,
+      "kind": "if",
+      "line": 2241,
+      "test_end_line": 2247,
+      "test_line": 2241
+    },
+    {
+      "expression": "set(document) != {\n        \"schema\",\n        \"standardisation_controls\",\n        \"noise_control_ledger\",\n        \"noise_base\",\n    }",
+      "function": "validate_commissioning",
+      "id": 234,
+      "kind": "if",
+      "line": 2250,
+      "test_end_line": 2255,
+      "test_line": 2250
+    },
+    {
+      "expression": "not valid_ledger(ledger, selected_sites)",
+      "function": "validate_commissioning",
+      "id": 235,
+      "kind": "if",
+      "line": 2259,
+      "test_end_line": 2259,
+      "test_line": 2259
+    },
+    {
+      "expression": "not (\n            np.array_equal(base_cell[\"candidate\"], placebo_cell[\"candidate\"])\n            and np.array_equal(base_cell[\"legacy\"], placebo_cell[\"legacy\"])\n        )",
+      "function": "validate_commissioning",
+      "id": 236,
+      "kind": "if",
+      "line": 2289,
+      "test_end_line": 2292,
+      "test_line": 2289
+    },
+    {
+      "expression": "contract[\"status\"] != contract[\"activation\"][\"required_status\"]",
+      "function": "adjudicate_result",
+      "id": 237,
+      "kind": "if",
+      "line": 2311,
+      "test_end_line": 2311,
+      "test_line": 2311
+    },
+    {
+      "expression": "verify_sources",
+      "function": "adjudicate_result",
+      "id": 238,
+      "kind": "if",
+      "line": 2313,
+      "test_end_line": 2313,
+      "test_line": 2313
+    },
+    {
+      "expression": "not HEX40.fullmatch(str(contract[\"activation\"].get(\"frozen_commit\", \"\")))",
+      "function": "adjudicate_result",
+      "id": 239,
+      "kind": "if",
+      "line": 2321,
+      "test_end_line": 2321,
+      "test_line": 2321
+    },
+    {
+      "expression": "contract[\"detail_instrument\"].get(\"binding_state\") != \"BOUND\"",
+      "function": "adjudicate_result",
+      "id": 240,
+      "kind": "if",
+      "line": 2323,
+      "test_end_line": 2323,
+      "test_line": 2323
+    },
+    {
+      "expression": "result.get(\"schema\") != contract[\"evidence_contract\"][\"result_schema\"]",
+      "function": "adjudicate_result",
+      "id": 241,
+      "kind": "if",
+      "line": 2337,
+      "test_end_line": 2337,
+      "test_line": 2337
+    },
+    {
+      "expression": "result.get(\"contract_sha256\") != sha256(contract_path)",
+      "function": "adjudicate_result",
+      "id": 242,
+      "kind": "if",
+      "line": 2339,
+      "test_end_line": 2339,
+      "test_line": 2339
+    },
+    {
+      "expression": "set(result) - {\n            \"schema\",\n            \"contract_sha256\",\n            \"standardisation\",\n            \"commissioning\",\n            \"development\",\n            \"holdout\",\n        }",
+      "function": "adjudicate_result",
+      "id": 243,
+      "kind": "if",
+      "line": 2341,
+      "test_end_line": 2348,
+      "test_line": 2341
+    },
+    {
+      "expression": "development.get(\"schema\")\n            != contract[\"evidence_contract\"][\"development_schema\"]",
+      "function": "adjudicate_result",
+      "id": 244,
+      "kind": "if",
+      "line": 2386,
+      "test_end_line": 2388,
+      "test_line": 2387
+    },
+    {
+      "expression": "development.get(\"ledger\") != ledgers[\"development\"]",
+      "function": "adjudicate_result",
+      "id": 245,
+      "kind": "if",
+      "line": 2391,
+      "test_end_line": 2391,
+      "test_line": 2391
+    },
+    {
+      "expression": "not isinstance(arms, dict) or set(arms) != set(keys)",
+      "function": "adjudicate_result",
+      "id": 246,
+      "kind": "if",
+      "line": 2395,
+      "test_end_line": 2395,
+      "test_line": 2395
+    },
+    {
+      "expression": "arm_results[key][\"passes\"]",
+      "function": "adjudicate_result",
+      "id": 247,
+      "kind": "comprehension-if",
+      "line": 2413,
+      "test_end_line": 2413,
+      "test_line": 2413
+    },
+    {
+      "expression": "{index - 1, index, index + 1}.issubset(passing)",
+      "function": "adjudicate_result",
+      "id": 248,
+      "kind": "comprehension-if",
+      "line": 2418,
+      "test_end_line": 2418,
+      "test_line": 2418
+    },
+    {
+      "expression": "not robust",
+      "function": "adjudicate_result",
+      "id": 249,
+      "kind": "if",
+      "line": 2420,
+      "test_end_line": 2420,
+      "test_line": 2420
+    },
+    {
+      "expression": "result.get(\"holdout\") is None",
+      "function": "adjudicate_result",
+      "id": 250,
+      "kind": "if",
+      "line": 2432,
+      "test_end_line": 2432,
+      "test_line": 2432
+    },
+    {
+      "expression": "holdout.get(\"schema\") != contract[\"evidence_contract\"][\"holdout_schema\"]",
+      "function": "adjudicate_result",
+      "id": 251,
+      "kind": "if",
+      "line": 2446,
+      "test_end_line": 2446,
+      "test_line": 2446
+    },
+    {
+      "expression": "holdout.get(\"tau\") != selected",
+      "function": "adjudicate_result",
+      "id": 252,
+      "kind": "if",
+      "line": 2448,
+      "test_end_line": 2448,
+      "test_line": 2448
+    },
+    {
+      "expression": "holdout.get(\"ledger\") != ledgers[\"holdout\"]",
+      "function": "adjudicate_result",
+      "id": 253,
+      "kind": "if",
+      "line": 2452,
+      "test_end_line": 2452,
+      "test_line": 2452
+    },
+    {
+      "expression": "not holdout_result[\"passes\"]",
+      "function": "adjudicate_result",
+      "id": 254,
+      "kind": "if",
+      "line": 2474,
+      "test_end_line": 2474,
+      "test_line": 2474
+    },
+    {
+      "expression": "not (args.check or args.self_test or args.result)",
+      "function": "main",
+      "id": 255,
+      "kind": "if",
+      "line": 4059,
+      "test_end_line": 4059,
+      "test_line": 4059
+    },
+    {
+      "expression": "args.check",
+      "function": "main",
+      "id": 256,
+      "kind": "if",
+      "line": 4064,
+      "test_end_line": 4064,
+      "test_line": 4064
+    },
+    {
+      "expression": "contract[\"status\"] == contract[\"activation\"][\"required_status\"]",
+      "function": "main",
+      "id": 257,
+      "kind": "if",
+      "line": 4067,
+      "test_end_line": 4067,
+      "test_line": 4067
+    },
+    {
+      "expression": "args.self_test",
+      "function": "main",
+      "id": 258,
+      "kind": "if",
+      "line": 4072,
+      "test_end_line": 4072,
+      "test_line": 4072
+    },
+    {
+      "expression": "args.result",
+      "function": "main",
+      "id": 259,
+      "kind": "if",
+      "line": 4083,
+      "test_end_line": 4083,
+      "test_line": 4083
+    },
+    {
+      "expression": "verdict[\"verdict\"] == \"INSTRUMENT_INVALID\"",
+      "function": "main",
+      "id": 260,
+      "kind": "ifexp",
+      "line": 4086,
+      "test_end_line": 4086,
+      "test_line": 4086
+    },
+    {
+      "expression": "__name__ == \"__main__\"",
+      "function": "<module>",
+      "id": 261,
+      "kind": "if",
+      "line": 4090,
+      "test_end_line": 4090,
+      "test_line": 4090
+    }
+  ],
+  "total": 261
+}
