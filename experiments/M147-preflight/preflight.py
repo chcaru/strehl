@@ -856,7 +856,7 @@ def _bootstrap_ratio(
         for reference_phase in reference["green_phases"]
         for scored_phase in scored["green_phases"]
     ]
-    point = reference["period_green_px"] / scored["period_green_px"]
+    global_period_ratio = reference["period_green_px"] / scored["period_green_px"]
     shape = np.asarray(
         reference["green_phases"][0]["image_shape_green_px"], dtype=np.float64
     )
@@ -894,7 +894,9 @@ def _bootstrap_ratio(
         )
         mapped_coordinate = (
             center
-            + coordinate_rotation @ (reference_coordinate - center) / point
+            + coordinate_rotation
+            @ (reference_coordinate - center)
+            / global_period_ratio
         )
         distances = np.linalg.norm(scored_coordinates - mapped_coordinate, axis=1)
         nearest = int(np.argmin(distances))
@@ -923,6 +925,7 @@ def _bootstrap_ratio(
             "Reframe both states so every retained reference strip maps onto grid.",
         )
     local_ratios = np.asarray(list(mapped_block_ratios.values()), dtype=np.float64)
+    point = float(np.median(local_ratios))
     systematic = float(uncertainty["relative_systematic_allowance"])
     lower = min(q_low, min(phase_ratios), float(np.min(local_ratios))) * (
         1.0 - systematic
@@ -937,6 +940,7 @@ def _bootstrap_ratio(
         "seed": uncertainty["seed"],
         "bootstrap_percentile_interval": [q_low, q_high],
         "green_phase_ratio_envelope": [min(phase_ratios), max(phase_ratios)],
+        "global_median_period_ratio": float(global_period_ratio),
         "common_spatial_block_count": len(mapped_block_ratios),
         "local_spatial_ratios": mapped_block_ratios,
         "local_mapping_maximum_distance_green_px": maximum_distance,
