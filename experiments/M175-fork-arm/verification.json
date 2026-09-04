@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "build_freeze_sha256": "74ccefec8ac0be97779fd96277fe2c61a5192c1fbecf3b77a8657ab435d99df7",
+    "output_sha256": "d40e59699b1a9fd19972a78f4c0ec2aa99b32cc9f97ac7c44eab8e3b847caaad",
+    "pre_render_freeze_sha256": "2c11137f723122b033b6b94d249c771a442406b608afa44e0a99e4166ce9de8e",
+    "render_result_sha256": "6d0b3f613bb381212d889a075315b1e8a8f9a9974b7ab101ec415fa0bdc11dc0",
+    "render_start_sha256": "f89b19e9e4326809ca1721a1841225ff09272e1fce4d2ac48546c8eabfe9f06c",
+    "source_pin_sha256": "603e2cd42526707cd0ce7871a44b645ba63bb866b6c2749e1a507032bd45d222"
+  },
+  "channel_results": [
+    {
+      "channel": "R",
+      "intercept": -6.6597626500634704e-18,
+      "max_abs_affine_residual": 2.220446049250313e-16,
+      "pass": true,
+      "rms_affine_residual": 1.3031039891780493e-16,
+      "slope": 1.0000000000000002,
+      "strictly_monotone": true
+    },
+    {
+      "channel": "G",
+      "intercept": -6.6597626500634704e-18,
+      "max_abs_affine_residual": 2.220446049250313e-16,
+      "pass": true,
+      "rms_affine_residual": 1.3031039891780493e-16,
+      "slope": 1.0000000000000002,
+      "strictly_monotone": true
+    },
+    {
+      "channel": "B",
+      "intercept": -6.6597626500634704e-18,
+      "max_abs_affine_residual": 2.220446049250313e-16,
+      "pass": true,
+      "rms_affine_residual": 1.3031039891780493e-16,
+      "slope": 1.0000000000000002,
+      "strictly_monotone": true
+    }
+  ],
+  "checks": {
+    "all_channels_pass_section_1_3": true,
+    "bits_per_sample": true,
+    "build_source_commit": true,
+    "current_executable_hash": true,
+    "decoded_output_matches_input_payload": true,
+    "eight_input_occurrences": true,
+    "expected_executable_hash": true,
+    "freeze_before_render": true,
+    "identical_input_hashes": true,
+    "independent_m165_hash_match": true,
+    "native_shape": true,
+    "no_holdout_path": true,
+    "output_absent_before_launch": true,
+    "output_file_hash": true,
+    "persisted_result_pass": true,
+    "result_executable_hash": true,
+    "single_page": true,
+    "source_commit": true,
+    "two_builds": true,
+    "two_builds_byte_identical": true,
+    "uint16": true
+  },
+  "independent_reference": {
+    "executable_sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac",
+    "git_commit": "e3f2c841b6ed41ab131fc842172c52bdd9752a61",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\build-freeze.json"
+  },
+  "schema": "m175-fork-independent-verification-v1",
+  "status": "PASS"
+}

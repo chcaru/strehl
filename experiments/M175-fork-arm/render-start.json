@@ -1,0 +1,47 @@
+{
+  "executable": {
+    "bytes": 271360,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\focus-stack.exe",
+    "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+  },
+  "input_count": 8,
+  "input_file_sha256": "dc6c7871137283448ebff150832559c7cf42cd8b7c3551eea72920247957532e",
+  "invocation": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\focus-stack.exe",
+    "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\output\\tone-sentinel.tiff",
+    "--threads=1",
+    "--batchsize=2",
+    "--no-opencl",
+    "--no-align",
+    "--no-whitebalance",
+    "--no-contrast",
+    "--consistency=0",
+    "--denoise=0",
+    "--input-colorspace=none",
+    "--output-colorspace=srgb",
+    "--output-bitdepth=16",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-01.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-02.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-03.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-04.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-05.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-06.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-07.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-08.tiff"
+  ],
+  "output_absent_before_launch": true,
+  "pre_render_commits": [
+    "32618aafb66e88c066fcbb638507423810b29050",
+    "3c96a6247166f4788cf4dcfbfe3c8c4c6a6cbbc5",
+    "9935decb9f9539baa6e8ec3d49f31010bd5d4377"
+  ],
+  "pre_render_freeze": {
+    "bytes": 4168,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\PRE-RENDER-FREEZE.json",
+    "sha256": "2c11137f723122b033b6b94d249c771a442406b608afa44e0a99e4166ce9de8e"
+  },
+  "pre_render_guard_commit": "32618aafb66e88c066fcbb638507423810b29050",
+  "render_started_utc": "2026-09-04T20:28:10.395738+00:00",
+  "schema": "m175-fork-render-start-v1",
+  "status": "STARTING"
+}

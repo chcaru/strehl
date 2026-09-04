@@ -167,9 +167,9 @@ def score_transfer(
 ) -> dict[str, Any]:
     expected_shape = tuple(site_manifest["output_shape_expected_hwc"])
     format_checks = {
-        "native_dimensions": tuple(array.shape) == expected_shape,
-        "uint16": array.dtype == np.uint16,
-        "three_channels": array.ndim == 3 and array.shape[2] == 3,
+        "native_dimensions": bool(tuple(array.shape) == expected_shape),
+        "uint16": bool(array.dtype == np.uint16),
+        "three_channels": bool(array.ndim == 3 and array.shape[2] == 3),
     }
     if array.ndim != 3 or array.shape[2] != 3:
         raise RenderFailure(f"cannot score non-RGB output shape {array.shape}")
@@ -225,12 +225,12 @@ def score_transfer(
             for item in fitted
         )
         checks = {
-            "slope_0_995_to_1_005": 0.995 <= slope <= 1.005,
-            "abs_intercept_le_0_001": abs(intercept) <= 0.001,
-            "max_abs_affine_residual_le_0_002": max_abs <= 0.002,
-            "rms_affine_residual_le_0_0005": rms <= 0.0005,
-            "no_interior_step_clips": no_interior_clips,
-            "strictly_monotone": strictly_monotone,
+            "slope_0_995_to_1_005": bool(0.995 <= slope <= 1.005),
+            "abs_intercept_le_0_001": bool(abs(intercept) <= 0.001),
+            "max_abs_affine_residual_le_0_002": bool(max_abs <= 0.002),
+            "rms_affine_residual_le_0_0005": bool(rms <= 0.0005),
+            "no_interior_step_clips": bool(no_interior_clips),
+            "strictly_monotone": bool(strictly_monotone),
         }
         channels.append(
             {

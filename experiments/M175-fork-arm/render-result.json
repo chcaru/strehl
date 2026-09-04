@@ -1,0 +1,954 @@
+{
+  "executable": {
+    "bytes": 271360,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\focus-stack.exe",
+    "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+  },
+  "fork_arm_verdict": "REBUILT_AND_SECTION_1_3_PASS",
+  "freeze_order": {
+    "freeze_precedes_render": true,
+    "output_created_utc": "2026-09-04T20:28:23.124855+00:00",
+    "pre_render_commits": [
+      "32618aafb66e88c066fcbb638507423810b29050",
+      "3c96a6247166f4788cf4dcfbfe3c8c4c6a6cbbc5",
+      "9935decb9f9539baa6e8ec3d49f31010bd5d4377"
+    ],
+    "pre_render_freeze": {
+      "bytes": 4168,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\PRE-RENDER-FREEZE.json",
+      "sha256": "2c11137f723122b033b6b94d249c771a442406b608afa44e0a99e4166ce9de8e"
+    },
+    "pre_render_freeze_utc": "2026-09-04T20:27:28.666896+00:00",
+    "pre_render_guard_commit": "32618aafb66e88c066fcbb638507423810b29050",
+    "render_start_artifact": {
+      "bytes": 2568,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\render-start.json",
+      "sha256": "f89b19e9e4326809ca1721a1841225ff09272e1fce4d2ac48546c8eabfe9f06c"
+    },
+    "render_start_precedes_output_creation": true,
+    "render_started_utc": "2026-09-04T20:28:10.395738+00:00"
+  },
+  "holdout_used": false,
+  "input": {
+    "all_byte_identical": true,
+    "count": 8,
+    "file_sha256": "dc6c7871137283448ebff150832559c7cf42cd8b7c3551eea72920247957532e",
+    "manifest": {
+      "bytes": 6968,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\INPUT-MANIFEST.json",
+      "sha256": "aa93b2bee7c435f256e940f773ca2d9c179bc64b12f77aab754c22ac48f5f94a"
+    },
+    "pixel_payload_sha256": "2f8d3631e7e858e4e4fbb79d61ee031d07af7f5a809cc12050ab4d4501751087"
+  },
+  "invocation": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\focus-stack.exe",
+    "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\output\\tone-sentinel.tiff",
+    "--threads=1",
+    "--batchsize=2",
+    "--no-opencl",
+    "--no-align",
+    "--no-whitebalance",
+    "--no-contrast",
+    "--consistency=0",
+    "--denoise=0",
+    "--input-colorspace=none",
+    "--output-colorspace=srgb",
+    "--output-bitdepth=16",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-01.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-02.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-03.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-04.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-05.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-06.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-07.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-08.tiff"
+  ],
+  "measurement_recovery": {
+    "finalizer": {
+      "bytes": 8848,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\finalize_existing_render.py",
+      "sha256": "28b1603f8159ea58b791b23e71c48c35cdcf4a69708be7daf000f002b4773722"
+    },
+    "measurement_script": {
+      "bytes": 17318,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\render_tone_sentinel.py",
+      "sha256": "7505f47b7a035f5da8ec26a27570f77897c80873cde8057f2b7d12367facc2a4"
+    },
+    "no_rerender": true,
+    "original_failure": "JSON serialization rejected numpy.bool_ values after rendering and measurement; the measurement booleans were converted to built-in bool and this finalizer read the existing TIFF.",
+    "original_output_reused": true
+  },
+  "output": {
+    "bits_per_sample": [
+      16,
+      16,
+      16
+    ],
+    "compression": "5",
+    "decoded_pixel_bytes_sha256": "2f8d3631e7e858e4e4fbb79d61ee031d07af7f5a809cc12050ab4d4501751087",
+    "dtype": "uint16",
+    "file": {
+      "bytes": 1987882,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\output\\tone-sentinel.tiff",
+      "sha256": "d40e59699b1a9fd19972a78f4c0ec2aa99b32cc9f97ac7c44eab8e3b847caaad"
+    },
+    "height": 4688,
+    "icc_present": false,
+    "icc_sha256": null,
+    "photometric": "2",
+    "raw_strip_bytes_sha256": "7bf2788d4dbe0e42030afb2fd0851f3960f3b66a5ba06e6d15e613a4d4d386cd",
+    "sample_format": "1",
+    "shape": [
+      4688,
+      7028,
+      3
+    ],
+    "strip_count": 4688,
+    "width": 7028
+  },
+  "output_tiff_contract": {
+    "bits_per_sample_16_rgb": true,
+    "dtype_uint16": true,
+    "native_dimensions": true
+  },
+  "quality_score": false,
+  "renderer_exit_code": 0,
+  "renderer_exit_code_basis": "The original renderer wrapper reached output inspection and result serialization; its nonzero-exit branch returns before both.",
+  "reproducibility": {
+    "build_count": 2,
+    "builds": [
+      {
+        "build_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "--build",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-a",
+          "--config",
+          "Release"
+        ],
+        "build_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-a",
+        "compiler_environment_flags": [
+          "/Brepro",
+          "/experimental:deterministic",
+          "/EHsc",
+          "/wd4005",
+          "/DGIT_VERSION=\\\"4bc7f95e448cf20ee2bdd758403ec43e2612a1c6\\\"",
+          "/pathmap:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\source-a=C:\\m165\\focus-stack"
+        ],
+        "configure_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "-S",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\source-a",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-a",
+          "-G",
+          "NMake Makefiles",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_TESTS=OFF",
+          "-DOpenCV_DIR=C:\\dev\\macro\\deps\\opencv\\build",
+          "-DCMAKE_EXE_LINKER_FLAGS=/Brepro",
+          "-DCMAKE_STATIC_LINKER_FLAGS=/Brepro"
+        ],
+        "executable": {
+          "bytes": 271360,
+          "label": "focus-stack build a",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-a\\focus-stack.exe",
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        },
+        "label": "a",
+        "log": {
+          "bytes": 3971,
+          "label": "build a log",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-a.log",
+          "sha256": "2c53b99de7142562ec357c83f7ea3b6358c92f6f4da8b79ac261ec98704153a6"
+        },
+        "source_check": {
+          "file_count": 103,
+          "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196"
+        },
+        "source_date_epoch": 1778468219,
+        "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\source-a",
+        "version_banner": [
+          "focus-stack 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6, built 1 1",
+          "Compiled with OpenCV version 4.13.0"
+        ]
+      },
+      {
+        "build_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "--build",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-b",
+          "--config",
+          "Release"
+        ],
+        "build_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-b",
+        "compiler_environment_flags": [
+          "/Brepro",
+          "/experimental:deterministic",
+          "/EHsc",
+          "/wd4005",
+          "/DGIT_VERSION=\\\"4bc7f95e448cf20ee2bdd758403ec43e2612a1c6\\\"",
+          "/pathmap:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\source-b=C:\\m165\\focus-stack"
+        ],
+        "configure_argv": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+          "-S",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\source-b",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-b",
+          "-G",
+          "NMake Makefiles",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_TESTS=OFF",
+          "-DOpenCV_DIR=C:\\dev\\macro\\deps\\opencv\\build",
+          "-DCMAKE_EXE_LINKER_FLAGS=/Brepro",
+          "-DCMAKE_STATIC_LINKER_FLAGS=/Brepro"
+        ],
+        "executable": {
+          "bytes": 271360,
+          "label": "focus-stack build b",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-b\\focus-stack.exe",
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        },
+        "label": "b",
+        "log": {
+          "bytes": 3971,
+          "label": "build b log",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\build-b.log",
+          "sha256": "bb9c320c71830fc4e8edf2cc7ce3839ee36c828e46652a29e00b2966392d1774"
+        },
+        "source_check": {
+          "file_count": 103,
+          "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196"
+        },
+        "source_date_epoch": 1778468219,
+        "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\repro\\source-b",
+        "version_banner": [
+          "focus-stack 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6, built 1 1",
+          "Compiled with OpenCV version 4.13.0"
+        ]
+      }
+    ],
+    "byte_identical": true,
+    "differing_bytes": 0,
+    "verdict": "BIT_REPRODUCIBLE_TWO_CLEAN_PATHS_SAME_HOST"
+  },
+  "runtime_bundle_sha256": "4b9d4c310a16294bcc46ee5b947aec02cbdba9887787af017018071dd9455150",
+  "schema": "m175-fork-tone-sentinel-result-v1",
+  "section_1_3": {
+    "channels": [
+      {
+        "channel": "R",
+        "checks": {
+          "abs_intercept_le_0_001": true,
+          "max_abs_affine_residual_le_0_002": true,
+          "no_interior_step_clips": true,
+          "rms_affine_residual_le_0_0005": true,
+          "slope_0_995_to_1_005": true,
+          "strictly_monotone": true
+        },
+        "intercept": -6.6597626500634704e-18,
+        "max_abs_affine_residual": 2.220446049250313e-16,
+        "pass": true,
+        "rms_affine_residual": 1.3031039891780493e-16,
+        "slope": 1.0000000000000002
+      },
+      {
+        "channel": "G",
+        "checks": {
+          "abs_intercept_le_0_001": true,
+          "max_abs_affine_residual_le_0_002": true,
+          "no_interior_step_clips": true,
+          "rms_affine_residual_le_0_0005": true,
+          "slope_0_995_to_1_005": true,
+          "strictly_monotone": true
+        },
+        "intercept": -6.6597626500634704e-18,
+        "max_abs_affine_residual": 2.220446049250313e-16,
+        "pass": true,
+        "rms_affine_residual": 1.3031039891780493e-16,
+        "slope": 1.0000000000000002
+      },
+      {
+        "channel": "B",
+        "checks": {
+          "abs_intercept_le_0_001": true,
+          "max_abs_affine_residual_le_0_002": true,
+          "no_interior_step_clips": true,
+          "rms_affine_residual_le_0_0005": true,
+          "slope_0_995_to_1_005": true,
+          "strictly_monotone": true
+        },
+        "intercept": -6.6597626500634704e-18,
+        "max_abs_affine_residual": 2.220446049250313e-16,
+        "pass": true,
+        "rms_affine_residual": 1.3031039891780493e-16,
+        "slope": 1.0000000000000002
+      }
+    ],
+    "fit_steps_1_based_inclusive": [
+      2,
+      32
+    ],
+    "format_checks": {
+      "native_dimensions": true,
+      "three_channels": true,
+      "uint16": true
+    },
+    "measurements": [
+      {
+        "channel_max_u16": [
+          1311,
+          1311,
+          1311
+        ],
+        "channel_mean": [
+          0.020004577706569007,
+          0.020004577706569007,
+          0.020004577706569007
+        ],
+        "channel_min_u16": [
+          1311,
+          1311,
+          1311
+        ],
+        "fit_x": 0.020004577706569007,
+        "step_1_based": 1
+      },
+      {
+        "channel_max_u16": [
+          3277,
+          3277,
+          3277
+        ],
+        "channel_mean": [
+          0.05000381475547418,
+          0.05000381475547418,
+          0.05000381475547418
+        ],
+        "channel_min_u16": [
+          3277,
+          3277,
+          3277
+        ],
+        "fit_x": 0.05000381475547418,
+        "step_1_based": 2
+      },
+      {
+        "channel_max_u16": [
+          5243,
+          5243,
+          5243
+        ],
+        "channel_mean": [
+          0.08000305180437933,
+          0.08000305180437933,
+          0.08000305180437933
+        ],
+        "channel_min_u16": [
+          5243,
+          5243,
+          5243
+        ],
+        "fit_x": 0.08000305180437933,
+        "step_1_based": 3
+      },
+      {
+        "channel_max_u16": [
+          7209,
+          7209,
+          7209
+        ],
+        "channel_mean": [
+          0.1100022888532845,
+          0.1100022888532845,
+          0.1100022888532845
+        ],
+        "channel_min_u16": [
+          7209,
+          7209,
+          7209
+        ],
+        "fit_x": 0.1100022888532845,
+        "step_1_based": 4
+      },
+      {
+        "channel_max_u16": [
+          9175,
+          9175,
+          9175
+        ],
+        "channel_mean": [
+          0.14000152590218967,
+          0.14000152590218967,
+          0.14000152590218967
+        ],
+        "channel_min_u16": [
+          9175,
+          9175,
+          9175
+        ],
+        "fit_x": 0.14000152590218967,
+        "step_1_based": 5
+      },
+      {
+        "channel_max_u16": [
+          11141,
+          11141,
+          11141
+        ],
+        "channel_mean": [
+          0.17000076295109484,
+          0.17000076295109484,
+          0.17000076295109484
+        ],
+        "channel_min_u16": [
+          11141,
+          11141,
+          11141
+        ],
+        "fit_x": 0.17000076295109484,
+        "step_1_based": 6
+      },
+      {
+        "channel_max_u16": [
+          13107,
+          13107,
+          13107
+        ],
+        "channel_mean": [
+          0.2,
+          0.2,
+          0.2
+        ],
+        "channel_min_u16": [
+          13107,
+          13107,
+          13107
+        ],
+        "fit_x": 0.2,
+        "step_1_based": 7
+      },
+      {
+        "channel_max_u16": [
+          15073,
+          15073,
+          15073
+        ],
+        "channel_mean": [
+          0.22999923704890515,
+          0.22999923704890515,
+          0.22999923704890515
+        ],
+        "channel_min_u16": [
+          15073,
+          15073,
+          15073
+        ],
+        "fit_x": 0.22999923704890515,
+        "step_1_based": 8
+      },
+      {
+        "channel_max_u16": [
+          17039,
+          17039,
+          17039
+        ],
+        "channel_mean": [
+          0.25999847409781035,
+          0.25999847409781035,
+          0.25999847409781035
+        ],
+        "channel_min_u16": [
+          17039,
+          17039,
+          17039
+        ],
+        "fit_x": 0.25999847409781035,
+        "step_1_based": 9
+      },
+      {
+        "channel_max_u16": [
+          19005,
+          19005,
+          19005
+        ],
+        "channel_mean": [
+          0.2899977111467155,
+          0.2899977111467155,
+          0.2899977111467155
+        ],
+        "channel_min_u16": [
+          19005,
+          19005,
+          19005
+        ],
+        "fit_x": 0.2899977111467155,
+        "step_1_based": 10
+      },
+      {
+        "channel_max_u16": [
+          20971,
+          20971,
+          20971
+        ],
+        "channel_mean": [
+          0.31999694819562063,
+          0.31999694819562063,
+          0.31999694819562063
+        ],
+        "channel_min_u16": [
+          20971,
+          20971,
+          20971
+        ],
+        "fit_x": 0.31999694819562063,
+        "step_1_based": 11
+      },
+      {
+        "channel_max_u16": [
+          22937,
+          22937,
+          22937
+        ],
+        "channel_mean": [
+          0.3499961852445258,
+          0.3499961852445258,
+          0.3499961852445258
+        ],
+        "channel_min_u16": [
+          22937,
+          22937,
+          22937
+        ],
+        "fit_x": 0.3499961852445258,
+        "step_1_based": 12
+      },
+      {
+        "channel_max_u16": [
+          24903,
+          24903,
+          24903
+        ],
+        "channel_mean": [
+          0.379995422293431,
+          0.379995422293431,
+          0.379995422293431
+        ],
+        "channel_min_u16": [
+          24903,
+          24903,
+          24903
+        ],
+        "fit_x": 0.379995422293431,
+        "step_1_based": 13
+      },
+      {
+        "channel_max_u16": [
+          26869,
+          26869,
+          26869
+        ],
+        "channel_mean": [
+          0.40999465934233614,
+          0.40999465934233614,
+          0.40999465934233614
+        ],
+        "channel_min_u16": [
+          26869,
+          26869,
+          26869
+        ],
+        "fit_x": 0.40999465934233614,
+        "step_1_based": 14
+      },
+      {
+        "channel_max_u16": [
+          28835,
+          28835,
+          28835
+        ],
+        "channel_mean": [
+          0.4399938963912413,
+          0.4399938963912413,
+          0.4399938963912413
+        ],
+        "channel_min_u16": [
+          28835,
+          28835,
+          28835
+        ],
+        "fit_x": 0.4399938963912413,
+        "step_1_based": 15
+      },
+      {
+        "channel_max_u16": [
+          30801,
+          30801,
+          30801
+        ],
+        "channel_mean": [
+          0.4699931334401465,
+          0.4699931334401465,
+          0.4699931334401465
+        ],
+        "channel_min_u16": [
+          30801,
+          30801,
+          30801
+        ],
+        "fit_x": 0.4699931334401465,
+        "step_1_based": 16
+      },
+      {
+        "channel_max_u16": [
+          32768,
+          32768,
+          32768
+        ],
+        "channel_mean": [
+          0.5000076295109483,
+          0.5000076295109483,
+          0.5000076295109483
+        ],
+        "channel_min_u16": [
+          32768,
+          32768,
+          32768
+        ],
+        "fit_x": 0.5000076295109483,
+        "step_1_based": 17
+      },
+      {
+        "channel_max_u16": [
+          34734,
+          34734,
+          34734
+        ],
+        "channel_mean": [
+          0.5300068665598535,
+          0.5300068665598535,
+          0.5300068665598535
+        ],
+        "channel_min_u16": [
+          34734,
+          34734,
+          34734
+        ],
+        "fit_x": 0.5300068665598535,
+        "step_1_based": 18
+      },
+      {
+        "channel_max_u16": [
+          36700,
+          36700,
+          36700
+        ],
+        "channel_mean": [
+          0.5600061036087587,
+          0.5600061036087587,
+          0.5600061036087587
+        ],
+        "channel_min_u16": [
+          36700,
+          36700,
+          36700
+        ],
+        "fit_x": 0.5600061036087587,
+        "step_1_based": 19
+      },
+      {
+        "channel_max_u16": [
+          38666,
+          38666,
+          38666
+        ],
+        "channel_mean": [
+          0.5900053406576639,
+          0.5900053406576639,
+          0.5900053406576639
+        ],
+        "channel_min_u16": [
+          38666,
+          38666,
+          38666
+        ],
+        "fit_x": 0.5900053406576639,
+        "step_1_based": 20
+      },
+      {
+        "channel_max_u16": [
+          40632,
+          40632,
+          40632
+        ],
+        "channel_mean": [
+          0.620004577706569,
+          0.620004577706569,
+          0.620004577706569
+        ],
+        "channel_min_u16": [
+          40632,
+          40632,
+          40632
+        ],
+        "fit_x": 0.620004577706569,
+        "step_1_based": 21
+      },
+      {
+        "channel_max_u16": [
+          42598,
+          42598,
+          42598
+        ],
+        "channel_mean": [
+          0.6500038147554742,
+          0.6500038147554742,
+          0.6500038147554742
+        ],
+        "channel_min_u16": [
+          42598,
+          42598,
+          42598
+        ],
+        "fit_x": 0.6500038147554742,
+        "step_1_based": 22
+      },
+      {
+        "channel_max_u16": [
+          44564,
+          44564,
+          44564
+        ],
+        "channel_mean": [
+          0.6800030518043794,
+          0.6800030518043794,
+          0.6800030518043794
+        ],
+        "channel_min_u16": [
+          44564,
+          44564,
+          44564
+        ],
+        "fit_x": 0.6800030518043794,
+        "step_1_based": 23
+      },
+      {
+        "channel_max_u16": [
+          46530,
+          46530,
+          46530
+        ],
+        "channel_mean": [
+          0.7100022888532845,
+          0.7100022888532845,
+          0.7100022888532845
+        ],
+        "channel_min_u16": [
+          46530,
+          46530,
+          46530
+        ],
+        "fit_x": 0.7100022888532845,
+        "step_1_based": 24
+      },
+      {
+        "channel_max_u16": [
+          48496,
+          48496,
+          48496
+        ],
+        "channel_mean": [
+          0.7400015259021897,
+          0.7400015259021897,
+          0.7400015259021897
+        ],
+        "channel_min_u16": [
+          48496,
+          48496,
+          48496
+        ],
+        "fit_x": 0.7400015259021897,
+        "step_1_based": 25
+      },
+      {
+        "channel_max_u16": [
+          50462,
+          50462,
+          50462
+        ],
+        "channel_mean": [
+          0.7700007629510949,
+          0.7700007629510949,
+          0.7700007629510949
+        ],
+        "channel_min_u16": [
+          50462,
+          50462,
+          50462
+        ],
+        "fit_x": 0.7700007629510949,
+        "step_1_based": 26
+      },
+      {
+        "channel_max_u16": [
+          52428,
+          52428,
+          52428
+        ],
+        "channel_mean": [
+          0.8,
+          0.8,
+          0.8
+        ],
+        "channel_min_u16": [
+          52428,
+          52428,
+          52428
+        ],
+        "fit_x": 0.8,
+        "step_1_based": 27
+      },
+      {
+        "channel_max_u16": [
+          54394,
+          54394,
+          54394
+        ],
+        "channel_mean": [
+          0.8299992370489052,
+          0.8299992370489052,
+          0.8299992370489052
+        ],
+        "channel_min_u16": [
+          54394,
+          54394,
+          54394
+        ],
+        "fit_x": 0.8299992370489052,
+        "step_1_based": 28
+      },
+      {
+        "channel_max_u16": [
+          56360,
+          56360,
+          56360
+        ],
+        "channel_mean": [
+          0.8599984740978104,
+          0.8599984740978104,
+          0.8599984740978104
+        ],
+        "channel_min_u16": [
+          56360,
+          56360,
+          56360
+        ],
+        "fit_x": 0.8599984740978104,
+        "step_1_based": 29
+      },
+      {
+        "channel_max_u16": [
+          58326,
+          58326,
+          58326
+        ],
+        "channel_mean": [
+          0.8899977111467154,
+          0.8899977111467154,
+          0.8899977111467154
+        ],
+        "channel_min_u16": [
+          58326,
+          58326,
+          58326
+        ],
+        "fit_x": 0.8899977111467154,
+        "step_1_based": 30
+      },
+      {
+        "channel_max_u16": [
+          60292,
+          60292,
+          60292
+        ],
+        "channel_mean": [
+          0.9199969481956206,
+          0.9199969481956206,
+          0.9199969481956206
+        ],
+        "channel_min_u16": [
+          60292,
+          60292,
+          60292
+        ],
+        "fit_x": 0.9199969481956206,
+        "step_1_based": 31
+      },
+      {
+        "channel_max_u16": [
+          62258,
+          62258,
+          62258
+        ],
+        "channel_mean": [
+          0.9499961852445258,
+          0.9499961852445258,
+          0.9499961852445258
+        ],
+        "channel_min_u16": [
+          62258,
+          62258,
+          62258
+        ],
+        "fit_x": 0.9499961852445258,
+        "step_1_based": 32
+      },
+      {
+        "channel_max_u16": [
+          64224,
+          64224,
+          64224
+        ],
+        "channel_mean": [
+          0.979995422293431,
+          0.979995422293431,
+          0.979995422293431
+        ],
+        "channel_min_u16": [
+          64224,
+          64224,
+          64224
+        ],
+        "fit_x": 0.979995422293431,
+        "step_1_based": 33
+      }
+    ],
+    "pass": true,
+    "site_statistic": "arithmetic mean over each frozen central ROI"
+  },
+  "selected_commit": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+  "settings": {
+    "per_subject_tuning": false,
+    "post_result_rebuild_allowed": false,
+    "post_stack_processing": [],
+    "schema": "m175-fork-settings-manifest-v1",
+    "selected_commit": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+    "settings": {
+      "batchsize": 2,
+      "consistency": 0,
+      "denoise": 0,
+      "input_colorspace": "none",
+      "no_align": true,
+      "no_contrast": true,
+      "no_opencl": true,
+      "no_whitebalance": true,
+      "output_bitdepth": 16,
+      "output_colorspace": "srgb",
+      "threads": 1
+    },
+    "status": "FROZEN_BEFORE_RENDERING"
+  },
+  "source_manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196",
+  "source_tree_sha1": "543b825e325f959ed15c10032d2b8156f11070cc",
+  "status": "PASS"
+}
