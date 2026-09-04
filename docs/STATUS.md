@@ -6893,6 +6893,124 @@ column before ruling on the verdict that rests on it.
 
 ---
 
+### 2.9.70 What we can honestly claim, and the number I had already given the owner was wrong
+
+Two lanes closed within minutes of each other and between them they answer the
+question this program exists to answer, and correct a number I had already put
+in front of the owner.
+
+#### M164: the scoped claim is worth making, and it is not weaker than anyone else's
+
+M164's committed status line is deliberately narrower than the one-line verdict
+it led with, and the committed one is the one that governs: **`SCOPED M1 CLAIM
+COMPATIBLE WITH SOTA; NOT THE COMPLETE SOTA VERDICT; COMPARATOR BLOCKERS
+UNCHANGED`**. `GX` means detail transmitted through the registered optic's
+measured common non-null passband. It does **not** establish absolute object
+detail `X`, and the claim sentence has to say so or a hostile reviewer will read
+it as claiming more than was shown.
+
+**The strategically important finding is the competitor survey, and it is
+good news.** M164 went and read what the named comparators actually claim:
+Zerene advertises "Highest quality output images" and avoiding "stacking mush"
+with no independently calibrated absolute-object reference; Helicon claims a
+"fully focused image by combining the sharpest areas" and "theoretically
+unlimited depth of field" without claiming recovery of absolute `X`; Araujo,
+Ponce and Mairal target **pseudo ground truth computed using commercial
+software** and report qualitative parity, not absolute physical truth; MFIFB is
+benchmark truth across 30 algorithms rather than an optical measurement. Its
+conclusion, quoted from the report: **"The honest `GX` claim is not weaker than
+any validated absolute-object claim made by the named comparators, because none
+of the named comparators validates absolute `X`."** It is *narrower than their
+marketing language and stronger in measurement provenance.*
+
+That is the answer I was most afraid of getting wrong in the agreeable
+direction. I told the lane outright that a comfortable answer was worthless and
+that I would rather learn the achievable claim was weaker than the goal now than
+at the end. It came back sourced to vendor pages and arXiv identifiers rather
+than to its own prior reasoning, which is why I am willing to act on it.
+
+**And it costs nothing off the blocker list: `gx_removed=0`.** M164 re-derived
+the axis classification independently, as instructed, and reported
+`explicit_d=7 (M1,M2,M3,M4,M5,M6,M7)` with
+`semantic_comparator=M1,M2,M3,M4,M5,M6,M7,M11`. Scoping the claim to `GX` does
+not remove a single comparator dependence. **The licence ask is not avoidable by
+being more careful about what we claim.**
+
+**Reconciling two counts that look contradictory and are not.** M164 reports
+**eight** semantically comparator-dependent axes; §2.9.65 and §2.9.69 say
+**nine**. Both are right under stated definitions: M164 counts the seven
+explicit `(d)` axes plus M11's renamed equivalent; M175 and I additionally count
+M9, which is blocked *transitively* through M1 rather than carrying the blocker
+itself. Seven explicit, eight semantic, nine including transitive closure. I am
+keeping all three numbers in play with their qualifiers rather than collapsing
+them, because collapsing them is how a wrong count gets quoted to an owner.
+
+#### M166: the witness was invalid, so the session I quoted him was wrong
+
+M166 returned `REHEARSAL SPECIFIED: 1,092 frames` (commit `a195bc63`) and, in
+doing so, superseded the frame total I had put in the owner banner four hours
+earlier.
+
+**The `96`-frame converter-off witness cannot serve as the witness at all.**
+M164's frozen witness contract requires `S_1` and `S_2` to each be one complete
+independently acquired scored-path input set, and **a convenient fixed-focus
+burst is inadmissible when the renderer receives a focus stack.** The
+replacement is two complete candidate-excluded copies of both registered
+focus-stack budgets:
+
+| block | frames |
+| --- | --- |
+| `TC0-DOM-sw4-A` | `55` |
+| `TC0-DOM-sw4-B` | `55` |
+| `TC0-DOM-sw10-A` | `27` |
+| `TC0-DOM-sw10-B` | `27` |
+| **total** | **`164`** |
+
+That is `+68` frames, so the corrected combined score is **`1,215`, not
+`1,147`** — re-derived independently as `891 + 32 + 164 + 128 = 1,215`. The
+`1.32x` target, the hard `1.33x` maximum, the four converter-on reference strips
+and the held-out A/B/V calibration design all survive unchanged.
+
+**The rehearsal is `1,092` registered frames and is currently STOP at zero
+frames.** M166's zero-frame release gate: *"The owner must not start the
+`1,092`-frame rehearsal from the current repository state."* The gate is a
+hash-bound production dominance manifest that does not yet exist — **software
+work on my side, not owner action.** Note the scale: the rehearsal is only `123`
+frames short of the scored session it protects.
+
+**Ask 2a is unaffected and I checked that before touching anything.** My first
+concern on reading "capture remains STOP" was that I had told the owner to shoot
+four hours earlier and might now be reversing it. M166 is explicit at the same
+gate: *"The two-frame M147 preflight may still be completed; it establishes
+scale and field only."* The hold I lifted stays lifted; the STOP lands on the
+rehearsal.
+
+**I corrected the owner banner immediately.** The `1,147` figure is now retracted
+in place rather than quietly overwritten, because he has already read it once.
+The verifier's re-derivation was rebuilt on the corrected components, and a
+control now asserts the retraction is present — mutating "superseded" to
+"confirmed" turns the run red. Four stale mutation anchors surfaced during that
+rebuild and were repinned; `commission_quotes.py` is **`29 of 29`**.
+
+**A check that guarded nothing, found by trying to commission it.** I added a
+claim pinning M164's `12/12` self-check into this section. The verifier passed
+it. The commissioning harness then refused to mutate it: `MUTATION ANCHOR
+MATCHED 0 TIMES`. **The string `12/12` is not in this section at all** — I never
+wrote it — and the claim was being satisfied by an unrelated `12/12` elsewhere in
+the registered sections. A presence check over seventeen concatenated sections
+is satisfied by any duplicate anywhere in them. I deleted the claim rather than
+keep a green no-op.
+
+The same trap was waiting for three more: a bare needle `164` is satisfied by
+every occurrence of the string `M164`, and a bare `1,215` by the second site in
+this very section. Those three are now pinned on **full phrases** — a table row,
+a sentence fragment, an explicit contrast — with the bare numeral carried in the
+claim's source-literal slot so the source side still matches. All four now fire
+under mutation. **The lesson is the one this program keeps relearning: a check
+is worth exactly what its commissioning proves, and green is not evidence.**
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking

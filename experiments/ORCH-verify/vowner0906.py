@@ -112,15 +112,21 @@ else:
 print()
 M166 = ROOT / "docs" / "research" / "M166-reference-information-dominance-physical.md"
 M164D = ROOT / "docs" / "research" / "M164-reference-dominance.md"
+M166REH = ROOT / "docs" / "research" / "M166-reference-dominance-rehearsal.md"
 BANNER_QUOTES = [
     ("m166 target holds", M166, "TARGET HOLDS AT 1.32x"),
     ("m166 scale and field only", M166,
      "can establish scale and field only"),
     ("m166 cannot admit rig", M166,
      "Diffraction arithmetic cannot admit the rig."),
-    ("m166 rehearsal first", M166,
-     "The owner should perform the exact-configuration non-holdout rehearsal "
-     "first; only a pass licenses the `1,147`-frame holdout sitting."),
+    ("m166 rehearsal first", M166REH,
+     "The owner must not start the `1,092`-frame rehearsal from the current "
+     "repository state."),
+    ("m166 preflight still allowed", M166REH,
+     "The two-frame M147 preflight may still be completed; it establishes "
+     "scale and field only."),
+    ("m166 corrected total", M166REH,
+     "the combined score is `1,215`, not `1,147`."),
     ("m166 weakest cell ratio", M166, "1.03405"),
     ("m164 shared objective", M164D, "SHARED OBJECTIVE SUFFICIENT"),
 ]
@@ -156,18 +162,25 @@ for label, path, quote in BANNER_QUOTES:
 # rather than pinned, so editing any component without editing the total fails.
 print()
 rev = [("current registered session", 891), ("fourth reference strip", 32),
-       ("scored-path witness", 96), ("held-out validation", 128)]
+       ("scored-path S1/S2 witness", 164), ("held-out validation", 128)]
 rev_total = sum(v for _, v in rev)
 rev_checks = [
-    ("891 + 32 + 96 + 128 = 1,147", rev_total == 1147),
-    # Anchored on its own phrase, not on a bare "1,147": the figure also appears
-    # inside the quoted M166 ruling below, and a presence check for the bare
-    # number is satisfied by that duplicate even after this sentence drifts.
+    ("891 + 32 + 164 + 128 = 1,215", rev_total == 1215),
+    # Anchored on its own phrase, not on a bare "1,215": the figure also appears
+    # inside the quoted M166 corrections below, and a presence check for the
+    # bare number is satisfied by that duplicate even after this sentence drifts.
     ("owner states the revised total in context",
-     "`891` to `1,147` registered frames" in owner_flat),
-    ("owner attributes the +256 to its components",
+     "`891` to `1,215` registered frames" in owner_flat),
+    ("owner attributes the +324 to its components",
      "three reference strips become four (`+32`)" in owner_flat),
-    ("increase is 256", rev_total - 891 == 256),
+    ("owner shows the witness arithmetic",
+     "`55 + 55 + 27 + 27 = 164`" in owner_flat),
+    # The superseded total must be named as superseded, not silently dropped:
+    # the owner has already been told 1,147 once and needs it retracted.
+    ("owner retracts the stale 1,147",
+     "The `1,147` figure is superseded" in owner_flat),
+    ("increase is 324", rev_total - 891 == 324),
+    ("witness correction is +68", 164 - 96 == 68),
 ]
 for label, ok in rev_checks:
     print(("GREEN " if ok else "RED   ") + "revsn  " + label)
@@ -178,10 +191,10 @@ for label, ok in rev_checks:
 
 # ---- control: a wrong total must not re-derive ----
 ctl = (2 + sum(stages) + 704) != 1603
-ctl2 = (891 + 32 + 96 + 128) != 1148  # 1,148 is shutter releases, not registered frames
+ctl2 = (891 + 32 + 164 + 128) != 1147  # the stale total must no longer re-derive
 print(("CTLPASS" if ctl else "CTLFAIL") + " decoy total 1,603 does not re-derive")
 print(("CTLPASS" if ctl2 else "CTLFAIL")
-      + " decoy total 1,148 does not re-derive as registered frames")
+      + " superseded total 1,147 does not re-derive from the corrected parts")
 ctl = ctl and ctl2
 
 print()

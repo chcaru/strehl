@@ -32,13 +32,33 @@ Maintained by the orchestrator. Last updated after lane M175.
 > between, and you should know about it before you plan a long evening.
 >
 > **The scored session grew, and a rehearsal now sits in front of it.** The
-> session goes from `891` to `1,147` registered frames: three reference strips
-> become four (`+32`), a new converter-off witness adds `96`, and held-out
+> session goes from `891` to `1,215` registered frames: three reference strips
+> become four (`+32`), the physical `S_1/S_2` witness adds `164`, and held-out
 > calibration adds `128`. Before any of that counts, M166 requires an
 > **exact-configuration non-holdout rehearsal** that must pass the new
-> condition in every measured cell. Its ruling: *"The owner should perform the
-> exact-configuration non-holdout rehearsal first; only a pass licenses the
-> `1,147`-frame holdout sitting."*
+> condition in every measured cell. M166's zero-frame release gate is explicit:
+> *"The owner must not start the `1,092`-frame rehearsal from the current
+> repository state."*
+>
+> **Corrected once, before you shot it — the witness was wrong, not just
+> small.** I first told you this session was `1,147` frames, with a `96`-frame
+> converter-off witness. M164's frozen witness contract then ruled that `S_1`
+> and `S_2` must each be *one complete independently acquired scored-path input
+> set*, and a fixed-focus burst is inadmissible when the renderer receives a
+> focus stack. So the `96`-frame block could not serve as the witness at all.
+> It is replaced by two complete candidate-excluded copies of both registered
+> focus-stack budgets — `55 + 55 + 27 + 27 = 164` — which is `+68` frames. In
+> M166's words: *"The correction is `+68` frames, so the combined score is
+> `1,215`, not `1,147`."* **The `1,147` figure is superseded; ignore
+> it wherever you still see it.**
+>
+> **The rehearsal is `1,092` registered frames, and it is not yet releasable.**
+> That is a real evening, only `123` frames short of the scored session itself.
+> It is currently **STOP at zero frames** until the production dominance
+> manifest is frozen — that freeze is software work on my side, not something
+> you do. **This does not affect Ask 2a below: M166 is explicit that _"The
+> two-frame M147 preflight may still be completed; it establishes scale and
+> field only."_ Shoot the two frames. Do not start the rehearsal.**
 >
 > **Why a rehearsal is worth your time rather than an annoyance.** The margin
 > the whole route depends on is thin. From diffraction alone the reference

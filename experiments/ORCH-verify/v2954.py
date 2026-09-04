@@ -18,7 +18,7 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().pare
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
-            "2.9.66", "2.9.67", "2.9.68", "2.9.69"]
+            "2.9.66", "2.9.67", "2.9.68", "2.9.69", "2.9.70"]
 
 
 def collapse(s):
@@ -189,6 +189,19 @@ CLAIMS = [
      R + "M175-fork-arm.md"),
     ("m175 sentinel residual", "2.220446049250313e-16",
      R + "M175-fork-arm.md"),
+    # --- M164: the GX claim and what it does not buy ---
+    ("m164 gx removes nothing", "gx_removed=0", R + "M164-gx-sota-claim.md"),
+    # --- M166: the corrected witness and session totals ---
+    # STATUS-side needles are full phrases, not bare numerals. A bare "164" is
+    # satisfied by every occurrence of "M164" and a bare "1,215" by the second
+    # site in the same section, which makes the check unfalsifiable. The 5th
+    # element carries the source-side literal.
+    ("m166 witness block", "| **total** | **`164`** |",
+     R + "M166-reference-dominance-rehearsal.md", None, "164"),
+    ("m166 corrected session", "**`1,215`, not `1,147`**",
+     R + "M166-reference-dominance-rehearsal.md", None, "1,215"),
+    ("m166 rehearsal frames", "The rehearsal is `1,092` registered frames",
+     R + "M166-reference-dominance-rehearsal.md", None, "1,092"),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")

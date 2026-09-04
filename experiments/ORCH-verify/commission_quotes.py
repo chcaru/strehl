@@ -79,6 +79,15 @@ MUTATIONS = [
     ("m12 mem w8 n33", "docs/STATUS.md", "`15.6115`", "`15.6118`"),
     ("m175 sentinel residual", "docs/STATUS.md",
      "`2.220446049250313e-16`", "`2.220446049250314e-16`"),
+    ("m164 gx removes nothing", "docs/STATUS.md",
+     "`gx_removed=0`", "`gx_removed=3`"),
+    ("m166 witness block", "docs/STATUS.md",
+     "| **total** | **`164`** |", "| **total** | **`165`** |"),
+    ("m166 corrected session", "docs/STATUS.md",
+     "**`1,215`, not\n`1,147`**", "**`1,216`, not\n`1,147`**"),
+    ("m166 rehearsal frames", "docs/STATUS.md",
+     "The rehearsal is `1,092` registered frames",
+     "The rehearsal is `1,093` registered frames"),
 ]
 
 
@@ -129,15 +138,27 @@ OWNER_MUTATIONS = [
      "docs/research/M164-reference-dominance.md",
      "SHARED OBJECTIVE SUFFICIENT", "SHARED OBJECTIVE INSUFFICIENT"),
     ("banner m166 rehearsal first",
-     "docs/research/M166-reference-information-dominance-physical.md",
-     "only a pass licenses the `1,147`-frame holdout sitting.",
-     "the holdout sitting may proceed regardless."),
+     "docs/research/M166-reference-dominance-rehearsal.md",
+     "The owner must not start the `1,092`-frame rehearsal from the current",
+     "The owner may start the `1,092`-frame rehearsal from the current"),
+    ("banner m166 preflight still allowed",
+     "docs/research/M166-reference-dominance-rehearsal.md",
+     "The two-frame M147 preflight may still be completed; it establishes",
+     "The two-frame M147 preflight is also blocked; it establishes"),
+    ("banner m166 corrected total",
+     "docs/research/M166-reference-dominance-rehearsal.md",
+     "the combined score is `1,215`, not `1,147`.",
+     "the combined score is `1,216`, not `1,147`."),
     # Drift the owner-facing total away from the lane's figure.
     ("revsn  owner states the revised total in context", "docs/OWNER-ACTIONS.md",
-     "`891` to `1,147` registered frames", "`891` to `1,203` registered frames"),
-    ("revsn  owner attributes the +256 to its components", "docs/OWNER-ACTIONS.md",
+     "`891` to `1,215` registered frames", "`891` to `1,203` registered frames"),
+    ("revsn  owner attributes the +324 to its components", "docs/OWNER-ACTIONS.md",
      "three reference strips become four (`+32`)",
      "three reference strips become five (`+64`)"),
+    ("revsn  owner shows the witness arithmetic", "docs/OWNER-ACTIONS.md",
+     "`55 + 55 + 27 + 27 = 164`", "`55 + 55 + 27 + 27 = 165`"),
+    ("revsn  owner retracts the stale 1,147", "docs/OWNER-ACTIONS.md",
+     "The `1,147` figure is superseded", "The `1,147` figure is confirmed"),
 ]
 
 
