@@ -301,3 +301,43 @@ The admission audit opens TIFF containers and metadata only
 (`tifffile.TiffFile`); it never calls `imread`, `asarray` or `memmap` on image
 samples. No Rust file changed. No file under `D:\personal\macro` or
 `D:\edited\macro` was written, moved, renamed or deleted.
+
+## 14. Follow-up preregistration — magnitude versus kernel mechanism
+
+The orchestrator supplied a 1-D synthetic premise test after the first final
+report. Its registered null was `0.0000%`; USM amount
+`0.3/0.5/1.0/2.0` produced monotone
+`0.6836%/1.1475%/1.9043%/5.8350%`, unchanged by `[0,1]` clipping.
+This lane accepts that result as supplied and does not repeat it. It supports
+the narrower proposition that global rail clipping need not erase local
+interior excursions. It does not supply a missing foreign linear-domain or
+geometry contract.
+
+The same message proposes distinguishing resampling from sharpening by treating
+the commissioned half-phase Catmull hard-step excursion, `0.0625` of a
+full-scale step, as an approximate interpolation ceiling. Before executing new
+code, this lane registers a direct two-dimensional test of that ceiling:
+
+1. `kernel-bound.py` is synthetic kernel algebra, not another M8 checker, and
+   will read no real render pixels.
+2. All magnitudes are divided by the exact local interpolation-support span
+   `hi-lo`; raw normalised-output magnitude alone is not a kernel comparison.
+3. The half-phase one-dimensional hard step should reproduce `0.0625`.
+4. A phase-optimal one-dimensional hard step should exceed it: the registered
+   Catmull prediction is `2/27`, approximately `0.074074`.
+5. For arbitrary bounded support values, the registered negative-weight-mass
+   bounds are `0.125` in one dimension and `0.28125` for a separable
+   two-dimensional kernel. The latter follows from
+   `N_2D = n_x + n_y + 2*n_x*n_y` with `n_x=n_y=0.125`.
+6. Therefore, if the implementation confirms those values, `~6%` is rejected
+   as a universal Catmull bound and an observed excursion above it cannot by
+   itself identify sharpening.
+7. The controls are a convex-kernel GREEN null, Catmull upper/lower RED plants,
+   and an improvement arm that removes the negative lobes (`a=-0.5` to `a=0`)
+   and must reduce the planted excess to zero.
+
+No comparator becomes admissible merely because a magnitude discriminator is
+proposed. Real-render rate, median, p99, maximum and sign symmetry remain
+`UNMEASURED` unless the frozen §3 contract is recovered. A finite render also
+cannot exhibit an “unbounded tail”; unbounded growth is a property of a
+controlled gain sweep, not one empirical histogram.
