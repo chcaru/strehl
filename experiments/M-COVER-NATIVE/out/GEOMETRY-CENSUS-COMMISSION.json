@@ -1,0 +1,60 @@
+{
+  "actual_headers_observed_in_phase_a": true,
+  "all_passed": true,
+  "cases": [
+    {
+      "classification": {
+        "height": 8,
+        "height_pixels_lost": 0,
+        "native_height": 8,
+        "native_size": true,
+        "native_width": 12,
+        "verdict": "GREEN",
+        "width": 12,
+        "width_pixels_lost": 0
+      },
+      "expected_verdict": "GREEN",
+      "header": {
+        "dtype": "uint8",
+        "height": 8,
+        "shape": [
+          8,
+          12
+        ],
+        "width": 12
+      },
+      "name": "matching_dimensions_null",
+      "passed": true
+    },
+    {
+      "classification": {
+        "height": 6,
+        "height_pixels_lost": 2,
+        "native_height": 8,
+        "native_size": false,
+        "native_width": 12,
+        "verdict": "RED",
+        "width": 10,
+        "width_pixels_lost": 2
+      },
+      "expected_verdict": "RED",
+      "header": {
+        "dtype": "uint8",
+        "height": 6,
+        "shape": [
+          6,
+          10
+        ],
+        "width": 10
+      },
+      "name": "known_smaller_crop",
+      "passed": true
+    }
+  ],
+  "census_kind": "deterministic_header_census_not_blinded_discovery",
+  "script_sha256": "1fabe8259d32f310d64edbaeeecf390b81cc083cc169900005ee07be14de5507",
+  "status": "COMMISSIONED",
+  "synthetic_native_height": 8,
+  "synthetic_native_width": 12,
+  "temporary_files_removed": true
+}

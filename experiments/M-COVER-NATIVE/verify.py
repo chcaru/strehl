@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
+import geometry_census
 import run
 
 
@@ -129,6 +131,134 @@ def main() -> int:
         "legacy array-mapping field moved; review its superseding interpretation",
     )
 
+    commission = run.read_json(geometry_census.COMMISSION_PATH)
+    require(commission["status"] == "COMMISSIONED", "Q3 commission status moved")
+    require(commission["all_passed"], "Q3 commission did not pass")
+    require(
+        commission["temporary_files_removed"],
+        "Q3 commissioning temporary files remain",
+    )
+    require(
+        commission["script_sha256"]
+        == run.sha256(Path(geometry_census.__file__)),
+        "geometry_census.py moved after commissioning",
+    )
+    require(
+        [case["name"] for case in commission["cases"]]
+        == ["matching_dimensions_null", "known_smaller_crop"],
+        "Q3 commissioning cases moved",
+    )
+    null, smaller = commission["cases"]
+    require(
+        null["passed"]
+        and null["expected_verdict"] == "GREEN"
+        and null["classification"]["verdict"] == "GREEN"
+        and null["classification"]["width_pixels_lost"] == 0
+        and null["classification"]["height_pixels_lost"] == 0,
+        "matching-dimensions null did not stay GREEN",
+    )
+    require(
+        smaller["passed"]
+        and smaller["expected_verdict"] == "RED"
+        and smaller["classification"]["verdict"] == "RED"
+        and smaller["classification"]["width_pixels_lost"] == 2
+        and smaller["classification"]["height_pixels_lost"] == 2,
+        "known-smaller TIFF did not go RED",
+    )
+
+    census = run.read_json(geometry_census.CENSUS_PATH)
+    require(census["status"] == "Q3_COMPLETE", "Q3 census status moved")
+    require(census["arms"] == list(geometry_census.ARMS), "Q3 arm list moved")
+    require(census["row_count"] == 8, "Q3 census does not contain eight rows")
+    require(
+        [row["arm"] for row in census["rows"]] == list(geometry_census.ARMS),
+        "Q3 rows are not the exact eight frozen arms in order",
+    )
+    require(
+        census["native_size_fail_count"] == 8,
+        "Q3 native-size result is no longer RED 8/8",
+    )
+    require(
+        census["worst_field_loss_arm"] == "m2-second-first16",
+        "Q3 worst field-loss arm moved",
+    )
+    require(
+        census["all_manifest_header_hash_agree"],
+        "Q3 TIFF/header/manifest/hash agreement failed",
+    )
+    require(
+        census["all_dimensions_equal_twice_banner_crop_rect"],
+        "Q3 TIFF dimensions no longer equal twice the banner Crop rectangles",
+    )
+
+    for row in census["rows"]:
+        width = row["crop_width"]
+        height = row["crop_height"]
+        width_lost = row["width_pixels_lost"]
+        height_lost = row["height_pixels_lost"]
+        retained_area = row["retained_area_pixels"]
+        area_lost = row["area_pixels_lost"]
+        require(
+            width + width_lost == geometry_census.NATIVE_WIDTH,
+            f"{row['arm']}: width-loss invariant failed",
+        )
+        require(
+            height + height_lost == geometry_census.NATIVE_HEIGHT,
+            f"{row['arm']}: height-loss invariant failed",
+        )
+        require(
+            row["left_pixels_lost"] + row["right_pixels_lost"] == width_lost,
+            f"{row['arm']}: horizontal side-loss invariant failed",
+        )
+        require(
+            row["top_pixels_lost"] + row["bottom_pixels_lost"] == height_lost,
+            f"{row['arm']}: vertical side-loss invariant failed",
+        )
+        require(
+            retained_area == width * height,
+            f"{row['arm']}: retained-area invariant failed",
+        )
+        require(
+            retained_area + area_lost == geometry_census.NATIVE_AREA,
+            f"{row['arm']}: area-loss invariant failed",
+        )
+        require(
+            row["percent_width_loss"]
+            == geometry_census.percent(width_lost, geometry_census.NATIVE_WIDTH),
+            f"{row['arm']}: derived width percentage moved",
+        )
+        require(
+            row["percent_height_loss"]
+            == geometry_census.percent(height_lost, geometry_census.NATIVE_HEIGHT),
+            f"{row['arm']}: derived height percentage moved",
+        )
+        require(
+            row["percent_area_loss"]
+            == geometry_census.percent(area_lost, geometry_census.NATIVE_AREA),
+            f"{row['arm']}: derived area-loss percentage moved",
+        )
+        require(
+            row["retained_area_percent"]
+            == geometry_census.percent(retained_area, geometry_census.NATIVE_AREA),
+            f"{row['arm']}: derived retained-area percentage moved",
+        )
+        require(
+            row["common_overlap_retained_pixels"]
+            == row["common_overlap_area_pixels"]
+            and row["common_overlap_geometric_retention_percent"]
+            == "100.000000000",
+            f"{row['arm']}: common-overlap geometric containment moved",
+        )
+        require(
+            row["native_size_verdict"] == "RED",
+            f"{row['arm']}: native-size verdict moved",
+        )
+
+    require(
+        census == geometry_census.build_census(),
+        "Q3 census no longer reproduces from TIFF headers and committed manifest",
+    )
+
     provenance = run.read_json(run.OUT / "PROVENANCE-AUDIT.json")
     require(
         provenance["owned_read_only_input_guards_pass"],
@@ -149,7 +279,10 @@ def main() -> int:
             "warning: protected filesystem metadata changed concurrently: "
             + ", ".join(changed)
         )
-    print("post-render Q1/Q2 artifact verification passed; residual remains unmeasured")
+    print(
+        "post-render Q1/Q2/Q3 artifact verification passed; "
+        "residual remains unmeasured"
+    )
     return 0
 
 

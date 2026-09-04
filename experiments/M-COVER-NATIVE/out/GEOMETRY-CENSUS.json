@@ -1,0 +1,463 @@
+{
+  "all_common_overlap_geometric_retention_percent": "100.000000000",
+  "all_dimensions_equal_twice_banner_crop_rect": true,
+  "all_manifest_header_hash_agree": true,
+  "arms": [
+    "m1-bright-a12",
+    "m1-bright-b12",
+    "m1-second-a12",
+    "m1-second-b12",
+    "m2-bright-first16",
+    "m2-bright-second16",
+    "m2-second-first16",
+    "m2-second-second16"
+  ],
+  "commission_artifact": "experiments/M-COVER-NATIVE/out/GEOMETRY-CENSUS-COMMISSION.json",
+  "commission_artifact_sha256": "97ceb66981afbe250ee52cf67919b8bfb061b983c002ac9fa150112e9ce3e87c",
+  "commission_script_sha256": "1fabe8259d32f310d64edbaeeecf390b81cc083cc169900005ee07be14de5507",
+  "evidence": {
+    "common_overlap": "GEOMETRIC_CONTAINMENT_NOT_CLEAN_SITE_ADMISSION",
+    "headers_dimensions_and_hashes": "VERIFIED",
+    "loss_percentages": "DERIVED_FROM_FIXED_INTEGER_DIMENSIONS",
+    "non_translation_residual": "UNMEASURED_NOT_READ_BY_THIS_CENSUS"
+  },
+  "frozen_common_rect_yxhw": [
+    40,
+    58,
+    4608,
+    6912
+  ],
+  "native_area_pixels": 32966016,
+  "native_scale_array_shape_hxw": [
+    4688,
+    7032
+  ],
+  "native_scale_output_height": 4688,
+  "native_scale_output_width": 7032,
+  "native_size_fail_count": 8,
+  "percent_fields": "fixed decimal strings with 9 places",
+  "render_manifest": "experiments/M-COVER-NATIVE/out/RENDER-MANIFEST.json",
+  "render_manifest_git_blob": "3b41cf9724f5e1bf3e0c596e5305a97fadb60f72",
+  "render_manifest_sha256": "d61b8f7c3b8624025c0abafa240f9754071bc95755ce4d0ecc24ba6676cf1cd1",
+  "row_count": 8,
+  "rows": [
+    {
+      "actual_sha256": "995bec815fbc9d7b0b29ec4d9b8a0fcbcf622ac084cfe5d5c6765d2fb1adc3ee",
+      "area_pixels_lost": 205952,
+      "arm": "m1-bright-a12",
+      "bottom_pixels_lost": 8,
+      "common_overlap_area_pixels": 31850496,
+      "common_overlap_geometric_retention_percent": "100.000000000",
+      "common_overlap_is_geometric_not_clean_site_admission": true,
+      "common_overlap_retained_pixels": 31850496,
+      "contains_entire_common_overlap": true,
+      "crop_height": 4672,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "crop_width": 7012,
+      "dimensions_equal_twice_banner_crop_rect": true,
+      "height_pixels_lost": 16,
+      "left_pixels_lost": 10,
+      "manifest_header_hash_agree": true,
+      "manifest_sha256": "995bec815fbc9d7b0b29ec4d9b8a0fcbcf622ac084cfe5d5c6765d2fb1adc3ee",
+      "native_size_verdict": "RED",
+      "percent_area_loss": "0.624740339",
+      "percent_height_loss": "0.341296928",
+      "percent_width_loss": "0.284414107",
+      "retained_area_percent": "99.375259661",
+      "retained_area_pixels": 32760064,
+      "right_pixels_lost": 10,
+      "scale_native_height": 4688,
+      "scale_native_width": 7032,
+      "tiff": "experiments/M-COVER-NATIVE/out/renders/m1-bright-a12.tiff",
+      "tiff_header": {
+        "dtype": "uint16",
+        "height": 4672,
+        "shape": [
+          4672,
+          7012,
+          3
+        ],
+        "width": 7012
+      },
+      "top_pixels_lost": 8,
+      "width_pixels_lost": 20
+    },
+    {
+      "actual_sha256": "b6468ca016396f63767ee8f61270bfc4126167e3b931e781abf6e29ebfb371db",
+      "area_pixels_lost": 205952,
+      "arm": "m1-bright-b12",
+      "bottom_pixels_lost": 8,
+      "common_overlap_area_pixels": 31850496,
+      "common_overlap_geometric_retention_percent": "100.000000000",
+      "common_overlap_is_geometric_not_clean_site_admission": true,
+      "common_overlap_retained_pixels": 31850496,
+      "contains_entire_common_overlap": true,
+      "crop_height": 4672,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "crop_width": 7012,
+      "dimensions_equal_twice_banner_crop_rect": true,
+      "height_pixels_lost": 16,
+      "left_pixels_lost": 10,
+      "manifest_header_hash_agree": true,
+      "manifest_sha256": "b6468ca016396f63767ee8f61270bfc4126167e3b931e781abf6e29ebfb371db",
+      "native_size_verdict": "RED",
+      "percent_area_loss": "0.624740339",
+      "percent_height_loss": "0.341296928",
+      "percent_width_loss": "0.284414107",
+      "retained_area_percent": "99.375259661",
+      "retained_area_pixels": 32760064,
+      "right_pixels_lost": 10,
+      "scale_native_height": 4688,
+      "scale_native_width": 7032,
+      "tiff": "experiments/M-COVER-NATIVE/out/renders/m1-bright-b12.tiff",
+      "tiff_header": {
+        "dtype": "uint16",
+        "height": 4672,
+        "shape": [
+          4672,
+          7012,
+          3
+        ],
+        "width": 7012
+      },
+      "top_pixels_lost": 8,
+      "width_pixels_lost": 20
+    },
+    {
+      "actual_sha256": "2508c70feab85b2331b420453e92c93f96d80ced5b868051c30b9be3bc9fae2a",
+      "area_pixels_lost": 205952,
+      "arm": "m1-second-a12",
+      "bottom_pixels_lost": 8,
+      "common_overlap_area_pixels": 31850496,
+      "common_overlap_geometric_retention_percent": "100.000000000",
+      "common_overlap_is_geometric_not_clean_site_admission": true,
+      "common_overlap_retained_pixels": 31850496,
+      "contains_entire_common_overlap": true,
+      "crop_height": 4672,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "crop_width": 7012,
+      "dimensions_equal_twice_banner_crop_rect": true,
+      "height_pixels_lost": 16,
+      "left_pixels_lost": 10,
+      "manifest_header_hash_agree": true,
+      "manifest_sha256": "2508c70feab85b2331b420453e92c93f96d80ced5b868051c30b9be3bc9fae2a",
+      "native_size_verdict": "RED",
+      "percent_area_loss": "0.624740339",
+      "percent_height_loss": "0.341296928",
+      "percent_width_loss": "0.284414107",
+      "retained_area_percent": "99.375259661",
+      "retained_area_pixels": 32760064,
+      "right_pixels_lost": 10,
+      "scale_native_height": 4688,
+      "scale_native_width": 7032,
+      "tiff": "experiments/M-COVER-NATIVE/out/renders/m1-second-a12.tiff",
+      "tiff_header": {
+        "dtype": "uint16",
+        "height": 4672,
+        "shape": [
+          4672,
+          7012,
+          3
+        ],
+        "width": 7012
+      },
+      "top_pixels_lost": 8,
+      "width_pixels_lost": 20
+    },
+    {
+      "actual_sha256": "ec03b3051c83f76536848f17effee15d136519a4eb9fd73f5f5ee740f96cedc1",
+      "area_pixels_lost": 205952,
+      "arm": "m1-second-b12",
+      "bottom_pixels_lost": 8,
+      "common_overlap_area_pixels": 31850496,
+      "common_overlap_geometric_retention_percent": "100.000000000",
+      "common_overlap_is_geometric_not_clean_site_admission": true,
+      "common_overlap_retained_pixels": 31850496,
+      "contains_entire_common_overlap": true,
+      "crop_height": 4672,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "crop_width": 7012,
+      "dimensions_equal_twice_banner_crop_rect": true,
+      "height_pixels_lost": 16,
+      "left_pixels_lost": 10,
+      "manifest_header_hash_agree": true,
+      "manifest_sha256": "ec03b3051c83f76536848f17effee15d136519a4eb9fd73f5f5ee740f96cedc1",
+      "native_size_verdict": "RED",
+      "percent_area_loss": "0.624740339",
+      "percent_height_loss": "0.341296928",
+      "percent_width_loss": "0.284414107",
+      "retained_area_percent": "99.375259661",
+      "retained_area_pixels": 32760064,
+      "right_pixels_lost": 10,
+      "scale_native_height": 4688,
+      "scale_native_width": 7032,
+      "tiff": "experiments/M-COVER-NATIVE/out/renders/m1-second-b12.tiff",
+      "tiff_header": {
+        "dtype": "uint16",
+        "height": 4672,
+        "shape": [
+          4672,
+          7012,
+          3
+        ],
+        "width": 7012
+      },
+      "top_pixels_lost": 8,
+      "width_pixels_lost": 20
+    },
+    {
+      "actual_sha256": "e883de25b493cdf8c55d6e7008a5810e0dc92e4553e635a0920f9f87e1b93f83",
+      "area_pixels_lost": 224640,
+      "arm": "m2-bright-first16",
+      "bottom_pixels_lost": 8,
+      "common_overlap_area_pixels": 31850496,
+      "common_overlap_geometric_retention_percent": "100.000000000",
+      "common_overlap_is_geometric_not_clean_site_admission": true,
+      "common_overlap_retained_pixels": 31850496,
+      "contains_entire_common_overlap": true,
+      "crop_height": 4672,
+      "crop_rect_fullres_yxhw": [
+        8,
+        12,
+        4672,
+        7008
+      ],
+      "crop_rect_plane_xywh": [
+        6,
+        4,
+        3504,
+        2336
+      ],
+      "crop_width": 7008,
+      "dimensions_equal_twice_banner_crop_rect": true,
+      "height_pixels_lost": 16,
+      "left_pixels_lost": 12,
+      "manifest_header_hash_agree": true,
+      "manifest_sha256": "e883de25b493cdf8c55d6e7008a5810e0dc92e4553e635a0920f9f87e1b93f83",
+      "native_size_verdict": "RED",
+      "percent_area_loss": "0.681429021",
+      "percent_height_loss": "0.341296928",
+      "percent_width_loss": "0.341296928",
+      "retained_area_percent": "99.318570979",
+      "retained_area_pixels": 32741376,
+      "right_pixels_lost": 12,
+      "scale_native_height": 4688,
+      "scale_native_width": 7032,
+      "tiff": "experiments/M-COVER-NATIVE/out/renders/m2-bright-first16.tiff",
+      "tiff_header": {
+        "dtype": "uint16",
+        "height": 4672,
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "width": 7008
+      },
+      "top_pixels_lost": 8,
+      "width_pixels_lost": 24
+    },
+    {
+      "actual_sha256": "a3d71e96623fd55f11125292ac6807414e61c156d0ff38a915871153e6db29b7",
+      "area_pixels_lost": 205952,
+      "arm": "m2-bright-second16",
+      "bottom_pixels_lost": 8,
+      "common_overlap_area_pixels": 31850496,
+      "common_overlap_geometric_retention_percent": "100.000000000",
+      "common_overlap_is_geometric_not_clean_site_admission": true,
+      "common_overlap_retained_pixels": 31850496,
+      "contains_entire_common_overlap": true,
+      "crop_height": 4672,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "crop_width": 7012,
+      "dimensions_equal_twice_banner_crop_rect": true,
+      "height_pixels_lost": 16,
+      "left_pixels_lost": 10,
+      "manifest_header_hash_agree": true,
+      "manifest_sha256": "a3d71e96623fd55f11125292ac6807414e61c156d0ff38a915871153e6db29b7",
+      "native_size_verdict": "RED",
+      "percent_area_loss": "0.624740339",
+      "percent_height_loss": "0.341296928",
+      "percent_width_loss": "0.284414107",
+      "retained_area_percent": "99.375259661",
+      "retained_area_pixels": 32760064,
+      "right_pixels_lost": 10,
+      "scale_native_height": 4688,
+      "scale_native_width": 7032,
+      "tiff": "experiments/M-COVER-NATIVE/out/renders/m2-bright-second16.tiff",
+      "tiff_header": {
+        "dtype": "uint16",
+        "height": 4672,
+        "shape": [
+          4672,
+          7012,
+          3
+        ],
+        "width": 7012
+      },
+      "top_pixels_lost": 8,
+      "width_pixels_lost": 20
+    },
+    {
+      "actual_sha256": "a0b38ce9cab2cd0c1030da21d8d44dc5832055045c03dc89c5d45e27a893ee1c",
+      "area_pixels_lost": 318016,
+      "arm": "m2-second-first16",
+      "bottom_pixels_lost": 12,
+      "common_overlap_area_pixels": 31850496,
+      "common_overlap_geometric_retention_percent": "100.000000000",
+      "common_overlap_is_geometric_not_clean_site_admission": true,
+      "common_overlap_retained_pixels": 31850496,
+      "contains_entire_common_overlap": true,
+      "crop_height": 4664,
+      "crop_rect_fullres_yxhw": [
+        12,
+        16,
+        4664,
+        7000
+      ],
+      "crop_rect_plane_xywh": [
+        8,
+        6,
+        3500,
+        2332
+      ],
+      "crop_width": 7000,
+      "dimensions_equal_twice_banner_crop_rect": true,
+      "height_pixels_lost": 24,
+      "left_pixels_lost": 16,
+      "manifest_header_hash_agree": true,
+      "manifest_sha256": "a0b38ce9cab2cd0c1030da21d8d44dc5832055045c03dc89c5d45e27a893ee1c",
+      "native_size_verdict": "RED",
+      "percent_area_loss": "0.964678292",
+      "percent_height_loss": "0.511945392",
+      "percent_width_loss": "0.455062571",
+      "retained_area_percent": "99.035321708",
+      "retained_area_pixels": 32648000,
+      "right_pixels_lost": 16,
+      "scale_native_height": 4688,
+      "scale_native_width": 7032,
+      "tiff": "experiments/M-COVER-NATIVE/out/renders/m2-second-first16.tiff",
+      "tiff_header": {
+        "dtype": "uint16",
+        "height": 4664,
+        "shape": [
+          4664,
+          7000,
+          3
+        ],
+        "width": 7000
+      },
+      "top_pixels_lost": 12,
+      "width_pixels_lost": 32
+    },
+    {
+      "actual_sha256": "7f58d9c124ebdf20af69a2c85f43905d24d1ecd1eb37d87c872ca26f6f5b3129",
+      "area_pixels_lost": 205952,
+      "arm": "m2-second-second16",
+      "bottom_pixels_lost": 8,
+      "common_overlap_area_pixels": 31850496,
+      "common_overlap_geometric_retention_percent": "100.000000000",
+      "common_overlap_is_geometric_not_clean_site_admission": true,
+      "common_overlap_retained_pixels": 31850496,
+      "contains_entire_common_overlap": true,
+      "crop_height": 4672,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "crop_width": 7012,
+      "dimensions_equal_twice_banner_crop_rect": true,
+      "height_pixels_lost": 16,
+      "left_pixels_lost": 10,
+      "manifest_header_hash_agree": true,
+      "manifest_sha256": "7f58d9c124ebdf20af69a2c85f43905d24d1ecd1eb37d87c872ca26f6f5b3129",
+      "native_size_verdict": "RED",
+      "percent_area_loss": "0.624740339",
+      "percent_height_loss": "0.341296928",
+      "percent_width_loss": "0.284414107",
+      "retained_area_percent": "99.375259661",
+      "retained_area_pixels": 32760064,
+      "right_pixels_lost": 10,
+      "scale_native_height": 4688,
+      "scale_native_width": 7032,
+      "tiff": "experiments/M-COVER-NATIVE/out/renders/m2-second-second16.tiff",
+      "tiff_header": {
+        "dtype": "uint16",
+        "height": 4672,
+        "shape": [
+          4672,
+          7012,
+          3
+        ],
+        "width": 7012
+      },
+      "top_pixels_lost": 8,
+      "width_pixels_lost": 20
+    }
+  ],
+  "status": "Q3_COMPLETE",
+  "worst_field_loss_arm": "m2-second-first16"
+}

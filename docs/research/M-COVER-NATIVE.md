@@ -1,4 +1,4 @@
-# M-COVER-NATIVE — Phase A Q1/Q2
+# M-COVER-NATIVE — final Q1–Q4 report
 
 ## Answer
 
@@ -25,7 +25,25 @@ adapter and comparator geometry remain absent, and the current scorecard's
 `### M1 — WITHDRAWN: no admissible detail instrument` has no active statistic
 or bar.
 
-This report covers Q1 and Q2 only. Q3 and Q4 were not started.
+**VERIFIED/DERIVED — Q3: the deterministic header census quantifies the
+field loss.** Against native `7032 x 4688`, the eight Crop outputs lose
+20–32 columns, 16–24 rows, and 0.624740–0.964678% of native area. Worst arm
+`m2-second-first16` is `7000 x 4664`. Every TIFF header and SHA-256 matches the
+committed Phase A render manifest, every dimension is exactly twice its frozen
+banner rectangle, and all eight geometrically retain 100.000000% of the frozen
+common-overlap rectangle. The percentages are derived arithmetic, not new
+experimental evidence, and geometric retention is still not clean-site
+admission.
+
+**VERIFIED — Q4: Scale is a documented, intentional product trade and
+simultaneously a hard scorecard-conformance failure under §1.5 native scale.**
+It preserves dimensions by composing `k <= 1` and paying an upsample of `1/k`
+at every output pixel, including the identity reference. This lane does not
+establish that trade as a general picture-quality defect: prior M112 evidence
+found that removing it did not recover the expected sharpness, while
+`cover-default.md` keeps Scale because Crop has the worse unresolved boundary
+problem. It is not a simple export-setting bug, no default change is advocated,
+and the current `COVER / default path` decision remains **CLOSED — keep Scale**.
 
 ## Frozen provenance and control
 
@@ -279,6 +297,163 @@ The current file states:
 | Formal comparability to a full-frame comparator | **UNMEASURED / not admitted** | Native-size output fails; comparator render geometry was not measured; common-TIFF adapter remains absent; the ECC audit is not literal input-landmark scoring. |
 | Scientific comparability of the shared crop | **ARGUED possible, not established** | Same-pitch array overlap exists, but exact scene-frame mapping, admitted residual, and clean-border site survival remain unresolved. |
 
+## Q3 — deterministic TIFF-header geometry census
+
+### Method and commissioning
+
+**VERIFIED.** `PHASE-B-METHOD.md` was committed before the census ran. It
+states explicitly that Phase A had already observed the actual dimensions, so
+this is a deterministic census and cross-check, not blinded discovery.
+`geometry_census.py --commission` then exercised the same TIFF-header parser and
+the same integer loss predicate on two tiny TIFF arrays under ignored `work`:
+
+| Synthetic case | Fixed native | Header read | Integer loss `(W,H)` | Expected/result |
+|---|---:|---:|---:|---|
+| matching-dimensions null | `12 x 8` | `12 x 8` | `(0,0)` | GREEN / GREEN |
+| known smaller crop | `12 x 8` | `10 x 6` | `(2,2)` | RED / RED |
+
+Both files were removed before commissioning returned. Only after that artifact
+was GREEN did the production command read the eight existing ignored Crop TIFF
+headers. No TIFF was rerendered. `GEOMETRY-CENSUS.json` records nine decimal
+places for every derived percentage.
+
+For every arm, the header shape and SHA-256 equal the committed Phase A
+`RENDER-MANIFEST.json` record, and output width/height equal exactly twice the
+frozen banner Crop rectangle. Scale/native mode is fixed at `7032 x 4688`
+(`4688 x 7032` array order) for all eight baseline arms.
+
+### Exact census
+
+**VERIFIED integers; DERIVED percentages.** `ΔW` and `ΔH` are total columns and
+rows lost relative to native, across both sides. Retained-area percentages use
+the `32,966,016`-pixel native rectangle. Common-overlap percentages use the
+separate frozen `6912 x 4608` common rectangle.
+
+| Arm | W | H | ΔW px | ΔH px | Width loss | Height loss | Area loss | Retained area | Common-overlap geometric retention |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `m1-bright-a12` | 7012 | 4672 | 20 | 16 | 0.284414% | 0.341297% | 0.624740% | 32,760,064 (99.375260%) | 100.000000% |
+| `m1-bright-b12` | 7012 | 4672 | 20 | 16 | 0.284414% | 0.341297% | 0.624740% | 32,760,064 (99.375260%) | 100.000000% |
+| `m1-second-a12` | 7012 | 4672 | 20 | 16 | 0.284414% | 0.341297% | 0.624740% | 32,760,064 (99.375260%) | 100.000000% |
+| `m1-second-b12` | 7012 | 4672 | 20 | 16 | 0.284414% | 0.341297% | 0.624740% | 32,760,064 (99.375260%) | 100.000000% |
+| `m2-bright-first16` | 7008 | 4672 | 24 | 16 | 0.341297% | 0.341297% | 0.681429% | 32,741,376 (99.318571%) | 100.000000% |
+| `m2-bright-second16` | 7012 | 4672 | 20 | 16 | 0.284414% | 0.341297% | 0.624740% | 32,760,064 (99.375260%) | 100.000000% |
+| **`m2-second-first16`** | **7000** | **4664** | **32** | **24** | **0.455063%** | **0.511945%** | **0.964678%** | **32,648,000 (99.035322%)** | **100.000000%** |
+| `m2-second-second16` | 7012 | 4672 | 20 | 16 | 0.284414% | 0.341297% | 0.624740% | 32,760,064 (99.375260%) | 100.000000% |
+
+`m2-second-first16` is the asserted worst arm on width, height, and area loss.
+Native-size is RED 8/8 even though no arm loses 1% of native area. Conversely,
+all eight rectangles contain the complete frozen common overlap, so §1.5's
+`>=99.0%` field-of-view predicate is a **geometric pass at 100.000000%**. These
+are not contradictory: §1.3 requires exact native output dimensions, while
+§1.5 uses the smaller pre-frozen common-overlap denominator.
+
+That §1.5 conclusion remains geometric only. It does not turn contained sites
+into admitted clean sites, does not establish a transferable safe inset, and
+does not change the current residual status: **UNMEASURED because its inherited
+reader fails pure-translation nulls**.
+
+### `sample_lanczos3` support is not part of these dimensions
+
+**VERIFIED source reading; prior evidence, not a Q3 measurement.** Current
+`crates\strehl-core\src\align.rs`, symbol `sample_lanczos3`, says:
+
+> “Interpolating like Catmull-Rom — at integer phase every tap but the centre
+> lands on a zero of `sinc`, so an identity transform is a true identity — but
+> with a far flatter passband. M95 measured it recovering **+0.1160 dex** of
+> 0.30–0.48 cyc/px power against Catmull-Rom on the shipped `bee-3-cpl` warps,
+> against **+0.0179 dex** for removing the coverage rescale: the kernel is the
+> larger of the two levers by 6.5x.”
+
+The surrounding support sentence is:
+
+> “Support is 3 px, not 2, so [`Resampler::sample_checked`] rejects a wider
+> border — one more px of the coverage-cropped field is unavailable per side.”
+
+That sentence is specifically the Lanczos-3 support cost relative to
+Catmull-Rom. The frozen Phase A banners and manifest say `catmull-rom`; no
+Lanczos-3 arm ran. Therefore the sentence adds **zero pixels** to the measured
+Crop losses above. The `+0.1160 dex` versus `+0.0179 dex` passage is cited only
+as prior source evidence and is not a number measured by M-COVER-NATIVE.
+
+## Q4 — what Scale is, and how it is classified
+
+### Current `CoverMode` documentation
+
+**VERIFIED source reading.** Current
+`crates\strehl-cli\src\align_cmd.rs`, symbol `CoverMode`, documents Scale:
+
+> “[`CoverMode::Scale`] shrinks the reference grid by `k <= 1` about the plane
+> centre and composes that scale into every placement, so the same pixel
+> dimensions come out. **The dropped field of view is paid for by an upsample
+> of `1/k` at every pixel of every render**, and because `S_k` rides on every
+> placement, the reference frame -- whose placement is the identity, and which
+> would otherwise pass through the interpolator untouched -- is resampled too.”
+
+It documents Crop:
+
+> “[`CoverMode::Crop`] composes **nothing**. It renders the covered rectangle at
+> unity scale and emits it, so the output is about `k*W x k*H` instead of
+> `W x H` and no upsample happens anywhere. A frame whose placement is an
+> integer translation -- the reference frame's identity is the extreme case --
+> then reaches the output through an interpolating kernel evaluated exactly on
+> a sample, which is a copy.”
+
+And it states the exact two-price passage:
+
+> “The price of `Crop` is the one the doc on [`fit_to_cover`] named: **the
+> output dimensions change**, which is why it is opt-in and why
+> [`CoverMode::Scale`] is still the default. There is a second price that is
+> easier to miss: the merge still runs on the full plane, so frames that do
+> not reach the border still fold their black fill there, and the pyramid's
+> coarse bands spread that fill inward some distance before the crop discards
+> it. Measure a border profile before trusting the outermost pixels.”
+
+### Classification
+
+**Scale is a DOCUMENTED, INTENTIONAL PRODUCT TRADE and simultaneously a HARD
+SCORECARD-CONFORMANCE FAILURE under §1.5 native scale.**
+
+- **Documented and intentional:** it deliberately exchanges field of view and
+  an all-pixel `1/k` upsample for stable output dimensions and full-frame
+  coverage.
+- **Hard conformance failure:** current §1.5 says “Outputs must retain native
+  scale. Resize is a hard invalidation.” The frozen Scale arms measure
+  0.2901–0.4619% disagreement against the `<=0.10%` gate. Preserving the output
+  dimensions does not cure that scale failure.
+- **Not established here as a general picture-quality defect:** prior
+  `M112-real-pixels.md` found that removing the coverage scale did not recover
+  the expected sharpness on the relevant real-stack evidence.
+  `BUILD-CROP.md` likewise limits its claim to mechanism rather than general
+  quality. These are prior results, not Q4 measurements.
+- **Not a simple export-setting bug:** Scale changes the placement composed
+  before interpolation; Crop changes the emitted rectangle only after the
+  full-plane merge has already admitted black fill and spread it through coarse
+  pyramid bands. Changing only TIFF export settings cannot satisfy both sides.
+- **No default recommendation:** prior `cover-default.md` keeps Scale because
+  Crop's boundary problem is worse and unresolved; its decision remains
+  **CLOSED — keep Scale**. This lane neither advocates a default change nor
+  reopens that scorecard decision.
+
+`M104-resample-verify.md` is relevant prior method evidence because it separates
+native sampling from field of view and treats changed dimensions as a trap
+rather than evidence of sharpness. It is not quoted as a new measurement here.
+
+### Why Q3 does not supply a conforming existing mode
+
+| Existing mode | Native output dimensions (§1.3) | Native scale (§1.5) | Common overlap / sites |
+|---|---|---|---|
+| Scale | PASS | **HARD FAIL** on the frozen scale audit | Full dimensions, but the native-scale gate already invalidates it |
+| Crop | **FAIL 8/8** | PASS for the specific frozen scale/rotation audit; residual still UNMEASURED | 100% geometric common-overlap containment, but clean-site/border admission remains UNMEASURED |
+
+Thus neither offered mode satisfies all current rules. **ARGUED, speculative
+only:** if a future lane finds the distinction useful, it would need a
+native-size, no-resample output representation—for example, preserving a
+unity-pitch interior on a native canvas while marking the exterior explicitly
+invalid—plus scorecard-admitted border, invalid-pixel, common-overlap, and site
+semantics. Current rules do not license that representation merely because it
+can be described. This report does not design it, edit it, or recommend
+shipping it.
+
 ## Prior-art boundary
 
 **VERIFIED as design provenance, not remeasurement.**
@@ -307,6 +482,11 @@ No `M8-overshoot` content was read or duplicated.
 
 ## Limitations
 
+- **DETERMINISTIC, NOT BLINDED:** Phase A had already observed all eight Crop
+  dimensions. Q3 commissioned the header parser and loss predicate, then
+  reproduced and cross-checked known headers and hashes.
+- **DERIVED:** width, height, and area percentages are arithmetic from fixed
+  integer dimensions; they are not independent experimental observations.
 - **UNVERIFIED:** comparator output geometry; no comparator was rendered or
   measured here.
 - **UNVERIFIED:** formal common-input identity; the common-ProPhoto-TIFF adapter
@@ -319,6 +499,9 @@ No `M8-overshoot` content was read or duplicated.
   input-derived landmarks.
 - **UNMEASURED:** the unchanged four-tile residual reader reports nonzero
   residuals but fails pure-translation nulls and cannot license an 8/8 failure.
+- **Q4 SCOPE:** source documentation and prior-art classification do not
+  establish a general visual-quality defect, license a default change, or
+  establish the speculative native-canvas representation.
 - **CURRENT SCORECARD:** M1 is withdrawn for lack of an admissible statistic and
   bar, independently of this geometry result.
 - **DEVIATION:** concurrent ignored-file growth under protected
@@ -329,9 +512,16 @@ No `M8-overshoot` content was read or duplicated.
 ## Ruling
 
 **MEASURED/VERIFIED: Crop fixes the specific native-scale magnification
-failure, but it does not unblock M1.** Every Crop arm passes the frozen
-scale/rotation audit and every Crop arm fails the native-size program-output
-clause. Residual geometry and clean-site survival remain unmeasured by an
-admitted instrument, the current COVER gate remains closed, the common-input
-adapter/comparator arms remain absent, and current M1 has no statistic or bar.
-Formal competitive comparison remains `UNMEASURED`.
+failure, but it does not unblock M1 or produce a conforming existing cover
+mode.** Every Crop arm passes the frozen scale/rotation audit, every Crop arm
+fails the native-size program-output clause, and the exact Q3 field loss is
+20–32 columns, 16–24 rows, and 0.624740–0.964678% of native area while retaining
+100.000000% of the frozen common rectangle geometrically. Scale preserves
+dimensions through an intentional all-pixel resample and therefore hard-fails
+§1.5 native scale; Crop avoids that resample but changes dimensions and retains
+an unresolved boundary.
+
+Residual geometry and clean-site survival remain unmeasured by an admitted
+instrument, the current COVER gate remains **CLOSED — keep Scale**, the
+common-input adapter/comparator arms remain absent, and current M1 has no
+statistic or bar. Formal competitive comparison remains `UNMEASURED`.
