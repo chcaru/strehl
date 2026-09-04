@@ -459,13 +459,22 @@ def parse_alignment(text: str) -> dict[str, Any]:
     }
 
 
-def parse_scale_coverage(text: str) -> dict[str, Any]:
+def coverage_banner(text: str) -> str:
     line = next(
-        (line for line in text.splitlines() if line.lstrip().startswith("coverage")),
+        (
+            line
+            for line in text.splitlines()
+            if re.match(r"^\s*coverage\s+:", line)
+        ),
         None,
     )
     if line is None:
-        raise RuntimeError("coverage banner missing")
+        raise RuntimeError("coverage fit banner missing")
+    return line
+
+
+def parse_scale_coverage(text: str) -> dict[str, Any]:
+    line = coverage_banner(text)
     match = re.search(r"field of view scaled to\s+([0-9.]+)", line)
     if match is None:
         raise RuntimeError(f"Scale coverage banner unparseable: {line}")
@@ -473,12 +482,7 @@ def parse_scale_coverage(text: str) -> dict[str, Any]:
 
 
 def parse_crop_coverage(text: str) -> dict[str, Any]:
-    line = next(
-        (line for line in text.splitlines() if line.lstrip().startswith("coverage")),
-        None,
-    )
-    if line is None:
-        raise RuntimeError("coverage banner missing")
+    line = coverage_banner(text)
     match = re.search(
         r"--\s*(\d+)\s+x\s+(\d+)\s+plane px at\s+\((\d+),\s*(\d+)\)"
         r"\s+of\s+(\d+)\s+x\s+(\d+).*?\(k=([0-9.]+)\)",
@@ -562,6 +566,60 @@ def run_render(name: str, output: Path, log: Path, cover: str | None) -> dict[st
     return record
 
 
+def recover_existing_render(
+    name: str,
+    output: Path,
+    log: Path,
+    cover: str,
+    preflight_cache: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    if not output.is_file() or not log.is_file():
+        raise RuntimeError(f"{name}: cannot recover an incomplete render pair")
+    command = command_for(name, output, cover)
+    text = log.read_text(encoding="utf-8")
+    expected_first = "$ " + subprocess.list2cmdline(command)
+    if text.splitlines()[0] != expected_first:
+        raise RuntimeError(f"{name}: existing log command differs from preregistration")
+    combined = text.split("\n\n", 1)[1] if "\n\n" in text else text
+    total_match = re.search(r"^total\s*:\s*([0-9.]+)\s+s", combined, re.MULTILINE)
+    cache_after = cache_snapshot(PRIVATE_CACHE)
+    if cache_after != preflight_cache:
+        raise RuntimeError(f"{name}: private cache moved during the interrupted render")
+    record: dict[str, Any] = {
+        "name": name,
+        "cover_argument": cover,
+        "command": command,
+        "environment": {
+            **THREAD_ENV,
+            "PYTHONIOENCODING": "utf-8",
+            "STREHL_CACHE_DIR": str(PRIVATE_CACHE.resolve()),
+            "other_STREHL_variables": "unset",
+        },
+        "defaults": DEFAULTS,
+        "started_utc": datetime.fromtimestamp(
+            output.stat().st_ctime, timezone.utc
+        ).isoformat(),
+        "wall_seconds_diagnostic_only": (
+            float(total_match.group(1)) if total_match else None
+        ),
+        "wall_seconds_source": "recovered binary total banner after parser failure",
+        "returncode": 0,
+        "log": str(log.resolve()),
+        "selected_banner_lines": selected_banners(combined),
+        "cache_before": preflight_cache,
+        "cache_after": cache_after,
+        "cache_unchanged": cache_after == preflight_cache,
+        "record_recovered_without_rerender": True,
+        "recovery_reason": (
+            "AMENDMENT-1: binary completed before the original coverage parser raised"
+        ),
+    }
+    record.update(inspect_tiff(output))
+    record["alignment"] = parse_alignment(combined)
+    record["coverage"] = parse_crop_coverage(combined)
+    return record
+
+
 def baseline_log(name: str) -> str:
     return (BASELINE_OUT / f"{name}.log").read_text(encoding="utf-8")
 
@@ -593,40 +651,58 @@ def render() -> int:
         raise RuntimeError("frozen binary moved after preflight")
     if cache_snapshot(PRIVATE_CACHE) != pre["private_cache"]:
         raise RuntimeError("private cache moved after preflight")
-    manifest: dict[str, Any] = {
-        "phase": "A_Q1_Q2_ONLY",
-        "started_utc": utc_now(),
-        "control_required_before_crop": True,
-        "control": None,
-        "crop_records": [],
-        "crop_interpretable": False,
-    }
+    manifest_path = OUT / "RENDER-MANIFEST.json"
+    if manifest_path.exists():
+        manifest = read_json(manifest_path)
+        manifest["resumed_utc"] = utc_now()
+    else:
+        manifest = {
+            "phase": "A_Q1_Q2_ONLY",
+            "started_utc": utc_now(),
+            "control_required_before_crop": True,
+            "control": None,
+            "crop_records": [],
+            "crop_interpretable": False,
+        }
     control_output = RENDERS / f"control-scale-{CONTROL_NAME}.tiff"
-    control = run_render(
-        CONTROL_NAME,
-        control_output,
-        OUT / f"control-scale-{CONTROL_NAME}.log",
-        None,
-    )
-    control["required_sha256"] = CONTROL_SHA256
-    control["hash_matches"] = control.get("sha256") == CONTROL_SHA256
+    if manifest.get("control") is not None:
+        control = manifest["control"]
+        if not control_output.is_file() or sha256(control_output) != CONTROL_SHA256:
+            raise RuntimeError("existing Scale control no longer matches its frozen hash")
+    else:
+        control = run_render(
+            CONTROL_NAME,
+            control_output,
+            OUT / f"control-scale-{CONTROL_NAME}.log",
+            None,
+        )
+        control["required_sha256"] = CONTROL_SHA256
+        control["hash_matches"] = control.get("sha256") == CONTROL_SHA256
     manifest["control"] = control
-    write_json(OUT / "RENDER-MANIFEST.json", manifest)
+    write_json(manifest_path, manifest)
     print(
         f"control {CONTROL_NAME}: rc={control['returncode']} "
         f"sha256={control.get('sha256')}"
     )
     if control["returncode"] != 0 or not control["hash_matches"]:
         manifest["stop_reason"] = "Scale control failed or hash mismatched; Crop not rendered"
-        write_json(OUT / "RENDER-MANIFEST.json", manifest)
+        write_json(manifest_path, manifest)
         return 2
+    existing = {record["name"]: record for record in manifest["crop_records"]}
     for name in ARMS:
-        record = run_render(
-            name,
-            RENDERS / f"{name}.tiff",
-            OUT / f"{name}.log",
-            "crop",
-        )
+        output = RENDERS / f"{name}.tiff"
+        log = OUT / f"{name}.log"
+        if name in existing:
+            record = existing[name]
+            if not output.is_file() or record.get("sha256") != sha256(output):
+                raise RuntimeError(f"{name}: manifested output moved")
+            continue
+        if output.exists():
+            record = recover_existing_render(
+                name, output, log, "crop", pre["private_cache"]
+            )
+        else:
+            record = run_render(name, output, log, "crop")
         if record["returncode"] == 0:
             record["same_solve_as_frozen_scale"] = same_solve_assertions(name, record)
             rect = record["coverage"]["rect_plane"]
@@ -634,7 +710,8 @@ def render() -> int:
             record["expected_shape_from_crop_rect"] = expected_shape
             record["shape_matches_crop_rect"] = record["shape"] == expected_shape
         manifest["crop_records"].append(record)
-        write_json(OUT / "RENDER-MANIFEST.json", manifest)
+        existing[name] = record
+        write_json(manifest_path, manifest)
         print(f"{name}: rc={record['returncode']} shape={record.get('shape')}")
         if record["returncode"] != 0:
             return record["returncode"]
@@ -646,7 +723,7 @@ def render() -> int:
             raise RuntimeError(f"{name}: TIFF dimensions disagree with Crop rectangle")
     manifest["crop_interpretable"] = True
     manifest["completed_utc"] = utc_now()
-    write_json(OUT / "RENDER-MANIFEST.json", manifest)
+    write_json(manifest_path, manifest)
     return 0
 
 
@@ -941,4 +1018,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
