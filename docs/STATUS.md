@@ -4158,6 +4158,75 @@ result forcing it to withdraw its own conclusion counts as success.
 
 Until that returns, this result is **strong but not banked.**
 
+### 2.9.38 M136 rules on the M8-O bar — and corrects two claims of mine
+
+**The ruling: a representable-domain repair is legitimate, not goalpost-moving**,
+conditional on being versioned prospectively with the original FAIL retained. I
+accept it, and the reason I accept it is the test I set in advance: *a repaired
+bar that the current code passes trivially would be worse than an impossible
+one.*
+
+**It does not pass trivially.** The conservative reanalysis that projects the
+hull *and* grants the known intermediate quantizer — every benefit of the doubt
+available — still leaves Catmull-Rom with `31,148` M8-O violations, while
+bilinear leaves **zero** (`experiments/M136-m8o-bar/analysis.json:87-92`). The
+bar still separates the two kernels in the correct direction, so it is still
+measuring something. Shipping M8-R independently remains
+`63,191,176 / 6,131,678,976` = the familiar `1.030569%`.
+
+M136 also **rejected the specific wording I floated.** A categorical "exclude
+rail undershoots" clause is refused; the replacement is a representable-domain
+hull with the **denominator unchanged**, mandatory rail reporting, and every
+existing in-range, wrong-rail, off-rail, post-gather and M8-R check retained.
+Excluding a population is not the same as pricing it correctly, and the ruling
+holds that line.
+
+#### Two corrections to §2.9.34 — both mine, both material
+
+**Correction 1 — I overstated the checker's independence.** I wrote that the
+checker is independent, citing `forbidden_strehl_imports: []`. That flag is true
+and it means the analysis does not import the shipped stack. **It does not mean
+what I implied.** I have now read the code: `phase4.py` loads `o-lo.npy`,
+`o-tau.npy` and `m8-o-violations.npy` from `experiments/M8-overshoot/out/…`
+(`phase4.py:30-33,58-59,112-118`). It is an independent *analysis of M8's saved
+hull arrays*, **not an independent raw-to-hull reconstruction.** The
+impossibility proof is therefore conditional on M8's own hull computation being
+correct. That is a materially weaker claim than the one I recorded, and M136
+caught it.
+
+**Correction 2 — my "natural experiment" was not one.** I wrote that the three
+`flat-et*` arms differ only in exposure and that nonrail moves opposite to the
+violation mass. Checked directly against `phase4-results.json`, the nonrail
+direction is **kernel-dependent**, and I generalised from one arm:
+
+| capture | bilinear nonrail | shipping-catmull nonrail |
+|---|---|---|
+| `flat-et1s` | `1,409` | `7,562` |
+| `flat-et2.5s` | `671` | `14,688` |
+| `flat-et6s` | `333` | `23,335` |
+
+Bilinear falls with exposure; **the shipping kernel rises, more than threefold.**
+My claim was drawn from the bilinear column and stated as though it were general.
+M136 additionally reports that the arms differ in frame counts and cover scales,
+not exposure alone. **The saturation attribution still looks right** — the
+`977,684` rail-pinned mass appears only at `et6s` in both kernels — but it rests
+on the mechanism and the `lo > 1` proof, *not* on a clean two-arm contrast, and I
+should not have called it one.
+
+#### What this leaves open, and it is the decisive number
+
+M137 showed the clamped kernel scores `0` M8-**R** violations. M136 has repaired
+M8-**O**. But **the clamp is to the source hull, and the M8-O problem is the
+output container** — when `lo > 1` no representable value satisfies the hull, and
+clamping to `[lo, hi]` cannot help, because the unrepresentable target is exactly
+what it clamps to. So the two results are orthogonal, and **what a properly
+written M8-O charges the *clamped* kernel is unmeasured.** `31,148` is Catmull-
+Rom's residue, not clamped's.
+
+That single number now decides whether M8 can pass, and nothing in flight
+produces it. **Queued as the next M8 measurement**, to run against the repaired
+bar once M136's replacement text lands.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
