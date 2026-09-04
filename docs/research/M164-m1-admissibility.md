@@ -7,9 +7,14 @@ Status: **DESIGN RULING; REAL-PAIR JOB PREPARED BUT NOT RUN**
 > incorrectly presents that bundle as the minimum M1 claim-bearing sitting.
 > A standalone M1 sitting restores the `128` converter-on calibration frames
 > used by the `96`-frame reference and omits `315` converter-on M5/M9
-> focus/witness frames: `96 + 128 + 164 + 60 + 128 = 576`. The staged,
-> falsifiable plan and full waste-mode audit supersede the owner-count
-> conclusion here; see `docs/research/M164-m1-staged-capture.md`.
+> focus/witness frames: `96 + 128 + 164 + 60 + 128 = 576` before M165.
+> M165 subsequently made a held-out deterministic-pattern-map calibration
+> mandatory. The conservative staged proposal adds one `32`-flat/`32`-dark
+> validation block per optical state, making the conditional M1-only score
+> `704` and the full path `1,602`. Those numbers remain blocked on M165's
+> focus/temperature matching and manifest rules. The staged plan and complete
+> waste-mode audit supersede the owner-count conclusion here; see
+> `docs/research/M164-m1-staged-capture.md`.
 
 ## 0. Ruling first
 
@@ -209,20 +214,26 @@ focus/witness frames:
 = 576 M1-only scored frames.
 ```
 
-This unbundles other axes; it does not remove an M1 role
+This unbundles other axes; it does not remove an M1 role. M165 then requires
+held-out validation of the pattern map. The conservative staged proposal adds
+one `32`-flat/`32`-dark V block per optical state, raising the conditional
+standalone score to `704`
 (`docs/proposals/2026-09-truth-referenced-detail.md`, §0).
 
 **ARGUED.** The minimum **defensible owner program before admission** is
-larger. The M1-only route is **768 non-holdout rehearsal frames plus 576
-sealed scored frames = 1,344 frames**, after the two-frame preflight. Including
-that preflight, the current M1-only path is **1,346 registered/setup
-exposures**. Preserving the combined M1/M5/M9 score instead retains the
-original `1,661` total. The rehearsal must be read to bind the physical blur
-and genuine-improvement controls, reference transfer, target eligibility,
-registration, calibration independence and physical allowances. It cannot
-share a subject/session, reference or calibration with the score. Combining
-rehearsal and score would burn the holdout before the physical instrument was
-frozen
+larger. Under the provisional assumption that one focus-valid pattern-map
+class covers each optical state, the M1-only route is **896 non-holdout
+rehearsal frames plus 704 sealed scored frames = 1,600 frames**, after the
+two-frame preflight. Including that preflight, the conditional floor is
+**1,602 registered/setup exposures**. Preserving the combined M1/M5/M9 score
+instead gives a conditional `1,917`. Each extra flat-focus class adds `96`
+frames; each extra dark-temperature class adds `96`, and splitting both adds
+`192` to the affected sitting. The rehearsal must be read to bind the physical
+blur and genuine-improvement controls, reference transfer, target eligibility,
+pattern-map residual, registration, calibration independence and physical
+allowances. It cannot share a subject/session, reference or calibration with
+the score. Combining rehearsal and score would burn the holdout before the
+physical instrument was frozen
 (`docs/research/M135-detail-instrument.md`, §§6.4 and 8;
 `docs/research/M164-m1-staged-capture.md`).
 
