@@ -3962,6 +3962,71 @@ experiment directory contained an hour of correct, well-commissioned work. Had I
 taken the reply at face value I would have discarded both real findings and
 re-run the compute. The artifacts, not the agent's summary, were the truth.
 
+### 2.9.35 Where the SOTA path actually stands — and it is not where §9 says
+
+I went and read the program's own build-path documents rather than the plan's
+sequencing, on the principle that burned me this morning: the plan describes
+intent, the results describe state. The gap is larger than I thought and it is
+worth stating plainly.
+
+**Phase 1 of the plan does not currently exist.** `2026-09-phase1-design.md` —
+the design for the plan's "one merge" containing A1, A2, A4, B3, B4, B6 — is
+banner-marked **REFUTED — DO NOT IMPLEMENT**. Its own W1 go/no-go gate fired
+`NO_COMMON_K`: of 42 predicates, 16 pass at some `k` and 26 pass at none, and
+
+> no predicate in bands 4–6 passes at any `k` in `[0,8]`
+
+The two ends of the band range demand opposite values of the single constant the
+design offers, so it is *refuted, not untuned*, and the banner explicitly
+forbids reviving it by choosing `k` better. It also records that a previous
+orchestrator challenged the verdict on four separate grounds and it survived all
+four, after which the numbers were independently re-verified. I have no basis to
+reopen it and I am not going to.
+
+So the plan's §9 ordering — Phase 1 merge, then Phase 2, then Phase 3 where the
+resolution claim is won — has **no bridge at its first step**.
+
+**What the program is actually doing instead is a documented pause with three
+named exit conditions.** `2026-09-next-build-path.md` states *"No new product
+build is authorized today"* and lists what ends it:
+
+| adjudication | state today |
+|---|---|
+| **M8 / Crop** — finish crop-early, independently verify, rerun M8 | **in flight (M130 + its verifier)** |
+| **M12** — registered `N=33/105/299` x workers `1/2/4/8/16`, six scored runs per cell | **not started; formal value `UNMEASURED`** |
+| **Candidate 2** | **complete: DEAD** (gamma-3 `R=0.502893`, logistic `R=0.486741`, both missing `[0.99,1.01]`) |
+
+**That makes M130 the true critical path right now** — not because crop-early is
+glamorous, but because it is one of two remaining gates on resuming *any* new
+product build. The program record already calls it *"the most consequential open
+build in the program"*.
+
+**And it tells me when to run M12, which I had been treating as merely "free".**
+M12 needs a stable `strehl` binary; M130 is mid-edit in `crates/`, so measuring
+now would characterise a half-applied build. Worse, crop-early changes the merge
+domain and therefore the output bytes, so an M12 measured today would have to be
+thrown away and re-run the moment M130 lands. **M12 waits for M130 — that is
+correct sequencing, not procrastination**, and I am recording the reasoning so it
+does not get re-litigated as idleness. The existing `N=20`, workers `1/4/8` sweep
+does not count; the document is explicit that it is diagnostic only.
+
+One nuance I nearly got wrong. M12's licensing clause reads *"a formal M12 pass
+kills D9 and promotes dust correction to rank 1"*, which makes it look
+program-steering. It is less urgent than that: the same document records that a
+later committed verdict already authorised crop-early and that *"the original
+headline and global ranking are no longer current"*, so M12 ranks the three
+**unstarted** options rather than deciding what runs next. Its real value is that
+it closes an `UNMEASURED` scorecard axis at zero cost in money and zero cost in
+owner time.
+
+**Net program position.** Phase 0 is nearly closed and has been productive
+precisely by killing things — D8 among them. Phase 1 as designed is dead. The
+live work is the pause-exit set, and the two axes that can actually move without
+the owner are **M8** (M137 decides whether the clamp keeps the detail) and
+**M12** (queued behind M130). Everything comparative remains behind blocker
+`(a)`, which is M135's problem and the one thing in the program that cannot be
+bought, shot, or coded around.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
