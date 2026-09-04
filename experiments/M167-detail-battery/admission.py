@@ -242,6 +242,23 @@ def verify_freeze() -> dict[str, object]:
 def audit_candidate_source() -> dict[str, object]:
     source = CANDIDATE_PATH.read_text(encoding="utf-8")
     tree = ast.parse(source)
+    module_bound_names = set()
+    for statement in tree.body:
+        if isinstance(statement, (ast.Assign, ast.AnnAssign)):
+            targets = (
+                statement.targets
+                if isinstance(statement, ast.Assign)
+                else [statement.target]
+            )
+            for target in targets:
+                if isinstance(target, ast.Name):
+                    module_bound_names.add(target.id)
+
+    def root_name(node: ast.AST) -> str | None:
+        while isinstance(node, (ast.Attribute, ast.Subscript)):
+            node = node.value
+        return node.id if isinstance(node, ast.Name) else None
+
     imports = []
     strings = []
     called_names = []
@@ -262,8 +279,51 @@ def audit_candidate_source() -> dict[str, object]:
         elif isinstance(node, ast.Nonlocal):
             mutable_state_hits.extend(node.names)
         elif isinstance(node, ast.AugAssign):
-            if isinstance(node.target, ast.Name):
-                mutable_state_hits.append(node.target.id)
+            target_root = root_name(node.target)
+            if (
+                target_root is not None
+                and (
+                    isinstance(node.target, ast.Name)
+                    or target_root in module_bound_names
+                )
+            ):
+                mutable_state_hits.append(target_root)
+        elif isinstance(node, (ast.Assign, ast.AnnAssign)):
+            targets = (
+                node.targets
+                if isinstance(node, ast.Assign)
+                else [node.target]
+            )
+            for target in targets:
+                target_root = root_name(target)
+                if (
+                    not isinstance(target, ast.Name)
+                    and target_root in module_bound_names
+                ):
+                    mutable_state_hits.append(str(target_root))
+        elif (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr
+            in {
+                "__setitem__",
+                "add",
+                "append",
+                "clear",
+                "discard",
+                "extend",
+                "insert",
+                "pop",
+                "remove",
+                "reverse",
+                "setdefault",
+                "sort",
+                "update",
+            }
+        ):
+            target_root = root_name(node.func.value)
+            if target_root in module_bound_names:
+                mutable_state_hits.append(str(target_root))
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             if node.name == "score":
                 score_signature = {
@@ -539,10 +599,12 @@ def normalized_child_environment() -> dict[str, str]:
     return result
 
 
-def run_packet(encoded: bytes) -> dict[str, object]:
+def run_packet(encoded: bytes, root: Path) -> dict[str, object]:
     environment = normalized_child_environment()
-    with tempfile.TemporaryDirectory(prefix="m167-packet-") as directory:
-        root = Path(directory)
+    if root.exists():
+        shutil.rmtree(root)
+    root.mkdir(parents=True)
+    try:
         worker = root / "worker.py"
         candidate = root / "candidate.py"
         shutil.copy2(WORKER_PATH, worker)
@@ -556,9 +618,9 @@ def run_packet(encoded: bytes) -> dict[str, object]:
         ]
         visible_blob = "\n".join(
             [
-                *(Path(value).name for value in command),
+                *command,
                 *(f"{key}={value}" for key, value in sorted(environment.items())),
-                root.name,
+                str(root),
             ]
         ).lower()
         leaked_terms = sorted(
@@ -614,6 +676,8 @@ def run_packet(encoded: bytes) -> dict[str, object]:
                 "packet_index_supplied": False,
             },
         }
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
 
 
 def run_blinded(
@@ -621,10 +685,15 @@ def run_blinded(
 ) -> tuple[dict[str, object], dict[str, object]]:
     sealed_instances = []
     channel_audits = []
+    run_number = int(str(instances[0]["commitment"])[:16], 16)
+    packet_root = (
+        Path(tempfile.gettempdir())
+        / f"m167_blind_worker_{run_number}"
+    )
     for instance in instances:
         packets = []
         for item in instance["packets"]:
-            child = run_packet(item["packet_bytes"])
+            child = run_packet(item["packet_bytes"], packet_root)
             item["child"] = child
             channel_audits.append(child["channel_audit"])
             packets.append(
