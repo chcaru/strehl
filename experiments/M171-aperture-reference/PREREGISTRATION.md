@@ -91,3 +91,14 @@ means:
 - no bulk or subsampled RAW decode.
 
 This is a negative preflight result, not an instrument result.
+
+## 6. Post-freeze clarification (2026-09-04)
+
+Independent verification found direct prior-decode evidence for the three
+horizontal-flat stacks, but not for the three diagonal-tilt stacks.  The
+37-minute inter-block gap and geometry change do not prove that both blocks are
+one uninterrupted unit.  This does not change the frozen split: the horizontal
+block is prior-burned development, while M171 prospectively assigned the
+diagonal block to development before opening any of its pixels.  The original
+claim that prior M128 access itself burned all six was broader than the
+available evidence.  No holdout was opened or reclassified.

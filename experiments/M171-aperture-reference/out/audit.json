@@ -1,0 +1,285 @@
+{
+  "aberration_counterexample": {
+    "coarse_grid_side": 512,
+    "coarse_to_fine_max_abs_delta": 0.0005342895018550786,
+    "f8_exceeds_f5_6": true,
+    "fine_grid_side": 1024,
+    "frequency_lpmm": 20.0,
+    "purpose": "existence proof only; W040 and working factor are not estimates of the capture",
+    "rows": [
+      {
+        "actual_mtf": 0.29747974943252836,
+        "ideal_mtf": 0.7108085760683319,
+        "illustrative_working_f_number": 20.832,
+        "normalized_frequency": 0.22915200000000002,
+        "recorded_f_number": 5.6,
+        "w040_waves": 0.6
+      },
+      {
+        "actual_mtf": 0.5512711128257757,
+        "ideal_mtf": 0.5907613079678588,
+        "illustrative_working_f_number": 29.76,
+        "normalized_frequency": 0.32736000000000004,
+        "recorded_f_number": 8.0,
+        "w040_waves": 0.14405999999999997
+      },
+      {
+        "actual_mtf": 0.44390199839499317,
+        "ideal_mtf": 0.446877680090548,
+        "illustrative_working_f_number": 40.92,
+        "normalized_frequency": 0.4501200000000001,
+        "recorded_f_number": 11.0,
+        "w040_waves": 0.040302558568403785
+      }
+    ],
+    "status": "PASS",
+    "two_decimal_report_stable": true,
+    "w040_at_recorded_f5_6_waves": 0.6,
+    "working_factor": 3.72
+  },
+  "actual_transfer_identification": {
+    "actual_lens_tc_wavefront_in_exif": false,
+    "focus_state_bound_in_exif": false,
+    "ideal_mtf_is_upper_bound_only": true,
+    "independent_lower_bound_available": false
+  },
+  "audit_source_sha256": "5115176F972ED34BFC8EB1E44611CB3738A82BA5857211595C264D8259E5ACE9",
+  "candidate_built": false,
+  "confidence_interval": "NO CI",
+  "directional_controls": {
+    "base": {
+      "f_number": 8.0,
+      "mtf": 0.7770721787377866
+    },
+    "frequency_lpmm": 40.0,
+    "planted_degradation": {
+      "f_number": 11.0,
+      "mtf": 0.6949105140444671,
+      "strictly_below_base": true
+    },
+    "planted_improvement": {
+      "f_number": 5.6,
+      "mtf": 0.8435346141315047,
+      "strictly_above_base": true
+    },
+    "status": "PASS"
+  },
+  "exif_interpretation": {
+    "bare_lens_max_aperture": 2.8,
+    "expected_post_tc_max_aperture": 5.6,
+    "nominal_f_number_multiplier": 2.0,
+    "nominal_light_factor": 4.0,
+    "nominal_stop_cost": 2.0,
+    "observed_focal_length_mm": 200.0,
+    "observed_max_aperture": 5.59591869015324,
+    "teleconverter_magnification": 2.0,
+    "verdict": "EXIF FNumber is already TC-corrected; multiplying the recorded 5.6/8/11 by two would double-count the TC"
+  },
+  "exiftool_version": "13.58",
+  "file_count": 789,
+  "m167_executed": false,
+  "metadata_source": "ExifTool metadata-only recursive census",
+  "physics": {
+    "formulae": {
+      "airy_first_zero_diameter": "2.44 * wavelength * N",
+      "cutoff": "1 / (wavelength * N)",
+      "ideal_incoherent_mtf": "(2/pi) * (acos(x) - x*sqrt(1-x^2)), x = frequency*wavelength*N",
+      "working_f_number": "Nw = (1 + magnification/pupil_magnification) * N"
+    },
+    "question_values_if_tc_were_double_counted": [
+      {
+        "airy_first_zero_diameter_um": 14.762,
+        "f_number": 11.0
+      },
+      {
+        "airy_first_zero_diameter_um": 21.472,
+        "f_number": 16.0
+      },
+      {
+        "airy_first_zero_diameter_um": 29.524,
+        "f_number": 22.0
+      }
+    ],
+    "recorded_system_f_number_rows": [
+      {
+        "airy_diameter_sensor_px_x": 1.467034027855153,
+        "airy_first_zero_diameter_um": 7.5152,
+        "cutoff_lpmm": 324.6753246753247,
+        "ideal_mtf": {
+          "10": 0.9607904231806674,
+          "20": 0.9216180745229231,
+          "40": 0.8435346141315047,
+          "60": 0.7660515373953974,
+          "80": 0.689477873866013,
+          "97.6044568245": 0.623082596872004
+        },
+        "recorded_system_f_number": 5.6
+      },
+      {
+        "airy_diameter_sensor_px_x": 2.095762896935933,
+        "airy_first_zero_diameter_um": 10.736,
+        "cutoff_lpmm": 227.27272727272725,
+        "ideal_mtf": {
+          "10": 0.9439955418909621,
+          "20": 0.8880997013617781,
+          "40": 0.7770721787377866,
+          "60": 0.6678111787537219,
+          "80": 0.5612550221637076,
+          "97.6044568245": 0.47050213577612865
+        },
+        "recorded_system_f_number": 8.0
+      },
+      {
+        "airy_diameter_sensor_px_x": 2.881673983286908,
+        "airy_first_zero_diameter_um": 14.762,
+        "cutoff_lpmm": 165.2892561983471,
+        "ideal_mtf": {
+          "10": 0.9230160254927665,
+          "20": 0.8463147819691589,
+          "40": 0.6949105140444671,
+          "60": 0.5481750623220146,
+          "80": 0.4087375093821371,
+          "97.6044568245": 0.2944691829650621
+        },
+        "recorded_system_f_number": 11.0
+      }
+    ],
+    "sensor": {
+      "derived_nyquist_lpmm": {
+        "horizontal": 97.60445682451252,
+        "vertical": 97.74058577405857
+      },
+      "derived_pitch_um": {
+        "horizontal": 5.122716894977169,
+        "vertical": 5.115582191780822
+      },
+      "official_effective_dimensions_px": [
+        7008,
+        4672
+      ],
+      "official_size_mm": [
+        35.9,
+        23.9
+      ]
+    },
+    "wavelength_nm": 550.0,
+    "working_f_number_status": "NOT IDENTIFIED BY EXIF: capture magnification and pupil magnification are not both recorded"
+  },
+  "pupil_model_validation": {
+    "bar": 0.0002,
+    "grid_side": 1024,
+    "max_abs_error_vs_analytic": 9.360204816235098e-05,
+    "status": "PASS"
+  },
+  "raw_root": "D:\\personal\\macro\\requests\\19-razor-edge",
+  "raw_tree_inventory_after": {
+    "byte_count": 28397995881,
+    "file_count": 791
+  },
+  "raw_tree_inventory_before": {
+    "byte_count": 28397995881,
+    "file_count": 791
+  },
+  "raw_tree_inventory_unchanged": true,
+  "raw_tree_write_operations": 0,
+  "reason": "The ideal diffraction order is monotone, but EXIF supplies no lower bound on realized transfer.  A valid aberrated pupil with the same f-number metadata reverses f/5.6 and f/8.",
+  "schema": "M171-aperture-reference-audit-v1",
+  "scope": "metadata and physics only; zero RAW pixels decoded",
+  "sources": {
+    "airy": "https://www.edmundoptics.com/knowledge-center/application-notes/imaging/limitations-on-resolution-and-contrast-the-airy-disk/",
+    "lens": "https://www.sony.jp/ichigan/products/SEL100M28GM/spec.html",
+    "mtf": "https://www.edmundoptics.com/knowledge-center/application-notes/optics/introduction-to-modulation-transfer-function/",
+    "pixel_dimensions": "https://helpguide.sony.net/ilc/2360/v1/en/contents/0404M_jpeg_image_size.html",
+    "sensor": "https://helpguide.sony.net/ilc/2360/v1/en/contents/231h_specifications_ilc2360.html",
+    "sony_tc_stop_loss": "https://www.sony.jp/ichigan/products/SEL20TC/feature_1.html",
+    "viltrox_tc": "https://viltrox.com/products/tc-2-0x-teleconverter-for-sony"
+  },
+  "stacks": [
+    {
+      "count": 143,
+      "exposure_s": 2.5,
+      "f_number": 11.0,
+      "first_capture": "2026:08:30 16:57:45",
+      "focal_length_35mm_mm": 200.0,
+      "focal_length_mm": 200.0,
+      "focus_position2_max": 61.0,
+      "focus_position2_min": 58.0,
+      "iso": 100,
+      "last_capture": "2026:08:30 17:04:46",
+      "max_aperture": 5.59591869015324,
+      "stack": "diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl"
+    },
+    {
+      "count": 279,
+      "exposure_s": 2.5,
+      "f_number": 5.6,
+      "first_capture": "2026:08:30 16:29:45",
+      "focal_length_35mm_mm": 200.0,
+      "focal_length_mm": 200.0,
+      "focus_position2_max": 61.0,
+      "focus_position2_min": 58.0,
+      "iso": 100,
+      "last_capture": "2026:08:30 16:43:31",
+      "max_aperture": 5.59591869015324,
+      "stack": "diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f5.6-cpl"
+    },
+    {
+      "count": 210,
+      "exposure_s": 2.5,
+      "f_number": 8.0,
+      "first_capture": "2026:08:30 16:45:30",
+      "focal_length_35mm_mm": 200.0,
+      "focal_length_mm": 200.0,
+      "focus_position2_max": 61.0,
+      "focus_position2_min": 58.0,
+      "iso": 100,
+      "last_capture": "2026:08:30 16:55:50",
+      "max_aperture": 5.59591869015324,
+      "stack": "diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f8-cpl"
+    },
+    {
+      "count": 40,
+      "exposure_s": 3.2,
+      "f_number": 11.0,
+      "first_capture": "2026:08:30 15:32:46",
+      "focal_length_35mm_mm": 200.0,
+      "focal_length_mm": 200.0,
+      "focus_position2_max": 59.0,
+      "focus_position2_min": 58.0,
+      "iso": 100,
+      "last_capture": "2026:08:30 15:35:08",
+      "max_aperture": 5.59591869015324,
+      "stack": "horizontal-flat/razor-edge-horizontal-flat-sw4-f11-cpl"
+    },
+    {
+      "count": 67,
+      "exposure_s": 3.2,
+      "f_number": 5.6,
+      "first_capture": "2026:08:30 15:48:31",
+      "focal_length_35mm_mm": 200.0,
+      "focal_length_mm": 200.0,
+      "focus_position2_max": 59.0,
+      "focus_position2_min": 59.0,
+      "iso": 100,
+      "last_capture": "2026:08:30 15:52:30",
+      "max_aperture": 5.59591869015324,
+      "stack": "horizontal-flat/razor-edge-horizontal-flat-sw4-f5.6-cpl"
+    },
+    {
+      "count": 50,
+      "exposure_s": 3.2,
+      "f_number": 8.0,
+      "first_capture": "2026:08:30 15:43:12",
+      "focal_length_35mm_mm": 200.0,
+      "focal_length_mm": 200.0,
+      "focus_position2_max": 59.0,
+      "focus_position2_min": 59.0,
+      "iso": 100,
+      "last_capture": "2026:08:30 15:46:09",
+      "max_aperture": 5.59591869015324,
+      "stack": "horizontal-flat/razor-edge-horizontal-flat-sw4-f8-cpl"
+    }
+  ],
+  "status": "PASS",
+  "verdict": "NOT_FORCED"
+}

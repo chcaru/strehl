@@ -1,0 +1,182 @@
+{
+  "baseline": {
+    "output": "{\"counterexample_f8_exceeds_f5_6\": true, \"planted_degradation\": {\"f_number\": 11.0, \"mtf\": 0.6949105140444671, \"strictly_below_base\": true}, \"planted_improvement\": {\"f_number\": 5.6, \"mtf\": 0.8435346141315047, \"strictly_above_base\": true}, \"status\": \"PASS\", \"verdict\": \"NOT_FORCED\"}",
+    "passed": true,
+    "returncode": 0
+  },
+  "caught_count": 20,
+  "missing_anchor_hard_error": {
+    "message": "ANCHOR ERROR: expected exactly one 'THIS UNIQUE FULL-LINE ANCHOR DOES NOT EXIST', found 0",
+    "passed": true
+  },
+  "mutation_count": 20,
+  "mutations": [
+    {
+      "anchor": "        for index in range(int(expected[\"count\"])):",
+      "name": "stack_member_missing",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: count 142 != 143",
+      "red_caught": true,
+      "replacement": "        for index in range(int(expected[\"count\"]) - 1):",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"Directory\": str(root / Path(stack)),",
+      "name": "metadata_directory_outside_root",
+      "output": "ERROR: metadata directory outside read-only root: C:\\outside",
+      "red_caught": true,
+      "replacement": "                    \"Directory\": r\"C:\\outside\",",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"Model\": \"ILCE-7CM2\",",
+      "name": "camera_model_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected camera model",
+      "red_caught": true,
+      "replacement": "                    \"Model\": \"WRONG-CAMERA\",",
+      "returncode": 2
+    },
+    {
+      "anchor": "                        \"FE 100mm F2.8 Macro GM OSS + 2X Teleconverter\"",
+      "name": "lens_model_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected lens model",
+      "red_caught": true,
+      "replacement": "                        \"WRONG LENS\"",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"LensType3\": 33094,",
+      "name": "lens_type_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected LensType3",
+      "red_caught": true,
+      "replacement": "                    \"LensType3\": 1,",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"FNumber\": float(expected[\"f_number\"]),",
+      "name": "f_number_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected FNumber",
+      "red_caught": true,
+      "replacement": "                    \"FNumber\": 99.0,",
+      "returncode": 2
+    },
+    {
+      "anchor": "SENSOR_WIDTH_MM = 35.9",
+      "name": "sensor_pitch_wrong",
+      "output": "ERROR: pixel-pitch reference mismatch: 5.136986301369863",
+      "red_caught": true,
+      "replacement": "SENSOR_WIDTH_MM = 36.0",
+      "returncode": 2
+    },
+    {
+      "anchor": "EXPECTED_FOCAL_LENGTH_MM = 200.0",
+      "name": "focal_length_check_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected FocalLength",
+      "red_caught": true,
+      "replacement": "EXPECTED_FOCAL_LENGTH_MM = 100.0",
+      "returncode": 2
+    },
+    {
+      "anchor": "EXPECTED_MAX_APERTURE = 5.6",
+      "name": "tc_correction_check_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected MaxApertureValue",
+      "red_caught": true,
+      "replacement": "EXPECTED_MAX_APERTURE = 2.8",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"FocalLengthIn35mmFormat\": 200.0,",
+      "name": "focal_length_35mm_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected FocalLengthIn35mmFormat",
+      "red_caught": true,
+      "replacement": "                    \"FocalLengthIn35mmFormat\": 100.0,",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"ISO\": 100,",
+      "name": "iso_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected ISO",
+      "red_caught": true,
+      "replacement": "                    \"ISO\": 200,",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"ExposureTime\": float(expected[\"exposure_s\"]),",
+      "name": "exposure_wrong",
+      "output": "ERROR: diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl: unexpected ExposureTime",
+      "red_caught": true,
+      "replacement": "                    \"ExposureTime\": 99.0,",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"FocusPosition2\": 58 + index % 4,",
+      "name": "focus_position_non_numeric",
+      "output": "ERROR: missing/non-numeric EXIF FocusPosition2",
+      "red_caught": true,
+      "replacement": "                    \"FocusPosition2\": None,",
+      "returncode": 2
+    },
+    {
+      "anchor": "                    \"DateTimeOriginal\": (",
+      "name": "capture_time_missing",
+      "output": "ERROR: missing/empty EXIF DateTimeOriginal",
+      "red_caught": true,
+      "replacement": "                    \"DateTimeOriginal_WRONG\": (",
+      "returncode": 2
+    },
+    {
+      "anchor": "AIRY_DIAMETER_FACTOR = 2.44",
+      "name": "airy_radius_substituted_for_diameter",
+      "output": "ERROR: Airy-diameter reference mismatch",
+      "red_caught": true,
+      "replacement": "AIRY_DIAMETER_FACTOR = 1.22",
+      "returncode": 2
+    },
+    {
+      "anchor": "MTF_SCALE = 2.0 / math.pi",
+      "name": "mtf_normalization_halved",
+      "output": "ERROR: pupil autocorrelation validation error 0.4936472182042031 >= 0.0002",
+      "red_caught": true,
+      "replacement": "MTF_SCALE = 1.0 / math.pi",
+      "returncode": 2
+    },
+    {
+      "anchor": "DIRECTIONAL_IMPROVEMENT_N = 5.6",
+      "name": "planted_improvement_blinded",
+      "output": "ERROR: planted ideal improvement/degradation direction was not detected",
+      "red_caught": true,
+      "replacement": "DIRECTIONAL_IMPROVEMENT_N = 8.0",
+      "returncode": 2
+    },
+    {
+      "anchor": "DIRECTIONAL_DEGRADATION_N = 11.0",
+      "name": "planted_degradation_blinded",
+      "output": "ERROR: planted ideal improvement/degradation direction was not detected",
+      "red_caught": true,
+      "replacement": "DIRECTIONAL_DEGRADATION_N = 8.0",
+      "returncode": 2
+    },
+    {
+      "anchor": "COUNTEREXAMPLE_W040_WAVES = 0.60",
+      "name": "aberration_reversal_erased",
+      "output": "ERROR: frozen physical stop verdict was not NOT_FORCED",
+      "red_caught": true,
+      "replacement": "COUNTEREXAMPLE_W040_WAVES = 0.00",
+      "returncode": 2
+    },
+    {
+      "anchor": "    verdict = counterexample_verdict(counterexample)",
+      "name": "counterexample_ignored",
+      "output": "ERROR: frozen physical stop verdict was not NOT_FORCED",
+      "red_caught": true,
+      "replacement": "    verdict = \"FORCED\"",
+      "returncode": 2
+    }
+  ],
+  "planted_degradation_present_in_green": true,
+  "planted_improvement_commissioned": true,
+  "schema": "M171-aperture-reference-commission-v1",
+  "source_sha256_after": "5115176F972ED34BFC8EB1E44611CB3738A82BA5857211595C264D8259E5ACE9",
+  "source_sha256_before": "5115176F972ED34BFC8EB1E44611CB3738A82BA5857211595C264D8259E5ACE9",
+  "source_unchanged": true,
+  "status": "COMMISSIONED"
+}
