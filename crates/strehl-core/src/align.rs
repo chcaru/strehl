@@ -2706,6 +2706,57 @@ pub fn sample_catmull_rom(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     acc
 }
 
+/// Catmull-Rom followed by an exact clamp to the range of its 16 input taps.
+///
+/// The weighted sum is evaluated in the same order as [`sample_catmull_rom`].
+/// Min and max are collected during that gather, rather than by a second pass,
+/// and an in-range sum is returned untouched. Thus this differs from ordinary
+/// Catmull-Rom only where the cubic leaves the scalar hull of its support.
+///
+/// This is a nonlinear, phase- and content-dependent limiter. Hull containment
+/// is a narrow value-range invariant, not evidence of spatial fidelity: the
+/// clamp can flatten extrema, kink derivatives, or alter harmonics while
+/// remaining in range. It is therefore opt-in, and the linear-kernel
+/// restoration in [`crate::restore`] refuses it rather than pretending its
+/// response is ordinary Catmull-Rom's.
+pub fn sample_clamped_catmull_rom(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
+    if p.width < 4 || p.height < 4 {
+        return sample_bilinear(p, x, y);
+    }
+    let x = x.clamp(1.0, (p.width - 3) as f64);
+    let y = y.clamp(1.0, (p.height - 3) as f64);
+    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+    let wx = catmull_rom_weights((x - x0 as f64) as f32);
+    let wy = catmull_rom_weights((y - y0 as f64) as f32);
+    let mut acc = 0f32;
+    let mut lo = f32::INFINITY;
+    let mut hi = f32::NEG_INFINITY;
+    for (dy, wyv) in wy.iter().enumerate() {
+        let row = (y0 + dy - 1) * p.width + x0 - 1;
+        let mut r = 0f32;
+        for (dx, wxv) in wx.iter().enumerate() {
+            let v = p.data[row + dx];
+            lo = lo.min(v);
+            hi = hi.max(v);
+            r += v * *wxv;
+        }
+        acc += r * *wyv;
+    }
+
+    // Explicit comparisons preserve every bit of an in-range Catmull-Rom
+    // result. A NaN can arise from overflow cancellation even when all taps are
+    // finite; it is outside every scalar hull, so fail closed to a support tap.
+    if acc.is_nan() {
+        lo
+    } else if acc < lo {
+        lo
+    } else if acc > hi {
+        hi
+    } else {
+        acc
+    }
+}
+
 /// Normalised sinc, `sin(pi x) / (pi x)`, with the removable singularity filled.
 #[inline]
 fn sinc(x: f64) -> f64 {
@@ -2846,6 +2897,7 @@ pub enum Resampler {
     Nearest,
     Bilinear,
     CatmullRom,
+    ClampedCatmullRom,
     Lanczos2,
     Lanczos3,
 }
@@ -2857,6 +2909,7 @@ impl Resampler {
             Resampler::Nearest => sample_nearest(p, x, y),
             Resampler::Bilinear => sample_bilinear(p, x, y),
             Resampler::CatmullRom => sample_catmull_rom(p, x, y),
+            Resampler::ClampedCatmullRom => sample_clamped_catmull_rom(p, x, y),
             Resampler::Lanczos2 => sample_lanczos2(p, x, y),
             Resampler::Lanczos3 => sample_lanczos3(p, x, y),
         }
@@ -2868,7 +2921,7 @@ impl Resampler {
         match self {
             Resampler::Nearest => 0.5,
             Resampler::Bilinear => 1.0,
-            Resampler::CatmullRom => 2.0,
+            Resampler::CatmullRom | Resampler::ClampedCatmullRom => 2.0,
             Resampler::Lanczos2 => 2.0,
             Resampler::Lanczos3 => 3.0,
         }
@@ -3483,6 +3536,56 @@ mod tests {
 
     // ---- resampling ----------------------------------------------------
 
+    fn catmull_support_bounds(p: PlaneRef<'_>, x: f64, y: f64) -> (f32, f32) {
+        assert!(p.width >= 4 && p.height >= 4);
+        let x = x.clamp(1.0, (p.width - 3) as f64);
+        let y = y.clamp(1.0, (p.height - 3) as f64);
+        let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+        let mut lo = f32::INFINITY;
+        let mut hi = f32::NEG_INFINITY;
+        for dy in 0..4 {
+            let row = (y0 + dy - 1) * p.width + x0 - 1;
+            for dx in 0..4 {
+                lo = lo.min(p.data[row + dx]);
+                hi = hi.max(p.data[row + dx]);
+            }
+        }
+        (lo, hi)
+    }
+
+    fn hard_step(w: usize, h: usize, left: f32, right: f32) -> Vec<f32> {
+        (0..w * h)
+            .map(|i| if i % w < w / 2 { left } else { right })
+            .collect()
+    }
+
+    fn hard_step_points(w: usize, h: usize) -> Vec<(f64, f64)> {
+        let mut points = Vec::new();
+        for yi in 0..7 {
+            let y = 2.125 + yi as f64 * ((h as f64 - 5.25) / 6.0);
+            for xi in 0..36 {
+                let x = w as f64 * 0.5 - 2.0 + xi as f64 * (4.0 / 35.0);
+                points.push((x, y));
+            }
+        }
+        points
+    }
+
+    fn hull_violations(
+        p: PlaneRef<'_>,
+        points: &[(f64, f64)],
+        sample: impl Fn(PlaneRef<'_>, f64, f64) -> f32,
+    ) -> usize {
+        points
+            .iter()
+            .filter(|&&(x, y)| {
+                let (lo, hi) = catmull_support_bounds(p, x, y);
+                let got = sample(p, x, y);
+                !(got >= lo && got <= hi)
+            })
+            .count()
+    }
+
     #[test]
     fn catmull_rom_reproduces_the_samples_at_integer_positions() {
         let data = texture(64, 64, 7);
@@ -3495,6 +3598,170 @@ mod tests {
                 p.at(x, y)
             );
         }
+    }
+
+    #[test]
+    fn clamped_catmull_rom_stays_inside_the_exact_support16_hull() {
+        let (w, h) = (24, 18);
+        let points = hard_step_points(w, h);
+        for (name, data) in [
+            ("low-to-high", hard_step(w, h, -1200.0, 700.0)),
+            ("high-to-low", hard_step(w, h, 700.0, -1200.0)),
+        ] {
+            let p = PlaneRef::new(&data, w, h).expect("view");
+            assert_eq!(
+                hull_violations(p, &points, sample_clamped_catmull_rom),
+                0,
+                "{name} hard step left its exact 16-tap hull"
+            );
+        }
+
+        // A deterministic census over signed, finite random planes. Unlike the
+        // two steps, this exercises a different hull at almost every sample.
+        for seed in [17, 0x5eed, 0xdead_beef] {
+            let (w, h) = (31, 29);
+            let mut rng = Lcg(seed);
+            let data: Vec<f32> = (0..w * h)
+                .map(|_| (2.0 * rng.next_unit() - 1.0) * 1_000_000.0)
+                .collect();
+            let p = PlaneRef::new(&data, w, h).expect("view");
+            let points: Vec<(f64, f64)> = (0..4096)
+                .map(|_| {
+                    (
+                        1.0 + (w - 4) as f64 * f64::from(rng.next_unit()),
+                        1.0 + (h - 4) as f64 * f64::from(rng.next_unit()),
+                    )
+                })
+                .collect();
+            assert_eq!(
+                hull_violations(p, &points, sample_clamped_catmull_rom),
+                0,
+                "random finite plane seed {seed} left its exact 16-tap hull"
+            );
+        }
+    }
+
+    #[test]
+    fn clamped_catmull_rom_is_bit_identical_until_catmull_leaves_the_hull() {
+        let (w, h) = (32, 27);
+        let mut rng = Lcg(0x172c_a7);
+        let data: Vec<f32> = (0..w * h)
+            .map(|_| (2.0 * rng.next_unit() - 1.0) * 16_000.0)
+            .collect();
+        let p = PlaneRef::new(&data, w, h).expect("view");
+        let mut unchanged = 0usize;
+        let mut clamped = 0usize;
+        for _ in 0..8192 {
+            let x = 1.0 + (w - 4) as f64 * f64::from(rng.next_unit());
+            let y = 1.0 + (h - 4) as f64 * f64::from(rng.next_unit());
+            let raw = sample_catmull_rom(p, x, y);
+            let got = sample_clamped_catmull_rom(p, x, y);
+            let (lo, hi) = catmull_support_bounds(p, x, y);
+            if raw >= lo && raw <= hi {
+                assert_eq!(
+                    got.to_bits(),
+                    raw.to_bits(),
+                    "an already-in-hull Catmull-Rom sample changed at ({x}, {y})"
+                );
+                unchanged += 1;
+            } else {
+                assert!(
+                    got >= lo && got <= hi,
+                    "a violating Catmull-Rom sample was not clamped at ({x}, {y})"
+                );
+                clamped += 1;
+            }
+        }
+        assert!(unchanged > 0, "the bit-identity arm was never exercised");
+        assert!(clamped > 0, "the clamp arm was never exercised");
+    }
+
+    #[test]
+    fn clamped_catmull_rom_preserves_integer_samples_and_constant_planes_exactly() {
+        let (w, h) = (19, 17);
+        let mut rng = Lcg(172);
+        let data: Vec<f32> = (0..w * h)
+            .map(|_| (2.0 * rng.next_unit() - 1.0) * 10_000.0)
+            .collect();
+        let p = PlaneRef::new(&data, w, h).expect("view");
+        for y in 1..=h - 3 {
+            for x in 1..=w - 3 {
+                assert_eq!(
+                    sample_clamped_catmull_rom(p, x as f64, y as f64).to_bits(),
+                    p.at(x, y).to_bits(),
+                    "integer sample ({x}, {y}) moved"
+                );
+            }
+        }
+
+        let constant = vec![-4321.25f32; w * h];
+        let p = PlaneRef::new(&constant, w, h).expect("view");
+        for (x, y) in [
+            (1.0, 1.0),
+            (2.25, 3.75),
+            (8.5, 7.125),
+            ((w - 3) as f64, (h - 3) as f64),
+        ] {
+            assert_eq!(
+                sample_clamped_catmull_rom(p, x, y).to_bits(),
+                (-4321.25f32).to_bits(),
+                "constant plane moved at ({x}, {y})"
+            );
+        }
+    }
+
+    #[test]
+    fn clamped_catmull_rom_has_catmull_support_and_checked_domain() {
+        let data = texture(32, 24, 172);
+        let p = PlaneRef::new(&data, 32, 24).expect("view");
+        assert_eq!(
+            Resampler::ClampedCatmullRom.support(),
+            Resampler::CatmullRom.support()
+        );
+        for yi in -4..=52 {
+            for xi in -4..=68 {
+                let x = xi as f64 * 0.5;
+                let y = yi as f64 * 0.5;
+                let ordinary = Resampler::CatmullRom.sample_checked(p, x, y);
+                let clamped = Resampler::ClampedCatmullRom.sample_checked(p, x, y);
+                assert_eq!(
+                    clamped.is_some(),
+                    ordinary.is_some(),
+                    "checked domain differs at ({x}, {y})"
+                );
+                if let Some(got) = clamped {
+                    assert_eq!(
+                        got.to_bits(),
+                        sample_clamped_catmull_rom(p, x, y).to_bits(),
+                        "sample_checked dispatched a different value at ({x}, {y})"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn a_widened_clamp_makes_the_hull_guard_fail() {
+        let (w, h) = (24, 18);
+        let points = hard_step_points(w, h);
+        let mut violations = 0usize;
+        for data in [
+            hard_step(w, h, -1200.0, 700.0),
+            hard_step(w, h, 700.0, -1200.0),
+        ] {
+            let p = PlaneRef::new(&data, w, h).expect("view");
+            violations += hull_violations(p, &points, |p, x, y| {
+                let raw = sample_catmull_rom(p, x, y);
+                let (lo, hi) = catmull_support_bounds(p, x, y);
+                let padding = (hi - lo).abs() + 1.0;
+                raw.clamp(lo - padding, hi + padding)
+            });
+        }
+        assert!(
+            violations > 0,
+            "widening both clamp bounds hid every Catmull-Rom hull violation; \
+             the containment guard has not been proven live"
+        );
     }
 
     #[test]
@@ -3720,6 +3987,7 @@ mod tests {
             Resampler::Nearest,
             Resampler::Bilinear,
             Resampler::CatmullRom,
+            Resampler::ClampedCatmullRom,
             Resampler::Lanczos2,
             Resampler::Lanczos3,
         ] {

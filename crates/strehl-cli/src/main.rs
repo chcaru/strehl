@@ -680,13 +680,20 @@ enum Command {
         confidence_tail: f64,
 
         /// Interpolator each frame is gathered with by the registration:
-        /// nearest, bilinear, catmull-rom, lanczos2 or lanczos3.
+        /// nearest, bilinear, catmull-rom, clamped-catmull, lanczos2 or
+        /// lanczos3.
         ///
         /// THE DEFAULT DOES NOT MOVE. catmull-rom is what every quality number
         /// in this project's corpus was measured through, and a run that omits
         /// this flag is byte-identical to one from before the flag existed.
         /// Whether the default SHOULD move is a pre-registered decision in
         /// docs/research/ORCH-kernel-decision.md, not a setting.
+        ///
+        /// clamped-catmull clamps each Catmull-Rom result to the range of its
+        /// 16 taps. That enforces scalar hull containment, not spatial fidelity:
+        /// it is a nonlinear, content-dependent limiter that can flatten
+        /// extrema or alter harmonics. It is opt-in, and restoration refuses
+        /// it because there is no linear MTF to invert.
         ///
         /// COST, AND IT IS THE POINT OF THE FLAG. Measured as a BOUND on a
         /// loaded machine rather than as a value (M118 Y10): lanczos3 costs

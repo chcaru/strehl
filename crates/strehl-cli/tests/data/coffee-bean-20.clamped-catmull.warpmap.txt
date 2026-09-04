@@ -1,0 +1,36 @@
+strehl-warpmap 1
+# a warp sidecar: per-frame placements, reference -> frame.
+# `a_re a_im b_re b_im` are f64 bit patterns; the trailing
+# decimals are a human aid and are NOT parsed.
+stack-name coffee-bean
+stack-digest 25daf54c45be5446
+frames 20
+plane 3516x2344
+reference 10
+strategy S3-ba-unit
+resampler clamped-catmull
+heldout-px none
+cycle-floor-px 3fc7c1496173922e # 0.1856
+note strehl align, M86b, spans [1, 2, 4, 8, 16, 32, 64, 96, 128]
+# idx state a_re a_im b_re b_im | scale-1, rot, dx, dy
+0 placed 3ff00a4fdec333e3 bef24651f4348054 bfe7954fd3be9274 3fc02399098765eb # g=+2.517576e-3 rot=-1.742810e-5 dx=-0.7370 dy=+0.1261
+1 placed 3ff009e2e8d87971 3efbf84cd1a43a69 bfed57fb668df55e 3fa6c727b313f58a # g=+2.413663e-3 rot=+2.667420e-5 dx=-0.9170 dy=+0.0445
+2 placed 3ff008d68d048981 3e779e7e3af0d100 bfe97f8845569430 3f95a48275706494 # g=+2.157737e-3 rot=+8.798805e-8 dx=-0.7968 dy=+0.0211
+3 placed 3ff00802b5e3a357 bf04245a798b3462 bfe5b3d3ce6535e5 3fb18417aa21a959 # g=+1.955710e-3 rot=-3.841783e-5 dx=-0.6782 dy=+0.0684
+4 placed 3ff006053aeb8b03 3eb4cc10ac0b5620 bfdc15f1c1944029 3f83cf9d60e6b348 # g=+1.469832e-3 rot=+1.239606e-6 dx=-0.4388 dy=+0.0097
+5 placed 3ff0051913784493 3ee47dcdfef6f344 bfd6634fa8e29187 bf42177d480ac100 # g=+1.244618e-3 rot=+9.771073e-6 dx=-0.3498 dy=-0.0006
+6 placed 3ff003e6c42e0c1a bee4c7aca3001439 bfd3f2d2089fd56a 3f85a7abd0a42010 # g=+9.524978e-4 rot=-9.908666e-6 dx=-0.3117 dy=+0.0106
+7 placed 3ff00305cffcf2b7 3ee6939bbe91cf1c bfcec8618041eb5e bfb059b970a20d02 # g=+7.379651e-4 rot=+1.076536e-5 dx=-0.2405 dy=-0.0639
+8 placed 3ff0024c9f795cd8 3ee1d4f0211f737a bfccfb3ffc52d65c 3f8fc62697d4e8f0 # g=+5.613546e-4 rot=+8.502860e-6 dx=-0.2264 dy=+0.0155
+9 placed 3ff0010f5fa176ad 3ecf380fce933c48 bfb70b13a6f6aeb8 bf92fd44e3a2f7c0 # g=+2.588020e-4 rot=+3.721594e-6 dx=-0.0900 dy=-0.0185
+10 placed 3fefffffffffffff 0000000000000000 0000000000000000 0000000000000000 # g=-1.110223e-16 rot=+0.000000e0 dx=+0.0000 dy=+0.0000
+11 placed 3feffe38620146de becfc73e2fd519fc bfc32b904508105c 3f78f8a106b5e2a0 # g=-2.172552e-4 rot=-3.788268e-6 dx=-0.1498 dy=+0.0061
+12 placed 3feffcbfe84dcb98 3ec896dcd5c3ddc0 bfbf54db68cdd210 bf87d3db48d17990 # g=-3.967727e-4 rot=+2.931274e-6 dx=-0.1224 dy=-0.0116
+13 placed 3feffa3960c4a9ef bedae9be54f4134a 3fbb246875dedcf0 bf720bee291f1880 # g=-7.050619e-4 rot=-6.416574e-6 dx=+0.1060 dy=-0.0044
+14 placed 3feff892ab6bafdc 3ef1e9075167937f bf8654e9e19f5780 bfb2b45d9815501c # g=-9.066250e-4 rot=+1.708056e-5 dx=-0.0109 dy=-0.0731
+15 placed 3feff5fceb9d945f 3ef5520aa4e04942 3fbf62baf0357c28 bfb355df00038244 # g=-1.222172e-3 rot=+2.033279e-5 dx=+0.1226 dy=-0.0755
+16 placed 3feff32e9fc7a9f1 3ef02c9e95323233 3fc3b6a3ef3e84b4 bf86730b873fb3f0 # g=-1.564682e-3 rot=+1.542501e-5 dx=+0.1540 dy=-0.0110
+17 placed 3feff0d5ee97515a 3ef2869311a803a2 3fc57ca668df2518 bfa234c4c3a284c0 # g=-1.851114e-3 rot=+1.766747e-5 dx=+0.1679 dy=-0.0356
+18 placed 3fefef4f944bc780 3f10d082bc65d63e 3fc79f68fad6aabc bfab83bc7b25f6f8 # g=-2.037249e-3 rot=+6.414221e-5 dx=+0.1846 dy=-0.0537
+19 placed 3fefec1563df1df7 3f1b9a023ccee3e2 3fd7844a9e9ad408 3fa7935552d31b40 # g=-2.431207e-3 rot=+1.052917e-4 dx=+0.3674 dy=+0.0460
+end 20

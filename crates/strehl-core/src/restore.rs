@@ -118,6 +118,24 @@ use crate::align::Resampler;
 /// the smallest effect this module can produce.
 const PHASE_SAMPLES: usize = 64;
 
+/// Whether the gather has a linear, shift-invariant kernel restoration can
+/// model.
+///
+/// Clamped Catmull-Rom depends on the values under each individual gather, so
+/// it has no single tap response or MTF to invert. Treating it as ordinary
+/// Catmull-Rom would silently restore a kernel that did not produce the image.
+pub const fn restoration_supported(r: Resampler) -> bool {
+    !matches!(r, Resampler::ClampedCatmullRom)
+}
+
+fn assert_restoration_supported(r: Resampler) {
+    assert!(
+        restoration_supported(r),
+        "restoration refuses ClampedCatmullRom: clamping is nonlinear and has no \
+         shift-invariant tap response to invert"
+    );
+}
+
 /// One interpolation weight, for the kernel a [`Resampler`] uses.
 ///
 /// This **must** agree with `align.rs`'s samplers. It is written separately
@@ -145,6 +163,9 @@ fn tap(r: Resampler, t: f64) -> f64 {
                 0.0
             }
         }
+        Resampler::ClampedCatmullRom => {
+            unreachable!("nonlinear kernels must be refused before tap evaluation")
+        }
         Resampler::Lanczos2 | Resampler::Lanczos3 => {
             let n = if matches!(r, Resampler::Lanczos2) { 2.0 } else { 3.0 };
             if a >= n {
@@ -164,6 +185,9 @@ fn support(r: Resampler) -> i32 {
         Resampler::Nearest => 1,
         Resampler::Bilinear => 1,
         Resampler::CatmullRom | Resampler::Lanczos2 => 2,
+        Resampler::ClampedCatmullRom => {
+            unreachable!("nonlinear kernels must be refused before support evaluation")
+        }
         Resampler::Lanczos3 => 3,
     }
 }
@@ -177,6 +201,7 @@ fn support(r: Resampler) -> i32 {
 /// [`RestoreConfig::grid_factor`] exists so that conversion is a named value
 /// rather than a `2.0` somebody has to notice.
 pub fn gather_mtf(r: Resampler, f: f64) -> f64 {
+    assert_restoration_supported(r);
     let sup = support(r);
     let mut acc = 0.0;
     for p in 0..PHASE_SAMPLES {
@@ -561,6 +586,7 @@ fn fir_response(taps: &[f64], f: f64) -> f64 {
 pub fn restore_plane(plane: &mut [f32], w: usize, h: usize, cfg: &RestoreConfig) -> RestoreReport {
     const MAX_LAG: usize = 24;
     const HALF_TAPS: usize = 4;
+    assert_restoration_supported(cfg.resampler);
     let mut report = RestoreReport {
         sigma2: cfg.sigma2,
         dc_gain: 1.0,
@@ -671,8 +697,9 @@ pub fn restore_plane(plane: &mut [f32], w: usize, h: usize, cfg: &RestoreConfig)
     report
 }
 
-/// The two facts that hold for **any** interpolating kernel, checked rather
-/// than assumed. Exposed so a caller can run it, not only the test harness.
+/// The two facts that hold for every supported linear interpolating kernel,
+/// checked rather than assumed. Exposed so a caller can run it, not only the
+/// test harness. Nonlinear kernels are deliberately absent.
 pub fn selftest() -> Result<(), String> {
     for r in [
         Resampler::Nearest,
@@ -807,8 +834,32 @@ mod tests {
     }
 
     #[test]
-    fn kernels_are_interpolating_and_preserve_dc() {
+    fn supported_linear_kernels_are_interpolating_and_preserve_dc() {
         selftest().unwrap();
+    }
+
+    #[test]
+    fn restoration_refuses_the_nonlinear_clamped_kernel_before_mutating_pixels() {
+        assert!(!restoration_supported(Resampler::ClampedCatmullRom));
+        assert!(restoration_supported(Resampler::CatmullRom));
+
+        let (w, h) = (16, 16);
+        let mut plane = step_plane(w, h, -100.0, 100.0);
+        let before = plane.clone();
+        let cfg = RestoreConfig {
+            resampler: Resampler::ClampedCatmullRom,
+            grid_factor: 1.0,
+            sigma2: 1.0,
+            gain_cap: 2.0,
+        };
+        let refused = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            restore_plane(&mut plane, w, h, &cfg)
+        }));
+        assert!(refused.is_err(), "nonlinear restoration was accepted");
+        assert_eq!(
+            plane, before,
+            "restoration touched pixels before refusing the nonlinear kernel"
+        );
     }
 
     /// ORCH's acceptance criterion for the fold, with a positive control that

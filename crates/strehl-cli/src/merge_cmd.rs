@@ -232,6 +232,10 @@ pub struct MergeOptions {
     /// field existed. Whether the default should move is pre-registered in
     /// `docs/research/ORCH-kernel-decision.md` and is not this field's decision.
     ///
+    /// `clamped-catmull` is an opt-in nonlinear limiter. Its scalar hull
+    /// guarantee is not a spatial-fidelity result, and restoration is refused
+    /// for it because the restoration model requires a linear kernel.
+    ///
     /// It reaches pixels only through the **solve** path: with
     /// [`WARPMAP_ENV`] set the named sidecar carries its own resampler and wins,
     /// which [`alignment_for`] says out loud rather than silently ignoring the
@@ -2428,6 +2432,20 @@ fn alignment_for(
     Ok(Some((map, "sidecar-override")))
 }
 
+/// Refuse restoration when the gather has no linear response to invert.
+///
+/// This is called immediately before each [`strehl_core::restore::RestorePlan`]
+/// construction. Continuing with ordinary Catmull-Rom's response would be a
+/// silent kernel substitution, not a conservative approximation.
+fn ensure_restoration_supported(resampler: Resampler) -> Result<()> {
+    ensure!(
+        strehl_core::restore::restoration_supported(resampler),
+        "restoration requested for {resampler:?}, but clamped-catmull is nonlinear and has \
+         no shift-invariant MTF to invert; refusing rather than restoring the wrong kernel"
+    );
+    Ok(())
+}
+
 /// The environment variable that asks for an election map without a flag.
 const ELECTION_ENV: &str = "STREHL_DUMP_ELECTION";
 
@@ -4468,6 +4486,20 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     };
 
     if let Some(path) = &opts.out {
+        let restore = match (
+            strehl_core::restore::gain_cap_from_env(),
+            alignment.as_ref(),
+        ) {
+            (Some(cap), Some((m, _, _))) => {
+                ensure_restoration_supported(m.resampler())?;
+                Some(strehl_core::restore::RestorePlan {
+                    resampler: m.resampler(),
+                    gain_cap: cap,
+                    noise: &noise,
+                })
+            }
+            _ => None,
+        };
         write_merged(
             Merged::Estimated {
                 est: &p2.est[0],
@@ -4479,15 +4511,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
             opts.space,
             opts.demosaic,
             exposure,
-            strehl_core::restore::gain_cap_from_env().and_then(|cap| {
-                alignment
-                    .as_ref()
-                    .map(|(m, _, _)| strehl_core::restore::RestorePlan {
-                        resampler: m.resampler(),
-                        gain_cap: cap,
-                        noise: &noise,
-                    })
-            }),
+            restore,
             path,
         )?;
     }
@@ -5972,6 +5996,20 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).ok();
     }
+    let restore = match (
+        strehl_core::restore::gain_cap_from_env(),
+        alignment.as_ref(),
+    ) {
+        (Some(cap), Some((m, _, _))) => {
+            ensure_restoration_supported(m.resampler())?;
+            Some(strehl_core::restore::RestorePlan {
+                resampler: m.resampler(),
+                gain_cap: cap,
+                noise: &noise,
+            })
+        }
+        _ => None,
+    };
     write_merged(
         Merged::Bands {
             domain,
@@ -5983,15 +6021,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         opts.space,
         opts.demosaic,
         exposure,
-        strehl_core::restore::gain_cap_from_env().and_then(|cap| {
-            alignment
-                .as_ref()
-                .map(|(m, _, _)| strehl_core::restore::RestorePlan {
-                    resampler: m.resampler(),
-                    gain_cap: cap,
-                    noise: &noise,
-                })
-        }),
+        restore,
         path,
     )?;
     eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
@@ -7622,6 +7652,16 @@ fn write_merged(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn restoration_accepts_linear_kernels_and_refuses_clamped_catmull() {
+        ensure_restoration_supported(Resampler::CatmullRom).unwrap();
+        let e = ensure_restoration_supported(Resampler::ClampedCatmullRom)
+            .expect_err("nonlinear restoration must be refused");
+        let msg = e.to_string();
+        assert!(msg.contains("clamped-catmull"), "{msg}");
+        assert!(msg.contains("nonlinear"), "{msg}");
+    }
 
     fn extraction_fixture() -> (Vec<u16>, usize, usize, usize, PlaneGeometry) {
         let full = PlaneGeometry {

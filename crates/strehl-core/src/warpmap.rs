@@ -540,8 +540,14 @@ fn hex_f64(s: &str, key: &str) -> Result<f64, WarpMapError> {
 /// (`docs/research/M118-resampler.md` §7, Y6). Two mappings for one vocabulary
 /// is how that happens, so the CLI now parses through
 /// [`resampler_from_name`] and this is the only list.
-pub const RESAMPLER_NAMES: [&str; 5] =
-    ["nearest", "bilinear", "catmull-rom", "lanczos2", "lanczos3"];
+pub const RESAMPLER_NAMES: [&str; 6] = [
+    "nearest",
+    "bilinear",
+    "catmull-rom",
+    "clamped-catmull",
+    "lanczos2",
+    "lanczos3",
+];
 
 /// The sidecar spelling of a resampler. Round-trips with
 /// [`resampler_from_name`], which `every_resampler_survives_a_name_round_trip`
@@ -554,6 +560,7 @@ pub fn resampler_name(r: Resampler) -> &'static str {
         Resampler::Nearest => "nearest",
         Resampler::Bilinear => "bilinear",
         Resampler::CatmullRom => "catmull-rom",
+        Resampler::ClampedCatmullRom => "clamped-catmull",
         Resampler::Lanczos2 => "lanczos2",
         Resampler::Lanczos3 => "lanczos3",
     }
@@ -570,6 +577,7 @@ pub fn resampler_from_name(s: &str) -> Option<Resampler> {
         "nearest" => Some(Resampler::Nearest),
         "bilinear" => Some(Resampler::Bilinear),
         "catmull-rom" => Some(Resampler::CatmullRom),
+        "clamped-catmull" => Some(Resampler::ClampedCatmullRom),
         "lanczos2" => Some(Resampler::Lanczos2),
         "lanczos3" => Some(Resampler::Lanczos3),
         _ => None,
@@ -969,6 +977,7 @@ mod tests {
             Resampler::Nearest,
             Resampler::Bilinear,
             Resampler::CatmullRom,
+            Resampler::ClampedCatmullRom,
             Resampler::Lanczos2,
             Resampler::Lanczos3,
         ] {

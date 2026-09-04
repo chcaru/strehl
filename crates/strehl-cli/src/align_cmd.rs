@@ -114,9 +114,14 @@ pub struct AlignArgs {
     pub threads: usize,
 
     /// Interpolator recorded in the sidecar for the merge to gather with:
-    /// nearest, bilinear, catmull-rom, lanczos2 or lanczos3.
+    /// nearest, bilinear, catmull-rom, clamped-catmull, lanczos2 or lanczos3.
     ///
     /// See `WarpMap::set_resampler` for exactly how evidenced this default is.
+    ///
+    /// `clamped-catmull` limits each Catmull-Rom result to the range of its 16
+    /// taps. That guarantees scalar hull containment, not spatial fidelity: it
+    /// is nonlinear and can flatten extrema or alter harmonics. It is opt-in,
+    /// and restoration refuses it because there is no linear MTF to invert.
     ///
     /// COST: the sharper kernels are not free. Measured as a BOUND on a loaded
     /// machine (M118 Y10), lanczos3 costs roughly 2.9x-3.9x the default's merge
@@ -2763,6 +2768,10 @@ mod tests {
         for (label, other) in [
             ("reference", solve_config_key(40, &spans, Resampler::CatmullRom)),
             ("resampler", solve_config_key(20, &spans, Resampler::Bilinear)),
+            (
+                "catmull versus clamped catmull resampler",
+                solve_config_key(20, &spans, Resampler::ClampedCatmullRom),
+            ),
             ("spans", solve_config_key(20, &[1, 2], Resampler::CatmullRom)),
         ] {
             assert_ne!(base, other, "{label} does not change the cache key");
