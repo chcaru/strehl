@@ -2424,6 +2424,75 @@ and not an admitted 8/8 residual failure. Its negative answer does not rest on
 them. A lane that disowns its own supporting numbers when they fail a null is
 behaving correctly.
 
+### 2.9.18 The candidates were never tested against truth -- and a prediction, registered before the answer
+
+`docs/research/M-CAND2.md`, frontier audit appended, commit `b3f54737`. I asked
+every dead candidate one question: what did it read on the **genuine optical
+improvement** arm? A statistic that reads sharpening up *and* real improvement
+up is still usable as one coordinate of a two-axis instrument. One that reads
+real improvement *down* is useless in any pairing.
+
+The answer is a gap, not a verdict:
+
+| statistic | USM | genuine improvement | physical blur |
+|---|---:|---:|---:|
+| Candidate 1 finite-observer `J_q` | `1.095732` | **NOT RUN** | **NOT RUN** |
+| Candidate 2 native full-covariance | `1.0000000000000266` | **NOT RUN** | **NOT RUN** |
+| Candidate 2 display-referred | `1.0000000000000009` | **NOT RUN** | **NOT RUN** |
+
+Every lane-owned optical arm was stopped upstream. So the one measured
+wrong-signed optical reading in the program remains `Q25` at `0.977981`, and
+**whether that wrong sign is universal or particular to `Q25` is unknown.** Six
+families were retired without anyone checking whether they track truth.
+
+**This is the churn diagnosis of `2026-08-sota-path.md:264-267` in miniature:**
+candidates were killed on invariance properties before anyone asked the only
+question that decides whether they measure anything real.
+
+**The measurement is cheap.** Candidate 2's blur and improvement paths are
+already implemented; the frozen runner correctly refuses them behind a closed
+mandatory gate. Filling both cells needs a fresh preregistration authorising a
+post-mortem sign measurement, two existing 480-site invocations, and a checker.
+Compute is minutes. No new capture. It is commissioned.
+
+**My prediction, registered here before the result exists.** I expect **blur to
+read approximately `1.0`**, at the same precision as the USM invariance, and I
+expect it for an algebraic reason rather than a hunch.
+
+An unsharp mask is `I + a(I - G*I) = ((1+a)*delta - a*G) * I`. **Unclipped USM
+is therefore exactly a linear shift-invariant filter**, and the evidence file
+behind the fifteen-decimal invariance is named `unclipped-usm.json`. I checked
+that identity numerically rather than asserting it: the largest disagreement
+between `I + a(I - G*I)` and the single kernel `((1+a)*delta - a*G) * I` over a
+4096-sample random signal at `a = 1.7` is `6.661e-16`, i.e. floating-point
+zero. Gaussian blur is exactly LSI too. If candidate 2's invariance is generic to common LSI
+filters, it is invariant to blur by the identical mechanism -- and **invariance
+to blur is blindness, not robustness.**
+
+This repository has already bought that lesson once. `M-FRC-VIABILITY.md:11-12`
+records that for FRC, common post-noise filtering is an **"ideal null."** FRC
+could not be fooled upward by sharpening and could not see blur, and those were
+one property, not two. **Candidate 2 may be FRC wearing a Hotelling coat.**
+
+Three outcomes are named in advance so none can be rationalised afterwards:
+
+1. **blur ~ 1.0 and improvement ~ 1.0** -- structurally blind, an FRC repeat.
+   The family dies, and we gain a general rule: any statistic exactly invariant
+   to unclipped USM is invariant to blur, because both are LSI. That rule would
+   let future candidates be rejected on paper before being built.
+2. **blur ~ 1.0 and improvement clearly above 1** -- the prize. Genuine optical
+   improvement is *not* a common linear filter applied to the same image; it is
+   a different physical measurement carrying real added information. A statistic
+   blind to every LSI operation yet responsive to true resolution gain is
+   exactly what the detail axis requires: immune to sharpening by construction,
+   sensitive to truth.
+3. **blur clearly away from 1.0** -- the invariance is not generic-LSI and my
+   prediction is wrong.
+
+The lane has been told plainly that I would rather be publicly wrong than have
+a reading shaded toward my prior, and that it must not adjudicate its own
+result. An independent lane verifies before anything here is updated.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
