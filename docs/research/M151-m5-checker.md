@@ -206,18 +206,13 @@ F1 deliberately works with a single complete pass, so it does not demand a
 frame type absent from legacy M5 holdouts; the new A/B passes improve
 precision but do not change the estimator.
 
-**The scored sitting is structurally sufficient for its controlled-slide M5
-arm, but the pre-shutter proof is not yet sufficient.** The documented
-768-frame rehearsal contains TC0 focus ladders and a converter-on fixed-focus
-atlas, not converter-on `sw4/sw10` M5 ladders
-(`docs/OWNER-ACTIONS.md:290-301`). Existing converter-on development stacks
-are IBIS-on single passes. They can commission this checker, but they cannot
-prove that the final patch and tilt will yield at least 50 eligible native
-128-pixel sites in both the planned 55- and 27-frame converter-on arms.
-Before the 891 sequence, run an exact-configuration converter-on M5 rehearsal
-or an owner-approved equivalent input-only gate proving that count and
-gap-free depth support on the final patch. This is a preflight omission, not a
-request for another frame type inside the sealed 891 sitting.
+At freeze, I judged the pre-shutter proof insufficient because the rehearsal
+has TC0 focus ladders rather than converter-on `sw4/sw10` ladders. That
+inference was also based on an unlabelled 64-site sample and the nominal
+50-site floor. **It is superseded by the exhaustive census and A ruling
+below:** the existing final-patch/final-tilt TC0 rehearsal is the
+owner-approved input-only feasibility gate, and its effective minimum is 133
+eligible tiles per capture, not 50.
 
 The 891 arm also cannot alone satisfy comparator parity or establish the whole
 pooled M5 score; the registered ruler/natural holdouts and commercial
@@ -246,17 +241,27 @@ Run from the `strehl` repository root:
 ```powershell
 python experiments/M151-m5-checker/checker.py self-test
 python experiments/M151-m5-checker/test_checker.py
+python experiments/M151-m5-checker/test_full_population.py
 python experiments/M151-m5-checker/commission.py --refresh
 python experiments/M151-m5-checker/verify_results.py
+python experiments/M151-m5-checker/full_population.py --refresh
+python experiments/M151-m5-checker/verify_full_population.py
 ```
 
-The self-test exits 0. The unit suite runs 14 tests and exits 0. The full
+The self-test exits 0. The core unit suite runs 14 tests and the census suite
+runs 5 tests; both exit 0. The full
 commission command forces all numerical thread pools to one, reads 174
 explicitly development/burned RAWs in 67.9 seconds of RAW preparation on this
 run, writes only under the lane, and exits **1** because the real-input site
 count and exact-length capture-sufficiency controls correctly remain red.
 `commission-results.json` is the compact result; detailed manifests and site
 rows are reproducible caches under ignored `out/`.
+
+The exhaustive command serially rereads only the three named
+burned/development stacks and writes
+`full-population-results.json`. `verify_full_population.py` checks its frozen
+definition hash, active-area arithmetic, all four eligibility counts, selected
+window and Wilson feasibility.
 
 ### Null, defect, improvement, and FOV magnitudes
 
@@ -306,6 +311,35 @@ The best 27-frame development window was nodes 6-32. Its median point ratio
 was 1.39945 and maximum 12.3001. Because point ratio `>=2` is conjunctive, 15
 is a hard upper bound even before bootstrap; the frozen combined result is 13.
 
+### Exhaustive-census correction
+
+The 64 sites above were **not the candidate population**. They were an imposed
+fixed 8x8 M131-style grid subsample, chosen to bound the first commissioning
+run. `rawpy.raw_image_visible` is 7028x4688 pixels. Before eligibility, it
+contains
+
+```
+floor(7028 / 128) * floor(4688 / 128)
+= 54 * 36
+= 1,944 complete, non-overlapping candidate tiles
+```
+
+with 116 pixels left at the right and 80 at the bottom. The exhaustive
+input-only census produced:
+
+| development arm | point-qualified / 1,944 | bootstrap-eligible / 1,944 |
+| --- | ---: | ---: |
+| burned grid, exact sw4/55 | **0** | **0** |
+| burned grid, exact sw10/27 | **0** | **0** |
+| tilted sw10, full 92 | **69** | **53** |
+| tilted sw10, best exact 27-frame window (nodes 9-35) | **328** | **275** |
+
+The exact-27 tilted result has an all-success Wilson LCB95 of **0.990258**.
+Thus the earlier `13/64` result was a sample count, not evidence that the
+geometry could not reach 133. The exhaustive result proves that an exact-length
+tilted capture can exceed the effective Wilson minimum. It does not rescue the
+planar burned grid, whose complete populations remain 0/1,944.
+
 Existing M131 focus curves independently show the same broad-through-focus
 mechanism with different statistics: best/far-at-three ratios reached the 2.0
 bar at **0/64** sites for Tenengrad and Laplacian on both sw4 and sw10. Their
@@ -321,34 +355,43 @@ sample size.
 
 ## Final capture-sufficiency ruling
 
-The sealed 891-frame sitting is **structurally complete but not empirically
-sufficient for M5 as presently planned**.
+**A — measurable on the 768-frame rehearsal as already specified; added frame
+cost: zero.** The full census changes the earlier ruling. The rehearsal already
+contains the required final-patch/final-tilt input ladders:
+`TC0-sw4-A/B` at 55 frames and `TC0-sw10-A/B` at 27 frames. M5 eligibility and
+best-frame election are input-only, so these four named captures can be read
+without rendering an output and without touching the sealed holdout.
 
-It does contain every frame type the checker consumes: converter-on paired
-sw4/sw10 passes, dense sw1, independent calibration, ordered nodes, witnesses,
-and a full-frame FOV reference. No additional frame type is required inside
-the scored sitting. Its 2048x2048 patch also has geometric room for 256
-non-overlapping 128-pixel M5 tiles.
+Add this M5 rehearsal exit gate:
 
-What is missing is an exact-configuration **converter-on M5 rehearsal on the
-final patch and tilt**. It must run this frozen input-only manifest separately
-on the planned 55-frame sw4 and 27-frame sw10 arms and demonstrate:
+1. enumerate all complete non-overlapping 128x128 tiles in the RAW-visible
+   rectangle using the fixed origin `(0,0)`;
+2. for sw4, average the block cross-powers from the complete A and B passes
+   **before** regularisation, best-frame election, ratios, and bootstrap; do
+   the same independently for sw10;
+3. require **at least 133 eligible tiles in the pass-averaged sw4 manifest**;
+4. require **at least 133 eligible tiles in the pass-averaged sw10 manifest**;
+   and
+5. require **at least 133 common eligible physical tiles in the intersection
+   of those two required step-width manifests**.
 
-1. at least **133 distinct eligible 128x128 physical tiles per capture**
-   (not 64 larger M1 sites and not merely the nominal 50);
-2. enough distinct elected depths that the largest Voronoi depth cell and any
-   one failure do not make the 1% run bar meaningless;
-3. interior peaks and gap-free depth support in both arms; and
-4. the same input geometry needed to reconstruct retained FOV.
+Failure of any one count is a stop: do not shoot the 891-frame session until
+the target/framing/sweep is corrected in another non-holdout rehearsal. The
+intersection count is the controlled-slide capture's effective Wilson
+denominator after the frozen within-session duplicate collapse; 133/133 has
+LCB95 0.980063. Do **not** count A, B, sw4 and sw10 as four independent
+populations. The scorecard's 500-overall floor must be met by distinct physical
+sites across the full registered M5 capture set; this one rehearsal cannot
+commission that future pooled total. This is a feasibility gate, not an M5
+score: the converter-off rehearsal does not replace the converter-on holdout
+outcome. The existing G0-G3, gap-free-depth, M147 and physical-control gates
+remain independently required.
 
-The documented 768-frame rehearsal contains TC0 ladders and a converter-on
-fixed-focus atlas, not the converter-on through-focus M5 arms. Existing exact
-55/27 converter-on data measured 0/64 eligible on the burned grid. Therefore
-the 891 must not be shot on the assumption that its current target will pass.
-If the exact rehearsal misses, the owner must enlarge/change the nonperiodic
-target, change tilt/step sampling, or explicitly amend/retire the
-three-node/2.0 eligibility clause before capture. More sealed frames of the
-same unverified design are not a repair.
+The sealed sitting is therefore **conditionally sufficient for M5 if this
+rehearsal gate passes**. It contains the scored through-focus arms, ordered
+nodes, witnesses, independent calibration and FOV reference. M5 requires no
+extra frame type or configuration beyond the already specified rehearsal and
+scored blocks.
 
 ## Can this bar bite?
 
@@ -358,14 +401,13 @@ localized a failed run in both, rejected a 2% crop, rejected far-only outputs,
 and moved 100 points in the planted-improvement direction. It is not an
 always-green statistic and its error sign is not one-sided by construction.
 
-**The complete registered bar cannot yet bite on a claim-bearing real
-population.** Its input-only eligibility denominator is underfilled by more
-than an order of magnitude on the available exact-length data, so the correct
-verdict is `UNMEASURED`, not pass. `all_commissioned` is consequently `false`.
-If an exact final-patch rehearsal cannot reach 133 sites, retaining the current
-eligibility clause would create a bar that rejects every real candidate before
-examining an output. Retiring or amending that clause would then be more honest
-than calling the checker commissioned.
+**The complete registered bar can bite, but no claim-bearing population has
+yet been read.** The exact-27 development census supplies 275 eligible sites,
+so the 133-site Wilson requirement is reachable without lowering the frozen
+optical threshold. `all_commissioned` remains `false` because no scored
+common-input/output population exists. If the exact final-patch rehearsal
+cannot reach 133 sites per capture, the correct action is to stop and repair
+the capture design, not move the bar.
 
 ## Not commissioned
 
@@ -376,8 +418,11 @@ than calling the checker commissioned.
 - No production Strehl or commercial-comparator output was rendered. The
   complete and defective outputs are input-only oracle tile mosaics. This
   avoided sustained rendering during M139's timing campaign.
-- The real null/defect response has only four eligible sites and therefore
-  does not commission Wilson, per-capture coverage, or comparator parity.
+- The accepted real null/defect response used four eligible sites from the
+  original 64-site sample and therefore does not commission Wilson,
+  per-capture coverage, or comparator parity. The later census found 53
+  eligible sites over the full 92-frame tilted stack and 275 in a
+  development-selected exact-27 window; it tested eligibility, not outputs.
 - The source-signal noise null uses independent centered cross-power at unit
   scale. Because the eligibility ratios are scale-invariant it exercises the
   zero-signal sign path, but it does not reproduce measured sensor

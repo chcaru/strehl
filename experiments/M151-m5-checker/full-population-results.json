@@ -1,0 +1,208 @@
+{
+  "active_area_arithmetic": {
+    "bottom_remainder_px": 80,
+    "candidate_columns": 54,
+    "candidate_rows": 36,
+    "candidate_tiles": 1944,
+    "formula": "floor(7028/128) * floor(4688/128) = 54 * 36 = 1944",
+    "height": 4688,
+    "right_remainder_px": 116,
+    "tile_side_px": 128,
+    "width": 7028
+  },
+  "arms": {
+    "burned_grid_sw10_exact_27": {
+      "all_success_wilson_lcb95": null,
+      "bootstrap_eligible_count": 0,
+      "bootstrap_subset_manifest_sha256": "c1d9e0c22b9479c8a94e0cdc3cc68f309db10f0a0ffd2501a1f8db392c6a126a",
+      "bootstrap_tested_point_eligible": 0,
+      "capture_id": "full-burned-grid-sw10-exact-27",
+      "effective_wilson_minimum_met": false,
+      "end_node_inclusive": 26,
+      "maximum_point_ratio": 1.3532286445473742,
+      "median_finite_point_ratio": 1.1672658779047984,
+      "point_eligible_count": 0,
+      "point_ineligible_skipped_bootstrap": 1944,
+      "site_count": 1944,
+      "start_node": 0,
+      "window_nodes": 27
+    },
+    "burned_grid_sw4_exact_55": {
+      "all_success_wilson_lcb95": null,
+      "bootstrap_eligible_count": 0,
+      "bootstrap_subset_manifest_sha256": "d3c5cc0a21b7bfe25ee201a6282a1f222149b76332dd6e4608b3bfd1f86ae597",
+      "bootstrap_tested_point_eligible": 0,
+      "capture_id": "full-burned-grid-sw4-exact-55",
+      "effective_wilson_minimum_met": false,
+      "end_node_inclusive": 54,
+      "maximum_point_ratio": 1.1359457158442097,
+      "median_finite_point_ratio": 1.0261195303758521,
+      "point_eligible_count": 0,
+      "point_ineligible_skipped_bootstrap": 1944,
+      "site_count": 1944,
+      "start_node": 0,
+      "window_nodes": 55
+    },
+    "tilted_sw10_best_27": {
+      "all_success_wilson_lcb95": 0.9902575100934469,
+      "bootstrap_eligible_count": 275,
+      "bootstrap_subset_manifest_sha256": "9cd84870f30353827509d092b0a2f5b0820a9d155c5305fcd8da37ac00fc3138",
+      "bootstrap_tested_point_eligible": 328,
+      "capture_id": "full-development-tilted-sw10-best-27",
+      "effective_wilson_minimum_met": true,
+      "end_node_inclusive": 35,
+      "maximum_point_ratio": 13.294321824787417,
+      "median_finite_point_ratio": 1.3546581456543245,
+      "point_eligible_count": 328,
+      "point_ineligible_skipped_bootstrap": 1616,
+      "site_count": 1944,
+      "start_node": 9,
+      "window_nodes": 27,
+      "windows_evaluated": 66
+    },
+    "tilted_sw10_full_92": {
+      "all_success_wilson_lcb95": 0.951431342621674,
+      "bootstrap_eligible_count": 53,
+      "bootstrap_subset_manifest_sha256": "4f3093ad0fac579e90978f2ca358257dee489d8c13174c74e1bd64865c95448b",
+      "bootstrap_tested_point_eligible": 69,
+      "capture_id": "full-development-tilted-sw10-92",
+      "effective_wilson_minimum_met": false,
+      "end_node_inclusive": 91,
+      "maximum_point_ratio": 4.821000801159298,
+      "median_finite_point_ratio": 1.1261360767675077,
+      "point_eligible_count": 69,
+      "point_ineligible_skipped_bootstrap": 1875,
+      "site_count": 1944,
+      "start_node": 0,
+      "window_nodes": 92
+    }
+  },
+  "definitions_sha256": "04bad98c8bb8099f3a674d464ffbf72f57c97559d038af07e4ee8d450731b09f",
+  "inventories": {
+    "burned_grid_sw10": {
+      "expected_frames": 27,
+      "first_file": "DSC00008.ARW",
+      "frames": 27,
+      "geometry": {
+        "black_levels": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "height": 4688,
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "white_level": 16383,
+        "width": 7028
+      },
+      "last_file": "DSC00034.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+      "tile_geometry": {
+        "bottom_remainder_px": 80,
+        "candidate_columns": 54,
+        "candidate_rows": 36,
+        "candidate_tiles": 1944,
+        "height": 4688,
+        "right_remainder_px": 116,
+        "tile_side_px": 128,
+        "width": 7028
+      },
+      "total_source_bytes": 1236983808
+    },
+    "burned_grid_sw4": {
+      "expected_frames": 55,
+      "first_file": "DSC00015.ARW",
+      "frames": 55,
+      "geometry": {
+        "black_levels": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "height": 4688,
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "white_level": 16383,
+        "width": 7028
+      },
+      "last_file": "DSC00069.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+      "tile_geometry": {
+        "bottom_remainder_px": 80,
+        "candidate_columns": 54,
+        "candidate_rows": 36,
+        "candidate_tiles": 1944,
+        "height": 4688,
+        "right_remainder_px": 116,
+        "tile_side_px": 128,
+        "width": 7028
+      },
+      "total_source_bytes": 2513940480
+    },
+    "tilted_sw10": {
+      "expected_frames": 92,
+      "first_file": "DSC00016.ARW",
+      "frames": 92,
+      "geometry": {
+        "black_levels": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "height": 4688,
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "white_level": 16383,
+        "width": 7028
+      },
+      "last_file": "DSC00107.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+      "tile_geometry": {
+        "bottom_remainder_px": 80,
+        "candidate_columns": 54,
+        "candidate_rows": 36,
+        "candidate_tiles": 1944,
+        "height": 4688,
+        "right_remainder_px": 116,
+        "tile_side_px": 128,
+        "width": 7028
+      },
+      "total_source_bytes": 3662270464
+    }
+  },
+  "prior_64_site_design": {
+    "columns": 8,
+    "kind": "fixed grid subsample",
+    "reason": "matched the pre-existing M131 8x8 focus-coverage audit and bounded commissioning cost; it was not the candidate population",
+    "rows": 8,
+    "sites": 64
+  },
+  "protocol": "M151-M5-full-population-v1"
+}

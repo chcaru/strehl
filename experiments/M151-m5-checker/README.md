@@ -32,8 +32,11 @@ From the repository root:
 ```powershell
 python experiments/M151-m5-checker/checker.py self-test
 python experiments/M151-m5-checker/test_checker.py
+python experiments/M151-m5-checker/test_full_population.py
 python experiments/M151-m5-checker/commission.py --refresh
 python experiments/M151-m5-checker/verify_results.py
+python experiments/M151-m5-checker/full_population.py --refresh
+python experiments/M151-m5-checker/verify_full_population.py
 ```
 
 The full commissioning command is serial (`OMP_NUM_THREADS`,
@@ -44,6 +47,17 @@ only beneath this directory. Prepared spectra and detailed rows are cached in
 Commissioning intentionally exits 1 while the two real-input eligibility
 controls remain red. `verify_results.py` exits 0 only when that partial verdict
 and every measured magnitude reproduce exactly.
+
+`full_population.py --refresh` is the exhaustive follow-up to the original
+fixed 8x8 development sample. It streams every RAW-visible complete 128x128
+tile (54x36 = 1,944 at 7028x4688) and writes the compact
+`full-population-results.json`. It reads only the same burned/development
+stacks listed in that result. The point-ratio conjunction is evaluated for all
+1,944 sites; the expensive 10,000-draw bootstrap is skipped only for point
+failures, which cannot become eligible under the frozen AND rule.
+`rehearsal_gate()` applies the future rehearsal rule in the required order:
+average complete A/B block cross-powers within each step width, elect and test
+eligibility, then intersect the eligible physical sites across sw4 and sw10.
 
 For direct two-phase use:
 
