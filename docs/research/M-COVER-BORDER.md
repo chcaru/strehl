@@ -2,6 +2,16 @@
 
 Date: 2026-09-03
 
+> **Correction frozen before follow-up scoring.** The two-worker b2/b7
+> rerenders reported below do not equal the old cover-default files. The
+> previous sentence claiming exact equality was wrong. Consequently,
+> `profile-final.json` combined a fresh two-worker b4 with old b2/b7 files and
+> the real 8/40/264 causal ladder is withdrawn pending a matched-worker rerun.
+> The source-ordering audit, exact coverage audit, synthetic commission, and
+> original matched b7/b2 Scale-versus-Crop conserved-error test are unaffected.
+> Predicates for the correction and the newly assigned numerical contradiction
+> are frozen in `CONTRADICTION-PREREGISTRATION.md`.
+
 ## Verdict
 
 The mechanism is **late-crop black-fill boundary poisoning followed by
@@ -500,15 +510,18 @@ All omitted CLI options retained executable defaults. The complete stderr/stdout
 record is `results/render-b4.log`.
 
 After the final score, b2 and b7 were independently rerendered under the same
-two-worker/six-thread environment as a hash reproduction check:
+two-worker/six-thread environment:
 
 ```text
 b2: 10F7DEAF5A82CA2A311C76A323AE5627207520E7DA3BB71D237BB861CC7CC977
 b7: 0465D253F14431CE76BA1DD68E54C1BD2CBAE56DA17F079D5DD572852FCAD304
 ```
 
-Both hashes exactly equal the preregistered existing b2/b7 inputs. Their logs
-are `results/render-b2.log` and `results/render-b7.log`.
+They **do not** equal the preregistered existing b2/b7 inputs
+(`02C147...` and `B2489C...`). They were not used by
+`profile-final.json`; that file used the old inputs. Their logs are
+`results/render-b2.log` and `results/render-b7.log`. The resulting worker/order
+confound in the b4 ladder is the subject of the frozen follow-up above.
 
 Instrument commands:
 
