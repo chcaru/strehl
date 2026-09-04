@@ -661,7 +661,20 @@ function Prepare {
     $merge = [IO.File]::ReadAllText(
         (Join-Path $PatchedSnapshot "crates\strehl-cli\src\merge_cmd.rs")
     )
-    if ($merge.IndexOf("cover: Cover::Crop", [StringComparison]::Ordinal) -lt 0) {
+    if (
+        $merge.IndexOf(
+            "if mode != align_cmd::CoverMode::Crop",
+            [StringComparison]::Ordinal
+        ) -lt 0 -or
+        $merge.IndexOf(
+            "return PyramidDomain::cropped(full, rect);",
+            [StringComparison]::Ordinal
+        ) -lt 0 -or
+        $merge.IndexOf(
+            "Crop has already happened while preparing each frame.",
+            [StringComparison]::Ordinal
+        ) -lt 0
+    ) {
         throw "Private snapshot does not contain the post-M130 Crop path"
     }
     Copy-RegisteredMaps
