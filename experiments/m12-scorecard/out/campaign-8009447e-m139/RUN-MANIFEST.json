@@ -30,10 +30,10 @@
     }
   },
   "evidence_tag": "VERIFIED",
-  "generated_utc": "2026-09-04T10:06:24.484652+00:00",
+  "generated_utc": "2026-09-04T10:49:08.823473+00:00",
   "harness": {
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
-    "sha256": "75A342629B47F2E8BAF023B45B2D96D43E398C281078AD02512FEFE500CF1ABE"
+    "sha256": "A36A74B0304EF519C060781301DA9CCC740B330D6D9E37987975DE82D9DCC978"
   },
   "host_load_gate": {
     "application": "Every formal warm-up and scored invocation waits for the preload gate; any invocation crossing the during-run gate is preserved as rejected and repeated in the same position.",
@@ -136,7 +136,7 @@
   },
   "registration": {
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\registration.json",
-    "sha256": "E8494F150F6DDA7AC23C424E789654ED70FEE13D4217B73199A978C26173E8D0"
+    "sha256": "9CBA00A78BC4E5059323735A49C04FD4A328F113CFFA685AD5E84C4241D7C8EA"
   },
   "registration_status": "registered",
   "schema": 1,

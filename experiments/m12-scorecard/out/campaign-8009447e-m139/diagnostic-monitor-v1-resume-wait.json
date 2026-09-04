@@ -1,0 +1,594 @@
+{
+  "schema": 1,
+  "evidence_tag": "VERIFIED",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "started_utc": "2026-09-04T10:30:00.6265198Z",
+  "completed_utc": "2026-09-04T10:37:35.2105182Z",
+  "criterion": "six consecutive 5-second samples <=10% whole-host busy and no strehl/cargo/rustc/ExifTool process",
+  "attempts": [
+    {
+      "utc": "2026-09-04T10:30:06.3855769Z",
+      "mean_busy_percent": 36.90631541015829,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 37036,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge estimator --photometric off --limit 20 --gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-sidecar-p1\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:30:23.5643940Z",
+      "mean_busy_percent": 96.88973658234531,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 44844,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge estimator --photometric off --limit 20 --gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:30:38.6660653Z",
+      "mean_busy_percent": 9.245644514000741,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 44844,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge estimator --photometric off --limit 20 --gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:30:54.7029704Z",
+      "mean_busy_percent": 65.08297085190942,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 44844,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge estimator --photometric off --limit 20 --gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:31:11.7931207Z",
+      "mean_busy_percent": 91.91784029263451,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 44844,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge estimator --photometric off --limit 20 --gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:31:27.8998376Z",
+      "mean_busy_percent": 81.92897739299916,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 44844,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge estimator --photometric off --limit 20 --gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:31:42.9821833Z",
+      "mean_busy_percent": 9.482756122704565,
+      "contender_count": 2,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:31:58.0417826Z",
+      "mean_busy_percent": 25.92746603085083,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 35040,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-p1\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:32:13.1219839Z",
+      "mean_busy_percent": 10.603752681173383,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 35040,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-p1\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:32:28.1948452Z",
+      "mean_busy_percent": 20.44815532377622,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 15312,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:32:43.2798420Z",
+      "mean_busy_percent": 6.327520436617005,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 15312,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:32:58.5522695Z",
+      "mean_busy_percent": 34.14711635996269,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 19992,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p1\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:33:14.2589017Z",
+      "mean_busy_percent": 50.890065846182466,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 19992,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p1\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:33:30.1705635Z",
+      "mean_busy_percent": 84.31987666160909,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 19992,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p1\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:33:45.7291140Z",
+      "mean_busy_percent": 50.60328500205432,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 19992,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p1\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:34:01.6505822Z",
+      "mean_busy_percent": 55.86703851563725,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 45828,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:34:17.6726707Z",
+      "mean_busy_percent": 88.11917568394628,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 45828,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:34:32.9297717Z",
+      "mean_busy_percent": 49.532664882418274,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 45828,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:34:49.2451056Z",
+      "mean_busy_percent": 51.10358750967723,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 45828,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:35:04.3313227Z",
+      "mean_busy_percent": 10.503808812706097,
+      "contender_count": 3,
+      "contenders": [
+        {
+          "pid": 33092,
+          "parent_pid": 12168,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.cargo\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 38312,
+          "parent_pid": 33092,
+          "name": "cargo.exe",
+          "command_line": "\"C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe\" test -p strehl-cli --test byte-freeze"
+        },
+        {
+          "pid": 45828,
+          "parent_pid": 40120,
+          "name": "strehl.exe",
+          "command_line": "\"C:\\dev\\verify-target-M130\\debug\\strehl.exe\" stack D:\\personal\\macro\\coffee-bean --merge pyramid --limit 20 --pyramid-gate 2.0 --out C:\\Users\\chris\\AppData\\Local\\Temp\\strehl-freeze-40120-coffee-bean-20-gate2-pyramid-sidecar-p2\\render.tif"
+        }
+      ],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:35:19.4223921Z",
+      "mean_busy_percent": 6.892162824185261,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 1
+    },
+    {
+      "utc": "2026-09-04T10:35:34.5048202Z",
+      "mean_busy_percent": 8.07681988568863,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 2
+    },
+    {
+      "utc": "2026-09-04T10:35:49.6086263Z",
+      "mean_busy_percent": 33.47234917469426,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:36:04.6928721Z",
+      "mean_busy_percent": 13.036349581074365,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 0
+    },
+    {
+      "utc": "2026-09-04T10:36:19.7749981Z",
+      "mean_busy_percent": 5.077313041128152,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 1
+    },
+    {
+      "utc": "2026-09-04T10:36:34.8550034Z",
+      "mean_busy_percent": 9.47486723673975,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 2
+    },
+    {
+      "utc": "2026-09-04T10:36:49.9471873Z",
+      "mean_busy_percent": 5.674197373362633,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 3
+    },
+    {
+      "utc": "2026-09-04T10:37:05.0154781Z",
+      "mean_busy_percent": 4.234538064804939,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 4
+    },
+    {
+      "utc": "2026-09-04T10:37:20.1150976Z",
+      "mean_busy_percent": 4.095703567366405,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 5
+    },
+    {
+      "utc": "2026-09-04T10:37:35.2090014Z",
+      "mean_busy_percent": 7.219010269504965,
+      "contender_count": 0,
+      "contenders": [],
+      "consecutive_clean_samples": 6
+    }
+  ]
+}

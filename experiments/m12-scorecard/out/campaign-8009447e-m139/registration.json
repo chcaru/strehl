@@ -8,7 +8,14 @@
     "peak_process_tree_private_committed_bytes_max": 6442450944
   },
   "evidence_tag": "INHERITED",
-  "generated_utc": "2026-09-04T10:05:37.260603+00:00",
+  "execution_registration_amendment": {
+    "evidence_tag": "VERIFIED",
+    "reason": "Warm-up commissioning showed that enumerating the complete Windows process table every 10 ms materially loaded the host and prevented the inherited external-busy gate from clearing. Private-byte counters remain sampled every 10 ms; process-tree topology is refreshed every 100 ms. The memory positive control must still observe the planted child.",
+    "superseded_warmup_records_are_not_score_evidence": true,
+    "timing": "before any scored M12 repetition"
+  },
+  "execution_registration_revision": 2,
+  "generated_utc": "2026-09-04T10:49:08.563560+00:00",
   "governing_registration": {
     "bytes": 84635,
     "joint_constraint": {
@@ -82,6 +89,7 @@
       299
     ],
     "order": "alternating ascending/descending worker order",
+    "process_tree_discovery_interval_ms": 100.0,
     "scored_repetitions_per_cell": 6,
     "warmups_per_cell": 1,
     "worker_counts": [

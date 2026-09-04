@@ -32,6 +32,7 @@ REGISTERED_COUNTS = (33, 105, 299)
 WORKERS = (1, 2, 4, 8, 16)
 MODULO_COUNTS = (96, 97, 98, 99)
 SAMPLE_INTERVAL_S = 0.010
+PROCESS_DISCOVERY_INTERVAL_S = 0.100
 DEFAULT_PRELOAD_SAMPLE_S = 5.0
 DEFAULT_PRELOAD_BUSY_MAX = 0.15
 DEFAULT_EXTERNAL_BUSY_MAX = 0.10
@@ -744,6 +745,9 @@ def monitor_command(
     max_lateness = 0.0
     gaps: list[float] = []
     last_sample: float | None = None
+    last_process_discovery = float("-inf")
+    parents: dict[int, int] = {}
+    names: dict[int, str] = {}
 
     with stdout_path.open("w", encoding="utf-8", newline="\n") as stdout, stderr_path.open(
         "w", encoding="utf-8", newline="\n"
@@ -773,11 +777,20 @@ def monitor_command(
                 gaps.append(sampled_at - last_sample)
             last_sample = sampled_at
 
-            table = process_table()
-            parents = {
-                pid: int(details["parent_pid"]) for pid, details in table.items()
-            }
-            live_tree = descendants(process.pid, parents) if process.pid in parents else set()
+            if sampled_at - last_process_discovery >= PROCESS_DISCOVERY_INTERVAL_S:
+                table = process_table()
+                parents = {
+                    pid: int(details["parent_pid"]) for pid, details in table.items()
+                }
+                names.update(
+                    {pid: str(details["name"]) for pid, details in table.items()}
+                )
+                last_process_discovery = sampled_at
+            live_tree = (
+                descendants(process.pid, parents)
+                if process.pid in parents
+                else set()
+            )
             candidate_pids = live_tree | (set(known) & set(parents))
             rows: list[tuple[int, dict[str, int]]] = []
             for pid in candidate_pids:
@@ -791,7 +804,7 @@ def monitor_command(
                     known[pid] = {
                         "created": counters["created"],
                         "parent_pid": parents.get(pid),
-                        "name": table.get(pid, {}).get("name"),
+                        "name": names.get(pid),
                         "first_seen_s": sampled_at - start,
                         "last_seen_s": sampled_at - start,
                         "samples": 1,
@@ -861,6 +874,9 @@ def monitor_command(
         "stderr_log": str(stderr_path.resolve()),
         "memory": {
             "sample_interval_ms": SAMPLE_INTERVAL_S * 1000.0,
+            "process_discovery_interval_ms": (
+                PROCESS_DISCOVERY_INTERVAL_S * 1000.0
+            ),
             "sample_count": sample_count,
             "missed_intervals": missed_intervals,
             "max_lateness_ms": max_lateness * 1000.0,
@@ -1568,6 +1584,20 @@ def registration_artifact(output: Path, measured_revision: str) -> int:
         "evidence_tag": "INHERITED",
         "measured_commit": measured_commit,
         "generated_utc": utc_now(),
+        "execution_registration_revision": 2,
+        "execution_registration_amendment": {
+            "evidence_tag": "VERIFIED",
+            "timing": "before any scored M12 repetition",
+            "reason": (
+                "Warm-up commissioning showed that enumerating the complete "
+                "Windows process table every 10 ms materially loaded the host "
+                "and prevented the inherited external-busy gate from clearing. "
+                "Private-byte counters remain sampled every 10 ms; process-tree "
+                "topology is refreshed every 100 ms. The memory positive control "
+                "must still observe the planted child."
+            ),
+            "superseded_warmup_records_are_not_score_evidence": True,
+        },
         "governing_registration": {
             **git_file_provenance(measured_commit, scorecard_rel),
             "version": scorecard_version(scorecard),
@@ -1588,6 +1618,9 @@ def registration_artifact(output: Path, measured_revision: str) -> int:
             "modulo_scored_repetitions_per_n": 6,
             "highest_precision_deliverable": "uncompressed 16-bit RGB TIFF",
             "memory_sample_interval_ms": SAMPLE_INTERVAL_S * 1000.0,
+            "process_tree_discovery_interval_ms": (
+                PROCESS_DISCOVERY_INTERVAL_S * 1000.0
+            ),
         },
         "bars": {
             "peak_process_tree_private_committed_bytes_max": 6 * (1 << 30),

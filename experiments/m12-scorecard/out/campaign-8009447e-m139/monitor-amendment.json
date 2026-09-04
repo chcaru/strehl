@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "evidence_tag": "VERIFIED",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "generated_utc": "2026-09-04T10:52:46.2239607Z",
+  "classification": "diagnostic warm-up only; no scored M12 repetition ran",
+  "reason": "The first monitor enumerated the complete Windows process table at every 10 ms memory sample. After six consecutive quiet-host samples, every N33/W4 warm-up attempt still exceeded the inherited 10% during-run external-busy gate. Before any scored repetition, topology discovery was reduced to 100 ms while private-byte sampling remained 10 ms.",
+  "protocol_change": {
+    "timing": "before any scored repetition",
+    "prior_private_byte_sample_interval_ms": 10.0,
+    "prior_process_tree_discovery_interval_ms": 10.0,
+    "amended_private_byte_sample_interval_ms": 10.0,
+    "amended_process_tree_discovery_interval_ms": 100.0,
+    "bar_or_adjudication_changed": false
+  },
+  "superseded_records": {
+    "record_count": 19,
+    "scored_record_count": 0,
+    "accepted_warmup_count": 2,
+    "rejected_warmup_count": 17,
+    "path": "diagnostic-monitor-v1-records.jsonl",
+    "sha256": "125AA32B50AD1F524E6F6CF2AA2D840407822957C83AFE6F8DDC34265FC4D5C2",
+    "harness_sha256": [
+      "75A342629B47F2E8BAF023B45B2D96D43E398C281078AD02512FEFE500CF1ABE"
+    ]
+  },
+  "quiet_host_evidence": {
+    "path": "diagnostic-monitor-v1-resume-wait.json",
+    "sha256": "717099C06AB05B9C59A249E40105789F7145DB6793570DF64EBED280A5F72D6B",
+    "criterion": "six consecutive 5-second samples <=10% whole-host busy and no strehl/cargo/rustc/ExifTool process",
+    "final_consecutive_clean_samples": 6,
+    "final_mean_busy_percent": 7.219010269504965,
+    "final_contender_count": 0
+  },
+  "rejected_n33_w4": {
+    "attempt_count": 16,
+    "minimum_external_busy_fraction": 0.10045998220558362,
+    "maximum_external_busy_fraction": 0.3429700271587395,
+    "all_exceeded_0_10": true
+  },
+  "recommissioning": {
+    "amended_harness_sha256": "A36A74B0304EF519C060781301DA9CCC740B330D6D9E37987975DE82D9DCC978",
+    "memory": {
+      "path": "memory-commission.json",
+      "sha256": "614C6985F50C7AB167228EAEF74F22126A0E12E46A3E99F571BCE435B35CBC48",
+      "status": "COMMISSIONED",
+      "null_peak_private_committed_bytes": 80936960,
+      "plant_peak_private_committed_bytes": 7544344576,
+      "plant_peak_process_count": 2
+    },
+    "determinism": {
+      "path": "determinism-commission.json",
+      "sha256": "B6BAFD639417AB73F9799478501C8DA5C8A703D54150C2DDAD24482ECEE9786E",
+      "status": "COMMISSIONED",
+      "plant_went_red": true,
+      "restore_returned_green": true,
+      "one_output_lsb_went_red": true
+    },
+    "smoke": {
+      "path": "smoke.json",
+      "sha256": "583917F76AB138E3587E956245D7478AA5ED8FA868577359493A35E3AD123303",
+      "status": "PASS",
+      "max_external_busy_fraction": 0.08934888820440731,
+      "repeat_byte_identical": true
+    }
+  },
+  "superseded_for_formal_campaign": true
+}
