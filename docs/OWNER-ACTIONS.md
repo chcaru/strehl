@@ -414,18 +414,29 @@ the decision on their own:**
    near `1.0` cannot support that bar at any price — and the published data does
    not yet state its uncertainty. NIST is explicit that *"traceability alone does
    not signify or guarantee fitness for purpose"*. Worse, our own scorecard
-   **specifies no uncertainty budget for reference values at all**, which is a
-   gap on our side that I need to close before recommending you spend anything.
+   **specified no uncertainty budget for reference values at all**, which was a
+   gap on our side.
+
+   **That gap is now closed, and the answer is still wait.** A lane has since
+   built the budget (`docs/research/M144-reference-uncertainty.md`). It turns
+   this reason from a shrug into a number: the largest term is not sensor noise
+   but variation between individual target units, whose worst patch models at
+   **p95 `2.6445 ΔE00`** against a p95 bar of `2.0`. That is a screening model
+   rather than a measurement of the certified unit, which is exactly why the
+   certificate's real uncertainty is now the whole question — and why the answer
+   arrives by email rather than by purchase.
 
 **Reason 3 alone is sufficient**, and it is the one that actually protects your
 money: the `$189` unlocks exactly one axis, that axis is M7, and M7 cannot be
 scored without a `$660` target we have not yet confirmed is good enough.
 
-**So there is a new `$0` step ahead of this ask:** request ISA's sample
-certificate and its numerical uncertainty, which they supply at no charge, and
-let me confirm the scorecard accepts a non-Calibrite target. If the certificate
-does not support a `ΔE00 ≤ 1.0` bar, the `$660` is dead money and the `$189`
-buys nothing — and we will have learned that for free.
+**That `$0` step is now written up as Ask 2b above, with a decision rule
+attached.** Ask ISA for the sample certificate and its numerical uncertainty,
+which they supply at no charge. **Reject if any scored patch or required
+patch-difference carries `U95 > 0.25 ΔE00`**; a conforming certificate reverses
+this recommendation and I will tell you to buy. If the certificate does not
+support a `ΔE00 ≤ 1.0` bar, the `$660` is dead money and the `$189` buys
+nothing — and we will have learned that for free.
 
 Buy when the detail instrument is admitted, the capture exists, and the
 certificate checks out. Nothing is lost by the delay.
