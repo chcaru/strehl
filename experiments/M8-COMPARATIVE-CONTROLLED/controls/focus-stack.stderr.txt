@@ -1,0 +1,6 @@
+--noise-model=auto: loaded C:/dev/macro/presets/noise_profile.json (source=preset:iso_50, iso_hint=50)
+
+
+Task Construct depthmap layer -1 on thread 2 failed with exception:
+OpenCV(4.13.0) C:\GHA-OCV-3\_work\ci-gha-workflow\ci-gha-workflow\opencv\modules\imgproc\src\histogram.cpp:202: error: (-215:Assertion failed) ranges[i] && ranges[i][0] < ranges[i][1] in function 'cv::histPrepareImages'
+

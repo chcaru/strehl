@@ -1,0 +1,1480 @@
+[  1/  2] Load C:\dev\blog\death-of-software\proje
+[  2/  9] Load C:\dev\blog\death-of-software\proje
+[  3/ 17] Load C:\dev\blog\death-of-software\proje
+[  4/ 25] Load C:\dev\blog\death-of-software\proje
+[  5/ 33] Load C:\dev\blog\death-of-software\proje
+[  6/754] Load C:\dev\blog\death-of-software\proje
+[  6/754] Load C:\dev\blog\death-of-software\proje
+[  7/754] Load C:\dev\blog\death-of-software\proje
+[  7/754] Load C:\dev\blog\death-of-software\proje
+[  8/754] Load C:\dev\blog\death-of-software\proje
+[  8/754] Load C:\dev\blog\death-of-software\proje
+[  9/754] Grayscale C:\dev\blog\death-of-software\
+[  9/754] Load C:\dev\blog\death-of-software\proje
+[ 10/754] Load C:\dev\blog\death-of-software\proje
+[ 10/754] Load C:\dev\blog\death-of-software\proje
+[ 11/754] Load C:\dev\blog\death-of-software\proje
+[ 11/754] Load C:\dev\blog\death-of-software\proje
+[ 12/754] Load C:\dev\blog\death-of-software\proje
+[ 12/754] Load C:\dev\blog\death-of-software\proje
+[ 13/754] Load C:\dev\blog\death-of-software\proje
+[ 13/754] Grayscale C:\dev\blog\death-of-software\
+[ 14/754] Load C:\dev\blog\death-of-software\proje
+[ 14/754] Load C:\dev\blog\death-of-software\proje
+[ 15/754] Load C:\dev\blog\death-of-software\proje
+[ 15/754] Load C:\dev\blog\death-of-software\proje
+[ 16/754] Load C:\dev\blog\death-of-software\proje
+[ 16/754] Load C:\dev\blog\death-of-software\proje
+[ 17/754] Load C:\dev\blog\death-of-software\proje
+[ 17/754] Load C:\dev\blog\death-of-software\proje
+[ 18/754] Align 046-identity-witness.tif to 046-id
+[ 18/754] Load C:\dev\blog\death-of-software\proje
+[ 19/754] Grayscale aligned_046-identity-witness.t
+[ 19/754] Load C:\dev\blog\death-of-software\proje
+[ 20/754] Grayscale C:\dev\blog\death-of-software\
+[ 20/754] Load C:\dev\blog\death-of-software\proje
+[ 21/754] Grayscale C:\dev\blog\death-of-software\
+[ 21/754] Load C:\dev\blog\death-of-software\proje
+[ 22/754] Grayscale C:\dev\blog\death-of-software\
+[ 22/754] Load C:\dev\blog\death-of-software\proje
+[ 23/754] Grayscale C:\dev\blog\death-of-software\
+[ 23/754] Grayscale C:\dev\blog\death-of-software\
+[ 24/754] Grayscale C:\dev\blog\death-of-software\
+[ 24/754] Grayscale C:\dev\blog\death-of-software\
+[ 25/754] Forward-wavelet aligned_046-identity-wit
+[ 25/754] Grayscale C:\dev\blog\death-of-software\
+[ 26/754] Align-residual aligned_046-identity-witn
+[ 26/754] Grayscale C:\dev\blog\death-of-software\
+[ 27/754] Align 045-identity-witness.tif to 046-id
+[ 27/754] Grayscale C:\dev\blog\death-of-software\
+[ 28/754] Grayscale aligned_045-identity-witness.t
+[ 28/754] Grayscale C:\dev\blog\death-of-software\
+[ 29/754] Align 047-identity-witness.tif to 046-id
+[ 29/754] Grayscale C:\dev\blog\death-of-software\
+[ 30/754] Grayscale aligned_047-identity-witness.t
+[ 30/754] Grayscale C:\dev\blog\death-of-software\
+[ 31/754] Align 048-identity-witness.tif to 047-id
+[ 31/754] Align 048-identity-witness.tif to 047-id
+[ 32/754] Align 044-identity-witness.tif to 045-id
+[ 32/754] Grayscale C:\dev\blog\death-of-software\
+[ 33/754] Grayscale aligned_048-identity-witness.t
+[ 33/754] Grayscale C:\dev\blog\death-of-software\
+[ 34/754] Grayscale aligned_044-identity-witness.t
+[ 34/754] Forward-wavelet aligned_046-identity-wit
+[ 35/754] Align 043-identity-witness.tif to 044-id
+[ 35/754] Forward-wavelet aligned_046-identity-wit
+[ 36/754] Grayscale aligned_043-identity-witness.t
+[ 36/754] Forward-wavelet aligned_046-identity-wit
+[ 37/754] Align-residual aligned_047-identity-witn
+[ 37/754] Forward-wavelet aligned_046-identity-wit
+[ 38/754] Align-residual aligned_045-identity-witn
+[ 38/754] Align-residual aligned_045-identity-witn
+[ 39/754] WAVS focus measure for aligned_046-ident
+[ 39/754] Align-residual aligned_045-identity-witn
+[ 40/754] Forward-wavelet aligned_045-identity-wit
+[ 40/754] Align-residual aligned_045-identity-witn
+[ 41/754] Align-residual aligned_044-identity-witn
+[ 41/754] Align-residual aligned_045-identity-witn
+[ 42/754] Align-residual aligned_048-identity-witn
+[ 42/754] Align-residual aligned_045-identity-witn
+[ 43/754] WAVS focus measure for aligned_045-ident
+[ 43/754] Align-residual aligned_045-identity-witn
+[ 44/754] Construct depthmap layer 46             
+[ 44/754] Construct depthmap layer 46             
+[ 45/754] Forward-wavelet aligned_047-identity-wit
+[ 45/754] Construct depthmap layer 46             
+[ 46/754] Align-residual aligned_043-identity-witn
+[ 46/754] Align-residual aligned_043-identity-witn
+[ 47/754] Grayscale C:\dev\blog\death-of-software\
+[ 47/754] Align-residual aligned_043-identity-witn
+[ 48/754] Grayscale C:\dev\blog\death-of-software\
+[ 48/754] Align-residual aligned_043-identity-witn
+[ 49/754] WAVS focus measure for aligned_047-ident
+[ 49/754] Align-residual aligned_043-identity-witn
+[ 50/754] Forward-wavelet aligned_044-identity-wit
+[ 50/754] Align-residual aligned_043-identity-witn
+[ 51/754] Align 049-identity-witness.tif to 048-id
+[ 51/754] Align-residual aligned_043-identity-witn
+[ 52/754] Align 042-identity-witness.tif to 043-id
+[ 52/754] Align-residual aligned_043-identity-witn
+[ 53/754] Grayscale aligned_049-identity-witness.t
+[ 53/754] Grayscale aligned_049-identity-witness.t
+[ 54/754] Grayscale aligned_042-identity-witness.t
+[ 54/754] Grayscale aligned_049-identity-witness.t
+[ 55/754] WAVS focus measure for aligned_044-ident
+[ 55/754] Grayscale aligned_049-identity-witness.t
+[ 56/754] Forward-wavelet aligned_048-identity-wit
+[ 56/754] Forward-wavelet aligned_048-identity-wit
+[ 57/754] Align-residual aligned_042-identity-witn
+[ 57/754] Forward-wavelet aligned_048-identity-wit
+[ 58/754] Align-residual aligned_049-identity-witn
+[ 58/754] Construct depthmap layer 46             
+[ 59/754] WAVS focus measure for aligned_048-ident
+[ 59/754] Construct depthmap layer 46             
+[ 60/754] Forward-wavelet aligned_043-identity-wit
+[ 60/754] Construct depthmap layer 46             
+[ 61/754] Grayscale C:\dev\blog\death-of-software\
+[ 61/754] Construct depthmap layer 46             
+[ 62/754] WAVS focus measure for aligned_043-ident
+[ 62/754] Construct depthmap layer 46             
+[ 63/754] Forward-wavelet aligned_049-identity-wit
+[ 63/754] Construct depthmap layer 46             
+[ 64/754] Grayscale C:\dev\blog\death-of-software\
+[ 64/754] Grayscale C:\dev\blog\death-of-software\
+[ 65/754] Grayscale C:\dev\blog\death-of-software\
+[ 65/754] Grayscale C:\dev\blog\death-of-software\
+[ 66/754] Align 050-identity-witness.tif to 049-id
+[ 66/754] Grayscale C:\dev\blog\death-of-software\
+[ 67/754] Grayscale aligned_050-identity-witness.t
+[ 67/754] Grayscale C:\dev\blog\death-of-software\
+[ 68/754] WAVS focus measure for aligned_049-ident
+[ 68/754] Grayscale C:\dev\blog\death-of-software\
+[ 69/754] Forward-wavelet aligned_042-identity-wit
+[ 69/754] Construct depthmap layer 46             
+[ 70/754] Align 041-identity-witness.tif to 042-id
+[ 70/754] Construct depthmap layer 46             
+[ 71/754] Grayscale aligned_041-identity-witness.t
+[ 71/754] Construct depthmap layer 46             
+[ 72/754] Align-residual aligned_050-identity-witn
+[ 72/754] Construct depthmap layer 46             
+[ 73/754] Align 051-identity-witness.tif to 050-id
+[ 73/754] Construct depthmap layer 46             
+[ 74/754] Grayscale aligned_051-identity-witness.t
+[ 74/754] Construct depthmap layer 46             
+[ 75/754] WAVS focus measure for aligned_042-ident
+[ 75/754] Construct depthmap layer 46             
+[ 76/754] Merge 8 images                          
+[ 76/754] Construct depthmap layer 46             
+[ 77/754] Forward-wavelet aligned_050-identity-wit
+[ 77/754] Forward-wavelet aligned_050-identity-wit
+[ 78/754] Align-residual aligned_041-identity-witn
+[ 78/754] Construct depthmap layer 46             
+[ 79/754] WAVS focus measure for aligned_050-ident
+[ 79/754] Construct depthmap layer 46             
+[ 80/754] Forward-wavelet aligned_041-identity-wit
+[ 80/754] Construct depthmap layer 46             
+[ 81/754] Align-residual aligned_051-identity-witn
+[ 81/754] Construct depthmap layer 46             
+[ 82/754] WAVS focus measure for aligned_041-ident
+[ 82/754] Construct depthmap layer 46             
+[ 83/754] Forward-wavelet aligned_051-identity-wit
+[ 83/754] WAVS focus measure for aligned_041-ident
+[ 84/754] Construct depthmap layer 45             
+[ 84/754] WAVS focus measure for aligned_041-ident
+[ 85/754] Grayscale C:\dev\blog\death-of-software\
+[ 85/754] WAVS focus measure for aligned_041-ident
+[ 86/754] WAVS focus measure for aligned_051-ident
+[ 86/754] WAVS focus measure for aligned_051-ident
+[ 87/754] Grayscale C:\dev\blog\death-of-software\
+[ 87/754] WAVS focus measure for aligned_051-ident
+[ 88/754] Align 052-identity-witness.tif to 051-id
+[ 88/754] WAVS focus measure for aligned_051-ident
+[ 89/754] Grayscale aligned_052-identity-witness.t
+[ 89/754] WAVS focus measure for aligned_051-ident
+[ 90/754] Align 040-identity-witness.tif to 041-id
+[ 90/754] WAVS focus measure for aligned_051-ident
+[ 91/754] Grayscale aligned_040-identity-witness.t
+[ 91/754] WAVS focus measure for aligned_051-ident
+[ 92/754] Grayscale C:\dev\blog\death-of-software\
+[ 92/754] WAVS focus measure for aligned_051-ident
+[ 93/754] Forward-wavelet aligned_052-identity-wit
+[ 93/754] Merge 8 images                          
+[ 94/754] Align-residual aligned_052-identity-witn
+[ 94/754] Merge 8 images                          
+[ 95/754] Align-residual aligned_040-identity-witn
+[ 95/754] Align-residual aligned_040-identity-witn
+[ 96/754] Align 039-identity-witness.tif to 040-id
+[ 96/754] Align-residual aligned_040-identity-witn
+[ 97/754] Grayscale aligned_039-identity-witness.t
+[ 97/754] Align-residual aligned_040-identity-witn
+[ 98/754] Forward-wavelet aligned_040-identity-wit
+[ 98/754] Align-residual aligned_040-identity-witn
+[ 99/754] WAVS focus measure for aligned_040-ident
+[ 99/754] Align-residual aligned_040-identity-witn
+[100/754] WAVS focus measure for aligned_052-ident
+[100/754] Align-residual aligned_040-identity-witn
+[101/754] Forward-wavelet aligned_039-identity-wit
+[101/754] Merge 8 images                          
+[102/754] Align-residual aligned_039-identity-witn
+[102/754] Merge 8 images                          
+[103/754] WAVS focus measure for aligned_039-ident
+[103/754] Merge 8 images                          
+[104/754] Grayscale C:\dev\blog\death-of-software\
+[104/754] Merge 8 images                          
+[105/754] Grayscale C:\dev\blog\death-of-software\
+[105/754] Grayscale C:\dev\blog\death-of-software\
+[106/754] Align 053-identity-witness.tif to 052-id
+[106/754] Grayscale C:\dev\blog\death-of-software\
+[107/754] Grayscale aligned_053-identity-witness.t
+[107/754] Grayscale C:\dev\blog\death-of-software\
+[108/754] Load C:\dev\blog\death-of-software\proje
+[108/754] Grayscale C:\dev\blog\death-of-software\
+[109/754] Construct depthmap layer 47             
+[109/754] Merge 8 images                          
+[110/754] Align 038-identity-witness.tif to 039-id
+[110/754] Merge 8 images                          
+[111/754] Grayscale aligned_038-identity-witness.t
+[111/754] Merge 8 images                          
+[112/754] Grayscale C:\dev\blog\death-of-software\
+[112/754] Grayscale C:\dev\blog\death-of-software\
+[113/754] Forward-wavelet aligned_053-identity-wit
+[113/754] Grayscale C:\dev\blog\death-of-software\
+[114/754] Align-residual aligned_053-identity-witn
+[114/754] Grayscale C:\dev\blog\death-of-software\
+[115/754] WAVS focus measure for aligned_053-ident
+[115/754] Grayscale C:\dev\blog\death-of-software\
+[116/754] Forward-wavelet aligned_038-identity-wit
+[116/754] Merge 8 images                          
+[117/754] Align-residual aligned_038-identity-witn
+[117/754] Merge 8 images                          
+[118/754] Align 054-identity-witness.tif to 053-id
+[118/754] Merge 8 images                          
+[119/754] Grayscale aligned_054-identity-witness.t
+[119/754] Merge 8 images                          
+[120/754] WAVS focus measure for aligned_038-ident
+[120/754] Merge 8 images                          
+[121/754] Load C:\dev\blog\death-of-software\proje
+[121/754] Merge 8 images                          
+[122/754] Load C:\dev\blog\death-of-software\proje
+[122/754] Construct depthmap layer 47             
+[123/754] Merge 8 images                          
+[123/754] Construct depthmap layer 47             
+[124/754] Forward-wavelet aligned_054-identity-wit
+[124/754] Construct depthmap layer 47             
+[125/754] Align-residual aligned_054-identity-witn
+[125/754] Construct depthmap layer 47             
+[126/754] Grayscale C:\dev\blog\death-of-software\
+[126/754] Construct depthmap layer 47             
+[127/754] WAVS focus measure for aligned_054-ident
+[127/754] Construct depthmap layer 47             
+[128/754] Grayscale C:\dev\blog\death-of-software\
+[128/754] Construct depthmap layer 47             
+[129/754] Align 037-identity-witness.tif to 038-id
+[129/754] Construct depthmap layer 47             
+[130/754] Grayscale aligned_037-identity-witness.t
+[130/754] Construct depthmap layer 47             
+[131/754] Align 055-identity-witness.tif to 054-id
+[131/754] Construct depthmap layer 47             
+[132/754] Grayscale aligned_055-identity-witness.t
+[132/754] Grayscale aligned_055-identity-witness.t
+[133/754] Load C:\dev\blog\death-of-software\proje
+[133/754] Grayscale aligned_055-identity-witness.t
+[134/754] Grayscale C:\dev\blog\death-of-software\
+[134/754] Grayscale aligned_055-identity-witness.t
+[135/754] Forward-wavelet aligned_037-identity-wit
+[135/754] Construct depthmap layer 47             
+[136/754] Align-residual aligned_037-identity-witn
+[136/754] Align-residual aligned_037-identity-witn
+[137/754] Align-residual aligned_055-identity-witn
+[137/754] Align-residual aligned_037-identity-witn
+[138/754] Align 036-identity-witness.tif to 037-id
+[138/754] Align-residual aligned_037-identity-witn
+[139/754] Grayscale aligned_036-identity-witness.t
+[139/754] Align-residual aligned_037-identity-witn
+[140/754] WAVS focus measure for aligned_037-ident
+[140/754] Align-residual aligned_037-identity-witn
+[141/754] Construct depthmap layer 44             
+[141/754] Align-residual aligned_037-identity-witn
+[142/754] Forward-wavelet aligned_055-identity-wit
+[142/754] Align-residual aligned_055-identity-witn
+[143/754] Align-residual aligned_036-identity-witn
+[143/754] Align-residual aligned_055-identity-witn
+[144/754] WAVS focus measure for aligned_055-ident
+[144/754] Merge 8 images                          
+[145/754] Forward-wavelet aligned_036-identity-wit
+[145/754] Merge 8 images                          
+[146/754] WAVS focus measure for aligned_036-ident
+[146/754] Merge 8 images                          
+[147/754] Load C:\dev\blog\death-of-software\proje
+[147/754] Merge 8 images                          
+[148/754] Load C:\dev\blog\death-of-software\proje
+[148/754] Merge 8 images                          
+[149/754] Grayscale C:\dev\blog\death-of-software\
+[149/754] Merge 8 images                          
+[150/754] Grayscale C:\dev\blog\death-of-software\
+[150/754] Merge 8 images                          
+[151/754] Load C:\dev\blog\death-of-software\proje
+[151/754] Merge 8 images                          
+[152/754] Align 056-identity-witness.tif to 055-id
+[152/754] Merge 8 images                          
+[153/754] Grayscale aligned_056-identity-witness.t
+[153/754] Merge 8 images                          
+[154/754] Align 035-identity-witness.tif to 036-id
+[154/754] Merge 8 images                          
+[155/754] Grayscale aligned_035-identity-witness.t
+[155/754] Merge 8 images                          
+[156/754] Grayscale C:\dev\blog\death-of-software\
+[156/754] Merge 8 images                          
+[157/754] Load C:\dev\blog\death-of-software\proje
+[157/754] Merge 8 images                          
+[158/754] Grayscale C:\dev\blog\death-of-software\
+[158/754] Merge 8 images                          
+[159/754] Align 057-identity-witness.tif to 056-id
+[159/754] Merge 8 images                          
+[160/754] Grayscale aligned_057-identity-witness.t
+[160/754] Merge 8 images                          
+[161/754] Forward-wavelet aligned_035-identity-wit
+[161/754] Merge 8 images                          
+[162/754] Align-residual aligned_056-identity-witn
+[162/754] Merge 8 images                          
+[163/754] Align-residual aligned_035-identity-witn
+[163/754] Merge 8 images                          
+[164/754] Align-residual aligned_057-identity-witn
+[164/754] Merge 8 images                          
+[165/754] Forward-wavelet aligned_056-identity-wit
+[165/754] Merge 8 images                          
+[166/754] WAVS focus measure for aligned_056-ident
+[166/754] Merge 8 images                          
+[167/754] WAVS focus measure for aligned_035-ident
+[167/754] Merge 8 images                          
+[168/754] Forward-wavelet aligned_057-identity-wit
+[168/754] Merge 8 images                          
+[169/754] Align 034-identity-witness.tif to 035-id
+[169/754] Merge 8 images                          
+[170/754] Grayscale aligned_034-identity-witness.t
+[170/754] Merge 8 images                          
+[171/754] WAVS focus measure for aligned_057-ident
+[171/754] Merge 8 images                          
+[172/754] Forward-wavelet aligned_034-identity-wit
+[172/754] Merge 8 images                          
+[173/754] Construct depthmap layer 48             
+[173/754] Merge 8 images                          
+[174/754] Align-residual aligned_034-identity-witn
+[174/754] Merge 8 images                          
+[175/754] Load C:\dev\blog\death-of-software\proje
+[175/754] Merge 8 images                          
+[176/754] WAVS focus measure for aligned_034-ident
+[176/754] Merge 8 images                          
+[177/754] Grayscale C:\dev\blog\death-of-software\
+[177/754] Grayscale C:\dev\blog\death-of-software\
+[178/754] Load C:\dev\blog\death-of-software\proje
+[178/754] Merge 8 images                          
+[179/754] Align 058-identity-witness.tif to 057-id
+[179/754] Merge 8 images                          
+[180/754] Grayscale aligned_058-identity-witness.t
+[180/754] Merge 8 images                          
+[181/754] Load C:\dev\blog\death-of-software\proje
+[181/754] Merge 8 images                          
+[182/754] Grayscale C:\dev\blog\death-of-software\
+[182/754] Merge 8 images                          
+[183/754] Load C:\dev\blog\death-of-software\proje
+[183/754] Merge 8 images                          
+[184/754] Grayscale C:\dev\blog\death-of-software\
+[184/754] Merge 8 images                          
+[185/754] Forward-wavelet aligned_058-identity-wit
+[185/754] Merge 8 images                          
+[186/754] Align-residual aligned_058-identity-witn
+[186/754] Merge 8 images                          
+[187/754] Align 033-identity-witness.tif to 034-id
+[187/754] Merge 8 images                          
+[188/754] Grayscale aligned_033-identity-witness.t
+[188/754] Merge 8 images                          
+[189/754] WAVS focus measure for aligned_058-ident
+[189/754] Merge 8 images                          
+[190/754] Align 059-identity-witness.tif to 058-id
+[190/754] Merge 8 images                          
+[191/754] Grayscale aligned_059-identity-witness.t
+[191/754] Merge 8 images                          
+[192/754] Forward-wavelet aligned_033-identity-wit
+[192/754] Merge 8 images                          
+[193/754] Align-residual aligned_033-identity-witn
+[193/754] Merge 8 images                          
+[194/754] Align-residual aligned_059-identity-witn
+[194/754] Align-residual aligned_059-identity-witn
+[195/754] WAVS focus measure for aligned_033-ident
+[195/754] Align-residual aligned_059-identity-witn
+[196/754] Forward-wavelet aligned_059-identity-wit
+[196/754] Align-residual aligned_059-identity-witn
+[197/754] Grayscale C:\dev\blog\death-of-software\
+[197/754] Align-residual aligned_059-identity-witn
+[198/754] WAVS focus measure for aligned_059-ident
+[198/754] WAVS focus measure for aligned_059-ident
+[199/754] Load C:\dev\blog\death-of-software\proje
+[199/754] WAVS focus measure for aligned_059-ident
+[200/754] Load C:\dev\blog\death-of-software\proje
+[200/754] WAVS focus measure for aligned_059-ident
+[201/754] Grayscale C:\dev\blog\death-of-software\
+[201/754] WAVS focus measure for aligned_059-ident
+[202/754] Align 032-identity-witness.tif to 033-id
+[202/754] WAVS focus measure for aligned_059-ident
+[203/754] Grayscale aligned_032-identity-witness.t
+[203/754] WAVS focus measure for aligned_059-ident
+[204/754] Construct depthmap layer 43             
+[204/754] WAVS focus measure for aligned_059-ident
+[205/754] Grayscale C:\dev\blog\death-of-software\
+[205/754] WAVS focus measure for aligned_059-ident
+[206/754] Align 060-identity-witness.tif to 059-id
+[206/754] WAVS focus measure for aligned_059-ident
+[207/754] Grayscale aligned_060-identity-witness.t
+[207/754] WAVS focus measure for aligned_059-ident
+[208/754] Forward-wavelet aligned_032-identity-wit
+[208/754] WAVS focus measure for aligned_059-ident
+[209/754] Align-residual aligned_032-identity-witn
+[209/754] Merge 8 images                          
+[210/754] Align 031-identity-witness.tif to 032-id
+[210/754] Merge 8 images                          
+[211/754] Grayscale aligned_031-identity-witness.t
+[211/754] Construct depthmap layer 43             
+[212/754] Merge 8 images                          
+[212/754] Construct depthmap layer 43             
+[213/754] Align-residual aligned_060-identity-witn
+[213/754] Construct depthmap layer 43             
+[214/754] WAVS focus measure for aligned_032-ident
+[214/754] Construct depthmap layer 43             
+[215/754] Forward-wavelet aligned_060-identity-wit
+[215/754] Construct depthmap layer 43             
+[216/754] Align-residual aligned_031-identity-witn
+[216/754] Align-residual aligned_031-identity-witn
+[217/754] WAVS focus measure for aligned_060-ident
+[217/754] Align-residual aligned_031-identity-witn
+[218/754] Forward-wavelet aligned_031-identity-wit
+[218/754] Forward-wavelet aligned_031-identity-wit
+[219/754] Load C:\dev\blog\death-of-software\proje
+[219/754] Load C:\dev\blog\death-of-software\proje
+[220/754] WAVS focus measure for aligned_031-ident
+[220/754] WAVS focus measure for aligned_031-ident
+[221/754] Load C:\dev\blog\death-of-software\proje
+[221/754] WAVS focus measure for aligned_031-ident
+[222/754] Grayscale C:\dev\blog\death-of-software\
+[222/754] WAVS focus measure for aligned_031-ident
+[223/754] Grayscale C:\dev\blog\death-of-software\
+[223/754] WAVS focus measure for aligned_031-ident
+[224/754] Load C:\dev\blog\death-of-software\proje
+[224/754] WAVS focus measure for aligned_031-ident
+[225/754] Align 061-identity-witness.tif to 060-id
+[225/754] WAVS focus measure for aligned_031-ident
+[226/754] Grayscale aligned_061-identity-witness.t
+[226/754] WAVS focus measure for aligned_031-ident
+[227/754] Align 030-identity-witness.tif to 031-id
+[227/754] WAVS focus measure for aligned_031-ident
+[228/754] Grayscale aligned_030-identity-witness.t
+[228/754] Construct depthmap layer 43             
+[229/754] Load C:\dev\blog\death-of-software\proje
+[229/754] Construct depthmap layer 43             
+[230/754] Grayscale C:\dev\blog\death-of-software\
+[230/754] Grayscale C:\dev\blog\death-of-software\
+[231/754] Grayscale C:\dev\blog\death-of-software\
+[231/754] Grayscale C:\dev\blog\death-of-software\
+[232/754] Forward-wavelet aligned_061-identity-wit
+[232/754] Grayscale C:\dev\blog\death-of-software\
+[233/754] Align-residual aligned_061-identity-witn
+[233/754] Construct depthmap layer 43             
+[234/754] Align-residual aligned_030-identity-witn
+[234/754] Construct depthmap layer 43             
+[235/754] WAVS focus measure for aligned_061-ident
+[235/754] Construct depthmap layer 43             
+[236/754] Forward-wavelet aligned_030-identity-wit
+[236/754] Merge 8 images                          
+[237/754] Construct depthmap layer 49             
+[237/754] Merge 8 images                          
+[238/754] WAVS focus measure for aligned_030-ident
+[238/754] WAVS focus measure for aligned_030-ident
+[239/754] Align 062-identity-witness.tif to 061-id
+[239/754] WAVS focus measure for aligned_030-ident
+[240/754] Grayscale aligned_062-identity-witness.t
+[240/754] WAVS focus measure for aligned_030-ident
+[241/754] Align 029-identity-witness.tif to 030-id
+[241/754] WAVS focus measure for aligned_030-ident
+[242/754] Grayscale aligned_029-identity-witness.t
+[242/754] Grayscale aligned_029-identity-witness.t
+[243/754] Load C:\dev\blog\death-of-software\proje
+[243/754] Load C:\dev\blog\death-of-software\proje
+[244/754] Forward-wavelet aligned_062-identity-wit
+[244/754] Load C:\dev\blog\death-of-software\proje
+[245/754] Align-residual aligned_062-identity-witn
+[245/754] WAVS focus measure for aligned_030-ident
+[246/754] Align-residual aligned_029-identity-witn
+[246/754] Align-residual aligned_029-identity-witn
+[247/754] Grayscale C:\dev\blog\death-of-software\
+[247/754] Align-residual aligned_029-identity-witn
+[248/754] WAVS focus measure for aligned_062-ident
+[248/754] Align-residual aligned_029-identity-witn
+[249/754] Forward-wavelet aligned_029-identity-wit
+[249/754] Align-residual aligned_029-identity-witn
+[250/754] Align 063-identity-witness.tif to 062-id
+[250/754] Align-residual aligned_029-identity-witn
+[251/754] Grayscale aligned_063-identity-witness.t
+[251/754] Align-residual aligned_029-identity-witn
+[252/754] WAVS focus measure for aligned_029-ident
+[252/754] Align-residual aligned_029-identity-witn
+[253/754] Load C:\dev\blog\death-of-software\proje
+[253/754] Align-residual aligned_029-identity-witn
+[254/754] Forward-wavelet aligned_063-identity-wit
+[254/754] Merge 8 images                          
+[255/754] Align-residual aligned_063-identity-witn
+[255/754] Merge 8 images                          
+[256/754] Grayscale C:\dev\blog\death-of-software\
+[256/754] Merge 8 images                          
+[257/754] WAVS focus measure for aligned_063-ident
+[257/754] Merge 8 images                          
+[258/754] Load C:\dev\blog\death-of-software\proje
+[258/754] Merge 8 images                          
+[259/754] Align 028-identity-witness.tif to 029-id
+[259/754] Merge 8 images                          
+[260/754] Grayscale aligned_028-identity-witness.t
+[260/754] Merge 8 images                          
+[261/754] Load C:\dev\blog\death-of-software\proje
+[261/754] Merge 8 images                          
+[262/754] Grayscale C:\dev\blog\death-of-software\
+[262/754] Merge 8 images                          
+[263/754] Forward-wavelet aligned_028-identity-wit
+[263/754] Merge 8 images                          
+[264/754] Construct depthmap layer 42             
+[264/754] Merge 8 images                          
+[265/754] Align-residual aligned_028-identity-witn
+[265/754] Merge 8 images                          
+[266/754] Grayscale C:\dev\blog\death-of-software\
+[266/754] Merge 8 images                          
+[267/754] Align 064-identity-witness.tif to 063-id
+[267/754] Merge 8 images                          
+[268/754] Grayscale aligned_064-identity-witness.t
+[268/754] Merge 8 images                          
+[269/754] WAVS focus measure for aligned_028-ident
+[269/754] Merge 8 images                          
+[270/754] Align 027-identity-witness.tif to 028-id
+[270/754] Merge 8 images                          
+[271/754] Grayscale aligned_027-identity-witness.t
+[271/754] Merge 8 images                          
+[272/754] Forward-wavelet aligned_064-identity-wit
+[272/754] Merge 8 images                          
+[273/754] Align-residual aligned_064-identity-witn
+[273/754] Merge 8 images                          
+[274/754] WAVS focus measure for aligned_064-ident
+[274/754] Merge 8 images                          
+[275/754] Forward-wavelet aligned_027-identity-wit
+[275/754] Merge 8 images                          
+[276/754] Align-residual aligned_027-identity-witn
+[276/754] Align-residual aligned_027-identity-witn
+[277/754] WAVS focus measure for aligned_027-ident
+[277/754] Align-residual aligned_027-identity-witn
+[278/754] Load C:\dev\blog\death-of-software\proje
+[278/754] Align-residual aligned_027-identity-witn
+[279/754] Load C:\dev\blog\death-of-software\proje
+[279/754] Merge 8 images                          
+[280/754] Load C:\dev\blog\death-of-software\proje
+[280/754] Merge 8 images                          
+[281/754] Grayscale C:\dev\blog\death-of-software\
+[281/754] Grayscale C:\dev\blog\death-of-software\
+[282/754] Grayscale C:\dev\blog\death-of-software\
+[282/754] Grayscale C:\dev\blog\death-of-software\
+[283/754] Grayscale C:\dev\blog\death-of-software\
+[283/754] Grayscale C:\dev\blog\death-of-software\
+[284/754] Load C:\dev\blog\death-of-software\proje
+[284/754] Grayscale C:\dev\blog\death-of-software\
+[285/754] Align 065-identity-witness.tif to 064-id
+[285/754] Grayscale C:\dev\blog\death-of-software\
+[286/754] Grayscale aligned_065-identity-witness.t
+[286/754] Merge 8 images                          
+[287/754] Align 026-identity-witness.tif to 027-id
+[287/754] Merge 8 images                          
+[288/754] Grayscale aligned_026-identity-witness.t
+[288/754] Merge 8 images                          
+[289/754] Grayscale C:\dev\blog\death-of-software\
+[289/754] Merge 8 images                          
+[290/754] Align 066-identity-witness.tif to 065-id
+[290/754] Merge 8 images                          
+[291/754] Grayscale aligned_066-identity-witness.t
+[291/754] Merge 8 images                          
+[292/754] Forward-wavelet aligned_065-identity-wit
+[292/754] Merge 8 images                          
+[293/754] Align-residual aligned_065-identity-witn
+[293/754] Merge 8 images                          
+[294/754] Construct depthmap layer 50             
+[294/754] Merge 8 images                          
+[295/754] Align-residual aligned_026-identity-witn
+[295/754] Merge 8 images                          
+[296/754] WAVS focus measure for aligned_065-ident
+[296/754] Merge 8 images                          
+[297/754] Forward-wavelet aligned_026-identity-wit
+[297/754] Merge 8 images                          
+[298/754] WAVS focus measure for aligned_026-ident
+[298/754] Merge 8 images                          
+[299/754] Forward-wavelet aligned_066-identity-wit
+[299/754] Forward-wavelet aligned_066-identity-wit
+[300/754] Align-residual aligned_066-identity-witn
+[300/754] Align-residual aligned_066-identity-witn
+[301/754] Align 025-identity-witness.tif to 026-id
+[301/754] Align-residual aligned_066-identity-witn
+[302/754] Grayscale aligned_025-identity-witness.t
+[302/754] Grayscale aligned_025-identity-witness.t
+[303/754] WAVS focus measure for aligned_066-ident
+[303/754] Align-residual aligned_066-identity-witn
+[304/754] Forward-wavelet aligned_025-identity-wit
+[304/754] Align-residual aligned_066-identity-witn
+[305/754] Align-residual aligned_025-identity-witn
+[305/754] Merge 8 images                          
+[306/754] Load C:\dev\blog\death-of-software\proje
+[306/754] Merge 8 images                          
+[307/754] WAVS focus measure for aligned_025-ident
+[307/754] Merge 8 images                          
+[308/754] Grayscale C:\dev\blog\death-of-software\
+[308/754] Merge 8 images                          
+[309/754] Load C:\dev\blog\death-of-software\proje
+[309/754] Merge 8 images                          
+[310/754] Load C:\dev\blog\death-of-software\proje
+[310/754] Merge 8 images                          
+[311/754] Align 067-identity-witness.tif to 066-id
+[311/754] Merge 8 images                          
+[312/754] Grayscale aligned_067-identity-witness.t
+[312/754] Grayscale aligned_067-identity-witness.t
+[313/754] Grayscale C:\dev\blog\death-of-software\
+[313/754] Grayscale aligned_067-identity-witness.t
+[314/754] Grayscale C:\dev\blog\death-of-software\
+[314/754] Grayscale aligned_067-identity-witness.t
+[315/754] Load C:\dev\blog\death-of-software\proje
+[315/754] Grayscale aligned_067-identity-witness.t
+[316/754] Align 024-identity-witness.tif to 025-id
+[316/754] Grayscale aligned_067-identity-witness.t
+[317/754] Grayscale aligned_024-identity-witness.t
+[317/754] Merge 8 images                          
+[318/754] Forward-wavelet aligned_067-identity-wit
+[318/754] Merge 8 images                          
+[319/754] Align-residual aligned_067-identity-witn
+[319/754] Merge 8 images                          
+[320/754] Align 068-identity-witness.tif to 067-id
+[320/754] Merge 8 images                          
+[321/754] Grayscale aligned_068-identity-witness.t
+[321/754] Merge 8 images                          
+[322/754] Construct depthmap layer 41             
+[322/754] Merge 8 images                          
+[323/754] WAVS focus measure for aligned_067-ident
+[323/754] Merge 8 images                          
+[324/754] Forward-wavelet aligned_024-identity-wit
+[324/754] Merge 8 images                          
+[325/754] Align-residual aligned_024-identity-witn
+[325/754] Align-residual aligned_024-identity-witn
+[326/754] Merge 8 images                          
+[326/754] Align-residual aligned_024-identity-witn
+[327/754] Align-residual aligned_068-identity-witn
+[327/754] Align-residual aligned_024-identity-witn
+[328/754] WAVS focus measure for aligned_024-ident
+[328/754] WAVS focus measure for aligned_024-ident
+[329/754] Forward-wavelet aligned_068-identity-wit
+[329/754] WAVS focus measure for aligned_024-ident
+[330/754] Grayscale C:\dev\blog\death-of-software\
+[330/754] Grayscale C:\dev\blog\death-of-software\
+[331/754] Load C:\dev\blog\death-of-software\proje
+[331/754] Grayscale C:\dev\blog\death-of-software\
+[332/754] WAVS focus measure for aligned_068-ident
+[332/754] WAVS focus measure for aligned_024-ident
+[333/754] Align 023-identity-witness.tif to 024-id
+[333/754] WAVS focus measure for aligned_024-ident
+[334/754] Grayscale aligned_023-identity-witness.t
+[334/754] WAVS focus measure for aligned_024-ident
+[335/754] Grayscale C:\dev\blog\death-of-software\
+[335/754] Construct depthmap layer 41             
+[336/754] Load C:\dev\blog\death-of-software\proje
+[336/754] Construct depthmap layer 41             
+[337/754] Forward-wavelet aligned_023-identity-wit
+[337/754] Construct depthmap layer 41             
+[338/754] Align-residual aligned_023-identity-witn
+[338/754] Construct depthmap layer 41             
+[339/754] Align 069-identity-witness.tif to 068-id
+[339/754] Construct depthmap layer 41             
+[340/754] Grayscale aligned_069-identity-witness.t
+[340/754] Construct depthmap layer 41             
+[341/754] Grayscale C:\dev\blog\death-of-software\
+[341/754] Construct depthmap layer 41             
+[342/754] WAVS focus measure for aligned_023-ident
+[342/754] Construct depthmap layer 41             
+[343/754] Load C:\dev\blog\death-of-software\proje
+[343/754] Construct depthmap layer 41             
+[344/754] Forward-wavelet aligned_069-identity-wit
+[344/754] Forward-wavelet aligned_069-identity-wit
+[345/754] Align-residual aligned_069-identity-witn
+[345/754] Forward-wavelet aligned_069-identity-wit
+[346/754] Align 022-identity-witness.tif to 023-id
+[346/754] Forward-wavelet aligned_069-identity-wit
+[347/754] Grayscale aligned_022-identity-witness.t
+[347/754] Construct depthmap layer 41             
+[348/754] WAVS focus measure for aligned_069-ident
+[348/754] Construct depthmap layer 41             
+[349/754] Grayscale C:\dev\blog\death-of-software\
+[349/754] Construct depthmap layer 41             
+[350/754] Forward-wavelet aligned_022-identity-wit
+[350/754] Construct depthmap layer 41             
+[351/754] Align-residual aligned_022-identity-witn
+[351/754] Align-residual aligned_022-identity-witn
+[352/754] Align 070-identity-witness.tif to 069-id
+[352/754] Align-residual aligned_022-identity-witn
+[353/754] Grayscale aligned_070-identity-witness.t
+[353/754] Align-residual aligned_022-identity-witn
+[354/754] WAVS focus measure for aligned_022-ident
+[354/754] Align-residual aligned_022-identity-witn
+[355/754] Construct depthmap layer 51             
+[355/754] Construct depthmap layer 51             
+[356/754] Forward-wavelet aligned_070-identity-wit
+[356/754] Construct depthmap layer 51             
+[357/754] Align-residual aligned_070-identity-witn
+[357/754] Construct depthmap layer 51             
+[358/754] Load C:\dev\blog\death-of-software\proje
+[358/754] Construct depthmap layer 51             
+[359/754] WAVS focus measure for aligned_070-ident
+[359/754] Construct depthmap layer 51             
+[360/754] Grayscale C:\dev\blog\death-of-software\
+[360/754] Construct depthmap layer 51             
+[361/754] Load C:\dev\blog\death-of-software\proje
+[361/754] Construct depthmap layer 51             
+[362/754] Load C:\dev\blog\death-of-software\proje
+[362/754] Construct depthmap layer 51             
+[363/754] Grayscale C:\dev\blog\death-of-software\
+[363/754] Construct depthmap layer 51             
+[364/754] Align 021-identity-witness.tif to 022-id
+[364/754] Construct depthmap layer 51             
+[365/754] Grayscale aligned_021-identity-witness.t
+[365/754] Grayscale aligned_021-identity-witness.t
+[366/754] Grayscale C:\dev\blog\death-of-software\
+[366/754] Grayscale aligned_021-identity-witness.t
+[367/754] Load C:\dev\blog\death-of-software\proje
+[367/754] Grayscale aligned_021-identity-witness.t
+[368/754] Align 071-identity-witness.tif to 070-id
+[368/754] Grayscale aligned_021-identity-witness.t
+[369/754] Grayscale aligned_071-identity-witness.t
+[369/754] Construct depthmap layer 51             
+[370/754] Forward-wavelet aligned_021-identity-wit
+[370/754] Construct depthmap layer 51             
+[371/754] Align-residual aligned_021-identity-witn
+[371/754] Construct depthmap layer 51             
+[372/754] Align 020-identity-witness.tif to 021-id
+[372/754] Construct depthmap layer 51             
+[373/754] Grayscale aligned_020-identity-witness.t
+[373/754] Construct depthmap layer 51             
+[374/754] WAVS focus measure for aligned_021-ident
+[374/754] Construct depthmap layer 51             
+[375/754] Forward-wavelet aligned_071-identity-wit
+[375/754] Construct depthmap layer 51             
+[376/754] Align-residual aligned_071-identity-witn
+[376/754] Construct depthmap layer 51             
+[377/754] WAVS focus measure for aligned_071-ident
+[377/754] Construct depthmap layer 51             
+[378/754] Forward-wavelet aligned_020-identity-wit
+[378/754] Merge 8 images                          
+[379/754] Construct depthmap layer 40             
+[379/754] Merge 8 images                          
+[380/754] Align-residual aligned_020-identity-witn
+[380/754] Merge 8 images                          
+[381/754] Grayscale C:\dev\blog\death-of-software\
+[381/754] Merge 8 images                          
+[382/754] WAVS focus measure for aligned_020-ident
+[382/754] Merge 8 images                          
+[383/754] Load C:\dev\blog\death-of-software\proje
+[383/754] Merge 8 images                          
+[384/754] Align 072-identity-witness.tif to 071-id
+[384/754] Merge 8 images                          
+[385/754] Grayscale aligned_072-identity-witness.t
+[385/754] Merge 8 images                          
+[386/754] Grayscale C:\dev\blog\death-of-software\
+[386/754] Merge 8 images                          
+[387/754] Load C:\dev\blog\death-of-software\proje
+[387/754] Merge 8 images                          
+[388/754] Load C:\dev\blog\death-of-software\proje
+[388/754] Merge 8 images                          
+[389/754] Forward-wavelet aligned_072-identity-wit
+[389/754] Merge 8 images                          
+[390/754] Align-residual aligned_072-identity-witn
+[390/754] Merge 8 images                          
+[391/754] Align 019-identity-witness.tif to 020-id
+[391/754] Merge 8 images                          
+[392/754] Grayscale aligned_019-identity-witness.t
+[392/754] Merge 8 images                          
+[393/754] Grayscale C:\dev\blog\death-of-software\
+[393/754] Grayscale C:\dev\blog\death-of-software\
+[394/754] WAVS focus measure for aligned_072-ident
+[394/754] Grayscale C:\dev\blog\death-of-software\
+[395/754] Grayscale C:\dev\blog\death-of-software\
+[395/754] Grayscale C:\dev\blog\death-of-software\
+[396/754] Forward-wavelet aligned_019-identity-wit
+[396/754] Merge 8 images                          
+[397/754] Align-residual aligned_019-identity-witn
+[397/754] Merge 8 images                          
+[398/754] WAVS focus measure for aligned_019-ident
+[398/754] Merge 8 images                          
+[399/754] Align 073-identity-witness.tif to 072-id
+[399/754] Merge 8 images                          
+[400/754] Grayscale aligned_073-identity-witness.t
+[400/754] Merge 8 images                          
+[401/754] Align 018-identity-witness.tif to 019-id
+[401/754] Merge 8 images                          
+[402/754] Grayscale aligned_018-identity-witness.t
+[402/754] Merge 8 images                          
+[403/754] Load C:\dev\blog\death-of-software\proje
+[403/754] Merge 8 images                          
+[404/754] Forward-wavelet aligned_073-identity-wit
+[404/754] Merge 8 images                          
+[405/754] Align-residual aligned_073-identity-witn
+[405/754] Merge 8 images                          
+[406/754] Align-residual aligned_018-identity-witn
+[406/754] Align-residual aligned_018-identity-witn
+[407/754] Construct depthmap layer 52             
+[407/754] Align-residual aligned_018-identity-witn
+[408/754] WAVS focus measure for aligned_073-ident
+[408/754] WAVS focus measure for aligned_073-ident
+[409/754] Forward-wavelet aligned_018-identity-wit
+[409/754] WAVS focus measure for aligned_073-ident
+[410/754] Grayscale C:\dev\blog\death-of-software\
+[410/754] WAVS focus measure for aligned_073-ident
+[411/754] WAVS focus measure for aligned_018-ident
+[411/754] WAVS focus measure for aligned_073-ident
+[412/754] Load C:\dev\blog\death-of-software\proje
+[412/754] Load C:\dev\blog\death-of-software\proje
+[413/754] Align 074-identity-witness.tif to 073-id
+[413/754] Load C:\dev\blog\death-of-software\proje
+[414/754] Grayscale aligned_074-identity-witness.t
+[414/754] Load C:\dev\blog\death-of-software\proje
+[415/754] Load C:\dev\blog\death-of-software\proje
+[415/754] Load C:\dev\blog\death-of-software\proje
+[416/754] Grayscale C:\dev\blog\death-of-software\
+[416/754] Load C:\dev\blog\death-of-software\proje
+[417/754] Load C:\dev\blog\death-of-software\proje
+[417/754] Load C:\dev\blog\death-of-software\proje
+[418/754] Forward-wavelet aligned_074-identity-wit
+[418/754] Merge 8 images                          
+[419/754] Align-residual aligned_074-identity-witn
+[419/754] Merge 8 images                          
+[420/754] Align 017-identity-witness.tif to 018-id
+[420/754] Merge 8 images                          
+[421/754] Grayscale aligned_017-identity-witness.t
+[421/754] Merge 8 images                          
+[422/754] Grayscale C:\dev\blog\death-of-software\
+[422/754] Merge 8 images                          
+[423/754] WAVS focus measure for aligned_074-ident
+[423/754] Merge 8 images                          
+[424/754] Forward-wavelet aligned_017-identity-wit
+[424/754] Forward-wavelet aligned_017-identity-wit
+[425/754] Align-residual aligned_017-identity-witn
+[425/754] Forward-wavelet aligned_017-identity-wit
+[426/754] Align 075-identity-witness.tif to 074-id
+[426/754] Forward-wavelet aligned_017-identity-wit
+[427/754] Grayscale aligned_075-identity-witness.t
+[427/754] Merge 8 images                          
+[428/754] WAVS focus measure for aligned_017-ident
+[428/754] WAVS focus measure for aligned_017-ident
+[429/754] Grayscale C:\dev\blog\death-of-software\
+[429/754] Grayscale C:\dev\blog\death-of-software\
+[430/754] Forward-wavelet aligned_075-identity-wit
+[430/754] Grayscale C:\dev\blog\death-of-software\
+[431/754] Align-residual aligned_075-identity-witn
+[431/754] WAVS focus measure for aligned_017-ident
+[432/754] Align 016-identity-witness.tif to 017-id
+[432/754] WAVS focus measure for aligned_017-ident
+[433/754] Grayscale aligned_016-identity-witness.t
+[433/754] WAVS focus measure for aligned_017-ident
+[434/754] WAVS focus measure for aligned_075-ident
+[434/754] Merge 8 images                          
+[435/754] Load C:\dev\blog\death-of-software\proje
+[435/754] Merge 8 images                          
+[436/754] Load C:\dev\blog\death-of-software\proje
+[436/754] Merge 8 images                          
+[437/754] Construct depthmap layer 39             
+[437/754] Merge 8 images                          
+[438/754] Forward-wavelet aligned_016-identity-wit
+[438/754] Merge 8 images                          
+[439/754] Align-residual aligned_016-identity-witn
+[439/754] Merge 8 images                          
+[440/754] Grayscale C:\dev\blog\death-of-software\
+[440/754] Forward-wavelet aligned_016-identity-wit
+[441/754] Merge 8 images                          
+[441/754] WAVS focus measure for aligned_075-ident
+[442/754] WAVS focus measure for aligned_016-ident
+[442/754] WAVS focus measure for aligned_016-ident
+[443/754] Grayscale C:\dev\blog\death-of-software\
+[443/754] Grayscale C:\dev\blog\death-of-software\
+[444/754] Align 076-identity-witness.tif to 075-id
+[444/754] Grayscale C:\dev\blog\death-of-software\
+[445/754] Grayscale aligned_076-identity-witness.t
+[445/754] Grayscale aligned_076-identity-witness.t
+[446/754] Load C:\dev\blog\death-of-software\proje
+[446/754] Grayscale aligned_076-identity-witness.t
+[447/754] Align 015-identity-witness.tif to 016-id
+[447/754] Grayscale aligned_076-identity-witness.t
+[448/754] Grayscale aligned_015-identity-witness.t
+[448/754] WAVS focus measure for aligned_016-ident
+[449/754] Forward-wavelet aligned_076-identity-wit
+[449/754] Forward-wavelet aligned_076-identity-wit
+[450/754] Align-residual aligned_076-identity-witn
+[450/754] Forward-wavelet aligned_076-identity-wit
+[451/754] Grayscale C:\dev\blog\death-of-software\
+[451/754] Forward-wavelet aligned_076-identity-wit
+[452/754] Align-residual aligned_015-identity-witn
+[452/754] Construct depthmap layer 39             
+[453/754] WAVS focus measure for aligned_076-ident
+[453/754] Construct depthmap layer 39             
+[454/754] Forward-wavelet aligned_015-identity-wit
+[454/754] Forward-wavelet aligned_015-identity-wit
+[455/754] Align 077-identity-witness.tif to 076-id
+[455/754] Forward-wavelet aligned_015-identity-wit
+[456/754] Grayscale aligned_077-identity-witness.t
+[456/754] Forward-wavelet aligned_015-identity-wit
+[457/754] Load C:\dev\blog\death-of-software\proje
+[457/754] Construct depthmap layer 39             
+[458/754] WAVS focus measure for aligned_015-ident
+[458/754] WAVS focus measure for aligned_015-ident
+[459/754] Forward-wavelet aligned_077-identity-wit
+[459/754] WAVS focus measure for aligned_015-ident
+[460/754] Align-residual aligned_077-identity-witn
+[460/754] WAVS focus measure for aligned_015-ident
+[461/754] Grayscale C:\dev\blog\death-of-software\
+[461/754] WAVS focus measure for aligned_015-ident
+[462/754] WAVS focus measure for aligned_077-ident
+[462/754] WAVS focus measure for aligned_015-ident
+[463/754] Load C:\dev\blog\death-of-software\proje
+[463/754] WAVS focus measure for aligned_015-ident
+[464/754] Align 014-identity-witness.tif to 015-id
+[464/754] Construct depthmap layer 39             
+[465/754] Load C:\dev\blog\death-of-software\proje
+[465/754] Construct depthmap layer 39             
+[466/754] Grayscale aligned_014-identity-witness.t
+[466/754] Merge 8 images                          
+[467/754] Construct depthmap layer 53             
+[467/754] Merge 8 images                          
+[468/754] Grayscale C:\dev\blog\death-of-software\
+[468/754] Merge 8 images                          
+[469/754] Grayscale C:\dev\blog\death-of-software\
+[469/754] Merge 8 images                          
+[470/754] Forward-wavelet aligned_014-identity-wit
+[470/754] Merge 8 images                          
+[471/754] Align-residual aligned_014-identity-witn
+[471/754] Merge 8 images                          
+[472/754] WAVS focus measure for aligned_014-ident
+[472/754] Merge 8 images                          
+[473/754] Align 078-identity-witness.tif to 077-id
+[473/754] Merge 8 images                          
+[474/754] Grayscale aligned_078-identity-witness.t
+[474/754] Merge 8 images                          
+[475/754] Align 013-identity-witness.tif to 014-id
+[475/754] Merge 8 images                          
+[476/754] Grayscale aligned_013-identity-witness.t
+[476/754] Merge 8 images                          
+[477/754] Forward-wavelet aligned_078-identity-wit
+[477/754] Merge 8 images                          
+[478/754] Align-residual aligned_078-identity-witn
+[478/754] Merge 8 images                          
+[479/754] Align-residual aligned_013-identity-witn
+[479/754] Merge 8 images                          
+[480/754] Load C:\dev\blog\death-of-software\proje
+[480/754] Merge 8 images                          
+[481/754] WAVS focus measure for aligned_078-ident
+[481/754] Merge 8 images                          
+[482/754] Forward-wavelet aligned_013-identity-wit
+[482/754] Merge 8 images                          
+[483/754] Grayscale C:\dev\blog\death-of-software\
+[483/754] Grayscale C:\dev\blog\death-of-software\
+[484/754] Load C:\dev\blog\death-of-software\proje
+[484/754] Load C:\dev\blog\death-of-software\proje
+[485/754] WAVS focus measure for aligned_013-ident
+[485/754] Grayscale C:\dev\blog\death-of-software\
+[486/754] Grayscale C:\dev\blog\death-of-software\
+[486/754] Merge 8 images                          
+[487/754] Align 079-identity-witness.tif to 078-id
+[487/754] Merge 8 images                          
+[488/754] Grayscale aligned_079-identity-witness.t
+[488/754] Merge 8 images                          
+[489/754] Load C:\dev\blog\death-of-software\proje
+[489/754] Merge 8 images                          
+[490/754] Align 012-identity-witness.tif to 013-id
+[490/754] Merge 8 images                          
+[491/754] Grayscale aligned_012-identity-witness.t
+[491/754] Merge 8 images                          
+[492/754] Grayscale C:\dev\blog\death-of-software\
+[492/754] Merge 8 images                          
+[493/754] Forward-wavelet aligned_079-identity-wit
+[493/754] Merge 8 images                          
+[494/754] Align-residual aligned_079-identity-witn
+[494/754] Merge 8 images                          
+[495/754] Align-residual aligned_012-identity-witn
+[495/754] Align-residual aligned_012-identity-witn
+[496/754] WAVS focus measure for aligned_079-ident
+[496/754] Align-residual aligned_012-identity-witn
+[497/754] Forward-wavelet aligned_012-identity-wit
+[497/754] Forward-wavelet aligned_012-identity-wit
+[498/754] Construct depthmap layer 38             
+[498/754] Forward-wavelet aligned_012-identity-wit
+[499/754] Align 080-identity-witness.tif to 079-id
+[499/754] Forward-wavelet aligned_012-identity-wit
+[500/754] Grayscale aligned_080-identity-witness.t
+[500/754] Align-residual aligned_012-identity-witn
+[501/754] WAVS focus measure for aligned_012-ident
+[501/754] WAVS focus measure for aligned_012-ident
+[502/754] Forward-wavelet aligned_080-identity-wit
+[502/754] WAVS focus measure for aligned_012-ident
+[503/754] Align-residual aligned_080-identity-witn
+[503/754] WAVS focus measure for aligned_012-ident
+[504/754] Load C:\dev\blog\death-of-software\proje
+[504/754] WAVS focus measure for aligned_012-ident
+[505/754] WAVS focus measure for aligned_080-ident
+[505/754] WAVS focus measure for aligned_012-ident
+[506/754] Grayscale C:\dev\blog\death-of-software\
+[506/754] Merge 8 images                          
+[507/754] Load C:\dev\blog\death-of-software\proje
+[507/754] Merge 8 images                          
+[508/754] Load C:\dev\blog\death-of-software\proje
+[508/754] Merge 8 images                          
+[509/754] Grayscale C:\dev\blog\death-of-software\
+[509/754] Merge 8 images                          
+[510/754] Align 011-identity-witness.tif to 012-id
+[510/754] Merge 8 images                          
+[511/754] Grayscale aligned_011-identity-witness.t
+[511/754] Merge 8 images                          
+[512/754] Grayscale C:\dev\blog\death-of-software\
+[512/754] Merge 8 images                          
+[513/754] Load C:\dev\blog\death-of-software\proje
+[513/754] Merge 8 images                          
+[514/754] Align 081-identity-witness.tif to 080-id
+[514/754] Merge 8 images                          
+[515/754] Grayscale aligned_081-identity-witness.t
+[515/754] Merge 8 images                          
+[516/754] Forward-wavelet aligned_011-identity-wit
+[516/754] Merge 8 images                          
+[517/754] Align-residual aligned_011-identity-witn
+[517/754] Merge 8 images                          
+[518/754] Align 010-identity-witness.tif to 011-id
+[518/754] Merge 8 images                          
+[519/754] Grayscale aligned_010-identity-witness.t
+[519/754] Grayscale aligned_010-identity-witness.t
+[520/754] Align-residual aligned_081-identity-witn
+[520/754] Grayscale aligned_010-identity-witness.t
+[521/754] WAVS focus measure for aligned_011-ident
+[521/754] WAVS focus measure for aligned_011-ident
+[522/754] Forward-wavelet aligned_081-identity-wit
+[522/754] WAVS focus measure for aligned_011-ident
+[523/754] Align-residual aligned_010-identity-witn
+[523/754] WAVS focus measure for aligned_011-ident
+[524/754] WAVS focus measure for aligned_081-ident
+[524/754] WAVS focus measure for aligned_011-ident
+[525/754] Forward-wavelet aligned_010-identity-wit
+[525/754] WAVS focus measure for aligned_011-ident
+[526/754] Construct depthmap layer 54             
+[526/754] Merge 8 images                          
+[527/754] Grayscale C:\dev\blog\death-of-software\
+[527/754] Merge 8 images                          
+[528/754] Load C:\dev\blog\death-of-software\proje
+[528/754] Merge 8 images                          
+[529/754] WAVS focus measure for aligned_010-ident
+[529/754] Merge 8 images                          
+[530/754] Grayscale C:\dev\blog\death-of-software\
+[530/754] Merge 8 images                          
+[531/754] Align 082-identity-witness.tif to 081-id
+[531/754] Merge 8 images                          
+[532/754] Grayscale aligned_082-identity-witness.t
+[532/754] Merge 8 images                          
+[533/754] Load C:\dev\blog\death-of-software\proje
+[533/754] Merge 8 images                          
+[534/754] Grayscale C:\dev\blog\death-of-software\
+[534/754] Merge 8 images                          
+[535/754] Align 009-identity-witness.tif to 010-id
+[535/754] Merge 8 images                          
+[536/754] Grayscale aligned_009-identity-witness.t
+[536/754] Merge 8 images                          
+[537/754] Load C:\dev\blog\death-of-software\proje
+[537/754] Load C:\dev\blog\death-of-software\proje
+[538/754] Forward-wavelet aligned_082-identity-wit
+[538/754] Load C:\dev\blog\death-of-software\proje
+[539/754] Align-residual aligned_082-identity-witn
+[539/754] Merge 8 images                          
+[540/754] Align 083-identity-witness.tif to 082-id
+[540/754] Merge 8 images                          
+[541/754] Grayscale aligned_083-identity-witness.t
+[541/754] Merge 8 images                          
+[542/754] Align-residual aligned_009-identity-witn
+[542/754] Align-residual aligned_009-identity-witn
+[543/754] WAVS focus measure for aligned_082-ident
+[543/754] Align-residual aligned_009-identity-witn
+[544/754] Forward-wavelet aligned_009-identity-wit
+[544/754] Forward-wavelet aligned_009-identity-wit
+[545/754] Align-residual aligned_083-identity-witn
+[545/754] Forward-wavelet aligned_009-identity-wit
+[546/754] Grayscale C:\dev\blog\death-of-software\
+[546/754] Merge 8 images                          
+[547/754] WAVS focus measure for aligned_009-ident
+[547/754] Merge 8 images                          
+[548/754] Forward-wavelet aligned_083-identity-wit
+[548/754] Merge 8 images                          
+[549/754] Load C:\dev\blog\death-of-software\proje
+[549/754] Merge 8 images                          
+[550/754] Align 008-identity-witness.tif to 009-id
+[550/754] Merge 8 images                          
+[551/754] Grayscale aligned_008-identity-witness.t
+[551/754] Merge 8 images                          
+[552/754] Grayscale C:\dev\blog\death-of-software\
+[552/754] Grayscale C:\dev\blog\death-of-software\
+[553/754] WAVS focus measure for aligned_083-ident
+[553/754] Grayscale C:\dev\blog\death-of-software\
+[554/754] Construct depthmap layer 37             
+[554/754] Grayscale C:\dev\blog\death-of-software\
+[555/754] Forward-wavelet aligned_008-identity-wit
+[555/754] Grayscale C:\dev\blog\death-of-software\
+[556/754] Align-residual aligned_008-identity-witn
+[556/754] Merge 8 images                          
+[557/754] Align 084-identity-witness.tif to 083-id
+[557/754] Merge 8 images                          
+[558/754] Grayscale aligned_084-identity-witness.t
+[558/754] Merge 8 images                          
+[559/754] WAVS focus measure for aligned_008-ident
+[559/754] Merge 8 images                          
+[560/754] Forward-wavelet aligned_084-identity-wit
+[560/754] Merge 8 images                          
+[561/754] Align-residual aligned_084-identity-witn
+[561/754] Merge 8 images                          
+[562/754] Load C:\dev\blog\death-of-software\proje
+[562/754] Merge 8 images                          
+[563/754] Grayscale C:\dev\blog\death-of-software\
+[563/754] Merge 8 images                          
+[564/754] WAVS focus measure for aligned_084-ident
+[564/754] Merge 8 images                          
+[565/754] Load C:\dev\blog\death-of-software\proje
+[565/754] Merge 8 images                          
+[566/754] Load C:\dev\blog\death-of-software\proje
+[566/754] Load C:\dev\blog\death-of-software\proje
+[567/754] Grayscale C:\dev\blog\death-of-software\
+[567/754] Load C:\dev\blog\death-of-software\proje
+[568/754] Align 007-identity-witness.tif to 008-id
+[568/754] Load C:\dev\blog\death-of-software\proje
+[569/754] Grayscale aligned_007-identity-witness.t
+[569/754] Merge 8 images                          
+[570/754] Grayscale C:\dev\blog\death-of-software\
+[570/754] Merge 8 images                          
+[571/754] Load C:\dev\blog\death-of-software\proje
+[571/754] Merge 8 images                          
+[572/754] Forward-wavelet aligned_007-identity-wit
+[572/754] Merge 8 images                          
+[573/754] Align-residual aligned_007-identity-witn
+[573/754] Merge 8 images                          
+[574/754] Align 085-identity-witness.tif to 084-id
+[574/754] Merge 8 images                          
+[575/754] Grayscale aligned_085-identity-witness.t
+[575/754] Merge 8 images                          
+[576/754] WAVS focus measure for aligned_007-ident
+[576/754] Merge 8 images                          
+[577/754] Align 006-identity-witness.tif to 007-id
+[577/754] Merge 8 images                          
+[578/754] Grayscale aligned_006-identity-witness.t
+[578/754] Grayscale aligned_006-identity-witness.t
+[579/754] Grayscale C:\dev\blog\death-of-software\
+[579/754] Grayscale aligned_006-identity-witness.t
+[580/754] Forward-wavelet aligned_085-identity-wit
+[580/754] Grayscale aligned_006-identity-witness.t
+[581/754] Align-residual aligned_085-identity-witn
+[581/754] Merge 8 images                          
+[582/754] WAVS focus measure for aligned_085-ident
+[582/754] Merge 8 images                          
+[583/754] Construct depthmap layer 55             
+[583/754] Merge 8 images                          
+[584/754] Forward-wavelet aligned_006-identity-wit
+[584/754] Forward-wavelet aligned_006-identity-wit
+[585/754] Align-residual aligned_006-identity-witn
+[585/754] Merge 8 images                          
+[586/754] WAVS focus measure for aligned_006-ident
+[586/754] Merge 8 images                          
+[587/754] Align 086-identity-witness.tif to 085-id
+[587/754] Merge 8 images                          
+[588/754] Grayscale aligned_086-identity-witness.t
+[588/754] Merge 8 images                          
+[589/754] Load C:\dev\blog\death-of-software\proje
+[589/754] Load C:\dev\blog\death-of-software\proje
+[590/754] Load C:\dev\blog\death-of-software\proje
+[590/754] Merge 8 images                          
+[591/754] Grayscale C:\dev\blog\death-of-software\
+[591/754] Merge 8 images                          
+[592/754] Grayscale C:\dev\blog\death-of-software\
+[592/754] Merge 8 images                          
+[593/754] Forward-wavelet aligned_086-identity-wit
+[593/754] Merge 8 images                          
+[594/754] Align-residual aligned_086-identity-witn
+[594/754] Merge 8 images                          
+[595/754] Align 087-identity-witness.tif to 086-id
+[595/754] Merge 8 images                          
+[596/754] Grayscale aligned_087-identity-witness.t
+[596/754] Merge 8 images                          
+[597/754] WAVS focus measure for aligned_086-ident
+[597/754] Merge 8 images                          
+[598/754] Align 005-identity-witness.tif to 006-id
+[598/754] Merge 8 images                          
+[599/754] Grayscale aligned_005-identity-witness.t
+[599/754] Grayscale aligned_005-identity-witness.t
+[600/754] Merge 8 images                          
+[600/754] Grayscale aligned_005-identity-witness.t
+[601/754] Load C:\dev\blog\death-of-software\proje
+[601/754] Grayscale aligned_005-identity-witness.t
+[602/754] Forward-wavelet aligned_087-identity-wit
+[602/754] Merge 8 images                          
+[603/754] Align-residual aligned_005-identity-witn
+[603/754] Merge 8 images                          
+[604/754] Align-residual aligned_087-identity-witn
+[604/754] Merge 8 images                          
+[605/754] Forward-wavelet aligned_005-identity-wit
+[605/754] Merge 8 images                          
+[606/754] WAVS focus measure for aligned_087-ident
+[606/754] Merge 8 images                          
+[607/754] WAVS focus measure for aligned_005-ident
+[607/754] Merge 8 images                          
+[608/754] Grayscale C:\dev\blog\death-of-software\
+[608/754] Merge 8 images                          
+[609/754] Construct depthmap layer 36             
+[609/754] Merge 8 images                          
+[610/754] Load C:\dev\blog\death-of-software\proje
+[610/754] Merge 8 images                          
+[611/754] Align 004-identity-witness.tif to 005-id
+[611/754] Merge 8 images                          
+[612/754] Grayscale C:\dev\blog\death-of-software\
+[612/754] Grayscale C:\dev\blog\death-of-software\
+[613/754] Grayscale aligned_004-identity-witness.t
+[613/754] Grayscale C:\dev\blog\death-of-software\
+[614/754] Load C:\dev\blog\death-of-software\proje
+[614/754] Grayscale C:\dev\blog\death-of-software\
+[615/754] Load C:\dev\blog\death-of-software\proje
+[615/754] Merge 8 images                          
+[616/754] Align 088-identity-witness.tif to 087-id
+[616/754] Merge 8 images                          
+[617/754] Grayscale aligned_088-identity-witness.t
+[617/754] Merge 8 images                          
+[618/754] Grayscale C:\dev\blog\death-of-software\
+[618/754] Merge 8 images                          
+[619/754] Forward-wavelet aligned_004-identity-wit
+[619/754] Merge 8 images                          
+[620/754] Align-residual aligned_004-identity-witn
+[620/754] Merge 8 images                          
+[621/754] Align-residual aligned_088-identity-witn
+[621/754] Merge 8 images                          
+[622/754] WAVS focus measure for aligned_004-ident
+[622/754] WAVS focus measure for aligned_004-ident
+[623/754] Forward-wavelet aligned_088-identity-wit
+[623/754] WAVS focus measure for aligned_004-ident
+[624/754] Align 003-identity-witness.tif to 004-id
+[624/754] WAVS focus measure for aligned_004-ident
+[625/754] Grayscale aligned_003-identity-witness.t
+[625/754] WAVS focus measure for aligned_004-ident
+[626/754] WAVS focus measure for aligned_088-ident
+[626/754] WAVS focus measure for aligned_004-ident
+[627/754] Grayscale C:\dev\blog\death-of-software\
+[627/754] WAVS focus measure for aligned_004-ident
+[628/754] Forward-wavelet aligned_003-identity-wit
+[628/754] Merge 8 images                          
+[629/754] Align-residual aligned_003-identity-witn
+[629/754] Merge 8 images                          
+[630/754] Align 089-identity-witness.tif to 088-id
+[630/754] Merge 8 images                          
+[631/754] Grayscale aligned_089-identity-witness.t
+[631/754] Merge 8 images                          
+[632/754] WAVS focus measure for aligned_003-ident
+[632/754] Merge 8 images                          
+[633/754] Load C:\dev\blog\death-of-software\proje
+[633/754] Merge 8 images                          
+[634/754] Forward-wavelet aligned_089-identity-wit
+[634/754] Merge 8 images                          
+[635/754] Align-residual aligned_089-identity-witn
+[635/754] Merge 8 images                          
+[636/754] Grayscale C:\dev\blog\death-of-software\
+[636/754] Merge 8 images                          
+[637/754] WAVS focus measure for aligned_089-ident
+[637/754] Merge 8 images                          
+[638/754] Align 002-identity-witness.tif to 003-id
+[638/754] Merge 8 images                          
+[639/754] Grayscale aligned_002-identity-witness.t
+[639/754] Merge 8 images                          
+[640/754] Load C:\dev\blog\death-of-software\proje
+[640/754] Load C:\dev\blog\death-of-software\proje
+[641/754] Construct depthmap layer 56             
+[641/754] Merge 8 images                          
+[642/754] Grayscale C:\dev\blog\death-of-software\
+[642/754] Merge 8 images                          
+[643/754] Load C:\dev\blog\death-of-software\proje
+[643/754] Load C:\dev\blog\death-of-software\proje
+[644/754] Forward-wavelet aligned_002-identity-wit
+[644/754] Merge 8 images                          
+[645/754] Align-residual aligned_002-identity-witn
+[645/754] Merge 8 images                          
+[646/754] Grayscale C:\dev\blog\death-of-software\
+[646/754] Merge 8 images                          
+[647/754] WAVS focus measure for aligned_002-ident
+[647/754] Merge 8 images                          
+[648/754] Align 090-identity-witness.tif to 089-id
+[648/754] Merge 8 images                          
+[649/754] Grayscale aligned_090-identity-witness.t
+[649/754] Grayscale aligned_090-identity-witness.t
+[650/754] Align 001-identity-witness.tif to 002-id
+[650/754] Grayscale aligned_090-identity-witness.t
+[651/754] Grayscale aligned_001-identity-witness.t
+[651/754] Merge 8 images                          
+[652/754] Forward-wavelet aligned_090-identity-wit
+[652/754] Merge 8 images                          
+[653/754] Align-residual aligned_090-identity-witn
+[653/754] Merge 8 images                          
+[654/754] Align-residual aligned_001-identity-witn
+[654/754] Merge 8 images                          
+[655/754] WAVS focus measure for aligned_090-ident
+[655/754] Merge 8 images                          
+[656/754] Forward-wavelet aligned_001-identity-wit
+[656/754] Merge 8 images                          
+[657/754] Load C:\dev\blog\death-of-software\proje
+[657/754] Merge 8 images                          
+[658/754] WAVS focus measure for aligned_001-ident
+[658/754] Merge 8 images                          
+[659/754] Grayscale C:\dev\blog\death-of-software\
+[659/754] Merge 8 images                          
+[660/754] Load C:\dev\blog\death-of-software\proje
+[660/754] Merge 8 images                          
+[661/754] Align 091-identity-witness.tif to 090-id
+[661/754] Merge 8 images                          
+[662/754] Grayscale aligned_091-identity-witness.t
+[662/754] Merge 8 images                          
+[662/754] Merge 8 images                          
+[663/754] Grayscale C:\dev\blog\death-of-software\
+[663/754] Merge 8 images                          
+[664/754] Construct depthmap layer 35             
+[664/754] Merge 8 images                          
+[664/754] Merge 8 images                          
+[665/754] Align 000-identity-witness.tif to 001-id
+[665/754] Merge 8 images                          
+[666/754] Forward-wavelet aligned_091-identity-wit
+[667/754] Align-residual aligned_091-identity-witn
+[667/754] Merge 8 images                          
+[668/754] Grayscale aligned_000-identity-witness.t
+[668/754] Grayscale aligned_000-identity-witness.t
+[669/754] WAVS focus measure for aligned_091-ident
+[669/754] Merge 8 images                          
+[670/754] Forward-wavelet aligned_000-identity-wit
+[671/754] Align-residual aligned_000-identity-witn
+[671/754] Merge 8 images                          
+[672/754] Cross-bracket defective-pixel map       
+[672/754] Merge 8 images                          
+[672/754] Merge 8 images                          
+[672/754] Merge 8 images                          
+[673/754] WAVS focus measure for aligned_000-ident
+[673/754] Merge 8 images                          
+[673/754] Merge 8 images                          
+[673/754] Merge 8 images                          
+[674/754] Construct depthmap layer 57             
+[674/754] Merge 8 images                          
+[675/754] Construct depthmap layer 34             
+[675/754] Merge 8 images                          
+[676/754] Construct depthmap layer 58             
+[676/754] Construct depthmap layer 58             
+[677/754] Merge 8 images                          
+[677/754] Merge 8 images                          
+[678/754] Construct depthmap layer 33             
+[678/754] Merge 8 images                          
+[679/754] Construct depthmap layer 59             
+[679/754] Merge 8 images                          
+[680/754] Construct depthmap layer 32             
+[680/754] Merge 8 images                          
+[681/754] Construct depthmap layer 60             
+[681/754] Merge 8 images                          
+[682/754] Construct depthmap layer 31             
+[682/754] Merge 8 images                          
+[683/754] Construct depthmap layer 61             
+[683/754] Construct depthmap layer 61             
+[684/754] Merge 8 images                          
+[684/754] Merge 8 images                          
+[685/754] Construct depthmap layer 30             
+[685/754] Merge 8 images                          
+[686/754] Construct depthmap layer 62             
+[686/754] Merge 8 images                          
+[687/754] Construct depthmap layer 29             
+[687/754] Merge 8 images                          
+[688/754] Construct depthmap layer 63             
+[688/754] Merge 8 images                          
+[689/754] Construct depthmap layer 28             
+[689/754] Merge 8 images                          
+[690/754] Construct depthmap layer 64             
+[690/754] Merge 8 images                          
+[691/754] Construct depthmap layer 27             
+[691/754] Construct depthmap layer 27             
+[692/754] Merge 8 images                          
+[692/754] Merge 8 images                          
+[693/754] Construct depthmap layer 65             
+[693/754] Merge 8 images                          
+[694/754] Construct depthmap layer 26             
+[694/754] Merge 8 images                          
+[695/754] Construct depthmap layer 66             
+[695/754] Merge 8 images                          
+[696/754] Construct depthmap layer 25             
+[696/754] Merge 8 images                          
+[697/754] Construct depthmap layer 67             
+[697/754] Merge 8 images                          
+[698/754] Construct depthmap layer 24             
+[698/754] Construct depthmap layer 24             
+[699/754] Merge 8 images                          
+[699/754] Merge 8 images                          
+[700/754] Construct depthmap layer 68             
+[700/754] Merge 8 images                          
+[701/754] Construct depthmap layer 23             
+[701/754] Merge 8 images                          
+[702/754] Construct depthmap layer 69             
+[702/754] Merge 8 images                          
+[703/754] Construct depthmap layer 22             
+[703/754] Merge 8 images                          
+[704/754] Construct depthmap layer 70             
+[704/754] Merge 8 images                          
+[705/754] Construct depthmap layer 21             
+[705/754] Merge 8 images                          
+[706/754] Construct depthmap layer 71             
+[706/754] Merge 8 images                          
+[707/754] Construct depthmap layer 20             
+[707/754] Construct depthmap layer 20             
+[708/754] Merge 8 images                          
+[708/754] Merge 8 images                          
+[709/754] Construct depthmap layer 72             
+[709/754] Merge 8 images                          
+[710/754] Construct depthmap layer 19             
+[710/754] Merge 8 images                          
+[711/754] Construct depthmap layer 73             
+[711/754] Merge 8 images                          
+[712/754] Construct depthmap layer 18             
+[712/754] Merge 8 images                          
+[713/754] Construct depthmap layer 74             
+[713/754] Merge 8 images                          
+[714/754] Construct depthmap layer 17             
+[714/754] Merge 8 images                          
+[715/754] Construct depthmap layer 75             
+[715/754] Construct depthmap layer 75             
+[716/754] Merge 4 images                          
+[716/754] Merge 4 images                          
+[717/754] Construct depthmap layer 16             
+[717/754] Merge 4 images                          
+[718/754] Construct depthmap layer 76             
+[718/754] Merge 4 images                          
+[719/754] Construct depthmap layer 15             
+[719/754] Merge 4 images                          
+[720/754] Construct depthmap layer 77             
+[720/754] Merge 4 images                          
+[721/754] Construct depthmap layer 14             
+[721/754] Merge 4 images                          
+[722/754] Construct depthmap layer 78             
+[722/754] Merge 4 images                          
+[723/754] Construct depthmap layer 13             
+[723/754] Merge 4 images                          
+[724/754] Construct depthmap layer 79             
+[724/754] Construct depthmap layer 79             
+[725/754] Denoise merge_result.jpg                
+[725/754] Construct depthmap layer 79             
+[726/754] Inverse-wavelet denoised_merge_result.jp
+[726/754] Construct depthmap layer 79             
+[727/754] Construct depthmap layer 12             
+[728/754] Construct depthmap layer 80             
+[729/754] Construct depthmap layer 11             
+[730/754] Construct depthmap layer 81             
+[731/754] Construct depthmap layer 10             
+[732/754] Construct depthmap layer 82             
+[733/754] Construct depthmap layer 9              
+[734/754] Construct depthmap layer 83             
+[735/754] Construct depthmap layer 8              
+[736/754] Construct depthmap layer 84             
+[737/754] Construct depthmap layer 7              
+[738/754] Construct depthmap layer 85             
+[739/754] Construct depthmap layer 6              
+[740/754] Construct depthmap layer 86             
+[741/754] Construct depthmap layer 5              
+[742/754] Construct depthmap layer 87             
+[743/754] Construct depthmap layer 4              
+[744/754] Construct depthmap layer 88             
+[745/754] Construct depthmap layer 3              
+[746/754] Construct depthmap layer 89             
+[747/754] Construct depthmap layer 2              
+[748/754] Construct depthmap layer 90             
+[749/754] Construct depthmap layer 1              
+[750/754] Construct depthmap layer 91             
+[751/754] Construct depthmap layer 0              
+[752/754] Construct depthmap layer -1             
+[753/754] Compose color (winner-copy)             
+
+Error exit due to failed steps

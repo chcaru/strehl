@@ -1,0 +1,58 @@
+{
+  "status": "UNMEASURED",
+  "reason": "mandatory same-N, same-dimensions output-grid control failed before producing an output",
+  "preregistration_commit": "363310920169e94b3e916a2573e481a1c7f1ed0a",
+  "control": {
+    "dimensions": [
+      2262,
+      3392,
+      3
+    ],
+    "source_count": 92,
+    "source_replication": {
+      "base_plus_input_links": 93,
+      "input_links": 92,
+      "unique_windows_file_ids": 1
+    },
+    "base_tiff_sha256": "45F27A1E6B43AF778CE6312AB78653EA8F8CE6983989BC1B40DC1AFF5932F52B",
+    "base_pixel_sha256": "347BBAFBDE9C9D3146B6BAB5993B8DC693FBE0DDFFA092092058521A442DEBDC",
+    "base_schema": {
+      "dtype": "uint16",
+      "shape": [
+        2262,
+        3392,
+        3
+      ],
+      "orientation": 1,
+      "compression": "NONE",
+      "photometric": "RGB"
+    },
+    "icc_sha256": "A7FEE628AF2961869B68E2F38A11123F4899F4CAB88B27A15742672B8BF43445",
+    "icc_bytes": 552,
+    "comparator_sha256": "0ABA0CF0936AF8B1CACE2681CA43D49729D253E8ED1F786F2A8960B7974CA45D",
+    "command_record_sha256": "5FDC83193FA3003960133B287F7312BC8957A705E2468EE0459F1B6458F59D78",
+    "returncode": 1,
+    "direct_output_exists": false,
+    "stderr_file_sha256": "F2EBFEA1FAD68221F0348E688724E7538D148832650FC234695E81E79C57C713",
+    "stdout_file_sha256": "1AC7F8D39AC280FE4C43FD5E33153B29408B9C07C58FCA4D5F4DA4B95B66488A",
+    "failure": "OpenCV 4.13.0 cv::histPrepareImages assertion ranges[i][0] < ranges[i][1] while constructing depthmap layer -1",
+    "last_progress": "Compose color (winner-copy), then Error exit due to failed steps",
+    "alignment_diagnostic": {
+      "align_task_labels": 93,
+      "no_align_or_skip_align_log_mentions": 0,
+      "interpretation": "The progress log is inconsistent with the requested bypass on its face, but without an output the pixel geometry predicate cannot adjudicate whether those labels denote an actual transform."
+    }
+  },
+  "stopped": {
+    "geometry_green_evaluated": false,
+    "geometry_red_evaluated": false,
+    "adapter_commissioning_evaluated": false,
+    "subject_prepare_invoked": false,
+    "subject_frame_decoded": false,
+    "subject_render_invoked": false,
+    "m8_o_invoked": false
+  },
+  "licensed_conclusion": "The frozen focus-stack build cannot manufacture the required comparative contract under this preregistered control. The subject M8-O result is UNMEASURED.",
+  "scope": "Controlled merge audit, not a default-settings product benchmark."
+}
+

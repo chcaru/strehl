@@ -412,3 +412,64 @@ The nominal sharpness pair remains unusable: its source pixels differ in eleven
 development fields, sharpening is upstream of each declared hull, and no
 frozen common placement survives. Consequently the within-pair movement and
 the registered sharpening prediction remain **untested**, not negative.
+
+## 16. Controlled `focus-stack` execution stopped at the mandatory control
+
+**Preregistration:** commit
+`363310920169e94b3e916a2573e481a1c7f1ed0a`, before generating a synthetic
+outcome, decoding a subject frame, invoking the comparator, or running M8-O.
+
+The registrar-granted subject was `tilted-sw10-cpl`, 92 frames. The source
+inventory was frozen by names and sizes, but no subject frame was decoded and
+no subject pixel outcome was opened. `tilted-sw4-cpl` and the `flat-*` stacks
+were not accessed.
+
+The first mandatory control used the frozen comparator
+`focus-stack.exe` SHA-256
+`0ABA0CF0936AF8B1CACE2681CA43D49729D253E8ED1F786F2A8960B7974CA45D`
+with the exact §6 invocation. Its 92 inputs were byte-identical hard links to
+one preregistered `3392 x 2262 x 3` uint16 coordinate/domain witness. Windows
+reported one file identity with 93 links. The witness was uncompressed,
+Orientation 1, linear-Rec.2020 ICC SHA-256
+`A7FEE628AF2961869B68E2F38A11123F4899F4CAB88B27A15742672B8BF43445`,
+and canonical pixel SHA-256
+`347BBAFBDE9C9D3146B6BAB5993B8DC693FBE0DDFFA092092058521A442DEBDC`.
+
+The comparator exited `1` and wrote no output. Its terminal failure was:
+
+```text
+Task Construct depthmap layer -1 on thread 2 failed with exception:
+OpenCV(4.13.0) ... histogram.cpp:202:
+(-215:Assertion failed) ranges[i] && ranges[i][0] < ranges[i][1]
+in function 'cv::histPrepareImages'
+```
+
+The progress stream reached `Compose color (winner-copy)` and then
+`Error exit due to failed steps`. It also contained 93 `Align ...` task labels
+despite `--no-align --no-transform`, and no log statement saying alignment was
+skipped. That is a concerning diagnostic, not a pixel-level finding: because
+no output exists, the preregistered geometry predicate cannot tell whether the
+labels denote an actual transform.
+
+The stop rule therefore fired. No threshold, witness, source count, or
+comparator option was changed; there was no retry with non-identical inputs.
+The geometry GREEN/RED verdicts, adapter commissioning, prepared subject
+frames, subject render, and M8-O were not run.
+
+**Candidate result: `UNMEASURED`.** The frozen `focus-stack` build cannot
+manufacture the required contract under this preregistered control. There is
+no violation rate, denominator, sign split, magnitude distribution, or
+comparator-versus-strehl reading to report.
+
+This remains a **controlled merge audit, not a default-settings product
+benchmark**. The licensing analysis and the reason Zerene remains necessary
+for the governing headline are in
+`M8-COMPARATIVE-PROTOCOL.md` §§15.1–15.3.
+
+Artifacts:
+
+* `experiments/M8-COMPARATIVE-CONTROLLED/control-result.json`
+* `experiments/M8-COMPARATIVE-CONTROLLED/controls/focus-stack-command.json`
+* `experiments/M8-COMPARATIVE-CONTROLLED/controls/focus-stack.stdout.txt`
+* `experiments/M8-COMPARATIVE-CONTROLLED/controls/focus-stack.stderr.txt`
+* `experiments/M8-COMPARATIVE-CONTROLLED/controls/FAIL.json`

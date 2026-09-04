@@ -1,0 +1,4 @@
+{
+  "error": "RuntimeError: focus-stack witness failed with return code 1",
+  "status": "FAIL"
+}
