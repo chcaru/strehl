@@ -396,9 +396,218 @@ and exit nonzero on mismatch or a `Real defect` branch.
 - `experiments/M168-orchestrator-verifier-audit/restore_crash.py`
 - `experiments/M168-orchestrator-verifier-audit/probe_attacks.py`
 - `experiments/M168-orchestrator-verifier-audit/date_audit.py`
+- `experiments/M168-orchestrator-verifier-audit/boundary_attacks.py`
 
 All scripts use temporary trees. The default target is the assignment’s
 52-claim revision; pass `HEAD` to the first three scripts to test the latest
 revision. The untracked M134 dependency is used only if its audited hash
 matches; a clean checkout receives a one-token scratch fixture for that
 unrelated presence claim.
+
+
+## 11. Re-audit of the `7c65f8a4` boundary repair
+
+This section responds to the later request to re-read and attack the revised
+apparatus. It supersedes any earlier implication that `positions()` had closed
+the duplicate-number problem.
+
+- **VERIFIED BY RUNNING.** The requested revision
+  `7c65f8a4444d2c2fb239e589f56466da9e7aa7e2` reproduces its `61`-claim GREEN
+  baseline and the `19/19` commissioning population.
+- **VERIFIED BY READING AND RUNNING.** The shared tree advanced again during
+  this re-audit. `v2954.py` was later touched at
+  `31daf74cf21a26ed50d067951f32c11caff6e1ef`, but the bodies of `variants()`,
+  `rounds_to()` and `positions()` are unchanged from `7c65f8a4`. The complete
+  boundary attack also reproduced against that later live checker.
+
+### 11.1 Direct attack on `positions()` and `rounds_to()`
+
+**VERIFIED BY RUNNING.** `boundary_attacks.py` extracts the three functions from
+the audited checker AST and calls those exact definitions. Four controls behave
+correctly: an exact decimal matches; strict mode rejects `2.031203` as
+`2.0312`; source mode accepts `2.031203` because it rounds to `2.0312`; and it
+rejects `2.03126` because that rounds to `2.0313`.
+
+Eleven edge results are defective:
+
+| case | expected | actual | failure |
+|---|---:|---:|---|
+| positive `0.27` in `-0.27` | false | true | false GREEN; sign is ignored |
+| integer `96` in decimal `0.96` | false | true | false GREEN; suffix of a larger number |
+| integer `96` in `96.5` | false | true | false GREEN; decimal point is accepted as a boundary |
+| `1,602` in `1,602,000` | false | true | false GREEN; comma is accepted as a boundary |
+| numeric `96` in hex `A96F` | false | true | false GREEN; hex letters are accepted as boundaries |
+| full SHA followed by another hex digit | false | true | false GREEN; SHA token boundary is not checked |
+| scalar `1.11` in `1.11e-15` | false | true | false GREEN; exponent marker is accepted as a boundary |
+| rounded source `1.5604%` for `1.560%` | true | false | false RED; suffix prevents `extend` from running |
+| rounded source `2.031203x` for `2.0312x` | true | false | false RED; same unit-suffix defect |
+| rounded source `1.1100e-15` for `1.11e-15` | true | false | false RED; scientific notation is unsupported |
+| decimal midpoint `2.675` for `2.67` | false under decimal half-even | true | false GREEN from binary-float formatting |
+
+**INFERRED BY READING.** The cause is that only adjacent decimal digits are
+considered continuations. Signs, decimal points, commas, exponent markers,
+percent signs, units and hexadecimal letters are all treated as boundaries.
+`rounds_to()` derives precision with `len(short.split(".")[1])` and converts
+through binary `float`, so its name “rounds exactly” is stronger than its
+implementation.
+
+### 11.2 Full-verifier witnesses
+
+**VERIFIED BY RUNNING.** These are not helper-only hypotheticals. Temporary
+copies of the complete verifier produced:
+
+```text
+INTEGRATION_FALSE_GREEN negative exponent: exit=0 | GREEN aperture airy calibration error 1.11e-15 | VERDICT: GREEN
+INTEGRATION_FALSE_GREEN comma-grouped larger count: exit=0 | GREEN M1 capture exposures     1,661 | VERDICT: GREEN
+INTEGRATION_FALSE_GREEN SHA with appended hex digit: exit=0 | GREEN m167 results sha         210675AB3BC25FCE53EE090AAEE98E69330E95F3EC8C19FDC1CA59BCEF9229B0 | VERDICT: GREEN
+MIS_SLOT_REPAIR numeric source mutation: exit=1 | RED   ref info dominance ratio 0.698970 NOT IN docs/research/M164-reference-identifiability.md | VERDICT: RED
+CTX_FALSE_GREEN negated nearby decoy: exit=0 | GREEN ref info dominance ratio 0.698970  [anchor a ratio of] | VERDICT: GREEN
+INTEGRATION_FALSE_GREEN negative source ratio: exit=0 | GREEN ref info dominance ratio 0.698970  [anchor a ratio of] | VERDICT: GREEN
+INTEGRATION_FALSE_RED rounded percent source: exit=1 | RED   margin over bar          1.560% NOT IN docs/research/M164-reference-identifiability.md | VERDICT: RED
+```
+
+The first three mutations respectively changed `1.11e-15` to `-1.11e-15`,
+`1,661` to `1,661,000`, and appended `A` to the guarded SHA. The repaired tuple
+placement correctly catches an ordinary source digit change from `0.698970` to
+`0.698971`. It nevertheless accepts ``ratio `0.698971` (not `0.698970`)``: the
+expected value is merely a negated decoy inside the context window. Changing the
+only source value to `-0.698970` separately proves that the new boundary matcher
+erases sign. Increasing source precision from `1.560%` to `1.5604%` proves the
+complementary false RED.
+
+**VERIFIED BY RUNNING.** Exact matcher inventory at `7c65f8a4` found twelve
+claims with multiple STATUS matches and eighteen with multiple source matches
+after applying each claim's optional context filter. All seven newly
+contextualized M164 source probes happen to have exactly one match in the
+current source. That is a property of this snapshot, not a sound context
+implementation: `ctx` is source-only, is any substring in a fixed +/-160-
+character window, has no expected occurrence count, and accepts the negated-
+decoy witness above.
+
+### 11.3 Adjudication of the two self-reported defects
+
+**Prefix no-op — CONFIRMED, and the narrow repair works.** Mutating the
+canonical STATUS site from `2.0312` to `2.0313` gives:
+
+```text
+PREFIX_REPAIR current: exit=1 | RED   preflight design ratio   2.0312 NOT ASSERTED IN STATUS ... | VERDICT: RED
+PREFIX_REPAIR reconstructed_bare: exit=0 | GREEN preflight design ratio   2.0312 | VERDICT: GREEN
+```
+
+The reconstructed bare matcher is satisfied by unrelated `2.031203`. The new
+strict prefix rule catches that exact defect.
+
+**Tuple mis-slot — CORE DEFECT CONFIRMED; REPORTED POPULATION NEEDS
+CORRECTION.** The bad intermediate state was not committed, so its literal
+contents are not independently recoverable. Reconstruction from the current
+claim table gives:
+
+```text
+MIS_SLOT first_five: exit=0 skipped=11
+MIS_SLOT all_seven: exit=0 skipped=13 | GREEN ref info dominance ratio 0.698970  [pinned] | VERDICT: GREEN
+MIS_SLOT all_source_numbers_changed: exit=0 | GREEN ref info dominance ratio 0.698970  [pinned] | GREEN ref bits inferior 1.160964  [pinned] | GREEN margin over bar 1.560%  [pinned] | VERDICT: GREEN
+```
+
+Moving only five anchors into `srclit` raises skips from six to eleven. The
+reported jump from six to thirteen requires **seven**, exactly the seven M164
+reference claims present in `7c65f8a4`. Therefore “five” and “six to thirteen”
+cannot both describe the same claim table. Either seven claims were mis-slotted
+or two additional mis-slots were omitted from the account.
+
+**Judgment.** Finding the tuple defect only by manually reading the skip summary
+is damning: the run remained GREEN and no source-side commissioning arm existed.
+A typed/non-positional schema plus one source mutation per claim would catch it
+by construction. Finding the prefix collision is narrowly reassuring: the
+canonical-site commissioning mutation did exactly what such a control should do
+and reported the no-op. It does not rehabilitate the harness because it still
+accepts an unrelated RED as a caught named control and tests only 19 status
+numbers.
+
+### 11.4 Exact replacement contract
+
+A safe repair cannot be another punctuation condition in `positions()`. The
+single overloaded `needle` cannot represent different STATUS/source literals,
+units, token kinds, contexts and rounding policies. Replace the positional tuple
+with this explicit contract:
+
+```python
+@dataclass(frozen=True)
+class SiteProbe:
+    anchor: str
+    value: str
+    kind: Literal["literal", "decimal", "sha256"]
+    expected_count: int = 1
+    rounding: Literal[None, "decimal-half-even"] = None
+
+@dataclass(frozen=True)
+class Claim:
+    label: str
+    section: str
+    status: SiteProbe
+    source_path: str
+    source: SiteProbe
+```
+
+For `decimal` probes, extract the **whole signed numeric token**, including
+comma grouping, fraction, exponent and `%`/`x` unit, with this grammar:
+
+```python
+DECIMAL_TOKEN = re.compile(
+    r"(?<![0-9A-Za-z_.,+\-])"
+    r"(?P<num>[+\-]?(?:\d{1,3}(?:,\d{3})+|\d+)"
+    r"(?:\.\d+)?(?:[eE][+\-]?\d+)?)"
+    r"(?P<unit>%|x)?"
+    r"(?![0-9A-Za-z_.,+\-])"
+)
+```
+
+The required behavior is exact:
+
+1. Preserve and compare the sign.
+2. Require the candidate unit to equal the declared unit.
+3. In STATUS, require the normalized complete lexeme, including precision, to
+   equal the declared value.
+4. In a source with rounding enabled, parse with `Decimal`, derive the quantum
+   from the declared `Decimal` exponent, and use explicitly declared
+   `ROUND_HALF_EVEN`; never use binary `float`:
+   `candidate.quantize(Decimal(1).scaleb(expected.as_tuple().exponent),
+   rounding=ROUND_HALF_EVEN) == expected`.
+5. For `sha256`, require exactly 64 hex characters with non-hex boundaries.
+6. For `literal`, require the declared unique anchor and value; never scan the
+   concatenation of all sections.
+
+Replace the commissioning acceptance condition
+
+```python
+red = rc != 0 or "VERDICT: RED" in out
+```
+
+with the named condition
+
+```python
+named_red = any(
+    line.startswith("RED   ")
+    and line[6:6 + len(label)] == label
+    and line[6 + len(label):].startswith(" ")
+    for line in out.splitlines()
+)
+caught_this_control = rc != 0 and named_red
+```
+
+and replace the overall GREEN condition so any uncommissioned claim is fatal:
+
+```python
+commissioned = (
+    red == 0
+    and ctl_fail == 0
+    and ctl_skip == 0
+    and every_claim_has_status_and_source_mutations
+)
+```
+
+Until those conditions exist, the honest summary text is:
+
+```text
+VERDICT: TOKEN-PRESENCE SMOKE TEST ONLY; NOT A CLAIM VERIFIER;
+6 CLAIMS HAVE NO DEMONSTRATED CONTROL
+```
