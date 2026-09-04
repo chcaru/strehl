@@ -1,0 +1,21 @@
+{
+  "per_subject_tuning": false,
+  "post_result_rebuild_allowed": false,
+  "post_stack_processing": [],
+  "schema": "m175-fork-settings-manifest-v1",
+  "selected_commit": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+  "settings": {
+    "batchsize": 2,
+    "consistency": 0,
+    "denoise": 0,
+    "input_colorspace": "none",
+    "no_align": true,
+    "no_contrast": true,
+    "no_opencl": true,
+    "no_whitebalance": true,
+    "output_bitdepth": 16,
+    "output_colorspace": "srgb",
+    "threads": 1
+  },
+  "status": "FROZEN_BEFORE_RENDERING"
+}

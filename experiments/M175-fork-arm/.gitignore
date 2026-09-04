@@ -1,0 +1,10 @@
+/bin/
+/handoff/
+/work/
+*.dll
+*.exe
+*.lib
+*.obj
+*.pdb
+*.tif
+*.tiff

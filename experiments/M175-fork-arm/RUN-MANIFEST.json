@@ -1,0 +1,80 @@
+{
+  "build_freeze": {
+    "bytes": 13799,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\build-freeze.json",
+    "sha256": "74ccefec8ac0be97779fd96277fe2c61a5192c1fbecf3b77a8657ab435d99df7"
+  },
+  "executable": {
+    "bytes": 271360,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\focus-stack.exe",
+    "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+  },
+  "holdout_used": false,
+  "invocation": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\focus-stack.exe",
+    "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\output\\tone-sentinel.tiff",
+    "--threads=1",
+    "--batchsize=2",
+    "--no-opencl",
+    "--no-align",
+    "--no-whitebalance",
+    "--no-contrast",
+    "--consistency=0",
+    "--denoise=0",
+    "--input-colorspace=none",
+    "--output-colorspace=srgb",
+    "--output-bitdepth=16",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-01.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-02.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-03.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-04.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-05.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-06.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-07.tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-08.tiff"
+  ],
+  "measurement_runtime": {
+    "numpy": "2.4.4",
+    "python": "3.12.10",
+    "tifffile": "2026.5.2"
+  },
+  "output_contract": {
+    "channels": 3,
+    "dtype": "uint16",
+    "linear": true,
+    "native_dimensions": [
+      2112,
+      128
+    ],
+    "post_stack_processing": []
+  },
+  "output_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\output\\tone-sentinel.tiff",
+  "purpose": "SECTION_1_3_DEVELOPMENT_TRANSFER_ADMISSION_ONLY",
+  "quality_score": false,
+  "revision_selection": {
+    "bytes": 2088,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\revision-selection.json",
+    "sha256": "00a43f77beb856e9548097559289c160f754fcb4e1140ec26c2a814f561c62a6"
+  },
+  "runtime_bundle_sha256": "4b9d4c310a16294bcc46ee5b947aec02cbdba9887787af017018071dd9455150",
+  "schema": "m175-fork-run-manifest-v1",
+  "settings": {
+    "batchsize": 2,
+    "consistency": 0,
+    "denoise": 0,
+    "input_colorspace": "none",
+    "no_align": true,
+    "no_contrast": true,
+    "no_opencl": true,
+    "no_whitebalance": true,
+    "output_bitdepth": 16,
+    "output_colorspace": "srgb",
+    "threads": 1
+  },
+  "source_pin": {
+    "bytes": 29124,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\source-pin.json",
+    "sha256": "603e2cd42526707cd0ce7871a44b645ba63bb866b6c2749e1a507032bd45d222"
+  },
+  "status": "FROZEN_BEFORE_RENDERING"
+}

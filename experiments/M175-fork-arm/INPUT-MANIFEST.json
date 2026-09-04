@@ -1,0 +1,178 @@
+{
+  "contract": {
+    "bits_per_sample": [
+      16,
+      16,
+      16
+    ],
+    "colour_space": "linear ProPhoto RGB D50",
+    "copies": 8,
+    "identical_bytes": true,
+    "native_dimensions": [
+      2112,
+      128
+    ],
+    "range": [
+      0.02,
+      0.98
+    ],
+    "sample_format": [
+      1,
+      1,
+      1
+    ],
+    "sidecars": [],
+    "step_count": 33,
+    "uncompressed": true
+  },
+  "eligibility": "DEVELOPMENT_TRANSFER_SENTINEL_ONLY_NOT_A_QUALITY_SCORE",
+  "inputs": [
+    {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "bytes": 1623084,
+      "compression": 1,
+      "forbidden_instruction_hits": [],
+      "height": 128,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-01.tiff",
+      "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+      "sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+      "width": 2112
+    },
+    {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "bytes": 1623084,
+      "compression": 1,
+      "forbidden_instruction_hits": [],
+      "height": 128,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-02.tiff",
+      "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+      "sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+      "width": 2112
+    },
+    {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "bytes": 1623084,
+      "compression": 1,
+      "forbidden_instruction_hits": [],
+      "height": 128,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-03.tiff",
+      "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+      "sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+      "width": 2112
+    },
+    {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "bytes": 1623084,
+      "compression": 1,
+      "forbidden_instruction_hits": [],
+      "height": 128,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-04.tiff",
+      "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+      "sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+      "width": 2112
+    },
+    {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "bytes": 1623084,
+      "compression": 1,
+      "forbidden_instruction_hits": [],
+      "height": 128,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-05.tiff",
+      "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+      "sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+      "width": 2112
+    },
+    {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "bytes": 1623084,
+      "compression": 1,
+      "forbidden_instruction_hits": [],
+      "height": 128,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-06.tiff",
+      "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+      "sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+      "width": 2112
+    },
+    {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "bytes": 1623084,
+      "compression": 1,
+      "forbidden_instruction_hits": [],
+      "height": 128,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-07.tiff",
+      "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+      "sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+      "width": 2112
+    },
+    {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "bytes": 1623084,
+      "compression": 1,
+      "forbidden_instruction_hits": [],
+      "height": 128,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\work\\tone-sentinel\\input\\ramp-08.tiff",
+      "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+      "sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+      "width": 2112
+    }
+  ],
+  "layout": {
+    "file_sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
+    "height": 128,
+    "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+    "inert_padding_offset": 172,
+    "pixel_bytes": 1622016,
+    "pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+    "strip_byte_count": 1622016,
+    "strip_offset": 1068,
+    "width": 2112
+  },
+  "schema": "m175-tone-sentinel-input-manifest-v1",
+  "status": "FROZEN_BEFORE_RENDERING",
+  "track": "common-merge",
+  "writer": {
+    "bytes": 93394,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\converter.py",
+    "sha256": "a515a39895c3d1d27adebaecc07fab529f3aa7b3c1ef0dcb12cf417b5367a481"
+  }
+}

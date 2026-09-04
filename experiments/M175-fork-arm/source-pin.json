@@ -1,0 +1,751 @@
+{
+  "commit": {
+    "author_utc_offset_time": "2026-05-10T19:56:59-07:00",
+    "committer_utc_offset_time": "2026-05-10T19:56:59-07:00",
+    "parents": [],
+    "requested": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+    "resolved": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+    "subject": "init to win it"
+  },
+  "frozen_utc": "2026-09-04T20:20:02.365627+00:00",
+  "hash_algorithms": {
+    "file_and_manifest_hashes": "SHA-256",
+    "git_object_ids": "SHA-1"
+  },
+  "repository": {
+    "origin": "https://github.com/chcaru/macro.git",
+    "path": "C:\\dev\\macro"
+  },
+  "schema": "m175-fork-source-pin-v1",
+  "source_subtree": {
+    "file_count": 103,
+    "files": [
+      {
+        "bytes": 5809,
+        "git_blob_sha1": "947a56a487eacfb6cbe1844bcb6154e29c808cd5",
+        "mode": "100644",
+        "path": "focus-stack/.github/workflows/release.yml",
+        "sha256": "2762fa7951e374cd05c0e580b70fd17f91624d6e0123a068e6c30241dad7bd9f"
+      },
+      {
+        "bytes": 1013,
+        "git_blob_sha1": "ed4e7f895e8399dece1e5dbf71a51c5fb5f10f22",
+        "mode": "100644",
+        "path": "focus-stack/.github/workflows/run_tests.yml",
+        "sha256": "e404811cc52a3d4c5e9b173d36ae862fae1af928492984ee1aad5e4947dbe85c"
+      },
+      {
+        "bytes": 57,
+        "git_blob_sha1": "ef467c91328afbf95df481ba1cc010da78c02edf",
+        "mode": "100644",
+        "path": "focus-stack/.gitignore",
+        "sha256": "180b7dcc9fb6bb77142db82350e502284eb9151ce0f1f32caf38a5a85f00ec74"
+      },
+      {
+        "bytes": 1386,
+        "git_blob_sha1": "c07c03a24a7db40aa67ecda07ab7708ae57c3096",
+        "mode": "100644",
+        "path": "focus-stack/CMakeLists.txt",
+        "sha256": "716089b0436b85226ff42a65e56ef07c02d4fab7caa07c24df858b53069341c4"
+      },
+      {
+        "bytes": 401,
+        "git_blob_sha1": "4ed61f9bca4eb5f820f86c473f1a85bc2422a8f5",
+        "mode": "100644",
+        "path": "focus-stack/Dockerfile",
+        "sha256": "aa05143c203251075b2fb0a8a405b8987e72627626bc6f8d5e80e7619608609b"
+      },
+      {
+        "bytes": 1059,
+        "git_blob_sha1": "5f1656334a8a74f76fc42e4a1e7c774acde36cde",
+        "mode": "100644",
+        "path": "focus-stack/LICENSE.md",
+        "sha256": "5e11fc4bce97ec54bfe65e8b74da8010fd1d7f2427d35f28e3cab25607109e57"
+      },
+      {
+        "bytes": 4821,
+        "git_blob_sha1": "0863e0fbeddaea664981036507b400a8f7bf01d0",
+        "mode": "100644",
+        "path": "focus-stack/Makefile",
+        "sha256": "46915fb5ff21b0efac43b1323fc38cd51270b1a83de43d89bd871358f71f7e61"
+      },
+      {
+        "bytes": 2264,
+        "git_blob_sha1": "508f828e765ceb0c620a79a77710328e58094338",
+        "mode": "100644",
+        "path": "focus-stack/Makefile.windows",
+        "sha256": "228c579fc3aa5c97e541cd108e5fae7800ab7c4c65bc1faaee5950c2f2b93409"
+      },
+      {
+        "bytes": 7373,
+        "git_blob_sha1": "5588d467906187e39d848b34807e276e98cc606b",
+        "mode": "100644",
+        "path": "focus-stack/README.md",
+        "sha256": "ce638e00cca9498c7de0aaea31c62de4a85c87064096eb7ab9282f7c8af502bb"
+      },
+      {
+        "bytes": 1463,
+        "git_blob_sha1": "148acdfc89fd48e0fb6f5205640eb5b503e745d5",
+        "mode": "100644",
+        "path": "focus-stack/build-windows.bat",
+        "sha256": "4d563c52e79e108783444f23a6390285eb2c6e317bf5567ef7037c42cf5b6ce4"
+      },
+      {
+        "bytes": 554,
+        "git_blob_sha1": "15817b2de32295cabfe6f5bf05cc63a6238d90ce",
+        "mode": "100644",
+        "path": "focus-stack/debian/changelog",
+        "sha256": "06eb083ec7d7b4a47e0771c00ee74891629952c9b278b890296a4618090b8902"
+      },
+      {
+        "bytes": 3,
+        "git_blob_sha1": "f599e28b8ab0d8c9c57a486c89c4a5132dcbd3b2",
+        "mode": "100644",
+        "path": "focus-stack/debian/compat",
+        "sha256": "917df3320d778ddbaa5c5c7742bc4046bf803c36ed2b050f30844ed206783469"
+      },
+      {
+        "bytes": 685,
+        "git_blob_sha1": "b60427541a46db539d4e8f26bdc642d48ccdf2e4",
+        "mode": "100644",
+        "path": "focus-stack/debian/control",
+        "sha256": "cd05a8fca3a4574d2a008679076d3832c3be83662c83a2fe434fbf80993a9628"
+      },
+      {
+        "bytes": 1269,
+        "git_blob_sha1": "17e049f21b6f9b5b7dcf51c3f8396abcb03d4ad5",
+        "mode": "100644",
+        "path": "focus-stack/debian/copyright",
+        "sha256": "5967a9545fcf000a64ce542a1ac54d1916d6ab4c552ca5cb235f36a365b5d43b"
+      },
+      {
+        "bytes": 10,
+        "git_blob_sha1": "b43bf86b50fd8d3529a0dc062c30006ed38f309e",
+        "mode": "100644",
+        "path": "focus-stack/debian/focus-stack-docs.docs",
+        "sha256": "d0919d5bb7576d4b1a495856f1e561985d1063a8e22c74dfb90a5267c165331d"
+      },
+      {
+        "bytes": 44,
+        "git_blob_sha1": "01f3043481692681d318a3da3916898d84a0045f",
+        "mode": "100644",
+        "path": "focus-stack/debian/rules",
+        "sha256": "0e94d3577a39600040ff5a64a488b62205815783cc171db7bdb9b244eb3debf7"
+      },
+      {
+        "bytes": 12,
+        "git_blob_sha1": "163aaf8d82b6c54f23c45f32895dbdfdcc27b047",
+        "mode": "100644",
+        "path": "focus-stack/debian/source/format",
+        "sha256": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a"
+      },
+      {
+        "bytes": 7449,
+        "git_blob_sha1": "4d8282da19702b3326d97980b0affa28066646d1",
+        "mode": "100644",
+        "path": "focus-stack/docs/Algorithms.md",
+        "sha256": "1674366a8494d7431f42c7df7704a8655cca12b4a8bf987442f2bd35b1d2db24"
+      },
+      {
+        "bytes": 7969,
+        "git_blob_sha1": "8f2da7d2df0d3179028d2b36eaadabb08b7e39b6",
+        "mode": "100644",
+        "path": "focus-stack/docs/focus-stack.1",
+        "sha256": "0782ef7d12ede38f6738209f9f81ea58e5d280a032e73da87e59fdbfc91c371f"
+      },
+      {
+        "bytes": 11968,
+        "git_blob_sha1": "dedc75a21dfcb403b9af19f9338870cf490e5088",
+        "mode": "100644",
+        "path": "focus-stack/docs/focus-stack.html",
+        "sha256": "e71e9d5293aa2cf20f1ac837cc6046bd57e9782add79240c8b83595210ea17df"
+      },
+      {
+        "bytes": 7821,
+        "git_blob_sha1": "99cda8621d3c83a80c0c43ef9fbbf0d067478edf",
+        "mode": "100644",
+        "path": "focus-stack/docs/focus-stack.md",
+        "sha256": "4a7559fc380121926814877b7df8b8fac4c7f0c442d175ff46ff47d58e93c4d8"
+      },
+      {
+        "bytes": 125713,
+        "git_blob_sha1": "e3e587edc5d31b9f5684e67e0bb8e627698c8346",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/3d.jpg",
+        "sha256": "1f78da69dd145f710ff79eeb05c236f35ad6a7bc2ead8d23b8eed054328a38c3"
+      },
+      {
+        "bytes": 185180,
+        "git_blob_sha1": "72e7824f0f997defaccaf6583850fb1074dca269",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/alignment.jpg",
+        "sha256": "cc2bebda4802bdb2fee5948b412564880dd04a5dd446c12f6b4c2631e8f30ce8"
+      },
+      {
+        "bytes": 41310,
+        "git_blob_sha1": "f45fdd623cf29587aea433d135dcfefc1552a43c",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/alignment_flow.png",
+        "sha256": "e24508b465e29ab707a8b21ebcfc9f169f9a0a15c2a783c4d2a27eb588087570"
+      },
+      {
+        "bytes": 43123,
+        "git_blob_sha1": "00b7cde1dc64f7b9cc585951a89c073ec9f2c75f",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/denoise.jpg",
+        "sha256": "5323a608ab56ec34519dc13971d3f786e8045b02e6165b3328435ecfa7057870"
+      },
+      {
+        "bytes": 305227,
+        "git_blob_sha1": "9aca45f880c68a9c2052f5430adecf9b6bb99576",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/depth_inpainted.png",
+        "sha256": "4cadd495be86c79f6e9c02dbc774b981890dc74841c1af25d501bc8ef33ee872"
+      },
+      {
+        "bytes": 133853,
+        "git_blob_sha1": "741193d176c65c1da65534802827969938a36bdb",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/depth_points.png",
+        "sha256": "55591c2301eb5b004ca9e15e9b0834b05e84fa62d68a6439113ebe89ef9c0e09"
+      },
+      {
+        "bytes": 745776,
+        "git_blob_sha1": "e42a8c417bb45fdd02be18f0e0e9f8defa796303",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/depth_raw.png",
+        "sha256": "33b4cc8deed9a5cd6aa9be9dd7d7da84958bf638e57ae3fccfb1d777961e6b66"
+      },
+      {
+        "bytes": 479749,
+        "git_blob_sha1": "084995363a709fabec2c1e21c371c21cd5c08777",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/reassignment.jpg",
+        "sha256": "d6ef1a0690ac24cfca98e1fb8a4c8525acca3d589ef1111c2a52b22fb7457136"
+      },
+      {
+        "bytes": 381583,
+        "git_blob_sha1": "2893c5bf3bc962d3a287aace7977998e9b3b4a7c",
+        "mode": "100644",
+        "path": "focus-stack/docs/imgs/wavelet.jpg",
+        "sha256": "0920a7f3dc25be4b0378c74411fb7b687bc975f588c98f30d98e8f571732e6a9"
+      },
+      {
+        "bytes": 942841,
+        "git_blob_sha1": "a92242813d7f1a38ef2026dc93115a1def0d2781",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_000.JPG",
+        "sha256": "897e0e068bf7149b6cb1ce4d823e491c3eab7046536881812d5c03f327d5be26"
+      },
+      {
+        "bytes": 958227,
+        "git_blob_sha1": "a0ef191f996e8217e5731bdc63c4bd79511de848",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_001.JPG",
+        "sha256": "331af7e39fe2bd59263074f31e781a9bb44e9ad6656fb756a98f0d5d08bd4b49"
+      },
+      {
+        "bytes": 1018203,
+        "git_blob_sha1": "8ae782c2c8dc0b0c23a11e8d1e019e679eb016f4",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_002.JPG",
+        "sha256": "24895955f8279fdffdf1af4a02a5a04baa3cb52313e34d9bc64757926e3086d7"
+      },
+      {
+        "bytes": 999741,
+        "git_blob_sha1": "4747b5596ceed05cce34ff705f33307b4dcd4d56",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_003.JPG",
+        "sha256": "245fc29004b32781329e5a687174739f4b31aa47d7a8dad964d170a1ac43a44d"
+      },
+      {
+        "bytes": 973064,
+        "git_blob_sha1": "5b73c9bf046b86345259e9753516ed06a6891e54",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_004.JPG",
+        "sha256": "24c5e5082cfbc71fcbfd0a0026f1a80311eb7bb91d3c4e021b60c0ec790b6d3e"
+      },
+      {
+        "bytes": 991472,
+        "git_blob_sha1": "43b5ef4ba7c2a6fab5b997b8a417ca72668de260",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_005.JPG",
+        "sha256": "ec0251f1b8d8bfbda82f85452fa95c7f8c8c6ac2558be9334e64fa6c66ed65e0"
+      },
+      {
+        "bytes": 964363,
+        "git_blob_sha1": "6484a297205dbb1f4c648550a4fa94b56aad3708",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_006.JPG",
+        "sha256": "87e7aa091b992309b1aef9e62a7f2cf5b46af56853f95e80d53914b612985b59"
+      },
+      {
+        "bytes": 898955,
+        "git_blob_sha1": "58c722e20ef8822d4c6a431275d09c8320d2c68b",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_007.JPG",
+        "sha256": "a9e4b1c991973d1686f419af24cfeb95110bad4c85b86435f0da5ff883cb2d55"
+      },
+      {
+        "bytes": 866853,
+        "git_blob_sha1": "1ea5dfbb2fe90c4d16cd88099b9a66de9923a959",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_008.JPG",
+        "sha256": "00639b58df430460273a2b4a1c7193cb395bae9fdac1a30cdd2ef1391ea16ce2"
+      },
+      {
+        "bytes": 838051,
+        "git_blob_sha1": "c9e194ed220a7490ada9ef8cc5a24c51bc79a50e",
+        "mode": "100644",
+        "path": "focus-stack/examples/depthmap/pcb_009.JPG",
+        "sha256": "81eb6877188ea635c01398e960fa510bb1ff1ad253db66eca13cebd2b9cebb07"
+      },
+      {
+        "bytes": 535898,
+        "git_blob_sha1": "9dbbf461e15d2f36d8e0b80b966450ddbefd7611",
+        "mode": "100644",
+        "path": "focus-stack/examples/pcb/expected.jpg",
+        "sha256": "398e49c74b962458a45b04ea70d7d5a34dd6b04719b196670ebd4f984f526bf4"
+      },
+      {
+        "bytes": 334392,
+        "git_blob_sha1": "43e385c2dfd36fb351aa087412763c2d0288bee0",
+        "mode": "100644",
+        "path": "focus-stack/examples/pcb/pcb_001.jpg",
+        "sha256": "0c5fc542eec9058ec0d7bce315732f6d3867731fdcdf05ca536f2025979d991d"
+      },
+      {
+        "bytes": 311787,
+        "git_blob_sha1": "e5274fae7c01f642427ccfe3ec58b2c8d8869220",
+        "mode": "100644",
+        "path": "focus-stack/examples/pcb/pcb_002.jpg",
+        "sha256": "5589326d77b6cbc4cf4adecdf2da969bdd4245d0cb97a4a6553c28bd78ff7869"
+      },
+      {
+        "bytes": 310288,
+        "git_blob_sha1": "88e6062a48692b66ea274f079cf3f39b2f701f69",
+        "mode": "100644",
+        "path": "focus-stack/examples/pcb/pcb_003.jpg",
+        "sha256": "4d1bbb9cb6a09641db151bad3d0b9d8f5e156c0d5c857e8f2366cd861a4bd6f6"
+      },
+      {
+        "bytes": 320674,
+        "git_blob_sha1": "7ed88c72dbc9bb27adbd19ddf1b5fce4d312aaa1",
+        "mode": "100644",
+        "path": "focus-stack/examples/pcb/pcb_004.jpg",
+        "sha256": "1c101e35e9e7ff3867fd6b0e22618cac00116c2800d092106f2449dfdaed4de3"
+      },
+      {
+        "bytes": 346633,
+        "git_blob_sha1": "531652a1498ac97a0f763323dd4a554aee34d2fe",
+        "mode": "100644",
+        "path": "focus-stack/examples/pcb/pcb_005.jpg",
+        "sha256": "dec186fc4a5173994a14bbcf84b297c10563cc5e4b80e54f053c766381636541"
+      },
+      {
+        "bytes": 326132,
+        "git_blob_sha1": "7a9b33abf9d5a93608c3aa16afc052e3961a21ea",
+        "mode": "100644",
+        "path": "focus-stack/examples/pcb/pcb_006.jpg",
+        "sha256": "f9c7df70264e1e35afacd5f37d5681c28427478b4329af03fc910d14f9162a00"
+      },
+      {
+        "bytes": 311782,
+        "git_blob_sha1": "bdc69fc76a689ead7658779f4cccaa5819a85415",
+        "mode": "100644",
+        "path": "focus-stack/examples/pcb/pcb_007.jpg",
+        "sha256": "d5d075bc94c6414acae8600166e7c091e97b93cebda80bac174150352629993c"
+      },
+      {
+        "bytes": 142,
+        "git_blob_sha1": "957a76bcacc319abc64c02b6a7318608a27df832",
+        "mode": "100644",
+        "path": "focus-stack/packaging/focus-stack.desktop",
+        "sha256": "47bdf21f59848d97f6023fa7dd3364f6ed1b4e9f77d19047c5d7f7cf087aef81"
+      },
+      {
+        "bytes": 1297,
+        "git_blob_sha1": "7fe345419c2f4397da4cfc09d953a80006b4bb0d",
+        "mode": "100644",
+        "path": "focus-stack/packaging/macosx/Info.plist",
+        "sha256": "6b41181456fc8a096b2a858e1930ca49977cee95423351e41eb456b2d6d43e8c"
+      },
+      {
+        "bytes": 9,
+        "git_blob_sha1": "cda79fa55dd707900370bef701e8daa5d0dadc2c",
+        "mode": "100644",
+        "path": "focus-stack/packaging/macosx/PkgInfo",
+        "sha256": "d92967af66b140454d1792c1c0e6ad4c0fa9ae30f237cbe4901947c806297975"
+      },
+      {
+        "bytes": 1748,
+        "git_blob_sha1": "4bf137413bc675005713d1f1715faeae3949715b",
+        "mode": "100644",
+        "path": "focus-stack/packaging/macosx/focus-stack-gui.scpt",
+        "sha256": "ff33e2eda0af06c5f5202170f96600bcb38b35c883d51cab431d23561145b185"
+      },
+      {
+        "bytes": 9977,
+        "git_blob_sha1": "e89bb270f2c768df4765368b4c0d0f20ade8b551",
+        "mode": "100644",
+        "path": "focus-stack/src/colormgmt.cc",
+        "sha256": "45c2b93c5c0c54c76a9c3398f376dd50682c2a30f3e3c8c75ca064ab6496db46"
+      },
+      {
+        "bytes": 5695,
+        "git_blob_sha1": "8f1feeb5eed0169711b8d6a9d0100b5cfa8fe0cb",
+        "mode": "100644",
+        "path": "focus-stack/src/colormgmt.hh",
+        "sha256": "fd88382402e03015af3c2d19bcb492d4874ae9288f9f2638be5e1886ce2c6fa9"
+      },
+      {
+        "bytes": 7441,
+        "git_blob_sha1": "63a2430444a9f7d7478140b54ab56bd750d5ae1b",
+        "mode": "100644",
+        "path": "focus-stack/src/fast_bilateral.hh",
+        "sha256": "44fc2b64b1670bdca2dfdfb2c9a561b41453e0d185dcfb3067e72304eb494cc1"
+      },
+      {
+        "bytes": 16757,
+        "git_blob_sha1": "17829dcd667b898de3a7d57334ee57cf39a9fd2c",
+        "mode": "100644",
+        "path": "focus-stack/src/focusstack.cc",
+        "sha256": "acc1717e3e14618c481900e9967edb7b58982c1e6b04235261d4ec6d4b3b10ef"
+      },
+      {
+        "bytes": 7513,
+        "git_blob_sha1": "36822344d50a719bd529e6f9df45234c1c2964c4",
+        "mode": "100644",
+        "path": "focus-stack/src/focusstack.hh",
+        "sha256": "0ff5cab30ad0ba88a07c5b842b7ec26d675bb7db45ec919bec9f5592334f3dc4"
+      },
+      {
+        "bytes": 131,
+        "git_blob_sha1": "7860d633111f0bd3c678e94e182526c9f72a1879",
+        "mode": "100644",
+        "path": "focus-stack/src/gtest_main.cc",
+        "sha256": "8e5b6891d2f5a69e3ef445d9978ecbd52ba3271f59b8504094d1c40061881479"
+      },
+      {
+        "bytes": 2514,
+        "git_blob_sha1": "a7b0495e9980dfe071dbb578da73b9821fc86d79",
+        "mode": "100644",
+        "path": "focus-stack/src/histogrampercentile.cc",
+        "sha256": "291a470ee8975b0c94b523cb222737ead58ee9dff2890f58ba509dad67994ddb"
+      },
+      {
+        "bytes": 1122,
+        "git_blob_sha1": "7d0e27296b3175065f1d35cf2ae605bc906dc8bc",
+        "mode": "100644",
+        "path": "focus-stack/src/histogrampercentile.hh",
+        "sha256": "ae68fd721e216bc4d9d90344f1d758d27e551f93a582fc301bad280a5c2ca27b"
+      },
+      {
+        "bytes": 1664,
+        "git_blob_sha1": "6b186741be038c1383eac967cfde818cced2c14e",
+        "mode": "100644",
+        "path": "focus-stack/src/logger.cc",
+        "sha256": "ad07e5afbda74e043aa16bb2651d81fbf62cc6c1b31a0c3f3d5394052f1490dc"
+      },
+      {
+        "bytes": 1290,
+        "git_blob_sha1": "4bbceedb1c22a67ebd684d6a9dc75a918f386f57",
+        "mode": "100644",
+        "path": "focus-stack/src/logger.hh",
+        "sha256": "8ad112e1773ff0f49b5757cd0f631a724f690461571903ba7cc311820ef75fd1"
+      },
+      {
+        "bytes": 10376,
+        "git_blob_sha1": "cc699f8133da1cba5f2a2f217e10d788f0d3651a",
+        "mode": "100644",
+        "path": "focus-stack/src/main.cc",
+        "sha256": "d515176145bd4ae050bd0c78661a1ee975b6e571b52f6f364452ca500b5e1d1a"
+      },
+      {
+        "bytes": 1618,
+        "git_blob_sha1": "73d25977d50ac5a401e0cdde993663796a02cc59",
+        "mode": "100644",
+        "path": "focus-stack/src/options.cc",
+        "sha256": "0bcf1b15ce2a442f008c48838b02ab62f5b08624d710f09387aa10b7064ae2f5"
+      },
+      {
+        "bytes": 869,
+        "git_blob_sha1": "cd95af5f85ed98c6dc1c28bfeabfea1a6e196898",
+        "mode": "100644",
+        "path": "focus-stack/src/options.hh",
+        "sha256": "0488d93e1c5434fc442129064ca62004b199d9e828d79b8e7c5fe4d75d39072d"
+      },
+      {
+        "bytes": 8512,
+        "git_blob_sha1": "7fd18d9be4320db7e4eb4eab5f706d7af8d8eda0",
+        "mode": "100644",
+        "path": "focus-stack/src/radialfilter.cc",
+        "sha256": "0a5dcd2d22dd45be7208d57442c2ab8bb4bdedb2f46ca8b4a2131cde31b0b13f"
+      },
+      {
+        "bytes": 1537,
+        "git_blob_sha1": "d85baecf0c9c574f561b57941a1d8daa85097c4e",
+        "mode": "100644",
+        "path": "focus-stack/src/radialfilter.hh",
+        "sha256": "321683fd3121baf8e7aea194d9320c6e1c39e888d2039cd37e76490b9518c14d"
+      },
+      {
+        "bytes": 1518,
+        "git_blob_sha1": "efede5dc3770897c223a5a76510671536349bb5c",
+        "mode": "100644",
+        "path": "focus-stack/src/radialfilter_tests.cc",
+        "sha256": "cfad7a28ee718ed4176d94dc5bd3639f424c75f531aaf75efea461ac6dba1a26"
+      },
+      {
+        "bytes": 5545,
+        "git_blob_sha1": "1c80bede30990635d9b944626380aa06c6e69c9a",
+        "mode": "100644",
+        "path": "focus-stack/src/task_3dpreview.cc",
+        "sha256": "7e98e4e40cf7c754fb0f4762c57b98dc1ca3674d11abcedadf209c02199a88bf"
+      },
+      {
+        "bytes": 731,
+        "git_blob_sha1": "81cf2f2f91cbe36d4454b14e701a420b05b1f642",
+        "mode": "100644",
+        "path": "focus-stack/src/task_3dpreview.hh",
+        "sha256": "6e2ceb9c844caf961383be88f089e3e4fed161790f487770ee762dd7e784f1b0"
+      },
+      {
+        "bytes": 17926,
+        "git_blob_sha1": "9db9e2c8b61598a3b7f55fd5c7dcafd8079347fd",
+        "mode": "100644",
+        "path": "focus-stack/src/task_align.cc",
+        "sha256": "7d894b3405b07bd5bf027ed021a0ee572cb9508db65bbc5fcb4aa59289812ae0"
+      },
+      {
+        "bytes": 1901,
+        "git_blob_sha1": "0e64e35c3889e5befc39d414ed6fa9d971016d82",
+        "mode": "100644",
+        "path": "focus-stack/src/task_align.hh",
+        "sha256": "6116b7b8fe8cbbc7f207cbb0706d4aae3025f756928062caba66e03730257e6c"
+      },
+      {
+        "bytes": 1450,
+        "git_blob_sha1": "e67e91f628e796b5458234df369a5bd675ad64fa",
+        "mode": "100644",
+        "path": "focus-stack/src/task_background_removal.cc",
+        "sha256": "d782c25a41937bea5b3cfe00df86100794eb5291696e71a6e099e0ed14f17230"
+      },
+      {
+        "bytes": 462,
+        "git_blob_sha1": "dadbd9199411b5a5aa6afbbaf98b89e9b3db1ace",
+        "mode": "100644",
+        "path": "focus-stack/src/task_background_removal.hh",
+        "sha256": "00bd64a7a9be31e5a9619ae4ac4bc2dba13c758a0d241f78ac52e7081addeafb"
+      },
+      {
+        "bytes": 1563,
+        "git_blob_sha1": "469298d9e90f0845a580b8ec77b64936bb13b5ce",
+        "mode": "100644",
+        "path": "focus-stack/src/task_denoise.cc",
+        "sha256": "4bdd3b17db4bb07b7f3f465fd21ffea4a2608d369dcb961ade4818dcc3c25196"
+      },
+      {
+        "bytes": 338,
+        "git_blob_sha1": "3d02a06f4586cf6d8435f12f8458cf59734e8161",
+        "mode": "100644",
+        "path": "focus-stack/src/task_denoise.hh",
+        "sha256": "6b958a2287b781b7e6dfaa03d92b0d0f85e054f8b297dbcf51ae5f54e9b79b7a"
+      },
+      {
+        "bytes": 5812,
+        "git_blob_sha1": "9f76f08923759cb23cc38721d3a15f510fda91fe",
+        "mode": "100644",
+        "path": "focus-stack/src/task_depthmap.cc",
+        "sha256": "ce710709cdc0af3c8cbabde5df72e714ae8d2a49eec8c9362afa9dac7061ac11"
+      },
+      {
+        "bytes": 2110,
+        "git_blob_sha1": "98cea392a81a61054b881b4402215dafea5ffb9d",
+        "mode": "100644",
+        "path": "focus-stack/src/task_depthmap.hh",
+        "sha256": "483026fd98e4b559fdc3e1d74324fff98247da35b857346c3bf7c02e76232d2f"
+      },
+      {
+        "bytes": 4097,
+        "git_blob_sha1": "399126818ec863c4ec769fc9970f82110e803c97",
+        "mode": "100644",
+        "path": "focus-stack/src/task_depthmap_inpaint.cc",
+        "sha256": "d14befefe1a7c6cc5d619edf915f5a2a138731b550921e514ae1c37aa9c9c0f1"
+      },
+      {
+        "bytes": 668,
+        "git_blob_sha1": "837d6bc496b890a478f3113766cf2999e69ecdac",
+        "mode": "100644",
+        "path": "focus-stack/src/task_depthmap_inpaint.hh",
+        "sha256": "e16d686fea645a425c0fea5985725512a42aaee9f435b5ef3d1c204fea7bb642"
+      },
+      {
+        "bytes": 1474,
+        "git_blob_sha1": "7d5d1db8f809dba1bc025d207452b8eb6a12e2a8",
+        "mode": "100644",
+        "path": "focus-stack/src/task_focusmeasure.cc",
+        "sha256": "a2198fd51be34ca1e7b7be897cb403037c0fd9896e20a0c0afc6f2602659c90e"
+      },
+      {
+        "bytes": 454,
+        "git_blob_sha1": "fcca252cb9bdf9a6a84b3325b207200006ba2206",
+        "mode": "100644",
+        "path": "focus-stack/src/task_focusmeasure.hh",
+        "sha256": "08541105d828d4b404ce1cc018a804e5b5aaaf29510587d885b6606f422a0848"
+      },
+      {
+        "bytes": 3504,
+        "git_blob_sha1": "bff422c292b72ae05692694f51ce84a590706c37",
+        "mode": "100644",
+        "path": "focus-stack/src/task_grayscale.cc",
+        "sha256": "892592dc2da4274cc924ae20d7dc016bc4e26a91e0bfeb61ad36550918a0d380"
+      },
+      {
+        "bytes": 635,
+        "git_blob_sha1": "a29fdc2ca999b2c489e5bfee1cf3bad43e6559db",
+        "mode": "100644",
+        "path": "focus-stack/src/task_grayscale.hh",
+        "sha256": "49441b8b14128aac29e2194f5b5ded81c6173c089dbbf6a9d55e86be6152361c"
+      },
+      {
+        "bytes": 507,
+        "git_blob_sha1": "bdc4d13f76729fcc054349fc7f1a8eaf45e27e46",
+        "mode": "100644",
+        "path": "focus-stack/src/task_grayscale_tests.cc",
+        "sha256": "e2f548ba627475312086d4fa2c9231e50b0fbc3320b38f3607a791ed5b691074"
+      },
+      {
+        "bytes": 4099,
+        "git_blob_sha1": "e5b511cdd21c4e50869fd5e7a8c0c25d7a3711e0",
+        "mode": "100644",
+        "path": "focus-stack/src/task_loadimg.cc",
+        "sha256": "510096801a3a21aba9a8b696cb65df4201de68865f249782e244c1dccda0c054"
+      },
+      {
+        "bytes": 727,
+        "git_blob_sha1": "010d75e4ad7dc61299e7464368814b0085a2378c",
+        "mode": "100644",
+        "path": "focus-stack/src/task_loadimg.hh",
+        "sha256": "45a7ccddc4d0920b8202df5ee923bd8cd7e36df115e9bdf1f2593f9dbfbc0405"
+      },
+      {
+        "bytes": 5301,
+        "git_blob_sha1": "6eb91fccdff0971585f04d1005dd682e9f011ac1",
+        "mode": "100644",
+        "path": "focus-stack/src/task_merge.cc",
+        "sha256": "eee52b9269b55eb2158dff2b66fbb7831abaea5a2b0933eb0c85ed10b190957d"
+      },
+      {
+        "bytes": 1016,
+        "git_blob_sha1": "aab5f58772068cbad66b26f16dad3ca2f8129fe5",
+        "mode": "100644",
+        "path": "focus-stack/src/task_merge.hh",
+        "sha256": "199a5feec9e2c0eebc2b54cc2321cc09491364acda27926dc5980248b89875f7"
+      },
+      {
+        "bytes": 8287,
+        "git_blob_sha1": "87eb79435b5acf6f987459935eda6e1b3f6b5bb9",
+        "mode": "100644",
+        "path": "focus-stack/src/task_reassign.cc",
+        "sha256": "e5e780b8dea9ac448001d776935d1609a9100560e566c86a828e95a168ae98d3"
+      },
+      {
+        "bytes": 3449,
+        "git_blob_sha1": "789fea2d58c3eecb3fedbad1b4825134f5f46f74",
+        "mode": "100644",
+        "path": "focus-stack/src/task_reassign.hh",
+        "sha256": "ada0969fd9309fa2f3f2dc2405c7b63b4cf6044c294fec5fb3c92bfa0145a3b0"
+      },
+      {
+        "bytes": 6758,
+        "git_blob_sha1": "4c54535bdb788ff12280cf822b89868459e21bac",
+        "mode": "100644",
+        "path": "focus-stack/src/task_saveimg.cc",
+        "sha256": "885043cd2aa350b7379c26006acc069efa019bcf18a1901b54878614bac0685e"
+      },
+      {
+        "bytes": 1449,
+        "git_blob_sha1": "461d3041401ff0d7caa297649944649e88871c44",
+        "mode": "100644",
+        "path": "focus-stack/src/task_saveimg.hh",
+        "sha256": "8ea87c1be90bbfabb8092d29ec6eaa8efc029f0a76b8e99b40563d1a7fecf14a"
+      },
+      {
+        "bytes": 2605,
+        "git_blob_sha1": "1b0a89ec1cd0de81047298e8831a18705e4d8d7a",
+        "mode": "100644",
+        "path": "focus-stack/src/task_wavelet.cc",
+        "sha256": "e0ce7d6051a7ad6a1b544da460a67cc5560cb9d9d04697bf96a049f2c11fa665"
+      },
+      {
+        "bytes": 1124,
+        "git_blob_sha1": "148be5f169b961b20e12e8956f24cc22e25c657f",
+        "mode": "100644",
+        "path": "focus-stack/src/task_wavelet.hh",
+        "sha256": "47f292cddd805871914ebaaf92727ff3af018ea0f13ca49e3bc6849da1f99ebd"
+      },
+      {
+        "bytes": 1670,
+        "git_blob_sha1": "1895ab27392c7046cc943ba68f05ad9190407601",
+        "mode": "100644",
+        "path": "focus-stack/src/task_wavelet_opencl.cc",
+        "sha256": "6388d9db5b22f128e15fb8d4983513e6e5f3cb9af2ea9d837b27d269c376476d"
+      },
+      {
+        "bytes": 336,
+        "git_blob_sha1": "3d6f395ef7d49f31bb8358001450c86b26715337",
+        "mode": "100644",
+        "path": "focus-stack/src/task_wavelet_opencl.hh",
+        "sha256": "9e1ab2b290f68a4f042020cc7270e6cf500202831b661c7acfb075b4134f612a"
+      },
+      {
+        "bytes": 6307,
+        "git_blob_sha1": "133fc7057ab56bd99b0eb7fc4bb7aaf34c88b3be",
+        "mode": "100644",
+        "path": "focus-stack/src/task_wavelet_opencl_kernels.cl",
+        "sha256": "1dbcc5bda4af2d2f3a195a325f98ece3b1bb8fac5d1bdbc5fb06f99aaed3f3be"
+      },
+      {
+        "bytes": 6655,
+        "git_blob_sha1": "9a49ae78b2a8935de017302ad0205dbf0023feea",
+        "mode": "100644",
+        "path": "focus-stack/src/task_wavelet_opencl_tests.cc",
+        "sha256": "f71f6adf037229936dbfd6fbb341cda6b84f92443246670b7f0b42f9f93f8de7"
+      },
+      {
+        "bytes": 9161,
+        "git_blob_sha1": "c58fff45ec6522648a5d6647beefc87dddcb3ba1",
+        "mode": "100644",
+        "path": "focus-stack/src/task_wavelet_templates.hh",
+        "sha256": "98018f5f4ec3e5c74a6107f418a7a6a006dfa31fbc97fc71bea699995a6fc852"
+      },
+      {
+        "bytes": 4794,
+        "git_blob_sha1": "f1d2984f4aeb82ceb50f5357d1a32d3bb837d02a",
+        "mode": "100644",
+        "path": "focus-stack/src/task_wavelet_tests.cc",
+        "sha256": "af39e7414951fd3345e77643c07137fffd6f2c4b9815ffda9af9dbf5a6284717"
+      },
+      {
+        "bytes": 8376,
+        "git_blob_sha1": "533dde365b531c3e6e04ee82890d095109d00df3",
+        "mode": "100644",
+        "path": "focus-stack/src/worker.cc",
+        "sha256": "821d9a8d4f6d96548fa410d9de49f0629d0cc2f0896948be6c84120e67532759"
+      },
+      {
+        "bytes": 3855,
+        "git_blob_sha1": "e99fa79e4ed8a1d56839d710fb6233a7d49da614",
+        "mode": "100644",
+        "path": "focus-stack/src/worker.hh",
+        "sha256": "400ebf64572cce5f71911007b6731ba00b74b34a71862cd3249f792211daa9a4"
+      }
+    ],
+    "git_tree_sha1": "543b825e325f959ed15c10032d2b8156f11070cc",
+    "manifest_sha256": "494d3abb49ccec3f23d7c37676acd806111f973f12c0cf416ae45999359d1196",
+    "path": "focus-stack",
+    "total_file_bytes": 14961176
+  },
+  "status": "FROZEN"
+}

@@ -1,0 +1,411 @@
+{
+  "fit_steps_1_based_inclusive": [
+    2,
+    32
+  ],
+  "range": [
+    0.02,
+    0.98
+  ],
+  "schema": "m175-tone-sentinel-truth-v1",
+  "sites": [
+    {
+      "encoded_u16": 1311,
+      "fit_x": 0.020004577706569007,
+      "ideal_linear_value": 0.02,
+      "roi_xyxy_exclusive": [
+        16,
+        16,
+        48,
+        112
+      ],
+      "step_1_based": 1
+    },
+    {
+      "encoded_u16": 3277,
+      "fit_x": 0.05000381475547418,
+      "ideal_linear_value": 0.05,
+      "roi_xyxy_exclusive": [
+        80,
+        16,
+        112,
+        112
+      ],
+      "step_1_based": 2
+    },
+    {
+      "encoded_u16": 5243,
+      "fit_x": 0.08000305180437933,
+      "ideal_linear_value": 0.08,
+      "roi_xyxy_exclusive": [
+        144,
+        16,
+        176,
+        112
+      ],
+      "step_1_based": 3
+    },
+    {
+      "encoded_u16": 7209,
+      "fit_x": 0.1100022888532845,
+      "ideal_linear_value": 0.11,
+      "roi_xyxy_exclusive": [
+        208,
+        16,
+        240,
+        112
+      ],
+      "step_1_based": 4
+    },
+    {
+      "encoded_u16": 9175,
+      "fit_x": 0.14000152590218967,
+      "ideal_linear_value": 0.13999999999999999,
+      "roi_xyxy_exclusive": [
+        272,
+        16,
+        304,
+        112
+      ],
+      "step_1_based": 5
+    },
+    {
+      "encoded_u16": 11141,
+      "fit_x": 0.17000076295109484,
+      "ideal_linear_value": 0.16999999999999998,
+      "roi_xyxy_exclusive": [
+        336,
+        16,
+        368,
+        112
+      ],
+      "step_1_based": 6
+    },
+    {
+      "encoded_u16": 13107,
+      "fit_x": 0.2,
+      "ideal_linear_value": 0.19999999999999998,
+      "roi_xyxy_exclusive": [
+        400,
+        16,
+        432,
+        112
+      ],
+      "step_1_based": 7
+    },
+    {
+      "encoded_u16": 15073,
+      "fit_x": 0.22999923704890515,
+      "ideal_linear_value": 0.22999999999999998,
+      "roi_xyxy_exclusive": [
+        464,
+        16,
+        496,
+        112
+      ],
+      "step_1_based": 8
+    },
+    {
+      "encoded_u16": 17039,
+      "fit_x": 0.25999847409781035,
+      "ideal_linear_value": 0.26,
+      "roi_xyxy_exclusive": [
+        528,
+        16,
+        560,
+        112
+      ],
+      "step_1_based": 9
+    },
+    {
+      "encoded_u16": 19005,
+      "fit_x": 0.2899977111467155,
+      "ideal_linear_value": 0.29000000000000004,
+      "roi_xyxy_exclusive": [
+        592,
+        16,
+        624,
+        112
+      ],
+      "step_1_based": 10
+    },
+    {
+      "encoded_u16": 20971,
+      "fit_x": 0.31999694819562063,
+      "ideal_linear_value": 0.32,
+      "roi_xyxy_exclusive": [
+        656,
+        16,
+        688,
+        112
+      ],
+      "step_1_based": 11
+    },
+    {
+      "encoded_u16": 22937,
+      "fit_x": 0.3499961852445258,
+      "ideal_linear_value": 0.35,
+      "roi_xyxy_exclusive": [
+        720,
+        16,
+        752,
+        112
+      ],
+      "step_1_based": 12
+    },
+    {
+      "encoded_u16": 24903,
+      "fit_x": 0.379995422293431,
+      "ideal_linear_value": 0.38,
+      "roi_xyxy_exclusive": [
+        784,
+        16,
+        816,
+        112
+      ],
+      "step_1_based": 13
+    },
+    {
+      "encoded_u16": 26869,
+      "fit_x": 0.40999465934233614,
+      "ideal_linear_value": 0.41000000000000003,
+      "roi_xyxy_exclusive": [
+        848,
+        16,
+        880,
+        112
+      ],
+      "step_1_based": 14
+    },
+    {
+      "encoded_u16": 28835,
+      "fit_x": 0.4399938963912413,
+      "ideal_linear_value": 0.44,
+      "roi_xyxy_exclusive": [
+        912,
+        16,
+        944,
+        112
+      ],
+      "step_1_based": 15
+    },
+    {
+      "encoded_u16": 30801,
+      "fit_x": 0.4699931334401465,
+      "ideal_linear_value": 0.47,
+      "roi_xyxy_exclusive": [
+        976,
+        16,
+        1008,
+        112
+      ],
+      "step_1_based": 16
+    },
+    {
+      "encoded_u16": 32768,
+      "fit_x": 0.5000076295109483,
+      "ideal_linear_value": 0.5,
+      "roi_xyxy_exclusive": [
+        1040,
+        16,
+        1072,
+        112
+      ],
+      "step_1_based": 17
+    },
+    {
+      "encoded_u16": 34734,
+      "fit_x": 0.5300068665598535,
+      "ideal_linear_value": 0.53,
+      "roi_xyxy_exclusive": [
+        1104,
+        16,
+        1136,
+        112
+      ],
+      "step_1_based": 18
+    },
+    {
+      "encoded_u16": 36700,
+      "fit_x": 0.5600061036087587,
+      "ideal_linear_value": 0.56,
+      "roi_xyxy_exclusive": [
+        1168,
+        16,
+        1200,
+        112
+      ],
+      "step_1_based": 19
+    },
+    {
+      "encoded_u16": 38666,
+      "fit_x": 0.5900053406576639,
+      "ideal_linear_value": 0.59,
+      "roi_xyxy_exclusive": [
+        1232,
+        16,
+        1264,
+        112
+      ],
+      "step_1_based": 20
+    },
+    {
+      "encoded_u16": 40632,
+      "fit_x": 0.620004577706569,
+      "ideal_linear_value": 0.62,
+      "roi_xyxy_exclusive": [
+        1296,
+        16,
+        1328,
+        112
+      ],
+      "step_1_based": 21
+    },
+    {
+      "encoded_u16": 42598,
+      "fit_x": 0.6500038147554742,
+      "ideal_linear_value": 0.65,
+      "roi_xyxy_exclusive": [
+        1360,
+        16,
+        1392,
+        112
+      ],
+      "step_1_based": 22
+    },
+    {
+      "encoded_u16": 44564,
+      "fit_x": 0.6800030518043794,
+      "ideal_linear_value": 0.6799999999999999,
+      "roi_xyxy_exclusive": [
+        1424,
+        16,
+        1456,
+        112
+      ],
+      "step_1_based": 23
+    },
+    {
+      "encoded_u16": 46530,
+      "fit_x": 0.7100022888532845,
+      "ideal_linear_value": 0.71,
+      "roi_xyxy_exclusive": [
+        1488,
+        16,
+        1520,
+        112
+      ],
+      "step_1_based": 24
+    },
+    {
+      "encoded_u16": 48496,
+      "fit_x": 0.7400015259021897,
+      "ideal_linear_value": 0.74,
+      "roi_xyxy_exclusive": [
+        1552,
+        16,
+        1584,
+        112
+      ],
+      "step_1_based": 25
+    },
+    {
+      "encoded_u16": 50462,
+      "fit_x": 0.7700007629510949,
+      "ideal_linear_value": 0.77,
+      "roi_xyxy_exclusive": [
+        1616,
+        16,
+        1648,
+        112
+      ],
+      "step_1_based": 26
+    },
+    {
+      "encoded_u16": 52428,
+      "fit_x": 0.8,
+      "ideal_linear_value": 0.8,
+      "roi_xyxy_exclusive": [
+        1680,
+        16,
+        1712,
+        112
+      ],
+      "step_1_based": 27
+    },
+    {
+      "encoded_u16": 54394,
+      "fit_x": 0.8299992370489052,
+      "ideal_linear_value": 0.83,
+      "roi_xyxy_exclusive": [
+        1744,
+        16,
+        1776,
+        112
+      ],
+      "step_1_based": 28
+    },
+    {
+      "encoded_u16": 56360,
+      "fit_x": 0.8599984740978104,
+      "ideal_linear_value": 0.86,
+      "roi_xyxy_exclusive": [
+        1808,
+        16,
+        1840,
+        112
+      ],
+      "step_1_based": 29
+    },
+    {
+      "encoded_u16": 58326,
+      "fit_x": 0.8899977111467154,
+      "ideal_linear_value": 0.89,
+      "roi_xyxy_exclusive": [
+        1872,
+        16,
+        1904,
+        112
+      ],
+      "step_1_based": 30
+    },
+    {
+      "encoded_u16": 60292,
+      "fit_x": 0.9199969481956206,
+      "ideal_linear_value": 0.9199999999999999,
+      "roi_xyxy_exclusive": [
+        1936,
+        16,
+        1968,
+        112
+      ],
+      "step_1_based": 31
+    },
+    {
+      "encoded_u16": 62258,
+      "fit_x": 0.9499961852445258,
+      "ideal_linear_value": 0.95,
+      "roi_xyxy_exclusive": [
+        2000,
+        16,
+        2032,
+        112
+      ],
+      "step_1_based": 32
+    },
+    {
+      "encoded_u16": 64224,
+      "fit_x": 0.979995422293431,
+      "ideal_linear_value": 0.98,
+      "roi_xyxy_exclusive": [
+        2064,
+        16,
+        2096,
+        112
+      ],
+      "step_1_based": 33
+    }
+  ],
+  "status": "FROZEN_BEFORE_RENDERING",
+  "step_count": 33
+}

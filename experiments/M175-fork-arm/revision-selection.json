@@ -1,0 +1,57 @@
+{
+  "archived_run": {
+    "log": {
+      "bytes": 152520,
+      "last_write_utc": "2026-05-10T23:45:16.356465+00:00",
+      "path": "C:\\dev\\macro\\out\\coffee-bean\\stack.log",
+      "sha256": "cfc2837ca87219f0150e14e2151d3f89fe81ade9920f5dbfc082cfb6369ab283"
+    },
+    "output": {
+      "bytes": 393326272,
+      "last_write_utc": "2026-05-11T03:01:58.750813+00:00",
+      "path": "C:\\dev\\macro\\out\\coffee-bean\\stack.tif",
+      "sha256": "8636c20d73ca0cb1f57db89bf8553abc166e0fbc517e5c62a07c74dee509066e"
+    },
+    "producer_identity": "UNKNOWN"
+  },
+  "identity": {
+    "licence_blob_sha1": "5f1656334a8a74f76fc42e4a1e7c774acde36cde",
+    "licence_copyright_line": "Copyright (c) 2019 Petteri Aimonen",
+    "licence_sha256": "5e11fc4bce97ec54bfe65e8b74da8010fd1d7f2427d35f28e3cab25607109e57",
+    "readme_blob_sha1": "5588d467906187e39d848b34807e276e98cc606b",
+    "readme_sha256": "ce638e00cca9498c7de0aaea31c62de4a85c87064096eb7ab9282f7c8af502bb",
+    "upstream_project": "PetteriAimonen/focus-stack",
+    "upstream_url": "https://github.com/PetteriAimonen/focus-stack"
+  },
+  "next_retained_revision": {
+    "commit_sha1": "412d1b5226f69b186a6e8b8ef91b4befa3c55664",
+    "committer_time": "2026-05-11T01:40:21-07:00",
+    "diff_from_selected": {
+      "deletions": 154,
+      "files_changed": 27,
+      "insertions": 1582
+    },
+    "parents": [
+      "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6"
+    ],
+    "subject": "focus stack improvements"
+  },
+  "repository": {
+    "origin": "https://github.com/chcaru/macro.git",
+    "path": "C:\\dev\\macro",
+    "source_subtree": "C:\\dev\\macro\\focus-stack"
+  },
+  "schema": "m175-fork-revision-selection-v1",
+  "selected_revision": {
+    "commit_sha1": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+    "committer_time": "2026-05-10T19:56:59-07:00",
+    "parents": [],
+    "subject": "init to win it"
+  },
+  "selection_basis": {
+    "kind": "EARLIEST_AND_NEAREST_RETAINED_SOURCE_AFTER_ARCHIVED_RUN",
+    "not_claimed_as_archived_producer": true,
+    "seconds_after_archived_log_last_write": 11502.643535
+  },
+  "status": "PASS"
+}
