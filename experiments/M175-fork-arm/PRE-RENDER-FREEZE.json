@@ -1,7 +1,7 @@
 {
   "all_eight_input_files_byte_identical": true,
   "executable_sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac",
-  "freeze_digest_sha256": "f592379b1b3cfd265523341199e4b811eb816abc488f5eedd5600738ecbceec5",
+  "freeze_digest_sha256": "89ebf73e205856b241c7c203315212985e1e3a540ae6b8c7b7ebaeaa202e456a",
   "frozen_files": [
     {
       "bytes": 29124,
@@ -44,9 +44,9 @@
       "sha256": "0840663c7b57578479ec958e9fbb05a5f9a40dd8a1bd886bae7af50c45bc526d"
     },
     {
-      "bytes": 14357,
+      "bytes": 14844,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\prepare_tone_sentinel.py",
-      "sha256": "bb689e8ffe8c1d0c834505a9c63ea278bcb1199f9ad0c21fb6d968536320af72"
+      "sha256": "bb6b34dfb373efb3a798e5d9708c51102acb8f1e557d393901558b1e4c375710"
     },
     {
       "bytes": 17264,
@@ -54,19 +54,19 @@
       "sha256": "faaec13202ea8be9f538e157b53f206d9efc0969f111f1b65f14dbf119d0e78d"
     },
     {
-      "bytes": 7716,
+      "bytes": 7806,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\TONE-TRUTH.json",
-      "sha256": "9c9d83306964b5f08a0dbf980b810ed798edf9a64cf12c47e377ab9dce54d2b3"
+      "sha256": "f0df22aa43fc82d63bb6d6f4be268e3e4ebf8c93dc2d42c8ad5879e47637dd63"
     },
     {
-      "bytes": 4540,
+      "bytes": 4631,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\SITE-MANIFEST.json",
-      "sha256": "56404d88637d913fbff059a56e3ccf073c2a315bb24ff02ef2b7f862c5ee2471"
+      "sha256": "2896da3321d2d4ed8918ab5a29c79a952fc81148b4072fbc1187f39bce473b30"
     },
     {
-      "bytes": 6258,
+      "bytes": 6968,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\INPUT-MANIFEST.json",
-      "sha256": "5473572bc815a093454fab3931f45a940472dd1205d12d95b0dcc09448d92b08"
+      "sha256": "aa93b2bee7c435f256e940f773ca2d9c179bc64b12f77aab754c22ac48f5f94a"
     },
     {
       "bytes": 544,
@@ -74,14 +74,14 @@
       "sha256": "5243673447a6b4a912cac413ff48a90599b090cbffa56b784282effe2580c154"
     },
     {
-      "bytes": 3533,
+      "bytes": 3534,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\RUN-MANIFEST.json",
-      "sha256": "8a8ffa407be62cfaf01928b198e610ef59713beac9d99f63ac3398fcbbcd3c9c"
+      "sha256": "266e44eefd4ee4a5a3eac2825662b61075d4721b92b683bfc03c08e487f8a0cd"
     }
   ],
-  "frozen_utc": "2026-09-04T20:25:10.505676+00:00",
-  "input_file_sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
-  "input_pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
+  "frozen_utc": "2026-09-04T20:27:28.666896+00:00",
+  "input_file_sha256": "dc6c7871137283448ebff150832559c7cf42cd8b7c3551eea72920247957532e",
+  "input_pixel_payload_sha256": "2f8d3631e7e858e4e4fbb79d61ee031d07af7f5a809cc12050ab4d4501751087",
   "render_output_absent_at_freeze": true,
   "schema": "m175-fork-pre-render-freeze-v1",
   "selected_commit": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",

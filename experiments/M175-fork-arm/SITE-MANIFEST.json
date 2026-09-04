@@ -1,7 +1,7 @@
 {
   "output_shape_expected_hwc": [
-    128,
-    2112,
+    4688,
+    7028,
     3
   ],
   "schema": "m175-tone-sentinel-site-manifest-v1",
@@ -9,298 +9,298 @@
   "sites": [
     {
       "roi_xyxy_exclusive": [
-        16,
-        16,
-        48,
-        112
+        32,
+        512,
+        181,
+        4176
       ],
       "step_1_based": 1
     },
     {
       "roi_xyxy_exclusive": [
-        80,
-        16,
-        112,
-        112
+        245,
+        512,
+        394,
+        4176
       ],
       "step_1_based": 2
     },
     {
       "roi_xyxy_exclusive": [
-        144,
-        16,
-        176,
-        112
+        458,
+        512,
+        607,
+        4176
       ],
       "step_1_based": 3
     },
     {
       "roi_xyxy_exclusive": [
-        208,
-        16,
-        240,
-        112
+        671,
+        512,
+        820,
+        4176
       ],
       "step_1_based": 4
     },
     {
       "roi_xyxy_exclusive": [
-        272,
-        16,
-        304,
-        112
+        884,
+        512,
+        1033,
+        4176
       ],
       "step_1_based": 5
     },
     {
       "roi_xyxy_exclusive": [
-        336,
-        16,
-        368,
-        112
+        1097,
+        512,
+        1246,
+        4176
       ],
       "step_1_based": 6
     },
     {
       "roi_xyxy_exclusive": [
-        400,
-        16,
-        432,
-        112
+        1310,
+        512,
+        1459,
+        4176
       ],
       "step_1_based": 7
     },
     {
       "roi_xyxy_exclusive": [
-        464,
-        16,
-        496,
-        112
+        1523,
+        512,
+        1672,
+        4176
       ],
       "step_1_based": 8
     },
     {
       "roi_xyxy_exclusive": [
-        528,
-        16,
-        560,
-        112
+        1736,
+        512,
+        1885,
+        4176
       ],
       "step_1_based": 9
     },
     {
       "roi_xyxy_exclusive": [
-        592,
-        16,
-        624,
-        112
+        1949,
+        512,
+        2098,
+        4176
       ],
       "step_1_based": 10
     },
     {
       "roi_xyxy_exclusive": [
-        656,
-        16,
-        688,
-        112
+        2162,
+        512,
+        2311,
+        4176
       ],
       "step_1_based": 11
     },
     {
       "roi_xyxy_exclusive": [
-        720,
-        16,
-        752,
-        112
+        2375,
+        512,
+        2524,
+        4176
       ],
       "step_1_based": 12
     },
     {
       "roi_xyxy_exclusive": [
-        784,
-        16,
-        816,
-        112
+        2588,
+        512,
+        2737,
+        4176
       ],
       "step_1_based": 13
     },
     {
       "roi_xyxy_exclusive": [
-        848,
-        16,
-        880,
-        112
+        2801,
+        512,
+        2950,
+        4176
       ],
       "step_1_based": 14
     },
     {
       "roi_xyxy_exclusive": [
-        912,
-        16,
-        944,
-        112
+        3014,
+        512,
+        3163,
+        4176
       ],
       "step_1_based": 15
     },
     {
       "roi_xyxy_exclusive": [
-        976,
-        16,
-        1008,
-        112
+        3227,
+        512,
+        3376,
+        4176
       ],
       "step_1_based": 16
     },
     {
       "roi_xyxy_exclusive": [
-        1040,
-        16,
-        1072,
-        112
+        3440,
+        512,
+        3588,
+        4176
       ],
       "step_1_based": 17
     },
     {
       "roi_xyxy_exclusive": [
-        1104,
-        16,
-        1136,
-        112
+        3652,
+        512,
+        3801,
+        4176
       ],
       "step_1_based": 18
     },
     {
       "roi_xyxy_exclusive": [
-        1168,
-        16,
-        1200,
-        112
+        3865,
+        512,
+        4014,
+        4176
       ],
       "step_1_based": 19
     },
     {
       "roi_xyxy_exclusive": [
-        1232,
-        16,
-        1264,
-        112
+        4078,
+        512,
+        4227,
+        4176
       ],
       "step_1_based": 20
     },
     {
       "roi_xyxy_exclusive": [
-        1296,
-        16,
-        1328,
-        112
+        4291,
+        512,
+        4440,
+        4176
       ],
       "step_1_based": 21
     },
     {
       "roi_xyxy_exclusive": [
-        1360,
-        16,
-        1392,
-        112
+        4504,
+        512,
+        4653,
+        4176
       ],
       "step_1_based": 22
     },
     {
       "roi_xyxy_exclusive": [
-        1424,
-        16,
-        1456,
-        112
+        4717,
+        512,
+        4866,
+        4176
       ],
       "step_1_based": 23
     },
     {
       "roi_xyxy_exclusive": [
-        1488,
-        16,
-        1520,
-        112
+        4930,
+        512,
+        5079,
+        4176
       ],
       "step_1_based": 24
     },
     {
       "roi_xyxy_exclusive": [
-        1552,
-        16,
-        1584,
-        112
+        5143,
+        512,
+        5292,
+        4176
       ],
       "step_1_based": 25
     },
     {
       "roi_xyxy_exclusive": [
-        1616,
-        16,
-        1648,
-        112
+        5356,
+        512,
+        5505,
+        4176
       ],
       "step_1_based": 26
     },
     {
       "roi_xyxy_exclusive": [
-        1680,
-        16,
-        1712,
-        112
+        5569,
+        512,
+        5718,
+        4176
       ],
       "step_1_based": 27
     },
     {
       "roi_xyxy_exclusive": [
-        1744,
-        16,
-        1776,
-        112
+        5782,
+        512,
+        5931,
+        4176
       ],
       "step_1_based": 28
     },
     {
       "roi_xyxy_exclusive": [
-        1808,
-        16,
-        1840,
-        112
+        5995,
+        512,
+        6144,
+        4176
       ],
       "step_1_based": 29
     },
     {
       "roi_xyxy_exclusive": [
-        1872,
-        16,
-        1904,
-        112
+        6208,
+        512,
+        6357,
+        4176
       ],
       "step_1_based": 30
     },
     {
       "roi_xyxy_exclusive": [
-        1936,
-        16,
-        1968,
-        112
+        6421,
+        512,
+        6570,
+        4176
       ],
       "step_1_based": 31
     },
     {
       "roi_xyxy_exclusive": [
-        2000,
-        16,
-        2032,
-        112
+        6634,
+        512,
+        6783,
+        4176
       ],
       "step_1_based": 32
     },
     {
       "roi_xyxy_exclusive": [
-        2064,
-        16,
-        2096,
-        112
+        6847,
+        512,
+        6996,
+        4176
       ],
       "step_1_based": 33
     }

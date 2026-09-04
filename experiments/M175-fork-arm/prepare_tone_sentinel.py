@@ -158,12 +158,14 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
         raise PreparationFailure("generated ProPhoto ICC is not linear")
 
     step_count = 33
-    step_width = 64
-    height = 128
+    width = 7028
+    height = 4688
     ideal = np.linspace(0.02, 0.98, step_count, dtype=np.float64)
     encoded = np.rint(ideal * 65535.0).astype(np.uint16)
-    row = np.repeat(encoded, step_width)
-    gray = np.repeat(row[np.newaxis, :], height, axis=0)
+    edges = np.rint(np.linspace(0, width, step_count + 1)).astype(np.int64)
+    gray = np.empty((height, width), dtype=np.uint16)
+    for index, value in enumerate(encoded):
+        gray[:, edges[index] : edges[index + 1]] = value
     rgb = np.repeat(gray[:, :, np.newaxis], 3, axis=2)
     provenance = {
         "schema": "m175-tone-sentinel-input-v1",
@@ -176,18 +178,19 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
     }
 
     input_dir = work / "input"
+    if input_dir.exists():
+        shutil.rmtree(input_dir)
     input_dir.mkdir(parents=True, exist_ok=True)
     first = input_dir / "ramp-01.tiff"
     layout = converter.write_common_tiff(first, rgb, icc, provenance)
-    first_bytes = first.read_bytes()
     inputs = [first]
     for index in range(2, 9):
         path = input_dir / f"ramp-{index:02d}.tiff"
-        path.write_bytes(first_bytes)
+        os.link(first, path)
         inputs.append(path)
 
     input_records = []
-    for path in inputs:
+    for occurrence, path in enumerate(inputs, start=1):
         inspected = converter.inspect_common_tiff(path)
         data = path.read_bytes()
         hits = [
@@ -202,6 +205,8 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
         input_records.append(
             {
                 **file_record(path),
+                "occurrence_1_based": occurrence,
+                "filesystem_file_id": path.stat().st_ino,
                 "pixel_payload_sha256": inspected["pixel_payload_sha256"],
                 "width": inspected["width"],
                 "height": inspected["height"],
@@ -214,12 +219,14 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
     if len({item["sha256"] for item in input_records}) != 1:
         raise PreparationFailure("the eight tone-sentinel TIFFs are not byte-identical")
 
-    sample_margin_x = 16
-    sample_margin_y = 16
+    sample_margin_y = 512
     sites = []
     for index, (ideal_value, encoded_value) in enumerate(zip(ideal, encoded), start=1):
-        x0 = (index - 1) * step_width + sample_margin_x
-        x1 = index * step_width - sample_margin_x
+        left = int(edges[index - 1])
+        right = int(edges[index])
+        sample_margin_x = min(32, max(4, (right - left) // 4))
+        x0 = left + sample_margin_x
+        x1 = right - sample_margin_x
         sites.append(
             {
                 "step_1_based": index,
@@ -245,7 +252,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
             "Arithmetic central ROI for every predeclared constant step; "
             "16 pixels excluded from each vertical step edge and image top/bottom."
         ),
-        "output_shape_expected_hwc": [height, step_count * step_width, 3],
+        "output_shape_expected_hwc": [height, width, 3],
         "sites": [
             {
                 "step_1_based": item["step_1_based"],
@@ -262,13 +269,17 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
         "contract": {
             "copies": 8,
             "identical_bytes": True,
+            "distinct_paths": 8,
+            "distinct_filesystem_file_ids": len(
+                {item["filesystem_file_id"] for item in input_records}
+            ),
             "step_count": step_count,
             "range": [0.02, 0.98],
             "uncompressed": True,
             "bits_per_sample": [16, 16, 16],
             "sample_format": [1, 1, 1],
             "colour_space": "linear ProPhoto RGB D50",
-            "native_dimensions": [step_count * step_width, height],
+            "native_dimensions": [width, height],
             "sidecars": [],
         },
         "writer": converter_record,
@@ -301,7 +312,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
         "invocation": build_invocation(executable, output, inputs),
         "output_path": str(output),
         "output_contract": {
-            "native_dimensions": [step_count * step_width, height],
+            "native_dimensions": [width, height],
             "dtype": "uint16",
             "channels": 3,
             "linear": True,

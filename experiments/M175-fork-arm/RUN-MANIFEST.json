@@ -43,8 +43,8 @@
     "dtype": "uint16",
     "linear": true,
     "native_dimensions": [
-      2112,
-      128
+      7028,
+      4688
     ],
     "post_stack_processing": []
   },
