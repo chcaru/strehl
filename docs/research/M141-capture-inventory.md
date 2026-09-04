@@ -13,17 +13,22 @@
   **BURNED — deliberately spent development, not holdout**. The program record
   says this explicitly at `docs/proposals/2026-09-sota-scorecard.md:363-379`
   and `docs/STATUS.md:2535-2547`.
-- **VERIFIED gap arithmetic:** existing material contributes **0 eligible
-  frames** to the frozen holdout session. The owner still owes all **603
-  session frames** in its **24 requested blocks**. The procedure is **604
-  shutter releases** including the one throwaway histogram exposure
-  (`docs/capture-requests/2026-09-319-frame-session.md:127-137`,
-  `:228-255`, `:566-577`).
-- **INHERITED additional prerequisite:** pre-shoot blockers **1** and **2**
-  still require one exact-configuration development rehearsal; blocker **3**
-  is closed (`docs/capture-requests/2026-09-319-frame-session.md:27-32`).
-  The request does not assign that rehearsal a frame count, so it is additional
-  to, but not included in, the **603 VERIFIED remaining session frames**.
+- **Part 4 has two design-scoped ledgers, not one governing headline.**
+  For the committed **603-frame INHERITED** bench sheet, all **24 VERIFIED**
+  blocks remain unsatisfied. For lane-TRUTH's uncommitted
+  **448-frame INHERITED** inverted-block proposal, all **21 VERIFIED** blocks
+  also remain unsatisfied by the inventoried corpus. M141 does not choose
+  between them. See
+  `experiments/M141-capture-inventory/capture-design-coverage.json`.
+- **INHERITED proposal integration, not an M141 ruling:** the live proposal
+  says replacing the old **160-frame INHERITED** reference block with its
+  **448-frame INHERITED** block would make a combined **891-frame INHERITED**
+  session (`docs/proposals/2026-09-truth-referenced-detail.md:135-147`).
+- **INHERITED additional prerequisite for the committed design:** pre-shoot
+  blockers **1** and **2** still require one exact-configuration development
+  rehearsal; blocker **3** is closed
+  (`docs/capture-requests/2026-09-319-frame-session.md:27-32`). The request
+  does not assign that rehearsal a frame count.
 
 ## Method and inventory products
 
@@ -44,6 +49,11 @@ The manifest records, for every stack:
 - CPL state with its provenance; and
 - contiguous setting segments for multi-setting directories such as the paper,
   bee-repeat, dark and flat campaigns.
+
+`capture-design-coverage.json` is the machine-readable dual-design Part 4
+ledger. It embeds all **24 VERIFIED** committed-request block rulings and all
+**21 VERIFIED** live-proposal block rulings with defining conditions and
+metadata-only near matches.
 
 The eight request groups are all present:
 
@@ -172,7 +182,15 @@ scorecard says only a row beginning `HOLDOUT` is holdout
 (`docs/proposals/2026-09-sota-scorecard.md:299-300`), those are classified
 **INDETERMINATE — DO NOT ASSUME CLEAN**, not silently promoted.
 
-## Gap analysis against the frozen session
+## Part 4 — block coverage under both live designs
+
+This section deliberately does **not** decide which design governs. Design A
+is the committed frozen bench sheet. Design B is a snapshot of lane-TRUTH's
+currently uncommitted proposal. The snapshot read for this audit has SHA-256
+`4a8f470b31d7823a819b865084af29d4511b2a2df8317b2e71316a9ced076171`
+**VERIFIED**; if that working file changes, its block ledger must be regenerated.
+
+### Design A — committed 603-frame bench sheet
 
 Three cross-cutting facts decide every block:
 
@@ -189,7 +207,7 @@ Three cross-cutting facts decide every block:
 Existing analogues are therefore useful for rehearsal and commissioning but
 credit **0 VERIFIED** frames toward the sealed score session.
 
-Every shorthand `:line` citation in the table below refers to
+Within the Design-A table, every shorthand `:line` citation refers to
 `docs/capture-requests/2026-09-319-frame-session.md`; every `scorecard :line`
 citation refers to `docs/proposals/2026-09-sota-scorecard.md`.
 
@@ -220,11 +238,71 @@ citation refers to `docs/proposals/2026-09-sota-scorecard.md`.
 | reference flats | **32 INHERITED** | **NOT SATISFIED** | No independently repositioned reference-only master from that block exists (`:252`; `:319-320`). |
 | reference darks | **32 INHERITED** | **NOT SATISFIED** | No warmed dark group matching that reference exposure exists (`:253`; `:321`). |
 
-**VERIFIED arithmetic:** **24** not-satisfied blocks sum to **603 remaining
-frames**. There are **0 already-satisfied** and **0 partially-satisfied** blocks
-because the protocol forbids assembling a scored session from prior sittings.
-The machine-readable ruling and per-block reasons are in
+**Design-A VERIFIED arithmetic:** **24** not-satisfied blocks sum to **603
+frames within this design**. There are **0 already-satisfied** and **0
+partially-satisfied** blocks because the protocol forbids assembling a scored
+session from prior sittings. The design-specific machine ruling remains in
 `experiments/M141-capture-inventory/capture-gap-analysis.json`.
+
+### Design B — uncommitted 448-frame inverted-block proposal
+
+The proposal's defining change is **INHERITED**: preserve the incoming
+converter-on maximum-reproduction optical state for three fixed-focus
+reference bursts, then remove the converter and capture independent bare-lens
+`sw4`/`sw10` A/B passes at a **1.32× INHERITED** target, never above
+**1.33× INHERITED**, marked **f/5.6 INHERITED**
+(`docs/proposals/2026-09-truth-referenced-detail.md:57-61,97-104`).
+Its shooting order makes clear that “existing” refers to the converter-on
+portion of that same incoming shoot: take the three reference bursts after
+the converter-on brackets, then remove the converter and begin TC0
+(`docs/proposals/2026-09-truth-referenced-detail.md:169-197`).
+
+The inventory gives three decisive **VERIFIED** facts:
+
+1. all **10,509 ARWs** report **200 mm** and the
+   `+ 2X Teleconverter` protocol identity;
+2. all **10,509 ARWs** report `ImageStabilization: On`; and
+3. physical reproduction ratio is metadata-recoverable for **0 stacks**.
+
+Therefore no inventoried frame proves the proposal's bare-lens TC0 state,
+measured **1.32×–1.33× INHERITED** scale, or stabilisation-off state. The
+burned slide remains useful only for commissioning; the live proposal itself
+bars it from the scored value
+(`docs/proposals/2026-09-truth-referenced-detail.md:1011-1016,1171-1179`).
+
+Every row below is independent of whether the orchestrator later adopts the
+proposal. Within this Design-B table, every shorthand `:line` citation refers
+to `docs/proposals/2026-09-truth-referenced-detail.md`:
+
+| Candidate block | Frames | Defining capture | Existing-corpus ruling |
+| --- | ---: | --- | --- |
+| `TR-REF-NEAR` | **32 INHERITED** | Same subject and untouched converter-on maximum-reproduction framing; fixed focus in near third (`:108,175-185`). | **NOT SATISFIED.** The bee repeat has metadata-defined **32-frame VERIFIED** groups but is a different subject/session at **200 mm VERIFIED** with stabilisation on. The slide's **60-frame VERIFIED**, **1-s VERIFIED** flat is a focus bracket, not this fixed-focus nonperiodic reference. |
+| `TR-REF-MID` | **32 INHERITED** | Same optical state; fixed focus in middle third (`:109,175-185`). | **NOT SATISFIED.** No same-subject middle-focus burst exists; the same near matches fail subject, session, capture mode and stabilisation. |
+| `TR-REF-FAR` | **32 INHERITED** | Same optical state; fixed focus in far third (`:110,175-185`). | **NOT SATISFIED.** No same-subject far-focus burst exists; the same near matches fail subject, session, capture mode and stabilisation. |
+| `TC0-P0` | **6 INHERITED** | Bare-lens fixed-focus burst at the recorded **1.32× INHERITED** reset (`:111`). | **NOT SATISFIED.** No inventoried bare-lens or measured **1.32× INHERITED** capture exists. |
+| `TC0-P1` | **6 INHERITED** | Same reset after move-away and return (`:112`). | **NOT SATISFIED.** No paired TC0 return-to-reset burst exists. |
+| `TC0-S4-A` | **6 INHERITED** | Bare-lens fixed-focus sentinel immediately before sw4 A (`:113`). | **NOT SATISFIED.** No named TC0 sentinel exists. |
+| `TC0-sw4-A` | **55 INHERITED** | Bare-lens automated pass A at step width **4 INHERITED** (`:114`). | **NOT SATISFIED.** Grid-1 sw4 has the exact **55-frame VERIFIED** count at **ISO 100, 1 s and f/5.6 VERIFIED**, but it is converter-on, stabilisation-on and burned. Slide sw4 has **182 frames VERIFIED** at the same exposure but is one burned converter-on development ladder, not an A/B pair. |
+| `TC0-E4-A` | **6 INHERITED** | Fixed-focus sentinel at A's untouched endpoint (`:115`). | **NOT SATISFIED.** No named TC0 endpoint sentinel exists. |
+| `TC0-S4-B` | **6 INHERITED** | Fixed-focus sentinel after the repeated reset (`:116`). | **NOT SATISFIED.** No named TC0 repeat-reset sentinel exists. |
+| `TC0-sw4-B` | **55 INHERITED** | Independent bare-lens repeat of sw4 A (`:117`). | **NOT SATISFIED.** The old grid partner has only **46 frames VERIFIED** and is burned; no eligible identical **55-frame INHERITED** bare-lens B pass exists. |
+| `TC0-E4-B` | **6 INHERITED** | Fixed-focus sentinel at B's untouched endpoint (`:118`). | **NOT SATISFIED.** No named TC0 endpoint sentinel exists. |
+| `TC0-S10-A` | **6 INHERITED** | Bare-lens fixed-focus sentinel immediately before sw10 A (`:119`). | **NOT SATISFIED.** No named TC0 sentinel exists. |
+| `TC0-sw10-A` | **27 INHERITED** | Bare-lens automated pass A at step width **10 INHERITED** (`:120`). | **NOT SATISFIED.** Grid-2 sw10 has the exact **27-frame VERIFIED** count but is converter-on, stabilisation-on and burned. Slide sw10 has **92 frames VERIFIED** but is one burned converter-on development ladder. |
+| `TC0-E10-A` | **6 INHERITED** | Fixed-focus sentinel at A's untouched endpoint (`:121`). | **NOT SATISFIED.** No named TC0 endpoint sentinel exists. |
+| `TC0-S10-B` | **6 INHERITED** | Fixed-focus sentinel after the repeated reset (`:122`). | **NOT SATISFIED.** No named TC0 repeat-reset sentinel exists. |
+| `TC0-sw10-B` | **27 INHERITED** | Independent bare-lens repeat of sw10 A (`:123`). | **NOT SATISFIED.** The other grid sw10 has only **23 frames VERIFIED**; the slide's **197-frame VERIFIED** sw10 view has different all-axis geometry. All are converter-on, stabilisation-on and burned. |
+| `TC0-E10-B` | **6 INHERITED** | Fixed-focus sentinel at B's untouched endpoint (`:124`). | **NOT SATISFIED.** No named TC0 endpoint sentinel exists. |
+| `TC0-FLAT-A` | **32 INHERITED** | Bare-lens A flat at the scored exposure (`:125`). | **NOT SATISFIED.** The closest slide flat has **60 frames VERIFIED** at **ISO 100, 1 s and f/5.6 VERIFIED**, but is a burned converter-on focus bracket, not an independent TC0 diffuser group. |
+| `TC0-FLAT-B` | **32 INHERITED** | Independent B flat after diffuser movement/rotation (`:126,195-197`). | **NOT SATISFIED.** No second independently repositioned bare-lens TC0 flat exists. |
+| `TC0-DARK-A` | **32 INHERITED** | Independent bare-lens A dark at the scored exposure (`:127`). | **NOT SATISFIED.** The existing dark campaign has one **22-frame VERIFIED** segment at **ISO 100 / 1 s VERIFIED**, not a **32-frame INHERITED** warmed same-session TC0 group. |
+| `TC0-DARK-B` | **32 INHERITED** | Independent bare-lens B dark at the scored exposure (`:128`). | **NOT SATISFIED.** No second independent **32-frame INHERITED** TC0 dark exists. |
+
+**Design-B VERIFIED arithmetic:** **21** not-satisfied blocks sum to **448
+frames within this proposal block**; **0** are already or partially satisfied
+by existing material. This does not replace Design A in M141. Both full
+ledgers, requirements and analogue metadata are in
+`experiments/M141-capture-inventory/capture-design-coverage.json`.
 
 ## Read-only verification
 

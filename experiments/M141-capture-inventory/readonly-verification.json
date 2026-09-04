@@ -1,7 +1,7 @@
 {
   "schema": "M141-readonly-verification-v1",
   "method": "Get-ChildItem -LiteralPath <tree> -File -Recurse -Force; file count plus sum of Length",
-  "captured_at": "2026-09-04T10:20:07.0337083Z",
+  "captured_at": "2026-09-04T10:27:43.0648598Z",
   "numeric_status": "VERIFIED",
   "trees": {
     "D:\\personal\\macro": {
@@ -32,5 +32,5 @@
     }
   },
   "all_trees_unchanged": true,
-  "notes": "The start snapshot was recorded before metadata extraction; the end snapshot was taken after analysis and before commit."
+  "notes": "The start snapshot was recorded before metadata extraction; this end snapshot was repeated after the dual-design Part 4 follow-up and before its commit."
 }

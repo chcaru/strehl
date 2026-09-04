@@ -1,5 +1,11 @@
 {
   "schema": "M141-capture-gap-analysis-v1",
+  "design_scope": {
+    "design_id": "committed-603-bench-sheet",
+    "authority": "FROZEN COMMITTED CAPTURE REQUEST",
+    "source": "docs\\capture-requests\\2026-09-319-frame-session.md",
+    "note": "This artifact answers only the committed 603-frame design. See capture-design-coverage.json for the separate, non-arbitrating live 448-frame proposal snapshot."
+  },
   "ruling": {
     "requested_session_frames": 603,
     "requested_session_frames_status": "INHERITED",

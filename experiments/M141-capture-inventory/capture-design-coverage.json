@@ -1,0 +1,1833 @@
+{
+  "schema": "M141-capture-design-coverage-v1",
+  "non_arbitration": {
+    "text": "This artifact preserves separate block ledgers for both designs. It does not choose which design governs.",
+    "status": "INHERITED",
+    "source": "orchestrator direction for M141 follow-up"
+  },
+  "inventory_facts": {
+    "stack_directories": 68,
+    "arw_frames": 10509,
+    "focal_length_mm_values": [
+      200
+    ],
+    "image_stabilization_values": [
+      "On"
+    ],
+    "metadata_recoverable_magnification_stack_count": 0,
+    "numeric_status": "VERIFIED",
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M141-capture-inventory\\capture-manifest.json",
+    "implication": "No inventoried stack proves the candidate TC0 bare-lens optical state or either design's required stabilization-off state."
+  },
+  "designs": [
+    {
+      "design_id": "committed-603-bench-sheet",
+      "authority": "FROZEN COMMITTED CAPTURE REQUEST",
+      "source": "docs\\capture-requests\\2026-09-319-frame-session.md",
+      "requested_frames": 603,
+      "requested_frames_status": "INHERITED",
+      "block_count": 24,
+      "block_count_status": "VERIFIED",
+      "eligible_existing_frames": 0,
+      "eligible_existing_frames_status": "VERIFIED",
+      "blocks": [
+        {
+          "block": "reset pre-flight P0",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:228",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "reset pre-flight P1",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:229",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "start sw4-A",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:230",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "sw4-A",
+          "requested_frames": 55,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 55,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:231",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing sw4 ladders are burned/development-only, and no eligible pair supplies two identical 55-frame passes at one geometry.",
+          "existing_analogues_not_creditable": [
+            "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+            "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl"
+          ]
+        },
+        {
+          "block": "end sw4-A",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:232",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "start sw4-B",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:233",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "sw4-B",
+          "requested_frames": 55,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 55,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:234",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing sw4 ladders are burned/development-only, and no eligible pair supplies two identical 55-frame passes at one geometry.",
+          "existing_analogues_not_creditable": [
+            "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+            "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl"
+          ]
+        },
+        {
+          "block": "end sw4-B",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:235",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "start sw10-A",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:236",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "sw10-A",
+          "requested_frames": 27,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 27,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:237",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing sw10 ladders are burned/development-only; the two new sw10 views have different geometry and are not repeats.",
+          "existing_analogues_not_creditable": [
+            "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+            "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl"
+          ]
+        },
+        {
+          "block": "end sw10-A",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:238",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "start sw10-B",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:239",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "sw10-B",
+          "requested_frames": 27,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 27,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:240",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing sw10 ladders are burned/development-only; the two new sw10 views have different geometry and are not repeats.",
+          "existing_analogues_not_creditable": [
+            "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+            "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl"
+          ]
+        },
+        {
+          "block": "end sw10-B",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:241",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "sw1 checker-only",
+          "requested_frames": 91,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 91,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:242",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. The exact 91-frame old sw1 grid is burned; the new dense slide is sw4 and development-only.",
+          "existing_analogues_not_creditable": [
+            "requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl"
+          ]
+        },
+        {
+          "block": "flats A",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:243",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing flat material is not two independent, same-session, same-exposure 32-frame diffuser groups assigned separately to A and B.",
+          "existing_analogues_not_creditable": [
+            "flat-fields\\flat-fields",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl"
+          ]
+        },
+        {
+          "block": "flats B",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:244",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing flat material is not two independent, same-session, same-exposure 32-frame diffuser groups assigned separately to A and B.",
+          "existing_analogues_not_creditable": [
+            "flat-fields\\flat-fields",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+            "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl"
+          ]
+        },
+        {
+          "block": "darks A",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:245",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. The existing dark campaign has only one 22-frame ISO-100/1-s group and was not warmed in this claim session; it cannot supply either 32-frame A/B master.",
+          "existing_analogues_not_creditable": [
+            "requests\\6-11-extended-dark-frames"
+          ]
+        },
+        {
+          "block": "darks B",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:246",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. The existing dark campaign has only one 22-frame ISO-100/1-s group and was not warmed in this claim session; it cannot supply either 32-frame A/B master.",
+          "existing_analogues_not_creditable": [
+            "requests\\6-11-extended-dark-frames"
+          ]
+        },
+        {
+          "block": "reference near",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:249",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture is a 32-frame fixed-focus view of this same physical patch at the required >=2x sampling ratio.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "reference middle",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:250",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture is a 32-frame fixed-focus view of this same physical patch at the required >=2x sampling ratio.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "reference far",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:251",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture is a 32-frame fixed-focus view of this same physical patch at the required >=2x sampling ratio.",
+          "existing_analogues_not_creditable": []
+        },
+        {
+          "block": "reference flats",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:252",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing flat group is an independently repositioned, reference-only 32-frame master from the high-magnification block.",
+          "existing_analogues_not_creditable": [
+            "flat-fields\\flat-fields"
+          ]
+        },
+        {
+          "block": "reference darks",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:253",
+          "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing dark group is a warmed, matching 32-frame reference dark from the high-magnification block.",
+          "existing_analogues_not_creditable": [
+            "requests\\6-11-extended-dark-frames"
+          ]
+        }
+      ]
+    },
+    {
+      "design_id": "live-448-inverted-block",
+      "authority": "UNCOMMITTED LIVE PROPOSAL SNAPSHOT; ORCHESTRATOR GOVERNANCE DECISION PENDING",
+      "source_snapshot": {
+        "path": "docs\\proposals\\2026-09-truth-referenced-detail.md",
+        "sha256": "4a8f470b31d7823a819b865084af29d4511b2a2df8317b2e71316a9ced076171",
+        "sha256_status": "VERIFIED",
+        "working_tree_state_when_audited": "modified/uncommitted",
+        "working_tree_state_status": "VERIFIED",
+        "working_tree_state_method": "git status --short -- docs/proposals/2026-09-truth-referenced-detail.md",
+        "proposal_decision_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:5-6",
+        "block_table_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:104-133"
+      },
+      "requested_frames": 448,
+      "requested_frames_status": "INHERITED",
+      "block_count": 21,
+      "block_count_status": "VERIFIED",
+      "eligible_existing_frames": 0,
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_within_this_block": 448,
+      "remaining_frames_status": "VERIFIED",
+      "proposal_integration_statement": {
+        "text": "The proposal says to replace the committed design's 160-frame reference block with this 448-frame block, making that proposal's combined total 891 frames.",
+        "status": "INHERITED",
+        "source": "docs\\proposals\\2026-09-truth-referenced-detail.md:135-147",
+        "governance_note": "M141 does not adopt or reject that integration; the committed 603 ledger remains separate."
+      },
+      "development_only_near_match": {
+        "text": "The burned high-resolution slide supplies sw4/sw10 and flat-path commissioning analogues only. It is explicitly barred from the scored value.",
+        "status": "INHERITED",
+        "sources": [
+          "docs\\proposals\\2026-09-truth-referenced-detail.md:1011-1016",
+          "docs\\proposals\\2026-09-truth-referenced-detail.md:1171-1179"
+        ]
+      },
+      "blocks": [
+        {
+          "block": "TR-REF-NEAR",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:108",
+          "requirement": {
+            "subject": "same grid plus nonperiodic physical patch as the incoming converter-on session",
+            "optical_state": "converter on; untouched existing maximum-reproduction framing",
+            "capture": "32 fixed-focus lossless-compressed 14-bit RAW exposures at one of the near/middle/far focus intersections",
+            "settings": "same converter-on ISO, shutter and marked f-number; fixed white balance; IBIS and OSS off",
+            "focus_position": "near third"
+          },
+          "reason": "No inventoried stack is a same-subject, same-framing member of the incoming converter-on session. Physical magnification is metadata-recoverable for zero stacks, and every inventoried ARW reports ImageStabilization On.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+              "frame_count": 576,
+              "iso_values": [
+                100,
+                200,
+                320,
+                400,
+                50,
+                500,
+                64,
+                640,
+                80
+              ],
+              "exposure_seconds_values": [
+                1.6
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Normal"
+              ],
+              "step_width": {
+                "value": null,
+                "status": "not_recoverable",
+                "source": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+                "basis": "not encoded in the path and not exposed by Sony EXIF"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Contains metadata-defined 32-frame fixed-focus repeat groups, but it is a different subject/session at 200 mm with stabilization on, not the required three maximum-reproduction near/middle/far bursts."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+              "frame_count": 60,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Has at least 32 ISO-100, 1-s, f/5.6 CPL frames, but it is a converter-on focus bracket of a flat development slide, not a fixed-focus same-subject reference burst; the entire slide session is burned development."
+            }
+          ]
+        },
+        {
+          "block": "TR-REF-MID",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:109",
+          "requirement": {
+            "subject": "same grid plus nonperiodic physical patch as the incoming converter-on session",
+            "optical_state": "converter on; untouched existing maximum-reproduction framing",
+            "capture": "32 fixed-focus lossless-compressed 14-bit RAW exposures at one of the near/middle/far focus intersections",
+            "settings": "same converter-on ISO, shutter and marked f-number; fixed white balance; IBIS and OSS off",
+            "focus_position": "middle third"
+          },
+          "reason": "No inventoried stack is a same-subject, same-framing member of the incoming converter-on session. Physical magnification is metadata-recoverable for zero stacks, and every inventoried ARW reports ImageStabilization On.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+              "frame_count": 576,
+              "iso_values": [
+                100,
+                200,
+                320,
+                400,
+                50,
+                500,
+                64,
+                640,
+                80
+              ],
+              "exposure_seconds_values": [
+                1.6
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Normal"
+              ],
+              "step_width": {
+                "value": null,
+                "status": "not_recoverable",
+                "source": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+                "basis": "not encoded in the path and not exposed by Sony EXIF"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Contains metadata-defined 32-frame fixed-focus repeat groups, but it is a different subject/session at 200 mm with stabilization on, not the required three maximum-reproduction near/middle/far bursts."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+              "frame_count": 60,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Has at least 32 ISO-100, 1-s, f/5.6 CPL frames, but it is a converter-on focus bracket of a flat development slide, not a fixed-focus same-subject reference burst; the entire slide session is burned development."
+            }
+          ]
+        },
+        {
+          "block": "TR-REF-FAR",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:110",
+          "requirement": {
+            "subject": "same grid plus nonperiodic physical patch as the incoming converter-on session",
+            "optical_state": "converter on; untouched existing maximum-reproduction framing",
+            "capture": "32 fixed-focus lossless-compressed 14-bit RAW exposures at one of the near/middle/far focus intersections",
+            "settings": "same converter-on ISO, shutter and marked f-number; fixed white balance; IBIS and OSS off",
+            "focus_position": "far third"
+          },
+          "reason": "No inventoried stack is a same-subject, same-framing member of the incoming converter-on session. Physical magnification is metadata-recoverable for zero stacks, and every inventoried ARW reports ImageStabilization On.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+              "frame_count": 576,
+              "iso_values": [
+                100,
+                200,
+                320,
+                400,
+                50,
+                500,
+                64,
+                640,
+                80
+              ],
+              "exposure_seconds_values": [
+                1.6
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Normal"
+              ],
+              "step_width": {
+                "value": null,
+                "status": "not_recoverable",
+                "source": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+                "basis": "not encoded in the path and not exposed by Sony EXIF"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Contains metadata-defined 32-frame fixed-focus repeat groups, but it is a different subject/session at 200 mm with stabilization on, not the required three maximum-reproduction near/middle/far bursts."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+              "frame_count": 60,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Has at least 32 ISO-100, 1-s, f/5.6 CPL frames, but it is a converter-on focus bracket of a flat development slide, not a fixed-focus same-subject reference burst; the entire slide session is burned development."
+            }
+          ]
+        },
+        {
+          "block": "TC0-P0",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:111",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus burst at the recorded bare-lens 1.32x near reset",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-P1",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:112",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame paired fixed-focus reset burst after move-away and return",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-S4-A",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:113",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus sentinel immediately before sw4 A",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-sw4-A",
+          "requested_frames": 55,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 55,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:114",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "55-frame automated Focus Bracket, step width 4, independent pass A",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No eligible pair supplies two identical 55-frame step-width-4 bare-lens passes at one geometry.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+              "frame_count": 55,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Exact 55-frame sw4 count and matching ISO/exposure/aperture, but converter-on, stabilization-on and burned; no eligible bare-lens B repeat exists."
+            },
+            {
+              "stack_id": "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+              "frame_count": 46,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Same burned converter-on grid session, but only 46 frames and not an eligible independent TC0 repeat."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+              "frame_count": 182,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "A 182-frame sw4-labelled development bracket at ISO 100, 1 s and f/5.6, but converter-on, stabilization-on, burned and not two 55-frame bare-lens A/B passes."
+            }
+          ]
+        },
+        {
+          "block": "TC0-E4-A",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:115",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus sentinel at sw4 A's untouched endpoint",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-S4-B",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:116",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus sentinel after the repeated sw4 reset",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-sw4-B",
+          "requested_frames": 55,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 55,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:117",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "55-frame automated Focus Bracket, step width 4, independent pass B",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No eligible pair supplies two identical 55-frame step-width-4 bare-lens passes at one geometry.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+              "frame_count": 55,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Exact 55-frame sw4 count and matching ISO/exposure/aperture, but converter-on, stabilization-on and burned; no eligible bare-lens B repeat exists."
+            },
+            {
+              "stack_id": "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+              "frame_count": 46,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Same burned converter-on grid session, but only 46 frames and not an eligible independent TC0 repeat."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+              "frame_count": 182,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "A 182-frame sw4-labelled development bracket at ISO 100, 1 s and f/5.6, but converter-on, stabilization-on, burned and not two 55-frame bare-lens A/B passes."
+            }
+          ]
+        },
+        {
+          "block": "TC0-E4-B",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:118",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus sentinel at sw4 B's untouched endpoint",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-S10-A",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:119",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus sentinel immediately before sw10 A",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-sw10-A",
+          "requested_frames": 27,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 27,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:120",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "27-frame automated Focus Bracket, step width 10, independent pass A",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No eligible pair supplies two identical 27-frame step-width-10 bare-lens passes at one geometry.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+              "frame_count": 23,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 10,
+                "status": "INHERITED",
+                "source": "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Burned converter-on sw10 stack with only 23 frames."
+            },
+            {
+              "stack_id": "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+              "frame_count": 27,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 10,
+                "status": "INHERITED",
+                "source": "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Exact 27-frame sw10 count, but converter-on, stabilization-on and burned; no eligible TC0 partner exists."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+              "frame_count": 92,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 10,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "A 92-frame sw10-labelled development bracket, but converter-on, stabilization-on, burned and not a 27-frame bare-lens repeat pair."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+              "frame_count": 197,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 10,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "A 197-frame sw10-labelled all-axis development bracket with different geometry; converter-on, stabilization-on and burned."
+            }
+          ]
+        },
+        {
+          "block": "TC0-E10-A",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:121",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus sentinel at sw10 A's untouched endpoint",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-S10-B",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:122",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus sentinel after the repeated sw10 reset",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-sw10-B",
+          "requested_frames": 27,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 27,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:123",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "27-frame automated Focus Bracket, step width 10, independent pass B",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No eligible pair supplies two identical 27-frame step-width-10 bare-lens passes at one geometry.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+              "frame_count": 23,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 10,
+                "status": "INHERITED",
+                "source": "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Burned converter-on sw10 stack with only 23 frames."
+            },
+            {
+              "stack_id": "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+              "frame_count": 27,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 10,
+                "status": "INHERITED",
+                "source": "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Exact 27-frame sw10 count, but converter-on, stabilization-on and burned; no eligible TC0 partner exists."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+              "frame_count": 92,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 10,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "A 92-frame sw10-labelled development bracket, but converter-on, stabilization-on, burned and not a 27-frame bare-lens repeat pair."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+              "frame_count": 197,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 10,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "A 197-frame sw10-labelled all-axis development bracket with different geometry; converter-on, stabilization-on and burned."
+            }
+          ]
+        },
+        {
+          "block": "TC0-E10-B",
+          "requested_frames": 6,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 6,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:124",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "6-frame fixed-focus sentinel at sw10 B's untouched endpoint",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. No existing capture implements this named six-frame witness at the required point in the TC0 reset/pass sequence.",
+          "closest_existing_analogues_not_creditable": []
+        },
+        {
+          "block": "TC0-FLAT-A",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:125",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "32-frame bare-lens A diffuser flat at the scored exposure",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. Existing calibration material is not an independent 32-frame TC0 group assigned to this incoming-session master.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "flat-fields\\flat-fields",
+              "frame_count": 360,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                0.004,
+                0.008,
+                0.01666667,
+                0.03333333,
+                0.05,
+                0.07692308,
+                0.1,
+                0.125,
+                0.2
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Normal"
+              ],
+              "step_width": {
+                "value": null,
+                "status": "not_recoverable",
+                "source": "flat-fields\\flat-fields",
+                "basis": "not encoded in the path and not exposed by Sony EXIF"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\flat-fields\\flat-fields",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Existing flat material is converter-on and not one of two independently repositioned 32-frame TC0 A/B groups from the incoming session."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+              "frame_count": 60,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "A 60-frame ISO-100, 1-s, f/5.6 converter-on focus bracket; not two independent bare-lens diffuser groups and burned development."
+            }
+          ]
+        },
+        {
+          "block": "TC0-FLAT-B",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:126",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "32-frame bare-lens B diffuser flat at the scored exposure; move or rotate the diffuser after A",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. Existing calibration material is not an independent 32-frame TC0 group assigned to this incoming-session master.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "flat-fields\\flat-fields",
+              "frame_count": 360,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                0.004,
+                0.008,
+                0.01666667,
+                0.03333333,
+                0.05,
+                0.07692308,
+                0.1,
+                0.125,
+                0.2
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Normal"
+              ],
+              "step_width": {
+                "value": null,
+                "status": "not_recoverable",
+                "source": "flat-fields\\flat-fields",
+                "basis": "not encoded in the path and not exposed by Sony EXIF"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\flat-fields\\flat-fields",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "Existing flat material is converter-on and not one of two independently repositioned 32-frame TC0 A/B groups from the incoming session."
+            },
+            {
+              "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+              "frame_count": 60,
+              "iso_values": [
+                100
+              ],
+              "exposure_seconds_values": [
+                1
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Exposure Bracketing"
+              ],
+              "step_width": {
+                "value": 4,
+                "status": "INHERITED",
+                "source": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "directory-name label; Sony EXIF does not expose step width"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "A 60-frame ISO-100, 1-s, f/5.6 converter-on focus bracket; not two independent bare-lens diffuser groups and burned development."
+            }
+          ]
+        },
+        {
+          "block": "TC0-DARK-A",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:127",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "32-frame independent bare-lens A dark at the scored exposure",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. Existing calibration material is not an independent 32-frame TC0 group assigned to this incoming-session master.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\6-11-extended-dark-frames",
+              "frame_count": 506,
+              "iso_values": [
+                100,
+                1000,
+                160,
+                2000,
+                400,
+                800
+              ],
+              "exposure_seconds_values": [
+                0.125,
+                1,
+                10,
+                2.5,
+                5
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Normal"
+              ],
+              "step_width": {
+                "value": null,
+                "status": "not_recoverable",
+                "source": "requests\\6-11-extended-dark-frames",
+                "basis": "not encoded in the path and not exposed by Sony EXIF"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\6-11-extended-dark-frames",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "The only ISO-100, 1-s segment has 22 frames; it is not a 32-frame bare-lens, warmed, same-session TC0 A/B dark group."
+            }
+          ]
+        },
+        {
+          "block": "TC0-DARK-B",
+          "requested_frames": 32,
+          "status": "NOT SATISFIED",
+          "eligible_existing_frames": 0,
+          "remaining_frames": 32,
+          "requested_frames_status": "INHERITED",
+          "eligible_existing_frames_status": "VERIFIED",
+          "remaining_frames_status": "VERIFIED",
+          "request_source": "docs\\proposals\\2026-09-truth-referenced-detail.md:128",
+          "requirement": {
+            "subject": "same physical grid plus nonperiodic patch, retained across converter removal",
+            "optical_state": "bare lens, 1.32x target and measured reproduction no greater than 1.33x",
+            "capture": "32-frame independent bare-lens B dark at the scored exposure",
+            "settings": "ISO 100, 1 s, marked f/5.6, fixed white balance, EFCS, IBIS off, OSS off and crossed polarizers"
+          },
+          "reason": "No inventoried stack was captured in the required bare-lens TC0 state: every stack reports 200 mm with the 2x-converter protocol identity and ImageStabilization On, while physical reproduction ratio is not metadata-recoverable. Existing calibration material is not an independent 32-frame TC0 group assigned to this incoming-session master.",
+          "closest_existing_analogues_not_creditable": [
+            {
+              "stack_id": "requests\\6-11-extended-dark-frames",
+              "frame_count": 506,
+              "iso_values": [
+                100,
+                1000,
+                160,
+                2000,
+                400,
+                800
+              ],
+              "exposure_seconds_values": [
+                0.125,
+                1,
+                10,
+                2.5,
+                5
+              ],
+              "aperture_values": [
+                5.6
+              ],
+              "focal_length_mm_values": [
+                200
+              ],
+              "image_stabilization_values": [
+                "On"
+              ],
+              "release_mode_values": [
+                "Normal"
+              ],
+              "step_width": {
+                "value": null,
+                "status": "not_recoverable",
+                "source": "requests\\6-11-extended-dark-frames",
+                "basis": "not encoded in the path and not exposed by Sony EXIF"
+              },
+              "magnification": {
+                "value": null,
+                "status": "not_recoverable_from_metadata",
+                "source": "D:\\personal\\macro\\requests\\6-11-extended-dark-frames",
+                "basis": "Sony RAW metadata supplies focal length and coarse focus distance, not an independently measured reproduction ratio"
+              },
+              "numeric_status": "VERIFIED",
+              "why_not_creditable": "The only ISO-100, 1-s segment has 22 frames; it is not a 32-frame bare-lens, warmed, same-session TC0 A/B dark group."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
