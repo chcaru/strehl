@@ -1,0 +1,897 @@
+{
+  "ciede2000_self_check": {
+    "absolute_tolerance": 5e-05,
+    "expected": 2.0425,
+    "observed": 2.042459680156571,
+    "pass": true
+  },
+  "m10_reference": {
+    "depth_scale_largest_95_relative_half_width": 0.00044069568425686407,
+    "existing_other-ruler_example_only": true,
+    "median_truth_uncertainty_focus_steps": 0.19620853080568718,
+    "p90_truth_uncertainty_focus_steps": 0.3893364928909952
+  },
+  "m3_plateau_noise": {
+    "model": "Normal-noise approximation for two median plateaus, evaluated at the scorecard's minimum eligible 10-sigma source step.",
+    "rows": [
+      {
+        "samples_per_plateau": 17,
+        "u95_fraction_of_unit_step_at_10sigma_eligibility_floor": 0.08425710770517524
+      },
+      {
+        "samples_per_plateau": 81,
+        "u95_fraction_of_unit_step_at_10sigma_eligibility_floor": 0.03860010608638679
+      }
+    ]
+  },
+  "m7_assumed_procurement_budget": {
+    "certificate_screen_u95_delta_e00": 0.2,
+    "remaining_root_sum_square_u95_delta_e00": 0.14999999999999997,
+    "status": "Policy allocation for this report, not scorecard language, vendor specification, or measured capability.",
+    "total_u95_delta_e00": 0.25
+  },
+  "m7_nominal_batch_variation": {
+    "all_patches": [
+      {
+        "component_sd": [
+          0.29893947649339203,
+          1.4101849948489005,
+          2.036798673787567
+        ],
+        "delta_e00_p50": 0.9959926187813737,
+        "delta_e00_p95": 2.6445260062245204,
+        "delta_e00_p99": 3.456700735286594,
+        "lab": [
+          29.514576779026214,
+          13.416745318352056,
+          -47.69091011235955
+        ],
+        "patch": 27
+      },
+      {
+        "component_sd": [
+          0.42725992924447526,
+          0.8329796395869205,
+          1.3555464203203074
+        ],
+        "delta_e00_p50": 0.7276143332032534,
+        "delta_e00_p95": 1.7037985338420107,
+        "delta_e00_p99": 2.2246128983486977,
+        "lab": [
+          40.07962546816481,
+          10.253891385767794,
+          -44.770153558052435
+        ],
+        "patch": 18
+      },
+      {
+        "component_sd": [
+          0.24436677806891013,
+          0.44374994209702295,
+          0.21872125842928208
+        ],
+        "delta_e00_p50": 0.525890560248159,
+        "delta_e00_p95": 1.273670360748415,
+        "delta_e00_p99": 1.6655813563040753,
+        "lab": [
+          69.43329999999999,
+          -0.7813,
+          0.7429
+        ],
+        "patch": 14
+      },
+      {
+        "component_sd": [
+          0.08982507690901917,
+          0.44379375840586166,
+          0.1369194410349901
+        ],
+        "delta_e00_p50": 0.44771126246593684,
+        "delta_e00_p95": 1.2398548272285703,
+        "delta_e00_p99": 1.6361709908123745,
+        "lab": [
+          76.3101,
+          -0.8852999999999998,
+          1.3283999999999998
+        ],
+        "patch": 11
+      },
+      {
+        "component_sd": [
+          0.33930232439485813,
+          0.9866938059330799,
+          0.463360209234249
+        ],
+        "delta_e00_p50": 0.5518943966589283,
+        "delta_e00_p95": 1.1934803359173325,
+        "delta_e00_p99": 1.5275569935478535,
+        "lab": [
+          30.31949812734083,
+          22.132333333333335,
+          -19.02389138576779
+        ],
+        "patch": 30
+      },
+      {
+        "component_sd": [
+          0.35485812596288036,
+          0.9234139063409722,
+          0.5271264031979584
+        ],
+        "delta_e00_p50": 0.4986196659653961,
+        "delta_e00_p95": 1.0817767031653487,
+        "delta_e00_p99": 1.3806843819550836,
+        "lab": [
+          63.13425842696629,
+          35.42630711610486,
+          57.8449063670412
+        ],
+        "patch": 12
+      },
+      {
+        "component_sd": [
+          0.1040118971438498,
+          0.6567084967193442,
+          0.545017698875484
+        ],
+        "delta_e00_p50": 0.45802655961100863,
+        "delta_e00_p95": 1.0244679910359058,
+        "delta_e00_p99": 1.3137170383901262,
+        "lab": [
+          65.1520936329588,
+          19.20805617977529,
+          17.920359550561805
+        ],
+        "patch": 2
+      },
+      {
+        "component_sd": [
+          0.3833724178564443,
+          0.8798838536759245,
+          0.49963047203506905
+        ],
+        "delta_e00_p50": 0.46601379907998847,
+        "delta_e00_p95": 0.906533702451027,
+        "delta_e00_p99": 1.1107978954702937,
+        "lab": [
+          55.60242696629212,
+          -38.45962172284643,
+          32.1894831460674
+        ],
+        "patch": 26
+      },
+      {
+        "component_sd": [
+          0.09169541789837649,
+          0.38862700561715346,
+          0.3062361382829871
+        ],
+        "delta_e00_p50": 0.3041122602442339,
+        "delta_e00_p95": 0.7258529324057885,
+        "delta_e00_p99": 0.9423761115925875,
+        "lab": [
+          49.61261423220974,
+          -4.195404494382024,
+          -21.326606741573038
+        ],
+        "patch": 3
+      },
+      {
+        "component_sd": [
+          0.35407396172215455,
+          0.16944785557083236,
+          0.29383713049803845
+        ],
+        "delta_e00_p50": 0.33539015273031725,
+        "delta_e00_p95": 0.712893800254223,
+        "delta_e00_p99": 0.900538379428614,
+        "lab": [
+          55.516441947565575,
+          8.782082397003744,
+          -24.3135468164794
+        ],
+        "patch": 5
+      },
+      {
+        "component_sd": [
+          0.1321162787501368,
+          0.0492324418786362,
+          0.4093263978782722
+        ],
+        "delta_e00_p50": 0.26481427626637727,
+        "delta_e00_p95": 0.7038316412920798,
+        "delta_e00_p99": 0.923020269137769,
+        "lab": [
+          95.0894,
+          -0.7685000000000001,
+          3.5421
+        ],
+        "patch": 8
+      },
+      {
+        "component_sd": [
+          0.33605093584297396,
+          0.15811778789205735,
+          0.2672114306186601
+        ],
+        "delta_e00_p50": 0.2854153920273883,
+        "delta_e00_p95": 0.674321216115239,
+        "delta_e00_p99": 0.8744993055068987,
+        "lab": [
+          51.749513108614224,
+          47.362734082397,
+          16.93431835205993
+        ],
+        "patch": 24
+      },
+      {
+        "component_sd": [
+          0.36374058216146166,
+          0.12714995521474307,
+          0.12558680043875808
+        ],
+        "delta_e00_p50": 0.30570076909846766,
+        "delta_e00_p95": 0.6172386247459913,
+        "delta_e00_p99": 0.7825050268920009,
+        "lab": [
+          31.3839,
+          -0.44299999999999995,
+          -0.1684
+        ],
+        "patch": 21
+      },
+      {
+        "component_sd": [
+          0.3263090639546655,
+          0.07876404262579265,
+          0.10615947916602635
+        ],
+        "delta_e00_p50": 0.22048354374648726,
+        "delta_e00_p95": 0.5966444424566306,
+        "delta_e00_p99": 0.7823455669274644,
+        "lab": [
+          43.54459176029964,
+          -12.885235955056176,
+          22.655591760299625
+        ],
+        "patch": 4
+      },
+      {
+        "component_sd": [
+          0.1329720521993017,
+          0.14979007532766114,
+          0.26192749208724003
+        ],
+        "delta_e00_p50": 0.3025504632412397,
+        "delta_e00_p95": 0.5887403878767463,
+        "delta_e00_p99": 0.7272261088938389,
+        "lab": [
+          55.981700000000004,
+          -0.8438000000000001,
+          0.6643
+        ],
+        "patch": 16
+      },
+      {
+        "component_sd": [
+          0.2956677001116771,
+          0.09986774587756868,
+          0.12248015712305774
+        ],
+        "delta_e00_p50": 0.2616941280219628,
+        "delta_e00_p95": 0.5358256416477156,
+        "delta_e00_p99": 0.6842155247686443,
+        "lab": [
+          61.6645,
+          -0.8916999999999999,
+          0.7335
+        ],
+        "patch": 15
+      },
+      {
+        "component_sd": [
+          0.12577535957814243,
+          0.1537904473092369,
+          0.5534364354168906
+        ],
+        "delta_e00_p50": 0.22836297213516699,
+        "delta_e00_p95": 0.5117480831548333,
+        "delta_e00_p99": 0.6601459018940685,
+        "lab": [
+          50.857232209737845,
+          -27.779370786516864,
+          -27.682044943820227
+        ],
+        "patch": 7
+      },
+      {
+        "component_sd": [
+          0.2306627167299244,
+          0.08289625376872545,
+          0.08422746978668336
+        ],
+        "delta_e00_p50": 0.22109224593212712,
+        "delta_e00_p95": 0.4783607111997827,
+        "delta_e00_p99": 0.6101015981130742,
+        "lab": [
+          48.536199999999994,
+          -0.6723,
+          0.3776
+        ],
+        "patch": 17
+      },
+      {
+        "component_sd": [
+          0.30447638306864655,
+          0.22824815745213536,
+          0.2905920057473224
+        ],
+        "delta_e00_p50": 0.22294026826043317,
+        "delta_e00_p95": 0.4766886545952659,
+        "delta_e00_p99": 0.607419788477775,
+        "lab": [
+          72.4953183520599,
+          -22.91993258426966,
+          56.07951685393257
+        ],
+        "patch": 29
+      },
+      {
+        "component_sd": [
+          0.22050050772504146,
+          0.22620448088309114,
+          0.6522340234758
+        ],
+        "delta_e00_p50": 0.2459062833781817,
+        "delta_e00_p95": 0.4737151818111571,
+        "delta_e00_p99": 0.5857741614002236,
+        "lab": [
+          72.09845692883893,
+          19.505588014981274,
+          67.84992883895129
+        ],
+        "patch": 28
+      },
+      {
+        "component_sd": [
+          0.2509440840778887,
+          0.06280835047100615,
+          0.11610919190333065
+        ],
+        "delta_e00_p50": 0.21843994536194766,
+        "delta_e00_p95": 0.4631852907384599,
+        "delta_e00_p99": 0.5958646056212955,
+        "lab": [
+          40.9204,
+          -0.5910000000000001,
+          0.2783
+        ],
+        "patch": 20
+      },
+      {
+        "component_sd": [
+          0.3111348877066988,
+          0.2201451541344729,
+          0.5250453852426905
+        ],
+        "delta_e00_p50": 0.23224049095397822,
+        "delta_e00_p95": 0.45978648500678027,
+        "delta_e00_p99": 0.5770471518936977,
+        "lab": [
+          82.01946441947564,
+          3.2827528089887643,
+          78.75404868913857
+        ],
+        "patch": 19
+      },
+      {
+        "component_sd": [
+          0.33026489368559614,
+          0.034642459496982164,
+          0.09032195500295319
+        ],
+        "delta_e00_p50": 0.18261522316088943,
+        "delta_e00_p95": 0.4422138553665946,
+        "delta_e00_p99": 0.5768272461707139,
+        "lab": [
+          83.4627,
+          -0.8770999999999999,
+          1.9155000000000002
+        ],
+        "patch": 10
+      },
+      {
+        "component_sd": [
+          0.22714840963554223,
+          0.02497999199359423,
+          0.11321999234528621
+        ],
+        "delta_e00_p50": 0.16579506810152983,
+        "delta_e00_p95": 0.35238675030888794,
+        "delta_e00_p99": 0.4473501509578808,
+        "lab": [
+          24.0748,
+          0.354,
+          -0.34890000000000004
+        ],
+        "patch": 22
+      },
+      {
+        "component_sd": [
+          0.11984691062663065,
+          0.31327303847193577,
+          0.22245096875849385
+        ],
+        "delta_e00_p50": 0.171790284111095,
+        "delta_e00_p95": 0.33517723455167536,
+        "delta_e00_p99": 0.41887760659880263,
+        "lab": [
+          43.48029213483145,
+          50.739157303370796,
+          29.13111610486891
+        ],
+        "patch": 25
+      },
+      {
+        "component_sd": [
+          0.1420498086867086,
+          0.2902111213381307,
+          0.2003231900491321
+        ],
+        "delta_e00_p50": 0.16453968034498118,
+        "delta_e00_p95": 0.3155507719888562,
+        "delta_e00_p99": 0.3931180245876775,
+        "lab": [
+          52.851977528089876,
+          49.89764419475655,
+          -12.86356554307116
+        ],
+        "patch": 13
+      },
+      {
+        "component_sd": [
+          0.08350912772346336,
+          0.15683827641571052,
+          0.21876855188287272
+        ],
+        "delta_e00_p50": 0.14025462928546753,
+        "delta_e00_p95": 0.30337272391235787,
+        "delta_e00_p99": 0.3903824592549484,
+        "lab": [
+          70.42180898876406,
+          -32.385329588015,
+          -0.4811535580524345
+        ],
+        "patch": 6
+      },
+      {
+        "component_sd": [
+          0.21418750130200767,
+          0.04418285866713348,
+          0.09504885961591424
+        ],
+        "delta_e00_p50": 0.1489554459648641,
+        "delta_e00_p95": 0.297411194697327,
+        "delta_e00_p99": 0.3732672698124417,
+        "lab": [
+          88.691,
+          -0.49787500000000007,
+          1.2495
+        ],
+        "patch": 9
+      },
+      {
+        "component_sd": [
+          0.07847431972087912,
+          0.12022793657906755,
+          0.18220812414699095
+        ],
+        "delta_e00_p50": 0.14648450326325507,
+        "delta_e00_p95": 0.2966608748628102,
+        "delta_e00_p99": 0.3751973522199912,
+        "lab": [
+          38.7614382022472,
+          13.80533333333334,
+          14.693891385767786
+        ],
+        "patch": 1
+      },
+      {
+        "component_sd": [
+          0.16524849974163067,
+          0.03538188488164211,
+          0.06147637305863489
+        ],
+        "delta_e00_p50": 0.11740954952648236,
+        "delta_e00_p95": 0.24519305440493094,
+        "delta_e00_p99": 0.31181175566995833,
+        "lab": [
+          22.307199999999998,
+          0.1821,
+          -0.15829999999999997
+        ],
+        "patch": 23
+      }
+    ],
+    "draws_per_patch": 100000,
+    "median_patch_p95_delta_e00": 0.562283014762231,
+    "model": "Independent Gaussian L*, a*, b* target-to-target variation using the vendor workbook's n=50 component standard deviations. This is a screening model, not a certificate uncertainty.",
+    "patches_with_p95_over_1_delta_e00": 7,
+    "patches_with_p95_over_2_delta_e00": 1,
+    "seed": 20260904,
+    "worst_patch": {
+      "component_sd": [
+        0.29893947649339203,
+        1.4101849948489005,
+        2.036798673787567
+      ],
+      "delta_e00_p50": 0.9959926187813737,
+      "delta_e00_p95": 2.6445260062245204,
+      "delta_e00_p99": 3.456700735286594,
+      "lab": [
+        29.514576779026214,
+        13.416745318352056,
+        -47.69091011235955
+      ],
+      "patch": 27
+    }
+  },
+  "m7_patch_random_terms": {
+    "effective_independent_pixels": 14641.0,
+    "lstar": 22.307199999999998,
+    "model": "Darkest matte neutral patch, one-frame ISO-100 noise, 484x484 eroded pixels, and a conservative 16-pixel correlation area. PRNU calculation treats the measured near-white PRNU spectrum as spatially averaging; low-frequency flat/illumination residue is not covered.",
+    "noise_u95_delta_lstar": 0.005154496173648937,
+    "noise_u95_dn": 0.2307581531595007,
+    "patch": 23,
+    "prnu_u95_delta_lstar_if_white": 0.0008025676444951557,
+    "prnu_u95_dn_if_white": 0.03592552660925102,
+    "signal_dn": 571.5727972644596
+  },
+  "m8_numeric_budget": {
+    "absolute_excess_multiple_of_tolerance": 122237.28646616997,
+    "combined_unit_scale_tolerance": 8.583185264754461e-06,
+    "half_16bit_lsb": 7.629510948348211e-06,
+    "largest_absolute_m8o_excess": 1.049185276,
+    "largest_positive_m8o_excess": 0.00370329,
+    "positive_excess_multiple_of_tolerance": 431.4587051041523,
+    "tau_r_at_unit_scale": 9.5367431640625e-07
+  },
+  "protocol": "M144 reference uncertainty budget v1",
+  "reference_noise": {
+    "gain_dn_per_electron": 0.224001,
+    "model": "sigma^2 = g*S + RN_DN^2; independent frame means scale as 1/sqrt(N)",
+    "read_noise_dn": 1.079,
+    "rows": [
+      {
+        "mean_16_sigma_dn": 1.9283104878364374,
+        "mean_16_sigma_percent_active_range": 0.012149899110556597,
+        "mean_32_sigma_dn": 1.3635214221822844,
+        "mean_32_sigma_percent_active_range": 0.00859127605180697,
+        "signal_dn": 260.4,
+        "single_frame_sigma_dn": 7.71324195134575,
+        "single_frame_sigma_percent_active_range": 0.04859959644222639
+      },
+      {
+        "mean_16_sigma_dn": 12.136326556304011,
+        "mean_16_sigma_percent_active_range": 0.07646856881295451,
+        "mean_32_sigma_dn": 8.581678806656946,
+        "mean_32_sigma_percent_active_range": 0.05407144355527028,
+        "signal_dn": 10515.5,
+        "single_frame_sigma_dn": 48.545306225216045,
+        "single_frame_sigma_percent_active_range": 0.30587427525181804
+      }
+    ]
+  },
+  "registration_sensitivity": {
+    "model": "Registration phase is 2*pi*f*sigma. Amplitude loss assumes zero-mean Gaussian residual jitter. Scale attenuation integrates a linear 0.10% coordinate error over a centered 128-px site.",
+    "rows": [
+      {
+        "gaussian_jitter_amplitude_loss_fraction": 0.005045363144377424,
+        "phase_rms_rad_at_0_25_cyc_per_px": 0.10057965960100403,
+        "registration_rms_px": 0.064031
+      },
+      {
+        "gaussian_jitter_amplitude_loss_fraction": 0.006027756059852063,
+        "phase_rms_rad_at_0_25_cyc_per_px": 0.10996359685727673,
+        "registration_rms_px": 0.070005
+      },
+      {
+        "gaussian_jitter_amplitude_loss_fraction": 0.01356114035230982,
+        "phase_rms_rad_at_0_25_cyc_per_px": 0.16525091517147672,
+        "registration_rms_px": 0.105202
+      },
+      {
+        "gaussian_jitter_amplitude_loss_fraction": 0.014208934237044168,
+        "phase_rms_rad_at_0_25_cyc_per_px": 0.16917947678479073,
+        "registration_rms_px": 0.107703
+      }
+    ],
+    "scale_gate": {
+      "maximum_edge_displacement_px": 0.064,
+      "phase_span_rad_at_0_25_cyc_per_px": 0.10053096491487339,
+      "scale_fraction": 0.001,
+      "sinc_amplitude_loss_fraction": 0.0016835615156166606,
+      "site_width_px": 128
+    }
+  },
+  "scorecard_success_quotes": {
+    "M1": {
+      "line_end": 588,
+      "line_start": 585,
+      "verbatim": "**Success.** There is deliberately no active numeric success bar. M1 remains\n**UNMEASURED**, and no detail, matched-information, quality-qualified comparator or\nSOTA claim is licensed until a replacement statistic and numeric bar survive\ncommissioning."
+    },
+    "M10": {
+      "line_end": 1043,
+      "line_start": 1041,
+      "verbatim": "**Success.** **SCORECARD ADDITION:** valid target pixels `>=99%`; rank correlation\n`>=0.99`; median absolute error `<=0.5` focus step; p95 `<=1.0` step; ruler slope error\n`<=5%`; flat-null p95 range `<=0.5` step; synthetic layer confusion `<=1%`."
+    },
+    "M11": {
+      "line_end": 1098,
+      "line_start": 1092,
+      "verbatim": "**Success.** **PROPOSAL BARS:** warm common-input strehl throughput `>=2.00x` the\nbest comparator; native-RAW CPU-only at 16 workers `<=0.15 s/frame`; hybrid\n`<=0.06 s/frame`; cold `<=warm+20 s`; first-100 streaming master closed and readable\n`<=10 s` after `DSC00100.ARW` becomes available.\n**SCORECARD FREEZE OF D5'S \u201cROUGHLY 2x\u201d:**\ncandidate/default-baseline warm-wall ratio `<=2.00`. The baseline build/hash and its\ncomplete settings are frozen before the candidate is timed."
+    },
+    "M12": {
+      "line_end": 1144,
+      "line_start": 1138,
+      "verbatim": "**Success.** The proposal bars are warm peak `<=6 GiB` and byte invariance. The\n**SCORECARD ADDITIONS** that make \u201cflat\u201d numeric are\n`peak_N299/peak_N33<=1.10` and N-mod-4 per-frame spread `<=2%`. M12-D requires\nexactly one distinct hash in every fixed-worker six-run cell. M12-S requires exactly\none distinct hash across all five worker counts at every N, and the 16-worker output\nmust simultaneously pass M11. A product may pass M12-D while failing M12-S; the two\nverdicts must never be conflated."
+    },
+    "M2": {
+      "line_end": 635,
+      "line_start": 633,
+      "verbatim": "**Success.** The proposal says \u201cstrictly lower noise\u201d but supplies no practical\nmargin (`2026-08-sota-path.md` lines 192\u2013195). **SCORECARD ADDITION:**\n`eta <=1.10` and `UCB95(sigma_strehl / min(sigma_comparator)) <=0.950`."
+    },
+    "M3": {
+      "line_end": 681,
+      "line_start": 678,
+      "verbatim": "**Success.** **SCORECARD ADDITION:** median `h_e` and `v_e <=0.01`; p99 of each\n`<=0.05`; affected-edge point rate `<=1%` and Wilson UCB95 `<=2%`; median edge-width\nratio in `[0.95,1.05]`; median `rho_edge>=0.90`; strehl\u2019s paired p99 is no greater\nthan the best comparator\u2019s."
+    },
+    "M4": {
+      "line_end": 717,
+      "line_start": 716,
+      "verbatim": "**Success.** **SCORECARD ADDITION:** median `Q_flat<=1.00`; failed-site point rate\n`<=1%`, Wilson UCB95 `<=2%`; strehl\u2019s rate is no greater than the best comparator\u2019s."
+    },
+    "M5": {
+      "line_end": 761,
+      "line_start": 759,
+      "verbatim": "**Success.** **SCORECARD ADDITION:** coverage point estimate `>=99%`, Wilson LCB95\n`>=98%`, longest failed run `<=1%` of the sweep dimension, retained FOV `>=99%`, and\nstrehl coverage no lower than the best comparator."
+    },
+    "M6": {
+      "line_end": 798,
+      "line_start": 796,
+      "verbatim": "**Success.** **SCORECARD ADDITION:** `clip_high<=0.001`,\n`clip_low<=0.001`, highlight-detail retention `>=0.90`, and none of the three values\nis worse than the best comparator."
+    },
+    "M7": {
+      "line_end": 834,
+      "line_start": 832,
+      "verbatim": "**Success.** **SCORECARD ADDITION:** median DeltaE00 `<=1.0`, p95 `<=2.0`, maximum\n`<=3.0`, boundary-seam p99 `<=1.0`, ICC/300-DPI conformance `100%`, and no summary is\nworse than the best comparator."
+    },
+    "M8": {
+      "line_end": 892,
+      "line_start": 889,
+      "verbatim": "**Success.** **PROPOSAL BAR (M8-O):** final-output violation fraction exactly\n`0.0000%`. **SCORECARD ADDITION (M8-R):** resampler violation fraction exactly\n`0.0000%`; the crop/reference identity arm also has zero violations. A missing\npre-clamp trace is `UNMEASURED`, not a pass."
+    },
+    "M9": {
+      "line_end": 999,
+      "line_start": 997,
+      "verbatim": "**Success.** **SCORECARD ADDITION:** false-certification Wilson UCB95 `<=1%`;\ntrue-band coverage `>=90%`; nominal 95% coverage in `[93%,97%]`; empirical/predicted\nvariance ratio in `[0.90,1.10]` for at least 90% of deciles."
+    }
+  },
+  "seed": 20260904,
+  "software": {
+    "numpy": "2.4.4",
+    "scikit_image": "0.26.0",
+    "xlrd": "1.2.0"
+  },
+  "source_sha256": {
+    "docs/OWNER-ACTIONS.md": "c3f58dd4026ae036e9c55d6c8d871a394de2855ac05e0c1e27108c5e552df094",
+    "docs/proposals/2026-09-sota-scorecard.md": "8d419ba344cff97fd41adec41245a0814e7aebf81633f9c87ec181886a2d1cc9",
+    "docs/proposals/2026-09-truth-referenced-detail.md": "4a8f470b31d7823a819b865084af29d4511b2a2df8317b2e71316a9ced076171",
+    "docs/research/F-camera-lens-optics.md": "56ccbae7d6ed64f29a854a150fcc291acabda15ad08746b4a7d5d77b43089966",
+    "docs/research/M-PHASE0-SPLIT2.md": "4a2b50040a44cad491e794d22bb6db4691965ea4ee600f304fc96be4798efed3",
+    "docs/research/M132-blocker-d-routes.md": "127bdf0b6d9bffc02d17090e4cd46a2cf71160a1b8a3971270c744f67537b11c",
+    "docs/research/M133-blocker-audit.md": "915f73fdf0044da60723fc44410adf0799644e1ac7f6aaa8ce93fe63db6d43d7",
+    "docs/research/M135-detail-instrument.md": "cf25dbaa3f9604d71b17ea62fb7e1ede807f1bed1e30597330c4932091eef4ae",
+    "docs/research/M71-flat-fields.md": "0c4711e26f57bfbba0745e331ee04013dc76e9a8ca68e192d690d74e3e58f3df",
+    "docs/research/M8-overshoot.md": "1cd81dbee41a5332f390b5da4c2f64e4600be39d19dcd7b9f52ed1bb279f6e63",
+    "docs/research/M84b-ruler-metrology.md": "c124436a1a235e8e84be123ed9042ab9bcd77a55badcc5e4122451bd3388aacc",
+    "experiments/M-PHASE0-SPLIT2/out/alignment-gate.json": "ac2885e474488e5cac8e1ff8b3a9f09d5ee08ad956e05e618c3df0febde2f13f",
+    "experiments/M132-blocker-d-routes/m7-isa-target-colorimetry.xls": "7cb4d01b450e9d4ad26d0e58d8c14cd69d9dbc57aa0704bb343faac9f91d8b9f",
+    "experiments/M71-flat-fields/data/03-ptc.json": "ae6aff7b68aff00cb11956ea78a49b4b0d9e937f7318ae476e9e5edf49e51b51",
+    "experiments/M71-flat-fields/data/05-kappa.json": "f3411f1596954db38086a225f16baf4e6792e3bbe46e640da9ba0b3ce0dcee79",
+    "experiments/M71-flat-fields/data/07-structure.json": "de24f5a7a695138a310b7e3775d33d07383e46e9e16fe2c57d3662c2055306c1",
+    "experiments/M8-overshoot/results.json": "d310abb387a7ee7f9f9c4bb5a4484ace8a864f34e4c90ee026bfa97ac5236241",
+    "experiments/M84b-ruler-metrology/out/depth-truth-params.json": "745bbbcedb3da04842740a88a01ce21109a75393dcc371804d62874c63973d69"
+  },
+  "tone_and_quantisation": {
+    "maxima": {
+      "combined_minus": {
+        "delta_lstar": 1.1624488223407106,
+        "patch": 23
+      },
+      "combined_plus": {
+        "delta_lstar": 1.0958810180692744,
+        "patch": 23
+      },
+      "half_16bit_lsb_plus": {
+        "delta_lstar": 0.0027049418257156788,
+        "patch": 23
+      },
+      "offset_only_plus": {
+        "delta_lstar": 0.35132973251985433,
+        "patch": 23
+      },
+      "residual_only_plus": {
+        "delta_lstar": 0.6963871740540064,
+        "patch": 23
+      },
+      "slope_only_plus": {
+        "delta_lstar": 0.18484127265783457,
+        "patch": 8
+      }
+    },
+    "model": "Neutral-axis CIELAB sensitivity only. The combined tone case places slope, offset, and maximum affine residual in the same direction; it is an admitted worst case, not an expected error.",
+    "neutral_patches": [
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.3125093063472093,
+          "combined_plus": 0.31076086900093003,
+          "half_16bit_lsb_plus": 0.00032166433739178046,
+          "offset_only_plus": 0.04214467606925609,
+          "residual_only_plus": 0.08425741111155105,
+          "slope_only_plus": 0.18484127265783457
+        },
+        "lstar": 95.0894,
+        "patch": 8,
+        "relative_y": 0.8783020485480115
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.3178639735821349,
+          "combined_plus": 0.3159454021445356,
+          "half_16bit_lsb_plus": 0.00036218396155618393,
+          "offset_only_plus": 0.04745010655592807,
+          "residual_only_plus": 0.09485725897432928,
+          "slope_only_plus": 0.17419499678474892
+        },
+        "lstar": 88.691,
+        "patch": 9,
+        "relative_y": 0.7351129556430224
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.3246099775920328,
+          "combined_plus": 0.3225048787095659,
+          "half_16bit_lsb_plus": 0.00040126120475747484,
+          "offset_only_plus": 0.052565732562271705,
+          "residual_only_plus": 0.10507599140457557,
+          "slope_only_plus": 0.16549564629913505
+        },
+        "lstar": 83.4627,
+        "patch": 10,
+        "relative_y": 0.6303862988137389
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.3382671537084718,
+          "combined_plus": 0.3358060219035366,
+          "half_16bit_lsb_plus": 0.0004658528737877532,
+          "offset_only_plus": 0.0610193001288053,
+          "residual_only_plus": 0.12195808929456575,
+          "slope_only_plus": 0.15359445962594975
+        },
+        "lstar": 76.3101,
+        "patch": 11,
+        "relative_y": 0.5039340415598473
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.35773982323999576,
+          "combined_plus": 0.35476868450628274,
+          "half_16bit_lsb_plus": 0.0005438664698971252,
+          "offset_only_plus": 0.07122563478131383,
+          "residual_only_plus": 0.142332804329115,
+          "slope_only_plus": 0.14215217562934868
+        },
+        "lstar": 69.43329999999999,
+        "patch": 14,
+        "relative_y": 0.3994915323112776
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.39017665137915714,
+          "combined_plus": 0.3862951580921461,
+          "half_16bit_lsb_plus": 0.0006581132462102346,
+          "offset_only_plus": 0.08616400508379485,
+          "residual_only_plus": 0.1721374567851015,
+          "slope_only_plus": 0.12922569588398147
+        },
+        "lstar": 61.6645,
+        "patch": 15,
+        "relative_y": 0.30011913371200655
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.42371060411863937,
+          "combined_plus": 0.4187802479617204,
+          "half_16bit_lsb_plus": 0.000766126690663782,
+          "offset_only_plus": 0.10027753285517349,
+          "residual_only_plus": 0.20027683520051198,
+          "slope_only_plus": 0.11977010440305946
+        },
+        "lstar": 55.981700000000004,
+        "patch": 16,
+        "relative_y": 0.23894190947386085
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.4859828325655684,
+          "combined_plus": 0.47877175251691995,
+          "half_16bit_lsb_plus": 0.0009530950632949953,
+          "offset_only_plus": 0.12468297408204876,
+          "residual_only_plus": 0.2488869513448293,
+          "slope_only_plus": 0.10738156242179286
+        },
+        "lstar": 48.536199999999994,
+        "patch": 17,
+        "relative_y": 0.17220121120662604
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.5825777943267525,
+          "combined_plus": 0.5708905157958455,
+          "half_16bit_lsb_plus": 0.0012251920745214306,
+          "offset_only_plus": 0.16013842983275595,
+          "residual_only_plus": 0.3193833352033124,
+          "slope_only_plus": 0.09470965885307692
+        },
+        "lstar": 40.9204,
+        "patch": 20,
+        "relative_y": 0.11814894892356806
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 0.787182259498632,
+          "combined_plus": 0.7618620738494464,
+          "half_16bit_lsb_plus": 0.0017679566148522952,
+          "offset_only_plus": 0.2306105508415719,
+          "residual_only_plus": 0.4590086569402452,
+          "slope_only_plus": 0.07884190912446698
+        },
+        "lstar": 31.3839,
+        "patch": 21,
+        "relative_y": 0.06815825163719345
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 1.0668627015976817,
+          "combined_plus": 1.012896165386632,
+          "half_16bit_lsb_plus": 0.0024716097600041564,
+          "offset_only_plus": 0.3213895205474451,
+          "residual_only_plus": 0.6377449204530201,
+          "slope_only_plus": 0.06668032263661061
+        },
+        "lstar": 24.0748,
+        "patch": 22,
+        "relative_y": 0.041232543246512876
+      },
+      {
+        "absolute_delta_lstar": {
+          "combined_minus": 1.1624488223407106,
+          "combined_plus": 1.0958810180692744,
+          "half_16bit_lsb_plus": 0.0027049418257156788,
+          "offset_only_plus": 0.35132973251985433,
+          "residual_only_plus": 0.6963871740540064,
+          "slope_only_plus": 0.06373921904301838
+        },
+        "lstar": 22.307199999999998,
+        "patch": 23,
+        "relative_y": 0.03601365996247619
+      }
+    ]
+  },
+  "wilson_count_sensitivity_at_n_500": {
+    "m3_m4_max_failures_for_one_sided_ucb95_le_0_02": 4,
+    "m5_max_failures_for_point_ge_0_99_and_lcb95_ge_0_98": 4,
+    "m9_max_false_certifications_for_one_sided_ucb95_le_0_01": 1
+  }
+}

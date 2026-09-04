@@ -1,0 +1,26 @@
+{
+  "checked_at_utc": "2026-09-04T10:41:57.4801940Z",
+  "method": "SHA-256 over UTF-8 records FullName|Length|LastWriteTimeUtc:o followed by literal `n, sorted by FullName",
+  "trees": [
+    {
+      "root": "D:\\personal\\macro",
+      "baseline_files": 10724,
+      "final_files": 10724,
+      "baseline_bytes": 487169829957,
+      "final_bytes": 487169829957,
+      "baseline_inventory_sha256": "d6da3ab0de166b1bcf42202e24ce3a9fb96b83e345244b0873caa10ec02afd01",
+      "final_inventory_sha256": "d6da3ab0de166b1bcf42202e24ce3a9fb96b83e345244b0873caa10ec02afd01",
+      "unchanged": true
+    },
+    {
+      "root": "D:\\edited\\macro",
+      "baseline_files": 387,
+      "final_files": 387,
+      "baseline_bytes": 141333902406,
+      "final_bytes": 141333902406,
+      "baseline_inventory_sha256": "170ef72fea9e1fa039ebe0c1328c6cf521fb8302122ae6c8518e882b68229e59",
+      "final_inventory_sha256": "170ef72fea9e1fa039ebe0c1328c6cf521fb8302122ae6c8518e882b68229e59",
+      "unchanged": true
+    }
+  ]
+}
