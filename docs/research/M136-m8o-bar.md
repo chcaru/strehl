@@ -13,6 +13,7 @@ denominator, rather than delete rail coordinates from the census.
 |---|---|
 | Meaning of `full_rail_below_hull` | The proposed reading is correct. It is an encoded `65535` sample already classified as a lower violation, with `lo > 1 + tolerance`. |
 | Achievability as written | Impossible for the 977,684 bilinear coordinates while output remains the required `u16/65535` domain and the current unprojected hull is used. |
+| M134 corroboration | Confirms the proof and all per-capture counts; it increases confidence but does not change the ruling. |
 | Goalposts | Legitimate construct repair, provided the denominator is unchanged, unavoidable rails remain separately reported, in-range plants remain red, and M8-R remains mandatory. |
 | Ownership of rails | Not current M6: its denominator requires another aligned input in `[0.20,0.95]`. Keep a mandatory M8-adjacent headroom census and, if it is to gate quality, specify a new prospective M6 headroom submetric. |
 | Rail-only residue | Exactly `2413/74173536`, or approximately `0.0032531818356347471421613228739694976925463011497793%`. |
@@ -221,6 +222,108 @@ is legitimate only if M8-R remains a separate pre-clamp census. Clamping source
 support before reconstructing M8-R would hide the very excursions M8-R exists
 to expose and is not this ruling.
 
+### Independent M134 corroboration
+
+**VERIFIED — no change to the ruling:** I read
+`experiments/M134-kernel-frontier/phase4-results.json` and its generating
+script rather than accepting the supplied summary. M134 states the same
+set-theoretic proof:
+
+>   "proof": {
+>     "accepted_lower_condition": "value >= lo - tolerance",
+>     "consequence": "at least one such geometrically valid census sample makes an exact 0.0000% M8-O bar impossible without changing the output representation, normalization, or census treatment of saturation",
+>     "empty_intersection_when": "lo - tolerance > 1",
+>     "representable_output_interval": "[0, 1]"
+>   },
+(`experiments/M134-kernel-frontier/phase4-results.json:158-163`)
+
+**VERIFIED:** Its protocol, source hashes, tolerance, and verdict are:
+
+>   "protocol": "M134 M8-O representability v1",
+>   "source": {
+>     "analysis_script_sha256": "7161136DBC100FA852E82BCAADA5335A226B9FAFDF0F815DC23F1E9CCBB2D144",
+>     "frozen_stage_attribution": "experiments/M8-overshoot/stage-attribution.json",
+>     "frozen_stage_attribution_sha256": "E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792"
+>   },
+>   "u16_quantisation_tolerance": 7.629510948348211e-06,
+>   "verdict": "UNACHIEVABLE AS WRITTEN under the current normalized u16 output: when lo > 1 + tolerance, every representable value is below the source hull"
+(`experiments/M134-kernel-frontier/phase4-results.json:164-171`)
+
+**VERIFIED:** I independently hashed `phase4.py`, the frozen stage-attribution
+artifact, and the companion checker; all equal the recorded hashes. I also
+compared every M134 bilinear per-capture denominator, violation count, rail
+classification, and nonrail count with M136's separate reclassification; all
+match (`experiments/M136-m8o-bar/analysis.json:94-150`).
+
+**VERIFIED:** The per-capture split is exactly:
+
+| Capture | Unrepresentable/full-rail-below-hull | Nonrail | Fraction of all valid output coordinates |
+|---|---:|---:|---:|
+| `flat-et1s` | `0` | `1,409` | `0` (`experiments/M134-kernel-frontier/phase4-results.json:21-38`) |
+| `flat-et2.5s` | `0` | `671` | `0` (`experiments/M134-kernel-frontier/phase4-results.json:40-57`) |
+| `flat-et6s` | `977,684` | `333` | `0.03954310604795759` (`experiments/M134-kernel-frontier/phase4-results.json:59-76`) |
+
+**VERIFIED:** This strongly corroborates saturation attribution, but the
+mechanism does not depend on a natural-experiment inference: M134 directly
+counts `lo > 1 + tau + 0.5/65535`. Such a coordinate has an empty intersection
+between its accepted interval and `[0,1]`, regardless of why its exposure
+produced that hull.
+
+**VERIFIED — correction to the supplied characterization:** Exposure time is
+not the only recorded difference among the three arms. They contain 60, 61,
+and 65 frames and use cover scales `0.9862`, `0.9870`, and `0.9859`,
+respectively:
+
+>     "flat-et1s": {
+>       "cover_scale": 0.9862,
+>       "frames": 60,
+(`experiments/M8-overshoot/results.json:65-67`)
+
+>     "flat-et2.5s": {
+>       "cover_scale": 0.987,
+>       "frames": 61,
+(`experiments/M8-overshoot/results.json:132-134`)
+
+>     "flat-et6s": {
+>       "cover_scale": 0.9859,
+>       "frames": 65,
+(`experiments/M8-overshoot/results.json:199-201`)
+
+**VERIFIED:** The split is therefore corroborative rather than a controlled
+“only exposure differs” experiment. This qualification does not weaken the
+per-coordinate impossibility proof.
+
+**VERIFIED — independence qualification:** The companion record truthfully
+reports `forbidden_strehl_imports: []`, `independent: true`, and names
+independent coordinate, support, and tolerance functions
+(`experiments/M134-kernel-frontier/out/independence.json:2-4,20-23`).
+However, `phase4.py` itself computes this particular representability census
+from the frozen M8 checker's saved `o-lo.npy` and `o-tau.npy` arrays:
+
+> def count_unrepresentable_hulls(state: Path) -> dict:
+>     lo = np.load(state / "o-lo.npy", mmap_mode="r")
+>     tau = np.load(state / "o-tau.npy", mmap_mode="r")
+>     if lo.shape != tau.shape:
+>         raise RuntimeError(f"{state}: lo/tau shape mismatch")
+>     valid = 0
+>     above = 0
+>     for channel in range(lo.shape[0]):
+>         for y0 in range(0, lo.shape[1], 64):
+>             y1 = min(lo.shape[1], y0 + 64)
+>             l = np.asarray(lo[channel, y0:y1], dtype=np.float64)
+>             t = np.asarray(tau[channel, y0:y1], dtype=np.float64)
+>             finite = np.isfinite(l)
+>             valid += int(np.count_nonzero(finite))
+>             above += int(
+>                 np.count_nonzero(finite & (l > 1.0 + t + U16_QUANT_TOL))
+>             )
+(`experiments/M134-kernel-frontier/phase4.py:57-73`)
+
+**VERIFIED:** M134 is thus an independent analysis and proof over the same
+frozen evidence, not a wholly independent raw-to-hull reconstruction for the
+phase-4 count. That is still valuable convergence, but it is not independent
+data and should not be described as such.
+
 ## 3. Legitimate repair versus moving the goalposts
 
 ### The case that it is goalpost-moving
@@ -269,7 +372,42 @@ and off-rail red:
 >     "observed_green": 4,
 >     "observed_red": 4,
 >     "passed": true
-(`experiments/M136-m8o-bar/analysis.json:161-165`)
+(`experiments/M136-m8o-bar/analysis.json:219-223`)
+
+**VERIFIED — ruling on the specific M134-style proposal:** “Count nonrail and
+rail-pinned overshoots, but exclude unavoidable rail-pinned undershoots” has
+the right intent but is not precise enough to govern. It misclassifies by
+output category:
+
+1. nonrail rows are not automatically invention — all 2,413 bilinear nonrail
+   rows fit a known omitted intermediate-quantizer bound;
+2. rail rows are not automatically representability exceptions — one shipping
+   Catmull full-rail row is not `full_rail_below_hull`;
+3. excluding rows changes the population and invites outcome-conditioned
+   accounting.
+
+**VERIFIED:** The principled version is source-defined, not label-defined:
+retain every coordinate and compare its output with the exact representable
+image of its independently reconstructed source interval. This produces the
+desired dispositions without a special amnesty: matching unavoidable rail
+passes, off-rail output fails, in-domain low/high invention fails, and a rail
+on the wrong side of an in-domain hull fails.
+
+**VERIFIED — defects the successor must still catch:**
+
+1. every pre-clamp resampler undershoot or overshoot outside exact discrete
+   support, through unchanged M8-R;
+2. every final in-range value below or above the representable source hull;
+3. a high-rail output when the projected source hull ends below one, and a
+   zero-rail output when the projected source hull begins above zero;
+4. any off-rail output when the whole source hull lies beyond the corresponding
+   rail, because the nearest supported representable value is that rail;
+5. post-gather merge, reconstruction, sharpening, or restoration excursions
+   that survive into the deliverable;
+6. either-sign planted defects, while exact copy and convex-bilinear controls
+   remain green;
+7. omitted valid frames or producer-selected contributor masks, by retaining
+   the all-geometrically-valid-frame hull and independent coordinate list.
 
 **VERIFIED:** This is not a repair designed to make the shipping arm pass.
 Even the conservative reanalysis that projects the hull and grants the known
@@ -359,7 +497,7 @@ The persisted calculation is:
 >     "post_projection_residue_fraction_decimal": "0.000032531818356347471421613228739694976925463011497793",
 >     "post_projection_residue_percent": 0.003253181835634747,
 >     "post_projection_residue_percent_decimal": "0.0032531818356347471421613228739694976925463011497793"
-(`experiments/M136-m8o-bar/analysis.json:174-178`)
+(`experiments/M136-m8o-bar/analysis.json:232-236`)
 
 **VERIFIED:** The current checker budgets only the mapped `tau_R` plus the
 final half-code. It omits an earlier lossy conversion. After the M8-R trace,
@@ -396,7 +534,7 @@ Across the three bilinear arms this is about `6.045–6.125` output LSB for R,
 `2.207` for G, and `3.356–3.444` for B. The 2,413 post-projection violations
 are R `1,839`, G `0`, B `574`; none exceeds the corresponding omitted bound,
 and all three bilinear arms become zero under projection plus that bound
-(`experiments/M136-m8o-bar/analysis.json:3-46,366-577`).
+(`experiments/M136-m8o-bar/analysis.json:3-46,440-670`).
 
 **VERIFIED:** The one-frame bilinear arm is the cleaner diagnosis. It has zero
 M8-R but 52,570 nonrail M8-O rows:
@@ -421,7 +559,7 @@ M8-R but 52,570 nonrail M8-O rows:
 
 **VERIFIED:** Every one of those 52,570 rows also clears under the known
 intermediate half-step bound
-(`experiments/M136-m8o-bar/analysis.json:814-887`). This independently
+(`experiments/M136-m8o-bar/analysis.json:902-977`). This independently
 demonstrates that the post-gather residue is compatible with a representation
 round trip even when the resampler itself is clean.
 
@@ -429,6 +567,18 @@ round trip even when the resampler itself is clean.
 rows may not honestly be called “genuine invention” on present evidence. They
 are violations of the incomplete checker model, but all are bounded by a
 known, deterministic quantizer omitted from that model.
+
+**VERIFIED — shipping disposition:** The 2,413 are from the bilinear
+counterfactual, not the shipping Catmull-Rom kernel, so they do not themselves
+decide whether shipping passes a repaired bar. Shipping does not pass
+trivially: projection plus the complete conservative quantization bound still
+leaves 31,148 Catmull-Rom M8-O violations
+(`experiments/M136-m8o-bar/analysis.json:87-92`), and its separate M8-R result
+remains `63,191,176/6,131,678,976`
+(`experiments/M8-overshoot/results.json:14-25`). The formal result under the
+exact new M8-O definition is nevertheless `UNMEASURED` until that checker is
+commissioned; the 31,148 count is a diagnostic lower than the old count, not a
+promoted score.
 
 **ASSUMED — remaining causal precision:** The quantization bound proves that
 none of the 2,413 requires an invention explanation; it does not replay the
@@ -523,6 +673,17 @@ while an output even one full code off the required projected rail remains
 red.
 
 ## Could not determine
+
+**ASSUMED — could not independently determine:** The statement that M134 was
+dispatched without knowledge of M136 is accepted from the owner's message.
+Neither `phase4-results.json` nor its provenance records cross-lane awareness,
+so the artifacts cannot prove cognitive blindness. They do prove distinct
+scripts and matching conclusions over the same frozen M8 evidence.
+
+**VERIFIED — could not determine:** The per-capture split cannot isolate the
+causal effect of exposure time because frame count and cover scale also vary.
+This does not affect the direct empty-intersection proof; it limits only the
+claim that the split itself is a one-variable natural experiment.
 
 **VERIFIED — could not determine:** The exact historical ambient value of
 `STREHL_HULL` for the stage-attribution run cannot be reconstructed from its

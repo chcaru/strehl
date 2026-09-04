@@ -91,6 +91,64 @@
     "projected_plus_internal_quant_violations": 31148,
     "violations": 983648
   },
+  "m134_corroboration": {
+    "bilinear_per_capture": {
+      "flat-et1s": {
+        "cover_scale": 0.9862,
+        "frames": 60,
+        "full_rail_below_hull": 0,
+        "m136_direct_unrepresentable_hulls": {
+          "high": 0,
+          "low": 0,
+          "valid": 24724512
+        },
+        "matches_m136_reclassification": true,
+        "nonrail": 1409,
+        "unrepresentable_fraction": 0.0
+      },
+      "flat-et2.5s": {
+        "cover_scale": 0.987,
+        "frames": 61,
+        "full_rail_below_hull": 0,
+        "m136_direct_unrepresentable_hulls": {
+          "high": 0,
+          "low": 0,
+          "valid": 24724512
+        },
+        "matches_m136_reclassification": true,
+        "nonrail": 671,
+        "unrepresentable_fraction": 0.0
+      },
+      "flat-et6s": {
+        "cover_scale": 0.9859,
+        "frames": 65,
+        "full_rail_below_hull": 977684,
+        "m136_direct_unrepresentable_hulls": {
+          "high": 977684,
+          "low": 0,
+          "valid": 24724512
+        },
+        "matches_m136_reclassification": true,
+        "nonrail": 333,
+        "unrepresentable_fraction": 0.03954310604795759
+      }
+    },
+    "companion_checker": {
+      "forbidden_strehl_imports": [],
+      "hash_matches": true,
+      "independent": true
+    },
+    "frozen_stage_attribution_hash_matches": true,
+    "phase4_script_hash_matches": true,
+    "proof": {
+      "accepted_lower_condition": "value >= lo - tolerance",
+      "consequence": "at least one such geometrically valid census sample makes an exact 0.0000% M8-O bar impossible without changing the output representation, normalization, or census treatment of saturation",
+      "empty_intersection_when": "lo - tolerance > 1",
+      "representable_output_interval": "[0, 1]"
+    },
+    "protocol": "M134 M8-O representability v1",
+    "verdict": "UNACHIEVABLE AS WRITTEN under the current normalized u16 output: when lo > 1 + tolerance, every representable value is below the source hull"
+  },
   "proposed_instrument_commissioning": {
     "cases": {
       "in_range_convex_green": {
@@ -164,7 +222,7 @@
     "observed_red": 4,
     "passed": true
   },
-  "protocol": "M136 deterministic analysis v1",
+  "protocol": "M136 deterministic analysis v2",
   "quantisation_model": {
     "checker_existing_tolerance": "mapped tau_R + 0.5/65535",
     "comparison": "project lo/hi through clamp([0,1]), then add the omitted internal half-step to the existing tolerance",
@@ -291,6 +349,36 @@
       "after": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
       "before": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\checker.py",
+      "unchanged": true
+    },
+    "m134_checker": {
+      "after": "53372005C1DE76A5C9897C0A69BDEF723C4A3B2E0CB071E3A7D54F0C4FB5E178",
+      "before": "53372005C1DE76A5C9897C0A69BDEF723C4A3B2E0CB071E3A7D54F0C4FB5E178",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\checker.py",
+      "unchanged": true
+    },
+    "m134_independence": {
+      "after": "1154B9C6DDD82C1F019985C4EF182ECB35E0DAC95A46559B8669294AF266A8BC",
+      "before": "1154B9C6DDD82C1F019985C4EF182ECB35E0DAC95A46559B8669294AF266A8BC",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\independence.json",
+      "unchanged": true
+    },
+    "m134_phase4_results": {
+      "after": "54D37CA84557D7E4D5C9790B9D13FF9E8E87C2E5C95BB26E2DE81841DC992BCA",
+      "before": "54D37CA84557D7E4D5C9790B9D13FF9E8E87C2E5C95BB26E2DE81841DC992BCA",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\phase4-results.json",
+      "unchanged": true
+    },
+    "m134_phase4_script": {
+      "after": "7161136DBC100FA852E82BCAADA5335A226B9FAFDF0F815DC23F1E9CCBB2D144",
+      "before": "7161136DBC100FA852E82BCAADA5335A226B9FAFDF0F815DC23F1E9CCBB2D144",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\phase4.py",
+      "unchanged": true
+    },
+    "m8_results": {
+      "after": "D310ABB387A7EE7F9F9C4BB5A4484ACE8A864F34E4C90EE026BFA97AC5236241",
+      "before": "D310ABB387A7EE7F9F9C4BB5A4484ACE8A864F34E4C90EE026BFA97AC5236241",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\results.json",
       "unchanged": true
     },
     "one-frame-bilinear_m8_o": {

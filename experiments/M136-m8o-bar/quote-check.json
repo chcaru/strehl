@@ -2,12 +2,12 @@
   "protocol": "M136 quote verification v1",
   "normalization": "collapse all whitespace and strip leading Markdown blockquote markers",
   "report": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\docs\\research\\M136-m8o-bar.md",
-  "report_sha256": "8A96E50029622B9B27F324117086AAFF76ABAC453D0E77BD3B20970DA31767C9",
-  "quote_count": 21,
+  "report_sha256": "6C24D01E3F64C8B8DFB53A073B9CC7E13EA38E1959F26F44881DA42471F483C9",
+  "quote_count": 27,
   "passed": true,
   "checks": [
     {
-      "report_line": 31,
+      "report_line": 32,
       "source": "docs/proposals/2026-09-sota-scorecard.md",
       "source_lines": [
         175,
@@ -19,7 +19,7 @@
       "passed": true
     },
     {
-      "report_line": 38,
+      "report_line": 39,
       "source": "docs/proposals/2026-09-sota-scorecard.md",
       "source_lines": [
         821,
@@ -31,7 +31,7 @@
       "passed": true
     },
     {
-      "report_line": 55,
+      "report_line": 56,
       "source": "docs/research/M-FLATNULL.md",
       "source_lines": [
         3,
@@ -43,7 +43,7 @@
       "passed": true
     },
     {
-      "report_line": 67,
+      "report_line": 68,
       "source": "docs/research/M-FLATNULL.md",
       "source_lines": [
         178,
@@ -55,7 +55,7 @@
       "passed": true
     },
     {
-      "report_line": 85,
+      "report_line": 86,
       "source": "experiments/M8-overshoot/checker.py",
       "source_lines": [
         550,
@@ -67,7 +67,7 @@
       "passed": true
     },
     {
-      "report_line": 93,
+      "report_line": 94,
       "source": "experiments/M8-overshoot/checker.py",
       "source_lines": [
         577,
@@ -79,7 +79,7 @@
       "passed": true
     },
     {
-      "report_line": 103,
+      "report_line": 104,
       "source": "experiments/M8-overshoot/checker.py",
       "source_lines": [
         528,
@@ -91,7 +91,7 @@
       "passed": true
     },
     {
-      "report_line": 117,
+      "report_line": 118,
       "source": "experiments/M8-overshoot/stage_attribution.py",
       "source_lines": [
         181,
@@ -103,7 +103,7 @@
       "passed": true
     },
     {
-      "report_line": 137,
+      "report_line": 138,
       "source": "experiments/M8-overshoot/stage-attribution.json",
       "source_lines": [
         70,
@@ -115,7 +115,7 @@
       "passed": true
     },
     {
-      "report_line": 155,
+      "report_line": 156,
       "source": "experiments/M8-overshoot/stage-attribution.json",
       "source_lines": [
         111,
@@ -127,7 +127,7 @@
       "passed": true
     },
     {
-      "report_line": 182,
+      "report_line": 183,
       "source": "docs/proposals/2026-09-sota-scorecard.md",
       "source_lines": [
         852,
@@ -139,7 +139,7 @@
       "passed": true
     },
     {
-      "report_line": 194,
+      "report_line": 195,
       "source": "experiments/M8-overshoot/checker.py",
       "source_lines": [
         409,
@@ -151,7 +151,79 @@
       "passed": true
     },
     {
-      "report_line": 234,
+      "report_line": 232,
+      "source": "experiments/M134-kernel-frontier/phase4-results.json",
+      "source_lines": [
+        158,
+        163
+      ],
+      "source_sha256": "54D37CA84557D7E4D5C9790B9D13FF9E8E87C2E5C95BB26E2DE81841DC992BCA",
+      "quoted_normalized": "\"proof\": { \"accepted_lower_condition\": \"value >= lo - tolerance\", \"consequence\": \"at least one such geometrically valid census sample makes an exact 0.0000% M8-O bar impossible without changing the output representation, normalization, or census treatment of saturation\", \"empty_intersection_when\": \"lo - tolerance > 1\", \"representable_output_interval\": \"[0, 1]\" },",
+      "source_normalized": "\"proof\": { \"accepted_lower_condition\": \"value >= lo - tolerance\", \"consequence\": \"at least one such geometrically valid census sample makes an exact 0.0000% M8-O bar impossible without changing the output representation, normalization, or census treatment of saturation\", \"empty_intersection_when\": \"lo - tolerance > 1\", \"representable_output_interval\": \"[0, 1]\" },",
+      "passed": true
+    },
+    {
+      "report_line": 242,
+      "source": "experiments/M134-kernel-frontier/phase4-results.json",
+      "source_lines": [
+        164,
+        171
+      ],
+      "source_sha256": "54D37CA84557D7E4D5C9790B9D13FF9E8E87C2E5C95BB26E2DE81841DC992BCA",
+      "quoted_normalized": "\"protocol\": \"M134 M8-O representability v1\", \"source\": { \"analysis_script_sha256\": \"7161136DBC100FA852E82BCAADA5335A226B9FAFDF0F815DC23F1E9CCBB2D144\", \"frozen_stage_attribution\": \"experiments/M8-overshoot/stage-attribution.json\", \"frozen_stage_attribution_sha256\": \"E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792\" }, \"u16_quantisation_tolerance\": 7.629510948348211e-06, \"verdict\": \"UNACHIEVABLE AS WRITTEN under the current normalized u16 output: when lo > 1 + tolerance, every representable value is below the source hull\"",
+      "source_normalized": "\"protocol\": \"M134 M8-O representability v1\", \"source\": { \"analysis_script_sha256\": \"7161136DBC100FA852E82BCAADA5335A226B9FAFDF0F815DC23F1E9CCBB2D144\", \"frozen_stage_attribution\": \"experiments/M8-overshoot/stage-attribution.json\", \"frozen_stage_attribution_sha256\": \"E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792\" }, \"u16_quantisation_tolerance\": 7.629510948348211e-06, \"verdict\": \"UNACHIEVABLE AS WRITTEN under the current normalized u16 output: when lo > 1 + tolerance, every representable value is below the source hull\"",
+      "passed": true
+    },
+    {
+      "report_line": 277,
+      "source": "experiments/M8-overshoot/results.json",
+      "source_lines": [
+        65,
+        67
+      ],
+      "source_sha256": "D310ABB387A7EE7F9F9C4BB5A4484ACE8A864F34E4C90EE026BFA97AC5236241",
+      "quoted_normalized": "\"flat-et1s\": { \"cover_scale\": 0.9862, \"frames\": 60,",
+      "source_normalized": "\"flat-et1s\": { \"cover_scale\": 0.9862, \"frames\": 60,",
+      "passed": true
+    },
+    {
+      "report_line": 282,
+      "source": "experiments/M8-overshoot/results.json",
+      "source_lines": [
+        132,
+        134
+      ],
+      "source_sha256": "D310ABB387A7EE7F9F9C4BB5A4484ACE8A864F34E4C90EE026BFA97AC5236241",
+      "quoted_normalized": "\"flat-et2.5s\": { \"cover_scale\": 0.987, \"frames\": 61,",
+      "source_normalized": "\"flat-et2.5s\": { \"cover_scale\": 0.987, \"frames\": 61,",
+      "passed": true
+    },
+    {
+      "report_line": 287,
+      "source": "experiments/M8-overshoot/results.json",
+      "source_lines": [
+        199,
+        201
+      ],
+      "source_sha256": "D310ABB387A7EE7F9F9C4BB5A4484ACE8A864F34E4C90EE026BFA97AC5236241",
+      "quoted_normalized": "\"flat-et6s\": { \"cover_scale\": 0.9859, \"frames\": 65,",
+      "source_normalized": "\"flat-et6s\": { \"cover_scale\": 0.9859, \"frames\": 65,",
+      "passed": true
+    },
+    {
+      "report_line": 303,
+      "source": "experiments/M134-kernel-frontier/phase4.py",
+      "source_lines": [
+        57,
+        73
+      ],
+      "source_sha256": "7161136DBC100FA852E82BCAADA5335A226B9FAFDF0F815DC23F1E9CCBB2D144",
+      "quoted_normalized": "def count_unrepresentable_hulls(state: Path) -> dict: lo = np.load(state / \"o-lo.npy\", mmap_mode=\"r\") tau = np.load(state / \"o-tau.npy\", mmap_mode=\"r\") if lo.shape != tau.shape: raise RuntimeError(f\"{state}: lo/tau shape mismatch\") valid = 0 above = 0 for channel in range(lo.shape[0]): for y0 in range(0, lo.shape[1], 64): y1 = min(lo.shape[1], y0 + 64) l = np.asarray(lo[channel, y0:y1], dtype=np.float64) t = np.asarray(tau[channel, y0:y1], dtype=np.float64) finite = np.isfinite(l) valid += int(np.count_nonzero(finite)) above += int( np.count_nonzero(finite & (l > 1.0 + t + U16_QUANT_TOL)) )",
+      "source_normalized": "def count_unrepresentable_hulls(state: Path) -> dict: lo = np.load(state / \"o-lo.npy\", mmap_mode=\"r\") tau = np.load(state / \"o-tau.npy\", mmap_mode=\"r\") if lo.shape != tau.shape: raise RuntimeError(f\"{state}: lo/tau shape mismatch\") valid = 0 above = 0 for channel in range(lo.shape[0]): for y0 in range(0, lo.shape[1], 64): y1 = min(lo.shape[1], y0 + 64) l = np.asarray(lo[channel, y0:y1], dtype=np.float64) t = np.asarray(tau[channel, y0:y1], dtype=np.float64) finite = np.isfinite(l) valid += int(np.count_nonzero(finite)) above += int( np.count_nonzero(finite & (l > 1.0 + t + U16_QUANT_TOL)) )",
+      "passed": true
+    },
+    {
+      "report_line": 337,
       "source": "docs/proposals/2026-09-sota-scorecard.md",
       "source_lines": [
         877,
@@ -163,31 +235,31 @@
       "passed": true
     },
     {
-      "report_line": 267,
+      "report_line": 370,
       "source": "experiments/M136-m8o-bar/analysis.json",
       "source_lines": [
-        161,
-        165
+        219,
+        223
       ],
-      "source_sha256": "C2664E296B8F8E19307F7A090FBFA17D3AB987F768C5B9C6DA87F219AAEA2DF4",
+      "source_sha256": "FC958184625FB80B86B9DE84493BFB55F545B7985EF9735CA7988A7C33494E1D",
       "quoted_normalized": "\"expected_green\": 4, \"expected_red\": 4, \"observed_green\": 4, \"observed_red\": 4, \"passed\": true",
       "source_normalized": "\"expected_green\": 4, \"expected_red\": 4, \"observed_green\": 4, \"observed_red\": 4, \"passed\": true",
       "passed": true
     },
     {
-      "report_line": 279,
+      "report_line": 417,
       "source": "experiments/M136-m8o-bar/analysis.json",
       "source_lines": [
         87,
         92
       ],
-      "source_sha256": "C2664E296B8F8E19307F7A090FBFA17D3AB987F768C5B9C6DA87F219AAEA2DF4",
+      "source_sha256": "FC958184625FB80B86B9DE84493BFB55F545B7985EF9735CA7988A7C33494E1D",
       "quoted_normalized": "\"denominator\": 74173536, \"full_rail_below_hull\": 938062, \"nonrail\": 45585, \"projected_hull_violations\": 45586, \"projected_plus_internal_quant_violations\": 31148, \"violations\": 983648",
       "source_normalized": "\"denominator\": 74173536, \"full_rail_below_hull\": 938062, \"nonrail\": 45585, \"projected_hull_violations\": 45586, \"projected_plus_internal_quant_violations\": 31148, \"violations\": 983648",
       "passed": true
     },
     {
-      "report_line": 309,
+      "report_line": 447,
       "source": "docs/proposals/2026-09-sota-scorecard.md",
       "source_lines": [
         762,
@@ -199,19 +271,19 @@
       "passed": true
     },
     {
-      "report_line": 357,
+      "report_line": 495,
       "source": "experiments/M136-m8o-bar/analysis.json",
       "source_lines": [
-        174,
-        178
+        232,
+        236
       ],
-      "source_sha256": "C2664E296B8F8E19307F7A090FBFA17D3AB987F768C5B9C6DA87F219AAEA2DF4",
+      "source_sha256": "FC958184625FB80B86B9DE84493BFB55F545B7985EF9735CA7988A7C33494E1D",
       "quoted_normalized": "\"post_projection_residue_exact\": \"2413/74173536\", \"post_projection_residue_fraction\": 3.2531818356347474e-05, \"post_projection_residue_fraction_decimal\": \"0.000032531818356347471421613228739694976925463011497793\", \"post_projection_residue_percent\": 0.003253181835634747, \"post_projection_residue_percent_decimal\": \"0.0032531818356347471421613228739694976925463011497793\"",
       "source_normalized": "\"post_projection_residue_exact\": \"2413/74173536\", \"post_projection_residue_fraction\": 3.2531818356347474e-05, \"post_projection_residue_fraction_decimal\": \"0.000032531818356347471421613228739694976925463011497793\", \"post_projection_residue_percent\": 0.003253181835634747, \"post_projection_residue_percent_decimal\": \"0.0032531818356347471421613228739694976925463011497793\"",
       "passed": true
     },
     {
-      "report_line": 369,
+      "report_line": 507,
       "source": "experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/align_cmd.rs",
       "source_lines": [
         2143,
@@ -223,7 +295,7 @@
       "passed": true
     },
     {
-      "report_line": 378,
+      "report_line": 516,
       "source": "experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/merge_cmd.rs",
       "source_lines": [
         4779,
@@ -235,7 +307,7 @@
       "passed": true
     },
     {
-      "report_line": 386,
+      "report_line": 524,
       "source": "experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/merge_cmd.rs",
       "source_lines": [
         7365,
@@ -247,7 +319,7 @@
       "passed": true
     },
     {
-      "report_line": 404,
+      "report_line": 542,
       "source": "experiments/M8-overshoot/stage-attribution.json",
       "source_lines": [
         649,

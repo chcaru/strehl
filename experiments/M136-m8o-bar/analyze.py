@@ -10,6 +10,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 M8 = ROOT / "experiments" / "M8-overshoot"
+M134 = ROOT / "experiments" / "M134-kernel-frontier"
 STAGE = M8 / "out" / "stage-attribution"
 U16_MAX = 65535.0
 
@@ -131,6 +132,35 @@ def commission_projected_hull() -> dict:
     }
 
 
+def count_unrepresentable_hulls(path: Path) -> dict[str, int]:
+    lo_all = np.load(path / "o-lo.npy", mmap_mode="r")
+    hi_all = np.load(path / "o-hi.npy", mmap_mode="r")
+    tau_all = np.load(path / "o-tau.npy", mmap_mode="r")
+    if lo_all.shape != hi_all.shape or lo_all.shape != tau_all.shape:
+        raise RuntimeError(f"{path}: output-hull array shape mismatch")
+    valid = high = low = 0
+    final_half_step = 0.5 / U16_MAX
+    for channel in range(lo_all.shape[0]):
+        for y0 in range(0, lo_all.shape[1], 64):
+            y1 = min(lo_all.shape[1], y0 + 64)
+            lo = np.asarray(lo_all[channel, y0:y1], dtype=np.float64)
+            hi = np.asarray(hi_all[channel, y0:y1], dtype=np.float64)
+            tau = np.asarray(tau_all[channel, y0:y1], dtype=np.float64)
+            finite = np.isfinite(lo) & np.isfinite(hi)
+            valid += int(np.count_nonzero(finite))
+            high += int(
+                np.count_nonzero(finite & (lo > 1.0 + tau + final_half_step))
+            )
+            low += int(
+                np.count_nonzero(finite & (hi < -tau - final_half_step))
+            )
+    return {
+        "valid": valid,
+        "high": high,
+        "low": low,
+    }
+
+
 def summarize_state(path: Path) -> dict:
     meta = json.loads((path / "meta.json").read_text(encoding="utf-8"))
     result = json.loads((path / "m8-o.json").read_text(encoding="utf-8"))
@@ -226,8 +256,13 @@ def summarize_state(path: Path) -> dict:
 def main() -> None:
     evidence = {
         "stage_attribution": M8 / "stage-attribution.json",
+        "m8_results": M8 / "results.json",
         "checker": M8 / "checker.py",
         "rail_classifier": M8 / "stage_attribution.py",
+        "m134_phase4_results": M134 / "phase4-results.json",
+        "m134_phase4_script": M134 / "phase4.py",
+        "m134_checker": M134 / "checker.py",
+        "m134_independence": M134 / "out" / "independence.json",
         "snapshot_align": M8
         / "out"
         / "source-snapshot"
@@ -262,6 +297,11 @@ def main() -> None:
     bilinear_aggregate = aggregate_states(summaries, bilinear_names)
     catmull_aggregate = aggregate_states(summaries, catmull_names)
     commissioning = commission_projected_hull()
+    m134 = json.loads(evidence["m134_phase4_results"].read_text(encoding="utf-8"))
+    m134_independence = json.loads(
+        evidence["m134_independence"].read_text(encoding="utf-8")
+    )
+    m8_results = json.loads(evidence["m8_results"].read_text(encoding="utf-8"))
 
     assert bilinear_aggregate["violations"] == 980_097
     assert bilinear_aggregate["full_rail_below_hull"] == 977_684
@@ -278,6 +318,42 @@ def main() -> None:
         == 0
     )
     assert commissioning["passed"]
+    assert m134["protocol"] == "M134 M8-O representability v1"
+    assert m134["source"]["analysis_script_sha256"] == before_hashes[
+        "m134_phase4_script"
+    ]
+    assert m134["source"]["frozen_stage_attribution_sha256"] == before_hashes[
+        "stage_attribution"
+    ]
+    assert m134_independence["sha256"] == before_hashes["m134_checker"]
+    assert m134_independence["independent"] is True
+    assert m134_independence["forbidden_strehl_imports"] == []
+    direct_hulls_by_capture = {}
+    for capture, state_name in (
+        ("flat-et1s", "bilinear-et1s"),
+        ("flat-et2.5s", "bilinear-et2.5s"),
+        ("flat-et6s", "bilinear-et6s"),
+    ):
+        other = m134["arms"]["bilinear"]["per_capture"][capture]
+        ours = summaries[state_name]
+        direct_hulls = count_unrepresentable_hulls(STATES[state_name])
+        direct_hulls_by_capture[capture] = direct_hulls
+        assert other["violations"]["denominator"] == ours["denominator"]
+        assert other["violations"]["violations"] == ours["violations"]
+        assert (
+            other["violations"]["full_rail_below_hull"]
+            == ours["full_rail_below_hull"]
+        )
+        assert other["violations"]["nonrail"] == ours["nonrail"]
+        assert (
+            other["representability"][
+                "source_hull_lower_bound_above_u16_ceiling"
+            ]
+            == direct_hulls["high"]
+        )
+        assert direct_hulls["high"] == ours["full_rail_below_hull"]
+        assert direct_hulls["low"] == 0
+        assert direct_hulls["valid"] == ours["denominator"]
 
     after_hashes = {name: sha256(path) for name, path in evidence.items()}
     assert before_hashes == after_hashes
@@ -285,7 +361,7 @@ def main() -> None:
     numerator = Decimal(bilinear_aggregate["nonrail"])
     denominator = Decimal(bilinear_aggregate["denominator"])
     payload = {
-        "protocol": "M136 deterministic analysis v1",
+        "protocol": "M136 deterministic analysis v2",
         "source": str(M8 / "stage-attribution.json"),
         "source_hashes_before_after": {
             name: {
@@ -299,6 +375,50 @@ def main() -> None:
         "states": summaries,
         "bilinear_aggregate": bilinear_aggregate,
         "catmull_aggregate": catmull_aggregate,
+        "m134_corroboration": {
+            "protocol": m134["protocol"],
+            "verdict": m134["verdict"],
+            "proof": m134["proof"],
+            "phase4_script_hash_matches": (
+                m134["source"]["analysis_script_sha256"]
+                == before_hashes["m134_phase4_script"]
+            ),
+            "frozen_stage_attribution_hash_matches": (
+                m134["source"]["frozen_stage_attribution_sha256"]
+                == before_hashes["stage_attribution"]
+            ),
+            "companion_checker": {
+                "hash_matches": (
+                    m134_independence["sha256"] == before_hashes["m134_checker"]
+                ),
+                "independent": m134_independence["independent"],
+                "forbidden_strehl_imports": m134_independence[
+                    "forbidden_strehl_imports"
+                ],
+            },
+            "bilinear_per_capture": {
+                capture: {
+                    "full_rail_below_hull": m134["arms"]["bilinear"][
+                        "per_capture"
+                    ][capture]["violations"]["full_rail_below_hull"],
+                    "nonrail": m134["arms"]["bilinear"]["per_capture"][capture][
+                        "violations"
+                    ]["nonrail"],
+                    "unrepresentable_fraction": m134["arms"]["bilinear"][
+                        "per_capture"
+                    ][capture]["representability"]["fraction"],
+                    "frames": m8_results["development_arms"][capture]["frames"],
+                    "cover_scale": m8_results["development_arms"][capture][
+                        "cover_scale"
+                    ],
+                    "m136_direct_unrepresentable_hulls": direct_hulls_by_capture[
+                        capture
+                    ],
+                    "matches_m136_reclassification": True,
+                }
+                for capture in ("flat-et1s", "flat-et2.5s", "flat-et6s")
+            },
+        },
         "rates": {
             "post_projection_residue_exact": (
                 f"{bilinear_aggregate['nonrail']}/{bilinear_aggregate['denominator']}"
