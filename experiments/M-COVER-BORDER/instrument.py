@@ -80,8 +80,12 @@ def annular_effect(
     )
     rows: list[dict[str, Any]] = []
     annular_stop = min(deep_start, n)
-    for lo in range(0, annular_stop, bin_width):
-        hi = min(lo + bin_width, annular_stop)
+    edges = [(0, min(8, annular_stop))]
+    for lo in range(8, annular_stop, bin_width):
+        edges.append((lo, min(lo + bin_width, annular_stop)))
+    for lo, hi in edges:
+        if hi <= lo:
+            continue
         count = int(counts[lo:hi].sum())
         if count == 0:
             continue
