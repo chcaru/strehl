@@ -2660,6 +2660,72 @@ flat triple is assigned elsewhere; that is a coordination boundary, not a
 holdout one. If a control fails the lane stops at `UNMEASURED`, which on this
 lane's record is a promise rather than a hope.
 
+### 2.9.22 The shipping default is not resting on an artifact; I was wrong, and 768 never meant what it said
+
+`docs/research/M-COVER-BORDER.md`, commit `ce706e9e`, preregistration
+`61196edc` committed first. Three renders' worth of evidence: per-mode logs at
+two band depths on both subjects plus two linear result JSONs, 2,765 insertions.
+
+**I told this lane that a finding that the shipping default rests on a
+measurement artifact would be "the single most valuable result available to this
+program," and authorised it in advance. The lane measured, and it is not an
+artifact.** On subject 109, Scale `8` plane px and Crop `256` plane px survive
+exactly, `nominal_safe_ratio 32.0`. I verified that from
+`experiments/M-COVER-BORDER/results/common-linear-109.json` directly rather than
+from the report's prose. My hypothesis is refuted and Crop's border cost is real.
+
+The three-way contradiction of 2.9.x is resolved by a unit contract that had
+never been written down: distance in **binned plane pixels**, two full-resolution
+pixels per plane pixel, threshold `0.001`, space *default linear camera-native
+RGB16*, never `--srgb`.
+
+| reading | 109 | 113 |
+|---|---|---|
+| Scale safe inset | `8` | `640` |
+| Crop safe inset | `256` | `320` |
+| nominal ratio | `32.0` | `0.5` |
+| specificity | `specific: true` | **both modes `NONSPECIFIC_ARTIFICIAL_BOUNDARY_CONTROL_FIRES`** |
+| conserved-error (H5) | `REJECTED_NOT_CONSERVED` | `UNRESOLVED` |
+
+113 is where "Crop is 2x better" came from, and 113 does not support any inset:
+a centred artificial `1024^2` window, `637-660` px from any physical edge,
+returns `320` px for *both* modes. Those are scene-driven tail statistics. The
+deleted sensitivity artifact's `1289`/`1263` were **locations of retained
+patches, not required clearances** -- a category error that would have
+propagated into a paper as "Crop needs half."
+
+H5, that Scale merely smears a conserved defect below detection, is rejected on
+109: Scale carries `0.05833%` of Crop's positive boundary mass through 256 px
+and `1.4374%` full-plane. Scale is not concealing this; it genuinely does not
+have it.
+
+**A second finding, which is mine and which the lane did not report.** It had
+written off the withdrawn sRGB result as a measurement in the wrong space. I
+recovered the deleted harness from history and read the estimator. `DEEP_START =
+768`; the deep control region is the plane inset by `deep_start`; the final
+annulus is `lo = 768`, which *is* that control region, so its
+`normalised_effect = ratio/deep_ratio - 1.0` is identically zero by construction
+and can never fail the threshold. **`safe = 768` is therefore returned
+unconditionally whenever nothing shallower qualifies. It is the estimator's
+floor, not a measurement.**
+
+So the withdrawn artifact reporting Scale `768` and Crop `768` is not two modes
+agreeing at a large inset. It is **two censored non-readings**, and anyone
+quoting it as a convergence would be quoting a construction artefact. That
+artifact was void twice over. Every value in the surviving table above is
+strictly below the floor, so no live conclusion is censored; the rule now stands
+for future runs, and the lane has been told to report `768` as `NEVER_SAFE` and
+never to let it enter a ratio.
+
+**What this changes.** The crop-early fix is load-bearing rather than cleanup:
+Crop has a genuine `256` px border cost that must be removed before Crop can
+displace a default that changes `98.1462%` of the registered external overlap
+samples through a negative-lobe kernel, against an identity arm that changes
+none (`cover-default.md:7,234`; the scorecard quotes the same measurement on a
+slightly different denominator as `98.1463%`). And the `32x` rests on a single subject, so generality is
+now under test on `very-tilted-all-axis-sw10`, the most aggressive geometry
+available.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
