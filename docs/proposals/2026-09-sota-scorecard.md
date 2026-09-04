@@ -71,10 +71,43 @@ end-state is conjunctive: detail at or beyond the best shipping comparator, stri
 lower noise, zero invented structure, bounded occlusion veil, calibrated per-pixel
 acuity / effective sample count / physical depth, and competitive CPU speed
 (`2026-08-sota-path.md` §1, lines 189–197). **Therefore, for strehl, SOTA means that
-the shipping default passes every primary bar below against licensed Zerene Stacker
-and Helicon Focus under one common linear-input protocol, while also emitting
-independently calibrated trust and depth products and meeting the registered resource
-bars.** It is not an average, a weighted score, or “wins most axes.”
+the shipping default satisfies every clause of that sentence against the licensed
+comparator set under one common linear-input protocol, while also emitting
+independently calibrated trust and depth products.** It is not an average, a weighted
+score, or “wins most axes.”
+
+> **AMENDMENT — publication scope corrected to the owner's sentence, and Helicon
+> restored to optional.** This paragraph previously read *"passes every primary bar
+> below against licensed Zerene Stacker and Helicon Focus ... and meeting the
+> registered resource bars."* That was wrong in two independent ways, both of which
+> made this document harder to satisfy than the plan it derives from.
+>
+> **(i) Twelve axes are not the owner's requirement.** An independent audit of all
+> `58` gate-bearing blocks in this document against the full plan (M158,
+> `docs/research/M158-scorecard-drift.md`, finding 13) established that the plan's
+> printable end-state sentence names licensing instruments mapping to **seven** axes:
+> **M1** (`D1: FRC + slant-edge`), **M2** (*"existing flat-ROI instrument"*), **M8**
+> (*"hull census, stamped per file"*), **M3** (*"halo instrument at full reach"*),
+> **M9** and **M10** (*"D2/D8/A5/C5"*), and **M11** (*"existing harness"*). I verified
+> this directly against the sentence rather than accepting the audit's summary.
+> **M4, M5, M6, M7 and M12 are named by no clause of it**, yet this document made all
+> five fatal to publication. They are retained below as engineering gates and are
+> marked `SCORECARD ADDITION`; **they are not prerequisites for the owner's claim**,
+> and a report may not withhold the owner's sentence on their account.
+>
+> **(ii) Helicon was never mandatory.** The plan pins comparators as *"licensed Zerene
+> (PMax **and** DMap ...), the fork rebuilt at its best-known build ..., Helicon if
+> obtainable"*, and its purchase instruction names only Zerene, at *"Prosumer ($189)
+> or Professional ($289)"*. Requiring Helicon made comparator blocker `(d)` fatal on
+> eight axes for a product the owner never mandated. **The required comparator set is
+> licensed Zerene Stacker plus the fork at its best-known build**; Helicon is included
+> when obtainable, and its absence is recorded rather than fatal. The fork's omission
+> from this document's comparator list is itself a drift (M158 finding 9) and is
+> corrected by this amendment.
+>
+> **What this amendment does not do.** It lowers no bar, retracts no `FAIL`, and makes
+> no axis passable that was failing on its merits — M8 still reads `FAIL`, on M8-R at
+> `1.030569%`. It removes prerequisites this document invented. Nothing else.
 
 The proposal supplies several exact systems bars and the exact `0.0000%` hull bar.
 It leaves the veil, acuity, colour, coverage, and several other acceptance numbers as
@@ -1392,3 +1425,13 @@ Until such a report exists, the only defensible public sentence is:
 
 > **strehl’s competitive position against Zerene Stacker and Helicon Focus is
 > unknown.**
+
+> **AMENDMENT — what "required" means here.** Consistent with the §0 amendment, the
+> metrics whose absence forces `UNMEASURED` for the **owner's end-state sentence** are
+> the seven it names: `M1`, `M2`, `M3`, `M8`, `M9`, `M10`, `M11`. `M4`, `M5`, `M6`,
+> `M7` and `M12` are this document's additions. Their results **must still be
+> published**, and a miss on any of them must be stated plainly in the report — but it
+> does not by itself convert the owner's verdict to `UNMEASURED`, because the owner's
+> sentence does not rest on them. A report that suppressed the owner's sentence over
+> an axis the owner never named would be reporting this document's opinion as the
+> owner's requirement, which is the precise failure M158 audited.
