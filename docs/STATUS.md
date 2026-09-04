@@ -5909,6 +5909,182 @@ audit regress is stopped.
 
 ---
 
+### 2.9.54 The bottleneck was never measurement, it was instruments — and M1 is the root of a cascade (M136, M160, M162, M163, M164, M166, orchestrator, 2026-09-06)
+
+#### 2.9.54.1 Four instruments repaired, and one structural discovery
+
+Six lanes reported tonight. The four that produced value all did the same kind of work:
+they repaired an instrument. The lanes chartered to produce numbers produced none worth
+keeping, and one of them said why in a sentence I am adopting program-wide:
+
+> a proxy that cannot be *fooled* by blur is still not a proxy that can *adjudicate*
+> quality — refusing a bad answer is not the same as producing a right one.
+
+That is the shape of this program's difficulty and it took a long time to see plainly.
+
+#### 2.9.54.2 The transfer veto exists (M164)
+
+M1, M2 and M9 were void for one shared reason: each judged two already-rendered outputs
+with no external reference, and against such a judge **blur was a legal move**. §2.9.52
+recorded the fix as "external truth reference plus transfer veto" for all three.
+
+**The veto half is now built and commissioned.** It fires on Gaussian blur at sigma
+`0.27 px`, unsharp masking at amount `0.0035`, scalar gain at delta `0.00018`, resampling
+at `0.001 px` displacement, and on `72/72` blur-plus-gain arms. It does **not** fire on
+exact identity (`0/12`, returning `IDENTITY_EQUIVALENT`), on legitimate differences
+(`0/144`, exact one-sided Clopper-Pearson 95% upper bound `2.058879%`), or on a
+fresh-noise optical improvement (`0/96`).
+
+Its null is provably movable: a local disturbance moved the observed difference to a
+median of `2.552833 LSB` and the veto still correctly did not fire. That matters because a
+veto which fired on everything would have blocked this program permanently while looking
+rigorous.
+
+**Adopted as a binding protocol rule**, from M164's own finding that a *truth-improving*
+common USM fires `12/12` and is indistinguishable from a cosmetic one: on the common-merge
+track no participant may apply unilateral post-render USM, deconvolution, blur, denoising
+or resampling before scoring. Inseparable internal product sharpening may remain, but if
+the final pair triggers the veto, the M1/M2/M9 comparison must be refused.
+
+#### 2.9.54.3 M1 is the root of a dependency cascade, and it is expensive
+
+The scorecard records M1 as **`NO ADMISSIBLE BAR — WITHDRAWN`**: `f_licensed` is blind,
+native `S_25` fails sharpening and tone, and the tone-hardened derivatives reverse the
+optical controls — they score a blurred image better than a sharp one.
+
+That is not one axis being difficult. **M2's comparator ratio admits only modes qualifying
+through an M1 information envelope, and the scorecard states no mode qualifies by that
+route. M3 requires "no worse than best comparator". M11 requires being twice as fast as
+the fastest *qualifying* comparator.** All three inherit comparator qualification, and
+comparator qualification routes through M1.
+
+**With M1 withdrawn, at least four of seven axes cannot be adjudicated by any amount of
+measurement.** This reframes the program: the axes are not seven parallel tracks, and
+effort spent measuring the dependents before M1 has a bar cannot convert into a verdict.
+
+M164 ruled on whether its veto revives M1. The answer is **partial and honest**: the veto
+helps as an *admissibility gate*, not as a detail score. An admissible M1 still requires an
+external higher-sampling truth reference, and **no withdrawn candidate revives** — PCHIP
+linearisation fixes `S_25`'s tone alone, while its noise, angle, calibration and
+reversed-optics failures remain. The cheap route is closed.
+
+Its first-stated minimum capture is **1,661 exposures**. I have refused to forward that as
+a monolithic owner ask and sent it back for a staged plan with falsification gates, on the
+grounds that a non-refundable request of that size against a design never exercised end to
+end is how a month gets lost. That work is in flight.
+
+#### 2.9.54.4 The M8-O bar was impossible, and is now discriminating (M136)
+
+M136 established constructively that the **v1.4** M8-O bar could not be met by any
+implementation: `977,684` required census coordinates have `lo - tolerance > 1`, and a
+normalized-u16 output cannot exceed one. The cause was a deterministic representation step
+omitted from the checker model. M166 confirmed it independently.
+
+The repair — projection to the representable domain, denominator unchanged at
+`74,173,536`, exact-zero gate retained — produces a bar that **discriminates**. A clean
+bilinear kernel measures **exactly `0/74,173,536`**, independently zero in R, G and B. The
+shipping Catmull-Rom kernel does not.
+
+**This corrects the scoreboard sentence in §2.9.53.** The `1.326144%` M8-O figure was read
+against a bar nothing could pass, so reporting it as a live failure *understated* strehl.
+The scorecard now marks it superseded and records M8-O v1.5 as `UNMEASURED`; the `31,148`
+diagnostic was not promoted to a score anywhere. **The M8 axis verdict is unchanged and
+remains `FAIL`, on M8-R at `1.030569%` against a bar M166 confirms is achievable.**
+
+Recommissioning the replacement checker costs **two minutes** of exclusive host time and is
+armed as a single unattended command.
+
+#### 2.9.54.5 M10's instrument no longer ignores its own input (M163)
+
+M163 reproduced the void executably — reported, zero, infinity and random uncertainty all
+returned an identical result tuple and hash — then repaired it and commissioned the repair
+properly. Baseline coverage `0.94925` and CRPS `0.101205` pass; zero, infinity and random
+now all fail. A planted degradation moves CRPS `0.101205 -> 0.156590` and coverage
+`0.94925 -> 0.8113`, flipping PASS to FAIL. A planted improvement moves CRPS
+`0.109187 -> 0.101205` and coverage `0.6764 -> 0.94925`, flipping FAIL to PASS.
+
+**The bar got harder, not easier**: seven bars retained and five vetoes added. The axis
+remains `UNMEASURED` — the current product fails preflight at `0/2` required planes,
+because no depth product exists yet.
+
+#### 2.9.54.6 Most bars are not wrong, they are unfalsifiable (M166)
+
+M166 audited every gating bar for achievability. **Only M8's components are well-defined
+enough to evaluate at all.** M1, M2, M3, retained M4, M9, M10 and M11's comparator
+qualification are all incompletely specified — two competent implementers would compute
+different numbers from them.
+
+This refines §2.9.52's "no bar is impossible". Both are true and they answer different
+questions: the bars are not *unsatisfiable*, they are *unfalsifiable as written*.
+
+Two bars are broken in the opposite direction, which I consider equally serious:
+**M2's statistic improves to `0.571215x` under blur**, and retained M4 can be passed by a
+blurred or constant output. A bar that a constant image passes is not a standard.
+
+Healthy bars — clean implementation passes, product fails — are exactly three: M8-R,
+M8-O v1.5, and retained M12 cross-worker byte identity.
+
+#### 2.9.54.7 The fork comparator cannot be rerun (M162)
+
+The scorecard's required comparator set named "the fork at its frozen best-known build".
+No such build exists. The fork survives only as an **opaque byte-pinned archived output**,
+rendered from **105 Lightroom-developed TIFFs**, with no executable or source revision
+bound to it — the retained executable postdates the render by six days and is not its
+producer. The repositories have unrelated histories, so no bisect is possible.
+
+The archived output is therefore inadmissible on the common-merge track, which requires
+every comparator to receive identical linear TIFF bytes. Because the owner's plan requires
+a fork comparator and the plan outranks the scorecard, it is retained as a *rebuilt,
+commit-pinned* comparator, and every fork cell now carries `UNMEASURED — blocker (d).`
+
+M162 also established that the `4.5` versus `2.0` pyramid-gate question is an **unresolved
+conflict**, not a settled policy: the earlier decision withdrew only the recommendation to
+*change the default*, and the later README calls `2.0` wrong. The 26-subject quality survey
+was rendered at `4.5`. **My ruling is not to move the shipped default**, because the sweep
+that would justify it stopped at `k=4.0` with depth and merge regime confounded, and the
+headline `9.9x` noise reduction came from the corpus's finest-sampled stack — the regime in
+which a high gate is safest, while the stated failure mode lives at coarse steps and was
+never tested. There is no publication exposure: the README already discloses the gap.
+
+#### 2.9.54.8 The common input contract is built, and it needs frames nobody had asked for (M165)
+
+The comparative axes require every participant to consume identical bytes. That contract
+did not exist — it was assumed. M165 built it and, importantly, measured rather than
+asserted its properties: the converter is frozen (rawpy `0.27.0`, LibRaw `0.22.1`, bundle
+hash pinned), and the emitted TIFFs are confirmed 16-bit, ICC TRC `1.0`, ProPhoto D50 by
+matrix and whitepoint, `Compression=1`, at native `7028x4688`.
+
+The byte-identity check is commissioned to this program's standard: a flipped bit fails
+it, a single-LSB pixel change fails it, and the repair passes. Its manifest
+(`m165-common-input-manifest-v2`) binds source, converter, settings, calibration, TIFF
+hashes and — after a mid-flight instruction from this orchestrator, prompted by M162's fork
+finding — arbitrary **consumer** executable identities, since binary identity is exactly
+what the fork lost.
+
+**The finding that matters is what is missing.** The contract requires a frozen
+deterministic-pattern map estimated from independent **matching darks** (body, ISO,
+exposure time, temperature) and **matching flats** (lens, aperture, focus). No such map
+exists, and without it **M1 and M9 are `UNMEASURED` regardless of anything else.**
+
+This is the night's clearest orchestration catch. M164's capture plan and M165's contract
+were designed in separate lanes, and as they stood the owner could have shot every one of
+M164's exposures, executed the protocol perfectly, and still been unable to score M1 —
+because the calibration frames that make those exposures interpretable were in neither
+plan. The requirement has been routed into M164's staged plan and recorded as a
+demonstrated waste mode. **No capture request goes to the owner without it.**
+
+#### 2.9.54.9 The corrected scoreboard
+
+**Zero of seven axes passed.** Exactly one component — **M8-R** — is scored against an
+achievable bar, and it **fails at `1.030569%`** against `0.0000%`.
+
+What moved tonight is not the pass count. It is that the veto half of the M1/M2/M9 fix now
+exists, M10's instrument responds to its own input, M8-O has a bar that a clean
+implementation can pass, three bars are confirmed healthy, and the single largest obstacle
+in the program has been located precisely enough to cost out.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
