@@ -73,9 +73,13 @@ capture is required. Neither arm was run for this audit.
 
 <!-- CAND2-POSTMORTEM-PREREG-START -->
 
-**Status: FROZEN before either optical arm.** The freeze is the path-scoped Git
-commit containing this block. The historical `DEAD` verdict and downstream gate
-remain closed; this is a separately authorised sign measurement, not a rescue.
+**Status: FROZEN before either optical arm.** The freeze is the latest
+path-scoped Git commit containing this block. It supersedes preregistration
+`c4b29080174e47643ca17284551f63112f8c0bc5` before any arm because that
+version did not bind the output directory to its exclusive locks. No result
+artifact or invocation lock existed. The historical `DEAD` verdict and
+downstream gate remain closed; this is a separately authorised sign
+measurement, not a rescue.
 
 ### Registered prior and outcomes
 
@@ -100,8 +104,8 @@ adjudication. Native and display results are not pooled.
 
 ### Frozen implementation and provenance
 
-- Runner SHA-256: `fa40d3eac987596dcfbb8b1a4111b04d45b684ad0e69ce7e1f92e92b2cea8462`
-- Checker SHA-256: `e69cf12df3af8eab13609eb7770675168c5e10c6ce79999501ddc6bb07186b03`
+- Runner SHA-256: `14d634dc5c14caf5786957156f6318509bc2faedf4e999419fce56b3fcc1281e`
+- Checker SHA-256: `00c4a97b9efde97656656181e836c291d0d3c3ae9fc98da67fb0727a293c7d39`
 - Session directory:
   `C:\Users\chris\.copilot\session-state\841ddf83-8ef0-40bd-a341-d2c66d487731\files\cand2-postmortem-optics`
 - CAND1 manifest SHA-256:
@@ -125,9 +129,10 @@ respectively within absolute and relative `1e-12`.
 Exactly two invocations are authorised, in order: degraded sigma `1.35`, then
 improved sigma `0.35`. Each invocation reports native and display variants.
 Improved cannot start until the independent checker accepts degraded. Permanent
-exclusive invocation locks forbid reruns. No USM, tone, clipping, quantisation,
-null, alternate seed, threshold change, or statistic retuning is authorised.
-All six numerical thread variables are fixed at eight.
+exclusive invocation locks in the exact registered session directory forbid
+reruns; both scripts reject every alternate output directory. No USM, tone,
+clipping, quantisation, null, alternate seed, threshold change, or statistic
+retuning is authorised. All six numerical thread variables are fixed at eight.
 
 The checker independently recomputes held-out `d'^2`, all four 10,000-draw
 bootstraps and every disposition from stored score arrays without regenerating
