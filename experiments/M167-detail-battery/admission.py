@@ -932,12 +932,59 @@ def main() -> int:
         == "REJECTED_BY_SYNTHETIC_BATTERY"
         for item in blinded_verdicts
     )
+    sealed_packets = [
+        packet
+        for instance in transcript["instances"]
+        for packet in instance["packets"]
+    ]
+    all_children_succeeded = all(
+        packet["returncode"] == 0
+        and packet["parse_status"] == "OK"
+        and packet["stderr"] == ""
+        for packet in sealed_packets
+    )
+
+    def fallback_exact(item: dict[str, object]) -> bool:
+        arms = item["candidate_result"]["arms"]
+        valid = [
+            arms["flat_roi"]["detail"],
+            arms["flat_roi"]["flat"],
+            arms["planted_improvement"]["base"],
+            arms["planted_improvement"]["improved"],
+            arms["planted_degradation"]["degraded"],
+            *(
+                rung["measurement"]
+                for rung in arms["blur_monotonicity"]
+            ),
+            arms["sharpening_discrimination"]["usm"],
+        ]
+        malformed = arms["fail_closed"]
+        return (
+            all(
+                record.get("status") == "VALUE"
+                and record.get("score") == 1.0
+                and record.get("canary_identity_source")
+                == "CALL_INDEX_GUESS"
+                and record.get("canary_identity_guess") == "flat_detail"
+                for record in valid
+            )
+            and malformed["nonfinite"].get("status") == "REFUSED"
+            and malformed["nonfinite"].get("code") == "NONFINITE_INPUT"
+            and malformed["wrong_shape"].get("status") == "ERROR"
+            and malformed["wrong_shape"].get("code") == "INVALID_SHAPE"
+        )
+
+    blinded_fallback_exact = all(
+        fallback_exact(item) for item in blinded_verdicts
+    )
     commissioning_checks = {
         "freeze_passed_before_nonce": freeze["passed"],
         "legacy_labeled_canary_passes_P1_to_P6": legacy_all_green,
         "source_audit_detects_cheat": not source_audit["passed"],
         "blinded_channels_withhold_identity": packet_blinding,
+        "all_blinded_children_succeeded": all_children_succeeded,
         "sealed_transcript_readback_exact": seal_readback_exact,
+        "blinded_canary_fallback_exact": blinded_fallback_exact,
         "blinded_gate_pattern_matches_preregistration": (
             expected_blinded_pattern
         ),
