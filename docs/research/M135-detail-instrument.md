@@ -1014,7 +1014,7 @@ replacement artifact was byte-identical. No threshold was relaxed
 **VERIFIED.** Full numerical output is in
 `experiments/M135-detail-instrument/commission.json:1-1005`; the concise
 commissioning account is
-`experiments/M135-detail-instrument/RESULTS.md:1-164`.
+`experiments/M135-detail-instrument/RESULTS.md:1-197`.
 
 **VERIFIED.** A read-only independent verifier reran the original battery and
 citation audit, reproduced the postfilter identity, checked C0-C21 and the
@@ -1086,6 +1086,76 @@ instrument exists under the named defeats. The final diagnostics prove why:
 shared false truth and predictable truth are indistinguishable from real truth
 after provenance is removed.
 
+## 8.1 M138 consumer interface
+
+**VERIFIED.** M138 requires a bound M135 checker before any corrected-gate
+candidate render, requires that checker to return `detail_pass` on every
+applicable capture, and explicitly forbids accepting a Boolean supplied by a
+result file
+(`7fb925bf:experiments/M138-w1-gate-audit/corrected-gate-preregistration.md:309-348,401-425`).
+It also correctly reserves `BLOCKED_DETAIL_INSTRUMENT` for an absent or invalid
+physical M135 binding rather than calling that a Phase-1 loss
+(`7fb925bf:experiments/M138-w1-gate-audit/corrected-gate-preregistration.md:445-456`).
+
+**VERIFIED.** The interface in M138 commit `7fb925bf` cannot be bound unchanged.
+Its contract names only `R1/R2/Y1/Y2`, omits the mandatory matched-flat roles,
+and omits M135's flat-control output. Its current adjudicator consumes a map of
+producer-supplied Booleans, although its own preregistration says those
+Booleans are inadmissible
+(`7fb925bf:experiments/M138-w1-gate-audit/corrected-gate-contract.json:109-130`;
+`7fb925bf:experiments/M138-w1-gate-audit/adjudicate.py:350-361`). Its pinned M135 source
+hash also predates the mandatory-flat API. M138 therefore needs a pre-output
+binding amendment; this is not a request to weaken either gate.
+
+**VERIFIED.** M135 now supplies the versioned rule
+`m135-detail-pass-v1`. It is one-capture-at-a-time and emits:
+
+| status | `detail_pass` | meaning |
+|---|---:|---|
+| `DETAIL_PASS` | `true` | valid applicable capture; every hard gate passes |
+| `DETAIL_FAIL` | `false` | valid applicable capture; at least one preservation gate fails |
+| `NOT_APPLICABLE` | `null` | capture absent from the frozen M135 detail ledger |
+| `INSTRUMENT_UNBOUND` | `null` | physical M135 rule is not bound |
+| `INSTRUMENT_INVALID` | `null` | registered input, lineage, flat, or bootstrap record is invalid |
+
+The consumer may not coerce `null` to `false`
+(`experiments/M135-detail-instrument/CONSUMER-PREREGISTRATION.md:24-42`;
+`experiments/M135-detail-instrument/comparison-contract.json:1-19`).
+
+**VERIFIED.** On one applicable capture, the checker recomputes its own
+one-sided bounds from `10,000` paired-site draws at frozen seed `20260902` and
+returns `DETAIL_PASS` only when:
+
+```text
+Q05(J_candidate / J_legacy)                        >= 0.98
+Q05(T_candidate,k / T_legacy,k)                    >= 0.98 for every cell k
+Q95(U_candidate - U_legacy)                        <= 0.02
+```
+
+Candidate and legacy must also each pass the mandatory three-ratio flat
+certificate. These are preservation bars for Phase 1, not an M1 superiority
+claim, and no capture or coordinate may compensate another
+(`experiments/M135-detail-instrument/CONSUMER-PREREGISTRATION.md:67-107`;
+`experiments/M135-detail-instrument/comparison_checker.py:190-353`).
+
+**VERIFIED.** The frozen checker self-test passed `14 / 14` controls: exact
+null, genuine improvement, three independent defects, candidate and legacy
+flat failures, malformed payloads, inclusive boundary values, one-step
+boundary failures, unbound, and not-applicable states. The rule manifest binds
+the contract and checker hashes. A committed post-test amendment then rejected
+JSON Boolean and numeric-string coercions without changing a bar; the
+replacement self-test again passed `14 / 14`
+(`experiments/M135-detail-instrument/comparison-verification.json:1-182`;
+`experiments/M135-detail-instrument/comparison-rule-manifest.json:1-42`;
+`experiments/M135-detail-instrument/CONSUMER-AMENDMENT-1.md:1-22`).
+
+**VERIFIED.** The checked-in physical binding remains `UNBOUND`; therefore
+M135 currently emits no claim-bearing `detail_pass` for M138. Phase 1 remains
+`BLOCKED_DETAIL_INSTRUMENT` until physical M135 commissioning passes and M138
+binds the contract, checker, payload generator, capture ledger, physical
+preregistration, and commissioning hashes. This is the intended fail-closed
+outcome, not a detail failure.
+
 ## 9. Could not determine
 
 - **ASSUMED.** Whether the planned reference optic has stronger object-space
@@ -1116,6 +1186,13 @@ after provenance is removed.
 - **VERIFIED.** A common post-render filter still ties on `J_TR`; the flat
   sentinel does not turn that invariant coordinate into an absolute
   presentation-sharpness score. `T_TR` remains a mandatory veto.
+- **ASSUMED.** Whether the physical payload generator can produce stable
+  per-capture `10,000`-draw bounds at the `64`-site floor without becoming
+  `UNDERPOWERED`. The comparison checker is frozen; the physical generator is
+  not yet implemented or commissioned.
+- **ASSUMED.** Whether M138 will adopt the required flat roles, invoke the
+  checker instead of trusting supplied Booleans, and preserve non-binary
+  instrument states. Until it does, its M135 dependency cannot be bound.
 - **ASSUMED.** Whether `N=256` gives adequate rank and power for architecture B.
 - **ASSUMED.** Whether repeat-pair FRC, after independent A/B calibration,
   can drive the held-out flat/dark ring residual below a frozen bar on the
@@ -1157,3 +1234,9 @@ reference and matched-flat lineages are parts of the instrument, and existing
 development captures do not contain those roles. M1 should remain
 `UNMEASURED` until the physical lineage and extraction rehearsal pass without
 changing the frozen bars.
+
+**VERIFIED.** M138 now has a stable interface to bind later, but not a result:
+the checked-in rule is hashable, per-capture, and fail-closed, while its
+physical binding is explicitly `UNBOUND`. The correct current Phase-1 state is
+therefore `BLOCKED_DETAIL_INSTRUMENT`, not `DETAIL_FAIL` and not
+`DETAIL_PASS`.

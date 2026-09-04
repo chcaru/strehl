@@ -2,18 +2,40 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
 REPORT = ROOT / "docs" / "research" / "M135-detail-instrument.md"
+HERE = Path(__file__).resolve().parent
 
 
 def normalize(text: str) -> str:
     lines = [re.sub(r"^\s*>\s?", "", line) for line in text.splitlines()]
     return " ".join(" ".join(lines).split())
+
+
+def raw_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def normalized_text_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_text(encoding="utf-8").encode("utf-8")).hexdigest()
+
+
+def canonical_json_sha256(path: Path) -> str:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    encoded = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def main() -> None:
@@ -34,20 +56,49 @@ def main() -> None:
             encoding="utf-8"
         )
     )
+    comparison_verification = json.loads(
+        (HERE / "comparison-verification.json").read_text(encoding="utf-8")
+    )
+    comparison_manifest = json.loads(
+        (HERE / "comparison-rule-manifest.json").read_text(encoding="utf-8")
+    )
+    comparison_contract = json.loads(
+        (HERE / "comparison-contract.json").read_text(encoding="utf-8")
+    )
+    comparison_binding = json.loads(
+        (HERE / "comparison-binding.json").read_text(encoding="utf-8")
+    )
 
     citation_pattern = re.compile(
+        r"(?:(?P<revision>[0-9a-f]{7,40}):)?"
         r"(?P<path>(?:docs|experiments)/[A-Za-z0-9_./-]+)"
         r":(?P<ranges>\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*)"
     )
     for match in citation_pattern.finditer(report):
+        revision = match.group("revision")
         relative = match.group("path")
         path = ROOT / Path(relative)
-        if not path.exists():
-            findings.append(
-                {"kind": "missing_file", "citation": match.group(0)}
-            )
-            continue
-        line_count = len(path.read_text(encoding="utf-8").splitlines())
+        if revision is not None:
+            try:
+                source = subprocess.check_output(
+                    ["git", "show", f"{revision}:{relative}"],
+                    cwd=ROOT,
+                    text=True,
+                    encoding="utf-8",
+                )
+            except subprocess.CalledProcessError:
+                findings.append(
+                    {"kind": "missing_revision_file", "citation": match.group(0)}
+                )
+                continue
+            line_count = len(source.splitlines())
+        else:
+            if not path.exists():
+                findings.append(
+                    {"kind": "missing_file", "citation": match.group(0)}
+                )
+                continue
+            line_count = len(path.read_text(encoding="utf-8").splitlines())
         for line_range in match.group("ranges").split(","):
             if "-" in line_range:
                 start_text, end_text = line_range.split("-", maxsplit=1)
@@ -104,9 +155,23 @@ def main() -> None:
             "it is at least substantially, and plausibly predominantly, noise "
             "amplification or another within-hull kernel-transfer effect.",
         ],
+        "7fb925bf:experiments/M138-w1-gate-audit/corrected-gate-preregistration.md": [
+            "a Boolean supplied by a result file is not admissible evidence.",
+            "A failure of calibration cannot be reported as a merge failure.",
+        ],
     }
     for relative, quotes in quote_checks.items():
-        source = normalize((ROOT / relative).read_text(encoding="utf-8"))
+        if re.match(r"^[0-9a-f]{7,40}:", relative):
+            revision, path = relative.split(":", maxsplit=1)
+            source_text = subprocess.check_output(
+                ["git", "show", f"{revision}:{path}"],
+                cwd=ROOT,
+                text=True,
+                encoding="utf-8",
+            )
+        else:
+            source_text = (ROOT / relative).read_text(encoding="utf-8")
+        source = normalize(source_text)
         for quote in quotes:
             if normalize(quote) not in source:
                 findings.append(
@@ -122,6 +187,7 @@ def main() -> None:
         "## 5. Candidate architecture B",
         "## 7. Frozen challenge battery and outcome",
         "## 8. Admission decision",
+        "## 8.1 M138 consumer interface",
         "## 9. Could not determine",
     ]
     for heading in required_sections:
@@ -164,6 +230,78 @@ def main() -> None:
         findings.append(
             {"kind": "failed_flat_verification_checks", "checks": failed_flat_checks}
         )
+    if comparison_verification.get("status") != "PASS":
+        findings.append(
+            {
+                "kind": "comparison_verification_status",
+                "value": comparison_verification.get("status"),
+            }
+        )
+    failed_comparison_checks = [
+        name
+        for name, passed in comparison_verification.get("checks", {}).items()
+        if not passed
+    ]
+    if failed_comparison_checks:
+        findings.append(
+            {
+                "kind": "failed_comparison_checks",
+                "checks": failed_comparison_checks,
+            }
+        )
+    if comparison_contract.get("status") != "PHYSICAL_UNBOUND":
+        findings.append(
+            {
+                "kind": "comparison_contract_state",
+                "value": comparison_contract.get("status"),
+            }
+        )
+    if comparison_binding.get("state") != "UNBOUND":
+        findings.append(
+            {
+                "kind": "comparison_binding_state",
+                "value": comparison_binding.get("state"),
+            }
+        )
+    if (
+        comparison_manifest.get("physical_binding_state") != "UNBOUND"
+        or comparison_manifest.get("claim_bearing_detail_decision_available")
+        is not False
+    ):
+        findings.append({"kind": "comparison_manifest_overclaim"})
+
+    manifest_files = comparison_manifest.get("files", {})
+    hash_targets = {
+        "comparison-contract.json": HERE / "comparison-contract.json",
+        "comparison_checker.py": HERE / "comparison_checker.py",
+        "comparison-binding.json": HERE / "comparison-binding.json",
+        "CONSUMER-PREREGISTRATION.md": HERE / "CONSUMER-PREREGISTRATION.md",
+        "CONSUMER-AMENDMENT-1.md": HERE / "CONSUMER-AMENDMENT-1.md",
+        "instrument.py": HERE / "instrument.py",
+    }
+    for name, path in hash_targets.items():
+        expected = manifest_files.get(name, {})
+        if "raw_sha256" in expected and raw_sha256(path) != expected["raw_sha256"]:
+            findings.append({"kind": "comparison_raw_hash", "path": name})
+        if (
+            "normalized_text_sha256" in expected
+            and normalized_text_sha256(path) != expected["normalized_text_sha256"]
+        ):
+            findings.append({"kind": "comparison_text_hash", "path": name})
+        if (
+            "canonical_sha256" in expected
+            and canonical_json_sha256(path) != expected["canonical_sha256"]
+        ):
+            findings.append({"kind": "comparison_canonical_hash", "path": name})
+    verification_manifest = comparison_manifest.get("verification", {})
+    if raw_sha256(HERE / "comparison-verification.json") != verification_manifest.get(
+        "raw_sha256"
+    ):
+        findings.append({"kind": "comparison_verification_hash"})
+    if verification_manifest.get("status") != "PASS" or verification_manifest.get(
+        "checks"
+    ) != len(comparison_verification.get("checks", {})):
+        findings.append({"kind": "comparison_verification_manifest"})
 
     output = {
         "status": "PASS" if not findings else "FAIL",
@@ -176,6 +314,8 @@ def main() -> None:
         "assumed_tags": report.count("**ASSUMED."),
         "d8_checks": len(d8_audit.get("checks", {})),
         "flat_checks": len(flat_verification.get("checks", {})),
+        "comparison_checks": len(comparison_verification.get("checks", {})),
+        "comparison_binding_state": comparison_binding.get("state"),
         "findings": findings,
     }
     output_path = Path(__file__).resolve().parent / "audit.json"

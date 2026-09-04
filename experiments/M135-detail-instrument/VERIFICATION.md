@@ -71,3 +71,30 @@ author**
 
 All 20 checks passed. The machine-readable result is
 `flat-verification.json`.
+
+## M138 consumer-interface verification
+
+Status: **SELF-TESTED; PHYSICAL BINDING UNAVAILABLE**
+
+The comparison checker was committed before its self-test ran. Its frozen
+synthetic battery passed all 14 controls:
+
+- default binding returns `INSTRUMENT_UNBOUND`;
+- an unregistered capture returns `NOT_APPLICABLE`;
+- exact null and genuine improvement return `DETAIL_PASS`;
+- information, one-cell transfer, and unexplained-repeatability defects return
+  `DETAIL_FAIL`;
+- candidate and legacy flat-null failures return `INSTRUMENT_INVALID`;
+- missing, short, non-finite, wrong-seed, unpaired, wrong-frequency,
+  wrong-angle, wrong-hash, Boolean/numeric-string draw, Boolean-count, and
+  producer-Boolean payloads are invalid;
+- exact threshold values pass and one floating-point step beyond each
+  threshold fails; and
+- every decision exposes the contract and checker hashes while non-decisions
+  keep `detail_pass=null`.
+
+`comparison-rule-manifest.json` records the frozen hashes.
+`comparison-binding.json` remains `UNBOUND`; this test therefore verifies only
+the deterministic consumer interface, not a physical detail decision. M138
+still requires its own independent design review and a pre-output binding
+amendment.

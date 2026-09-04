@@ -122,6 +122,45 @@ spectrally shaped noise-only plant were frozen in response before their first
 successful outcomes
 (`experiments/M134-kernel-frontier/M137-clamped-detail.md:207-289`).
 
+## M138 consumer contract
+
+**VERIFIED.** Commit `6e581c05` froze the contract and checker before the
+first self-test. The first self-test passed. A later input audit found that
+Python/NumPy would coerce JSON Booleans and numeric strings; commit
+`11879ddc` froze consumer amendment 1 before replacement execution. It changed
+no bar or valid numeric decision and added malformed-input plants.
+
+**VERIFIED.** `m135-detail-pass-v1` is now a deterministic, per-capture
+comparison rule. The checker emits `DETAIL_PASS`, `DETAIL_FAIL`,
+`NOT_APPLICABLE`, `INSTRUMENT_UNBOUND`, or `INSTRUMENT_INVALID`; its
+`detail_pass` field is Boolean only for the first two states and `null`
+otherwise.
+
+**VERIFIED.** A valid applicable candidate passes only when its `10,000`
+paired-site bootstrap draws at seed `20260902` satisfy all three
+non-compensating bars: information-ratio lower 95% `>=0.98`, every cell's
+transfer-ratio lower 95% `>=0.98`, and unexplained-fraction-difference upper
+95% `<=0.02`. Candidate and legacy must also each pass the mandatory
+flat-control bars.
+
+**VERIFIED.** The frozen self-test passed `14 / 14` controls, including exact
+boundary and one-step-beyond-boundary tests, defect and improvement arms,
+malformed payloads, failed flats, unbound state, and per-capture
+`NOT_APPLICABLE`.
+
+**VERIFIED.** The canonical contract SHA-256 is
+`247abd2024307aa43e7ab62edd7da23b8042ca98dedf6ca1a8eaac2d1510c249`;
+the checker SHA-256 is
+`a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b`.
+The checked-in binding remains `UNBOUND`, so no current result is a
+claim-bearing `detail_pass`.
+
+**VERIFIED.** M138 requires an amendment before binding: its current input and
+output lists omit the flat certificate, its adjudicator accepts supplied
+Booleans instead of invoking M135, and its pinned M135 source hash predates the
+mandatory-flat API. That amendment must route unbound or invalid M135 states
+to instrument blockage, not Phase-1 refutation.
+
 ## Load-bearing negative diagnostics
 
 The complete certificate includes capture lineage because the score alone

@@ -1,0 +1,42 @@
+{
+  "schema": "m135-detail-comparison-rule-manifest-v1",
+  "rule_id": "m135-detail-pass-v1",
+  "freeze_commit": "6e581c05",
+  "amendment_commits": [
+    "11879ddc"
+  ],
+  "physical_binding_state": "UNBOUND",
+  "claim_bearing_detail_decision_available": false,
+  "files": {
+    "comparison-contract.json": {
+      "canonical_sha256": "247abd2024307aa43e7ab62edd7da23b8042ca98dedf6ca1a8eaac2d1510c249",
+      "raw_sha256": "88741cec6756392d5e8f892f8be8e6be299f55de1d6525dff08718eb19dedc4f"
+    },
+    "comparison_checker.py": {
+      "raw_sha256": "a8f92dbfc436e7a0ffab0fd0cc8bbc9d6708cc829f0435a5bdda510e2a30af5b",
+      "normalized_text_sha256": "8d5247a71d7a29eefc02f9de93b858950f58fb0c2c4819a95471a5eb294a63c8"
+    },
+    "comparison-binding.json": {
+      "canonical_sha256": "0c1b089dbe7f4586f272e0b17b66a3aeeb37e73d3d10fb5d652dcf1ea44fc0d9",
+      "raw_sha256": "23a015ca5bc81836422d7764b3f5aff2880fb697efa47572880fe675a70daff0"
+    },
+    "CONSUMER-PREREGISTRATION.md": {
+      "raw_sha256": "c340624d4f2b19362d70701a212e17464f914f85f9c4b38571cf90fc444504d6",
+      "normalized_text_sha256": "02ad05e1395bf19f0c09718e9a9250b68b43359898f3c03524fc2dd7e6f0aebf"
+    },
+    "CONSUMER-AMENDMENT-1.md": {
+      "raw_sha256": "5b5edb45d73c3094daf36bb8635c87c94bcac9bbbd0e72e547041b8b1b862899",
+      "normalized_text_sha256": "7963ef7830d99c697a23557114ebcd196e146e0a7d06dcebfd4d9c8edf049125"
+    },
+    "instrument.py": {
+      "raw_sha256": "264d035331ffbb7e982449b675d88724c566b2f88cd251b08d215dcca2c6823c",
+      "normalized_text_sha256": "b2243292d92b8edc386b11b68e01740d0365bc4d633d728771d421be0732bbf1"
+    }
+  },
+  "verification": {
+    "path": "comparison-verification.json",
+    "raw_sha256": "29efb1742d9f0239b9f3d17db50d221b9342071de6325cded2d4c10e084cf3e3",
+    "status": "PASS",
+    "checks": 14
+  }
+}
