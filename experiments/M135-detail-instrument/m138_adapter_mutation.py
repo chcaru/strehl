@@ -170,12 +170,27 @@ MUTATIONS = (
         "commission-hash-requires-error",
         "guard_commission_hash_requires_error",
         (
+            "def hash_mutation_control_passes(\n"
+            "    error: AdapterRefusal | None,\n"
+            "    first_snapshot: FileSnapshot,\n"
+            "    second_snapshot: FileSnapshot,\n"
+            ") -> bool:\n"
+            "    return bool(\n"
             "        error is not None\n"
             "        and \"SHA-256 mismatch\" in error.reason\n"
+            "        and first_snapshot == second_snapshot\n"
+            "    )\n"
         ),
         (
-            "        True\n"
-            "        and \"SHA-256 mismatch\" in error.reason\n"
+            "def hash_mutation_control_passes(\n"
+            "    error: AdapterRefusal | None,\n"
+            "    first_snapshot: FileSnapshot,\n"
+            "    second_snapshot: FileSnapshot,\n"
+            ") -> bool:\n"
+            "    return bool(\n"
+            "        (error is None or \"SHA-256 mismatch\" in error.reason)\n"
+            "        and first_snapshot == second_snapshot\n"
+            "    )\n"
         ),
     ),
     Mutation(
