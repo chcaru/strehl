@@ -108,10 +108,22 @@ or verdict from one into the other. SOTA is not an average, a weighted score, or
 > or Professional ($289)"*. Treating Helicon as required despite "when obtainable"
 > made comparator blocker `(d)` fatal on eight axes for a product the owner never
 > mandated. **The required comparator set is licensed Zerene Stacker PMax, licensed
-> Zerene Stacker DMap, and the fork at its frozen best-known build**. Helicon, when
-> obtainable, is an additional comparator; its absence is recorded rather than fatal.
-> The fork's omission from this document's comparator list is itself a drift (M158
-> finding 9) and is corrected by this amendment.
+> Zerene Stacker DMap, and a fresh rebuild of the fork's best-known retained source
+> revision, commit-pinned before scoring, on the common-input TIFFs, with its
+> executable hash frozen before rendering.** Helicon,
+> when obtainable, is an additional comparator; its absence is recorded rather than
+> fatal. The fork's omission from this document's comparator list was itself a drift
+> (M158 finding 9), but M162 later established that the archived fork output cannot
+> fill the required common-merge arm. It consumed `105` Lightroom-developed TIFFs,
+> has no producing source revision or executable bound to it, and is not reproducible;
+> the retained May 17 executable postdates the render by six days and is not its
+> producer (`docs/research/M162-noise-regression.md`, "Correction to the premise"
+> clause). That byte-pinned artifact is **HISTORICAL /
+> `PRODUCT_NATIVE_END_TO_END` DIAGNOSTIC ONLY**, not a v1.7 scored arm. The first
+> retained fork commit, `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`, makes a fresh
+> rebuild plausibly constructible but does not establish that it builds. Until a
+> qualifying rebuild exists, every fork result cell is `UNMEASURED` under blocker
+> `(d)`.
 >
 > **What this amendment does not do.** It lowers no bar, retracts no `FAIL`, and makes
 > no axis passable that was failing on its merits — M8 still reads `FAIL`, on M8-R at
@@ -139,10 +151,12 @@ document’s proposed completions, not claims that the governing proposal alread
    never a reason for `UNMEASURED`.
 3. A comparative quality gate uses the **best qualifying comparator envelope**.
    The required set is exactly licensed Zerene Stacker PMax, licensed Zerene
-   Stacker DMap, and the fork at its frozen best-known build. Helicon Methods A, B,
-   and C are added when obtainable. Every included mode uses its frozen setting
-   with user post-processing disabled. “Best” is chosen in the
-   comparator-favouring direction for each metric.
+   Stacker DMap, and a fresh fork rebuild from the best-known retained source
+   revision, pinned by commit before scoring, with the built executable's hash frozen
+   before rendering. Helicon Methods A, B, and C are added when obtainable. Every
+   included mode uses its frozen setting with user post-processing disabled. “Best”
+   is chosen in the comparator-favouring direction for each metric. The archived
+   fork output is not an admissible common-merge arm.
 4. Once a replacement M1 is admitted, a comparator mode may define a noise, artifact,
    speed, or memory envelope only if it passes the input/output transfer audit and
    retains at least `98%` of the highest replacement-M1 information score achieved by
@@ -289,12 +303,21 @@ contrast, gamut compression, and output resize. Strip development tags from the
 derivative, embed only the frozen linear ICC, provenance, and source hash, and hash
 both the pixel payload and whole TIFF.
 
-Licensed Zerene Stacker PMax, licensed Zerene Stacker DMap, the fork at its frozen
-best-known build, and strehl must receive the exact same TIFF bytes on this track.
-Helicon Methods A, B, and C, when obtainable, must receive those bytes too. A strehl
-TIFF adapter or a bit-for-bit hash identity at strehl's internal pre-merge
-linear-frame boundary is required. Until one exists, the dependent publication gates
-remain `UNMEASURED`; feeding TIFFs only to the comparators is forbidden.
+Licensed Zerene Stacker PMax, licensed Zerene Stacker DMap, the fresh commit-pinned
+best-known-source fork rebuild, and strehl must receive the exact same TIFF bytes on
+this track. The fork's built-executable hash must be frozen before rendering. Helicon
+Methods A, B, and C, when obtainable, must receive those bytes too. A strehl TIFF
+adapter or a bit-for-bit hash identity at strehl's internal pre-merge linear-frame
+boundary is required. Until one exists, the dependent publication gates remain
+`UNMEASURED`; feeding TIFFs only to the comparators is forbidden.
+
+The byte-pinned archived fork output is **HISTORICAL /
+`PRODUCT_NATIVE_END_TO_END` DIAGNOSTIC ONLY** and cannot populate this track. It was
+rendered from `105` Lightroom-developed TIFFs, has no producing source revision or
+executable bound to it, and is not reproducible; the retained May 17 executable
+postdates the render by six days and is not its producer. It also does not satisfy
+the registered product-native contract below because neither its input lineage nor
+its producing binary was frozen to that protocol.
 
 **Product-native track — product evidence only.** Freeze one source-ARW manifest
 before any output is viewed. Strehl receives those original ARWs through its shipping
@@ -349,19 +372,27 @@ sample identity, and cannot satisfy a publication gate.
 ### 1.4 Comparator settings
 
 For licensed shipping products, use the newest generally available stable release on
-the `RUN-MANIFEST.json` freeze date. Use the fork only at the best-known build frozen
-by the protocol below. Freeze every included comparator's version, binary hash,
-licence where applicable, and screenshots/export of every relevant setting before
-the first scored output; do not choose among releases, builds, or settings after
-viewing results.
+the `RUN-MANIFEST.json` freeze date. The required fork arm must be a fresh rebuild
+from the best-known retained source revision, pinned by commit before scoring. Freeze
+every included comparator's version, binary hash, licence where applicable, and
+screenshots/export of every relevant setting before the first scored output; do not
+choose among releases, builds, or settings after viewing results.
 
 - **Zerene Stacker:** licensed current shipping build; automatic PMax and automatic
   DMap; no retouching; output contrast/brightness/sharpening at neutral/off.
-- **Fork:** rebuild the best-known source revision before scoring. Freeze and record
-  its version and source commit, source-tree hash, toolchain and dependency lock,
-  compiler flags, final binary SHA-256, and a complete settings manifest. Select that
-  build and one fixed setting preset before any scored output; no per-subject tuning
-  or post-result rebuild is allowed.
+- **Fork — required common-merge rebuild:** select the best-known retained source
+  revision and pin its commit before scoring, then freeze and record its source-tree
+  hash, toolchain and dependency lock, compiler flags, final executable SHA-256, and
+  complete settings manifest **before rendering**. The retained history begins at
+  `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`; that proves a source pin exists, not
+  that it builds. Select one build and one fixed setting preset before any scored
+  output; no per-subject tuning or post-result rebuild is allowed.
+- **Archived fork output — historical / product-native only:** the byte-pinned
+  artifact used `105` Lightroom-developed TIFFs, has no producing binary or source
+  revision bound to the render, and is not reproducible. The retained May 17
+  executable postdates the render by six days and is not its producer. It is a
+  diagnostic, not a common-merge or current product-native scorecard arm; unrelated
+  repository histories also prohibit a cross-project bisect.
 - **Helicon Focus, when obtainable:** licensed current shipping build; Methods A, B,
   and C at factory defaults; no retouching; built-in post-sharpening, denoising, and
   auto-adjustment neutral/off.
@@ -369,10 +400,13 @@ viewing results.
   overrides or experimental quality flags.
 
 If a named control is unavailable in a particular version, record the exact UI and
-exclude that mode. If any required arm — Zerene PMax, Zerene DMap, or the fork at its
-frozen best-known build — cannot produce a linear output that passes §1.3, the
-named-comparator requirement is unmet and the dependent comparative axes remain
-`UNMEASURED`; the run-level verdict follows §8.
+exclude that mode. If any required arm — Zerene PMax, Zerene DMap, or the fresh
+commit-pinned best-known-source fork rebuild — cannot produce a linear output that
+passes §1.3, the named-comparator requirement is unmet and the dependent comparative
+axes remain `UNMEASURED`; the run-level verdict follows §8. Until the fork is rebuilt
+from its pinned best-known retained source revision, its executable hash is frozen
+before rendering, and it consumes the exact common-input TIFF bytes, the fork arm is
+explicitly `UNMEASURED` under blocker `(d)`.
 Helicon, when obtainable, must pass the same transfer rule; when it is unobtainable,
 record that absence and continue. If an obtainable Helicon arm is invalid, record and
 exclude it rather than changing the required-comparator verdict. No expert hand
@@ -598,15 +632,16 @@ This table separates scientific blockers from the baseline's single pre-metric
 refusal. Codes are the owner's requested categories: **(a)** missing admissible
 detail instrument, **(b)** unresolved native-scale/`cover=scale` geometry,
 **(c)** missing or under-powered capture, **(d)** unavailable common-input output
-from licensed Zerene PMax, licensed Zerene DMap, or the fork at its frozen best-known
-build, and **(e)** scientifically measurable now. Helicon, when obtainable, is
-recorded separately and never supplies blocker `(d)`. An **(e)** does not mean a
-result has been run.
+from licensed Zerene PMax, licensed Zerene DMap, or a fresh commit-pinned
+best-known-source fork rebuild whose executable hash was frozen before rendering,
+and **(e)** scientifically measurable now. The archived fork output cannot clear
+`(d)`. Helicon, when obtainable, is recorded separately and never supplies blocker
+`(d)`. An **(e)** does not mean a result has been run.
 
 | Axis | Class | What can and cannot be measured now |
 |---|---|---|
 | M1 | **(a)(b)(c)(d)** | No active detail statistic or bar exists; scored matched repeats and comparator arms are also absent. |
-| M2 | **INSTRUMENT VOID; (b)(c)(d)** | The licensed flat/defocused-ground noise instrument does not exist. DELIVER-V6's product-native diagnostic fractional box9 residual is `1.515208x` the fork's median across twelve frozen sites, with `0 of 12` below one; a blur challenge scores `0.571215x`, proving that the existing flat-ROI statistic rewards blur. M2 remains `UNMEASURED`, not passing. |
+| M2 | **INSTRUMENT VOID; (b)(c)(d)** | The licensed flat/defocused-ground noise instrument does not exist. DELIVER-V6's product-native diagnostic fractional box9 residual is `1.515208x` the historical archived fork output's median across twelve frozen sites, with `0 of 12` below one; that output is not an admissible common-merge comparator. A blur challenge scores `0.571215x`, proving that the existing flat-ROI statistic rewards blur. M2 remains `UNMEASURED`, not passing. |
 | M3 | **(a)(b)(d)** | Artifact counts without a licensed detail/matched-presentation arm cannot support the competitive claim. |
 | M4 | **(a)(b)(d)** | Flatness is computable diagnostically, but its detail-preserving comparator verdict is blocked. |
 | M5 | **(a)(b)(c)(d)** | No scored dense/sparse repeat unit exists, and failure coverage needs a licensed detail test. |
@@ -771,10 +806,11 @@ data are read.
 existing flat-ROI statistic is commissioned only as an output-residual measurement,
 not as a stand-alone comparative noise instrument: a blur challenge improves it to
 `0.571215x`. On twelve frozen coffee-paper sites, the product-native DELIVER-V6
-diagnostic instead measures an adverse median `1.515208x` the fork's fractional box9
-residual, with `0 of 12` sites below one. Both observations must be published, but
-neither is a licensed M2 verdict, and the rename does not make M2 measurable or
-passing.
+diagnostic instead measures an adverse median `1.515208x` the historical archived
+fork output's fractional box9 residual, with `0 of 12` sites below one. That archived
+output is not an admissible common-merge comparator. Both observations must be
+published, but neither is a licensed M2 verdict, and the rename does not make M2
+measurable or passing.
 
 **What it measures and why.** Focus stacking should average independent sensor noise
 without trading it for blur, selected grain, or low-frequency patchwork.
@@ -1493,20 +1529,26 @@ explained 94.8%, 109.9%, and 267.1% of the apparent three-band gaps
 (`docs/research/V-HEADTOHEAD2.md` lines 23–27 and 57–70). The correct present
 competitive statement is **unknown**.
 
-| ID | Metric | strehl | Zerene Stacker (PMax + DMap) | Fork (frozen best-known build) | Helicon Focus (when obtainable) | Current standing |
+The fork column is explicitly `UNMEASURED` under blocker `(d)` until a fresh rebuild
+of the best-known retained source revision exists under a pre-scoring commit pin, its
+executable hash is frozen before rendering, and it successfully consumes the exact
+common-input TIFF bytes. The historical archived fork output cannot populate this
+column.
+
+| ID | Metric | strehl | Zerene Stacker (PMax + DMap) | Fork (commit-pinned best-known-source common-merge rebuild) | Helicon Focus (when obtainable) | Current standing |
 | --- | --- | --- | --- | --- | --- | --- |
-| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | CAND1 is killed; no admissible instrument or active bar remains, and fresh matched captures are absent. |
-| M2 | Flat/defocused-ground noise | **UNMEASURED — INSTRUMENT VOID.** Product-native diagnostic DELIVER-V6 fractional box9 residual is `1.515208x` the fork median, with `0 of 12` sites below one; blur improves the statistic to `0.571215x`, so it is not licensed for M2. | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The adverse residual and blur-specificity failure are published, but no current value is a valid M2 verdict. |
-| M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | VEIL2 stops the A2 build premise but does not measure M3; full-reach sites and its checker remain absent. |
-| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.7 site manifest or control run exists. |
-| M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
-| M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
-| M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | LCA confirms an axial effect but licenses no correction and is not colour fidelity; traceable target absent. |
-| M8 | Independent source-hull census | **FAIL** — M8-R `1.030569%`, M8-O `1.326144%` against a bar of exactly `0.0000%` | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **READ AND ADMITTED `76b3d9cc`**, superseding the prior UNMEASURED cell. Checker commissioned in both directions before the reading. M8-R is 100% attributable to the Catmull-Rom gather; bilinear gives `0/6,131,678,976` but costs 0.3404 dex of band detail. M8-O is a separate downstream failure. See `docs/research/M8-overshoot.md`. |
-| M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
-| M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
-| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | D11 decode and D15 storage component gates PASS; the common-merge comparator run and separate product-native bar report are absent. |
-| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.7 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
+| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | CAND1 is killed; no admissible instrument or active bar remains, and fresh matched captures are absent. |
+| M2 | Flat/defocused-ground noise | **UNMEASURED — INSTRUMENT VOID.** Product-native diagnostic DELIVER-V6 fractional box9 residual is `1.515208x` the historical archived fork output's median, with `0 of 12` sites below one; that output is not an admissible common-merge comparator. Blur improves the statistic to `0.571215x`, so it is not licensed for M2. | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | The adverse residual and blur-specificity failure are published, but no current value is a valid M2 verdict. |
+| M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | VEIL2 stops the A2 build premise but does not measure M3; full-reach sites and its checker remain absent. |
+| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | No v1.7 site manifest or control run exists. |
+| M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
+| M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
+| M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | LCA confirms an axial effect but licenses no correction and is not colour fidelity; traceable target absent. |
+| M8 | Independent source-hull census | **FAIL** — M8-R `1.030569%`, M8-O `1.326144%` against a bar of exactly `0.0000%` | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | **READ AND ADMITTED `76b3d9cc`**, superseding the prior UNMEASURED cell. Checker commissioned in both directions before the reading. M8-R is 100% attributable to the Catmull-Rom gather; bilinear gives `0/6,131,678,976` but costs 0.3404 dex of band detail. M8-O is a separate downstream failure. See `docs/research/M8-overshoot.md`. |
+| M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
+| M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
+| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | D11 decode and D15 storage component gates PASS; the common-merge comparator run and separate product-native bar report are absent. |
+| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.7 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -1521,14 +1563,17 @@ The proposal is authoritative about direction, but these parts cannot stand as w
    fact. The proposal’s D1 pairing of FRC and SFR therefore cannot be used as two
    independent votes.
 3. **The comparator prerequisite has two input contracts.** The operative required
-   arms are licensed Zerene PMax, licensed Zerene DMap, and the fork at its frozen
-   best-known build; Helicon is added when obtainable. The common-merge track requires
-   every included arm to receive the same hashed linear TIFF and is the sole source of
-   publication-gate evidence. The product-native track starts every arm from one
-   frozen source-ARW lineage while allowing each native stack path to consume the
-   earliest linear representation it supports. It is labelled end to end and may
-   support product statements only. Neither track may borrow from or be reported as
-   the other.
+   arms are licensed Zerene PMax, licensed Zerene DMap, and a fresh fork rebuild from
+   the best-known retained source revision, pinned by commit before scoring, with its
+   executable hash frozen before rendering; Helicon is added when obtainable. The
+   common-merge track requires every included arm to receive the same hashed linear
+   TIFF and is the sole source of publication-gate evidence. The archived fork output is historical /
+   product-native-only diagnostic evidence: its `105` Lightroom-developed TIFF inputs
+   and unbound producing binary make it inadmissible for common merge. The
+   product-native track starts every current arm from one frozen source-ARW lineage
+   while allowing each native stack path to consume the earliest linear
+   representation it supports. It is labelled end to end and may support product
+   statements only. Neither track may borrow from or be reported as the other.
 4. **Colour fidelity is unspecified and presently uncapturable.** D7 discusses ICC,
    soft proof, and tone policy but names no traceable target, DeltaE computation, or
    bar. Natural subjects cannot close that gap.
@@ -1619,6 +1664,9 @@ product statement. No value, setting, or verdict may be spliced across tracks.
 Until such a report exists, the only defensible public sentence is:
 
 > **strehl’s competitive position against the required comparators — licensed Zerene
-> Stacker PMax, licensed Zerene Stacker DMap, and the fork at its frozen best-known
-> build — is unknown. Helicon Focus, when obtainable, is an additional optional
-> comparator and its result is reported separately.**
+> Stacker PMax, licensed Zerene Stacker DMap, and a fresh commit-pinned rebuild of
+> the fork's best-known retained source revision whose executable hash was frozen
+> before rendering — is unknown. The fork arm is `UNMEASURED` under blocker `(d)`
+> until that rebuild consumes the exact common-input TIFFs; the historical archived
+> fork output cannot fill it. Helicon Focus, when obtainable, is an additional
+> optional comparator and its result is reported separately.**

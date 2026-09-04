@@ -1,6 +1,73 @@
 # M160 scope audit — independent review of `6b966d8c`
 
-Status: **COMPLETE — `6b966d8c` REFUTED; OPERATIVE TEXT AND F5/F6/F14 RECONCILED**
+Status: **COMPLETE — `6b966d8c` REFUTED; F5/F6/F14 AND M162 FORK PROVENANCE RECONCILED**
+
+## M162 fork-provenance correction
+
+M162 establishes that the archived fork result is a byte-pinned output, not a
+reproducible build. It consumed `105` Lightroom-developed TIFFs; no producing source
+revision or executable is cryptographically bound to it; the retained May 17
+executable postdates the render by six days and is not its producer. The fork and
+strehl repositories also have unrelated histories, so no cross-project bisect exists
+(`docs/research/M162-noise-regression.md`, "Correction to the premise" and
+"DELIVER-V6 ground truth" clauses).
+
+The scorecard now applies that provenance:
+
+- The archived output is labelled **HISTORICAL /
+  `PRODUCT_NATIVE_END_TO_END` DIAGNOSTIC ONLY**. It is inadmissible for common merge
+  and does not satisfy the current product-native scoring contract.
+- The required fork comparator is a fresh rebuild from the best-known retained source
+  revision, pinned by commit before scoring. Its source tree,
+  toolchain/dependency lock, compiler flags, executable SHA-256, settings, and exact
+  common-input TIFFs are frozen before rendering.
+- The first retained commit,
+  `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`, is recorded only as proof that a source
+  pin exists; the scorecard does not claim it builds.
+- Every one of the twelve fork result cells now reads
+  **`UNMEASURED — blocker (d)`**. The status clears only after the commit-pinned
+  rebuild exists, its executable hash is frozen before rendering, and it consumes
+  the exact common-input TIFF bytes.
+- M159's `1.515208x` / `0 of 12` comparison is retained as an adverse historical
+  product-native diagnostic, never promoted into a common-merge comparator value.
+
+`experiments/M160-scope-audit/verify_m162_fork.py` reads M162's source evidence from
+commit `ed5fa20b` and independently compares the `7648d360` scorecard blob with the
+corrected result:
+
+```text
+GROUP_SUM fork total=8 passed=8 failed=0
+GROUP_SUM integrity total=46 passed=46 failed=0
+GROUP_SUM position total=2 passed=2 failed=0
+GROUP_SUM rebuild total=13 passed=13 failed=0
+GROUP_SUM source total=6 passed=6 failed=0
+GROUP_SUM table total=8 passed=8 failed=0
+SUMMARY total=83 passed=83 failed=0 skipped=0 accounted=83
+VERDICT GREEN
+```
+
+Its integrity checks keep all twelve at-a-glance rows and all twelve metric-card
+success blocks unchanged, preserve every non-fork scoreboard field except M2's
+required provenance qualification, and leave sections 2 and 5 byte-identical. M8
+remains `FAIL` at `1.030569%` / `1.326144%` against exactly `0.0000%`. The F4/F14
+joint row still occurs exactly once with `Q_flat<=1.00` intact.
+
+| Control | Anchor found | Exit | Expected named result | Result |
+| --- | --- | ---: | --- | --- |
+| admit-archive-to-common-merge | yes | 1 | RED `fork.archive-common-inadmissible` | PASS |
+| drop-source-commit-pin | yes | 1 | RED `fork.rebuild-required-set` | PASS |
+| freeze-executable-after-render | yes | 1 | RED `fork.rebuild-executable-pre-frozen` | PASS |
+| blank-one-fork-cell | yes | 1 | RED `fork.column-status-count`, `fork.column-no-blank` | PASS |
+| erase-developed-input-defect | yes | 1 | RED `fork.archive-developed-input` | PASS |
+| claim-bound-producer | yes | 1 | RED `fork.archive-no-bound-producer` | PASS |
+| mark-fork-cell-pass | yes | 1 | RED `fork.column-status-count`, `fork.column-status-token` | PASS |
+| erase-m8-fail | yes | 1 | RED `integrity.m8-fail` | PASS |
+| lower-m2-bar | yes | 1 | RED `integrity.m2-glance-row` | PASS |
+| commit-pin-reflow-benign | yes | 0 | GREEN | PASS |
+| archive-reason-reflow-benign | yes | 0 | GREEN | PASS |
+
+Result: **11/11 controls passed: nine named RED controls and two benign GREEN
+controls.**
 
 ## F5/F6/F14 follow-on reconciliation
 
@@ -10,8 +77,8 @@ The scorecard now defines two frozen contracts:
 
 - **Common merge** is the sole evidence path for the owner's SOTA sentence and all
   seven publication gates. Strehl, licensed Zerene PMax, licensed Zerene DMap, and
-  the frozen best-known fork receive byte-identical linear TIFFs; Helicon receives
-  the same bytes when obtainable.
+  a fresh commit-pinned rebuild of the best-known retained fork source receive
+  byte-identical linear TIFFs; Helicon receives the same bytes when obtainable.
 - **Product native** starts from one frozen ARW manifest, lets each arm use its
   frozen native stack path, and is labelled `PRODUCT_NATIVE_END_TO_END`. It must be
   reported honestly and in full, but it cannot establish a competitive detail,
@@ -47,10 +114,10 @@ only as the narrow M4-derived anti-cheat component of the owner's M1/M2/M8 gate.
 
 The rename does not manufacture an instrument or a pass. M2 remains
 **INSTRUMENT VOID / UNMEASURED**. The scorecard preserves M159's adverse
-product-native diagnostic: DELIVER-V6 is `1.515208x` the fork's fractional box9
-residual, with `0 of 12` sites below one, while blur improves the existing
-statistic to `0.571215x`. The `98%` natural-detail qualification also remains
-unchanged.
+product-native diagnostic: DELIVER-V6 is `1.515208x` the historical archived fork
+output's fractional box9 residual, with `0 of 12` sites below one, while blur improves
+the existing statistic to `0.571215x`. That archived output is not an admissible
+common-merge arm. The `98%` natural-detail qualification also remains unchanged.
 
 ### F4/F14 overlap
 
@@ -86,7 +153,9 @@ baseline numeric tokens, and M8 remains `FAIL` at M8-R `1.030569%` and M8-O
 
 The historical reconciliation verifier and controls now default to the immutable
 `513ea3fe` blob, so their accepted 51-check / 12-control result remains reproducible
-after this follow-on amendment.
+after this follow-on amendment. The F5/F6/F14 verifier and controls likewise default
+to immutable commit `7648d360`, preserving their 108-check / 12-control result after
+the later M162 correction.
 
 ### Commissioning
 
@@ -165,14 +234,17 @@ The required comparator set is now consistently:
 
 - licensed Zerene Stacker PMax;
 - licensed Zerene Stacker DMap;
-- the fork at its frozen best-known build.
+- a fresh fork rebuild from the best-known retained source revision, pinned by
+  commit before scoring, with its executable hash frozen before rendering.
 
-The fork settings entry requires its version/source commit, source-tree hash,
-toolchain and dependency lock, compiler flags, binary SHA-256, and complete frozen
-settings manifest. The common-input rule, readiness blocker, speed qualification,
-results schema, and public sentence all include the fork. Helicon is qualified
-`when obtainable` throughout operative text; its absence or invalidity is recorded
-and excluded rather than made fatal.
+The fork settings entry requires its source commit, source-tree hash, toolchain and
+dependency lock, compiler flags, binary SHA-256, and complete frozen settings
+manifest. M162 subsequently proved that the old archived output cannot fill this
+arm; its developed input and unbound producer make it historical/product-native-only
+diagnostic evidence. The common-input rule, readiness blocker, speed qualification,
+results schema, and public sentence all require the fresh rebuild. Helicon is
+qualified `when obtainable` throughout operative text; its absence or invalidity is
+recorded and excluded rather than made fatal.
 
 ### Forward verification
 
@@ -445,16 +517,21 @@ disclaimer. The reconciliation above applies these required changes:
    components of named axes or independent axis prerequisites. If the former,
    state the narrower component requirement; if the latter, the amendment's
    seven-axis claim is false.
-3. Replace the comparator set everywhere with licensed Zerene PMax/DMap plus
-   the fork at its frozen best-known build, and qualify Helicon with `when
-   obtainable`.
-4. Add a frozen fork row to comparator settings and a fork column to the result
-   table.
+3. Replace the comparator set everywhere with licensed Zerene PMax/DMap plus a fresh
+   rebuild of the best-known retained fork source, pinned by commit before scoring
+   with its executable hash frozen before rendering, and qualify Helicon with `when
+   obtainable`. M162 superseded the earlier "frozen best-known build" shorthand
+   after proving that the archive has no bound producer.
+4. Add separate comparator-settings entries for the required fresh best-known-source
+   fork rebuild and the historical/product-native-only archive, plus a fork result
+   column whose cells remain explicitly `UNMEASURED — blocker (d)` until the rebuild
+   exists.
 5. Change both speed-selection clauses from `complete/all quality scorecard`
    to the owner-required quality subset, while still publishing added-axis
    failures.
-6. Rewrite the public unknown-position sentence around Zerene plus the frozen
-   fork; mention Helicon separately as optional.
+6. Rewrite the public unknown-position sentence around Zerene plus the required
+   commit-pinned best-known-source fork rebuild; state its current `UNMEASURED`
+   blocker, and mention the archived fork and optional Helicon separately.
 
 ## Why the predecessor author's verifier passed
 

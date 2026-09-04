@@ -23,6 +23,7 @@ M158 = ROOT / "docs/research/M158-scorecard-amendment-text.md"
 M159 = ROOT / "docs/research/M159-noise-clause.md"
 SCORECARD_PATH = "docs/proposals/2026-09-sota-scorecard.md"
 BASE_REV = "513ea3fe"
+RECONCILED_REV = "7648d360"
 
 
 @dataclass(frozen=True)
@@ -569,16 +570,16 @@ def run_checks(after: str, before: str, m158: str, m159: str) -> list[Check]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--before-rev", default=BASE_REV)
-    parser.add_argument("--after-rev")
-    parser.add_argument("--scorecard", type=Path, default=SCORECARD)
+    parser.add_argument("--after-rev", default=RECONCILED_REV)
+    parser.add_argument("--scorecard", type=Path)
     args = parser.parse_args()
 
     try:
         before = git_blob(args.before_rev)
         after = (
-            git_blob(args.after_rev)
-            if args.after_rev
-            else read_utf8(args.scorecard.resolve())
+            read_utf8(args.scorecard.resolve())
+            if args.scorecard
+            else git_blob(args.after_rev)
         )
         checks = run_checks(after, before, read_utf8(M158), read_utf8(M159))
     except (OSError, UnicodeDecodeError, RuntimeError) as exc:

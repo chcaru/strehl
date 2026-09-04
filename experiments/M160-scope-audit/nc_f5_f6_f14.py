@@ -14,6 +14,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 VERIFIER = Path(__file__).with_name("verify_f5_f6_f14.py")
 SCORECARD = ROOT / "docs/proposals/2026-09-sota-scorecard.md"
+SCORECARD_PATH = "docs/proposals/2026-09-sota-scorecard.md"
+RECONCILED_REV = "7648d360"
 
 
 @dataclass(frozen=True)
@@ -124,6 +126,21 @@ def read_utf8(path: Path) -> str:
     return path.read_bytes().decode("utf-8").replace("\r\n", "\n")
 
 
+def git_blob(rev: str) -> str:
+    completed = subprocess.run(
+        ["git", "show", f"{rev}:{SCORECARD_PATH}"],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if completed.returncode:
+        raise RuntimeError(
+            completed.stderr.decode("utf-8", errors="replace").strip()
+        )
+    return completed.stdout.decode("utf-8").replace("\r\n", "\n")
+
+
 def mutate(source: str, control: Control) -> str:
     count = source.splitlines().count(control.anchor)
     if count != 1:
@@ -153,10 +170,15 @@ def run_verifier(path: Path) -> tuple[int, str, set[str], set[str]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--scorecard", type=Path, default=SCORECARD)
+    parser.add_argument("--scorecard", type=Path)
+    parser.add_argument("--scorecard-rev", default=RECONCILED_REV)
     args = parser.parse_args()
 
-    source = read_utf8(args.scorecard.resolve())
+    source = (
+        read_utf8(args.scorecard.resolve())
+        if args.scorecard
+        else git_blob(args.scorecard_rev)
+    )
     temp_env = os.environ.get("TEMP")
     if not temp_env:
         raise RuntimeError("TEMP is unset")
