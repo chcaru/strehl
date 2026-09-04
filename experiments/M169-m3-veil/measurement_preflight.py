@@ -11,7 +11,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 OUT = HERE / "out" / "measurement-verdict.json"
 FEASIBILITY = HERE / "out" / "capture-feasibility.json"
-FULL_COMMISSION = HERE / "out" / "commission-v2.json"
+FULL_COMMISSION = HERE / "out" / "commission-v3.json"
 ANCHORED_CONTROLS = HERE / "out" / "anchored-controls.json"
 SCORECARD = REPO / "docs" / "proposals" / "2026-09-sota-scorecard.md"
 REQUIRED_PACKAGES = {
@@ -63,7 +63,7 @@ def main() -> int:
 
     prerequisites = {
         "capture_feasibility": feasibility["verdict"] == "PASS",
-        "full_m161_v2_commissioning": commission["verdict"] == "PASS",
+        "full_m169_v3_commissioning": commission["verdict"] == "PASS",
         "line_anchored_controls": controls["verdict"] == "PASS",
     }
 
@@ -87,7 +87,7 @@ def main() -> int:
                 "evidence": str(FEASIBILITY),
             }
         )
-    if not prerequisites["full_m161_v2_commissioning"]:
+    if not prerequisites["full_m169_v3_commissioning"]:
         blockers.append(
             {
                 "code": "NOT_ADMITTED_COMMISSIONING_FAILED",
@@ -162,9 +162,20 @@ def main() -> int:
         },
         "capture_feasibility": feasibility["verdict"],
         "recommissioning": {
-            "full_m161_v2": commission["verdict"],
+            "full_m169_v3": commission["verdict"],
+            "registration": "commissioning-registration-v3.json",
+            "adjudication_commit": (
+                "a9176fef45ce5bc8306ef690eafc7f51bc2d5ddd"
+            ),
             "line_anchored_required_controls": controls["verdict"],
             "failed_assertions": commission["failed_assertions"],
+        },
+        "scorecard_readiness": {
+            "classification": (
+                "DEFINED; UNMEASURED_COMPARATOR_QUALIFICATION; (a)(b)(d)"
+            ),
+            "m3_instrument_status": "COMMISSIONED",
+            "axis_score_status": "UNMEASURED_COMPARATOR_QUALIFICATION",
         },
         "host_policy": {
             "exclusive_host_lock": False,
@@ -181,7 +192,7 @@ def main() -> int:
         "pixel_files_opened_by_m169": 0,
         "verdict": (
             "NOT_ADMITTED_COMMISSIONING_FAILED"
-            if not prerequisites["full_m161_v2_commissioning"]
+            if not prerequisites["full_m169_v3_commissioning"]
             else (
                 "UNMEASURED_COMPARATOR_QUALIFICATION"
                 if blockers

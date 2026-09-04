@@ -13,13 +13,6 @@
   },
   "blockers": [
     {
-      "code": "NOT_ADMITTED_COMMISSIONING_FAILED",
-      "evidence": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\out\\commission-v2.json",
-      "failed_assertions": [
-        "improved_arm_passes"
-      ]
-    },
-    {
       "code": "COMMON_INPUT_MANIFEST_ABSENT",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\INPUT-MANIFEST.json",
       "product": "common-input",
@@ -70,11 +63,11 @@
   },
   "pixel_files_opened_by_m169": 0,
   "recommissioning": {
-    "failed_assertions": [
-      "improved_arm_passes"
-    ],
-    "full_m161_v2": "NOT_ADMITTED_COMMISSIONING_FAILED",
-    "line_anchored_required_controls": "PASS"
+    "adjudication_commit": "a9176fef45ce5bc8306ef690eafc7f51bc2d5ddd",
+    "failed_assertions": [],
+    "full_m169_v3": "PASS",
+    "line_anchored_required_controls": "PASS",
+    "registration": "commissioning-registration-v3.json"
   },
   "required_packages": {
     "common-input": {
@@ -106,11 +99,16 @@
   "schema": "m169-m3-measurement-verdict-v2",
   "score": null,
   "score_attempted": false,
+  "scorecard_readiness": {
+    "axis_score_status": "UNMEASURED_COMPARATOR_QUALIFICATION",
+    "classification": "DEFINED; UNMEASURED_COMPARATOR_QUALIFICATION; (a)(b)(d)",
+    "m3_instrument_status": "COMMISSIONED"
+  },
   "subjects": {
     "m3-chia": 133,
     "m3-duck-tape": 133,
     "m3-flower-fern": 132,
     "m3-razor-control": 102
   },
-  "verdict": "NOT_ADMITTED_COMMISSIONING_FAILED"
+  "verdict": "UNMEASURED_COMPARATOR_QUALIFICATION"
 }

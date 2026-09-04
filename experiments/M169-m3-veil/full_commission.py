@@ -1,7 +1,10 @@
-"""Synthetic commissioning for the frozen M161 M3 checker.
+"""Synthetic commissioning v3 for the frozen M161 M3 checker.
 
 This M169-owned copy removes only M161's obsolete host-reservation gate.
-It opens no capture, candidate, or comparator pixels and records no timing.
+M174's adjudication corrects the 0.5%-each arm's expected result and v3 adds
+a separately registered sub-boundary green recovery arm. No numerical checker
+gate changes. This opens no capture, candidate, or comparator pixels and
+records no timing.
 """
 
 from __future__ import annotations
@@ -25,7 +28,8 @@ from m3_checker_v2 import (
 
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "out" / "commission-v2.json"
+OUT = HERE / "out" / "commission-v3.json"
+REGISTRATION = HERE / "commissioning-registration-v3.json"
 MASTER_SEED = 161_202_609_06
 SITE_COUNT = 500
 SOURCE_COUNT = 8
@@ -40,6 +44,68 @@ def write_json(path: Path, value: Any) -> None:
         value, indent=2, sort_keys=True, ensure_ascii=True, allow_nan=False
     )
     path.write_text(encoded + "\n", encoding="ascii")
+
+
+def load_registration(
+    definition: dict[str, Any], definition_sha: str
+) -> dict[str, Any]:
+    registration = json.loads(REGISTRATION.read_text(encoding="utf-8"))
+    if registration.get("schema") != "m169-m3-commissioning-registration-v3":
+        raise RuntimeError("unexpected M169 commissioning registration")
+    authority = registration["authority"]
+    if (
+        authority["commit"]
+        != "a9176fef45ce5bc8306ef690eafc7f51bc2d5ddd"
+        or authority["verdict"] != "B_ASSERTION_DEFECT"
+    ):
+        raise RuntimeError("M174 adjudication authority changed")
+
+    frozen = registration["frozen_instrument"]
+    expected_frozen = {
+        "checker_definition_sha256": definition_sha,
+        "checker_source_sha256": sha256_file(HERE / "m3_checker_v2.py"),
+        "master_seed": MASTER_SEED,
+        "site_count": SITE_COUNT,
+        "noise_sigma_fraction_of_step": NOISE_SIGMA_FRACTION,
+    }
+    if frozen != expected_frozen:
+        raise RuntimeError("registration does not match the frozen instrument")
+    if registration["unchanged_gates"] != definition["bars"]:
+        raise RuntimeError("registration changed one or more M3 gates")
+
+    boundary = registration["boundary_reduction_arm"]
+    if (
+        boundary["expected_gate_result"] != "FAIL_MEDIAN_H_E"
+        or boundary["expected_result_assertion"]
+        != "improved_arm_fails_median_h_e"
+        or boundary["rim_component_fraction_of_step"] != 0.005
+        or boundary["veil_component_fraction_of_step"] != 0.005
+        or boundary["noiseless_overlap_fraction_of_step"]
+        != definition["bars"]["median_h_e_max"]
+        or boundary["overlap_offsets_native_px"] != list(range(16, 25))
+        or boundary["retained_movement_assertions"]
+        != [
+            "improvement_reduces_h_by_at_least_5pp",
+            "improvement_reduces_v_by_at_least_5pp",
+        ]
+    ):
+        raise RuntimeError("boundary-reduction registration changed")
+
+    green = registration["green_recovery_arm"]
+    expected_green_component = definition["bars"]["median_h_e_max"] / 4.0
+    if (
+        green["expected_gate_result"] != "PASS_ALL_GATES"
+        or green["rim_component_fraction_of_step"]
+        != expected_green_component
+        or green["veil_component_fraction_of_step"]
+        != expected_green_component
+        or green["noiseless_overlap_fraction_of_step"]
+        != definition["bars"]["median_h_e_max"] / 2.0
+        or green["selection_uses_observed_failure_or_crossing"] is not False
+        or registration["score_authorized"] is not False
+    ):
+        raise RuntimeError("green-recovery registration changed")
+    return registration
 
 
 def logistic_profile(
@@ -359,6 +425,15 @@ def commission_warp(definition: dict[str, Any]) -> dict[str, Any]:
 
 def main() -> None:
     definition, definition_sha = load_checker_definition()
+    registration = load_registration(definition, definition_sha)
+    boundary_registration = registration["boundary_reduction_arm"]
+    green_registration = registration["green_recovery_arm"]
+    boundary_amplitude = float(
+        boundary_registration["rim_component_fraction_of_step"]
+    )
+    green_amplitude = float(
+        green_registration["rim_component_fraction_of_step"]
+    )
     identity = lambda output, offsets, step: output.copy()
     identity_patch = lambda patch, step: patch.copy()
     rim6 = lambda output, offsets, step: output + rim_delta(offsets, step, 0.06)
@@ -387,13 +462,27 @@ def main() -> None:
     combined6_patch = lambda patch, step: patch_delta(
         patch, step, rim=0.06, veil=0.06
     )
-    improved = (
+    reduced_boundary = (
         lambda output, offsets, step: output
-        + rim_delta(offsets, step, 0.005)
-        + two_sided_veil_delta(offsets, step, 0.005)
+        + rim_delta(offsets, step, boundary_amplitude)
+        + two_sided_veil_delta(offsets, step, boundary_amplitude)
     )
-    improved_patch = lambda patch, step: patch_delta(
-        patch, step, rim=0.005, veil=0.005
+    reduced_boundary_patch = lambda patch, step: patch_delta(
+        patch,
+        step,
+        rim=boundary_amplitude,
+        veil=boundary_amplitude,
+    )
+    green_recovery = (
+        lambda output, offsets, step: output
+        + rim_delta(offsets, step, green_amplitude)
+        + two_sided_veil_delta(offsets, step, green_amplitude)
+    )
+    green_recovery_patch = lambda patch, step: patch_delta(
+        patch,
+        step,
+        rim=green_amplitude,
+        veil=green_amplitude,
     )
     blurred = lambda output, offsets, step: ndimage.gaussian_filter1d(
         output, sigma=5.0, mode="nearest"
@@ -470,10 +559,19 @@ def main() -> None:
             None,
         ),
         (
-            "planted_improvement_0_5pct_rim_and_veil",
-            improved,
-            improved_patch,
-            0.005,
+            boundary_registration["name"],
+            reduced_boundary,
+            reduced_boundary_patch,
+            boundary_amplitude,
+            NOISE_SIGMA_FRACTION,
+            0.0,
+            None,
+        ),
+        (
+            green_registration["name"],
+            green_recovery,
+            green_recovery_patch,
+            green_amplitude,
             NOISE_SIGMA_FRACTION,
             0.0,
             None,
@@ -548,6 +646,16 @@ def main() -> None:
         arms.append(summary)
 
     by_name = {arm["name"]: arm for arm in arms}
+    boundary_arm = by_name[boundary_registration["name"]]
+    green_arm = by_name[green_registration["name"]]
+    boundary_arm["registered_role"] = "BOUNDARY_REDUCTION_REMAINS_RED"
+    boundary_arm["expected_gate_result"] = boundary_registration[
+        "expected_gate_result"
+    ]
+    green_arm["registered_role"] = "SUB_BOUNDARY_GREEN_RECOVERY"
+    green_arm["expected_gate_result"] = green_registration[
+        "expected_gate_result"
+    ]
     sparse = by_name["single_site_6pct_one_sided_veil"]
     sparse_legacy_checks = {
         name: passed
@@ -591,18 +699,34 @@ def main() -> None:
         ],
         "improvement_reduces_h_by_at_least_5pp": (
             by_name["planted_6pct_rim_and_veil"]["median_h_e"]
-            - by_name["planted_improvement_0_5pct_rim_and_veil"]["median_h_e"]
+            - boundary_arm["median_h_e"]
         )
         >= 0.05,
         "improvement_reduces_v_by_at_least_5pp": (
             by_name["planted_6pct_rim_and_veil"]["median_v_e"]
-            - by_name["planted_improvement_0_5pct_rim_and_veil"]["median_v_e"]
+            - boundary_arm["median_v_e"]
         )
         >= 0.05,
-        "improved_arm_passes": by_name[
-            "planted_improvement_0_5pct_rim_and_veil"
-        ]["verdict"]
-        == "PASS",
+        "improved_arm_fails_median_h_e": (
+            boundary_arm["verdict"] == "FAIL"
+            and sorted(
+                name
+                for name, passed in boundary_arm["checks"].items()
+                if not passed
+            )
+            == ["median_h_e"]
+        ),
+        "green_recovery_reduces_h_by_at_least_5pp": (
+            by_name["planted_6pct_rim_and_veil"]["median_h_e"]
+            - green_arm["median_h_e"]
+        )
+        >= 0.05,
+        "green_recovery_reduces_v_by_at_least_5pp": (
+            by_name["planted_6pct_rim_and_veil"]["median_v_e"]
+            - green_arm["median_v_e"]
+        )
+        >= 0.05,
+        "green_recovery_passes_all_gates": green_arm["verdict"] == "PASS",
         "blur_guard_fails": not by_name["planted_blur_degradation"]["checks"][
             "edge_width"
         ],
@@ -626,7 +750,9 @@ def main() -> None:
     }
     failed = [name for name, passed in assertions.items() if not passed]
     result = {
-        "schema": "m161-m3-checker-commission-v2",
+        "schema": "m169-m3-checker-commission-v3",
+        "registration_sha256": sha256_file(REGISTRATION),
+        "adjudication": registration["authority"],
         "master_seed": MASTER_SEED,
         "checker_definition_sha256": definition_sha,
         "checker_source_sha256": sha256_file(HERE / "m3_checker_v2.py"),
@@ -665,6 +791,7 @@ def main() -> None:
     if failed:
         print("NOT ADMITTED: failed assertions=" + ",".join(failed))
         raise SystemExit(3)
+    print("BATTERY COMMISSIONED")
 
 
 if __name__ == "__main__":

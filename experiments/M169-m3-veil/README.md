@@ -1,8 +1,17 @@
 # M169 — M3 occlusion-veil execution
 
-This lane re-runs the frozen M161 v2 commissioning and performs a fail-closed
-score preflight. It does not alter the ratified `0.05` bar, open any ARW
-pixels, fabricate a product package, or report wall-clock timing.
+This lane preserves the historical M161 v2 commissioning result, commissions
+the frozen checker under M169 registration v3, and performs a fail-closed score
+preflight. It does not alter the ratified `0.05` bar, open any ARW pixels,
+fabricate a product package, or report wall-clock timing.
+
+M169 commissioning registration v3 applies M174's independently adjudicated
+assertion correction from commit `a9176fef`: the unchanged 0.5%-each boundary
+reduction must improve both channels by at least five percentage points and
+must fail only median `h_e`. A separate 0.25%-each green recovery arm must pass
+every gate. Its magnitude is registered from geometry, not the observed
+crossing: two overlapping components sum to 0.5%, exactly half of the
+unchanged 1% median gate.
 
 Run from the repository root, in order:
 
@@ -17,15 +26,11 @@ python experiments\M169-m3-veil\measurement_preflight.py
 python experiments\M169-m3-veil\verify_artifacts.py
 ```
 
-The feasibility check and unit tests must exit `0`. In the measured M169 run,
-the full frozen commissioning exits `3` because its registered improvement arm
-does not pass the unchanged median-`h_e` gate. The narrower line-anchored
-controls and untouched-M161 reproduction exit `0`, and the final preflight
-exits `5` with
-`NOT_ADMITTED_COMMISSIONING_FAILED`. If full commissioning is repaired by a
-newly authorized instrument version, the preflight will still exit `4` while
-any required common-input/product package or M1-qualified comparator envelope
-is absent.
+The feasibility check, unit tests and corrected v3 battery exit `0`. The
+untouched-M161 reproduction remains a historical proof that v2 failed its
+mis-registered whole-arm-pass assertion. The final preflight exits `4` with
+`UNMEASURED_COMPARATOR_QUALIFICATION`: a commissioned instrument is not an M3
+score or axis pass, and scorecard blockers `(a)`, `(b)` and `(d)` remain.
 
 `characterize_improvement_curve.py` imports the hash-verified untouched M161
 source and measures the combined rim-and-veil transfer from zero through 6%.
@@ -41,9 +46,10 @@ outside M3's registered population and is separately shown to fail closed as
 `nonpositive_source_step`; it is not relabelled as a clean score.
 
 The frozen checker and definition are byte-identical copies of M161 commit
-`47d67a9f`. `full_commission.py` changes only the obsolete host-reservation
-gate and records the current orchestrator policy; its numerical battery is
-unchanged.
+`47d67a9f`. `full_commission.py` retains M161's numerical checker, plants,
+seed and population, removes the obsolete host-reservation gate, applies the
+M174-authorized assertion-only correction, and adds the separately registered
+design-derived green recovery arm.
 
 Prior-art search before commissioning named:
 

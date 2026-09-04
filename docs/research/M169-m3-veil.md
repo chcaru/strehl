@@ -4,17 +4,24 @@
 500-site / 50-per-capture / 400-native-pixel-reach requirement. No new M3
 photon capture is needed.**
 
-**Measurement verdict: `NOT_ADMITTED_COMMISSIONING_FAILED`. NO SCORE. NO CI.**
+**Instrument verdict: BATTERY COMMISSIONED.** M169 commissioning registration
+v3 passes every assertion after applying M174's independently adjudicated
+oracle correction and adding a separately registered green recovery arm.
+
+**Axis verdict: `UNMEASURED_COMPARATOR_QUALIFICATION`. NO SCORE. NO CI.**
 
 **Axis-contract verdict: CONJUNCTIVE ABSOLUTE AND COMPARATIVE.** The `0.05`
 maximum is an absolute candidate gate, but it is not by itself an M3 axis
 score. The scorecard also requires Strehl's paired `p99(a_e)` to be no worse
 than the required M1-qualified comparator envelope in every scope.
 
-The score was not run because the frozen M161 commissioning battery failed its
-own registered improvement assertion before any candidate or comparator pixel
-was opened. Required common-input and product packages are also absent, and
-the scorecard's M1-qualified comparator envelope does not exist.
+The historical frozen M161 battery failed its mis-registered improvement
+assertion. M174 commit
+`a9176fef45ce5bc8306ef690eafc7f51bc2d5ddd` independently ruled that this was
+an assertion defect, not an instrument defect. The corrected battery is now
+commissioned, but no product score was run: required common-input and product
+packages remain absent, and the scorecard's admissible-detail and
+M1-qualified-comparator dependencies do not exist.
 
 ## 1. Feasibility before measurement
 
@@ -72,11 +79,11 @@ comparator gates also remain exactly as registered
 `docs/proposals/2026-09-sota-scorecard.md`, unique anchors `The candidate must
 satisfy every bar` and `For the comparator clause`).
 
-M169 changed only the copied full-commission runner's obsolete scheduling
-gate. The checker, definition, random seed, plants, assertions and numerical
-code are unchanged. A source diff against M161 confirms that the other changes
-are the local filename used for self-hashing and a non-timing host-policy
-annotation.
+The numerical checker, definition, random seed, original plants, population
+and every gate remain unchanged. M169 commissioning v3 changes the registered
+oracle for the unchanged 0.5%-each boundary arm exactly as M174 prescribed,
+renames that arm to expose its role, and adds one separately registered
+design-derived green recovery arm.
 
 ### 2.1 The `0.05` bar is not the whole M3 axis contract
 
@@ -127,6 +134,13 @@ Therefore M161 alone does not demonstrate an execution path that enforces the
 current scorecard's M1-qualified-envelope clause. M169 did not alter another
 lane's scorer.
 
+The scorecard's §3.1 readiness row consequently remains
+`DEFINED; UNMEASURED_COMPARATOR_QUALIFICATION; (a)(b)(d)`. Commissioning the
+M3 instrument does not clear `(a)`—the missing admissible M1 detail
+instrument—or `(d)`—the unavailable required common-input comparator set.
+The row also retains `(b)` while the profile-package builder and input-only
+warp evidence are absent.
+
 ## 3. Recommissioning
 
 ### 3.1 Line-anchored required controls
@@ -164,7 +178,7 @@ therefore moves in both directions and does not reward that improvement as a
 veil defect
 (`experiments/M169-m3-veil/out/anchored-controls.json`).
 
-### 3.2 Full frozen M161 battery
+### 3.2 Historical frozen M161 v2 battery
 
 **VERIFIED BY RUNNING.** The complete M161 battery produced the following
 planted-degradation outputs:
@@ -204,10 +218,9 @@ effect. The fixed-seed battery is deterministic and contains no wall-clock
 measurement
 (`experiments/M169-m3-veil/out/m161-source-reproduction.json`).
 
-**Result:** `NOT_ADMITTED_COMMISSIONING_FAILED`. The bar and plant were not
-changed to make the arm pass. M161's paper preregistration was sound enough to
-expose this failure, but its statement that the checker was ready to run did
-not constitute successful commissioning because the battery had never run.
+**Historical v2 result:** `NOT_ADMITTED_COMMISSIONING_FAILED`. That artifact
+and its hash remain preserved as `out/commission-v2.json` and
+`out/commission-v2.sha256`; they are not relabelled green.
 
 ### 3.3 Improvement-arm failure: explanation B
 
@@ -258,22 +271,71 @@ pass assertion with the frozen plant, checker, noise population and gate. It
 does not pre-empt M174's independent ruling on which requirement, if any,
 should be revised.
 
-## 4. Score
+### 3.4 M174 ruling and corrected v3 commissioning
 
-**VERIFIED BY RUNNING.** Scoring stopped before any candidate or comparator
-pixel was opened:
+**INFERRED BY READING.** M174 commit
+`a9176fef45ce5bc8306ef690eafc7f51bc2d5ddd` returned 23/23 checks and ruled
+`(B) ASSERTION DEFECT`. Its outcome-independent derivation is decisive: the
+unchanged 0.5% rim contributes on `+12..+24`, the unchanged 0.5% veil
+contributes on `+16..+200`, and their nine-sample overlap at `+16..+24`
+therefore supplies exactly `0.005 + 0.005 = 0.010` before noise inside the
+`h_e` support. The correct expectation was `FAIL_MEDIAN_H_E`, while retaining:
+
+- `improvement_reduces_h_by_at_least_5pp`; and
+- `improvement_reduces_v_by_at_least_5pp`.
+
+M169 recorded that correction before the v3 run in
+`commissioning-registration-v3.json`. The ambiguous historical arm name
+`planted_improvement_0_5pct_rim_and_veil` becomes
+`paired_reduction_to_0_5pct_each_boundary_challenge`. Its amplitude and
+numerical result do not change; only its name and expected gate result do.
+
+The new green arm is
+`paired_reduction_to_0_25pct_each_green_control`: 0.25% rim plus 0.25% veil.
+Its magnitude is derived from the frozen design, not from the observed
+crossing:
 
 ```text
-NOT_ADMITTED_COMMISSIONING_FAILED
+component amplitude = median_h_e gate / 4 = 0.01 / 4 = 0.0025
+overlap peak = 2 * 0.0025 = 0.005 = one half of the unchanged gate
+```
+
+This supplies a nonzero planted paired recovery with design margin while
+leaving the registered 0.5%-each boundary arm intact.
+
+**VERIFIED BY RUNNING.** The complete v3 battery produced:
+
+```text
+paired_reduction_to_0_5pct_each_boundary_challenge: h50=0.010413 v50=0.005339 v99=0.005761 max=0.014730 affected=0.000% verdict=FAIL
+paired_reduction_to_0_25pct_each_green_control: h50=0.005649 v50=0.003223 v99=0.003552 max=0.009726 affected=0.000% verdict=PASS
+warp=PASS
+commission sha256=3d69bbcd45c7a1120232bce65c0a3b9142bae9243317cb957c9bd7b1b603fdef
+BATTERY COMMISSIONED
+```
+
+All **21/21** v3 assertions are true and `failed_assertions=[]`. The boundary
+arm fails only `median_h_e`, exactly as registered; both retained
+five-percentage-point improvement assertions pass. The new 0.25%-each arm
+passes every numerical gate and its three explicit assertions: downward
+`h_e`, downward `v_e`, and whole-arm PASS. The registration hashes to
+`3abe5e7d595d8c5af14890a460f9b40b8010c9514ecb068164ee44842a35efeb`.
+No capture, candidate, comparator or protected holdout pixel was opened.
+
+## 4. Score
+
+**VERIFIED BY RUNNING.** The post-commission preflight still stopped before
+any candidate or comparator pixel was opened:
+
+```text
+UNMEASURED_COMPARATOR_QUALIFICATION
 denominator=500
 subjects=m3-chia:133,m3-duck-tape:133,m3-flower-fern:132,m3-razor-control:102
 score=NO SCORE
 confidence_interval=NO CI
 ```
 
-The failed commissioning assertion is sufficient to prohibit a score.
-Independently, files needed even for the absolute candidate diagnostic are
-absent:
+The instrument is now commissioned; the M3 axis is not measured or passing.
+Files needed even for the absolute candidate diagnostic are absent:
 
 - common-input manifest;
 - Strehl profile package; and
@@ -285,20 +347,19 @@ The full comparative axis additionally lacks:
 - Zerene PMax profile package; and
 - Zerene DMap profile package.
 
-**INFERRED BY READING.** The scorecard also makes the comparator limb
-unavailable until an M1-qualified comparator envelope and input-only
-profile-warp evidence exist
+**INFERRED BY READING.** The scorecard makes the comparator limb unavailable
+until an admissible M1 detail instrument, M1-qualified comparator envelope and
+input-only profile-warp evidence exist
 (`docs/proposals/2026-09-sota-scorecard.md`, unique M3 `Definition status` and
-`For the comparator clause` anchors). Therefore even a repaired commissioning
-run would still be
-`UNMEASURED_COMPARATOR_QUALIFICATION` today. Producing the missing product
-packages would require a separate common-input rendering/profile-extraction
-run over 693 RAWs plus licensed comparator outputs. M169 did not begin that
-heavy work without owner approval.
+`For the comparator clause` anchors, plus §3.1's M3 row). Therefore a
+commissioned battery still leaves M3
+`UNMEASURED_COMPARATOR_QUALIFICATION` under blockers `(a)`, `(b)` and `(d)`.
+Producing the missing product packages would require a separate common-input
+rendering/profile-extraction run over 693 RAWs plus licensed comparator
+outputs. M169 did not begin that heavy work without owner approval.
 
-No new capture is requested. The next technical decision is whether to revise
-and re-register the combined improvement control or the median-`h_e` gate;
-M169 makes neither change.
+No new capture is requested, no score is authorized, and no axis PASS is
+claimed.
 
 ## 5. Reproduction and artifacts
 
@@ -315,14 +376,18 @@ python experiments\M169-m3-veil\measurement_preflight.py
 python experiments\M169-m3-veil\verify_artifacts.py
 ```
 
-Expected exits for this committed state are `0`, `0`, `3`, `0`, `0`, `0`, `5`,
-`0`. The nonzero exits are deliberate fail-closed verdicts, not command
-failures. No absolute timing is recorded.
+Expected exits for this committed state are `0`, `0`, `0`, `0`, `0`, `0`, `4`,
+`0`. The preflight's nonzero exit is a deliberate external-blocker verdict,
+not a command failure. No absolute timing is recorded.
 
 Primary artifacts:
 
 - `out/capture-feasibility.json` — capture sufficiency;
-- `out/commission-v2.json` and `.sha256` — full frozen commissioning;
+- `commissioning-registration-v3.json` — M174-authorized oracle correction
+  and the design-derived green-arm registration;
+- `out/commission-v2.json` and `.sha256` — preserved historical failed
+  commissioning;
+- `out/commission-v3.json` and `.sha256` — corrected commissioned battery;
 - `out/anchored-controls.json` and `out/control-configs/` — required
   line-anchored controls;
 - `out/improvement-response-curve.json` — fixed-seed combined rim-and-veil

@@ -1,0 +1,673 @@
+{
+  "adjudication": {
+    "commit": "a9176fef45ce5bc8306ef690eafc7f51bc2d5ddd",
+    "report": "docs/research/M174-m3-improvement-assertion.md",
+    "verdict": "B_ASSERTION_DEFECT",
+    "verification": "23/23 checks passed"
+  },
+  "arms": [
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": true,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "maximum_max_h_v": 0.006863374246262382,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.0029430516302103543,
+      "median_rho_edge": 0.9822833562747562,
+      "median_v_e": 0.002320178352496525,
+      "median_v_e_pooled_diagnostic": 0.0022506893712354345,
+      "name": "clean_noise_null",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.0058445510510100555,
+      "p99_v_e": 0.00259163990973747,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0,
+      "site_count": 500,
+      "verdict": "PASS",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": true,
+        "median_h_e": false,
+        "median_v_e": false,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": false
+      },
+      "detection_rate": 0.0,
+      "maximum_max_h_v": 0.04147057481702443,
+      "median_edge_width_ratio": 0.9985188620385476,
+      "median_h_e": 0.017705911660482274,
+      "median_rho_edge": 0.6072274176247356,
+      "median_v_e": 0.01393431958635807,
+      "median_v_e_pooled_diagnostic": 0.013499888471316997,
+      "name": "noise_sensitivity_degradation",
+      "noise_sigma_fraction_of_step": 0.012,
+      "p99_h_e": 0.034806271368021974,
+      "p99_v_e": 0.015554285629294833,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "headline_maximum": false,
+        "median_h_e": false,
+        "median_v_e": true,
+        "p99_h_e": false,
+        "p99_v_e": true,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "maximum_max_h_v": 0.06582938605651269,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.06158363698760055,
+      "median_rho_edge": 0.720057690179188,
+      "median_v_e": 0.0051339564459637775,
+      "median_v_e_pooled_diagnostic": 0.005059493241748352,
+      "name": "planted_6pct_rim",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.06478184419368077,
+      "p99_v_e": 0.005394153560968052,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "headline_maximum": false,
+        "median_h_e": false,
+        "median_v_e": true,
+        "p99_h_e": false,
+        "p99_v_e": true,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "maximum_max_h_v": 0.06601724515629227,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.061636876994061986,
+      "median_rho_edge": 0.7102963867897872,
+      "median_v_e": 0.005138715624633358,
+      "median_v_e_pooled_diagnostic": 0.005061898227638983,
+      "name": "planted_6pct_opposite_sign_rim",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.06443795242176335,
+      "p99_v_e": 0.005428141099993579,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "headline_maximum": false,
+        "median_h_e": false,
+        "median_v_e": false,
+        "p99_h_e": false,
+        "p99_v_e": false,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "maximum_max_h_v": 0.06694738446531957,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.06176482906194787,
+      "median_rho_edge": 0.7927759027003245,
+      "median_v_e": 0.06012175537119064,
+      "median_v_e_pooled_diagnostic": 0.06001044632357559,
+      "name": "planted_6pct_two_sided_veil",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.06521951174285029,
+      "p99_v_e": 0.060511421101961775,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "headline_maximum": false,
+        "median_h_e": true,
+        "median_v_e": false,
+        "p99_h_e": true,
+        "p99_v_e": false,
+        "rho_edge": true
+      },
+      "detection_rate": 1.0,
+      "maximum_max_h_v": 0.055312737260008155,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.0029430516302103543,
+      "median_rho_edge": 0.9822833562747562,
+      "median_v_e": 0.054699995142191586,
+      "median_v_e_pooled_diagnostic": 0.02847846413434784,
+      "name": "planted_6pct_one_sided_far_veil",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.0058445510510100555,
+      "p99_v_e": 0.055140034143159926,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "headline_maximum": false,
+        "median_h_e": false,
+        "median_v_e": false,
+        "p99_h_e": false,
+        "p99_v_e": false,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "maximum_max_h_v": 0.12480476535717543,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.12033896557593107,
+      "median_rho_edge": 0.6392664163694882,
+      "median_v_e": 0.06293250081178207,
+      "median_v_e_pooled_diagnostic": 0.060065356613742085,
+      "name": "planted_6pct_rim_and_veil",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.12377518099793312,
+      "p99_v_e": 0.06340432509776803,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": true,
+        "median_h_e": false,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "expected_gate_result": "FAIL_MEDIAN_H_E",
+      "maximum_max_h_v": 0.014729783758402937,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.010413357351919823,
+      "median_rho_edge": 0.9779626279054068,
+      "median_v_e": 0.005338683767680065,
+      "median_v_e_pooled_diagnostic": 0.0051491767293755835,
+      "name": "paired_reduction_to_0_5pct_each_boundary_challenge",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.013717163574523992,
+      "p99_v_e": 0.005760859102140135,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.005,
+      "registered_role": "BOUNDARY_REDUCTION_REMAINS_RED",
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": true,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "expected_gate_result": "PASS_ALL_GATES",
+      "maximum_max_h_v": 0.009726375503913375,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.005648873327640571,
+      "median_rho_edge": 0.9812087148571368,
+      "median_v_e": 0.0032225916705620077,
+      "median_v_e_pooled_diagnostic": 0.0031205395406584562,
+      "name": "paired_reduction_to_0_25pct_each_green_control",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.0089995203959837,
+      "p99_v_e": 0.0035517340611610913,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0025,
+      "registered_role": "SUB_BOUNDARY_GREEN_RECOVERY",
+      "site_count": 500,
+      "verdict": "PASS",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": false,
+        "headline_maximum": false,
+        "median_h_e": false,
+        "median_v_e": true,
+        "p99_h_e": false,
+        "p99_v_e": true,
+        "rho_edge": false
+      },
+      "detection_rate": 1.0,
+      "maximum_max_h_v": 0.16728888282663673,
+      "median_edge_width_ratio": 1.7565954332074423,
+      "median_h_e": 0.13309501677826358,
+      "median_rho_edge": 0.015365554772416218,
+      "median_v_e": 0.0017345270782215963,
+      "median_v_e_pooled_diagnostic": 0.001677644992294083,
+      "name": "planted_blur_degradation",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.16512250942851495,
+      "p99_v_e": 0.0018893244690316388,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": true,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": false
+      },
+      "detection_rate": 0.0,
+      "maximum_max_h_v": 0.006863374246262382,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.0029430516302103543,
+      "median_rho_edge": 0.22598310760072074,
+      "median_v_e": 0.002320178352496525,
+      "median_v_e_pooled_diagnostic": 0.0022506893712354345,
+      "name": "planted_rho_phase_degradation",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.0058445510510100555,
+      "p99_v_e": 0.00259163990973747,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": true,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "maximum_max_h_v": 0.006863368952857764,
+      "median_edge_width_ratio": 0.9981005452766027,
+      "median_h_e": 0.002893827258333773,
+      "median_rho_edge": 0.9822833562747562,
+      "median_v_e": 0.0023202341284688814,
+      "median_v_e_pooled_diagnostic": 0.00225077403226833,
+      "name": "allowed_warp_clean_null",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.005837952262525238,
+      "p99_v_e": 0.0025917626007624425,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0,
+      "site_count": 500,
+      "verdict": "PASS",
+      "warp_residual_bound_native_px": 0.08
+    },
+    {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "headline_maximum": false,
+        "median_h_e": true,
+        "median_v_e": false,
+        "p99_h_e": true,
+        "p99_v_e": false,
+        "rho_edge": true
+      },
+      "detection_rate": 1.0,
+      "maximum_max_h_v": 0.05531276227429466,
+      "median_edge_width_ratio": 0.9981005452766027,
+      "median_h_e": 0.002893827258333773,
+      "median_rho_edge": 0.9822833562747562,
+      "median_v_e": 0.054699972021565214,
+      "median_v_e_pooled_diagnostic": 0.028478463110422556,
+      "name": "allowed_warp_one_sided_6pct_veil",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.005837952262525238,
+      "p99_v_e": 0.055139817600708955,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.08
+    },
+    {
+      "affected_edge_count": 1,
+      "affected_edge_rate": 0.002,
+      "affected_edge_wilson_ucb95": 0.008914125800331725,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": false,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.002,
+      "maximum_max_h_v": 0.054862055070886616,
+      "median_edge_width_ratio": 0.9999368748288627,
+      "median_h_e": 0.0029430516302103543,
+      "median_rho_edge": 0.9822833562747562,
+      "median_v_e": 0.002320178352496525,
+      "median_v_e_pooled_diagnostic": 0.0022506893712354345,
+      "name": "single_site_6pct_one_sided_veil",
+      "noise_sigma_fraction_of_step": 0.002,
+      "p99_h_e": 0.0058445510510100555,
+      "p99_v_e": 0.0025945619172159764,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    }
+  ],
+  "assertions": {
+    "allowed_warp_does_not_hide_veil": true,
+    "allowed_warp_null_passes": true,
+    "blur_guard_fails": true,
+    "both_rim_signs_detected": true,
+    "clean_noise_null_is_nonzero": true,
+    "clean_noise_null_passes": true,
+    "green_recovery_passes_all_gates": true,
+    "green_recovery_reduces_h_by_at_least_5pp": true,
+    "green_recovery_reduces_v_by_at_least_5pp": true,
+    "improved_arm_fails_median_h_e": true,
+    "improvement_reduces_h_by_at_least_5pp": true,
+    "improvement_reduces_v_by_at_least_5pp": true,
+    "literal_headline_catches_sparse_defect": true,
+    "noise_sensitivity_arm_fails": true,
+    "noise_sensitivity_arm_moves": true,
+    "one_sided_far_veil_detected": true,
+    "rho_diagnostic_can_fail": true,
+    "side_max_exceeds_retired_pool_on_one_sided_veil": true,
+    "sparse_defect_would_pass_old_distribution_tuple": true,
+    "two_sided_veil_detected": true,
+    "warp_null_degradation_improvement_pass": true
+  },
+  "candidate_outputs_opened": 0,
+  "capture_pixels_opened": 0,
+  "checker_definition_sha256": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+  "checker_source_sha256": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda",
+  "commission_source_sha256": "cbe744030ae411bff3dbf58ead286faf2f84417d0a0e865c80b647a5e76aa83c",
+  "comparator_outputs_opened": 0,
+  "failed_assertions": [],
+  "host_policy": "orchestrator 2026-09-04: deterministic correctness work proceeds; no exclusive host lock",
+  "master_seed": 16120260906,
+  "registration_sha256": "3abe5e7d595d8c5af14890a460f9b40b8010c9514ecb068164ee44842a35efeb",
+  "schema": "m169-m3-checker-commission-v3",
+  "source_profiles_per_site": 8,
+  "synthetic_site_count_per_arm": 500,
+  "verdict": "PASS",
+  "warp_commission": {
+    "assertions": {
+      "improvement_reduces_rotation_error": true,
+      "improvement_reduces_scale_error": true,
+      "null_is_nonzero": true,
+      "null_passes": true,
+      "planted_degradation_fails": true,
+      "planted_improvement_passes": true
+    },
+    "degradation": {
+      "gate": {
+        "checks": {
+          "input_only": true,
+          "nontranslation_residual": true,
+          "rotation": false,
+          "scale": false
+        },
+        "values": {
+          "nontranslation_residual_rms_output_px": 0.011768748218693562,
+          "rotation_disagreement_degrees": 0.04997069155166022,
+          "scale_disagreement_percent": 0.25000221097046804
+        },
+        "verdict": "UNMEASURED_WARP_INADEQUATE"
+      },
+      "metrics": {
+        "fitted_transform": [
+          1.0024996408333944,
+          0.0008743333882569454,
+          0.4503039647950673,
+          -0.2998023435193449
+        ],
+        "input_only": true,
+        "nontranslation_residual_rms_output_px": 0.011768748218693562,
+        "rotation_disagreement_degrees": 0.04997069155166022,
+        "scale_disagreement_percent": 0.25000221097046804
+      }
+    },
+    "fit_count": 256,
+    "holdout_count": 256,
+    "improvement": {
+      "gate": {
+        "checks": {
+          "input_only": true,
+          "nontranslation_residual": true,
+          "rotation": true,
+          "scale": true
+        },
+        "values": {
+          "nontranslation_residual_rms_output_px": 0.011739397714964926,
+          "rotation_disagreement_degrees": 1.581685199959523e-05,
+          "scale_disagreement_percent": -1.486895768731955e-05
+        },
+        "verdict": "PASS"
+      },
+      "metrics": {
+        "fitted_transform": [
+          0.999999851310385,
+          2.760561036469107e-07,
+          0.00035046925821966837,
+          0.00019197486222949868
+        ],
+        "input_only": true,
+        "nontranslation_residual_rms_output_px": 0.011739397714964926,
+        "rotation_disagreement_degrees": 1.581685199959523e-05,
+        "scale_disagreement_percent": -1.486895768731955e-05
+      }
+    },
+    "landmark_count": 512,
+    "null": {
+      "gate": {
+        "checks": {
+          "input_only": true,
+          "nontranslation_residual": true,
+          "rotation": true,
+          "scale": true
+        },
+        "values": {
+          "nontranslation_residual_rms_output_px": 0.011768748218694242,
+          "rotation_disagreement_degrees": -2.9380602780803326e-05,
+          "scale_disagreement_percent": 2.255720610300216e-06
+        },
+        "verdict": "PASS"
+      },
+      "metrics": {
+        "fitted_transform": [
+          1.0000000225570747,
+          -5.127882663126678e-07,
+          0.00030396479501024876,
+          0.0001976564806349711
+        ],
+        "input_only": true,
+        "nontranslation_residual_rms_output_px": 0.011768748218694242,
+        "rotation_disagreement_degrees": -2.9380602780803326e-05,
+        "scale_disagreement_percent": 2.255720610300216e-06
+      }
+    },
+    "planted_transform": [
+      1.00249961827632,
+      0.0008748461765232374,
+      0.45,
+      -0.3
+    ],
+    "verdict": "PASS"
+  }
+}

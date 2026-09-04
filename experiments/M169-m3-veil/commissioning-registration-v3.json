@@ -1,0 +1,63 @@
+{
+  "schema": "m169-m3-commissioning-registration-v3",
+  "status": "REGISTERED_BEFORE_V3_EXECUTION",
+  "authority": {
+    "commit": "a9176fef45ce5bc8306ef690eafc7f51bc2d5ddd",
+    "report": "docs/research/M174-m3-improvement-assertion.md",
+    "verdict": "B_ASSERTION_DEFECT",
+    "verification": "23/23 checks passed"
+  },
+  "frozen_instrument": {
+    "checker_definition_sha256": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+    "checker_source_sha256": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda",
+    "master_seed": 16120260906,
+    "site_count": 500,
+    "noise_sigma_fraction_of_step": 0.002
+  },
+  "unchanged_gates": {
+    "affected_point_rate_max": 0.01,
+    "affected_wilson_ucb95_max": 0.02,
+    "maximum_max_h_v": 0.05,
+    "median_edge_width_ratio_max": 1.05,
+    "median_edge_width_ratio_min": 0.95,
+    "median_h_e_max": 0.01,
+    "median_rho_edge_min": 0.9,
+    "median_v_e_max": 0.01,
+    "p99_h_e_max": 0.05,
+    "p99_v_e_max": 0.05
+  },
+  "boundary_reduction_arm": {
+    "name": "paired_reduction_to_0_5pct_each_boundary_challenge",
+    "supersedes_name": "planted_improvement_0_5pct_rim_and_veil",
+    "rim_component_fraction_of_step": 0.005,
+    "veil_component_fraction_of_step": 0.005,
+    "overlap_offsets_native_px": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "noiseless_overlap_fraction_of_step": 0.01,
+    "expected_gate_result": "FAIL_MEDIAN_H_E",
+    "expected_result_assertion": "improved_arm_fails_median_h_e",
+    "retained_movement_assertions": [
+      "improvement_reduces_h_by_at_least_5pp",
+      "improvement_reduces_v_by_at_least_5pp"
+    ]
+  },
+  "green_recovery_arm": {
+    "name": "paired_reduction_to_0_25pct_each_green_control",
+    "rim_component_fraction_of_step": 0.0025,
+    "veil_component_fraction_of_step": 0.0025,
+    "noiseless_overlap_fraction_of_step": 0.005,
+    "expected_gate_result": "PASS_ALL_GATES",
+    "selection_rule": "each component is median_h_e_max divided by four, so their overlap is one half of the unchanged median_h_e gate",
+    "selection_uses_observed_failure_or_crossing": false
+  },
+  "score_authorized": false
+}

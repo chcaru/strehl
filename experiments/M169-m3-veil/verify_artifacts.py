@@ -70,23 +70,26 @@ def main() -> int:
         "feasibility unexpectedly opened pixel files",
     )
 
-    commission = read_json(OUT / "commission-v2.json")
+    historic_commission = read_json(OUT / "commission-v2.json")
     require(
-        commission["verdict"] == "NOT_ADMITTED_COMMISSIONING_FAILED",
-        "full commissioning unexpectedly changed verdict",
+        historic_commission["verdict"]
+        == "NOT_ADMITTED_COMMISSIONING_FAILED",
+        "historical v2 commissioning verdict changed",
     )
     require(
-        commission["failed_assertions"] == ["improved_arm_passes"],
-        "full commissioning failure set changed",
+        historic_commission["failed_assertions"] == ["improved_arm_passes"],
+        "historical v2 commissioning failure set changed",
     )
     require(
-        commission["capture_pixels_opened"] == 0
-        and commission["candidate_outputs_opened"] == 0
-        and commission["comparator_outputs_opened"] == 0,
-        "full commissioning opened protected pixels",
+        historic_commission["capture_pixels_opened"] == 0
+        and historic_commission["candidate_outputs_opened"] == 0
+        and historic_commission["comparator_outputs_opened"] == 0,
+        "historical commissioning opened protected pixels",
     )
-    arms = {row["name"]: row for row in commission["arms"]}
-    improved = arms["planted_improvement_0_5pct_rim_and_veil"]
+    historic_arms = {
+        row["name"]: row for row in historic_commission["arms"]
+    }
+    improved = historic_arms["planted_improvement_0_5pct_rim_and_veil"]
     require(
         close(improved["median_h_e"], 0.010413357351919823),
         "registered improvement median h_e changed",
@@ -96,12 +99,141 @@ def main() -> int:
         and improved["verdict"] == "FAIL",
         "registered improvement no longer exhibits the commissioning failure",
     )
-    digest_record = (OUT / "commission-v2.sha256").read_text(
+    historic_digest_record = (OUT / "commission-v2.sha256").read_text(
         encoding="ascii"
     ).split()[0]
     require(
-        digest_record == sha256_file(OUT / "commission-v2.json"),
-        "commission artifact digest mismatch",
+        historic_digest_record == sha256_file(OUT / "commission-v2.json"),
+        "historical commission artifact digest mismatch",
+    )
+
+    registration = read_json(HERE / "commissioning-registration-v3.json")
+    definition = read_json(HERE / "m3-checker-definition-v2.json")
+    require(
+        registration["authority"]["commit"]
+        == "a9176fef45ce5bc8306ef690eafc7f51bc2d5ddd"
+        and registration["authority"]["verdict"] == "B_ASSERTION_DEFECT",
+        "M174 registration authority changed",
+    )
+    require(
+        registration["status"] == "REGISTERED_BEFORE_V3_EXECUTION"
+        and registration["score_authorized"] is False,
+        "v3 registration status or score prohibition changed",
+    )
+    require(
+        registration["unchanged_gates"] == definition["bars"],
+        "v3 registration changed an M3 gate",
+    )
+    require(
+        registration["boundary_reduction_arm"]["expected_gate_result"]
+        == "FAIL_MEDIAN_H_E"
+        and registration["boundary_reduction_arm"][
+            "expected_result_assertion"
+        ]
+        == "improved_arm_fails_median_h_e"
+        and registration["boundary_reduction_arm"][
+            "retained_movement_assertions"
+        ]
+        == [
+            "improvement_reduces_h_by_at_least_5pp",
+            "improvement_reduces_v_by_at_least_5pp",
+        ],
+        "M174 boundary-arm registration changed",
+    )
+    require(
+        close(
+            registration["green_recovery_arm"][
+                "rim_component_fraction_of_step"
+            ],
+            0.0025,
+        )
+        and close(
+            registration["green_recovery_arm"][
+                "veil_component_fraction_of_step"
+            ],
+            0.0025,
+        )
+        and registration["green_recovery_arm"][
+            "selection_uses_observed_failure_or_crossing"
+        ]
+        is False,
+        "green recovery is not the design-derived 0.25%-each arm",
+    )
+
+    commission = read_json(OUT / "commission-v3.json")
+    require(
+        commission["schema"] == "m169-m3-checker-commission-v3"
+        and commission["verdict"] == "PASS"
+        and commission["failed_assertions"] == [],
+        "v3 battery is not commissioned",
+    )
+    require(
+        len(commission["assertions"]) == 21
+        and all(commission["assertions"].values()),
+        "not all 21 v3 commissioning assertions pass",
+    )
+    require(
+        commission["registration_sha256"]
+        == sha256_file(HERE / "commissioning-registration-v3.json")
+        and commission["commission_source_sha256"]
+        == sha256_file(HERE / "full_commission.py"),
+        "v3 commissioning source or registration digest changed",
+    )
+    require(
+        commission["adjudication"] == registration["authority"],
+        "v3 commissioning is not bound to its registered adjudication",
+    )
+    require(
+        commission["capture_pixels_opened"] == 0
+        and commission["candidate_outputs_opened"] == 0
+        and commission["comparator_outputs_opened"] == 0,
+        "v3 commissioning opened protected pixels",
+    )
+    arms = {row["name"]: row for row in commission["arms"]}
+    require(
+        "planted_improvement_0_5pct_rim_and_veil" not in arms,
+        "ambiguous historical arm name survived in v3",
+    )
+    boundary = arms["paired_reduction_to_0_5pct_each_boundary_challenge"]
+    boundary_failed = sorted(
+        name for name, passed in boundary["checks"].items() if not passed
+    )
+    require(
+        boundary["expected_gate_result"] == "FAIL_MEDIAN_H_E"
+        and boundary["verdict"] == "FAIL"
+        and boundary_failed == ["median_h_e"]
+        and close(boundary["median_h_e"], 0.010413357351919823),
+        "boundary reduction does not have its registered result",
+    )
+    green = arms["paired_reduction_to_0_25pct_each_green_control"]
+    require(
+        green["expected_gate_result"] == "PASS_ALL_GATES"
+        and green["verdict"] == "PASS"
+        and all(green["checks"].values())
+        and close(green["median_h_e"], 0.005648873327640571)
+        and close(green["median_v_e"], 0.0032225916705620077),
+        "green recovery control does not pass every gate",
+    )
+    require(
+        commission["assertions"][
+            "improvement_reduces_h_by_at_least_5pp"
+        ]
+        and commission["assertions"][
+            "improvement_reduces_v_by_at_least_5pp"
+        ]
+        and commission["assertions"][
+            "improved_arm_fails_median_h_e"
+        ]
+        and commission["assertions"]["green_recovery_passes_all_gates"]
+        and "improved_arm_passes" not in commission["assertions"],
+        "v3 improvement assertions are not correctly registered",
+    )
+    digest_record = (OUT / "commission-v3.sha256").read_text(
+        encoding="ascii"
+    ).split()[0]
+    require(
+        digest_record == sha256_file(OUT / "commission-v3.json"),
+        "v3 commission artifact digest mismatch",
     )
 
     controls = read_json(OUT / "anchored-controls.json")
@@ -202,7 +334,7 @@ def main() -> int:
 
     measurement = read_json(OUT / "measurement-verdict.json")
     require(
-        measurement["verdict"] == "NOT_ADMITTED_COMMISSIONING_FAILED",
+        measurement["verdict"] == "UNMEASURED_COMPARATOR_QUALIFICATION",
         "measurement refusal changed",
     )
     require(measurement["score"] is None, "a score was manufactured")
@@ -213,6 +345,14 @@ def main() -> int:
     require(
         measurement["pixel_files_opened_by_m169"] == 0,
         "measurement opened protected pixels",
+    )
+    require(
+        measurement["recommissioning"]["full_m169_v3"] == "PASS"
+        and measurement["scorecard_readiness"]["m3_instrument_status"]
+        == "COMMISSIONED"
+        and measurement["scorecard_readiness"]["axis_score_status"]
+        == "UNMEASURED_COMPARATOR_QUALIFICATION",
+        "instrument/axis status distinction changed",
     )
     require(
         measurement["axis_contract"]["kind"]
@@ -227,8 +367,13 @@ def main() -> int:
     print("PASS")
     print("capture_feasibility=PASS denominator=500 eligible=1233")
     print(
-        "commission=NOT_ADMITTED_COMMISSIONING_FAILED "
-        "failed=improved_arm_passes median_h_e=0.010413357351919823"
+        "commission=PASS failed_assertions=0 "
+        "boundary_expected=FAIL_MEDIAN_H_E "
+        "boundary_h50=0.010413357351919823"
+    )
+    print(
+        "green_recovery=PASS amplitude_each=0.0025 "
+        "h50=0.005648873327640571 v50=0.0032225916705620077"
     )
     print(
         "anchored_controls=PASS null=0.000000 "
@@ -241,6 +386,10 @@ def main() -> int:
         "[0.4777984619140625,0.47780609130859375]"
     )
     print("axis_contract=CONJUNCTIVE_ABSOLUTE_AND_COMPARATIVE")
+    print(
+        "axis_status=UNMEASURED_COMPARATOR_QUALIFICATION "
+        "blockers=(a)(b)(d)"
+    )
     print("score=NO SCORE confidence_interval=NO CI")
     return 0
 
