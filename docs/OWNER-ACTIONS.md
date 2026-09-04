@@ -802,9 +802,11 @@ standing.
 you M11 was blocked "purely because I said a comparator must be
 quality-qualified first." That is wrong on the literal document. The scorecard's
 comparator-envelope definition says *"For speed it is the fastest mode that
-passes the complete quality scorecard"* (`:245-246`), and M11's own computation
-step 7 independently repeats *"the fastest mode that passes all quality gates"*
-(`:1089-1090`). **Neither clause is rule 4.** I verified both directly. Strike
+passes the complete quality scorecard"* (line `267` at this edit), and M11's own
+computation step 7 independently repeats *"the fastest mode that passes all
+quality gates"* (line `1132` at this edit). **Neither clause is rule 4.** I
+re-verified both against the scorecard directly; cite the named clause rather
+than the line number, which drifts with every insertion. Strike
 rule 4 tomorrow and M11 is still blocked, because M11's own bar demands a
 quality-qualified comparator in its own words. M2, M3 and M4 have comparable
 independent couplings.
@@ -817,9 +819,18 @@ independent couplings.
 **So the honest position: narrowing rule 4 unlocks nothing today.** M146 tested
 all four axes against the archive and returned `NEEDS_NEW_CAPTURE` or
 `BLOCKED_FOR_ANOTHER_REASON` for every one. That is a genuinely useful negative:
-it means **Ask 3's advice to wait on the $925 is correct and now independently
-confirmed**, and it means you are not losing anything by leaving rule 4 alone
-while the detail instrument is built.
+it confirms you gain nothing by narrowing rule 4 now, and that you lose nothing
+by leaving it alone while the detail instrument is built.
+
+> **STALE SENTENCE, CORRECTED.** This paragraph used to end by saying that
+> *"Ask 3's advice to wait on the `$925` is correct and now independently
+> confirmed."* **Ask 3 no longer advises waiting.** Your plan asks for
+> *"a commercial comparator"* and lists *"Helicon if obtainable"*, so the
+> `$925` both-products figure was never something you had to clear; Ask 3 now
+> advises buying **Zerene Professional at `$289` now** and not buying Helicon.
+> What M146 confirmed is narrower than the sentence claimed: it confirmed that
+> *rule 4* is not worth spending on, not that the comparator is not. Rule 4 is
+> unaffected by the purchase either way.
 
 **Why I am still asking.** Rule 4 remains an unratified rule I inserted into
 your scorecard, and it still changes what a passing claim *means* even though it

@@ -105,23 +105,44 @@ document’s proposed completions, not claims that the governing proposal alread
    > preserves the noise, veil and invented-structure instruments as live
    > (`:2208-2210`). See `docs/research/M133-blocker-audit.md:1177,1190,1204,1209,1598`.
    >
-   > **It is load-bearing and it has a price.** This rule is what propagates
-   > blocker `(a)` beyond the axes that intrinsically need a detail instrument. A
-   > mechanical re-derivation of all sixteen blocker subsets
-   > (`experiments/M140-readiness/readiness.json`) finds `(a)` is **intrinsic**
-   > only to M1, M5, M6 and M9, and **propagated by this rule** to M2, M3, M4 and
-   > M11. The consequence for the owner's spending decision:
+   > **It is load-bearing.** This rule propagates blocker `(a)` beyond the axes
+   > that intrinsically need a detail instrument. A mechanical re-derivation of
+   > all sixteen blocker subsets (`experiments/M140-readiness/readiness.json`)
+   > finds `(a)` is **intrinsic** only to M1, M5, M6 and M9, and **propagated by
+   > this rule** to M2, M3, M4 and M11.
+   >
+   > **CORRECTION -- the price this block originally quoted was false.** It read
+   > `2` axes becoming `6`, and `4` becoming `8`, under the headline *"Same
+   > money, same shooting, four more axes."* **That claim is withdrawn.** An
+   > independent audit (M146, `docs/research/M146-unlock-audit.md`, commit
+   > `68ea3b95`) tested all four propagated axes against the archive and returned
+   > `NEEDS_NEW_CAPTURE` or `BLOCKED_FOR_ANOTHER_REASON` for every one. The
+   > propagation above is real but it is **not exclusive**: those axes reach the
+   > detail instrument through clauses that are not rule 4, so striking rule 4
+   > leaves the couplings standing. M11 is the cleanest case -- the
+   > comparator-envelope definition requires *"the fastest mode that passes the
+   > complete quality scorecard"* (the comparator-envelope clause, line `267` at
+   > this edit), and M11's own computation step 7 independently repeats *"the
+   > fastest mode that passes all quality gates"* (line `1132` at this edit).
+   > Neither clause is rule 4. Both quotations were re-verified against this file
+   > directly rather than taken from the owner page, which cited them as
+   > `:245-246` and `:1089-1090` -- stale by `+21` and `+42` lines. **Cite the
+   > named clause, not the line number.** Writing this very correction moved both
+   > targets a further `+5`, and a checker that only asks whether a quotation
+   > still exists reads green while its pointer rots.
    >
    > | cleared | rule 4 as written | rule 4 narrowed or removed |
    > |---|---|---|
-   > | `b+d` — comparator bought | **2 axes** | **6 axes** |
-   > | `b+c+d` — comparator + capture | **4 axes** | **8 axes** |
+   > | `b+d` — comparator bought | **2 axes** | **2 axes** — *no change* |
+   > | `b+c+d` — comparator + capture | **4 axes** | **4 axes** — *no change* |
    >
-   > **Same money, same shooting, four more axes.** Until the owner ratifies,
-   > narrows or rejects this rule, blocker `(a)` assignments and any purchase
-   > ordering derived from them must not be presented as owner-mandated.
-   > Note it changes nothing measurable *today*: with only `(b)` cleared, all
-   > three scenarios leave exactly M8 and M12 scoreable.
+   > **Narrowing rule 4 unlocks nothing today**, and with only `(b)` cleared all
+   > scenarios leave exactly M8 and M12 scoreable. The rule remains `UNRATIFIED`
+   > and it still changes what a passing claim *means*, so blocker `(a)`
+   > assignments must not be presented as owner-mandated until the owner
+   > ratifies, narrows or rejects it -- but no purchase or capture decision
+   > should be made expecting to gain axes from it. The owner-facing version is
+   > `docs/OWNER-ACTIONS.md` Ask 3.
 5. Each capture must pass independently, and the pooled one-sided 95% confidence bar
    must also pass. Pooling may not rescue a failed capture.
 6. All confidence intervals resample independent physical sites, not pixels:
