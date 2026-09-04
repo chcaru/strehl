@@ -298,8 +298,49 @@ for label, needle, rel, ctx, srclit in CLAIMS:
     else:
         ctl_pass += 1
 
+# ---- cross-document derived claims -------------------------------------------
+# STATUS 2.9.65 asserts a COUNT derived from a table that another lane owns and
+# actively edits. A quoted count goes stale silently: the sentence still reads
+# well after the table beneath it changes. Recompute it from the source instead
+# of pinning the digit.
+xdoc_pass = xdoc_fail = 0
+SCORECARD = ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md"
+
+
+def check(label, ok, detail):
+    global xdoc_pass, xdoc_fail
+    if ok:
+        print("XDOC  %-24s %s" % (label, detail))
+        xdoc_pass += 1
+    else:
+        print("XFAIL %-24s %s" % (label, detail))
+        xdoc_fail += 1
+
+
+if not SCORECARD.exists():
+    check("scorecard present", False, "MISSING %s" % SCORECARD)
+else:
+    sc_lines = SCORECARD.read_text(encoding="utf-8", errors="replace").splitlines()
+    # The §3.1 readiness table: rows "| M<n> | **<class codes>** | ..."
+    d_axes = []
+    for ln in sc_lines:
+        m = re.match(r"^\| (M\d+) \| \*\*(.+?)\*\* \|", ln)
+        if m and "(d)" in m.group(2):
+            d_axes.append(m.group(1))
+    expected = ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]
+    check("blocker (d) axis set", d_axes == expected,
+          "recomputed %s (STATUS 2.9.65 asserts exactly these seven)" % (d_axes,))
+    check("m3 carries (a)(b)(d)",
+          any(re.match(r"^\| M3 \| \*\*.*\(a\)\(b\)\(d\)\*\* \|", ln) for ln in sc_lines),
+          "STATUS 2.9.61 correction depends on M3 carrying (a) and (d)")
+    joined = collapse("\n".join(sc_lines))
+    check("all-arms-required rule",
+          "the named-comparator requirement is unmet and the dependent comparative axes remain"
+          in joined,
+          "STATUS 2.9.65 quotes this to justify 'all three arms are required'")
+
 print()
-print("claims checked      : %d" % (green + red))
+
 print("GREEN               : %d" % green)
 print("RED                 : %d" % red)
 print("not asserted (RED)  : %d  %s" % (len(missing_in_status), missing_in_status))
@@ -307,6 +348,8 @@ print("controls pass       : %d" % ctl_pass)
 print("controls fail       : %d" % ctl_fail)
 print("controls skipped    : %d  %s" % (ctl_skip, ctl_skip_reasons))
 print("controls accounted  : %d of %d claims" % (ctl_pass + ctl_fail + ctl_skip, len(CLAIMS)))
+print("xdoc derived pass   : %d" % xdoc_pass)
+print("xdoc derived fail   : %d" % xdoc_fail)
 print()
-print("VERDICT: " + ("GREEN" if red == 0 and ctl_fail == 0 else "RED"))
-sys.exit(0 if (red == 0 and ctl_fail == 0) else 1)
+print("VERDICT: " + ("GREEN" if red == 0 and ctl_fail == 0 and xdoc_fail == 0 else "RED"))
+sys.exit(0 if (red == 0 and ctl_fail == 0 and xdoc_fail == 0) else 1)
