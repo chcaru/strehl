@@ -1,0 +1,103 @@
+{
+  "claim": "M164_REFERENCE_INFORMATION_DOMINANCE_GX",
+  "evidence": {
+    "path": null,
+    "sha256": null,
+    "verified_bytes_consumed": false
+  },
+  "family_result": null,
+  "manifest": {
+    "path": "experiments\\M164-dominance-manifest\\production-manifest-v1.json",
+    "sha256": "7dd9c5e5da63bd68ffa49b645e59cedc4495fc08b5e5b8e423f6eb68552a22d9",
+    "verified_bytes_consumed": true
+  },
+  "reasons": [
+    {
+      "code": "MANIFEST_STATUS",
+      "detail": "only FROZEN manifests are executable",
+      "pointer": "$.status"
+    },
+    {
+      "code": "DIMENSIONS_NONEMPTY",
+      "detail": "dimension must be a nonempty list",
+      "pointer": "$.dimensions.channels"
+    },
+    {
+      "code": "DIMENSIONS_NONEMPTY",
+      "detail": "dimension must be a nonempty list",
+      "pointer": "$.dimensions.field_partitions"
+    },
+    {
+      "code": "FAMILY_CARTESIAN",
+      "detail": "the licensed cell family may not be empty",
+      "pointer": "$.cells"
+    },
+    {
+      "code": "EPSILON_COMMON_RANGE",
+      "detail": "epsilon_common must be finite and lie in (0, 1)",
+      "pointer": "$.thresholds.epsilon_common"
+    },
+    {
+      "code": "POWER_FLOORS_POSITIVE",
+      "detail": "signal and noise floors must be finite and strictly positive",
+      "pointer": "$.thresholds"
+    },
+    {
+      "code": "RANK_CONDITION_BARS",
+      "detail": "minimum_rank must be positive and condition bar at least one",
+      "pointer": "$.thresholds"
+    },
+    {
+      "code": "POWER_FLOORS_POSITIVE",
+      "detail": "site floors must be integers with at least 64 witness and 8 control sites",
+      "pointer": "$.thresholds"
+    },
+    {
+      "code": "EPSILON_COMMON_RANGE",
+      "detail": "common-mode control classes must be a nonempty unique token list",
+      "pointer": "$.thresholds.common_mode_control_classes"
+    },
+    {
+      "code": "REDUCTION_SPEC",
+      "detail": "a complete scalar-linear-sufficient reduction and exact frame counts are required",
+      "pointer": "$.reduction"
+    },
+    {
+      "code": "HASH_GROUPS_COMPLETE",
+      "detail": "required hash group must be nonempty",
+      "pointer": "$.artifact_hashes.seed"
+    },
+    {
+      "code": "UNRESOLVED_FIELDS",
+      "detail": "{\"id\": \"production-cell-family\", \"missing\": \"registered channels, frozen subject-region/field partitions, and their exact Cartesian expansion\", \"producer\": \"M164 registrar with the M135 target owner\"}",
+      "pointer": "$.unresolved[0]"
+    },
+    {
+      "code": "UNRESOLVED_FIELDS",
+      "detail": "{\"id\": \"production-numerical-bars\", \"missing\": \"positive per-cell information and transfer margins, epsilon_common, signal/noise floors, rank bar, conditioning bar, and control-site floor\", \"producer\": \"M164 calibration owner using two disjoint known-ratio development partitions\"}",
+      "pointer": "$.unresolved[1]"
+    },
+    {
+      "code": "UNRESOLVED_FIELDS",
+      "detail": "{\"id\": \"complete-s-reduction\", \"missing\": \"candidate-blind scalar sufficiency proof and exact 55/27-frame reduction artifact\", \"producer\": \"M164 complete-input reduction owner\"}",
+      "pointer": "$.unresolved[2]"
+    },
+    {
+      "code": "UNRESOLVED_FIELDS",
+      "detail": "{\"id\": \"physical-target-geometry\", \"missing\": \"final target artwork, native-output resampler, accepted M147 scale/field result, and production geometry binding\", \"producer\": \"M135 target and M147 geometry owners after the allowed two-frame M147 preflight\"}",
+      "pointer": "$.unresolved[3]"
+    },
+    {
+      "code": "UNRESOLVED_FIELDS",
+      "detail": "{\"id\": \"production-software\", \"missing\": \"every candidate/comparator binary, native-output adapter, setting, and environment freeze\", \"producer\": \"orchestrator and comparator execution owners\"}",
+      "pointer": "$.unresolved[4]"
+    },
+    {
+      "code": "UNRESOLVED_FIELDS",
+      "detail": "{\"id\": \"production-seed\", \"missing\": \"target-code, randomization, and checker seed artifact\", \"producer\": \"M164 registrar before any registered exposure\"}",
+      "pointer": "$.unresolved[5]"
+    }
+  ],
+  "schema": "m164-dominance-verdict/v1",
+  "status": "UNMEASURED"
+}

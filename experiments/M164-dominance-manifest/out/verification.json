@@ -1,0 +1,232 @@
+{
+  "checks": [
+    {
+      "detail": {
+        "consumed": "7dd9c5e5da63bd68ffa49b645e59cedc4495fc08b5e5b8e423f6eb68552a22d9",
+        "expected": "7dd9c5e5da63bd68ffa49b645e59cedc4495fc08b5e5b8e423f6eb68552a22d9"
+      },
+      "name": "freeze-binds-consumed-manifest-bytes",
+      "passed": true
+    },
+    {
+      "detail": "8d3fb6e3ae547208037b368a7b25ba99cad39a5cf1decfd110ccdff41c80ac52",
+      "name": "freeze-binds-checker-core",
+      "passed": true
+    },
+    {
+      "detail": "603a0a9e6cdfdf8592c2f86a7a0d0f7c0f5a40cd5bb6b46c728688161efabe6b",
+      "name": "freeze-binds-launcher",
+      "passed": true
+    },
+    {
+      "detail": {
+        "core": "experiments\\M164-dominance-manifest\\reader_core.py",
+        "launcher": "experiments\\M164-dominance-manifest\\reader.py",
+        "manifest": "experiments\\M164-dominance-manifest\\production-manifest-v1.json"
+      },
+      "name": "freeze-paths-are-exact",
+      "passed": true
+    },
+    {
+      "detail": [
+        {
+          "consumed": "a9fbd14556316550dd50a9eb3c18797c46a4674035aed7fffabd174df920e715",
+          "expected": "a9fbd14556316550dd50a9eb3c18797c46a4674035aed7fffabd174df920e715",
+          "group": "calibration",
+          "id": "m165-pattern-map-settings"
+        },
+        {
+          "consumed": "220764ec19f1b1d6b06e9b51cb1b069bbe07dd9aa8c8f9b8a2eb5de4e32eb86e",
+          "expected": "220764ec19f1b1d6b06e9b51cb1b069bbe07dd9aa8c8f9b8a2eb5de4e32eb86e",
+          "group": "calibration",
+          "id": "m165-pattern-map-estimator-freeze"
+        },
+        {
+          "consumed": "8d3fb6e3ae547208037b368a7b25ba99cad39a5cf1decfd110ccdff41c80ac52",
+          "expected": "8d3fb6e3ae547208037b368a7b25ba99cad39a5cf1decfd110ccdff41c80ac52",
+          "group": "checker",
+          "id": "reader-core"
+        },
+        {
+          "consumed": "603a0a9e6cdfdf8592c2f86a7a0d0f7c0f5a40cd5bb6b46c728688161efabe6b",
+          "expected": "603a0a9e6cdfdf8592c2f86a7a0d0f7c0f5a40cd5bb6b46c728688161efabe6b",
+          "group": "checker",
+          "id": "reader-launcher"
+        },
+        {
+          "consumed": "29ba7b8de9db80b7167fd068a3d96269d4d91287db5c823109ebeb149b1b8e98",
+          "expected": "29ba7b8de9db80b7167fd068a3d96269d4d91287db5c823109ebeb149b1b8e98",
+          "group": "geometry",
+          "id": "m147-preflight-core"
+        },
+        {
+          "consumed": "4fafcdef3619ba5a1b6be60115292746b04b3acafb208c9b3576a671861b0e5e",
+          "expected": "4fafcdef3619ba5a1b6be60115292746b04b3acafb208c9b3576a671861b0e5e",
+          "group": "resampler",
+          "id": "m135-comparison-rule"
+        },
+        {
+          "consumed": "a005c9d6698366da31bc5d1e4cffeb1eccdb72a27e728bfa2c8b0a88a44f5e0d",
+          "expected": "a005c9d6698366da31bc5d1e4cffeb1eccdb72a27e728bfa2c8b0a88a44f5e0d",
+          "group": "software",
+          "id": "dominance-core"
+        },
+        {
+          "consumed": "fa62585f0ad010e0b51af68c64222490824e09ca9a7e8f692467e080622c5f0b",
+          "expected": "fa62585f0ad010e0b51af68c64222490824e09ca9a7e8f692467e080622c5f0b",
+          "group": "software",
+          "id": "manifest-builder"
+        },
+        {
+          "consumed": "88741cec6756392d5e8f892f8be8e6be299f55de1d6525dff08718eb19dedc4f",
+          "expected": "88741cec6756392d5e8f892f8be8e6be299f55de1d6525dff08718eb19dedc4f",
+          "group": "target",
+          "id": "m135-comparison-contract"
+        },
+        {
+          "consumed": "23a015ca5bc81836422d7764b3f5aff2880fb697efa47572880fe675a70daff0",
+          "expected": "23a015ca5bc81836422d7764b3f5aff2880fb697efa47572880fe675a70daff0",
+          "group": "target",
+          "id": "m135-comparison-binding"
+        }
+      ],
+      "name": "all-present-artifacts-are-hash-bound",
+      "passed": true
+    },
+    {
+      "detail": {
+        "commissioning_default_present": false,
+        "status": "BLOCKED"
+      },
+      "name": "blocked-values-have-no-default",
+      "passed": true
+    },
+    {
+      "detail": {
+        "json_exact_lf": {
+          "commission.json": true,
+          "production-manifest-v1.freeze.json": true,
+          "production-manifest-v1.json": true,
+          "production-refusal.json": true
+        },
+        "python_crlf": {
+          "build_blocked_manifest.py": true,
+          "commission.py": true,
+          "reader.py": true,
+          "reader_core.py": true,
+          "verify.py": true
+        }
+      },
+      "name": "hash-bound-line-ending-policy",
+      "passed": true
+    },
+    {
+      "detail": [
+        "complete-s-reduction",
+        "physical-target-geometry",
+        "production-cell-family",
+        "production-numerical-bars",
+        "production-seed",
+        "production-software"
+      ],
+      "name": "blocker-ledger-is-complete",
+      "passed": true
+    },
+    {
+      "detail": {
+        "manifest_path_read_calls": 1
+      },
+      "name": "manifest-read-hash-parse-single-byte-flow",
+      "passed": true
+    },
+    {
+      "detail": {
+        "reason_codes": [
+          "DIMENSIONS_NONEMPTY",
+          "EPSILON_COMMON_RANGE",
+          "FAMILY_CARTESIAN",
+          "HASH_GROUPS_COMPLETE",
+          "MANIFEST_STATUS",
+          "POWER_FLOORS_POSITIVE",
+          "RANK_CONDITION_BARS",
+          "REDUCTION_SPEC",
+          "UNRESOLVED_FIELDS"
+        ],
+        "returncode": 2
+      },
+      "name": "production-reader-refuses-persistently",
+      "passed": true
+    },
+    {
+      "detail": {
+        "recorded_sha256": "8913fb83f0114c8bf1aa88e8bf3b8ad66e92d2151927e8f732afc2cdadc66d7d",
+        "replay_sha256": "8913fb83f0114c8bf1aa88e8bf3b8ad66e92d2151927e8f732afc2cdadc66d7d"
+      },
+      "name": "production-refusal-is-reproducible",
+      "passed": true
+    },
+    {
+      "detail": {
+        "after_sha256": "3c3c2797908275dc9e6a951d8e82d9eba83e0790a2406a8d2261154fa044f418",
+        "before_sha256": "3c3c2797908275dc9e6a951d8e82d9eba83e0790a2406a8d2261154fa044f418",
+        "returncode": 0
+      },
+      "name": "commission-is-byte-reproducible",
+      "passed": true
+    },
+    {
+      "detail": {
+        "cases": 54,
+        "observed": 45,
+        "required": 45
+      },
+      "name": "every-declared-check-fired",
+      "passed": true
+    },
+    {
+      "detail": {
+        "both_metrics_rose": true,
+        "clean_min_information_ratio": 2.0168234326654613,
+        "clean_min_transfer_ratio": 1.8795972457065035,
+        "contaminated_min_information_ratio": 2.0843587303121627,
+        "contaminated_min_transfer_ratio": 2.08123707509508
+      },
+      "name": "improvement-shaped-defect-is-unmeasured",
+      "passed": true
+    },
+    {
+      "detail": {
+        "bad_checker_reason_codes": [],
+        "bad_checker_rewarded_contamination": true,
+        "bad_checker_status": "PASS",
+        "commission_would_reject_bad_checker": true,
+        "source_mutation": {
+          "anchor_count": 1,
+          "anchor_sha256": "6129697229cb7a1d9529145960e119e95bd7703dcf5e13e391636a10436a3002",
+          "label": "disable-common-mode-charge-and-fraction"
+        }
+      },
+      "name": "common-mode-charge-red-canary-is-load-bearing",
+      "passed": true
+    },
+    {
+      "detail": true,
+      "name": "all-plants-have-exact-one-anchors",
+      "passed": true
+    },
+    {
+      "detail": [],
+      "name": "no-scratch-leftovers",
+      "passed": true
+    }
+  ],
+  "manifest_sha256": "7dd9c5e5da63bd68ffa49b645e59cedc4495fc08b5e5b8e423f6eb68552a22d9",
+  "schema": "m164-dominance-manifest-verification/v1",
+  "source_sha256": {
+    "commission.py": "ab6e73dc2885089438fc0e03b9a412f4e2fad77bb4b4ad39a2f22061699d4407",
+    "reader.py": "603a0a9e6cdfdf8592c2f86a7a0d0f7c0f5a40cd5bb6b46c728688161efabe6b",
+    "reader_core.py": "8d3fb6e3ae547208037b368a7b25ba99cad39a5cf1decfd110ccdff41c80ac52",
+    "verify.py": "5984d2cdb1eb05973ebabb8c1429db0e6a8150243567683b94fbd7ce5886789b"
+  },
+  "status": "PASS"
+}

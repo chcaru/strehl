@@ -1,0 +1,3 @@
+# Hash-bound code checks out as CRLF; generated JSON retains exact LF bytes.
+*.py text eol=crlf
+*.json -text
