@@ -4027,6 +4027,63 @@ the owner are **M8** (M137 decides whether the clamp keeps the detail) and
 `(a)`, which is M135's problem and the one thing in the program that cannot be
 bought, shot, or coded around.
 
+### 2.9.36 M132 prices the purchase: `4 of 12` costs `$925`, not `$189`
+
+M132 returned and its follow-up changed the purchase picture by a factor of
+five. I had told the owner that `$189` moves him from `3 of 12` to `4 of 12`.
+The arithmetic was right and the advice was still wrong, because I never asked
+what the *one* axis that `$189` buys actually needs.
+
+It buys **M7, colour fidelity**. The scorecard's own readiness note for M7 is a
+single sentence: *"No traceable colour target exists."* So the purchase unlocks
+an axis that is itself blocked, on hardware nobody in this program had priced.
+
+Priced, the floor for `4 of 12` is:
+
+| item | cost |
+|---|---|
+| Zerene Prosumer | `$189` |
+| ISA ColorGauge Nano, matte, NIST-traceable certificate | `$660` |
+| Sekonic C-800 illuminant meter, three-day rental | `$76` |
+| **total** | **`$925`** plus tax and shipping |
+
+`$849` with a meter already in hand; **`$2,748`** if the C-800 is bought at
+`$1,899` rather than rented.
+
+**The genuinely useful finding is that M7 is shootable at all.** I had assumed
+without checking that a colour chart at `1.3x` was routine. It is not: ordinary
+ColorCheckers **do not fit the field**, and the Calibrite Nano would need
+`62.64°` of tilt and `35.52 mm` of depth travel. The sensor field is
+`27.62 x 18.38 mm`; the ISA Nano is `20.64 x 17.46 mm` and fits with hundreds of
+pixels per patch after 20% erosion. So the axis is practical — but only with a
+specific and more expensive target, and that fact was one unchecked assumption
+away from being discovered after the money was spent.
+
+**A defect in my own instrument, which I am recording rather than quietly
+fixing.** M132 reports the scorecard *"specifies no reference-value uncertainty
+budget or conformity rule"* for M7. That matters concretely: the bar is median
+`ΔE00 ≤ 1.0`, and a chart whose own reference values carry uncertainty near
+`1.0` cannot support that bar at any price. NIST states the point directly —
+
+> traceability alone does not signify or guarantee fitness for purpose
+
+— and our scorecard currently asks for "traceable" without asking "to what
+uncertainty". **A bar that does not budget the uncertainty of its own reference
+is not a bar.** I own the scorecard and this is mine to repair; I am holding it
+to batch with M133's bar-defect list rather than making one-off edits to a
+pre-registration document, which is how instruments drift.
+
+Consequently a new `$0` step goes ahead of the purchase: obtain ISA's sample
+certificate and its numerical uncertainty, which they supply free. If it cannot
+support `ΔE00 ≤ 1.0`, the `$660` is dead money and the `$189` buys nothing — and
+we learn that at no cost. The owner page now carries the corrected figure and
+this precondition.
+
+Two corrections to the same advice in one day is not a good record. The common
+cause in both is the same: I reasoned from a table without reading what its
+entries depend on. The blocker table said `(d)` unlocks M7; it did not say M7
+was independently blocked, and I did not go and look.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
