@@ -43,18 +43,46 @@ TRANSFER_VETO_SHA256 = (
 Q = 1.0 / 65535.0
 SITE_SIDE = 512
 SITE_CENTRES = (
-    (1024, 1024),
-    (1024, 2680),
-    (1024, 4336),
-    (1024, 5992),
-    (2336, 1024),
-    (2336, 2680),
-    (2336, 4336),
-    (2336, 5992),
-    (3648, 1024),
-    (3648, 2680),
-    (3648, 4336),
-    (3648, 5992),
+    (768, 768),
+    (768, 1550),
+    (768, 2331),
+    (768, 3113),
+    (768, 3895),
+    (768, 4677),
+    (768, 5458),
+    (768, 6240),
+    (1552, 768),
+    (1552, 1550),
+    (1552, 2331),
+    (1552, 3113),
+    (1552, 3895),
+    (1552, 4677),
+    (1552, 5458),
+    (1552, 6240),
+    (2336, 768),
+    (2336, 1550),
+    (2336, 2331),
+    (2336, 3113),
+    (2336, 3895),
+    (2336, 4677),
+    (2336, 5458),
+    (2336, 6240),
+    (3120, 768),
+    (3120, 1550),
+    (3120, 2331),
+    (3120, 3113),
+    (3120, 3895),
+    (3120, 4677),
+    (3120, 5458),
+    (3120, 6240),
+    (3904, 768),
+    (3904, 1550),
+    (3904, 2331),
+    (3904, 3113),
+    (3904, 3895),
+    (3904, 4677),
+    (3904, 5458),
+    (3904, 6240),
 )
 ADAPTERS = (("bilinear", 1), ("cubic", 3))
 MAX_RAIL_FRACTION = 0.001
@@ -1078,14 +1106,26 @@ def evaluate_pair(
             ) from error
 
     eligible = [site for site in sites if site["eligible"]]
-    if len(eligible) < MIN_ELIGIBLE_SITES:
-        reasons = [site.get("reason") for site in sites if not site["eligible"]]
-        raise RuntimeError(
-            f"{pair.key}: only {len(eligible)}/{len(sites)} sites eligible; "
-            f"reasons={reasons}"
-        )
+    reasons = [site.get("reason") for site in sites if not site["eligible"]]
+    pair_valid = len(eligible) >= MIN_ELIGIBLE_SITES
     if controls is None or not controls["passed"]:
-        raise RuntimeError(f"{pair.key}: no passing adapter control site")
+        return {
+            "pair": pair.key,
+            "label": pair.label,
+            "holdout_status": "BURNED-OK",
+            "status": "PAIR_INVALID",
+            "fired": None,
+            "verdict": "UNADJUDICABLE_NO_CONTROL_SITE",
+            "error": f"{pair.key}: no passing adapter control site",
+            "fixed_sites": len(SITE_CENTRES),
+            "eligible_sites": len(eligible),
+            "excluded_sites": len(sites) - len(eligible),
+            "exclusion_reasons": reasons,
+            "geometry": geometry.as_dict(),
+            "tone_inversion": tone,
+            "provenance": provenance,
+            "sites": sites,
+        }
 
     forward_count = sum(
         bool(site["robust_fire_comparator_from_strehl"]) for site in eligible
@@ -1093,7 +1133,10 @@ def evaluate_pair(
     reverse_count = sum(
         bool(site["robust_fire_strehl_from_comparator"]) for site in eligible
     )
-    if forward_count == len(eligible) or reverse_count == len(eligible):
+    if not pair_valid:
+        verdict = "UNADJUDICABLE_INSUFFICIENT_SITES"
+        fired = None
+    elif forward_count == len(eligible) or reverse_count == len(eligible):
         verdict = "INADMISSIBLE_COMMON_TRANSFER"
         fired = True
     elif forward_count == 0 and reverse_count == 0:
@@ -1115,8 +1158,17 @@ def evaluate_pair(
         "pair": pair.key,
         "label": pair.label,
         "holdout_status": "BURNED-OK",
+        "status": "OK" if pair_valid else "PAIR_INVALID",
         "fired": fired,
         "verdict": verdict,
+        "error": (
+            None
+            if pair_valid
+            else (
+                f"{pair.key}: only {len(eligible)}/{len(sites)} sites eligible; "
+                f"minimum is {MIN_ELIGIBLE_SITES}"
+            )
+        ),
         "pair_rule": (
             "fire only when every eligible fixed site (minimum 8) fires in "
             "one direction under both bilinear and cubic geometry adapters"
@@ -1124,6 +1176,7 @@ def evaluate_pair(
         "fixed_sites": len(SITE_CENTRES),
         "eligible_sites": len(eligible),
         "excluded_sites": len(sites) - len(eligible),
+        "exclusion_reasons": reasons,
         "robust_fire_sites_comparator_from_strehl": forward_count,
         "robust_fire_sites_strehl_from_comparator": reverse_count,
         "geometry": geometry.as_dict(),
@@ -1158,17 +1211,18 @@ def run_real(output: Path, stage_dir: Path) -> dict[str, Any]:
         strehl_path, strehl_provenance = materialized[pair.strehl]
         comparator_path, comparator_provenance = materialized[pair.comparator]
         try:
-            pair_results.append(
-                evaluate_pair(
-                    pair,
-                    strehl_path,
-                    comparator_path,
-                    {
-                        "strehl": strehl_provenance,
-                        "comparator": comparator_provenance,
-                    },
-                )
+            pair_result = evaluate_pair(
+                pair,
+                strehl_path,
+                comparator_path,
+                {
+                    "strehl": strehl_provenance,
+                    "comparator": comparator_provenance,
+                },
             )
+            if pair_result["status"] == "PAIR_INVALID":
+                pair_failures += 1
+            pair_results.append(pair_result)
         except BaseException as error:
             pair_failures += 1
             pair_results.append(
@@ -1186,7 +1240,9 @@ def run_real(output: Path, stage_dir: Path) -> dict[str, Any]:
     verdicts = [
         result["verdict"] for result in pair_results if "verdict" in result
     ]
-    if pair_failures:
+    if pair_failures == len(PAIRS):
+        historical = "NOT_DETERMINED"
+    elif pair_failures:
         historical = "PARTIAL"
     elif "INADMISSIBLE_COMMON_TRANSFER" in verdicts:
         historical = "NO"
@@ -1214,6 +1270,8 @@ def self_test() -> None:
         raise AssertionError("pair whitelist changed")
     if any("119" in pair.key.lower() for pair in PAIRS):
         raise AssertionError("119 entered the pair whitelist")
+    if len(SITE_CENTRES) != 40 or len(set(SITE_CENTRES)) != 40:
+        raise AssertionError("fixed 5-by-8 site lattice changed")
     if sha256_file(TRANSFER_VETO_PATH) != TRANSFER_VETO_SHA256:
         raise AssertionError("transfer-veto source hash changed")
 
@@ -1290,7 +1348,9 @@ def main(argv: list[str] | None = None) -> int:
         for pair in result["pairs"]:
             if pair.get("status") == "PAIR_INVALID":
                 print(
-                    f"{pair['pair']}: PAIR_INVALID: {pair['error']}",
+                    f"{pair['pair']}: {pair['verdict']} "
+                    f"eligible={pair.get('eligible_sites', 0)}/"
+                    f"{pair.get('fixed_sites', 0)}: {pair.get('error', '')}",
                     file=sys.stderr,
                 )
             else:

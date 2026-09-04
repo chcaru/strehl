@@ -1,0 +1,68 @@
+{
+  "authorized_pairs": [
+    "cb",
+    "113",
+    "113-sharp"
+  ],
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\out\\realpair-verdict.json",
+    "--stage-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\out\\realpair-stage"
+  ],
+  "completed_at": "2026-09-04T18:22:04.393016+00:00",
+  "forbidden_pairs": [
+    "all 119MSDCF pairs"
+  ],
+  "pair_failures": 3,
+  "pairs": [
+    {
+      "error": "cb: only 4/12 sites eligible; reasons=['REGISTRATION_DID_NOT_IMPROVE', 'COMPARATOR_RAIL_FRACTION', 'COMPARATOR_RAIL_FRACTION', 'REGISTRATION_DID_NOT_IMPROVE', 'REGISTRATION_DID_NOT_IMPROVE', 'COMPARATOR_RAIL_FRACTION', 'COMPARATOR_RAIL_FRACTION', 'COMPARATOR_RAIL_FRACTION']",
+      "error_type": "RuntimeError",
+      "holdout_status": "BURNED-OK",
+      "label": "DELIVER-V6 versus focus-stack fork",
+      "pair": "cb",
+      "status": "PAIR_INVALID",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py\", line 1162, in run_real\n    evaluate_pair(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py\", line 1083, in evaluate_pair\n    raise RuntimeError(\nRuntimeError: cb: only 4/12 sites eligible; reasons=['REGISTRATION_DID_NOT_IMPROVE', 'COMPARATOR_RAIL_FRACTION', 'COMPARATOR_RAIL_FRACTION', 'REGISTRATION_DID_NOT_IMPROVE', 'REGISTRATION_DID_NOT_IMPROVE', 'COMPARATOR_RAIL_FRACTION', 'COMPARATOR_RAIL_FRACTION', 'COMPARATOR_RAIL_FRACTION']\n"
+    },
+    {
+      "error": "113: only 7/12 sites eligible; reasons=['REGISTRATION_DID_NOT_IMPROVE', 'STREHL_RAIL_FRACTION', 'STREHL_RAIL_FRACTION', 'REGISTRATION_NULL', 'REGISTRATION_DID_NOT_IMPROVE']",
+      "error_type": "RuntimeError",
+      "holdout_status": "BURNED-OK",
+      "label": "DELIVER-V6 versus Zerene PMax0",
+      "pair": "113",
+      "status": "PAIR_INVALID",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py\", line 1162, in run_real\n    evaluate_pair(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py\", line 1083, in evaluate_pair\n    raise RuntimeError(\nRuntimeError: 113: only 7/12 sites eligible; reasons=['REGISTRATION_DID_NOT_IMPROVE', 'STREHL_RAIL_FRACTION', 'STREHL_RAIL_FRACTION', 'REGISTRATION_NULL', 'REGISTRATION_DID_NOT_IMPROVE']\n"
+    },
+    {
+      "error": "113-sharp: only 6/12 sites eligible; reasons=['REGISTRATION_NULL', 'REGISTRATION_NULL', 'STREHL_RAIL_FRACTION', 'REGISTRATION_NULL', 'STREHL_RAIL_FRACTION', 'REGISTRATION_NULL']",
+      "error_type": "RuntimeError",
+      "holdout_status": "BURNED-OK",
+      "label": "DELIVER-V6 versus Zerene PMax40",
+      "pair": "113-sharp",
+      "status": "PAIR_INVALID",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py\", line 1162, in run_real\n    evaluate_pair(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py\", line 1083, in evaluate_pair\n    raise RuntimeError(\nRuntimeError: 113-sharp: only 6/12 sites eligible; reasons=['REGISTRATION_NULL', 'REGISTRATION_NULL', 'STREHL_RAIL_FRACTION', 'REGISTRATION_NULL', 'STREHL_RAIL_FRACTION', 'REGISTRATION_NULL']\n"
+    }
+  ],
+  "runtime": {
+    "numpy": "2.4.4",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "scipy": "1.17.1",
+    "tifffile": "2026.5.2"
+  },
+  "scientific_result": {
+    "historical_comparisons_admissible": "PARTIAL",
+    "interpretation": "This is an admissibility result only. It does not rank either renderer and a NOT_VETOED result excludes only M164's frozen families."
+  },
+  "script_sha256": "B0FF67C0C55B2F04F0F4A97B075A77545B63C0960F1756E26D6907C8BCDE3688",
+  "started_at": "2026-09-04T18:21:07.874983+00:00",
+  "status": "FAIL",
+  "thread_environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "transfer_veto_sha256": "E6C44578CA5913E4BB7FA966BBF1CD945F0AB084E2EEB8754B75435CD86E853B"
+}
