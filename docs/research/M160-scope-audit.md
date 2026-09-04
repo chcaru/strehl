@@ -1,0 +1,261 @@
+# M160 scope audit — independent review of `6b966d8c`
+
+Status: **COMPLETE — CLAIM D REFUTED**
+
+## Verdicts
+
+| Claim | Verdict | Basis |
+| --- | --- | --- |
+| A — seven axes, five unnamed | **CONFIRMED** | The plan's printable sentence contains six top-level clauses and seven distinct axis predicates because its compound output clause names both certificate calibration and physical depth. |
+| B — Helicon optional; Zerene-only purchase; fork required | **CONFIRMED** | The plan says `Helicon if obtainable`, pins the fork at its best-known build, and gives the owner only a Zerene purchase at Prosumer/Professional prices. |
+| C — no bar or FAIL weakened beyond the stated scope change | **CONFIRMED** | Only sections 0 and 8 changed; the pre-existing decision rules and sections 1–7 are byte-identical; section 8 is append-only; the M8 row is unchanged and remains FAIL at M8-R `1.030569%`. |
+| D — amended scorecard internally consistent | **REFUTED** | Fourteen operative checks still encode all-primary/all-quality gating or a mandatory Zerene+Helicon comparator set that omits the newly required fork. |
+
+The independent checker reports:
+
+```text
+CHECKS total=36 passed=22 failed=14 skipped=0 accounted=36
+CLAIM A CONFIRMED
+CLAIM B CONFIRMED
+CLAIM C CONFIRMED
+CLAIM D REFUTED
+AUDIT_VERDICT REFUTED
+```
+
+## Method
+
+`experiments/M160-scope-audit/verify_scope_audit.py` reads the plan directly.
+It reads the parent and target scorecard blobs as bytes via `git show`, decodes
+UTF-8 itself, and compares content by named sections and unique single-line
+anchors. Wrapped quotations are compared after stripping Markdown blockquote
+prefixes per line and collapsing whitespace.
+
+The withdrawn mandatory-Helicon wording occurs exactly once in the amended
+scorecard, inside the amendment block and nowhere outside it. This is a
+position-aware check, not a global presence/absence test.
+
+## Claim A — clause enumeration
+
+Source block anchor in `docs/proposals/2026-08-sota-path.md`:
+`licensing instrument in parentheses:`.
+
+| Predicate in the printable sentence | Named instrument | Axis | Confidence | Reason |
+| --- | --- | --- | --- | --- |
+| `resolves detail at or beyond the best shipping comparator` | `D1: FRC + slant-edge`, licensed Zerene PMax and DMap | M1 | High, 0.99 | M1 is sharpening-safe resolved information. |
+| `at strictly lower noise` | `existing flat-ROI instrument` | M2 | High, 0.99 | M2 is noise efficiency. |
+| `with zero invented structure` | `hull census, stamped per file` | M8 | High, 1.00 | M8 is explicitly the independent source-hull census. |
+| `no occlusion veil above [bar]` | `halo instrument at full reach` | M3 | High, 0.99 | M3 is occlusion halo and broad veil. |
+| `per-pixel certified acuity, n_eff` | D2 model channel plus D8 empirical channel | M9 | High, 0.98 | M9 is explicitly acuity / `n_eff` certificate calibration. |
+| `depth in physical units` | A5 depth field plus C5 metric conversion | M10 | High, 0.98 | M10 is the physical-depth product. |
+| `[X] s per frame on CPU` | `existing harness` | M11 | High, 1.00 | M11 is wall-clock throughput. |
+
+The sentence contains no predicate for:
+
+- M4 non-edge artifact rate. `zero invented structure` is disambiguated by its
+  explicit `hull census` instrument, which is M8.
+- M5 depth-of-field coverage. A5 contributes to the emitted depth product, but
+  the sentence claims physical depth, not eligible-tile coverage or failed-run
+  length.
+- M6 highlight/shadow retention.
+- M7 colour fidelity.
+- M12 memory, determinism, or scaling invariance. The sentence names CPU
+  seconds per frame, which is M11.
+
+## Claim B — comparator and purchase source
+
+The plan's D1 section is explicit:
+
+- Anchor `speed quote against it), Helicon if obtainable. Every scorecard run archives hashes`
+  makes Helicon optional.
+- Anchor `the fork rebuilt at its best-known build (2.4× is the honest`
+  makes the fork a pinned comparator.
+- Anchor `pinned and priced: licensed Zerene (PMax *and* DMap — DMap has never rendered here and`
+  requires both Zerene modes.
+
+The owner's purchase list is equally explicit:
+
+- Anchor `session has room. *Owner (purchase):* the Zerene licence — D1 is blocked on it and`
+  names Zerene only.
+- Anchor `we need, *Save Adjusted Input Images*, is licensed only to **Prosumer`
+  and anchor `($189)** or **Professional ($289)**. This is an owner purchase, not a build.`
+  establish the two price points.
+
+The later plan shorthand `unavailable common-input Zerene/Helicon output`
+describes the then-current scorecard blocker table, but the same amendment's
+concrete purchase action remains Zerene-only. It does not override D1's
+`Helicon if obtainable`.
+
+## Claim C — amendment integrity
+
+The parent is `c30c93b0`; the reviewed commit is `6b966d8c`.
+
+- Top-level changed sections are exactly `0` and `8`.
+- The complete text from anchor `### 0.1 Decision rule` through the start of
+  section 8 is byte-identical before and after. No metric card, numeric bar,
+  control, readiness row, or scoreboard row changed.
+- Section 8's former content is an exact prefix of its amended content.
+- Every pre-existing line containing `FAIL` remains.
+- The M8 scoreboard row is byte-identical and still says
+  ``**FAIL** — M8-R `1.030569%```.
+- The old mandatory wording beginning
+  `passes every primary bar below against licensed Zerene Stacker and Helicon Focus`
+  occurs once, between the amendment anchor
+  `> **AMENDMENT — publication scope corrected to the owner's sentence, and Helicon`
+  and `### 0.1 Decision rule`; it occurs zero times outside that interval.
+
+I found no easier metric threshold, erased failure, or changed axis result.
+The only semantic relaxation in the diff is the stated publication-scope and
+Helicon change.
+
+## Claim D — contradictory operative text
+
+These are not historical quotations. Each anchor occurs exactly once in
+operative text.
+
+### Publication scope still gates unnamed axes
+
+1. Anchor:
+   `1. Every primary metric is a hard gate. No win compensates for a loss.`
+
+   All twelve rows are still labelled primary metrics, so this makes M4, M5,
+   M6, M7 and M12 fatal despite the amendment.
+
+2. Anchor:
+   ``| M1 information + M2 noise + M4 flat power + M8 hull | Harder averaging can lower noise by losing information; sharpening can flatter transfer while increasing flat power or leaving the source hull. | M1 presently has no admissible statistic. When it is replaced, publish the replacement detail value with `(eta, Q_flat, M8-R, M8-O)` from the same output and pass every bar simultaneously. Until then neither a noise-only nor a detail claim is valid. |``
+
+   This keeps the unnamed M4 bar as a prerequisite for the named M1, M2 and M8
+   claims.
+
+3. Anchor:
+   `| M11 runtime + M12 determinism/scaling invariance/memory | Serial execution can make fixed-worker runs deterministic by abandoning the speed claim. | The primary CPU result is the 16-worker output; it must meet M11, reproduce at fixed width, and be byte-identical to 1/2/4/8-worker outputs while meeting M12. |`
+
+   This keeps the unnamed M12 axis as a prerequisite for named M11.
+
+4. Anchor:
+   `is the fastest mode that passes the complete quality scorecard. This is intentionally`
+
+   The comparator-speed definition still gates M11 on all quality axes.
+
+5. Anchor:
+   `7. Comparator speed uses the fastest mode that passes all quality gates at identical`
+
+   M11's own computation repeats the same all-quality prerequisite.
+
+6. Anchor:
+   ``- `FAIL`, when any commissioned primary gate misses;``
+
+   An M4/M5/M6/M7/M12 miss still forces the only `FAIL` verdict, contradicting
+   the section 8 amendment's statement that such a miss does not determine the
+   owner's verdict.
+
+### Helicon remains mandatory and the fork remains unwired
+
+7. Anchor:
+   `   Zerene PMax, Zerene DMap, and Helicon Methods A, B, and C, each at its frozen`
+
+   The operative comparator envelope includes Helicon without an optional
+   qualifier and omits the required fork.
+
+8. Anchor:
+   `5. Zerene, Helicon, and strehl must receive the exact same TIFF bytes. A strehl TIFF`
+
+   The common-input contract still requires Helicon and does not require the
+   fork.
+
+9. Anchor:
+   `### 1.4 Comparator settings`
+
+   This complete section has Zerene, Helicon and strehl bullets, but no fork
+   bullet. The required fork therefore has no version, hash or frozen-setting
+   protocol.
+
+10. Anchor:
+    `- **Helicon Focus:** licensed current shipping build; Methods A, B, and C at factory`
+
+    The Helicon settings bullet has no `when obtainable` qualification.
+
+11. Anchor:
+    `exclude that mode. If either product cannot produce a linear output that passes §1.3,`
+
+    In the two-product settings section, failure by either Zerene or Helicon
+    leaves the named-comparator requirement unmet.
+
+12. Anchor:
+    `Zerene/Helicon output, and **(e)** scientifically measurable now. An **(e)** does not`
+
+    Readiness blocker `(d)` still requires Zerene/Helicon and omits the required
+    fork.
+
+13. Anchor:
+    `| ID | Metric | strehl | Zerene Stacker | Helicon Focus | Current standing |`
+
+    The result schema has no column for the required fork and presents optional
+    Helicon as the sole second comparator.
+
+14. Anchor:
+    `> **strehl’s competitive position against Zerene Stacker and Helicon Focus is`
+
+    The only permitted public sentence omits the required fork and presents
+    optional Helicon as part of the core comparator statement.
+
+## Required reconciliation
+
+The amendment cannot be made internally consistent by one more disclaimer.
+The operative rules must be changed:
+
+1. Replace “every primary metric” and “any commissioned primary gate” with the
+   explicit owner-required set M1, M2, M3, M8, M9, M10 and M11; retain the other
+   five as mandatory disclosures.
+2. Decide whether the M4 and M12 joint constraints are true anti-cheat
+   components of named axes or independent axis prerequisites. If the former,
+   state the narrower component requirement; if the latter, the amendment's
+   seven-axis claim is false.
+3. Replace the comparator set everywhere with licensed Zerene PMax/DMap plus
+   the fork at its frozen best-known build, and qualify Helicon with `when
+   obtainable`.
+4. Add a frozen fork row to comparator settings and a fork column to the result
+   table.
+5. Change both speed-selection clauses from `complete/all quality scorecard`
+   to the owner-required quality subset, while still publishing added-axis
+   failures.
+6. Rewrite the public unknown-position sentence around Zerene plus the frozen
+   fork; mention Helicon separately as optional.
+
+## Why the author's verifier passed
+
+`experiments/ORCH-verify/v-scope.ps1` reports 35/35 because it checks that the
+new amendment says the intended things, not whether operative text elsewhere
+still contradicts them.
+
+Its position check is also incomplete. The unique anchor
+`Chk 'old text sits INSIDE the amendment' (($amendIdx -ge 0) -and ($oldIdx -gt $amendIdx))`
+tests only that the old wording occurs after the amendment starts; it never
+checks that the occurrence precedes the amendment's end. The commissioned
+counterexample moves the sole occurrence below `### 0.1 Decision rule`.
+The author's verifier remains **35/35 GREEN** while the independent
+`C.withdrawn-old-text-position` check turns RED.
+
+`experiments/ORCH-verify/nc-scope.ps1` also accepts duplicate mutation anchors:
+its unique anchor is
+`if ($count -lt 1) { throw "MUTATION TARGET NOT FOUND: $($c.n) -- anchor '$($c.a)'" }`.
+It should require `$count -eq 1`; `.Replace()` currently mutates every duplicate.
+
+## Commissioning
+
+All controls used fresh copies below `$env:TEMP`.
+
+| Control | Anchor found | Expected transition | Result |
+| --- | --- | --- | --- |
+| plan-detail-instrument-wording | yes | `A.map-M1` PASS→FAIL | PASS |
+| plan-helicon-made-mandatory | yes | `B.helicon-optional` PASS→FAIL | PASS |
+| plan-purchase-adds-helicon | yes | `B.owner-purchase-zerene-only` PASS→FAIL | PASS |
+| m8-fail-retracted | yes | both M8-preservation checks PASS→FAIL | PASS |
+| withdrawn-wording-outside-block | yes | position check PASS→FAIL | PASS |
+| author-position-counterexample | yes | independent position check FAIL; author verifier remains GREEN | PASS |
+| repair-primary-gate-scope | yes | named D check FAIL→PASS | PASS |
+| repair-required-fork-settings | yes | named D check FAIL→PASS | PASS |
+| repair-helicon-optional-settings | yes | named D check FAIL→PASS | PASS |
+| benign-scorecard-line-shift | yes | identical failure set | PASS |
+| benign-plan-quote-rewrap | yes | identical failure set | PASS |
+
+Result: **11/11 controls passed**.
