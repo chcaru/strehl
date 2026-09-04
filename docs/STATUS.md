@@ -929,7 +929,10 @@ Read as a census rather than a scorecard, the lane is not empty:
   salt `1,193`, battery `1,230`, angled ruler/grid `0`.
 * **M9 certification** — matching bee dark/flat groups `0/0`, and the shipping default **emits no
   licensed-band acuity or variance certificate at all**.
-* **M10 depth** — no depth product exists; the ruler record says only *"approximately 10.26 deg"*.
+* **M10 depth** — no depth product exists; and the ruler's angle, though derived
+  correctly from a stated `10 cm` run against a `1.81 cm` rise, carries no instrument,
+  least count, endpoint definition or repeatability, so it has no interval — and all
+  three ruler stacks are burned (2.9.49).
 * **M1/M2 diagnostics** (invalid as scores, retained as diagnostics): cutoff `0.15` on both bee
   lights, `S_25` of `6.20e-5` and `6.34e-5`; M2 medians `1.8483` and `2.5156` against an
   `eta <= 1.10` bar, affine slopes `1.0630`–`1.0687`.
@@ -5068,9 +5071,11 @@ M140 re-derived readiness against the verbatim `Success:` clause of every axis:
 **M12 is scoreable but not presently winnable** -- its pass is contingent on
 M11, which has no instrument. M11 was unstaffed; it is now staffed, because it
 is the only thing standing between this program and a non-`FAIL` result on a
-real axis. M10 is blocked on a single untraceable number: the sole repository
-record of `theta_ext` is the phrase *"approximately 10.26 deg"*, with no
-derivation and no uncertainty. Also now staffed.
+real axis. M10 is blocked on a number that cannot be tightened as recorded:
+the repository's `theta_ext` is derived from an owner measurement of *"about:
+10cm run against 1.81cm rise"*, which yields `10.259461685 deg` correctly, but
+carries no instrument, least count, endpoint definition or repeatability and
+therefore no interval. Its capture unit is also burned. Also now staffed.
 
 #### 2.9.47.5 Position
 
@@ -5195,6 +5200,172 @@ its own coverage, a capture ask whose stated cost is honest, and one lane
 pulled out of an unterminating regress. **Ask 2a remains the highest-value five
 minutes on the board**, and the 891-frame session's magnification target still
 waits on it.
+
+---
+
+### 2.9.49 A false table in my own pre-registered document made me reach the wrong conclusion twice in ten minutes (M151, M152, M154, orchestrator, 2026-09-06)
+
+**The headline of this segment is not a measurement. It is that a claim known
+to be false, corrected in one document and left standing in another, went on
+producing false conclusions in a careful reader — and the careful reader was
+me.**
+
+#### 2.9.49.1 The invented rule that was worth four axes, then two, then nothing
+
+Rule 4 of the scorecard's comparator-eligibility clause requires a comparator
+mode to retain at least `98%` of the best replacement-M1 information score. It
+is `UNRATIFIED`, it was authored in the scorecard, and **it appears nowhere in
+the owner's plan.** 2.9.43 claimed it was worth four axes; 2.9.45 retracted
+that.
+
+The retraction left behind a repair table asserting that narrowing rule 4 would
+take `2` axes to `6` and `4` to `8`, under the headline *"Same money, same
+shooting, four more axes."* **That table was already known to be false.** An
+independent audit (M146, `docs/research/M146-unlock-audit.md`, `68ea3b95`) had
+tested all four propagated axes against the archive and returned
+`NEEDS_NEW_CAPTURE` or `BLOCKED_FOR_ANOTHER_REASON` for every one, and
+OWNER-ACTIONS records the outcome plainly — *"That was false"*. The true payoff
+is `2 -> 2` and `4 -> 4`, **no change at all**, because the constraint rule 4
+propagates is *also* reachable by other routes. M11 is the cleanest case: its
+own computation step 7 independently requires *"the fastest mode that passes
+all quality gates"*. Propagation is not exclusivity: **narrowing a redundant
+constraint unlocks nothing.**
+
+The false table was still live in the pre-registered scorecard. It is now
+withdrawn visibly rather than deleted (`74b599c5`), because a silently removed
+false claim leaves no trace that anyone was misled by it.
+
+#### 2.9.49.2 Three wrong conclusions, the third made while writing up the first two
+
+Investigating whether M2 was blocked by anything real, I reached a conclusion
+three times and was wrong three times:
+
+1. **"M2 is a free first score."** Wrong. The scorecard's own annotation on the
+   same manoeuvre reads *"Narrowing rule 4 unlocks nothing today"*.
+2. **"Then narrowing rule 4 buys four axes."** Wrong, and worse — I got this
+   from the false table above, in a document I wrote and had pre-registered.
+3. **Then, writing this very section, I attributed a verbatim quotation to the
+   scorecard that the scorecard does not contain.** I had carried a paraphrase
+   — *"it changes nothing measurable today"* — in my working notes long enough
+   that it acquired quotation marks, and I wrote it into item 1 above with a
+   source attached. The verifier's quote-at-source check failed on it and the
+   real wording replaced it. **A paraphrase that survives long enough starts to
+   look like a quotation.** This is why every quotation in this document is
+   checked against the file that supposedly contains it, and never against my
+   own summary of that file.
+
+**What made every recovery work is the only transferable part.** In each case
+the correction came from going to the primary source and reading the clause
+there, rather than trusting my own record of it. None of the three errors would
+have survived contact with the source file; all three had already survived
+contact with my notes.
+
+The rule this earns: **a stale claim corrected elsewhere is not inert.** It has
+the full authority of the document it sits in, and a competent reader will act
+on it. Corrections must be applied where the claim lives, not only where the
+correction was discovered.
+
+#### 2.9.49.3 The comparator licence chain, and a drift caught in three places
+
+The owner's plan says *"Helicon if obtainable"*. **Three separate documents had
+hardened that into a requirement**, making an optional comparator read as a
+blocker on the critical path. Ask 3 accordingly flipped to **buy Zerene
+Professional, `$289`** — but a sentence endorsing *"wait on the `$925`"*
+survived the flip and was reconciled in `74b599c5`. Same disease as 2.9.49.1,
+different document.
+
+#### 2.9.49.4 M152: one axis needs no more photons, and a null that cannot fail
+
+**M3 is capture-sufficient.** The site census found `1,233` broad-eligible
+edges against a need of `500`, every one with the required `400 px` reach
+(`221 + 399 + 511 + 102 = 1233`). **No new M3 photons are required** — a rare
+subtraction from the owner's shutter list. M4's flat arm does need capture;
+foam yields `0` eligible tiles. Ask 2c was written for it (`975dc147`), and
+while verifying it I caught my own denominator error: `178` flat sites
+*qualify*, but only `138` *score* (`55 + 83 + 0`), because the bee background's
+`123` eligible tiles are capped at its `83` quota. Total `388/500`.
+
+**Then the M3 checker was built and refused its own admission.** The registered
+veil statistic `v_e` averaged both sides of the edge, so a genuinely veiled
+population — a one-sided `200 px`, `6%` veil — diluted to `0.027243`, and the
+affected-site count stayed at **zero**. Median, p99 and affected-rate all
+passed on a population built to fail. The bar was blind to the exact defect it
+exists to catch.
+
+Step 5 is amended to a **per-side maximum** (`4b79b6dc`). This is admissible
+post-registration because the band `16 <= |s| <= 200` is symmetric, so the old
+whole-band mean equals `(v_e_neg + v_e_pos)/2` and `max(a,b) >= (a+b)/2`
+always: the amended statistic is greater than or equal to the old one at every
+site, so the bar is strictly harder. For a wholly one-sided defect the clean
+side contributes nothing and `max = 2 x mean` exactly, which is the
+`0.027243 -> 0.054486` above.
+
+**M152 then returned something better than the measurement I asked for: the
+null I had ordered cannot fail.** An identity null has output equal to input,
+so both side residuals are identically zero and `max(0,0) = mean(0,0) = 0`. It
+reads `0` under either reduction. **A null that reads zero by construction
+commissions nothing** — it cannot distinguish a working statistic from a dead
+one. The primary arm is promoted to a clean-noise population with genuinely
+independent per-side noise, and the decision rule is pre-registered before the
+number exists: if a clean, defect-free population breaches median `0.01` or p99
+`0.05` under the side-max, then my amendment made the bar unpassable and the
+thresholds are amended or escalated. **Whether a good stack can pass the bar I
+tightened is the decisive open question and it is still open.**
+
+#### 2.9.49.5 M154: the angle was never measured, and the ruler was burned before it was protected
+
+The repository's `theta_ext` derives from an owner note of *"about: 10cm run
+against 1.81cm rise"*. **The arithmetic is right** — it yields
+`10.259461685 deg` — and that is the entire problem: there is no instrument, no
+least count, no endpoint definition, no repeatability and no camera-relative
+frame. **Decimal places in a derived display value are not measurement
+precision.** M10 needs the angle to contribute at most `2.5%` slope error, i.e.
+an admissible band of `[10.014357, 10.516727] deg`, and degree-level knowledge
+does not qualify. Two passages in this document that said the angle had *"no
+derivation"* were wrong in the other direction and are corrected above.
+
+**Worse, the unit was already burned before the scorecard called it holdout.**
+M-PHASE0-CURV reports scored verdicts with confidence intervals for f/5.6, f/8
+and f/11 at `120/85/65` frames — **exactly the frame counts in the holdout
+table** — and M-PHASE0-LCA names f/11 its *"primary ruler"*. The frame-count
+correspondence is what makes this decisive rather than suggestive; I verified it
+against both sources rather than taking the lane's word. The rows are relabelled
+`BURNED — DEVELOPMENT ONLY` (`6915fe44`).
+
+Ask 2d (`5ab2ddd6`) turns this into a `$0` action by making the precision
+practical: the tolerance on the measured rise scales with the baseline, so the
+`±0.25 deg` requirement means `±0.45 mm` over the `10 cm` run originally used —
+which is why the original does not qualify — but only `±2.3 mm` over `50 cm`,
+which a careful tape measurement meets. **The fix for an unqualifying
+measurement was a longer ruler, not a laboratory.**
+
+#### 2.9.49.6 One lane closed properly, one forfeited
+
+**M151 closed well.** Ordered to document its denominators, it classified every
+proportion its lane ever reported as population, fixed subsample, cap, fixture
+or arithmetic example, and volunteered that its own original `0/64`, `0/64`,
+`13/64` were under-specified and were the cause of its incorrect initial ruling
+(`d4f574c6`).
+
+**M136 forfeited.** It spent its budget perfecting the M8-O instrument and
+never scored the axis. That is worth recording not as a lane failure but as the
+shape of the program's own risk.
+
+#### 2.9.49.7 Position
+
+**Unchanged: `0 of 12`.** Four instruments got more trustworthy, one axis was
+freed from the capture queue, one bar was made strictly harder, and one owner
+ask became free — and still no axis has a score. **M136's disease at program
+scale is the standing risk**, and naming it is not the same as being immune to
+it.
+
+One structural question is open and matters more than any single axis: the
+owner's plan states the end state as a **six-clause sentence**, and **three of
+those clauses rest on instruments the plan says already exist** — noise on the
+flat-ROI instrument, invented structure on the hull census, speed on the
+existing harness. The twelve-axis scorecard is my elaboration of that sentence,
+not the owner's requirement. Whether it demands materially more than the plan
+does is with M158 and unreported.
 
 ---
 
