@@ -375,11 +375,14 @@ at `738528b6` and `1a6fd10c` before drawing a superseded nonce.
 
 Independent sign-off then swapped valid packets between committed instances
 and reached built-ins through `__builtins__` and a NumPy wildcard import.
-The final runner also binds each ordered token/hash sequence to its instance,
+The runner also binds each ordered token/hash sequence to its instance,
 rejects those alias forms plus module metadata and additional file/clock
 attributes, and makes a wrong child-call count fail commissioning as well as
-admission.  The final correction and freeze are `4bf0a02b` and `b9c3392f`;
-the preceding challenge is superseded.
+admission.  Those changes were frozen at `4bf0a02b` and `b9c3392f`.  The
+final audit additionally requires canonical transcript bytes and exact
+allowlisted import module names, closing dotted-submodule import aliases.
+The final correction and freeze are `44104162` and `96d7316f`; all preceding
+challenges are superseded.
 
 **VERIFIED BY RUNNING.** The final run made 45 fresh child calls and produced:
 
@@ -398,12 +401,12 @@ state, so A2 is also false.
 All nine canary-commissioning checks are true.
 
 The disclosed replay nonce is
-`40AB196AC02E8502288F1F027A0AECFCCFA10874B3B1FB5F27EA98B1986B5213`.
+`41689A1981B6355E1A422354BC8D2858DBB7DFFFCB61CAA6546AA2E3F1B63350`.
 The semantic-free transcript is
 `experiments/M167-detail-battery/admission-sealed.json`, SHA-256
-`8A0823178F861290D4B0DA601196709C0858F9F3DBF58D0EA83FE49E12932A29`.
+`44E95EFF1BBB1DEFB9E96766DEE2AB6BD38BC4104C36E6C1F664AECC7AFE17AF`.
 The unblinded record is `admission-results.json`, SHA-256
-`957EABB26CF5CC0C7362D5CBB21D7226A8D4B17D0ABAEA7BEB798B206D467251`.
+`0D8794A27E8FE9B70D31D6DBF10374ECFF516E74BE448022A01553C8456837E7`.
 A full replay with that nonce reproduced both hashes exactly.
 
 ### 8.3 What is and is not closed
@@ -439,7 +442,7 @@ $env:BLIS_NUM_THREADS='1'
 $env:VECLIB_MAXIMUM_THREADS='1'
 $env:PYTHONDONTWRITEBYTECODE='1'
 python -B experiments\M167-detail-battery\admission.py `
-  --nonce 40AB196AC02E8502288F1F027A0AECFCCFA10874B3B1FB5F27EA98B1986B5213
+  --nonce 41689A1981B6355E1A422354BC8D2858DBB7DFFFCB61CAA6546AA2E3F1B63350
 ```
 
 No timing result is produced or used.
