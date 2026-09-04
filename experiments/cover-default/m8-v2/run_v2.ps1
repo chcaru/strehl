@@ -560,6 +560,10 @@ function New-ArmLock {
     )
     $stream.Write($payload, 0, $payload.Length)
     $stream.Flush($true)
+    # The retained create-new file, not an open handle, is the lock. Closing it
+    # keeps duplicate/concurrent acquisition impossible while allowing the
+    # receipt to hash the immutable lock bytes on Windows.
+    $stream.Dispose()
     return [ordered]@{ path = $path; stream = $stream }
 }
 
