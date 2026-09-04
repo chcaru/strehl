@@ -421,7 +421,7 @@ viewed.
 | M4 | Non-edge artifact rate | Median flat-patchwork ratio `<=1.00`; sites above `1.25` or ghost ratio above `0.10`: `<=1%`, Wilson upper bound `<=2%`; no worse than best comparator. |
 | M5 | Depth-of-field coverage / stack failure | `>=99%` of eligible tiles pass `rho_best>=0.90` and focus margin `>=0.05`; Wilson lower bound `>=98%`; longest failed run `<=1%` of sweep. |
 | M6 | Recoverable highlight/shadow retention | Recoverable high-rail and low-rail clipping each `<=0.10%`; highlight-detail retention `>=0.90`; no worse than best comparator. |
-| M7 | Colour fidelity | Median DeltaE00 `<=1.0`, p95 `<=2.0`, maximum `<=3.0`, boundary-seam p99 `<=1.0`; ICC/300-DPI conformance `100%`; no worse than best comparator. |
+| M7 | Colour fidelity | Median DeltaE00 `<=1.0`, p95 `<=2.0`, maximum `<=3.0`; on the frozen M145 input-only seam population, nearest-rank boundary-seam p99 `<=1.0` and no connected contour segment has three consecutive sites `>1.0`; an empty or sub-minimum population is `UNMEASURED_CAPTURE_INADEQUATE`; ICC/300-DPI conformance `100%`; no worse than best comparator. |
 | M8 | Invented values / source-hull certificate | Per-frame resampler-hull violations and final-output source-hull violations: each exactly `0.0000%`. |
 | M9 | Acuity / `n_eff` certificate calibration | False-certification Wilson upper bound `<=1%`; true-band coverage `>=90%`; nominal 95% interval coverage `93%`–`97%`; variance ratio `0.90`–`1.10`. |
 | M10 | Physical depth product | Valid target pixels `>=99%`; rank correlation `>=0.99`; median error `<=0.5` focus step, p95 `<=1.0` step; physical slope error `<=5%`. |
@@ -818,20 +818,42 @@ on different elected frames. At least 24 valid patches, including all neutral pa
 and at least 12 chromatic patches, must survive. Fabric, foam, battery, and ruler
 remain seam diagnostics only and cannot substitute for the target.
 
+**The seam arm needs its own stimulus.** A flat or untextured ColorChecker capture
+cannot be presumed to exercise focus transitions at all, so it cannot populate the
+boundary-seam term in step 4. That arm additionally requires a **dedicated tilted,
+textured colour-seam coupon** with an independently measured, pre-output Lab-D50
+reference raster. It may share a physical composite target and lighting session with
+the patch arm. If a combined target cannot meet the frozen population floors in step 4,
+shoot a separate seam capture — **do not relax the floors after seeing outputs.**
+
 **Exact computation.**
 
 1. Convert the common linear output through its frozen ICC to CIELAB D50.
 2. Erode each target patch by 20%; use the median Lab value.
 3. Compute CIEDE2000 to the traceable patch value. No per-output matrix, white-balance,
    exposure, or gamut fit is permitted.
-4. Across input-defined focus boundaries, compute the p99 DeltaE00 discontinuity after
-   subtracting the target’s true patch-to-patch difference.
+4. **Boundary-seam population.** Use the dedicated tilted, textured colour-seam coupon
+   and its independently measured, pre-output Lab-D50 reference raster. From the common
+   inputs only, compute normalised 32×32-tile Sobel focus curves, three-point peak
+   coordinates, and the one-pass 3-MAD affine focus field specified by M145. Its
+   half-integer contours, dilated normally by one quarter focus-step pitch, are clipped
+   to single 20%-eroded colour regions and sampled every 12 native pixels from a fixed
+   half-spacing phase. At each site, search the frozen corridor with paired 3×9
+   median-Lab windows and score the maximum CIEDE2000 difference between the two sides'
+   local reference-corrected colour errors. Freeze and hash the manifest before opening
+   outputs. Require at least `1,000` sites, `10` contours, `50` sites per contour, four
+   neutral regions, and eight chromatic regions. Any deficient or empty population is
+   `UNMEASURED_CAPTURE_INADEQUATE`, never PASS. Output defects are scored as infinity,
+   not masked. The p99 is nearest-rank at one-based rank `ceil(0.99*N)`. No
+   candidate/comparator output or strehl internal map may affect membership.
 5. Verify that every scored deliverable embeds the byte-identical frozen ICC and
    carries 300-DPI resolution tags.
 
 **Success.** **SCORECARD ADDITION:** median DeltaE00 `<=1.0`, p95 `<=2.0`, maximum
-`<=3.0`, boundary-seam p99 `<=1.0`, ICC/300-DPI conformance `100%`, and no summary is
-worse than the best comparator.
+`<=3.0`; on the frozen M145 input-only seam population, nearest-rank boundary-seam p99
+`<=1.0` **and** no connected contour segment has three consecutive sites `>1.0`; an
+empty or sub-minimum population is `UNMEASURED_CAPTURE_INADEQUATE`; ICC/300-DPI
+conformance `100%`; and no summary is worse than the best comparator.
 
 **Known defeat.** Desaturation flatters neutral-only data; fitting a matrix to the
 same patches makes the checker carry the answer; tone/gamut mapping can trade
