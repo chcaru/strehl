@@ -396,13 +396,13 @@ function Invoke-Prepare {
 function New-WarpMap {
     param(
         [Parameter(Mandatory)][pscustomobject]$ArmRow,
-        [Parameter(Mandatory)][string]$Input,
+        [Parameter(Mandatory)][string]$CapturePath,
         [Parameter(Mandatory)][string]$Map
     )
     Clear-StrehlEnvironment
     $env:RAYON_NUM_THREADS = "8"
     $arguments = @(
-        "align", $Input, "--out", $Map, "--resampler", "catmull-rom"
+        "align", $CapturePath, "--out", $Map, "--resampler", "catmull-rom"
     )
     if ($ArmRow.Limit -gt 0) {
         $arguments += @("--limit", "$($ArmRow.Limit)")
@@ -445,7 +445,7 @@ function Invoke-Arm {
         return
     }
     $capture = Get-Capture $ArmRow.Capture
-    $input = Join-Path $CaptureRoot $capture.Directory
+    $capturePath = Join-Path $CaptureRoot $capture.Directory
     $map = Join-Path $Out "$($ArmRow.Name).warpmap.txt"
     $state = Join-Path $Out "$($ArmRow.Name)-state"
     $tiff = Join-Path $Out "$($ArmRow.Name).tiff"
@@ -468,7 +468,7 @@ function Invoke-Arm {
         Reset-OutputPath $path
     }
 
-    New-WarpMap $ArmRow $input $map
+    New-WarpMap $ArmRow $capturePath $map
     Clear-StrehlEnvironment
     $env:RAYON_NUM_THREADS = "8"
     $env:STREHL_M8_TRACE_DIR = $state
@@ -478,7 +478,7 @@ function Invoke-Arm {
     $env:STREHL_DEFECT = "off"
     $env:STREHL_PYRAMID_WORKERS = "1"
     $arguments = @(
-        "stack", $input, "--out", $tiff, "--merge", "pyramid",
+        "stack", $capturePath, "--out", $tiff, "--merge", "pyramid",
         "--cover", "scale", "--resampler", "catmull-rom"
     )
     if ($ArmRow.Limit -gt 0) {
