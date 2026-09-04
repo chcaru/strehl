@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-09-04T10:49:14.012395+00:00",
-  "harness_sha256": "A36A74B0304EF519C060781301DA9CCC740B330D6D9E37987975DE82D9DCC978",
+  "generated_utc": "2026-09-04T10:56:38.731221+00:00",
+  "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
   "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
   "null": {
     "argv": [
@@ -9,15 +9,15 @@
       "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\memory-control\\child.py",
       "67108864"
     ],
-    "completed_utc": "2026-09-04T10:49:11.140735+00:00",
+    "completed_utc": "2026-09-04T10:56:35.899892+00:00",
     "host_load_during_run": {
-      "external_busy_cpu_seconds": 3.421875,
-      "external_busy_fraction_of_wall_capacity": 0.05043170110986038,
+      "external_busy_cpu_seconds": 5.953125,
+      "external_busy_fraction_of_wall_capacity": 0.0894256536648493,
       "external_busy_max": 0.1,
       "logical_processors": 32,
       "memory_end": {
-        "available_page_file_bytes": 86375710720,
-        "available_physical_bytes": 48061120512,
+        "available_page_file_bytes": 84565340160,
+        "available_physical_bytes": 47658893312,
         "available_virtual_bytes": 140732206792704,
         "memory_load_percent": 27,
         "total_page_file_bytes": 117633830912,
@@ -25,8 +25,8 @@
         "total_virtual_bytes": 140737488224256
       },
       "memory_start": {
-        "available_page_file_bytes": 86334279680,
-        "available_physical_bytes": 48002760704,
+        "available_page_file_bytes": 84562374656,
+        "available_physical_bytes": 47665594368,
         "available_virtual_bytes": 140732206792704,
         "memory_load_percent": 27,
         "total_page_file_bytes": 117633830912,
@@ -34,52 +34,66 @@
         "total_virtual_bytes": 140737488224256
       },
       "pass": true,
-      "process_tree_cpu_seconds": 0.03125,
-      "system_busy_cpu_seconds": 3.453125,
-      "system_total_cpu_seconds": 68.46875
+      "process_tree_cpu_seconds": 0.0625,
+      "system_busy_cpu_seconds": 6.015625,
+      "system_total_cpu_seconds": 66.84375
     },
     "memory": {
-      "max_gap_ms": 10.520999960135669,
-      "max_lateness_ms": 4.038200015202165,
-      "median_gap_ms": 9.972250030841678,
+      "kernel_job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 625000,
+        "total_kernel_100ns": 312500,
+        "total_page_fault_count": 22526,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 312500
+      },
+      "kernel_job_peak_memory": {
+        "peak_job_memory_used_bytes": 80928768,
+        "peak_process_memory_used_bytes": 73109504
+      },
+      "max_gap_ms": 10.467599960975349,
+      "max_lateness_ms": 4.3966000084765255,
+      "median_gap_ms": 10.079249972477555,
       "missed_intervals": 0,
       "peak_process_count": 2,
-      "peak_process_tree_page_fault_count": 22409,
-      "peak_process_tree_private_committed_bytes": 80936960,
-      "peak_process_tree_working_set_bytes": 90886144,
+      "peak_process_tree_page_fault_count": 22526,
+      "peak_process_tree_private_committed_bytes": 80920576,
+      "peak_process_tree_working_set_bytes": 90869760,
       "peak_temp_file_bytes": 0,
-      "process_discovery_interval_ms": 100.0,
+      "process_discovery_interval_ms": 10.0,
       "process_lifetimes": [
         {
-          "created": 134329925490484598,
-          "first_seen_s": 0.11043529998278245,
-          "last_seen_s": 2.050473499984946,
-          "max_cpu_100ns": 156250,
+          "created": 134329929938207795,
+          "first_seen_s": 0.0043966000084765255,
+          "last_seen_s": 2.0604077999596484,
+          "max_cpu_100ns": 312500,
           "name": "python.exe",
-          "parent_pid": 39960,
-          "pid": 940,
-          "samples": 195
+          "parent_pid": 7540,
+          "pid": 24384,
+          "samples": 207
         },
         {
-          "created": 134329925490215645,
-          "first_seen_s": 0.004038200015202165,
-          "last_seen_s": 2.1000207000179216,
-          "max_cpu_100ns": 156250,
+          "created": 134329929938489647,
+          "first_seen_s": 0.03054030000930652,
+          "last_seen_s": 2.050169399997685,
+          "max_cpu_100ns": 312500,
           "name": "python.exe",
-          "parent_pid": 34552,
-          "pid": 39960,
-          "samples": 211
+          "parent_pid": 24384,
+          "pid": 32236,
+          "samples": 203
         }
       ],
-      "sample_count": 213,
+      "process_tree_membership_source": "Windows Job Object",
+      "sample_count": 209,
       "sample_interval_ms": 10.0
     },
     "requested_allocation_bytes": 67108864,
     "returncode": 0,
-    "started_utc": "2026-09-04T10:49:09.017013+00:00",
+    "started_utc": "2026-09-04T10:56:33.804923+00:00",
     "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\memory-control\\null-64mib.stderr.log",
     "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\memory-control\\null-64mib.stdout.log",
-    "wall_seconds": 2.12036459997762
+    "wall_seconds": 2.0803331999923103
   },
   "plant": {
     "argv": [
@@ -88,15 +102,15 @@
       "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\memory-control\\child.py",
       "7516192768"
     ],
-    "completed_utc": "2026-09-04T10:49:14.012395+00:00",
+    "completed_utc": "2026-09-04T10:56:38.731221+00:00",
     "host_load_during_run": {
-      "external_busy_cpu_seconds": 5.671875,
-      "external_busy_fraction_of_wall_capacity": 0.06174792376020512,
+      "external_busy_cpu_seconds": 7.6875,
+      "external_busy_fraction_of_wall_capacity": 0.08487068487368145,
       "external_busy_max": 0.1,
       "logical_processors": 32,
       "memory_end": {
-        "available_page_file_bytes": 86400012288,
-        "available_physical_bytes": 48068272128,
+        "available_page_file_bytes": 84549586944,
+        "available_physical_bytes": 47640068096,
         "available_virtual_bytes": 140732206792704,
         "memory_load_percent": 27,
         "total_page_file_bytes": 117633830912,
@@ -104,8 +118,8 @@
         "total_virtual_bytes": 140737488224256
       },
       "memory_start": {
-        "available_page_file_bytes": 86374735872,
-        "available_physical_bytes": 48060768256,
+        "available_page_file_bytes": 84565417984,
+        "available_physical_bytes": 47658893312,
         "available_virtual_bytes": 140732206792704,
         "memory_load_percent": 27,
         "total_page_file_bytes": 117633830912,
@@ -114,58 +128,72 @@
       },
       "pass": true,
       "process_tree_cpu_seconds": 0.796875,
-      "system_busy_cpu_seconds": 6.46875,
-      "system_total_cpu_seconds": 92.0
+      "system_busy_cpu_seconds": 8.484375,
+      "system_total_cpu_seconds": 90.546875
     },
     "memory": {
-      "max_gap_ms": 10.50169998779893,
-      "max_lateness_ms": 4.482400021515787,
-      "median_gap_ms": 10.005799995269626,
+      "kernel_job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 7968750,
+        "total_kernel_100ns": 3750000,
+        "total_page_fault_count": 1844678,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 4218750
+      },
+      "kernel_job_peak_memory": {
+        "peak_job_memory_used_bytes": 7544406016,
+        "peak_process_memory_used_bytes": 7536836608
+      },
+      "max_gap_ms": 10.56239998433739,
+      "max_lateness_ms": 4.151100001763552,
+      "median_gap_ms": 10.024300019722432,
       "missed_intervals": 0,
       "peak_process_count": 2,
-      "peak_process_tree_page_fault_count": 1844602,
-      "peak_process_tree_private_committed_bytes": 7544344576,
-      "peak_process_tree_working_set_bytes": 7539716096,
+      "peak_process_tree_page_fault_count": 1844678,
+      "peak_process_tree_private_committed_bytes": 7544352768,
+      "peak_process_tree_working_set_bytes": 7539728384,
       "peak_temp_file_bytes": 0,
-      "process_discovery_interval_ms": 100.0,
+      "process_discovery_interval_ms": 10.0,
       "process_lifetimes": [
         {
-          "created": 134329925511430195,
-          "first_seen_s": 0.004482400021515787,
-          "last_seen_s": 2.850315199990291,
-          "max_cpu_100ns": 312500,
+          "created": 134329929959017869,
+          "first_seen_s": 0.004151100001763552,
+          "last_seen_s": 2.810365300043486,
+          "max_cpu_100ns": 156250,
           "name": "python.exe",
-          "parent_pid": 34552,
-          "pid": 3240,
-          "samples": 286
+          "parent_pid": 7540,
+          "pid": 18640,
+          "samples": 282
         },
         {
-          "created": 134329925511725824,
-          "first_seen_s": 0.11046400002669543,
-          "last_seen_s": 2.8103418999817222,
-          "max_cpu_100ns": 7656250,
+          "created": 134329929959281994,
+          "first_seen_s": 0.030129500024486333,
+          "last_seen_s": 2.8005091000231914,
+          "max_cpu_100ns": 7812500,
           "name": "python.exe",
-          "parent_pid": 3240,
-          "pid": 46624,
-          "samples": 271
+          "parent_pid": 18640,
+          "pid": 29600,
+          "samples": 278
         }
       ],
-      "sample_count": 288,
+      "process_tree_membership_source": "Windows Job Object",
+      "sample_count": 284,
       "sample_interval_ms": 10.0
     },
     "requested_allocation_bytes": 7516192768,
     "returncode": 0,
-    "started_utc": "2026-09-04T10:49:11.140735+00:00",
+    "started_utc": "2026-09-04T10:56:35.899892+00:00",
     "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\memory-control\\plant-7gib.stderr.log",
     "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\memory-control\\plant-7gib.stdout.log",
-    "wall_seconds": 2.870478600030765
+    "wall_seconds": 2.8305931000504643
   },
   "schema": 1,
   "status": "COMMISSIONED",
   "verdict": {
-    "null_peak_private_committed_bytes": 80936960,
+    "null_peak_private_committed_bytes": 80920576,
     "null_stayed_below_one_gib": true,
-    "plant_peak_private_committed_bytes": 7544344576,
+    "plant_peak_private_committed_bytes": 7544352768,
     "plant_peak_process_count": 2,
     "seven_gib_child_exceeded_six_gib_bar": true
   }

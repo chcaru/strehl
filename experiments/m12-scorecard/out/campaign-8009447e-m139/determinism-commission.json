@@ -14,10 +14,10 @@
     "binary": {
       "bytes": 9864704,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\target\\release\\strehl.exe",
-      "sha256": "A002ACB2DE6F9C6E653746827BBC68C08807C6402C6DB0260297227ED64CC694"
+      "sha256": "F0229CDF0938B3D8A868D0CD4FCF06FBEB05408645C602CAC130731FC0E68452"
     },
     "bits_per_sample": 16,
-    "completed_utc": "2026-09-04T10:50:30.636054+00:00",
+    "completed_utc": "2026-09-04T10:58:00.607164+00:00",
     "dtype": "uint16",
     "environment": {
       "MKL_NUM_THREADS": null,
@@ -74,61 +74,75 @@
       "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\baseline-temp"
     },
     "host_load_during_run": {
-      "external_busy_cpu_seconds": 5.625,
-      "external_busy_fraction_of_wall_capacity": 0.10218223617026388,
+      "external_busy_cpu_seconds": 5.140625,
+      "external_busy_fraction_of_wall_capacity": 0.09390284208893028,
       "external_busy_max": 0.1,
       "logical_processors": 32,
       "memory_end": {
-        "available_page_file_bytes": 86066065408,
-        "available_physical_bytes": 47198162944,
-        "available_virtual_bytes": 140732188295168,
+        "available_page_file_bytes": 84658655232,
+        "available_physical_bytes": 47482978304,
+        "available_virtual_bytes": 140732188966912,
         "memory_load_percent": 28,
         "total_page_file_bytes": 117633830912,
         "total_physical_bytes": 66094223360,
         "total_virtual_bytes": 140737488224256
       },
       "memory_start": {
-        "available_page_file_bytes": 86312230912,
-        "available_physical_bytes": 47612502016,
+        "available_page_file_bytes": 84655230976,
+        "available_physical_bytes": 47686451200,
         "available_virtual_bytes": 140732188966912,
         "memory_load_percent": 27,
         "total_page_file_bytes": 117633830912,
         "total_physical_bytes": 66094223360,
         "total_virtual_bytes": 140737488224256
       },
-      "pass": false,
-      "process_tree_cpu_seconds": 2.78125,
-      "system_busy_cpu_seconds": 8.40625,
-      "system_total_cpu_seconds": 55.5
+      "pass": true,
+      "process_tree_cpu_seconds": 2.828125,
+      "system_busy_cpu_seconds": 7.96875,
+      "system_total_cpu_seconds": 55.09375
     },
     "invalid_reasons": [],
     "kind": "commission-baseline",
     "limit": 3,
     "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
     "memory": {
-      "max_gap_ms": 12.858000001870096,
-      "max_lateness_ms": 106.60950001329184,
-      "median_gap_ms": 10.01410000026226,
+      "kernel_job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 28281250,
+        "total_kernel_100ns": 5312500,
+        "total_page_fault_count": 881908,
+        "total_processes": 1,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 22968750
+      },
+      "kernel_job_peak_memory": {
+        "peak_job_memory_used_bytes": 1847562240,
+        "peak_process_memory_used_bytes": 1847562240
+      },
+      "max_gap_ms": 10.612000012770295,
+      "max_lateness_ms": 109.67919998802245,
+      "median_gap_ms": 10.020899993833154,
       "missed_intervals": 10,
       "peak_process_count": 1,
-      "peak_process_tree_page_fault_count": 890908,
-      "peak_process_tree_private_committed_bytes": 1847640064,
-      "peak_process_tree_working_set_bytes": 1498599424,
+      "peak_process_tree_page_fault_count": 881908,
+      "peak_process_tree_private_committed_bytes": 1847562240,
+      "peak_process_tree_working_set_bytes": 1490010112,
       "peak_temp_file_bytes": 0,
-      "process_discovery_interval_ms": 100.0,
+      "process_discovery_interval_ms": 10.0,
       "process_lifetimes": [
         {
-          "created": 134329926290181283,
-          "first_seen_s": 0.10660950001329184,
-          "last_seen_s": 1.7001561999786645,
-          "max_cpu_100ns": 27812500,
+          "created": 134329930790021412,
+          "first_seen_s": 0.10967919998802245,
+          "last_seen_s": 1.6904350999975577,
+          "max_cpu_100ns": 28125000,
           "name": "strehl.exe",
-          "parent_pid": 22928,
-          "pid": 42756,
-          "samples": 161
+          "parent_pid": 46696,
+          "pid": 908,
+          "samples": 160
         }
       ],
-      "sample_count": 163,
+      "process_tree_membership_source": "Windows Job Object",
+      "sample_count": 162,
       "sample_interval_ms": 10.0
     },
     "output_bytes": 197798928,
@@ -145,12 +159,12 @@
     ],
     "software": "strehl 0.0.0 (8009447e059f)",
     "stack": "D:\\personal\\macro\\coffee-bean",
-    "started_utc": "2026-09-04T10:50:28.910685+00:00",
+    "started_utc": "2026-09-04T10:57:58.887679+00:00",
     "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\baseline.tiff.stderr.log",
     "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\baseline.tiff.stdout.log",
     "sweep": null,
     "valid": true,
-    "wall_seconds": 1.7202721000066958,
+    "wall_seconds": 1.710752599989064,
     "workers": 1
   },
   "build_proof": {
@@ -163,8 +177,8 @@
     "--demosaic"
   ],
   "forced_build_id": "8009447e059f",
-  "generated_utc": "2026-09-04T10:51:36.413287+00:00",
-  "harness_sha256": "A36A74B0304EF519C060781301DA9CCC740B330D6D9E37987975DE82D9DCC978",
+  "generated_utc": "2026-09-04T10:59:06.359771+00:00",
+  "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
   "hash_gate": {
     "baseline_sha256": "790570CF966ADDF883D1E1BF8CE093A0978676540EAB447D3CFA159A5EE8B8CC",
     "lsb_after": 6576,
@@ -201,10 +215,10 @@
     "binary": {
       "bytes": 9864704,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\target\\release\\strehl.exe",
-      "sha256": "18D3BE2D27B37473F17A79EA5B586D0C083FDCF8A332C868EAA3BC005C940E6D"
+      "sha256": "40B92A7B7364178C863056F50CEC3240549783C562A357207B99210E4132E2F6"
     },
     "bits_per_sample": 16,
-    "completed_utc": "2026-09-04T10:51:03.454169+00:00",
+    "completed_utc": "2026-09-04T10:58:33.391525+00:00",
     "dtype": "uint16",
     "environment": {
       "MKL_NUM_THREADS": null,
@@ -261,61 +275,75 @@
       "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\planted-temp"
     },
     "host_load_during_run": {
-      "external_busy_cpu_seconds": 5.234375,
-      "external_busy_fraction_of_wall_capacity": 0.0950805104580313,
+      "external_busy_cpu_seconds": 4.484375,
+      "external_busy_fraction_of_wall_capacity": 0.081935183594194,
       "external_busy_max": 0.1,
       "logical_processors": 32,
       "memory_end": {
-        "available_page_file_bytes": 86217621504,
-        "available_physical_bytes": 47301976064,
-        "available_virtual_bytes": 140732186021888,
+        "available_page_file_bytes": 84695793664,
+        "available_physical_bytes": 47485239296,
+        "available_virtual_bytes": 140732186693632,
         "memory_load_percent": 28,
         "total_page_file_bytes": 117633830912,
         "total_physical_bytes": 66094223360,
         "total_virtual_bytes": 140737488224256
       },
       "memory_start": {
-        "available_page_file_bytes": 86223990784,
-        "available_physical_bytes": 47495286784,
-        "available_virtual_bytes": 140732186021888,
-        "memory_load_percent": 28,
+        "available_page_file_bytes": 84714004480,
+        "available_physical_bytes": 47677845504,
+        "available_virtual_bytes": 140732186693632,
+        "memory_load_percent": 27,
         "total_page_file_bytes": 117633830912,
         "total_physical_bytes": 66094223360,
         "total_virtual_bytes": 140737488224256
       },
       "pass": true,
-      "process_tree_cpu_seconds": 2.828125,
-      "system_busy_cpu_seconds": 8.0625,
-      "system_total_cpu_seconds": 55.390625
+      "process_tree_cpu_seconds": 2.84375,
+      "system_busy_cpu_seconds": 7.328125,
+      "system_total_cpu_seconds": 54.671875
     },
     "invalid_reasons": [],
     "kind": "commission-planted",
     "limit": 3,
     "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
     "memory": {
-      "max_gap_ms": 13.865999993868172,
-      "max_lateness_ms": 103.33429998718202,
-      "median_gap_ms": 10.009649995481595,
+      "kernel_job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 28437500,
+        "total_kernel_100ns": 4687500,
+        "total_page_fault_count": 885910,
+        "total_processes": 1,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 23750000
+      },
+      "kernel_job_peak_memory": {
+        "peak_job_memory_used_bytes": 1848541184,
+        "peak_process_memory_used_bytes": 1848541184
+      },
+      "max_gap_ms": 10.423500032629818,
+      "max_lateness_ms": 104.62210001423955,
+      "median_gap_ms": 10.041299974545836,
       "missed_intervals": 10,
       "peak_process_count": 1,
-      "peak_process_tree_page_fault_count": 871545,
-      "peak_process_tree_private_committed_bytes": 1847107584,
-      "peak_process_tree_working_set_bytes": 1490747392,
+      "peak_process_tree_page_fault_count": 885910,
+      "peak_process_tree_private_committed_bytes": 1847717888,
+      "peak_process_tree_working_set_bytes": 1490931712,
       "peak_temp_file_bytes": 0,
-      "process_discovery_interval_ms": 100.0,
+      "process_discovery_interval_ms": 10.0,
       "process_lifetimes": [
         {
-          "created": 134329926618337726,
-          "first_seen_s": 0.10333429998718202,
-          "last_seen_s": 1.7001093999715522,
-          "max_cpu_100ns": 28281250,
+          "created": 134329931117820655,
+          "first_seen_s": 0.10462210001423955,
+          "last_seen_s": 1.6901622000150383,
+          "max_cpu_100ns": 28437500,
           "name": "strehl.exe",
-          "parent_pid": 22928,
-          "pid": 30084,
-          "samples": 161
+          "parent_pid": 46696,
+          "pid": 800,
+          "samples": 160
         }
       ],
-      "sample_count": 163,
+      "process_tree_membership_source": "Windows Job Object",
+      "sample_count": 162,
       "sample_interval_ms": 10.0
     },
     "output_bytes": 197798928,
@@ -332,12 +360,12 @@
     ],
     "software": "strehl 0.0.0 (8009447e059f)",
     "stack": "D:\\personal\\macro\\coffee-bean",
-    "started_utc": "2026-09-04T10:51:01.733840+00:00",
+    "started_utc": "2026-09-04T10:58:31.680908+00:00",
     "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\planted.tiff.stderr.log",
     "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\planted.tiff.stdout.log",
     "sweep": null,
     "valid": true,
-    "wall_seconds": 1.720375899982173,
+    "wall_seconds": 1.7103363000205718,
     "workers": 1
   },
   "restored": {
@@ -355,10 +383,10 @@
     "binary": {
       "bytes": 9864704,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\target\\release\\strehl.exe",
-      "sha256": "59B3A77C7430ADECD0394DDC484A9904B8811C54A842708F87B4BABF24CF2DBE"
+      "sha256": "BBC8D9914ED633A01FB5CF52792A7AB1B4D2ED928D143F591BDCF5492DB92E39"
     },
     "bits_per_sample": 16,
-    "completed_utc": "2026-09-04T10:51:35.964873+00:00",
+    "completed_utc": "2026-09-04T10:59:05.916407+00:00",
     "dtype": "uint16",
     "environment": {
       "MKL_NUM_THREADS": null,
@@ -415,61 +443,75 @@
       "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\restored-temp"
     },
     "host_load_during_run": {
-      "external_busy_cpu_seconds": 3.71875,
-      "external_busy_fraction_of_wall_capacity": 0.06873375970305301,
+      "external_busy_cpu_seconds": 3.859375,
+      "external_busy_fraction_of_wall_capacity": 0.07176036359323953,
       "external_busy_max": 0.1,
       "logical_processors": 32,
       "memory_end": {
-        "available_page_file_bytes": 86243291136,
-        "available_physical_bytes": 47334010880,
-        "available_virtual_bytes": 140732188053504,
+        "available_page_file_bytes": 86247182336,
+        "available_physical_bytes": 47511691264,
+        "available_virtual_bytes": 140732188725248,
         "memory_load_percent": 28,
         "total_page_file_bytes": 117633830912,
         "total_physical_bytes": 66094223360,
         "total_virtual_bytes": 140737488224256
       },
       "memory_start": {
-        "available_page_file_bytes": 86262730752,
-        "available_physical_bytes": 47544193024,
-        "available_virtual_bytes": 140732188053504,
-        "memory_load_percent": 28,
+        "available_page_file_bytes": 86296707072,
+        "available_physical_bytes": 47761719296,
+        "available_virtual_bytes": 140732188725248,
+        "memory_load_percent": 27,
         "total_page_file_bytes": 117633830912,
         "total_physical_bytes": 66094223360,
         "total_virtual_bytes": 140737488224256
       },
       "pass": true,
-      "process_tree_cpu_seconds": 2.671875,
-      "system_busy_cpu_seconds": 6.390625,
-      "system_total_cpu_seconds": 54.171875
+      "process_tree_cpu_seconds": 2.796875,
+      "system_busy_cpu_seconds": 6.65625,
+      "system_total_cpu_seconds": 53.609375
     },
     "invalid_reasons": [],
     "kind": "commission-restored",
     "limit": 3,
     "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
     "memory": {
-      "max_gap_ms": 11.568800022359937,
-      "max_lateness_ms": 109.29549997672439,
-      "median_gap_ms": 10.023899958468974,
-      "missed_intervals": 10,
+      "kernel_job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 27968750,
+        "total_kernel_100ns": 5000000,
+        "total_page_fault_count": 881236,
+        "total_processes": 1,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 22968750
+      },
+      "kernel_job_peak_memory": {
+        "peak_job_memory_used_bytes": 1847410688,
+        "peak_process_memory_used_bytes": 1847410688
+      },
+      "max_gap_ms": 10.870300000533462,
+      "max_lateness_ms": 111.1005999846384,
+      "median_gap_ms": 9.968099999241531,
+      "missed_intervals": 11,
       "peak_process_count": 1,
-      "peak_process_tree_page_fault_count": 884539,
-      "peak_process_tree_private_committed_bytes": 1846956032,
-      "peak_process_tree_working_set_bytes": 1490042880,
+      "peak_process_tree_page_fault_count": 881236,
+      "peak_process_tree_private_committed_bytes": 1847066624,
+      "peak_process_tree_working_set_bytes": 1488060416,
       "peak_temp_file_bytes": 0,
-      "process_discovery_interval_ms": 100.0,
+      "process_discovery_interval_ms": 10.0,
       "process_lifetimes": [
         {
-          "created": 134329926943799611,
-          "first_seen_s": 0.10929549997672439,
-          "last_seen_s": 1.6700507000205107,
-          "max_cpu_100ns": 26718750,
+          "created": 134329931443429254,
+          "first_seen_s": 0.11110059998463839,
+          "last_seen_s": 1.6602874999516644,
+          "max_cpu_100ns": 27968750,
           "name": "strehl.exe",
-          "parent_pid": 22928,
-          "pid": 40588,
-          "samples": 158
+          "parent_pid": 46696,
+          "pid": 44468,
+          "samples": 156
         }
       ],
-      "sample_count": 160,
+      "process_tree_membership_source": "Windows Job Object",
+      "sample_count": 158,
       "sample_interval_ms": 10.0
     },
     "output_bytes": 197798928,
@@ -486,12 +528,12 @@
     ],
     "software": "strehl 0.0.0 (8009447e059f)",
     "stack": "D:\\personal\\macro\\coffee-bean",
-    "started_utc": "2026-09-04T10:51:34.273422+00:00",
+    "started_utc": "2026-09-04T10:59:04.233551+00:00",
     "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\restored.tiff.stderr.log",
     "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\determinism\\commission-runs\\restored.tiff.stdout.log",
     "sweep": null,
     "valid": true,
-    "wall_seconds": 1.6907402999931946,
+    "wall_seconds": 1.6806696999701671,
     "workers": 1
   },
   "schema": 1,

@@ -32,17 +32,22 @@ REGISTERED_COUNTS = (33, 105, 299)
 WORKERS = (1, 2, 4, 8, 16)
 MODULO_COUNTS = (96, 97, 98, 99)
 SAMPLE_INTERVAL_S = 0.010
-PROCESS_DISCOVERY_INTERVAL_S = 0.100
 DEFAULT_PRELOAD_SAMPLE_S = 5.0
 DEFAULT_PRELOAD_BUSY_MAX = 0.15
 DEFAULT_EXTERNAL_BUSY_MAX = 0.10
 DEFAULT_QUIET_RETRY_S = 30.0
 
 kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+ntdll = ctypes.WinDLL("ntdll")
 
 TH32CS_SNAPPROCESS = 0x00000002
 PROCESS_QUERY_INFORMATION = 0x0400
 PROCESS_VM_READ = 0x0010
+CREATE_SUSPENDED = 0x00000004
+JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
+JOB_OBJECT_BASIC_ACCOUNTING_INFORMATION_CLASS = 1
+JOB_OBJECT_BASIC_PROCESS_ID_LIST_CLASS = 3
+JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS = 9
 INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
 
 
@@ -98,6 +103,55 @@ class MEMORYSTATUSEX(ctypes.Structure):
     ]
 
 
+class IO_COUNTERS(ctypes.Structure):
+    _fields_ = [
+        ("read_operation_count", ctypes.c_ulonglong),
+        ("write_operation_count", ctypes.c_ulonglong),
+        ("other_operation_count", ctypes.c_ulonglong),
+        ("read_transfer_count", ctypes.c_ulonglong),
+        ("write_transfer_count", ctypes.c_ulonglong),
+        ("other_transfer_count", ctypes.c_ulonglong),
+    ]
+
+
+class JOBOBJECT_BASIC_LIMIT_INFORMATION(ctypes.Structure):
+    _fields_ = [
+        ("per_process_user_time_limit", ctypes.c_longlong),
+        ("per_job_user_time_limit", ctypes.c_longlong),
+        ("limit_flags", wt.DWORD),
+        ("minimum_working_set_size", ctypes.c_size_t),
+        ("maximum_working_set_size", ctypes.c_size_t),
+        ("active_process_limit", wt.DWORD),
+        ("affinity", ctypes.c_size_t),
+        ("priority_class", wt.DWORD),
+        ("scheduling_class", wt.DWORD),
+    ]
+
+
+class JOBOBJECT_EXTENDED_LIMIT_INFORMATION(ctypes.Structure):
+    _fields_ = [
+        ("basic_limit_information", JOBOBJECT_BASIC_LIMIT_INFORMATION),
+        ("io_info", IO_COUNTERS),
+        ("process_memory_limit", ctypes.c_size_t),
+        ("job_memory_limit", ctypes.c_size_t),
+        ("peak_process_memory_used", ctypes.c_size_t),
+        ("peak_job_memory_used", ctypes.c_size_t),
+    ]
+
+
+class JOBOBJECT_BASIC_ACCOUNTING_INFORMATION(ctypes.Structure):
+    _fields_ = [
+        ("total_user_time", ctypes.c_longlong),
+        ("total_kernel_time", ctypes.c_longlong),
+        ("this_period_total_user_time", ctypes.c_longlong),
+        ("this_period_total_kernel_time", ctypes.c_longlong),
+        ("total_page_fault_count", wt.DWORD),
+        ("total_processes", wt.DWORD),
+        ("active_processes", wt.DWORD),
+        ("total_terminated_processes", wt.DWORD),
+    ]
+
+
 kernel32.CreateToolhelp32Snapshot.argtypes = [wt.DWORD, wt.DWORD]
 kernel32.CreateToolhelp32Snapshot.restype = wt.HANDLE
 kernel32.Process32FirstW.argtypes = [wt.HANDLE, ctypes.POINTER(PROCESSENTRY32W)]
@@ -130,6 +184,27 @@ kernel32.GetSystemTimes.argtypes = [
 kernel32.GetSystemTimes.restype = wt.BOOL
 kernel32.GlobalMemoryStatusEx.argtypes = [ctypes.POINTER(MEMORYSTATUSEX)]
 kernel32.GlobalMemoryStatusEx.restype = wt.BOOL
+kernel32.CreateJobObjectW.argtypes = [ctypes.c_void_p, wt.LPCWSTR]
+kernel32.CreateJobObjectW.restype = wt.HANDLE
+kernel32.AssignProcessToJobObject.argtypes = [wt.HANDLE, wt.HANDLE]
+kernel32.AssignProcessToJobObject.restype = wt.BOOL
+kernel32.SetInformationJobObject.argtypes = [
+    wt.HANDLE,
+    ctypes.c_int,
+    ctypes.c_void_p,
+    wt.DWORD,
+]
+kernel32.SetInformationJobObject.restype = wt.BOOL
+kernel32.QueryInformationJobObject.argtypes = [
+    wt.HANDLE,
+    ctypes.c_int,
+    ctypes.c_void_p,
+    wt.DWORD,
+    ctypes.POINTER(wt.DWORD),
+]
+kernel32.QueryInformationJobObject.restype = wt.BOOL
+ntdll.NtResumeProcess.argtypes = [wt.HANDLE]
+ntdll.NtResumeProcess.restype = ctypes.c_long
 
 
 def utc_now() -> str:
@@ -479,6 +554,98 @@ def descendants(root_pid: int, parents: dict[int, int]) -> set[int]:
     return found
 
 
+def create_process_job() -> wt.HANDLE:
+    handle = kernel32.CreateJobObjectW(None, None)
+    if not handle:
+        raise ctypes.WinError(ctypes.get_last_error())
+    limits = JOBOBJECT_EXTENDED_LIMIT_INFORMATION()
+    limits.basic_limit_information.limit_flags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+    if not kernel32.SetInformationJobObject(
+        handle,
+        JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS,
+        ctypes.byref(limits),
+        ctypes.sizeof(limits),
+    ):
+        error = ctypes.get_last_error()
+        kernel32.CloseHandle(handle)
+        raise ctypes.WinError(error)
+    return handle
+
+
+def assign_process_to_job(job: wt.HANDLE, process: subprocess.Popen[str]) -> None:
+    process_handle = wt.HANDLE(int(process._handle))
+    if not kernel32.AssignProcessToJobObject(job, process_handle):
+        raise ctypes.WinError(ctypes.get_last_error())
+    status = ntdll.NtResumeProcess(process_handle)
+    if status != 0:
+        raise OSError(f"NtResumeProcess failed with NTSTATUS 0x{status & 0xFFFFFFFF:08X}")
+
+
+def job_process_ids(job: wt.HANDLE) -> list[int]:
+    capacity = 1024
+    buffer = ctypes.create_string_buffer(
+        2 * ctypes.sizeof(wt.DWORD) + capacity * ctypes.sizeof(ctypes.c_size_t)
+    )
+    returned = wt.DWORD()
+    if not kernel32.QueryInformationJobObject(
+        job,
+        JOB_OBJECT_BASIC_PROCESS_ID_LIST_CLASS,
+        buffer,
+        ctypes.sizeof(buffer),
+        ctypes.byref(returned),
+    ):
+        raise ctypes.WinError(ctypes.get_last_error())
+    header = (wt.DWORD * 2).from_buffer(buffer)
+    count = int(header[1])
+    if count > capacity:
+        raise RuntimeError(f"job process count {count} exceeds capacity {capacity}")
+    process_ids = (ctypes.c_size_t * count).from_buffer(
+        buffer, 2 * ctypes.sizeof(wt.DWORD)
+    )
+    return [int(pid) for pid in process_ids]
+
+
+def job_accounting(job: wt.HANDLE) -> dict[str, int]:
+    accounting = JOBOBJECT_BASIC_ACCOUNTING_INFORMATION()
+    returned = wt.DWORD()
+    if not kernel32.QueryInformationJobObject(
+        job,
+        JOB_OBJECT_BASIC_ACCOUNTING_INFORMATION_CLASS,
+        ctypes.byref(accounting),
+        ctypes.sizeof(accounting),
+        ctypes.byref(returned),
+    ):
+        raise ctypes.WinError(ctypes.get_last_error())
+    return {
+        "total_user_100ns": int(accounting.total_user_time),
+        "total_kernel_100ns": int(accounting.total_kernel_time),
+        "total_cpu_100ns": int(
+            accounting.total_user_time + accounting.total_kernel_time
+        ),
+        "total_page_fault_count": int(accounting.total_page_fault_count),
+        "total_processes": int(accounting.total_processes),
+        "active_processes": int(accounting.active_processes),
+        "total_terminated_processes": int(accounting.total_terminated_processes),
+    }
+
+
+def job_memory(job: wt.HANDLE) -> dict[str, int]:
+    limits = JOBOBJECT_EXTENDED_LIMIT_INFORMATION()
+    returned = wt.DWORD()
+    if not kernel32.QueryInformationJobObject(
+        job,
+        JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS,
+        ctypes.byref(limits),
+        ctypes.sizeof(limits),
+        ctypes.byref(returned),
+    ):
+        raise ctypes.WinError(ctypes.get_last_error())
+    return {
+        "peak_process_memory_used_bytes": int(limits.peak_process_memory_used),
+        "peak_job_memory_used_bytes": int(limits.peak_job_memory_used),
+    }
+
+
 def process_counters(pid: int) -> dict[str, int] | None:
     handle = kernel32.OpenProcess(
         PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
@@ -745,105 +912,134 @@ def monitor_command(
     max_lateness = 0.0
     gaps: list[float] = []
     last_sample: float | None = None
-    last_process_discovery = float("-inf")
-    parents: dict[int, int] = {}
-    names: dict[int, str] = {}
+    names: dict[int, str | None] = {}
+    parents: dict[int, int | None] = {}
+    job_peak_memory = {
+        "peak_process_memory_used_bytes": 0,
+        "peak_job_memory_used_bytes": 0,
+    }
+    final_job_accounting: dict[str, int] | None = None
+    job = create_process_job()
+    process: subprocess.Popen[str] | None = None
+    try:
+        with stdout_path.open(
+            "w", encoding="utf-8", newline="\n"
+        ) as stdout, stderr_path.open(
+            "w", encoding="utf-8", newline="\n"
+        ) as stderr:
+            stdout.write(f"measured_commit={measured_commit}\n")
+            stdout.flush()
+            stderr.write(f"measured_commit={measured_commit}\n")
+            stderr.flush()
+            process = subprocess.Popen(
+                argv,
+                env=env,
+                stdout=stdout,
+                stderr=stderr,
+                text=True,
+                errors="replace",
+                creationflags=CREATE_SUSPENDED,
+            )
+            assign_process_to_job(job, process)
+            next_sample = start
+            empty_after_exit = 0
+            while True:
+                now = time.perf_counter()
+                if now < next_sample:
+                    time.sleep(next_sample - now)
+                sampled_at = time.perf_counter()
+                lateness = max(0.0, sampled_at - next_sample)
+                max_lateness = max(max_lateness, lateness)
+                if last_sample is not None:
+                    gaps.append(sampled_at - last_sample)
+                last_sample = sampled_at
 
-    with stdout_path.open("w", encoding="utf-8", newline="\n") as stdout, stderr_path.open(
-        "w", encoding="utf-8", newline="\n"
-    ) as stderr:
-        stdout.write(f"measured_commit={measured_commit}\n")
-        stdout.flush()
-        stderr.write(f"measured_commit={measured_commit}\n")
-        stderr.flush()
-        process = subprocess.Popen(
-            argv,
-            env=env,
-            stdout=stdout,
-            stderr=stderr,
-            text=True,
-            errors="replace",
-        )
-        next_sample = start
-        empty_after_exit = 0
-        while True:
-            now = time.perf_counter()
-            if now < next_sample:
-                time.sleep(next_sample - now)
-            sampled_at = time.perf_counter()
-            lateness = max(0.0, sampled_at - next_sample)
-            max_lateness = max(max_lateness, lateness)
-            if last_sample is not None:
-                gaps.append(sampled_at - last_sample)
-            last_sample = sampled_at
+                process_ids = set(job_process_ids(job))
+                new_pids = process_ids - set(known)
+                if new_pids:
+                    table = process_table()
+                    for pid in new_pids:
+                        details = table.get(pid, {})
+                        parents[pid] = details.get("parent_pid")
+                        names[pid] = details.get("name")
+                rows: list[tuple[int, dict[str, int]]] = []
+                for pid in process_ids:
+                    counters = process_counters(pid)
+                    if counters is None:
+                        continue
+                    prior = known.get(pid)
+                    if prior is not None and prior["created"] != counters["created"]:
+                        continue
+                    if prior is None:
+                        known[pid] = {
+                            "created": counters["created"],
+                            "parent_pid": parents.get(pid),
+                            "name": names.get(pid),
+                            "first_seen_s": sampled_at - start,
+                            "last_seen_s": sampled_at - start,
+                            "samples": 1,
+                            "max_cpu_100ns": counters["cpu_100ns"],
+                        }
+                    else:
+                        prior["last_seen_s"] = sampled_at - start
+                        prior["samples"] += 1
+                        prior["max_cpu_100ns"] = max(
+                            prior["max_cpu_100ns"], counters["cpu_100ns"]
+                        )
+                    rows.append((pid, counters))
 
-            if sampled_at - last_process_discovery >= PROCESS_DISCOVERY_INTERVAL_S:
-                table = process_table()
-                parents = {
-                    pid: int(details["parent_pid"]) for pid, details in table.items()
-                }
-                names.update(
-                    {pid: str(details["name"]) for pid, details in table.items()}
+                peak_private = max(
+                    peak_private, sum(row["private"] for _, row in rows)
                 )
-                last_process_discovery = sampled_at
-            live_tree = (
-                descendants(process.pid, parents)
-                if process.pid in parents
-                else set()
-            )
-            candidate_pids = live_tree | (set(known) & set(parents))
-            rows: list[tuple[int, dict[str, int]]] = []
-            for pid in candidate_pids:
-                counters = process_counters(pid)
-                if counters is None:
-                    continue
-                prior = known.get(pid)
-                if prior is not None and prior["created"] != counters["created"]:
-                    continue
-                if prior is None:
-                    known[pid] = {
-                        "created": counters["created"],
-                        "parent_pid": parents.get(pid),
-                        "name": names.get(pid),
-                        "first_seen_s": sampled_at - start,
-                        "last_seen_s": sampled_at - start,
-                        "samples": 1,
-                        "max_cpu_100ns": counters["cpu_100ns"],
-                    }
+                peak_working_set = max(
+                    peak_working_set, sum(row["working_set"] for _, row in rows)
+                )
+                accounting = job_accounting(job)
+                peak_page_faults = max(
+                    peak_page_faults, accounting["total_page_fault_count"]
+                )
+                current_job_memory = job_memory(job)
+                job_peak_memory = {
+                    key: max(job_peak_memory[key], current_job_memory[key])
+                    for key in job_peak_memory
+                }
+                peak_process_count = max(
+                    peak_process_count,
+                    len(process_ids),
+                    accounting["active_processes"],
+                )
+                if sample_count % 10 == 0:
+                    peak_temp_bytes = max(peak_temp_bytes, tree_bytes(temp))
+                sample_count += 1
+
+                root_done = process.poll() is not None
+                if root_done and accounting["active_processes"] == 0:
+                    empty_after_exit += 1
                 else:
-                    prior["last_seen_s"] = sampled_at - start
-                    prior["samples"] += 1
-                    prior["max_cpu_100ns"] = max(
-                        prior["max_cpu_100ns"], counters["cpu_100ns"]
+                    empty_after_exit = 0
+                if root_done and empty_after_exit >= 2:
+                    final_job_accounting = accounting
+                    break
+
+                next_sample += SAMPLE_INTERVAL_S
+                if next_sample <= sampled_at:
+                    skipped = (
+                        int((sampled_at - next_sample) // SAMPLE_INTERVAL_S) + 1
                     )
-                rows.append((pid, counters))
-
-            peak_private = max(peak_private, sum(row["private"] for _, row in rows))
-            peak_working_set = max(
-                peak_working_set, sum(row["working_set"] for _, row in rows)
-            )
-            peak_page_faults = max(
-                peak_page_faults, sum(row["page_faults"] for _, row in rows)
-            )
-            peak_process_count = max(peak_process_count, len(rows))
-            if sample_count % 10 == 0:
-                peak_temp_bytes = max(peak_temp_bytes, tree_bytes(temp))
-            sample_count += 1
-
-            root_done = process.poll() is not None
-            if root_done and not rows:
-                empty_after_exit += 1
-            else:
-                empty_after_exit = 0
-            if root_done and empty_after_exit >= 2:
-                break
-
-            next_sample += SAMPLE_INTERVAL_S
-            if next_sample <= sampled_at:
-                skipped = int((sampled_at - next_sample) // SAMPLE_INTERVAL_S) + 1
-                missed_intervals += skipped
-                next_sample += skipped * SAMPLE_INTERVAL_S
-        returncode = process.wait()
+                    missed_intervals += skipped
+                    next_sample += skipped * SAMPLE_INTERVAL_S
+            returncode = process.wait()
+            final_job_accounting = job_accounting(job)
+            current_job_memory = job_memory(job)
+            job_peak_memory = {
+                key: max(job_peak_memory[key], current_job_memory[key])
+                for key in job_peak_memory
+            }
+    finally:
+        kernel32.CloseHandle(job)
+        if process is not None and process.poll() is None:
+            process.kill()
+            process.wait()
 
     wall = time.perf_counter() - start
     system_end = system_times()
@@ -854,9 +1050,11 @@ def monitor_command(
     system_busy_cpu_seconds = (
         system_end["busy_100ns"] - system_start["busy_100ns"]
     ) / 10_000_000.0
-    process_tree_cpu_seconds = sum(
-        details["max_cpu_100ns"] for details in known.values()
-    ) / 10_000_000.0
+    if final_job_accounting is None:
+        raise RuntimeError("job accounting was not captured")
+    process_tree_cpu_seconds = (
+        final_job_accounting["total_cpu_100ns"] / 10_000_000.0
+    )
     external_busy_cpu_seconds = max(
         0.0, system_busy_cpu_seconds - process_tree_cpu_seconds
     )
@@ -874,9 +1072,8 @@ def monitor_command(
         "stderr_log": str(stderr_path.resolve()),
         "memory": {
             "sample_interval_ms": SAMPLE_INTERVAL_S * 1000.0,
-            "process_discovery_interval_ms": (
-                PROCESS_DISCOVERY_INTERVAL_S * 1000.0
-            ),
+            "process_discovery_interval_ms": SAMPLE_INTERVAL_S * 1000.0,
+            "process_tree_membership_source": "Windows Job Object",
             "sample_count": sample_count,
             "missed_intervals": missed_intervals,
             "max_lateness_ms": max_lateness * 1000.0,
@@ -887,6 +1084,8 @@ def monitor_command(
             "peak_process_tree_page_fault_count": peak_page_faults,
             "peak_process_count": peak_process_count,
             "peak_temp_file_bytes": peak_temp_bytes,
+            "kernel_job_peak_memory": job_peak_memory,
+            "kernel_job_accounting": final_job_accounting,
             "process_lifetimes": [
                 {"pid": pid, **details} for pid, details in sorted(known.items())
             ],
@@ -1584,18 +1783,19 @@ def registration_artifact(output: Path, measured_revision: str) -> int:
         "evidence_tag": "INHERITED",
         "measured_commit": measured_commit,
         "generated_utc": utc_now(),
-        "execution_registration_revision": 2,
+        "execution_registration_revision": 3,
         "execution_registration_amendment": {
             "evidence_tag": "VERIFIED",
             "timing": "before any scored M12 repetition",
             "reason": (
-                "Warm-up commissioning showed that enumerating the complete "
-                "Windows process table every 10 ms materially loaded the host "
-                "and prevented the inherited external-busy gate from clearing. "
-                "Private-byte counters remain sampled every 10 ms; process-tree "
-                "topology is refreshed every 100 ms. The memory positive control "
-                "must still observe the planted child."
+                "Warm-up commissioning showed that scanning the complete host "
+                "process table every 10 ms materially loaded the host. Revision "
+                "2 proposed 100-ms topology refreshes but produced no scored "
+                "repetition and is superseded. Revision 3 uses Windows Job Object "
+                "membership at every 10-ms sample, preserving the registered "
+                "whole-process-tree cadence without a full-host scan."
             ),
+            "supersedes_execution_registration_revision": 2,
             "superseded_warmup_records_are_not_score_evidence": True,
         },
         "governing_registration": {
@@ -1618,9 +1818,8 @@ def registration_artifact(output: Path, measured_revision: str) -> int:
             "modulo_scored_repetitions_per_n": 6,
             "highest_precision_deliverable": "uncompressed 16-bit RGB TIFF",
             "memory_sample_interval_ms": SAMPLE_INTERVAL_S * 1000.0,
-            "process_tree_discovery_interval_ms": (
-                PROCESS_DISCOVERY_INTERVAL_S * 1000.0
-            ),
+            "process_tree_discovery_interval_ms": SAMPLE_INTERVAL_S * 1000.0,
+            "process_tree_membership_source": "Windows Job Object",
         },
         "bars": {
             "peak_process_tree_private_committed_bytes_max": 6 * (1 << 30),

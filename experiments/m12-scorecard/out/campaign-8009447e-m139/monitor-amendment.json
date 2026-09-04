@@ -1,18 +1,36 @@
 {
-  "schema": 1,
+  "schema": 2,
   "evidence_tag": "VERIFIED",
   "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
-  "generated_utc": "2026-09-04T10:52:46.2239607Z",
-  "classification": "diagnostic warm-up only; no scored M12 repetition ran",
-  "reason": "The first monitor enumerated the complete Windows process table at every 10 ms memory sample. After six consecutive quiet-host samples, every N33/W4 warm-up attempt still exceeded the inherited 10% during-run external-busy gate. Before any scored repetition, topology discovery was reduced to 100 ms while private-byte sampling remained 10 ms.",
-  "protocol_change": {
-    "timing": "before any scored repetition",
-    "prior_private_byte_sample_interval_ms": 10.0,
-    "prior_process_tree_discovery_interval_ms": 10.0,
-    "amended_private_byte_sample_interval_ms": 10.0,
-    "amended_process_tree_discovery_interval_ms": 100.0,
-    "bar_or_adjudication_changed": false
-  },
+  "generated_utc": "2026-09-04T10:59:46.6239607Z",
+  "classification": "pre-score instrument amendment; no scored M12 repetition ran under either superseded monitor",
+  "reason": "The original compliant monitor scanned the complete host process table at every 10 ms sample and introduced avoidable observer load. A 100-ms topology-refresh revision was commissioned but rejected before the formal matrix because the governing registration requires sampling the whole process tree every 10 ms. The final monitor assigns the launched process tree to a Windows Job Object and queries job membership plus per-process counters every 10 ms, preserving the registered cadence without scanning unrelated host processes.",
+  "revision_history": [
+    {
+      "revision": 1,
+      "status": "superseded",
+      "process_tree_membership": "full-host Toolhelp snapshot every 10 ms",
+      "private_byte_sample_interval_ms": 10.0,
+      "formal_scored_repetitions": 0
+    },
+    {
+      "revision": 2,
+      "status": "superseded before matrix launch",
+      "commit": "4c7b46a29052cc209ad80c8791ca60ca6ba35c2b",
+      "process_tree_membership": "full-host Toolhelp snapshot every 100 ms",
+      "private_byte_sample_interval_ms": 10.0,
+      "formal_scored_repetitions": 0,
+      "reason_superseded": "Did not satisfy the registration text requiring the whole process tree every 10 ms."
+    },
+    {
+      "revision": 3,
+      "status": "current",
+      "process_tree_membership": "Windows Job Object queried every 10 ms",
+      "private_byte_sample_interval_ms": 10.0,
+      "formal_scored_repetitions_before_freeze": 0,
+      "bar_or_adjudication_changed": false
+    }
+  ],
   "superseded_records": {
     "record_count": 19,
     "scored_record_count": 0,
@@ -38,19 +56,25 @@
     "maximum_external_busy_fraction": 0.3429700271587395,
     "all_exceeded_0_10": true
   },
-  "recommissioning": {
-    "amended_harness_sha256": "A36A74B0304EF519C060781301DA9CCC740B330D6D9E37987975DE82D9DCC978",
+  "current_recommissioning": {
+    "registration_revision": 3,
+    "amended_harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+    "formal_records_path_exists": false,
     "memory": {
       "path": "memory-commission.json",
-      "sha256": "614C6985F50C7AB167228EAEF74F22126A0E12E46A3E99F571BCE435B35CBC48",
+      "sha256": "DB2572CAE5E1C39CA6FC3DE9BC6A2F65ABE22CD29A05F47647E4E3A99BAA6FAF",
       "status": "COMMISSIONED",
-      "null_peak_private_committed_bytes": 80936960,
-      "plant_peak_private_committed_bytes": 7544344576,
+      "sample_interval_ms": 10.0,
+      "process_discovery_interval_ms": 10.0,
+      "membership_source": "Windows Job Object",
+      "null_peak_private_committed_bytes": 80920576,
+      "plant_peak_private_committed_bytes": 7544352768,
+      "plant_kernel_peak_job_memory_used_bytes": 7544406016,
       "plant_peak_process_count": 2
     },
     "determinism": {
       "path": "determinism-commission.json",
-      "sha256": "B6BAFD639417AB73F9799478501C8DA5C8A703D54150C2DDAD24482ECEE9786E",
+      "sha256": "C0A31ADDF58904FF844161734D717704E6F1FBD302C87E3988C576E3D8956DCF",
       "status": "COMMISSIONED",
       "plant_went_red": true,
       "restore_returned_green": true,
@@ -58,11 +82,12 @@
     },
     "smoke": {
       "path": "smoke.json",
-      "sha256": "583917F76AB138E3587E956245D7478AA5ED8FA868577359493A35E3AD123303",
+      "sha256": "A38FB3AC38018E0A7463C57BF983AB19136D42F67766926BFB4C51A6D99B6C54",
       "status": "PASS",
-      "max_external_busy_fraction": 0.08934888820440731,
+      "max_external_busy_fraction": 0.05931040918639293,
+      "maximum_gap_ms": 39.56150001613423,
+      "minimum_sample_coverage": 0.9761904761904762,
       "repeat_byte_identical": true
     }
-  },
-  "superseded_for_formal_campaign": true
+  }
 }

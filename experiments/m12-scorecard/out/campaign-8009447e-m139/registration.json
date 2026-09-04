@@ -10,12 +10,13 @@
   "evidence_tag": "INHERITED",
   "execution_registration_amendment": {
     "evidence_tag": "VERIFIED",
-    "reason": "Warm-up commissioning showed that enumerating the complete Windows process table every 10 ms materially loaded the host and prevented the inherited external-busy gate from clearing. Private-byte counters remain sampled every 10 ms; process-tree topology is refreshed every 100 ms. The memory positive control must still observe the planted child.",
+    "reason": "Warm-up commissioning showed that scanning the complete host process table every 10 ms materially loaded the host. Revision 2 proposed 100-ms topology refreshes but produced no scored repetition and is superseded. Revision 3 uses Windows Job Object membership at every 10-ms sample, preserving the registered whole-process-tree cadence without a full-host scan.",
     "superseded_warmup_records_are_not_score_evidence": true,
+    "supersedes_execution_registration_revision": 2,
     "timing": "before any scored M12 repetition"
   },
-  "execution_registration_revision": 2,
-  "generated_utc": "2026-09-04T10:49:08.563560+00:00",
+  "execution_registration_revision": 3,
+  "generated_utc": "2026-09-04T10:56:33.382298+00:00",
   "governing_registration": {
     "bytes": 84635,
     "joint_constraint": {
@@ -89,7 +90,8 @@
       299
     ],
     "order": "alternating ascending/descending worker order",
-    "process_tree_discovery_interval_ms": 100.0,
+    "process_tree_discovery_interval_ms": 10.0,
+    "process_tree_membership_source": "Windows Job Object",
     "scored_repetitions_per_cell": 6,
     "warmups_per_cell": 1,
     "worker_counts": [
