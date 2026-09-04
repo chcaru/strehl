@@ -4499,7 +4499,19 @@ samples. If clamped M8-O also returns `V=0`, **M8 becomes the first passing axis
 in the program.** If it returns anything else it is a FAIL under a rule I can no
 longer argue with — which is exactly why the rule was written first.
 
-### 2.9.43 The rule I invented is worth four axes, and the scorecard is repaired prospectively (M140, orchestrator, 2026-09-05)
+### 2.9.43 ~~The rule I invented is worth four axes~~ — **RETRACTED, see 2.9.45** — and the scorecard is repaired prospectively (M140, orchestrator, 2026-09-05)
+
+> **RETRACTION (orchestrator, 2026-09-05, later the same day).** The claim in
+> this entry's original title — that decision rule 4 was costing the program
+> four scoreable axes — is **false**, and M146 established it (§2.9.45,
+> `docs/research/M146-unlock-audit.md`, commit `68ea3b95`). Rule 4 is **not**
+> the only thing attaching the detail-instrument blocker to M2/M3/M4/M11; each
+> has an independent coupling that survives rule 4's removal. **Narrowing or
+> striking rule 4 unlocks nothing.** The entry is left standing as written
+> below, because what I believed and when is part of the record, but **no
+> decision may be taken on its headline.** Everything else in this entry —
+> M140's refutation of my *earlier* hypothesis, and the mechanical
+> re-derivation — is unaffected and still holds.
 
 **M140 commit `b1fda0cf`**; artifact `experiments/M140-readiness/readiness.json`,
 report `docs/research/M140-readiness.md`.
@@ -4656,7 +4668,168 @@ has been told to **discard and re-run** any affected measurement rather than
 adjust it, because a timing number repaired after the fact is not a timing
 number.
 
+### 2.9.45 The capture session is stopped, my four-axis claim is retracted, and a bar was found blind to the defect it exists to catch (M135, M145, M146, M138, orchestrator, 2026-09-05)
+
+**Commits:** `99edaafe` (M130 close-out), `0f3344fd` (M145), `68ea3b95` (M146),
+`6f64ea99` (M138 repairs), `e8106b40` (OWNER-ACTIONS), `3d2fa16d` (scorecard),
+this entry.
+
+#### 2.9.45.1 The owner must not shoot, and the reason is a number nobody could have seen in the field
+
+**M135 ruled that the `1.54%` sampling margin is not safe for blind
+hand-setting**, and I have stopped the capture session on that ruling.
+
+The design needs the reference state to oversample TC0 by `2.0x`. As specified
+that is `2.7015 / 1.33 = 2.0312x`, leaving `0.0312x` of room. The owner sets
+that magnification **by hand**. The figure that made this look survivable —
+M84b's `0.188%` statistical and `~0.36%` absolute — **measures recovery, not
+placement**, and therefore does not cover the quantity at risk.
+
+**What makes it dangerous rather than merely tight is M141:** physical
+reproduction ratio is metadata-recoverable for **0 of 68** existing stacks. A
+session landing more than `1.54%` low would announce nothing, and would be
+discovered already spent.
+
+**The escape, which I verified independently before propagating it.** Both
+optical states image the same coplanar grid, so the gate is a *ratio* of two
+magnifications measured against one grid — and grid pitch, sensor pixel pitch
+and EXIF reporting all cancel. No absolute calibration is required, and the
+achieved ratio is measurable from the frames. It simply has to be measured
+**before** the session. **M147 is building that preflight**, and it is now the
+program's gating deliverable.
+
+**Session parameters settled:** converter on for references and off for TC0;
+`1.32x` target, `1.33x` ceiling, conditional on preflight; **891 registered
+frames**; the 603-frame request **superseded**; stabilisation off throughout.
+`docs/capture-requests/2026-09-319-frame-session.md` still describes the
+superseded session and is flagged **not safe to shoot from** until I reconcile
+it — that is an action on me, not the owner.
+
+#### 2.9.45.2 The critical path moved, and it is no longer the instrument
+
+The plan's §13.5 states the detail instrument *"cannot be bought, cannot be shot
+around with a better capture, and cannot be coded around"*, and that it
+outranks every speed branch. That remains true. But the instrument's **remaining
+work is now itself capture-blocked**: M135 reports its physical nuisance
+allowances *"remain unbound pending rehearsal"*, and rehearsal needs the session
+that is stopped.
+
+**So the chain is: M147 preflight → rehearsal → M135 binds physical allowances →
+M1 becomes scoreable.** The gating deliverable is a field tool that did not
+exist this morning. This is a real change in what "the critical path" names, and
+it is recorded here so it is not rediscovered later.
+
+**The instrument itself is healthy.** M135's amendment-6 re-run reproduced its
+predecessor **byte-for-byte** at SHA-256 `6DC8CC…B00F14` with **25/25** gates
+passing, after a fail-closed repair to an invalid-shape refusal path. Requiring
+byte-identity across a refusal-path fix is the right discipline: it proves no
+valid-input statistic moved.
+
+#### 2.9.45.3 My four-axis claim was false, and a lane found it
+
+**Retracted: rule 4 does not cost four axes.** §2.9.43 has been marked
+accordingly. M146 tested all four candidate axes against the archive and
+returned `NEEDS_NEW_CAPTURE` or `BLOCKED_FOR_ANOTHER_REASON` for every one.
+**No axis unlocks today.**
+
+**M11 was my sharpest example and is the cleanest refutation.** I wrote that M11
+*"is blocked purely because I said a comparator must be quality-qualified
+first."* That is wrong on the literal document, and I verified both citations
+directly: the comparator-envelope definition says *"For speed it is the fastest
+mode that passes the complete quality scorecard"* (`:245-246`), and M11's own
+computation step 7 independently repeats *"the fastest mode that passes all
+quality gates"* (`:1089-1090`). **Neither clause is rule 4.** Strike rule 4 and
+M11 is still blocked by its own bar.
+
+**The useful consequence is a confirmed negative:** Ask 3's advice to hold the
+`$925` comparator purchase is now independently corroborated rather than merely
+mine. A correct negative that saves the owner money is worth as much as an
+unlock, and I asked M146 for it in those terms.
+
+**I over-claimed the benefit and mis-stated the mechanism in the same ask.** Ask
+4 now carries both corrections on its face rather than being quietly rewritten.
+
+#### 2.9.45.4 A bar that could not see the defect it exists to catch
+
+**This is the fourth instance of the same defect in this program**, and the
+first where the *statistic* rather than the population was at fault.
+
+M7's boundary-seam term set `p99 <= 1.0` over a population **defined nowhere**,
+so an empty population passed trivially. M145 has now defined it from the common
+inputs only, with floors of `1,000` sites, `10` contours, `50` sites per
+contour and `12` colour regions, and the rule that any deficient population is
+`UNMEASURED_CAPTURE_INADEQUATE` and **never PASS**. Membership cannot be
+influenced by any candidate or comparator output.
+
+**The better finding is that p99 itself was blind.** M145 planted a
+`4.072293 DeltaE00` seam across three consecutive sites. The pooled p99 came
+back **exactly `0.0`** — as did p50 and p95. Increasing the sample count makes
+that dilution *easier*, not harder. The bar now carries a coherence guard — no
+connected contour segment may hold three consecutive sites above `1.0` — and I
+verified the guard is **load-bearing**: the sparse arm sits below the p99
+threshold and fails only because of it.
+
+Commissioning is four-armed and two-sided, which is this corpus's standard:
+baseline `0.7215534852960046`, planted defect `4.300123625262583`, planted
+improvement `0.21680132055013615` — **below** baseline, so the metric can charge
+for an improvement and is not bounded below at zero — and an identical-frame
+null returning `0` sites that correctly **refuses** rather than passing.
+
+**Capture consequence:** a flat or untextured ColorChecker cannot be presumed to
+exercise focus transitions at all, so the seam arm needs its own tilted textured
+coupon with an independent pre-output Lab reference. If a combined target cannot
+meet the floors, the answer is a separate capture — **not relaxed floors after
+seeing outputs.**
+
+#### 2.9.45.5 The W1 gate repairs, and what I still owe
+
+M138 repaired all six review defects (`6f64ea99`). Most importantly it **removed
+`0.90` entirely** rather than substituting another invented constant, replacing
+it with a simultaneous all-capture, all-plane `upper95 < 1.0`; and its
+adjudicator now hash-verifies and recomputes evidence instead of accepting
+supplied Booleans. **It is correctly still `NOT FROZEN`.**
+
+A second independent review (M148) is running, by a lane that wrote neither the
+specification nor the first review. I asked it three questions: **can this gate
+fail**, is the adjudicator evidence-driven *when executed*, and did removing
+`0.90` remove the problem or relocate it. I told it explicitly that
+over-correction into an unfalsifiable rule is as fatal as a rule nothing can
+fail — I pushed hard on the invented-constant problem and want to know if the
+repair swung too far.
+
+**M135's interface is satisfiable with no M138 change**, but it is *satisfiable,
+not physically bound*, and M138 has been told to keep it marked unresolved. It
+also has **three** outcomes, not two: a null detail state must fail closed as
+`INSTRUMENT_INVALID` rather than being coerced to `False`. Coercing it would
+convert an instrument failure into a scientific conclusion — structurally the
+same defect that killed `NO_COMMON_K`, where an empty candidate set was read as
+an answered question.
+
+#### 2.9.45.6 Two errors of my own, recorded
+
+**I inferred M139 was idle from a single guessed directory.** Its artifacts were
+in `experiments/m12-scorecard/out/campaign-8009447e-m139/`, not
+`experiments/M139-m12-campaign/`, and it was writing to them 13 seconds before I
+looked. I nearly released a lane to compile against a live timing campaign on
+that inference. **Concluding absence from one location is not a search.**
+
+**M142 had no directory because I never gave it one**, so it wrote into M136's
+tree — beside the frozen preregistration. Nothing was damaged; the
+preregistration is unmodified. It now owns `experiments/M142-m8o-execute/`.
+That is the seventh authored-constraint defect of mine in this program, and the
+count is kept deliberately.
+
+#### 2.9.45.7 Position
+
+**Unchanged: `0 of 12`.** M8 remains the only axis ever scored and it FAILED.
+M12 is in flight and is the first axis with a real prospect of moving; M139's
+harness gates every run on measured external load at `0.15` of wall capacity,
+which is why M142 is held from compiling rather than merely asked to be polite.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
+
 
 ### 3.1 Blocking
 
