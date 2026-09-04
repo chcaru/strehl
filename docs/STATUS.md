@@ -4349,6 +4349,65 @@ be repaired before any re-run. And the corrected gate's Pareto outcome is
 explicitly **could not determine**: nobody knows yet whether Phase 1 actually
 works.
 
+### 2.9.41 The plan is amended, and one amendment corrected itself within the hour (orchestrator, 2026-09-05)
+
+**Amendment 3 is published** at `docs/proposals/2026-08-sota-path.md` § 13,
+commit `2bc867bd`, 49/49 checks including a byte-identity guard proving no text
+above it was altered and five independent arithmetic re-derivations.
+
+It records five things, each already evidenced in 2.9.37--2.9.40:
+
+1. **Phase 1's refutation is withdrawn.** `NO_COMMON_K` was unsatisfiable by
+   construction. Status is `untested`, not `dead` -- *"unvalidated, not
+   rescued"*. Five standardisation defects must be repaired before any re-run.
+2. **Section 9 cannot be executed literally.** A2 is `STOP_DO_NOT_BUILD` at
+   `0/7` yet Phase 1 still includes it; D8 is `KILL` yet Phase 2 still schedules
+   it; `DECODE2` and `NVME2` both PASS, making D11's owned-decoder and D15's
+   IOCP build branches false. `C13/MAKERNOTE` and `D10/TETHER` ran ungated.
+3. **A defect in my own instrument** -- see below.
+4. **Amendment 2's item 1 is closed.** `crop-early` landed at
+   `96.22496088092659%` against a registered prediction of `96.22496%`. **This
+   is the first quantitative preregistration in this program to land on its
+   digits.** Item 2's price is corrected `$189 -> $925`.
+5. **The real critical path is the detail instrument.** Amendment 1 said no
+   single-image high-frequency statistic separates resolved detail from
+   sharpening; two independently built instruments have since failed the same
+   flat-ROI null. Amendment 1 is strengthened, not superseded.
+
+**The correction I owe against myself, recorded because it is exactly the
+failure mode I keep charging lanes with.** Amendment 3 § 13.4 stated that the
+Zerene purchase advice *"has been rewritten to rest on independent grounds"*. At
+the moment I committed that sentence **it was not true** -- `OWNER-ACTIONS.md`
+still gave as its first reason to wait that *"No comparator can be
+quality-qualified until a replacement M1 is admitted"*, which **is** decision
+rule 4, the very rule the same amendment had just shown to be scorecard-authored
+and absent from the owner's plan. I had written a forward promise in the past
+tense. I caught it on the next read, and commit `5925fbd5` makes it true:
+reason 1 is explicitly withdrawn, the disclosure that I wrote the rule myself is
+stated to the owner in plain terms, and the unchanged conclusion -- *do not buy
+yet* -- now rests on reasons 2 and 3, which no authored rule touches. 13/13
+checks, one of which asserts the withdrawn claim is gone.
+
+**Why this is worth a paragraph rather than a silent fix.** Telling the owner to
+delay a purchase because of a rule I invented is not advice, it is circularity,
+and it survived two prior passes over that page because it *read* like a
+finding. The general form -- an authored constraint that has been in the
+document long enough to look like an external fact -- is the same defect as
+`NO_COMMON_K` and the same defect as decision rule 4. That is now three
+instances in one program.
+
+**Dispatched on the back of it: M140.** Amendment 2's conjunctive-blocker table
+-- *"clearing the single largest blocker in the program, alone, changes the
+scoreboard by nothing"* -- was computed **with rule 4 in force**, and rule 4 is
+what propagates blocker `(a)` across axes. With `(b)` now genuinely cleared,
+nobody has recomputed what is measurable. M140 re-derives the full 16-subset
+table under three scenarios (rule 4 as written / narrowed to the plan's
+*"at matched output"* / removed), ruling per axis whether `(a)` is **intrinsic**
+or **propagated**, and reports what is scoreable today plus the cheapest
+credible route to the program's first passing axis. **A well-evidenced "still
+zero" is an acceptable answer** and would mean the detail instrument is even
+more central than 13.5 already claims.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
