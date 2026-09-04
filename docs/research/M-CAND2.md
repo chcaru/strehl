@@ -56,3 +56,15 @@ Therefore this lane has **no measured viable frontier coordinate and no
 wrong-signed optical result**. The universal-sign question remains unanswered:
 every lane-owned optical arm was stopped upstream, so Candidate 1's \(J_q\) has
 no lawful improvement or blur reading to recover.
+
+### Highest-value missing cells
+
+Candidate 2's blur and improvement paths are already implemented, but the
+frozen runner correctly refuses them behind the closed mandatory gate
+(`experiments/M-CAND2/src/run_v2.py:524-551,604-630`;
+`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5`). Filling those two
+cells requires a separate preregistration/freeze that authorizes a post-mortem
+optical-sign measurement, followed by two existing 480-site arm invocations and
+their checker/report. Scope estimate: one short dedicated lane; compute should
+take minutes, while the new freeze and review are the substantive work. No new
+capture is required. Neither arm was run for this audit.
