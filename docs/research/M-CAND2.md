@@ -44,30 +44,30 @@ Congruence protects only invertible linear transforms; it stops at nonlinear
 tone, clipping, quantization, rank loss, regularization, channel removal, and
 local-model failure (`PREREGISTRATION-V2.md:101-108`).
 
-## Frontier-coordinate audit — existing measurements only
+## Frontier-coordinate audit
 
 | statistic / variant | USM ratio | genuine optical improvement ratio | physical blur ratio | sign correct on improvement? |
 | --- | ---: | ---: | ---: | --- |
 | Candidate 1 finite-observer \(J_q\) | `1.095732` (`experiments/M-CAND1/out/usm.json:88-102`) | **NOT RUN** (`docs/research/M-CAND1.md:57-63`) | **NOT RUN** (`docs/research/M-CAND1.md:57-63`) | **UNKNOWN — NOT RUN** (`docs/research/M-CAND1.md:57-63`) |
-| Candidate 2 native full-covariance Hotelling | `1.0000000000000266` (`experiments/M-CAND2/out/unclipped-usm.json:214-231`) | **NOT RUN** (`experiments/M-CAND2/PREREGISTRATION.md:67-75,92-95`) | **NOT RUN** (`experiments/M-CAND2/PREREGISTRATION.md:67-75,92-95`) | **UNKNOWN — NOT RUN** (`experiments/M-CAND2/PREREGISTRATION.md:67-75,92-95`) |
-| Candidate 2 display-referred Hotelling | `1.0000000000000009` (`experiments/M-CAND2/out/amendment-unclipped-usm.json:210-225`) | **NOT RUN** (`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5,22-39`) | **NOT RUN** (`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5,22-39`) | **UNKNOWN — NOT RUN** (`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5,22-39`) |
+| Candidate 2 native full-covariance Hotelling | `1.0000000000000266` (`experiments/M-CAND2/out/unclipped-usm.json:214-231`) | `2.4627494970140926` (post-mortem `improved-result.json:215-237`) | `0.2779204535796564` (post-mortem `degraded-result.json:215-237`) | **YES** (post-mortem `improved-result.json:227-237`) |
+| Candidate 2 display-referred Hotelling | `1.0000000000000009` (`experiments/M-CAND2/out/amendment-unclipped-usm.json:210-225`) | `2.4627459325690912` (post-mortem `improved-result.json:143-165`) | `0.27792013119436004` (post-mortem `degraded-result.json:143-165`) | **YES** (post-mortem `improved-result.json:155-165`) |
 
-Therefore this lane has **no measured viable frontier coordinate and no
-wrong-signed optical result**. The universal-sign question remains unanswered:
-every lane-owned optical arm was stopped upstream, so Candidate 1's \(J_q\) has
-no lawful improvement or blur reading to recover.
+Candidate 1's optical sign remains unknown. Both Candidate 2 variants read the
+separately authorised genuine improvement in the correct direction, while
+their USM readings remain unity rather than increasing. Under the audit's
+registered rule requiring both USM and improvement to rise, neither variant is
+a measured frontier coordinate. Neither Candidate 2 variant is optically
+wrong-signed.
 
-### Highest-value missing cells
+### Original optical gap
 
 Candidate 2's blur and improvement paths are already implemented, but the
 frozen runner correctly refuses them behind the closed mandatory gate
 (`experiments/M-CAND2/src/run_v2.py:524-551,604-630`;
-`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5`). Filling those two
-cells requires a separate preregistration/freeze that authorizes a post-mortem
-optical-sign measurement, followed by two existing 480-site arm invocations and
-their checker/report. Scope estimate: one short dedicated lane; compute should
-take minutes, while the new freeze and review are the substantive work. No new
-capture is required. Neither arm was run for this audit.
+`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5`). The original
+campaign and audit therefore recorded both cells as **NOT RUN**. The values now
+shown above come only from the separately frozen post-mortem protocol below;
+they do not alter or bypass the historical gate.
 
 ## Post-mortem optical-sign preregistration
 
@@ -147,3 +147,52 @@ generic-LSI prediction is a prediction to test, not an algebraic consequence of
 this fixture. This caveat cannot change the registered outcome labels.
 
 <!-- CAND2-POSTMORTEM-PREREG-END -->
+
+<!-- CAND2-POSTMORTEM-RESULTS -->
+
+## Post-mortem optical-sign results
+
+Authoritative preregistration commit
+`e17439485c01713a7cb997700c35e2ae7c539deb` preceded both invocations. The
+degraded sigma-`1.35` lock was created and accepted before the improved
+sigma-`0.35` lock. The independent checker then recomputed the held-out
+statistics and all four 10,000-draw bootstraps from the stored score arrays
+without regenerating observations.
+
+The cited artifacts are under the frozen external session directory named in
+the preregistration. Native and display variants share observations and are
+reported separately rather than pooled.
+
+| Variant / arm | Baseline \(d'^2\) | Arm \(d'^2\) | Ratio \(R\) | Two-sided 95% ratio CI | One-sided LCB95 / UCB95 | Condition-number range, baseline -> arm | Frozen arm disposition |
+| --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
+| Native / blur | `6.0122885561019395` | `1.6709379625636285` | `0.2779204535796564` | `[0.23055319880698877, 0.32707789521097985]` | `0.23762270338291042 / 0.31924656354176933` | `[170061.28994016047, 192546.99477967757] -> [152739.90574990198, 211302.7015871064]` | `RESOLVED_NONUNITY`; `blur_meaningfully_nonunity=true` (`degraded-result.json:169-237`) |
+| Display / blur | `6.012288528538082` | `1.6709360166296494` | `0.27792013119436004` | `[0.2305493062942622, 0.3270771541765442]` | `0.23762157399178782 / 0.31924900900161624` | `[170061.2899398179, 192546.9947799625] -> [152739.90574989485, 211302.7015868653]` | `RESOLVED_NONUNITY`; `blur_meaningfully_nonunity=true` (`degraded-result.json:79-165`) |
+| Native / improvement | `6.0122885561019395` | `14.806760617443636` | `2.4627494970140926` | `[2.130877002324432, 2.830351341335454]` | `2.177137250041903 / 2.7712421495813917` | `[170061.28994016047, 192546.99477967757] -> [165738.71228594956, 197373.84917382186]` | `RESOLVED_NONUNITY`; `improvement_meaningfully_above_one=true` (`improved-result.json:169-237`) |
+| Display / improvement | `6.012288528538082` | `14.806739119088967` | `2.4627459325690912` | `[2.1308765706910395, 2.8303506158618172]` | `2.1771378823874796 / 2.7712409599177183` | `[170061.2899398179, 192546.9947799625] -> [165738.71228618408, 197373.84917387666]` | `RESOLVED_NONUNITY`; `improvement_meaningfully_above_one=true` (`improved-result.json:79-165`) |
+
+At the frozen precision, neither blur ratio is `≈1`: each complete CI is
+strictly below `[0.99,1.01]`. Both improvement CIs are strictly above that
+interval and both one-sided LCB95 values exceed `1.30`. The checker therefore
+assigned both variants the mechanical label
+`OUTCOME_3_PRIOR_WRONG_NEEDS_ANALYSIS`
+(`postmortem-check.json:125-129`). This is the registered disposition, not a
+lane adjudication of Candidate 2.
+
+### Artifact identity
+
+- Preregistration-block SHA-256:
+  `617c1710b4b972138641523a654d5e78f90777b9170867c0cb14390cda5f9b99`
+- Degraded result SHA-256:
+  `ca44516f7ea16a7248b6bfad3bb8cf0ef2ab5bf0dec86e5b574be4f2b916ad59`
+- Degraded score-array SHA-256:
+  `8c45a6b0563ae20006ed6c7b49c64d3d8296d0f630fadca5e9e96f3439e61824`
+- Improved result SHA-256:
+  `086508fca6f06593049fc218da6465108e10eeafa3aeeabe8d704b5ab539a1b3`
+- Improved score-array SHA-256:
+  `2b5170d8c3332ec9ea4d79ecb1b899d4c68d43135d108fcce6f11e45a68c7ec4`
+- Final independent-check SHA-256:
+  `ef9ed89311b18eaf4cd31607d1109a574916ea3909c0c384650c3965e11bd111`
+
+The historical downstream gate remained closed and byte-identical at
+`b030945a6cb11ac17895175fee3b1cc03b302b5f2819baa3c0fee423bc551408`.
+Candidate 2's historical `DEAD` status was not reopened.
