@@ -6078,11 +6078,29 @@ hash pinned), and the emitted TIFFs are confirmed 16-bit, ICC TRC `1.0`, ProPhot
 matrix and whitepoint, `Compression=1`, at native `7028x4688`.
 
 The byte-identity check is commissioned to this program's standard: a flipped bit fails
-it, a single-LSB pixel change fails it, and the repair passes. Its manifest
-(`m165-common-input-manifest-v2`) binds source, converter, settings, calibration, TIFF
-hashes and — after a mid-flight instruction from this orchestrator, prompted by M162's fork
-finding — arbitrary **consumer** executable identities, since binary identity is exactly
-what the fork lost.
+it, a single-LSB pixel change fails it, and the repair passes. Its manifest binds source,
+converter, settings, calibration, TIFF hashes and — after a mid-flight instruction from
+this orchestrator, prompted by M162's fork finding — arbitrary **consumer** executable
+identities, since binary identity is exactly what the fork lost.
+
+**That manifest has since advanced to v3, and the change is a strengthening rather than a
+rename.** The v3 common-input manifest requires the v2 map plus a per-source capture
+context, and it checks the actual body witness, capture record, temperature
+calibration/log and focus schedule artifacts *rather than free-form IDs* — closing the gap
+where a manifest could be satisfied by a plausible-looking string. This record previously
+cited the superseded v2 manifest by name. **The stale citation was caught by a
+cross-document verifier check that re-reads M165's own file, not by re-reading this one**
+— which is the only reason it was caught at all, since nothing in this document had
+changed.
+
+**M165 also reports its own validation battery passing** — pattern-map commissioning, the
+Stage 0M manifest/refusal battery, a deterministic estimator repeat, `4 passed` on
+`cargo test -p strehl-raw common_tiff`, and an independent .NET/Python/Rust hash audit.
+**None of that is a score.** It is a commissioning pass of the contract machinery: evidence
+that the refusals fire and that the bytes are what they claim to be, not evidence about any
+image. This is the same distinction recorded in §2.9.54.9 — a commissioned instrument plus
+an existing number is still not a score — and it applies here even though the instrument is
+M165's own and the passes are real.
 
 **The finding that matters is what is missing.** The contract requires a frozen
 deterministic-pattern map estimated from independent **matching darks** (body, ISO,

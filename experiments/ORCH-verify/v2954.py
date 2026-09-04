@@ -126,7 +126,10 @@ CLAIMS = [
     ("rawpy version", "0.27.0", R + "M165-common-input.md"),
     ("libraw version", "0.22.1", R + "M165-common-input.md"),
     ("tiff native dims", "7028", R + "M165-common-input.md"),
-    ("manifest name", "m165-common-input-manifest-v2", R + "M165-common-input.md"),
+    ("manifest v3", "v3 common-input manifest", R + "M165-common-input.md", None,
+     "The v3 common-input manifest requires the v2 map"),
+    ("m165 stage0m battery", "Stage 0M manifest/refusal battery", R + "M165-common-input.md", None,
+     "Stage 0M manifest/refusal battery: **PASS**"),
     # --- scorecard ---
     ("m8r score", "1.030569", "docs/proposals/2026-09-sota-scorecard.md"),
     ("m1 withdrawn", "NO ADMISSIBLE BAR", "docs/proposals/2026-09-sota-scorecard.md"),

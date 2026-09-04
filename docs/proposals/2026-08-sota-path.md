@@ -2653,3 +2653,124 @@ because a gap invites a check and a label suppresses one.
 - **Neither item is killed.** Both are deferred with stated preconditions, and
   either may be reopened the moment its precondition is met.
 
+
+## 16. Amendment 6 — the §13.5 blocker survives independent attack, but its wording is too broad and its escape route is not uniquely M1 (orchestrator, 2026-09-06)
+
+§13.5 named the detail instrument as the program's critical path, and said the
+blocker *"cannot be bought, cannot be shot around with a better capture, and
+cannot be coded around."* A lane (M164) was then asked to repair M2, whose
+statistic rewards blur, and returned something stronger than a repair: an
+argument that no output-only repair exists. Because that argument, if sound,
+changes what this plan should instruct, **it was not adopted on the authoring
+lane's own evidence.** An independent verifier (M168) was asked to attack it and
+to supply wording it would stand behind.
+
+It reproduced every number from source at commit `19f6f54a` — the regenerated
+`commission.json` is byte-identical to the committed artifact, both
+`418D2D852DC15B072CB65DD6BAAECAA9B4CBF82843BA825F00B0440ACC733C43` — built its
+own finite two-world witness, and returned a split verdict: **the core argument
+sound, two claims around it overstated.**
+
+### 16.1 The limitation, in the form that survives
+
+Adopted verbatim as the operative statement, in the verifier's own words:
+
+> **Derived, assumption-qualified limitation.** For the unrestricted
+> natural-scene, detail-preserving comparative-noise claim, the rendered outputs
+> do not by themselves identify whether reduced high-frequency variation is
+> removed noise or artifact, or removed scene signal. The same observed output
+> or output pair can arise from latent worlds requiring opposite quality
+> rankings. Consequently, no output-only statistic can guarantee the intended
+> ranking across those worlds without additional identifying assumptions or
+> evidence. Such information may be an independently anchored signal/transfer
+> reference, a certified featureless-target protocol whose claim expressly does
+> not test spatial smoothing, or another validated generative prior or
+> constraint with correspondingly limited scope. This does not prove that every
+> no-reference metric is impossible; it proves that any such conclusion is
+> conditional on its assumptions. M164's `Q_EIN` has passed synthetic arithmetic
+> and directional controls only and still requires a separate transfer/detail
+> admission condition. M1 is the current proposed implementation of that
+> condition, not the only mathematically possible one. M2 remains `UNMEASURED`.
+
+The argument is sound **because** it carries the hedge *"without an assumption or
+observation outside those outputs."* The hedge is load-bearing and may not be
+dropped when the finding is quoted.
+
+### 16.2 Amendment 1's central sentence is qualified, not withdrawn
+
+The finding at line 2196 — *"no single-image high-frequency statistic separates
+resolved detail from sharpening"* — is **too broad as written.** It holds for all
+admissible scenes *without an external model, prior or reference*. It does not
+hold as a universal statement about every no-reference metric: a restricted
+sharpening family, or an explicit and validated natural-image prior, can be
+discriminated statistically, with the result inheriting those assumptions and
+their scope.
+
+The three instrument deaths in §13.5 are **not** all instances of one theorem,
+and this plan should stop implying they are. D8's common-filter invariance is a
+separate algebraic fact; the band-power flat-null failure is empirical; only
+M2's is the identifiability construction. The defensible unification is
+narrower:
+
+> No statistic can universally certify latent signal provenance when the
+> observation map admits worlds with identical observed pixels and opposite
+> ground-truth labels.
+
+### 16.3 "Cannot be shot around with a better capture" is the wrong shape
+
+§13.5 ranked capture as an *alternative* that the blocker defeats. This result
+inverts that framing. The blocker is not defeated by capture, and it is not
+defeated without it either: the sound instrument requires identifying
+information from outside the rendered outputs, and **capture is the currently
+usable form of that information.** Capture is therefore a *precondition of the
+instrument*, not a way around it.
+
+§13.5's ranking of the detail instrument as the critical path is **unchanged and
+strengthened** — §14.2 already makes Phase 1's W1 gate depend on the same lane,
+so the instrument gates the merge, not merely the detail axis.
+
+### 16.4 M1 is the current route, not the only possible one
+
+M164's claims that *"the minimum repair reuses M1"* and that *"only the
+independent M1 ... can decide"* assert a uniqueness that does not follow from the
+formula. Under the commissioned linear model the comparative ratio cancels both
+the reference power and the common reference transfer; the verifier obtained the
+identical `q = 0.500000` for reference transfers `H_R = 0.4` and `H_R = 0.9`. A
+same-resolution but independent, sufficiently powered reference can normalise
+*relative* transfer. Two independent high-resolution truth halves remain
+valuable for absolute units, bias and power — they are not algebraically
+mandatory for the comparative ratio.
+
+**This changes the justification, not the schedule.** No cheaper asset exists in
+usable form: adequate signal power, cross-fit independence, fixed-pattern
+calibration, eligible common-render outputs and a commissioned admission rule
+are all missing, and M135 independently records that the archive holds no
+same-site reference/output pair with disjoint calibration. **M1 remains the only
+route with a path to an admissible result, and Ask 2a remains the highest-value
+owner action.** What is withdrawn is the claim that it is mathematically
+mandatory — a claim this program did not need and could not support.
+
+### 16.5 A verifier that passes with randomness disabled
+
+`experiments/M164-m2-repair/verify.py` reports `PASS: 8 checks` **with
+`np.random.default_rng` forced to raise.** It loads `commission.json`, recomputes
+summaries from stored trial ratios, and checks identities, gates, hashes and
+report strings. It never regenerates the experiment and never tests the ruling.
+
+This is recorded in the plan, not merely in the lane, because the orchestrator
+relied on that `PASS` when accepting the work. **An artifact-consistency checker
+and a re-derivation are different instruments, and a report string that does not
+distinguish them will be over-trusted by whoever reads it next.** Numerical
+reproducibility here was established by the verifier's independent rerun from
+source, not by `verify.py`.
+
+### 16.6 What this amendment does not change
+
+- **No axis, bar, or holdout is altered.** M2 remains `UNMEASURED`; the
+  scorecard is untouched.
+- **The detail instrument remains the critical path**, and the requirement that
+  it survive a flat null and a planted improvement is unchanged.
+- **Amendments 1–5 stand**, with Amendment 1's central sentence qualified by
+  §16.2 rather than withdrawn.
+- **No result is retracted.** M164's synthetic commissioning stands as
+  synthetic; what is narrowed is the scope claimed around it.

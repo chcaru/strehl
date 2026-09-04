@@ -280,9 +280,21 @@ from outside them.
 
 That sounds like bad news and is not, because it points at exactly the escape
 route your own plan already contained: score the lower magnification and use the
-higher one as the truth. **The reference has to come from the capture.** I have
-an independent lane attacking that proof now, and I will not write it into the
-plan until that lane reports.
+higher one as the truth. **The identifying information has to come from outside
+those images, and capture is the only usable source of it we have.**
+
+**That proof has now been independently attacked, and it held.** A separate lane
+reproduced every number from source — byte-identical to the committed artifact —
+built its own counterexample from scratch, and confirmed the core argument. It
+also caught the first lane overselling two things around it, and I have corrected
+both in the plan rather than letting them stand: the impossibility is *not* a
+universal statement about every conceivable metric, and M1 is *not* the only
+anchor that could work in principle. In practice nothing cheaper exists — no
+adequately powered, independently calibrated reference is sitting in the archive —
+so **M1 is still the only route with a path to a real result, and Ask 2a is still
+the best five minutes you can give this program.** What I withdrew was a claim
+that it was mathematically forced, which this program never needed and could not
+support.
 
 **What this means for you, concretely.** It raises the value of the two frames
 in Ask 2a and lowers the value of everything else on this page. Those two frames
