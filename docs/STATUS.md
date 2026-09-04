@@ -1875,6 +1875,118 @@ several dependent quality and comparator judgements. **M8 is the only immediatel
 measurable complete quality axis.** That is the whole live surface of this
 program: one axis that can be measured today, and one that cannot yet be defined.
 
+### 2.9.11 FRC was the last hope for the detail axis, and the reason it died inverts my own argument
+
+**Verdict: `NO-GO as M1's detail instrument`** (`docs/research/M-FRC-VIABILITY.md`,
+commit `34cd4063`). I found Fourier Ring Correlation this session by searching for
+anything that had ever survived a sharpening arm, and it looked like the strongest
+candidate the program had seen. It is what the governing proposal actually
+prescribes -- `2026-08-sota-path.md:192-197` specifies detail as *"D1: FRC +
+slant-edge"* -- and the split prototype had recorded it surviving an unsharp arm
+three times stronger than the registered one.
+
+**I argued for it on algebra, and the algebra was right.** FRC is a per-ring
+normalised cross-correlation between two independent realisations. An isotropic
+unsharp mask has a real transfer function constant on each ring, so it multiplies
+the ring numerator by `a^2` and each denominator factor under the square root by
+`a^2`, cancelling exactly on the finite sample. I put that to the lane as a
+guarantee categorically stronger than the one that failed for candidate 1, because
+it is a finite-sample identity rather than a population theorem.
+
+**The lane accepted the derivation and used it to kill the candidate.** A statistic
+that exactly cancels an arbitrary-strength common linear filter cancels **blur**
+exactly as it cancels sharpening. It is *"structurally blind to an
+arbitrary-strength common linear post-filter, including blur."* A detail instrument
+must rank more detail above less detail; FRC provably cannot rank either direction.
+**Invariance and blindness are the same property here**, and the guarantee I was
+most impressed by is precisely the disqualification. It survives only as a
+secondary repeatability sentinel.
+
+That also settles the standing worry from `BUILD-SHARP.md:172` -- the claim that
+something was *"18,644x more responsive than ring FRC"* -- against FRC rather than
+in its favour. A statistic hard to fool because it barely moves is not safe, it is
+inert.
+
+**The tally is now six.** `Q25` at `5.560744x` (+456.07%); three slanted-edge
+implementations at ~9.9%; `S_25` at `1.028294x`; candidate 1 at `1.095732x`; and FRC
+by blindness. **The detail axis has no admissible instrument and, for the first time,
+no candidate in flight that is merely waiting on data.**
+
+**Candidate 2 is untested, not dead, and the distinction is the whole result.**
+Freeze `c1e7840d`, results `8c9966fa`, report `docs/research/M-CAND2.md`. Its verdict
+reads verbatim **`CANDIDATE 2 DOES NOT LIVE -- uncommissioned, not empirically
+killed.`** The unclipped-USM arm passed by algebra exactly as predicted before the
+run -- `R = 1 + 2.66e-14`, congruence residual `1.25e-15` -- which was only ever an
+implementation check, because an unclipped unsharp mask is `1.5*I - 0.5*G`, full-rank
+and invertible, and therefore the exact case the congruence identity protects. The
+arm that could have killed it was **inert**: **zero rail hits across 2,088,960
+values**, so clipping was a no-op. The lane detected this itself, corrected its
+potency checker, preserved the raw results, refused to retune, and stopped every
+later arm. **An inert adversary and a genuinely survived adversary produce the same
+number**, and only a potency check separates them. It has been re-tasked to
+commission a potent clipping adversary and to run the tone arms, which the
+investigation spec says *"remain empirical kill arms"* and which are where the
+candidate is genuinely exposed.
+
+**The competitive deficit against sharpened Zerene PMax is rejected as a confound.**
+`V-HEADTOHEAD3` completed while these lanes ran (now 887 lines, still committing) and
+disposed of the question at `:212-219`: the Sharpness-40 arm is *"a confounded
+spatial-development comparison, and both flat and hull placebos go strongly
+positive."* Positive flat power reads `1.7291 [1.3645,2.1638]` and hull excess
+`0.03692 [0.01311,0.06010]`. Its licensed transfer arm then measured
+`M40 = USM05(PMax0)/PMax40 = 1.0187 [0.6937,1.5825]` -- a plain radius-1 amount-0.5
+unsharp mask applied to unsharpened PMax reproduces sharpened PMax to within the
+interval. **Strehl is not shown to lose detail to PMax40; that arm was measuring
+development, not merging.** The same lane also refused `Q25` outright: tone arms held
+at `0.999963/1.000000/0.999966`, but a **genuine sigma-1.20 optical improvement read
+`0.977981`** -- the wrong sign -- while information-free USM was rewarded `5.560744x`.
+A statistic that penalises real resolution and pays for fake sharpening is worse than
+no statistic.
+
+**The capture was hours from being shot wrong.** The 319-frame request gets the
+mechanical core right -- SteadyShot and OSS off, fixed exposure, coplanar
+nonperiodic patch -- and the lane still returned **"NO, not exactly as specified."**
+Its defects: two complete sweeps from an *"identical near-focus reset"* do not
+guarantee matched focus nodes, so A and B can resolve different material and present
+a latent mismatch as independent noise; **frame count is not site count**, and 55/27
+frames give one output pair per condition rather than the registered 64 independent
+sites; `"flats 32 / darks 32"` is underspecified, and paper fibre texture is exactly
+confounded with PRNU unless defocus removes it. **The owner had not yet shot, and has
+approved the amendment: the session is now 383 frames**, with 32 flats and 32 darks
+*per realization* so each output gets an independent calibration master.
+
+**The primary fix is unavailable on this body.** The owner shoots with **in-camera
+focus bracketing on the A7C II**, which drives the focus ladder itself; there is no
+way to expose A and B back-to-back at each node. The fallback -- a separately frozen
+focus-repeatability gate plus fixed-focus witnesses proving the two node ladders
+coincide -- is therefore the actual protocol, and the lane is making it operational.
+This is not hypothetical: **SPLIT2 died on exactly this**, at a registration residual
+of `0.107703` against a `0.10` native-pixel bar, with an independent ECC reproducing
+`0.105202`.
+
+**What the incoming capture is now worth.** It unblocks two questions, not one.
+`V-HEADTOHEAD3` stopped at the same wall, unable to settle *"recovered scene detail
+or amplified noise/ringing"* because *"without independent same-focus repeats/noise
+qualification, correlation to those ARWs would also validate amplified sensor
+noise."* Independent same-focus repeats exist in no capture this project owns. The
+383-frame session is the only one that will contain any, which is why getting its
+specification right outranked every other live task this hour.
+
+**There is finally a build path, and it is ranked on a property worth naming.** The
+planning lane returns **pause, then conditionally build D9 (fixed reduction
+lattice)** -- because **D9's verification survives M1**. Worker count currently
+changes floating-point reduction order, measured at `0.2573%` of pixels differing by
+at most 1 DN, and the fix is checked by exact cross-worker hashes, which need no
+detail instrument at all. Everything with a larger apparent payoff is gated behind an
+axis that cannot yet be defined. Default-on dust correction ranks second on measured
+grounds -- the physical mote moves `-4.644%` to `+0.019%` and a deliberately wrong map
+produces byte-identical output -- but its no-harm null covered a single subject.
+
+**The honest summary of this hour: one hope found and killed on its own merits, one
+candidate saved from a hollow green, one competitive deficit dissolved into a
+confound, and one irreplaceable capture corrected before exposure.** The scoreboard
+is unchanged at **0/12 MEASURED**.
+
 ---
 
 ## 3. Gaps, ranked by what stands between here and print-worthy
