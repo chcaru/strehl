@@ -155,11 +155,52 @@ the checker SHA-256 is
 The checked-in binding remains `UNBOUND`, so no current result is a
 claim-bearing `detail_pass`.
 
-**VERIFIED.** M138 requires an amendment before binding: its current input and
-output lists omit the flat certificate, its adjudicator accepts supplied
-Booleans instead of invoking M135, and its pinned M135 source hash predates the
-mandatory-flat API. That amendment must route unbound or invalid M135 states
-to instrument blockage, not Phase-1 refutation.
+**VERIFIED.** M138 has since adopted the executable interface. The thin
+`m138_adapter.py` wrapper now exposes the exact
+`--m138-commission REQUEST` and `--m138-evaluate REQUEST` commands under
+`python -I`, verifies the bundle, environment, binding and every declared
+artifact, and invokes the frozen core once per capture. It emits
+`DETAIL_PASS → true` and `DETAIL_FAIL → false`; `NOT_APPLICABLE` and
+`INSTRUMENT_INVALID` become an `INSTRUMENT_INVALID` state with no Boolean
+entry. An unbound physical rule or request-level defect exits nonzero with no
+standard-output verdict.
+
+**VERIFIED.** The first frozen adapter invocation exposed that isolated Python
+does not put the script directory on `sys.path`; amendment 1 replaced the
+ordinary sibling import with an explicit path-bound import before any request
+or statistic ran. The next full battery passed 24/25; its only miss was a
+test-fixture `null` used where a syntactically valid dummy hash was required.
+Amendment 2 changed only that fixture. The final rerun passed all 25 controls,
+including valid pass/fail output, flat and missing-flat no-Boolean states,
+not-applicable handling, both physical direction controls, hash mutation,
+supplied-Boolean rejection, duplicate-capture rejection, deterministic output,
+and explicit unbound refusal. A post-pass source audit then found that the
+adapter's own bundle verification occurred after Python had loaded the local
+core. M138's outer adjudicator already verified that bundle before launch, but
+the standalone adapter's claimed verification order was too strong.
+Amendment 3 deferred the core and NumPy imports until after bundle and
+environment verification. Its complete rerun again passed 25/25 and reproduced
+byte-for-byte. A separate five-check tamper harness then replaced the local
+core with a sentinel side effect while retaining the old bundle: the adapter
+refused the hash mismatch before the sentinel executed. A final source review
+identified that Python's ordinary source loader could still consume an
+unbound cached `.pyc`; amendment 4 instead compiles and executes the verified
+source bytes directly. The final 25/25 battery again passed byte-for-byte. Its
+expanded 10/10 bootstrap test proved both that a conventional loader would
+execute a planted, timestamp-eligible poisoned cache and that this adapter
+ignored it, then re-proved pre-import source-hash refusal. The 24/25 and both
+pre-hardening 25/25 artifacts are retained.
+
+**VERIFIED.** The adapter SHA-256 is
+`6d4366533b2b12fc1e03c44d96faa1af3d7e89e6c6f35ed5420dd33b8e5e6290`;
+the checker-bundle SHA-256 is
+`fa3f5135693766114aed6db58bfa74197236e5a51b454a421951f645cdcb27ea`;
+and the canonical adapter-contract SHA-256 is
+`30453f8901c0b121a48771d35c9cf735da88358bb441794b918de77b267903e2`.
+The production description validates the bundle under isolated Python and
+reports `UNBOUND`. Therefore this is a commissioned consumer interface, not a
+physical detail result. A separate-author review of the adapter remains
+pending.
 
 ## Load-bearing negative diagnostics
 

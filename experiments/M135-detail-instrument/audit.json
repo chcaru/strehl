@@ -1,12 +1,16 @@
 {
   "status": "PASS",
-  "citation_count": 111,
-  "citation_range_count": 132,
-  "verified_tags": 92,
+  "citation_count": 120,
+  "citation_range_count": 141,
+  "verified_tags": 94,
   "assumed_tags": 40,
   "d8_checks": 14,
   "flat_checks": 20,
   "comparison_checks": 14,
   "comparison_binding_state": "UNBOUND",
+  "adapter_checks": 25,
+  "adapter_bootstrap_checks": 10,
+  "adapter_binding_state": "UNBOUND",
+  "adapter_independent_review": "PENDING",
   "findings": []
 }

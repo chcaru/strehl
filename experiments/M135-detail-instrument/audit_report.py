@@ -68,6 +68,47 @@ def main() -> None:
     comparison_binding = json.loads(
         (HERE / "comparison-binding.json").read_text(encoding="utf-8")
     )
+    adapter_verification = json.loads(
+        (HERE / "m138-adapter-verification.json").read_text(encoding="utf-8")
+    )
+    adapter_failed_verification = json.loads(
+        (HERE / "m138-adapter-verification-run2-failed.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    adapter_pre_bootstrap_verification = json.loads(
+        (HERE / "m138-adapter-verification-run3-pre-bootstrap.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    adapter_bootstrap_verification = json.loads(
+        (HERE / "m138-adapter-bootstrap-verification.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    adapter_pre_source_verification = json.loads(
+        (HERE / "m138-adapter-verification-run4-pre-source-loader.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    adapter_pre_source_bootstrap = json.loads(
+        (
+            HERE
+            / "m138-adapter-bootstrap-verification-run1-pre-source-loader.json"
+        ).read_text(encoding="utf-8")
+    )
+    adapter_manifest = json.loads(
+        (HERE / "m138-adapter-result-manifest.json").read_text(encoding="utf-8")
+    )
+    adapter_contract = json.loads(
+        (HERE / "m138-adapter-contract.json").read_text(encoding="utf-8")
+    )
+    adapter_bundle = json.loads(
+        (HERE / "m138-checker-bundle.json").read_text(encoding="utf-8")
+    )
+    adapter_description = json.loads(
+        (HERE / "m138-adapter-description.json").read_text(encoding="utf-8")
+    )
 
     citation_pattern = re.compile(
         r"(?:(?P<revision>[0-9a-f]{7,40}):)?"
@@ -303,6 +344,144 @@ def main() -> None:
     ) != len(comparison_verification.get("checks", {})):
         findings.append({"kind": "comparison_verification_manifest"})
 
+    adapter_checks = adapter_verification.get("checks", {})
+    if (
+        adapter_verification.get("status") != "PASS"
+        or adapter_verification.get("check_count") != 25
+        or adapter_verification.get("passed_check_count") != 25
+        or not isinstance(adapter_checks, dict)
+        or set(adapter_checks.values()) != {True}
+    ):
+        findings.append({"kind": "adapter_verification"})
+    failed_adapter_checks = adapter_failed_verification.get("checks", {})
+    if (
+        adapter_failed_verification.get("status") != "FAIL"
+        or adapter_failed_verification.get("check_count") != 25
+        or adapter_failed_verification.get("passed_check_count") != 24
+        or {
+            name for name, passed in failed_adapter_checks.items() if not passed
+        }
+        != {"unbound_status_is_explicit"}
+    ):
+        findings.append({"kind": "adapter_failed_run_history"})
+    if (
+        adapter_pre_bootstrap_verification.get("status") != "PASS"
+        or adapter_pre_bootstrap_verification.get("check_count") != 25
+        or adapter_pre_bootstrap_verification.get("passed_check_count") != 25
+        or set(adapter_pre_bootstrap_verification.get("checks", {}).values())
+        != {True}
+    ):
+        findings.append({"kind": "adapter_pre_bootstrap_run_history"})
+    if (
+        adapter_bootstrap_verification.get("status") != "PASS"
+        or adapter_bootstrap_verification.get("check_count") != 10
+        or adapter_bootstrap_verification.get("passed_check_count") != 10
+        or set(adapter_bootstrap_verification.get("checks", {}).values()) != {True}
+        or adapter_bootstrap_verification.get("adapter_sha256")
+        != raw_sha256(HERE / "m138_adapter.py")
+        or adapter_bootstrap_verification.get("bundle_sha256")
+        != raw_sha256(HERE / "m138-checker-bundle.json")
+    ):
+        findings.append({"kind": "adapter_bootstrap_verification"})
+    for label, artifact, expected_checks in (
+        ("adapter_pre_source_run_history", adapter_pre_source_verification, 25),
+        ("adapter_pre_source_bootstrap_history", adapter_pre_source_bootstrap, 5),
+    ):
+        if (
+            artifact.get("status") != "PASS"
+            or artifact.get("check_count") != expected_checks
+            or artifact.get("passed_check_count") != expected_checks
+            or set(artifact.get("checks", {}).values()) != {True}
+        ):
+            findings.append({"kind": label})
+    if (
+        adapter_contract.get("schema") != "m135-m138-adapter-contract-v1"
+        or canonical_json_sha256(HERE / "m138-adapter-contract.json")
+        != "30453f8901c0b121a48771d35c9cf735da88358bb441794b918de77b267903e2"
+    ):
+        findings.append({"kind": "adapter_contract_hash"})
+    if (
+        adapter_manifest.get("status") != "PASS_INTERFACE_ONLY_PHYSICAL_UNBOUND"
+        or adapter_manifest.get("physical_binding_state") != "UNBOUND"
+        or adapter_manifest.get("claim_bearing_detail_decision_available") is not False
+    ):
+        findings.append({"kind": "adapter_manifest_overclaim"})
+    for name, hashes in adapter_manifest.get("files", {}).items():
+        path = HERE / name
+        if not path.is_file() or raw_sha256(path) != hashes.get("raw_sha256"):
+            findings.append({"kind": "adapter_manifest_hash", "path": name})
+    adapter_contract_manifest = adapter_manifest.get("adapter_contract", {})
+    if (
+        raw_sha256(HERE / "m138-adapter-contract.json")
+        != adapter_contract_manifest.get("raw_sha256")
+        or canonical_json_sha256(HERE / "m138-adapter-contract.json")
+        != adapter_contract_manifest.get("canonical_sha256")
+    ):
+        findings.append({"kind": "adapter_contract_manifest"})
+    adapter_verification_manifest = adapter_manifest.get("verification", {})
+    if raw_sha256(HERE / "m138-adapter-verification.json") != (
+        adapter_verification_manifest.get("final", {}).get("raw_sha256")
+    ):
+        findings.append({"kind": "adapter_final_verification_hash"})
+    if raw_sha256(HERE / "m138-adapter-verification-run2-failed.json") != (
+        adapter_verification_manifest.get("amendment_1_run", {}).get("raw_sha256")
+    ):
+        findings.append({"kind": "adapter_failed_verification_hash"})
+    if raw_sha256(HERE / "m138-adapter-verification-run3-pre-bootstrap.json") != (
+        adapter_verification_manifest.get("pre_bootstrap_hardening", {}).get(
+            "raw_sha256"
+        )
+    ):
+        findings.append({"kind": "adapter_pre_bootstrap_verification_hash"})
+    if raw_sha256(HERE / "m138-adapter-bootstrap-verification.json") != (
+        adapter_verification_manifest.get("bootstrap_order", {}).get("raw_sha256")
+    ):
+        findings.append({"kind": "adapter_bootstrap_verification_hash"})
+    if raw_sha256(HERE / "m138-adapter-verification-run4-pre-source-loader.json") != (
+        adapter_verification_manifest.get("pre_source_loader_hardening", {}).get(
+            "raw_sha256"
+        )
+    ):
+        findings.append({"kind": "adapter_pre_source_verification_hash"})
+    if raw_sha256(
+        HERE / "m138-adapter-bootstrap-verification-run1-pre-source-loader.json"
+    ) != adapter_verification_manifest.get("pre_source_loader_bootstrap", {}).get(
+        "raw_sha256"
+    ):
+        findings.append({"kind": "adapter_pre_source_bootstrap_hash"})
+    if (
+        adapter_verification.get("adapter_sha256")
+        != raw_sha256(HERE / "m138_adapter.py")
+        or adapter_verification.get("adapter_contract_canonical_sha256")
+        != canonical_json_sha256(HERE / "m138-adapter-contract.json")
+    ):
+        findings.append({"kind": "adapter_verification_identity"})
+    if (
+        adapter_bundle.get("schema") != "m135-checker-bundle/v1"
+        or adapter_bundle.get("rule_id") != "m135-m138-adapter-v1"
+    ):
+        findings.append({"kind": "adapter_bundle_schema"})
+    else:
+        for ref in adapter_bundle.get("files", []):
+            path = HERE / ref.get("path", "")
+            if not path.is_file() or raw_sha256(path) != ref.get("sha256"):
+                findings.append(
+                    {"kind": "adapter_bundle_hash", "path": ref.get("path")}
+                )
+    if (
+        adapter_description.get("binding_state") != "UNBOUND"
+        or adapter_description.get("checker_sha256")
+        != raw_sha256(HERE / "m138_adapter.py")
+        or adapter_description.get("checker_bundle_manifest_sha256")
+        != raw_sha256(HERE / "m138-checker-bundle.json")
+        or adapter_description.get("environment_manifest_sha256")
+        != raw_sha256(HERE / "m138-adapter-environment.json")
+        or adapter_description.get("comparison_rule_sha256")
+        != raw_sha256(HERE / "comparison-contract.json")
+        or adapter_manifest.get("production_description") != adapter_description
+    ):
+        findings.append({"kind": "adapter_production_description"})
+
     output = {
         "status": "PASS" if not findings else "FAIL",
         "citation_count": len(list(citation_pattern.finditer(report))),
@@ -316,6 +495,12 @@ def main() -> None:
         "flat_checks": len(flat_verification.get("checks", {})),
         "comparison_checks": len(comparison_verification.get("checks", {})),
         "comparison_binding_state": comparison_binding.get("state"),
+        "adapter_checks": len(adapter_checks),
+        "adapter_bootstrap_checks": len(
+            adapter_bootstrap_verification.get("checks", {})
+        ),
+        "adapter_binding_state": adapter_description.get("binding_state"),
+        "adapter_independent_review": "PENDING",
         "findings": findings,
     }
     output_path = Path(__file__).resolve().parent / "audit.json"

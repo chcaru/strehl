@@ -1088,24 +1088,23 @@ after provenance is removed.
 
 ## 8.1 M138 consumer interface
 
-**VERIFIED.** M138 requires a bound M135 checker before any corrected-gate
-candidate render, requires that checker to return `detail_pass` on every
-applicable capture, and explicitly forbids accepting a Boolean supplied by a
-result file
-(`7fb925bf:experiments/M138-w1-gate-audit/corrected-gate-preregistration.md:309-348,401-425`).
-It also correctly reserves `BLOCKED_DETAIL_INSTRUMENT` for an absent or invalid
-physical M135 binding rather than calling that a Phase-1 loss
-(`7fb925bf:experiments/M138-w1-gate-audit/corrected-gate-preregistration.md:445-456`).
+**VERIFIED.** M138 now requires a bound M135 executable before any
+corrected-gate candidate render. It invokes the checker itself under
+`python -I`, verifies its transitive bundle and environment, rejects
+campaign-supplied Booleans, and requires a complete per-capture state ledger.
+Only `DETAIL_PASS` and `DETAIL_FAIL` may have Boolean entries;
+`INSTRUMENT_INVALID` must not
+(`experiments/M138-w1-gate-audit/corrected-gate-preregistration.md:250-333`;
+`experiments/M138-w1-gate-audit/corrected-gate-contract.json:121-157`;
+`experiments/M138-w1-gate-audit/adjudicate.py:648-827`). It correctly reserves
+`BLOCKED_DETAIL_INSTRUMENT` for an absent physical binding rather than calling
+that a Phase-1 loss.
 
-**VERIFIED.** The interface in M138 commit `7fb925bf` cannot be bound unchanged.
-Its contract names only `R1/R2/Y1/Y2`, omits the mandatory matched-flat roles,
-and omits M135's flat-control output. Its current adjudicator consumes a map of
-producer-supplied Booleans, although its own preregistration says those
-Booleans are inadmissible
-(`7fb925bf:experiments/M138-w1-gate-audit/corrected-gate-contract.json:109-130`;
-`7fb925bf:experiments/M138-w1-gate-audit/adjudicate.py:350-361`). Its pinned M135 source
-hash also predates the mandatory-flat API. M138 therefore needs a pre-output
-binding amendment; this is not a request to weaken either gate.
+**VERIFIED.** The earlier M138 interface at commit `7fb925bf` omitted the
+mandatory flat roles and accepted supplied Booleans. That historical
+incompatibility was reported rather than worked around; M138 repaired its
+contract before M135 built the adapter. No M135 threshold or refusal was
+weakened to satisfy the consumer.
 
 **VERIFIED.** M135 now supplies the versioned rule
 `m135-detail-pass-v1`. It is one-capture-at-a-time and emits:
@@ -1149,6 +1148,43 @@ replacement self-test again passed `14 / 14`
 `experiments/M135-detail-instrument/comparison-rule-manifest.json:1-42`;
 `experiments/M135-detail-instrument/CONSUMER-AMENDMENT-1.md:1-22`).
 
+**VERIFIED.** `m138_adapter.py` implements the current M138 envelope without
+changing the frozen core. It hash-verifies the request artifacts, checker
+bundle, environment, physical preregistration binding, and comparison rule,
+then invokes `comparison_checker.adjudicate` separately for every capture.
+Valid pass/fail decisions alone enter `detail_pass_by_capture`; internal
+invalidity remains in `detail_state_by_capture` with no Boolean. Request-level
+invalidity and an unbound physical rule exit nonzero with no standard-output
+verdict
+(`experiments/M135-detail-instrument/M138-ADAPTER-PREREGISTRATION.md:18-166`;
+`experiments/M135-detail-instrument/m138_adapter.py:313-380,469-685`).
+
+**VERIFIED.** After four frozen implementation amendments, the complete
+adapter battery passed `25 / 25`. It exercised valid pass and fail, flat-ROI
+and missing-flat internal invalidity, not-applicable capture handling,
+byte-stable output, both optical-direction controls, hash mutation,
+producer-Boolean and duplicate-capture refusal, and explicit unbound refusal.
+The amendment-1 run is retained at `24 / 25`; its only miss was a malformed
+test-only unbound hash, not a production decision. Amendment 3 additionally
+made the standalone bootstrap verify the bundle and environment before loading
+the local core or NumPy; M138's outer verifier already provided that ordering
+for the registered consumer path. A five-check tamper harness replaced the
+local core with a sentinel side effect under the stale bundle and verified
+that hash refusal occurred before the sentinel could execute. Amendment 4
+then removed the remaining cached-bytecode ambiguity by compiling the verified
+core source bytes directly. Its expanded `10 / 10` harness proved that a
+conventional loader executed a planted, timestamp-eligible poisoned `.pyc`
+while the adapter ignored it, and re-proved source-hash refusal before
+execution
+(`experiments/M135-detail-instrument/m138-adapter-verification.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-bootstrap-verification.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-verification-run2-failed.json:1`;
+`experiments/M135-detail-instrument/m138-adapter-verification-run3-pre-bootstrap.json:1`;
+`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-1.md:1-24`;
+`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-2.md:1-22`;
+`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-3.md:1-25`;
+`experiments/M135-detail-instrument/M138-ADAPTER-AMENDMENT-4.md:1-23`).
+
 **VERIFIED.** The checked-in physical binding remains `UNBOUND`; therefore
 M135 currently emits no claim-bearing `detail_pass` for M138. Phase 1 remains
 `BLOCKED_DETAIL_INSTRUMENT` until physical M135 commissioning passes and M138
@@ -1190,9 +1226,10 @@ outcome, not a detail failure.
   per-capture `10,000`-draw bounds at the `64`-site floor without becoming
   `UNDERPOWERED`. The comparison checker is frozen; the physical generator is
   not yet implemented or commissioned.
-- **ASSUMED.** Whether M138 will adopt the required flat roles, invoke the
-  checker instead of trusting supplied Booleans, and preserve non-binary
-  instrument states. Until it does, its M135 dependency cannot be bound.
+- **ASSUMED.** Whether an independent author will reproduce the adapter's
+  25/25 interface battery and find no bundle, environment, request-shape, or
+  refusal-path defect. The adapter is self-tested but has not yet received the
+  rule-12 separate-author review.
 - **ASSUMED.** Whether `N=256` gives adequate rank and power for architecture B.
 - **ASSUMED.** Whether repeat-pair FRC, after independent A/B calibration,
   can drive the held-out flat/dark ring residual below a frozen bar on the
