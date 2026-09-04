@@ -1,0 +1,182 @@
+{
+  "blocker": "no frozen matching dark/flat pattern map exists",
+  "burned_input_permitted_for_commissioning_only": true,
+  "complete_invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\development_probe.py",
+    "--input",
+    "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl\\DSC00031.ARW",
+    "--settings",
+    "experiments\\M165-common-input\\settings-v1.json",
+    "--icc",
+    "experiments\\M165-common-input\\linear-prophoto-d50-v1.icc",
+    "--freeze",
+    "experiments\\M165-common-input\\converter-freeze-v1.json",
+    "--out",
+    "experiments\\M165-common-input\\out\\development-raw-probe.json"
+  ],
+  "converter_executable_sha256": "f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6",
+  "icc_inspection": {
+    "data_color_space": "RGB ",
+    "device_class": "mntr",
+    "header_d50_xyz": [
+      0.964202880859375,
+      1.0,
+      0.8249053955078125
+    ],
+    "matrix_columns_xyz": {
+      "blue": [
+        0.0313568115234375,
+        9.1552734375e-05,
+        0.8252105712890625
+      ],
+      "green": [
+        0.13519287109375,
+        0.7118682861328125,
+        0.0
+      ],
+      "red": [
+        0.79766845703125,
+        0.2880401611328125,
+        0.0
+      ]
+    },
+    "media_white_xyz": [
+      0.9642181396484375,
+      1.0,
+      0.8252105712890625
+    ],
+    "pcs": "XYZ ",
+    "profile_size": 548,
+    "profile_version_hex": "02100000",
+    "trc_gamma": {
+      "blue": 1.0,
+      "green": 1.0,
+      "red": 1.0
+    }
+  },
+  "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+  "in_memory_output": {
+    "c_contiguous": true,
+    "dtype": "uint16",
+    "first_pixel": [
+      12483,
+      12460,
+      13004
+    ],
+    "last_pixel": [
+      5409,
+      5345,
+      5415
+    ],
+    "rgb16_byte_sha256": "27dbd01c5fcfd15ebbf89b059faca9e015b6aaea06b75ae30210cbea3c4179cf",
+    "shape": [
+      4688,
+      7028,
+      3
+    ]
+  },
+  "pattern_map_applied": false,
+  "schema": "m165-development-raw-probe-v1",
+  "scoreable": false,
+  "settings_sha256": "a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587",
+  "source": {
+    "metadata": {
+      "active_height": 4688,
+      "active_width": 7028,
+      "black_levels": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "camera": {
+        "camera_temperature_c": null,
+        "exposure_time_s": 1.0,
+        "f_number": 5.6,
+        "focal_length_mm": 200.0,
+        "focus_distance_m": null,
+        "iso_speed": 100.0,
+        "lens_model": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+        "make": "SONY",
+        "model": "ILCE-7CM2",
+        "serial_number": null
+      },
+      "camera_whitebalance": [
+        2823.0,
+        1024.0,
+        1533.0,
+        1024.0
+      ],
+      "left_margin": 0,
+      "raw_height": 5120,
+      "raw_width": 7168,
+      "rgb_xyz_matrix": [
+        [
+          0.7459999918937683,
+          -0.23649999499320984,
+          -0.058800000697374344
+        ],
+        [
+          -0.5687000155448914,
+          1.3442000150680542,
+          0.24740000069141388
+        ],
+        [
+          -0.06239999830722809,
+          0.11559999734163284,
+          0.6583999991416931
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "sensor_fingerprint": {
+        "active_shape": [
+          4688,
+          7028
+        ],
+        "black_levels": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "color_description": "RGBG",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "raw_shape": [
+          5120,
+          7168
+        ],
+        "white_levels": [
+          15360,
+          15360,
+          15360,
+          15360
+        ]
+      },
+      "top_margin": 0,
+      "white_levels": [
+        15360,
+        15360,
+        15360,
+        15360
+      ]
+    },
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl\\DSC00031.ARW",
+    "sha256": "1b9ad0bac914f017aee35dc36ccec9a69d3f8c8284c604ff9bce0cc9bcd2d38a"
+  },
+  "status": "DEVELOPMENT_ONLY_NONCONTRACT",
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+}

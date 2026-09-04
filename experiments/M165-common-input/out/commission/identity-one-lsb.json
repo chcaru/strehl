@@ -1,0 +1,1 @@
+{"schema":"m165-strehl-common-input-identity-v1","status":"FAIL","failure_class":"ERROR_RETURN","reason":"pixel payload SHA-256 mismatch: expected 17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b, got f229a267899a682ab9b4fffd8533c1429aa893d6f236224ee7d1f5cd43abbd68"}

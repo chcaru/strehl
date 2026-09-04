@@ -1,0 +1,1 @@
+{"schema":"m165-strehl-common-input-identity-v1","status":"FAIL","failure_class":"ERROR_RETURN","reason":"only little-endian TIFF is admitted by the common-input contract"}

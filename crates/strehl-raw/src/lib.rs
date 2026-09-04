@@ -33,6 +33,7 @@ use strehl_core::plane::{PlaneGeometry, QuadSource};
 /// profile is optional, and a capture that carries no identity must decode
 /// exactly as it did before this module existed.
 pub mod identity;
+pub mod common_tiff;
 
 pub use identity::{CaptureIdentity, identity};
 

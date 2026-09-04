@@ -1,0 +1,78 @@
+{
+  "schema": "m165-sensor-pattern-map-v1",
+  "status": "UNFROZEN",
+  "capture_match": {
+    "make": "REQUIRED",
+    "model": "REQUIRED",
+    "iso_speed": 0.0,
+    "serial_number": null,
+    "exposure_time_s": 0.0,
+    "f_number": 0.0,
+    "lens_model": "REQUIRED",
+    "focal_length_mm": 0.0,
+    "focus_distance_m": null,
+    "camera_temperature_c": null
+  },
+  "sensor_fingerprint": {
+    "active_shape": [
+      0,
+      0
+    ],
+    "raw_shape": [
+      0,
+      0
+    ],
+    "black_levels": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "white_levels": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "raw_pattern": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "color_description": "RGBG"
+  },
+  "active_shape": [
+    0,
+    0
+  ],
+  "semantics": "corrected = black + clip((raw - black - offset_dn) * gain, 0, white - black)",
+  "arrays": {
+    "gain": {
+      "dtype": "float32",
+      "shape": [
+        0,
+        0
+      ]
+    },
+    "offset_dn": {
+      "dtype": "float32",
+      "shape": [
+        0,
+        0
+      ]
+    }
+  },
+  "map_npz_sha256": "REQUIRED",
+  "estimator": {
+    "id": "REQUIRED",
+    "version": "REQUIRED",
+    "executable_sha256": "REQUIRED"
+  },
+  "independent_dark_source_sha256": [],
+  "independent_flat_source_sha256": []
+}

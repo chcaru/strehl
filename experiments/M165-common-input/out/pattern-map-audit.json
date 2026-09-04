@@ -1,0 +1,30 @@
+{
+  "schema": "m165-pattern-map-audit-v1",
+  "status": "ABSENT",
+  "searched": [
+    {
+      "path": "experiments/M71-flat-fields",
+      "npy_total": 250,
+      "plane_mean_arrays": 72,
+      "dark_bias_dsnu_arrays": 0,
+      "gain_arrays": 0,
+      "npz_maps": 0,
+      "finding": "Flat-analysis intermediates exist, but no paired dark-derived offset field and no frozen combined correction map exist."
+    },
+    {
+      "path": "experiments/m2-fpn",
+      "files_total": 2184,
+      "candidate_pattern_maps": 0
+    },
+    {
+      "path": "experiments/m16-orientation-fpn",
+      "files_total": 3505,
+      "candidate_pattern_maps": 0
+    }
+  ],
+  "independent_prior_evidence": {
+    "path": "docs/research/SCORECARD-BASELINE.md",
+    "finding": "The registered bee preflight reports matching 1.6 s darks/flats as 0/0."
+  },
+  "conclusion": "No eligible frozen deterministic-pattern map estimated from independent matching dark and flat captures exists."
+}

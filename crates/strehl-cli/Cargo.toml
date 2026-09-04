@@ -12,6 +12,10 @@ description = "Command-line interface for strehl."
 name = "strehl"
 path = "src/main.rs"
 
+[[bin]]
+name = "strehl-common-input"
+path = "src/bin/strehl-common-input.rs"
+
 [dependencies]
 strehl-core.workspace = true
 strehl-plugin.workspace = true

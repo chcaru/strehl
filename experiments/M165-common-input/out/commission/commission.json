@@ -1,0 +1,290 @@
+{
+  "baseline": {
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+      "--tiff",
+      "experiments\\M165-common-input\\out\\commission\\identity-baseline.tiff",
+      "--report",
+      "experiments\\M165-common-input\\out\\commission\\identity-baseline.json",
+      "--file-sha256",
+      "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+      "--pixel-sha256",
+      "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "--icc-sha256",
+      "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "--source-sha256",
+      "25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a",
+      "--converter-sha256",
+      "f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6",
+      "--settings-sha256",
+      "a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587",
+      "--pattern-map-sha256",
+      "880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654",
+      "--pattern-manifest-sha256",
+      "a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2",
+      "--exercise-core-merge"
+    ],
+    "exit_code": 0,
+    "report": {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "compression": 1,
+      "core_merge_exercised": true,
+      "file_sha256": "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+      "height": 5,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "internal_premerge_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "merge_sample_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "photometric": 2,
+      "pixel_payload_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "planar_configuration": 1,
+      "provenance": "{\"converter_executable_sha256\":\"f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6\",\"icc_sha256\":\"16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef\",\"pattern_manifest_sha256\":\"a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2\",\"pattern_map_sha256\":\"880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654\",\"schema\":\"m165-common-input-provenance-v1\",\"settings_sha256\":\"a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587\",\"source_sha256\":\"25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a\"}",
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "schema": "m165-strehl-common-input-identity-v1",
+      "status": "PASS",
+      "strip_count": 1,
+      "tiff": "experiments\\M165-common-input\\out\\commission\\identity-baseline.tiff",
+      "width": 7
+    },
+    "stderr": "",
+    "stdout": "{\"schema\":\"m165-strehl-common-input-identity-v1\",\"status\":\"PASS\",\"tiff\":\"experiments\\\\M165-common-input\\\\out\\\\commission\\\\identity-baseline.tiff\",\"width\":7,\"height\":5,\"bits_per_sample\":[16,16,16],\"sample_format\":[1,1,1],\"compression\":1,\"photometric\":2,\"planar_configuration\":1,\"strip_count\":1,\"file_sha256\":\"a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788\",\"pixel_payload_sha256\":\"17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b\",\"internal_premerge_sha256\":\"17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b\",\"merge_sample_sha256\":\"17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b\",\"core_merge_exercised\":true,\"icc_sha256\":\"16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef\",\"provenance\":\"{\\\"converter_executable_sha256\\\":\\\"f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6\\\",\\\"icc_sha256\\\":\\\"16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef\\\",\\\"pattern_manifest_sha256\\\":\\\"a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2\\\",\\\"pattern_map_sha256\\\":\\\"880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654\\\",\\\"schema\\\":\\\"m165-common-input-provenance-v1\\\",\\\"settings_sha256\\\":\\\"a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587\\\",\\\"source_sha256\\\":\\\"25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a\\\"}\"}"
+  },
+  "checks": {
+    "actual_core_merge_exercised": true,
+    "baseline_passes": true,
+    "malformed_degrades_to_fail": true,
+    "metadata_bitflip_fails": true,
+    "metadata_bitflip_moves_file_hash": true,
+    "metadata_bitflip_preserves_pixel_hash": true,
+    "one_lsb_fails": true,
+    "one_lsb_moves_pixel_hash": true,
+    "pattern_probe_passes": true,
+    "repaired_passes": true
+  },
+  "complete_invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commission.py",
+    "--verifier",
+    "target\\debug\\strehl-common-input.exe",
+    "--icc",
+    "experiments\\M165-common-input\\linear-prophoto-d50-v1.icc",
+    "--freeze",
+    "experiments\\M165-common-input\\converter-freeze-v1.json",
+    "--out",
+    "experiments\\M165-common-input\\out\\commission"
+  ],
+  "expected_identity": {
+    "converter_sha256": "f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6",
+    "file_sha256": "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+    "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+    "pattern_manifest_sha256": "a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2",
+    "pattern_map_sha256": "880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654",
+    "pixel_payload_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+    "settings_sha256": "a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587",
+    "source_sha256": "25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a"
+  },
+  "malformed_input": {
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+      "--tiff",
+      "experiments\\M165-common-input\\out\\commission\\identity-malformed.tiff",
+      "--report",
+      "experiments\\M165-common-input\\out\\commission\\identity-malformed.json",
+      "--file-sha256",
+      "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+      "--pixel-sha256",
+      "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "--icc-sha256",
+      "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "--source-sha256",
+      "25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a",
+      "--converter-sha256",
+      "f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6",
+      "--settings-sha256",
+      "a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587",
+      "--pattern-map-sha256",
+      "880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654",
+      "--pattern-manifest-sha256",
+      "a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2"
+    ],
+    "exit_code": 1,
+    "report": {
+      "failure_class": "ERROR_RETURN",
+      "reason": "only little-endian TIFF is admitted by the common-input contract",
+      "schema": "m165-strehl-common-input-identity-v1",
+      "status": "FAIL"
+    },
+    "stderr": "",
+    "stdout": "{\"schema\":\"m165-strehl-common-input-identity-v1\",\"status\":\"FAIL\",\"failure_class\":\"ERROR_RETURN\",\"reason\":\"only little-endian TIFF is admitted by the common-input contract\"}"
+  },
+  "metadata_bitflip": {
+    "file_sha256": "6716d1f8c8a74f0ae3003d553136baeff3dbd98f2ee05f000c92638b41c36241",
+    "mutation": {
+      "byte_offset": 172,
+      "xor_mask": 1
+    },
+    "pixel_payload_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+    "verifier": {
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+        "--tiff",
+        "experiments\\M165-common-input\\out\\commission\\identity-bitflip.tiff",
+        "--report",
+        "experiments\\M165-common-input\\out\\commission\\identity-bitflip.json",
+        "--file-sha256",
+        "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+        "--pixel-sha256",
+        "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+        "--icc-sha256",
+        "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+        "--source-sha256",
+        "25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a",
+        "--converter-sha256",
+        "f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6",
+        "--settings-sha256",
+        "a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587",
+        "--pattern-map-sha256",
+        "880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654",
+        "--pattern-manifest-sha256",
+        "a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2"
+      ],
+      "exit_code": 1,
+      "report": {
+        "failure_class": "ERROR_RETURN",
+        "reason": "whole TIFF SHA-256 mismatch: expected a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788, got 6716d1f8c8a74f0ae3003d553136baeff3dbd98f2ee05f000c92638b41c36241",
+        "schema": "m165-strehl-common-input-identity-v1",
+        "status": "FAIL"
+      },
+      "stderr": "",
+      "stdout": "{\"schema\":\"m165-strehl-common-input-identity-v1\",\"status\":\"FAIL\",\"failure_class\":\"ERROR_RETURN\",\"reason\":\"whole TIFF SHA-256 mismatch: expected a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788, got 6716d1f8c8a74f0ae3003d553136baeff3dbd98f2ee05f000c92638b41c36241\"}"
+    }
+  },
+  "one_lsb": {
+    "file_sha256": "55b572cf6c5c0ae8db84ef794717413e679f4e1292efcbe7d1a48172611f91e7",
+    "mutation": {
+      "byte_offset": 1312,
+      "sample_after": 1001,
+      "sample_before": 1000
+    },
+    "pixel_payload_sha256": "f229a267899a682ab9b4fffd8533c1429aa893d6f236224ee7d1f5cd43abbd68",
+    "verifier": {
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+        "--tiff",
+        "experiments\\M165-common-input\\out\\commission\\identity-one-lsb.tiff",
+        "--report",
+        "experiments\\M165-common-input\\out\\commission\\identity-one-lsb.json",
+        "--file-sha256",
+        "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+        "--pixel-sha256",
+        "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+        "--icc-sha256",
+        "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+        "--source-sha256",
+        "25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a",
+        "--converter-sha256",
+        "f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6",
+        "--settings-sha256",
+        "a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587",
+        "--pattern-map-sha256",
+        "880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654",
+        "--pattern-manifest-sha256",
+        "a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2"
+      ],
+      "exit_code": 1,
+      "report": {
+        "failure_class": "ERROR_RETURN",
+        "reason": "pixel payload SHA-256 mismatch: expected 17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b, got f229a267899a682ab9b4fffd8533c1429aa893d6f236224ee7d1f5cd43abbd68",
+        "schema": "m165-strehl-common-input-identity-v1",
+        "status": "FAIL"
+      },
+      "stderr": "",
+      "stdout": "{\"schema\":\"m165-strehl-common-input-identity-v1\",\"status\":\"FAIL\",\"failure_class\":\"ERROR_RETURN\",\"reason\":\"pixel payload SHA-256 mismatch: expected 17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b, got f229a267899a682ab9b4fffd8533c1429aa893d6f236224ee7d1f5cd43abbd68\"}"
+    }
+  },
+  "pattern_correction_probe": {
+    "movable_null": {
+      "disturbed_uncorrected_mae_dn": 7.025,
+      "undisturbed_mae_dn": 0.0
+    },
+    "planted_degradation": {
+      "direction_correct": true,
+      "wrong_map_mae_dn": 14.1875
+    },
+    "planted_improvement": {
+      "correct_map_mae_dn": 0.0,
+      "direction_correct": true
+    },
+    "status": "PASS"
+  },
+  "repaired_improvement": {
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+      "--tiff",
+      "experiments\\M165-common-input\\out\\commission\\identity-repaired.tiff",
+      "--report",
+      "experiments\\M165-common-input\\out\\commission\\identity-repaired.json",
+      "--file-sha256",
+      "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+      "--pixel-sha256",
+      "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "--icc-sha256",
+      "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "--source-sha256",
+      "25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a",
+      "--converter-sha256",
+      "f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6",
+      "--settings-sha256",
+      "a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587",
+      "--pattern-map-sha256",
+      "880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654",
+      "--pattern-manifest-sha256",
+      "a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2"
+    ],
+    "exit_code": 0,
+    "report": {
+      "bits_per_sample": [
+        16,
+        16,
+        16
+      ],
+      "compression": 1,
+      "core_merge_exercised": false,
+      "file_sha256": "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+      "height": 5,
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "internal_premerge_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "merge_sample_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "photometric": 2,
+      "pixel_payload_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+      "planar_configuration": 1,
+      "provenance": "{\"converter_executable_sha256\":\"f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6\",\"icc_sha256\":\"16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef\",\"pattern_manifest_sha256\":\"a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2\",\"pattern_map_sha256\":\"880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654\",\"schema\":\"m165-common-input-provenance-v1\",\"settings_sha256\":\"a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587\",\"source_sha256\":\"25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a\"}",
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "schema": "m165-strehl-common-input-identity-v1",
+      "status": "PASS",
+      "strip_count": 1,
+      "tiff": "experiments\\M165-common-input\\out\\commission\\identity-repaired.tiff",
+      "width": 7
+    },
+    "stderr": "",
+    "stdout": "{\"schema\":\"m165-strehl-common-input-identity-v1\",\"status\":\"PASS\",\"tiff\":\"experiments\\\\M165-common-input\\\\out\\\\commission\\\\identity-repaired.tiff\",\"width\":7,\"height\":5,\"bits_per_sample\":[16,16,16],\"sample_format\":[1,1,1],\"compression\":1,\"photometric\":2,\"planar_configuration\":1,\"strip_count\":1,\"file_sha256\":\"a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788\",\"pixel_payload_sha256\":\"17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b\",\"internal_premerge_sha256\":\"17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b\",\"merge_sample_sha256\":\"17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b\",\"core_merge_exercised\":false,\"icc_sha256\":\"16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef\",\"provenance\":\"{\\\"converter_executable_sha256\\\":\\\"f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6\\\",\\\"icc_sha256\\\":\\\"16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef\\\",\\\"pattern_manifest_sha256\\\":\\\"a8c1ea18fc3e86df8739ad8bda56addbd08450f5e37ed3c4553801d5489487f2\\\",\\\"pattern_map_sha256\\\":\\\"880cfbb56e13852c5314ef7b53f6b69d8b4cb232e5ea614e7376c00b4f43a654\\\",\\\"schema\\\":\\\"m165-common-input-provenance-v1\\\",\\\"settings_sha256\\\":\\\"a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587\\\",\\\"source_sha256\\\":\\\"25d8137c1aa3c349a21c7804ed91745e2cef90109052cc9d7232aca8125ae94a\\\"}\"}"
+  },
+  "schema": "m165-common-input-commission-v1",
+  "status": "PASS",
+  "verifier": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+    "sha256": "32c22234f3e0f11063de77136c99818825a41e78fe6edb646026a45d3181ada0"
+  },
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+}

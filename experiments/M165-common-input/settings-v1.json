@@ -1,0 +1,84 @@
+{
+  "schema": "m165-common-input-settings-v1",
+  "converter": {
+    "id": "m165-libraw-common-linear",
+    "version": "1.0.0"
+  },
+  "sensor_linearization": {
+    "black_levels": "LibRaw per-channel camera metadata, explicitly supplied as user_cblack",
+    "white_level": "LibRaw per-channel camera metadata; all channels must agree, explicitly supplied as user_sat",
+    "pattern_correction": "corrected = black + clip((raw - black - offset_dn) * gain, 0, white - black)",
+    "rounding": "numpy.rint to uint16 before demosaic"
+  },
+  "postprocess": {
+    "demosaic_algorithm": "AHD",
+    "half_size": false,
+    "four_color_rgb": false,
+    "dcb_iterations": 0,
+    "dcb_enhance": false,
+    "fbdd_noise_reduction": "Off",
+    "noise_thr": null,
+    "median_filter_passes": 0,
+    "use_camera_wb": true,
+    "use_auto_wb": false,
+    "user_wb": null,
+    "output_color": "ProPhoto",
+    "output_bps": 16,
+    "user_flip": 0,
+    "user_black": 0,
+    "user_cblack": "LibRaw per-channel camera metadata",
+    "user_sat": "LibRaw camera white level",
+    "no_auto_bright": true,
+    "auto_bright_thr": null,
+    "adjust_maximum_thr": 0.0,
+    "bright": 1.0,
+    "highlight_mode": "Clip",
+    "exp_shift": null,
+    "exp_preserve_highlights": 0.0,
+    "no_auto_scale": false,
+    "gamma": [
+      1.0,
+      1.0
+    ],
+    "chromatic_aberration": null,
+    "bad_pixels_path": null
+  },
+  "output": {
+    "format": "classic TIFF",
+    "byte_order": "little-endian",
+    "sample_layout": "row-major interleaved RGB",
+    "bits_per_sample": [
+      16,
+      16,
+      16
+    ],
+    "sample_format": "unsigned integer",
+    "compression": "none",
+    "photometric": "RGB",
+    "planar_configuration": "chunky",
+    "rows_per_strip": "full image",
+    "orientation": "top-left via user_flip=0",
+    "color_space": "linear ProPhoto RGB D50",
+    "resize": "none",
+    "allowed_nonstructural_tags": [
+      "ImageDescription canonical provenance",
+      "ICCProfile"
+    ]
+  },
+  "disabled": [
+    "XMP sidecars",
+    "auto brightening",
+    "exposure compensation",
+    "tone curves",
+    "contrast",
+    "clarity",
+    "texture",
+    "sharpening",
+    "denoising",
+    "chromatic-aberration correction",
+    "lens correction",
+    "local contrast",
+    "gamut compression",
+    "output resize"
+  ]
+}

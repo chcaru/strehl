@@ -1,0 +1,22 @@
+{
+  "schema": "m165-independent-hash-audit-v1",
+  "status": "PASS",
+  "baseline_file_sha256": "a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788",
+  "baseline_pixel_payload_sha256": "17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b",
+  "baseline_strip_offset": 1312,
+  "baseline_strip_byte_count": 210,
+  "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+  "converter_script_sha256": "91c5a072a49d61ba603b19cf699cab12d13d54b9831687c73e98a03c095e3043",
+  "converter_executable_bundle_sha256": "f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6",
+  "settings_sha256": "a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587",
+  "rawpy_extension_sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897",
+  "verifier_binary_sha256": "32c22234f3e0f11063de77136c99818825a41e78fe6edb646026a45d3181ada0",
+  "source_arw_sha256": "1b9ad0bac914f017aee35dc36ccec9a69d3f8c8284c604ff9bce0cc9bcd2d38a",
+  "scorecard_sha256": "ad223867c20e9abcc0b6b576ec1471fa7a9ff34259c9e64f8fc41c003f9ac03b",
+  "matches_commission_file": true,
+  "matches_commission_pixels": true,
+  "matches_freeze_icc": true,
+  "matches_freeze_converter": true,
+  "matches_freeze_rawpy": true,
+  "matches_commission_verifier": true
+}
