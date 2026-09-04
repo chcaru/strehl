@@ -44,6 +44,23 @@ MUTATIONS = [
     ("m12s diagnostic fail", "docs/STATUS.md",
      "**M12-S, cross-worker scaling invariance** -- diagnostic FAIL.",
      "**M12-S, cross-worker scaling invariance** -- diagnostic PASS."),
+    ("m166 target holds",
+     "docs/research/M166-reference-information-dominance-physical.md",
+     "TARGET HOLDS AT 1.32x", "TARGET MOVES TO 1.18x"),
+    ("m166 rehearsal first",
+     "docs/research/M166-reference-information-dominance-physical.md",
+     "only a pass licenses the `1,147`-frame holdout sitting.",
+     "the holdout sitting needs no rehearsal."),
+    ("m166 weakest cell",
+     "docs/research/M166-reference-information-dominance-physical.md",
+     "1.03405", "1.44405"),
+    ("m164 shared objective", "docs/research/M164-reference-dominance.md",
+     "SHARED OBJECTIVE SUFFICIENT", "SHARED OBJECTIVE INSUFFICIENT"),
+    # The inequality my own briefing got wrong. If the spec ever reads
+    # otherwise, STATUS 2.9.67's account of my error becomes false.
+    ("m164 strictly positive",
+     "docs/research/M164-reference-identifiability.md",
+     "must be strictly positive", "must exceed unity"),
 ]
 
 
@@ -150,13 +167,7 @@ def main() -> int:
     for label, rel, anchor, replacement in MUTATIONS:
         target = SCRATCH / rel
         pristine = target.read_text(encoding="utf-8")
-        if anchor not in pristine:
-            raise SystemExit("MUTATION TARGET NOT FOUND for %r in %s: %r"
-                             % (label, rel, anchor))
-        if pristine.count(anchor) != 1:
-            raise SystemExit("MUTATION ANCHOR NOT UNIQUE for %r in %s (%d hits)"
-                             % (label, rel, pristine.count(anchor)))
-        target.write_text(pristine.replace(anchor, replacement, 1),
+        target.write_text(apply_mutation(pristine, anchor, replacement),
                           encoding="utf-8", newline="")
         rc, out = run()
         if rc != 0 and ("XFAIL " + label) in out:

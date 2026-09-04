@@ -6713,6 +6713,59 @@ if it names such an arm I will schedule a real quiet window with every lane stoo
 down. Overruling a lane on two documents read the same night is worth doing and
 worth being checked on.
 
+### 2.9.67 The detail route survives, the owner can shoot, and my own question was the wrong one
+
+Two lanes closed the question that stopped the capture, and the answers point
+opposite ways from the ones I expected.
+
+**M166 (`db5379b8`, `13/13` and `19/19`) led with `TARGET HOLDS AT 1.32x`.** The
+protocol change M164's ruling forced does not land on the two-frame preflight at
+all; it lands on the scored session. The preflight *"can establish scale and
+field only. It cannot establish `I_R/I_S` or `|H_R|/|H_S|`"* — necessary, not
+sufficient, and unchanged. **I lifted the hold and told the owner to shoot.**
+
+**M164 (`ec7fa237`, `13/13`) answered `SHARED OBJECTIVE SUFFICIENT`** on its
+measured non-null passband. The reference can be provably more informative than
+the scored path through the same Sony prime, so **the route does not need a
+different reference optic** — the outcome that would have cost the owner money
+did not happen. `null(G)` and unresolved near-null cells remain inadmissible.
+
+**The scored session grows and a rehearsal now gates it.** `891` to `1,147`
+registered frames: `+32` for a fourth reference strip, `+96` for a converter-off
+scored-path witness, `+128` for held-out calibration validation. M166 §7: *"The
+owner should perform the exact-configuration non-holdout rehearsal first; only a
+pass licenses the `1,147`-frame holdout sitting."*
+
+**The margin is thin, and that is the honest headline.** Diffraction alone gives
+the reference only `1.03405x` at the weakest licensed cell, and M166 states that
+*"Viltrox aberration, transmission loss, focus error, or bare-lens pupil
+behavior can erase or reverse it. Diffraction arithmetic cannot admit the rig."*
+No archive frame can settle it: all `10,509` inventoried ARWs are converter-on.
+**The route is open but unproven, and the rehearsal exists so that it fails on a
+throwaway sitting rather than the holdout one.**
+
+**M164's gate caught the failure mode that has actually bitten this program.**
+Its commissioning includes an improvement-shaped plant — contamination that
+*raised* both metrics — and the gate charged it to `UNMEASURED` rather than
+passing it. A defect that makes the number go up is the one a degradation-only
+commissioning suite never catches.
+
+**I asked the wrong question and a lane caught it.** I briefed M166 to determine
+whether `delta_H,k > 1` was achievable. That demands a transfer ratio above `2`.
+The spec requires `delta_H,k` merely **strictly positive** —
+`M164-reference-identifiability.md:200`: *"`delta_I,k` and `delta_H,k` may be
+small, but they must be strictly positive"*. Against the measured
+`1.034`–`1.110x` diffraction range, **my form of the question would have failed
+a route the physics supports.** M166 rejected the premise in its §5.1 instead of
+answering as briefed. The error reached only that brief; M164 was sent the
+correct inequality. **Recorded as my defect, not the lane's.**
+
+**What remains unmeasured.** Actual Sony/Viltrox dominance is still unmeasured
+on this rig; only new matched TC-on/TC0 captures can establish it. And M164's
+`GX` scoping question — whether qualified reference-path truth is a publishable
+SOTA claim or a consolation prize — is now the most consequential open question
+in the program, and is assigned.
+
 ---
 
 ## 3. Gaps, ranked by what stands between here and print-worthy

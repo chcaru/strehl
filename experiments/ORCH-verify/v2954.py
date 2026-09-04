@@ -18,7 +18,7 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().pare
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
-            "2.9.66"]
+            "2.9.66", "2.9.67"]
 
 
 def collapse(s):
@@ -352,6 +352,16 @@ QUOTES = [
      "can make all five outputs byte-identical"),
     ("m12s diagnostic fail", "docs/STATUS.md",
      "**M12-S, cross-worker scaling invariance** -- diagnostic FAIL."),
+    ("m166 target holds", "docs/research/M166-reference-information-dominance-physical.md",
+     "TARGET HOLDS AT 1.32x"),
+    ("m166 rehearsal first", "docs/research/M166-reference-information-dominance-physical.md",
+     "only a pass licenses the `1,147`-frame holdout sitting."),
+    ("m166 weakest cell", "docs/research/M166-reference-information-dominance-physical.md",
+     "1.03405"),
+    ("m164 shared objective", "docs/research/M164-reference-dominance.md",
+     "SHARED OBJECTIVE SUFFICIENT"),
+    ("m164 strictly positive", "docs/research/M164-reference-identifiability.md",
+     "must be strictly positive"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel
