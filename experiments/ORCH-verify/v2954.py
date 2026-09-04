@@ -18,7 +18,7 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().pare
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
-            "2.9.66", "2.9.67"]
+            "2.9.66", "2.9.67", "2.9.68"]
 
 
 def collapse(s):
@@ -362,6 +362,14 @@ QUOTES = [
      "SHARED OBJECTIVE SUFFICIENT"),
     ("m164 strictly positive", "docs/research/M164-reference-identifiability.md",
      "must be strictly positive"),
+    # Anchored on values with exactly one site in the source. "BATTERY
+    # COMMISSIONED" occurs twice and "UNMEASURED_COMPARATOR_QUALIFICATION" five
+    # times, so a presence check on either is satisfied by a duplicate after the
+    # claim it guards has drifted.
+    ("m169 commission sha", "docs/research/M169-m3-veil.md", "3d69bbcd"),
+    ("m169 green recovery arm", "docs/research/M169-m3-veil.md", "0.005649"),
+    ("m169 axis has no CI", "docs/research/M169-m3-veil.md",
+     "confidence_interval=NO CI"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel

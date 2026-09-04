@@ -6766,6 +6766,37 @@ on this rig; only new matched TC-on/TC0 captures can establish it. And M164's
 SOTA claim or a consolation prize — is now the most consequential open question
 in the program, and is assigned.
 
+### 2.9.68 A commissioned instrument is not a passing axis, and M169 said so itself
+
+Lane M169 re-registered the M3 veil battery on M174's ruling and returned
+`BATTERY COMMISSIONED`: `21/21` assertions, `failed_assertions=[]`, commission
+SHA-256 `3d69bbcd`. The registered boundary-challenge arm failed on exactly the
+assertion M174 specified and nothing else —
+`h50=0.010413 v50=0.005339 v99=0.005761 max=0.014730 affected=0.000%
+verdict=FAIL`, failing only `median_h_e`.
+
+**It also added the control this program most often lacks.** A design-derived
+green recovery arm at `0.25%` per component,
+`h50=0.005649 v50=0.003223 v99=0.003552 max=0.009726 verdict=PASS`, with its
+magnitude derived *without* reference to the observed crossing:
+`0.01 / 4 = 0.0025` per component, overlapping peak `2 x 0.0025 = 0.005`, half
+the unchanged median gate. **A battery that can only fail is not commissioned;
+it is merely strict.**
+
+**The result worth recording is what M169 refused to do.** With a fully
+commissioned instrument in hand it reported M3 as
+`UNMEASURED_COMPARATOR_QUALIFICATION`, `score=NO SCORE`,
+`confidence_interval=NO CI`, still carrying `(a)(b)(d)`. No gate, threshold,
+plant, checker, seed or population changed, and the historical failing v2
+battery was preserved rather than overwritten. **A working instrument and a
+measured axis are different things, and the distance between them here is a
+software licence.**
+
+**It was also correct to refuse a peer lane's host lock.** M139 broadcast a stop
+instruction to sibling lanes; M169 declined on the grounds that a peer holds no
+scheduling authority. That is the right reading — see §2.9.66 — and I have
+confirmed it to the lane as policy: only the orchestrator schedules.
+
 ---
 
 ## 3. Gaps, ranked by what stands between here and print-worthy

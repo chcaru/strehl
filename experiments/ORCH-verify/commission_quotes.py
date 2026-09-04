@@ -61,6 +61,14 @@ MUTATIONS = [
     ("m164 strictly positive",
      "docs/research/M164-reference-identifiability.md",
      "must be strictly positive", "must exceed unity"),
+    # The inequality my own briefing got wrong. If the spec ever reads
+    # otherwise, STATUS 2.9.67's account of my error becomes false.
+    ("m169 commission sha", "docs/research/M169-m3-veil.md",
+     "3d69bbcd", "4e70ccde"),
+    ("m169 green recovery arm", "docs/research/M169-m3-veil.md",
+     "0.005649", "0.009999"),
+    ("m169 axis has no CI", "docs/research/M169-m3-veil.md",
+     "confidence_interval=NO CI", "confidence_interval=[0.1, 0.9]"),
 ]
 
 
