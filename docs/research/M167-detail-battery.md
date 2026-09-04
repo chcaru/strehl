@@ -1,7 +1,7 @@
 # M167 — independent adversarial detail-instrument battery
 
-**Status: BATTERY COMMISSIONED; THREE KNOWN-DEAD INSTRUMENTS REJECTED; NO
-DEPLOYABLE DETAIL INSTRUMENT ADMITTED.**
+**Status: BATTERY COMMISSIONED; THREE KNOWN-DEAD INSTRUMENTS REJECTED;
+ARM-IDENTITY CANARY REJECTED; NO DEPLOYABLE DETAIL INSTRUMENT ADMITTED.**
 
 ## 1. Question and result
 
@@ -270,3 +270,327 @@ passing serialized M2 exited `1`.
 
 No M164, proposal, status, owner-action, capture, or product implementation file
 was modified.
+
+## 8. Arm-blinded candidate admission
+
+### 8.1 The rule was frozen before the attack
+
+The score JSON alone could not establish that a future adapter had not read an
+arm name and returned the expected answer.  That gap is now governed by
+`experiments/M167-detail-battery/ADMISSION-PREREGISTRATION.md`, frozen in
+commit `20ef67e8` before the cheating canary was written or executed.
+
+The admission unit is a frozen candidate artifact, not an author-supplied
+result file.  The candidate and evaluator harness are hash-pinned before a
+256-bit challenge nonce is drawn.  Three nonce-derived fixture instances are
+used.  Each has 12 semantic observations plus exact duplicates of
+`flat_detail`, `base`, and `improved`, for 15 anonymously permuted calls.  Each
+call starts a fresh process and receives only one `.npy` image on stdin; it
+receives no name, token, position, construction label or mapping.  Candidate
+outputs are written to a semantic-free transcript and that transcript is
+read back and SHA-256 committed before unblinding.
+
+P1--P6 are unchanged.  New P7 requires byte-identical canonical result records
+on all three duplicate pairs in every instance.  Admission also requires:
+
+- **A1:** artifact hashes and pre-nonce Git state match;
+- **A2:** source/dependency provenance has no identity channel;
+- **A3:** packet argv, environment, path shape and schema are invariant and
+  unlabeled;
+- **A4:** each packet starts with no prior-call state;
+- **A5:** candidate output is sealed before the private mapping is used; and
+- **A6:** an evaluator-controlled capability sandbox denies repository,
+  manifest, filesystem, network, clock, parent-memory and persistent-state
+  access.
+
+All P1--P7 and A1--A6 are conjunctive.  A missing sandbox attestation is an
+explicit refusal, not an assumption that source inspection was enough.
+
+### 8.2 Deliberately cheating canary
+
+`cheating_canary.py` is marked `INELIGIBLE_CHEATING_CANARY`.  It is a battery
+sabotage, not a candidate detail instrument.  It searches a direct argument,
+environment, argv/path and stable call position for an arm identity.  When it
+finds one it emits canned passing answers; otherwise a fresh-process
+call-position guess always starts at the same first label and every valid
+image receives the same point score.
+
+The canary, worker and runner were first frozen at `a0c1cd6f`.  The first
+post-freeze attempt exposed a Windows anonymous-pipe transport defect:
+`numpy.load()` took a legal short read from stdin, so every child errored and
+the preregistered P7 outcome did not occur.  No predicate or expected score was
+changed.  The worker was changed only to buffer all stdin bytes before NumPy
+parsing (`dbc35231`), the manifest was re-frozen (`09e2233d`), that disclosed
+challenge was discarded, and a fresh nonce was generated.
+
+An independent verifier then found that A1 compared the mutable manifest only
+to working-tree bytes, omitted the imported `commission.py`, did not detect the
+canary's mutable call counter, and serialized the moving repository `HEAD`
+into the result.  Those are real verification defects even though the canary
+was rejected.  A1 now requires the exact five-file set, pins both runtime and
+Git-blob SHA-256 values, reads those objects from the named artifact commit,
+requires no later committed or working-tree drift, and pins the imported
+checker.  The AST audit now detects `global`/`nonlocal` and augmented state
+mutation; moving `HEAD` is no longer serialized.  The strengthened runner was
+frozen at `ad665b63` and its manifest at `d0bfd2e2`; the earlier valid
+challenge was superseded and a new nonce was generated.
+
+Follow-up verifiers then supplied stronger attacks: mutate a module-global
+container without a `global` declaration, alias that container before
+mutation, keep state on a function attribute, hide an identity argument as
+keyword-only, and force a temporary-path separator spelling that only the
+canary normalized.  The source audit now conservatively rejects module-level
+mutable construction, every augmented or attribute/subscript assignment,
+common mutator calls, classes, and every extra positional or keyword
+parameter.  The path audit applies exactly the canary's normalization.  Every
+packet receives the same cleared numeric-suffix working path within a run.
+The final fixes were frozen at `67e2102f` and `87aaca37`; every preceding
+challenge was superseded before the final nonce below was drawn.
+
+The closeout verifier then replaced every child result with the same process
+error and showed that P6 plus exact duplicate errors could mimic the expected
+gate pattern.  Commissioning now additionally requires all 45 children to
+return zero, parse as JSON with empty stderr, and reproduce the canary's exact
+constant fallback/typed-malformed records.  That fail-closed check was frozen
+at `1a4d8acb` and `481cab36`, again before drawing the final nonce.
+
+One final adversarial probe replaced numeric `1.0` with JSON `true` and added
+forged fields.  Python otherwise treats `bool` as an `int`.  The base checker
+now rejects Boolean scores, and the canary check compares complete canonical
+records rather than selected fields.  Those changes were frozen at
+`3474cf28` and `30240575` before the final challenge.
+
+The last schema probe put JSON Booleans in the blur-ladder sigma fields.
+Those metadata now require finite non-Boolean numbers as well; the correction
+and final freeze are `379c4e38` and `9c2554e6`.
+
+**VERIFIED BY RUNNING.** The final run made 45 fresh child calls and produced:
+
+| execution | P1 | P2 | P3 | P4 | P5 | P6 | P7 | disposition |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| legacy, direct arm label | pass | pass | pass | pass | pass | pass | n/a | canned vector passes |
+| blind instance 0 | fail | fail | fail | fail | fail | pass | pass | rejected |
+| blind instance 1 | fail | fail | fail | fail | fail | pass | pass | rejected |
+| blind instance 2 | fail | fail | fail | fail | fail | pass | pass | rejected |
+
+Thus the exact cheating artifact that looks perfect under the labeled
+protocol is **`REJECTED_BY_BLINDED_ADMISSION`** on every hidden instance.  The
+source audit independently catches its `os`/`sys` access, second
+`arm_identity` argument, all twelve arm literals, and mutable `_CALL_INDEX`
+state, so A2 is also false.
+All nine canary-commissioning checks are true.
+
+The disclosed replay nonce is
+`1AD3D886A22CBE84F03571F29156CC77EDE0E38016893E5F56A501DD0B45F2E7`.
+The semantic-free transcript is
+`experiments/M167-detail-battery/admission-sealed.json`, SHA-256
+`7C3E50F65EC3EC7EF2B7E538D051334CEE4FA33A2742352E93F0C7E5A4409B3B`.
+The unblinded record is `admission-results.json`, SHA-256
+`B91C44579250A891B4AAB2C8F70C79B7B3C8853E00BEA59E591D225E12F8BA0A`.
+A full replay with that nonce reproduced both hashes exactly.
+
+### 8.3 What is and is not closed
+
+**VERIFIED:** the ordinary labeled/order API is exploitable, the new local API
+does not disclose those channels to this attack, and the exact attack is
+rejected by both its outputs and provenance audit.
+
+**NOT VERIFIED:** OS-strength capability isolation.  The local run used fresh
+ordinary Windows subprocesses, not a disposable VM.  It therefore records
+`A6_capability_sandbox=false`.  A hostile native extension could still read an
+absolute host path or attack another process.  The admission rule closes that
+bypass by failing closed: this harness cannot emit a real-candidate admission
+until an independent evaluator supplies A6.  It does not mislabel a source
+scan as a security boundary.
+
+There is an unavoidable distinction between forbidden identity and permitted
+measurement.  If code identifies a fixture only from the pixels it was
+legitimately given, that is content-dependent behavior and cannot be made
+impossible without also forbidding image analysis.  Hidden post-freeze seeds,
+three instances and source audit prevent memorized public-fixture answers;
+whether a content rule measures resolution is still decided empirically by
+P1--P7 and later physical controls.
+
+Reproduction, from the repository root:
+
+```powershell
+$env:OMP_NUM_THREADS='1'
+$env:OPENBLAS_NUM_THREADS='1'
+$env:MKL_NUM_THREADS='1'
+$env:NUMEXPR_NUM_THREADS='1'
+$env:BLIS_NUM_THREADS='1'
+$env:VECLIB_MAXIMUM_THREADS='1'
+$env:PYTHONDONTWRITEBYTECODE='1'
+python -B experiments\M167-detail-battery\admission.py `
+  --nonce 1AD3D886A22CBE84F03571F29156CC77EDE0E38016893E5F56A501DD0B45F2E7
+```
+
+No timing result is produced or used.
+
+## 9. Physical false-rate capture specification
+
+### 9.1 What the existing 657-frame session can license
+
+The requested directory was surveyed read-only.  No RAW was decoded and
+nothing under `D:\personal\macro` was written.
+
+**VERIFIED BY RUNNING a recursive inventory and ExifTool over all 657
+headers:**
+
+| relative stack | frames | exposure | focus-position histogram |
+|---|---:|---:|---|
+| `flat-sw4-cpl/flat-et6s-sw4-cpl` | 65 | 6 s | `57 x 65` |
+| `flat-sw4-cpl/flat-et2.5s-sw4-cpl` | 61 | 2.5 s | `57 x 61` |
+| `flat-sw4-cpl/flat-et1s-sw4-cpl` | 60 | 1 s | `57 x 60` |
+| `tilted-sw4-cpl` | 182 | 1 s | `57 x 76, 58 x 80, 59 x 26` |
+| `tilted-sw10-cpl` | 92 | 1 s | `57 x 38, 58 x 40, 59 x 14` |
+| `very-tilted-all-axis-sw10-cpl` | 197 | 1 s | `56 x 10, 57 x 40, 58 x 40, 59 x 41, 60 x 40, 61 x 26` |
+
+Every header reports `7168 x 5120`, ISO 100, f/5.6, 200 mm,
+`FE 100mm F2.8 Macro GM OSS + 2X Teleconverter`, and image stabilization
+`On`.  The six runs occupy one 2026-09-02 session from 20:13:04 through
+21:01:58.
+
+**INFERRED FROM THE CAPTURE STRUCTURE AND EXISTING REGISTRATION:** this is
+excellent development material but not a physical-rate sample.
+
+- `tilted-sw4` and `tilted-sw10` cover the same coarse encoder range, with
+  exactly 2:1 populations in the complete `57` and `58` bins.  They are a
+  useful real dense-versus-sparse improvement challenge.
+- The 6/2.5/1-second fronto-parallel runs are a real exposure/noise ladder.
+  Here “flat” means the slide is fronto-parallel; it is a patterned slide, not
+  a spatially uniform no-detail field.
+- The entire session is already burned development, has stabilization on, has
+  only one complete pass per condition, and has no corresponding-node A/B
+  repeat stacks.  It can expose a failure and prune a candidate.  It cannot
+  estimate a repeatable false-accept or false-refusal rate, and it cannot be
+  promoted to holdout evidence.
+
+The archived `19-razor-edge` aperture ladder is not a free replacement.  The
+repository classifies only one f/5.6 horizontal stack as development and the
+other five as indeterminate; `7-aperture-pairs` includes protected holdouts.
+Their pixels were not opened for M167 and they must not be silently spent.
+
+### 9.2 The honest limit
+
+No capture, by itself, yields an unconditional “probability this instrument is
+wrong on real macro photographs.”  That rate needs:
+
+1. an independently assigned truth label at every trial;
+2. a frozen target population and sampling rule; and
+3. multiple independent subjects/sessions if the claim is to generalize
+   beyond one panel and one rig state.
+
+No known-good deployable detail instrument currently supplies those labels.
+Agreement with another uncommissioned statistic would be circular.
+
+A weaker result **is** achievable without such an instrument:
+intervention-conditioned error rates.  A uniform field has no scene detail,
+post-render blur removes information, USM adds none, and a separately sampled
+reference can supply external truth for a real-improvement subset.  The rates
+below are therefore explicitly conditional on this panel, optical
+configuration and registered interventions.  They are not population rates
+for arbitrary natural scenes.
+
+### 9.3 Exact acquisition requested
+
+This is a **non-holdout physical-commissioning session**, not a scored product
+session.  Do not duplicate it if the already planned M1 non-holdout rehearsal
+will supply the same blocks.  Before any result is opened, freeze the
+candidate, reference/truth reader, 64-site input-only manifest, transforms and
+all direction predicates.
+
+**Subjects.**
+
+1. Use the existing microscope/calibration grid with a fine, matte,
+   nonperiodic fibre or speckle patch fixed in the same tilted plane.  The grid
+   is needed to prove cross-configuration sampling and registration; the
+   irregular patch prevents a periodic target from carrying its own answer.
+   A natural specimen alone lacks known geometry, while a razor edge alone
+   does not exercise two-dimensional nonperiodic detail.  The common
+   high-/low-magnification footprint must contain 64 non-overlapping
+   `128 x 128` low-magnification sites with a 16-pixel guard; allocate them
+   `21/21/22` across the near/middle/far reference-focus zones.
+2. Use a separately illuminated opal diffuser or integrating-surface field
+   with no printed texture for the null.  It must cover the same 64-site
+   footprint.  Do not substitute the fronto-parallel patterned “flat” slide.
+
+**Common camera settings.** Sony A7C II, Sony FE 100mm F2.8 GM, RAW, M mode,
+ISO 100, marked f/5.6, 1 s, fixed white balance, EFCS, tripod, IBIS **off** and
+lens OSS **off**.  Lighting, subject and support remain fixed within each
+subject block.  Focus Bracket direction is `0 -> +`, interval 3 s.  One
+unregistered histogram exposure may precede the session; clipping or
+photon-starvation is a stop requiring a revised preregistration, not an
+in-session exposure substitution.
+
+| block | optical configuration | focus setting and count | acquisitions | unique licensed claim |
+|---|---|---|---:|---|
+| `TR-REF-NEAR/MID/FAR` | 2x Viltrox installed, maximum reproduction `M_ref >= 2.70x` | Focus Bracket **off**; 32 fixed-focus frames at each of three registered depth zones | 3 bursts, 96 frames | Supplies the separately sampled reference needed to label true-improvement sites. Without this block no physical false-refusal rate is licensed. |
+| `TEST-sw4-A/B` | teleconverter removed, live-measured `M_test <= 1.30x` | step width 4, 55 frames | 2 complete stacks, 110 frames | Independent whole-pass repeats of the denser scored observation; supports repeat uncertainty without pretending exposures were interleaved per node. |
+| `TEST-sw10-A/B` | identical test configuration and reset | step width 10, 27 frames | 2 complete stacks, 54 frames | Supplies the sparse-focus intervention. It is a degradation label only at sites independently declared eligible from the reference, never merely because it has fewer frames. |
+| reset/start/end witnesses | identical test configuration | Focus Bracket off; 6 frames in each of two reset and eight start/end groups | 10 bursts, 60 frames | Detects reset, endpoint and between-pass drift; failure voids the corresponding A/B rates. |
+| `NULL-sw4-A/B` | identical test configuration, diffuser substituted | step width 4, 55 frames | 2 complete stacks, 110 frames | Supplies a physical no-scene-detail denominator for the flat false-accept rate. These are not calibration flats. |
+| reference calibration | converter installed, reference exposure/focus state | Focus Bracket off; 32 each of flat A, flat B, dark A, dark B | 4 groups, 128 frames | Separates reference signal from sensor pattern/noise; A and B masters are disjoint. |
+| test calibration | teleconverter removed, test exposure/focus state | Focus Bracket off; 32 each of flat A, flat B, dark A, dark B | 4 groups, 128 frames | Separates test/null signal from sensor pattern/noise without importing the reference-state map. |
+
+Registered total: **686 frames** =
+`96 + 110 + 54 + 60 + 110 + 128 + 128`, in **six complete focus-bracket
+stacks**, three reference bursts, ten witness bursts and eight calibration
+groups.  The histogram exposure is outside the count.
+
+The exact ordering of the four test stacks is
+`sw4-A, sw10-A, sw10-B, sw4-B`, with the registered reset and six-frame
+start/end witnesses around each pass.  This ABBA order brackets monotone drift.
+The two null stacks are then complete sequential passes.  There is **no**
+request for two exposures at one focus node: every A or B is a complete
+in-camera bracket, and corresponding nodes are compared only after both passes
+finish.
+
+Two preconditions make the numeric settings honest rather than decorative:
+
+1. the grid must verify live that `M_ref / M_test >= 2.0`; directory names and
+   EXIF do not supply magnification; and
+2. a non-holdout exact-configuration preflight must show that 55/step-4 and
+   27/step-10 are gap-free over the target and yield at least 64 common
+   guarded sites.  If either fails, stop.  Do not choose replacement counts
+   after candidate outputs are visible.
+
+### 9.4 The rates this licenses
+
+Fix 64 non-overlapping guarded sites from input geometry before rendering or
+candidate execution.  A/B halves estimate measurement uncertainty but are not
+counted as 128 independent sites.  Report each arm separately:
+
+- **flat false-accept rate:** fraction of the 64 null sites that neither
+  refuse as featureless nor lie wholly below the matched detailed site;
+- **USM false-accept rate:** fraction at which a fixed post-render USM copy is
+  wholly above its unchanged source;
+- **blur wrong-sign rate:** fraction at which any fixed post-render blur rung
+  ties or rises;
+- **physical-improvement false-refusal rate:** among sites declared eligible
+  by the frozen independent `>=2x` reference reader, the fraction for which
+  the dense observation does not lie wholly above the sparse one, including
+  refusals on eligible detail.
+
+USM and blur require no extra exposures.  Their transformations are applied
+after the A/B renders are fixed and use the already frozen M167 parameters.
+No result may be pooled across arms to hide a failure.
+
+For the flat, USM and blur arms, all 64 registered sites give empirical-rate
+increments of `1/64 = 1.5625%`.  **VERIFIED BY CALCULATION:** under an
+independent Bernoulli model only, zero failures among those 64 has a one-sided
+95% Wilson upper bound `0.040559499465846936`.  The physical-improvement
+denominator is instead `N_eligible <= 64`; report its increment as
+`1/N_eligible` and recompute its interval from that denominator when
+`N_eligible > 0`.  If `N_eligible = 0`, the physical-improvement rate is
+`UNMEASURABLE`, not zero and not a division.  Do not print the 64-site bound
+when fewer than 64 reference sites qualify.  Sites from one panel are
+clustered in every arm, so any such Wilson number must be labelled nominal and
+must not be promoted to a general real-world bound.  A defensible
+across-subject rate still requires a later population-sampled, multi-session
+holdout after both candidate and truth reader are commissioned.
+
+If the independent reference reader cannot be commissioned, the capture still
+licenses the flat, blur and USM false-accept rates and repeatability diagnostics.
+It licenses **no physical false-refusal rate**.  That limitation is preferable
+to relabelling dense sampling, aperture, or visual preference as ground truth.
