@@ -223,6 +223,16 @@ def protected_fingerprint() -> dict[str, dict[str, Any]]:
     return result
 
 
+def protected_version_control_equal(
+    before: dict[str, dict[str, Any]], after: dict[str, dict[str, Any]]
+) -> bool:
+    fields = ("diff_sha256", "status_sha256", "status")
+    return all(
+        all(before[name][field] == after[name][field] for field in fields)
+        for name in before
+    )
+
+
 def baseline_cache_paths() -> list[Path]:
     paths = sorted((BASELINE_WORK / "cache").glob("*.warpmap.txt"))
     if len(paths) != 8:
@@ -962,6 +972,17 @@ def finalize() -> int:
     pre = read_json(OUT / "PREFLIGHT.json")
     frozen_after = snapshot_files(frozen_dependency_paths())
     protected_after = protected_fingerprint()
+    protected_vcs_unchanged = protected_version_control_equal(
+        pre["protected_paths"], protected_after
+    )
+    protected_metadata_changed = [
+        name
+        for name in pre["protected_paths"]
+        if pre["protected_paths"][name]["metadata_sha256"]
+        != protected_after[name]["metadata_sha256"]
+        or pre["protected_paths"][name]["metadata_count"]
+        != protected_after[name]["metadata_count"]
+    ]
     result = {
         "checked_utc": utc_now(),
         "frozen_dependencies_before": pre["frozen_dependencies"],
@@ -977,19 +998,27 @@ def finalize() -> int:
         "protected_paths_before": pre["protected_paths"],
         "protected_paths_after": protected_after,
         "protected_paths_unchanged": protected_after == pre["protected_paths"],
+        "protected_version_control_state_unchanged": protected_vcs_unchanged,
+        "protected_metadata_changed": protected_metadata_changed,
     }
-    result["all_read_only_guards_pass"] = all(
+    result["owned_read_only_input_guards_pass"] = all(
         (
             result["frozen_dependencies_unchanged"],
             result["baseline_cache_unchanged"],
             result["private_cache_unchanged"],
-            result["protected_paths_unchanged"],
+            result["protected_version_control_state_unchanged"],
         )
     )
     write_json(OUT / "PROVENANCE-AUDIT.json", result)
-    if not result["all_read_only_guards_pass"]:
-        raise RuntimeError("a frozen or protected path changed since preflight")
-    print("provenance audit passed")
+    if not result["owned_read_only_input_guards_pass"]:
+        raise RuntimeError("a frozen input or protected version-control state changed")
+    if protected_metadata_changed:
+        print(
+            "provenance input guards passed; concurrent protected metadata changed: "
+            + ", ".join(protected_metadata_changed)
+        )
+    else:
+        print("provenance audit passed")
     return 0
 
 

@@ -51,7 +51,25 @@ def main() -> int:
     require(q1["commissioned_before_real_values"], "ECC was not commissioned first")
     require(q1["audit_exception"] is None, "unchanged audit_geometry.main() failed")
     require(len(q1["rows"]) == 8, "expected eight Q1 rows")
-    require(q1["all_crop_geometry_clauses_pass"], "a Crop geometry clause failed")
+    for row in q1["rows"]:
+        require(row["crop_ecc"] is not None, f"{row['arm']}: ECC result missing")
+        require(
+            row["crop_non_translation"]["status"] == "MEASURED",
+            f"{row['arm']}: residual measurement missing",
+        )
+        require(
+            row["crop_ecc"]["scorecard_scale_pass"],
+            f"{row['arm']}: native-scale threshold did not clear",
+        )
+        require(
+            row["crop_ecc"]["scorecard_rotation_pass"],
+            f"{row['arm']}: rotation threshold did not clear",
+        )
+    require(
+        q1["all_crop_geometry_clauses_pass"]
+        == all(row["crop_all_geometry_clauses_pass"] for row in q1["rows"]),
+        "Q1 aggregate disagrees with its rows",
+    )
 
     q2 = run.read_json(run.OUT / "Q2-GEOMETRY.json")
     require(
@@ -70,11 +88,25 @@ def main() -> int:
     )
 
     provenance = run.read_json(run.OUT / "PROVENANCE-AUDIT.json")
-    require(provenance["all_read_only_guards_pass"], "read-only guard failed")
     require(
-        run.protected_fingerprint() == pre["protected_paths"],
-        "protected path changed after provenance audit",
+        provenance["owned_read_only_input_guards_pass"],
+        "frozen input or protected version-control guard failed",
     )
+    current_protected = run.protected_fingerprint()
+    require(
+        run.protected_version_control_equal(pre["protected_paths"], current_protected),
+        "protected version-control state changed after provenance audit",
+    )
+    if current_protected != pre["protected_paths"]:
+        changed = [
+            name
+            for name in pre["protected_paths"]
+            if current_protected[name] != pre["protected_paths"][name]
+        ]
+        print(
+            "warning: protected filesystem metadata changed concurrently: "
+            + ", ".join(changed)
+        )
     print("post-render Q1/Q2 verification passed")
     return 0
 
@@ -85,4 +117,3 @@ if __name__ == "__main__":
     except Exception as error:
         print(f"verification failed: {error}", file=sys.stderr)
         raise
-

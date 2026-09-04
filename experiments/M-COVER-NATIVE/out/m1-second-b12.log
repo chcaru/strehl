@@ -1,0 +1,78 @@
+$ C:\dev\blog\death-of-software\projects\strehl\experiments\SCORECARD-BASELINE\work\bin\strehl.exe stack C:\dev\blog\death-of-software\projects\strehl\experiments\SCORECARD-BASELINE\work\inputs\m1-second-b12 --out C:\dev\blog\death-of-software\projects\strehl\experiments\M-COVER-NATIVE\out\renders\m1-second-b12.tiff --linear-srgb --demosaic --cover crop
+
+
+build           : strehl 0.0.0 (4b60b1ba9f56)
+merge backend   : pyramid (default)
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+iso             : 100
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+defect map      : off (STREHL_DEFECT=off)
+frames          : 12 from C:\dev\blog\death-of-software\projects\strehl\experiments\SCORECARD-BASELINE\work\inputs\m1-second-b12  (first decode 0.12 s)
+planes          : 3516 x 2344 per CFA plane
+--- the merge ---
+bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+coverage mode   : crop -- as asked, --cover
+alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9973), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in
+                  the frame count. The merge is a fold: every accumulator is a sum, so a
+                  frame is built, added and dropped. STREHL_PYRAMID_WORKERS=N overrides.
+
+folded          : 12 / 12 frames in 9.9 s (0.83 s per frame, 4 workers)
+band noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.8645 0.0518 0.0100 0.0024
+                  x white       : 0.9716 0.9777 0.9911 1.0002
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 12 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 73.4% 30.5% 7.0% 2.1% 0.5% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+colour          : camera RGB -> LINEAR sRGB (BT.709 primaries, D65 white)
+                  characterisation: decoder color_matrix[D65]
+                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]
+                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 1.5664 B 2.5449
+                  Order: black, as-shot WB, demosaic, matrix, clamp -- NO transfer curve, safe to measure on.
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\M-COVER-NATIVE\out\renders\m1-second-b12.tiff (7012 x 4672, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.5 s
+total           : 10.9 s

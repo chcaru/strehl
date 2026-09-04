@@ -1,0 +1,1520 @@
+{
+  "baseline_cache_after": {
+    "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+      "bytes": 2102,
+      "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+    },
+    "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+      "bytes": 2098,
+      "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+    },
+    "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+    },
+    "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+    },
+    "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+      "bytes": 2640,
+      "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+    },
+    "m2-bright-second16-830898178934c63d.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+    },
+    "m2-second-first16-f65d655759759820.warpmap.txt": {
+      "bytes": 2638,
+      "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+    },
+    "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+    }
+  },
+  "baseline_cache_before": {
+    "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+      "bytes": 2102,
+      "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+    },
+    "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+      "bytes": 2098,
+      "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+    },
+    "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+    },
+    "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+    },
+    "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+      "bytes": 2640,
+      "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+    },
+    "m2-bright-second16-830898178934c63d.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+    },
+    "m2-second-first16-f65d655759759820.warpmap.txt": {
+      "bytes": 2638,
+      "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+    },
+    "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+    }
+  },
+  "baseline_cache_unchanged": true,
+  "checked_utc": "2026-09-04T03:07:36.901570+00:00",
+  "frozen_dependencies_after": {
+    "experiments/SCORECARD-BASELINE/.gitignore": {
+      "bytes": 91,
+      "sha256": "c3b0e56aa2de77b8052ee8671bc0f079f9e9ca4e706a011dfb59e97227becd6f"
+    },
+    "experiments/SCORECARD-BASELINE/audit_geometry.py": {
+      "bytes": 5670,
+      "sha256": "be1ec143f3d391e7eb0ab4a927c4744aa18283f4992e82d3f975354163a357fd"
+    },
+    "experiments/SCORECARD-BASELINE/commission.py": {
+      "bytes": 8076,
+      "sha256": "eb3459d9cc077c6353343362d9e860552306af12ccb0011e7990c8c20875dba6"
+    },
+    "experiments/SCORECARD-BASELINE/common.py": {
+      "bytes": 7484,
+      "sha256": "ddeca49f9afd184d88830ec17f0ef3ded2f9a63401db4f7d4672e9888619b8e0"
+    },
+    "experiments/SCORECARD-BASELINE/freeze.py": {
+      "bytes": 5655,
+      "sha256": "4a35d537c53f8bab7af2a4cd074424cf96d09bc0ed25c2a72873ea222b640cf7"
+    },
+    "experiments/SCORECARD-BASELINE/measure.py": {
+      "bytes": 10079,
+      "sha256": "7c0d1175c76ffdab7adc3ab799831cbbd63debcdcb31dc5f9b80372e4ceb51b5"
+    },
+    "experiments/SCORECARD-BASELINE/out/GEOMETRY-AUDIT.json": {
+      "bytes": 10015,
+      "sha256": "6f42ce2252310806e9a55f57e2359dc41e7d4560857c7188d2b7ec001e7ebebd"
+    },
+    "experiments/SCORECARD-BASELINE/out/INPUT-MANIFEST.json": {
+      "bytes": 33669,
+      "sha256": "78266db73a0bcb76a755aceecd38c6e1f57acc9f54bf7e22c0326c78e8dbb1c1"
+    },
+    "experiments/SCORECARD-BASELINE/out/MEASUREMENTS.json": {
+      "bytes": 3845797,
+      "sha256": "dc50ac70368e621c9a8d138e51fbbc0f15cafbcf78433521cc673d2fc3459cdf"
+    },
+    "experiments/SCORECARD-BASELINE/out/RAIL-PREFLIGHT.json": {
+      "bytes": 7835,
+      "sha256": "2e39311d596dbbae4b20d8feafeaa3e732e6d8cecb3e8949e4f2a5231c5b75c5"
+    },
+    "experiments/SCORECARD-BASELINE/out/RENDER-MANIFEST.json": {
+      "bytes": 21593,
+      "sha256": "535ea4293c7b45c485961f3fc4d206729d1bf5b583a00db2b1c1465de04aebc5"
+    },
+    "experiments/SCORECARD-BASELINE/out/RUN-MANIFEST.json": {
+      "bytes": 2559,
+      "sha256": "96b2945352f1cee33295aeeed7804ca48ff529b175232aa9e1f7e81cbb5af6f0"
+    },
+    "experiments/SCORECARD-BASELINE/out/SITE-MANIFEST.json": {
+      "bytes": 247275,
+      "sha256": "953293abdd9d6bc8c2ca9182ba2328f8c0ecb863db4da679506b987054bc14fb"
+    },
+    "experiments/SCORECARD-BASELINE/out/commission.json": {
+      "bytes": 3533,
+      "sha256": "5bee816b2ed899aab580898c5e0be7f88bb3563324365753ece9ec8a838712ed"
+    },
+    "experiments/SCORECARD-BASELINE/out/exif-bee.json": {
+      "bytes": 758163,
+      "sha256": "a26538d820b2918cc74a8e4d984b323d79d88b3e1b54333d738e92954e838132"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m1-bright-a12.tiff": {
+      "bytes": 197798928,
+      "sha256": "3785be947a7b87a331858fb9d84a00e7306be335185aa158b4989e3c69c030f7"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m1-bright-b12.tiff": {
+      "bytes": 197798928,
+      "sha256": "be0a78fa01bc63966478d6a7b292cf97b597aaba3c8574805e472c8df6fec608"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m1-second-a12.tiff": {
+      "bytes": 197798928,
+      "sha256": "f20dd6bdf7264731688f73a08d8e410e5a4a0c47350303311dba0ba27cc68265"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m1-second-b12.tiff": {
+      "bytes": 197798928,
+      "sha256": "2ce6bb6c89f8ace6ae1fd4fc02c38c2f9e623eb8c397a0724ed11d7caea939bf"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m2-bright-first16.tiff": {
+      "bytes": 197798928,
+      "sha256": "898ed3f3de0f4f53581a38b0ba1fce317285536a4aebbe8981d0dc6b91e484b9"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m2-bright-second16.tiff": {
+      "bytes": 197798928,
+      "sha256": "932d56d58550274b3c7a2c8276337c3d2fd7cd114d191d4a83c10b12112a67d7"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m2-second-first16.tiff": {
+      "bytes": 197798928,
+      "sha256": "3d46f11413e5cf37bdeb730eb6faf66c266ac52107e1b5af1e032052080d16bc"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m2-second-second16.tiff": {
+      "bytes": 197798928,
+      "sha256": "f487cec1ed75a24c46a5834b1a5a7818816a1651f64215639c2802c0d8918d7c"
+    },
+    "experiments/SCORECARD-BASELINE/prepare.py": {
+      "bytes": 19567,
+      "sha256": "dd4e9b3bd1c09680930b757b305d8d83e232f1975bff033010c7ab8265bc8dc3"
+    },
+    "experiments/SCORECARD-BASELINE/rail_preflight.py": {
+      "bytes": 4798,
+      "sha256": "09f2554549858c4575dc9e5a2f1f06bdc1480e59c882236f401affde9756bc29"
+    },
+    "experiments/SCORECARD-BASELINE/render.py": {
+      "bytes": 6795,
+      "sha256": "a7213691381553c81e5d19d0c091001024be88c8a2d9f023f97c1e2b4c8be39a"
+    },
+    "experiments/SCORECARD-BASELINE/verify.py": {
+      "bytes": 3680,
+      "sha256": "7b832c19b2f1547b394e519862bdb54fc601721208cd9513f3ab12c639949d22"
+    },
+    "experiments/SCORECARD-BASELINE/work/bin/strehl.exe": {
+      "bytes": 9862656,
+      "sha256": "814eb719608cc0f085fbd49e7529eb6fa4e50031070f5f57af4fc2812cee4363"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+      "bytes": 2102,
+      "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+      "bytes": 2098,
+      "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+      "bytes": 2640,
+      "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m2-bright-second16-830898178934c63d.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m2-second-first16-f65d655759759820.warpmap.txt": {
+      "bytes": 2638,
+      "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/bright_all32.npy": {
+      "bytes": 127402112,
+      "sha256": "8a65fa8eb1e3655b416740470291b64998fcf7268ec590353c46cce21d506f09"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/bright_first16.npy": {
+      "bytes": 127402112,
+      "sha256": "51a4bf1ca335f13807d9726c1945013eb9027b5fe055af9b0d2dacb76a986eb0"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/bright_reference8.npy": {
+      "bytes": 127402112,
+      "sha256": "2da650cfca9f498458860f12de40574b023011522ecdd721347b625e148492c2"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/bright_second16.npy": {
+      "bytes": 127402112,
+      "sha256": "69484952e81318705982b9c5fefd1d488e43b9497708fcc023d2af9f47ea811f"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/second_all32.npy": {
+      "bytes": 127402112,
+      "sha256": "5cd40c16e8b3b0a1dc6171a5d039923b2310e2939f27a647e47545203eb9e986"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/second_first16.npy": {
+      "bytes": 127402112,
+      "sha256": "40c815fee07055ed0a4b8a4d78dc11bd555e5774af7a76fec60408aa7ad64d2c"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/second_reference8.npy": {
+      "bytes": 127402112,
+      "sha256": "06782d2a08ec0435e4d88504679ec488811c0597ebded53eb897a76721bae7ed"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/second_second16.npy": {
+      "bytes": 127402112,
+      "sha256": "c301a6b9307bd71af7f34152cdd027196e173528707a80b9dc8f92a902b4365d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00336.ARW": {
+      "bytes": 36343808,
+      "sha256": "41a0a4723cea362200f91b527f101bd93e6da370b5faca79e141bb08a409b93d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00337.ARW": {
+      "bytes": 36335616,
+      "sha256": "744ae9655b4a1b86a7cc7c48813cd0bd412199326dc1f42cbf3666f34605d2b7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00338.ARW": {
+      "bytes": 36335616,
+      "sha256": "0a709b90c5dc85394ab85edf150d41c920395e3eaec0bc8041c10a725a0799ef"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00339.ARW": {
+      "bytes": 36335616,
+      "sha256": "73b32c94cb10a09701d69799a921248cf6132d9d04e6f2cfc90ad6d4b8b43556"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00340.ARW": {
+      "bytes": 36339712,
+      "sha256": "d2ba7ab37a44ce59dbc911413b32b70b735ffeff9768a928ddc40ea1097536f1"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00341.ARW": {
+      "bytes": 36335616,
+      "sha256": "dec749818b3694e74c25cfbb6207c64234bb4493ed88ba4bddb02a0a7de1975b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00342.ARW": {
+      "bytes": 36335616,
+      "sha256": "f1a397e411dcb726f67e44ba847730c4c74460d3dca744cde429d82f3ead07bc"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00343.ARW": {
+      "bytes": 36335616,
+      "sha256": "7c4878b65c462dddaa175f2fa2e4ed126c801dae9542e5895aa6cee2670af8d2"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00344.ARW": {
+      "bytes": 36335616,
+      "sha256": "0f274e12a373eed71b957472b7e8b5b7782f3625c93df1967f7d631612a31c18"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00345.ARW": {
+      "bytes": 36335616,
+      "sha256": "44ab71dba4d47b1a76d0a0e8ac30156bc999130ab5278c5ef626be96c198eb8e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00346.ARW": {
+      "bytes": 36335616,
+      "sha256": "cf52493994ebf5adfd9b7cd95a26b8e1f250b19f76cebc354f32b606cd1bf8c5"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00347.ARW": {
+      "bytes": 36335616,
+      "sha256": "c48ab0146be1bdec2a8ab7eed63e9afd7c919aae1b34c60c054633f099dbe90f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00348.ARW": {
+      "bytes": 36335616,
+      "sha256": "2ca9f41d7bebf906d7cc5bfc92d56a774f9d9bac3add74da4009d9eeb486c743"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00349.ARW": {
+      "bytes": 36335616,
+      "sha256": "8370598b6efcdea436b1f30e3bfb49246b0df9adf4ebbed65d3f5ed66ff0089c"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00350.ARW": {
+      "bytes": 36335616,
+      "sha256": "51380795dbea085b8f2929ca14b544915a63f5d858476bace864376e2261bece"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00351.ARW": {
+      "bytes": 36335616,
+      "sha256": "a94e38d26a377e509c18cd66abe2ca2e3fda1793e2bd7248b67faad47d485291"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00352.ARW": {
+      "bytes": 36335616,
+      "sha256": "b1605aef81b46e4de0123dd9e8f50e37654d33bacf95fb2e7848e9201ee1946b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00353.ARW": {
+      "bytes": 36335616,
+      "sha256": "787e469ca1b0dd10a1f228407bedea3fb16989868350b29d59190a77c6a47fa7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00354.ARW": {
+      "bytes": 36339712,
+      "sha256": "04cea1b521e0805af684922811927c3b5b923c5998e0553babf1b31937f3ed78"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00355.ARW": {
+      "bytes": 36331520,
+      "sha256": "d3723d1bf58ac36f137107bc8eb383fb4c4648c6697d41d335c564e1339e12e7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00356.ARW": {
+      "bytes": 36339712,
+      "sha256": "34afaf03abb463a285ad8bbf024cc2ee207f7f9b7c8d65969918df786c30fd1c"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00357.ARW": {
+      "bytes": 36335616,
+      "sha256": "70ae74a95a356287dc1ccf6c0e6601143a7650fa5a0e3ba564f9cc7dcf804d09"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00358.ARW": {
+      "bytes": 36335616,
+      "sha256": "78f45014aed446ffd5a4355ba2b1777f1ec4faf1cf33f995d225abe175e7bd81"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00359.ARW": {
+      "bytes": 36335616,
+      "sha256": "2eccc4ddec4a77a840fd34df631977b274f7160c0ea4e978ce67ea6ba9fc2302"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00592.ARW": {
+      "bytes": 35524608,
+      "sha256": "3bfd7c6ea55be5f4ba68148a49c4b80aa7121557f67c15477988c1472f787521"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00593.ARW": {
+      "bytes": 35524608,
+      "sha256": "ac7b1b384fcb8b87073a633ac1a1e7a2df1dc71ae4fc9641c239016406373adf"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00594.ARW": {
+      "bytes": 35520512,
+      "sha256": "3aad33987a3416cd8c58d197761f63077d6398bf0ffc9b7f8e01baa960f3640a"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00595.ARW": {
+      "bytes": 35520512,
+      "sha256": "09294ad2669e057cc204eca052084bc050073505e975fb1c34ccff2573763ffa"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00596.ARW": {
+      "bytes": 35520512,
+      "sha256": "b4718fd3e4f59d09875bfaa96738c83d883be5ded7bdefd0fdebc2876eba8c4d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00597.ARW": {
+      "bytes": 35520512,
+      "sha256": "33f0915b8f8a7986d964468bd7c89604c63aacbc722314daf70ceb23fcc74a17"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00598.ARW": {
+      "bytes": 35524608,
+      "sha256": "6dc743b53437395db001a5bb91e3cd4317d56b31f17a470ce9a7f4d90e386aa8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00599.ARW": {
+      "bytes": 35520512,
+      "sha256": "54e79958796c83ae1df7c67dec2b88315daa64aaa89af53f92c8c28109de5b5f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00600.ARW": {
+      "bytes": 35520512,
+      "sha256": "aa75a1675b19ab0f995331eae4ec7e0e2917cc9ef0034c797ad63e94c8d06df7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00601.ARW": {
+      "bytes": 35520512,
+      "sha256": "0bf420d27fa015153e2d93c8c54842e49e651e8a8a275c695c93b06b7693aa71"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00602.ARW": {
+      "bytes": 35520512,
+      "sha256": "4698c311b41e3b6afbec94e79d3118eb604f34e2ff14969b40ee8555fcca5a91"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00603.ARW": {
+      "bytes": 35520512,
+      "sha256": "c9d622067ba14ba99e939af80cf1e08b4a5097791ed4cfd85802205114277ed8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00604.ARW": {
+      "bytes": 35524608,
+      "sha256": "c706b98af636d4fa738e6aca49060aeb1b7e0b89cb3a3ac1d15a0b7fcd5059d7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00605.ARW": {
+      "bytes": 35524608,
+      "sha256": "cd3c71bbe36548ea8440dcb635ea72ac35236cadfc50dcb058718a5df9720a57"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00606.ARW": {
+      "bytes": 35520512,
+      "sha256": "ab5d973f1e41bf0730143658f1bbcf23a7a5335ca5082246ca3990b11d2a228b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00607.ARW": {
+      "bytes": 35520512,
+      "sha256": "0dcac38e61ad540b35f44a59c97953e9d72c5c27a2acaff54e8389b661699252"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00608.ARW": {
+      "bytes": 35524608,
+      "sha256": "5c952ef91cd1f2a25599957ae18830ec0fc1d06a4581c91f3c5aa378225d078a"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00609.ARW": {
+      "bytes": 35520512,
+      "sha256": "a3c64f4147decf10dd9cbf56adc73e108e293b600974f05c1c3ffe2303a172b4"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00610.ARW": {
+      "bytes": 35524608,
+      "sha256": "bde92f971d6ee9db7d4ea0960faf99adf06798c643decb906a4194008d198d29"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00611.ARW": {
+      "bytes": 35524608,
+      "sha256": "985bed7b69d8be7954e308501727485fb352f260f077b7d64548abbd06fabf47"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00612.ARW": {
+      "bytes": 35520512,
+      "sha256": "c193877d3ebad7838d4298da2be5627adf08b73e2b820210333845a6d05e114e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00613.ARW": {
+      "bytes": 35520512,
+      "sha256": "ca4a6881281e2f34a9a9b27cdbe4962d203b2abab5dfc64408ad2123b974aa06"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00614.ARW": {
+      "bytes": 35524608,
+      "sha256": "c2d6daf98e99bcecf4bab572c827ddd13ca3548b49cb400a4f1ab2ea74d59cc8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00615.ARW": {
+      "bytes": 35520512,
+      "sha256": "a7da46e1ea8d15e7cd034fafac93e0dd38282da5e18cb7f31c98dd89946b3e55"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00328.ARW": {
+      "bytes": 36347904,
+      "sha256": "b935bd6fca3196113c1dc5e5b1320c932b9a2484408b8a5b57c9ab456971de60"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00329.ARW": {
+      "bytes": 36343808,
+      "sha256": "30067c51c0859fc17a56cd01410d58b783419a3926a89e63509ddb8efef821a6"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00330.ARW": {
+      "bytes": 36339712,
+      "sha256": "f31fc5e1c419cd2112fad18999c42ef59ff3b5a7763bf066704a8150d8d093d5"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00331.ARW": {
+      "bytes": 36335616,
+      "sha256": "75cefdcc2e0219c71e741edd4bb1f50c4b8bdcb173054a2737129cf60d73be01"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00332.ARW": {
+      "bytes": 36335616,
+      "sha256": "d2fb23c2b71213b1b8e576a42d0bd275d0d237e3978be335e85c42b871cf7cda"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00333.ARW": {
+      "bytes": 36335616,
+      "sha256": "2d59bbcd783fbc8d2ddf1853ec9ebb1544eca69e9e513559f51913886f5f34f2"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00334.ARW": {
+      "bytes": 36343808,
+      "sha256": "a7d2dd40442ac7e05fd2eb6a86b9e5bfae669c55dd48ec68093f2ab7173f7b2d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00335.ARW": {
+      "bytes": 36335616,
+      "sha256": "187f157cdd26baa6563290ecbc07cc1812d163a929986599ea0627d248c0ad27"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00336.ARW": {
+      "bytes": 36343808,
+      "sha256": "41a0a4723cea362200f91b527f101bd93e6da370b5faca79e141bb08a409b93d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00337.ARW": {
+      "bytes": 36335616,
+      "sha256": "744ae9655b4a1b86a7cc7c48813cd0bd412199326dc1f42cbf3666f34605d2b7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00338.ARW": {
+      "bytes": 36335616,
+      "sha256": "0a709b90c5dc85394ab85edf150d41c920395e3eaec0bc8041c10a725a0799ef"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00339.ARW": {
+      "bytes": 36335616,
+      "sha256": "73b32c94cb10a09701d69799a921248cf6132d9d04e6f2cfc90ad6d4b8b43556"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00340.ARW": {
+      "bytes": 36339712,
+      "sha256": "d2ba7ab37a44ce59dbc911413b32b70b735ffeff9768a928ddc40ea1097536f1"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00341.ARW": {
+      "bytes": 36335616,
+      "sha256": "dec749818b3694e74c25cfbb6207c64234bb4493ed88ba4bddb02a0a7de1975b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00342.ARW": {
+      "bytes": 36335616,
+      "sha256": "f1a397e411dcb726f67e44ba847730c4c74460d3dca744cde429d82f3ead07bc"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00343.ARW": {
+      "bytes": 36335616,
+      "sha256": "7c4878b65c462dddaa175f2fa2e4ed126c801dae9542e5895aa6cee2670af8d2"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00344.ARW": {
+      "bytes": 36335616,
+      "sha256": "0f274e12a373eed71b957472b7e8b5b7782f3625c93df1967f7d631612a31c18"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00345.ARW": {
+      "bytes": 36335616,
+      "sha256": "44ab71dba4d47b1a76d0a0e8ac30156bc999130ab5278c5ef626be96c198eb8e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00346.ARW": {
+      "bytes": 36335616,
+      "sha256": "cf52493994ebf5adfd9b7cd95a26b8e1f250b19f76cebc354f32b606cd1bf8c5"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00347.ARW": {
+      "bytes": 36335616,
+      "sha256": "c48ab0146be1bdec2a8ab7eed63e9afd7c919aae1b34c60c054633f099dbe90f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00348.ARW": {
+      "bytes": 36335616,
+      "sha256": "2ca9f41d7bebf906d7cc5bfc92d56a774f9d9bac3add74da4009d9eeb486c743"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00349.ARW": {
+      "bytes": 36335616,
+      "sha256": "8370598b6efcdea436b1f30e3bfb49246b0df9adf4ebbed65d3f5ed66ff0089c"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00350.ARW": {
+      "bytes": 36335616,
+      "sha256": "51380795dbea085b8f2929ca14b544915a63f5d858476bace864376e2261bece"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00351.ARW": {
+      "bytes": 36335616,
+      "sha256": "a94e38d26a377e509c18cd66abe2ca2e3fda1793e2bd7248b67faad47d485291"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00352.ARW": {
+      "bytes": 36335616,
+      "sha256": "b1605aef81b46e4de0123dd9e8f50e37654d33bacf95fb2e7848e9201ee1946b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00353.ARW": {
+      "bytes": 36335616,
+      "sha256": "787e469ca1b0dd10a1f228407bedea3fb16989868350b29d59190a77c6a47fa7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00354.ARW": {
+      "bytes": 36339712,
+      "sha256": "04cea1b521e0805af684922811927c3b5b923c5998e0553babf1b31937f3ed78"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00355.ARW": {
+      "bytes": 36331520,
+      "sha256": "d3723d1bf58ac36f137107bc8eb383fb4c4648c6697d41d335c564e1339e12e7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00356.ARW": {
+      "bytes": 36339712,
+      "sha256": "34afaf03abb463a285ad8bbf024cc2ee207f7f9b7c8d65969918df786c30fd1c"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00357.ARW": {
+      "bytes": 36335616,
+      "sha256": "70ae74a95a356287dc1ccf6c0e6601143a7650fa5a0e3ba564f9cc7dcf804d09"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00358.ARW": {
+      "bytes": 36335616,
+      "sha256": "78f45014aed446ffd5a4355ba2b1777f1ec4faf1cf33f995d225abe175e7bd81"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00359.ARW": {
+      "bytes": 36335616,
+      "sha256": "2eccc4ddec4a77a840fd34df631977b274f7160c0ea4e978ce67ea6ba9fc2302"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00584.ARW": {
+      "bytes": 35520512,
+      "sha256": "6d3a3fe4058d10aeb3fb3009d0215751c5a5470ed20e96e91dcb8f1ebb860c6e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00585.ARW": {
+      "bytes": 35520512,
+      "sha256": "fc1110096036424b68a594387571edcd2cedc49b6fe0990e4fb6e3b334ac0d38"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00586.ARW": {
+      "bytes": 35516416,
+      "sha256": "a8b2cecb190a9baa4fd862515b63df1452c917874926df4f2dc905b2a4eabfe8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00587.ARW": {
+      "bytes": 35524608,
+      "sha256": "a2f757b8a47c3046829ea0a797a4496ad027a9d9f56f867e845aeab256cbad5e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00588.ARW": {
+      "bytes": 35516416,
+      "sha256": "688c29a40fc811b06437d12df067b812ae04c62a540af6525e0667ed128934ae"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00589.ARW": {
+      "bytes": 35516416,
+      "sha256": "23237a186eeabd90810fbfbe4c7bb2bd2a8ce04ccbc96df2fa0260dd3be51aec"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00590.ARW": {
+      "bytes": 35512320,
+      "sha256": "6cc992f97195200c20fc57b0286b3ecbb4bdda5445cb30858ed2037647de666f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00591.ARW": {
+      "bytes": 35516416,
+      "sha256": "b3a16282cdae9a85ffd38e0dde08e4f6891c512278648355eadb719acda6e47e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00592.ARW": {
+      "bytes": 35524608,
+      "sha256": "3bfd7c6ea55be5f4ba68148a49c4b80aa7121557f67c15477988c1472f787521"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00593.ARW": {
+      "bytes": 35524608,
+      "sha256": "ac7b1b384fcb8b87073a633ac1a1e7a2df1dc71ae4fc9641c239016406373adf"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00594.ARW": {
+      "bytes": 35520512,
+      "sha256": "3aad33987a3416cd8c58d197761f63077d6398bf0ffc9b7f8e01baa960f3640a"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00595.ARW": {
+      "bytes": 35520512,
+      "sha256": "09294ad2669e057cc204eca052084bc050073505e975fb1c34ccff2573763ffa"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00596.ARW": {
+      "bytes": 35520512,
+      "sha256": "b4718fd3e4f59d09875bfaa96738c83d883be5ded7bdefd0fdebc2876eba8c4d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00597.ARW": {
+      "bytes": 35520512,
+      "sha256": "33f0915b8f8a7986d964468bd7c89604c63aacbc722314daf70ceb23fcc74a17"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00598.ARW": {
+      "bytes": 35524608,
+      "sha256": "6dc743b53437395db001a5bb91e3cd4317d56b31f17a470ce9a7f4d90e386aa8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00599.ARW": {
+      "bytes": 35520512,
+      "sha256": "54e79958796c83ae1df7c67dec2b88315daa64aaa89af53f92c8c28109de5b5f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00600.ARW": {
+      "bytes": 35520512,
+      "sha256": "aa75a1675b19ab0f995331eae4ec7e0e2917cc9ef0034c797ad63e94c8d06df7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00601.ARW": {
+      "bytes": 35520512,
+      "sha256": "0bf420d27fa015153e2d93c8c54842e49e651e8a8a275c695c93b06b7693aa71"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00602.ARW": {
+      "bytes": 35520512,
+      "sha256": "4698c311b41e3b6afbec94e79d3118eb604f34e2ff14969b40ee8555fcca5a91"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00603.ARW": {
+      "bytes": 35520512,
+      "sha256": "c9d622067ba14ba99e939af80cf1e08b4a5097791ed4cfd85802205114277ed8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00604.ARW": {
+      "bytes": 35524608,
+      "sha256": "c706b98af636d4fa738e6aca49060aeb1b7e0b89cb3a3ac1d15a0b7fcd5059d7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00605.ARW": {
+      "bytes": 35524608,
+      "sha256": "cd3c71bbe36548ea8440dcb635ea72ac35236cadfc50dcb058718a5df9720a57"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00606.ARW": {
+      "bytes": 35520512,
+      "sha256": "ab5d973f1e41bf0730143658f1bbcf23a7a5335ca5082246ca3990b11d2a228b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00607.ARW": {
+      "bytes": 35520512,
+      "sha256": "0dcac38e61ad540b35f44a59c97953e9d72c5c27a2acaff54e8389b661699252"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00608.ARW": {
+      "bytes": 35524608,
+      "sha256": "5c952ef91cd1f2a25599957ae18830ec0fc1d06a4581c91f3c5aa378225d078a"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00609.ARW": {
+      "bytes": 35520512,
+      "sha256": "a3c64f4147decf10dd9cbf56adc73e108e293b600974f05c1c3ffe2303a172b4"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00610.ARW": {
+      "bytes": 35524608,
+      "sha256": "bde92f971d6ee9db7d4ea0960faf99adf06798c643decb906a4194008d198d29"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00611.ARW": {
+      "bytes": 35524608,
+      "sha256": "985bed7b69d8be7954e308501727485fb352f260f077b7d64548abbd06fabf47"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00612.ARW": {
+      "bytes": 35520512,
+      "sha256": "c193877d3ebad7838d4298da2be5627adf08b73e2b820210333845a6d05e114e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00613.ARW": {
+      "bytes": 35520512,
+      "sha256": "ca4a6881281e2f34a9a9b27cdbe4962d203b2abab5dfc64408ad2123b974aa06"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00614.ARW": {
+      "bytes": 35524608,
+      "sha256": "c2d6daf98e99bcecf4bab572c827ddd13ca3548b49cb400a4f1ab2ea74d59cc8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00615.ARW": {
+      "bytes": 35520512,
+      "sha256": "a7da46e1ea8d15e7cd034fafac93e0dd38282da5e18cb7f31c98dd89946b3e55"
+    },
+    "experiments/SCORECARD-BASELINE/work/source/crates/strehl-cli/src/align_cmd.rs": {
+      "bytes": 121931,
+      "sha256": "77498f962fe2c5f2373fd00aefbba6b7535c15594da213271be33624296e9cee"
+    },
+    "experiments/SCORECARD-BASELINE/work/source/crates/strehl-cli/src/main.rs": {
+      "bytes": 88623,
+      "sha256": "cb55bc7894cb5f10dbe1ae29b9ead893838829a4dc1040ab2a14f26ebf5ea582"
+    },
+    "experiments/SCORECARD-BASELINE/work/source/crates/strehl-cli/src/merge_cmd.rs": {
+      "bytes": 412215,
+      "sha256": "8e1d2e75ea28ab3ea392f95a761767012c8ef4c216856c0f3b2d5925351df8dc"
+    },
+    "experiments/SCORECARD-BASELINE/work/source/crates/strehl-core/src/pyramid.rs": {
+      "bytes": 194661,
+      "sha256": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47"
+    }
+  },
+  "frozen_dependencies_before": {
+    "experiments/SCORECARD-BASELINE/.gitignore": {
+      "bytes": 91,
+      "sha256": "c3b0e56aa2de77b8052ee8671bc0f079f9e9ca4e706a011dfb59e97227becd6f"
+    },
+    "experiments/SCORECARD-BASELINE/audit_geometry.py": {
+      "bytes": 5670,
+      "sha256": "be1ec143f3d391e7eb0ab4a927c4744aa18283f4992e82d3f975354163a357fd"
+    },
+    "experiments/SCORECARD-BASELINE/commission.py": {
+      "bytes": 8076,
+      "sha256": "eb3459d9cc077c6353343362d9e860552306af12ccb0011e7990c8c20875dba6"
+    },
+    "experiments/SCORECARD-BASELINE/common.py": {
+      "bytes": 7484,
+      "sha256": "ddeca49f9afd184d88830ec17f0ef3ded2f9a63401db4f7d4672e9888619b8e0"
+    },
+    "experiments/SCORECARD-BASELINE/freeze.py": {
+      "bytes": 5655,
+      "sha256": "4a35d537c53f8bab7af2a4cd074424cf96d09bc0ed25c2a72873ea222b640cf7"
+    },
+    "experiments/SCORECARD-BASELINE/measure.py": {
+      "bytes": 10079,
+      "sha256": "7c0d1175c76ffdab7adc3ab799831cbbd63debcdcb31dc5f9b80372e4ceb51b5"
+    },
+    "experiments/SCORECARD-BASELINE/out/GEOMETRY-AUDIT.json": {
+      "bytes": 10015,
+      "sha256": "6f42ce2252310806e9a55f57e2359dc41e7d4560857c7188d2b7ec001e7ebebd"
+    },
+    "experiments/SCORECARD-BASELINE/out/INPUT-MANIFEST.json": {
+      "bytes": 33669,
+      "sha256": "78266db73a0bcb76a755aceecd38c6e1f57acc9f54bf7e22c0326c78e8dbb1c1"
+    },
+    "experiments/SCORECARD-BASELINE/out/MEASUREMENTS.json": {
+      "bytes": 3845797,
+      "sha256": "dc50ac70368e621c9a8d138e51fbbc0f15cafbcf78433521cc673d2fc3459cdf"
+    },
+    "experiments/SCORECARD-BASELINE/out/RAIL-PREFLIGHT.json": {
+      "bytes": 7835,
+      "sha256": "2e39311d596dbbae4b20d8feafeaa3e732e6d8cecb3e8949e4f2a5231c5b75c5"
+    },
+    "experiments/SCORECARD-BASELINE/out/RENDER-MANIFEST.json": {
+      "bytes": 21593,
+      "sha256": "535ea4293c7b45c485961f3fc4d206729d1bf5b583a00db2b1c1465de04aebc5"
+    },
+    "experiments/SCORECARD-BASELINE/out/RUN-MANIFEST.json": {
+      "bytes": 2559,
+      "sha256": "96b2945352f1cee33295aeeed7804ca48ff529b175232aa9e1f7e81cbb5af6f0"
+    },
+    "experiments/SCORECARD-BASELINE/out/SITE-MANIFEST.json": {
+      "bytes": 247275,
+      "sha256": "953293abdd9d6bc8c2ca9182ba2328f8c0ecb863db4da679506b987054bc14fb"
+    },
+    "experiments/SCORECARD-BASELINE/out/commission.json": {
+      "bytes": 3533,
+      "sha256": "5bee816b2ed899aab580898c5e0be7f88bb3563324365753ece9ec8a838712ed"
+    },
+    "experiments/SCORECARD-BASELINE/out/exif-bee.json": {
+      "bytes": 758163,
+      "sha256": "a26538d820b2918cc74a8e4d984b323d79d88b3e1b54333d738e92954e838132"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m1-bright-a12.tiff": {
+      "bytes": 197798928,
+      "sha256": "3785be947a7b87a331858fb9d84a00e7306be335185aa158b4989e3c69c030f7"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m1-bright-b12.tiff": {
+      "bytes": 197798928,
+      "sha256": "be0a78fa01bc63966478d6a7b292cf97b597aaba3c8574805e472c8df6fec608"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m1-second-a12.tiff": {
+      "bytes": 197798928,
+      "sha256": "f20dd6bdf7264731688f73a08d8e410e5a4a0c47350303311dba0ba27cc68265"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m1-second-b12.tiff": {
+      "bytes": 197798928,
+      "sha256": "2ce6bb6c89f8ace6ae1fd4fc02c38c2f9e623eb8c397a0724ed11d7caea939bf"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m2-bright-first16.tiff": {
+      "bytes": 197798928,
+      "sha256": "898ed3f3de0f4f53581a38b0ba1fce317285536a4aebbe8981d0dc6b91e484b9"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m2-bright-second16.tiff": {
+      "bytes": 197798928,
+      "sha256": "932d56d58550274b3c7a2c8276337c3d2fd7cd114d191d4a83c10b12112a67d7"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m2-second-first16.tiff": {
+      "bytes": 197798928,
+      "sha256": "3d46f11413e5cf37bdeb730eb6faf66c266ac52107e1b5af1e032052080d16bc"
+    },
+    "experiments/SCORECARD-BASELINE/out/renders/m2-second-second16.tiff": {
+      "bytes": 197798928,
+      "sha256": "f487cec1ed75a24c46a5834b1a5a7818816a1651f64215639c2802c0d8918d7c"
+    },
+    "experiments/SCORECARD-BASELINE/prepare.py": {
+      "bytes": 19567,
+      "sha256": "dd4e9b3bd1c09680930b757b305d8d83e232f1975bff033010c7ab8265bc8dc3"
+    },
+    "experiments/SCORECARD-BASELINE/rail_preflight.py": {
+      "bytes": 4798,
+      "sha256": "09f2554549858c4575dc9e5a2f1f06bdc1480e59c882236f401affde9756bc29"
+    },
+    "experiments/SCORECARD-BASELINE/render.py": {
+      "bytes": 6795,
+      "sha256": "a7213691381553c81e5d19d0c091001024be88c8a2d9f023f97c1e2b4c8be39a"
+    },
+    "experiments/SCORECARD-BASELINE/verify.py": {
+      "bytes": 3680,
+      "sha256": "7b832c19b2f1547b394e519862bdb54fc601721208cd9513f3ab12c639949d22"
+    },
+    "experiments/SCORECARD-BASELINE/work/bin/strehl.exe": {
+      "bytes": 9862656,
+      "sha256": "814eb719608cc0f085fbd49e7529eb6fa4e50031070f5f57af4fc2812cee4363"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+      "bytes": 2102,
+      "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+      "bytes": 2098,
+      "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+      "bytes": 2640,
+      "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m2-bright-second16-830898178934c63d.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m2-second-first16-f65d655759759820.warpmap.txt": {
+      "bytes": 2638,
+      "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+    },
+    "experiments/SCORECARD-BASELINE/work/cache/m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/bright_all32.npy": {
+      "bytes": 127402112,
+      "sha256": "8a65fa8eb1e3655b416740470291b64998fcf7268ec590353c46cce21d506f09"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/bright_first16.npy": {
+      "bytes": 127402112,
+      "sha256": "51a4bf1ca335f13807d9726c1945013eb9027b5fe055af9b0d2dacb76a986eb0"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/bright_reference8.npy": {
+      "bytes": 127402112,
+      "sha256": "2da650cfca9f498458860f12de40574b023011522ecdd721347b625e148492c2"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/bright_second16.npy": {
+      "bytes": 127402112,
+      "sha256": "69484952e81318705982b9c5fefd1d488e43b9497708fcc023d2af9f47ea811f"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/second_all32.npy": {
+      "bytes": 127402112,
+      "sha256": "5cd40c16e8b3b0a1dc6171a5d039923b2310e2939f27a647e47545203eb9e986"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/second_first16.npy": {
+      "bytes": 127402112,
+      "sha256": "40c815fee07055ed0a4b8a4d78dc11bd555e5774af7a76fec60408aa7ad64d2c"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/second_reference8.npy": {
+      "bytes": 127402112,
+      "sha256": "06782d2a08ec0435e4d88504679ec488811c0597ebded53eb897a76721bae7ed"
+    },
+    "experiments/SCORECARD-BASELINE/work/input-cache/second_second16.npy": {
+      "bytes": 127402112,
+      "sha256": "c301a6b9307bd71af7f34152cdd027196e173528707a80b9dc8f92a902b4365d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00336.ARW": {
+      "bytes": 36343808,
+      "sha256": "41a0a4723cea362200f91b527f101bd93e6da370b5faca79e141bb08a409b93d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00337.ARW": {
+      "bytes": 36335616,
+      "sha256": "744ae9655b4a1b86a7cc7c48813cd0bd412199326dc1f42cbf3666f34605d2b7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00338.ARW": {
+      "bytes": 36335616,
+      "sha256": "0a709b90c5dc85394ab85edf150d41c920395e3eaec0bc8041c10a725a0799ef"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00339.ARW": {
+      "bytes": 36335616,
+      "sha256": "73b32c94cb10a09701d69799a921248cf6132d9d04e6f2cfc90ad6d4b8b43556"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00340.ARW": {
+      "bytes": 36339712,
+      "sha256": "d2ba7ab37a44ce59dbc911413b32b70b735ffeff9768a928ddc40ea1097536f1"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00341.ARW": {
+      "bytes": 36335616,
+      "sha256": "dec749818b3694e74c25cfbb6207c64234bb4493ed88ba4bddb02a0a7de1975b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00342.ARW": {
+      "bytes": 36335616,
+      "sha256": "f1a397e411dcb726f67e44ba847730c4c74460d3dca744cde429d82f3ead07bc"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00343.ARW": {
+      "bytes": 36335616,
+      "sha256": "7c4878b65c462dddaa175f2fa2e4ed126c801dae9542e5895aa6cee2670af8d2"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00344.ARW": {
+      "bytes": 36335616,
+      "sha256": "0f274e12a373eed71b957472b7e8b5b7782f3625c93df1967f7d631612a31c18"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00345.ARW": {
+      "bytes": 36335616,
+      "sha256": "44ab71dba4d47b1a76d0a0e8ac30156bc999130ab5278c5ef626be96c198eb8e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00346.ARW": {
+      "bytes": 36335616,
+      "sha256": "cf52493994ebf5adfd9b7cd95a26b8e1f250b19f76cebc354f32b606cd1bf8c5"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-a12/DSC00347.ARW": {
+      "bytes": 36335616,
+      "sha256": "c48ab0146be1bdec2a8ab7eed63e9afd7c919aae1b34c60c054633f099dbe90f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00348.ARW": {
+      "bytes": 36335616,
+      "sha256": "2ca9f41d7bebf906d7cc5bfc92d56a774f9d9bac3add74da4009d9eeb486c743"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00349.ARW": {
+      "bytes": 36335616,
+      "sha256": "8370598b6efcdea436b1f30e3bfb49246b0df9adf4ebbed65d3f5ed66ff0089c"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00350.ARW": {
+      "bytes": 36335616,
+      "sha256": "51380795dbea085b8f2929ca14b544915a63f5d858476bace864376e2261bece"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00351.ARW": {
+      "bytes": 36335616,
+      "sha256": "a94e38d26a377e509c18cd66abe2ca2e3fda1793e2bd7248b67faad47d485291"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00352.ARW": {
+      "bytes": 36335616,
+      "sha256": "b1605aef81b46e4de0123dd9e8f50e37654d33bacf95fb2e7848e9201ee1946b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00353.ARW": {
+      "bytes": 36335616,
+      "sha256": "787e469ca1b0dd10a1f228407bedea3fb16989868350b29d59190a77c6a47fa7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00354.ARW": {
+      "bytes": 36339712,
+      "sha256": "04cea1b521e0805af684922811927c3b5b923c5998e0553babf1b31937f3ed78"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00355.ARW": {
+      "bytes": 36331520,
+      "sha256": "d3723d1bf58ac36f137107bc8eb383fb4c4648c6697d41d335c564e1339e12e7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00356.ARW": {
+      "bytes": 36339712,
+      "sha256": "34afaf03abb463a285ad8bbf024cc2ee207f7f9b7c8d65969918df786c30fd1c"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00357.ARW": {
+      "bytes": 36335616,
+      "sha256": "70ae74a95a356287dc1ccf6c0e6601143a7650fa5a0e3ba564f9cc7dcf804d09"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00358.ARW": {
+      "bytes": 36335616,
+      "sha256": "78f45014aed446ffd5a4355ba2b1777f1ec4faf1cf33f995d225abe175e7bd81"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-bright-b12/DSC00359.ARW": {
+      "bytes": 36335616,
+      "sha256": "2eccc4ddec4a77a840fd34df631977b274f7160c0ea4e978ce67ea6ba9fc2302"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00592.ARW": {
+      "bytes": 35524608,
+      "sha256": "3bfd7c6ea55be5f4ba68148a49c4b80aa7121557f67c15477988c1472f787521"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00593.ARW": {
+      "bytes": 35524608,
+      "sha256": "ac7b1b384fcb8b87073a633ac1a1e7a2df1dc71ae4fc9641c239016406373adf"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00594.ARW": {
+      "bytes": 35520512,
+      "sha256": "3aad33987a3416cd8c58d197761f63077d6398bf0ffc9b7f8e01baa960f3640a"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00595.ARW": {
+      "bytes": 35520512,
+      "sha256": "09294ad2669e057cc204eca052084bc050073505e975fb1c34ccff2573763ffa"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00596.ARW": {
+      "bytes": 35520512,
+      "sha256": "b4718fd3e4f59d09875bfaa96738c83d883be5ded7bdefd0fdebc2876eba8c4d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00597.ARW": {
+      "bytes": 35520512,
+      "sha256": "33f0915b8f8a7986d964468bd7c89604c63aacbc722314daf70ceb23fcc74a17"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00598.ARW": {
+      "bytes": 35524608,
+      "sha256": "6dc743b53437395db001a5bb91e3cd4317d56b31f17a470ce9a7f4d90e386aa8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00599.ARW": {
+      "bytes": 35520512,
+      "sha256": "54e79958796c83ae1df7c67dec2b88315daa64aaa89af53f92c8c28109de5b5f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00600.ARW": {
+      "bytes": 35520512,
+      "sha256": "aa75a1675b19ab0f995331eae4ec7e0e2917cc9ef0034c797ad63e94c8d06df7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00601.ARW": {
+      "bytes": 35520512,
+      "sha256": "0bf420d27fa015153e2d93c8c54842e49e651e8a8a275c695c93b06b7693aa71"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00602.ARW": {
+      "bytes": 35520512,
+      "sha256": "4698c311b41e3b6afbec94e79d3118eb604f34e2ff14969b40ee8555fcca5a91"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-a12/DSC00603.ARW": {
+      "bytes": 35520512,
+      "sha256": "c9d622067ba14ba99e939af80cf1e08b4a5097791ed4cfd85802205114277ed8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00604.ARW": {
+      "bytes": 35524608,
+      "sha256": "c706b98af636d4fa738e6aca49060aeb1b7e0b89cb3a3ac1d15a0b7fcd5059d7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00605.ARW": {
+      "bytes": 35524608,
+      "sha256": "cd3c71bbe36548ea8440dcb635ea72ac35236cadfc50dcb058718a5df9720a57"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00606.ARW": {
+      "bytes": 35520512,
+      "sha256": "ab5d973f1e41bf0730143658f1bbcf23a7a5335ca5082246ca3990b11d2a228b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00607.ARW": {
+      "bytes": 35520512,
+      "sha256": "0dcac38e61ad540b35f44a59c97953e9d72c5c27a2acaff54e8389b661699252"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00608.ARW": {
+      "bytes": 35524608,
+      "sha256": "5c952ef91cd1f2a25599957ae18830ec0fc1d06a4581c91f3c5aa378225d078a"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00609.ARW": {
+      "bytes": 35520512,
+      "sha256": "a3c64f4147decf10dd9cbf56adc73e108e293b600974f05c1c3ffe2303a172b4"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00610.ARW": {
+      "bytes": 35524608,
+      "sha256": "bde92f971d6ee9db7d4ea0960faf99adf06798c643decb906a4194008d198d29"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00611.ARW": {
+      "bytes": 35524608,
+      "sha256": "985bed7b69d8be7954e308501727485fb352f260f077b7d64548abbd06fabf47"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00612.ARW": {
+      "bytes": 35520512,
+      "sha256": "c193877d3ebad7838d4298da2be5627adf08b73e2b820210333845a6d05e114e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00613.ARW": {
+      "bytes": 35520512,
+      "sha256": "ca4a6881281e2f34a9a9b27cdbe4962d203b2abab5dfc64408ad2123b974aa06"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00614.ARW": {
+      "bytes": 35524608,
+      "sha256": "c2d6daf98e99bcecf4bab572c827ddd13ca3548b49cb400a4f1ab2ea74d59cc8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m1-second-b12/DSC00615.ARW": {
+      "bytes": 35520512,
+      "sha256": "a7da46e1ea8d15e7cd034fafac93e0dd38282da5e18cb7f31c98dd89946b3e55"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00328.ARW": {
+      "bytes": 36347904,
+      "sha256": "b935bd6fca3196113c1dc5e5b1320c932b9a2484408b8a5b57c9ab456971de60"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00329.ARW": {
+      "bytes": 36343808,
+      "sha256": "30067c51c0859fc17a56cd01410d58b783419a3926a89e63509ddb8efef821a6"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00330.ARW": {
+      "bytes": 36339712,
+      "sha256": "f31fc5e1c419cd2112fad18999c42ef59ff3b5a7763bf066704a8150d8d093d5"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00331.ARW": {
+      "bytes": 36335616,
+      "sha256": "75cefdcc2e0219c71e741edd4bb1f50c4b8bdcb173054a2737129cf60d73be01"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00332.ARW": {
+      "bytes": 36335616,
+      "sha256": "d2fb23c2b71213b1b8e576a42d0bd275d0d237e3978be335e85c42b871cf7cda"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00333.ARW": {
+      "bytes": 36335616,
+      "sha256": "2d59bbcd783fbc8d2ddf1853ec9ebb1544eca69e9e513559f51913886f5f34f2"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00334.ARW": {
+      "bytes": 36343808,
+      "sha256": "a7d2dd40442ac7e05fd2eb6a86b9e5bfae669c55dd48ec68093f2ab7173f7b2d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00335.ARW": {
+      "bytes": 36335616,
+      "sha256": "187f157cdd26baa6563290ecbc07cc1812d163a929986599ea0627d248c0ad27"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00336.ARW": {
+      "bytes": 36343808,
+      "sha256": "41a0a4723cea362200f91b527f101bd93e6da370b5faca79e141bb08a409b93d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00337.ARW": {
+      "bytes": 36335616,
+      "sha256": "744ae9655b4a1b86a7cc7c48813cd0bd412199326dc1f42cbf3666f34605d2b7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00338.ARW": {
+      "bytes": 36335616,
+      "sha256": "0a709b90c5dc85394ab85edf150d41c920395e3eaec0bc8041c10a725a0799ef"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00339.ARW": {
+      "bytes": 36335616,
+      "sha256": "73b32c94cb10a09701d69799a921248cf6132d9d04e6f2cfc90ad6d4b8b43556"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00340.ARW": {
+      "bytes": 36339712,
+      "sha256": "d2ba7ab37a44ce59dbc911413b32b70b735ffeff9768a928ddc40ea1097536f1"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00341.ARW": {
+      "bytes": 36335616,
+      "sha256": "dec749818b3694e74c25cfbb6207c64234bb4493ed88ba4bddb02a0a7de1975b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00342.ARW": {
+      "bytes": 36335616,
+      "sha256": "f1a397e411dcb726f67e44ba847730c4c74460d3dca744cde429d82f3ead07bc"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-first16/DSC00343.ARW": {
+      "bytes": 36335616,
+      "sha256": "7c4878b65c462dddaa175f2fa2e4ed126c801dae9542e5895aa6cee2670af8d2"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00344.ARW": {
+      "bytes": 36335616,
+      "sha256": "0f274e12a373eed71b957472b7e8b5b7782f3625c93df1967f7d631612a31c18"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00345.ARW": {
+      "bytes": 36335616,
+      "sha256": "44ab71dba4d47b1a76d0a0e8ac30156bc999130ab5278c5ef626be96c198eb8e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00346.ARW": {
+      "bytes": 36335616,
+      "sha256": "cf52493994ebf5adfd9b7cd95a26b8e1f250b19f76cebc354f32b606cd1bf8c5"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00347.ARW": {
+      "bytes": 36335616,
+      "sha256": "c48ab0146be1bdec2a8ab7eed63e9afd7c919aae1b34c60c054633f099dbe90f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00348.ARW": {
+      "bytes": 36335616,
+      "sha256": "2ca9f41d7bebf906d7cc5bfc92d56a774f9d9bac3add74da4009d9eeb486c743"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00349.ARW": {
+      "bytes": 36335616,
+      "sha256": "8370598b6efcdea436b1f30e3bfb49246b0df9adf4ebbed65d3f5ed66ff0089c"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00350.ARW": {
+      "bytes": 36335616,
+      "sha256": "51380795dbea085b8f2929ca14b544915a63f5d858476bace864376e2261bece"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00351.ARW": {
+      "bytes": 36335616,
+      "sha256": "a94e38d26a377e509c18cd66abe2ca2e3fda1793e2bd7248b67faad47d485291"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00352.ARW": {
+      "bytes": 36335616,
+      "sha256": "b1605aef81b46e4de0123dd9e8f50e37654d33bacf95fb2e7848e9201ee1946b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00353.ARW": {
+      "bytes": 36335616,
+      "sha256": "787e469ca1b0dd10a1f228407bedea3fb16989868350b29d59190a77c6a47fa7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00354.ARW": {
+      "bytes": 36339712,
+      "sha256": "04cea1b521e0805af684922811927c3b5b923c5998e0553babf1b31937f3ed78"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00355.ARW": {
+      "bytes": 36331520,
+      "sha256": "d3723d1bf58ac36f137107bc8eb383fb4c4648c6697d41d335c564e1339e12e7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00356.ARW": {
+      "bytes": 36339712,
+      "sha256": "34afaf03abb463a285ad8bbf024cc2ee207f7f9b7c8d65969918df786c30fd1c"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00357.ARW": {
+      "bytes": 36335616,
+      "sha256": "70ae74a95a356287dc1ccf6c0e6601143a7650fa5a0e3ba564f9cc7dcf804d09"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00358.ARW": {
+      "bytes": 36335616,
+      "sha256": "78f45014aed446ffd5a4355ba2b1777f1ec4faf1cf33f995d225abe175e7bd81"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-bright-second16/DSC00359.ARW": {
+      "bytes": 36335616,
+      "sha256": "2eccc4ddec4a77a840fd34df631977b274f7160c0ea4e978ce67ea6ba9fc2302"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00584.ARW": {
+      "bytes": 35520512,
+      "sha256": "6d3a3fe4058d10aeb3fb3009d0215751c5a5470ed20e96e91dcb8f1ebb860c6e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00585.ARW": {
+      "bytes": 35520512,
+      "sha256": "fc1110096036424b68a594387571edcd2cedc49b6fe0990e4fb6e3b334ac0d38"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00586.ARW": {
+      "bytes": 35516416,
+      "sha256": "a8b2cecb190a9baa4fd862515b63df1452c917874926df4f2dc905b2a4eabfe8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00587.ARW": {
+      "bytes": 35524608,
+      "sha256": "a2f757b8a47c3046829ea0a797a4496ad027a9d9f56f867e845aeab256cbad5e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00588.ARW": {
+      "bytes": 35516416,
+      "sha256": "688c29a40fc811b06437d12df067b812ae04c62a540af6525e0667ed128934ae"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00589.ARW": {
+      "bytes": 35516416,
+      "sha256": "23237a186eeabd90810fbfbe4c7bb2bd2a8ce04ccbc96df2fa0260dd3be51aec"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00590.ARW": {
+      "bytes": 35512320,
+      "sha256": "6cc992f97195200c20fc57b0286b3ecbb4bdda5445cb30858ed2037647de666f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00591.ARW": {
+      "bytes": 35516416,
+      "sha256": "b3a16282cdae9a85ffd38e0dde08e4f6891c512278648355eadb719acda6e47e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00592.ARW": {
+      "bytes": 35524608,
+      "sha256": "3bfd7c6ea55be5f4ba68148a49c4b80aa7121557f67c15477988c1472f787521"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00593.ARW": {
+      "bytes": 35524608,
+      "sha256": "ac7b1b384fcb8b87073a633ac1a1e7a2df1dc71ae4fc9641c239016406373adf"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00594.ARW": {
+      "bytes": 35520512,
+      "sha256": "3aad33987a3416cd8c58d197761f63077d6398bf0ffc9b7f8e01baa960f3640a"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00595.ARW": {
+      "bytes": 35520512,
+      "sha256": "09294ad2669e057cc204eca052084bc050073505e975fb1c34ccff2573763ffa"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00596.ARW": {
+      "bytes": 35520512,
+      "sha256": "b4718fd3e4f59d09875bfaa96738c83d883be5ded7bdefd0fdebc2876eba8c4d"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00597.ARW": {
+      "bytes": 35520512,
+      "sha256": "33f0915b8f8a7986d964468bd7c89604c63aacbc722314daf70ceb23fcc74a17"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00598.ARW": {
+      "bytes": 35524608,
+      "sha256": "6dc743b53437395db001a5bb91e3cd4317d56b31f17a470ce9a7f4d90e386aa8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-first16/DSC00599.ARW": {
+      "bytes": 35520512,
+      "sha256": "54e79958796c83ae1df7c67dec2b88315daa64aaa89af53f92c8c28109de5b5f"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00600.ARW": {
+      "bytes": 35520512,
+      "sha256": "aa75a1675b19ab0f995331eae4ec7e0e2917cc9ef0034c797ad63e94c8d06df7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00601.ARW": {
+      "bytes": 35520512,
+      "sha256": "0bf420d27fa015153e2d93c8c54842e49e651e8a8a275c695c93b06b7693aa71"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00602.ARW": {
+      "bytes": 35520512,
+      "sha256": "4698c311b41e3b6afbec94e79d3118eb604f34e2ff14969b40ee8555fcca5a91"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00603.ARW": {
+      "bytes": 35520512,
+      "sha256": "c9d622067ba14ba99e939af80cf1e08b4a5097791ed4cfd85802205114277ed8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00604.ARW": {
+      "bytes": 35524608,
+      "sha256": "c706b98af636d4fa738e6aca49060aeb1b7e0b89cb3a3ac1d15a0b7fcd5059d7"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00605.ARW": {
+      "bytes": 35524608,
+      "sha256": "cd3c71bbe36548ea8440dcb635ea72ac35236cadfc50dcb058718a5df9720a57"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00606.ARW": {
+      "bytes": 35520512,
+      "sha256": "ab5d973f1e41bf0730143658f1bbcf23a7a5335ca5082246ca3990b11d2a228b"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00607.ARW": {
+      "bytes": 35520512,
+      "sha256": "0dcac38e61ad540b35f44a59c97953e9d72c5c27a2acaff54e8389b661699252"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00608.ARW": {
+      "bytes": 35524608,
+      "sha256": "5c952ef91cd1f2a25599957ae18830ec0fc1d06a4581c91f3c5aa378225d078a"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00609.ARW": {
+      "bytes": 35520512,
+      "sha256": "a3c64f4147decf10dd9cbf56adc73e108e293b600974f05c1c3ffe2303a172b4"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00610.ARW": {
+      "bytes": 35524608,
+      "sha256": "bde92f971d6ee9db7d4ea0960faf99adf06798c643decb906a4194008d198d29"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00611.ARW": {
+      "bytes": 35524608,
+      "sha256": "985bed7b69d8be7954e308501727485fb352f260f077b7d64548abbd06fabf47"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00612.ARW": {
+      "bytes": 35520512,
+      "sha256": "c193877d3ebad7838d4298da2be5627adf08b73e2b820210333845a6d05e114e"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00613.ARW": {
+      "bytes": 35520512,
+      "sha256": "ca4a6881281e2f34a9a9b27cdbe4962d203b2abab5dfc64408ad2123b974aa06"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00614.ARW": {
+      "bytes": 35524608,
+      "sha256": "c2d6daf98e99bcecf4bab572c827ddd13ca3548b49cb400a4f1ab2ea74d59cc8"
+    },
+    "experiments/SCORECARD-BASELINE/work/inputs/m2-second-second16/DSC00615.ARW": {
+      "bytes": 35520512,
+      "sha256": "a7da46e1ea8d15e7cd034fafac93e0dd38282da5e18cb7f31c98dd89946b3e55"
+    },
+    "experiments/SCORECARD-BASELINE/work/source/crates/strehl-cli/src/align_cmd.rs": {
+      "bytes": 121931,
+      "sha256": "77498f962fe2c5f2373fd00aefbba6b7535c15594da213271be33624296e9cee"
+    },
+    "experiments/SCORECARD-BASELINE/work/source/crates/strehl-cli/src/main.rs": {
+      "bytes": 88623,
+      "sha256": "cb55bc7894cb5f10dbe1ae29b9ead893838829a4dc1040ab2a14f26ebf5ea582"
+    },
+    "experiments/SCORECARD-BASELINE/work/source/crates/strehl-cli/src/merge_cmd.rs": {
+      "bytes": 412215,
+      "sha256": "8e1d2e75ea28ab3ea392f95a761767012c8ef4c216856c0f3b2d5925351df8dc"
+    },
+    "experiments/SCORECARD-BASELINE/work/source/crates/strehl-core/src/pyramid.rs": {
+      "bytes": 194661,
+      "sha256": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47"
+    }
+  },
+  "frozen_dependencies_unchanged": true,
+  "owned_read_only_input_guards_pass": true,
+  "private_cache_after": {
+    "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+      "bytes": 2102,
+      "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+    },
+    "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+      "bytes": 2098,
+      "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+    },
+    "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+    },
+    "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+    },
+    "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+      "bytes": 2640,
+      "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+    },
+    "m2-bright-second16-830898178934c63d.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+    },
+    "m2-second-first16-f65d655759759820.warpmap.txt": {
+      "bytes": 2638,
+      "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+    },
+    "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+    }
+  },
+  "private_cache_before": {
+    "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+      "bytes": 2102,
+      "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+    },
+    "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+      "bytes": 2098,
+      "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+    },
+    "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+    },
+    "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+      "bytes": 2100,
+      "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+    },
+    "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+      "bytes": 2640,
+      "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+    },
+    "m2-bright-second16-830898178934c63d.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+    },
+    "m2-second-first16-f65d655759759820.warpmap.txt": {
+      "bytes": 2638,
+      "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+    },
+    "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+      "bytes": 2641,
+      "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+    }
+  },
+  "private_cache_unchanged": true,
+  "protected_metadata_changed": [
+    "experiments/M8-overshoot"
+  ],
+  "protected_paths_after": {
+    "docs/STATUS.md": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 1,
+      "metadata_sha256": "b14c585d23cd5a2bb78530b7164944e7e2056daaaa1ef2e55b1c45d7e4d6c5df",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/proposals/2026-09-sota-scorecard.md": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 1,
+      "metadata_sha256": "df867ed9c60f108f167ff8c2f313ed0e3a2ec0ad33fa75ac770d41d187d9a033",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/research/M8-overshoot.md": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 1,
+      "metadata_sha256": "9db281592a19ba6fbf4fb91a97a1e4f6d57500d9bf8d91933c02f1b860ded5cf",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "experiments/M-COVER-BORDER": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 13,
+      "metadata_sha256": "1f0a33132c3797df530750ed7f88d251f6f5fe7b641f0c63c2254cd95095d4ad",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "experiments/M8-overshoot": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 5729,
+      "metadata_sha256": "e03cca04608deb32f1c7f7cc44a7a5e02a7e4f3755fd02ceeb79be4a95e5767a",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "experiments/SCORECARD-BASELINE": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 10447,
+      "metadata_sha256": "babe976211a8b23cdc854f3fdebd44cd515bf1808577dcdc3d660cc0af1b274b",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "protected_paths_before": {
+    "docs/STATUS.md": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 1,
+      "metadata_sha256": "b14c585d23cd5a2bb78530b7164944e7e2056daaaa1ef2e55b1c45d7e4d6c5df",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/proposals/2026-09-sota-scorecard.md": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 1,
+      "metadata_sha256": "df867ed9c60f108f167ff8c2f313ed0e3a2ec0ad33fa75ac770d41d187d9a033",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/research/M8-overshoot.md": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 1,
+      "metadata_sha256": "9db281592a19ba6fbf4fb91a97a1e4f6d57500d9bf8d91933c02f1b860ded5cf",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "experiments/M-COVER-BORDER": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 13,
+      "metadata_sha256": "1f0a33132c3797df530750ed7f88d251f6f5fe7b641f0c63c2254cd95095d4ad",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "experiments/M8-overshoot": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 5403,
+      "metadata_sha256": "9b93afb555dce140e52b531a53160fbcbc37c2b2e671b2177239a5c5f78727e5",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "experiments/SCORECARD-BASELINE": {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata_count": 10447,
+      "metadata_sha256": "babe976211a8b23cdc854f3fdebd44cd515bf1808577dcdc3d660cc0af1b274b",
+      "status": [],
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "protected_paths_unchanged": false,
+  "protected_version_control_state_unchanged": true
+}

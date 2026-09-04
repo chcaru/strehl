@@ -1,0 +1,1899 @@
+{
+  "completed_utc": "2026-09-04T03:04:49.911663+00:00",
+  "control": {
+    "alignment": {
+      "banner": "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+      "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+      "placed": 16,
+      "reference_frame": 8,
+      "refused": 0,
+      "resampler": "catmullrom"
+    },
+    "bytes": 197798928,
+    "cache_after": {
+      "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+        "bytes": 2102,
+        "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+      },
+      "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+        "bytes": 2098,
+        "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+      },
+      "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+        "bytes": 2100,
+        "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+      },
+      "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+        "bytes": 2100,
+        "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+      },
+      "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+        "bytes": 2640,
+        "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+      },
+      "m2-bright-second16-830898178934c63d.warpmap.txt": {
+        "bytes": 2641,
+        "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+      },
+      "m2-second-first16-f65d655759759820.warpmap.txt": {
+        "bytes": 2638,
+        "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+      },
+      "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+        "bytes": 2641,
+        "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+      }
+    },
+    "cache_before": {
+      "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+        "bytes": 2102,
+        "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+      },
+      "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+        "bytes": 2098,
+        "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+      },
+      "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+        "bytes": 2100,
+        "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+      },
+      "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+        "bytes": 2100,
+        "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+      },
+      "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+        "bytes": 2640,
+        "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+      },
+      "m2-bright-second16-830898178934c63d.warpmap.txt": {
+        "bytes": 2641,
+        "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+      },
+      "m2-second-first16-f65d655759759820.warpmap.txt": {
+        "bytes": 2638,
+        "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+      },
+      "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+        "bytes": 2641,
+        "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+      }
+    },
+    "cache_unchanged": true,
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+      "stack",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-second-first16",
+      "--out",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\control-scale-m2-second-first16.tiff",
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "cover_argument": null,
+    "coverage": {
+      "banner": "  coverage      : field of view scaled to 0.9956 so that EVERY frame covers every pixel (0.4% of width dropped, then upsampled to keep the output dimensions).",
+      "k": 0.9956,
+      "k_printed": "0.9956"
+    },
+    "defaults": {
+      "auto_exposure": false,
+      "binned": false,
+      "confidence_map": null,
+      "confidence_tail": 0.05,
+      "cover_control": "scale (omitted shipping default)",
+      "cover_test": "crop (explicit)",
+      "demosaic": "Malvar-He-Cutler full resolution",
+      "detail_roi": null,
+      "estimator_gate": "omitted and inapplicable to pyramid",
+      "exposure_stops": 0.0,
+      "fix_ca": "omitted; gear-matched profile default",
+      "flat_roi": null,
+      "focus": "omitted and inapplicable to pyramid",
+      "index_map": null,
+      "limit": null,
+      "limit_meaning": "all files in exact frozen input directory",
+      "linear_srgb": true,
+      "merge": "pyramid (omitted shipping default)",
+      "n_eff_map": null,
+      "photometric": "omitted; pyramid banner says photometric gain not applied",
+      "pyramid_bands": 7,
+      "pyramid_base": "mean",
+      "pyramid_exponent_coarsest": 2.0,
+      "pyramid_gate": 2.0,
+      "pyramid_select": "soft",
+      "pyramid_sharpen_per_octave": 1.4,
+      "resampler": "catmull-rom",
+      "srgb_transfer_curve": false,
+      "stats": false,
+      "stats_placebo": false,
+      "target_n_eff": null
+    },
+    "dtype": "uint16",
+    "environment": {
+      "MKL_NUM_THREADS": "6",
+      "NUMEXPR_NUM_THREADS": "6",
+      "OMP_NUM_THREADS": "6",
+      "OPENBLAS_NUM_THREADS": "6",
+      "PYTHONIOENCODING": "utf-8",
+      "RAYON_NUM_THREADS": "6",
+      "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+      "other_STREHL_variables": "unset"
+    },
+    "hash_matches": true,
+    "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\control-scale-m2-second-first16.log",
+    "name": "m2-second-first16",
+    "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\control-scale-m2-second-first16.tiff",
+    "required_sha256": "3d46f11413e5cf37bdeb730eb6faf66c266ac52107e1b5af1e032052080d16bc",
+    "returncode": 0,
+    "selected_banner_lines": [
+      "build           : strehl 0.0.0 (4b60b1ba9f56)",
+      "merge backend   : pyramid (default)",
+      "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+      "defect map      : off (STREHL_DEFECT=off)",
+      "frames          : 16 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-second-first16  (first decode 0.12 s)",
+      "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+      "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+      "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+      "exponent        : 2.00",
+      "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+      "base band       : plain mean across frames",
+      "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+      "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+      "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+      "  coverage      : field of view scaled to 0.9956 so that EVERY frame covers every pixel (0.4% of width dropped, then upsampled to keep the output dimensions).",
+      "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+      "folded          : 16 / 16 frames in 12.1 s (0.76 s per frame, 4 workers)",
+      "  frames. The line above it is the white-noise constant, which is",
+      "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\control-scale-m2-second-first16.tiff (7032 x 4688, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+    ],
+    "sha256": "3d46f11413e5cf37bdeb730eb6faf66c266ac52107e1b5af1e032052080d16bc",
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "started_utc": "2026-09-04T03:02:04.785236+00:00",
+    "wall_seconds_diagnostic_only": 13.062538600002881
+  },
+  "control_required_before_crop": true,
+  "crop_interpretable": true,
+  "crop_records": [
+    {
+      "alignment": {
+        "banner": "alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s",
+        "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "placed": 12,
+        "reference_frame": 6,
+        "refused": 0,
+        "resampler": "catmullrom"
+      },
+      "bytes": 196563208,
+      "cache_after": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_before": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_unchanged": true,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+        "stack",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m1-bright-a12",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-bright-a12.tiff",
+        "--linear-srgb",
+        "--demosaic",
+        "--cover",
+        "crop"
+      ],
+      "cover_argument": "crop",
+      "coverage": {
+        "banner": "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9973), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "full_plane": {
+          "height": 2344,
+          "width": 3516
+        },
+        "k": 0.9973,
+        "k_printed": "0.9973",
+        "rect_plane": {
+          "height": 2336,
+          "width": 3506,
+          "x": 5,
+          "y": 4
+        }
+      },
+      "defaults": {
+        "auto_exposure": false,
+        "binned": false,
+        "confidence_map": null,
+        "confidence_tail": 0.05,
+        "cover_control": "scale (omitted shipping default)",
+        "cover_test": "crop (explicit)",
+        "demosaic": "Malvar-He-Cutler full resolution",
+        "detail_roi": null,
+        "estimator_gate": "omitted and inapplicable to pyramid",
+        "exposure_stops": 0.0,
+        "fix_ca": "omitted; gear-matched profile default",
+        "flat_roi": null,
+        "focus": "omitted and inapplicable to pyramid",
+        "index_map": null,
+        "limit": null,
+        "limit_meaning": "all files in exact frozen input directory",
+        "linear_srgb": true,
+        "merge": "pyramid (omitted shipping default)",
+        "n_eff_map": null,
+        "photometric": "omitted; pyramid banner says photometric gain not applied",
+        "pyramid_bands": 7,
+        "pyramid_base": "mean",
+        "pyramid_exponent_coarsest": 2.0,
+        "pyramid_gate": 2.0,
+        "pyramid_select": "soft",
+        "pyramid_sharpen_per_octave": 1.4,
+        "resampler": "catmull-rom",
+        "srgb_transfer_curve": false,
+        "stats": false,
+        "stats_placebo": false,
+        "target_n_eff": null
+      },
+      "dtype": "uint16",
+      "environment": {
+        "MKL_NUM_THREADS": "6",
+        "NUMEXPR_NUM_THREADS": "6",
+        "OMP_NUM_THREADS": "6",
+        "OPENBLAS_NUM_THREADS": "6",
+        "PYTHONIOENCODING": "utf-8",
+        "RAYON_NUM_THREADS": "6",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+        "other_STREHL_variables": "unset"
+      },
+      "expected_shape_from_crop_rect": [
+        4672,
+        7012,
+        3
+      ],
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\m1-bright-a12.log",
+      "name": "m1-bright-a12",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-bright-a12.tiff",
+      "record_recovered_without_rerender": true,
+      "recovery_reason": "AMENDMENT-1: binary completed before the original coverage parser raised",
+      "returncode": 0,
+      "same_solve_as_frozen_scale": {
+        "all_match": true,
+        "checks": {
+          "coverage_k_printed": true,
+          "placed": true,
+          "reference_frame": true,
+          "refused": true,
+          "resampler": true
+        },
+        "scale_alignment": {
+          "banner": "alignment       : ON (solved), reference frame 6, 12 placed / 0 refused, 1.7 s",
+          "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+          "placed": 12,
+          "reference_frame": 6,
+          "refused": 0,
+          "resampler": "catmullrom"
+        },
+        "scale_coverage": {
+          "banner": "  coverage      : field of view scaled to 0.9973 so that EVERY frame covers every pixel (0.3% of width dropped, then upsampled to keep the output dimensions).",
+          "k": 0.9973,
+          "k_printed": "0.9973"
+        }
+      },
+      "selected_banner_lines": [
+        "build           : strehl 0.0.0 (4b60b1ba9f56)",
+        "merge backend   : pyramid (default)",
+        "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+        "defect map      : off (STREHL_DEFECT=off)",
+        "frames          : 12 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m1-bright-a12  (first decode 0.13 s)",
+        "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+        "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+        "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+        "exponent        : 2.00",
+        "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+        "base band       : plain mean across frames",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "coverage mode   : crop -- as asked, --cover",
+        "alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s",
+        "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9973), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+        "folded          : 12 / 12 frames in 9.7 s (0.81 s per frame, 4 workers)",
+        "  frames. The line above it is the white-noise constant, which is",
+        "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-bright-a12.tiff (7012 x 4672, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+      ],
+      "sha256": "995bec815fbc9d7b0b29ec4d9b8a0fcbcf622ac084cfe5d5c6765d2fb1adc3ee",
+      "shape": [
+        4672,
+        7012,
+        3
+      ],
+      "shape_matches_crop_rect": true,
+      "started_utc": "2026-09-04T03:02:15.588029+00:00",
+      "wall_seconds_diagnostic_only": 10.6,
+      "wall_seconds_source": "recovered binary total banner after parser failure"
+    },
+    {
+      "alignment": {
+        "banner": "alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s",
+        "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "placed": 12,
+        "reference_frame": 6,
+        "refused": 0,
+        "resampler": "catmullrom"
+      },
+      "bytes": 196563208,
+      "cache_after": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_before": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_unchanged": true,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+        "stack",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m1-bright-b12",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-bright-b12.tiff",
+        "--linear-srgb",
+        "--demosaic",
+        "--cover",
+        "crop"
+      ],
+      "cover_argument": "crop",
+      "coverage": {
+        "banner": "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9972), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "full_plane": {
+          "height": 2344,
+          "width": 3516
+        },
+        "k": 0.9972,
+        "k_printed": "0.9972",
+        "rect_plane": {
+          "height": 2336,
+          "width": 3506,
+          "x": 5,
+          "y": 4
+        }
+      },
+      "defaults": {
+        "auto_exposure": false,
+        "binned": false,
+        "confidence_map": null,
+        "confidence_tail": 0.05,
+        "cover_control": "scale (omitted shipping default)",
+        "cover_test": "crop (explicit)",
+        "demosaic": "Malvar-He-Cutler full resolution",
+        "detail_roi": null,
+        "estimator_gate": "omitted and inapplicable to pyramid",
+        "exposure_stops": 0.0,
+        "fix_ca": "omitted; gear-matched profile default",
+        "flat_roi": null,
+        "focus": "omitted and inapplicable to pyramid",
+        "index_map": null,
+        "limit": null,
+        "limit_meaning": "all files in exact frozen input directory",
+        "linear_srgb": true,
+        "merge": "pyramid (omitted shipping default)",
+        "n_eff_map": null,
+        "photometric": "omitted; pyramid banner says photometric gain not applied",
+        "pyramid_bands": 7,
+        "pyramid_base": "mean",
+        "pyramid_exponent_coarsest": 2.0,
+        "pyramid_gate": 2.0,
+        "pyramid_select": "soft",
+        "pyramid_sharpen_per_octave": 1.4,
+        "resampler": "catmull-rom",
+        "srgb_transfer_curve": false,
+        "stats": false,
+        "stats_placebo": false,
+        "target_n_eff": null
+      },
+      "dtype": "uint16",
+      "environment": {
+        "MKL_NUM_THREADS": "6",
+        "NUMEXPR_NUM_THREADS": "6",
+        "OMP_NUM_THREADS": "6",
+        "OPENBLAS_NUM_THREADS": "6",
+        "PYTHONIOENCODING": "utf-8",
+        "RAYON_NUM_THREADS": "6",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+        "other_STREHL_variables": "unset"
+      },
+      "expected_shape_from_crop_rect": [
+        4672,
+        7012,
+        3
+      ],
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\m1-bright-b12.log",
+      "name": "m1-bright-b12",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-bright-b12.tiff",
+      "returncode": 0,
+      "same_solve_as_frozen_scale": {
+        "all_match": true,
+        "checks": {
+          "coverage_k_printed": true,
+          "placed": true,
+          "reference_frame": true,
+          "refused": true,
+          "resampler": true
+        },
+        "scale_alignment": {
+          "banner": "alignment       : ON (solved), reference frame 6, 12 placed / 0 refused, 1.7 s",
+          "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+          "placed": 12,
+          "reference_frame": 6,
+          "refused": 0,
+          "resampler": "catmullrom"
+        },
+        "scale_coverage": {
+          "banner": "  coverage      : field of view scaled to 0.9972 so that EVERY frame covers every pixel (0.3% of width dropped, then upsampled to keep the output dimensions).",
+          "k": 0.9972,
+          "k_printed": "0.9972"
+        }
+      },
+      "selected_banner_lines": [
+        "build           : strehl 0.0.0 (4b60b1ba9f56)",
+        "merge backend   : pyramid (default)",
+        "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+        "defect map      : off (STREHL_DEFECT=off)",
+        "frames          : 12 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m1-bright-b12  (first decode 0.16 s)",
+        "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+        "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+        "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+        "exponent        : 2.00",
+        "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+        "base band       : plain mean across frames",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "coverage mode   : crop -- as asked, --cover",
+        "alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s",
+        "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9972), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+        "folded          : 12 / 12 frames in 11.6 s (0.96 s per frame, 4 workers)",
+        "  frames. The line above it is the white-noise constant, which is",
+        "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-bright-b12.tiff (7012 x 4672, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+      ],
+      "sha256": "b6468ca016396f63767ee8f61270bfc4126167e3b931e781abf6e29ebfb371db",
+      "shape": [
+        4672,
+        7012,
+        3
+      ],
+      "shape_matches_crop_rect": true,
+      "started_utc": "2026-09-04T03:03:27.295831+00:00",
+      "wall_seconds_diagnostic_only": 12.622826499980874
+    },
+    {
+      "alignment": {
+        "banner": "alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s",
+        "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "placed": 12,
+        "reference_frame": 6,
+        "refused": 0,
+        "resampler": "catmullrom"
+      },
+      "bytes": 196563208,
+      "cache_after": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_before": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_unchanged": true,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+        "stack",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m1-second-a12",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-second-a12.tiff",
+        "--linear-srgb",
+        "--demosaic",
+        "--cover",
+        "crop"
+      ],
+      "cover_argument": "crop",
+      "coverage": {
+        "banner": "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9973), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "full_plane": {
+          "height": 2344,
+          "width": 3516
+        },
+        "k": 0.9973,
+        "k_printed": "0.9973",
+        "rect_plane": {
+          "height": 2336,
+          "width": 3506,
+          "x": 5,
+          "y": 4
+        }
+      },
+      "defaults": {
+        "auto_exposure": false,
+        "binned": false,
+        "confidence_map": null,
+        "confidence_tail": 0.05,
+        "cover_control": "scale (omitted shipping default)",
+        "cover_test": "crop (explicit)",
+        "demosaic": "Malvar-He-Cutler full resolution",
+        "detail_roi": null,
+        "estimator_gate": "omitted and inapplicable to pyramid",
+        "exposure_stops": 0.0,
+        "fix_ca": "omitted; gear-matched profile default",
+        "flat_roi": null,
+        "focus": "omitted and inapplicable to pyramid",
+        "index_map": null,
+        "limit": null,
+        "limit_meaning": "all files in exact frozen input directory",
+        "linear_srgb": true,
+        "merge": "pyramid (omitted shipping default)",
+        "n_eff_map": null,
+        "photometric": "omitted; pyramid banner says photometric gain not applied",
+        "pyramid_bands": 7,
+        "pyramid_base": "mean",
+        "pyramid_exponent_coarsest": 2.0,
+        "pyramid_gate": 2.0,
+        "pyramid_select": "soft",
+        "pyramid_sharpen_per_octave": 1.4,
+        "resampler": "catmull-rom",
+        "srgb_transfer_curve": false,
+        "stats": false,
+        "stats_placebo": false,
+        "target_n_eff": null
+      },
+      "dtype": "uint16",
+      "environment": {
+        "MKL_NUM_THREADS": "6",
+        "NUMEXPR_NUM_THREADS": "6",
+        "OMP_NUM_THREADS": "6",
+        "OPENBLAS_NUM_THREADS": "6",
+        "PYTHONIOENCODING": "utf-8",
+        "RAYON_NUM_THREADS": "6",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+        "other_STREHL_variables": "unset"
+      },
+      "expected_shape_from_crop_rect": [
+        4672,
+        7012,
+        3
+      ],
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\m1-second-a12.log",
+      "name": "m1-second-a12",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-second-a12.tiff",
+      "returncode": 0,
+      "same_solve_as_frozen_scale": {
+        "all_match": true,
+        "checks": {
+          "coverage_k_printed": true,
+          "placed": true,
+          "reference_frame": true,
+          "refused": true,
+          "resampler": true
+        },
+        "scale_alignment": {
+          "banner": "alignment       : ON (solved), reference frame 6, 12 placed / 0 refused, 1.6 s",
+          "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+          "placed": 12,
+          "reference_frame": 6,
+          "refused": 0,
+          "resampler": "catmullrom"
+        },
+        "scale_coverage": {
+          "banner": "  coverage      : field of view scaled to 0.9973 so that EVERY frame covers every pixel (0.3% of width dropped, then upsampled to keep the output dimensions).",
+          "k": 0.9973,
+          "k_printed": "0.9973"
+        }
+      },
+      "selected_banner_lines": [
+        "build           : strehl 0.0.0 (4b60b1ba9f56)",
+        "merge backend   : pyramid (default)",
+        "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+        "defect map      : off (STREHL_DEFECT=off)",
+        "frames          : 12 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m1-second-a12  (first decode 0.13 s)",
+        "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+        "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+        "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+        "exponent        : 2.00",
+        "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+        "base band       : plain mean across frames",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "coverage mode   : crop -- as asked, --cover",
+        "alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s",
+        "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9973), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+        "folded          : 12 / 12 frames in 9.7 s (0.81 s per frame, 4 workers)",
+        "  frames. The line above it is the white-noise constant, which is",
+        "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-second-a12.tiff (7012 x 4672, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+      ],
+      "sha256": "2508c70feab85b2331b420453e92c93f96d80ced5b868051c30b9be3bc9fae2a",
+      "shape": [
+        4672,
+        7012,
+        3
+      ],
+      "shape_matches_crop_rect": true,
+      "started_utc": "2026-09-04T03:03:38.139895+00:00",
+      "wall_seconds_diagnostic_only": 10.668738199979998
+    },
+    {
+      "alignment": {
+        "banner": "alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s",
+        "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "placed": 12,
+        "reference_frame": 6,
+        "refused": 0,
+        "resampler": "catmullrom"
+      },
+      "bytes": 196563208,
+      "cache_after": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_before": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_unchanged": true,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+        "stack",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m1-second-b12",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-second-b12.tiff",
+        "--linear-srgb",
+        "--demosaic",
+        "--cover",
+        "crop"
+      ],
+      "cover_argument": "crop",
+      "coverage": {
+        "banner": "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9973), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "full_plane": {
+          "height": 2344,
+          "width": 3516
+        },
+        "k": 0.9973,
+        "k_printed": "0.9973",
+        "rect_plane": {
+          "height": 2336,
+          "width": 3506,
+          "x": 5,
+          "y": 4
+        }
+      },
+      "defaults": {
+        "auto_exposure": false,
+        "binned": false,
+        "confidence_map": null,
+        "confidence_tail": 0.05,
+        "cover_control": "scale (omitted shipping default)",
+        "cover_test": "crop (explicit)",
+        "demosaic": "Malvar-He-Cutler full resolution",
+        "detail_roi": null,
+        "estimator_gate": "omitted and inapplicable to pyramid",
+        "exposure_stops": 0.0,
+        "fix_ca": "omitted; gear-matched profile default",
+        "flat_roi": null,
+        "focus": "omitted and inapplicable to pyramid",
+        "index_map": null,
+        "limit": null,
+        "limit_meaning": "all files in exact frozen input directory",
+        "linear_srgb": true,
+        "merge": "pyramid (omitted shipping default)",
+        "n_eff_map": null,
+        "photometric": "omitted; pyramid banner says photometric gain not applied",
+        "pyramid_bands": 7,
+        "pyramid_base": "mean",
+        "pyramid_exponent_coarsest": 2.0,
+        "pyramid_gate": 2.0,
+        "pyramid_select": "soft",
+        "pyramid_sharpen_per_octave": 1.4,
+        "resampler": "catmull-rom",
+        "srgb_transfer_curve": false,
+        "stats": false,
+        "stats_placebo": false,
+        "target_n_eff": null
+      },
+      "dtype": "uint16",
+      "environment": {
+        "MKL_NUM_THREADS": "6",
+        "NUMEXPR_NUM_THREADS": "6",
+        "OMP_NUM_THREADS": "6",
+        "OPENBLAS_NUM_THREADS": "6",
+        "PYTHONIOENCODING": "utf-8",
+        "RAYON_NUM_THREADS": "6",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+        "other_STREHL_variables": "unset"
+      },
+      "expected_shape_from_crop_rect": [
+        4672,
+        7012,
+        3
+      ],
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\m1-second-b12.log",
+      "name": "m1-second-b12",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-second-b12.tiff",
+      "returncode": 0,
+      "same_solve_as_frozen_scale": {
+        "all_match": true,
+        "checks": {
+          "coverage_k_printed": true,
+          "placed": true,
+          "reference_frame": true,
+          "refused": true,
+          "resampler": true
+        },
+        "scale_alignment": {
+          "banner": "alignment       : ON (solved), reference frame 6, 12 placed / 0 refused, 1.6 s",
+          "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+          "placed": 12,
+          "reference_frame": 6,
+          "refused": 0,
+          "resampler": "catmullrom"
+        },
+        "scale_coverage": {
+          "banner": "  coverage      : field of view scaled to 0.9973 so that EVERY frame covers every pixel (0.3% of width dropped, then upsampled to keep the output dimensions).",
+          "k": 0.9973,
+          "k_printed": "0.9973"
+        }
+      },
+      "selected_banner_lines": [
+        "build           : strehl 0.0.0 (4b60b1ba9f56)",
+        "merge backend   : pyramid (default)",
+        "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+        "defect map      : off (STREHL_DEFECT=off)",
+        "frames          : 12 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m1-second-b12  (first decode 0.12 s)",
+        "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+        "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+        "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+        "exponent        : 2.00",
+        "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+        "base band       : plain mean across frames",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "coverage mode   : crop -- as asked, --cover",
+        "alignment       : ON (sidecar), reference frame 6, 12 placed / 0 refused, 0.0 s",
+        "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9973), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+        "folded          : 12 / 12 frames in 9.9 s (0.83 s per frame, 4 workers)",
+        "  frames. The line above it is the white-noise constant, which is",
+        "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m1-second-b12.tiff (7012 x 4672, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+      ],
+      "sha256": "ec03b3051c83f76536848f17effee15d136519a4eb9fd73f5f5ee740f96cedc1",
+      "shape": [
+        4672,
+        7012,
+        3
+      ],
+      "shape_matches_crop_rect": true,
+      "started_utc": "2026-09-04T03:03:49.161921+00:00",
+      "wall_seconds_diagnostic_only": 10.867885499959812
+    },
+    {
+      "alignment": {
+        "banner": "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+        "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "placed": 16,
+        "reference_frame": 8,
+        "refused": 0,
+        "resampler": "catmullrom"
+      },
+      "bytes": 196451080,
+      "cache_after": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_before": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_unchanged": true,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+        "stack",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-bright-first16",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-bright-first16.tiff",
+        "--linear-srgb",
+        "--demosaic",
+        "--cover",
+        "crop"
+      ],
+      "cover_argument": "crop",
+      "coverage": {
+        "banner": "  coverage      : CROPPED to the region EVERY frame covers -- 3504 x 2336 plane px at (6, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9969), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "full_plane": {
+          "height": 2344,
+          "width": 3516
+        },
+        "k": 0.9969,
+        "k_printed": "0.9969",
+        "rect_plane": {
+          "height": 2336,
+          "width": 3504,
+          "x": 6,
+          "y": 4
+        }
+      },
+      "defaults": {
+        "auto_exposure": false,
+        "binned": false,
+        "confidence_map": null,
+        "confidence_tail": 0.05,
+        "cover_control": "scale (omitted shipping default)",
+        "cover_test": "crop (explicit)",
+        "demosaic": "Malvar-He-Cutler full resolution",
+        "detail_roi": null,
+        "estimator_gate": "omitted and inapplicable to pyramid",
+        "exposure_stops": 0.0,
+        "fix_ca": "omitted; gear-matched profile default",
+        "flat_roi": null,
+        "focus": "omitted and inapplicable to pyramid",
+        "index_map": null,
+        "limit": null,
+        "limit_meaning": "all files in exact frozen input directory",
+        "linear_srgb": true,
+        "merge": "pyramid (omitted shipping default)",
+        "n_eff_map": null,
+        "photometric": "omitted; pyramid banner says photometric gain not applied",
+        "pyramid_bands": 7,
+        "pyramid_base": "mean",
+        "pyramid_exponent_coarsest": 2.0,
+        "pyramid_gate": 2.0,
+        "pyramid_select": "soft",
+        "pyramid_sharpen_per_octave": 1.4,
+        "resampler": "catmull-rom",
+        "srgb_transfer_curve": false,
+        "stats": false,
+        "stats_placebo": false,
+        "target_n_eff": null
+      },
+      "dtype": "uint16",
+      "environment": {
+        "MKL_NUM_THREADS": "6",
+        "NUMEXPR_NUM_THREADS": "6",
+        "OMP_NUM_THREADS": "6",
+        "OPENBLAS_NUM_THREADS": "6",
+        "PYTHONIOENCODING": "utf-8",
+        "RAYON_NUM_THREADS": "6",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+        "other_STREHL_variables": "unset"
+      },
+      "expected_shape_from_crop_rect": [
+        4672,
+        7008,
+        3
+      ],
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\m2-bright-first16.log",
+      "name": "m2-bright-first16",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-bright-first16.tiff",
+      "returncode": 0,
+      "same_solve_as_frozen_scale": {
+        "all_match": true,
+        "checks": {
+          "coverage_k_printed": true,
+          "placed": true,
+          "reference_frame": true,
+          "refused": true,
+          "resampler": true
+        },
+        "scale_alignment": {
+          "banner": "alignment       : ON (solved), reference frame 8, 16 placed / 0 refused, 2.3 s",
+          "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+          "placed": 16,
+          "reference_frame": 8,
+          "refused": 0,
+          "resampler": "catmullrom"
+        },
+        "scale_coverage": {
+          "banner": "  coverage      : field of view scaled to 0.9969 so that EVERY frame covers every pixel (0.3% of width dropped, then upsampled to keep the output dimensions).",
+          "k": 0.9969,
+          "k_printed": "0.9969"
+        }
+      },
+      "selected_banner_lines": [
+        "build           : strehl 0.0.0 (4b60b1ba9f56)",
+        "merge backend   : pyramid (default)",
+        "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+        "defect map      : off (STREHL_DEFECT=off)",
+        "frames          : 16 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-bright-first16  (first decode 0.13 s)",
+        "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+        "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+        "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+        "exponent        : 2.00",
+        "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+        "base band       : plain mean across frames",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "coverage mode   : crop -- as asked, --cover",
+        "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+        "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "  coverage      : CROPPED to the region EVERY frame covers -- 3504 x 2336 plane px at (6, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9969), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+        "folded          : 16 / 16 frames in 14.2 s (0.89 s per frame, 4 workers)",
+        "  frames. The line above it is the white-noise constant, which is",
+        "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-bright-first16.tiff (7008 x 4672, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+      ],
+      "sha256": "e883de25b493cdf8c55d6e7008a5810e0dc92e4553e635a0920f9f87e1b93f83",
+      "shape": [
+        4672,
+        7008,
+        3
+      ],
+      "shape_matches_crop_rect": true,
+      "started_utc": "2026-09-04T03:04:04.545087+00:00",
+      "wall_seconds_diagnostic_only": 15.216389900015201
+    },
+    {
+      "alignment": {
+        "banner": "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+        "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "placed": 16,
+        "reference_frame": 8,
+        "refused": 0,
+        "resampler": "catmullrom"
+      },
+      "bytes": 196563208,
+      "cache_after": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_before": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_unchanged": true,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+        "stack",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-bright-second16",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-bright-second16.tiff",
+        "--linear-srgb",
+        "--demosaic",
+        "--cover",
+        "crop"
+      ],
+      "cover_argument": "crop",
+      "coverage": {
+        "banner": "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9972), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "full_plane": {
+          "height": 2344,
+          "width": 3516
+        },
+        "k": 0.9972,
+        "k_printed": "0.9972",
+        "rect_plane": {
+          "height": 2336,
+          "width": 3506,
+          "x": 5,
+          "y": 4
+        }
+      },
+      "defaults": {
+        "auto_exposure": false,
+        "binned": false,
+        "confidence_map": null,
+        "confidence_tail": 0.05,
+        "cover_control": "scale (omitted shipping default)",
+        "cover_test": "crop (explicit)",
+        "demosaic": "Malvar-He-Cutler full resolution",
+        "detail_roi": null,
+        "estimator_gate": "omitted and inapplicable to pyramid",
+        "exposure_stops": 0.0,
+        "fix_ca": "omitted; gear-matched profile default",
+        "flat_roi": null,
+        "focus": "omitted and inapplicable to pyramid",
+        "index_map": null,
+        "limit": null,
+        "limit_meaning": "all files in exact frozen input directory",
+        "linear_srgb": true,
+        "merge": "pyramid (omitted shipping default)",
+        "n_eff_map": null,
+        "photometric": "omitted; pyramid banner says photometric gain not applied",
+        "pyramid_bands": 7,
+        "pyramid_base": "mean",
+        "pyramid_exponent_coarsest": 2.0,
+        "pyramid_gate": 2.0,
+        "pyramid_select": "soft",
+        "pyramid_sharpen_per_octave": 1.4,
+        "resampler": "catmull-rom",
+        "srgb_transfer_curve": false,
+        "stats": false,
+        "stats_placebo": false,
+        "target_n_eff": null
+      },
+      "dtype": "uint16",
+      "environment": {
+        "MKL_NUM_THREADS": "6",
+        "NUMEXPR_NUM_THREADS": "6",
+        "OMP_NUM_THREADS": "6",
+        "OPENBLAS_NUM_THREADS": "6",
+        "PYTHONIOENCODING": "utf-8",
+        "RAYON_NUM_THREADS": "6",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+        "other_STREHL_variables": "unset"
+      },
+      "expected_shape_from_crop_rect": [
+        4672,
+        7012,
+        3
+      ],
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\m2-bright-second16.log",
+      "name": "m2-bright-second16",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-bright-second16.tiff",
+      "returncode": 0,
+      "same_solve_as_frozen_scale": {
+        "all_match": true,
+        "checks": {
+          "coverage_k_printed": true,
+          "placed": true,
+          "reference_frame": true,
+          "refused": true,
+          "resampler": true
+        },
+        "scale_alignment": {
+          "banner": "alignment       : ON (solved), reference frame 8, 16 placed / 0 refused, 2.3 s",
+          "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+          "placed": 16,
+          "reference_frame": 8,
+          "refused": 0,
+          "resampler": "catmullrom"
+        },
+        "scale_coverage": {
+          "banner": "  coverage      : field of view scaled to 0.9972 so that EVERY frame covers every pixel (0.3% of width dropped, then upsampled to keep the output dimensions).",
+          "k": 0.9972,
+          "k_printed": "0.9972"
+        }
+      },
+      "selected_banner_lines": [
+        "build           : strehl 0.0.0 (4b60b1ba9f56)",
+        "merge backend   : pyramid (default)",
+        "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+        "defect map      : off (STREHL_DEFECT=off)",
+        "frames          : 16 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-bright-second16  (first decode 0.13 s)",
+        "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+        "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+        "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+        "exponent        : 2.00",
+        "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+        "base band       : plain mean across frames",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "coverage mode   : crop -- as asked, --cover",
+        "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+        "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9972), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+        "folded          : 16 / 16 frames in 13.7 s (0.86 s per frame, 4 workers)",
+        "  frames. The line above it is the white-noise constant, which is",
+        "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-bright-second16.tiff (7012 x 4672, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+      ],
+      "sha256": "a3d71e96623fd55f11125292ac6807414e61c156d0ff38a915871153e6db29b7",
+      "shape": [
+        4672,
+        7012,
+        3
+      ],
+      "shape_matches_crop_rect": true,
+      "started_utc": "2026-09-04T03:04:19.535607+00:00",
+      "wall_seconds_diagnostic_only": 14.791849899978843
+    },
+    {
+      "alignment": {
+        "banner": "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+        "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "placed": 16,
+        "reference_frame": 8,
+        "refused": 0,
+        "resampler": "catmullrom"
+      },
+      "bytes": 195890824,
+      "cache_after": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_before": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_unchanged": true,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+        "stack",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-second-first16",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-second-first16.tiff",
+        "--linear-srgb",
+        "--demosaic",
+        "--cover",
+        "crop"
+      ],
+      "cover_argument": "crop",
+      "coverage": {
+        "banner": "  coverage      : CROPPED to the region EVERY frame covers -- 3500 x 2332 plane px at (8, 6) of 3516 x 2344, emitted at UNITY SCALE. 0.4% of width dropped and NOT upsampled (k=0.9956), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "full_plane": {
+          "height": 2344,
+          "width": 3516
+        },
+        "k": 0.9956,
+        "k_printed": "0.9956",
+        "rect_plane": {
+          "height": 2332,
+          "width": 3500,
+          "x": 8,
+          "y": 6
+        }
+      },
+      "defaults": {
+        "auto_exposure": false,
+        "binned": false,
+        "confidence_map": null,
+        "confidence_tail": 0.05,
+        "cover_control": "scale (omitted shipping default)",
+        "cover_test": "crop (explicit)",
+        "demosaic": "Malvar-He-Cutler full resolution",
+        "detail_roi": null,
+        "estimator_gate": "omitted and inapplicable to pyramid",
+        "exposure_stops": 0.0,
+        "fix_ca": "omitted; gear-matched profile default",
+        "flat_roi": null,
+        "focus": "omitted and inapplicable to pyramid",
+        "index_map": null,
+        "limit": null,
+        "limit_meaning": "all files in exact frozen input directory",
+        "linear_srgb": true,
+        "merge": "pyramid (omitted shipping default)",
+        "n_eff_map": null,
+        "photometric": "omitted; pyramid banner says photometric gain not applied",
+        "pyramid_bands": 7,
+        "pyramid_base": "mean",
+        "pyramid_exponent_coarsest": 2.0,
+        "pyramid_gate": 2.0,
+        "pyramid_select": "soft",
+        "pyramid_sharpen_per_octave": 1.4,
+        "resampler": "catmull-rom",
+        "srgb_transfer_curve": false,
+        "stats": false,
+        "stats_placebo": false,
+        "target_n_eff": null
+      },
+      "dtype": "uint16",
+      "environment": {
+        "MKL_NUM_THREADS": "6",
+        "NUMEXPR_NUM_THREADS": "6",
+        "OMP_NUM_THREADS": "6",
+        "OPENBLAS_NUM_THREADS": "6",
+        "PYTHONIOENCODING": "utf-8",
+        "RAYON_NUM_THREADS": "6",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+        "other_STREHL_variables": "unset"
+      },
+      "expected_shape_from_crop_rect": [
+        4664,
+        7000,
+        3
+      ],
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\m2-second-first16.log",
+      "name": "m2-second-first16",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-second-first16.tiff",
+      "returncode": 0,
+      "same_solve_as_frozen_scale": {
+        "all_match": true,
+        "checks": {
+          "coverage_k_printed": true,
+          "placed": true,
+          "reference_frame": true,
+          "refused": true,
+          "resampler": true
+        },
+        "scale_alignment": {
+          "banner": "alignment       : ON (solved), reference frame 8, 16 placed / 0 refused, 2.2 s",
+          "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+          "placed": 16,
+          "reference_frame": 8,
+          "refused": 0,
+          "resampler": "catmullrom"
+        },
+        "scale_coverage": {
+          "banner": "  coverage      : field of view scaled to 0.9956 so that EVERY frame covers every pixel (0.4% of width dropped, then upsampled to keep the output dimensions).",
+          "k": 0.9956,
+          "k_printed": "0.9956"
+        }
+      },
+      "selected_banner_lines": [
+        "build           : strehl 0.0.0 (4b60b1ba9f56)",
+        "merge backend   : pyramid (default)",
+        "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+        "defect map      : off (STREHL_DEFECT=off)",
+        "frames          : 16 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-second-first16  (first decode 0.13 s)",
+        "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+        "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+        "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+        "exponent        : 2.00",
+        "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+        "base band       : plain mean across frames",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "coverage mode   : crop -- as asked, --cover",
+        "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+        "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "  coverage      : CROPPED to the region EVERY frame covers -- 3500 x 2332 plane px at (8, 6) of 3516 x 2344, emitted at UNITY SCALE. 0.4% of width dropped and NOT upsampled (k=0.9956), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+        "folded          : 16 / 16 frames in 14.8 s (0.92 s per frame, 4 workers)",
+        "  frames. The line above it is the white-noise constant, which is",
+        "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-second-first16.tiff (7000 x 4664, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+      ],
+      "sha256": "a0b38ce9cab2cd0c1030da21d8d44dc5832055045c03dc89c5d45e27a893ee1c",
+      "shape": [
+        4664,
+        7000,
+        3
+      ],
+      "shape_matches_crop_rect": true,
+      "started_utc": "2026-09-04T03:04:35.507686+00:00",
+      "wall_seconds_diagnostic_only": 15.790251199970953
+    },
+    {
+      "alignment": {
+        "banner": "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+        "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "placed": 16,
+        "reference_frame": 8,
+        "refused": 0,
+        "resampler": "catmullrom"
+      },
+      "bytes": 196563208,
+      "cache_after": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_before": {
+        "m1-bright-a12-f1adda2705d2b1b6.warpmap.txt": {
+          "bytes": 2102,
+          "sha256": "061ba0be3bb0b5503d9ac0c7eab928d8fadc32d8048c7ed5eab0320409e28c26"
+        },
+        "m1-bright-b12-f4f98c94f8f05eb5.warpmap.txt": {
+          "bytes": 2098,
+          "sha256": "fec2101b384f32136a93193221692040167c6638c8e28752af03cc0e9d31720f"
+        },
+        "m1-second-a12-ec1ffe6f728e27ec.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "d644f5880c298b7a26fbb66d3dbdec41e32fbae5fd2132769e580802d2d5efb6"
+        },
+        "m1-second-b12-ea736b509e1401f6.warpmap.txt": {
+          "bytes": 2100,
+          "sha256": "45d52d8a1ecd808ff7c3528d4145b656cbf4c6f735a0317abec454ba9f785662"
+        },
+        "m2-bright-first16-d6c446915288a08b.warpmap.txt": {
+          "bytes": 2640,
+          "sha256": "20a188f0a648a03f9af32bb1c05109fad2dced144aae402a3ec96f56321bf74d"
+        },
+        "m2-bright-second16-830898178934c63d.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "34a1851786fafa19847a451702de46026f33814ba03466ed95fb17eb3fd84488"
+        },
+        "m2-second-first16-f65d655759759820.warpmap.txt": {
+          "bytes": 2638,
+          "sha256": "98da1c5846f7cdfde55db5559ee6b5ad03f5c796e54b30ef14d6fd1516722c72"
+        },
+        "m2-second-second16-dfaeda5e98cf77d6.warpmap.txt": {
+          "bytes": 2641,
+          "sha256": "db9f7d9d06974252067e8f7f8e474e9cf8ca1951fa9168967baa7d5094917230"
+        }
+      },
+      "cache_unchanged": true,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+        "stack",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-second-second16",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-second-second16.tiff",
+        "--linear-srgb",
+        "--demosaic",
+        "--cover",
+        "crop"
+      ],
+      "cover_argument": "crop",
+      "coverage": {
+        "banner": "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9972), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "full_plane": {
+          "height": 2344,
+          "width": 3516
+        },
+        "k": 0.9972,
+        "k_printed": "0.9972",
+        "rect_plane": {
+          "height": 2336,
+          "width": 3506,
+          "x": 5,
+          "y": 4
+        }
+      },
+      "defaults": {
+        "auto_exposure": false,
+        "binned": false,
+        "confidence_map": null,
+        "confidence_tail": 0.05,
+        "cover_control": "scale (omitted shipping default)",
+        "cover_test": "crop (explicit)",
+        "demosaic": "Malvar-He-Cutler full resolution",
+        "detail_roi": null,
+        "estimator_gate": "omitted and inapplicable to pyramid",
+        "exposure_stops": 0.0,
+        "fix_ca": "omitted; gear-matched profile default",
+        "flat_roi": null,
+        "focus": "omitted and inapplicable to pyramid",
+        "index_map": null,
+        "limit": null,
+        "limit_meaning": "all files in exact frozen input directory",
+        "linear_srgb": true,
+        "merge": "pyramid (omitted shipping default)",
+        "n_eff_map": null,
+        "photometric": "omitted; pyramid banner says photometric gain not applied",
+        "pyramid_bands": 7,
+        "pyramid_base": "mean",
+        "pyramid_exponent_coarsest": 2.0,
+        "pyramid_gate": 2.0,
+        "pyramid_select": "soft",
+        "pyramid_sharpen_per_octave": 1.4,
+        "resampler": "catmull-rom",
+        "srgb_transfer_curve": false,
+        "stats": false,
+        "stats_placebo": false,
+        "target_n_eff": null
+      },
+      "dtype": "uint16",
+      "environment": {
+        "MKL_NUM_THREADS": "6",
+        "NUMEXPR_NUM_THREADS": "6",
+        "OMP_NUM_THREADS": "6",
+        "OPENBLAS_NUM_THREADS": "6",
+        "PYTHONIOENCODING": "utf-8",
+        "RAYON_NUM_THREADS": "6",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\work\\cache",
+        "other_STREHL_variables": "unset"
+      },
+      "expected_shape_from_crop_rect": [
+        4672,
+        7012,
+        3
+      ],
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\m2-second-second16.log",
+      "name": "m2-second-second16",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-second-second16.tiff",
+      "returncode": 0,
+      "same_solve_as_frozen_scale": {
+        "all_match": true,
+        "checks": {
+          "coverage_k_printed": true,
+          "placed": true,
+          "reference_frame": true,
+          "refused": true,
+          "resampler": true
+        },
+        "scale_alignment": {
+          "banner": "alignment       : ON (solved), reference frame 8, 16 placed / 0 refused, 2.2 s",
+          "held_out_banner": "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+          "placed": 16,
+          "reference_frame": 8,
+          "refused": 0,
+          "resampler": "catmullrom"
+        },
+        "scale_coverage": {
+          "banner": "  coverage      : field of view scaled to 0.9972 so that EVERY frame covers every pixel (0.3% of width dropped, then upsampled to keep the output dimensions).",
+          "k": 0.9972,
+          "k_printed": "0.9972"
+        }
+      },
+      "selected_banner_lines": [
+        "build           : strehl 0.0.0 (4b60b1ba9f56)",
+        "merge backend   : pyramid (default)",
+        "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+        "defect map      : off (STREHL_DEFECT=off)",
+        "frames          : 16 from C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\inputs\\m2-second-second16  (first decode 0.16 s)",
+        "bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19",
+        "selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.",
+        "noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the",
+        "exponent        : 2.00",
+        "per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)",
+        "base band       : plain mean across frames",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "coverage mode   : crop -- as asked, --cover",
+        "alignment       : ON (sidecar), reference frame 8, 16 placed / 0 refused, 0.0 s",
+        "  held-out err  : NOT MEASURED   resampler: CatmullRom",
+        "  coverage      : CROPPED to the region EVERY frame covers -- 3506 x 2336 plane px at (5, 4) of 3516 x 2344, emitted at UNITY SCALE. 0.3% of width dropped and NOT upsampled (k=0.9972), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.",
+        "memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in",
+        "folded          : 16 / 16 frames in 13.1 s (0.82 s per frame, 4 workers)",
+        "  frames. The line above it is the white-noise constant, which is",
+        "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-NATIVE\\out\\renders\\m2-second-second16.tiff (7012 x 4672, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)"
+      ],
+      "sha256": "7f58d9c124ebdf20af69a2c85f43905d24d1ecd1eb37d87c872ca26f6f5b3129",
+      "shape": [
+        4672,
+        7012,
+        3
+      ],
+      "shape_matches_crop_rect": true,
+      "started_utc": "2026-09-04T03:04:49.769178+00:00",
+      "wall_seconds_diagnostic_only": 14.091169099963736
+    }
+  ],
+  "phase": "A_Q1_Q2_ONLY",
+  "resumed_utc": "2026-09-04T03:03:14.169913+00:00",
+  "started_utc": "2026-09-04T03:01:51.695452+00:00"
+}

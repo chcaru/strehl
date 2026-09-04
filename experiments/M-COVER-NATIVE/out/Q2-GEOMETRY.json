@@ -1,0 +1,442 @@
+{
+  "all_common_overlap_retained_at_least_99_percent": true,
+  "all_differential_attrition_at_most_2pp": true,
+  "all_outputs_large_enough_for_common_shape": true,
+  "all_outputs_native_size": false,
+  "all_sites_survive_at_least_80_percent": true,
+  "attrition_groups": {
+    "m1-bright": {
+      "arms": [
+        "m1-bright-a12",
+        "m1-bright-b12"
+      ],
+      "differential_attrition_percentage_points": 0.0,
+      "survival_percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "m1-second": {
+      "arms": [
+        "m1-second-a12",
+        "m1-second-b12"
+      ],
+      "differential_attrition_percentage_points": 0.0,
+      "survival_percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "m2-bright": {
+      "arms": [
+        "m2-bright-first16",
+        "m2-bright-second16"
+      ],
+      "differential_attrition_percentage_points": 0.0,
+      "survival_percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "m2-second": {
+      "arms": [
+        "m2-second-first16",
+        "m2-second-second16"
+      ],
+      "differential_attrition_percentage_points": 0.0,
+      "survival_percent": [
+        100.0,
+        100.0
+      ]
+    }
+  },
+  "frozen_common_shape_hxw": [
+    4608,
+    6912
+  ],
+  "native_active_array_shape_hxw": [
+    4688,
+    7032
+  ],
+  "native_active_output_width_x_height": [
+    7032,
+    4688
+  ],
+  "rows": [
+    {
+      "center_crop_origin_equals_frozen_input_crop": false,
+      "common_overlap_retained_fraction": 1.0,
+      "common_overlap_retained_percent": 100.0,
+      "contains_entire_frozen_common_overlap": true,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "exact_integer_scene_mapping_established": true,
+      "frozen_common_input_crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "large_enough_for_common_shape": true,
+      "name": "m1-bright-a12",
+      "native_dimensions_match": false,
+      "native_shape_hwc": [
+        4688,
+        7032,
+        3
+      ],
+      "output_luma_center_crop_scene_origin_yx": [
+        40,
+        60
+      ],
+      "output_shape": [
+        4672,
+        7012,
+        3
+      ],
+      "site_family": "m1.sites",
+      "site_survival_percent": 100.0,
+      "sites_preregistered": 486,
+      "sites_survived": 486
+    },
+    {
+      "center_crop_origin_equals_frozen_input_crop": false,
+      "common_overlap_retained_fraction": 1.0,
+      "common_overlap_retained_percent": 100.0,
+      "contains_entire_frozen_common_overlap": true,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "exact_integer_scene_mapping_established": true,
+      "frozen_common_input_crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "large_enough_for_common_shape": true,
+      "name": "m1-bright-b12",
+      "native_dimensions_match": false,
+      "native_shape_hwc": [
+        4688,
+        7032,
+        3
+      ],
+      "output_luma_center_crop_scene_origin_yx": [
+        40,
+        60
+      ],
+      "output_shape": [
+        4672,
+        7012,
+        3
+      ],
+      "site_family": "m1.sites",
+      "site_survival_percent": 100.0,
+      "sites_preregistered": 486,
+      "sites_survived": 486
+    },
+    {
+      "center_crop_origin_equals_frozen_input_crop": false,
+      "common_overlap_retained_fraction": 1.0,
+      "common_overlap_retained_percent": 100.0,
+      "contains_entire_frozen_common_overlap": true,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "exact_integer_scene_mapping_established": true,
+      "frozen_common_input_crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "large_enough_for_common_shape": true,
+      "name": "m1-second-a12",
+      "native_dimensions_match": false,
+      "native_shape_hwc": [
+        4688,
+        7032,
+        3
+      ],
+      "output_luma_center_crop_scene_origin_yx": [
+        40,
+        60
+      ],
+      "output_shape": [
+        4672,
+        7012,
+        3
+      ],
+      "site_family": "m1.sites",
+      "site_survival_percent": 100.0,
+      "sites_preregistered": 486,
+      "sites_survived": 486
+    },
+    {
+      "center_crop_origin_equals_frozen_input_crop": false,
+      "common_overlap_retained_fraction": 1.0,
+      "common_overlap_retained_percent": 100.0,
+      "contains_entire_frozen_common_overlap": true,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "exact_integer_scene_mapping_established": true,
+      "frozen_common_input_crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "large_enough_for_common_shape": true,
+      "name": "m1-second-b12",
+      "native_dimensions_match": false,
+      "native_shape_hwc": [
+        4688,
+        7032,
+        3
+      ],
+      "output_luma_center_crop_scene_origin_yx": [
+        40,
+        60
+      ],
+      "output_shape": [
+        4672,
+        7012,
+        3
+      ],
+      "site_family": "m1.sites",
+      "site_survival_percent": 100.0,
+      "sites_preregistered": 486,
+      "sites_survived": 486
+    },
+    {
+      "center_crop_origin_equals_frozen_input_crop": false,
+      "common_overlap_retained_fraction": 1.0,
+      "common_overlap_retained_percent": 100.0,
+      "contains_entire_frozen_common_overlap": true,
+      "crop_rect_fullres_yxhw": [
+        8,
+        12,
+        4672,
+        7008
+      ],
+      "crop_rect_plane_xywh": [
+        6,
+        4,
+        3504,
+        2336
+      ],
+      "exact_integer_scene_mapping_established": true,
+      "frozen_common_input_crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "large_enough_for_common_shape": true,
+      "name": "m2-bright-first16",
+      "native_dimensions_match": false,
+      "native_shape_hwc": [
+        4688,
+        7032,
+        3
+      ],
+      "output_luma_center_crop_scene_origin_yx": [
+        40,
+        60
+      ],
+      "output_shape": [
+        4672,
+        7008,
+        3
+      ],
+      "site_family": "m2.bright_sites",
+      "site_survival_percent": 100.0,
+      "sites_preregistered": 455,
+      "sites_survived": 455
+    },
+    {
+      "center_crop_origin_equals_frozen_input_crop": false,
+      "common_overlap_retained_fraction": 1.0,
+      "common_overlap_retained_percent": 100.0,
+      "contains_entire_frozen_common_overlap": true,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "exact_integer_scene_mapping_established": true,
+      "frozen_common_input_crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "large_enough_for_common_shape": true,
+      "name": "m2-bright-second16",
+      "native_dimensions_match": false,
+      "native_shape_hwc": [
+        4688,
+        7032,
+        3
+      ],
+      "output_luma_center_crop_scene_origin_yx": [
+        40,
+        60
+      ],
+      "output_shape": [
+        4672,
+        7012,
+        3
+      ],
+      "site_family": "m2.bright_sites",
+      "site_survival_percent": 100.0,
+      "sites_preregistered": 455,
+      "sites_survived": 455
+    },
+    {
+      "center_crop_origin_equals_frozen_input_crop": false,
+      "common_overlap_retained_fraction": 1.0,
+      "common_overlap_retained_percent": 100.0,
+      "contains_entire_frozen_common_overlap": true,
+      "crop_rect_fullres_yxhw": [
+        12,
+        16,
+        4664,
+        7000
+      ],
+      "crop_rect_plane_xywh": [
+        8,
+        6,
+        3500,
+        2332
+      ],
+      "exact_integer_scene_mapping_established": true,
+      "frozen_common_input_crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "large_enough_for_common_shape": true,
+      "name": "m2-second-first16",
+      "native_dimensions_match": false,
+      "native_shape_hwc": [
+        4688,
+        7032,
+        3
+      ],
+      "output_luma_center_crop_scene_origin_yx": [
+        40,
+        60
+      ],
+      "output_shape": [
+        4664,
+        7000,
+        3
+      ],
+      "site_family": "m2.second_sites",
+      "site_survival_percent": 100.0,
+      "sites_preregistered": 455,
+      "sites_survived": 455
+    },
+    {
+      "center_crop_origin_equals_frozen_input_crop": false,
+      "common_overlap_retained_fraction": 1.0,
+      "common_overlap_retained_percent": 100.0,
+      "contains_entire_frozen_common_overlap": true,
+      "crop_rect_fullres_yxhw": [
+        8,
+        10,
+        4672,
+        7012
+      ],
+      "crop_rect_plane_xywh": [
+        5,
+        4,
+        3506,
+        2336
+      ],
+      "exact_integer_scene_mapping_established": true,
+      "frozen_common_input_crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "large_enough_for_common_shape": true,
+      "name": "m2-second-second16",
+      "native_dimensions_match": false,
+      "native_shape_hwc": [
+        4688,
+        7032,
+        3
+      ],
+      "output_luma_center_crop_scene_origin_yx": [
+        40,
+        60
+      ],
+      "output_shape": [
+        4672,
+        7012,
+        3
+      ],
+      "site_family": "m2.second_sites",
+      "site_survival_percent": 100.0,
+      "sites_preregistered": 455,
+      "sites_survived": 455
+    }
+  ],
+  "site_manifest_input_crop_yxhw": [
+    40,
+    58,
+    4608,
+    6912
+  ],
+  "status": "DERIVED_FROM_VERIFIED_INTEGER_CROP_MAPPING"
+}
