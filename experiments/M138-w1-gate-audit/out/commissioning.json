@@ -1,0 +1,1 @@
+{"null":{"consistent_width_arithmetic":"GREEN","constant_variance_propagation":"GREEN","overlapping_intervals":"GREEN","report_required_text_present":"GREEN"},"plant":{"corrupted_stored_ratio":"RED","disjoint_intervals":"RED","heteroscedastic_variance_propagation":"RED","report_required_text_missing":"RED"},"status":"PASS"}
