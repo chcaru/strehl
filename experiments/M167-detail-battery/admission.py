@@ -128,11 +128,23 @@ def verify_freeze() -> dict[str, object]:
     preregistration_commit = str(
         manifest.get("preregistration_commit", "")
     )
+    expected_worktree_hashes = {
+        name: record.get("worktree_sha256")
+        if isinstance(record, dict)
+        else None
+        for name, record in files.items()
+    }
+    expected_commit_hashes = {
+        name: record.get("commit_sha256")
+        if isinstance(record, dict)
+        else None
+        for name, record in files.items()
+    }
     actual = {
         name: sha256_file(HERE / name)
         for name in files
     }
-    hash_match = actual == files
+    hash_match = actual == expected_worktree_hashes
     paths = [str((HERE / name).relative_to(ROOT)) for name in files]
     committed_hashes = {}
     committed_reads_ok = True
@@ -187,7 +199,7 @@ def verify_freeze() -> dict[str, object]:
         *paths,
     )
     checks = {
-        "manifest_schema": manifest.get("schema") == 1,
+        "manifest_schema": manifest.get("schema") == 2,
         "manifest_file_set_exact": set(files) == required_files,
         "preregistration_commit_pinned": (
             manifest.get("preregistration_commit")
@@ -199,7 +211,7 @@ def verify_freeze() -> dict[str, object]:
         "artifact_hashes_match": hash_match,
         "artifact_commit_objects_readable": committed_reads_ok,
         "manifest_hashes_match_artifact_commit": (
-            committed_hashes == files
+            committed_hashes == expected_commit_hashes
         ),
         "no_committed_artifact_drift": committed_drift.returncode == 0,
         "artifact_commit_is_last_pinned_change": (
