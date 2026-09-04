@@ -1335,7 +1335,7 @@ switch ($Phase) {
             $producerRepo = Join-Path $commissionRoot "producer-repo"
             $producerWork = Join-Path $commissionRoot "producer-work"
             $operations += Invoke-Logged "git" @(
-                "clone", "--local", "--no-checkout", $Repo, $producerRepo
+                "clone", "--no-hardlinks", "--no-checkout", $Repo, $producerRepo
             ) (Join-Path $commissionRoot "logs\producer-repo-clone.log")
             $operations += Invoke-Logged "git" @(
                 "-C", $producerRepo, "checkout", "--detach", [string]$prepare.source_commit
