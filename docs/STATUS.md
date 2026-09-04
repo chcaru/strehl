@@ -3007,6 +3007,73 @@ but it clears **no scorecard blocker** and belongs off the critical path.
 Verified by re-parsing §3.1: the eight `(d)` axes are M1 M2 M3 M4 M5 M6 M7 M11,
 none of which name an open-source comparator.
 
+**AUDITED AND CONFIRMED, with one real gap (lane M133, `b8d6acdc`).** Because
+this table now steers the whole program, I had it independently re-derived by a
+lane that was required to parse §3.1 and brute-force all sixteen subsets of
+`{a,b,c,d}` **before** being allowed to read this section, so it could not
+anchor on the answer it was auditing.
+
+**The verdict is yes.** Every per-code count and every axis list above is
+correct, and the headline holds. But the combination table is **incomplete**:
+it lists twelve of the sixteen subsets and omits four. I re-derived all four
+myself, directly from the scorecard's Class cells rather than from the lane's
+report:
+
+| omitted subset | axes measurable | which |
+|---|---|---|
+| `c` alone | 2 | M8 M12 |
+| `a+c+d` | 2 | M8 M12 |
+| **`a+b+c`** | **4** | M8 **M9 M10** M12 |
+| **`b+c+d`** | **4** | **M7** M8 **M10** M12 |
+
+The two `4`s matter: neither was reachable from the table as written, and one
+of them — `a+b+c` — is **the best state obtainable without spending a dollar**.
+
+**The twelve blocker sets, extracted by me from `§3.1` directly:**
+
+```text
+M1  a,b,c,d     M5  a,b,c,d     M9   a,b,c
+M2  a,b,d       M6  a,b,c,d     M10  b,c
+M3  a,b,d       M7  b,c,d       M11  a,b,d
+M4  a,b,d       M8  (e) none    M12  (e) none
+```
+
+**And that yields a far sharper statement than the one I got wrong.** Read the
+column: **every one of the ten blocked axes carries `(b)`.** The only two rows
+without it are M8 and M12, which are already measurable. Therefore
+
+> **`(b)` is a strict necessary condition for every axis this program can still
+> gain. No subset excluding `(b)` can ever score above `2 of 12`.**
+
+This is the correct justification for building crop-early first, and it is
+stronger than the false one I had to retract in §2.9.28. Crop-early unlocks
+nothing by itself — and *nothing whatsoever can be unlocked without it*. Those
+are not in tension; they are the same conjunctive fact seen from both ends.
+
+Lane M133 also confirmed the structure is sound: **no blocked axis carries
+exactly one blocker**, so the headline "no single fix unlocks a single axis"
+is not an accident of one row. M10 is uniquely closest at two, exactly `(b)(c)`
+(`docs/proposals/2026-09-sota-scorecard.md:432`), which is why `b+c` is the only
+special pair.
+
+**What this changes about the order of the three roadmap items.** Both remaining
+owner asks are needed for `12 of 12`, but the best intermediate state depends on
+something not yet known — whether `(a)` can be cleared without the bench session:
+
+| route | reaches | owner cost to get there |
+|---|---|---|
+| crop-early alone | `2 of 12` | nothing |
+| crop-early + bench session (`a+b+c`) | **`4 of 12`** | 45-60 min, **$0** |
+| crop-early + `(a)` + Zerene (`a+b+d`) | **`6 of 12`** | **$189**, no bench time |
+| all four | `12 of 12` | both |
+
+So if lane M131 rules **for** Candidate 2 — clearing `(a)` from stacks already on
+disk — then **$189 alone buys `6 of 12` with no time at the bench**, and the
+session afterwards completes the set. If M131 rules **against**, the session
+comes first and reaches `4 of 12` for free, with the purchase completing it.
+**M131's verdict therefore decides the spending order, and it is the reason that
+lane was dispatched before either ask was put to the owner.**
+
 ### 2.9.27 M12 unblocked, and a measurement merge that would have understated our own scaling
 
 Two lanes wanted the same exclusive host for overlapping timing work, and the
