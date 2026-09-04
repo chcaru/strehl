@@ -1,0 +1,1331 @@
+{
+  "schema": "m164-reference-dominance-commission-v1",
+  "status": "PASS",
+  "planted_defect": null,
+  "captures_opened": 0,
+  "config": {
+    "sites": 256,
+    "cells": 4,
+    "delta_information": 0.08,
+    "delta_transfer": 0.08,
+    "overall_familywise_alpha": 0.05,
+    "common_bound_alpha": 0.025,
+    "dominance_alpha": 0.025,
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 164177,
+    "maximum_common_fraction": 0.05
+  },
+  "shared_objective_ruling": {
+    "verdict": "SUFFICIENT_ON_MEASURED_NON_NULL_PASSBAND",
+    "factorization": "H_R=A*G; H_S=B*G",
+    "ratio_on_support": "|H_R/H_S|=|A/B|",
+    "G": [
+      1.0,
+      0.8,
+      0.5,
+      0.0
+    ],
+    "A": [
+      1.4,
+      1.3,
+      1.2,
+      1.1
+    ],
+    "B": [
+      1.0,
+      0.9,
+      0.8,
+      0.7
+    ],
+    "H_R": [
+      1.4,
+      1.04,
+      0.6,
+      0.0
+    ],
+    "H_S": [
+      1.0,
+      0.7200000000000001,
+      0.4,
+      0.0
+    ],
+    "supported_ratios": [
+      1.4,
+      1.4444444444444444,
+      1.4999999999999998
+    ],
+    "permanent_exclusion": "null(G) and unresolved near-null cells"
+  },
+  "legitimate": {
+    "status": "PASS",
+    "sites": 256,
+    "cells": 4,
+    "family": {
+      "members": 8,
+      "contents": "log information-ratio and log transfer-ratio margins for every frozen cell",
+      "method": "paired-site one-sided max-t cluster bootstrap",
+      "alpha": 0.025,
+      "draws": 10000,
+      "seed": 164177
+    },
+    "delta_information": [
+      0.08,
+      0.08,
+      0.08,
+      0.08
+    ],
+    "delta_transfer": [
+      0.08,
+      0.08,
+      0.08,
+      0.08
+    ],
+    "reference_common_bound": [
+      0.00011186249994702671,
+      9.159006727053111e-05,
+      6.968880285879546e-05,
+      9.526956653033874e-05
+    ],
+    "scored_common_bound": [
+      5.4858594270217124e-05,
+      8.061360363907058e-05,
+      0.00011661450684839856,
+      6.403370646891428e-05
+    ],
+    "reference_common_fraction": [
+      5.701127528992516e-05,
+      5.043826526621829e-05,
+      4.111245995937943e-05,
+      6.083084314119094e-05
+    ],
+    "scored_common_fraction": [
+      5.497372255197655e-05,
+      8.047822990629016e-05,
+      0.00011775547003138264,
+      6.352574406580403e-05
+    ],
+    "common_mode_pass": true,
+    "absolute_transfer_status": "KNOWN_INPUT",
+    "failed_cells": [],
+    "valid_bootstrap_draws": 10000,
+    "critical_value": 2.6908571030925863,
+    "point": {
+      "reference_cross_power": [
+        1.9621118695935342,
+        1.8158845627840179,
+        1.6950774273213152,
+        1.5661391756351968
+      ],
+      "scored_cross_power": [
+        0.9979057579437054,
+        1.0016821161814575,
+        0.9903107415504349,
+        1.0079961661304442
+      ],
+      "reference_signal_power": [
+        1.9620000070935872,
+        1.8157929727167474,
+        1.6950077385184563,
+        1.5660439060686664
+      ],
+      "scored_signal_power": [
+        0.9979606165379756,
+        1.0017627297850966,
+        0.9904273560572833,
+        1.0080601998369132
+      ],
+      "reference_difference_noise_power": [
+        0.0024500929646194803,
+        0.0026701926510963596,
+        0.0025582118801111245,
+        0.00260722590788293
+      ],
+      "scored_difference_noise_power": [
+        0.004599454437850575,
+        0.004837756526122567,
+        0.004663863882363777,
+        0.004630144004809558
+      ],
+      "reference_noise_power": [
+        0.002561955464566507,
+        0.0027617827183668907,
+        0.00262790068296992,
+        0.002702495474413269
+      ],
+      "scored_noise_power": [
+        0.004544595843580358,
+        0.0047571429224834965,
+        0.004547249375515379,
+        0.004566110298340644
+      ],
+      "reference_information": [
+        4.791373279495435,
+        4.681488414395514,
+        4.667700190489644,
+        4.59055211619149
+      ],
+      "scored_information": [
+        3.8926210114712703,
+        3.8625322859007674,
+        3.886760884605074,
+        3.8964602245973112
+      ],
+      "information_ratio": [
+        1.2308861472451613,
+        1.2120257043505231,
+        1.2009229096077825,
+        1.178133960463028
+      ],
+      "transfer_ratio": [
+        1.4021445910678365,
+        1.34632754279698,
+        1.3082011573924683,
+        1.246403709330219
+      ]
+    },
+    "information_log_margin": [
+      0.130773313767105,
+      0.11533205449610608,
+      0.10612931139845268,
+      0.08697075618724802
+    ],
+    "transfer_log_margin": [
+      0.26104187416126706,
+      0.22041950579996,
+      0.1916919901298043,
+      0.14330133102894643
+    ],
+    "information_simultaneous_lcb": [
+      0.09308831397488954,
+      0.07258329813690115,
+      0.06314685978418147,
+      0.046438637086850525
+    ],
+    "transfer_simultaneous_lcb": [
+      0.25158804793229916,
+      0.21112092361434376,
+      0.18143192122621554,
+      0.13429736385968433
+    ],
+    "information_pass": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "transfer_pass": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "cell_pass": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "absolute_transfer": {
+      "reference_point": [
+        1.4007540360796875,
+        1.34754761058154,
+        1.301951392073189,
+        1.2514548236493384
+      ],
+      "scored_point": [
+        0.998952330165812,
+        1.0008407046985337,
+        0.995143578359643,
+        1.0039901225263346
+      ],
+      "reference_charged_lower": [
+        1.4007141061235826,
+        1.3475136261710854,
+        1.3019246285858703,
+        1.2514167595444239
+      ],
+      "scored_charged_upper": [
+        0.9989797878525749,
+        1.0008809768324587,
+        0.9952021684347775,
+        1.0040220116296819
+      ]
+    },
+    "failure": null
+  },
+  "legitimate_relative_only": {
+    "status": "PASS",
+    "sites": 256,
+    "cells": 4,
+    "family": {
+      "members": 8,
+      "contents": "log information-ratio and log transfer-ratio margins for every frozen cell",
+      "method": "paired-site one-sided max-t cluster bootstrap",
+      "alpha": 0.025,
+      "draws": 10000,
+      "seed": 164177
+    },
+    "delta_information": [
+      0.08,
+      0.08,
+      0.08,
+      0.08
+    ],
+    "delta_transfer": [
+      0.08,
+      0.08,
+      0.08,
+      0.08
+    ],
+    "reference_common_bound": [
+      0.00011186249994702671,
+      9.159006727053111e-05,
+      6.968880285879546e-05,
+      9.526956653033874e-05
+    ],
+    "scored_common_bound": [
+      5.4858594270217124e-05,
+      8.061360363907058e-05,
+      0.00011661450684839856,
+      6.403370646891428e-05
+    ],
+    "reference_common_fraction": [
+      5.701127528992516e-05,
+      5.043826526621829e-05,
+      4.111245995937943e-05,
+      6.083084314119094e-05
+    ],
+    "scored_common_fraction": [
+      5.497372255197655e-05,
+      8.047822990629016e-05,
+      0.00011775547003138264,
+      6.352574406580403e-05
+    ],
+    "common_mode_pass": true,
+    "absolute_transfer_status": "ABSOLUTE_TRANSFER_UNIDENTIFIED",
+    "failed_cells": [],
+    "valid_bootstrap_draws": 10000,
+    "critical_value": 2.6908571030925863,
+    "point": {
+      "reference_cross_power": [
+        1.9621118695935342,
+        1.8158845627840179,
+        1.6950774273213152,
+        1.5661391756351968
+      ],
+      "scored_cross_power": [
+        0.9979057579437054,
+        1.0016821161814575,
+        0.9903107415504349,
+        1.0079961661304442
+      ],
+      "reference_signal_power": [
+        1.9620000070935872,
+        1.8157929727167474,
+        1.6950077385184563,
+        1.5660439060686664
+      ],
+      "scored_signal_power": [
+        0.9979606165379756,
+        1.0017627297850966,
+        0.9904273560572833,
+        1.0080601998369132
+      ],
+      "reference_difference_noise_power": [
+        0.0024500929646194803,
+        0.0026701926510963596,
+        0.0025582118801111245,
+        0.00260722590788293
+      ],
+      "scored_difference_noise_power": [
+        0.004599454437850575,
+        0.004837756526122567,
+        0.004663863882363777,
+        0.004630144004809558
+      ],
+      "reference_noise_power": [
+        0.002561955464566507,
+        0.0027617827183668907,
+        0.00262790068296992,
+        0.002702495474413269
+      ],
+      "scored_noise_power": [
+        0.004544595843580358,
+        0.0047571429224834965,
+        0.004547249375515379,
+        0.004566110298340644
+      ],
+      "reference_information": [
+        4.791373279495435,
+        4.681488414395514,
+        4.667700190489644,
+        4.59055211619149
+      ],
+      "scored_information": [
+        3.8926210114712703,
+        3.8625322859007674,
+        3.886760884605074,
+        3.8964602245973112
+      ],
+      "information_ratio": [
+        1.2308861472451613,
+        1.2120257043505231,
+        1.2009229096077825,
+        1.178133960463028
+      ],
+      "transfer_ratio": [
+        1.4021445910678365,
+        1.34632754279698,
+        1.3082011573924683,
+        1.246403709330219
+      ]
+    },
+    "information_log_margin": [
+      0.130773313767105,
+      0.11533205449610608,
+      0.10612931139845268,
+      0.08697075618724802
+    ],
+    "transfer_log_margin": [
+      0.26104187416126706,
+      0.22041950579996,
+      0.1916919901298043,
+      0.14330133102894643
+    ],
+    "information_simultaneous_lcb": [
+      0.09308831397488954,
+      0.07258329813690115,
+      0.06314685978418147,
+      0.046438637086850525
+    ],
+    "transfer_simultaneous_lcb": [
+      0.25158804793229916,
+      0.21112092361434376,
+      0.18143192122621554,
+      0.13429736385968433
+    ],
+    "information_pass": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "transfer_pass": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "cell_pass": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "failure": null
+  },
+  "single_cell_violation": {
+    "status": "UNMEASURED",
+    "sites": 256,
+    "cells": 4,
+    "family": {
+      "members": 8,
+      "contents": "log information-ratio and log transfer-ratio margins for every frozen cell",
+      "method": "paired-site one-sided max-t cluster bootstrap",
+      "alpha": 0.025,
+      "draws": 10000,
+      "seed": 164177
+    },
+    "delta_information": [
+      0.08,
+      0.08,
+      0.08,
+      0.08
+    ],
+    "delta_transfer": [
+      0.08,
+      0.08,
+      0.08,
+      0.08
+    ],
+    "reference_common_bound": [
+      0.00011186249994702671,
+      9.159006727053111e-05,
+      6.968880285879546e-05,
+      9.526956653033874e-05
+    ],
+    "scored_common_bound": [
+      5.4858594270217124e-05,
+      8.061360363907058e-05,
+      0.00011661450684839856,
+      6.403370646891428e-05
+    ],
+    "reference_common_fraction": [
+      5.701301451410568e-05,
+      5.04854971254324e-05,
+      4.127955390225588e-05,
+      0.0002656551173700556
+    ],
+    "scored_common_fraction": [
+      5.497372255197655e-05,
+      8.047822990629016e-05,
+      0.00011775547003138264,
+      6.352574406580403e-05
+    ],
+    "common_mode_pass": true,
+    "absolute_transfer_status": "KNOWN_INPUT",
+    "failed_cells": [
+      3
+    ],
+    "valid_bootstrap_draws": 10000,
+    "critical_value": 2.6997508055881037,
+    "point": {
+      "reference_cross_power": [
+        1.9620520139195696,
+        1.8141857065004916,
+        1.6882159876002694,
+        0.3586212359599643
+      ],
+      "scored_cross_power": [
+        0.9979057579437054,
+        1.0016821161814575,
+        0.9903107415504349,
+        1.0079961661304442
+      ],
+      "reference_signal_power": [
+        1.9619401514196226,
+        1.8140941164332212,
+        1.6881462987974105,
+        0.358525966393434
+      ],
+      "scored_signal_power": [
+        0.9979606165379756,
+        1.0017627297850966,
+        0.9904273560572833,
+        1.0080601998369132
+      ],
+      "reference_difference_noise_power": [
+        0.002633532869695808,
+        0.0025682215931453404,
+        0.002508102224977079,
+        0.002562357876981297
+      ],
+      "scored_difference_noise_power": [
+        0.004599454437850575,
+        0.004837756526122567,
+        0.004663863882363777,
+        0.004630144004809558
+      ],
+      "reference_noise_power": [
+        0.002745395369642835,
+        0.0026598116604158715,
+        0.0025777910278358745,
+        0.0026576274435116355
+      ],
+      "scored_noise_power": [
+        0.004544595843580358,
+        0.0047571429224834965,
+        0.004547249375515379,
+        0.004566110298340644
+      ],
+      "reference_information": [
+        4.741534389465345,
+        4.7079116086458965,
+        4.6786451075246465,
+        3.543224837921164
+      ],
+      "scored_information": [
+        3.8926210114712703,
+        3.8625322859007674,
+        3.886760884605074,
+        3.8964602245973112
+      ],
+      "information_ratio": [
+        1.2180827199700122,
+        1.2188666036089797,
+        1.203738857735272,
+        0.9093445418879765
+      ],
+      "transfer_ratio": [
+        1.402123202956395,
+        1.3456975832501799,
+        1.305550654526294,
+        0.5963717645148918
+      ]
+    },
+    "information_log_margin": [
+      0.12031704043498657,
+      0.12096037237333988,
+      0.10847138665654431,
+      -0.17199226377584703
+    ],
+    "transfer_log_margin": [
+      0.26102662018909834,
+      0.21995148672227466,
+      0.18966386813091418,
+      -0.59385208154946
+    ],
+    "information_simultaneous_lcb": [
+      0.08086695270249974,
+      0.07975580377640229,
+      0.06510299373030169,
+      -0.21832897215720098
+    ],
+    "transfer_simultaneous_lcb": [
+      0.2517708807909836,
+      0.21108377854811777,
+      0.17917413119330602,
+      -0.6071491847664753
+    ],
+    "information_pass": [
+      true,
+      true,
+      true,
+      false
+    ],
+    "transfer_pass": [
+      true,
+      true,
+      true,
+      false
+    ],
+    "cell_pass": [
+      true,
+      true,
+      true,
+      false
+    ],
+    "absolute_transfer": {
+      "reference_point": [
+        1.400732670397735,
+        1.346917111963647,
+        1.2993136602069069,
+        0.5988499277448102
+      ],
+      "scored_point": [
+        0.998952330165812,
+        1.0008407046985337,
+        0.995143578359643,
+        1.0039901225263346
+      ],
+      "reference_charged_lower": [
+        1.4006927398325526,
+        1.3468831116445188,
+        1.2992868423860109,
+        0.5987703786873846
+      ],
+      "scored_charged_upper": [
+        0.9989797878525749,
+        1.0008809768324587,
+        0.9952021684347775,
+        1.0040220116296819
+      ]
+    },
+    "failure": "DOMINANCE_NOT_ESTABLISHED"
+  },
+  "improvement_shaped_common_mode": {
+    "clean": {
+      "status": "UNMEASURED",
+      "sites": 256,
+      "cells": 4,
+      "family": {
+        "members": 8,
+        "contents": "log information-ratio and log transfer-ratio margins for every frozen cell",
+        "method": "paired-site one-sided max-t cluster bootstrap",
+        "alpha": 0.025,
+        "draws": 10000,
+        "seed": 164177
+      },
+      "delta_information": [
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "delta_transfer": [
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "reference_common_bound": [
+        0.00011186249994702671,
+        9.159006727053111e-05,
+        6.968880285879546e-05,
+        9.526956653033874e-05
+      ],
+      "scored_common_bound": [
+        5.4858594270217124e-05,
+        8.061360363907058e-05,
+        0.00011661450684839856,
+        6.403370646891428e-05
+      ],
+      "reference_common_fraction": [
+        0.00010700968559305267,
+        8.821117303284468e-05,
+        6.684892603659371e-05,
+        9.131013292255474e-05
+      ],
+      "scored_common_fraction": [
+        5.497372255197655e-05,
+        8.047822990629016e-05,
+        0.00011775547003138264,
+        6.352574406580403e-05
+      ],
+      "common_mode_pass": true,
+      "absolute_transfer_status": "KNOWN_INPUT",
+      "failed_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "valid_bootstrap_draws": 10000,
+      "critical_value": 2.7386376373392003,
+      "point": {
+        "reference_cross_power": [
+          1.0453493001785727,
+          1.0383046061118395,
+          1.042482011164206,
+          1.043362477756354
+        ],
+        "scored_cross_power": [
+          0.9979057579437054,
+          1.0016821161814575,
+          0.9903107415504349,
+          1.0079961661304442
+        ],
+        "reference_signal_power": [
+          1.0452374376786258,
+          1.038213016044569,
+          1.042412322361347,
+          1.0432672081898235
+        ],
+        "scored_signal_power": [
+          0.9979606165379756,
+          1.0017627297850966,
+          0.9904273560572833,
+          1.0080601998369132
+        ],
+        "reference_difference_noise_power": [
+          0.001286878872033977,
+          0.0012091014726417619,
+          0.0012531867153971119,
+          0.0012654275661108092
+        ],
+        "scored_difference_noise_power": [
+          0.004599454437850575,
+          0.004837756526122567,
+          0.004663863882363777,
+          0.004630144004809558
+        ],
+        "reference_noise_power": [
+          0.0013987413719810035,
+          0.001300691539912293,
+          0.0013228755182559074,
+          0.001360697132641148
+        ],
+        "scored_noise_power": [
+          0.004544595843580358,
+          0.0047571429224834965,
+          0.004547249375515379,
+          0.004566110298340644
+        ],
+        "reference_information": [
+          4.773707543556292,
+          4.82120710042594,
+          4.811931355478443,
+          4.792213724520183
+        ],
+        "scored_information": [
+          3.8926210114712703,
+          3.8625322859007674,
+          3.886760884605074,
+          3.8964602245973112
+        ],
+        "information_ratio": [
+          1.2263478847513087,
+          1.2481985245856924,
+          1.2380312291753892,
+          1.229889039869628
+        ],
+        "transfer_ratio": [
+          1.023412640989916,
+          1.0180305237633287,
+          1.025908090224227,
+          1.0173128829562545
+        ]
+      },
+      "information_log_margin": [
+        0.1270795120414034,
+        0.14474029034740415,
+        0.13656135831327926,
+        0.12996291269078952
+      ],
+      "transfer_log_margin": [
+        -0.053818271869370674,
+        -0.05909113940688886,
+        -0.05138287907828042,
+        -0.059796318527467515
+      ],
+      "information_simultaneous_lcb": [
+        0.0880778300857552,
+        0.10188300748019499,
+        0.0962426192991141,
+        0.09001831910616981
+      ],
+      "transfer_simultaneous_lcb": [
+        -0.06260643511536657,
+        -0.06844834169326139,
+        -0.062300924916473925,
+        -0.06894678458229199
+      ],
+      "information_pass": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "transfer_pass": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "cell_pass": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "absolute_transfer": {
+        "reference_point": [
+          1.0224232490405198,
+          1.018972328432838,
+          1.0210200836243164,
+          1.0214511626878466
+        ],
+        "scored_point": [
+          0.998952330165812,
+          1.0008407046985337,
+          0.995143578359643,
+          1.0039901225263346
+        ],
+        "reference_charged_lower": [
+          1.0223685429817497,
+          1.0189273850695,
+          1.020985956005932,
+          1.0214045272025298
+        ],
+        "scored_charged_upper": [
+          0.9989797878525749,
+          1.0008809768324587,
+          0.9952021684347775,
+          1.0040220116296819
+        ]
+      },
+      "failure": "DOMINANCE_NOT_ESTABLISHED"
+    },
+    "contaminated_naive": {
+      "status": "PASS",
+      "sites": 256,
+      "cells": 4,
+      "family": {
+        "members": 8,
+        "contents": "log information-ratio and log transfer-ratio margins for every frozen cell",
+        "method": "paired-site one-sided max-t cluster bootstrap",
+        "alpha": 0.025,
+        "draws": 10000,
+        "seed": 164177
+      },
+      "delta_information": [
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "delta_transfer": [
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "reference_common_bound": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scored_common_bound": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reference_common_fraction": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scored_common_fraction": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "common_mode_pass": true,
+      "absolute_transfer_status": "KNOWN_INPUT",
+      "failed_cells": [],
+      "valid_bootstrap_draws": 10000,
+      "critical_value": 2.7121234422721128,
+      "point": {
+        "reference_cross_power": [
+          1.5473940636719525,
+          1.5390808942836967,
+          1.540867546542632,
+          1.541926251016524
+        ],
+        "scored_cross_power": [
+          0.9979057579437054,
+          1.0016821161814575,
+          0.9903107415504349,
+          1.0079961661304442
+        ],
+        "reference_signal_power": [
+          1.5473940636719525,
+          1.5390808942836967,
+          1.540867546542632,
+          1.541926251016524
+        ],
+        "scored_signal_power": [
+          0.9979057579437054,
+          1.0016821161814575,
+          0.9903107415504349,
+          1.0079961661304442
+        ],
+        "reference_difference_noise_power": [
+          0.0012868788720339767,
+          0.0012091014726417619,
+          0.0012531867153971119,
+          0.001265427566110809
+        ],
+        "scored_difference_noise_power": [
+          0.004599454437850575,
+          0.004837756526122567,
+          0.004663863882363777,
+          0.004630144004809558
+        ],
+        "reference_noise_power": [
+          0.0012868788720339767,
+          0.0012091014726417619,
+          0.0012531867153971119,
+          0.001265427566110809
+        ],
+        "scored_noise_power": [
+          0.004599454437850575,
+          0.004837756526122567,
+          0.004663863882363777,
+          0.004630144004809558
+        ],
+        "reference_information": [
+          5.116473985656174,
+          5.157525477975718,
+          5.132549311064972,
+          5.126038312329629
+        ],
+        "scored_information": [
+          3.8839656378653213,
+          3.850410889168092,
+          3.8684951054998917,
+          3.886414547220221
+        ],
+        "information_ratio": [
+          1.3173324541738878,
+          1.3394740526224818,
+          1.3267560565781658,
+          1.3189633401295433
+        ],
+        "transfer_ratio": [
+          1.2452475586317666,
+          1.2395548914614578,
+          1.2473746370287915,
+          1.2368082143939638
+        ]
+      },
+      "information_log_margin": [
+        0.198647782703039,
+        0.21531599773624943,
+        0.2057758665524989,
+        0.19988503852784179
+      ],
+      "transfer_log_margin": [
+        0.14237331128854913,
+        0.1377913155409693,
+        0.14408001109812718,
+        0.13557299934384215
+      ],
+      "information_simultaneous_lcb": [
+        0.1549361464575373,
+        0.1670600024862945,
+        0.1608725969560974,
+        0.15468376424706942
+      ],
+      "transfer_simultaneous_lcb": [
+        0.07491151564699518,
+        0.06744329399836677,
+        0.07504469021001671,
+        0.06649814318778897
+      ],
+      "information_pass": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "transfer_pass": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "cell_pass": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "absolute_transfer": {
+        "reference_point": [
+          1.2439429503284918,
+          1.2405969910827999,
+          1.2413168598478923,
+          1.2417432307109726
+        ],
+        "scored_point": [
+          0.998952330165812,
+          1.0008407046985337,
+          0.995143578359643,
+          1.0039901225263346
+        ],
+        "reference_charged_lower": [
+          1.2439429503284918,
+          1.2405969910827999,
+          1.2413168598478923,
+          1.2417432307109726
+        ],
+        "scored_charged_upper": [
+          0.998952330165812,
+          1.0008407046985337,
+          0.995143578359643,
+          1.0039901225263346
+        ]
+      },
+      "failure": null
+    },
+    "contaminated_charged": {
+      "status": "UNMEASURED",
+      "sites": 256,
+      "cells": 4,
+      "family": {
+        "members": 8,
+        "contents": "log information-ratio and log transfer-ratio margins for every frozen cell",
+        "method": "paired-site one-sided max-t cluster bootstrap",
+        "alpha": 0.025,
+        "draws": 10000,
+        "seed": 164177
+      },
+      "delta_information": [
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "delta_transfer": [
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "reference_common_bound": [
+        0.6152610832331615,
+        0.6255284370759157,
+        0.619968163690577,
+        0.6254779591742032
+      ],
+      "scored_common_bound": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reference_common_fraction": [
+        0.39761111773503405,
+        0.4064298630430616,
+        0.4023500690125178,
+        0.40564713050436313
+      ],
+      "scored_common_fraction": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "common_mode_pass": false,
+      "absolute_transfer_status": "KNOWN_INPUT",
+      "failed_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "valid_bootstrap_draws": 10000,
+      "critical_value": 2.3424513994548652,
+      "point": {
+        "reference_cross_power": [
+          1.5473940636719525,
+          1.5390808942836967,
+          1.540867546542632,
+          1.541926251016524
+        ],
+        "scored_cross_power": [
+          0.9979057579437054,
+          1.0016821161814575,
+          0.9903107415504349,
+          1.0079961661304442
+        ],
+        "reference_signal_power": [
+          0.932132980438791,
+          0.913552457207781,
+          0.9208993828520551,
+          0.9164482918423207
+        ],
+        "scored_signal_power": [
+          0.9979057579437054,
+          1.0016821161814575,
+          0.9903107415504349,
+          1.0079961661304442
+        ],
+        "reference_difference_noise_power": [
+          0.0012868788720339767,
+          0.0012091014726417619,
+          0.0012531867153971119,
+          0.001265427566110809
+        ],
+        "scored_difference_noise_power": [
+          0.004599454437850575,
+          0.004837756526122567,
+          0.004663863882363777,
+          0.004630144004809558
+        ],
+        "reference_noise_power": [
+          0.6165479621051955,
+          0.6267375385485574,
+          0.621221350405974,
+          0.626743386740314
+        ],
+        "scored_noise_power": [
+          0.004599454437850575,
+          0.004837756526122567,
+          0.004663863882363777,
+          0.004630144004809558
+        ],
+        "reference_information": [
+          0.664377459529809,
+          0.6486343432113556,
+          0.6558681999966502,
+          0.6499852478835668
+        ],
+        "scored_information": [
+          3.8839656378653213,
+          3.850410889168092,
+          3.8684951054998917,
+          3.886414547220221
+        ],
+        "information_ratio": [
+          0.1710564720379348,
+          0.16845847414261222,
+          0.16954091503546007,
+          0.1672454752281823
+        ],
+        "transfer_ratio": [
+          0.9664828965394888,
+          0.9549965112011278,
+          0.9643181614446846,
+          0.953508442913778
+        ]
+      },
+      "information_log_margin": [
+        -1.8427225722988827,
+        -1.8580270449557195,
+        -1.8516220357869455,
+        -1.865253675418001
+      ],
+      "transfer_log_margin": [
+        -0.11105271791255628,
+        -0.12300863283674436,
+        -0.11329503696751603,
+        -0.12456804046174685
+      ],
+      "information_simultaneous_lcb": [
+        -2.0045557214072107,
+        -2.0003512260682648,
+        -2.0007377855294055,
+        -2.019083649557848
+      ],
+      "transfer_simultaneous_lcb": [
+        -0.20857384989743594,
+        -0.213529450352547,
+        -0.2056060532781429,
+        -0.21862264240854906
+      ],
+      "information_pass": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "transfer_pass": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "cell_pass": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "absolute_transfer": {
+        "reference_point": [
+          1.2439429503284918,
+          1.2405969910827999,
+          1.2413168598478923,
+          1.2417432307109726
+        ],
+        "scored_point": [
+          0.998952330165812,
+          1.0008407046985337,
+          0.995143578359643,
+          1.0039901225263346
+        ],
+        "reference_charged_lower": [
+          0.9654703415635257,
+          0.9557993812551779,
+          0.9596350258572554,
+          0.9573130584308984
+        ],
+        "scored_charged_upper": [
+          0.998952330165812,
+          1.0008407046985337,
+          0.995143578359643,
+          1.0039901225263346
+        ]
+      },
+      "failure": "COMMON_MODE_BOUND"
+    },
+    "clean_min_information_ratio": 1.2263478847513087,
+    "contaminated_naive_min_information_ratio": 1.3173324541738878,
+    "clean_min_transfer_ratio": 1.0173128829562545,
+    "contaminated_naive_min_transfer_ratio": 1.2368082143939638,
+    "common_mode_true_power": 0.5,
+    "common_mode_charged_bound": [
+      0.6152610832331615,
+      0.6255284370759157,
+      0.619968163690577,
+      0.6254779591742032
+    ],
+    "common_mode_bound_estimator": {
+      "family": {
+        "members": 8,
+        "contents": "absolute repeatable control covariance for both paths and every frozen cell",
+        "method": "one-sided max-t cluster bootstrap",
+        "alpha": 0.025,
+        "draws": 10000,
+        "seed": 164178
+      },
+      "reference_point": [
+        0.49855259180049566,
+        0.500917566490488,
+        0.4998436353222676,
+        0.4994058017763899
+      ],
+      "scored_point": [
+        8.1768330454123e-06,
+        2.6103823294870602e-05,
+        5.112214726972903e-05,
+        1.423281809086315e-05
+      ],
+      "reference_ucb": [
+        0.6152610832331615,
+        0.6255284370759157,
+        0.619968163690577,
+        0.6254779591742032
+      ],
+      "scored_ucb": [
+        5.4079839671734705e-05,
+        7.906724243044423e-05,
+        0.00011487012139492652,
+        6.207265641259733e-05
+      ],
+      "critical_value": 3.722164939627471
+    }
+  },
+  "clean_common_mode_bound_estimator": {
+    "family": {
+      "members": 8,
+      "contents": "absolute repeatable control covariance for both paths and every frozen cell",
+      "method": "one-sided max-t cluster bootstrap",
+      "alpha": 0.025,
+      "draws": 10000,
+      "seed": 164175
+    },
+    "reference_point": [
+      4.5312163256464224e-05,
+      3.0822592640599624e-05,
+      1.656243117142701e-05,
+      3.342246371375533e-05
+    ],
+    "scored_point": [
+      8.1768330454123e-06,
+      2.6103823294870602e-05,
+      5.112214726972903e-05,
+      1.423281809086315e-05
+    ],
+    "reference_ucb": [
+      0.00011186249994702671,
+      9.159006727053111e-05,
+      6.968880285879546e-05,
+      9.526956653033874e-05
+    ],
+    "scored_ucb": [
+      5.4858594270217124e-05,
+      8.061360363907058e-05,
+      0.00011661450684839856,
+      6.403370646891428e-05
+    ],
+    "critical_value": 3.8311148390899206
+  },
+  "checks": {
+    "C1_shared_objective_allows_supported_dominance": true,
+    "C2_shared_objective_null_remains_common": true,
+    "C3_legitimate_case_is_admitted": true,
+    "C4_legitimate_case_keeps_every_cell": true,
+    "C5_known_input_yields_absolute_transfer_estimates": true,
+    "C6_unknown_input_refuses_absolute_transfer_labels": true,
+    "C7_single_weak_cell_is_rejected": true,
+    "C8_strong_cells_do_not_compensate": true,
+    "C9_clean_improvement_shape_fails_transfer_margin": true,
+    "C10_common_mode_raises_information_number": true,
+    "C11_common_mode_raises_transfer_number": true,
+    "C12_naive_improvement_shaped_case_would_pass": true,
+    "C13_charged_improvement_shaped_case_is_rejected": true,
+    "C14_common_mode_gate_names_the_failure": true,
+    "C15_gate_uses_one_noncompensating_family": true
+  },
+  "source": {
+    "dominance_py_sha256": "A005C9D6698366DA31BC5D1E4CFFEB1ECCDB72A27E728BFA2C8B0A88A44F5E0D",
+    "commission_py_sha256": "EEC951F26DB550E2F7F833A0E602B53246489BA83E99DD9358D0977787059363"
+  }
+}

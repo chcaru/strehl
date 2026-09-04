@@ -3,6 +3,13 @@
 Status: **CONDITIONAL ROUTE; SAMPLING-ONLY ADMISSION REJECTED; M1 REMAINS
 UNMEASURED**
 
+> **FORMAL FOLLOW-UP.** The complete estimator, simultaneous-inference family,
+> scored-path witness contract, common-mode charge and commissioning results
+> are now frozen in
+> `docs/research/M164-reference-dominance.md` and
+> `experiments/M164-reference-dominance/`. They supersede the schematic gate
+> in section 2 below without changing this document's identifiability ruling.
+
 ## 0. Ruling first
 
 **AMBIGUITY SURVIVES for the pair as stated.** A strictly higher subject-space
