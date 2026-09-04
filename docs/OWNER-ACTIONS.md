@@ -5,6 +5,57 @@ in `docs/STATUS.md` §2.9.28-2.9.30 and the lane reports named below.
 
 Maintained by the orchestrator. Last updated after lanes M130-M134.
 
+> **CORRECTION, and it is mine.** An earlier version of this page told you the
+> capture session reaches `4 of 12` and that buying Zerene reaches `12 of 12`.
+> **Both were wrong and both overstated what your money and time buy.** I had
+> credited the capture session with clearing blocker `(a)`. It does not. `(a)`
+> is *"missing admissible detail instrument"* — a **statistic**, not a capture.
+> The session supplies that instrument's required *inputs*; it cannot supply the
+> instrument. Corrected numbers are below, re-derived mechanically from the
+> scorecard's own table. The short version: **do not buy anything yet.**
+
+---
+
+## The one thing that actually gates this program
+
+**Blocker `(a)`, a working detail instrument, is required by 8 of the 12 axes.
+It is the only blocker that cannot be bought, shot, or coded around. It has to
+be invented, and it has already defeated several attempts.**
+
+Here is what each step really reaches. This is a mechanical re-derivation from
+the blocker table at `docs/proposals/2026-09-sota-scorecard.md:423-434`, not a
+summary of one:
+
+| after | clears | reaches | which axes |
+| --- | --- | --- | --- |
+| `crop-early` (in progress, free) | `b` | **`2 of 12`** | M8, M12 |
+| \+ capture session (`$0`, 45-60 min) | `b+c` | **`3 of 12`** | M8, M10, M12 |
+| \+ **Zerene `$189`** | `b+c+d` | **`4 of 12`** | M7, M8, M10, M12 |
+| \+ a working detail instrument | `a` | **`12 of 12`** | all |
+
+**Read the third row carefully. $189 buys exactly one additional axis** — M7,
+colour accuracy — and the scorecard says of M7 that *"No traceable colour target
+exists"*, so even that one needs a further purchase before it can be scored.
+
+There is a second, independent reason not to buy yet. The scorecard's decision
+rules say a comparative quality gate must use a **qualifying** comparator, and:
+
+> Once a replacement M1 is admitted, a comparator mode may define a noise,
+> artifact, speed, or memory envelope only if it passes the input/output
+> transfer audit and retains at least `98%` of the highest replacement-M1
+> information score achieved by any registered mode on that capture. [...]
+> **In v1.7 no mode can yet be quality-qualified.**
+> (`docs/proposals/2026-09-sota-scorecard.md:94-98`)
+
+**Zerene cannot be lawfully qualified as a comparator until the detail
+instrument exists.** Buying it today purchases a tool the scoring rules will not
+yet let us use for five of the axes it is meant to unlock. The money is not
+wasted, but it is early, and nothing is lost by spending it later.
+
+**So the program's critical path is not your wallet and not your time. It is a
+measurement problem, and it is mine to solve.** That work is now the top
+priority lane.
+
 ---
 
 ## Where the program actually stands
@@ -40,9 +91,9 @@ No action needed on any of these. They cost nothing and need none of your time.
 
 ---
 
-## Ask 1 — send one email. **$0, five minutes.** Do this first.
+## Ask 1 — send one email. **$0, five minutes.** No deadline, but do it before any purchase.
 
-**This is the highest-leverage thing you can do, and it protects the $189.**
+**It costs nothing, and it protects the $189 whenever you do spend it.**
 
 Blocker `(d)` — the Zerene/Helicon comparison — gates **8 of the 12 axes**. The
 entire point of it is to *publish* a comparison. Lane M132 read both vendors'
@@ -108,26 +159,54 @@ built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 
 ---
 
-## Ask 2 — the capture session. **$0, 45-60 minutes.**
+## Ask 2 — the capture session. **$0, 45-60 minutes.** *Now the most valuable thing you can do.*
 
-Clears blockers `(a)` and `(c)` **together**, which with `crop-early` reaches
-**`4 of 12`**.
+Clears blocker `(c)`, which with `crop-early` reaches **`3 of 12`** (M8, M10,
+M12).
+
+**But its real value is larger than that number.** The session is also where the
+*inputs* for the detail instrument come from — the dense checker-only reference,
+the two matched sw4 passes, the two matched sw10 passes, the darks and flats and
+the non-periodic sentinel (`docs/proposals/2026-09-sota-scorecard.md:544-551`).
+Since the detail instrument is now the program's critical path, **this session
+feeds the critical path.** It is the one owner action that unblocks the work
+that unblocks everything else.
+
+The scorecard is explicit that the existing material cannot be used for the
+scored value: the burned grid and the development-only slide *"may commission a
+new instrument but may never provide its scored value"*. So the session is not
+optional, and no amount of cleverness on existing stacks substitutes for it.
 
 Full protocol: `docs/capture-requests/2026-09-319-frame-session.md`.
 Needs one dry-run rehearsal at 1.30x first — see blockers 1 and 2 in that file.
 
-**This step is now known to come before the purchase.** Lane M131 ruled that
-Candidate 2 — the one route that might have cleared `(a)` from stacks already on
-disk, at no cost to you — **does not work**. Its synthetic result is genuine and
-survives audit, but it does not transfer to natural renders. Had it survived,
-$189 alone would have bought `6 of 12` with none of your time and the order
-would have reversed. It did not, so the free step goes first.
+**Why this comes before the purchase.** Lane M131 ruled that Candidate 2 — the
+one route that might have cleared `(a)` from stacks already on disk, at no cost
+to you — **does not work**. Its synthetic result is genuine and survives audit,
+but it does not transfer to natural renders. Had it survived, $189 alone would
+have bought `6 of 12` with none of your time and the order would have reversed.
+It did not.
 
 ---
 
-## Ask 3 — buy Zerene. **$189, or $289 depending on Ask 1.**
+## Ask 3 — buy Zerene. **$189, or $289 depending on Ask 1.** *Not yet. Wait.*
 
-Only after Ask 1 answers. Clears `(d)` and, with the above, reaches **`12 of 12`**.
+**Recommendation: do not buy this now.** It clears `(d)` and, with the two steps
+above, reaches **`4 of 12`** — one axis more than the session alone. It does
+*not* reach `12 of 12`; that needs the detail instrument, which no purchase
+provides.
+
+Two reasons to wait, neither of which is about the money:
+
+1. **The scoring rules will not let us use it yet.** No comparator can be
+   quality-qualified until a replacement M1 is admitted, so five of the axes
+   Zerene is meant to unlock stay blocked with it sitting installed.
+2. **A licence bought now starts ageing against a program whose gating work is
+   measured in research, not weeks.** We already lost one trial that way.
+
+Buy it when the detail instrument is admitted and the capture exists — then it
+converts immediately, and Ask 1's answer will already be in hand. Nothing is
+lost by the delay and the $189 stays in your pocket meanwhile.
 
 Zerene is already installed here at `1.04T2026-05-04-0750`, but its trial is
 **consumed and expired** (`License category = TRIAL`, expired `2026-06-06`), so
