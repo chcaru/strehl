@@ -1,6 +1,7 @@
 {
   "checks": {
     "binary_guard_red": true,
+    "defect_concentration": true,
     "defect_peak": true,
     "defect_safe": true,
     "dtype_guard_red": true,

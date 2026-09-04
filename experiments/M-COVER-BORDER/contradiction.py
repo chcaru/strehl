@@ -131,17 +131,20 @@ def residual_masses(
     residual = candidate_mean / deep_ratio - reference_mean
     denominator = float(np.sum(reference_mean * count, dtype=np.float64))
     values = residual * count
+    signed = float(np.sum(values, dtype=np.float64))
+    absolute = float(np.sum(np.abs(values), dtype=np.float64))
+    positive = float(np.sum(np.maximum(values, 0.0), dtype=np.float64))
+    negative = float(np.sum(np.maximum(-values, 0.0), dtype=np.float64))
     return {
-        "signed_fraction": float(np.sum(values, dtype=np.float64) / denominator),
-        "absolute_fraction": float(
-            np.sum(np.abs(values), dtype=np.float64) / denominator
-        ),
-        "positive_fraction": float(
-            np.sum(np.maximum(values, 0.0), dtype=np.float64) / denominator
-        ),
-        "negative_fraction": float(
-            np.sum(np.maximum(-values, 0.0), dtype=np.float64) / denominator
-        ),
+        "denominator_level_sum": denominator,
+        "signed_level_sum": signed,
+        "absolute_level_sum": absolute,
+        "positive_level_sum": positive,
+        "negative_level_sum": negative,
+        "signed_fraction": signed / denominator,
+        "absolute_fraction": absolute / denominator,
+        "positive_fraction": positive / denominator,
+        "negative_fraction": negative / denominator,
     }
 
 
@@ -238,8 +241,8 @@ def mode_profile(b7: dict[str, Any], b2: dict[str, Any]) -> dict[str, Any]:
         float(profile["deep_ratio"]),
     )
     concentration = ratio(
-        through_256["positive_fraction"],
-        full["positive_fraction"],
+        through_256["positive_level_sum"],
+        full["positive_level_sum"],
     )
     return {
         "profile": profile,
@@ -360,6 +363,13 @@ def command_commission(args: argparse.Namespace) -> int:
     defect_mass = residual_masses(
         defect_sums, control_sums, counts, float(defect["deep_ratio"])
     )
+    defect_mass_through_256 = residual_masses(
+        defect_sums,
+        control_sums,
+        counts,
+        float(defect["deep_ratio"]),
+        256,
+    )
     improved_mass = residual_masses(
         improved_sums, control_sums, counts, float(improved["deep_ratio"])
     )
@@ -425,6 +435,12 @@ def command_commission(args: argparse.Namespace) -> int:
         "improvement_safe": improved["safe_inset_px"] == 8,
         "improvement_mass": improved_mass["positive_fraction"]
         <= 0.05 * defect_mass["positive_fraction"],
+        "defect_concentration": math.isclose(
+            defect_mass_through_256["positive_level_sum"]
+            / defect_mass["positive_level_sum"],
+            1.0,
+            abs_tol=1e-12,
+        ),
         "restoration_safe": restored["safe_inset_px"]
         == defect["safe_inset_px"],
         "restoration_rows": restored["rows"] == defect["rows"],
