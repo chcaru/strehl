@@ -1,0 +1,121 @@
+{
+  "checks": [
+    {
+      "detail": "VERDICT: `SOUND WITH REPAIRS`",
+      "name": "report contains VERDICT: `SOUND WITH REPAIRS`",
+      "passed": true
+    },
+    {
+      "detail": "Threat 1",
+      "name": "report contains Threat 1",
+      "passed": true
+    },
+    {
+      "detail": "Threat 2",
+      "name": "report contains Threat 2",
+      "passed": true
+    },
+    {
+      "detail": "Threat 3",
+      "name": "report contains Threat 3",
+      "passed": true
+    },
+    {
+      "detail": "Threat 4",
+      "name": "report contains Threat 4",
+      "passed": true
+    },
+    {
+      "detail": "Threat 5",
+      "name": "report contains Threat 5",
+      "passed": true
+    },
+    {
+      "detail": "Threat 6",
+      "name": "report contains Threat 6",
+      "passed": true
+    },
+    {
+      "detail": "X'=KX",
+      "name": "report contains X'=KX",
+      "passed": true
+    },
+    {
+      "detail": "reference-path",
+      "name": "report contains reference-path",
+      "passed": true
+    },
+    {
+      "detail": "2.0312030",
+      "name": "report contains 2.0312030",
+      "passed": true
+    },
+    {
+      "detail": "0.1230798",
+      "name": "report contains 0.1230798",
+      "passed": true
+    },
+    {
+      "detail": "-23.81%",
+      "name": "report contains -23.81%",
+      "passed": true
+    },
+    {
+      "detail": "7.87%",
+      "name": "report contains 7.87%",
+      "passed": true
+    },
+    {
+      "detail": "139.62 um",
+      "name": "report contains 139.62 um",
+      "passed": true
+    },
+    {
+      "detail": "37.92\u201348.18 um",
+      "name": "report contains 37.92\u201348.18 um",
+      "passed": true
+    },
+    {
+      "detail": "24,576",
+      "name": "report contains 24,576",
+      "passed": true
+    },
+    {
+      "detail": "Exact pre-capture repair set",
+      "name": "report contains Exact pre-capture repair set",
+      "passed": true
+    },
+    {
+      "detail": "FATALLY FLAWED",
+      "name": "report contains FATALLY FLAWED",
+      "passed": true
+    },
+    {
+      "detail": "PASS",
+      "name": "analysis artifact passed",
+      "passed": true
+    },
+    {
+      "detail": {
+        "passed": 14,
+        "status": "PASS",
+        "total": 14
+      },
+      "name": "witness verifier passed",
+      "passed": true
+    },
+    {
+      "detail": "running/reading/inferred",
+      "name": "all evidence labels are present",
+      "passed": true
+    },
+    {
+      "detail": "no unqualified sound verdict",
+      "name": "report does not claim design sound without qualification",
+      "passed": true
+    }
+  ],
+  "passed": 22,
+  "status": "PASS",
+  "total": 22
+}

@@ -1,0 +1,95 @@
+{
+  "checks": [
+    {
+      "detail": "PASS",
+      "name": "analysis status",
+      "passed": true
+    },
+    {
+      "detail": 1.2412670766236366e-16,
+      "name": "gauge preserves reference",
+      "passed": true
+    },
+    {
+      "detail": [
+        2.7755575615628914e-17,
+        0.0
+      ],
+      "name": "gauge preserves every output",
+      "passed": true
+    },
+    {
+      "detail": {
+        "world_a": [
+          0.5249999999999999,
+          0.7499999999999999
+        ],
+        "world_b": [
+          0.5249999999999999,
+          0.7499999999999999
+        ]
+      },
+      "name": "relative transfer gate passes both worlds",
+      "passed": true
+    },
+    {
+      "detail": 0.12307977049787157,
+      "name": "licensed band is far below reference Nyquist",
+      "passed": true
+    },
+    {
+      "detail": 2.0126457,
+      "name": "M147 nominal lower bound clears 2x",
+      "passed": true
+    },
+    {
+      "detail": 8.070249385317878,
+      "name": "1.30 target does not fit eight guarded rows",
+      "passed": true
+    },
+    {
+      "detail": 7.947972879479728,
+      "name": "1.32 target barely fits eight guarded rows",
+      "passed": true
+    },
+    {
+      "detail": 42,
+      "name": "64 macro rows limit unspecified feature dimensions",
+      "passed": true
+    },
+    {
+      "detail": 24576,
+      "name": "full 128-square support needs explicit micro-sites",
+      "passed": true
+    },
+    {
+      "detail": [
+        3,
+        4
+      ],
+      "name": "three strips are not guaranteed on short axis",
+      "passed": true
+    },
+    {
+      "detail": [
+        5,
+        6
+      ],
+      "name": "long-axis tilt needs more than three strips",
+      "passed": true
+    },
+    {
+      "detail": -23.809523809523803,
+      "name": "common reference error materially biases transfer",
+      "passed": true
+    },
+    {
+      "detail": 7.870739250216063,
+      "name": "shared error can inflate squared correlation",
+      "passed": true
+    }
+  ],
+  "passed": 14,
+  "status": "PASS",
+  "total": 14
+}

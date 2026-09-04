@@ -1,0 +1,145 @@
+{
+  "absolute_scene_gauge": {
+    "both_worlds_reference_stronger": true,
+    "interpretation": "Absolute X and G are not separately identified; the observations do identify the scoped reference-path latent GX.",
+    "observed_output_to_reference_ratios_a": [
+      0.5249999999999999,
+      0.7499999999999999
+    ],
+    "observed_output_to_reference_ratios_b": [
+      0.5249999999999999,
+      0.7499999999999999
+    ],
+    "output_observation_max_errors": [
+      2.7755575615628914e-17,
+      0.0
+    ],
+    "reference_observation_max_error": 1.2412670766236366e-16,
+    "reference_transfer_a": 0.8,
+    "reference_transfer_b": 0.6666666666666667,
+    "scene_a": [
+      [
+        0.7,
+        -0.2
+      ],
+      [
+        -0.1,
+        0.9
+      ],
+      [
+        1.2,
+        0.4
+      ],
+      [
+        -0.6,
+        -0.5
+      ]
+    ],
+    "scene_b": [
+      [
+        0.84,
+        -0.24
+      ],
+      [
+        -0.12,
+        1.08
+      ],
+      [
+        1.44,
+        0.48
+      ],
+      [
+        -0.72,
+        -0.6
+      ]
+    ]
+  },
+  "correlated_reference_error": {
+    "clean_squared_correlation": 0.7066942719116632,
+    "estimated_with_reference_only_common_error": 0.380952380952381,
+    "interpretation": "Disjoint fitted masters do not make reference-half errors independent; common residual covariance biases both the cross-transfer denominator and canonical information.",
+    "relative_transfer_bias_percent": -23.809523809523803,
+    "shared_error_squared_correlation": 0.7623163353500432,
+    "squared_correlation_change_percent": 7.870739250216063,
+    "true_output_to_reference_transfer": 0.5
+  },
+  "diffraction": {
+    "interpretation": "Diffraction-only cutoffs clear the licensed band, but this does not bound Viltrox aberration or establish information superiority.",
+    "licensed_object_frequency_cy_mm": 64.90696378830084,
+    "reference_object_cutoff_range_cy_mm": [
+      286.38497652582157,
+      368.58006042296074
+    ],
+    "scored_object_cutoff_range_cy_mm": [
+      184.70855412566235,
+      228.0373831775701
+    ]
+  },
+  "fixed_focus_coverage": {
+    "depth_span_um_across_12mm": 209.42887724740214,
+    "depth_span_um_across_8mm": 139.61925149826808,
+    "depth_span_um_across_diagonal": 251.70218515945396,
+    "interpretation": "Three strips are not guaranteed even under a permissive two-pixel circle of confusion; overlap and seam guards reduce the listed ideal coverage further.",
+    "one_pixel_dof_um_range": [
+      18.962069665120303,
+      24.08780325618931
+    ],
+    "strips_needed_two_pixel_diagonal_range": [
+      6,
+      7
+    ],
+    "strips_needed_two_pixel_long_axis_range": [
+      5,
+      6
+    ],
+    "strips_needed_two_pixel_short_axis_range": [
+      3,
+      4
+    ],
+    "three_strip_coverage_um_range": [
+      113.77241799072182,
+      144.52681953713585
+    ],
+    "tilt_degrees": 1.0,
+    "two_pixel_dof_um_range": [
+      37.92413933024061,
+      48.17560651237862
+    ]
+  },
+  "rank_contract": {
+    "full_128_by_128_output_dimension": 16384,
+    "interpretation": "The target must freeze additional independently coded micro-site rows or a smaller theorem-bearing output support; 64 unspecified macro-sites do not determine covariance rank.",
+    "largest_dimension_if_each_macro_site_is_one_row": 42,
+    "macro_sites": 64,
+    "required_n_over_max_dimension": 1.5,
+    "rows_required_for_full_128_by_128_output": 24576
+  },
+  "sampling": {
+    "licensed_frequency_reference_cyc_px": 0.12307977049787157,
+    "licensed_frequency_scored_cyc_px": 0.25,
+    "m147_lower_headroom_percent": 0.6322850000000102,
+    "m147_nominal_lower": 2.0126457,
+    "m147_nominal_point": 2.0329159,
+    "margin_over_2x_relative_to_achieved_percent": 1.536183601702748,
+    "margin_over_2x_relative_to_threshold_percent": 1.5601503759398394,
+    "pixel_pitch_um": 5.122716894977169,
+    "reference_lower_magnification": 2.7015,
+    "reference_samples_per_licensed_cycle": 8.124812030075187,
+    "sampling_ratio": 2.031203007518797,
+    "scored_max_magnification": 1.33
+  },
+  "status": "PASS",
+  "target_packing": {
+    "cell_span_mm_at_1_30": 1.0087811731647347,
+    "cell_span_mm_at_1_32": 0.993496609934966,
+    "cell_span_mm_at_1_33": 0.9860267106121468,
+    "cell_span_scored_px": 256,
+    "eight_rows_mm_at_1_30": 8.070249385317878,
+    "eight_rows_mm_at_1_32": 7.947972879479728,
+    "eight_rows_mm_at_1_33": 7.888213684897174,
+    "minimum_magnification_for_eight_rows_in_8mm": 1.3114155251141553,
+    "reference_field_height_mm": 8.846936886914678,
+    "reference_field_width_mm": 13.28891356653711,
+    "ten_columns_mm_at_1_32": 9.93496609934966
+  }
+}
