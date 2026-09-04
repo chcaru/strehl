@@ -5793,6 +5793,122 @@ commissioning, gated on a host that is now finally moving.
 
 ---
 
+### 2.9.53 The blocked half and the unblocked half — a scheduling error of mine was costing three axes (M157, M161, M163, M164, orchestrator, 2026-09-06)
+
+**The correction is mine and it is the point of this section.** §2.9.52 recorded that one
+capture unblocks three of the seven gating axes, because M1, M2 and M9 are void for one
+shared cause. That is still true. What I got wrong is what follows from it.
+
+M135's prescribed fix has two components: a **truth reference** and a **transfer veto**.
+I had been treating those as a single blocked unit, because the truth reference needs a
+fresh physical capture the owner has not made. But only the reference needs the capture.
+**The veto compares two outputs to each other and asks whether one is consistent with the
+other under a common filter. That needs no ground truth and no new capture, and it can be
+built and commissioned entirely on data already on disk.**
+
+So for some time now the largest piece of *unblocked* work in the program has been sitting
+unstaffed, filed behind a blocker that only covers half of it. Lane **M164** is now on it.
+Its contract is admissibility, not quality: given two rendered outputs, decide whether the
+comparison is answerable at all, and refuse it when `B` is consistent with `A` under a
+common transfer. It must fire on planted blur, on planted sharpening, on resampling, and on
+blur composed with gain — that last one because a common *scalar* transfer is exactly what
+the retired statistics were proved invariant to. It must not fire on identity, nor on
+genuinely different renders that differ by something which is not a common transfer. Both
+halves are required: a veto that fires on everything blocks the program permanently by
+declaring every comparison inadmissible.
+
+The sharpening direction is weighted deliberately. This program has already been burned by
+a statistic whose error was bounded below by zero, so that it could ignore a halo but could
+never charge for one. **A veto that catches blur but not sharpening is half a veto.**
+
+**M10 is three gaps, not one, and I had written otherwise where the owner would read it.**
+`OWNER-ACTIONS.md` headed Ask 2d *"This is the whole of M10"*. Since M161 voided the M10
+instrument that has been wrong, and the same ask further claimed the angle was *"the only
+thing standing between M10 and being measurable"*, which is now false twice over. The three
+gaps are: the tilt angle measured to specification, which is the owner's and is the only one
+of the three needing him; a depth product that does not yet exist, which is unstaffed; and
+the void instrument itself, now lane **M163**. The heading is corrected, the bar is not
+moved — the admissible band is still `[10.014357, 10.516727] deg` and the three tilted-ruler
+stacks are still `BURNED — DEVELOPMENT ONLY` — and negative controls `NC22` and `NC23` exist
+specifically to catch either being quietly relaxed later.
+
+M163's assignment carries one warning worth repeating here, because it generalises. **An
+instrument that ignores its uncertainty input looks better behaved than a correct one.** It
+produces clean, stable, confident numbers precisely because nothing is ever allowed to widen
+them. If the repair makes M10 noisier, less decisive, or newly unable to conclude, that is
+the repair working. A correct instrument that says *cannot conclude* is worth more here than
+a broken one that says PASS.
+
+**Buying Zerene does not close the gate it appears to close.** M157 is now committed at
+`docs/research/M157-comparator-viability.md` (it ran as a `research` agent, which cannot
+write files, so its deliverable existed only in a transcript and would have been lost with
+the session). Its decisive finding is an absence: the scorecard requires every program to
+emit a native-size 16-bit **linear** TIFF, and Zerene's public documentation never binds
+that contract to `Save Adjusted Input Images` — **[NOT FOUND]** across the FAQ, how-to page,
+modification history, Batch API, browser-UA raw HTML and the vendor's own full-text search.
+What is verified is only that the command exports adjusted *input* images rather than a
+PMax/DMap result. So a licence clears the **licence** gate and must not be recorded as
+closing the **common-linear-input** gate. Rather than add an ask, the existing `$0` email now
+settles all three questions at once, and its "if they say yes" branch is conditional on the
+output contract, with an explicit instruction to stop before buying if the answer comes back
+gamma-encoded or 8-bit.
+
+**A verification spiral, ended.** Lane M136 had run 7.7 hours and spawned **fifteen** distinct
+sub-agents — verifiers, audits of verifiers, re-audits, and audits of the re-audits. Each pass
+was buying less than it cost. This is the failure mode that the program's own verification
+discipline invites if nothing bounds it: the discipline is correct, and it is still possible
+to spend the whole night on it and score nothing. M136 has been given a hard land-or-forfeit,
+with forfeit explicitly acceptable. M139 has likewise been told to deliver from existing data
+or declare the measurement impossible — and for M139 the **admission rule** is the deliverable
+I actually want, not the verdict: its `<=5%` host-load gate rejected 23 of 23 attempts, and a
+gate that never admits anything is indistinguishable from a broken instrument, which is the
+fourth time this program has met that pattern.
+
+**Two lanes landed while this section was being written, and both are recorded here rather
+than deferred.**
+
+**M160 applied the scorecard reconciliation** (`513ea3fe`, verified by me against the commit
+rather than the lane's report). The publication gates are now exactly M1, M2, M3, M8, M9,
+M10, M11. M4, M5, M6, M7 and M12 become mandatory disclosures, and a third verdict state,
+`DISCLOSURE MISS`, now exists so that a run clearing all seven gates while missing a
+disclosure cannot be read as a clean pass. M4 and M12 survive only as narrow anti-cheat
+components of the joint cards — the flat-power tell on the same output as the detail and
+noise claim, and byte-identity across the worker ladder — because those guards protect the
+owner's own sentence from being satisfied by a cheat. The required comparator set is Zerene
+PMax, Zerene DMap and the frozen fork; Helicon is optional everywhere. **No bar moved and no
+FAIL was erased: M8 still reads FAIL at `1.030569%`.** 51/51 forward checks, 12/12 controls.
+
+**M161 ratified the M3 bar** (`47d67a9f`, `docs/research/M161-m3-ratification.md`) at
+`max_e max(h_e,v_e) <= 0.05`. It is worth being explicit that this **tightens** the
+scorecard rather than relaxing it — the lane was told that if the defensible bar was one
+`strehl` fails, that was the correct answer, and it did not pick a passable number. **M3's
+verdict is BLOCKED**, not measured: formal commissioning needs the host, and the
+common-input manifest, the comparator packages and the external warp profiles do not exist
+yet.
+
+**M161 also corrected my critical-path claim, and the correction stands.** §2.9.52 and the
+opening of this section say *one capture* unblocks three axes. In the lane's words: **one
+inversion stack cannot alone unblock M1, M2 and M9; one coordinated session can capture
+their distinct required repeats.** The difference is not pedantic — it is the difference
+between an owner instruction that fits in one sitting and one that must be planned as a
+session with per-axis repeat counts. The owner-facing asks must say *session*, not *stack*,
+before he shoots anything.
+
+**The scoreboard, stated precisely, because I had been stating it loosely.** Zero of seven
+gating axes have **passed**. That is not the same as zero scored: the scorecard records M8 as
+*"the only axis in the program with a produced-and-read score"* — `FAIL`, M8-R `1.030569%`
+and M8-O `1.326144%` against a bar of exactly `0.0000%`. So the honest sentence is **zero of
+seven passed, exactly one scored, and the one that scored failed.** Writing "zero scored"
+was convenient shorthand that understated what the program has actually established, and in
+a document whose whole purpose is to resist convenient shorthand.
+
+What changed tonight is staffing, scope and honesty, not the pass count: three lanes now
+point at unblocked work that was previously mis-filed as blocked, the scorecard's operative
+text finally matches the owner's plan, one owner-facing overstatement is corrected, and one
+audit regress is stopped.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
