@@ -2004,6 +2004,16 @@ trips `0/300`. The instrument fires on overshoot and only on overshoot.
 `docs/research/M8-overshoot.md`, commit `76b3d9cc`. Every number above was
 checked against that file before this section was written.
 
+**Two qualifications that change what the number means, both from the same
+report.** First, all three arms were measured **under `cover=scale`** -- the
+per-arm rescale factors `k` are `0.9862`, `0.9870` and `0.9859`. So
+`1.030569%` is a property of the pipeline *as it ships*, not a proven property
+of the merge algorithm. Second, and pointing the same way: **the identity arm
+reads exactly `0` violations across `32,919,152` values.** Where nothing is
+resampled, nothing overshoots. Taken together these say the defect is
+resampling-borne, and they leave open only *which* resample -- the per-frame
+registration warp, or the whole-frame coverage rescale.
+
 **This is a real defect in the pictures, not a measurement artifact.** Values
 outside the source hull are invented. At `+586` DN they are visible, and they
 are the signature of ringing -- which is the same family as the halo already
