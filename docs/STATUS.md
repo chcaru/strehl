@@ -4537,6 +4537,96 @@ external fact. **This is the program's most reliable failure mode and it is not
 a coincidence — it is what happens when the author of a bar is also the party
 graded by it.**
 
+### 2.9.44 Every existing frame was shot with stabilisation on, and two more of my own constraints were refused (M141, M143, M130, M142, M144, orchestrator, 2026-09-05)
+
+Five lanes reported inside one window. Taken together they say the same thing
+from five directions: **the program's binding constraints are the ones I wrote
+myself, and the evidence base is thinner than the file count suggests.**
+
+**M141 inventoried every frame on disk against the capture request, and found
+the archive cannot serve a scored result.** 68 stacks, 10,509 ARW files, 154
+distinct setting segments. The finding I re-derived myself before publishing it:
+**every one of those 154 segments reports `image_stabilization: On`**, while the
+protocol requires it off (`docs/capture-requests/2026-09-319-frame-session.md`).
+Metadata cannot prove a physical switch position, and a lens-side switch may not
+be recorded at all — so this is not proof of a mistake. It is the absence of
+proof of correctness: **no existing frame demonstrates the required state.**
+Coverage of the requested design is **zero under both candidate designs** — 0 of
+24 blocks under the committed 603-frame request, 0 of 21 under lane-TRUTH's
+448-frame alternative. Separately, 35 of 68 stack directories carry no evidence
+row at all and are now marked `INDETERMINATE - DO NOT ASSUME CLEAN`, while 16
+clean holdout rows are protected. The 657-frame `high-res-calibration-slide-cpl`
+unit is confirmed **burned** and may be used to commission an instrument but
+never to score one. All three findings are in
+`docs/OWNER-ACTIONS.md`, because they change what the owner should do before he
+shoots rather than what any lane should compute.
+
+**M143 sent the rebuilt W1 gate back, and refuted my hypothesis while doing it.**
+I had suspected the `<=0.90` residual-ratio constant was tuned against
+`NO_COMMON_K` survivors. It was not, and M143 said so explicitly rather than
+accepting a convenient accusation from the orchestrator. The constant is
+nevertheless unusable, for a better reason: it was inserted into the withdrawn
+Phase-1 proposal without derivation, validated only against synthetic effects
+placed deliberately far from its own boundary, and then **carried across a change
+of estimand** — from a spatial shared-green band-power ratio to a per-CFA
+temporal variance ratio. It also demands less than it appears to: `sqrt(0.90) =
+0.948683`, a **5.13% RMS reduction**. Five further defects accompany it,
+including a repeat of the finding that the adjudicator can still return
+`PHASE1_GO` on assertions rather than evidence. The gate is under repair and is
+**not frozen**. A second independent review is owed once it is, and it will not
+be M138's or M143's author.
+
+**M130 landed crop-early and cleared a scorecard blocker.** Crop retention rises
+from **64.6% to 96.2%** (`8e83dced`). Its claim that a rustfmt pass was
+formatting-only survived only the third verification attempt: a naive token
+compare failed, normalising import order and trailing commas still failed, and
+the third pass located a single redundant brace pair that rustfmt had collapsed
+around a one-expression match arm. Inert, and confirmed by reading it. The
+lesson generalises: **`git diff -w` is not sufficient to certify a rustfmt pass,
+and a check that fails twice may still be reporting something inert** - narrow
+to the exact construct rather than loosening the check.
+
+**M142 refused to build, and it was right twice.** Four pre-build challenges, of
+which **two were defects in my own dispatch**. I told it to build in the shared
+`crates/` tree; M136's frozen protocol requires a private snapshot and forbids
+touching shared crates. M142 proposed reinterpreting the frozen preregistration
+to accommodate my instruction, and I declined - **bending a frozen protocol to
+fit a bad instruction from the orchestrator is precisely the move this program
+must never make.** I withdrew the instruction instead. I also told it to author
+both the checker and its verifier, violating M136's own independence rule; it
+declined to self-certify and I reassigned the verifier. Its remaining two
+challenges - an unmapped representation notation and an underspecified G1/G2
+reduction that can change the verdict - went to M136 as prospective
+interpretations that must not alter the decision rule.
+
+**M144 says do not spend the $660, and corrected a misconception of mine in the
+process.** The item is not a better detail reference; it is a matte ISA
+ColorGauge Nano plus certificate, serving M7 colour accuracy. It changes no
+current verdict, and ISA has not published the certificate's numerical
+uncertainty - so a $0 email precedes any purchase, with a falsifiable rule in
+both directions (`U95 > 0.25 DeltaE00` rejects; a conforming certificate
+reverses the recommendation). Two of its side findings matter more than the
+purchase. **Reference precision cannot rescue M8**: the historical failure
+exceeded tolerance by a factor of 122,237, which is not a reference problem.
+And the capture design now under discussion carries a sampling margin of only
+**1.54%** - a proposed ratio of `2.0312x` against a `2.0x` requirement - which,
+combined with M141's finding that reproduction ratio is metadata-recoverable for
+**0 of 68** existing stacks, means a hand-set magnification error could
+invalidate a session without leaving any trace in the files. That is now a
+question to lane-TRUTH rather than an assumption.
+
+**Two consequences I am carrying.** First, the tally of constraints authored by
+this program rather than derived from evidence now stands at **six**, and
+tonight two of them were caught by lanes declining to comply rather than by me
+auditing myself. That ratio is the honest measure of how well the orchestrator
+is policing its own output, and it is not flattering. Second, I protected one
+flank of a host-contention problem and left the other open: I held M142 off
+compilation to protect M139's timing campaign, but never held M130, which ran
+121 cargo tests and two long RAW-decoding freezes inside the same window. M139
+has been told to **discard and re-run** any affected measurement rather than
+adjust it, because a timing number repaired after the fact is not a timing
+number.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
