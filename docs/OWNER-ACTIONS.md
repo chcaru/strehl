@@ -28,10 +28,44 @@ summary of one:
 
 | after | clears | reaches | which axes |
 | --- | --- | --- | --- |
-| `crop-early` (in progress, free) | `b` | **`2 of 12`** | M8, M12 |
+| `crop-early` — **DONE, free** | `b` | **`2 of 12`** | M8, M12 |
 | \+ capture session (`$0`, 45-60 min) | `b+c` | **`3 of 12`** | M8, M10, M12 |
 | \+ **Zerene `$189`** + a colour target | `b+c+d` | **`4 of 12`** | M7, M8, M10, M12 |
 | \+ a working detail instrument | `a` | **`12 of 12`** | all |
+
+> ### One decision from you is worth four axes, and it costs nothing
+>
+> **Every number in the table above assumes a rule I wrote and never checked
+> against your plan.** I have since had it audited: the rule says no comparator
+> can define a noise, artifact, speed or memory result until a new detail
+> instrument exists. **It appears nowhere in your plan.** I added it.
+>
+> A mechanical re-derivation of all sixteen blocker combinations shows what it
+> costs you:
+>
+> | after | with my rule | without it |
+> | --- | --- | --- |
+> | Zerene + colour target | `2 of 12` | **`6 of 12`** |
+> | \+ the capture session | `4 of 12` | **`8 of 12`** |
+>
+> **Same money. Same shooting. Twice the scoreboard.** The reason is that four
+> axes — noise, artifact, flat power and throughput — do not actually need a
+> detail instrument to be scored; my rule was blocking them anyway. Four others
+> (M1, M5, M6, M9) genuinely do need one, and those stay blocked either way.
+>
+> **The honest case for keeping it:** it stops a deliberately blurred fast mode
+> from being crowned the quality comparator, which is a real way to fake a win.
+> **The honest case against:** your plan asks only for comparators *"at matched
+> output"*, and it is not my place to spend four axes of your money enforcing a
+> stricter bar you never asked for.
+>
+> **What I need from you: keep it, narrow it, or drop it.** I am not going to
+> quietly pick, because I am the one who benefits from the stricter version —
+> it makes the eventual claim stronger while costing *you* the axes. **It
+> changes nothing today** (with only `crop-early` done, all three answers leave
+> exactly M8 and M12 scoreable), so there is no rush — but it should be your
+> call before you spend anything.
+
 
 **Read the third row carefully. $189 buys exactly one additional axis** — M7,
 colour accuracy — and the scorecard says of M7 that *"No traceable colour target
