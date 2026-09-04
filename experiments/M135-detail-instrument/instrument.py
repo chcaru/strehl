@@ -18,6 +18,9 @@ MIN_EFFECTIVE_BITS = 12
 MAX_CALIBRATION_CORRELATION = 0.05
 NO_CLAIM_FLOOR_BITS = 0.10
 PERMUTATION_COUNT = 32
+MAX_FLAT_INFORMATION_RATIO = 0.10
+MAX_FLAT_REFERENCE_POWER_RATIO = 0.25
+MAX_FLAT_OUTPUT_POWER_RATIO = 0.10
 
 
 @dataclass(frozen=True)
@@ -148,11 +151,7 @@ def _status(captures: CaptureSet) -> tuple[str, dict[str, Any]]:
     return "ELIGIBLE", diagnostics
 
 
-def evaluate(captures: CaptureSet) -> dict[str, Any]:
-    status, diagnostics = _status(captures)
-    if status != "ELIGIBLE":
-        return {"status": status, "reference": diagnostics}
-
+def _information_summary(captures: CaptureSet) -> dict[str, Any]:
     r1 = captures.reference_a
     r2 = captures.reference_b
     y1 = captures.output_a
@@ -174,13 +173,39 @@ def evaluate(captures: CaptureSet) -> dict[str, Any]:
             cell_scores_by_pair.append(cells)
             pair_scores.append(float(np.mean(cells)))
 
-    information = float(np.min(pair_scores))
+    minimum_pair = int(np.argmin(pair_scores))
+    return {
+        "information_bits_per_site": float(pair_scores[minimum_pair]),
+        "pair_scores": pair_scores,
+        "cell_scores_min_pair": cell_scores_by_pair[minimum_pair].tolist(),
+    }
+
+
+def _repeatable_power(a: np.ndarray, b: np.ndarray) -> float:
+    powers = [
+        max(0.0, float(np.real(_complex_cov(a[:, cell], b[:, cell]))))
+        for cell in range(a.shape[1])
+    ]
+    return float(np.mean(powers))
+
+
+def _evaluate_core(captures: CaptureSet) -> dict[str, Any]:
+    status, diagnostics = _status(captures)
+    if status != "ELIGIBLE":
+        return {"status": status, "reference": diagnostics}
+
+    r1 = captures.reference_a
+    r2 = captures.reference_b
+    y1 = captures.output_a
+    y2 = captures.output_b
+    information_summary = _information_summary(captures)
+    information = information_summary["information_bits_per_site"]
     if information < NO_CLAIM_FLOOR_BITS:
         return {
             "status": "NO_EVIDENCE",
             "reference": diagnostics,
             "information_bits_per_site": information,
-            "pair_scores": pair_scores,
+            "pair_scores": information_summary["pair_scores"],
         }
 
     transfers = []
@@ -213,10 +238,128 @@ def evaluate(captures: CaptureSet) -> dict[str, Any]:
         "transfer": transfer,
         "unexplained_fraction": float(np.median(unexplained)),
         "noise_to_explained": float(np.median(noise_ratios)),
-        "pair_scores": pair_scores,
-        "cell_scores_min_pair": cell_scores_by_pair[int(np.argmin(pair_scores))].tolist(),
+        "pair_scores": information_summary["pair_scores"],
+        "cell_scores_min_pair": information_summary["cell_scores_min_pair"],
         "reference": diagnostics,
     }
+    return result
+
+
+def _flat_diagnostic(
+    captures: CaptureSet,
+    flat_control: CaptureSet,
+    detail_result: dict[str, Any],
+) -> dict[str, Any]:
+    flat_status, flat_reference = _status(flat_control)
+    flat_information: float | None = None
+    valid_shape = (
+        flat_control.reference_a.ndim == 2
+        and flat_control.reference_b.ndim == 2
+        and flat_control.output_a.ndim == 2
+        and flat_control.output_b.ndim == 2
+        and len(
+            {
+                flat_control.reference_a.shape,
+                flat_control.reference_b.shape,
+                flat_control.output_a.shape,
+                flat_control.output_b.shape,
+            }
+        )
+        == 1
+        and flat_control.reference_a.shape[1] == len(FREQUENCIES)
+        and np.all(np.isfinite(flat_control.reference_a))
+        and np.all(np.isfinite(flat_control.reference_b))
+        and np.all(np.isfinite(flat_control.output_a))
+        and np.all(np.isfinite(flat_control.output_b))
+    )
+    if valid_shape:
+        flat_information = _information_summary(flat_control)[
+            "information_bits_per_site"
+        ]
+
+    detail_information = detail_result.get("information_bits_per_site")
+    information_ratio = (
+        float(flat_information / detail_information)
+        if flat_information is not None
+        and detail_information is not None
+        and detail_information > 0.0
+        else None
+    )
+
+    reference_ratio = None
+    output_ratio = None
+    if valid_shape and captures.reference_a.shape == flat_control.reference_a.shape:
+        detail_reference_power = _repeatable_power(
+            captures.reference_a, captures.reference_b
+        )
+        detail_output_power = _repeatable_power(captures.output_a, captures.output_b)
+        flat_reference_power = _repeatable_power(
+            flat_control.reference_a, flat_control.reference_b
+        )
+        flat_output_power = _repeatable_power(
+            flat_control.output_a, flat_control.output_b
+        )
+        if detail_reference_power > 0.0:
+            reference_ratio = float(flat_reference_power / detail_reference_power)
+        if detail_output_power > 0.0:
+            output_ratio = float(flat_output_power / detail_output_power)
+    else:
+        detail_reference_power = None
+        detail_output_power = None
+        flat_reference_power = None
+        flat_output_power = None
+
+    passes = bool(
+        flat_status == "NO_DETAIL"
+        and information_ratio is not None
+        and information_ratio <= MAX_FLAT_INFORMATION_RATIO
+        and reference_ratio is not None
+        and reference_ratio <= MAX_FLAT_REFERENCE_POWER_RATIO
+        and output_ratio is not None
+        and output_ratio <= MAX_FLAT_OUTPUT_POWER_RATIO
+    )
+    return {
+        "status": flat_status,
+        "passes": passes,
+        "information_bits_per_site": flat_information,
+        "flat_to_detail_information_ratio": information_ratio,
+        "flat_to_detail_reference_repeatable_power_ratio": reference_ratio,
+        "flat_to_detail_output_repeatable_power_ratio": output_ratio,
+        "reference_repeatable_power": flat_reference_power,
+        "output_repeatable_power": flat_output_power,
+        "detail_reference_repeatable_power": detail_reference_power,
+        "detail_output_repeatable_power": detail_output_power,
+        "bars": {
+            "maximum_information_ratio": MAX_FLAT_INFORMATION_RATIO,
+            "maximum_reference_repeatable_power_ratio": (
+                MAX_FLAT_REFERENCE_POWER_RATIO
+            ),
+            "maximum_output_repeatable_power_ratio": MAX_FLAT_OUTPUT_POWER_RATIO,
+        },
+        "reference": flat_reference,
+    }
+
+
+def evaluate(
+    captures: CaptureSet, flat_control: CaptureSet | None = None
+) -> dict[str, Any]:
+    if flat_control is None:
+        return {
+            "status": "MISSING_FLAT_CONTROL",
+            "flat_control": {"status": "MISSING", "passes": False},
+        }
+
+    detail_result = _evaluate_core(captures)
+    flat_result = _flat_diagnostic(captures, flat_control, detail_result)
+    if detail_result.get("status") == "OK" and not flat_result["passes"]:
+        return {
+            "status": "FLAT_NULL_FAILED",
+            "detail": detail_result,
+            "flat_control": flat_result,
+        }
+
+    result = dict(detail_result)
+    result["flat_control"] = flat_result
     return result
 
 

@@ -26,6 +26,8 @@ SITE_COUNT = 64
 SAMPLE_SIZE_LADDER = (64, 128, 256, 512)
 REFERENCE_NOISE_SD = 0.10
 OUTPUT_NOISE_SD = 0.45
+FLAT_SEED_OFFSET = 40_000_000
+NOISE_GAIN = 1.0 + 1.5 * (FREQUENCIES / 0.25) ** 2
 
 
 def complex_normal(rng: np.random.Generator, shape: tuple[int, ...], sd: float) -> np.ndarray:
@@ -109,6 +111,10 @@ def rebuild(
     )
 
 
+def detail_diagnostic(result: dict) -> dict:
+    return result.get("detail", result)
+
+
 def require_ok(result: dict) -> float:
     if result["status"] != "OK":
         raise RuntimeError(f"expected OK, got {result['status']}")
@@ -116,7 +122,7 @@ def require_ok(result: dict) -> float:
 
 
 def ratio(arm: dict, base: dict, field: str = "information_bits_per_site") -> float:
-    return float(arm[field]) / float(base[field])
+    return float(detail_diagnostic(arm)[field]) / float(detail_diagnostic(base)[field])
 
 
 def log_mean_ci(values: list[float]) -> dict[str, float]:
@@ -131,6 +137,16 @@ def log_mean_ci(values: list[float]) -> dict[str, float]:
         "q95": float(np.quantile(values, 0.95)),
         "minimum": float(np.min(values)),
         "maximum": float(np.max(values)),
+    }
+
+
+def linear_summary(values: list[float]) -> dict[str, float]:
+    data = np.asarray(values)
+    return {
+        "minimum": float(np.min(data)),
+        "median": float(np.median(data)),
+        "q95": float(np.quantile(data, 0.95)),
+        "maximum": float(np.max(data)),
     }
 
 
@@ -179,37 +195,66 @@ def tone_capture(captures: CaptureSet, tone: Callable[[np.ndarray], np.ndarray])
     return replace(captures, output_a=ya, output_b=yb), max(pa, pb)
 
 
-def score_arm(captures: CaptureSet) -> dict:
-    return evaluate(captures)
+def make_flat_control(
+    rng: np.random.Generator, n: int = SITE_COUNT
+) -> tuple[CaptureSet, dict[str, np.ndarray]]:
+    signal = np.zeros((n, len(FREQUENCIES)), dtype=np.complex128)
+    return make_capture(rng, n=n, signal=signal)
+
+
+def score_arm(captures: CaptureSet, flat_control: CaptureSet) -> dict:
+    return evaluate(captures, flat_control)
 
 
 def run_trial(seed: int) -> dict[str, dict]:
     rng = np.random.default_rng(seed)
+    flat_rng = np.random.default_rng(seed + FLAT_SEED_OFFSET)
     base_capture, components = make_capture(rng)
-    base = score_arm(base_capture)
+    base_flat, flat_components = make_flat_control(flat_rng)
+    base = score_arm(base_capture, base_flat)
     require_ok(base)
 
-    identity = score_arm(replace(base_capture))
-    blur = score_arm(rebuild(components, sigma=1.05))
-    improvement = score_arm(rebuild(components, sigma=0.30))
+    identity = score_arm(replace(base_capture), replace(base_flat))
+    blur = score_arm(
+        rebuild(components, sigma=1.05),
+        rebuild(flat_components, sigma=1.05),
+    )
+    improvement = score_arm(
+        rebuild(components, sigma=0.30),
+        rebuild(flat_components, sigma=0.30),
+    )
 
     fresh_null_capture = rebuild(
         components, sigma=0.65, output_noise_sd=OUTPUT_NOISE_SD, rng=rng
     )
-    fresh_null = score_arm(fresh_null_capture)
+    fresh_null_flat = rebuild(
+        flat_components,
+        sigma=0.65,
+        output_noise_sd=OUTPUT_NOISE_SD,
+        rng=flat_rng,
+    )
+    fresh_null = score_arm(fresh_null_capture, fresh_null_flat)
 
     usm_gain = 1.0 + 0.75 * (
         1.0 - np.exp(-2.0 * np.pi**2 * 1.0**2 * FREQUENCIES**2)
     )
-    usm = score_arm(postfilter(base_capture, usm_gain))
+    usm = score_arm(
+        postfilter(base_capture, usm_gain),
+        postfilter(base_flat, usm_gain),
+    )
 
     blur_gain = np.exp(-2.0 * np.pi**2 * 0.75**2 * FREQUENCIES**2)
-    post_blur = score_arm(postfilter(base_capture, blur_gain))
+    post_blur = score_arm(
+        postfilter(base_capture, blur_gain),
+        postfilter(base_flat, blur_gain),
+    )
 
     gamma_capture, gamma_potency = tone_capture(base_capture, gamma3)
-    gamma = score_arm(gamma_capture)
+    gamma_flat, _ = tone_capture(base_flat, gamma3)
+    gamma = score_arm(gamma_capture, gamma_flat)
     logistic_capture, logistic_potency = tone_capture(base_capture, logistic8)
-    logistic = score_arm(logistic_capture)
+    logistic_flat, _ = tone_capture(base_flat, logistic8)
+    logistic = score_arm(logistic_capture, logistic_flat)
 
     extra_noise = replace(
         base_capture,
@@ -218,7 +263,33 @@ def run_trial(seed: int) -> dict[str, dict]:
         output_b=base_capture.output_b
         + complex_normal(rng, base_capture.output_b.shape, 0.70),
     )
-    noisy = score_arm(extra_noise)
+    flat_extra_noise = replace(
+        base_flat,
+        output_a=base_flat.output_a
+        + complex_normal(flat_rng, base_flat.output_a.shape, 0.70),
+        output_b=base_flat.output_b
+        + complex_normal(flat_rng, base_flat.output_b.shape, 0.70),
+    )
+    noisy = score_arm(extra_noise, flat_extra_noise)
+
+    noise_amplified_capture = replace(
+        base_capture,
+        output_a=base_capture.output_a
+        + components["output_noise_a"] * (NOISE_GAIN[np.newaxis, :] - 1.0),
+        output_b=base_capture.output_b
+        + components["output_noise_b"] * (NOISE_GAIN[np.newaxis, :] - 1.0),
+    )
+    flat_noise_amplified = replace(
+        base_flat,
+        output_a=base_flat.output_a
+        + flat_components["output_noise_a"] * (NOISE_GAIN[np.newaxis, :] - 1.0),
+        output_b=base_flat.output_b
+        + flat_components["output_noise_b"] * (NOISE_GAIN[np.newaxis, :] - 1.0),
+    )
+    noise_amplified = score_arm(
+        noise_amplified_capture,
+        flat_noise_amplified,
+    )
 
     common = complex_normal(rng, base_capture.output_a.shape, 0.80)
     common_capture = replace(
@@ -226,7 +297,13 @@ def run_trial(seed: int) -> dict[str, dict]:
         output_a=base_capture.output_a + common,
         output_b=base_capture.output_b + common,
     )
-    common_result = score_arm(common_capture)
+    flat_common = complex_normal(flat_rng, base_flat.output_a.shape, 0.80)
+    common_flat = replace(
+        base_flat,
+        output_a=base_flat.output_a + flat_common,
+        output_b=base_flat.output_b + flat_common,
+    )
+    common_result = score_arm(common_capture, common_flat)
 
     hallucination = np.zeros_like(base_capture.output_a)
     low = components["signal"][:, 0]
@@ -240,14 +317,23 @@ def run_trial(seed: int) -> dict[str, dict]:
         output_a=base_capture.output_a + hallucination,
         output_b=base_capture.output_b + hallucination,
     )
-    hallucination_result = score_arm(hallucination_capture)
+    hallucination_result = score_arm(hallucination_capture, base_flat)
 
     averaging_capture = rebuild(
         components, sigma=np.sqrt(0.65**2 + 0.55**2), output_noise_sd=0.18, rng=rng
     )
-    averaging = score_arm(averaging_capture)
+    averaging_flat = rebuild(
+        flat_components,
+        sigma=np.sqrt(0.65**2 + 0.55**2),
+        output_noise_sd=0.18,
+        rng=flat_rng,
+    )
+    averaging = score_arm(averaging_capture, averaging_flat)
 
-    angle = score_arm(rotate_cells(base_capture, 1))
+    angle = score_arm(
+        rotate_cells(base_capture, 1),
+        rotate_cells(base_flat, 1),
+    )
 
     perm = np.random.default_rng(seed + 9_000_000).permutation(SITE_COUNT)
     permuted_reference = replace(
@@ -255,7 +341,7 @@ def run_trial(seed: int) -> dict[str, dict]:
         reference_a=base_capture.reference_a[perm],
         reference_b=base_capture.reference_b[perm],
     )
-    permutation_result = score_arm(permuted_reference)
+    permutation_result = score_arm(permuted_reference, base_flat)
 
     return {
         "base": base,
@@ -268,6 +354,7 @@ def run_trial(seed: int) -> dict[str, dict]:
         "gamma": gamma,
         "logistic": logistic,
         "noise": noisy,
+        "noise_amplified": noise_amplified,
         "common": common_result,
         "hallucination": hallucination_result,
         "averaging": averaging,
@@ -277,20 +364,33 @@ def run_trial(seed: int) -> dict[str, dict]:
             "gamma": gamma_potency,
             "logistic": logistic_potency,
         },
+        "noise_amplification_potency": {
+            "gain": NOISE_GAIN.tolist(),
+            "squared_gain": (NOISE_GAIN**2).tolist(),
+            "upper_two_band_mean_squared_gain": float(np.mean(NOISE_GAIN[2:] ** 2)),
+            "upper_to_lower_mean_squared_gain_ratio": float(
+                np.mean(NOISE_GAIN[2:] ** 2) / np.mean(NOISE_GAIN[:2] ** 2)
+            ),
+        },
     }
 
 
 def refusal_trials() -> dict[str, dict]:
     rng = np.random.default_rng(MASTER_SEED + 77_000_000)
+    flat_rng = np.random.default_rng(MASTER_SEED + 78_000_000)
+    missing_rng = np.random.default_rng(MASTER_SEED + 79_000_000)
     base_capture, components = make_capture(rng)
+    base_flat, _ = make_flat_control(flat_rng)
 
     flat_results = []
     periodic_results = []
+    missing_flat_results = []
     for _ in range(TRIALS):
         flat_shape = base_capture.reference_a.shape
         flat_signal = np.zeros(flat_shape, dtype=np.complex128)
         flat_capture, _ = make_capture(rng, signal=flat_signal)
-        flat_results.append(score_arm(flat_capture))
+        flat_witness, _ = make_flat_control(flat_rng)
+        flat_results.append(score_arm(flat_capture, flat_witness))
 
         sites = np.arange(SITE_COUNT)[:, np.newaxis]
         harmonics = np.arange(1, len(FREQUENCIES) + 1)[np.newaxis, :]
@@ -299,7 +399,10 @@ def refusal_trials() -> dict[str, dict]:
         )
         periodic_capture, _ = make_capture(rng, signal=periodic_signal)
         periodic_capture = replace(periodic_capture, target_lineage="periodic")
-        periodic_results.append(score_arm(periodic_capture))
+        periodic_results.append(score_arm(periodic_capture, base_flat))
+
+        missing_capture, _ = make_capture(missing_rng)
+        missing_flat_results.append(evaluate(missing_capture))
 
     all_components = np.concatenate(
         [
@@ -371,13 +474,23 @@ def refusal_trials() -> dict[str, dict]:
             },
             "first_diagnostic": periodic_results[0],
         },
-        "clipping": score_arm(clipped_capture),
-        "quantization": score_arm(quantized_capture),
-        "shared_reference": score_arm(shared_reference_capture),
-        "shared_flat": score_arm(shared_flat_capture),
-        "shared_flat_without_lineage": score_arm(shared_flat_without_lineage),
-        "periodic_with_forged_lineage": score_arm(forged_periodic),
-        "missing_lineage": score_arm(missing_lineage),
+        "clipping": score_arm(clipped_capture, base_flat),
+        "quantization": score_arm(quantized_capture, base_flat),
+        "shared_reference": score_arm(shared_reference_capture, base_flat),
+        "shared_flat": score_arm(shared_flat_capture, base_flat),
+        "shared_flat_without_lineage": score_arm(
+            shared_flat_without_lineage, base_flat
+        ),
+        "periodic_with_forged_lineage": score_arm(forged_periodic, base_flat),
+        "missing_lineage": score_arm(missing_lineage, base_flat),
+        "structured_flat": score_arm(base_capture, base_capture),
+        "missing_flat": {
+            "status_counts": {
+                status: sum(r["status"] == status for r in missing_flat_results)
+                for status in sorted({r["status"] for r in missing_flat_results})
+            },
+            "first_diagnostic": missing_flat_results[0],
+        },
         "clipping_fraction": {"value": clipped_capture.clip_fraction},
         "unused_components_shape": {"signal": list(components["signal"].shape)},
     }
@@ -387,12 +500,17 @@ def sample_size_battery() -> dict[str, dict]:
     result: dict[str, dict] = {}
     for n in SAMPLE_SIZE_LADDER:
         rng = np.random.default_rng(MASTER_SEED + n)
+        flat_rng = np.random.default_rng(MASTER_SEED + FLAT_SEED_OFFSET + n)
         captures, _ = make_capture(rng, n=n)
-        base = score_arm(captures)
+        flat_control, _ = make_flat_control(flat_rng, n=n)
+        base = score_arm(captures, flat_control)
         usm_gain = 1.0 + 0.75 * (
             1.0 - np.exp(-2.0 * np.pi**2 * FREQUENCIES**2)
         )
-        usm = score_arm(postfilter(captures, usm_gain))
+        usm = score_arm(
+            postfilter(captures, usm_gain),
+            postfilter(flat_control, usm_gain),
+        )
         result[str(n)] = {
             "base_status": base["status"],
             "usm_status": usm["status"],
@@ -430,6 +548,7 @@ def main() -> None:
         "gamma": [],
         "logistic": [],
         "noise": [],
+        "noise_amplified": [],
         "common": [],
         "hallucination": [],
         "averaging": [],
@@ -439,6 +558,21 @@ def main() -> None:
     common_residual_increase = []
     statuses = {"permutation": []}
     tone_potency = {"gamma": [], "logistic": []}
+    flat_arm_names = ("base",) + tuple(
+        name for name in ratio_fields if name != "common"
+    )
+    flat_ratios = {
+        name: {
+            "information": [],
+            "reference_repeatable_power": [],
+            "output_repeatable_power": [],
+        }
+        for name in flat_arm_names
+    }
+    flat_statuses = {name: [] for name in flat_arm_names}
+    flat_passes = {name: [] for name in flat_arm_names}
+    common_flat_statuses = []
+    noise_amplification_potency = trials[0]["noise_amplification_potency"]
 
     for trial in trials:
         base = trial["base"]
@@ -447,11 +581,26 @@ def main() -> None:
         for name in transfer_fields:
             transfer_fields[name].append(ratio(trial[name], base, "transfer"))
         common_residual_increase.append(
-            trial["common"]["unexplained_fraction"] - base["unexplained_fraction"]
+            detail_diagnostic(trial["common"])["unexplained_fraction"]
+            - base["unexplained_fraction"]
         )
         statuses["permutation"].append(trial["permutation"]["status"])
         tone_potency["gamma"].append(trial["tone_potency"]["gamma"])
         tone_potency["logistic"].append(trial["tone_potency"]["logistic"])
+        for name in flat_arm_names:
+            flat = trial[name]["flat_control"]
+            flat_statuses[name].append(flat["status"])
+            flat_passes[name].append(flat["passes"])
+            flat_ratios[name]["information"].append(
+                flat["flat_to_detail_information_ratio"]
+            )
+            flat_ratios[name]["reference_repeatable_power"].append(
+                flat["flat_to_detail_reference_repeatable_power_ratio"]
+            )
+            flat_ratios[name]["output_repeatable_power"].append(
+                flat["flat_to_detail_output_repeatable_power_ratio"]
+            )
+        common_flat_statuses.append(trial["common"]["status"])
 
     summaries = {name: log_mean_ci(values) for name, values in ratio_fields.items()}
     transfer_summaries = {
@@ -470,10 +619,44 @@ def main() -> None:
         }
         for name, values in tone_potency.items()
     }
+    flat_summaries = {
+        name: {
+            measure: linear_summary(values)
+            for measure, values in measures.items()
+        }
+        for name, measures in flat_ratios.items()
+    }
 
     refusals = refusal_trials()
     sizes = sample_size_battery()
     mutations = checker_mutation_controls()
+    flat_controls_pass = all(
+        all(status == "NO_DETAIL" for status in flat_statuses[name])
+        and all(flat_passes[name])
+        and all(trial[name]["status"] == "OK" for trial in trials)
+        for name in flat_arm_names
+    )
+    noise_amplification_promotions = sum(
+        ratio(trial["noise_amplified"], trial["base"]) > 1.0 + 1e-12
+        for trial in trials
+    )
+    noise_potency_pass = bool(
+        np.allclose(
+            noise_amplification_potency["squared_gain"],
+            [1.5376, 2.3716, 3.8416, 6.25],
+            rtol=0.0,
+            atol=1e-12,
+        )
+        and abs(
+            noise_amplification_potency["upper_two_band_mean_squared_gain"]
+            - 5.0458
+        )
+        <= 1e-12
+        and noise_amplification_potency[
+            "upper_to_lower_mean_squared_gain_ratio"
+        ]
+        > 2.58
+    )
 
     gates = {
         "C0_identity": summaries["identity"]["maximum"] - 1.0 <= 1e-12
@@ -526,6 +709,16 @@ def main() -> None:
         "C20_checker_mutations": all(mutations.values()),
         "C21_missing_lineage": refusals["missing_lineage"]["status"]
         == "MISSING_LINEAGE",
+        "C22_mandatory_flat_certificate": flat_controls_pass
+        and all(status == "FLAT_NULL_FAILED" for status in common_flat_statuses)
+        and refusals["structured_flat"]["status"] == "FLAT_NULL_FAILED",
+        "C23_high_band_noise_amplification": summaries["noise_amplified"]["q95"]
+        < 0.90
+        and noise_amplification_promotions == 0
+        and noise_potency_pass
+        and all(flat_passes["noise_amplified"]),
+        "C24_missing_flat_control": refusals["missing_flat"]["status_counts"]
+        == {"MISSING_FLAT_CONTROL": TRIALS},
     }
 
     averaging_promotions = sum(
@@ -547,6 +740,13 @@ def main() -> None:
         "transfer_ratio_summaries": transfer_summaries,
         "common_residual_increase": residual_summary,
         "tone_potency_relative_rms": tone_summary,
+        "flat_control_ratio_summaries": flat_summaries,
+        "common_flat_status_counts": {
+            status: common_flat_statuses.count(status)
+            for status in sorted(set(common_flat_statuses))
+        },
+        "noise_amplification_potency": noise_amplification_potency,
+        "noise_amplification_promotions": noise_amplification_promotions,
         "permutation_status_counts": {
             status: statuses["permutation"].count(status)
             for status in sorted(set(statuses["permutation"]))
