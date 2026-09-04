@@ -1,0 +1,83 @@
+{
+  "schema": "m164-gx-sota-claim-audit-v1",
+  "status": "PASS",
+  "planted_defect": null,
+  "claim": "On the preregistered macro-subject population and licensed frequency-orientation cells for which the independent reference arm passed REFERENCE_INFORMATION_DOMINANCE, Strehl resolved more scene-linked detail, measured as greater recoverable covariance information about GX\u2014the scene structure transmitted through the measured non-null passband common to the registered Sony FE 100mm F2.8 Macro GM OSS optical paths\u2014than licensed Zerene Stacker PMax, licensed Zerene Stacker DMap, and the commit-pinned best-known-source fork and, when obtainable under the preregistration, licensed Helicon Focus methods A/B/C on identical inputs, without worse reference-relative attenuation, overshoot, phase error, or unexplained repeatable structure; this is a comparative claim about that camera, optic, reference path and licensed band, not a claim to recover absolute object detail removed by or artifacts shared through G, and not a claim about other optical configurations.",
+  "plan_definition": "SOTA = a pre-registered scorecard, versus named comparators, on axes with commissioned instruments.",
+  "plan_publication_gates": [
+    "M1",
+    "M2",
+    "M3",
+    "M8",
+    "M9",
+    "M10",
+    "M11"
+  ],
+  "scorecard_section_3_1": {
+    "explicit_blocker_d_axes": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7"
+    ],
+    "explicit_blocker_d_count": 7,
+    "semantic_comparator_axes": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "M11"
+    ],
+    "gx_removed_explicit_blocker_d_axes": [],
+    "note": "M11 is an additional semantic comparator dependency even though its class cell omits the literal (d) marker."
+  },
+  "competitor_claim_scope": {
+    "finding": "No named comparator or benchmark source in the verified evidence base validates absolute physical object truth X.",
+    "zerene": {
+      "source": "https://zerenesystems.com/cms/stacker",
+      "published_language": "Highest quality output images; preserves low contrast detail and avoids stacking mush.",
+      "absolute_X_validation": false
+    },
+    "helicon": {
+      "source": "https://www.heliconsoft.com/focus/help/english/HeliconFocus.html",
+      "published_language": "Fully focused image by combining the sharpest areas.",
+      "absolute_X_validation": false
+    },
+    "araujo_2023": {
+      "source": "https://arxiv.org/abs/2311.17846",
+      "published_language": "Uses pseudo ground truth computed with commercial software and reports qualitative parity.",
+      "absolute_X_validation": false
+    },
+    "mfifb_2020": {
+      "source": "https://arxiv.org/abs/2005.01116",
+      "published_language": "Benchmarks 30 algorithms on 105 image pairs with 20 metrics.",
+      "absolute_X_validation": false
+    }
+  },
+  "checks": {
+    "C1_plan_definition_is_present": true,
+    "C2_plan_end_state_requires_resolved_detail": true,
+    "C3_scorecard_publication_gate_set_is_exact": true,
+    "C4_exactly_seven_rows_explicitly_carry_d": true,
+    "C5_explicit_d_rows_are_M1_through_M7": true,
+    "C6_M11_has_untagged_semantic_comparator_dependency": true,
+    "C7_plan_reconciles_semantic_d_count_as_eight": true,
+    "C8_GX_scope_removes_no_explicit_d_dependency": true,
+    "C9_claim_names_required_comparators": true,
+    "C10_claim_defines_GX_scope": true,
+    "C11_claim_disclaims_absolute_X": true,
+    "C12_report_contains_literal_claim": true
+  },
+  "source": {
+    "audit_py_sha256": "8B604CD63149D6EF02B0873095AD0FB1ABFAFDE94064A62C053D903C0D2E25C2",
+    "plan_sha256": "72F8257918E929ACB3F50C4606A4A7A73A44594492F040B4FCF196072E6A0B94",
+    "scorecard_sha256": "D72160F57494ED1B3A07807EA0D7D6451B5E50D4630E0E6EEB093CED7D74CB28",
+    "report_sha256": "59D56FFEAE5156D9AFD046E864EFACC8DBA45EF455487BD5317000F2BCA0FDE8"
+  }
+}
