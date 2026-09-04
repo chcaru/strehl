@@ -1,0 +1,554 @@
+{
+  "schema": "M141-holdout-register-v1",
+  "rule": {
+    "text": "The holdout unit is subject plus uninterrupted capture session. Rendering, tuning, or reading an outcome on any member burns every member.",
+    "status": "INHERITED",
+    "source": "docs\\proposals\\2026-09-sota-scorecard.md:343-348"
+  },
+  "burned_or_spent_units": [
+    {
+      "unit_id": "calibration-grid-2026-09-01",
+      "members": [
+        "requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+        "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+        "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+        "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+        "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl"
+      ],
+      "frame_count": 242,
+      "first_capture_at": "2026:09:01 20:57:42.542-07:00",
+      "last_capture_at": "2026:09:01 21:09:06.266-07:00",
+      "ruling": "BURNED \u2014 QUARANTINED DEVELOPMENT ONLY",
+      "ruling_status": "INHERITED",
+      "numeric_status": "VERIFIED",
+      "sources": [
+        "docs\\proposals\\2026-09-sota-scorecard.md:304-308",
+        "docs\\proposals\\2026-09-sota-scorecard.md:345-360",
+        "experiments\\PHASE1-DESIGN\\quarantine\\f5658e5d-grid-sw4-exposed\\ACCESS.md:6-18"
+      ],
+      "note": "The sw4 outcome leak burns all five same-subject/session members, including stacks W1 did not itself score."
+    },
+    {
+      "unit_id": "high-res-calibration-slide-2026-09-02",
+      "members": [
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl"
+      ],
+      "frame_count": 657,
+      "first_capture_at": "2026:09:02 20:13:04.463-07:00",
+      "last_capture_at": "2026:09:02 21:01:58.443-07:00",
+      "ruling": "BURNED \u2014 DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+      "ruling_status": "INHERITED",
+      "numeric_status": "VERIFIED",
+      "sources": [
+        "docs\\proposals\\2026-09-sota-scorecard.md:36-41",
+        "docs\\proposals\\2026-09-sota-scorecard.md:363-379",
+        "docs\\STATUS.md:2535-2547",
+        "experiments\\cover-default\\slide-series-preregistration.md:9-15"
+      ],
+      "note": "Conservative unit boundary: all six stacks are one physical slide/session. Geometry outcomes have been read, so this unit cannot be recovered as holdout evidence."
+    }
+  ],
+  "clean_registered_holdout_rows": [
+    {
+      "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+      "frame_count": 210,
+      "first_capture_at": "2026:08:29 17:27:06.011-07:00",
+      "last_capture_at": "2026:08:29 17:33:01.672-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+      "frame_count": 150,
+      "first_capture_at": "2026:08:29 17:37:38.604-07:00",
+      "last_capture_at": "2026:08:29 17:41:52.051-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+      "frame_count": 109,
+      "first_capture_at": "2026:08:29 17:42:27.376-07:00",
+      "last_capture_at": "2026:08:29 17:45:31.132-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl",
+      "frame_count": 120,
+      "first_capture_at": "2026:08:29 22:15:12.922-07:00",
+      "last_capture_at": "2026:08:29 22:24:03.247-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl",
+      "frame_count": 85,
+      "first_capture_at": "2026:08:29 22:38:11.254-07:00",
+      "last_capture_at": "2026:08:29 22:44:25.525-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl",
+      "frame_count": 65,
+      "first_capture_at": "2026:08:29 22:48:04.475-07:00",
+      "last_capture_at": "2026:08:29 22:52:49.482-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+      "frame_count": 576,
+      "first_capture_at": "2026:08:30 19:51:12.324-07:00",
+      "last_capture_at": "2026:08:30 20:19:20.929-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "duck-tape-side-layers-cpl",
+      "frame_count": 197,
+      "first_capture_at": "2026:08:27 21:01:55.905-07:00",
+      "last_capture_at": "2026:08:27 21:05:26.488-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "chia-seeds-cpl",
+      "frame_count": 130,
+      "first_capture_at": "2026:08:27 21:40:55.869-07:00",
+      "last_capture_at": "2026:08:27 21:44:35.085-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "flower-bud-with-background-fern-cpl",
+      "frame_count": 299,
+      "first_capture_at": "2026:08:23 21:39:27.357-07:00",
+      "last_capture_at": "2026:08:23 21:42:11.737-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "medication-pill-cpl",
+      "frame_count": 146,
+      "first_capture_at": "2026:08:27 21:25:04.330-07:00",
+      "last_capture_at": "2026:08:27 21:26:37.565-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "foam",
+      "frame_count": 100,
+      "first_capture_at": "2026:05:25 16:25:55.386-07:00",
+      "last_capture_at": "2026:05:25 16:30:04.060-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso100-sw4-cpl",
+      "frame_count": 30,
+      "first_capture_at": "2026:09:01 20:15:20.273-07:00",
+      "last_capture_at": "2026:09:01 20:21:43.722-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "maldon-sea-salt-cpl",
+      "frame_count": 255,
+      "first_capture_at": "2026:08:27 21:50:45.442-07:00",
+      "last_capture_at": "2026:08:27 21:53:41.040-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "highly-angled-ruler-mm-cpl",
+      "frame_count": 299,
+      "first_capture_at": "2026:08:23 20:10:02.129-07:00",
+      "last_capture_at": "2026:08:23 20:13:29.058-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 QUALITY",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    },
+    {
+      "stack_id": "bee-1-cpl",
+      "frame_count": 299,
+      "first_capture_at": "2026:08:23 11:42:25.240-07:00",
+      "last_capture_at": "2026:08:23 11:46:55.268-07:00",
+      "ruling": "CLEAN REGISTERED HOLDOUT",
+      "evidence_class": "HOLDOUT \u2014 PERFORMANCE",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334",
+      "caveat": "This is the current scorecard label; same-subject/session partners not explicitly listed are not promoted by inference."
+    }
+  ],
+  "explicit_not_holdout_rows": [
+    {
+      "stack_id": "requests\\10-paper-iso-var",
+      "frame_count": 110,
+      "ruling": "NOT HOLDOUT",
+      "evidence_class": "CONTROL \u2014 NOT HOLDOUT",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+    },
+    {
+      "stack_id": "requests\\6-11-extended-dark-frames",
+      "frame_count": 506,
+      "ruling": "NOT HOLDOUT",
+      "evidence_class": "CONTROL \u2014 NOT HOLDOUT",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+    },
+    {
+      "stack_id": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+      "frame_count": 67,
+      "ruling": "NOT HOLDOUT",
+      "evidence_class": "CONTROL \u2014 NOT HOLDOUT",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+    },
+    {
+      "stack_id": "coffee-bubbles",
+      "frame_count": 19,
+      "ruling": "NOT HOLDOUT",
+      "evidence_class": "DEVELOPMENT \u2014 NOT HOLDOUT",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+    },
+    {
+      "stack_id": "coffee-bean",
+      "frame_count": 105,
+      "ruling": "NOT HOLDOUT",
+      "evidence_class": "FIXED HISTORICAL BENCHMARK \u2014 NOT HOLDOUT",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+    },
+    {
+      "stack_id": "113MSDCF",
+      "frame_count": 63,
+      "ruling": "NOT HOLDOUT",
+      "evidence_class": "HISTORICAL CONTROL \u2014 NOT HOLDOUT",
+      "numeric_status": "VERIFIED",
+      "ruling_status": "INHERITED",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+    }
+  ],
+  "unclassified_stack_ids": [
+    {
+      "stack_id": "109MSDCF",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "112MSDCF",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "119MSDCF",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "bee-2-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "bee-3-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "couch-fibers-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "defunct-dont-use\\flowers-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "dime-flat-narrow-slices-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "dry-erase-marker-head-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "flat-fields\\flat-fields",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "flat-fields\\subject-focus-sweep-no-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "flat-fields\\subject-focus-sweep-with-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "flat-on-ruler-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "flower-bud-alone-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "flower-inner-edge-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "lavendar-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "lead-1-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "leaf-2-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "pencil-flatter-angle-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "pencil-steep-angle-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "pottery-art-glazed-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f11-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f5.6-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f8-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f11-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f14-sw5-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f18-sw5-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso200-sw4-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso400-sw4-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "requests\\misc-diagnostic\\razor-flat-vertical-slightly-tilted-sw1-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "tweezers-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "unpopped-popcorn-kernels-cpl",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "wrapped-text-1",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    },
+    {
+      "stack_id": "wrapped-text-2",
+      "ruling": "INDETERMINATE \u2014 DO NOT ASSUME CLEAN",
+      "ruling_status": "INHERITED",
+      "basis": "No row for this stack in the scorecard's explicit evidence table; the scorecard says only rows beginning HOLDOUT are holdout.",
+      "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+    }
+  ],
+  "error_direction": "restrictive: ambiguous or unlisted material is not treated as a clean holdout, and the whole six-stack slide sitting is treated as spent rather than split into narrower units"
+}

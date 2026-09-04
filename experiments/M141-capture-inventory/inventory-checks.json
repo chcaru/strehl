@@ -1,0 +1,17 @@
+{
+  "schema": "M141-inventory-checks-v1",
+  "manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M141-capture-inventory\\capture-manifest.json",
+  "manifest_sha256": "e2849d543cb126ab95ad342f2a3a1a96f4b6f5658548025007f593ddd5764b03",
+  "stack_directory_count": 68,
+  "request_stack_directory_count": 32,
+  "general_stack_directory_count": 36,
+  "arw_frame_count": 10509,
+  "stack_frame_sum": 10509,
+  "all_filename_sequences_contiguous": true,
+  "noncontiguous_stack_ids": [
+    "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light"
+  ],
+  "source_trees_unchanged_during_inventory": true,
+  "new_slide_frame_count": 657,
+  "numeric_status": "VERIFIED"
+}

@@ -1,0 +1,421 @@
+{
+  "schema": "M141-capture-gap-analysis-v1",
+  "ruling": {
+    "requested_session_frames": 603,
+    "requested_session_frames_status": "INHERITED",
+    "eligible_existing_frames": 0,
+    "eligible_existing_frames_status": "VERIFIED",
+    "remaining_session_frames": 603,
+    "remaining_session_frames_status": "VERIFIED",
+    "throwaway_histogram_exposure_outside_603": 1,
+    "throwaway_histogram_exposure_status": "INHERITED",
+    "remaining_session_shutter_releases_including_throwaway": 604,
+    "remaining_session_shutter_releases_status": "VERIFIED",
+    "sources": [
+      "docs\\capture-requests\\2026-09-319-frame-session.md:127-137",
+      "docs\\capture-requests\\2026-09-319-frame-session.md:228-255",
+      "docs\\capture-requests\\2026-09-319-frame-session.md:566-577"
+    ],
+    "note": "The two unresolved pre-shoot items require one development dry run whose frame count is not specified in the request; it is additional to the frozen 603-frame holdout session."
+  },
+  "cross_cutting_disqualifiers": [
+    {
+      "fact": "All 10,509 inventoried ARWs report ImageStabilization On.",
+      "status": "VERIFIED",
+      "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M141-capture-inventory\\capture-manifest.json"
+    },
+    {
+      "fact": "The frozen session requires body SteadyShot OFF and lens OSS OFF.",
+      "status": "INHERITED",
+      "source": "docs\\capture-requests\\2026-09-319-frame-session.md:497-500"
+    },
+    {
+      "fact": "The scored value must come from this new sealed HOLDOUT session; existing development captures only commission.",
+      "status": "INHERITED",
+      "source": "docs\\capture-requests\\2026-09-319-frame-session.md:169-179"
+    }
+  ],
+  "pre_shoot_items": [
+    {
+      "item": 1,
+      "status": "NOT SATISFIED",
+      "numeric_status": "INHERITED",
+      "reason": "No metadata-only evidence establishes 1.30x reproduction, gap-free coverage, or 64 interior sites; the request explicitly requires image-data verification.",
+      "source": "docs\\capture-requests\\2026-09-319-frame-session.md:27"
+    },
+    {
+      "item": 2,
+      "status": "NOT SATISFIED",
+      "numeric_status": "INHERITED",
+      "reason": "The new slide has no required fixed-focus G2 burst pairs or matched A/B ladders for G3 at the exact configuration.",
+      "source": "docs\\capture-requests\\2026-09-319-frame-session.md:28"
+    },
+    {
+      "item": 3,
+      "status": "ALREADY SATISFIED",
+      "numeric_status": "INHERITED",
+      "reason": "Converter identity is closed by owner testimony.",
+      "source": "docs\\capture-requests\\2026-09-319-frame-session.md:29-32"
+    }
+  ],
+  "blocks": [
+    {
+      "block": "reset pre-flight P0",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:228",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "reset pre-flight P1",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:229",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "start sw4-A",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:230",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "sw4-A",
+      "requested_frames": 55,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 55,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:231",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing sw4 ladders are burned/development-only, and no eligible pair supplies two identical 55-frame passes at one geometry.",
+      "existing_analogues_not_creditable": [
+        "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+        "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl"
+      ]
+    },
+    {
+      "block": "end sw4-A",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:232",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "start sw4-B",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:233",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "sw4-B",
+      "requested_frames": 55,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 55,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:234",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing sw4 ladders are burned/development-only, and no eligible pair supplies two identical 55-frame passes at one geometry.",
+      "existing_analogues_not_creditable": [
+        "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+        "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl"
+      ]
+    },
+    {
+      "block": "end sw4-B",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:235",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "start sw10-A",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:236",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "sw10-A",
+      "requested_frames": 27,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 27,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:237",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing sw10 ladders are burned/development-only; the two new sw10 views have different geometry and are not repeats.",
+      "existing_analogues_not_creditable": [
+        "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+        "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl"
+      ]
+    },
+    {
+      "block": "end sw10-A",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:238",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "start sw10-B",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:239",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "sw10-B",
+      "requested_frames": 27,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 27,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:240",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing sw10 ladders are burned/development-only; the two new sw10 views have different geometry and are not repeats.",
+      "existing_analogues_not_creditable": [
+        "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+        "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl"
+      ]
+    },
+    {
+      "block": "end sw10-B",
+      "requested_frames": 6,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 6,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:241",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture implements this named fixed-focus witness at the required point in the A/B reset sequence.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "sw1 checker-only",
+      "requested_frames": 91,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 91,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:242",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. The exact 91-frame old sw1 grid is burned; the new dense slide is sw4 and development-only.",
+      "existing_analogues_not_creditable": [
+        "requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl"
+      ]
+    },
+    {
+      "block": "flats A",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:243",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing flat material is not two independent, same-session, same-exposure 32-frame diffuser groups assigned separately to A and B.",
+      "existing_analogues_not_creditable": [
+        "flat-fields\\flat-fields",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl"
+      ]
+    },
+    {
+      "block": "flats B",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:244",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. Existing flat material is not two independent, same-session, same-exposure 32-frame diffuser groups assigned separately to A and B.",
+      "existing_analogues_not_creditable": [
+        "flat-fields\\flat-fields",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+        "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl"
+      ]
+    },
+    {
+      "block": "darks A",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:245",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. The existing dark campaign has only one 22-frame ISO-100/1-s group and was not warmed in this claim session; it cannot supply either 32-frame A/B master.",
+      "existing_analogues_not_creditable": [
+        "requests\\6-11-extended-dark-frames"
+      ]
+    },
+    {
+      "block": "darks B",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:246",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. The existing dark campaign has only one 22-frame ISO-100/1-s group and was not warmed in this claim session; it cannot supply either 32-frame A/B master.",
+      "existing_analogues_not_creditable": [
+        "requests\\6-11-extended-dark-frames"
+      ]
+    },
+    {
+      "block": "reference near",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:249",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture is a 32-frame fixed-focus view of this same physical patch at the required >=2x sampling ratio.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "reference middle",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:250",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture is a 32-frame fixed-focus view of this same physical patch at the required >=2x sampling ratio.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "reference far",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:251",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing capture is a 32-frame fixed-focus view of this same physical patch at the required >=2x sampling ratio.",
+      "existing_analogues_not_creditable": []
+    },
+    {
+      "block": "reference flats",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:252",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing flat group is an independently repositioned, reference-only 32-frame master from the high-magnification block.",
+      "existing_analogues_not_creditable": [
+        "flat-fields\\flat-fields"
+      ]
+    },
+    {
+      "block": "reference darks",
+      "requested_frames": 32,
+      "status": "NOT SATISFIED",
+      "eligible_existing_frames": 0,
+      "remaining_frames": 32,
+      "requested_frames_status": "INHERITED",
+      "eligible_existing_frames_status": "VERIFIED",
+      "remaining_frames_status": "VERIFIED",
+      "request_source": "docs\\capture-requests\\2026-09-319-frame-session.md:253",
+      "reason": "No existing frame can enter this block: the request requires one fresh, sealed, uninterrupted HOLDOUT session, while all inventoried ARWs report ImageStabilization On and the request requires body SteadyShot and lens OSS off. No existing dark group is a warmed, matching 32-frame reference dark from the high-magnification block.",
+      "existing_analogues_not_creditable": [
+        "requests\\6-11-extended-dark-frames"
+      ]
+    }
+  ],
+  "block_count": 24,
+  "block_status_counts": {
+    "already_satisfied": 0,
+    "partially_satisfied": 0,
+    "not_satisfied": 24,
+    "numeric_status": "VERIFIED"
+  }
+}
