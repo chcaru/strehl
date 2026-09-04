@@ -29,6 +29,11 @@ def main() -> None:
             encoding="utf-8"
         )
     )
+    flat_verification = json.loads(
+        (Path(__file__).resolve().parent / "flat-verification.json").read_text(
+            encoding="utf-8"
+        )
+    )
 
     citation_pattern = re.compile(
         r"(?P<path>(?:docs|experiments)/[A-Za-z0-9_./-]+)"
@@ -94,6 +99,11 @@ def main() -> None:
             "Per-tile FRC between the two half-renders is a spatially-resolved, "
             "model-free certified-resolution map",
         ],
+        "experiments/M134-kernel-frontier/M137-clamped-detail.md": [
+            "The flat null shows that the gap cannot be called resolved detail; "
+            "it is at least substantially, and plausibly predominantly, noise "
+            "amplification or another within-hull kernel-transfer effect.",
+        ],
     }
     for relative, quotes in quote_checks.items():
         source = normalize((ROOT / relative).read_text(encoding="utf-8"))
@@ -106,6 +116,7 @@ def main() -> None:
     required_sections = [
         "## 0. D8-versus-blindness ruling",
         "## 2. What has already failed",
+        "### 2.9 The second flat-null failure",
         "## 3. The precise impossibility result",
         "## 4. Candidate architecture A",
         "## 5. Candidate architecture B",
@@ -122,12 +133,12 @@ def main() -> None:
     failed_gates = [name for name, passed in commission.get("gates", {}).items() if not passed]
     if failed_gates:
         findings.append({"kind": "failed_gates", "gates": failed_gates})
-    if len(commission.get("gates", {})) != 22:
+    if len(commission.get("gates", {})) != 25:
         findings.append(
             {
                 "kind": "gate_count",
                 "value": len(commission.get("gates", {})),
-                "expected": 22,
+                "expected": 25,
             }
         )
     if d8_audit.get("status") != "PASS":
@@ -137,6 +148,22 @@ def main() -> None:
     ]
     if failed_d8_checks:
         findings.append({"kind": "failed_d8_checks", "checks": failed_d8_checks})
+    if flat_verification.get("status") != "PASS":
+        findings.append(
+            {
+                "kind": "flat_verification_status",
+                "value": flat_verification.get("status"),
+            }
+        )
+    failed_flat_checks = [
+        name
+        for name, passed in flat_verification.get("checks", {}).items()
+        if not passed
+    ]
+    if failed_flat_checks:
+        findings.append(
+            {"kind": "failed_flat_verification_checks", "checks": failed_flat_checks}
+        )
 
     output = {
         "status": "PASS" if not findings else "FAIL",
@@ -148,6 +175,7 @@ def main() -> None:
         "verified_tags": report.count("**VERIFIED."),
         "assumed_tags": report.count("**ASSUMED."),
         "d8_checks": len(d8_audit.get("checks", {})),
+        "flat_checks": len(flat_verification.get("checks", {})),
         "findings": findings,
     }
     output_path = Path(__file__).resolve().parent / "audit.json"

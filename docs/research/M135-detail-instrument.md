@@ -507,6 +507,32 @@ for M1. The owner must revise or version the M55 declaration contract before
 this candidate can be mechanically admitted; setting the field false would
 hide the architecture rather than resolve the conflict.
 
+### 2.9 The second flat-null failure
+
+**VERIFIED.** M137 independently reproduced a Catmull-Rom-over-bilinear
+high-band gap of `0.3403664343410666 dex` on selected detail tiles. Its later
+flat arm carried only `13.314850036584688%` of the detailed arm's coarse
+structure yet produced a larger `0.3488548829813006 dex` gap. The
+flat/detail gap ratio was `1.0249391472947889`, or
+`2.4939147294788855%` higher on the flat arm
+(`experiments/M134-kernel-frontier/M137-clamped-detail.md:207-250`).
+
+**VERIFIED.** The registered flat-gap ceiling was `0.10`; both the main and
+independent verifier returned `S7_flat_band_null=false`, while the previous
+gates and decomposition remained unchanged. The lane therefore withdrew the
+resolved-detail interpretation
+(`experiments/M134-kernel-frontier/M137-clamped-detail.md:217-289`;
+`experiments/M134-kernel-frontier/detail-results.json:274-296`).
+
+**VERIFIED.** This is the same specificity failure as D8 by a different route.
+FRC treated repeatable flat structure as resolution; band power treated
+kernel-amplified high-frequency noise as detail. A one-time exact-zero refusal
+is therefore insufficient. Every claim-bearing M135 evaluation now requires a
+matched featureless sentinel rendered by the same candidate mode and emits
+flat/detail information, reference-repeatability, and output-repeatability
+ratios. Missing or failed flat evidence suppresses the score
+(`experiments/M135-detail-instrument/AMENDMENT-4.md:1-64`).
+
 ## 3. The precise impossibility result
 
 ### 3.1 What is impossible
@@ -599,12 +625,14 @@ approximation. This target is globally nonperiodic because each site's code is
 independent; knowing the carrier frequencies does not reveal its phases or
 amplitudes.
 
-**ASSUMED.** Acquire four independent evidence streams:
+**ASSUMED.** Acquire the following paired evidence streams:
 
 - `Y1`, `Y2`: two complete same-input-role bracket captures, each rendered
   independently by the mode under test;
 - `R1`, `R2`: two independently calibrated, fixed-focus, higher-sampling
-  reference realizations of the same physical code cells.
+  reference realizations of the same physical code cells; and
+- `F_Y1`, `F_Y2`, `F_R1`, `F_R2`: the corresponding four streams on a
+  preregistered featureless sentinel, processed by the same mode.
 
 The reference must use a different sensor footprint and at least `2.0x`
 subject sampling, then be low-passed and resampled to the scored native grid.
@@ -647,6 +675,27 @@ has the Gaussian-channel mutual-information interpretation. On arbitrary
 natural texture it is only a covariance information score; the stronger
 interpretation must not be claimed.
 
+**VERIFIED.** The public evaluator now refuses a missing flat sentinel. For
+arrays `A,B`, define
+
+```text
+P_rep(A,B) = mean_k max(0, Re cov(A_k,B_k)).
+```
+
+Every otherwise claim-bearing evaluation emits and gates:
+
+```text
+J_TR(flat) / J_TR(detail)                         <= 0.10
+P_rep(reference_flat) / P_rep(reference_detail)  <= 0.25
+P_rep(output_flat) / P_rep(output_detail)        <= 0.10.
+```
+
+The flat's own core status must be `NO_DETAIL`; otherwise the top-level result
+is `FLAT_NULL_FAILED`. These are certificate fields on every run, not an
+offline validation plot
+(`experiments/M135-detail-instrument/AMENDMENT-4.md:13-54`;
+`experiments/M135-detail-instrument/instrument.py:184-359`).
+
 ### 4.3 Transfer and unexplained-repeatability vetoes
 
 **VERIFIED.** Define, per cell:
@@ -662,7 +711,7 @@ U_k = max(0, P_Y - |C_YR|^2/P_R) / max(P_Y, epsilon).
 
 `T_TR` is the geometric mean of `T_k`; `U_TR` is the median of `U_k`.
 The committed implementation uses those definitions
-(`experiments/M135-detail-instrument/instrument.py:175-214`).
+(`experiments/M135-detail-instrument/instrument.py:192-245`).
 
 **VERIFIED.** `T_TR` and `U_TR` are veto-only. This is required by the
 scorecard's hard-gate rule:
@@ -726,7 +775,7 @@ This is the response that common post-noise invariance does not cancel.
 | Shared fixed pattern | **ASSUMED.** Different sensor footprint/scale, disjoint flats/darks, and a blank-residual correlation gate must prove lineage. The pixels alone cannot. |
 | Deterministic hallucination | **VERIFIED** when absent from the reference: it raises output variance or `U_TR` without raising reference covariance. **ASSUMED** against a hallucination that predicts the reference: the sealed random code makes such agreement evidence extracted from the input rather than a reusable prior. |
 | Periodic checker | **ASSUMED.** Periodic or public targets are ineligible by provenance, even if their covariance looks rich. |
-| Flat ROI | **VERIFIED** for independent noise: low reference-repeat coherence returns `NO_DETAIL`. **ASSUMED** for real shared sensor pattern unless the lineage gate passes. |
+| Flat ROI | **VERIFIED.** The matched flat is mandatory and reports three flat/detail ratios. Independent noise remains near zero; a structured false flat and a common A/B artifact return `FLAT_NULL_FAILED`. **ASSUMED** for physical data until the sentinel and lineage gates are commissioned. |
 
 ### 4.7 Failure boundary
 
@@ -742,7 +791,17 @@ truth. Independence and unpredictability are facts about acquisition lineage,
 not properties inferable from the output pixels. Missing lineage therefore
 returns `MISSING_LINEAGE`, never a numeric value
 (`experiments/M135-detail-instrument/AMENDMENT-3.md:6-23`;
-`experiments/M135-detail-instrument/commission.json:328-330`).
+`experiments/M135-detail-instrument/commission.json:850-937`).
+
+**VERIFIED.** The amended certificate also closes the exact hole exposed by
+M137. Across all uncontaminated synthetic arms, the worst single-run
+flat/detail ratio was `0.0023196142160268125` for corrected information,
+`0.0011493247893537382` for repeatable reference power, and
+`0.09619849966263185` for repeatable output power. Passing the detailed target
+itself as the alleged flat produced ratios of exactly `1.0` and
+`FLAT_NULL_FAILED`; adding a common artifact to both flat outputs failed in
+`128 / 128` populations
+(`experiments/M135-detail-instrument/commission.json:207-490,859-923`).
 
 ## 5. Candidate architecture B — full-covariance canonical information
 
@@ -805,7 +864,7 @@ registered LSI sharpening with far less rank pressure.
 | Averaging | **ASSUMED** same non-compensating transfer veto as architecture A. |
 | Shared fixed pattern / hallucination | **ASSUMED** same independent-reference and residual controls; no covariance method can repair shared false truth. |
 | Periodic checker | **ASSUMED** same target-provenance refusal. |
-| Flat ROI | **ASSUMED** same reference-repeat and no-evidence gate. |
+| Flat ROI | **ASSUMED** same mandatory paired-flat certificate and three non-compensating ratios as architecture A. |
 
 **VERIFIED.** Architecture B is mathematically broader but operationally less
 ready. It is a fallback if real image extraction shows material cross-cell
@@ -827,13 +886,21 @@ but it cannot provide the structural anti-prediction argument by itself.
 4. keep the seed unavailable to every renderer until all binaries, settings,
    and hashes are frozen;
 5. include input-only fiducials outside scored carriers;
-6. be photographed by an independently calibrated reference path at at least
+6. include preregistered neutral, featureless sentinel sites at matched tonal
+   levels and field positions, with their locations hidden from adaptive
+   render tuning; and
+7. be photographed by an independently calibrated reference path at at least
    `2.0x` the scored subject sampling.
 
 **ASSUMED.** Two output brackets and two reference halves are mandatory.
 Reference and output must not share flat/dark masters. The reference must land
 on a different sensor footprint after scale change or dither. A blank-residual
 cross-correlation above `0.05` refuses the capture.
+
+**ASSUMED.** The same candidate settings must render both coded and
+featureless sites. A separately tuned or recognizably special-cased flat
+sentinel is not a valid null. Physical commissioning must randomize or conceal
+sentinel locations well enough to test that assumption.
 
 ### 6.2 Linearization and geometry
 
@@ -880,6 +947,19 @@ UCB95(U_A - U_B) <= 0.02
 Ratios in `[0.98,1.02]` are parity. These are non-compensating: an information
 gain cannot buy transfer loss or unexplained repeatable structure.
 
+**ASSUMED.** Before any ratio above is claim-bearing, the same run must pass:
+
+```text
+status(flat)                                      = NO_DETAIL
+J_TR(flat) / J_TR(detail)                         <= 0.10
+P_rep(reference_flat) / P_rep(reference_detail)  <= 0.25
+P_rep(output_flat) / P_rep(output_detail)         <= 0.10.
+```
+
+Omission is `MISSING_FLAT_CONTROL`; any failed condition is
+`FLAT_NULL_FAILED`. These are hard gates, not quantities another coordinate
+may compensate.
+
 **ASSUMED.** The `1.02` superiority margin is paired with the scorecard's
 existing `0.98` retention threshold rather than tuned from a result. It still
 requires a physical power study before adoption; if the registered 64-site
@@ -888,11 +968,19 @@ design cannot resolve it, the outcome is `UNDERPOWERED`, not a relaxed bar.
 ## 7. Frozen challenge battery and outcome
 
 **VERIFIED.** The initial battery was frozen in commit `053ec124`. Three
-pre-outcome amendments corrected under-execution and tightened lineage; no
-threshold was relaxed
+pre-outcome amendments corrected under-execution and tightened lineage.
+Amendment 4 then froze the mandatory matched-flat certificate and
+spectrally-shaped noise plant before their first outcomes; amendment 5 fixed
+only a four-versus-sixteen-element potency-record shape error after the first
+attempt stopped before gate evaluation or artifact write. Amendment 6 then
+hardened an invalid-shape refusal without changing valid-input arithmetic; its
+replacement artifact was byte-identical. No threshold was relaxed
 (`experiments/M135-detail-instrument/AMENDMENT-1.md:1-22`;
 `experiments/M135-detail-instrument/AMENDMENT-2.md:1-28`;
-`experiments/M135-detail-instrument/AMENDMENT-3.md:1-26`).
+`experiments/M135-detail-instrument/AMENDMENT-3.md:1-26`;
+`experiments/M135-detail-instrument/AMENDMENT-4.md:1-89`;
+`experiments/M135-detail-instrument/AMENDMENT-5.md:1-13`;
+`experiments/M135-detail-instrument/AMENDMENT-6.md:1-16`).
 
 | Control | Expected direction | Frozen bar | Final |
 |---|---|---|---|
@@ -906,11 +994,15 @@ threshold was relaxed
 | Gamma-3 + PCHIP | tie/refuse | every ratio `[0.99,1.01]` | **VERIFIED PASS**, `[0.999997811,1.000001928]` |
 | Logistic + PCHIP | tie/refuse | every ratio `[0.99,1.01]` | **VERIFIED PASS**, `[0.999958140,1.000030663]` |
 | Added independent noise | down | q95 ratio `<0.90` | **VERIFIED PASS**, `0.468175` |
+| High-band noise-only gain | down, never promote | q95 ratio `<0.90`, zero promotions | **VERIFIED PASS**, q95 `0.549007`, zero promotions |
 | Common A/B artifact absent reference | down and residual up | `J` q95 `<0.90`, `U` increase q05 `>0.05` | **VERIFIED PASS**, `0.404241`, `+0.469309` |
 | Deterministic hallucination absent reference | down/no promotion | q95 ratio `<0.95` | **VERIFIED PASS**, `0.872049` |
 | Averaging trap | possible `J` up, transfer veto | `T` q95 `<0.98`, zero promotions | **VERIFIED PASS**, `J` q05 `1.808783`, `T` q95 `0.832604`, zero wins |
 | Angle relabeling | tie | max error `<=1e-10` | **VERIFIED PASS**, `4.44e-16` |
 | Flat reference | no number | `NO_DETAIL` 128/128 | **VERIFIED PASS** |
+| Matched flat on every valid arm | near-zero first-class ratios | information/output `<=0.10`, reference structure `<=0.25` per run | **VERIFIED PASS**, worst information/output/reference `0.002320 / 0.096199 / 0.001149` |
+| Structured false flat / common flat artifact | refuse | `FLAT_NULL_FAILED` | **VERIFIED PASS**, structured ratios `1/1/1`; common artifact 128/128 |
+| Missing flat | refuse | `MISSING_FLAT_CONTROL` 128/128 | **VERIFIED PASS** |
 | Predictable target | no number | `PREDICTABLE_TARGET` 128/128 | **VERIFIED PASS** |
 | Site-permuted reference | no number | no `OK` in 128/128 | **VERIFIED PASS**, `NO_EVIDENCE` 128/128 |
 | Clipping | refuse | `NONLINEAR_OUTPUT` | **VERIFIED PASS**, 3.027% rail hits |
@@ -920,14 +1012,32 @@ threshold was relaxed
 | Missing provenance | refuse | `MISSING_LINEAGE` | **VERIFIED PASS** |
 
 **VERIFIED.** Full numerical output is in
-`experiments/M135-detail-instrument/commission.json:1-399`; the concise
+`experiments/M135-detail-instrument/commission.json:1-1005`; the concise
 commissioning account is
-`experiments/M135-detail-instrument/RESULTS.md:1-122`.
+`experiments/M135-detail-instrument/RESULTS.md:1-164`.
 
-**VERIFIED.** A read-only independent verifier reran the battery and citation
-audit, reproduced the postfilter identity, checked all 22 gates and freeze
-commits, and reported no defect
+**VERIFIED.** A read-only independent verifier reran the original battery and
+citation audit, reproduced the postfilter identity, checked C0-C21 and the
+freeze commits, and reported no defect
 (`experiments/M135-detail-instrument/VERIFICATION.md:1-40`).
+
+**VERIFIED.** The amended run passed all 25 gates. Every pre-amendment
+information summary, transfer summary, common-residual summary, tone result,
+sample-size result, permutation count, checker result, averaging count, and
+C0-C21 Boolean reproduced exactly against the preserved prior artifact.
+The added noise plant had squared upper-band gain `5.0458`, reduced `J_TR` to
+q95 `0.5490065676630667`, and produced zero promotions. Its worst
+flat/detail information and output-repeatability ratios were
+`0.0023196142160268125` and `0.09619849966263185`
+(`experiments/M135-detail-instrument/commission.json:124-133,400-510,980-1005`).
+
+**VERIFIED.** A separately implemented verifier that does not import the
+commissioning harness passed 20/20 checks: exact preservation of every
+pre-amendment result family, all three flat bars, both positive flat-failure
+plants, missing-flat refusal, the M137 source values, noise-plant potency, and
+a fresh 128-site direct API probe including malformed-shape refusal
+(`experiments/M135-detail-instrument/flat-verification.json:1-82`;
+`experiments/M135-detail-instrument/VERIFICATION.md:42-73`).
 
 **VERIFIED.** The battery includes both directions required by the brief.
 Defect-only commissioning would have missed the averaging trap: its
@@ -950,8 +1060,10 @@ D2 `"certified-acuity"` map.
 - correct synthetic null, pre-noise blur, and improvement directions;
 - a positive improvement control;
 - a ≥64-site sharpening battery with an unchanged bar;
-- explicit tone, noise, angle, clipping, quantization, flat, permutation,
-  common-mode, hallucination, periodic-target, and checker controls;
+- a mandatory matched flat sentinel with first-class per-run ratios;
+- explicit broadband and high-band noise-amplification, angle, clipping,
+  quantization, permutation, common-mode, hallucination, periodic-target, and
+  checker controls;
 - typed refusal rather than near-zero ratios.
 
 **VERIFIED.** **NO-GO** for declaring M1 admitted now. The final synthetic run
@@ -965,7 +1077,8 @@ unmeasured.
 development material or a disposable target, followed by a sealed holdout. The
 rehearsal must demonstrate the exact carrier extraction, the reference MTF and
 sampling advantage, independent calibration, sensor-coordinate decorrelation,
-registration, tone witness, 64-site power, and all output-format refusals.
+registration, tone witness, 64-site power, matched featureless sentinels under
+the same mode, and all output-format refusals.
 
 **VERIFIED.** If the random-code target, higher-sampling reference, or
 independent calibration cannot be acquired, no admissible reference-agreement
@@ -987,6 +1100,22 @@ after provenance is removed.
   comparator's undisclosed internal sharpening support.
 - **ASSUMED.** Whether the 33-step physical PCHIP witness preserves the
   synthetic `<1%` result after RAW development and resampling.
+- **ASSUMED.** Whether a physical target can supply flat sentinels below the
+  frozen `0.25` reference-structure and `0.10` output-repeatability ratios at
+  all registered tones and field positions.
+- **ASSUMED.** Whether an adaptive proprietary renderer can recognize and
+  special-case the sentinel. Randomized/concealed placement is required, but
+  the synthetic campaign cannot prove concealment.
+- **ASSUMED.** Whether the frozen per-run flat bars have adequate false-refusal
+  power under real shot noise, residual gradients, and registration. They
+  cannot be relaxed after observing the holdout. The per-cell
+  `max(0, cross-power)` diagnostic has a finite positive null bias; under the
+  synthetic high-band noise plant its worst output-repeatability ratio was
+  `0.09619849966263185`, only `3.80150033736815%` below the `0.10` refusal
+  bar **VERIFIED**.
+- **VERIFIED.** A common post-render filter still ties on `J_TR`; the flat
+  sentinel does not turn that invariant coordinate into an absolute
+  presentation-sharpness score. `T_TR` remains a mandatory veto.
 - **ASSUMED.** Whether `N=256` gives adequate rank and power for architecture B.
 - **ASSUMED.** Whether repeat-pair FRC, after independent A/B calibration,
   can drive the held-out flat/dark ring residual below a frozen bar on the
@@ -1016,9 +1145,15 @@ independently rule out the claimed acuity certificate.
 unpredictable reference. Sharpening cannot game `J_TR` because common
 post-noise LSI gain cancels exactly in every observed and permuted coherence;
 any apparent transfer gain cannot promote without an information gain. The
-architecture is mathematically and synthetically commissioned.
+architecture is mathematically and synthetically commissioned. The
+claim-bearing API now also requires a matched flat sentinel on every run. In
+the amended 128-population battery, a `5.0458x` upper-band noise-power plant
+reduced information to q95 `0.549007`, never promoted, and retained a worst
+flat/detail information ratio of `0.002320`; structured and common-artifact
+flats were refused **VERIFIED**.
 
 **ASSUMED.** Physical feasibility is conditional, not established. The
-reference lineage is part of the instrument, and existing development captures
-do not contain that role. M1 should remain `UNMEASURED` until the physical
-lineage and extraction rehearsal pass without changing the frozen bars.
+reference and matched-flat lineages are parts of the instrument, and existing
+development captures do not contain those roles. M1 should remain
+`UNMEASURED` until the physical lineage and extraction rehearsal pass without
+changing the frozen bars.

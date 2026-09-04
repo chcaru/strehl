@@ -38,3 +38,36 @@ split. The final verifier reported **PASS with no remaining defects**.
 
 This verifies the mathematical and synthetic estimator work. It does not
 replace physical reference/extraction commissioning or produce an M1 score.
+
+## Amendment 4/5 verification
+
+Status: **VERIFIED by a separate implementation path; not an independent
+author**
+
+`flat_verify.py` does not import `commission.py`. It independently:
+
+- checked that `commission.json` passes all 25 gates;
+- compared every pre-amendment information, transfer, residual, tone,
+  sample-size, permutation, checker, averaging, and C0-C21 result against
+  `commission-run4-pre-flat-null.json`;
+- verified every uncontaminated arm's maximum flat/detail information,
+  reference-repeatability, and output-repeatability ratios against the frozen
+  `0.10 / 0.25 / 0.10` bars;
+- checked common-artifact rejection in 128/128 populations, structured-flat
+  rejection at ratios `1/1/1`, and missing-flat rejection in 128/128;
+- checked the four frozen squared noise gains, q95 information ratio below
+  `0.90`, and zero promotions;
+- read M137's retained JSON directly and matched its detailed gap, flat gap,
+  ratio, failed S7 gate, preserved old gates, and final failure; and
+- generated a fresh 128-site independent probe. Baseline was `OK`; the
+  high-band noise plant reduced `J_TR` from `3.9841138452442353` to
+  `2.6334749277223413` (`0.6609938947567657x`); its flat information ratio
+  remained `0`; structured and common-artifact flats failed; and omission
+  returned `MISSING_FLAT_CONTROL`;
+- exercised a malformed primary bundle and confirmed typed `INVALID_SHAPE`
+  rather than an indexing error; and
+- confirmed amendment 6's replacement campaign is byte-identical to the
+  pre-shape-guard artifact.
+
+All 20 checks passed. The machine-readable result is
+`flat-verification.json`.

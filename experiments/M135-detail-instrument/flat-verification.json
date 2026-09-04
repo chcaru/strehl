@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "checks": {
+    "commission_passes_25_gates": true,
+    "pre_amendment_sections_exact": true,
+    "pre_amendment_information_exact": true,
+    "pre_amendment_gates_exact": true,
+    "shape_guard_campaign_exact": true,
+    "all_flat_information_ratios_below_bar": true,
+    "all_flat_reference_ratios_below_bar": true,
+    "all_flat_output_ratios_below_bar": true,
+    "common_flat_rejected_128": true,
+    "structured_flat_rejected": true,
+    "missing_flat_rejected_128": true,
+    "noise_plant_potency_exact": true,
+    "noise_plant_not_rewarded": true,
+    "m137_failure_matches_source": true,
+    "direct_baseline_passes": true,
+    "direct_missing_flat_fails": true,
+    "direct_structured_flat_fails": true,
+    "direct_common_flat_fails": true,
+    "direct_invalid_shape_refuses": true,
+    "direct_noise_amplification_not_rewarded": true
+  },
+  "direct_probe": {
+    "baseline_information_bits_per_site": 3.9841138452442353,
+    "noise_amplified_information_bits_per_site": 2.6334749277223413,
+    "noise_amplified_to_baseline_ratio": 0.6609938947567657,
+    "baseline_flat_control": {
+      "status": "NO_DETAIL",
+      "passes": true,
+      "information_bits_per_site": 0.0,
+      "flat_to_detail_information_ratio": 0.0,
+      "flat_to_detail_reference_repeatable_power_ratio": 5.203384999357319e-05,
+      "flat_to_detail_output_repeatable_power_ratio": 0.0022042317321437953,
+      "reference_repeatable_power": 4.976532147442243e-05,
+      "output_repeatable_power": 0.0014592904638402104,
+      "detail_reference_repeatable_power": 0.9564028316292,
+      "detail_output_repeatable_power": 0.6620404028123356,
+      "bars": {
+        "maximum_information_ratio": 0.1,
+        "maximum_reference_repeatable_power_ratio": 0.25,
+        "maximum_output_repeatable_power_ratio": 0.1
+      },
+      "reference": {
+        "minimum_repeat_coherence": 0.03442266492610787,
+        "median_repeat_coherence": 0.08528891275838979,
+        "rank": 32,
+        "dimension": 32,
+        "condition": 8.201791994130312
+      }
+    },
+    "noise_amplified_flat_control": {
+      "status": "NO_DETAIL",
+      "passes": true,
+      "information_bits_per_site": 0.0,
+      "flat_to_detail_information_ratio": 0.0,
+      "flat_to_detail_reference_repeatable_power_ratio": 5.203384999357319e-05,
+      "flat_to_detail_output_repeatable_power_ratio": 0.007594968417243661,
+      "reference_repeatable_power": 4.976532147442243e-05,
+      "output_repeatable_power": 0.005042224887365904,
+      "detail_reference_repeatable_power": 0.9564028316292,
+      "detail_output_repeatable_power": 0.6638901718034808,
+      "bars": {
+        "maximum_information_ratio": 0.1,
+        "maximum_reference_repeatable_power_ratio": 0.25,
+        "maximum_output_repeatable_power_ratio": 0.1
+      },
+      "reference": {
+        "minimum_repeat_coherence": 0.03442266492610787,
+        "median_repeat_coherence": 0.08528891275838979,
+        "rank": 32,
+        "dimension": 32,
+        "condition": 8.201791994130312
+      }
+    },
+    "structured_flat_status": "FLAT_NULL_FAILED",
+    "common_flat_status": "FLAT_NULL_FAILED",
+    "invalid_shape_status": "INVALID_SHAPE",
+    "missing_flat_status": "MISSING_FLAT_CONTROL"
+  }
+}

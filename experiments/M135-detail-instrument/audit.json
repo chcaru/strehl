@@ -1,9 +1,10 @@
 {
   "status": "PASS",
-  "citation_count": 87,
-  "citation_range_count": 104,
-  "verified_tags": 76,
-  "assumed_tags": 33,
+  "citation_count": 100,
+  "citation_range_count": 120,
+  "verified_tags": 85,
+  "assumed_tags": 38,
   "d8_checks": 14,
+  "flat_checks": 20,
   "findings": []
 }

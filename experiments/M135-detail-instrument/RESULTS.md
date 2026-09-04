@@ -50,7 +50,21 @@ Machine-readable details are in `d8-audit.json`.
 7. `56f7cada` froze amendment 3, making all lineage fields mandatory and
    replacing the weak constant-template periodic fixture with a full-rank
    public cyclic code.
-8. `commission.json` is the first run under the final fail-closed contract.
+8. `commission-run4-pre-flat-null.json` preserves the first run under that
+   contract.
+9. `f319c19d` froze amendment 4: a paired flat sentinel became mandatory and a
+   high-band noise-amplification plant was added.
+10. The first amendment-4 execution stopped before gate evaluation or artifact
+    write because its potency record exposed 16 cell gains to a four-frequency
+    checker. `a16b3822` froze amendment 5, which de-duplicated that record
+    without changing the plant, statistic, or bars.
+11. `commission.json` is the first successful run under the mandatory-flat
+    contract.
+12. `commission-run5-pre-shape-guard.json` preserves that result.
+    `6a5b524d` froze amendment 6, which made malformed primary shapes return
+    `INVALID_SHAPE` instead of reaching flat-ratio arithmetic. The replacement
+    `commission.json` is byte-identical at SHA-256
+    `6DC8CC48534387D329010657E76E8574F6AFAFF541511951725BAC79D1B00F14`.
 
 No threshold was relaxed. The amendments only corrected under-execution or
 tightened provenance/refusal behavior.
@@ -58,7 +72,7 @@ tightened provenance/refusal behavior.
 ## Final result
 
 `python experiments/M135-detail-instrument/commission.py` returned `PASS` on
-all 22 gates.
+all 25 gates.
 
 | Control | Final result |
 |---|---:|
@@ -71,11 +85,15 @@ all 22 gates.
 | Gamma-3 after 33-step PCHIP | range `[0.999997811, 1.000001928]` |
 | Logistic after 33-step PCHIP | range `[0.999958140, 1.000030663]` |
 | Added independent noise | q95 ratio `0.468175` |
-| Common A/B artifact absent reference | q95 ratio `0.404241`; q05 residual increase `0.469309` |
+| High-band noise-only amplification | squared upper-band gain `5.0458`; q95 information ratio `0.549007`; promotions `0` |
+| Common A/B artifact absent reference | q95 ratio `0.404241`; q05 residual increase `0.469309`; matched flat `FLAT_NULL_FAILED` 128/128 |
 | Deterministic hallucination absent reference | q95 ratio `0.872049` |
 | Averaging trap | information q05 `1.808783`, transfer q95 `0.832604`, promotions `0` |
 | Edge-angle relabeling | maximum absolute ratio error `4.44e-16` |
 | Flat reference | `NO_DETAIL`, 128/128 |
+| Mandatory matched flat, uncontaminated arms | worst information ratio `0.002320`; reference-repeat ratio `0.001149`; output-repeat ratio `0.096199` |
+| Structured false flat | `FLAT_NULL_FAILED`; all three ratios exactly `1.0` |
+| Missing matched flat | `MISSING_FLAT_CONTROL`, 128/128 |
 | Predictable target | `PREDICTABLE_TARGET`, 128/128 |
 | Permuted reference | `NO_EVIDENCE`, 128/128 |
 | Clipping / 8-bit / shared calibration / missing lineage | typed refusal in every case |
@@ -83,6 +101,26 @@ all 22 gates.
 
 The two required responsiveness controls therefore both fired: pre-noise blur
 fell by roughly 38%, while planted optical improvement rose by roughly 25%.
+
+Every pre-amendment summary and C0-C21 gate reproduced exactly against
+`commission-run4-pre-flat-null.json`. The new flat control is not a post-hoc
+plot: `evaluate` requires it, emits all three ratios, and suppresses the
+claim-bearing score when the flat is structured or repeatably contaminated.
+The worst output-repeatability ratio, `0.09619849966263185`, is only
+`3.80150033736815%` below its `0.10` bar. That is a real warning about
+physical false-refusal margin, not grounds to relax the frozen threshold.
+
+## M137 flat-null input
+
+**VERIFIED.** M137's independent kernel experiment selected a low-structure arm at
+`13.314850036584688%` of the detailed arm's coarse structure. Its
+Catmull-Rom-over-bilinear gap nevertheless rose from
+`0.3403664343410666 dex` to `0.3488548829813006 dex`, ratio
+`1.0249391472947889`; its registered `0.10` flat-gap bar failed and the lane
+withdrew the resolved-detail claim. M135's paired-flat requirement and
+spectrally shaped noise-only plant were frozen in response before their first
+successful outcomes
+(`experiments/M134-kernel-frontier/M137-clamped-detail.md:207-289`).
 
 ## Load-bearing negative diagnostics
 
@@ -109,6 +147,8 @@ The final run commissions:
 - the exact LSI postfilter invariance;
 - the non-compensating transfer veto;
 - the common-mode residual response;
+- a mandatory per-run flat/detail certificate;
+- a high-band noise-amplification rejection;
 - the typed refusal paths;
 - null, defect, improvement, and checker power.
 
