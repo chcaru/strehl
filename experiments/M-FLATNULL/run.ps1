@@ -464,52 +464,87 @@ function Invoke-Arm {
             (Join-Path $Out "clean-full-usm-plant.json")
         )
     }
-    foreach ($path in $paths) {
-        Reset-OutputPath $path
-    }
-
-    New-WarpMap $ArmRow $capturePath $map
-    Clear-StrehlEnvironment
-    $env:RAYON_NUM_THREADS = "8"
-    $env:STREHL_M8_TRACE_DIR = $state
-    $env:STREHL_M8_CHECKER = $Checker
-    $env:STREHL_M8_CAPTURE = $ArmRow.Name
-    $env:STREHL_WARPMAP = $map
-    $env:STREHL_DEFECT = "off"
-    $env:STREHL_PYRAMID_WORKERS = "1"
-    $arguments = @(
-        "stack", $capturePath, "--out", $tiff, "--merge", "pyramid",
-        "--cover", "scale", "--resampler", "catmull-rom"
+    $evidencePaths = @(
+        $map,
+        $tiff,
+        (Join-Path $state "meta.json"),
+        (Join-Path $state "m8-r.json")
     )
-    if ($ArmRow.Limit -gt 0) {
-        $arguments += @("--limit", "$($ArmRow.Limit)")
-    }
-    Invoke-Checked $Strehl $arguments (
-        Join-Path $Out "$($ArmRow.Name)-stack.log"
-    )
-    Invoke-Checked "python" @(
-        "-B", $Checker, "finalize-r", "--state", $state
-    ) (Join-Path $Out "$($ArmRow.Name)-m8-r.log")
-
     if ($ArmRow.Name -eq "clean-full") {
-        Save-M8Final $state $tiff "base"
-        $zero = Join-Path $Out "clean-full-usm-a0.tiff"
-        $planted = Join-Path $Out "clean-full-usm-a1.tiff"
-        Invoke-Checked "python" @(
-            "-B", $Analyzer, "plant", "--input", $tiff, "--zero", $zero,
-            "--output", $planted,
-            "--manifest", (Join-Path $Out "clean-full-usm-plant.json")
-        ) (Join-Path $Out "clean-full-usm-plant.log")
-        Save-M8Final $state $zero "zero"
-        Save-M8Final $state $planted "usm"
+        foreach ($label in @("base", "zero", "usm")) {
+            $evidencePaths += @(
+                (Join-Path $state "m8-o-$label.json"),
+                (Join-Path $state "m8-o-$label-violations.npy")
+            )
+        }
+        $evidencePaths += @(
+            (Join-Path $Out "clean-full-usm-a0.tiff"),
+            (Join-Path $Out "clean-full-usm-a1.tiff"),
+            (Join-Path $Out "clean-full-usm-plant.json")
+        )
     }
     else {
-        Save-M8Final $state $tiff
+        $evidencePaths += @(
+            (Join-Path $state "m8-o.json"),
+            (Join-Path $state "m8-o-violations.npy")
+        )
+    }
+    $missingEvidence = @(
+        $evidencePaths | Where-Object {
+            -not (Test-Path -LiteralPath $_ -PathType Leaf)
+        }
+    )
+    if ($missingEvidence.Count -eq 0 -and -not $Force) {
+        Write-Output "Recovering completed evidence for $($ArmRow.Name)"
+    }
+    else {
+        foreach ($path in $paths) {
+            Reset-OutputPath $path
+        }
+
+        New-WarpMap $ArmRow $capturePath $map
+        Clear-StrehlEnvironment
+        $env:RAYON_NUM_THREADS = "8"
+        $env:STREHL_M8_TRACE_DIR = $state
+        $env:STREHL_M8_CHECKER = $Checker
+        $env:STREHL_M8_CAPTURE = $ArmRow.Name
+        $env:STREHL_WARPMAP = $map
+        $env:STREHL_DEFECT = "off"
+        $env:STREHL_PYRAMID_WORKERS = "1"
+        $arguments = @(
+            "stack", $capturePath, "--out", $tiff, "--merge", "pyramid",
+            "--cover", "scale", "--resampler", "catmull-rom"
+        )
+        if ($ArmRow.Limit -gt 0) {
+            $arguments += @("--limit", "$($ArmRow.Limit)")
+        }
+        Invoke-Checked $Strehl $arguments (
+            Join-Path $Out "$($ArmRow.Name)-stack.log"
+        )
+        Invoke-Checked "python" @(
+            "-B", $Checker, "finalize-r", "--state", $state
+        ) (Join-Path $Out "$($ArmRow.Name)-m8-r.log")
+
+        if ($ArmRow.Name -eq "clean-full") {
+            Save-M8Final $state $tiff "base"
+            $zero = Join-Path $Out "clean-full-usm-a0.tiff"
+            $planted = Join-Path $Out "clean-full-usm-a1.tiff"
+            Invoke-Checked "python" @(
+                "-B", $Analyzer, "plant", "--input", $tiff, "--zero", $zero,
+                "--output", $planted,
+                "--manifest", (Join-Path $Out "clean-full-usm-plant.json")
+            ) (Join-Path $Out "clean-full-usm-plant.log")
+            Save-M8Final $state $zero "zero"
+            Save-M8Final $state $planted "usm"
+        }
+        else {
+            Save-M8Final $state $tiff
+        }
     }
 
     $meta = Get-Content -LiteralPath (Join-Path $state "meta.json") -Raw |
         ConvertFrom-Json
-    if ($meta.sites.psobject.Properties.Count -ne 4 * $ArmRow.ExpectedFrames) {
+    if (@($meta.sites.psobject.Properties).Count -ne 4 * $ArmRow.ExpectedFrames) {
         throw "$($ArmRow.Name): unexpected M8 trace site count"
     }
     [pscustomobject]@{
