@@ -1476,7 +1476,7 @@ formal reading of any kind. I tried to shortcut it and was correctly refused.
 
 A concurrency lane had already measured 18 renders, six each at pyramid worker
 counts 1, 4 and 8, and found hashes identical **within** each count but three
-different hashes **across** counts. Together with `byte-freeze.rs:512-514`,
+different hashes **across** counts. Together with `byte-freeze.rs:519-521`,
 which admits in its own words that `STREHL_PYRAMID_WORKERS` "changes the fold's
 reduction order, which is worth 1 DN on a fifth of a percent of pixels", I put
 it to the registrar that M12's byte-invariance bar was already MEASURED and
@@ -2725,6 +2725,62 @@ none (`cover-default.md:7,234`; the scorecard quotes the same measurement on a
 slightly different denominator as `98.1463%`). And the `32x` rests on a single subject, so generality is
 now under test on `very-tilted-all-axis-sw10`, the most aggressive geometry
 available.
+
+### 2.9.23 A capture the owner cannot shoot, and a verification tree I had stopped counting
+
+Two governance failures, both mine, both caught before they cost anything.
+
+**1. The capture request specified something the owner's camera cannot do.**
+`docs/capture-requests/2026-09-319-frame-session.md` moved through
+`319 -> 407 -> 383 -> 443` frames in under twenty-four hours. At `c8873309` it
+made **back-to-back A/B exposures at every focus node the primary protocol**.
+The owner shoots macro with **in-camera focus bracketing on a Sony A7C II**,
+which drives a complete ladder automatically and fires one exposure per node.
+Per-node pairing is physically unavailable on that body.
+
+The requirement had already been withdrawn once. `M-FRC-VIABILITY.md:55-57` --
+the same lane's own adjudication -- states that FRC independence *"does not
+algebraically require alternating exposures at every node."* It was withdrawn,
+reinstated as primary, and is now withdrawn again on hardware grounds. The
+correction was sitting **uncommitted**, 245 insertions deep, in a tree shared by
+sixteen running lanes.
+
+Actions taken. The lane was ordered to commit immediately. The A7C II limit is
+recorded as **owner-supplied equipment fact, marked `DO NOT REOPEN`**, not as a
+finding any lane may re-derive. The document is **FROZEN**: no frame count,
+shot list, protocol or gate may change without my authorisation, because every
+revision made while the owner is away is a chance for the owner to shoot a
+superseded version. And I transferred write ownership of `docs/capture-requests/`
+to lane-FRC, formalising what was already true -- the header named me, but I had
+authored none of the last four revisions.
+
+**2. I mandated independent verification and stopped counting the cost.** The
+roster I maintain tracks seven lanes. The actual tree is **16 running and 220
+idle, 236 agents**. The sprawl is not disorder: it is overwhelmingly *verifiers*,
+which exist because of my own standing rule that the author never verifies its
+own work. That rule is correct and I am not withdrawing it.
+
+But it does not scale uniformly, and one case shows the failure clearly.
+Candidate 2 -- killed on nonlinear tone at `e9b3f830` -- carries at least eight
+distinct verification agents (`cand2-v2-verifier`, `-reverifier`,
+`-final-verifier`, `-interlock-verifier`, `cand2-optics-protocol-verifier`,
+`-reverifier`, `-metadata-verifier`, `cand2-final-result-verifier`). **Eight
+verifiers on a dead candidate.** Verification depth was tracking the lane's
+enthusiasm rather than the decision's consequence.
+
+New standing rule: **verification depth scales with what the result decides.**
+A result that changes a shipping default, a frozen gate, or a published claim
+gets an independent verifier and, if disputed, one re-verification. A
+post-mortem on an already-dead candidate gets one checker and stops. A lane that
+wants a third verifier on the same artifact must ask me and name the decision at
+risk.
+
+**3. A lane found a stale citation in this file.** `2.9.5` cited
+`byte-freeze.rs:512-514` for the sentence about `STREHL_PYRAMID_WORKERS`
+changing the fold's reduction order; that passage is at `519-521`, while
+`512-514` is the `STREHL_FULLRES_GATHER` entry. The quotation was correct and
+the argument unaffected -- only the line range was wrong. Corrected here. I
+hold every lane to citing at source; the rule applies to me identically.
 
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
