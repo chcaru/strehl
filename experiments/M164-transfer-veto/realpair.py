@@ -1231,6 +1231,10 @@ def run_real(output: Path, stage_dir: Path) -> dict[str, Any]:
                     "label": pair.label,
                     "holdout_status": "BURNED-OK",
                     "status": "PAIR_INVALID",
+                    "fired": None,
+                    "verdict": "UNADJUDICABLE_EXCEPTION",
+                    "fixed_sites": len(SITE_CENTRES),
+                    "eligible_sites": 0,
                     "error_type": type(error).__name__,
                     "error": str(error),
                     "traceback": traceback.format_exc(),
@@ -1348,7 +1352,8 @@ def main(argv: list[str] | None = None) -> int:
         for pair in result["pairs"]:
             if pair.get("status") == "PAIR_INVALID":
                 print(
-                    f"{pair['pair']}: {pair['verdict']} "
+                    f"{pair['pair']}: "
+                    f"{pair.get('verdict', 'UNADJUDICABLE_EXCEPTION')} "
                     f"eligible={pair.get('eligible_sites', 0)}/"
                     f"{pair.get('fixed_sites', 0)}: {pair.get('error', '')}",
                     file=sys.stderr,

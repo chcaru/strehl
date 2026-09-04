@@ -1,0 +1,37 @@
+{
+  "authorized_pairs": [
+    "cb",
+    "113",
+    "113-sharp"
+  ],
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\out\\realpair-verdict.json",
+    "--stage-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\out\\realpair-stage"
+  ],
+  "completed_at": "2026-09-04T18:25:17.822527+00:00",
+  "error": "'verdict'",
+  "error_type": "KeyError",
+  "forbidden_pairs": [
+    "all 119MSDCF pairs"
+  ],
+  "runtime": {
+    "numpy": "2.4.4",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "scipy": "1.17.1",
+    "tifffile": "2026.5.2"
+  },
+  "script_sha256": "87954918272B00C9997D5845C7B2147909ACA68F77A6FEE0B1D588CC81954D63",
+  "started_at": "2026-09-04T18:23:18.414414+00:00",
+  "status": "FAIL",
+  "thread_environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M164-transfer-veto\\realpair.py\", line 1351, in main\n    f\"{pair['pair']}: {pair['verdict']} \"\n                       ~~~~^^^^^^^^^^^\nKeyError: 'verdict'\n",
+  "transfer_veto_sha256": "E6C44578CA5913E4BB7FA966BBF1CD945F0AB084E2EEB8754B75435CD86E853B"
+}
