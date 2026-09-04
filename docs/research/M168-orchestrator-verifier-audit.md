@@ -19,8 +19,9 @@ lane was modified.
   `v2954.py` reports `52/52`, with `46 pass + 0 fail + 6 skipped`, and
   `commission_2957.py` reports `10/10`.
 - **VERIFIED BY RUNNING.** The apparatus changed while this audit was in
-  progress. I therefore also attacked the latest component revision,
-  `7c65f8a4444d2c2fb239e589f56466da9e7aa7e2`. It reports `61/61`, with
+  progress. I therefore also attacked the latest `v2954.py` revision at close,
+  `058a902364eba9e9a5c3dbc914bf03606d327288` (the harness remains at
+  `7c65f8a4444d2c2fb239e589f56466da9e7aa7e2`). It reports `61/61`, with
   `55 pass + 0 fail + 6 skipped`; the commissioning harness reports `19/19`.
   Every semantic, duplicate, source-linkage, named-target and crash-recovery
   defect reported below still reproduces on that revision.
@@ -28,7 +29,7 @@ lane was modified.
 
   | component | SHA-256 |
   |---|---|
-  | `v2954.py` | `C1958F2A890C5E7AEEC3C99C4C6D6D243CEB3845ECC7793D2DCEEC0372E6C8B9` |
+  | `v2954.py` | `CBE312BF5475CE51E1E6824118C3CD9B201880C7A286EF946A397C1B9958A229` |
   | `commission_2957.py` | `9DE0B8DA1C4EE28C43AA94EF6A4EB6B220F25B7F9D18C14A8155B6D9C3ABD82D` |
   | `vowner0906.py` | `802507B2F38EE1341069B1721189C5214C5E61EC164050DFA5BB396B7636B1AF` |
   | `probe_generativity.py` | `54E332F2CAD5A225111BADB6553C181DAE797C74A1E958B0D0684EAFFAF18855` |
@@ -110,7 +111,7 @@ GREEN.
   `:228-237,262`. STATUS matching at `:251` receives no context. At the assigned
   52-claim revision no live claim had `ctx`; the latest 61-claim revision has
   seven, but all seven remain source-only.
-- **VERIFIED BY RUNNING.** On the latest revision there are 13 non-unique STATUS
+- **VERIFIED BY RUNNING.** On the latest revision there are 14 non-unique STATUS
   probes and 18 non-unique source probes. Examples are `96` at eight STATUS
   sites, `PASS` at five sites, `2.0312` at three sites, and `1,602` at two sites.
   The checker requires at least one match, not the intended unique match.
