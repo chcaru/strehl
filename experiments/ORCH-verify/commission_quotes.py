@@ -69,6 +69,16 @@ MUTATIONS = [
      "0.005649", "0.009999"),
     ("m169 axis has no CI", "docs/research/M169-m3-veil.md",
      "confidence_interval=NO CI", "confidence_interval=[0.1, 0.9]"),
+    # M139's M12 memory table is the basis for the STATUS 2.9.69 claim that M12
+    # fails on memory rather than on quarantined wall-clock timing.
+    ("m139 m12 memory fail", "docs/research/M139-m12-campaign.md",
+     "8.9312", "5.9312"),
+    # STATUS-side controls: prove the 2.9.69 claims fire when STATUS drifts
+    # from the lane source rather than the other way round. Labels must match
+    # the label the verifier prints, not a description of the control.
+    ("m12 mem w8 n33", "docs/STATUS.md", "`15.6115`", "`15.6118`"),
+    ("m175 sentinel residual", "docs/STATUS.md",
+     "`2.220446049250313e-16`", "`2.220446049250314e-16`"),
 ]
 
 
@@ -178,13 +188,22 @@ def main() -> int:
         target.write_text(apply_mutation(pristine, anchor, replacement),
                           encoding="utf-8", newline="")
         rc, out = run()
-        if rc != 0 and ("XFAIL " + label) in out:
+        hit = re.search(r"^(?:XFAIL|RED)\s+" + re.escape(label) + r"(?:\s|$)",
+                        out, re.M)
+        if rc != 0 and hit:
             print("  RED   %-24s control PASSED" % label)
             caught += 1
+        elif rc != 0:
+            # The verifier failed, but not under this label. That is a
+            # mislabelled control, not a no-op check -- reporting it as a no-op
+            # would send me hunting a defect in the verifier that is not there.
+            print("  RED   %-24s *** CONTROL MISLABELLED -- verifier failed "
+                  "under a different label ***" % label)
+            missed.append(label + " (mislabelled)")
         else:
-            print("  %-5s %-24s *** CONTROL FAILED -- CHECK IS A NO-OP ***"
-                  % ("GREEN" if rc == 0 else "RED", label))
-            missed.append(label)
+            print("  GREEN %-24s *** CONTROL FAILED -- CHECK IS A NO-OP ***"
+                  % label)
+            missed.append(label + " (no-op)")
         target.write_text(pristine, encoding="utf-8", newline="")
 
     rc, out = run()

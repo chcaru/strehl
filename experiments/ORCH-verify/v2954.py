@@ -18,7 +18,7 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().pare
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
-            "2.9.66", "2.9.67", "2.9.68"]
+            "2.9.66", "2.9.67", "2.9.68", "2.9.69"]
 
 
 def collapse(s):
@@ -173,6 +173,22 @@ CLAIMS = [
      R + "M174-m3-improvement-assertion.md"),
     ("m3 gate crossing per component", "0.477804796",
      R + "M174-m3-improvement-assertion.md"),
+    # --- M139: M12 peak memory, the column the FAIL actually rests on ---
+    ("m12 mem w1 n33", "2.2463", R + "M139-m12-campaign.md"),
+    ("m12 mem w2 n33", "4.4747", R + "M139-m12-campaign.md"),
+    ("m12 mem w4 n33", "8.9312", R + "M139-m12-campaign.md"),
+    ("m12 mem w8 n33", "15.6115", R + "M139-m12-campaign.md"),
+    ("m12 mem w16 n33", "24.3967", R + "M139-m12-campaign.md"),
+    ("m12 mem w1 n105", "2.2461", R + "M139-m12-campaign.md"),
+    ("m12 mem w2 n105", "4.4758", R + "M139-m12-campaign.md"),
+    ("m12 mem w4 n105", "8.9329", R + "M139-m12-campaign.md"),
+    ("m12 mem w8 n105", "17.8372", R + "M139-m12-campaign.md"),
+    ("m12 mem w16 n105", "33.4283", R + "M139-m12-campaign.md"),
+    # --- M175: the free comparator arm, rebuilt and passed ---
+    ("m175 sentinel intercept", "-6.6597626500634704e-18",
+     R + "M175-fork-arm.md"),
+    ("m175 sentinel residual", "2.220446049250313e-16",
+     R + "M175-fork-arm.md"),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
@@ -370,6 +386,11 @@ QUOTES = [
     ("m169 green recovery arm", "docs/research/M169-m3-veil.md", "0.005649"),
     ("m169 axis has no CI", "docs/research/M169-m3-veil.md",
      "confidence_interval=NO CI"),
+    ("m175 exec sha", "experiments/M175-fork-arm/render-result.json",
+     "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"),
+    ("m175 sentinel slope", "experiments/M175-fork-arm/render-result.json",
+     "1.0000000000000002"),
+    ("m139 m12 memory fail", "docs/research/M139-m12-campaign.md", "8.9312"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel

@@ -165,6 +165,22 @@ or verdict from one into the other. SOTA is not an average, a weighted score, or
 > qualifying rebuild exists, every fork result cell is `UNMEASURED` under blocker
 > `(d)`.
 >
+> **Superseded on the rebuild question, 2026-09-07 (lane M175).** The sentence
+> above is retained as written because this amendment is a dated record. The
+> rebuild prerequisite is now **closed**: M175 rebuilt commit
+> `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6` twice on clean hosts to a
+> byte-identical executable, SHA-256
+> `691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac`, froze that
+> hash and the settings before rendering, and passed §1.3 on the native-size
+> eight-copy common-input tone sentinel — slope `1.0000000000000002`, intercept
+> `-6.6597626500634704e-18`, maximum residual `2.220446049250313e-16`, strictly
+> monotonic with no interior clipping. **Fork result cells nevertheless remain
+> `UNMEASURED`**, now for a different reason: no scored common-input campaign
+> output exists yet. **Blocker `(d)` itself is unmoved at run level while
+> licensed Zerene PMax and DMap are absent**, because `:472-477` requires every
+> named arm. The same distinction applies wherever this document says the
+> rebuild or development transfer is absent.
+>
 > **What this amendment does not do.** It lowers no bar, retracts no `FAIL`, and makes
 > no axis passable that was failing on its merits — M8 still reads `FAIL`, on M8-R at
 > `1.030569%`. It removes prerequisites this document invented. Nothing else.

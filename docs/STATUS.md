@@ -6662,7 +6662,20 @@ that if *any* required arm "cannot produce a linear output that passes §1.3, th
 named-comparator requirement is unmet and the dependent comparative axes remain
 `UNMEASURED`". Two of the three arms need a paid licence nobody has bought. The
 third — the fork rebuild — needs no licence, no money, no photography and no
-owner action, and has never been attempted. Lane M175 is on it.
+owner action.
+
+**Update, same night — the third arm is now complete and it moved nothing.**
+M175 independently rebuilt retained commit
+`4bc7f95e448cf20ee2bdd758403ec43e2612a1c6` twice to a byte-identical executable,
+froze the hash and settings before rendering, and passed §1.3 on the native-size
+eight-copy tone sentinel. **Blocker `(d)` and every dependent axis remain exactly
+where they were, because licensed Zerene PMax and DMap are still absent.** M175
+verified the axis classification independently and reached mine: seven explicit,
+M11 equivalent, M9 transitive, `M8`/`M10`/`M12` untouched — **nine axes carrying
+comparator dependence in total.** The free arm is spent; what remains is a
+purchase. **Measured §1.3 figures and the executable hash are recorded once, in
+§2.9.69** — they are not repeated here, so that each has exactly one site a
+verifier can pin.
 
 **I over-claimed this once already and corrected it before it propagated.** I
 briefed M175 that `(d)` covered "10 of 12" axes from memory rather than from the
@@ -6796,6 +6809,87 @@ software licence.**
 instruction to sibling lanes; M169 declined on the grounds that a peer holds no
 scheduling authority. That is the right reading — see §2.9.66 — and I have
 confirmed it to the lane as policy: only the orchestrator schedules.
+
+---
+
+### 2.9.69 The one arm we could clear for free is cleared, and it moved nothing
+
+**M175 returned `FORK REBUILT` and `Zero axes move`.** Both halves matter, and
+the second is the one that should govern planning.
+
+The rebuild is real and it is clean. M175 built retained commit
+`4bc7f95e448cf20ee2bdd758403ec43e2612a1c6` twice, on separately prepared hosts,
+to a **byte-identical** executable — SHA-256
+`691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac`. It froze
+that hash and the render settings *before* producing any output, which is the
+ordering that makes the result evidence rather than a post-hoc description. On
+the native-size eight-copy common-input tone sentinel it passed §1.3 with slope
+`1.0000000000000002`, intercept `-6.6597626500634704e-18`, maximum absolute
+affine residual `2.220446049250313e-16`, strict monotonicity and no interior
+clipping. That is a linear 16-bit path at the precision floor of float64. The
+prerequisite the scorecard called merely "plausibly constructible" is closed.
+
+**And blocker `(d)` did not move, because the scorecard requires every named arm
+and two of the three are licensed Zerene modes nobody owns.** `:472-477` is
+explicit: if any required arm cannot produce a linear output that passes §1.3,
+the named-comparator requirement is unmet and the dependent axes stay
+`UNMEASURED`. The fork was never the binding constraint; it was the only part of
+the constraint that could be attacked without spending money. It has now been
+attacked, successfully, and the board is unchanged.
+
+**M175 independently reproduced my corrected axis classification.** Working from
+the readiness table rather than from my briefing — I told it to verify the count
+itself precisely because I had already got it wrong once from memory — it
+reached seven explicit `(d)` axes (M1–M7), M11 equivalent under
+`UNMEASURED_COMPARATOR_QUALIFICATION`, M9 transitive through M1, and
+`M8`/`M10`/`M12` genuinely free. **Nine axes carry comparator dependence.** Two
+independent derivations now agree, which is the standard I want before an owner
+spends anything on the strength of a count.
+
+**This is the trigger for the licence ask.** There is no longer a cheaper thing
+to try first. I am holding the ask only until M169 reports, because M169 is
+auditing whether the comparator requirement is correctly constituted at all — if
+a free comparator qualifies, or if the scorecard demanded more than the plan
+does, the ask changes shape or disappears. That is a short wait against a
+purchase, and it is the last thing that could make the purchase unnecessary.
+
+**Separately, M139 closed M12 with a formal `FAIL`, and I was wrong about why.**
+My first reaction was that the verdict must rest on wall-clock timing, which is
+quarantined under Amendment 6 and therefore cannot carry a verdict. I checked
+before recording it, and the check reversed me: the failing column is **peak
+process-tree private committed memory**, which is not quarantined and is scored
+against an explicit `<= 6 GiB` bar.
+
+The measured table is unambiguous, and its shape is the finding:
+
+| workers | peak GiB, N=33 | peak GiB, N=105 |
+| --- | --- | --- |
+| 1 | `2.2463` | `2.2461` |
+| 2 | `4.4747` | `4.4758` |
+| 4 | `8.9312` | `8.9329` |
+| 8 | `15.6115` | `17.8372` |
+| 16 | `24.3967` | `33.4283` |
+
+**Memory is roughly `2.23 GiB` per worker and nearly independent of stack
+depth.** The bar is breached at four workers on a 33-frame stack. Holding 16
+workers under `6 GiB` needs about `375 MiB` per worker — an order of magnitude
+below current behaviour, which makes this an architectural property of the
+pipeline rather than a tuning miss. The `hashes` column reads `1 / 1` at every
+row: **fixed-worker determinism already passes.** The defect is invariance
+*across* worker counts, which M160's Amendment 6 traced to reduction order
+changing with worker count.
+
+So M12 needs two independent repairs, not one: bound peak memory, and make the
+reduction order worker-invariant. I have put memory first with M172, because it
+is the one scored against a stated bar. N=299 was never scored; the verdict was
+already irreversible by then, and spending the host on it would have bought
+nothing.
+
+**Recording my own error plainly:** I suspected a quarantined column and said so
+before checking. Had I acted on the suspicion I would have dismissed a valid
+`FAIL` and left a real architectural limit undocumented. The rule that saved it
+is the one I keep applying to lanes and had to apply to myself — read the source
+column before ruling on the verdict that rests on it.
 
 ---
 

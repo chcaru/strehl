@@ -3,7 +3,7 @@
 One page, decision-ready. Everything here is verified at source; citations are
 in `docs/STATUS.md` §2.9.28-2.9.52 and the lane reports named below.
 
-Maintained by the orchestrator. Last updated after lanes M157, M159, M160, M161.
+Maintained by the orchestrator. Last updated after lane M175.
 
 > # ✅ HOLD LIFTED — go ahead and shoot Ask 2a
 >
@@ -484,11 +484,14 @@ comes first.
 > Thank you,
 > Chris
 
-**If they say yes:** buy the edition they name and `(d)` is cleared — *provided*
-answer 3 confirms native-size 16-bit linear output. If answer 3 comes back as
-"gamma-encoded" or "8-bit only", tell me before buying; the comparison protocol
-would need rebuilding around whatever it does emit, and that is a design change
-rather than a purchase.
+**If they say yes:** buy the edition they name — *provided* answer 3 confirms
+native-size 16-bit linear output. **`(d)` clears only after both licensed PMax
+and DMap actually produce common-input outputs that pass §1.3**, not on purchase.
+The third arm is already done: lane M175 rebuilt the retained fork, froze its
+hash before rendering and passed §1.3, so Zerene is the only thing still
+missing. If answer 3 comes back as "gamma-encoded" or "8-bit only", tell me
+before buying; the comparison protocol would need rebuilding around whatever it
+does emit, and that is a design change rather than a purchase.
 **If they say no:** you have saved $189 and, far more importantly, we have not
 built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 
