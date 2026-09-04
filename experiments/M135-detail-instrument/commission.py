@@ -343,6 +343,7 @@ def run_trial(seed: int) -> dict[str, dict]:
     )
     permutation_result = score_arm(permuted_reference, base_flat)
 
+    frequency_noise_gain = NOISE_GAIN.reshape(4, 4)[:, 0]
     return {
         "base": base,
         "identity": identity,
@@ -365,11 +366,14 @@ def run_trial(seed: int) -> dict[str, dict]:
             "logistic": logistic_potency,
         },
         "noise_amplification_potency": {
-            "gain": NOISE_GAIN.tolist(),
-            "squared_gain": (NOISE_GAIN**2).tolist(),
-            "upper_two_band_mean_squared_gain": float(np.mean(NOISE_GAIN[2:] ** 2)),
+            "gain": frequency_noise_gain.tolist(),
+            "squared_gain": (frequency_noise_gain**2).tolist(),
+            "upper_two_band_mean_squared_gain": float(
+                np.mean(frequency_noise_gain[2:] ** 2)
+            ),
             "upper_to_lower_mean_squared_gain_ratio": float(
-                np.mean(NOISE_GAIN[2:] ** 2) / np.mean(NOISE_GAIN[:2] ** 2)
+                np.mean(frequency_noise_gain[2:] ** 2)
+                / np.mean(frequency_noise_gain[:2] ** 2)
             ),
         },
     }
