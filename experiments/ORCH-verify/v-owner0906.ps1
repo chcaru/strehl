@@ -60,6 +60,16 @@ Check 'owner note tells him to stop if 8-bit'    ($own -match 'tell me before bu
 # The email must remain FREE and remain ordered before the purchase.
 Check 'Ask 1 still costs nothing'               ($own -match 'send one email\. \*\*\$0, five minutes')
 Check 'Ask 1 still precedes any purchase'       ($own -match 'do it before any purchase')
+# Currency of the page itself. This is owner-facing, and a stale "last updated"
+# line invites him to act on a page he thinks is current when it is not.
+Check 'page cites the current STATUS range'     ($own -match 'STATUS\.md` §2\.9\.28-2\.9\.52')
+Check 'page names the lanes it now reflects'    ($own -match 'Last updated after lanes M157, M159, M160, M161')
+# Two-sided by construction: read the upper bound OUT of the owner page, then
+# require STATUS to actually contain that section. A hardcoded section number
+# here would assert a fact about STATUS while proving nothing about the claim
+# the owner page is making, and would survive the page citing anything at all.
+$citedTo = if ($own -match 'STATUS\.md` §2\.9\.28-2\.9\.(\d+)') { $matches[1] } else { '' }
+Check 'STATUS actually has the section cited'   (($citedTo -ne '') -and ((Flat "$root\docs\STATUS.md") -match ("### 2\.9\." + [regex]::Escape($citedTo) + "\b"))) "cited=2.9.$citedTo"
 Check 'owner note cites the commit'     ($own.Contains('6b966d8c'))
 Check 'owner note keeps the five publishable' ($own -match 'their results will still be published')
 

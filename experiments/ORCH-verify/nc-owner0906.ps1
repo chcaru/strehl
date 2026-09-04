@@ -103,9 +103,19 @@ $controls = @(
      b = '## Ask 1 — send one email. **$40, five minutes.** No deadline, but do it before any purchase.'
      e = 'Ask 1 still costs nothing'; benign = $false },
 
+  @{ n = 'NC18 let the page go stale about its own currency'
+     a = 'Maintained by the orchestrator. Last updated after lanes M157, M159, M160, M161.'
+     b = 'Maintained by the orchestrator. Last updated after lanes M147, M149, M150.'
+     e = 'page names the lanes it now reflects'; benign = $false },
+
+  # Commissions the CROSS-FILE lookup: citing a section that does not exist must
+  # be caught by reading STATUS, not by pattern-matching this page.
+  @{ n = 'NC19 cite a STATUS section that does not exist'
+     a = 'in `docs/STATUS.md` §2.9.28-2.9.52 and the lane reports named below.'
+     b = 'in `docs/STATUS.md` §2.9.28-2.9.99 and the lane reports named below.'
+     e = 'STATUS actually has the section cited'; benign = $false },
+
   # ---- SOURCE-SIDE controls: mutate the LANE REPORT, not this document. ----
-  # Without these, the M157 checks would only prove OWNER-ACTIONS agrees with
-  # itself. These prove the verifier is actually reading the evidence file.
   @{ n = 'NC16 [source] upgrade NOT FOUND to a verified contract'
      f = 'm157'
      a = '**[NOT FOUND]** Neither statement is explicitly attached to'

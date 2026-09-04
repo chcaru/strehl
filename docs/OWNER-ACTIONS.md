@@ -1,9 +1,9 @@
 # What the program needs from Chris
 
 One page, decision-ready. Everything here is verified at source; citations are
-in `docs/STATUS.md` §2.9.28-2.9.47 and the lane reports named below.
+in `docs/STATUS.md` §2.9.28-2.9.52 and the lane reports named below.
 
-Maintained by the orchestrator. Last updated after lanes M147, M149, M150.
+Maintained by the orchestrator. Last updated after lanes M157, M159, M160, M161.
 
 > # DO THIS FIRST — two frames, five minutes
 >
