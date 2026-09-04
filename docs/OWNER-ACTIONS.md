@@ -455,6 +455,84 @@ starting it now would burn a 30-day clock before the inputs are ready, which is
 exactly how the Zerene trial was wasted. **Reserve it. Reconsider when Helicon 9
 reaches stable release.**
 
+## Ask 4 — one definitional call that is worth four axes. **$0, and it is genuinely yours to make.**
+
+**The situation.** I wrote a rule into the scorecard that is not in your plan. It
+is rule 4, and an independent audit confirmed it appears nowhere in
+`2026-08-sota-path.md`. It is flagged `UNRATIFIED` in the scorecard for that
+reason. **You should decide it, not me, because it is a question about what
+counts as a fair comparison — and that is a judgement about the claim you want
+to make, not a fact I can measure.**
+
+**What it says.** A competing program's mode may set the noise, artifact, speed
+or memory bar only if it **(i)** passes an input/output transfer audit **and**
+**(ii)** retains at least `98%` of the best detail score any mode achieved on
+that capture. The intent was to stop a deliberately blurred, fast, quiet mode
+from becoming the yardstick.
+
+**What it costs.** Conjunct **(ii)** needs the detail instrument we do not yet
+have. So it propagates that blocker to four axes that do not otherwise need it.
+A mechanical re-derivation of all sixteen blocker subsets
+(`experiments/M140-readiness/readiness.json`) is unambiguous: blocker `(a)` is
+**intrinsic** only to M1, M5, M6 and M9, and **propagated by my rule alone** to
+M2, M3, M4 and M11.
+
+| | rule 4 as written | rule 4 narrowed or removed |
+|---|---|---|
+| comparator bought | **2 axes** | **6 axes** |
+| comparator + capture | **4 axes** | **8 axes** |
+
+**Same money, same shooting, four more axes.** M11 is the sharpest example: its
+own bar is elapsed time. Speed does not need a detail instrument to be measured.
+It is blocked purely because I said a comparator must be quality-qualified
+first.
+
+**The part I got wrong, stated plainly.** I originally justified rule 4 as
+rigour. It is not. Because rule 3 already picks the comparator in the
+*comparator-favouring* direction — the fastest for speed, the quietest for noise
+— excluding degenerate modes makes every affected bar **easier for us, not
+harder**. Rule 4 buys *fairness*, and it pays for it in scoreability. That is a
+reasonable trade to want, but it is not the trade I first described, and you
+should judge it on the honest version.
+
+### What I recommend: publish both, and decide nothing
+
+Score each affected axis **twice** — once against the rule-4-qualified
+comparator envelope, once against every mode that passes the transfer audit —
+and publish both numbers.
+
+- It costs **nothing extra**: no additional capture, no additional renders. Both
+  envelopes come from comparator runs we already have to do.
+- It **unblocks the four axes now**, because the all-modes envelope needs only
+  conjunct (i), which does not require the detail instrument.
+- It makes a pass **stronger than either rule alone**. Beating both envelopes is
+  unimpeachable. Beating only the qualified one is still a real result, and it
+  gets stated as exactly that rather than hidden by a definition.
+- It stops me from settling a definitional question by authorship, which is the
+  failure this program keeps repeating.
+
+**Your options, in the order I would pick them:**
+
+1. **Publish both envelopes.** My recommendation, for the reasons above.
+2. **Narrow it:** keep conjunct (i), drop conjunct (ii). Unblocks the same four
+   axes and keeps a single number per axis.
+3. **Ratify as written.** Legitimate if you want every published comparison to be
+   against a mode genuinely attempting the same job. Costs four axes until the
+   detail instrument lands.
+4. **Reject it entirely.** Maximum axes, but a draft mode could then set the
+   speed bar, which may fail us for no useful reason.
+
+**If you say nothing, I will proceed with option 1**, because it changes no bar,
+softens nothing, and is strictly more informative than any single choice. I will
+not treat silence as ratification of the rule itself.
+
+**This is not urgent and it does not block your shoot.** With only blocker `(b)`
+cleared, all four options leave exactly M8 and M12 scoreable today. It matters
+the moment the detail instrument or the capture lands, which is why I would
+rather you saw it now than be asked at the worst moment.
+
+---
+
 ---
 
 ## What is explicitly *not* being asked
