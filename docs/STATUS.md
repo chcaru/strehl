@@ -5609,6 +5609,84 @@ inversion ruling is not one axis's problem. It is five.
 
 ---
 
+### 2.9.51 The noise axis is not merely unproven, it is currently losing, and the instrument the plan names for it rewards blur (M159, M160, orchestrator, 2026-09-06)
+
+#### 2.9.51.1 The only measured comparison on a gating axis is adverse
+
+M159 corrected its own prior report, against its own lane's interest. The owner's
+`at strictly lower noise` clause cannot be claimed today. On twelve frozen flat-paper
+ROIs, DELIVER-V6 carries `1.515208x` the fork's fractional box9 residual at the median,
+with minimum `1.335062`, p25 `1.483011`, and **zero of twelve sites below one**. Residual
+is a badness, so higher is worse: there is no site at which the current build wins. This
+is not an absence of evidence, it is evidence that the advantage is absent.
+
+The historical number that would have argued the other way is unrecoverable. An archived
+SHIP-V2 report records `0.224x` the fork's residual at one coffee-paper site, but the
+SHIP-V2 numerator TIFF is gone, so it can be neither remeasured nor hash-matched.
+
+#### 2.9.51.2 The instrument is not neutral about the cheat
+
+The plan licenses the `existing flat-ROI instrument` for M2. M159's own blur challenge
+drove that statistic to `0.571215x`: blurring a noisy field that contained real six-pixel
+texture made the noise number look forty-three percent better. Without a separate transfer
+bound the instrument actively rewards the one manipulation that makes "lower noise"
+uninformative.
+
+#### 2.9.51.3 Three of the seven gating axes have now failed at the instrument, for one reason
+
+| axis | failure | lane |
+| --- | --- | --- |
+| M1 detail | normalized correlation is *exactly* invariant to a common nonzero scalar transfer; retires FRC, FSC, spectral SNR, coherence, NCC | M135 |
+| M2 noise | flat-ROI residual *improves* under blur, `0.571215x` | M159 |
+| M8 invented structure | bar unsatisfiable in the mandated `u16/65535` domain; M8-R still `FAIL` at `1.030569%` | M136 |
+
+The common cause is one sentence. **Each of these compares two already-rendered outputs
+with no external reference, and blur is a legal move in that comparison.** A statistic
+built only from the outputs cannot separate *removed noise* from *removed signal*, because
+from inside the outputs the two are the same event. That is not three unlucky choices of
+formula. It is a structural property of scoring without a truth term.
+
+#### 2.9.51.4 Which makes one capture worth at least two axes
+
+M159 names precisely what M2 lacks: a separate transfer bound. M135's replacement
+coordinate set supplies exactly that, in the veto-only `T_TR` transfer coordinate that sits
+beside `J_TR`. The inversion capture was commissioned as M1's instrument. It is also M2's
+missing bound. **One `$0` capture session, with equipment already owned, unblocks both** —
+and if M158's finding 4 holds, it unblocks the axes bound to M1 as well.
+
+#### 2.9.51.5 My own amendment was inert in the text that governs
+
+M160 audited `6b966d8c` independently and adversarially, as commissioned. Claims A, B and C
+confirmed: the seven-axis mapping is right, Helicon is genuinely optional, and no bar,
+threshold or `FAIL` moved. Claim D refuted, with fourteen operative contradictions. The
+decisive one is that §0.1 still read `Every primary metric is a hard gate`, so in the text
+that actually governs, all twelve axes still gated publication. **I amended the section that
+describes the rule and left the rule.**
+
+Two of the fourteen reproduce M158's finding 4 from the opposite direction, independently:
+the joint cards bind M4 to M1/M2/M8 and M12 to M11. Two lanes reaching the same constraint
+by different routes is the strongest evidence this program has produced about its own
+governance.
+
+Resolution now being applied: gates are the seven; M4, M5, M6, M7 and M12 become mandatory
+disclosures; and M4 and M12 retain their *anti-cheat components only* — the flat-power tell
+and the worker-ladder byte-identity — because those guard the owner's own sentence against
+being satisfied by a cheat, rather than adding a requirement of mine.
+
+#### 2.9.51.6 Position
+
+Still zero of seven gating axes scored. What changed is that the noise axis is no longer
+merely unscored: its single measurement is adverse at every site, and its licensed
+instrument is known to reward the degradation it should punish.
+
+The honest headline is that **the instrument layer is failing faster than the algorithm
+layer is being tested — and that is the correct order.** Every one of these failures would
+otherwise have surfaced as a published number that did not survive contact with a reader.
+Three rulers have been proven wrong before anything was measured with them. That is cheap.
+The reverse is not.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
