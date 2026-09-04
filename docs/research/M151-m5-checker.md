@@ -340,6 +340,45 @@ geometry could not reach 133. The exhaustive result proves that an exact-length
 tilted capture can exceed the effective Wilson minimum. It does not rescue the
 planar burned grid, whose complete populations remain 0/1,944.
 
+### Denominator provenance
+
+Every proportion reported by this lane has the following denominator:
+
+- **Synthetic coverage controls:** 160/160 (complete null), 152/160
+  (three-node deletion), and 0/160 (far-only) use the entire generated
+  160-site fixture, not a sample or cap. The four-capture 640/640 Wilson check
+  uses all 160 generated sites in each of four synthetic captures.
+- **Initial real coverage controls:** 4/4, 3/4, and 0/4 use every eligible site
+  found inside the fixed 64-site development subsample. They do **not** use
+  every eligible site in the frame.
+- **Initial real eligibility:** burned sw4 0/64, burned sw10 0/64, tilted-92
+  4/64, and best-27 13/64 (with separate point/bootstrap counts 15/64 and
+  17/64) all use the same imposed fixed 8x8 subsample and computational cap.
+  The corroborating M131 0/64 figures likewise use that audit's fixed 8x8
+  subsample. The noise-null 0/64 instead uses the entire generated 64-site
+  synthetic fixture.
+- **Exhaustive real eligibility:** 0/1,944, 0/1,944, 53/1,944, and 275/1,944
+  use the full population of complete 128x128 tiles in the 7028x4688
+  RAW-visible rectangle. The associated point counts 0/1,944, 0/1,944,
+  69/1,944, and 328/1,944 have the same population denominator.
+- **Coverage percentages** always divide passing tiles by all input-eligible
+  tiles in the stated fixture or census. **Failed-run percentages** divide
+  failed Voronoi depth length by the complete represented
+  `max(best)-min(best)+1` interval (reported examples: 0/21, 1/21, 21/21,
+  0/14, 3.5/14, and 14/14). The synthetic planted slab's 14.2857% depth
+  coverage is 3/21 of that same complete interval.
+- **Retained-FOV 100% and 98%** use every pixel in the complete frozen
+  synthetic anchor mask; the planted 2% strip was not a sampled region.
+  Wilson percentages use the explicitly reported eligible-tile `n`; the
+  50/50, 64/64, 128/128, 133/133, and 256-site values are arithmetic
+  feasibility examples, not observed populations.
+
+**Previously under-specified:** the first headline ruling published the
+0/64, 0/64, 13/64 and four-eligible-site results without stating that 64 was
+an imposed subsample/cap or that 1,944 candidates were available. Treating
+those sample counts as population evidence produced the wrong capture ruling.
+This subsection and the exhaustive census above are the correction.
+
 Existing M131 focus curves independently show the same broad-through-focus
 mechanism with different statistics: best/far-at-three ratios reached the 2.0
 bar at **0/64** sites for Tenengrad and Laplacian on both sw4 and sw10. Their
