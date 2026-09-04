@@ -2982,6 +2982,89 @@ one afternoon at the bench.** That is a far better position than "six days
 without a quality change" suggests, but only because the work is now correctly
 aimed -- and it was not aimed this way this morning.
 
+### 2.9.27 M12 unblocked, and a measurement merge that would have understated our own scaling
+
+Two lanes wanted the same exclusive host for overlapping timing work, and the
+obvious economy -- run it once, serve both -- would have quietly damaged the
+axis being scored. Recording the unblock and the ruling, because the ruling
+generalises to every future attempt to share one run between two measurements.
+
+**The unblock.** M12 had been stalled for nineteen hours on two things that
+were mine to resolve, not its. It refused to invent a product arm, which was
+correct. Both are now settled:
+
+- **Arm ratified** from `docs/proposals/2026-09-sota-scorecard.md:210` --
+  *"strehl: the shipping default at the scored commit; no per-subject
+  environment."* I did not invent an arm; I pointed at the rule already written.
+- **Scored commit `4b60b1ba9f56abe92573451815e67f03725d19fa`**, which owns the
+  frozen binary `sha256 814eb719...cee4363`. M12 confirmed every arm element
+  against source at that commit rather than adopting my list -- pyramid backend,
+  gate 2.0, alignment on, cover `scale`, photometric absent, RGB16 linear-sRGB
+  TIFF via `--linear-srgb --demosaic`, `STREHL_PYRAMID_WORKERS` the only
+  variable.
+- **210 uninterrupted minutes granted.** M12's own estimate, from a previously
+  measured 133-invocation matrix at `156.3` minutes plus `11.1` minutes of
+  pre-load gating; not the scorecard's guessed `120`.
+
+**The merge that had to be refused in the form proposed.** M12 reported that one
+run could also serve M11's native-RAW absolute-throughput bar *"if
+hashing/manifest closure, host/process-tree CPU, I/O, and load evidence are
+included inside the timer."* That condition is fatal, and the reason is
+arithmetic rather than a matter of taste.
+
+M12 scores **parallel worker scaling**. Model a cell as `S + P/w`. The reported
+quantity is the ratio `(S + P) / (S + P/16)`. Instrumentation is *fixed serial
+work*: it adds a constant `C` to every cell, giving `(S + C + P) / (S + C +
+P/16)`. Adding a positive constant to both sides of a ratio greater than one
+moves it toward one -- always, with no exception and no dependence on the
+machine. Computed:
+
+| `S` | `P` | `C = 0` | `C = 1` | `C = 5` | `C = 20` |
+| --- | --- | --- | --- | --- | --- |
+| 1.0 | 15.0 | `8.2581` | `5.7872` | `3.0270` | `1.6410` |
+| 2.0 | 30.0 | `8.2581` | `6.7692` | `4.1690` | `2.1780` |
+| 0.5 | 40.0 | `13.5000` | `10.3750` | `5.6875` | `2.6304` |
+
+Five units of instrumentation against fifteen units of parallel work takes the
+apparent W16/W1 speedup from `8.2581x` to `3.0270x` -- it destroys **63%** of
+the measured scaling. Nothing in the output would reveal it. We would have
+published a flattened scaling curve, on one of only **two of twelve axes
+measurable today**, and the flattening would have been entirely self-inflicted.
+
+**The ruling: dual timers, one run.** An inner timer excluding hashing, closure
+and evidence carries M12's scored quantity; an outer timer wrapping the whole
+invocation carries M11's inclusive bar; both recorded per invocation, never
+interchangeable. The shared run survives and the axis stays clean. M12 was
+told explicitly that if dual timers cannot be made honest in one process it
+should run M12 clean and let M11 take a separate window -- a duplicate run is
+cheap, a contaminated axis cannot be bought back. Whether the outer timer
+actually *satisfies* M11's bar as written is not mine to decide and was
+returned to the lane that owns that bar.
+
+**The generalisable form.** *Instrumentation added inside a timer that measures
+a ratio biases that ratio toward one.* Any time two measurements are merged into
+one run to save host time, the cheaper measurement's overhead lands inside the
+more expensive one's timer. The merge is safe only when the shared timer is not
+reporting a ratio, or when the timers are nested.
+
+**Host scheduling is now centralised** (standing rule 12). Lanes may not
+negotiate windows peer-to-peer; that is what failed, and it is why M12 spent
+nineteen hours producing a preflight while `SCORECARD-BASELINE`'s manifest sat
+recording `m11_m12_run: false`, reason `"quiet machine-wide window not yet
+available"`, `requested_window_minutes: [90, 120]`. A program-wide heavy-compute
+freeze is in force for M12's window, with light work explicitly exempt so the
+`crop-early` build is not stalled by it.
+
+**One stale artefact, now flagged.** `experiments/SCORECARD-BASELINE/out/RUN-MANIFEST.json`
+usefully pins the binary hash, `strehl 0.0.0 (4b60b1ba9f56)`,
+`working_tree_source_used: false` and the host -- but records
+`scorecard.version: v1.1` against a committed **v1.7**, and its
+`quality_product_arm.purpose` reads verbatim *"native-RAW product diagnostic,
+not the absent common-TIFF arm."* It registers a diagnostic and states the
+scored arm is absent. It must not be read as an arm ratification, and M12's
+refusal to build on it was right. The scorecard's own status line agrees that
+nothing has landed yet: **"No v1.7 score output has been read."**
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
