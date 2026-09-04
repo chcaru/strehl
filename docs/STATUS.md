@@ -2289,6 +2289,77 @@ Catmull-Rom resample disappears from the shipping path. M8 then gets re-run unde
 fail into a pass, and it would do it by deleting a resample rather than by
 tuning anything.
 
+### 2.9.16 The overshoot axis survives, but it cannot name the inventor -- and my discriminator was wrong
+
+`docs/research/M8-COMPARATIVE.md`, 415 lines, commits `bdf62f5a`, `c107e1cf`,
+`b62c0137`. Two results, and the second one refutes me.
+
+**1. M8-O is UNMEASURED on every retained comparator render, and the reason is
+provenance rather than physics.** The lane's formulation is the one to keep:
+**"black-box" does not mean "metadata-free."** The output may be opaque, but the
+checker still has to place each output sample into every source frame and
+compare them in one linear domain. None of the nine retained renders permits
+that -- the five Zerene arms have no per-frame placements, resampler support,
+crop/orientation map or photometric map; three marker variants have had their
+sources and invocation **deleted**; and coffee's transforms survive only as
+rounded log text. Coffee also proves why assuming identity coordinates would be
+wrong: it expanded to `7168x5120`, aligned, then cropped to `7008x4672`.
+
+**The lane refused to close the gap by fitting the missing transforms, and that
+refusal is the most valuable thing in the report:** model error at an edge can
+manufacture the very violation the statistic exists to detect. A fitted proxy
+would have produced a number and destroyed its meaning.
+
+**2. My kernel-bound discriminator was wrong, and precisely wrong.** I told the
+lane that an interpolation lobe is bounded near `6%` of local step while a gain
+term is unbounded, so magnitude would separate resampling from sharpening.
+**I had taken M8's commissioning value -- a hard step at half phase,
+`0.0625` -- and treated one plant at one phase as the kernel's maximum.** The
+exact bounds, which I re-derived myself rather than accepting:
+
+| Catmull-Rom case | excess / local support span |
+|---|---:|
+| 1-D hard step, half phase | `0.062500` |
+| 1-D hard step, phase `1/3` | `0.074074` |
+| 1-D arbitrary bounded support | `0.125000` |
+| **separable 2-D arbitrary bounded support** | **`0.281250`** |
+
+One-dimensional negative mass is `n(t) = 0.5*t*(1-t)`, maximised at `0.125`;
+the separable two-dimensional mass is `n_x + n_y + 2*n_x*n_y`, maximised at
+`0.28125`. Independently checked: `0.125 + 0.125 + 2*0.125*0.125 = 0.28125`.
+Bounds are exactly symmetric in sign. **So neither sign symmetry nor an
+excursion above `6%` separates sharpening from resampling**, and a fixed `6%`
+cutoff is not conservative -- it is roughly a quarter of the true ceiling.
+
+**What actually survives, stated in the narrow form the evidence supports:**
+**M8-O can establish invention. It cannot name the inventor.** A per-sample
+diagnostic that normalises excess by that sample's support span and compares it
+against the exact negative weight mass at its two fractional phases can reject
+the declared resampler as the sole explanation. It cannot distinguish
+sharpening from local contrast, deconvolution, non-convex merging or an omitted
+transform.
+
+That is still a real axis. *"This render contains structure its declared
+operator chain cannot produce"* is a strong claim about a competitor. It is
+simply not the sharpening detector I proposed, and the difference matters
+because the sharpening question is the one V-HEADTOHEAD3 needs answered.
+
+**Where this leaves escape 3.** The self-assessment arm is untouched -- on our
+own renders we hold the placements, so M8-O remains fully applicable. Only the
+*comparative* arm is blocked, and it is blocked on artifacts that were made
+without retaining their contract. I have therefore tasked the lane to
+manufacture the contract rather than recover it: **pre-align the source frames
+ourselves and disable the comparator's internal alignment, so per-frame
+placement is the identity by construction.** The largest missing item on its
+own table then disappears -- not recovered, but made trivial. Specification
+only; nothing rendered.
+
+The existing sharpening pair also failed because its arms differ in **eleven
+development fields** with sharpening upstream of each declared hull. Any
+replacement pair must differ in exactly one controlled variable, with
+sharpening applied downstream of a common merge so the hull is shared by
+construction.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
