@@ -61,4 +61,3 @@ The production extractor must be frozen before score data, must cover the
 complete `0.15–0.35 cyc/native px` band and all channels, and must bind both
 arms to the same sites, references, tone witness, calibration lineage and
 mode settings.
-
