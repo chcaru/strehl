@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""Independent, mutation-commissioned verifier for the M150 capture request."""
+"""Independent, mutation-commissioned verifier for the M150 capture request.
+
+Cross-references use ``(`path.md`, "Section / Clause" clause)`` or the
+corresponding ``section`` form. The locator names source structure; validation
+finds that structure uniquely and then matches its registered quotation after
+stripping Markdown blockquote prefixes per line and collapsing whitespace.
+"""
 from __future__ import annotations
 import argparse
 import hashlib
 import math
 import re
-import tempfile
+import subprocess
+import sys
 import unicodedata
 from collections import OrderedDict
 from dataclasses import dataclass
@@ -24,6 +31,33 @@ class Result:
     passed: bool
     evidence: str
 
+@dataclass(frozen=True)
+class Citation:
+    path: str
+    locator: str
+    kind: str
+    start: int
+    end: int
+
+    @property
+    def key(self) -> tuple[str, str, str]:
+        return (self.path.replace("\\", "/"), self.locator, self.kind)
+
+@dataclass(frozen=True)
+class CitationRequirement:
+    name: str
+    path: str
+    locator: str
+    kind: str
+    phrase: str
+    check_id: str
+    capture_phrases: tuple[str, ...]
+    minimum_uses: int = 1
+
+    @property
+    def key(self) -> tuple[str, str, str]:
+        return (self.path.replace("\\", "/"), self.locator, self.kind)
+
 def emit(value: object = "") -> None:
     print(str(value).encode("ascii", "replace").decode("ascii"))
 
@@ -36,6 +70,12 @@ def norm(text: str) -> str:
     for old, new in replacements.items():
         text = text.replace(old, new)
     return re.sub(r"\s+", " ", text).strip()
+
+def citation_norm(text: str) -> str:
+    """Normalise citation text without changing punctuation or inline markup."""
+    text = unicodedata.normalize("NFC", text)
+    lines = [re.sub(r"^\s*(?:>\s*)+", "", line) for line in text.splitlines()]
+    return re.sub(r"\s+", " ", "\n".join(lines)).strip()
 
 def clean_cell(cell: str) -> str:
     return norm(cell.replace("**", "").replace("`", "").strip())
@@ -96,12 +136,171 @@ def only_allowed_number_occurrences(text: str, token: str, fragments: list[str])
         allowed.update(starts[0] + m.start() for m in re.finditer(pattern, fragment))
     return not missing and actual == allowed, f"actual={len(actual)} allowed={len(allowed)} missing_fragments={missing}"
 
-def resolve_reference(raw_path: str) -> tuple[Path | None, bool, int]:
+def resolve_reference(raw_path: str, overrides: dict[str, Path] | None = None) -> tuple[Path | None, bool, int]:
+    key = raw_path.replace("\\", "/")
     literal = ROOT / raw_path
     if literal.is_file():
-        return literal, True, 1
+        return (overrides or {}).get(key, literal), True, 1
     matches = list(ROOT.rglob(Path(raw_path).name))
     return (matches[0], False, 1) if len(matches) == 1 else (None, False, len(matches))
+
+def named_region(source: str, locator: str, kind: str) -> tuple[str | None, bool, str]:
+    lines = source.splitlines()
+    if kind == "section":
+        section_name, clause_name = locator, None
+    elif kind == "clause" and locator.count(" / ") == 1:
+        section_name, clause_name = locator.split(" / ", 1)
+    else:
+        return None, False, f"unsupported locator={locator!r} kind={kind!r}"
+
+    heading_hits: list[tuple[int, int, str]] = []
+    for index, line in enumerate(lines):
+        match = re.match(r"^(#{1,6})\s+(.+?)\s*$", line)
+        if not match:
+            continue
+        title = citation_norm(match.group(2))
+        if title == section_name or (
+            clause_name is not None
+            and re.match(rf"^{re.escape(section_name)}(?:\s|$)", title)
+        ):
+            heading_hits.append((index, len(match.group(1)), title))
+    if len(heading_hits) != 1:
+        return None, False, f"section={section_name!r} heading_hits={len(heading_hits)}"
+
+    section_start, level, title = heading_hits[0]
+    section_end = len(lines)
+    for index in range(section_start + 1, len(lines)):
+        match = re.match(r"^(#{1,6})\s+", lines[index])
+        if match and len(match.group(1)) <= level:
+            section_end = index
+            break
+    if clause_name is None:
+        return "\n".join(lines[section_start:section_end]), True, f"section={title!r} anchor_hits=1"
+
+    clause_hits: list[int] = []
+    for index in range(section_start + 1, section_end):
+        match = re.match(r"^\s*(?:>\s*)*\*\*(.+?)\.\*\*", lines[index])
+        if match and citation_norm(match.group(1)) == clause_name:
+            clause_hits.append(index)
+    if len(clause_hits) != 1:
+        return None, False, (
+            f"section={title!r} section_hits=1 clause={clause_name!r} "
+            f"clause_hits={len(clause_hits)}"
+        )
+
+    clause_start = clause_hits[0]
+    clause_end = section_end
+    for index in range(clause_start + 1, section_end):
+        if re.match(r"^\s*(?:>\s*)*\*\*.+?\.\*\*", lines[index]):
+            clause_end = index
+            break
+    return (
+        "\n".join(lines[clause_start:clause_end]),
+        True,
+        f"section={title!r} clause={clause_name!r} anchor_hits=1",
+    )
+
+def phrase_count(source_region: str | None, phrase: str) -> int:
+    if source_region is None:
+        return 0
+    return citation_norm(source_region).count(citation_norm(phrase))
+
+def citation_after_phrase(
+    capture: str,
+    citations: list[Citation],
+    phrase: str,
+    expected_key: tuple[str, str, str],
+) -> tuple[bool, str]:
+    words = re.split(r"\s+", phrase.strip())
+    pattern = re.compile(r"\s+".join(re.escape(word) for word in words))
+    phrase_hits = list(pattern.finditer(capture))
+    if len(phrase_hits) != 1:
+        return False, f"capture_phrase_hits={len(phrase_hits)}"
+    phrase_end = phrase_hits[0].end()
+    following = [
+        citation
+        for citation in citations
+        if citation.start >= phrase_end
+        and citation.start - phrase_end <= 240
+        and "\n\n" not in capture[phrase_end:citation.start]
+    ]
+    if not following:
+        return False, "capture_phrase_hits=1 nearby_citations=0"
+    nearest = min(following, key=lambda citation: citation.start)
+    return (
+        nearest.key == expected_key,
+        (
+            f"capture_phrase_hits=1 distance={nearest.start - phrase_end} "
+            f"bound={nearest.path}|{nearest.locator}|{nearest.kind}"
+        ),
+    )
+
+EXPECTED_HOLDOUT = (
+    "The holdout unit is **subject plus uninterrupted capture session**, not a directory or step width. "
+    "Rendering, tuning, or reading an outcome on any member burns every member of that unit. A `HOLDOUT` "
+    "capture may be decoded to build the frozen common input and input-only site manifest, but no output, "
+    "metric, visual verdict, parameter sweep, or code-acceptance decision may be seen before the registered score run."
+)
+SCORECARD_PATH = SCORECARD.relative_to(ROOT).as_posix()
+CITATION_RE = re.compile(
+    r'\(`(?P<path>[^`\n]+\.md)`, "(?P<locator>[^"\n]+)" (?P<kind>section|clause)\)'
+)
+MARKDOWN_PATH_RE = re.compile(r"`[^`\n]+\.md(?::\d+(?:-\d+)?)?`")
+LEGACY_LINE_CITATION_RE = re.compile(r"`[^`\n]+\.md:\d+(?:-\d+)?`")
+CITATION_REQUIREMENTS = OrderedDict([
+    ("commission", CitationRequirement(
+        "commission",
+        SCORECARD_PATH,
+        "M1 / Input needed by a future replacement",
+        "clause",
+        "may commission a new instrument but may never provide its scored value",
+        "xref.commission-quote",
+        ("may commission a new instrument but may never provide its scored value",),
+    )),
+    ("holdout", CitationRequirement(
+        "holdout",
+        SCORECARD_PATH,
+        "2.3 Holdout units and burn log",
+        "section",
+        EXPECTED_HOLDOUT,
+        "xref.holdout-rule",
+        (
+            "A holdout unit is subject plus uninterrupted session",
+            "reading an outcome on any member burns every member",
+        ),
+        minimum_uses=2,
+    )),
+    ("frequency", CitationRequirement(
+        "frequency",
+        SCORECARD_PATH,
+        "M1 / Exact computation",
+        "clause",
+        "no frequency above `0.25 cyc/native px`",
+        "xref.frequency-quote",
+        ("no frequency above `0.25 cyc/native px`",),
+    )),
+    ("m5-success", CitationRequirement(
+        "m5-success",
+        SCORECARD_PATH,
+        "M5 / Success",
+        "clause",
+        "Wilson LCB95 `>=98%`",
+        "xref.m5-wilson-quote",
+        ("M5 requires a Wilson lower bound `>= 98%`",),
+    )),
+    ("m5-input", CitationRequirement(
+        "m5-input",
+        SCORECARD_PATH,
+        "M5 / Input",
+        "clause",
+        "At least 500 eligible tiles overall and 50 per capture must qualify.",
+        "xref.m5-eligibility-floor",
+        ("500 eligible tiles overall and 50 per capture",),
+    )),
+])
+CITATION_REQUIREMENTS_BY_KEY = {
+    requirement.key: requirement for requirement in CITATION_REQUIREMENTS.values()
+}
 
 PHYSICAL = OrderedDict([
     ("reset pre-flight P0", 6), ("reset pre-flight P1", 6),
@@ -141,7 +340,13 @@ KNOWN_IDS = {
     "TC0-S10-A", "TC0-S10-B", "TC0-E10-A", "TC0-E10-B", "TC0-sw4-A", "TC0-sw4-B",
     "TC0-sw10-A", "TC0-sw10-B", "TC0-FLAT-A", "TC0-FLAT-B", "TC0-DARK-A", "TC0-DARK-B",
 }
-def verify(capture_path: Path) -> tuple[list[Result], dict[str, object]]:
+def verify(
+    capture_path: Path,
+    *,
+    proposal_path: Path = PROPOSAL,
+    scorecard_path: Path = SCORECARD,
+    owner_actions_path: Path = OWNER_ACTIONS,
+) -> tuple[list[Result], dict[str, object]]:
     results: list[Result] = []
     raw = capture_path.read_bytes()
     capture = raw.decode("utf-8")
@@ -152,7 +357,7 @@ def verify(capture_path: Path) -> tuple[list[Result], dict[str, object]]:
     facts: dict[str, object] = {"sha256": hashlib.sha256(raw).hexdigest(), "capture_lines": len(lines)}
 
     # Independent ground truth.
-    proposal = read_utf8(PROPOSAL)
+    proposal = read_utf8(proposal_path)
     proposal_lines = proposal.splitlines()
     try:
         anchor = unique_line_index(proposal_lines, lambda line: "Add the following" in line and "448 frames" in line, "proposal 448 anchor")
@@ -182,17 +387,21 @@ def verify(capture_path: Path) -> tuple[list[Result], dict[str, object]]:
     except Exception as exc:
         add(results, "truth.proposal-parse", "ground-truth", False, repr(exc))
 
-    score_lines = read_utf8(SCORECARD).splitlines()
-    expected_holdout = norm(
-        "The holdout unit is **subject plus uninterrupted capture session**, not a directory or step width. "
-        "Rendering, tuning, or reading an outcome on any member burns every member of that unit. A `HOLDOUT` "
-        "capture may be decoded to build the frozen common input and input-only site manifest, but no output, "
-        "metric, visual verdict, parameter sweep, or code-acceptance decision may be seen before the registered score run."
+    scorecard = read_utf8(scorecard_path)
+    holdout_region, holdout_anchor_unique, holdout_anchor_detail = named_region(
+        scorecard, "2.3 Holdout units and burn log", "section"
     )
-    actual_holdout = norm(" ".join(score_lines[344:349])) if len(score_lines) >= 349 else ""
-    add(results, "truth.holdout-lines-345-349", "ground-truth", actual_holdout == expected_holdout, f"source_lines={len(score_lines)}")
+    holdout_phrase_hits = phrase_count(holdout_region, EXPECTED_HOLDOUT)
+    holdout_content_ok = holdout_anchor_unique and holdout_phrase_hits == 1
+    add(
+        results,
+        "truth.holdout-content-anchor",
+        "ground-truth",
+        holdout_content_ok,
+        f"{holdout_anchor_detail}; phrase_hits={holdout_phrase_hits}",
+    )
 
-    owner = read_utf8(OWNER_ACTIONS)
+    owner = read_utf8(owner_actions_path)
     owner_lines = owner.splitlines()
     try:
         owner_heading = unique_line_index(owner_lines, lambda line: "The capture ask is now" in line and "two sittings, not one" in line, "owner heading")
@@ -393,180 +602,206 @@ def verify(capture_path: Path) -> tuple[list[Result], dict[str, object]]:
     manifest_fragments = ["eight converter-on start/end bursts of six", "`sw4-A/B` at 55 each", "`sw10-A/B` at 27 each", "`sw1` at 91", "four converter-on calibration groups at 32 each", "`TR-REF-NEAR/MID/FAR` at 32 each", "eight TC0 start/end bursts of six", "`TC0-sw4-A/B` at 55 each", "`TC0-sw10-A/B` at 27 each", "four TC0 calibration groups at 32 each"]
     add(results, "internal.manifest-covers-table", "internal-consistency", all(norm(fragment) in flat for fragment in manifest_fragments), "arrival manifest covers groups")
 
-    # Every file/range cross-reference must resolve literally and substantively.
-    citations = list(re.finditer(r"`([^`\n]*\.md):(\d+)(?:-(\d+))?`", capture))
-    add(results, "xref.count", "internal-consistency", len(citations) == 4, f"citations={len(citations)}")
-    literal_flags, bounds_flags, citation_details = [], [], []
-    for match in citations:
-        raw_path, start, end = match.group(1), int(match.group(2)), int(match.group(3) or match.group(2))
-        resolved, literal, match_count = resolve_reference(raw_path)
-        literal_flags.append(literal)
-        in_bounds = False
-        if resolved:
-            in_bounds = 1 <= start <= end <= len(read_utf8(resolved).splitlines())
-        bounds_flags.append(in_bounds)
-        citation_details.append(f"{raw_path}:{start}-{end}:literal={literal}:matches={match_count}:bounds={in_bounds}")
-    add(results, "xref.paths-resolve-literally", "internal-consistency", len(citations) == 4 and all(literal_flags), "; ".join(citation_details))
-    add(results, "xref.ranges-in-bounds", "internal-consistency", len(citations) == 4 and all(bounds_flags), "; ".join(citation_details))
+    # Every content-anchored cross-reference must resolve literally and support its claim.
+    citations = [
+        Citation(
+            match.group("path"),
+            match.group("locator"),
+            match.group("kind"),
+            match.start(),
+            match.end(),
+        )
+        for match in CITATION_RE.finditer(capture)
+    ]
+    path_mentions = MARKDOWN_PATH_RE.findall(capture)
+    legacy_citations = LEGACY_LINE_CITATION_RE.findall(capture)
+    required_counts = {
+        requirement.name: sum(citation.key == requirement.key for citation in citations)
+        for requirement in CITATION_REQUIREMENTS.values()
+    }
+    required_minimum = sum(
+        requirement.minimum_uses for requirement in CITATION_REQUIREMENTS.values()
+    )
+    unknown_citations = [
+        f"{citation.path}|{citation.locator}|{citation.kind}"
+        for citation in citations
+        if citation.key not in CITATION_REQUIREMENTS_BY_KEY
+    ]
+    required_present = all(
+        required_counts[requirement.name] >= requirement.minimum_uses
+        for requirement in CITATION_REQUIREMENTS.values()
+    )
+    count_ok = (
+        len(citations) == len(path_mentions)
+        and len(citations) >= required_minimum
+        and required_present
+        and not unknown_citations
+    )
+    add(
+        results,
+        "xref.count",
+        "internal-consistency",
+        count_ok,
+        (
+            f"citations={len(citations)} path_mentions={len(path_mentions)} "
+            f"required_minimum={required_minimum} required_counts={required_counts} "
+            f"unknown={unknown_citations}"
+        ),
+    )
+    add(
+        results,
+        "xref.no-line-number-citations",
+        "internal-consistency",
+        not legacy_citations,
+        f"legacy={legacy_citations}",
+    )
 
-    def cited_range_for_phrase(phrase: str) -> tuple[str | None, str]:
-        phrase_pos = lower.find(norm(phrase).lower())
-        if phrase_pos < 0:
-            return None, "phrase absent"
-        cite = re.search(r"`([^`]*\.md):(\d+)-(\d+)`", flat[phrase_pos:])
-        if not cite:
-            return None, "citation absent"
-        resolved, _, match_count = resolve_reference(cite.group(1))
-        if not resolved:
-            return None, f"path matches={match_count}"
-        source_lines = read_utf8(resolved).splitlines()
-        start, end = int(cite.group(2)), int(cite.group(3))
-        if not (1 <= start <= end <= len(source_lines)):
-            return None, f"range={start}-{end} out of bounds"
-        return norm(" ".join(source_lines[start - 1:end])), f"{cite.group(1)}:{start}-{end}"
+    source_overrides = {SCORECARD_PATH: scorecard_path}
+    citation_states: list[dict[str, object]] = []
+    citation_details: list[str] = []
+    for citation in citations:
+        resolved, literal, match_count = resolve_reference(citation.path, source_overrides)
+        requirement = CITATION_REQUIREMENTS_BY_KEY.get(citation.key)
+        region = None
+        anchor_unique = False
+        anchor_detail = "source unresolved"
+        if resolved is not None:
+            region, anchor_unique, anchor_detail = named_region(
+                read_utf8(resolved), citation.locator, citation.kind
+            )
+        hits = phrase_count(region, requirement.phrase) if requirement else 0
+        substantive = anchor_unique and requirement is not None and hits == 1
+        state: dict[str, object] = {
+            "citation": citation,
+            "literal": literal,
+            "match_count": match_count,
+            "anchor_unique": anchor_unique,
+            "anchor_detail": anchor_detail,
+            "phrase_hits": hits,
+            "substantive": substantive,
+        }
+        citation_states.append(state)
+        citation_details.append(
+            f"{citation.path}|{citation.locator}|{citation.kind}:"
+            f"literal={literal}:matches={match_count}:anchor={anchor_unique}:"
+            f"phrase_hits={hits}"
+        )
 
-    commission_phrase = "may commission a new instrument but may never provide its scored value"
-    commission_source, commission_ref = cited_range_for_phrase(commission_phrase)
-    add(results, "xref.commission-quote", "internal-consistency", commission_source is not None and norm(commission_phrase).lower() in commission_source.lower(), commission_ref)
-    frequency_phrase = "no frequency above `0.25 cyc/native px`"
-    frequency_source, frequency_ref = cited_range_for_phrase(frequency_phrase)
-    add(results, "xref.frequency-quote", "internal-consistency", frequency_source is not None and norm(frequency_phrase).lower() in frequency_source.lower(), frequency_ref)
-    holdout_cites = [detail for detail in citation_details if ":345-349:" in detail]
-    add(results, "xref.holdout-rule", "internal-consistency", len(holdout_cites) == 2 and actual_holdout == expected_holdout, f"matching_citations={len(holdout_cites)}")
+    binding_states: dict[str, list[tuple[bool, str]]] = {}
+    for requirement in CITATION_REQUIREMENTS.values():
+        binding_states[requirement.name] = [
+            citation_after_phrase(capture, citations, phrase, requirement.key)
+            for phrase in requirement.capture_phrases
+        ]
+
+    parsed_all_mentions = len(citations) == len(path_mentions)
+    add(
+        results,
+        "xref.paths-resolve-literally",
+        "internal-consistency",
+        parsed_all_mentions
+        and bool(citation_states)
+        and all(bool(state["literal"]) and state["match_count"] == 1 for state in citation_states),
+        "; ".join(citation_details),
+    )
+    add(
+        results,
+        "xref.anchors-unique",
+        "internal-consistency",
+        parsed_all_mentions
+        and bool(citation_states)
+        and all(bool(state["anchor_unique"]) for state in citation_states),
+        "; ".join(citation_details),
+    )
+    add(
+        results,
+        "xref.all-citations-substantive",
+        "internal-consistency",
+        parsed_all_mentions
+        and bool(citation_states)
+        and all(bool(state["substantive"]) for state in citation_states),
+        "; ".join(citation_details),
+    )
+    all_bindings = [
+        binding
+        for requirement_bindings in binding_states.values()
+        for binding in requirement_bindings
+    ]
+    add(
+        results,
+        "xref.citations-bound-to-claims",
+        "internal-consistency",
+        bool(all_bindings) and all(passed for passed, _ in all_bindings),
+        "; ".join(detail for _, detail in all_bindings),
+    )
+
+    for requirement in CITATION_REQUIREMENTS.values():
+        matching = [
+            state
+            for state in citation_states
+            if isinstance(state["citation"], Citation)
+            and state["citation"].key == requirement.key
+        ]
+        passed = (
+            len(matching) >= requirement.minimum_uses
+            and all(bool(state["substantive"]) for state in matching)
+            and all(binding_passed for binding_passed, _ in binding_states[requirement.name])
+        )
+        details = ", ".join(
+            f"anchor={state['anchor_unique']} phrase_hits={state['phrase_hits']}"
+            for state in matching
+        )
+        binding_details = ", ".join(
+            detail for _, detail in binding_states[requirement.name]
+        )
+        add(
+            results,
+            requirement.check_id,
+            "internal-consistency",
+            passed,
+            (
+                f"matching_citations={len(matching)} minimum={requirement.minimum_uses}; "
+                f"{details or 'no matches'}; bindings={binding_details}"
+            ),
+        )
 
     facts["physical_rows"] = [(label, mapping.get(label, (None, ""))[0]) for label in PHYSICAL]
     facts["failed"] = [result for result in results if not result.passed]
     return results, facts
-def replace_unique_line(text: str, anchor: str, replacement: str, label: str) -> str:
-    lines = text.splitlines()
-    count = sum(line == anchor for line in lines)
-    if count != 1:
-        raise RuntimeError(f"mutation {label}: anchor count is {count}, expected exactly 1: {anchor!r}")
-    output: list[str] = []
-    for line in lines:
-        output.extend(replacement.split("\n")) if line == anchor else output.append(line)
-    return "\n".join(output) + ("\n" if text.endswith("\n") else "")
-
-def corrected_fixture(text: str) -> str:
-    text = replace_unique_line(
-        text,
-        'its scored value"* (`docs/proposals/2026-09-sota-scorecard.md:462-463`).',
-        'its scored value"* (`docs/proposals/2026-09-sota-scorecard.md:577-578`).',
-        "fix-commission-citation",
-    )
-    return replace_unique_line(
-        text,
-        'above `0.25 cyc/native px`"* (`2026-09-sota-scorecard.md:465-467`) \u2014 and SOTA',
-        'above `0.25 cyc/native px`"* (`docs/proposals/2026-09-sota-scorecard.md:581-582`) \u2014 and SOTA',
-        "fix-frequency-citation",
-    )
-
-@dataclass(frozen=True)
-class Mutation:
-    name: str
-    defect_class: str
-    anchor: str
-    replacement: str
-    expected_failed: tuple[str, ...]
-    inert: bool = False
-
-def commission(capture_path: Path) -> int:
-    clean = corrected_fixture(read_utf8(capture_path))
-    mutations = [
-        Mutation("arithmetic-block-count", "arithmetic",
-            "| `TC0-sw10-B` | 27 | identical independent repeat of `TC0-sw10-A` |",
-            "| `TC0-sw10-B` | 26 | identical independent repeat of `TC0-sw10-A` |",
-            ("arith.physical.TC0-sw10-B", "arith.physical-sum", "arith.stated-total")),
-        Mutation("arithmetic-stated-total", "arithmetic",
-            "| **scored session total `T_session`** | **891** | `383 + 60 + 96 + 164 + 60 + 128` |",
-            "| **scored session total `T_session`** | **890** | `383 + 60 + 96 + 164 + 60 + 128` |",
-            ("arith.stated-total", "arith.total-expression")),
-        Mutation("stale-603-wrapped", "numeric-residue",
-            "Superseded: the 603-frame design, on 2026-09-04",
-            "Current session total is 603\nframes.",
-            ("numbers.603-only-historical",)),
-        Mutation("stale-duration-budget", "numeric-residue",
-            "promise 45 minutes.** The fixed scored blocks include 419 automated-bracket",
-            "promise 45 minutes.** The fixed scored blocks include 255 automated-bracket",
-            ("numbers.duration.bracket-frames",)),
-        Mutation("mwork-silent-default", "working-magnification",
-            "- **TC0 phase:** use the bare lens at **`M_work`**, an explicitly unset",
-            "- **TC0 phase:** use the bare lens at **1.30x**, a silently defaulted setting",
-            ("mwork.settings-placeholder", "mwork.no-concrete-instruction")),
-        Mutation("converter-every-frame-wrapped", "converter-state",
-            "off for every TC0 sweep, TC0 witness, TC0 flat and TC0 dark. This is an optical",
-            "Keep the teleconverter installed for every\nframe in the session. This is an optical",
-            ("converter.no-all-frame-instruction", "converter.keep-off-tc0")),
-        Mutation("stop-banner-removed", "stop-banner",
-            "> # \u26d4 STOP \u2014 THIS DOCUMENT IS NOT SAFE TO SHOOT FROM",
-            "> # READY TO SHOOT", ("stop.exact-banner",)),
-        Mutation("stop-condition-softened", "stop-banner",
-            "> **This banner is removed only after M147's preflight has been delivered and",
-            "> **This banner may be removed before M147's preflight has been delivered and",
-            ("stop.removal-condition", "stop.not-softened")),
-        Mutation("control-row-in-scored-table", "control-arms",
-            "| **existing claim/calibration** | **383** | 255 converter-on focus + 128 converter-on calibration |",
-            "| `TC0-CTRL-BLUR` | 32 | scored-session physical blur control |\n| **existing claim/calibration** | **383** | 255 converter-on focus + 128 converter-on calibration |",
-            ("controls.no-scored-table-row", "arith.physical-row-order", "internal.no-unknown-block-identifiers")),
-        Mutation("unknown-block-reference", "internal-consistency",
-            "`TC0-S10-B`, `TC0-sw10-B`, `TC0-E10-B`. Use the same counts, direction,",
-            "`TC0-S10-B`, `TC0-sw10-B`, `TC0-E10-C`. Use the same counts, direction,",
-            ("internal.no-unknown-block-identifiers",)),
-        Mutation("stale-cross-reference", "internal-consistency",
-            'its scored value"* (`docs/proposals/2026-09-sota-scorecard.md:577-578`).',
-            'its scored value"* (`docs/proposals/2026-09-sota-scorecard.md:1-2`).',
-            ("xref.commission-quote",)),
-        Mutation("missing-block-purpose", "internal-consistency",
-            "| reset pre-flight `P0` | 6 | converter on, fixed focus at the existing maximum-reproduction reset |",
-            "| reset pre-flight `P0` | 6 | |", ("internal.all-block-purposes-present",)),
-        Mutation("inert-owner-metadata", "placebo", "Owning lane: **lane-FRC**",
-            "Owning lane: **lane-FRC** (administrative note)", (), inert=True),
+def commission(capture_path: Path, scorecard_path: Path) -> int:
+    command = [
+        sys.executable,
+        str(Path(__file__).with_name("nc_capreq.py")),
+        "--capture",
+        str(capture_path),
+        "--scorecard",
+        str(scorecard_path),
     ]
-    outcomes: list[bool] = []
-    with tempfile.TemporaryDirectory(prefix="m156-capreq-") as temp_name:
-        temp_dir = Path(temp_name)
-        base_path = temp_dir / "candidate.md"
-        base_path.write_text(clean, encoding="utf-8", newline="\n")
-        base_results, _ = verify(base_path)
-        base_failed = [r.check_id for r in base_results if not r.passed]
-        emit(f"COMMISSION_BASE {'GREEN' if not base_failed else 'RED'} checks={len(base_results)} failures={len(base_failed)}")
-        if base_failed:
-            for check_id in base_failed:
-                emit(f"  UNEXPECTED_BASE_FAILURE {check_id}")
-            return 2
-        for index, mutation in enumerate(mutations, 1):
-            mutated = replace_unique_line(clean, mutation.anchor, mutation.replacement, mutation.name)
-            mutant_path = temp_dir / f"mutant-{index:02d}.md"
-            mutant_path.write_text(mutated, encoding="utf-8", newline="\n")
-            mutant_results, _ = verify(mutant_path)
-            failed = {r.check_id for r in mutant_results if not r.passed}
-            if mutation.inert:
-                passed = not failed
-                emit(f"INERT {'GREEN' if passed else 'RED'} {mutation.name} failures={len(failed)}")
-            else:
-                expected = set(mutation.expected_failed)
-                passed = bool(failed) and expected.issubset(failed)
-                emit(f"MUTATION {'RED' if failed else 'GREEN'} {mutation.name} class={mutation.defect_class} expected_failed={len(expected)} observed_failures={len(failed)} covered={'yes' if passed else 'no'}")
-                if not passed:
-                    emit(f"  expected={sorted(expected)}")
-                    emit(f"  failed={sorted(failed)}")
-            outcomes.append(passed)
-    covered = sum(outcomes)
-    defect_total = sum(not m.inert for m in mutations)
-    defect_covered = sum(ok for m, ok in zip(mutations, outcomes) if not m.inert)
-    inert_total = sum(m.inert for m in mutations)
-    inert_green = sum(ok for m, ok in zip(mutations, outcomes) if m.inert)
-    emit(f"MUTATION_COVERAGE {covered}/{len(outcomes)} defect_red={defect_covered}/{defect_total} inert_green={inert_green}/{inert_total}")
-    return 0 if covered == len(outcomes) else 1
+    return subprocess.run(command, check=False).returncode
 
 def print_report(results: list[Result], facts: dict[str, object], verbose: bool) -> None:
     failures = [r for r in results if not r.passed]
+    passed = len(results) - len(failures)
+    skipped = 0
     emit(f"CAPTURE_SHA256 {facts['sha256']}")
-    emit(f"CHECKS total={len(results)} passed={len(results)-len(failures)} failed={len(failures)}")
+    emit(
+        f"CHECKS total={len(results)} passed={passed} failed={len(failures)} "
+        f"skipped={skipped} accounted={passed + len(failures) + skipped}"
+    )
+    class_total = 0
+    class_passed = 0
+    class_failed = 0
     for defect_class in sorted({r.defect_class for r in results}):
         selected = [r for r in results if r.defect_class == defect_class]
         failed = sum(not r.passed for r in selected)
+        class_total += len(selected)
+        class_passed += len(selected) - failed
+        class_failed += failed
         emit(f"CLASS {defect_class} checks={len(selected)} passed={len(selected)-failed} failed={failed}")
+    emit(
+        f"CLASS_SUM checks={class_total} passed={class_passed} "
+        f"failed={class_failed} skipped=0"
+    )
     emit("BLOCK_TABLE")
     for label, count in facts.get("physical_rows", []):
         emit(f"  {label}: {count}")
@@ -578,12 +813,16 @@ def print_report(results: list[Result], facts: dict[str, object], verbose: bool)
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--capture", type=Path, default=DEFAULT_CAPTURE)
+    parser.add_argument("--scorecard", type=Path, default=SCORECARD)
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--commission", action="store_true")
     args = parser.parse_args()
     if args.commission:
-        return commission(args.capture.resolve())
-    results, facts = verify(args.capture.resolve())
+        return commission(args.capture.resolve(), args.scorecard.resolve())
+    results, facts = verify(
+        args.capture.resolve(),
+        scorecard_path=args.scorecard.resolve(),
+    )
     print_report(results, facts, args.verbose)
     return 0 if all(r.passed for r in results) else 1
 

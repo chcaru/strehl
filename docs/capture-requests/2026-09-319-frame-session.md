@@ -228,7 +228,7 @@ stabilisation is off, and every claim-bearing focus node has two exposures.
 
 The scorecard states that the burned grid and the development-only
 high-resolution slide *"may commission a new instrument but may never provide
-its scored value"* (`docs/proposals/2026-09-sota-scorecard.md:577-578`).
+its scored value"* (`docs/proposals/2026-09-sota-scorecard.md`, "M1 / Input needed by a future replacement" clause).
 
 So the division of labour is:
 
@@ -240,7 +240,7 @@ So the division of labour is:
 development, tuning, threshold selection, or debugging.** If any lane renders
 it while an instrument is still being tuned, the holdout is burned and the
 session has to be shot again. A holdout unit is subject plus uninterrupted
-session (`docs/proposals/2026-09-sota-scorecard.md:345-349`), so it cannot be
+session (`docs/proposals/2026-09-sota-scorecard.md`, "2.3 Holdout units and burn log" section), so it cannot be
 partly spent.
 
 ## No certified target is needed
@@ -249,7 +249,7 @@ An earlier draft of this request specified a certified 10-µm clear-film grid
 with a fabricated nonperiodic microdot field. **That is withdrawn.** M1 caps its
 claims in **native pixel** units — the registered constraint is *"no frequency
 above `0.25 cyc/native px`"*
-(`docs/proposals/2026-09-sota-scorecard.md:581-582`) — and SOTA here is a
+(`docs/proposals/2026-09-sota-scorecard.md`, "M1 / Exact computation" clause) — and SOTA here is a
 *relative* comparator-leading claim against Zerene and Helicon on identical
 input. Absolute physical scale is consumed only when converting to
 cycles/mm or physical feature size, which is M10's problem, not M1's.
@@ -357,7 +357,7 @@ specified here. They are measured against a converter-on `R1/R2` reference,
 and the scored value depends on that same reference channel. The holdout unit
 is the subject plus the uninterrupted capture session; reading an outcome on
 any member burns every member
-(`docs/proposals/2026-09-sota-scorecard.md:345-349`). Reading either control
+(`docs/proposals/2026-09-sota-scorecard.md`, "2.3 Holdout units and burn log" section). Reading either control
 against this session's reference would therefore burn the scored session.
 
 - **Do not select the blur arm after the fact from this session's
@@ -367,6 +367,53 @@ against this session's reference would therefore burn the scored session.
   improved output and is circular.
 - **Do not add either control to the scored block table.** Complete and read
   both in the non-holdout rehearsal before the holdout sitting begins.
+
+## M5 eligibility gate — REHEARSAL EXIT CONDITION, zero extra frames
+
+> **This gate decides whether the 891-frame scored session is worth shooting
+> at all.** It is measured on the non-holdout rehearsal, so reading it burns
+> nothing.
+
+**Why this exists.** M5 requires a Wilson lower bound `>= 98%`
+(`docs/proposals/2026-09-sota-scorecard.md`, "M5 / Success" clause). For an all-successes sample
+the bound is `n / (n + z^2)` with `z = 1.6448536269514722`, so
+`z^2 = 2.705543454`. That gives `n=128 -> 0.979300` and `n=132 -> 0.979915`,
+both short, while `n=133 -> 0.980063` clears it. **133 eligible tiles is the
+smallest sample that can satisfy M5 at all**, and it was independently
+re-derived twice before being written here.
+
+**The population is not small.** At the RAW-visible active area of
+`7028 x 4688`, one frame affords
+`floor(7028/128) * floor(4688/128) = 54 * 36 = 1,944` complete non-overlapping
+`128 x 128` tiles, leaving `116 px` unused at right and `80 px` at bottom. An
+earlier reading of `13/64` was an `8x8` grid **subsample**, not the population,
+and reporting it as though `64` were all there is understated eligibility by
+roughly thirty-fold.
+
+**The gate can fail, which is the point.** Measured on the full population, the
+burned calibration grid yields `0/1,944` eligible at `sw4/55` and `0/1,944` at
+`sw10/27`, while the best exact 27-frame tilted window reaches `275/1,944`
+eligible from `328` point-qualified, an all-success `LCB95` of `0.990258`. So
+`133` is demonstrably attainable at this geometry **and** demonstrably not
+automatic.
+
+**The gate.** For each step width, average the complete A/B block cross-powers
+**before** election and bootstrap, then require all three:
+
+1. pass-averaged `sw4` manifest: **`>= 133` eligible tiles**
+2. pass-averaged `sw10` manifest: **`>= 133` eligible tiles**
+3. physical-coordinate intersection across `sw4`/`sw10`: **`>= 133` eligible
+   tiles**
+
+**Any failure is a STOP before the 891-frame session.**
+
+**Two things this gate is not.** A/B halves and step widths must **not** be
+counted as independent populations — that would manufacture the sample rather
+than measure it. And this converter-off rehearsal gate is a **feasibility
+check, not the converter-on M5 score**; the separate scorecard floor of "500
+eligible tiles overall and 50 per capture"
+(`docs/proposals/2026-09-sota-scorecard.md`, "M5 / Input" clause) still governs the complete
+registered M5 capture set.
 
 ## Literal shooting order
 
