@@ -3090,6 +3090,148 @@ scored arm is absent. It must not be read as an arm ratification, and M12's
 refusal to build on it was right. The scorecard's own status line agrees that
 nothing has landed yet: **"No v1.7 score output has been read."**
 
+### 2.9.28 The agent tree was cleared, and the program restarted from the record
+
+**What happened.** The orchestrator session crashed. Every subordinate lane went
+with it — 15 running and 238 idle agents, all gone. No lane wrote a handover.
+The working tree survived intact and dirty, as it always is.
+
+This section exists because the recovery was only possible from committed
+documents, and the two things that did *not* survive are both instructive.
+
+**What was lost, measured rather than assumed.** Two lanes had been authorised
+and neither had produced its artifact:
+
+| lane | authorised | expected artifact | state at recovery |
+| --- | --- | --- | --- |
+| crop-early | 6 days before the crash | any `crop_early`/`crop-early`/`CropEarly` symbol in `crates/` | **0 occurrences** |
+| M12 scorecard matrix | 210 min granted | `experiments/m12-scorecard/out/RUN-MANIFEST.json` | **absent** |
+
+M12's tree is not empty — it holds a 50 KB commissioned harness, a planted/
+restored build pair, a preflight, and a partial campaign `16bc3e3d` with a
+546 KB `records.jsonl`. What is missing is the closing manifest, so **the
+scored matrix never ran**. The distinction matters: this is a lane that did
+real work and did not finish, not a lane that never started.
+
+**Ruling: M12 is deliberately deferred, and the reason is not neglect.** Its
+registered bar is memory, determinism and scaling invariance, and the scorecard
+records at `:434` that the registered N/worker matrix *"still requires the
+reserved quiet host."* I have just made the host busy on purpose. M12 is one of
+only two axes already measurable — but clearing it **unlocks nothing else**,
+where crop-early unlocks 10. Timing a scaling ratio against concurrent renders
+would also violate rule 16 directly. Deferring the measurable axis to run the
+unlocking one is the correct trade, and it is recorded here so it is not later
+mistaken for the lane being forgotten a second time.
+
+#### Two EXIF traps, each of which has already cost a wrong ruling
+
+Both are properties of *this corpus* and both are invisible to the obvious check.
+
+1. **Converter identity cannot be read from EXIF.** All 68 stack directories
+   report `Sony FE 100mm F2.8 Macro GM OSS + 2X Teleconverter` in `LensModel`
+   *and* in maker-note `LensType3`. The physical part is a **2x Viltrox** that
+   mimics the Sony electronic protocol. I ruled it a Sony teleconverter from
+   the metadata and the owner corrected me. Blocker 3 on the capture request
+   still closed, but on better evidence: the Viltrox is the converter *every
+   existing capture was taken through*.
+2. **`ReleaseMode` is mis-mapped.** Frames report `Exposure Bracketing` with
+   `SequenceLength: Unknown (43)`. **Every stack in this corpus is focus
+   bracketed**, owner-confirmed. Any gate keyed on `ReleaseMode` is wrong on
+   every frame in the corpus.
+
+The transferable form: **identity here is owner testimony, and metadata is a
+hypothesis about it.** A checker can pass every string comparison and leave the
+inference wrong, which is exactly what happened.
+
+#### Focus-encoder quantisation, and why coverage must be read from pixels
+
+Measured by me from EXIF across the calibration stacks:
+
+```text
+tilted-sw4                182 frames:  57 x76,  58 x80,  59 x26
+tilted-sw10                92 frames:  57 x38,  58 x40,  59 x14
+very-tilted-all-axis-sw10 197 frames:  56 x10, 57 x40, 58 x40, 59 x41, 60 x40, 61 x26
+```
+
+The `sw4`/`sw10` pair is **density-matched bucket by bucket** — `76/38 = 2.000`
+and `80/40 = 2.000` — which is a far stronger comparability claim than "same
+endpoints". The truncated final bucket is **not** matched: `26/14 = 1.857`.
+
+Two consequences. One encoder unit spans ~40 frames at `sw10` and ~78 at `sw4`,
+so **step width 10 advances roughly twice as far per frame as step width 4**.
+And the encoder resolves only three to six distinct values across an entire
+sweep, so **coverage and any 64-peak verification must come from image data,
+never from EXIF**.
+
+#### Candidate 2 is elevated to the live route for blocker (a)
+
+Re-read at source this segment. It is the first candidate whose **both optical
+arms resolve non-unity in the correct direction**
+(`docs/research/M-CAND2.md:168-171`):
+
+| arm | ratio | interval |
+| --- | --- | --- |
+| blur | `0.2779204535796564` | CI `[0.23055319880698877, 0.32707789521097985]`, strictly below unity |
+| improvement | `2.4627494970140926` | LCB95 `2.177137250041903` |
+
+No prior candidate managed this; the slant-edge family *reversed*, scoring a
+blurred image as better. Its identity arm returns
+**`1.0000000000000266`** — unity to thirteen decimals — so the null is quiet.
+
+**What makes it strategically interesting is the capture cost.** Its proposed
+confirmation arm is `tilted-sw4` (182) against `tilted-sw10` (92), and **both
+are already on disk**. Every other known route to `(a)` costs the owner a 45-60
+minute bench session. This one may cost nothing.
+
+**What is unresolved, and why I have not declared `(a)` cleared.** Three things,
+all handed to the ruling lane rather than assumed away:
+
+1. Both arms ran on a **synthetic, signal-linear** plant, which makes the
+   real-photon arm *necessary rather than confirmatory* (rule 34).
+2. `M-CAND2.md` states **in its own text** that Hotelling `d'^2` *"cannot
+   lawfully score two natural renders"* by treating dense/sparse as classes.
+   That is a self-stated limitation on precisely the use this program needs,
+   and it is the crux.
+3. The confirmation pair carries the unmatched tail above, and **IBIS was on in
+   all six calibration stacks** — a confound I introduced and did not control.
+
+#### What was dispatched
+
+Both lanes run on `gpt-5.6-sol` at maximum effort and both are recorded in the
+`AGENTS.md` allocation ledger at dispatch, per rule 41, in commit `b7efe117`.
+
+**M130 — build crop-early.** The defect is verified at source: `--cover crop`
+runs the entire merge on the full plane and crops at write time. `merge_cmd.rs`
+at the crop site says so in its own comment — *"THE ONE PLACE THE CROP IS
+APPLIED, and it is applied by **addressing**, not by copying"* — and the two
+`CoverFit::Cropped` arms in the estimator and pyramid backends **only print a
+banner**. So every pyramid level, local-energy smoothing pass, band weight and
+the collapse have already run over coordinates no frame covers. The registered
+prediction, frozen before dispatch, is a safe inset falling `256 px -> <=8 px`
+and retained area `64.6047% -> 96.22496%`, against a `>=80%` gate. Two separate
+registered bars in `cover-default.md:411-413` are in scope: *"safe inset at most
+128 px on every stack"* and *"at least 80% of original pixels after inset"*.
+
+Three constraints bind it. The default stays `Scale` — this lane earns the right
+to *reconsider* Crop, not to flip it. The byte-frozen default render must be
+proved unmoved **by SHA-256, not by reading the code**. And Crop's byte-exactness
+must survive: it currently predicts all **24,580,566** serialised samples exactly
+at **max 0 DN, RMS 0 DN**, where Scale changes **98.1462%** of them
+(`cover-default.md:6-7`). That property is the entire reason Crop is interesting,
+and a fix that made Crop resample would destroy the thing it was sent to protect.
+
+**M131 — rule on Candidate 2.** One question: does it clear `(a)`, yes or no. It
+is read-only in `crates/` because M130 holds `merge_cmd.rs` concurrently, and it
+was told explicitly that a clean **no** is a complete result. Both EXIF traps and
+all three unresolved items above were handed to it in the brief, because rule 43
+is unambiguous that a confident wrong brief is far worse than a vague one.
+
+**Standing position for the owner.** Two small asks still stand between him and
+12 of 12: **$189** for Zerene Prosumer, which clears `(d)` and its 8 axes, and
+**45-60 minutes** at the bench for `(a)`+`(c)` — the latter possibly avoidable
+entirely if M131 rules in Candidate 2's favour. Blockers 1 and 2 on the capture
+request need one dry-run rehearsal at 1.30x before the real session.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
