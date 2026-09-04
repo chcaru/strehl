@@ -1,0 +1,70 @@
+{
+  "all_recorded_arms_pass": false,
+  "arms": {
+    "alias": {
+      "decision": {
+        "action": "FAIL: the point estimate is above 2.0, but its lower uncertainty bound is below 2.0. Reduce TC0 magnification by at least about 0.25% (about 1.78% to restore the registered 2.0312 target), or verify that the converter is seated and the reference is at maximum reproduction; then retake both preflight frames.",
+        "axis_anisotropy_fraction": 6.517063107613907e-06,
+        "axis_sampling_ratios": [
+          1.999991495088558,
+          2.0000045291593462
+        ],
+        "interval": {
+          "bootstrap_percentile_interval": [
+            1.9999927122986825,
+            2.0000052504167063
+          ],
+          "confidence_level": 0.95,
+          "draws": 10000,
+          "green_phase_ratio_envelope": [
+            2.0000016887558543,
+            2.000001755743144
+          ],
+          "lower": 1.9949927305179358,
+          "method": "independent spatial-block percentile bootstrap plus phase envelope",
+          "point": 2.000001748809698,
+          "relative_systematic_allowance": 0.0025,
+          "relative_width": 0.005006262134906102,
+          "seed": 14720260904,
+          "upper": 2.0050052635427478
+        },
+        "reason_code": "LOWER_BOUND_BELOW_2",
+        "relative_rotation_degrees": 0.0,
+        "sampling_ratio": 2.000001748809698,
+        "threshold": 2.0,
+        "verdict": "FAIL"
+      },
+      "elapsed_seconds": 12.184241199982353,
+      "measurement_status": "OK",
+      "pass": false,
+      "plant": "same 64 px primitive; scored second harmonic dominates",
+      "reference_block_count": 12,
+      "reference_period_green_px": 64.00214929252897,
+      "required": "typed refusal; never a numeric PASS",
+      "run_utc": "2026-09-04T12:18:21.744046+00:00",
+      "scored_block_count": 12,
+      "scored_period_green_px": 32.00104666439411,
+      "truth_ratio": 1.0,
+      "wall_seconds": 12.981253500038292
+    }
+  },
+  "preflight_parameters_sha256": "b56bd70421c6d1a7e9613394669d942107fe927acca148d37c785602a8a364b1",
+  "rules": {
+    "alias_required_outcome": "REFUSED",
+    "coverage_acceptable_count": [
+      18,
+      20
+    ],
+    "coverage_claim": 0.95,
+    "coverage_trials": 20,
+    "degenerate_required_outcome": "REFUSED",
+    "mild_nuisance_maximum_relative_error": 0.0025,
+    "never_pass_truth_at_or_below": 2.0,
+    "null_maximum_relative_error": 0.0025,
+    "schema": "m147-commission-rules-v1",
+    "uniform_scale_maximum_relative_error": 0.0025
+  },
+  "rules_sha256": "aabd804bc52b6c92b5baec25e219bf6795bfa1933999fff6cd4f95e25af49ba1",
+  "schema": "m147-commission-v1",
+  "updated_utc": "2026-09-04T12:18:21.744046+00:00"
+}

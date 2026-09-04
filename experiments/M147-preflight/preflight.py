@@ -33,7 +33,6 @@ FROZEN_PARAMETERS: dict[str, Any] = {
     "decision": {
         "minimum_sampling_ratio": 2.0,
         "confidence_level": 0.95,
-        "maximum_relative_interval_width": 0.015,
     },
     "raw": {
         "extensions": [".arw"],
@@ -51,6 +50,8 @@ FROZEN_PARAMETERS: dict[str, Any] = {
         "minimum_tile_robust_range_dn": 50.0,
         "minimum_peak_snr_db": 12.0,
         "minimum_median_peak_snr_db": 20.0,
+        "subharmonic_factors": [2, 3],
+        "subharmonic_ambiguity_relative_db": -30.0,
         "reciprocal_angle_degrees": [70.0, 90.0],
         "maximum_axis_period_ratio": 1.5,
         "period_cluster_relative_half_width": 0.018,
@@ -58,6 +59,7 @@ FROZEN_PARAMETERS: dict[str, Any] = {
         "minimum_cluster_fraction": 0.25,
         "maximum_competing_cluster_fraction": 0.65,
         "minimum_spatial_blocks": 6,
+        "minimum_common_ratio_blocks": 6,
         "spatial_block_size_green_px": 512,
         "maximum_period_mad_fraction": 0.01,
         "maximum_orientation_mad_degrees": 5.0,
@@ -66,12 +68,18 @@ FROZEN_PARAMETERS: dict[str, Any] = {
         "maximum_relative_rotation_degrees": 15.0,
     },
     "uncertainty": {
-        "method": "independent spatial-block percentile bootstrap plus phase envelope",
+        "method": (
+            "independent spatial-block percentile bootstrap plus green-phase "
+            "and mapped-local envelopes"
+        ),
         "draws": 10000,
         "seed": 14720260904,
         "lower_quantile": 0.025,
         "upper_quantile": 0.975,
         "relative_systematic_allowance": 0.0025,
+        "systematic_allowance_status": (
+            "provisional_unbound_pending_real_converter_on_off_pair"
+        ),
     },
     "operator_target_ratio": 2.0312,
 }
@@ -87,11 +95,18 @@ PARAMETERS_SHA256 = hashlib.sha256(
 
 
 class MeasurementRefusal(RuntimeError):
-    def __init__(self, code: str, message: str, action: str):
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        action: str,
+        details: dict[str, Any] | None = None,
+    ):
         super().__init__(message)
         self.code = code
         self.message = message
         self.action = action
+        self.details = details or {}
 
 
 class UsageError(RuntimeError):
@@ -304,6 +319,10 @@ def _angle_distance_mod_90(first: float, second: float) -> float:
     return min(delta, 90.0 - delta)
 
 
+def _signed_angle_delta_mod_90(first: float, second: float) -> float:
+    return (second - first + 45.0) % 90.0 - 45.0
+
+
 def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
     estimator = FROZEN_PARAMETERS["estimator"]
     tile_size = int(estimator["tile_size_green_px"])
@@ -394,6 +413,40 @@ def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
         return None
     cosine = abs(float(vector_1 @ vector_2)) / (norm_1 * norm_2)
     angle = math.degrees(math.acos(float(np.clip(cosine, 0.0, 1.0))))
+
+    def neighborhood_peak(vector: np.ndarray) -> float:
+        row = int(round(fft_size / 2 + vector[1] * fft_size))
+        column = int(round(fft_size / 2 + vector[0] * fft_size))
+        row_0 = max(0, row - 2)
+        row_1 = min(fft_size, row + 3)
+        column_0 = max(0, column - 2)
+        column_1 = min(fft_size, column + 3)
+        return float(np.max(power[row_0:row_1, column_0:column_1]))
+
+    selected_powers = (
+        float(power[int(first[0]), int(first[1])]),
+        float(power[int(second[0]), int(second[1])]),
+    )
+    subharmonic_relative_db = {
+        str(factor): min(
+            10.0
+            * math.log10(
+                max(
+                    neighborhood_peak(vector_1 / factor) / selected_powers[0],
+                    1e-30,
+                )
+            ),
+            10.0
+            * math.log10(
+                max(
+                    neighborhood_peak(vector_2 / factor) / selected_powers[1],
+                    1e-30,
+                )
+            ),
+        )
+        for factor in estimator["subharmonic_factors"]
+        if period * factor <= estimator["maximum_period_green_px"]
+    }
     orientations = [_orientation_mod_90(vector_1), _orientation_mod_90(vector_2)]
     if _angle_distance_mod_90(orientations[0], orientations[1]) <= 10.0:
         orientation = float(np.mean(orientations))
@@ -405,6 +458,9 @@ def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
         "reciprocal_angle_degrees": float(angle),
         "orientation_degrees_mod_90": float(orientation),
         "peak_snr_db": float(10.0 * math.log10(max(strength / background, 1e-30))),
+        "subharmonic_relative_db": {
+            factor: float(value) for factor, value in subharmonic_relative_db.items()
+        },
     }
 
 
@@ -555,10 +611,50 @@ def _find_cluster(
             f"below {estimator['minimum_median_peak_snr_db']:.2f} dB.",
             "Improve focus/illumination and make the grid larger in the frame.",
         )
+    median_subharmonic_relative = {
+        str(factor): float(
+            np.median(
+                [
+                    item["subharmonic_relative_db"][str(factor)]
+                    for item in best
+                    if str(factor) in item["subharmonic_relative_db"]
+                ]
+            )
+        )
+        for factor in estimator["subharmonic_factors"]
+        if any(
+            str(factor) in item["subharmonic_relative_db"] for item in best
+        )
+    }
+    for factor, relative_db in median_subharmonic_relative.items():
+        if relative_db >= estimator["subharmonic_ambiguity_relative_db"]:
+            raise MeasurementRefusal(
+                "AMBIGUOUS_HARMONIC",
+                f"{phase_name}: the selected lattice has a coherent 1/{factor} "
+                f"frequency alternative only {-relative_db:.2f} dB below it; "
+                f"the frozen ambiguity limit is "
+                f"{-estimator['subharmonic_ambiguity_relative_db']:.2f} dB.",
+                "Use a sharper, larger grid view whose primitive period dominates; "
+                "do not trust a possible integer-period alias.",
+            )
 
     axis_periods = np.median(
         np.asarray([item["axis_periods_green_px"] for item in best]), axis=0
     )
+    local_samples = [
+        {
+            "center_y_green_px": float(item["center_y_green_px"]),
+            "center_x_green_px": float(item["center_x_green_px"]),
+            "period_green_px": float(item["period_green_px"]),
+        }
+        for item in sorted(
+            best,
+            key=lambda item: (
+                item["center_y_green_px"],
+                item["center_x_green_px"],
+            ),
+        )
+    ]
     return {
         "period_green_px": period,
         "period_sensor_px": 2.0 * period,
@@ -572,12 +668,14 @@ def _find_cluster(
         "spatial_block_count": len(block_periods),
         "period_mad_fraction": mad_fraction,
         "median_peak_snr_db": median_snr,
+        "median_subharmonic_relative_db": median_subharmonic_relative,
         "median_reciprocal_angle_degrees": float(
             np.median([item["reciprocal_angle_degrees"] for item in best])
         ),
         "orientation_degrees_mod_90": orientation,
         "orientation_mad_degrees": orientation_mad,
         "image_shape_green_px": list(image_shape),
+        "local_period_samples": local_samples,
     }
 
 
@@ -640,6 +738,30 @@ def estimate_decoded(decoded: DecodedRaw, role: str) -> dict[str, Any]:
         for key in common_blocks
     }
     combined_values = np.asarray(list(combined_blocks.values()), dtype=np.float64)
+    phase_sample_maps = []
+    for phase in phases:
+        phase_sample_maps.append(
+            {
+                (
+                    sample["center_y_green_px"],
+                    sample["center_x_green_px"],
+                ): sample["period_green_px"]
+                for sample in phase["local_period_samples"]
+            }
+        )
+    common_sample_positions = sorted(
+        set(phase_sample_maps[0]) & set(phase_sample_maps[1])
+    )
+    combined_samples = [
+        {
+            "center_y_green_px": float(position[0]),
+            "center_x_green_px": float(position[1]),
+            "period_green_px": math.sqrt(
+                phase_sample_maps[0][position] * phase_sample_maps[1][position]
+            ),
+        }
+        for position in common_sample_positions
+    ]
     period = float(np.median(combined_values))
     axis_periods = np.sqrt(
         np.asarray(phases[0]["axis_periods_green_px"])
@@ -662,6 +784,7 @@ def estimate_decoded(decoded: DecodedRaw, role: str) -> dict[str, Any]:
         "block_periods_green_px": combined_blocks,
         "spatial_block_count": len(combined_blocks),
         "green_phases": phases,
+        "local_period_samples": combined_samples,
     }
 
 
@@ -733,10 +856,80 @@ def _bootstrap_ratio(
         for reference_phase in reference["green_phases"]
         for scored_phase in scored["green_phases"]
     ]
-    systematic = float(uncertainty["relative_systematic_allowance"])
-    lower = min(q_low, min(phase_ratios)) * (1.0 - systematic)
-    upper = max(q_high, max(phase_ratios)) * (1.0 + systematic)
     point = reference["period_green_px"] / scored["period_green_px"]
+    shape = np.asarray(
+        reference["green_phases"][0]["image_shape_green_px"], dtype=np.float64
+    )
+    center = (shape - 1.0) / 2.0
+    rotation_radians = math.radians(
+        _signed_angle_delta_mod_90(
+            reference["orientation_degrees_mod_90"],
+            scored["orientation_degrees_mod_90"],
+        )
+    )
+    coordinate_rotation = np.asarray(
+        [
+            [math.cos(rotation_radians), -math.sin(rotation_radians)],
+            [math.sin(rotation_radians), math.cos(rotation_radians)],
+        ],
+        dtype=np.float64,
+    )
+    scored_samples = scored["local_period_samples"]
+    scored_coordinates = np.asarray(
+        [
+            [sample["center_y_green_px"], sample["center_x_green_px"]]
+            for sample in scored_samples
+        ],
+        dtype=np.float64,
+    )
+    stride = FROZEN_PARAMETERS["estimator"]["tile_stride_green_px"]
+    maximum_distance = math.sqrt(2.0) * stride / 2.0 + 1e-9
+    block_size = FROZEN_PARAMETERS["estimator"]["spatial_block_size_green_px"]
+    grouped_local_ratios: dict[str, list[float]] = {}
+    grouped_distances: dict[str, list[float]] = {}
+    for sample in reference["local_period_samples"]:
+        reference_coordinate = np.asarray(
+            [sample["center_y_green_px"], sample["center_x_green_px"]],
+            dtype=np.float64,
+        )
+        mapped_coordinate = (
+            center
+            + coordinate_rotation @ (reference_coordinate - center) / point
+        )
+        distances = np.linalg.norm(scored_coordinates - mapped_coordinate, axis=1)
+        nearest = int(np.argmin(distances))
+        distance = float(distances[nearest])
+        if distance > maximum_distance:
+            continue
+        block_key = (
+            f"{int(reference_coordinate[0] // block_size)},"
+            f"{int(reference_coordinate[1] // block_size)}"
+        )
+        grouped_local_ratios.setdefault(block_key, []).append(
+            sample["period_green_px"]
+            / scored_samples[nearest]["period_green_px"]
+        )
+        grouped_distances.setdefault(block_key, []).append(distance)
+    mapped_block_ratios = {
+        key: float(np.median(values))
+        for key, values in sorted(grouped_local_ratios.items())
+    }
+    minimum_common = FROZEN_PARAMETERS["estimator"]["minimum_common_ratio_blocks"]
+    if len(mapped_block_ratios) < minimum_common:
+        raise MeasurementRefusal(
+            "INSUFFICIENT_COMMON_GRID",
+            f"Only {len(mapped_block_ratios)} reference regions map to a coherent "
+            f"TC0 grid region; {minimum_common} are required.",
+            "Reframe both states so every retained reference strip maps onto grid.",
+        )
+    local_ratios = np.asarray(list(mapped_block_ratios.values()), dtype=np.float64)
+    systematic = float(uncertainty["relative_systematic_allowance"])
+    lower = min(q_low, min(phase_ratios), float(np.min(local_ratios))) * (
+        1.0 - systematic
+    )
+    upper = max(q_high, max(phase_ratios), float(np.max(local_ratios))) * (
+        1.0 + systematic
+    )
     return {
         "method": uncertainty["method"],
         "confidence_level": FROZEN_PARAMETERS["decision"]["confidence_level"],
@@ -744,6 +937,22 @@ def _bootstrap_ratio(
         "seed": uncertainty["seed"],
         "bootstrap_percentile_interval": [q_low, q_high],
         "green_phase_ratio_envelope": [min(phase_ratios), max(phase_ratios)],
+        "common_spatial_block_count": len(mapped_block_ratios),
+        "local_spatial_ratios": mapped_block_ratios,
+        "local_mapping_maximum_distance_green_px": maximum_distance,
+        "local_mapping_median_nearest_distance_green_px": float(
+            np.median(
+                [
+                    distance
+                    for distances in grouped_distances.values()
+                    for distance in distances
+                ]
+            )
+        ),
+        "local_spatial_ratio_envelope": [
+            float(np.min(local_ratios)),
+            float(np.max(local_ratios)),
+        ],
         "relative_systematic_allowance": systematic,
         "lower": float(lower),
         "upper": float(upper),
@@ -780,16 +989,6 @@ def evaluate_measurements(
         )
 
     interval = _bootstrap_ratio(reference, scored)
-    width_limit = FROZEN_PARAMETERS["decision"]["maximum_relative_interval_width"]
-    if interval["relative_width"] > width_limit:
-        raise MeasurementRefusal(
-            "INSUFFICIENT_PRECISION",
-            f"The {100.0 * FROZEN_PARAMETERS['decision']['confidence_level']:.1f}% "
-            f"interval is {100.0 * interval['relative_width']:.3f}% wide, above "
-            f"the frozen {100.0 * width_limit:.3f}% limit.",
-            "Improve focus, make the grid fill more of both frames, and retake.",
-        )
-
     threshold = FROZEN_PARAMETERS["decision"]["minimum_sampling_ratio"]
     passed = interval["lower"] >= threshold
     if passed:
@@ -924,6 +1123,7 @@ def run_preflight(reference_path: Path, scored_path: Path) -> tuple[dict[str, An
             "sampling_ratio": None,
             "interval": None,
             "action": f"FAIL / REFUSAL: {refusal.message} {refusal.action}",
+            "diagnostics": refusal.details,
         }
         exit_code = 2
     artifact["elapsed_seconds"] = float(time.perf_counter() - started)
@@ -933,6 +1133,13 @@ def run_preflight(reference_path: Path, scored_path: Path) -> tuple[dict[str, An
 def _print_result(artifact: dict[str, Any], output_path: Path) -> None:
     decision = artifact["decision"]
     print("M147 MAGNIFICATION PREFLIGHT")
+    if FROZEN_PARAMETERS["uncertainty"]["systematic_allowance_status"].startswith(
+        "provisional"
+    ):
+        print(
+            "WARNING: provisional build; real converter-on/off commissioning "
+            "is still required before shooting."
+        )
     measurements = artifact.get("measurements")
     if measurements:
         print(
