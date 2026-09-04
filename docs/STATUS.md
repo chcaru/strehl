@@ -3863,6 +3863,105 @@ gate that fired KILL while the plan still assumes the item is alive — then the
 plan overstates what is buildable, and I need the full list before dispatching
 anything against it.
 
+### 2.9.34 M134 returns split: the M8-O bar is unachievable, and the clamp works
+
+Two findings, one solid in each direction, plus a defect I caught in the half
+that matters most.
+
+**First: an independent proof that the M8-O bar cannot be met.** M134's phase 4
+ran a checker that reconstructs coordinates, support and tolerance itself —
+`out/independence.json` records `forbidden_strehl_imports: []` and
+`independent: true`, so it does not call the code it audits. Pinned to the
+frozen `experiments/M8-overshoot/stage-attribution.json`
+(`E0BFCEDA…7207C792`). Its verdict:
+
+> UNACHIEVABLE AS WRITTEN under the current normalized u16 output: when lo > 1
+> + tolerance, every representable value is below the source hull
+
+The mechanism is representability, not resampling. Output is normalized `u16`
+on `[0, 1]` with quantisation tolerance `7.629510948348211e-06`. Where the
+source neighbourhood saturates, the hull's *lower* bound rises above `1`; once
+`lo - tolerance > 1` the set of representable values satisfying the hull
+condition is **empty**, and every sample is scored a violation whatever the
+kernel does.
+
+**The per-capture split is the part that convinces me**, because it is a natural
+experiment in which only exposure changes:
+
+| capture | `full_rail_below_hull` | `nonrail` |
+|---|---|---|
+| `flat-et1s` | **0** | `1409` |
+| `flat-et2.5s` | **0** | `671` |
+| `flat-et6s` | **977,684** | `333` |
+
+Same scene, same optics, same kernel. The entire violation mass appears at the
+long exposure and is absent at both shorter ones, while the non-rail count moves
+the *other* way, falling from `1409` to `333`. Kernel ringing does not switch on
+with exposure time. This is saturation being charged to the resampler. M136 now
+has it and is ruling on whether repairing the bar is principled or
+goalpost-moving; I have told it plainly that a repaired bar the current code
+passes trivially would be a worse outcome than an impossible one.
+
+**Second, and this is the one with upside: the clamp works.** Raw Catmull-Rom
+followed by a hard clamp to the exact `4x4` source hull scores **zero** M8-R
+violations on every sample of all three captures:
+
+| arm | violations | denominator |
+|---|---|---|
+| `clamped-flat-et1s` | `0` | `1,977,960,960` |
+| `clamped-flat-et2.5s` | `0` | `2,010,926,976` |
+| `clamped-flat-et6s` | `0` | `2,142,791,040` |
+
+Those sum to exactly `6,131,678,976` — **the identical denominator bilinear was
+scored on**, which is a free cross-check that the census covered the same
+ground. And the commissioning is the good kind, firing in both directions rather
+than only confirming success: `catmull-hard-step` **28**/252 (unclamped
+Catmull-Rom really does overshoot), `clamped-hard-step` **0**/252 (the clamp
+removes them), `explicit-hi-lo-plant` **2**/252 (a planted defect is caught),
+three nulls quiet — and best of all `widened-clamp-defect` **28**/252, a
+sabotage arm in which deliberately widening the clamp restores the unclamped
+count *exactly*. That last arm is what makes the result credible: it proves the
+clamp width is load-bearing rather than incidentally correlated with a pass.
+
+**Third: the detail half is not admissible, and I am not treating it as
+though it were.** The file advertises `gap_preserved_fraction: 0.9975871…` —
+i.e. clamping costs almost nothing — which is exactly the answer the program
+wants, and exactly the reason to check it. It fails:
+
+- `detail.py:87` registers the clamped kernel as a **plain alias** of
+  Catmull-Rom, with the real clamp installed by monkeypatching `M.gather` at
+  `:123`;
+- the support-excursion path calls `gather_x`, which never routes through that
+  patch, so on that path the "clamped" arm silently degrades to **unclamped
+  Catmull-Rom**;
+- the symptoms are diagnostic rather than circumstantial: `DCO` identical to
+  **fifteen significant figures** (`2.48028047667808`) and excursions identical
+  at `2,709,943` with `max 177.40625 DN`, where a hull clamp must give exactly
+  `0` **by construction**.
+
+**Credit where it is due: the harness caught its own defect.** Its `S5` gate
+demands bilinear `0`, catmull `> 0`, clamped `0`; it observed `2,709,943` and
+reported `S5_full_support_hull: false`, `all_pass: false`. It did not quietly
+pass a number that flattered its own arm. That is the behaviour the corpus keeps
+asking for and it worked here.
+
+So the question that decides M8 is still open, and it is the right question:
+**how much of Catmull-Rom's `0.3404` dex advantage over bilinear survives once
+the clamp is genuinely applied?** If most of it survives, M8 becomes passable
+without surrendering resolution, and the only scored axis in the program flips.
+If most of it does not, then a large share of what we have been calling
+sharpness was *invented* — overshoot reading as acutance — which would be a
+finding about the whole kernel family and would matter well beyond M8. **M137 is
+dispatched on exactly this, told both answers are welcome**, required to
+re-measure rather than inherit, to prove the fix on the harness's own unweakened
+gate, and to sabotage its own repair before reporting.
+
+One process note worth recording. M134's final turn returned output for an
+entirely unrelated task — a jobs/UI investigation in the blog app — while its
+experiment directory contained an hour of correct, well-commissioned work. Had I
+taken the reply at face value I would have discarded both real findings and
+re-run the compute. The artifacts, not the agent's summary, were the truth.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
