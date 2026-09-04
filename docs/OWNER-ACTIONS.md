@@ -685,7 +685,7 @@ that does not yet exist.
 
 ---
 
-## Ask 2d — one fresh tilted-ruler capture, with the tilt actually measured. **$0.** *This is the whole of M10.*
+## Ask 2d — one fresh tilted-ruler capture, with the tilt actually measured. **$0.** *One of three things M10 needs — and the only one that needs you.*
 
 **The angle on record does not qualify, and the unit it describes is already
 burned.** Both halves are new tonight (M154, `docs/research/M154-m10-angle.md`).
@@ -736,8 +736,23 @@ output from the new stack is read, and shoot it as its own uninterrupted
 session. The old unit was lost to scoring precisely because outcomes were read
 from it before anyone declared it protected.
 
-Not urgent — M10 also needs a depth product that does not yet exist — but it is
-cheap, and it is the only thing standing between M10 and being measurable.
+**Not urgent, and I have corrected this heading since I first wrote it.** I
+originally called this capture *"the whole of M10"*. It is not, and there are
+now **three** things between M10 and a score:
+
+1. **This angle** — yours, cheap, and the only one of the three that needs you.
+2. **A depth product that does not yet exist** — mine. M10 scores something
+   `strehl` does not currently emit.
+3. **The M10 instrument itself is void** — mine, and newly found. Lane M161
+   replaced every reported uncertainty with zero, then infinity, then random
+   values, and **every M10 pass/fail quantity stayed identical.** The instrument
+   does not read one of its own mandatory inputs, so today it would return the
+   same verdict no matter how good or bad the depth product was. Lane M163 is
+   repairing it.
+
+None of that makes this capture less worth doing — it stays cheap, it is
+genuinely blocking, and item 3 is being fixed without you. It does mean **do
+not expect an M10 number soon after you shoot it.**
 
 ---
 

@@ -115,6 +115,27 @@ $controls = @(
      b = 'in `docs/STATUS.md` §2.9.28-2.9.99 and the lane reports named below.'
      e = 'STATUS actually has the section cited'; benign = $false },
 
+  # ---- Ask 2d correction: it must not oversell itself again ----
+  @{ n = 'NC20 restore the whole-of-M10 overstatement'
+     a = '## Ask 2d — one fresh tilted-ruler capture, with the tilt actually measured. **$0.** *One of three things M10 needs — and the only one that needs you.*'
+     b = '## Ask 2d — one fresh tilted-ruler capture, with the tilt actually measured. **$0.** *This is the whole of M10.*'
+     e = 'Ask 2d no longer claims to be all of M10'; benign = $false },
+
+  @{ n = 'NC21 hide the third gap (the void instrument)'
+     a = '3. **The M10 instrument itself is void** — mine, and newly found. Lane M161'
+     b = '3. **The M10 instrument is in good order** — nothing outstanding. Lane M161'
+     e = 'Ask 2d names all three gaps'; benign = $false },
+
+  @{ n = 'NC22 widen the admissible angle band (moves the bar)'
+     a = '`[10.014357, 10.516727] deg` — about `±0.25 deg`. That sounds demanding and it'
+     b = '`[10.014357, 10.716727] deg` — about `±0.35 deg`. That sounds demanding and it'
+     e = 'Ask 2d angle band unchanged'; benign = $false },
+
+  @{ n = 'NC23 un-burn the burned tilted-ruler stacks'
+     a = 'them `BURNED — DEVELOPMENT ONLY` (`6915fe44`). They stay useful for'
+     b = 'them `READY FOR SCORING` (`6915fe44`). They stay useful for'
+     e = 'Ask 2d burned-stack warning survives'; benign = $false },
+
   # ---- SOURCE-SIDE controls: mutate the LANE REPORT, not this document. ----
   @{ n = 'NC16 [source] upgrade NOT FOUND to a verified contract'
      f = 'm157'

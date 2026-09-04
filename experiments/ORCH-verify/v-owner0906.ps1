@@ -70,6 +70,22 @@ Check 'page names the lanes it now reflects'    ($own -match 'Last updated after
 # the owner page is making, and would survive the page citing anything at all.
 $citedTo = if ($own -match 'STATUS\.md` §2\.9\.28-2\.9\.(\d+)') { $matches[1] } else { '' }
 Check 'STATUS actually has the section cited'   (($citedTo -ne '') -and ((Flat "$root\docs\STATUS.md") -match ("### 2\.9\." + [regex]::Escape($citedTo) + "\b"))) "cited=2.9.$citedTo"
+
+Write-Output 'F. Ask 2d does not oversell itself as the whole of M10'
+# I originally headed Ask 2d "This is the whole of M10". M161 has since voided
+# the M10 instrument, making that the THIRD gap. An owner-facing ask that
+# overstates what it buys is the same class of error as the corrected reach
+# claim at the top of the page.
+Check 'Ask 2d no longer claims to be all of M10' (-not ($own -match 'This is the whole of M10'))
+Check 'Ask 2d states it is one of three'        ($own -match 'One of three things M10 needs')
+Check 'Ask 2d owns the correction'              ($own -match 'I have corrected this heading since I first wrote it')
+Check 'Ask 2d names all three gaps'             ($own -match 'A depth product that does not yet exist' -and $own -match 'The M10 instrument itself is void')
+Check 'Ask 2d cites the null that voided M10'   ($own -match 'zero, then infinity, then random\s*values, and \*\*every M10 pass/fail quantity stayed identical')
+Check 'Ask 2d still tells him to shoot it'      ($own -match 'None of that makes this capture less worth doing')
+Check 'Ask 2d sets expectations on timing'      ($own -match 'do\s*not expect an M10 number soon after you shoot it')
+# The bar must not move: the admissible angle band is unchanged by any of this.
+Check 'Ask 2d angle band unchanged'             ($own.Contains('[10.014357, 10.516727] deg'))
+Check 'Ask 2d burned-stack warning survives'    ($own -match 'BURNED — DEVELOPMENT ONLY')
 Check 'owner note cites the commit'     ($own.Contains('6b966d8c'))
 Check 'owner note keeps the five publishable' ($own -match 'their results will still be published')
 
