@@ -1,11 +1,24 @@
-"""Independently verify the M164 M2 synthetic commissioning artifact."""
+"""Regenerate and verify the M164 M2 synthetic commissioning artifact."""
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
+import importlib.util
+import io
 import json
 import math
+import os
 from pathlib import Path
+from types import ModuleType
+
+for variable in (
+    "OMP_NUM_THREADS",
+    "OPENBLAS_NUM_THREADS",
+    "MKL_NUM_THREADS",
+    "VECLIB_MAXIMUM_THREADS",
+):
+    os.environ.setdefault(variable, "1")
 
 import numpy as np
 
@@ -15,10 +28,43 @@ REPO = HERE.parents[1]
 RESULT_PATH = HERE / "commission.json"
 VERIFY_PATH = HERE / "verification.json"
 REPORT_PATH = REPO / "docs" / "research" / "M164-m2-repair.md"
+COMMISSION_PATH = HERE / "commission.py"
 
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest().upper()
+
+
+def sha256_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest().upper()
+
+
+def load_commission() -> ModuleType:
+    spec = importlib.util.spec_from_file_location(
+        "_m164_m2_commission_regeneration", COMMISSION_PATH
+    )
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load {COMMISSION_PATH}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def regenerate_commission() -> tuple[bytes, str]:
+    scratch = HERE / f".verify-regenerated-commission-{os.getpid()}.json"
+    if scratch.exists():
+        raise RuntimeError(f"refusing to overwrite scratch artifact: {scratch}")
+    try:
+        commission = load_commission()
+        commission.OUTPUT = scratch
+        captured = io.StringIO()
+        with contextlib.redirect_stdout(captured):
+            commission.main()
+        if not scratch.is_file():
+            raise RuntimeError("commission.py did not write its output")
+        return scratch.read_bytes(), captured.getvalue().strip()
+    finally:
+        scratch.unlink(missing_ok=True)
 
 
 def close(actual: float, expected: float, tolerance: float, label: str) -> None:
@@ -47,8 +93,28 @@ def summarize(values: list[float]) -> dict[str, float | int]:
 
 
 def main() -> None:
-    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
+    print(
+        "VERIFY MODE: regenerate commission.py and require byte-identical "
+        "commission.json",
+        flush=True,
+    )
+    committed_bytes = RESULT_PATH.read_bytes()
+    try:
+        regenerated_bytes, commission_stdout = regenerate_commission()
+    except Exception as error:
+        raise AssertionError(
+            f"commission regeneration failed: {type(error).__name__}: {error}"
+        ) from error
+    if regenerated_bytes != committed_bytes:
+        raise AssertionError(
+            "regenerated commission.json differs: "
+            f"committed={sha256_bytes(committed_bytes)}, "
+            f"regenerated={sha256_bytes(regenerated_bytes)}"
+        )
+
+    result = json.loads(committed_bytes)
     checks: list[str] = []
+    checks.append("commission.py regenerates commission.json byte-for-byte")
 
     if result["schema"] != "m164-m2-repair-commission-v1":
         raise AssertionError("unexpected result schema")
@@ -202,16 +268,25 @@ def main() -> None:
     checks.append("report carries the diagnosis, limitation and current verdict")
 
     verification = {
-        "schema": "m164-m2-repair-verification-v1",
+        "schema": "m164-m2-repair-verification-v2",
         "status": "PASS",
+        "verification_mode": "fresh regeneration plus artifact consistency",
         "checks": checks,
         "commission_sha256": sha256(RESULT_PATH),
+        "regeneration": {
+            "byte_identical": True,
+            "regenerated_sha256": sha256_bytes(regenerated_bytes),
+            "commission_stdout": commission_stdout,
+        },
         "report_sha256": sha256(REPORT_PATH),
     }
     VERIFY_PATH.write_text(
         json.dumps(verification, indent=2) + "\n", encoding="utf-8"
     )
-    print(f"PASS: {len(checks)} checks; wrote {VERIFY_PATH}")
+    print(
+        f"PASS: {len(checks)} checks; regeneration byte-identical; "
+        f"wrote {VERIFY_PATH}"
+    )
 
 
 if __name__ == "__main__":

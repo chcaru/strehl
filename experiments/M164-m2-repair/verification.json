@@ -1,7 +1,9 @@
 {
-  "schema": "m164-m2-repair-verification-v1",
+  "schema": "m164-m2-repair-verification-v2",
   "status": "PASS",
+  "verification_mode": "fresh regeneration plus artifact consistency",
   "checks": [
+    "commission.py regenerates commission.json byte-for-byte",
     "schema, seed, trial count and site count are frozen",
     "preregistration, amendment and implementation hashes match",
     "all arm summaries rederive from 256 stored trial ratios",
@@ -12,5 +14,10 @@
     "report carries the diagnosis, limitation and current verdict"
   ],
   "commission_sha256": "418D2D852DC15B072CB65DD6BAAECAA9B4CBF82843BA825F00B0440ACC733C43",
-  "report_sha256": "90C4C5FC49A9890FA3E869C1FD0653ADBD952E70D5187CD7EAA774C86EA39F9F"
+  "regeneration": {
+    "byte_identical": true,
+    "regenerated_sha256": "418D2D852DC15B072CB65DD6BAAECAA9B4CBF82843BA825F00B0440ACC733C43",
+    "commission_stdout": "PASS: 12/12 gates; null=1.000535; noise=1.499654; denoise=0.499663; post-blur=1.000000000000"
+  },
+  "report_sha256": "DC201F1F0E5FCF7D83ECA3A26AD453C7D0CE6BF3CC8864F5B15EFB8CE5CD897D"
 }

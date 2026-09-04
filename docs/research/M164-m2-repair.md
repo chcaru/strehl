@@ -25,8 +25,10 @@ scene-dependent renderer blur.
 with a truth-normalized equivalent-input-noise coordinate, `Q_EIN`, computed
 from two independent output repeats and M1's two independent truth-reference
 halves. It is exactly neutral to a nonzero common per-cell transfer, responds
-in the correct direction to added noise and genuine improvements, and keeps
-M1 as a mandatory same-output admission gate.
+in the correct direction to added noise and genuine improvements, and keeps a
+separately commissioned same-output detail/transfer admission gate mandatory.
+M1 is the program's current proposed implementation of that gate, not the
+unique mathematical route.
 
 This is not an accepted M2 instrument. M167 owns the independent adversarial
 battery; none of M164's self-authored gates can substitute for it. The
@@ -114,15 +116,21 @@ calling it a better image requires a separately anchored transfer/detail
 condition.
 
 **RULING.** There is no stand-alone, two-render-output repair for the owner's
-detail-preserving comparative-noise claim. An admissible repair requires an
-external reference or an explicitly featureless-target claim whose scope
-concedes that spatial smoothing is not tested. The latter is not the current
-general comparator clause.
+detail-preserving comparative-noise claim without an assumption or observation
+outside those outputs. Admissible identifying information could include an
+independently anchored signal/transfer reference; a certified
+featureless-target protocol whose scope concedes that spatial smoothing is not
+tested; an explicitly validated signal/noise generative prior; or another
+validated external transfer constraint. This list is non-exhaustive, and every
+route inherits the scope and failure modes of its assumptions. The current
+general comparator clause has not commissioned any such route.
 
 ## 4. Proposed external-reference statistic
 
-The minimum repair reuses M1's physical roles rather than inventing another
-target. At each registered frequency/orientation cell `k`, let:
+The current proposed repair reuses M1's physical roles rather than inventing
+another target. M1 is the only route currently scheduled and capturable in
+this program, not a unique algebraic requirement. At each registered
+frequency/orientation cell `k`, let:
 
 - `R1`, `R2` be independent calibrated truth-reference observations;
 - `Y1`, `Y2` be the coded-site coefficients from independent renders of
@@ -234,7 +242,7 @@ Maximum numerical departure from one was
 noise alone calls the blur a `0.629621x` improvement, while `Q_EIN` correctly
 returns a tie.
 
-### 5.3 Why M1 remains mandatory
+### 5.3 Why a separate admission condition remains mandatory
 
 A blur-plus-denoise arm used sigma `1.05 px` and one-third baseline
 downstream-noise RMS. It measured:
@@ -248,10 +256,12 @@ transfer              = 0.571748x
 All `256/256` trials preferred its noise coordinate even though every trial
 lost transfer. This is not a defect in the arithmetic: the arm buys enough
 noise reduction to improve equivalent-input noise while discarding detail.
-Only the independent M1 information/transfer condition can decide whether
-that trade is admissible. `Q_EIN` must never be used as a quality score.
+A separately commissioned information/transfer condition must decide whether
+that trade is admissible. M1 is the program's current proposed implementation,
+not the only mathematical possibility. `Q_EIN` must never be used as a quality
+score.
 
-### 5.4 Why same-resolution `O-R` is not the repair
+### 5.4 Why unnormalised same-resolution `O-R` is not the repair
 
 The additional `64`-trial probe gave a held-out reference the same sigma
 `0.65 px` capture transfer as the baseline:
@@ -265,8 +275,17 @@ The additional `64`-trial probe gave a held-out reference the same sigma
 The cross-fit residual catches blur but scores the genuine optical
 improvement more than ten times worse, even while its error to physical truth
 falls to `0.067483x`. It therefore fails the mandatory improvement arm.
-Replacing `R_box9` with same-resolution output/reference disagreement merely
-exchanges a loose-direction failure for a conservative-direction failure.
+Replacing `R_box9` with this unnormalised same-resolution
+`MAD(BP(O-R))` disagreement merely exchanges a loose-direction failure for a
+conservative-direction failure.
+
+This result does **not** refute covariance-normalized `Q_EIN` using the same
+independent reference. They are different estimators. In the comparative
+ratio, the common reference power and transfer cancel; a sufficiently powered,
+independent same-resolution reference can therefore normalize relative
+transfer. Two independent higher-resolution truth halves remain valuable for
+absolute units, bias and power, but they are not algebraically mandatory for
+comparative `q`.
 
 ### 5.5 M167 interface status
 
@@ -293,7 +312,7 @@ admitted outputs. M167 can judge the first component; an independently frozen
 reference-bearing M2 adapter/battery must judge the second. M164 did not alter
 M167 or reconstruct its private latent truth to manufacture an apparent pass.
 
-## 6. M1 dependency and current verdict
+## 6. Current M1 dependency and verdict
 
 M2's noise coordinate and M1's admission test have different jobs:
 
@@ -355,6 +374,12 @@ From the repository root:
 $env:OMP_NUM_THREADS='1'; $env:OPENBLAS_NUM_THREADS='1'; $env:MKL_NUM_THREADS='1'; $env:VECLIB_MAXIMUM_THREADS='1'; python -B experiments\M164-m2-repair\commission.py
 python -B experiments\M164-m2-repair\verify.py
 ```
+
+`verify.py` first reruns `commission.py` into a lane-local scratch artifact and
+requires byte identity with committed `commission.json`. It then rederives the
+summaries, gates, hashes and report anchors. A regeneration failure exits
+nonzero before any `PASS` line; the scratch artifact is removed in either
+case. This remains author-owned development verification, not M167 acceptance.
 
 Artifacts:
 
