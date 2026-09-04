@@ -1,6 +1,65 @@
 # M160 scope audit — independent review of `6b966d8c`
 
-Status: **COMPLETE — `6b966d8c` REFUTED; F5/F6/F14 AND M162 FORK PROVENANCE RECONCILED**
+Status: **COMPLETE — SCOPE, FORK PROVENANCE, AND M8-O ACHIEVABILITY RECONCILED**
+
+## M136 M8-O achievability correction
+
+The v1.4 M8-O result did not show strehl failing a demanding but attainable
+standard. The construction was impossible for every normalized-`u16`
+implementation at `977,684` required census coordinates where
+`lo - tolerance > 1`. The scorecard now carries this exact disposition:
+
+> **M8-O v1.4 superseded figure:** `1.326144%` was read against the v1.4 bar, which has been shown impossible as written; see `docs/research/M136-m8o-bar.md` (commit `7befe55c`).
+
+The M8 axis nevertheless remains **`FAIL`** on its own merits: M8-R is
+`1.030569%` against an achievable exact-zero bar. The blocker table, metric card,
+and results table now say that M8-R is the only produced-and-read score against an
+achievable bar.
+
+M8-O v1.5 remains `UNMEASURED`. Its replacement checker was corrected at
+`e5489d64` but has not been independently recommissioned, so no candidate score
+exists. The scorecard does not contain or promote the diagnostic Catmull-Rom count.
+It does record the valid discriminating control from
+`experiments/M136-m8o-bar/analysis.json`: clean bilinear is exactly
+`0/74,173,536`, independently zero in R, G, and B. This demonstrates that the
+repaired predicate has a clean pass construction while distinguishing the shipping
+kernel; it is evidence about the bar, not a promoted candidate result.
+
+`experiments/M160-scope-audit/verify_m136_m8o.py` reads M136 at `7befe55c`, M166
+at `02014c6e`, the analysis artifact at `6712449e`, the corrected checker's commit
+subject at `e5489d64`, and the accepted scorecard baseline at `7bee3738`.
+
+```text
+GROUP_SUM discrimination total=7 passed=7 failed=0
+GROUP_SUM integrity total=48 passed=48 failed=0
+GROUP_SUM m8 total=16 passed=16 failed=0
+GROUP_SUM source total=11 passed=11 failed=0
+SUMMARY total=82 passed=82 failed=0 skipped=0 accounted=82
+VERDICT GREEN
+```
+
+Only scorecard sections 3, 4, and 6 changed. Every other top-level section is
+byte-identical to `7bee3738`; every non-M8 metric card and result row is
+byte-identical; M8-R's definition is byte-identical; all twelve fork blocker cells
+remain; and the F4/F14 joint row still occurs exactly once with `Q_flat<=1.00`.
+
+| Control | Anchor found | Exit | Expected named result | Result |
+| --- | --- | ---: | --- | --- |
+| soften-m8-axis-verdict | yes | 1 | RED `m8.axis-fail` | PASS |
+| make-readiness-v15-pass | yes | 1 | RED `m8.v15-unmeasured-readiness` | PASS |
+| make-result-v15-fail | yes | 1 | RED `m8.v15-unmeasured-result` | PASS |
+| restore-v14-failure | yes | 1 | RED `m8.superseded-line` | PASS |
+| claim-v15-recommissioned | yes | 1 | RED `m8.v15-unmeasured-card` | PASS |
+| promote-diagnostic-count | yes | 1 | RED `m8.no-diagnostic-count` | PASS |
+| break-bilinear-zero | yes | 1 | RED `m8.bilinear-zero-card` | PASS |
+| erase-channel-independence | yes | 1 | RED `m8.bilinear-channels-card` | PASS |
+| restore-only-axis-claim | yes | 1 | RED `m8.only-r-produced-read-card`, `m8.no-old-only-axis-claim` | PASS |
+| erase-impossibility-population | yes | 1 | RED `m8.v14-impossibility-count` | PASS |
+| status-reflow-benign | yes | 0 | GREEN | PASS |
+| bilinear-reflow-benign | yes | 0 | GREEN | PASS |
+
+Result: **12/12 controls passed: 10 named RED controls and two benign GREEN
+controls.**
 
 ## M162 fork-provenance correction
 
@@ -33,7 +92,8 @@ The scorecard now applies that provenance:
 
 `experiments/M160-scope-audit/verify_m162_fork.py` reads M162's source evidence from
 commit `ed5fa20b` and independently compares the `7648d360` scorecard blob with the
-corrected result:
+corrected result at `7bee3738`. The verifier and its controls now default to that
+immutable result so the accepted checkpoint remains reproducible after M136:
 
 ```text
 GROUP_SUM fork total=8 passed=8 failed=0
@@ -49,8 +109,9 @@ VERDICT GREEN
 Its integrity checks keep all twelve at-a-glance rows and all twelve metric-card
 success blocks unchanged, preserve every non-fork scoreboard field except M2's
 required provenance qualification, and leave sections 2 and 5 byte-identical. M8
-remains `FAIL` at `1.030569%` / `1.326144%` against exactly `0.0000%`. The F4/F14
-joint row still occurs exactly once with `Q_flat<=1.00` intact.
+remained `FAIL` at that checkpoint. M136 now supersedes the M8-O v1.4 figure;
+M8-R remains `FAIL` at `1.030569%` against its achievable `0.0000%` bar. The
+F4/F14 joint row still occurs exactly once with `Q_flat<=1.00` intact.
 
 | Control | Anchor found | Exit | Expected named result | Result |
 | --- | --- | ---: | --- | --- |
@@ -149,7 +210,9 @@ top-level sections are exactly 0, 1, 3, 4, 6, 7, and 8; sections 2 and 5 are
 byte-identical. Every pre-existing results-table `FAIL` row remains byte-identical,
 all twelve at-a-glance rows and all twelve detailed success blocks retain their
 baseline numeric tokens, and M8 remains `FAIL` at M8-R `1.030569%` and M8-O
-`1.326144%` against exactly `0.0000%`.
+`1.326144%` against exactly `0.0000%` at that historical checkpoint. M136 now
+supersedes only the M8-O v1.4 classification; M8-R remains the current
+`1.030569%` failure against an achievable exact-zero bar.
 
 The historical reconciliation verifier and controls now default to the immutable
 `513ea3fe` blob, so their accepted 51-check / 12-control result remains reproducible
@@ -272,7 +335,9 @@ The integrity group confirms:
   blocks are byte-identical;
 - every pre-existing scoreboard value and standing is preserved while the fork
   column is added; and
-- M8 remains `FAIL` on M8-R `1.030569%` and M8-O `1.326144%` against `0.0000%`.
+- At that historical checkpoint M8 remained `FAIL` on M8-R `1.030569%` and M8-O
+  `1.326144%` against `0.0000%`. M136 now supersedes the M8-O v1.4 figure while
+  leaving the M8-R failure intact.
 
 ### Reconciliation commissioning
 

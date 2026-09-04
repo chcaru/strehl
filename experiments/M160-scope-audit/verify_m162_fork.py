@@ -19,6 +19,7 @@ SCORECARD = ROOT / "docs/proposals/2026-09-sota-scorecard.md"
 SCORECARD_PATH = "docs/proposals/2026-09-sota-scorecard.md"
 M162_PATH = "docs/research/M162-noise-regression.md"
 BASE_REV = "7648d360"
+RECONCILED_REV = "7bee3738"
 M162_REV = "ed5fa20b"
 FORK_COMMIT = "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6"
 FORK_CELL = "**UNMEASURED — blocker (d).**"
@@ -395,17 +396,17 @@ def run_checks(after: str, before: str, source: str) -> list[Check]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--before-rev", default=BASE_REV)
-    parser.add_argument("--after-rev")
+    parser.add_argument("--after-rev", default=RECONCILED_REV)
     parser.add_argument("--source-rev", default=M162_REV)
-    parser.add_argument("--scorecard", type=Path, default=SCORECARD)
+    parser.add_argument("--scorecard", type=Path)
     args = parser.parse_args()
 
     try:
         before = git_blob(args.before_rev)
         after = (
-            git_blob(args.after_rev)
-            if args.after_rev
-            else read_utf8(args.scorecard.resolve())
+            read_utf8(args.scorecard.resolve())
+            if args.scorecard
+            else git_blob(args.after_rev)
         )
         source = git_blob(args.source_rev, M162_PATH)
         checks = run_checks(after, before, source)

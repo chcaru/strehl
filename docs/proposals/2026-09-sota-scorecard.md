@@ -613,7 +613,7 @@ metric result is reported separately and cannot alter a publication verdict.
 | M5 | Depth-of-field coverage / stack failure | `>=99%` of eligible tiles pass `rho_best>=0.90` and focus margin `>=0.05`; Wilson lower bound `>=98%`; longest failed run `<=1%` of sweep. |
 | M6 | Recoverable highlight/shadow retention | Recoverable high-rail and low-rail clipping each `<=0.10%`; highlight-detail retention `>=0.90`; no worse than best comparator. |
 | M7 | Colour fidelity | Median DeltaE00 `<=1.0`, p95 `<=2.0`, maximum `<=3.0`; on the frozen M145 input-only seam population, nearest-rank boundary-seam p99 `<=1.0` and no connected contour segment has three consecutive sites `>1.0`; an empty or sub-minimum population is `UNMEASURED_CAPTURE_INADEQUATE`; ICC/300-DPI conformance `100%`; no worse than best comparator. |
-| M8 | Invented values / source-hull certificate | Per-frame resampler-hull violations and final-output source-hull violations: each exactly `0.0000%`. |
+| M8 | Invented values / source-hull certificate | M8-R per-frame resampler-hull violations and prospective M8-O v1.5 representable-domain final-output violations: each exactly `0.0000%`. The impossible v1.4 M8-O construction is superseded. |
 | M9 | Acuity / `n_eff` certificate calibration | False-certification Wilson upper bound `<=1%`; true-band coverage `>=90%`; nominal 95% interval coverage `93%`–`97%`; variance ratio `0.90`–`1.10`. |
 | M10 | Physical depth product | Valid target pixels `>=99%`; rank correlation `>=0.99`; median error `<=0.5` focus step, p95 `<=1.0` step; physical slope error `<=5%`. |
 | M11 | Wall-clock throughput | **COMMON-MERGE PUBLICATION GATE:** warm common-input throughput `>=2.00x` fastest registered comparator mode passing §1.3, with the retained cross-worker byte-identity component. **PRODUCT-NATIVE REPORT:** candidate/default baseline ratio `<=2.00`; native-RAW CPU at 16 workers `<=0.15 s/frame`; hybrid `<=0.06 s/frame`; cold `<=warm+20 s`; 100-frame live master `<=10 s` after last shutter. Product-native values do not determine the publication verdict. |
@@ -647,7 +647,7 @@ and **(e)** scientifically measurable now. The archived fork output cannot clear
 | M5 | **(a)(b)(c)(d)** | No scored dense/sparse repeat unit exists, and failure coverage needs a licensed detail test. |
 | M6 | **(a)(b)(c)(d)** | The rail census is executable, but the registered capture set has fewer than 10,000 recoverable samples and the full axis includes detail retention and comparators. |
 | M7 | **(b)(c)(d)** | No traceable colour target exists. |
-| M8 | **(e)** | The v1.4 source-hull invariant needs neither detail nor a comparator and may use the development-only flat slide. **Checker commissioned and result read at `76b3d9cc`: FAIL, M8-R `1.030569%` and M8-O `1.326144%` against a bar of exactly `0.0000%`.** This is the only axis in the program with a produced-and-read score. |
+| M8 | **(e) for M8-R; M8-O v1.5 `UNMEASURED`** | **M8 remains `FAIL`: M8-R is `1.030569%` against the achievable `0.0000%` bar.** M8-R is the only produced-and-read score against an achievable bar. The historical M8-O v1.4 `1.326144%` figure is superseded because its bar was impossible as written; the corrected v1.5 checker at `e5489d64` has not been recommissioned, so no v1.5 M8-O score exists. |
 | M9 | **(a)(b)(c)** | Repeat calibration captures are absent and the shipping product emits no admissible acuity/variance certificate. |
 | M10 | **(b)(c)** | No scored geometric-truth capture or compatible depth product exists. The tilted slide is development-only. |
 | M11 | **(a)(b)(d)** | A quiet host is additionally required; native-decode timing alone is a diagnostic, not the registered competitive verdict. |
@@ -1157,7 +1157,7 @@ M8-O is the proposal's per-file invariant.
    16 observed support samples, so temporal `5*sigma` is not a legitimate tolerance.
    Here `ULP_f32(z)` is the distance from positive `f32` value `z` to its next
    representable value.
-4. **M8-O, final-output hull.** At the same linear coordinate and channel, define
+4. **M8-O v1.4, superseded final-output hull.** At the same linear coordinate and channel, define
    `lo_O=min_k(lo_k)` and `hi_O=max_k(hi_k)` over every geometrically valid input
    frame, never strehl's elected contributor list. Compare the actual final linear
    output `O` to this interval. For a 16-bit serialized audit only, add exactly
@@ -1168,31 +1168,40 @@ M8-O is the proposal's per-file invariant.
    report the one-frame/reference-frame arm: under `crop`, an integer identity
    placement must be a source copy within `tau_R`.
 
-**Success.** **PROPOSAL BAR (M8-O):** final-output violation fraction exactly
-`0.0000%`. **SCORECARD ADDITION (M8-R):** resampler violation fraction exactly
-`0.0000%`; the crop/reference identity arm also has zero violations. A missing
-pre-clamp trace is `UNMEASURED`, not a pass.
+**Success.** **PROSPECTIVE M8-O v1.5 BAR:** representable-domain final-output
+violation fraction exactly `0.0000%`. **SCORECARD ADDITION (M8-R):** resampler
+violation fraction exactly `0.0000%`; the crop/reference identity arm also has zero
+violations. A missing pre-clamp trace or an unrecommissioned M8-O v1.5 checker is
+`UNMEASURED`, not a pass. The v1.4 M8-O computation and its exact-zero bar are
+retained below only as superseded history.
 
 > ### M8-O v1.5 — prospective bar replacement, registered before the deciding number exists
 >
 > **The v1.4 M8-O bar above was proven impossible to satisfy as written, and it
 > is retained here rather than deleted.** The output is normalized `u16` on
-> `[0,1]`. Where the source neighbourhood saturates, the hull's lower bound can
-> exceed `1`; once `lo - tolerance > 1` the set of representable values
-> satisfying the hull condition is **empty**, so every representable value is
+> `[0,1]`. At `977,684` required census coordinates the hull has
+> `lo - tolerance > 1`, so the set of representable values satisfying the hull
+> condition is **empty**; every representable value is
 > charged a violation regardless of what the resampler does. The census was
 > pricing a limit of the output container as an algorithmic defect.
 >
-> **The original verdict stands and is not vacated: M8 FAILED under v1.4, and
-> that failure remains this program's only scored axis result.**
+> **M8-O v1.4 superseded figure:** `1.326144%` was read against the v1.4 bar, which has been shown impossible as written; see `docs/research/M136-m8o-bar.md` (commit `7befe55c`).
+>
+> **The M8 axis verdict remains `FAIL`, independently of that superseded figure.**
+> M8-R measured `1.030569%` against its achievable exact-zero bar; M166 confirms
+> that a convex bilinear or direct-copy gather can satisfy M8-R
+> (`docs/research/M166-bar-achievability.md`, "M8-R: ACHIEVABLE" clause). M8-R
+> is the only produced-and-read score against an achievable bar.
 >
 > **Ruling on legitimacy.** A repair is legitimate rather than goalpost-moving
 > only if it is versioned prospectively, keeps the denominator unchanged,
-> projects the hull into the output domain, retains the historical FAIL, and
-> still bites. It does still bite: under the replacement bar the **shipping
-> Catmull-Rom kernel fails at `31,148` violations while bilinear leaves zero**
-> (`experiments/M136-m8o-bar/analysis.json`). A repaired bar that the current
-> code passed trivially would be a worse outcome than an impossible one.
+> projects the hull into the output domain, retains the M8-R failure, and still
+> discriminates. It does discriminate: under the repaired v1.5 predicate a clean
+> bilinear kernel measures exactly `0/74,173,536`, independently zero in R, G,
+> and B (`experiments/M136-m8o-bar/analysis.json`, `bilinear_aggregate`), while
+> the shipping Catmull-Rom kernel does not clear the diagnostic reanalysis. The
+> latter is not promoted to a score. A repaired bar that the shipping code passed
+> trivially would be a worse outcome than an impossible one.
 >
 > **Normative text.** The v1.5 bar is § 6 of `docs/research/M136-m8o-bar.md`,
 > pinned at git blob `86291032355f1d6466e2357b1224d78d9716c80c`
@@ -1214,11 +1223,14 @@ pre-clamp trace is `UNMEASURED`, not a pass.
 > - Seven named conditions force `UNMEASURED`, so a voided run is a defined
 >   outcome and not a judgement call.
 >
-> **Status: `UNMEASURED`.** The clamped kernel scores `0 / 6,131,678,976` M8-R
-> violations, but its M8-O residue under this bar has never been measured, and
-> M8-R zero does **not** imply M8-O zero — the clamp changes the gathered values
-> supplied to the merge. No old Scale-domain count is registered as the expected
-> value, because M130 moved the output to the compact Crop domain.
+> **Status: `UNMEASURED`.** The replacement checker was corrected at `e5489d64`
+> but has not been independently recommissioned, so no v1.5 M8-O score exists.
+> The clean bilinear `0/74,173,536` result is achievability and discrimination
+> evidence, not a candidate score. A separate clamped-kernel diagnostic has
+> `0/6,131,678,976` M8-R violations, but M8-R zero does not imply M8-O zero because
+> the clamp changes the gathered values supplied to the merge. No old Scale-domain
+> count is registered as the expected value because M130 moved output to compact
+> Crop coordinates. No diagnostic Catmull-Rom M8-O count is promoted.
 
 
 **Current cover hypothesis.** The v1.3 definition was too weak: its all-frame hull and
@@ -1544,7 +1556,7 @@ column.
 | M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
 | M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
 | M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | LCA confirms an axial effect but licenses no correction and is not colour fidelity; traceable target absent. |
-| M8 | Independent source-hull census | **FAIL** — M8-R `1.030569%`, M8-O `1.326144%` against a bar of exactly `0.0000%` | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | **READ AND ADMITTED `76b3d9cc`**, superseding the prior UNMEASURED cell. Checker commissioned in both directions before the reading. M8-R is 100% attributable to the Catmull-Rom gather; bilinear gives `0/6,131,678,976` but costs 0.3404 dex of band detail. M8-O is a separate downstream failure. See `docs/research/M8-overshoot.md`. |
+| M8 | Independent source-hull census | **FAIL** — M8-R `1.030569%` against the achievable bar of exactly `0.0000%`; M8-O v1.5 **UNMEASURED** because the corrected checker at `e5489d64` has not been recommissioned. Historical M8-O v1.4 `1.326144%` is **SUPERSEDED** because that bar was impossible as written. | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | **M8-R READ AND ADMITTED `76b3d9cc`.** M8-R is the only produced-and-read score against an achievable bar and remains a genuine axis-level failure. It is 100% attributable to the Catmull-Rom gather; bilinear gives `0/6,131,678,976` but costs 0.3404 dex of band detail. Under the repaired M8-O v1.5 predicate, clean bilinear measures `0/74,173,536`, independently zero in R, G, and B; this proves the bar discriminates but is not a v1.5 candidate score. |
 | M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
 | M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
 | M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | D11 decode and D15 storage component gates PASS; the common-merge comparator run and separate product-native bar report are absent. |
