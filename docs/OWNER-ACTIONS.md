@@ -606,6 +606,62 @@ that does not yet exist.
 
 ---
 
+## Ask 2d — one fresh tilted-ruler capture, with the tilt actually measured. **$0.** *This is the whole of M10.*
+
+**The angle on record does not qualify, and the unit it describes is already
+burned.** Both halves are new tonight (M154, `docs/research/M154-m10-angle.md`).
+
+The README for `8-tilted-planar` records *"approximately 10.26deg (measured
+about: 10cm run against 1.81cm rise)"*. That derives `10.259461685 deg`
+correctly — the arithmetic is right — but it records no instrument, no least
+count, no endpoint definition, no repeatability and no camera-relative frame.
+**Decimal places in a derived display value are not measurement precision.**
+M10 requires `theta_ext` frozen with uncertainty contributing at most `2.5%`
+slope error, and nothing in the record bounds it at all.
+
+Separately, **all three of those ruler stacks are burned.** M-PHASE0-CURV read
+scored outcomes from f/5.6, f/8 and f/11, and M-PHASE0-LCA read another metric
+from f/11, before the scorecard ever labelled them holdout. I have relabelled
+them `BURNED — DEVELOPMENT ONLY` (`6915fe44`). They stay useful for
+development; they cannot score.
+
+**How precise, concretely.** The admissible band is
+`[10.014357, 10.516727] deg` — about `±0.25 deg`. That sounds demanding and it
+is not, provided you measure over a long baseline, because the tolerance on the
+rise scales with the run:
+
+| run | nominal rise | tolerance on rise |
+|---|---|---|
+| `100 mm` | `18.10 mm` | `-0.44 / +0.46 mm` |
+| `300 mm` | `54.30 mm` | `-1.32 / +1.39 mm` |
+| `500 mm` | `90.50 mm` | `-2.21 / +2.32 mm` |
+
+**That table is the whole problem with the original measurement.** It was taken
+over a `10 cm` run, where qualifying means knowing the rise to better than half
+a millimetre — and *"about 1.81 cm"* plainly is not that. Measure the same
+incline over `50 cm` and you need only `±2.3 mm`, which a careful tape
+measurement gives you comfortably. Nothing here needs a laboratory.
+
+**What to write down at capture time:**
+
+1. The instrument and its least count or stated accuracy. A digital
+   inclinometer specified to `<=0.1 deg` qualifies on its own.
+2. The run and the rise as measured, with the baseline length stated.
+3. Which physical features on the rig the endpoints were taken from.
+4. A repeat measurement, so repeatability is evidence rather than assumption.
+5. That the measurement is independent of image focus. **Image-derived focus
+   may not certify the angle it is being tested against.**
+
+**One caution that costs nothing.** Freeze the pose measurement *before* any
+output from the new stack is read, and shoot it as its own uninterrupted
+session. The old unit was lost to scoring precisely because outcomes were read
+from it before anyone declared it protected.
+
+Not urgent — M10 also needs a depth product that does not yet exist — but it is
+cheap, and it is the only thing standing between M10 and being measurable.
+
+---
+
 ## Ask 2b — one more free email, this time to ISA. **$0.** *Do this instead of spending $660.*
 
 **I owe you a correction first.** I have been describing the `$660` as buying a
