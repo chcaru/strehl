@@ -90,10 +90,15 @@ capture is circular because it can share blur, registration error,
 hallucination and tone with the candidate
 (`docs/proposals/2026-09-truth-referenced-detail.md`, §§0 and 3).
 
-The reference is a qualified proxy, not perfect ground truth. It is admitted
-only if its measured subject sampling is at least `2.0x`, its object-space
-transfer is stronger in every registered cell, its split halves agree, and
-its calibration/noise lineage is independent.
+The reference is a qualified proxy, not perfect ground truth. The `2.0x`
+subject-sampling threshold is only a geometry gate. Admission additionally
+requires strict reference-versus-scored information and object-space-transfer
+dominance in every registered cell, with simultaneous uncertainty, support,
+conditioning and common-mode bounds. Split halves must show fresh conditional
+noise and pass a residual shared-covariance gate; odd/even assignment and
+disjoint master estimates do not prove statistical independence. The formal
+nullspace witness and gate are in
+`docs/research/M164-reference-identifiability.md`.
 
 ### 2.2 A positive information coordinate and non-compensating witnesses
 
