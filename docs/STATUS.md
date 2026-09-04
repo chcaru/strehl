@@ -2217,6 +2217,81 @@ whichever direction it falls. Both outcomes are authorised in advance.
 
 ### 3.1 Blocking
 
+**0. The headline clause of the SOTA claim has no instrument, and this outranks
+every numbered item below.** The items in this list are build work. This one is
+the reason build work cannot currently be scored.
+
+The proposal's end-state sentence names its licensing instrument per clause
+(`2026-08-sota-path.md:192-197`). Its first and most important clause reads
+*"strehl resolves detail at or beyond the best shipping comparator*
+**`(D1: FRC + slant-edge, ...)`***"*. **Both named instruments are dead.**
+`:251` is more specific still: FRC is *"the one ground-truth-free sharpness
+metric that cannot be fooled upward by noise amplification ... which D1 adopts
+as its* **spine**". That spine is gone -- FRC's per-ring normalisation makes an
+isotropic unsharp mask cancel exactly, and a statistic that cancels an
+arbitrary-strength common linear filter cancels **blur** identically.
+Invariance and blindness were the same property.
+
+**The proposal diagnosed this exact disease and prescribed D1 as the cure.**
+`:264-267`: *"Instrument churn ate the project's middle. Three detail
+statistics, two rim instruments, one timing harness and one deconvolution
+channel failed their own commissioning. The cure is D1: build the instruments
+once, first."* **The cure caught the disease.** The count of dead detail
+statistics is no longer three; it is six -- `Q25` at `5.560744x`, three
+slant-edge builds, `S_25` at `1.028294x`, candidate 1 at `1.095732x`, and FRC.
+All six died the same death, and it is a structural one rather than six
+mistakes: **no single-image high-frequency statistic can separate resolved
+detail from sharpening, because sharpening adds exactly the thing being
+measured.** `Q25` is the cleanest demonstration -- it rewarded an unsharp mask
+`5.560744x` while reading a genuine optical improvement at `0.977981`, the
+**wrong sign**, with its tone-stability arms sitting at
+`0.999963 / 1.000000 / 0.999966`. A statistic can be perfectly invariant to
+everything it was tested against and still be pointed the wrong way.
+
+**So the program can presently prove harm and cannot prove benefit.** M8 is the
+only axis with a value and it reads FAIL. Every instrument that could have
+licensed an improvement is dead. That asymmetry, not any individual result, is
+what stands between here and a defensible claim.
+
+**What survives, and it is more than it looks.** Three escapes exist from the
+structural trap, and the proposal already contains one of them without naming it
+as such:
+
+1. **Truth reference** -- staffed, lane-TRUTH, D8 verification at M115 source.
+2. **Independent repeats** -- this was FRC's route and it is closed; the
+   repeat-pair node-coincidence gate is frozen at `docs/capture-requests/2026-09-node-coincidence-gate.md`
+   in case the capture reopens it.
+3. **A physical constraint that sharpening must violate** -- staffed,
+   lane-M8COMP. **The instrument already exists and the proposal already
+   licenses it**: `:194` lists *"zero invented structure (hull census, stamped
+   per file)"*. An unsharp mask is `I + a(I - G*I)`, which necessarily exceeds
+   the local input range at an edge -- ringing IS overshoot -- so the hull census
+   is a sharpening detector. The change is one of role: promoting it from a
+   self-check on our own output to a **comparative axis measurable on anyone's
+   render**, since it needs only the output and the input frames.
+
+I tested escape 3's premise myself before committing lanes to it, because the
+obvious attack is that tone-mapping erases the evidence. **It does not, and the
+reason is structural: the source hull is a LOCAL bound while clamping acts at
+the GLOBAL rails.** A hull-respecting merge scored `0.0000%`; unsharp masking at
+amount `0.3 / 0.5 / 1.0 / 2.0` scored `0.6836% / 1.1475% / 1.9043% / 5.8350%`
+monotonically; clamping those to `[0,1]` changed the figures **not at all**, and
+with the scene pushed against both rails they rose rather than fell
+(`1.6602% / 2.7588% / 15.9668%`). Null control silent, planted positive
+responsive.
+
+**The known confound, stated now so it is not discovered as a disappointment
+later:** a nonzero hull census does not by itself indicate sharpening, because
+**resampling also overshoots** -- our own unsharpened renders read M8-O
+`1.326144%`. The discriminator must therefore be magnitude against the
+kernel-implied bound, not presence, since an interpolation lobe is bounded where
+a gain term is not.
+
+**This is also the amendment the governing proposal needs, and I am flagging it
+rather than editing the owner's document:** `2026-08-sota-path.md` currently
+prescribes two dead instruments as the spine of its central claim.
+
+
 1. **`eps_r` re-fit — LANDED at `-508.4e-6` (`38df35fb`), but scored on ONE subject.** All three
    arms rendered from a single build: **re-fit 0.10093 / shipped 0.11377 / off 0.15576**, so it
    beats both. What remains is breadth: it is **not corpus-verified**, and
