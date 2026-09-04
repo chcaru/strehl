@@ -1,9 +1,10 @@
-# Capture request: 383 claim frames + 60 witnesses for M1, M5 and M9
+# Capture request: 383 claim frames + 60 witnesses + 160 reference = 603 for M1, M5 and M9
 
 Status: REQUESTED — awaiting owner
 Owner of this file: orchestrator
 Raised: 2026-09
 Amended: 2026-09 (Sony A7C II automated-bracketing protocol)
+Amended: 2026-09 (truth-reference block; main sweeps pinned to 1.30× reproduction)
 
 ---
 
@@ -20,6 +21,16 @@ version of this request.
 | 2 | **Patch must be physically large enough** for 64 guarded sites | Frame count is not site count |
 | 3 | **Use separate 32-flat/32-dark groups for A and B** | Shared calibration structure correlates the two realizations |
 | 4 | **Use a 3 s bracket interval and freeze the repeatability gate before shooting** | The old 1 s interval did not provide a settling margin or a defensible node test |
+| 5 | **Shoot the main sweeps at 1.30× effective reproduction — NOT at maximum magnification** | The truth reference must out-sample the main sweeps. At maximum magnification the ratio is 1.0× and the whole detail axis is an automatic no-go |
+| 6 | **Keep the 2× teleconverter installed for every frame in the session, main and reference alike** | Comparing a bare-lens reference against a teleconverter main sweep compares two different optical paths, not two samplings of one |
+| 7 | **Add a 160-frame truth-reference block at the end** | This is the only block that can make the detail axis measurable at all; without it M1 stays `UNMEASURED` no matter how good the sweeps are |
+
+**The detail axis is the reason this session exists, and it is the one thing the
+previous version of this request could not have delivered.** Six candidate
+detail statistics have failed because no single-image measurement separates
+resolved detail from sharpening. The escape is an independently sampled,
+higher-magnification image of the same patch — that is the 160-frame block, and
+it can only be shot while this rig is standing.
 
 **The claim-frame budget changed from 319 to 383.** The focus data remain 255
 frames. The old plan allowed four 16-frame calibration groups; this request
@@ -119,7 +130,7 @@ Thorlabs R1DS1P USAF 1951 target would add a clean frequency ladder. Neither
 replaces the nonperiodic patch — the star's radial pattern is deterministic and
 the USAF bars are sparse and repeated, so both risk carrying their own answer.
 
-## Frame counts — 383 claim/calibration + 60 witness = 443
+## Frame counts — 383 claim/calibration + 60 witness + 160 reference = 603
 
 | Block | Frames | Purpose |
 | --- | ---: | --- |
@@ -144,7 +155,13 @@ the USAF bars are sparse and repeated, so both risk carrying their own answer.
 | darks B | 32 | calibration for the complete B passes |
 | **claim/calibration** | **383** | |
 | **fixed-focus witnesses** | **60** | |
-| **session total** | **443** | |
+| reference near | 32 | fixed focus, **Focus Bracket OFF**, at maximum reproduction |
+| reference middle | 32 | fixed focus at the middle depth of the same patch |
+| reference far | 32 | fixed focus at the far depth of the same patch |
+| reference flats | 32 | **independently repositioned** diffuser; reference-only masters |
+| reference darks | 32 | warmed, matching the reference exposure |
+| **truth reference block** | **160** | |
+| **session total** | **603** | |
 
 ## Literal shooting order
 
@@ -179,10 +196,41 @@ Repeat the seven steps above using `S10-A`, `sw10-A` (27 shots, step width 10),
 `E10-A`, `S10-B`, `sw10-B`, and `E10-B`. Keep order `0 -> +`, interval 3 s,
 and every other camera/lens setting unchanged. Gate the pair before continuing.
 
-### 4. Finish the session
+### 4. Finish the main session
 
 After both A/B pairs pass their input-only gates, shoot the 91-frame `sw1`
 checker-only bracket, then the four 32-frame calibration groups.
+
+### 5. Truth-reference block — 160 frames, last, and do not skip it
+
+Everything above measures the stacker against itself. **This block is the only
+part of the session that can tell us whether the stacker resolves real detail
+rather than merely adding contrast**, so if bench time runs short, cut
+something else rather than this.
+
+1. **Do not touch the subject, the lighting or the tripod position.** The
+   reference must show the same patch under the same illumination. Moving the
+   target invalidates the block.
+2. **Leave the 2× teleconverter on.** Do not swap to the bare lens.
+3. **Turn Focus Bracket OFF.** Every frame in this block is fixed focus.
+4. **Increase magnification to the lens's maximum** — target **≥ 2.70×**
+   effective reproduction, versus the 1.30× used for the sweeps. Refocus and
+   reframe onto the same patch as needed; the framing may differ, but the same
+   physical detail and at least some of the same fiducial marks must be visible
+   so the two can be registered.
+5. Pick **three depths** across the patch — near, middle, far — matching the
+   depth range the sweeps covered. At each, lock focus and take **32 frames**
+   without touching anything. That is 96 frames.
+6. **32 reference flats.** Move or rotate the diffuser first, exactly as you did
+   between flats A and B. These must not reuse the main session's flats.
+7. **32 reference darks**, warmed, at the same exposure as the reference frames.
+8. Keep every frame in this block in its own folder, clearly separated from the
+   main sweeps.
+
+**If the maximum reproduction you can reach is below about 2.0× while the main
+sweeps are at 1.30×, stop and tell me the number before shooting the block** —
+below that ratio the reference cannot serve as truth and those 160 frames would
+be wasted.
 
 For every six-frame fixed-focus burst, use the same lock method. Switching
 between the lock and Focus Bracket must not move focus. If it does, this setup
@@ -356,6 +404,21 @@ one master and apply it to both.
 - **Lens OSS: OFF**
 
 **Body and lens:** A7C II, FE 100mm Macro GM with 2× teleconverter at 200 mm.
+**Keep the teleconverter installed for every frame in the session**, including
+the reference block.
+
+**Reproduction ratio — this is new and it matters more than it looks:**
+
+- **Main sweeps and all witnesses: 1.30× effective reproduction** at the
+  near-focus reset, verified from the grid as pixels per period. Do **not**
+  shoot these at the lens's maximum magnification.
+- **Truth-reference block only: maximum available reproduction, target ≥ 2.70×.**
+
+The reference must out-sample the main sweeps by at least 2×; 1.30× against
+2.70× gives 2.078×, with margin. If the main sweeps are shot at maximum
+magnification instead, the ratio collapses to 1.0×, the reference is
+disqualified before it is taken, and the detail axis cannot be measured from
+this session at any later date.
 
 **Exposure:** M mode, ISO 100, 1 s, f/5.6. Identical for every session frame.
 
@@ -422,18 +485,28 @@ spend none of the holdout.
 
 1. **Manifest.** Confirm the named file ranges contain P0/P1, all eight
    start/end bursts of six, `sw4-A/B` at 55 each, `sw10-A/B` at 27 each,
-   `sw1` at 91, and four calibration groups at 32 each. Confirm A and B used
-   identical bracket settings and the recorded reset approach.
-2. **Repeatability.** Run G0 through G3 exactly as frozen above. Compare only
+   `sw1` at 91, four calibration groups at 32 each, and the five reference
+   groups at 32 each (near, middle, far, reference flats, reference darks).
+   Confirm A and B used identical bracket settings and the recorded reset
+   approach, and that the reference groups carry **no** Focus Bracket metadata.
+2. **Reference eligibility — do this early, because it is the one thing that
+   cannot be fixed later.** Measure effective reproduction on both the main
+   sweeps and the reference block from the grid, as pixels per period, and
+   compute the ratio. It must be **≥ 2.0×**; below `1.25×` the block is an
+   automatic no-go. Confirm the reference is unclipped, that its two disjoint
+   16-frame halves agree, and that it carries genuine power in every band the
+   detail claim will use. A failed gate makes M1 `UNMEASURED`; it never
+   produces a lower score.
+3. **Repeatability.** Run G0 through G3 exactly as frozen above. Compare only
    A frame `i` with B frame `i`; no re-indexing, fractional resampling, scale,
    rotation, warp, or favorable subset.
-3. **Spectral eligibility, per site.** Confirm the patch carries power out to
+4. **Spectral eligibility, per site.** Confirm the patch carries power out to
    `0.25 cyc/native px` — measured **per site**, not as a frame average, and
    measured as **cross-power attributable to the subject** rather than raw
    single-frame power, which sensor pattern and noise can satisfy on their own.
-4. **Site count.** Confirm at least **64 guarded, non-overlapping eligible
+5. **Site count.** Confirm at least **64 guarded, non-overlapping eligible
    sites** survive. Freeze the site manifest before any render exists.
-5. **Clipping and focus.** Reject clipping per site. Verify every retained site
+6. **Clipping and focus.** Reject clipping per site. Verify every retained site
    has a through-focus peak **interior** to both complete named A and B passes.
 
 If the patch is too smooth, or too few sites survive, the session is still fine
