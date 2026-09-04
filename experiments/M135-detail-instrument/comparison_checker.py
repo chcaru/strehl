@@ -62,6 +62,10 @@ def valid_sha256(value: Any) -> bool:
     return isinstance(value, str) and SHA256_RE.fullmatch(value) is not None
 
 
+def exact_int(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
 def validate_contract(contract: dict[str, Any]) -> None:
     if canonical_json_sha256(contract) != EXPECTED_CONTRACT_SHA256:
         raise InvalidInstrument("comparison contract hash drift")
@@ -155,7 +159,10 @@ def validate_binding_structure(
             raise InvalidInstrument("binding contains an invalid capture ID")
         if not isinstance(row, dict):
             raise InvalidInstrument(f"capture binding {capture_id} is not an object")
-        if int(row.get("site_count", -1)) < int(contract["scope"]["minimum_sites"]):
+        site_count = row.get("site_count")
+        if not exact_int(site_count) or site_count < int(
+            contract["scope"]["minimum_sites"]
+        ):
             raise InvalidInstrument(f"capture binding {capture_id} has too few sites")
         for field in contract["required_capture_hashes"]:
             if not valid_sha256(row.get(field)):
@@ -179,12 +186,17 @@ def validate_lineage(
     for field in contract["required_capture_hashes"]:
         if lineage.get(field) != expected_capture.get(field):
             raise InvalidInstrument(f"payload capture mismatch: {field}")
-    if int(payload.get("site_count", -1)) != int(expected_capture["site_count"]):
+    site_count = payload.get("site_count")
+    if not exact_int(site_count) or site_count != expected_capture["site_count"]:
         raise InvalidInstrument("payload site count differs from bound capture")
 
 
 def finite_number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and math.isfinite(float(value))
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(float(value))
+    )
 
 
 def validate_mode(
@@ -229,9 +241,13 @@ def validate_mode(
 
 
 def numeric_vector(value: Any, length: int, label: str) -> np.ndarray:
+    if (
+        not isinstance(value, list)
+        or len(value) != length
+        or any(not finite_number(item) for item in value)
+    ):
+        raise InvalidInstrument(f"{label} must contain {length} JSON numbers")
     array = np.asarray(value, dtype=float)
-    if array.shape != (length,) or not np.all(np.isfinite(array)):
-        raise InvalidInstrument(f"{label} must contain {length} finite values")
     return array
 
 
@@ -242,9 +258,12 @@ def validate_bootstrap(
     if not isinstance(bootstrap, dict):
         raise InvalidInstrument("bootstrap record is missing")
     frozen = contract["bootstrap"]
-    for field in ("replicates", "seed", "paired_site_resampling", "capture_count"):
-        if bootstrap.get(field) != frozen[field]:
+    for field in ("replicates", "seed", "capture_count"):
+        value = bootstrap.get(field)
+        if not exact_int(value) or value != frozen[field]:
             raise InvalidInstrument(f"bootstrap {field} differs from the rule")
+    if bootstrap.get("paired_site_resampling") is not True:
+        raise InvalidInstrument("bootstrap paired_site_resampling differs from the rule")
     replicates = int(frozen["replicates"])
     information = numeric_vector(
         bootstrap.get("information_ratio"),
@@ -256,12 +275,22 @@ def validate_bootstrap(
         replicates,
         "unexplained_fraction_difference",
     )
-    transfer = np.asarray(bootstrap.get("transfer_ratio_by_cell"), dtype=float)
+    transfer_value = bootstrap.get("transfer_ratio_by_cell")
     cells = len(contract["scope"]["frequencies_cyc_per_native_px"])
-    if transfer.shape != (cells, replicates) or not np.all(np.isfinite(transfer)):
-        raise InvalidInstrument(
-            f"transfer_ratio_by_cell must have shape ({cells}, {replicates})"
+    if (
+        not isinstance(transfer_value, list)
+        or len(transfer_value) != cells
+        or any(
+            not isinstance(row, list)
+            or len(row) != replicates
+            or any(not finite_number(item) for item in row)
+            for row in transfer_value
         )
+    ):
+        raise InvalidInstrument(
+            f"transfer_ratio_by_cell must contain ({cells}, {replicates}) JSON numbers"
+        )
+    transfer = np.asarray(transfer_value, dtype=float)
     if np.any(information <= 0.0) or np.any(transfer <= 0.0):
         raise InvalidInstrument("information and transfer ratios must be positive")
     if np.any(unexplained < -1.0) or np.any(unexplained > 1.0):
@@ -302,7 +331,7 @@ def adjudicate(
             )
 
         validate_lineage(payload, binding, capture_id, contract)
-        if int(payload["site_count"]) < int(contract["scope"]["minimum_sites"]):
+        if payload["site_count"] < int(contract["scope"]["minimum_sites"]):
             raise InvalidInstrument("payload has too few sites")
         if payload.get("frequencies_cyc_per_native_px") != contract["scope"].get(
             "frequencies_cyc_per_native_px"
@@ -548,6 +577,15 @@ def run_self_test(
     supplied_boolean = copy.deepcopy(baseline)
     supplied_boolean["detail_pass"] = True
     malformed_cases["producer_boolean"] = supplied_boolean
+    boolean_draw = copy.deepcopy(baseline)
+    boolean_draw["bootstrap"]["information_ratio"][0] = True
+    malformed_cases["boolean_draw"] = boolean_draw
+    string_draw = copy.deepcopy(baseline)
+    string_draw["bootstrap"]["information_ratio"][0] = "1.0"
+    malformed_cases["numeric_string_draw"] = string_draw
+    boolean_count = copy.deepcopy(baseline)
+    boolean_count["bootstrap"]["capture_count"] = True
+    malformed_cases["boolean_capture_count"] = boolean_count
     checks["malformed_payloads_invalidate"] = all(
         adjudicate(payload, bound, contract)["status"] == "INSTRUMENT_INVALID"
         for payload in malformed_cases.values()
