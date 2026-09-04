@@ -1571,16 +1571,20 @@ switch ($Phase) {
         if ($receipt.evidence_commit -ne $EvidenceCommit) {
             throw "Arm receipt evidence commit differs from -EvidenceCommit"
         }
+        $verified = Invoke-Json @("verify-arm", "--receipt", $ArmReceipt)
         $verificationRoot = Join-Path $root "verification-logs"
         [void][IO.Directory]::CreateDirectory($verificationRoot)
-        $checkerLog = Join-Path $verificationRoot "$($receipt.arm)-checker.log"
+        $armLeaf = Split-Path -Leaf (Split-Path -Parent (Get-FullPath $ArmReceipt))
+        $checkerLog = Join-Path $verificationRoot "$armLeaf-checker.log"
+        if (-not (Test-PathWithin $checkerLog $verificationRoot)) {
+            throw "VERIFY log path escapes its private verification directory"
+        }
         if (Test-Path -LiteralPath $checkerLog) {
             throw "VERIFY is one-shot and will not overwrite its prior log: $checkerLog"
         }
         [void](Invoke-Logged $Python @(
             "-B", $Checker, "verify", "--result", [string]$receipt.result.path
         ) $checkerLog)
-        $verified = Invoke-Json @("verify-arm", "--receipt", $ArmReceipt)
         [void](Invoke-Json @("verify-input", "--input", $InputManifest))
         [void](Invoke-ToolAudit $ready.prepare.source_commit)
         [void](Invoke-Json @(
