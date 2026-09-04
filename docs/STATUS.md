@@ -4084,6 +4084,80 @@ cause in both is the same: I reasoned from a table without reading what its
 entries depend on. The blocker table said `(d)` unlocks M7; it did not say M7
 was independently blocked, and I did not go and look.
 
+### 2.9.37 M137: the sharpness is real — clamping costs `0.24%` of it
+
+M137 fixed the reach defect and re-measured. **The answer is the good one, and
+the detail number I refused to bank in §2.9.34 survived the repair intact.**
+
+My diagnosis was confirmed and it was more specific than I had it: `DCO` and the
+`S5` support-excursion control used the **aliased** `gather_1d`, while the *band*
+path did route through the patched `gather`. So the band measurement was correct
+all along; only the two controls were broken. That is why the decomposition below
+is byte-identical to the pre-fix file. **I was right to withhold it and right
+about the mechanism, and the number still held** — the useful outcome is that it
+now rests on a gate that passes rather than one that fails.
+
+**The gate now passes on its merits.** Support excursions, before and after:
+
+| kernel | before | after |
+|---|---|---|
+| bilinear | `0` | `0` |
+| catmull-rom | `2,709,943` (`max 177.40625 DN`) | `2,709,943` — positive control intact |
+| clamped-catmull | `2,709,943` — the defect | **`0`**, `max 0.0` |
+
+`all_pass: true`, `S5_full_support_hull: true`. And `DCO` for the clamped kernel
+now **differs** from Catmull-Rom, which was my registered test that the clamp
+actually reaches: `2.48028047667808 → 0.5559096954858782`, a `78%` reduction in
+differential chroma overshoot. Full ladder: `nearest 0`, `bilinear 0`,
+`catmull-rom 2.480280`, `clamped 0.555910`, `lanczos3 4.852171`.
+
+**The decomposition, which is the deliverable:**
+
+| quantity | value |
+|---|---|
+| Catmull-Rom − bilinear | `+0.3403664343410666` dex — reproduces the known `0.3404` |
+| clamped − Catmull-Rom | `−0.0008212624849210926` dex |
+| clamped − bilinear | `+0.3395451718561455` dex |
+| **advantage retained by clamping** | **`99.758712%`** |
+| advantage removed with the excursions | `0.241288%` |
+
+**So the sharpness was not made of overshoot.** Enforcing the source hull costs
+about a quarter of one percent of the detail advantage, where bilinear costs all
+of it. Stated the other way: **bilinear's `0.3404` dex loss is not the price of
+hull compliance** — it is the price of bilinear.
+
+**The controls discriminate, which is why I believe it.** Both sabotage arms
+widen the clamp and drive `gap_preserved_fraction` to exactly `1` while failing
+`S5` and restoring `DCO` to precisely the unclamped `2.48028047667808`. That is
+the correct signature: a clamp that does nothing preserves everything. An
+independently written verifier reproduced the fixed result exactly, including
+`0.5559096954858782` and `gap_preserved_fraction 0.9975871225771394`. And the
+read-only RAW tree was hashed **before and after** — `299` files,
+`11,308,236,800` bytes, unchanged.
+
+**What this means for the program.** M8 is the only axis with a produced score
+and it is a FAIL. Combining M134's render census with this: a clamped gather
+gives `0 / 6,131,678,976` M8-R violations while surrendering `0.24%` of detail.
+**The kernel half of M8 now has a repair with a price we can afford**, which is a
+materially different position from this morning, when the only known fix cost
+`0.3404` dex. This should be folded into the M8 rerun that the pause-exit
+conditions already schedule after M130 lands, rather than run separately.
+
+**One control is missing and I have sent it back for it.** M137's own limits
+section states the harness *"does not contain a flat-ROI control for the
+band-power statistic"*. In
+this corpus that is not a small gap: **a flat ROI reaching the same endpoint as a
+detailed one is one of the findings that killed D8.** Until the statistic is
+shown to report ~zero where there is nothing to report, the claim rests on an
+untested null. There is also a specific mechanism to rule out — Catmull-Rom's
+negative taps amplify high-frequency noise, part of its band advantage may be
+*amplified noise* rather than resolved detail, and **the clamp would not remove
+that**, because amplified noise stays inside the source hull. The flat null is
+exactly the instrument that detects it. M137 is running it now, told that a
+result forcing it to withdraw its own conclusion counts as success.
+
+Until that returns, this result is **strong but not banked.**
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
