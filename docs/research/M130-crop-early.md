@@ -133,6 +133,18 @@ Each `integrity.self_sha256` is calculated over canonical sorted-key UTF-8 JSON
 after removing only that field. `artifact_io.py` writes atomically and the
 `verify-results` / `verify-freeze` commands recalculate the seal.
 
+The seal is independent of checkout line endings. On 2026-09-04, byte-distinct
+CRLF copies of both artifacts were written outside the repository: all 1,451
+newlines in `results.json` and all 407 in `freeze.json` were CRLF, with no lone
+LF bytes. Their ordinary file hashes changed to
+`11A2D6268D8F4D5FDE1EF04BA9BB9F671E68F149EDD3CC652720BDCF6E2B833D`
+and
+`A05020909BEDDE86D93A57D7DE98B4BF34211B9CD3653274BF4ACB2AC6A0A9EB`,
+respectively, but `verify-results` and `verify-freeze` both exited 0 and
+reproduced the internal hashes in the table. Thus the ordinary file hashes
+describe the committed LF byte streams, while the canonical self-hashes are
+the portable integrity checks across LF/CRLF conversion.
+
 `results.json` contains the complete old and new annular profiles, exact
 retention numerators and denominators, 40-digit decimal ratios, full and Crop
 geometry, the exactness/control comparisons, a freshly exercised Estimator
