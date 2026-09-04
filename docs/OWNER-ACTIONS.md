@@ -291,6 +291,29 @@ materials". But `strehl` publishes through a blog, and if that blog ever carries
 income the reading changes. **The extra $100 buys unambiguous clearance to
 publish the output images.** Ask, and you will not have to guess.
 
+### The technical question, which the same email also settles — added 2026-09-06
+
+**Buying the licence does not close this blocker.** Lane M157 audited Zerene's
+public documentation for the one thing the scorecard actually requires — that
+every program emit a *native-size 16-bit linear TIFF* — and returned
+**[NOT FOUND]**:
+
+> Neither statement is explicitly attached to **Save Adjusted Input Images**.
+> Across the FAQ, how-to page, modification history and batch documentation, the
+> linear/16-bit contract for that specific command is undocumented.
+
+What *is* verified is only that the feature exports the aligned and
+brightness-corrected **input images** rather than a PMax or DMap result, and
+that Zerene supports high-bit-depth TIFF generally. Neither establishes that
+this command writes native-size, 16-bit, *linear* data with a known colour
+profile — and if it silently applies a tone curve, resizes, or writes 8-bit,
+the common-input contract fails and the comparison cannot be run at all.
+
+So the honest position is: **a Zerene purchase clears the licence gate but
+should not be recorded as closing the common-linear-input gate.** That needs
+either a written vendor answer or a licensed witness run. The email is free and
+comes first.
+
 ### Draft — send to Zerene Systems
 
 > Subject: Licence question — publishing a technical comparison
@@ -311,10 +334,25 @@ publish the output images.** Ask, and you will not have to guess.
 >    The project is personal and produces no income, but it would be published
 >    publicly.
 >
+> And one technical question, which decides whether the comparison is possible
+> at all:
+>
+> 3. When using "Save Adjusted Input Images", what exactly is written? I need
+>    to confirm five things: that the images are **native size** with no
+>    resizing or cropping; that they can be written as **16-bit** TIFF; whether
+>    the data is **linear**, or whether a gamma or tone curve is applied on the
+>    way out; which **ICC profile / colour space** is embedded; and whether the
+>    export can be driven from the **batch or command-line** interface rather
+>    than only the GUI.
+>
 > Thank you,
 > Chris
 
-**If they say yes:** buy the edition they name and `(d)` is cleared.
+**If they say yes:** buy the edition they name and `(d)` is cleared — *provided*
+answer 3 confirms native-size 16-bit linear output. If answer 3 comes back as
+"gamma-encoded" or "8-bit only", tell me before buying; the comparison protocol
+would need rebuilding around whatever it does emit, and that is a design change
+rather than a purchase.
 **If they say no:** you have saved $189 and, far more importantly, we have not
 built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 

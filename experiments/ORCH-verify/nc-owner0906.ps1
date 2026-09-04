@@ -20,6 +20,11 @@ $ErrorActionPreference = 'Stop'
 $here = $PSScriptRoot
 $src = Resolve-Path "$here\..\..\docs\OWNER-ACTIONS.md"
 $orig = Get-Content -LiteralPath $src -Raw -Encoding UTF8
+# Second mutable input. A control may target either document; the verifier reads
+# both, so a control that can only reach OWNER-ACTIONS would leave the
+# evidence-reading half of the verifier uncommissioned.
+$srcM157 = Resolve-Path "$here\..\..\docs\research\M157-comparator-viability.md"
+$origM157 = Get-Content -LiteralPath $srcM157 -Raw -Encoding UTF8
 
 $controls = @(
   @{ n = 'NC1 corrupt the measured reproduction ratio'
@@ -77,6 +82,42 @@ $controls = @(
      b = '> and they are dropped from the program entirely.**'
      e = 'owner note keeps the five publishable'; benign = $false },
 
+  # ---- 2026-09-06, M157: the purchase gate vs the technical gate ----
+  @{ n = 'NC12 claim the purchase closes the technical gate'
+     a = 'So the honest position is: **a Zerene purchase clears the licence gate but'
+     b = 'So the honest position is: **a Zerene purchase closes every gate at once and'
+     e = 'owner note states purchase != gate closed'; benign = $false },
+
+  @{ n = 'NC13 drop linearity from the vendor email'
+     a = '>    the data is **linear**, or whether a gamma or tone curve is applied on the'
+     b = '>    the data is acceptable, or whether some curve is applied on the'
+     e = 'owner email asks all five sub-questions'; benign = $false },
+
+  @{ n = 'NC14 let him buy anyway on a bad answer'
+     a = '"gamma-encoded" or "8-bit only", tell me before buying; the comparison protocol'
+     b = '"gamma-encoded" or "8-bit only", go ahead and buy; the comparison protocol'
+     e = 'owner note tells him to stop if 8-bit'; benign = $false },
+
+  @{ n = 'NC15 put a price on the free ask'
+     a = '## Ask 1 — send one email. **$0, five minutes.** No deadline, but do it before any purchase.'
+     b = '## Ask 1 — send one email. **$40, five minutes.** No deadline, but do it before any purchase.'
+     e = 'Ask 1 still costs nothing'; benign = $false },
+
+  # ---- SOURCE-SIDE controls: mutate the LANE REPORT, not this document. ----
+  # Without these, the M157 checks would only prove OWNER-ACTIONS agrees with
+  # itself. These prove the verifier is actually reading the evidence file.
+  @{ n = 'NC16 [source] upgrade NOT FOUND to a verified contract'
+     f = 'm157'
+     a = '**[NOT FOUND]** Neither statement is explicitly attached to'
+     b = '**[VERIFIED]** The linear 16-bit contract is explicitly attached to'
+     e = 'M157 rules the linear contract NOT FOUND'; benign = $false },
+
+  @{ n = 'NC17 [source] corrupt an edition price in the brief'
+     f = 'm157'
+     a = 'Prosumer Edition, $189 USD'
+     b = 'Prosumer Edition, $289 USD'
+     e = 'M157 records both edition prices'; benign = $false },
+
   # ---- benign: must stay GREEN ----
   @{ n = 'BENIGN-A reword prose carrying no checked claim'
      a = 'I spent it, and I would make the same call again.'
@@ -91,14 +132,20 @@ $controls = @(
 
 $pass = 0; $wrong = 0
 foreach ($c in $controls) {
+  $which = if ($c.ContainsKey('f')) { $c.f } else { 'owner' }
+  $base = if ($which -eq 'm157') { $origM157 } else { $orig }
   $tmp = Join-Path $env:TEMP ("ncown-" + ($c.n -replace '[^A-Za-z0-9]', '') + ".md")
-  $cnt = ([regex]::Matches($orig, [regex]::Escape($c.a))).Count
+  $cnt = ([regex]::Matches($base, [regex]::Escape($c.a))).Count
   if ($cnt -ne 1) { throw "MUTATION TARGET NOT UNIQUE: $($c.n) -- anchor occurs $cnt time(s): '$($c.a)'" }
-  $mut = $orig.Replace($c.a, $c.b)
-  if ($mut -eq $orig) { throw "MUTATION DID NOT ALTER THE FILE: $($c.n)" }
+  $mut = $base.Replace($c.a, $c.b)
+  if ($mut -eq $base) { throw "MUTATION DID NOT ALTER THE FILE: $($c.n)" }
   Set-Content -LiteralPath $tmp -Value $mut -Encoding UTF8 -NoNewline
 
-  $out = & "$here\v-owner0906.ps1" -Owner $tmp 2>&1 | Out-String
+  $out = if ($which -eq 'm157') {
+    & "$here\v-owner0906.ps1" -M157 $tmp 2>&1 | Out-String
+  } else {
+    & "$here\v-owner0906.ps1" -Owner $tmp 2>&1 | Out-String
+  }
   $rc = $LASTEXITCODE
 
   if ($c.benign) {

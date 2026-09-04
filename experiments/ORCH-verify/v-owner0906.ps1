@@ -1,4 +1,5 @@
-param([string]$Owner = "$PSScriptRoot\..\..\docs\OWNER-ACTIONS.md")
+param([string]$Owner = "$PSScriptRoot\..\..\docs\OWNER-ACTIONS.md",
+      [string]$M157 = "$PSScriptRoot\..\..\docs\research\M157-comparator-viability.md")
 
 # Forward verifier for the 2026-09-06 OWNER-ACTIONS amendments:
 #   * the seven-axis publication scope note and the Helicon correction
@@ -37,6 +38,28 @@ Check 'owner note owns the error as mine' ($own -match 'Both were my inventions,
 # blame for it to the owner's plan, so the attribution gets its own canonical check.
 Check 'owner note attributes Helicon requirement to ME' ($own -match 'had made \*\*Helicon mandatory\*\* where your plan says')
 Check 'owner note does not blame the plan' (-not ($own -match 'because your plan required it'))
+
+# --- added 2026-09-06, M157 comparator viability -------------------------------
+# The purchase gate and the technical gate are different gates. A licence clears
+# only the first, and the scorecard's actual requirement -- native-size 16-bit
+# LINEAR TIFF -- is [NOT FOUND] in Zerene's public documentation for the specific
+# command we depend on. These checks exist so that distinction cannot quietly
+# collapse back into "buy Zerene and (d) is cleared".
+$m157 = Flat $M157
+Check 'M157 brief is committed'                 ($m157.Length -gt 20000)
+Check 'M157 records the provenance of the brief' ($m157 -match 'extracted from the lane transcript by the orchestrator')
+Check 'M157 rules the linear contract NOT FOUND' ($m157 -match '\*\*\[NOT FOUND\]\*\* Neither statement is explicitly attached to')
+Check 'M157 verifies it exports INPUT images'    ($m157 -match 'exporting adjusted \*\*input images\*\*')
+Check 'M157 records both edition prices'         ($m157.Contains('Prosumer Edition, $189') -and $m157.Contains('Professional Edition, $289'))
+
+Check 'owner note adds the technical question'   ($own -match 'The technical question, which the same email also settles')
+Check 'owner note states purchase != gate closed' ($own -match 'clears the licence gate but\s+should not be recorded as closing the common-linear-input gate')
+Check 'owner email asks all five sub-questions'  ($own -match 'native size' -and $own -match '\*\*16-bit\*\* TIFF' -and $own -match 'whether\s+the data is \*\*linear\*\*' -and $own -match 'ICC profile / colour space' -and $own -match 'batch or command-line')
+Check 'owner note conditions the yes on answer 3' ($own -match 'provided\*\s+answer 3 confirms native-size 16-bit linear output')
+Check 'owner note tells him to stop if 8-bit'    ($own -match 'tell me before buying')
+# The email must remain FREE and remain ordered before the purchase.
+Check 'Ask 1 still costs nothing'               ($own -match 'send one email\. \*\*\$0, five minutes')
+Check 'Ask 1 still precedes any purchase'       ($own -match 'do it before any purchase')
 Check 'owner note cites the commit'     ($own.Contains('6b966d8c'))
 Check 'owner note keeps the five publishable' ($own -match 'their results will still be published')
 
