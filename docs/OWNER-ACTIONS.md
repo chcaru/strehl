@@ -223,9 +223,31 @@ itself then got wrong about its only score.
 
 The one scored axis is **M8, the source-hull certificate**: the rule that the
 stacker must never emit a value that was not in its source data. We violate it
-on `1.030569%` of resampler samples and `1.326144%` of output samples, against
-a bar of exactly `0.0000%`. The checker was commissioned in both directions
-before it ran, so the failure is real and not an instrument artifact.
+on `1.030569%` of resampler samples, against a bar of exactly `0.0000%`. The
+checker was commissioned in both directions before it ran, so the failure is
+real and not an instrument artifact.
+
+> **Corrected 2026-09-06, and the correction is in your favour.** This
+> paragraph used to add "and `1.326144%` of output samples". That second number
+> has been withdrawn. Lane M136 proved constructively that the bar it was
+> measured against was **impossible** — not demanding, but unsatisfiable by any
+> program ever written, because `977,684` of the required checks demanded an
+> output value larger than the output format can represent. Reporting it as a
+> failure told you strehl fell short of a standard, when the truth is it was
+> being measured against a standard nothing could meet. **That overstated how
+> badly we are doing, and it was my error to leave standing.**
+>
+> The bar has since been repaired, and the repair is not a softening: a clean
+> resampling kernel now scores **exactly zero** violations out of `74,173,536`
+> checks, independently zero in red, green and blue, while our shipping kernel
+> does not pass. So the new bar still bites. **We have not yet run our own code
+> against it** — that measurement is a two-minute job sitting in a queue behind
+> a long-running lane, and I will report the number when it exists rather than
+> quoting a provisional one.
+>
+> **The `1.030569%` failure above is untouched by all of this**, and an
+> independent audit confirms *its* bar is achievable. M8 still fails. It just
+> fails on one count rather than two.
 
 **Nothing you can buy or shoot fixes M8.** It is a software defect and it is
 being worked now. Tonight's picture changed twice: a promising repair looked
@@ -245,7 +267,7 @@ No action needed on any of these. They cost nothing and need none of your time.
 | **M137** | Clamped resampler — **good news, then retracted** | The fear was that fixing M8 costs sharpness. A clamped kernel scored **zero violations across 6,131,678,976 samples** while keeping `99.76%` of what we were calling detail. Then I made it test the measurement itself against a **blank patch of image** — and the blank patch scored *higher* than the detailed one. So that number was never measuring detail; it was measuring amplified noise. Claim withdrawn. **The silver lining is real: we no longer have any evidence that fixing M8 costs image quality.** |
 | **M138** | Re-examining a design we declared dead | Phase 1 of the plan — the merge rule the whole roadmap was built on — was declared refuted in September, leaving the plan with no bridge at its first step. **The test that killed it was self-contradictory.** It required a single fixed setting to match a comparator whose own setting deliberately changes across seven frequency bands, to within 5%, and threw out every candidate that failed *before* it ever measured quality. I verified that in the test's own source code. The refutation is withdrawn — **Phase 1 is untested, not dead**, which is a far better place to be. |
 | **M135** | A detail measurement we can trust | **Now the single most important thing in the program.** Two separate attempts to measure image detail have now failed the same test: both scored a blank patch as highly as a detailed one. Until we can measure detail honestly, we cannot make a resolution claim at all — and a resolution claim is the whole point. This cannot be bought or shot around. |
-| **M136** | The M8 bar itself — **ruled** | We were scoring the resampler for something it cannot control: at long exposures the output format physically cannot represent the correct value, so it counted as a violation no matter what. Ruling: fixing that is a **legitimate repair, not moving the goalposts** — and critically, the repaired bar **still fails our current code** (`31,148` violations) while a clean kernel scores zero. It still bites. |
+| **M136** | The M8 bar itself — **ruled, and the bar was broken** | We were scoring the resampler for something it cannot control: at long exposures the output format physically cannot represent the correct value, so it counted as a violation no matter what. This turned out to be worse than a quirk — the bar was **impossible**, failing on `977,684` checks that demanded a value larger than the format can hold. Ruling: repairing it is a **legitimate repair, not moving the goalposts**. The repaired bar still bites, and that is measured, not asserted: a clean kernel scores **exactly `0` out of `74,173,536`**, independently zero in red, green and blue, while our shipping kernel does not pass. **Our own score against the repaired bar does not exist yet** — a two-minute run, queued. I am not quoting the provisional figure; the lane's own report calls it a diagnostic rather than a score, and I hold this file to the same line I hold the lanes to. |
 | **M12** | Formal memory/determinism run | Superseded by the **M139** row below — its blocker has cleared. |
 | **M138** | Re-examining a design we declared dead | Phase 1 of the plan — the merge rule the whole roadmap was built on — was declared refuted in September and the plan has had no bridge at its first step ever since. **Answered tonight: the test that killed it was self-contradictory.** See the row above. |
 | **M139** | Formal memory/determinism run | Free, ~3.5 hours, no input from you. **Now unblocked** — `crop-early` landed and I verified and committed it. |
@@ -371,7 +393,63 @@ built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 > ratio that matters.** Read § *The blocking finding* if you want the full
 > reason for the stop.
 
-### The capture ask is now **two sittings, not one**. Read this before you plan a session.
+### Two things changed on 2026-09-06, and one of them would have wasted the whole session
+
+> **Read this before you plan anything.** Neither item asks you to do something
+> new tonight. Both change what the session has to contain.
+
+**1. The calibration frames were missing from every plan, including mine.**
+
+The lane building the common input contract (M165) finished tonight and
+delivered a working, commissioned converter: frozen `rawpy 0.27.0` / LibRaw
+`0.22.1`, and TIFFs *measured* rather than assumed to be 16-bit, linear
+(ICC TRC `1.0`), ProPhoto D50, uncompressed, at native `7028x4688`. Its
+byte-identity check is real — a single flipped bit fails it.
+
+Then it reported the thing nobody had noticed:
+
+> **PATTERN MAP: Does not exist.** M1/M9 remain `UNMEASURED`; matching
+> body/ISO/exposure/temperature darks and matching lens/aperture/focus flats
+> are required.
+
+In plain terms: the pipeline needs a map of your sensor's fixed pattern, and
+that map is built from **dark frames and flat frames that match the session**.
+Matching is the hard word — the darks have to match body, ISO, exposure time
+and temperature, and the flats have to match lens, aperture and focus.
+
+**As the plans stood, you could have shot the entire session, executed the
+protocol perfectly, and still been unable to score two axes**, because the
+frames that make the session interpretable were in neither plan. The capture
+lane and the input-contract lane were designed separately and each assumed the
+other had it covered. I have folded the requirement into the capture plan and
+recorded it as a demonstrated failure mode rather than a hypothetical one.
+
+You do not need to do anything about this yet. I am telling you because it is
+the clearest example so far of why I keep refusing to send you a capture
+request the moment a lane produces one.
+
+**2. The M1 session is much larger than Ask 2a, and I have sent it back.**
+
+The lane that owns the hardest axis quoted its first honest minimum for a
+capture that would make M1 measurable: **1,661 exposures.** That is not a typo
+and it is not padding — M1 needs an external truth reference at higher
+sampling, and there is no cheap substitute. The lane also confirmed the cheap
+route is closed: none of the withdrawn candidate metrics can be revived by
+fixing tone alone.
+
+**I have not forwarded that as an ask, and I will not forward it in that
+form.** A non-refundable request of that size, against a protocol that has
+never been exercised end to end, is how a month gets lost. I have sent it back
+for a staged plan where each stage has a go/no-go gate and the earliest stage
+is capable of *falsifying the design* before you shoot the expensive part.
+When that comes back, you will get a first sitting that is small, cheap and
+decisive, not a monolith.
+
+**What this means for you right now: still nothing.** Ask 2a below — two
+frames, five minutes — remains the only capture that is useful today, and it
+is still useful.
+
+
 
 > **This changed tonight and it changes what you should budget.** The session
 > was described above as one uninterrupted 45–60 minute sitting. It is now
