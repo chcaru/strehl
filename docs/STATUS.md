@@ -3117,11 +3117,32 @@ real work and did not finish, not a lane that never started.
 registered bar is memory, determinism and scaling invariance, and the scorecard
 records at `:434` that the registered N/worker matrix *"still requires the
 reserved quiet host."* I have just made the host busy on purpose. M12 is one of
-only two axes already measurable — but clearing it **unlocks nothing else**,
-where crop-early unlocks 10. Timing a scaling ratio against concurrent renders
-would also violate rule 16 directly. Deferring the measurable axis to run the
-unlocking one is the correct trade, and it is recorded here so it is not later
-mistaken for the lane being forgotten a second time.
+only two axes already measurable — but it is **terminal**: clearing it unlocks
+nothing further, and it will still be there when the host is quiet. Crop-early
+is **on the critical path to every large unlock**, is free, and is the only one
+of the three roadmap items I can execute without the owner. Timing a scaling
+ratio against concurrent renders would also violate rule 16 directly. Deferring
+the terminal measurable axis to run the enabling one is the correct trade, and
+it is recorded here so it is not later mistaken for the lane being forgotten a
+second time.
+
+> **CORRECTION, same turn, caught by my own follow-up before the lanes
+> returned.** As first committed, the paragraph above justified the deferral by
+> saying crop-early *"unlocks 10"* axes against M12's zero. **That is wrong and
+> it contradicts §2.9.26 two sections above.** `(b)` *appears in* 10 rows of the
+> readiness table, but §2.9.26's combination result is explicit — *"any one of
+> a, b, d → 2"*, and *"The blockers are conjunctive. No single fix unlocks a
+> single axis."* Clearing `(b)` alone moves the scoreboard from `2 of 12` to
+> `2 of 12`. The count of rows a blocker appears in is **not** the count of
+> axes clearing it unlocks, and I wrote the former while meaning the latter.
+>
+> The ruling survives the correction, but the reasoning had to be replaced
+> rather than patched: crop-early is worth doing first because it is a
+> **necessary precondition** for `a+b+d` (6 axes) and `a+b+c+d` (12), because
+> it costs no money and no owner time, and because it is the only roadmap item
+> I can complete alone — not because it unlocks anything by itself. **Nothing
+> I can do without the owner will move the scoreboard off `2 of 12`.** That is
+> the honest position and it should not have taken a correction to state it.
 
 #### Two EXIF traps, each of which has already cost a wrong ruling
 
