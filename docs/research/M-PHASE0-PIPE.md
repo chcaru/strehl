@@ -82,9 +82,9 @@ working set belong to that same run.
 
 \* W=32 is reported because it was run, but is **rejected**, not part of the
 valid curve. Eight 112 attempts had 14.7–26.7% external load and 53.3–72.5 s
-fold times; the bee attempt had 18.2% external load. Peak RSS reached
-48.9–53.7 GiB. Repeating with 60–120 s cooldowns did not produce a valid SMT
-arm, so no idle W=32 claim is made.
+fold times; four bee attempts had 14.7–24.0% external load and 57.9–81.6 s
+fold times. Peak RSS reached 45.6–53.7 GiB. Repeating with 60–120 s cooldowns
+did not produce a valid SMT arm, so no idle W=32 claim is made.
 
 Valid doubling speedups:
 
@@ -180,3 +180,85 @@ that is why every >10% arm remains recorded and excluded. A rejected loaded
 pair misleadingly made the queue look about 8% faster, while the accepted
 campaign made it slower—the load gate changed the conclusion, not merely the
 error bars.
+
+## 7. Final close-out and M11 handoff
+
+### 7.1 Evidence ledger
+
+Only these results survived the registered load and output-validity gates:
+
+| result | admitted evidence |
+|---|---|
+| timer commissioning | One control pair: 1.298 s baseline, 3.326 s with a planted 2,000 ms delay, delta +2.028 s; 5.3%/6.9% external load; identical nonzero output hash |
+| D13 scaling | Two real stacks at W=1/2/4/8/16; selected fold curves `55.8/35.0/24.7/21.0/19.4 s` and `54.7/40.3/27.0/22.2/20.6 s`; 5.4–10.0% external load |
+| fine-N diagnostic | N=29–36 at W=4, 15 accepted alternating-direction arms across eight settings; selected fold times `3.5/3.6/3.8/3.7/3.9/4.2/4.2/4.2 s`; 5.5–9.7% external load; registered staircase test FALSE |
+| queue throughput | Five accepted samples per mode on each stack; best speedups `0.9876x` and `0.9790x`; queued medians +1.48% and +3.67%; 4.8–9.9% external load |
+| queue transparency | Fixed-worker off/on renders matched byte-for-byte on two aligned stacks and one independent holdout; this was experimental evidence, not a permanent automated freeze |
+
+The following are **invalidated**, not weak evidence:
+
+* W=32: all 12 completed arms failed the external-load gate—eight 112 arms at
+  14.7–26.7% and four bee arms at 14.7–24.0%. They establish no idle-SMT
+  timing.
+* Queue timing: 22 additional arms exceeded 10% external load and were
+  excluded. The originally circulated `0.948029x` best / `0.958487x` median
+  came from 19.6–38.8% external load and is not the queue verdict.
+* The fifth bee throughput sample per mode came from consecutive replacement
+  retries; only four bee pairs were wholly valid. The five fully paired 112
+  samples independently fail the retention bar.
+
+Candidate `1da5e87b` was withdrawn by `a35691d3`. `decode_queue.rs`, its module
+wiring, flag/parser, and byte-freeze environment entry all left the tree.
+`cargo build --release -p strehl-cli` and
+`cargo test --release --workspace --all-targets --no-fail-fast --quiet` both
+exited 0 without them.
+
+### 7.2 Can M11 be measured here?
+
+**Not currently, and no finite quiet-window duration fixes that.** Scorecard
+v1.7 classifies M11 as blocked on `(a)(b)(d)`: no admissible detail/quality
+qualifier, unresolved native-scale geometry, and no quality-qualified
+common-input comparator output. Native decode or fold timing is diagnostic;
+it cannot populate the end-to-end product/comparator axis. The required idle
+window length is therefore **NOT MEASURED**, and scheduling one now would
+consume the program's single clean window without making M11 measurable.
+
+Once those scientific prerequisites exist, the frozen execution is one
+warm-up followed by six alternating-order scored sweeps per setting. It times
+process start through closed, flushed, hashed TIFF and manifest, including the
+whole process tree, registration, merge, colour, and write. Every hard bar
+must pass:
+
+* warm common-input throughput at least `2.00x` the fastest quality-qualified
+  comparator;
+* candidate/default warm-wall ratio at most `2.00`;
+* native-RAW CPU at 16 workers at most `0.15 s/frame`;
+* hybrid at most `0.06 s/frame`;
+* cold no more than warm plus 20 s;
+* readable 100-frame live master within 10 s of the last shutter.
+
+Before reserving a host, commission every complete arm and measure one
+non-scored dry-run campaign; that measured duration, including the documented
+reboot or equivalent cache reset required by the cold arm, must define the
+window. Do not estimate it from this lane's 64-frame fold-only timings.
+
+### 7.3 Timing gate to inherit
+
+1. Sample whole-host busy time for five seconds before each arm; start only at
+   `<=15%`.
+2. During the arm, subtract **whole-process-tree** CPU from system busy CPU and
+   require external busy `<=10%` of wall time times 32 logical processors.
+   Anything above that is invalid and must not enter a minimum, median, or
+   ratio.
+3. Alternate arm/sweep order. Retry a rejected paired position as a pair;
+   never splice a favourable loaded half into a clean comparison.
+4. Record executable and input provenance, QPC wall time, process-tree CPU,
+   system/external busy, peak memory, bytes read/written, stage banners, full
+   output hash, and a nonzero decoded-output witness.
+5. Before results, require the M11 controls: a planted one-second sleep adds
+   `1.00±0.05 s`, an asynchronous child writer remains inside the timer, and a
+   cold arm follows a documented machine-wide cache reset.
+
+Contention biases absolute time upward, against an absolute speed pass;
+correlation with arm order can move a ratio either way. A pre-run idle sample
+does not license a run whose measured external load later crosses the gate.
