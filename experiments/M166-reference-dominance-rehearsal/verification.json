@@ -1,0 +1,66 @@
+{
+  "checks": [
+    {
+      "detail": "PASS",
+      "name": "analysis status",
+      "passed": true
+    },
+    {
+      "detail": "REHEARSAL SPECIFIED: 1,092 frames",
+      "name": "headline count",
+      "passed": true
+    },
+    {
+      "detail": 164,
+      "name": "complete witness is 164 frames",
+      "passed": true
+    },
+    {
+      "detail": 68,
+      "name": "witness correction is 68 frames",
+      "passed": true
+    },
+    {
+      "detail": 1147,
+      "name": "prior score reconstruction is 1147",
+      "passed": true
+    },
+    {
+      "detail": 1215,
+      "name": "corrected combined score is 1215",
+      "passed": true
+    },
+    {
+      "detail": 320,
+      "name": "converter-on rehearsal subtotal is 320",
+      "passed": true
+    },
+    {
+      "detail": 772,
+      "name": "TC0 rehearsal subtotal is 772",
+      "passed": true
+    },
+    {
+      "detail": 1092,
+      "name": "registered rehearsal is 1092",
+      "passed": true
+    },
+    {
+      "detail": {
+        "controls": 192,
+        "m1_only_score": 900,
+        "rehearsal": 1092
+      },
+      "name": "rehearsal is M1-only score plus controls",
+      "passed": true
+    },
+    {
+      "detail": 1407,
+      "name": "full-dress rehearsal is 1407",
+      "passed": true
+    }
+  ],
+  "passed": 11,
+  "status": "PASS",
+  "total": 11
+}

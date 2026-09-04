@@ -1,0 +1,49 @@
+{
+  "formal_witness_correction": {
+    "complete_scored_path_witness": 164,
+    "difference": 68,
+    "old_fixed_focus_witness": 96,
+    "required_blocks": {
+      "TC0-DOM-sw10-A": 27,
+      "TC0-DOM-sw10-B": 27,
+      "TC0-DOM-sw4-A": 55,
+      "TC0-DOM-sw4-B": 55
+    }
+  },
+  "headline": "REHEARSAL SPECIFIED: 1,092 frames",
+  "rehearsal": {
+    "converter_on": {
+      "ab_calibration": 128,
+      "four_reference_strips": 128,
+      "held_out_validation": 64
+    },
+    "converter_on_total": 320,
+    "difference_from_corrected_score": -123,
+    "difference_from_stale_1147": -55,
+    "full_dress_with_unrelated_combined_inputs": 1407,
+    "histogram_setup_frames": 1,
+    "m147_preflight_frames_outside_sitting": 2,
+    "physical_control_frames": 192,
+    "registered_frames": 1092,
+    "shutter_releases_in_sitting": 1093,
+    "tc0": {
+      "ab_calibration": 128,
+      "blur_physical_control": 96,
+      "candidate_independent_dominance_witness": 164,
+      "candidate_input_stacks": 164,
+      "candidate_reset_start_end_witnesses": 60,
+      "held_out_validation": 64,
+      "sharp_physical_control": 96
+    },
+    "tc0_total": 772,
+    "unrelated_combined_inputs_omitted": 315
+  },
+  "score": {
+    "corrected_combined_score": 1215,
+    "correction_from_1147": 68,
+    "current_891_baseline": 891,
+    "m1_only_score": 900,
+    "stale_1147_total": 1147
+  },
+  "status": "PASS"
+}

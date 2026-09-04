@@ -2,6 +2,14 @@ TARGET HOLDS AT 1.32x
 
 # M166 — physical protocol for `REFERENCE_INFORMATION_DOMINANCE`
 
+> **SUPERSEDED IN PART.** M164's later complete-input witness contract in
+> `M164-reference-dominance.md` makes this report's `96`-frame fixed-focus TC0
+> witness inadmissible. `M166-reference-dominance-rehearsal.md` replaces that
+> witness with complete candidate-excluded `sw4-A/B` and `sw10-A/B` inputs
+> (`164` frames) and corrects the combined scored total from `1,147` to
+> `1,215`. The `1.32x` target, hard `1.33x` maximum, and four reference strips
+> remain in force.
+
 Status: **COMPLETE — PHYSICAL DESIGN; CAPTURE REMAINS BLOCKED**
 
 ## 0. Result

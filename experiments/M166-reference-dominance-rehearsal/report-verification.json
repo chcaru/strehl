@@ -1,0 +1,142 @@
+{
+  "checks": [
+    {
+      "detail": "**REHEARSAL SPECIFIED: 1,092 frames**",
+      "name": "report starts with required lead",
+      "passed": true
+    },
+    {
+      "detail": "REHEARSAL SPECIFIED: 1,092 frames",
+      "name": "headline",
+      "passed": true
+    },
+    {
+      "detail": "combined score is `1,215`, not `1,147`",
+      "name": "corrected score",
+      "passed": true
+    },
+    {
+      "detail": "`TC0-DOM-sw4-A`",
+      "name": "complete witness",
+      "passed": true
+    },
+    {
+      "detail": "`TC0-DOM-sw10-B`",
+      "name": "second density",
+      "passed": true
+    },
+    {
+      "detail": "blocks the rehearsal at zero frames",
+      "name": "zero-frame stop",
+      "passed": true
+    },
+    {
+      "detail": "rows `1-2`, `3-4`, `5-6`, and `7-8`",
+      "name": "four strips",
+      "passed": true
+    },
+    {
+      "detail": "D-REHEARSAL-01 \u2014 DEVELOPMENT; NEVER SCORE",
+      "name": "non-holdout marker",
+      "passed": true
+    },
+    {
+      "detail": "requires a fresh independently seeded D2 panel as well as a fresh sitting",
+      "name": "fresh validation after repair",
+      "passed": true
+    },
+    {
+      "detail": "merely partial result is overall `UNMEASURED`",
+      "name": "partial refusal",
+      "passed": true
+    },
+    {
+      "detail": "A rehearsal pass cannot guarantee that the independent scored session passes",
+      "name": "no transfer guarantee",
+      "passed": true
+    },
+    {
+      "detail": "**Viltrox aberration",
+      "name": "Viltrox aberration",
+      "passed": true
+    },
+    {
+      "detail": "**Viltrox transmission loss",
+      "name": "transmission loss",
+      "passed": true
+    },
+    {
+      "detail": "**focus error**",
+      "name": "focus error",
+      "passed": true
+    },
+    {
+      "detail": "**bare-lens pupil behavior**",
+      "name": "bare-lens pupil",
+      "passed": true
+    },
+    {
+      "detail": "one uninterrupted `1,092`-frame sitting",
+      "name": "one sitting",
+      "passed": true
+    },
+    {
+      "detail": "score does not contain",
+      "name": "score omits controls",
+      "passed": true
+    },
+    {
+      "detail": "They neither enter the M1 reference nor the M1 scored-path witness",
+      "name": "unrelated combined omission",
+      "passed": true
+    },
+    {
+      "detail": "full-dress endurance rehearsal that also repeats those unrelated inputs would be `1,407` frames",
+      "name": "optional full dress",
+      "passed": true
+    },
+    {
+      "detail": "## 8. Paste-ready owner-facing capture text",
+      "name": "owner text",
+      "passed": true
+    },
+    {
+      "detail": "One missing, > invalid, null, weak or failed cell",
+      "name": "final owner stop",
+      "passed": true
+    },
+    {
+      "detail": "No absolute duration is asserted",
+      "name": "no absolute timing",
+      "passed": true
+    },
+    {
+      "detail": "PASS: 11/11 checks",
+      "name": "running verification",
+      "passed": true
+    },
+    {
+      "detail": "capture three > fixed-focus strips",
+      "name": "forbidden stale instruction absent: capture three > fixed-focus strips",
+      "passed": true
+    },
+    {
+      "detail": "TC0-DOM-S01-R01-03",
+      "name": "forbidden stale instruction absent: TC0-DOM-S01-R01-03",
+      "passed": true
+    },
+    {
+      "detail": "Frame total:** `1,147`",
+      "name": "forbidden stale instruction absent: Frame total:** `1,147`",
+      "passed": true
+    },
+    {
+      "detail": "supersession banner and corrected total",
+      "name": "prior report carries supersession banner",
+      "passed": true
+    }
+  ],
+  "passed": 27,
+  "status": "PASS",
+  "total": 27
+}
