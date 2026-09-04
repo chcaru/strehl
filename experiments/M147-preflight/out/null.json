@@ -1,0 +1,451 @@
+{
+  "decision": {
+    "action": "FAIL: the sampling ratio is not safely at or above 2.0. Reduce TC0 magnification by at least about 50.36% (about 51.12% to restore the registered 2.0312 target), or verify that the converter is seated and the reference is at maximum reproduction; then retake both preflight frames.",
+    "axis_anisotropy_fraction": 3.0543119748926983e-06,
+    "axis_sampling_ratios": [
+      1.000293128792125,
+      1.0002961839994067
+    ],
+    "interval": {
+      "bootstrap_percentile_interval": [
+        0.9953834535459285,
+        1.0053176435693096
+      ],
+      "confidence_level": 0.95,
+      "draws": 10000,
+      "green_phase_ratio_envelope": [
+        1.000347533205231,
+        1.000357479535808
+      ],
+      "lower": 0.9928949949120637,
+      "method": "independent spatial-block percentile bootstrap plus phase envelope",
+      "point": 1.0003525063581578,
+      "relative_systematic_allowance": 0.0025,
+      "relative_width": 0.014930679606676194,
+      "seed": 14720260904,
+      "upper": 1.0078309376782328
+    },
+    "reason_code": "LOWER_BOUND_BELOW_2",
+    "relative_rotation_degrees": 0.0,
+    "sampling_ratio": 1.0003525063581578,
+    "threshold": 2.0,
+    "verdict": "FAIL"
+  },
+  "elapsed_seconds": 21.662931700004265,
+  "generated_utc": "2026-09-04T12:02:33.769704+00:00",
+  "inputs": {
+    "reference": {
+      "black_levels_dn": [
+        512.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "color_desc": "RGBG",
+      "decoded_visible_sha256": "b00d340beee6c2c4d16fba1a553e0df46890eab3791a4f6a736d489477dcc398",
+      "high_rail_fraction": 0.0,
+      "low_rail_fraction": 0.0,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00042.ARW",
+      "pixel_aspect": 1.0,
+      "raw_pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "robust_range_fraction": 0.14504442064142145,
+      "sha256": "352a57cfbb5c169580b043903893d563138c7958a6b990b3bf1fcf7638d0a9d8",
+      "size_bytes": 38969344,
+      "visible_shape": [
+        4688,
+        7028
+      ],
+      "white_level_dn": 16383
+    },
+    "scored": {
+      "black_levels_dn": [
+        512.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "color_desc": "RGBG",
+      "decoded_visible_sha256": "b3725e4e9140423a5207aa85a35ac74151de0e4486954ab74f566b6c390532e2",
+      "high_rail_fraction": 0.0,
+      "low_rail_fraction": 0.0,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00043.ARW",
+      "pixel_aspect": 1.0,
+      "raw_pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "robust_range_fraction": 0.14548547665553524,
+      "sha256": "46940299056b91a790b21895ca96d49b6e26c4df3447e7f7d7bebb76c52d9201",
+      "size_bytes": 38952960,
+      "visible_shape": [
+        4688,
+        7028
+      ],
+      "white_level_dn": 16383
+    }
+  },
+  "measurements": {
+    "reference": {
+      "axis_periods_green_px": [
+        63.40324609803992,
+        63.57976225353867
+      ],
+      "axis_periods_sensor_px": [
+        126.80649219607984,
+        127.15952450707734
+      ],
+      "block_periods_green_px": {
+        "1,0": 64.07168043101257,
+        "1,1": 64.07302397808358,
+        "1,2": 64.52113622075288,
+        "2,0": 63.43060095833142,
+        "2,1": 63.46692956080411,
+        "2,2": 63.75961351180609,
+        "2,3": 63.052828101081815,
+        "2,4": 63.08348864097338,
+        "3,0": 63.40461548725381,
+        "3,1": 63.42285780078856,
+        "3,2": 63.841812707711654,
+        "3,3": 63.74565085337403,
+        "3,4": 63.54253391782,
+        "3,5": 63.48610183570245,
+        "3,6": 63.536023543436066,
+        "4,0": 63.985079886291885,
+        "4,2": 64.2473743160953,
+        "4,3": 63.44308565182464,
+        "4,4": 63.4272998146534,
+        "4,5": 63.26723360178112,
+        "4,6": 63.19584155724819
+      },
+      "green_phase_disagreement_fraction": 5.742980319602467e-06,
+      "green_phases": [
+        {
+          "axis_periods_green_px": [
+            63.40311703445735,
+            63.58061292954815
+          ],
+          "axis_periods_sensor_px": [
+            126.8062340689147,
+            127.1612258590963
+          ],
+          "block_periods_green_px": {
+            "1,0": 64.08288487591804,
+            "1,1": 64.07863677429367,
+            "1,2": 64.52039097956839,
+            "2,0": 63.43068314593404,
+            "2,1": 63.46711981421236,
+            "2,2": 63.76028455507911,
+            "2,3": 63.041797379888436,
+            "2,4": 63.09135618763798,
+            "3,0": 63.4044649824374,
+            "3,1": 63.423288478604846,
+            "3,2": 63.84408328528312,
+            "3,3": 63.746142946067124,
+            "3,4": 63.54277465071422,
+            "3,5": 63.48591953624748,
+            "3,6": 63.53556790124253,
+            "4,0": 63.986714629162734,
+            "4,2": 64.24575172775769,
+            "4,3": 63.44335049937425,
+            "4,4": 63.42758085479801,
+            "4,5": 63.2672162285854,
+            "4,6": 63.19604334499686
+          },
+          "candidate_count": 95,
+          "cluster_candidate_count": 46,
+          "cluster_fraction": 0.4842105263157895,
+          "competing_cluster_count": 7,
+          "image_shape_green_px": [
+            2344,
+            3514
+          ],
+          "median_peak_snr_db": 42.40656762287772,
+          "median_reciprocal_angle_degrees": 89.69372208389836,
+          "orientation_degrees_mod_90": 45.14983351831299,
+          "orientation_mad_degrees": 0.05581042520614332,
+          "period_green_px": 63.48591953624748,
+          "period_mad_fraction": 0.004098915345647146,
+          "period_sensor_px": 126.97183907249496,
+          "spatial_block_count": 21
+        },
+        {
+          "axis_periods_green_px": [
+            63.403375161885215,
+            63.5789115889108
+          ],
+          "axis_periods_sensor_px": [
+            126.80675032377043,
+            127.1578231778216
+          ],
+          "block_periods_green_px": {
+            "1,0": 64.06047794512605,
+            "1,1": 64.06741167351132,
+            "1,2": 64.52188147054527,
+            "2,0": 63.43051877083529,
+            "2,1": 63.46673930796618,
+            "2,2": 63.75894247559545,
+            "2,3": 63.063860752372605,
+            "2,4": 63.07562207539865,
+            "3,0": 63.40476599242747,
+            "3,1": 63.42242712589681,
+            "3,2": 63.83954221089195,
+            "3,3": 63.74515876447968,
+            "3,4": 63.542293185837806,
+            "3,5": 63.48628413568089,
+            "3,6": 63.53647918889722,
+            "4,0": 63.98344518518571,
+            "4,2": 64.24899694541294,
+            "4,3": 63.44282080538064,
+            "4,4": 63.42701877575405,
+            "4,5": 63.26725097498162,
+            "4,6": 63.19563977014383
+          },
+          "candidate_count": 95,
+          "cluster_candidate_count": 46,
+          "cluster_fraction": 0.4842105263157895,
+          "competing_cluster_count": 7,
+          "image_shape_green_px": [
+            2344,
+            3514
+          ],
+          "median_peak_snr_db": 42.42920127330335,
+          "median_reciprocal_angle_degrees": 89.69363795732342,
+          "orientation_degrees_mod_90": 45.14983351831299,
+          "orientation_mad_degrees": 0.05597131991107673,
+          "period_green_px": 63.48628413568089,
+          "period_mad_fraction": 0.0040776465708015665,
+          "period_sensor_px": 126.97256827136178,
+          "spatial_block_count": 21
+        }
+      ],
+      "orientation_degrees_mod_90": 45.14983351831299,
+      "period_green_px": 63.48610183570245,
+      "period_sensor_px": 126.9722036714049,
+      "spatial_block_count": 21,
+      "status": "OK"
+    },
+    "scored": {
+      "axis_periods_green_px": [
+        63.38466622738944,
+        63.56093652115379
+      ],
+      "axis_periods_sensor_px": [
+        126.76933245477888,
+        127.12187304230758
+      ],
+      "block_periods_green_px": {
+        "1,0": 64.03523565888477,
+        "1,1": 64.04390688334165,
+        "1,2": 64.50489910345901,
+        "2,0": 63.41130433144745,
+        "2,1": 63.44614414158881,
+        "2,2": 63.737241575655894,
+        "2,3": 63.0733179189805,
+        "2,4": 63.075214875832984,
+        "3,0": 63.384963636243384,
+        "3,1": 63.403771030698394,
+        "3,2": 63.82070136488354,
+        "3,3": 63.724789408913594,
+        "3,4": 63.523838712964256,
+        "3,5": 63.46373046720036,
+        "3,6": 63.511583825976146,
+        "4,0": 63.95675356077767,
+        "4,2": 64.23291503337698,
+        "4,3": 63.42235602812267,
+        "4,4": 63.4065896133061,
+        "4,5": 63.24837672695111,
+        "4,6": 63.17740533806394
+      },
+      "green_phase_disagreement_fraction": 4.199845348035584e-06,
+      "green_phases": [
+        {
+          "axis_periods_green_px": [
+            63.38427471915337,
+            63.561297431868695
+          ],
+          "axis_periods_sensor_px": [
+            126.76854943830674,
+            127.12259486373739
+          ],
+          "block_periods_green_px": {
+            "1,0": 64.02235008613468,
+            "1,1": 64.04397387053217,
+            "1,2": 64.52104321105014,
+            "2,0": 63.411194964491216,
+            "2,1": 63.446110708025785,
+            "2,2": 63.73792968138629,
+            "2,3": 63.06268810371611,
+            "2,4": 63.08113328963193,
+            "3,0": 63.38510687252052,
+            "3,1": 63.40381399801656,
+            "3,2": 63.822805376841885,
+            "3,3": 63.72463667090444,
+            "3,4": 63.5229104399236,
+            "3,5": 63.46386373626687,
+            "3,6": 63.51166379549285,
+            "4,0": 63.95966431481291,
+            "4,2": 64.23098771267843,
+            "4,3": 63.4227230878949,
+            "4,4": 63.40618286906627,
+            "4,5": 63.24774359864759,
+            "4,6": 63.17795724102306
+          },
+          "candidate_count": 95,
+          "cluster_candidate_count": 46,
+          "cluster_fraction": 0.4842105263157895,
+          "competing_cluster_count": 7,
+          "image_shape_green_px": [
+            2344,
+            3514
+          ],
+          "median_peak_snr_db": 42.481550698835534,
+          "median_reciprocal_angle_degrees": 89.69266519188982,
+          "orientation_degrees_mod_90": 45.14983351831299,
+          "orientation_mad_degrees": 0.05604504796571064,
+          "period_green_px": 63.46386373626687,
+          "period_mad_fraction": 0.004108998716517544,
+          "period_sensor_px": 126.92772747253375,
+          "spatial_block_count": 21
+        },
+        {
+          "axis_periods_green_px": [
+            63.38505773804375,
+            63.56057561248819
+          ],
+          "axis_periods_sensor_px": [
+            126.7701154760875,
+            127.12115122497639
+          ],
+          "block_periods_green_px": {
+            "1,0": 64.0481238250727,
+            "1,1": 64.0438398962212,
+            "1,2": 64.48875903535945,
+            "2,0": 63.4114136985923,
+            "2,1": 63.44617757516946,
+            "2,2": 63.73655347735419,
+            "2,3": 63.08394952600125,
+            "2,4": 63.06929701731293,
+            "3,0": 63.38482040028993,
+            "3,1": 63.403728063409346,
+            "3,2": 63.81859742228703,
+            "3,3": 63.72494214728884,
+            "3,4": 63.52476699956995,
+            "3,5": 63.4635971984137,
+            "3,6": 63.51150385656013,
+            "4,0": 63.953842939208556,
+            "4,2": 64.2348424119069,
+            "4,3": 63.4219889704748,
+            "4,4": 63.40699636015516,
+            "4,5": 63.24900986159243,
+            "4,6": 63.17685343992607
+          },
+          "candidate_count": 95,
+          "cluster_candidate_count": 46,
+          "cluster_fraction": 0.4842105263157895,
+          "competing_cluster_count": 7,
+          "image_shape_green_px": [
+            2344,
+            3514
+          ],
+          "median_peak_snr_db": 42.4681107631734,
+          "median_reciprocal_angle_degrees": 89.70044784889834,
+          "orientation_degrees_mod_90": 45.14983351831299,
+          "orientation_mad_degrees": 0.05699731014427556,
+          "period_green_px": 63.4635971984137,
+          "period_mad_fraction": 0.004118029238999295,
+          "period_sensor_px": 126.9271943968274,
+          "spatial_block_count": 21
+        }
+      ],
+      "orientation_degrees_mod_90": 45.14983351831299,
+      "period_green_px": 63.46373046720036,
+      "period_sensor_px": 126.92746093440071,
+      "spatial_block_count": 21,
+      "status": "OK"
+    }
+  },
+  "parameters": {
+    "decision": {
+      "confidence_level": 0.95,
+      "maximum_relative_interval_width": 0.015,
+      "minimum_sampling_ratio": 2.0
+    },
+    "estimator": {
+      "fft_size": 1024,
+      "green_plane_step_native_px": 2,
+      "maximum_axis_period_ratio": 1.5,
+      "maximum_competing_cluster_fraction": 0.65,
+      "maximum_green_disagreement_fraction": 0.003,
+      "maximum_orientation_mad_degrees": 5.0,
+      "maximum_pair_anisotropy_fraction": 0.015,
+      "maximum_period_green_px": 128.0,
+      "maximum_period_mad_fraction": 0.01,
+      "maximum_relative_rotation_degrees": 15.0,
+      "minimum_cluster_candidates_per_green": 12,
+      "minimum_cluster_fraction": 0.25,
+      "minimum_median_peak_snr_db": 20.0,
+      "minimum_peak_snr_db": 12.0,
+      "minimum_period_green_px": 20.0,
+      "minimum_spatial_blocks": 6,
+      "minimum_tile_robust_range_dn": 50.0,
+      "period_cluster_relative_half_width": 0.018,
+      "reciprocal_angle_degrees": [
+        70.0,
+        90.0
+      ],
+      "spatial_block_size_green_px": 512,
+      "tile_size_green_px": 512,
+      "tile_stride_green_px": 256
+    },
+    "operator_target_ratio": 2.0312,
+    "raw": {
+      "extensions": [
+        ".arw"
+      ],
+      "maximum_high_rail_fraction": 0.001,
+      "maximum_low_rail_fraction": 0.005,
+      "minimum_robust_range_fraction": 0.01
+    },
+    "schema": "m147-preflight-parameters-v1",
+    "uncertainty": {
+      "draws": 10000,
+      "lower_quantile": 0.025,
+      "method": "independent spatial-block percentile bootstrap plus phase envelope",
+      "relative_systematic_allowance": 0.0025,
+      "seed": 14720260904,
+      "upper_quantile": 0.975
+    }
+  },
+  "parameters_sha256": "b56bd70421c6d1a7e9613394669d942107fe927acca148d37c785602a8a364b1",
+  "roles": {
+    "reference": "converter-on maximum-reproduction grid frame",
+    "scored": "converter-off TC0 grid frame"
+  },
+  "schema": "m147-preflight-result-v1",
+  "status": "OK",
+  "tool": {
+    "name": "M147 in-field magnification preflight",
+    "numpy": "2.4.4",
+    "python": "3.12.10",
+    "rawpy": "0.27.0",
+    "scipy": "1.17.1",
+    "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M147-preflight\\preflight.py",
+    "source_sha256": "dd38a1fd91325e0cf5347aabf9160003f7384b962267828436c8c372e97db293",
+    "version": "1.0.0"
+  }
+}
