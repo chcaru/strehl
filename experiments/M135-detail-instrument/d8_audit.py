@@ -1,8 +1,8 @@
 """Independent audit of the M115 evidence cited by proposal D8.
 
 This script does not open RAW files. It re-derives the advertised quantities
-from the preserved byte-pinned M115 rerun and checks the historical source
-blobs and the algebra that separates P_sig from normalized SNR/FRC.
+from the preserved byte-pinned M115 rerun, checks the historical source blobs
+and common-filter algebra, and audits SPLIT2's repaired-repeat gates.
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ LANE = Path(__file__).resolve().parent
 ROOT = Path(__file__).resolve().parents[2]
 SPLIT = ROOT / "experiments" / "M-PHASE0-SPLIT"
 RERUN = SPLIT / "out" / "m115-rerun"
+SPLIT2 = ROOT / "experiments" / "M-PHASE0-SPLIT2"
 RESULT = LANE / "d8-audit.json"
 
 
@@ -68,6 +69,17 @@ def main() -> int:
     )
     phase0 = json.loads(
         (SPLIT / "out" / "postupdate-audit.json").read_text(encoding="utf-8")
+    )
+    split2_commission = json.loads(
+        (SPLIT2 / "out" / "commission.json").read_text(encoding="utf-8")
+    )
+    split2_alignment = json.loads(
+        (SPLIT2 / "out" / "alignment-gate.json").read_text(encoding="utf-8")
+    )
+    split2_alignment_verification = json.loads(
+        (SPLIT2 / "out" / "alignment-gate-verification.json").read_text(
+            encoding="utf-8"
+        )
     )
 
     commit = manifest["historical_commit"]
@@ -167,6 +179,38 @@ def main() -> int:
     common_mode_frc = float(
         phase0["transfer_and_meaning"]["common_mode_adversary_low_band_frc"]
     )
+    split2_primary = [
+        {
+            "pass": int(row["pass"]),
+            "residual_rms_native_px": float(
+                row["maximum_nontranslation_residual_rms_native_pixels"]
+            ),
+            "passes": bool(row["passes_translation_only_gate"]),
+        }
+        for row in split2_alignment["runs"]
+    ]
+    split2_independent = [
+        {
+            "pass": int(row["pass"]),
+            "residual_rms_native_px": float(
+                row["maximum_nontranslation_residual_rms_native_pixels"]
+            ),
+            "passes": bool(row["passes"]),
+        }
+        for row in split2_alignment_verification["runs"]
+    ]
+    tuner_clean = split2_commission["readings"]["data_dependent_tuner"]
+    tuner_plant = split2_commission["plant_measurements"]["T1"][
+        "data_dependent_tuner"
+    ]
+    split2_measurement_paths = [
+        SPLIT2 / "out" / "measurement.json",
+        SPLIT2 / "out" / "aligned-measurement.json",
+    ]
+    split2_measurements_present = {
+        path.name: path.exists() for path in split2_measurement_paths
+    }
+    split2_retained_real_measurement = any(split2_measurements_present.values())
 
     checks = {
         "historical_sources_match_manifest": all(blob_checks.values()),
@@ -184,11 +228,11 @@ def main() -> int:
             and round(identity_max, 4) == 1.0
             and direct_identity_scaled_error < 1e-10
         ),
-        "common_filter_scales_psig": all(
+        "constant_cell_gain_scales_psig": all(
             rel_error(row["psig_ratio"], row["power_gain"]) < 1e-12
             for row in scale_results.values()
         ),
-        "common_filter_leaves_snr_and_frc_unchanged": all(
+        "constant_cell_gain_leaves_snr_and_frc_unchanged": all(
             abs(row["snr_ratio"] - 1.0) < 1e-12
             and abs(row["frc_ratio"] - 1.0) < 1e-12
             for row in scale_results.values()
@@ -199,6 +243,17 @@ def main() -> int:
         ),
         "common_mode_adversary_is_strong": common_mode_frc > 0.9,
         "phase0_verdict_is_kill": phase0["verdict"] == "STOP_REMOVE_RUST",
+        "split2_geometry_gate_failed": (
+            [row["passes"] for row in split2_primary] == [True, False]
+            and [row["passes"] for row in split2_independent] == [True, False]
+        ),
+        "split2_tuner_leakage_plant_went_red": (
+            split2_commission["plants"]["T1"] == 1
+            and float(tuner_clean["external_c_output_max_change"]) == 0.0
+            and float(tuner_plant["evaluation_high_band_frc"]) == 1.0
+            and float(tuner_plant["external_c_output_max_change"]) > 25.0
+        ),
+        "split2_retained_no_real_frc": not split2_retained_real_measurement,
     }
 
     output = {
@@ -236,9 +291,11 @@ def main() -> int:
             "base_frc": base_stats[3],
             "common_filter_results": scale_results,
             "interpretation": (
-                "P_sig follows common-filter power and is sharpening-sensitive; "
-                "normalized split SNR and ideal FRC cancel the same filter and "
-                "are therefore also blind to post-render blur."
+                "P_sig follows constant per-cell filter power and is "
+                "sharpening-sensitive; normalized split SNR and ideal per-cell "
+                "FRC cancel that gain and are therefore also blind to "
+                "post-render blur. Finite window/ring estimates need not cancel "
+                "exactly."
             ),
         },
         "failed_transfer_controls": {
@@ -247,16 +304,39 @@ def main() -> int:
             "historical_null_failed_arms": null_failed,
             "common_mode_adversary_low_band_frc": common_mode_frc,
             "phase0_verdict": phase0["verdict"],
+            "repeat_pair_geometry": {
+                "bar_native_px": 0.1,
+                "primary": split2_primary,
+                "independent": split2_independent,
+            },
+            "tuner_leakage_control": {
+                "clean_evaluation_high_band_frc": float(
+                    tuner_clean["evaluation_high_band_frc"]
+                ),
+                "clean_external_c_output_max_change": float(
+                    tuner_clean["external_c_output_max_change"]
+                ),
+                "planted_evaluation_high_band_frc": float(
+                    tuner_plant["evaluation_high_band_frc"]
+                ),
+                "planted_external_c_output_max_change": float(
+                    tuner_plant["external_c_output_max_change"]
+                ),
+                "plant_exit": int(split2_commission["plants"]["T1"]),
+            },
+            "repeat_pair_measurement_paths_present": split2_measurements_present,
+            "repeat_pair_real_measurement_retained": split2_retained_real_measurement,
         },
         "ruling": {
             "P_sig": "REJECT_AS_M1: blur-responsive but common-gain/sharpening-sensitive",
             "R_SNR": (
-                "AUXILIARY_ONLY: useful noise-efficiency coordinate, but blind "
-                "to common post-render blur and not commissioned for self-tuning"
+                "AUXILIARY_ONLY: ideal per-cell form is blind to common "
+                "post-render blur; finite-bin residual has no protected blur "
+                "direction; any tuner requires held-out evaluation"
             ),
             "FRC": (
-                "REJECT_AS_ABSOLUTE_ACUITY: ideal common-filter invariance is "
-                "the same property as post-render-blur blindness"
+                "REJECT_AS_ABSOLUTE_ACUITY: ideal per-cell common-filter "
+                "invariance is the same property as post-render-blur blindness"
             ),
             "half_difference": (
                 "DIAGNOSTIC_ONLY: omits common-mode structure and can be driven "

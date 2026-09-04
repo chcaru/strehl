@@ -1,9 +1,9 @@
 {
   "status": "PASS",
-  "citation_count": 76,
-  "citation_range_count": 90,
-  "verified_tags": 70,
+  "citation_count": 87,
+  "citation_range_count": 104,
+  "verified_tags": 76,
   "assumed_tags": 33,
-  "d8_checks": 11,
+  "d8_checks": 14,
   "findings": []
 }

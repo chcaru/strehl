@@ -62,7 +62,7 @@
         "frc_ratio": 1.0
       }
     },
-    "interpretation": "P_sig follows common-filter power and is sharpening-sensitive; normalized split SNR and ideal FRC cancel the same filter and are therefore also blind to post-render blur."
+    "interpretation": "P_sig follows constant per-cell filter power and is sharpening-sensitive; normalized split SNR and ideal per-cell FRC cancel that gain and are therefore also blind to post-render blur. Finite window/ring estimates need not cancel exactly."
   },
   "failed_transfer_controls": {
     "historical_null_bar": 0.25,
@@ -81,12 +81,51 @@
       "WIENER_UNG"
     ],
     "common_mode_adversary_low_band_frc": 0.972099,
-    "phase0_verdict": "STOP_REMOVE_RUST"
+    "phase0_verdict": "STOP_REMOVE_RUST",
+    "repeat_pair_geometry": {
+      "bar_native_px": 0.1,
+      "primary": [
+        {
+          "pass": 1,
+          "residual_rms_native_px": 0.06403124237432854,
+          "passes": true
+        },
+        {
+          "pass": 2,
+          "residual_rms_native_px": 0.10770329614268992,
+          "passes": false
+        }
+      ],
+      "independent": [
+        {
+          "pass": 1,
+          "residual_rms_native_px": 0.0700051139470696,
+          "passes": true
+        },
+        {
+          "pass": 2,
+          "residual_rms_native_px": 0.10520207181819466,
+          "passes": false
+        }
+      ]
+    },
+    "tuner_leakage_control": {
+      "clean_evaluation_high_band_frc": 0.003491627702354946,
+      "clean_external_c_output_max_change": 0.0,
+      "planted_evaluation_high_band_frc": 1.0,
+      "planted_external_c_output_max_change": 25.002575361893474,
+      "plant_exit": 1
+    },
+    "repeat_pair_measurement_paths_present": {
+      "measurement.json": false,
+      "aligned-measurement.json": false
+    },
+    "repeat_pair_real_measurement_retained": false
   },
   "ruling": {
     "P_sig": "REJECT_AS_M1: blur-responsive but common-gain/sharpening-sensitive",
-    "R_SNR": "AUXILIARY_ONLY: useful noise-efficiency coordinate, but blind to common post-render blur and not commissioned for self-tuning",
-    "FRC": "REJECT_AS_ABSOLUTE_ACUITY: ideal common-filter invariance is the same property as post-render-blur blindness",
+    "R_SNR": "AUXILIARY_ONLY: ideal per-cell form is blind to common post-render blur; finite-bin residual has no protected blur direction; any tuner requires held-out evaluation",
+    "FRC": "REJECT_AS_ABSOLUTE_ACUITY: ideal per-cell common-filter invariance is the same property as post-render-blur blindness",
     "half_difference": "DIAGNOSTIC_ONLY: omits common-mode structure and can be driven to zero by averaging the two halves",
     "D8_as_M1": "NO_GO",
     "replacement": "J_TR information plus veto-only T_TR and U_TR"
@@ -98,10 +137,13 @@
     "filter_move_reproduces_0_54_percent": true,
     "naive_gain_reproduces_8_25x": true,
     "identity_reproduces": true,
-    "common_filter_scales_psig": true,
-    "common_filter_leaves_snr_and_frc_unchanged": true,
+    "constant_cell_gain_scales_psig": true,
+    "constant_cell_gain_leaves_snr_and_frc_unchanged": true,
     "historical_null_failed": true,
     "common_mode_adversary_is_strong": true,
-    "phase0_verdict_is_kill": true
+    "phase0_verdict_is_kill": true,
+    "split2_geometry_gate_failed": true,
+    "split2_tuner_leakage_plant_went_red": true,
+    "split2_retained_no_real_frc": true
   }
 }

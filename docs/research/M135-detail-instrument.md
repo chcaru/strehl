@@ -12,16 +12,18 @@ absolute-acuity claim, and outcome 3 describes only a narrower auxiliary use:
 | D8 quantity | Ruling | Structural reason |
 |---|---|---|
 | absolute split cross-power `P_sig` | **Reject as M1** | It responds to blur, but a common output gain `K_k` also multiplies it by `|K_k|^2`; USM can buy the same increase. |
-| normalized split `R_SNR` | **Retain only as an auxiliary noise-efficiency coordinate** | Common gain cancels from signal and half-difference noise. That blocks noise-only sharpening, but makes common post-render blur equally invisible. |
-| split-half FRC crossing/map | **Reject as absolute or “certified” acuity** | The same common-filter cancellation applies to normalized coherence; shared structure can also hold the curve high on a flat. |
+| normalized split `R_SNR` | **Retain only as an auxiliary noise-efficiency coordinate** | At each ideal Fourier cell, common gain cancels from signal and half-difference noise. That blocks noise-only sharpening, but makes common post-render blur equally invisible. |
+| split-half FRC crossing/map | **Reject as absolute or “certified” acuity** | The same ideal per-cell cancellation applies to normalized coherence; finite windows add unsigned, implementation-dependent leakage with no distribution-free bound, and shared structure can hold the curve high on a flat. |
 | half-difference image | **Retain only as a diagnostic** | It omits common-mode artifacts and can be forced to zero by delivering the average of the two halves. |
 
 The apparent conflict is therefore a conflation of estimands, not a
 reproducibility dispute. M115's blur result belongs to **absolute `P_sig`**;
 its sharpening result belongs to **normalized `R_SNR`**. No M115 scalar owns
-both properties. D8's self-tuning objective was also never challenged with a
-data-dependent tuning plant, so it is not commissioned even for that narrower
-role (`docs/research/M-PHASE0-SPLIT.md:85-101`).
+both properties. M115's cited evidence also lacked a data-dependent tuner
+plant. SPLIT2 later added one: illegal evaluation-pair leakage drove high-band
+FRC to exactly `1.0` and moved an externally protected output by `25.002575`,
+so the plant went RED. That commissions a **held-out-tuning guard**, not D8's
+self-tuning claim (`docs/research/M-PHASE0-SPLIT2.md:91-116`).
 
 **VERIFIED.** The four D8 headline quantities reproduce from the preserved
 byte-pinned rerun of historical M115 commit `77c8d5e9`: eight blur recoveries
@@ -30,7 +32,7 @@ span `0.9938215871-0.9973982082`; the largest normalized-SNR movement is
 power-consistency ratios span `0.999999999987-1.000000000000`
 (`experiments/M135-detail-instrument/d8-audit.json:3-39`). The source hashes,
 plant locations, and algebra also pass an independent M135 audit
-(`experiments/M135-detail-instrument/d8-audit.json:40-97`).
+(`experiments/M135-detail-instrument/d8-audit.json:40-132`).
 
 Those accurate numbers do **not** prove D8's conclusion:
 
@@ -63,7 +65,17 @@ confirms that no axis tests the C6 calibration product
 supplies independent temporal noise but does not by itself erase same-sensor
 DSNU/PRNU. Repeat-pair FRC still requires independent A/B calibration and a
 held-out corrected-flat/dark residual gate
-(`docs/research/M-FRC-VIABILITY.md:470-524`).
+(`docs/research/M-FRC-VIABILITY.md:470-524`). SPLIT2 states the point even more
+directly: `"repeated exposures share stable sensor structure"`
+(`docs/research/M-PHASE0-SPLIT2.md:137-151`).
+
+**VERIFIED.** SPLIT2 also tested the available repeat-capture substrate and
+stopped before reading FRC. The bright pass cleared the `0.10 native px`
+non-translation gate at `0.064031`, but the second-light pass failed at
+`0.107703`; an independent spatial estimator reproduced the decisions at
+`0.070005` and `0.105202`. No real FRC or `P_sig/P_noise` result was retained
+(`docs/research/M-PHASE0-SPLIT2.md:1-12,55-90,117-151`;
+`experiments/M135-detail-instrument/d8-audit.json:88-132`).
 
 **VERIFIED.** D8 had already been run through its registered phase-0 gate and
 killed; it was not an unintegrated solved answer. The proposal prose still
@@ -73,7 +85,36 @@ present state is therefore exactly as severe as the original brief says: M1
 has `"NO ADMISSIBLE BAR — WITHDRAWN"`
 (`docs/proposals/2026-09-sota-scorecard.md:392,489-535`).
 
-## 0.1 Recommended replacement
+## 0.1 Does an independent repeated bracket rescue D8?
+
+**VERIFIED — no, not as M1.** It repairs one substrate defect and leaves the
+estimator defects intact:
+
+| Recorded failure | Effect of two independently captured brackets |
+|---|---|
+| 1. Common-filter cancellation | **No repair.** At an ideal Fourier cell, applying the same nonzero USM or blur to both completed renders cancels exactly from normalized SNR/FRC. Finite Hann/ring aggregation leaves implementation-dependent residuals with neither a guaranteed sign nor a distribution-free magnitude bound. |
+| 2. Failed flat null | **Partial substrate repair only.** Odd/even exposures already had independent temporal noise. A repeated full bracket repairs z-sampling/partitioning, but stable same-sensor DSNU/PRNU, dust, and shared calibration error remain common unless disjoint calibration and a held-out flat/dark ring null prove otherwise. |
+| 3. False/end-point FRC crossing | **No estimand repair.** Explicit censoring prevents reporting the last ring as a number, but cannot turn normalized agreement into delivered resolution. |
+| 4. `(A+B)/2` averaging adversary | **No repair.** The attack is defined on the two rendered outputs and remains available with independent captures. |
+| 5. Selection versus registration | **Harder, not solved.** Two brackets require inter-bracket registration; the available repeat pair failed its second registered geometry gate. |
+| 6. Sensitivity loss as shared fraction `rho` rises | **No inherent repair.** Temporal noise was already independent across odd/even exposures; averaging a full repeat can reduce its variance and make stable common pattern a larger fraction. Ideal per-cell common-filter cancellation remains exact. |
+
+**VERIFIED.** M115's source already defines the odd/even halves as independent
+noise observations
+(`experiments/M115-deconv-headroom/src/m115lib.py:405-453`). The repeat-pair
+fixed-pattern model predicts correlation rising, not falling, as temporal
+noise is averaged down
+(`docs/research/M-FRC-VIABILITY.md:470-506`).
+
+**VERIFIED.** The statement in the updated brief that two brackets of the same
+scene `"do not share"` fixed pattern is therefore too strong. SPLIT2's source
+conclusion is the opposite: even after a new stabilization-off capture,
+`"repeated exposures share stable sensor structure"`
+(`docs/research/M-PHASE0-SPLIT2.md:137-151`). The scorecard capture supplies
+necessary material for a better-controlled candidate, not a working or
+admitted M1 instrument.
+
+## 0.2 Recommended replacement
 
 **VERIFIED.** I recommend a **non-compensating truth-referenced certificate**
 with three outputs:
@@ -297,12 +338,12 @@ real, but they belong to different statistics:
 `M-PHASE0-SPLIT`'s exact historical rerun rather than trusting either prose
 summary. The source blobs match the pinned manifest; all four headline
 quantities reproduce
-(`experiments/M135-detail-instrument/d8-audit.json:3-39,88-107`).
+(`experiments/M135-detail-instrument/d8-audit.json:3-39,132-145`).
 
 **VERIFIED.** The same rerun resolves the apparent contradiction:
 
 ```text
-common output filter K:
+common output filter K at Fourier cell k:
 P_sig'   = |K|^2 P_sig
 P_noise' = |K|^2 P_noise
 SNR'     = SNR
@@ -315,6 +356,13 @@ post-render blur. The M135 structural probe gives `P_sig` ratios `0.25` and
 `4.0` under gains `0.5` and `2.0`, while both normalized ratios remain exactly
 `1.0` (`experiments/M135-detail-instrument/d8-audit.json:48-70`). The two
 desired properties never coexist in one M115 estimand.
+
+**VERIFIED.** M115's finite Hann/ring implementation is only approximately
+invariant to a frequency-varying filter because the filter reweights modes
+inside a bin and window leakage mixes them. Its measured `0.537785%` residual
+therefore does not contradict the per-cell identity, but neither its sign nor
+its size is a structural blur response
+(`docs/research/M-FRC-VIABILITY.md:340-367`).
 
 **VERIFIED.** M115 itself exposes the operational consequence:
 
@@ -336,15 +384,27 @@ brief's averaging defeat.
 
 (`docs/research/M115-deconv-headroom.md:109-119`)
 
-The registered D8 phase-0 lane then planted that failure directly: independent
-noise plus a shared pattern read low-band FRC `0.972099`; the exact historical
-null failed on `MEAN` and `WIENER_UNG`; and the lane returned:
+The published null values in the brief, `MEAN=0.2984` and
+`WIENER_UNG=0.4034`, are the **band means**. The registered rule was maximum
+mid-band SNR `<0.25`; the exact rerun's maxima are still worse:
+`0.438734` and `3.331288`
+(`docs/research/M115-deconv-headroom.md:109-126`;
+`experiments/M135-detail-instrument/d8-audit.json:72-87`). The registered D8
+phase-0 lane also planted the shared-pattern failure directly: independent
+noise plus a shared pattern read low-band FRC `0.972099`; the lane returned:
 
 > “the exact historical M115 numbers reproduce, but their controls do not
 > transfer to the common-mode and data-dependent-tuning failures on which D8
 > depends.”
 
 (`docs/research/M-PHASE0-SPLIT.md:3-10,85-101,176-181,269-274`)
+
+**VERIFIED.** Changing the FRC readout does not repair it. M41 found the
+published `0.4961` crossing was the last-ring fallback, used by `9/12`
+run-of-record values; a `4x4x2` sweep repaired `0/32` settings; a flat reached
+the same endpoint; and planted-blur sensitivity fell approximately as
+`1-rho` with shared-noise fraction
+(`docs/research/M41-r3-kill-measured.md:788-817,994-997`).
 
 **VERIFIED.** D8's remaining confounds are not minor:
 
@@ -366,8 +426,10 @@ null failed on `MEAN` and `WIENER_UNG`; and the lane returned:
 **VERIFIED.** D8's three faces consequently separate as follows:
 
 1. **Per-stack self-tuning:** no-go as commissioned product logic. Normalized
-   SNR can remain a diagnostic coordinate, but not the sole objective; no
-   data-dependent tuner plant transferred the result.
+   SNR can remain a diagnostic coordinate, but not the sole objective. SPLIT2
+   commissioned the necessary held-out lineage guard by showing that an
+   evaluation-leaking tuner can force FRC to `1.0`; it did not retain a real
+   tuning result or validate D8's objective.
 2. **Empirical acuity map:** refuted. Agreement to `0.35 cyc/px` certifies
    agreement, not delivered resolution.
 3. **Shipped null:** useful as a view of differential noise, but incapable of
@@ -405,6 +467,17 @@ still need a separate delivered-transfer veto and independent calibration.
 The current repeat-pair report explicitly retains shared fixed pattern as a
 structural confound
 (`docs/research/M-FRC-VIABILITY.md:6-13,470-524`).
+
+**VERIFIED.** SPLIT2 is the direct test of the proposed repaired substrate. It
+commissioned the arithmetic and 17/17 plants, including held-out tuner leakage,
+but its second repeat failed the registered geometry gate and therefore
+retained no real FRC. More fundamentally, its conclusion says that even a new
+capture with stabilization off would leave stable sensor structure shared
+between repeats
+(`docs/research/M-PHASE0-SPLIT2.md:91-151`). A second bracket repairs
+full-ladder latent matching and odd/even partitioning, but not common
+postfilter blindness, averaging, sensor-fixed structure, or inter-bracket
+registration.
 
 **VERIFIED.** The BUILD-SHARP claim that its edge statistic was `18,644x` more
 responsive than ring FRC is directionally useful but dimensionally invalid as
@@ -849,12 +922,12 @@ threshold was relaxed
 **VERIFIED.** Full numerical output is in
 `experiments/M135-detail-instrument/commission.json:1-399`; the concise
 commissioning account is
-`experiments/M135-detail-instrument/RESULTS.md:1-114`.
+`experiments/M135-detail-instrument/RESULTS.md:1-122`.
 
 **VERIFIED.** A read-only independent verifier reran the battery and citation
 audit, reproduced the postfilter identity, checked all 22 gates and freeze
 commits, and reported no defect
-(`experiments/M135-detail-instrument/VERIFICATION.md:1-36`).
+(`experiments/M135-detail-instrument/VERIFICATION.md:1-40`).
 
 **VERIFIED.** The battery includes both directions required by the brief.
 Defect-only commissioning would have missed the averaging trap: its
@@ -919,8 +992,9 @@ after provenance is removed.
   can drive the held-out flat/dark ring residual below a frozen bar on the
   requested capture.
 - **ASSUMED.** Whether normalized split SNR adds useful tuning power once the
-  required independent transfer veto is imposed; no data-dependent tuner
-  plant has commissioned that use.
+  required independent transfer veto is imposed. SPLIT2 commissioned the
+  held-out leakage guard, but geometry stopped the real measurement before
+  any lawful tuning result existed.
 - **ASSUMED.** M115 P18/P19 were source- and report-verified here, but their
   original machine-readable `s09_quanterror.json` was not present, so the
   `16x` quantisation under-report was not independently re-run in M135.
@@ -932,8 +1006,9 @@ after provenance is removed.
 **VERIFIED.** D8's normalized FRC/`R_SNR` claim is the family the
 common-filter blindness result kills as a stand-alone absolute-detail
 instrument. Its numbers reproduce; its inference does not. `P_sig` sees blur
-and sharpening alike, while `R_SNR`/FRC see neither common post-render
-intervention. Same-capture common mode and the averaging adversary
+and sharpening alike; ideal per-cell `R_SNR`/FRC sees neither common
+post-render intervention, while finite windowed estimates retain uncontrolled,
+unsigned implementation residuals. Same-capture common mode and the averaging adversary
 independently rule out the claimed acuity certificate.
 
 **VERIFIED.** The best available route is `J_TR` plus veto-only `T_TR` and

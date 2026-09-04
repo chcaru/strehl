@@ -87,6 +87,9 @@ def main() -> None:
             "do not transfer to the common-mode and data-dependent-tuning "
             "failures on which D8 depends.",
         ],
+        "docs/research/M-PHASE0-SPLIT2.md": [
+            "Even then, repeated exposures share stable sensor structure",
+        ],
         "docs/proposals/2026-08-sota-path.md": [
             "Per-tile FRC between the two half-renders is a spatially-resolved, "
             "model-free certified-resolution map",

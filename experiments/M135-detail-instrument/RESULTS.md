@@ -6,7 +6,7 @@ Status: **PASS at estimator level; physical capture path not commissioned**
 
 `python experiments/M135-detail-instrument/d8_audit.py` independently read the
 preserved byte-pinned M115 rerun and historical source at commit
-`77c8d5e9ac6ed342cdc841e541c98f87e5c743f8`. All source blob hashes and eleven
+`77c8d5e9ac6ed342cdc841e541c98f87e5c743f8`. All source blob hashes and fourteen
 audit checks passed. This is a post-brief source adjudication, not a change to
 the frozen M135 candidate or its admission bars.
 
@@ -20,12 +20,22 @@ the frozen M135 candidate or its admission bars.
 - The historical null still fails on `MEAN=0.438734` and
   `WIENER_UNG=3.331288` against `0.25`.
 - The direct common-mode adversary reads FRC `0.972099`.
+- SPLIT2's available repeat pair failed its second geometry gate at
+  `0.107703 native px` against `0.10`; the independent estimator reproduced
+  the fail at `0.105202`, so no real repeat-pair FRC was retained.
+- SPLIT2's evaluation-leakage plant drove high-band FRC to `1.0` and moved an
+  externally protected output by `25.002575`; its held-out tuner guard
+  correctly went RED.
 
-The values are valid; D8's inference is not. A common filter multiplies
-`P_sig` by its power, so `P_sig` is sharpening-sensitive. The same factor
-cancels from normalized split SNR and ideal FRC, so they are also blind to
-post-render blur. D8 is rejected as M1 and retained only as an auxiliary
-diagnostic family. Machine-readable details are in `d8-audit.json`.
+The values are valid; D8's inference is not. At an ideal Fourier cell, a
+common filter multiplies `P_sig` by its power, so `P_sig` is
+sharpening-sensitive, while the same factor cancels from normalized split SNR
+and FRC, making them blind to post-render blur. Finite Hann/ring aggregation
+has implementation-dependent residuals with no structural sign or magnitude
+bound, not a blur response. Repeated brackets remove neither that structural
+limit nor stable same-sensor pattern without independent calibration. D8 is
+rejected as M1 and retained only as an auxiliary diagnostic family.
+Machine-readable details are in `d8-audit.json`.
 
 ## Freeze history
 
