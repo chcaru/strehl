@@ -1,0 +1,32 @@
+                         ColorGauge Targets
+                         - Unique and custom color targets -
+
+
+ ISA’s ColorGauge targets are miniaturized professional grade color targets for
+ assessing color, tone, and full scale white balance for cameras and scanners in
+ close-up or macro photography applications. Our ColorGauge targets
+
+   • Have the identical pigmented color paints as the GretagMacbeth™
+     ColorChecker®.
+   • Include 12 spectrally neutral gray patches (matte or gloss*) to assess correct
+     exposure and full-scale white balance.
+   • Are mounted on aircraft grade anodized aluminum and set below the top surface
+     to help protect from damage.
+   • Include the RezChecker that provides additional features for measuring image
+     capture resolution according to ISO 12233.
+   • Offer options for
+         o Custom sizes and/or colors
+         o NIST certified colorimetry
+         o Ruggedized with cover glass to be waterproof with standard AR coating
+             or Tru Vue Conservation Grade UV protection glass
+Made with              www.imagescienceassociates.com
+                               315-573-4782
+                             - Truth in Imaging -
+* Gloss gray patches have an extended dynamic range (density ~ 2.4) and are suitable for measuring camera imager
+noise. Specular reflections from the gloss surface may occur for illumination geometries less than 45°/0° when used without
+crossed polarizers.
+* Matte gray patches have a lower dynamic range (density ~ 1.6) but are more suited to narrow illumination geometries
+such as those used in endoscopic imaging or with direct on-camera flash units. Because the matte surface can be
+interpreted as imager noise, we do not recommend using matte gray patch targets for evaluating imager noise in high
+magnification applications.
+

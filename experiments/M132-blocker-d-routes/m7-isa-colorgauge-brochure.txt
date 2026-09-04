@@ -1,0 +1,305 @@
+   Image Science Associates introduces a new system to analyze
+   images captured with our 30 patch Micro and Nano targets.
+
+   Designed for customers who require consistent image quality, the
+   ColorGauge Micro Analyzer     implements world-class image
+   processing algorithms to provide simple, accurate feedback on the
+   performance of your system.
+
+
+
+
+                                  with the Micro and
+Why use ColorGauge Micro Analyzer
+Nano Targets ?
+
+The colors embedded in our Micro and Nano targets are designed with known
+CIELab values (L*a*b*). To ensure that the captured RGB colors have been
+encoded accurately for a given color space, they need to be converted to CIELab
+to allow direct comparison with the originals. The ColorGauge Micro
+Analyzer  performs this transformation and calculates a color difference metric.
+
+Adobe RGB, for instance, is defined for RGB images that have been captured
+with D65 lighting and have a tonescale gamma of 2.2. But how much deviation
+from aim values can be tolerated before images are deemed unacceptable?
+Furthermore, how much can non-neutral patches vary from their aim and still be
+used?
+
+The ColorGauge Micro Analyzer™ answers these questions by providing a
+simple metric, Maximum Delta E, which can be used by system engineering,
+quality control, and purchasing teams to ensure that customer expectations are
+clearly understood and consistently verified.
+
+
+
+
+                       www.ImageScienceAssociates.com            1-888-801-6626
+                                 Target Details
+
+
+The Micro-Check Color Palette Kit includes two 30-patch color targets (the
+“Micro” and “Nano” targets) and ColorGauge Micro Analyzer™ software. The
+targets are intended for extremely small field-of-view applications where color
+accuracy is required.
+
+Munsell sheets are specified using the same 24 colors as those used in the X-Rite
+ColorChecker® Classic target with six additional neutral patches to expand the
+dynamic range of the target. Data extracted from the targets includes:
+
+   •   Opto-Electronic Conversion Function (OECF)
+   •   CIELab transformations to L*a*b*
+   •   Delta E 1976, 1994 and 2000
+   •   Raw digital values (RGB)
+   •   Noise measurements are made for all neutral patches
+   •   Grayscale neutral balance
+
+Target sizes are:
+Nano: 1 5/8" x 1 3/8"
+Micro: 9/16" x 13/16"
+
+
+
+
+                        www.ImageScienceAssociates.com           1-888-801-6626
+                              Color Analysis Details
+
+ColorGauge Micro Analyzer     employs the “Delta E” method recommended by
+the International Commission on Illumination (CIE) to evaluate the visual color
+difference between two color samples.
+
+The key step in this process is the conversion of camera RGB to CIELab, which
+requires the color model to be specified for your specific capture system.
+Knowing the actual CIELab values of the Micro and Nano ColorGauge targets, we
+are able to calculate the difference between them with the Delta E calculation.
+
+An example is shown below using the formula developed in 1976. Subsequent
+(and more complicated) versions in 1994 and 2000 are also selectable in the
+software. As the formula shows, if calculated CIELab values from the camera
+RGB values match the actual CIELab values of the target exactly, the calculated
+Delta E is zero. Larger differences in L*a*b* result in increasingly higher Delta E
+values.
+
+
+
+
+      Master Image
+
+
+
+
+                           L1*= 39.12, a1*= 13.24, b1*= 15.07
+
+       Test Image
+                                                                Delta E = 8.73
+
+
+
+                         L0*= 46.21, a0*= 10.11, b0*= 19.09
+
+
+
+
+By specifying the maximum-allowable Delta E for any patch, a means is available
+to constrain variation for these four standard color spaces: sRGB, Adobe RGB,
+ProPhoto and ECI. This ensures that image specifications are communicated
+without ambiguity and can be verified by the end user of the image.
+
+
+
+                       www.ImageScienceAssociates.com              1-888-801-6626
+           Workflow using ColorGauge Micro Analyzer™
+
+
+
+
+Target Actual CIELab: These values can be measured with a
+spectrophotometer. Nominal values for the Micro and Nano targets have been
+included with the ColorGauge Micro Analyzer program.
+
+Matrix Transform RGB to CIELab: Depending on the user’s choice of color
+space (sRGB, Adobe RGB, ProPhoto or ECI), ColorGauge calculates L* a* b*
+values for each of the 30 color patches.
+
+Calculate Delta E: ColorGauge uses the Target Actual L*a*b* and the
+transformed image L*a*b* values to calculate the Delta E for the version
+specified by the user (1976, 1994 or 2000). Delta E ranges from 0 to 100.
+Theoretically, a change of one Delta E correlates to one “just noticeable
+difference (JND)” in color difference.
+
+Post-Process Images: The captured image can be adjusted using a photo
+editor such as Adobe Photoshop® then re-read by ColorGauge to determine the
+color accuracy. By applying these adjustments to images captured under the
+same conditions, images can be processed to yield acceptable images.
+
+Modify System Hardware & Lighting: Camera settings such as the shutter
+speed, aperture and many other parameters can be adjusted to reduce the Delta
+E to an acceptable level. The light source, position and intensity can also be
+adjusted to improve the image.
+
+
+
+
+                      www.ImageScienceAssociates.com           1-888-801-6626
+                          Tonescale Analysis Details
+
+
+Measurement of the neutral patches in the Micro and Nano targets is given
+special attention due to the need for the system to accurately record these
+colors. The ColorGauge Micro Analyzer™ plots the digital code values of
+these patches against its neutral density value, often referred to as the OECF*
+curve.
+
+
+
+
+An aim curve for these patches is specified by the color space using a gamma,
+gain and offset. Parameters are displayed on the user interface along with a
+reference line on the tonescale plot to indicate relative performance of the test
+image.
+
+
+
+
+   OECF = Opto-Electronic Conversion Function
+
+
+
+                       www.ImageScienceAssociates.com              1-888-801-6626
+                          Noise & Neutrality Details
+
+Noise is simply calculated as the standard deviation of the digital code values for
+each of the neutral patches. It is calculated for all three color channels, resulting
+in a total of thirty-six noise measurements (12 red, 12 green, 12 blue).
+
+
+
+
+The difference in average digital code value for any particular neutral patch is
+calculated as the “neutrality” or “white balance” of the patch. Neutrality is
+measured against the green channel, i.e. (Avg. Green – Avg. Red) and (Avg.
+Green – Avg. Blue). For instance, if a patch measures: R=128, G=128,B=128
+then the neutrality would be zero.
+
+
+
+
+                       www.ImageScienceAssociates.com               1-888-801-6626
+                    Easy-to-Use Graphical Interface
+
+ColorGauge Micro Analyzer™ employs familiar programming controls to guide
+users through the analysis process.
+
+
+
+
+   1. Instruction box provides step-by-step guidance.
+   2. Color space selections for CIELab conversion.
+   3. Tonescale Aim Curve parameters are defined by color space but can be
+      adjusted for debugging purposes.
+   4. Analysis controls walk the user through the process.
+   5. Program controls allow data to be written to file, access to help files
+      and program termination.
+   6. Image controls allow the user to zoom in and out, draw regions-of-
+      interest and select sub-regions to adjust, if necessary.
+   7. Interactive image display
+   8. Results categories are displayed graphically in individual tabs.
+   9. Image information including size, magnification, bit depth, RGB code
+      value and position.
+   10. Image Name
+
+
+
+
+                     www.ImageScienceAssociates.com           1-888-801-6626
+                                  Results Output
+
+Each image has individual test results saved as a tab-delimited text file. The text
+file contains quite a bit more information than is displayed in the user interface.
+Included in the text file are:
+
+Test Parameters:
+    Analyzed image Name
+    Date and time the image was analyzed
+    Color space definition used to convert RGB digital values to CIELab, i.e.
+      sRGB, Adobe RGB, ProPhoto or ECI
+    Formula version used to calculate Delta E (1976, 1994 or 2000)
+
+Tonescale Results for twelve (12) neutral patches:
+   Average red, green and blue (RGB) digital values
+   Standard deviation of red, green and blue (RGB) digital values
+   Neutrality (average green – blue, average green – red) of digital values
+
+Color Results for all twenty-four (30) patches:
+    Average red, green and blue (RGB) digital values
+    L* a* b* values based on the specified color space
+    Delta E and Delta Eab (a*, b* only)
+
+
+Minimum System Recommendations:
+Microsoft Windows® 2000 or above
+1 GHz processor speed or higher
+500 Mb RAM or greater
+
+For Macintosh OS, the ColorGauge Micro Analyzer™ can be run using Windows
+simulator programs such as Parallels Desktop®
+
+
+
+
+                       www.ImageScienceAssociates.com             1-888-801-6626
+             Visit our website at
+ www.ImageScienceAssociates.com to
+sign up for an informational Webex seminar.
+
+   Or call us tool free at 1-888-801-6626
+
+
+
+
+        www.ImageScienceAssociates.com        1-888-801-6626
+              Other Products from Image Science Associates
+
+      ColorGauge CLS and ColorGauge SG Analyzers
+
+
+The ColorGauge Classic Analyzer™ works on images
+captured with the 24-patch X-Rite Digital
+ColorChecker® Classic target. Analyses include:
+
+•     Delta E 1976, 1994 and 2000
+•     sRGB, Adobe RGB, ProPhoto and ECI color spaces
+•     Tonescale, noise and neutrality
+
+
+
+
+      GoldenThread™ Analysis System
+
+The GoldenThread™ System includes two “Gold Standard”
+quality targets that incorporate all the necessary features to
+specify and assess the quality of your imaging system,
+including:
+
+•      Spatial Frequency Response and color plane registration
+•      Opto-Electronic Conversion Function (OECF), color
+       neutrality, and noise
+•      Color encoding accuracy
+•      All data is saved to individual reports in Microsoft Excel
+       and to appended reports in a Microsoft Access database
+
+
+
+      X-Large and X-small Object Targets
+
+
+
+    Object level targets are also available in 4.6” and
+    18.5” versions for extra-small and extra-large fields
+    of view. These targets are identical to the
+    standard object target except for their size.
+
+
+
+
+                              www.ImageScienceAssociates.com        1-888-801-6626
+

@@ -391,3 +391,261 @@ This is a contract-text classification, not legal advice.
 The retained raw pages, hashes, price context, derived text, and local read-only
 artifacts are indexed in
 [`snapshot-manifest.json`](../../experiments/M132-blocker-d-routes/snapshot-manifest.json).
+
+## 6. What M7 actually costs
+
+Follow-up research date: **2026-09-04**. Prices are the displayed US prices in
+**USD** on that date. Tax and shipping are excluded unless stated. This section
+adds `[DERIVED]` for arithmetic from cited dimensions and `[PROPOSED]` for a
+decision rule that is not yet in the scorecard.
+
+### Verdict summary
+
+| Question | Verdict |
+| --- | --- |
+| **What target does M7 require?** | `[VERIFIED]` At least **24 surviving patches**, including every neutral and at least 12 chromatic patches, with published traceable values. `[DERIVED]` Those values must apply to the particular chart. `[UNKNOWN]` The scorecard specifies no reference-value uncertainty budget or conformity rule. |
+| **Cheapest plausible target?** | **$660 Image Science Associates ColorGauge Nano, matte, with the listed NIST-traceable calibration certificate.** It has 30 patches and fits at 1.30x. It is only a candidate until ISA supplies a sample certificate with numerical uncertainty and the scorecard explicitly accepts this non-Calibrite target. |
+| **Can M7 be shot at 1.30x?** | **YES.** `[DERIVED]` The Sony field is about 27.62 x 18.38 mm; the 20.64 x 17.46-mm ColorGauge Nano fits and leaves hundreds of pixels per eroded patch. Full-size ColorCheckers do not fit; the viable axis-aligned orientation of the 24 x 40-mm Calibrite Nano needs 62.64 degrees of tilt and 35.52 mm of depth travel. |
+| **True known-price floor for 4/12?** | **$925 plus tax and shipping:** $189 Zerene + $660 calibrated Nano + $76 three-day C-800 rental. It is **$849** if a suitable illuminant meter is already available, or **$2,748** if the $1,899 C-800 is bought. None is yet guaranteed to clear M7. |
+| **Buy now?** | **NO — spend $0.** First obtain the Nano certificate format and uncertainty at no charge, amend/confirm the scorecard target and grey-reference language, and retain the prior written-publication-permission gate. |
+
+### 6.1 The actual target requirement
+
+`[VERIFIED]` [M7](../proposals/2026-09-sota-scorecard.md#m7--colour-fidelity)
+requires a tilted target under a measured illuminant, published traceable patch
+values, a grey reference and darks. At least 24 valid patches must survive,
+including **all neutral patches** and at least **12 chromatic patches**. Every
+surviving patch is scored after 20% erosion. The tightest bars are median and
+boundary-seam p99 `DeltaE00 <= 1.0`; p95 is `<=2.0`, maximum is `<=3.0`, and
+ICC/300-DPI conformance is `100%`.
+
+That wording implies more than buying a branded chart:
+
+1. `[DERIVED]` The reference values must apply to the **particular physical
+   target**, either by individual measurement or by a certified batch
+   assignment whose uncertainty includes homogeneity and stability. A nominal
+   recipe or unqualified batch average is insufficient because chart variation
+   is otherwise inseparable from stacker error.
+2. `[DERIVED]` The certificate must define the measurand: individual spectral
+   reflectance or D50/2-degree CIELAB values, measurement geometry and specular
+   condition, target identity, calibration chain, date, and uncertainty.
+3. `[VERIFIED]` NIST adopts the VIM definition of traceability as the:
+
+   > property of a measurement result whereby the result can be related to a
+   > reference through a documented unbroken chain of calibrations, each
+   > contributing to the measurement uncertainty.
+
+   NIST immediately warns:
+
+   > traceability alone does not signify or guarantee fitness for purpose,
+   > because this typically requires that the uncertainty associated with a
+   > measured value or calibration be sufficiently small to satisfy a
+   > particular measurement need.
+
+   Source:
+   [NIST, *Metrological Traceability*](https://www.nist.gov/metrology/metrological-traceability);
+   retained
+   [HTML](../../experiments/M132-blocker-d-routes/m7-nist-metrological-traceability.html).
+
+#### Reference tolerance — decisive ruling
+
+**The scorecard currently has no numerical reference-tolerance requirement and
+no uncertainty-aware pass/fail rule.** `[VERIFIED]` It gives the DeltaE00 bars
+but never states a permitted target uncertainty, coverage probability, or
+guard band. Therefore no unique target tolerance can be derived from the
+registered protocol. A raw measured value of `1.0` cannot be declared a pass
+when the reference has any non-zero unknown uncertainty.
+
+`[PROPOSED]` Before purchasing, add this procurement and decision rule:
+
+- require a serial-numbered certificate reporting per-patch expanded
+  uncertainty, and enough information to propagate it through D50/2-degree
+  CIEDE2000 and patch-to-patch seam differences;
+- require target-only `U95 <= 0.25 DeltaE00` for every scored patch;
+- combine target, illuminant, capture and computation uncertainty, then pass
+  only when the **95% upper bound** remains at or below the registered bar.
+
+The `0.25` is a conservative program budget that reserves at least 75% of the
+tightest `1.0` limit for the system under test. It is **not** current scorecard
+language, an ISA specification, or a claim that every aggregate statistic has
+the same uncertainty. If the owner chooses another false-acceptance risk or
+guard band, the number must change accordingly. What is non-negotiable is that
+an unstated uncertainty, or uncertainty comparable to `1.0`, cannot support
+this axis.
+
+### 6.2 Current target prices and what each price buys
+
+| Target | US price, 2026-09-04 | Patches / reference data | 1.30x ruling |
+| --- | ---: | --- | --- |
+| [Calibrite ColorChecker Classic](https://calibrite.com/us/product/colorchecker-classic/) | **$99** | 24; no per-chart measured dataset or numerical tolerance is stated on the rendered page or browser-UA raw HTML. | **No.** 203 x 292 mm. |
+| [Calibrite ColorChecker Classic Nano](https://calibrite.com/us/product/colorchecker-classic-nano/) | **$189** | 24; no per-chart measured dataset or numerical tolerance is stated. | **Not practical.** 24 x 40 mm does not fit face-on and needs extreme tilt. |
+| [Calibrite ColorChecker Digital SG](https://calibrite.com/us/product/colorchecker-digital-sg/) | **$369** | 140. Its generic certificate contains values from Munsell Labs and says the measuring instrument was NIST-traceably calibrated, but gives no chart serial/lot or numerical uncertainty. | **No.** 215.9 x 279.4 mm. |
+| [ISA ColorBuild Micro, CC Classic](https://www.imagescienceassociates.com/colorbuild-micro-target.html) | **$605** | 24; vendor says the populated version includes “Individual NIST traceable spectral (380-730nm) and colorimetric target data.” | **No.** 38.1 x 47.625 mm; even its short side exceeds the field diagonal. |
+| [ISA ColorGauge Pico](https://www.imagescienceassociates.com/colorgauge-pico-target.html) | **$352** | 30; only nominal batch values are offered on the page, with no calibrated-certificate option listed. | **Yes**, but not traceable enough for M7. |
+| [ISA ColorGauge Nano](https://www.imagescienceassociates.com/colorgauge-nano-target.html), matte | **$330 nominal / $660 with “NIST Traceable Calibration Certificate”** | 30: 18 chromatic and 12 spectrally neutral patches. Calibration is a **$330** option. Numerical certificate uncertainty is not published. | **Yes. Best candidate.** 17.463 x 20.638 mm. |
+
+The retained Calibrite pages are
+[Classic](../../experiments/M132-blocker-d-routes/m7-calibrite-classic.html),
+[Nano](../../experiments/M132-blocker-d-routes/m7-calibrite-nano.html), and
+[Digital SG](../../experiments/M132-blocker-d-routes/m7-calibrite-digital-sg.html).
+The Classic page says “24” and “203 x 292mm”; the Nano says “24” and
+“24 x 40mm”; the Digital SG says “140” and “215.9 x 279.4mm.” Browser-UA raw
+HTML and rendered-text captures agree on the prices and disclose no numerical
+reference tolerance.
+
+`[VERIFIED]` The available Digital SG
+[Certificate of Analysis](https://www.bhphotovideo.com/lit_files/850220.pdf)
+says:
+
+> This certificate is provided based on data from Munsell Labs at X-Rite. The
+> color sheets have been manufactured in accordance to the specifications for
+> Munsell Color services. The instrument used to measure the color sheets
+> mentioned above has been calibrated against NIST traceable standards.
+
+It specifies D65, 2-degree observer, 400–700 nm, 10-nm data, d/8 geometry and
+SCE, but no per-unit identity or uncertainty. `[VERIFIED]` This proves a
+traceable **instrument** was used for the source data; under NIST's definition
+it does not by itself establish a traceable, fit-for-purpose value for the
+particular purchased chart. The certificate is retained as
+[PDF](../../experiments/M132-blocker-d-routes/m7-calibrite-digital-sg-certificate.pdf)
+and
+[text](../../experiments/M132-blocker-d-routes/m7-calibrite-digital-sg-certificate.txt).
+
+`[VERIFIED]` ISA's Nano page says:
+
+> It has the identical 18 color patches as the GretagMacbeth ColorChecker, plus
+> 12 spectrally neutral gray patches to assess correct exposure and white
+> balance in close-up or macro photography applications.
+
+It lists 1/8-inch patches, an overall 11/16 x 13/16-inch body, and the exact
+**$660** matte certificate option. More importantly, ISA's linked
+[Micro/Nano/Pico workbook](https://www.imagescienceassociates.com/mm5/pubs/Micro_Nano_Pico_Rez_TargetData.xls)
+warns:
+
+> All measurements are based on batch measurements of Munsell color papers as
+> purchased from X-Rite Corp. There can always be inter-batch variations. The
+> values listed below should be considered nominal for the batch provided to
+> ISA by X-Rite Corp. For critical color calculations the user should perform
+> their own optical measurments of the colorimetric values or contact us
+> (info@imagescienceassociates.com) for individual target calibrations.
+
+`[VERIFIED]` The same workbook's batch data contain component standard
+deviations as high as **2.036799 in b-star**. That is not a per-target
+CIEDE2000 uncertainty, but it is direct evidence that the free nominal values
+cannot simply be treated as exact against a `1.0` bar. Reproduction:
+[audit script](../../experiments/M132-blocker-d-routes/m7-evidence-audit.py)
+and
+[output](../../experiments/M132-blocker-d-routes/m7-evidence-audit.txt).
+
+`[ASSUMED]` The $660 certificate option is ISA's individually calibrated route,
+because it is the certificate-bearing product option and the workbook directs
+critical users to “individual target calibrations.” The vendor does not publish
+a sample Nano certificate, its measurement geometry, or its numerical
+uncertainty. That assumption must be replaced by the actual certificate format
+before purchase.
+
+### 6.3 Physical use at 1.30x
+
+`[VERIFIED]` Sony's official A7C II help guide specifies a **35.9 x 23.9-mm**
+sensor and a 3:2 still-image size of **7008 x 4672 pixels**:
+[camera specifications](https://helpguide.sony.net/ilc/2360/v1/en/contents/231h_specifications_ilc2360.html)
+and
+[image-size table](https://helpguide.sony.net/ilc/2360/v1/en/contents/0404M_jpeg_image_size.html).
+The browser-UA captures are retained as
+[specifications](../../experiments/M132-blocker-d-routes/m7-sony-a7c2-specifications.html)
+and
+[image size](../../experiments/M132-blocker-d-routes/m7-sony-a7c2-image-size.html).
+
+At `1.30x`, `[DERIVED]`:
+
+- object-space field = `35.9/1.30` by `23.9/1.30` =
+  **27.615 x 18.385 mm**;
+- ISA ColorGauge Nano = **20.638 x 17.463 mm**, so it fits face-on;
+- each 3.175-mm patch projects to about **806 pixels** across. Even treating
+  20% erosion as removal from every side leaves about **484 pixels** across;
+- a 15-degree tilt across the target's short dimension projects it to
+  **16.868 mm** high and creates **4.520 mm** of focus travel. It still fits
+  and supplies a real tilted stack.
+
+Therefore **M7 is physically shootable at 1.30x with the ISA ColorGauge
+Nano**. This is not a marginal microscope speck: its patches remain hundreds of
+pixels wide after erosion.
+
+The cheaper Calibrite Nano is not a clean substitute. `[DERIVED]` In its best
+axis-aligned orientation, the 24-mm side fits the 27.615-mm field, but the
+40-mm side must be foreshortened into 18.385 mm. That requires at least
+`acos(18.385/40) = 62.638 degrees` and creates **35.525 mm** of depth travel.
+It is technically imageable only as an extreme, very deep stack, and it still
+lacks per-chart traceable values. The full-size Classic and Digital SG are
+orders of magnitude too large. The individually measured ColorBuild Micro is
+also too large: its 38.1-mm short side exceeds the entire **33.175-mm field
+diagonal**.
+
+`[ASSUMED]` The Nano's 12 spectrally neutral patches satisfy M7's grey-reference
+intent because ISA explicitly says they assess exposure and white balance.
+If “grey card” is interpreted literally as a separate artifact, add the
+[Calibrite Gray Balance](https://calibrite.com/us/product/colorchecker-gray-balance/)
+at **$89**; it can be captured separately under the same lighting. Darks
+require no purchase. The scorecard owner should resolve this wording before
+ordering.
+
+### 6.4 Illuminant measurement and all-in cost
+
+`[VERIFIED]` “Measured illuminant” is a separate M7 input. Sekonic lists the
+[C-800](https://sekonic.com/sekonic-c-800-u-spectrometer/) at **$1,899** and
+says it measures light from **380 to 780 nm**. Lensrentals lists the
+[same meter](https://www.lensrentals.com/rent/sekonic-c-800-spectromaster-color-meter)
+at **$76 for three days** or **$109 for seven days**, before shipping and
+optional damage coverage. Retained pages:
+[Sekonic](../../experiments/M132-blocker-d-routes/m7-sekonic-c800.html) and
+[Lensrentals](../../experiments/M132-blocker-d-routes/m7-lensrentals-c800.html).
+
+The minimum cash stack is therefore:
+
+| Item | Cost |
+| --- | ---: |
+| [Zerene Prosumer](https://zerenesystems.com/cms/stacker/docs/purchasing) | $189 |
+| ISA ColorGauge Nano, matte, certificate option | $660 |
+| Sekonic C-800, three-day rental without optional coverage | $76 |
+| Built-in neutral reference and dark frames | $0 |
+| **Known-price floor** | **$925** |
+
+`[DERIVED]` If a suitable illuminant meter is already available, the floor is
+**$849**. Buying rather than renting the C-800 makes it **$2,748**. A separately
+purchased Calibrite grey card would add **$89**. Shipping, sales tax, rental
+shipping and optional coverage remain unpriced.
+
+**Crucially, $925 is not presently the price of a cleared M7. It is the minimum
+listed-price bundle for an attempt.** The target's certificate uncertainty and
+protocol admissibility are unresolved, so spending it now can still leave the
+scorecard at 3/12.
+
+### 6.5 Recommendation
+
+**Spend $0 now.** Ask ISA for a sample of the exact certificate supplied with
+the $660 matte ColorGauge Nano and require: serial-number linkage, per-patch
+spectral or D50/2-degree values, measurement geometry/specular condition,
+calibration chain, coverage factor, and numerical expanded uncertainty. In
+parallel, make the scorecard explicitly admit the ColorGauge Nano and its
+built-in neutral row, and retain the earlier written benchmark-publication
+permission gate. Only if those no-cost gates pass should the owner spend
+**$660 on the target, $189 on Zerene, and rent the C-800 when every capture and
+comparator input is ready**.
+
+### What I could not determine
+
+1. `[UNKNOWN]` The numerical uncertainty, coverage factor, geometry, and exact
+   contents of ISA's Nano calibration certificate. No sample certificate or
+   tolerance is published on the browser-UA product page, linked workbook,
+   comparison sheet, or technical brochure.
+2. `[UNKNOWN]` Whether the $660 certificate is explicitly tied to the serial
+   number of the delivered target and supplies D50/2-degree values or spectral
+   data sufficient to derive them.
+3. `[UNKNOWN]` The scorecard's intended uncertainty budget and conformity
+   decision rule. The `U95 <= 0.25 DeltaE00` rule above is proposed, not
+   registered.
+4. `[UNKNOWN]` Whether the scorecard owner will accept the ColorGauge Nano as
+   the required “ColorChecker” and its 12 neutral patches as the required grey
+   reference.
+5. `[UNKNOWN]` Exact shipping, tax, and rental-delivery charges; all totals are
+   therefore explicit price floors, not checkout totals.

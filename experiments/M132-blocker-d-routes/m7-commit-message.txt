@@ -1,0 +1,6 @@
+docs: price the M7 colour target route
+
+Price traceable target and illuminant options, derive 1.30x fit, and record
+the unresolved uncertainty gate that makes the current recommendation $0.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

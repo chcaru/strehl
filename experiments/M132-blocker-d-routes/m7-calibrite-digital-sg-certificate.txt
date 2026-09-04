@@ -1,0 +1,146 @@
+Certificate of Analysis
+CCDSG ColorChecker Digital SG
+
+This certificate is provided based on data from Munsell Labs at X-Rite. The color sheets
+have been manufactured in accordance to the specifications for Munsell Color services.
+The instrument used to measure the color sheets mentioned above has been calibrated
+against NIST traceable standards.
+
+The shelf life of the color sheets is a minimum of 2 – 4 years if stored under proper
+conditions. To maintain the colors, the color standards should be protected from
+fingerprinting, soiling, abrasion and exposure to excessive light or temperature changes.
+When not used, the color standards should be stored in a dark cool environment.
+
+Analysis Parameters
+
+The following instrumental parameters were used to generate the data provided in this
+certificate:
+
+   •   Illuminant: D65
+   •   Observer: 2° standard observer
+   •   Wavelength Range: 400 nm to 700 nm
+   •   Bandpass: 10 nm data
+   •   Sampling Interval: 10 nm data
+   •   Instrument Geometry: d/8
+   •   Specular Component: Data is provided for SCE (non-specular) measurements
+   •   Color Space: CIE L*a*b*
+
+
+
+
+                              Confidential - Company Proprietary
+Colormetric Data
+Position             L*      a*        b*
+
+B2                 39.09    41.43   -10.58
+B3                 63.31    25.33   -17.79
+B4                 36.77    42.58    -36.1
+B5                 54.35    -5.43   -42.91
+B6                  63.9   -23.15    -23.2
+B7                 31.16   -13.19    -3.62
+B8                 63.46   -34.66   -10.34
+B9                 30.98     0.53     5.19
+C2                 31.55    13.21   -13.32
+C3                 46.81    19.77   -32.86
+C4                 31.46     4.02   -26.72
+C5                 63.49   -11.99    -28.1
+C6                 31.28    -8.26    -14.1
+C7                 63.88    -0.98   -29.74
+C8                 55.23   -39.98    -7.55
+C9                 63.69   -37.11    18.96
+D2                 85.22    -0.95    -7.69
+D3                 85.49    13.32    -0.14
+D4                 85.61   -17.46    -0.02
+D5                 85.57    11.76     6.25
+D6                 85.03   -12.37    24.85
+D7                 63.78    25.39    29.94
+D8                 66.22    16.45    16.54
+D9                 54.93   -45.57     13.3
+E2                 38.88    12.58     13.8
+E3                 62.59     31.4    54.86
+E4                 30.99    21.81   -46.07
+E7                 77.79    17.25    20.38
+E8                 74.53    25.49    21.53
+E9                 31.51   -13.56     3.88
+F2                 65.46    15.81    16.68
+F3                 41.78    16.48   -43.84
+F4                 55.96   -40.94    32.62
+F5                 80.64     0.26    -0.27
+F6                 37.96    -0.01     -0.5
+F7                 65.45    10.19    22.12
+F8                 66.43    11.29    14.51
+Colormetric Data
+Position              L*       a*       b*
+F9                 63.27   -39.46     8.35
+G2                 50.63    -0.95   -21.75
+G3                 50.54    45.27    14.92
+G4                 41.52    52.65    23.48
+G5                 67.35    -0.03    -0.49
+G6                 45.17    -0.06    -0.37
+G7                 48.16    11.82    20.57
+G8                 66.34    12.95    14.03
+G9                 63.67   -29.63    35.65
+H2                  43.9    -15.8    22.06
+H3                 31.44    21.99   -20.85
+H4                 81.31    -2.41     78.1
+H6                 62.96     0.13    -0.49
+H7                 69.08    11.07     14.8
+H8                 66.67    13.07    16.04
+H9                 54.81   -45.87    37.43
+I2                 55.38    11.25   -24.44
+I3                 72.77   -27.51    56.38
+I4                 51.67    49.58   -15.36
+I5                 41.48    -0.02    -0.31
+I6                 76.67     0.21     -0.3
+I7                 48.87    20.56    28.62
+I8                 41.44    11.57    18.08
+I9                 64.48   -50.48    41.12
+J2                 71.26   -31.09     0.45
+J3                 70.98    13.78    65.48
+J4                  52.5   -22.98   -26.13
+J5                 28.79    -0.08    -0.79
+J6                 89.44    -0.27    -0.37
+J7                 65.52    21.44    22.75
+J8                 67.61    18.13    24.64
+J9                 63.53    11.97    41.67
+K2                 85.56     8.52    15.98
+K3                 89.91   -16.22     6.65
+K4                 85.44     5.19    -5.85
+K5                 85.12   -11.65    -7.49
+K6                 72.57     0.05     -0.5
+K7                 50.12    -0.04    -0.05
+Colormetric Data
+Position                   L*         a*           b*
+K8                      31.28        0.1        -0.43
+K9                      64.59     -16.17        45.71
+L2                      32.05      22.78         3.73
+L3                      47.12      56.07        32.59
+L4                      62.71      32.42         1.98
+L5                       63.5      31.42        13.93
+L6                      63.45      44.78        59.49
+L7                      64.35      -1.12        47.09
+L8                      64.35      -1.12        47.09
+L9                      73.57     -30.31        64.11
+M2                      45.86      53.05         6.44
+M3                      30.03      19.51        -5.83
+M4                      44.22      54.36        20.67
+M5                      54.84      59.23        36.21
+M6                      81.67      17.57        75.34
+M7                      82.46       0.48        83.36
+M8                      72.63     -19.99        65.59
+M9                      31.38       8.05         8.15
+C1 F1 I1 L1 A2 A5 A8
+C10 F10 I10 L10 N9 N6
+N3 E6                   25.18        0.04        0.19
+B1 E1 H1 K1 M1 A3 A6
+A9 B10 E10 H10 K10
+M10 N8 N5 N2 H5          53.9       -0.02       -0.18
+A1 D1G1 J1 N1 A4 A7
+A10 D10 G10 J10 N10
+N7 N4 E5                96.65       -0.93        1.14
+
+
+
+
+                        Confidential - Company Proprietary
+

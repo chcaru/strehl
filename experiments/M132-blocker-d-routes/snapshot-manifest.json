@@ -1,9 +1,10 @@
 {
-  "generatedUtc": "2026-09-04T08:01:55.646682+00:00",
+  "generatedUtc": "2026-09-04T08:53:20.001383+00:00",
   "priceContext": {
     "checkedDate": "2026-09-04",
     "helicon": "USD, checkout geolocated to United States/Washington; tax extra",
-    "zerene": "USD on global English vendor page; location-dependent tax extra"
+    "zerene": "USD on global English vendor page; location-dependent tax extra",
+    "m7": "USD on US vendor pages; target and meter prices exclude tax and shipping; rental price excludes shipping and optional coverage"
   },
   "snapshots": [
     {
@@ -189,10 +190,145 @@
       "bytes": 5705,
       "sha256": "72A67C928F2DD79FACDCA2927732004BE64766814D2B07C7545E88125828858C",
       "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-calibrite-classic.html",
+      "url": "https://calibrite.com/us/product/colorchecker-classic/",
+      "capturedUtc": "2026-09-04T08:22:58.235421+00:00",
+      "bytes": 91612,
+      "sha256": "7505D6BD41DC03AE1F205737CD8B7DA9059E1894B9DA64BEBBBA8357C480F8DA",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-calibrite-nano.html",
+      "url": "https://calibrite.com/us/product/colorchecker-classic-nano/",
+      "capturedUtc": "2026-09-04T08:22:58.012241+00:00",
+      "bytes": 97375,
+      "sha256": "C70B15E1BED03483F91A66D61C50E0A2C1468AC97F38EF1333486CDF33FE7691",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-calibrite-digital-sg.html",
+      "url": "https://calibrite.com/us/product/colorchecker-digital-sg/",
+      "capturedUtc": "2026-09-04T08:22:57.526882+00:00",
+      "bytes": 89375,
+      "sha256": "57E2296F2EA4010C37605A3C8262CB862D24AC98F588D2D686F312D78EE8CB05",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-calibrite-digital-sg-certificate.pdf",
+      "url": "https://www.bhphotovideo.com/lit_files/850220.pdf",
+      "capturedUtc": "2026-09-04T08:36:57.393980+00:00",
+      "bytes": 260841,
+      "sha256": "88D5B559BD323454DB7C4F4FAC87076031110F85BDA2313C9A6D578F217D2B01",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-calibrite-gray-balance.html",
+      "url": "https://calibrite.com/us/product/colorchecker-gray-balance/",
+      "capturedUtc": "2026-09-04T08:39:37.531561+00:00",
+      "bytes": 85051,
+      "sha256": "19ADEEDDF3FDA9D72E88C972B33CA541CD78452C39CA5B4DAB2C68A501215988",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-isa-colorbuild-micro.html",
+      "url": "https://www.imagescienceassociates.com/colorbuild-micro-target.html",
+      "capturedUtc": "2026-09-04T08:28:49.316050+00:00",
+      "bytes": 71606,
+      "sha256": "A20E6E54AE769BC27883C9F6630614F1012E627BF12168A099836A8F52025FB5",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-isa-colorgauge-nano.html",
+      "url": "https://www.imagescienceassociates.com/colorgauge-nano-target.html",
+      "capturedUtc": "2026-09-04T08:24:17.396415+00:00",
+      "bytes": 79286,
+      "sha256": "21A2D875F15E8DA8F12433A75E12B241BC87289296090E4EE78A8DFAB6FBE71B",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-isa-colorgauge-pico.html",
+      "url": "https://www.imagescienceassociates.com/colorgauge-pico-target.html",
+      "capturedUtc": "2026-09-04T08:24:17.924738+00:00",
+      "bytes": 76549,
+      "sha256": "27ADD9C9203AC03A6C26222F0B42B34613DA3E363629D3BCAC54553063BF27CD",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-isa-colorgauge-brochure.pdf",
+      "url": "https://www.imagescienceassociates.com/mm5/software/ColorGauge_Micro_Analyzer.pdf",
+      "capturedUtc": "2026-09-04T08:24:31.876648+00:00",
+      "bytes": 512991,
+      "sha256": "B362FF14CFBEF002D549E4886B10F248A6D58F03D9FE1DCD6B62D339A57070ED",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-isa-target-colorimetry.xls",
+      "url": "https://www.imagescienceassociates.com/mm5/pubs/Micro_Nano_Pico_Rez_TargetData.xls",
+      "capturedUtc": "2026-09-04T08:24:32.631336+00:00",
+      "bytes": 323072,
+      "sha256": "7CB4D01B450E9D4AD26D0E58D8C14CD69D9DBC57AA0704BB343FAAC9F91D8B9F",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-isa-target-comparison.pdf",
+      "url": "https://www.imagescienceassociates.com/mm5/software/ColorGauge_Targets_comparison.pdf",
+      "capturedUtc": "2026-09-04T08:24:32.211730+00:00",
+      "bytes": 215833,
+      "sha256": "D0D021A0A7937D2A7252DAD35CACE8B2A58F26EBE6C1941E1F976DE1B0D4CCC8",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-lensrentals-c800.html",
+      "url": "https://www.lensrentals.com/rent/sekonic-c-800-spectromaster-color-meter",
+      "capturedUtc": "2026-09-04T08:38:14.460537+00:00",
+      "bytes": 53627,
+      "sha256": "FF1CB06FBE05D4B235E769B5DFC0817136C59D8D44E0F8D4CF63F8348094B3F7",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-nist-metrological-traceability.html",
+      "url": "https://www.nist.gov/metrology/metrological-traceability",
+      "capturedUtc": "2026-09-04T08:40:36.941301+00:00",
+      "bytes": 180550,
+      "sha256": "6A97821EDAF8DA4F3EA5E9A3DF30F53257B4BBFCD3AFD71B8D68324F1A08324D",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-sekonic-c800.html",
+      "url": "https://sekonic.com/sekonic-c-800-u-spectrometer/",
+      "capturedUtc": "2026-09-04T08:37:53.606776+00:00",
+      "bytes": 260395,
+      "sha256": "39D58EC22CFA41A8F59C764AA0F6DEA59D42F9DA717E865F495FB86DC7ABF220",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-sony-a7c2-specifications.html",
+      "url": "https://helpguide.sony.net/ilc/2360/v1/en/contents/231h_specifications_ilc2360.html",
+      "capturedUtc": "2026-09-04T08:52:52.523237+00:00",
+      "bytes": 72071,
+      "sha256": "226516C7A88347A26FB3739BD6E3AD0869BC9C2FBBAE7DD18B6E28BDBB67E2E2",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
+    },
+    {
+      "file": "m7-sony-a7c2-image-size.html",
+      "url": "https://helpguide.sony.net/ilc/2360/v1/en/contents/0404M_jpeg_image_size.html",
+      "capturedUtc": "2026-09-04T08:53:08.002566+00:00",
+      "bytes": 63902,
+      "sha256": "729AB9A6F02C1C720D146D7624A8B7B63E39EA44F5359AA96CE53F5080C6352B",
+      "retrieval": "successful browser-user-agent fetch; exact status code not retained"
     }
   ],
   "derivedFiles": [
     "canva-affinity-free.txt",
+    "m7-calibrite-classic.txt",
+    "m7-calibrite-digital-sg-certificate.txt",
+    "m7-calibrite-digital-sg.txt",
+    "m7-calibrite-nano.txt",
+    "m7-evidence-audit.txt",
+    "m7-isa-colorgauge-brochure.txt",
+    "m7-isa-target-comparison.txt",
     "picolay-manual-en.txt",
     "eula-keyword-audit.txt",
     "europe-pmc-stacker-counts.json"

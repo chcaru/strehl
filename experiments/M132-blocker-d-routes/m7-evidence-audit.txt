@@ -1,0 +1,18 @@
+M7 evidence audit
+=================
+Sensor: 35.9 x 23.9 mm
+Image: 7008 x 4672 px
+Magnification: 1.30x
+Object-space field: 27.615385 x 18.384615 mm
+Object-space field diagonal: 33.175346 mm
+Pixel pitch from width: 5.122717 micrometres
+ISA ColorGauge Nano: 20.6375 x 17.4625 mm
+ISA patch: 3.1750 mm = 805.72 px at 1.30x
+ISA Nano at 15-degree tilt across its short dimension: 16.8675 mm projected, 4.5196 mm depth excursion
+Calibrite Classic Nano minimum axis-aligned tilt: 62.6377 degrees, 35.5247 mm depth excursion
+ColorBuild Micro minimum side versus field diagonal: 38.1000 mm versus 33.1753 mm
+
+ISA workbook warning:
+All measurements are based on batch measurements of Munsell color papers as purchased from X-Rite Corp. There can always be inter-batch variations. The values listed below should be considered nominal for the batch provided to ISA by X-Rite Corp. For critical color calculations the user should perform their own optical measurments of the colorimetric values or contact us (info@imagescienceassociates.com) for individual target calibrations. The count values shown in RED below are considered out-of-gamut for the particular color space listed. All L*a*b* values are for D50 illuminant, 2 degree observer. Bradford adoption used for selected color spaces
+
+Largest published component standard deviation: 2.036799 b*, patch 27, workbook row 88
