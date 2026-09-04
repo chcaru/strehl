@@ -57,6 +57,17 @@ def checker_matcher(tree: ast.Module, checker: Path):
             break
     if window is None:
         raise AssertionError("WINDOW assignment not found")
+    if "positions" not in namespace:
+        checker_variants = namespace["variants"]
+
+        def bare_positions(hay: str, needle: str, extend: bool = False):
+            del extend
+            matches = []
+            for variant in checker_variants(needle):
+                matches.extend(re.finditer(re.escape(variant), hay))
+            return matches
+
+        return bare_positions, window
     return namespace["positions"], window
 
 
