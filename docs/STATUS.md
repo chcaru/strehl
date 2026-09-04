@@ -5971,7 +5971,30 @@ reversed-optics failures remain. The cheap route is closed.
 Its first-stated minimum capture is **1,661 exposures**. I have refused to forward that as
 a monolithic owner ask and sent it back for a staged plan with falsification gates, on the
 grounds that a non-refundable request of that size against a design never exercised end to
-end is how a month gets lost. That work is in flight.
+end is how a month gets lost.
+
+**It came back staged, and it came back honest** (`ab4dddc5`). Two orders were added before
+it landed: fold in M165's calibration requirement, and exhaust the existing corpus before
+requesting a single new frame. The corpus audit ruled per family and credited **zero**
+frames, on one checkable geometric fact — M1's reference must be shot with the
+teleconverter **removed**, and across all **10,509** inventoried RAWs there is not one
+bare-lens frame; physical reproduction ratio is recoverable for `0` stacks. Holdout
+discipline held throughout, with indeterminate families marked `DO NOT TOUCH` and no pixels
+read.
+
+The staged shape is `0` frames for a contract gate, **`2` frames for a kill test**, `896`
+for rehearsal released one block at a time, and `704` sealed — `1,602` total, or `1,917` if
+the combined M1/M5/M9 holdout is preserved. The totals re-derive arithmetically.
+
+**The most useful finding is a coincidence worth naming:** Stage 0 is *the same two frames*
+already sitting on the owner's board as Ask 2a. The first falsification gate of the
+program's most expensive capture costs five minutes and is already asked. If that pair says
+the optics cannot reach the required sampling ratio, the entire `1,602`-frame session is
+cancelled before it is shot.
+
+Neither total is owner-ready. Both scale off dark-temperature and flat-focus class counts —
+`96` frames per additional class — and **no calibration capture is executable until M165
+freezes them.** That gate is assigned and M165 is now on the program's critical path.
 
 #### 2.9.54.4 The M8-O bar was impossible, and is now discriminating (M136)
 

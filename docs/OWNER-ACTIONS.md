@@ -428,26 +428,59 @@ You do not need to do anything about this yet. I am telling you because it is
 the clearest example so far of why I keep refusing to send you a capture
 request the moment a lane produces one.
 
-**2. The M1 session is much larger than Ask 2a, and I have sent it back.**
+**2. The M1 session is much larger than Ask 2a. I sent it back, and it came
+back staged — with your two frames as its first gate.**
 
 The lane that owns the hardest axis quoted its first honest minimum for a
-capture that would make M1 measurable: **1,661 exposures.** That is not a typo
-and it is not padding — M1 needs an external truth reference at higher
-sampling, and there is no cheap substitute. The lane also confirmed the cheap
-route is closed: none of the withdrawn candidate metrics can be revived by
-fixing tone alone.
+capture that would make M1 measurable: roughly **1,661 exposures.** That is not
+a typo and it is not padding — M1 needs an external truth reference at higher
+sampling, and there is no cheap substitute.
 
-**I have not forwarded that as an ask, and I will not forward it in that
-form.** A non-refundable request of that size, against a protocol that has
-never been exercised end to end, is how a month gets lost. I have sent it back
-for a staged plan where each stage has a go/no-go gate and the earliest stage
-is capable of *falsifying the design* before you shoot the expensive part.
-When that comes back, you will get a first sitting that is small, cheap and
-decisive, not a monolith.
+**I did not forward that, and I would not have.** A non-refundable request of
+that size, against a protocol never exercised end to end, is how a month gets
+lost. I sent it back with three demands: stage it so each step has a go/no-go
+gate, make the earliest stage capable of *falsifying the design* before you
+shoot the expensive part, and **exhaust the frames you have already shot before
+asking for a single new one.**
 
-**What this means for you right now: still nothing.** Ask 2a below — two
-frames, five minutes — remains the only capture that is useful today, and it
-is still useful.
+**On reusing your existing frames, the answer is no, and the reason is one you
+can check yourself.** Every capture family was ruled on individually. They all
+fail for the same reason: M1's reference has to be shot with the **teleconverter
+removed**, and across the full inventory of **10,509 RAWs there is not one
+bare-lens frame** — every file reads `200 mm` through the 2× teleconverter, with
+stabilization on. Physical reproduction ratio is recoverable for **zero** stacks.
+So the credit against the new capture is `0` frames, and I am reporting that
+rather than pretending the number could be smaller. The corpus is not useless —
+it has already paid for a great deal of software development — but development
+frames and protocol photons are not interchangeable.
+
+**What you can do right now has not changed, and it matters more than it
+looks.** Ask 2a below — two frames, five minutes — **is Stage 0 of this plan.**
+Not a warm-up for it: the actual first gate. Converter on, then the same slide
+physically unmoved with the converter off. If that pair says the optics cannot
+support the required sampling ratio, **the entire 1,602-frame session is
+cancelled before it is ever shot**, and you will have spent five minutes to
+learn it. That is the best-value capture on the board by a wide margin.
+
+**The staged shape, so you can see the off-ramps.** Nothing after Stage 0 is
+released until the previous verdict is on disk and accepted:
+
+| gate | new frames | cumulative |
+| --- | ---: | ---: |
+| Stage 0M — contract gate, **zero frames** | `0` | `0` |
+| **Stage 0 — your two-frame kill test** | `2` | `2` |
+| Stages 1–5 — rehearsal, released one block at a time | `896` | `898` |
+| Stage 6 — the sealed M1 score | `704` | **`1,602`** |
+
+If you later choose to preserve the combined M1/M5/M9 holdout instead, the
+sealed block grows and the total becomes `1,917`.
+
+**These totals are not final yet and I am not asking you to accept them.** They
+assume two dark-temperature classes and two flat-focus classes; every extra
+focus class adds `96` flat frames and every extra temperature class adds `96`
+darks. Freezing those counts is work I have assigned, and **no calibration
+capture is executable until it lands.** You will get a final number, once, when
+it is real.
 
 
 

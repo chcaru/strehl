@@ -73,8 +73,16 @@ CLAIMS = [
     ("veto identity token", "IDENTITY_EQUIVALENT", R + "M164-transfer-veto.md"),
     ("veto legit-diff bound", "2.058879", R + "M164-transfer-veto.md"),
     ("veto movable null LSB", "2.552833", R + "M164-transfer-veto.md"),
-    # --- M164 M1 admissibility ---
-    ("M1 capture exposures", "1,661", R + "M164-m1-admissibility.md"),
+    # --- M164 M1 admissibility and staged capture ---
+    ("M1 capture exposures", "1,661", R + "M164-m1-staged-capture.md", None, None),
+    ("M1 inventory RAWs", "10,509", R + "M164-m1-staged-capture.md", None, None),
+    ("M1 rehearsal frames", "896", R + "M164-m1-staged-capture.md", None,
+     "`896`-frame rehearsal"),
+    ("M1 sealed frames", "704", R + "M164-m1-staged-capture.md", None, None),
+    ("M1-first total", "1,602", R + "M164-m1-staged-capture.md", None, None),
+    ("M1 combined total", "1,917", R + "M164-m1-staged-capture.md", None, None),
+    ("M1 per-class frames", "96", R + "M164-m1-staged-capture.md", None,
+     "Every additional focus class adds `96` flat frames"),
     # --- M136 M8-O ---
     ("m8o impossible count", "977,684", R + "M136-m8o-bar.md"),
     ("m8o denominator", "74,173,536", R + "M136-m8o-bar.md"),
