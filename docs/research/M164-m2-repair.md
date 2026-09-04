@@ -1,7 +1,8 @@
 # M164 — repairing M2's blur-rewarding statistic
 
-Status: **NO OUTPUT-ONLY REPAIR; EXTERNAL-REFERENCE REPLACEMENT
-SYNTHETICALLY COMMISSIONED; M2 REMAINS `UNMEASURED`**
+Status: **NO OUTPUT-ONLY REPAIR; EXTERNAL-REFERENCE CANDIDATE HAS
+AUTHOR-GENERATED DEVELOPMENT EVIDENCE; INDEPENDENT M167 ACCEPTANCE PENDING;
+M2 REMAINS `UNMEASURED`**
 
 No holdout was opened. No real image was scored. The commissioning used
 synthetic arrays, one process, and one thread; it completed in `3.370 s`.
@@ -19,16 +20,18 @@ signal. M164 can identify a restricted common-transfer relation, but it
 cannot assign quality to that relation and does not cover arbitrary
 scene-dependent renderer blur.
 
-**PROPOSAL, SYNTHETICALLY COMMISSIONED.** Replace the comparative residual
+**PROPOSAL, INTERNALLY COMMISSIONED ONLY.** Replace the comparative residual
 with a truth-normalized equivalent-input-noise coordinate, `Q_EIN`, computed
 from two independent output repeats and M1's two independent truth-reference
 halves. It is exactly neutral to a nonzero common per-cell transfer, responds
 in the correct direction to added noise and genuine improvements, and keeps
 M1 as a mandatory same-output admission gate.
 
-This is not a current M2 instrument. The production cell/channel/bootstrap
-reduction must be frozen, M1 must be commissioned physically, and M165's
-pattern maps must exist. M2 therefore remains `UNMEASURED`.
+This is not an accepted M2 instrument. M167 owns the independent adversarial
+battery; none of M164's self-authored gates can substitute for it. The
+production cell/channel/bootstrap reduction must also be frozen, M1 must be
+commissioned physically, and M165's pattern maps must exist. M2 therefore
+remains `UNMEASURED`.
 
 ## 1. Diagnosis: why blur improves the current statistic
 
@@ -145,6 +148,12 @@ for both terms because its additive signal cancels exactly in `Y1-Y2`; the
 physical instrument must use the concealed matched sentinels so M2 retains
 its flat/defocused-ground scope.
 
+This is deliberately **not** an ordinal or rank construction. The candidate
+requires the independently witnessed 33-step PCHIP linearization before
+coefficient extraction. That keeps the measured tone-invariance result
+without buying it by discarding amplitude—the move already identified as the
+leading sharpening risk.
+
 For any nonzero common per-cell postfilter `K(k)`:
 
 ```text
@@ -190,6 +199,12 @@ impossible because blur truly reduces output variance.
 
 The frozen run used `256` trials, `64` sites, three frequencies and four
 orientations. All `12/12` preregistered gates passed.
+
+**GOVERNANCE LIMIT.** These are author-generated development checks, not
+acceptance evidence. They show that the implementation moves and that its
+claimed algebra is present. Only M167's separately frozen battery may decide
+whether the candidate survives the program's flat-null, blur, improvement and
+sharpening requirements.
 
 ### 5.1 Null, degradation and mandatory improvements
 
@@ -272,13 +287,13 @@ physical truth capture, so no comparator qualifies through its envelope.
 M165 also reports no pattern map. A perfect synthetic M2 statistic cannot
 change either fact.
 
-**JUDGEMENT — LAND THE REPAIR NOW.** The repair is worth retaining as a
-preregistered candidate because it removes a known wrong-sign statistic,
-requires no additional photons beyond the accepted M1 A/B/reference roles,
-and can be integrated before the expensive capture. It must not be promoted
-to the scorecard as commissioned production evidence until the full
-`0.15–0.35` band, channel/reduction rule, physical M1 gate, M165 maps and
-real-renderer controls pass.
+**JUDGEMENT — LAND THE CANDIDATE NOW, NOT THE CLAIM.** The repair is worth
+retaining because it removes a known wrong-sign statistic, requires no
+additional photons beyond the accepted M1 A/B/reference roles, and can be
+presented unchanged to an independent adversary before the expensive capture.
+It must not be promoted to the scorecard as commissioned production evidence
+until M167 accepts it and the full `0.15–0.35` band, channel/reduction rule,
+physical M1 gate, M165 maps and real-renderer controls pass.
 
 ## 7. Limits and routed defects
 
@@ -296,6 +311,11 @@ real-renderer controls pass.
 5. M164's existing M2 text calls its veto a “partial unblock.” That remains
    true only for the restricted postfilter refusal; it is not the comparative
    statistic repair.
+6. The callable candidate is
+   `experiments/M164-m2-repair/instrument.py`. Its fail-closed API requires an
+   admitted M1 result, M165 pattern map, external 33-step tone witness,
+   independent repeats, complete-band declaration, nonperiodic target
+   lineage, and an explicit M164 verdict. Its existence is not acceptance.
 
 ## 8. Reproduction
 
@@ -311,6 +331,8 @@ Artifacts:
 - `experiments/M164-m2-repair/PREREGISTRATION.md`;
 - `experiments/M164-m2-repair/AMENDMENT-1.md`;
 - `experiments/M164-m2-repair/commission.py`;
+- `experiments/M164-m2-repair/CANDIDATE-CONTRACT.md`;
+- `experiments/M164-m2-repair/instrument.py`;
 - `experiments/M164-m2-repair/commission.json`;
 - `experiments/M164-m2-repair/verify.py`;
 - `experiments/M164-m2-repair/verification.json`.

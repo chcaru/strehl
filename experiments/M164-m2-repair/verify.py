@@ -189,12 +189,12 @@ def main() -> None:
 
     report = REPORT_PATH.read_text(encoding="utf-8")
     anchors = (
-        "NO OUTPUT-ONLY REPAIR; EXTERNAL-REFERENCE REPLACEMENT",
+        "NO OUTPUT-ONLY REPAIR; EXTERNAL-REFERENCE CANDIDATE",
         "The normalization makes the residual",
         "There is no stand-alone, two-render-output repair",
         "Q_EIN                 = 0.583120x",
         "**CURRENT VERDICT: `UNMEASURED`.**",
-        "**JUDGEMENT — LAND THE REPAIR NOW.**",
+        "**JUDGEMENT — LAND THE CANDIDATE NOW, NOT THE CLAIM.**",
     )
     missing = [anchor for anchor in anchors if report.count(anchor) != 1]
     if missing:
