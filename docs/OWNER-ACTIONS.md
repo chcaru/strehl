@@ -612,15 +612,52 @@ here so that when it *is* shootable you are not surprised by the size of it.
 > is the difference between the 891-frame session being shootable and being
 > guesswork.
 
+> **Before you start:** this is one preflight attempt, normally two RAW files.
+> It may require a second two-frame attempt if the first placement misses the
+> gate or either file is refused. Do not begin the rehearsal or scored session
+> from these frames alone.
+
 **What to shoot:**
 
-1. The calibration slide, **converter fitted**, at **maximum reproduction**. One frame.
-2. **The same slide, physically unmoved**, **converter removed**, focused to
-   about **`1.32x`**. One frame.
-
-Nothing else. Same slide, same position, same lighting, flat and square to the
-sensor. The slide **must not move between the two frames** — the whole
-measurement depends on both frames seeing one coplanar grid.
+1. Use the **high-resolution calibration slide's regular dot grid** used for the
+   existing `high-res-calibration-slide-cpl` captures — not the ruler, the older
+   calibration-grid target, or a nonperiodic patch. Mount it rigidly, flat, and
+   as square to the sensor as you can. Choose one grid intersection near frame
+   centre and keep that same physical point centred in both frames. Make the
+   grid fill most of both frames.
+2. Set **M mode, ISO 100, 1 s, camera-indicated/marked f/5.6, fixed white
+   balance, EFCS, and full-resolution 14-bit lossless-compressed ARW**. Turn
+   **body SteadyShot/IBIS OFF** and the lens **OSS switch OFF**. Keep the light
+   warmed and fixed. Leave the CPL/polarizer fitted and do not rotate it. Do not
+   use crop mode, digital zoom, autofocus, focus bracketing, or an in-camera JPEG
+   for either requested frame.
+3. Fit and fully seat the 2× converter. Put the sliding focus ring in **FULL MF**
+   and set the lens to its native **1.4:1 / minimum-focus end stop**; that is
+   "maximum reproduction" here. Do not change focus on the lens after setting it.
+   Move the complete camera/lens assembly **only along the optical axis on the
+   rail** until the grid is critically sharp. Lock the tripod head and rail,
+   confirm the selected grid intersection is centred, and take one frame.
+   Identify the untouched original as `TR-REF-PREFLIGHT.ARW`.
+4. Do not touch the slide, target tilt, light, polarizer, tripod head, camera
+   height, camera lateral position, roll, or yaw. Remove the converter and mount
+   the 100 mm lens directly. Put the lens in FULL MF and use its magnification
+   scale to aim near **`1.32x`**, on the lower-magnification side rather than
+   above the **`1.33x` ceiling**. This scale is only the initial placement; the
+   RAW measurement, not the printed mark or EXIF, decides acceptance.
+5. Keep that lens setting fixed. Refocus **only by moving the complete
+   camera/lens assembly axially on the rail**. Do not pan, tilt, roll, yaw,
+   raise, or shift sideways. Keep the same physical grid intersection centred and
+   the same grid plane in view. Take one frame and identify the untouched
+   original as `TC0-PREFLIGHT.ARW`.
+6. If the slide, tripod head, camera centre, light, polarizer, aperture, ISO,
+   shutter, or RAW mode changed — or if either frame is not critically sharp —
+   discard **both** frames and restart at step 1. Never combine one frame from
+   before a shift with one from after it.
+7. Record or phone-photograph the bare-lens magnification-scale indication and
+   rail/working-distance reading. Leave the rig locked and unchanged while the
+   two original ARWs are checked. Send the originals, not exports. If the rig
+   cannot remain locked, say so; a live pair must be repeated before the later
+   session.
 
 **Why this is needed, and why nothing in the corpus can substitute.** The
 preflight measures the *ratio* of the two states' sampling. To trust it at the
@@ -633,15 +670,33 @@ of **10,509 ARWs**, every lens string reads
 design depends on is an optical configuration your rig has never been recorded
 in.
 
-**What it settles.** The preflight already works. On a real null — two
-consecutive frames of one unchanged setup — it recovered the true ratio of
-`1.0` to within **`0.0353%`**, produced an interval that contains the truth, and
-**correctly refused**, in **21.7 seconds** on full-resolution RAW. Against a
-synthetic `2.0312x` plant it recovered `2.0312251532`, an error of
-**`0.00124%`**.
+**What it settles.** These files test the one physical placement you captured.
+The checker divides the same grid's measured periods, so it does not need grid
+pitch, sensor pitch, focal-length metadata, or an EXIF magnification value. It
+does **not** infer absolute `1.32x` from metadata.
 
-**But the synthetic result is not proof and I will not present it as one.**
-Making a synthetic `2x` frame means resampling a real one, and resampling injects
+There are three possible first results:
+
+- **Numerical PASS:** the measurement is valid and its unrounded lower bound is
+  at least `2.0`. Keep the setup unchanged while the result is reviewed. A
+  provisional console `PASS` is not permission to start either session; wait for
+  an explicit go-ahead.
+- **Numerical FAIL:** the pair was measured, but this placement lacks enough
+  margin. We may ask you to lower bare-lens magnification and repeat **both**
+  frames.
+- **REFUSED / no ratio:** focus, exposure, grid coverage, target plane, camera
+  pose, or input format was not measurable. Correct the named problem and repeat
+  **both** frames; this is not an optical-design verdict.
+
+A lower TC0 setting is usable only if the required target field and detail
+frequencies still fit. If no setting satisfies all three conditions — sampling
+ratio, common field, and carrier frequency — the present shared-lens reference
+design stops rather than lowering the `2.0` bar. These files can therefore save
+the large shoot, require one corrected pair, or show that this design must
+change.
+
+**The synthetic result is not proof and I will not present it as one.** Making a
+synthetic `2x` frame means resampling a real one, and resampling injects
 interpolation blur into exactly the quantity being measured. The lane that built
 it says so plainly and I agree: the synthetic pass *is not yet a commissioned
 gate*. Two real frames replace an argument with a measurement.
@@ -659,8 +714,10 @@ sitting is gone.
 The design compares two optical states of your rig: a **reference** state with
 the teleconverter fitted at about `2.7015x`, and the **TC0** state with it
 removed at a target of `1.32x`, ceiling `1.33x`. The instrument requires the
-reference to oversample the test by at least `2.0x`. As designed that ratio is
-`2.7015 / 1.33 = 2.0312x` — a margin of **`0.0312x`, or 1.54% relative**.
+reference to oversample the test by at least `2.0x`. As designed,
+`2.7015 / 1.33 = 2.031203...x`. That is `0.031203...x` above the `2.0x` gate:
+**`1.560%` relative to the required value, or `1.536%` relative to the achieved
+ratio.** The shorthand `1.54%` used below takes the latter denominator.
 
 You set that magnification **by hand**. M135's ruling is blunt: **`1.54%` is not
 enough for blind hand-setting.** Placement repeatability here is `UNMEASURED`,
