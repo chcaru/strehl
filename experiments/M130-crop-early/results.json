@@ -1,0 +1,1451 @@
+{
+  "border_profile": {
+    "absolute_threshold": 0.001,
+    "deep_start_px": 768,
+    "fixed_edges_px": [
+      0,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      96,
+      128,
+      160,
+      192,
+      256,
+      320,
+      384,
+      448,
+      512,
+      640,
+      768
+    ],
+    "late_crop_control": {
+      "b2": {
+        "bytes": 48136827,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\before-crop-b2.tiff",
+        "sha256": "10F7DEAF5A82CA2A311C76A323AE5627207520E7DA3BB71D237BB861CC7CC977",
+        "shape": [
+          2312,
+          3470,
+          3
+        ]
+      },
+      "b7": {
+        "bytes": 48136827,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\before-crop-b7.tiff",
+        "sha256": "0465D253F14431CE76BA1DD68E54C1BD2CBAE56DA17F079D5DD572852FCAD304",
+        "shape": [
+          2312,
+          3470,
+          3
+        ]
+      },
+      "pixel_area_gate_pass": false,
+      "profile": {
+        "censored_at_deep_start": false,
+        "deep_ratio": 0.9999192030984719,
+        "deep_start_px": 768,
+        "rows": [
+          {
+            "candidate_mean": 6798.419608861198,
+            "hi": 2,
+            "lo": 0,
+            "normalised_effect": 0.002695269889584795,
+            "ratio": 1.0026142552186008,
+            "reference_mean": 6780.693146417446,
+            "samples": 23112
+          },
+          {
+            "candidate_mean": 6796.950173310225,
+            "hi": 4,
+            "lo": 2,
+            "normalised_effect": 0.015719125226074215,
+            "ratio": 1.015637058267933,
+            "reference_mean": 6692.302253032929,
+            "samples": 23080
+          },
+          {
+            "candidate_mean": 6794.629363494269,
+            "hi": 8,
+            "lo": 4,
+            "normalised_effect": 0.025450469857845714,
+            "ratio": 1.0253676166372108,
+            "reference_mean": 6626.530088572421,
+            "samples": 46064
+          },
+          {
+            "candidate_mean": 6789.342006016742,
+            "hi": 16,
+            "lo": 8,
+            "normalised_effect": 0.026106339196126038,
+            "ratio": 1.0260234329832807,
+            "reference_mean": 6617.141273543774,
+            "samples": 91744
+          },
+          {
+            "candidate_mean": 6777.923913999297,
+            "hi": 32,
+            "lo": 16,
+            "normalised_effect": 0.02507429233915648,
+            "ratio": 1.0249914695124993,
+            "reference_mean": 6612.663729994724,
+            "samples": 181952
+          },
+          {
+            "candidate_mean": 6778.728544275492,
+            "hi": 64,
+            "lo": 32,
+            "normalised_effect": 0.023850152520933143,
+            "ratio": 1.0237674286009804,
+            "reference_mean": 6621.355939736136,
+            "samples": 357760
+          },
+          {
+            "candidate_mean": 6753.282354220066,
+            "hi": 96,
+            "lo": 64,
+            "normalised_effect": 0.02098779011188756,
+            "ratio": 1.0209052974619486,
+            "reference_mean": 6614.993938232333,
+            "samples": 349568
+          },
+          {
+            "candidate_mean": 6709.016459856581,
+            "hi": 128,
+            "lo": 96,
+            "normalised_effect": 0.016906199731019145,
+            "ratio": 1.0168240368609363,
+            "reference_mean": 6598.0112749578175,
+            "samples": 341376
+          },
+          {
+            "candidate_mean": 6679.005144304649,
+            "hi": 160,
+            "lo": 128,
+            "normalised_effect": 0.013093181775319263,
+            "ratio": 1.0130113269852725,
+            "reference_mean": 6593.2186209421825,
+            "samples": 333184
+          },
+          {
+            "candidate_mean": 6635.198811047657,
+            "hi": 192,
+            "lo": 160,
+            "normalised_effect": 0.007886846537896508,
+            "ratio": 1.0078054124036053,
+            "reference_mean": 6583.809463002166,
+            "samples": 324992
+          },
+          {
+            "candidate_mean": 6584.884980684609,
+            "hi": 256,
+            "lo": 192,
+            "normalised_effect": 0.002807814854771218,
+            "ratio": 1.002726791090503,
+            "reference_mean": 6566.978203029063,
+            "samples": 625408
+          },
+          {
+            "candidate_mean": 6550.575241293197,
+            "hi": 320,
+            "lo": 256,
+            "normalised_effect": 0.0003424974159094152,
+            "ratio": 1.0002616728416514,
+            "reference_mean": 6548.861582073434,
+            "samples": 592640
+          },
+          {
+            "candidate_mean": 6498.442742269662,
+            "hi": 384,
+            "lo": 320,
+            "normalised_effect": -5.3240368240281555e-05,
+            "ratio": 0.9998659670318885,
+            "reference_mean": 6499.313864597622,
+            "samples": 559872
+          },
+          {
+            "candidate_mean": 6384.121896248179,
+            "hi": 448,
+            "lo": 384,
+            "normalised_effect": -4.0517160709296896e-05,
+            "ratio": 0.9998786892114236,
+            "reference_mean": 6384.8964530718795,
+            "samples": 527104
+          },
+          {
+            "candidate_mean": 6340.9947120986535,
+            "hi": 512,
+            "lo": 448,
+            "normalised_effect": -7.695251625283728e-05,
+            "ratio": 0.9998422567997439,
+            "reference_mean": 6341.995118704686,
+            "samples": 494336
+          },
+          {
+            "candidate_mean": 6231.425499344092,
+            "hi": 640,
+            "lo": 512,
+            "normalised_effect": -4.435796500590339e-05,
+            "ratio": 0.9998748487174521,
+            "reference_mean": 6232.205467851495,
+            "samples": 890368
+          },
+          {
+            "candidate_mean": 6146.406082739801,
+            "hi": 768,
+            "lo": 640,
+            "normalised_effect": -3.9401181149201214e-05,
+            "ratio": 0.9998798051008161,
+            "reference_mean": 6147.144938205917,
+            "samples": 759296
+          },
+          {
+            "candidate_mean": 4867.125621675071,
+            "hi": 1156,
+            "lo": 768,
+            "normalised_effect": 0.0,
+            "ratio": 0.9999192030984719,
+            "reference_mean": 4867.5189021204915,
+            "samples": 1500784
+          }
+        ],
+        "safe_inset_px": 256,
+        "threshold": 0.001
+      },
+      "registered_prediction_pass": false,
+      "retention": {
+        "crop_height": 2312,
+        "crop_width": 3470,
+        "full_height": 2344,
+        "full_width": 3516,
+        "gate_fraction": 0.8,
+        "gate_pass": false,
+        "original_pixels": 8241504,
+        "retained_fraction": 0.6460471292618435,
+        "retained_fraction_decimal": "0.6460471292618434693473424268191825181423",
+        "retained_fraction_exact": "5324400/8241504",
+        "retained_height": 1800,
+        "retained_percent": 64.60471292618435,
+        "retained_pixels": 5324400,
+        "retained_rectangle": {
+          "height": 1800,
+          "width": 2958,
+          "x": 279,
+          "y": 272
+        },
+        "retained_width": 2958,
+        "safe_inset_px_per_side": 256
+      }
+    },
+    "m130_early_crop": {
+      "b2": {
+        "bytes": 48136827,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\crop-b2.tiff",
+        "sha256": "6538C53BDD0AFE36E3EBEA949E3352024CEC794F89C5644C3161B93CF64F6CDD",
+        "shape": [
+          2312,
+          3470,
+          3
+        ]
+      },
+      "b7": {
+        "bytes": 48136827,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\crop-b7.tiff",
+        "sha256": "8A67F2DBEE62EA2241BBFDA74516BFF9504CFD0AA81EE769B09C49F5C0267E9A",
+        "shape": [
+          2312,
+          3470,
+          3
+        ]
+      },
+      "pixel_area_gate_pass": true,
+      "profile": {
+        "censored_at_deep_start": false,
+        "deep_ratio": 0.9999171537074086,
+        "deep_start_px": 768,
+        "rows": [
+          {
+            "candidate_mean": 6612.924541363794,
+            "hi": 2,
+            "lo": 0,
+            "normalised_effect": -0.00044909255396041736,
+            "ratio": 0.9994680983591013,
+            "reference_mean": 6616.443838698511,
+            "samples": 23112
+          },
+          {
+            "candidate_mean": 6615.566941074523,
+            "hi": 4,
+            "lo": 2,
+            "normalised_effect": -0.0003988807922705728,
+            "ratio": 0.9995183059609329,
+            "reference_mean": 6618.755155979203,
+            "samples": 23080
+          },
+          {
+            "candidate_mean": 6616.854116012504,
+            "hi": 8,
+            "lo": 4,
+            "normalised_effect": -0.0003451077854849105,
+            "ratio": 0.9995720745128243,
+            "reference_mean": 6619.686848732199,
+            "samples": 46064
+          },
+          {
+            "candidate_mean": 6613.502245378444,
+            "hi": 16,
+            "lo": 8,
+            "normalised_effect": -0.0004637831347238386,
+            "ratio": 0.999453408995398,
+            "reference_mean": 6617.1191031566095,
+            "samples": 91744
+          },
+          {
+            "candidate_mean": 6607.858825404503,
+            "hi": 32,
+            "lo": 16,
+            "normalised_effect": -0.0006396516324252977,
+            "ratio": 0.9992775550677496,
+            "reference_mean": 6612.6360908371435,
+            "samples": 181952
+          },
+          {
+            "candidate_mean": 6618.881982334526,
+            "hi": 64,
+            "lo": 32,
+            "normalised_effect": -0.00030224202394946165,
+            "ratio": 0.9996149367230903,
+            "reference_mean": 6621.431652504472,
+            "samples": 357760
+          },
+          {
+            "candidate_mean": 6612.641165667338,
+            "hi": 96,
+            "lo": 64,
+            "normalised_effect": -0.0002717577686296435,
+            "ratio": 0.9996454184529026,
+            "reference_mean": 6614.9867178917975,
+            "samples": 349568
+          },
+          {
+            "candidate_mean": 6595.371613704537,
+            "hi": 128,
+            "lo": 96,
+            "normalised_effect": -0.00031632161021410976,
+            "ratio": 0.9996008583032672,
+            "reference_mean": 6598.005152676228,
+            "samples": 341376
+          },
+          {
+            "candidate_mean": 6592.649124807914,
+            "hi": 160,
+            "lo": 128,
+            "normalised_effect": 8.255895789233136e-08,
+            "ratio": 0.9999172362595269,
+            "reference_mean": 6593.194802271418,
+            "samples": 333184
+          },
+          {
+            "candidate_mean": 6581.383480208744,
+            "hi": 192,
+            "lo": 160,
+            "normalised_effect": -0.0002832827993992648,
+            "ratio": 0.9996338943769391,
+            "reference_mean": 6583.793844156164,
+            "samples": 324992
+          },
+          {
+            "candidate_mean": 6565.498965475338,
+            "hi": 256,
+            "lo": 192,
+            "normalised_effect": -0.0001414400230433932,
+            "ratio": 0.9997757254021468,
+            "reference_mean": 6566.971770428265,
+            "samples": 625408
+          },
+          {
+            "candidate_mean": 6547.495358058855,
+            "hi": 320,
+            "lo": 256,
+            "normalised_effect": -0.00012532975491597043,
+            "ratio": 0.9997918343355983,
+            "reference_mean": 6548.858605561555,
+            "samples": 592640
+          },
+          {
+            "candidate_mean": 6498.104973994055,
+            "hi": 384,
+            "lo": 320,
+            "normalised_effect": -9.448578062098978e-05,
+            "ratio": 0.9998226757545843,
+            "reference_mean": 6499.257449917124,
+            "samples": 559872
+          },
+          {
+            "candidate_mean": 6384.060729950826,
+            "hi": 448,
+            "lo": 384,
+            "normalised_effect": -3.940805224378341e-05,
+            "ratio": 0.9998777489199758,
+            "reference_mean": 6384.84128369354,
+            "samples": 527104
+          },
+          {
+            "candidate_mean": 6341.025869044536,
+            "hi": 512,
+            "lo": 448,
+            "normalised_effect": -7.322595497483153e-05,
+            "ratio": 0.9998439338189327,
+            "reference_mean": 6342.01564320624,
+            "samples": 494336
+          },
+          {
+            "candidate_mean": 6231.430306345242,
+            "hi": 640,
+            "lo": 512,
+            "normalised_effect": -4.4198759095781526e-05,
+            "ratio": 0.9998729586100161,
+            "reference_mean": 6232.222056497987,
+            "samples": 890368
+          },
+          {
+            "candidate_mean": 6146.391953862525,
+            "hi": 768,
+            "lo": 640,
+            "normalised_effect": -3.859349558932301e-05,
+            "ratio": 0.9998785634091474,
+            "reference_mean": 6147.138441398348,
+            "samples": 759296
+          },
+          {
+            "candidate_mean": 4867.115683536072,
+            "hi": 1156,
+            "lo": 768,
+            "normalised_effect": -1.1102230246251565e-16,
+            "ratio": 0.9999171537074085,
+            "reference_mean": 4867.518939434322,
+            "samples": 1500784
+          }
+        ],
+        "safe_inset_px": 8,
+        "threshold": 0.001
+      },
+      "registered_prediction_pass": true,
+      "retention": {
+        "crop_height": 2312,
+        "crop_width": 3470,
+        "full_height": 2344,
+        "full_width": 3516,
+        "gate_fraction": 0.8,
+        "gate_pass": true,
+        "original_pixels": 8241504,
+        "retained_fraction": 0.9622496088092659,
+        "retained_fraction_decimal": "0.9622496088092658815672479197971632362248",
+        "retained_fraction_exact": "7930384/8241504",
+        "retained_height": 2296,
+        "retained_percent": 96.22496088092659,
+        "retained_pixels": 7930384,
+        "retained_rectangle": {
+          "height": 2296,
+          "width": 3454,
+          "x": 31,
+          "y": 24
+        },
+        "retained_width": 3454,
+        "safe_inset_px_per_side": 8
+      }
+    },
+    "statistic": "((mean green b7 / mean green b2) / deep ratio) - 1"
+  },
+  "controls": {
+    "boundary_poison_commission": {
+      "null": {
+        "poison_reach_px": 0,
+        "profile": {
+          "censored_at_deep_start": false,
+          "deep_ratio": 1.0999999999999999,
+          "deep_start_px": 768,
+          "rows": [
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 2,
+              "lo": 0,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 23112
+            },
+            {
+              "candidate_mean": 8958.967187500002,
+              "hi": 4,
+              "lo": 2,
+              "normalised_effect": 4.440892098500626e-16,
+              "ratio": 1.1000000000000003,
+              "reference_mean": 8144.515625,
+              "samples": 23080
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 8,
+              "lo": 4,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 46064
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 16,
+              "lo": 8,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 91744
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 32,
+              "lo": 16,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 181952
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 64,
+              "lo": 32,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 357760
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 96,
+              "lo": 64,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 349568
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 128,
+              "lo": 96,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 341376
+            },
+            {
+              "candidate_mean": 8958.967187500002,
+              "hi": 160,
+              "lo": 128,
+              "normalised_effect": 4.440892098500626e-16,
+              "ratio": 1.1000000000000003,
+              "reference_mean": 8144.515625,
+              "samples": 333184
+            },
+            {
+              "candidate_mean": 8958.967187499999,
+              "hi": 192,
+              "lo": 160,
+              "normalised_effect": 0.0,
+              "ratio": 1.0999999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 324992
+            },
+            {
+              "candidate_mean": 8958.967187499999,
+              "hi": 256,
+              "lo": 192,
+              "normalised_effect": 0.0,
+              "ratio": 1.0999999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 625408
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 320,
+              "lo": 256,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 592640
+            },
+            {
+              "candidate_mean": 8958.967187500002,
+              "hi": 384,
+              "lo": 320,
+              "normalised_effect": 4.440892098500626e-16,
+              "ratio": 1.1000000000000003,
+              "reference_mean": 8144.515625,
+              "samples": 559872
+            },
+            {
+              "candidate_mean": 8958.967187499999,
+              "hi": 448,
+              "lo": 384,
+              "normalised_effect": 0.0,
+              "ratio": 1.0999999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 527104
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 512,
+              "lo": 448,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 494336
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 640,
+              "lo": 512,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 890368
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 768,
+              "lo": 640,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 759296
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 1156,
+              "lo": 768,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 1500784
+            }
+          ],
+          "safe_inset_px": 8,
+          "threshold": 0.001
+        },
+        "retention": {
+          "crop_height": 2312,
+          "crop_width": 3470,
+          "full_height": 2344,
+          "full_width": 3516,
+          "gate_fraction": 0.8,
+          "gate_pass": true,
+          "original_pixels": 8241504,
+          "retained_fraction": 0.9622496088092659,
+          "retained_height": 2296,
+          "retained_percent": 96.22496088092659,
+          "retained_pixels": 7930384,
+          "retained_width": 3454,
+          "safe_inset_px_per_side": 8
+        }
+      },
+      "planted_boundary_poison": {
+        "poison_reach_px": 256,
+        "profile": {
+          "censored_at_deep_start": false,
+          "deep_ratio": 1.0999999999999999,
+          "deep_start_px": 768,
+          "rows": [
+            {
+              "candidate_mean": 9138.146531249999,
+              "hi": 2,
+              "lo": 0,
+              "normalised_effect": 0.020000000000000018,
+              "ratio": 1.1219999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 23112
+            },
+            {
+              "candidate_mean": 9138.14653125,
+              "hi": 4,
+              "lo": 2,
+              "normalised_effect": 0.02000000000000024,
+              "ratio": 1.122,
+              "reference_mean": 8144.515625,
+              "samples": 23080
+            },
+            {
+              "candidate_mean": 9138.146531249999,
+              "hi": 8,
+              "lo": 4,
+              "normalised_effect": 0.020000000000000018,
+              "ratio": 1.1219999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 46064
+            },
+            {
+              "candidate_mean": 9138.14653125,
+              "hi": 16,
+              "lo": 8,
+              "normalised_effect": 0.02000000000000024,
+              "ratio": 1.122,
+              "reference_mean": 8144.515625,
+              "samples": 91744
+            },
+            {
+              "candidate_mean": 9138.14653125,
+              "hi": 32,
+              "lo": 16,
+              "normalised_effect": 0.02000000000000024,
+              "ratio": 1.122,
+              "reference_mean": 8144.515625,
+              "samples": 181952
+            },
+            {
+              "candidate_mean": 9138.14653125,
+              "hi": 64,
+              "lo": 32,
+              "normalised_effect": 0.02000000000000024,
+              "ratio": 1.122,
+              "reference_mean": 8144.515625,
+              "samples": 357760
+            },
+            {
+              "candidate_mean": 9138.146531249999,
+              "hi": 96,
+              "lo": 64,
+              "normalised_effect": 0.020000000000000018,
+              "ratio": 1.1219999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 349568
+            },
+            {
+              "candidate_mean": 9138.14653125,
+              "hi": 128,
+              "lo": 96,
+              "normalised_effect": 0.02000000000000024,
+              "ratio": 1.122,
+              "reference_mean": 8144.515625,
+              "samples": 341376
+            },
+            {
+              "candidate_mean": 9138.14653125,
+              "hi": 160,
+              "lo": 128,
+              "normalised_effect": 0.02000000000000024,
+              "ratio": 1.122,
+              "reference_mean": 8144.515625,
+              "samples": 333184
+            },
+            {
+              "candidate_mean": 9138.146531249999,
+              "hi": 192,
+              "lo": 160,
+              "normalised_effect": 0.020000000000000018,
+              "ratio": 1.1219999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 324992
+            },
+            {
+              "candidate_mean": 9138.14653125,
+              "hi": 256,
+              "lo": 192,
+              "normalised_effect": 0.02000000000000024,
+              "ratio": 1.122,
+              "reference_mean": 8144.515625,
+              "samples": 625408
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 320,
+              "lo": 256,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 592640
+            },
+            {
+              "candidate_mean": 8958.967187500002,
+              "hi": 384,
+              "lo": 320,
+              "normalised_effect": 4.440892098500626e-16,
+              "ratio": 1.1000000000000003,
+              "reference_mean": 8144.515625,
+              "samples": 559872
+            },
+            {
+              "candidate_mean": 8958.967187499999,
+              "hi": 448,
+              "lo": 384,
+              "normalised_effect": 0.0,
+              "ratio": 1.0999999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 527104
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 512,
+              "lo": 448,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 494336
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 640,
+              "lo": 512,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 890368
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 768,
+              "lo": 640,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 759296
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 1156,
+              "lo": 768,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 1500784
+            }
+          ],
+          "safe_inset_px": 256,
+          "threshold": 0.001
+        },
+        "retention": {
+          "crop_height": 2312,
+          "crop_width": 3470,
+          "full_height": 2344,
+          "full_width": 3516,
+          "gate_fraction": 0.8,
+          "gate_pass": false,
+          "original_pixels": 8241504,
+          "retained_fraction": 0.6460471292618435,
+          "retained_height": 1800,
+          "retained_percent": 64.60471292618435,
+          "retained_pixels": 5324400,
+          "retained_width": 2958,
+          "safe_inset_px_per_side": 256
+        }
+      },
+      "repaired_control": {
+        "poison_reach_px": 8,
+        "profile": {
+          "censored_at_deep_start": false,
+          "deep_ratio": 1.0999999999999999,
+          "deep_start_px": 768,
+          "rows": [
+            {
+              "candidate_mean": 9138.146531249999,
+              "hi": 2,
+              "lo": 0,
+              "normalised_effect": 0.020000000000000018,
+              "ratio": 1.1219999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 23112
+            },
+            {
+              "candidate_mean": 9138.14653125,
+              "hi": 4,
+              "lo": 2,
+              "normalised_effect": 0.02000000000000024,
+              "ratio": 1.122,
+              "reference_mean": 8144.515625,
+              "samples": 23080
+            },
+            {
+              "candidate_mean": 9138.146531249999,
+              "hi": 8,
+              "lo": 4,
+              "normalised_effect": 0.020000000000000018,
+              "ratio": 1.1219999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 46064
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 16,
+              "lo": 8,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 91744
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 32,
+              "lo": 16,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 181952
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 64,
+              "lo": 32,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 357760
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 96,
+              "lo": 64,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 349568
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 128,
+              "lo": 96,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 341376
+            },
+            {
+              "candidate_mean": 8958.967187500002,
+              "hi": 160,
+              "lo": 128,
+              "normalised_effect": 4.440892098500626e-16,
+              "ratio": 1.1000000000000003,
+              "reference_mean": 8144.515625,
+              "samples": 333184
+            },
+            {
+              "candidate_mean": 8958.967187499999,
+              "hi": 192,
+              "lo": 160,
+              "normalised_effect": 0.0,
+              "ratio": 1.0999999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 324992
+            },
+            {
+              "candidate_mean": 8958.967187499999,
+              "hi": 256,
+              "lo": 192,
+              "normalised_effect": 0.0,
+              "ratio": 1.0999999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 625408
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 320,
+              "lo": 256,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 592640
+            },
+            {
+              "candidate_mean": 8958.967187500002,
+              "hi": 384,
+              "lo": 320,
+              "normalised_effect": 4.440892098500626e-16,
+              "ratio": 1.1000000000000003,
+              "reference_mean": 8144.515625,
+              "samples": 559872
+            },
+            {
+              "candidate_mean": 8958.967187499999,
+              "hi": 448,
+              "lo": 384,
+              "normalised_effect": 0.0,
+              "ratio": 1.0999999999999999,
+              "reference_mean": 8144.515625,
+              "samples": 527104
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 512,
+              "lo": 448,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 494336
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 640,
+              "lo": 512,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 890368
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 768,
+              "lo": 640,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 759296
+            },
+            {
+              "candidate_mean": 8958.9671875,
+              "hi": 1156,
+              "lo": 768,
+              "normalised_effect": 2.220446049250313e-16,
+              "ratio": 1.1,
+              "reference_mean": 8144.515625,
+              "samples": 1500784
+            }
+          ],
+          "safe_inset_px": 8,
+          "threshold": 0.001
+        },
+        "retention": {
+          "crop_height": 2312,
+          "crop_width": 3470,
+          "full_height": 2344,
+          "full_width": 3516,
+          "gate_fraction": 0.8,
+          "gate_pass": true,
+          "original_pixels": 8241504,
+          "retained_fraction": 0.9622496088092659,
+          "retained_height": 2296,
+          "retained_percent": 96.22496088092659,
+          "retained_pixels": 7930384,
+          "retained_width": 3454,
+          "safe_inset_px_per_side": 8
+        }
+      }
+    },
+    "cli_unit_tests": {
+      "combined_output_sha256": "28C2A658DF944B076BB0811C34DA057CD1DBAFD25FE8CCBA28110C309803D338",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "strehl-cli",
+        "--bin",
+        "strehl"
+      ],
+      "compiled_strehl_cli": true,
+      "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+      "environment": {
+        "CARGO_TARGET_DIR": "C:\\dev\\strehl-out\\M130-crop-early\\target-artifact-results",
+        "inherited_strehl_variables": "removed"
+      },
+      "exit_code": 0,
+      "source": "regenerated by measure.py record-results",
+      "summary": {
+        "failed": 0,
+        "filtered_out": 0,
+        "ignored": 0,
+        "measured": 0,
+        "passed": 121
+      }
+    },
+    "estimator_crop_refusal": {
+      "combined_output_sha256": "1EF5713BA1420A7E0A71D17A441709AF748A024EF1B4FD4A212E00734AE06C3F",
+      "command": [
+        "C:\\dev\\strehl-out\\M130-crop-early\\target-after\\release\\strehl.exe",
+        "stack",
+        "D:\\strehl-out\\cover-default\\one-109-ref",
+        "--merge",
+        "estimator",
+        "--cover",
+        "crop",
+        "--out",
+        "<temporary-output>"
+      ],
+      "environment": "all inherited STREHL_* variables removed",
+      "exit_code": 1,
+      "output_created": false,
+      "refusal_text_observed": true,
+      "source": "regenerated by measure.py record-results"
+    }
+  },
+  "crop_exactness": {
+    "controls": {
+      "scale": {
+        "differing_samples": 24252367,
+        "fraction_differing": 0.981462052003266,
+        "max_dn": 8656,
+        "rms_dn": 215.4407990453508,
+        "samples": 24710448
+      },
+      "wrong_origin": {
+        "differing_samples": 23892271,
+        "fraction_differing": 0.9719984071969702,
+        "max_dn": 6235,
+        "rms_dn": 195.4375485149551,
+        "samples": 24580566
+      }
+    },
+    "crop": {
+      "differing_samples": 0,
+      "fraction_differing": 0.0,
+      "max_dn": 0,
+      "rms_dn": 0.0,
+      "samples": 24580566
+    },
+    "crop_origin_plane_px": [
+      5,
+      4
+    ],
+    "direct_window": {
+      "differing_samples": 0,
+      "fraction_differing": 0.0,
+      "max_dn": 0,
+      "rms_dn": 0.0,
+      "samples": 24580566
+    }
+  },
+  "generation": {
+    "analysis_status": "all profile, retention, exactness, refusal, test, file-hash, and capture-manifest values were regenerated by the named instruments",
+    "render_production_status": "manual command, not regenerated by record-results; exact commands and binary hashes are recorded in docs/research/M130-crop-early.md",
+    "repository_head": "a94f0160c319188872b0ce73ecea7272dd960c50",
+    "source": "regenerated by measure.py record-results"
+  },
+  "geometry": {
+    "crop_rectangle": {
+      "height": 2312,
+      "width": 3470,
+      "x": 23,
+      "y": 16
+    },
+    "full_plane": {
+      "height": 2344,
+      "pixels": 8241504,
+      "width": 3516,
+      "x": 0,
+      "y": 0
+    },
+    "units": "binned plane pixels"
+  },
+  "input_provenance": {
+    "full_stack": {
+      "capture_identifier": "109MSDCF:DSC00009.ARW..DSC00030.ARW",
+      "first_frame": "DSC00009.ARW",
+      "frame_count": 22,
+      "frames": [
+        {
+          "bytes": 37859328,
+          "name": "DSC00009.ARW",
+          "sha256": "09586FAE7A165247013F298353439C20DF6CD178D8FAB53F95CA8585A6573B0F"
+        },
+        {
+          "bytes": 37896192,
+          "name": "DSC00010.ARW",
+          "sha256": "A1040E3679346469BCC9E0320E51DF58656ECE81E3758FC279E6E913E50133E5"
+        },
+        {
+          "bytes": 37937152,
+          "name": "DSC00011.ARW",
+          "sha256": "FCF6130777D89DF12880AB1408D3A9A38B90D47C943DA56502B32457320D8AFB"
+        },
+        {
+          "bytes": 37982208,
+          "name": "DSC00012.ARW",
+          "sha256": "B97E88E6692B5B276D84EA16C9CE99783BA652BD49C99713D795A3C98BA23257"
+        },
+        {
+          "bytes": 38055936,
+          "name": "DSC00013.ARW",
+          "sha256": "DC235B7D0491AF3E3F31995DE2E0E399ACCAD3A14FE829F2E828607361C99754"
+        },
+        {
+          "bytes": 38051840,
+          "name": "DSC00014.ARW",
+          "sha256": "2A4783ED0F625517932B42EA14942076A5E516C968AD38A4D4A707FE93D1413E"
+        },
+        {
+          "bytes": 38178816,
+          "name": "DSC00015.ARW",
+          "sha256": "54592B7335FB3ABB87D5C4EC37EE4883AC26E30533211EA6C9F65A738A73A819"
+        },
+        {
+          "bytes": 38289408,
+          "name": "DSC00016.ARW",
+          "sha256": "44E684B1373665D14A8EB9B83D139A55DA86A0E74AF2F83ACFE7C91144E8EC97"
+        },
+        {
+          "bytes": 38322176,
+          "name": "DSC00017.ARW",
+          "sha256": "171E335F702C6307EA02F4C536989D2EDCA52FA8FE62B4DB45DC9C5623D5AE98"
+        },
+        {
+          "bytes": 38334464,
+          "name": "DSC00018.ARW",
+          "sha256": "25C260436BD3978B27A9B6116D024C113FA298C6CC5CA88F3035FF849D2C68AF"
+        },
+        {
+          "bytes": 38297600,
+          "name": "DSC00019.ARW",
+          "sha256": "7154EBD1C411A6DE7848E77FECB6F1FC9BF927023E1E34241762ED18C8FC968F"
+        },
+        {
+          "bytes": 38178816,
+          "name": "DSC00020.ARW",
+          "sha256": "77AAEC0B9958B97E8B712332E2A3C67013373623B8BCF52CC5C88B912F0070CA"
+        },
+        {
+          "bytes": 38121472,
+          "name": "DSC00021.ARW",
+          "sha256": "85DDA9E099A5F5D13ADBF8B40E9F069F3DE4F6723482416D75053FF5663B18A9"
+        },
+        {
+          "bytes": 38060032,
+          "name": "DSC00022.ARW",
+          "sha256": "07CB22CE6E42DDA8CDAD980E5DF4ADD01FF207D4A6F4F02D6269365377B7E338"
+        },
+        {
+          "bytes": 37978112,
+          "name": "DSC00023.ARW",
+          "sha256": "52FB32135030DD8A164C0E5D63BCACE1F8866D0CA57CF3B643941E8CAB865E1C"
+        },
+        {
+          "bytes": 37945344,
+          "name": "DSC00024.ARW",
+          "sha256": "6D00A69AD09FCAC4E93FAAB088EA5DC3EE04D1A87FB0A20B14710D1307A7D13D"
+        },
+        {
+          "bytes": 37892096,
+          "name": "DSC00025.ARW",
+          "sha256": "FADD7C9AF8AD662419E16A35F5A9D6050BC11D6B6032CD3E07B205C11DB3FDAF"
+        },
+        {
+          "bytes": 37867520,
+          "name": "DSC00026.ARW",
+          "sha256": "0516981384E553558B22D9228C887505EE709FE17B50502B7F513854F04C59EE"
+        },
+        {
+          "bytes": 37830656,
+          "name": "DSC00027.ARW",
+          "sha256": "CDB1BBD141C3B46775041A5AA295E16B110C425BAFB75CA5B9A62BBE620FBCD9"
+        },
+        {
+          "bytes": 37806080,
+          "name": "DSC00028.ARW",
+          "sha256": "A4683916F9F783109E00E6804A14C6926132AAE1ADC6192F38D78FEFA99C0A88"
+        },
+        {
+          "bytes": 37785600,
+          "name": "DSC00029.ARW",
+          "sha256": "E44DE53DA7500C37E1CCA29AFD97F0C18EE7D309F150EF11AC22EF629A71B877"
+        },
+        {
+          "bytes": 37769216,
+          "name": "DSC00030.ARW",
+          "sha256": "33C5704D6B368BEF59CC677145D622159442E6919D3D91C549646B1309DC3222"
+        }
+      ],
+      "last_frame": "DSC00030.ARW",
+      "manifest_definition": "SHA-256 of canonical JSON containing capture_identifier and the ordered name/bytes/content-sha256 frame records",
+      "manifest_sha256": "FD8934977027F2429DF9F030CF37470DCC61371AC319C94F538A4C5A49BDBE1D",
+      "path": "D:\\personal\\macro\\109MSDCF",
+      "total_bytes": 836440064
+    },
+    "one_frame": {
+      "black_levels": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "bytes": 38178816,
+      "camera_whitebalance": [
+        2930.0,
+        1024.0,
+        1518.0,
+        1024.0
+      ],
+      "capture_identifier": "109MSDCF:DSC00020.ARW",
+      "color_desc": "RGBG",
+      "gains": [
+        2.861328125,
+        1.0,
+        1.482421875
+      ],
+      "path": "D:\\strehl-out\\cover-default\\one-109-ref\\DSC00020.ARW",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "sha256": "77AAEC0B9958B97E8B712332E2A3C67013373623B8BCF52CC5C88B912F0070CA",
+      "visible_sha256": "894A15258713A9B260DB20792CB847D70898CEBECBAEA0871790D242BC659830",
+      "visible_shape": [
+        4688,
+        7028
+      ]
+    },
+    "preserved_render_artifacts": {
+      "crop": {
+        "bytes": 49162127,
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\one-crop.tiff",
+        "sha256": "9033579443C98A769770F71A239104E3529F53FB152308080A7EE4AC1C72C972",
+        "shape": [
+          2337,
+          3506,
+          3
+        ]
+      },
+      "default_before": {
+        "bytes": 49450019,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\before-default.tiff",
+        "sha256": "84901F122C256961199EB153674309C328AE7ABF9C33D371A4BBBEE26CD4F594",
+        "shape": [
+          2344,
+          3516,
+          3
+        ]
+      },
+      "direct": {
+        "bytes": 49450019,
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\one-direct.tiff",
+        "sha256": "447F1A6EF5212CECCE4890C0823C50E3D66DC65ED23733BC957F0217C31BFCF4",
+        "shape": [
+          2344,
+          3516,
+          3
+        ]
+      },
+      "new_b2": {
+        "bytes": 48136827,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\crop-b2.tiff",
+        "sha256": "6538C53BDD0AFE36E3EBEA949E3352024CEC794F89C5644C3161B93CF64F6CDD",
+        "shape": [
+          2312,
+          3470,
+          3
+        ]
+      },
+      "new_b7": {
+        "bytes": 48136827,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\crop-b7.tiff",
+        "sha256": "8A67F2DBEE62EA2241BBFDA74516BFF9504CFD0AA81EE769B09C49F5C0267E9A",
+        "shape": [
+          2312,
+          3470,
+          3
+        ]
+      },
+      "old_b2": {
+        "bytes": 48136827,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\before-crop-b2.tiff",
+        "sha256": "10F7DEAF5A82CA2A311C76A323AE5627207520E7DA3BB71D237BB861CC7CC977",
+        "shape": [
+          2312,
+          3470,
+          3
+        ]
+      },
+      "old_b7": {
+        "bytes": 48136827,
+        "dtype": "uint16",
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\before-crop-b7.tiff",
+        "sha256": "0465D253F14431CE76BA1DD68E54C1BD2CBAE56DA17F079D5DD572852FCAD304",
+        "shape": [
+          2312,
+          3470,
+          3
+        ]
+      },
+      "scale": {
+        "bytes": 49450019,
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\one-scale.tiff",
+        "sha256": "23A385AC2E5C0C70B1F436C3D9E5F3C13E905FB8DE9A177AA1D988DAFDBE2FC2",
+        "shape": [
+          2344,
+          3516,
+          3
+        ]
+      }
+    },
+    "sidecars": {
+      "full_stack": {
+        "bytes": 3438,
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\109-warpmap.txt",
+        "sha256": "C29CAB9C6F944F4D03C4402998E54AAD4D4221CC450AC4BEF42A453DE848434D"
+      },
+      "one_frame": {
+        "bytes": 608,
+        "path": "C:\\dev\\strehl-out\\M130-crop-early\\one-109-ref.warpmap.txt",
+        "sha256": "4C858562AF44E0646D9E45E445DEBAC17C6C9E4FEC28C325B9E653EB391E6C05"
+      }
+    }
+  },
+  "instruments": {
+    "artifact_io_py": {
+      "bytes": 5559,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M130-crop-early\\artifact_io.py",
+      "sha256": "8FC614EBC177BA40485297C051C3BE2A89AF8C94E3A9DA202A48948AF2FD8066"
+    },
+    "exactness_component": {
+      "bytes": 3724,
+      "path": "C:\\dev\\strehl-out\\M130-crop-early\\exactness-component.json",
+      "sha256": "7D374F796C78E421AFE8E79FB9794486254587893BECC85B2303F7FD8394804A"
+    },
+    "exactness_py": {
+      "bytes": 24194,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M130-crop-early\\exactness.py",
+      "sha256": "49799142E76F37C5DF264B716D55E56D17C29E273AC114BA80B2D5EA1CFF608B"
+    },
+    "measure_py": {
+      "bytes": 31395,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M130-crop-early\\measure.py",
+      "sha256": "AD44F1E298B4C9B9D4C7A7C5C8243B6B73816316FD442F76D818FC70001DD22B"
+    },
+    "preregistration": {
+      "bytes": 11606,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M130-crop-early\\PREREGISTRATION.md",
+      "sha256": "71DB51DF0026EA199EF3579DD75272685B21B219012DD9953BE8927AF0126E66"
+    }
+  },
+  "integrity": {
+    "algorithm": "SHA-256",
+    "self_hash_rule": "SHA-256 of UTF-8 JSON with sorted keys, compact separators, ensure_ascii=false, allow_nan=false, after removing integrity.self_sha256",
+    "self_sha256": "1CE89A1FAD14528FB7526E09D8D94D1C17E6F8D08DC9B9B04ED4E413F689C14B"
+  },
+  "milestone": "M130",
+  "registered_gate": {
+    "estimand": "retained pixel area divided by original plane pixel area",
+    "late_crop_pass": false,
+    "m130_early_crop_pass": true,
+    "threshold_fraction": 0.8
+  },
+  "schema": "m130-crop-early-results-v1",
+  "verdict": {
+    "cli_tests_pass": true,
+    "crop_exact": true,
+    "estimator_crop_refuses": true,
+    "pass": true,
+    "pixel_area_gate_pass": true,
+    "safe_inset_prediction_pass": true
+  }
+}

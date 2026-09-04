@@ -2930,7 +2930,10 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
 /// plane. Letting that backend reach the old writer-time crop would present two
 /// different operations under one flag, so it is refused before a frame is
 /// decoded instead.
-fn preflight_cover_backend_support(backend: MergeBackend, cover: align_cmd::CoverMode) -> Result<()> {
+fn preflight_cover_backend_support(
+    backend: MergeBackend,
+    cover: align_cmd::CoverMode,
+) -> Result<()> {
     if backend == MergeBackend::Estimator && cover == align_cmd::CoverMode::Crop {
         bail!(
             "REFUSING TO RENDER: --cover crop is not implemented by the estimator backend.\n\
@@ -4650,15 +4653,10 @@ fn extract_planes(
         let out = &mut planes[plane_index];
         for local_y in 0..local.height {
             let full_y = domain.rect.y + local_y;
-            let row = (active_y + 2 * full_y + dy) * stride
-                + active_x
-                + 2 * domain.rect.x
-                + dx;
-            let dst =
-                &mut out[local_y * local.width..(local_y + 1) * local.width];
+            let row = (active_y + 2 * full_y + dy) * stride + active_x + 2 * domain.rect.x + dx;
+            let dst = &mut out[local_y * local.width..(local_y + 1) * local.width];
             for (local_x, value) in dst.iter_mut().enumerate() {
-                *value =
-                    (f32::from(data[row + 2 * local_x]) - black).max(0.0);
+                *value = (f32::from(data[row + 2 * local_x]) - black).max(0.0);
             }
         }
     }
@@ -4732,10 +4730,9 @@ impl Merged<'_> {
                 };
                 (raw - black).max(0.0)
             }
-            Self::Bands { planes, .. } => {
-                (0.5 * (planes[band_slot(CfaPlane::G1)][i] + planes[band_slot(CfaPlane::G2)][i]))
-                    .max(0.0)
-            }
+            Self::Bands { planes, .. } => (0.5
+                * (planes[band_slot(CfaPlane::G1)][i] + planes[band_slot(CfaPlane::G2)][i]))
+                .max(0.0),
         }
     }
 }
@@ -5067,7 +5064,15 @@ fn confidence_pass(
             };
             for (i, p) in chunk {
                 if !load_frame(
-                    p, *i, domain, levels, warps, defect, &mut scratch, None, &mut planes,
+                    p,
+                    *i,
+                    domain,
+                    levels,
+                    warps,
+                    defect,
+                    &mut scratch,
+                    None,
+                    &mut planes,
                     &mut luma,
                 )? {
                     continue;
@@ -5216,7 +5221,15 @@ fn confidence_debug_pass(
             let mut c = Candidates::new(px);
             for (i, p) in chunk {
                 if !load_frame(
-                    p, *i, domain, levels, warps, defect, &mut scratch, None, &mut planes,
+                    p,
+                    *i,
+                    domain,
+                    levels,
+                    warps,
+                    defect,
+                    &mut scratch,
+                    None,
+                    &mut planes,
                     &mut luma,
                 )? {
                     continue;
@@ -5569,11 +5582,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         (m, how, fit)
     });
     let align_secs = t_align.elapsed().as_secs_f64();
-    let domain = pyramid_domain(
-        geom,
-        opts.cover,
-        alignment.as_ref().map(|(_, _, fit)| fit),
-    )?;
+    let domain = pyramid_domain(geom, opts.cover, alignment.as_ref().map(|(_, _, fit)| fit))?;
     let analysis_geom = domain.analysis();
     let sizes = level_sizes(analysis_geom.width, analysis_geom.height, cfg.bands);
 
@@ -5624,10 +5633,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         eprintln!(
             "analysis domain : {} x {} at full-plane origin ({}, {}) -- Crop is applied \
              BEFORE luma, variance, weighting and accumulation",
-            analysis_geom.width,
-            analysis_geom.height,
-            domain.rect.x,
-            domain.rect.y
+            analysis_geom.width, analysis_geom.height, domain.rect.x, domain.rect.y
         );
     }
     eprintln!("--- the merge ---");
@@ -5935,13 +5941,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                 &sigma,
                 per_chunk,
             )?;
-            write_confidence_debug(
-                Path::new(dir),
-                &c,
-                &merged_luma,
-                &sigma,
-                analysis_geom,
-            )?;
+            write_confidence_debug(Path::new(dir), &c, &merged_luma, &sigma, analysis_geom)?;
             Centrality {
                 below: c.below,
                 seen: c.seen,
@@ -7635,8 +7635,7 @@ mod tests {
         let mut data = vec![60_000u16; stride * rows];
         for y in 0..2 * full.height {
             for x in 0..2 * full.width {
-                data[(active_y + y) * stride + active_x + x] =
-                    1_000 + (100 * y + x) as u16;
+                data[(active_y + y) * stride + active_x + x] = 1_000 + (100 * y + x) as u16;
             }
         }
         (data, stride, active_x, active_y, full)
@@ -7672,9 +7671,7 @@ mod tests {
                 .map(|x| {
                     let source_y = 2 * rect.y + dy;
                     let source_x = 2 * (rect.x + x) + dx;
-                    f32::from(
-                        data[(active_y + source_y) * stride + active_x + source_x],
-                    ) - 500.0
+                    f32::from(data[(active_y + source_y) * stride + active_x + source_x]) - 500.0
                 })
                 .collect::<Vec<_>>();
             assert_eq!(baseline[plane], expected, "CFA plane {plane}");
@@ -7687,16 +7684,12 @@ mod tests {
         let mut poisoned = data.clone();
         for y in 0..full.height {
             for x in 0..full.width {
-                if x >= rect.x
-                    && x < rect.x + rect.width
-                    && y >= rect.y
-                    && y < rect.y + rect.height
+                if x >= rect.x && x < rect.x + rect.width && y >= rect.y && y < rect.y + rect.height
                 {
                     continue;
                 }
                 for (dx, dy) in BAND_PLANE_OFFSETS {
-                    poisoned[(active_y + 2 * y + dy) * stride + active_x + 2 * x + dx] =
-                        65_000;
+                    poisoned[(active_y + 2 * y + dy) * stride + active_x + 2 * x + dx] = 65_000;
                 }
             }
         }
@@ -7758,8 +7751,7 @@ mod tests {
             .flat_map(|y| {
                 let data = &data;
                 (0..full.width).map(move |x| {
-                    f32::from(data[(active_y + 2 * y) * stride + active_x + 2 * x])
-                        - 500.0
+                    f32::from(data[(active_y + 2 * y) * stride + active_x + 2 * x]) - 500.0
                 })
             })
             .collect::<Vec<_>>();
@@ -7837,9 +7829,7 @@ mod tests {
             width: 10,
             height: 8,
         };
-        assert!(
-            pyramid_domain(full, align_cmd::CoverMode::Crop, None).is_err()
-        );
+        assert!(pyramid_domain(full, align_cmd::CoverMode::Crop, None).is_err());
         assert!(
             pyramid_domain(
                 full,
@@ -7856,28 +7846,16 @@ mod tests {
 
     #[test]
     fn cover_backend_refuses_only_estimator_crop_and_keeps_scale_default() {
-        assert_eq!(
-            align_cmd::DEFAULT_COVER_MODE,
-            align_cmd::CoverMode::Scale
-        );
-        let error = preflight_cover_backend_support(
-            MergeBackend::Estimator,
-            align_cmd::CoverMode::Crop,
-        )
-        .unwrap_err()
-        .to_string();
+        assert_eq!(align_cmd::DEFAULT_COVER_MODE, align_cmd::CoverMode::Scale);
+        let error =
+            preflight_cover_backend_support(MergeBackend::Estimator, align_cmd::CoverMode::Crop)
+                .unwrap_err()
+                .to_string();
         assert!(error.contains("REFUSING TO RENDER"));
         assert!(error.contains("--merge pyramid --cover crop"));
-        preflight_cover_backend_support(
-            MergeBackend::Pyramid,
-            align_cmd::CoverMode::Crop,
-        )
-        .unwrap();
-        preflight_cover_backend_support(
-            MergeBackend::Estimator,
-            align_cmd::CoverMode::Scale,
-        )
-        .unwrap();
+        preflight_cover_backend_support(MergeBackend::Pyramid, align_cmd::CoverMode::Crop).unwrap();
+        preflight_cover_backend_support(MergeBackend::Estimator, align_cmd::CoverMode::Scale)
+            .unwrap();
     }
 
     /// Ladder **shapes** for exercising the solver, generated rather than

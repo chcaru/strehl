@@ -49,8 +49,8 @@ use strehl_core::align::{Resampler, Similarity};
 use strehl_core::pyramid::{level_sizes, LevelSize, Pyramid, Workspace};
 use strehl_raw::Frame;
 
-use crate::align_cmd::{self, WarpScratch};
 use super::{BAND_PLANE_OFFSETS, PyramidDomain, extract_planes};
+use crate::align_cmd::{self, WarpScratch};
 
 /// Probe level above black, in DN. Far enough above the pedestal that the
 /// `(data - black).max(0.0)` clamp in `load_frame` never fires -- it is a
@@ -227,13 +227,7 @@ impl Probe {
             // must come back at the white value. Any drift is the probe's, not
             // the warp's, and it is measured here rather than assumed.
             let got = self.beta.clone();
-            self.run(
-                template,
-                index,
-                Similarity::IDENTITY,
-                resampler,
-                scratch,
-            )?;
+            self.run(template, index, Similarity::IDENTITY, resampler, scratch)?;
             let white = strehl_core::pyramid::BandGain::measure(self.sizes.len() - 1);
             let worst = self
                 .beta
@@ -267,13 +261,7 @@ impl Probe {
         let black = f64::from(template.levels.black);
         fill_noise(&mut probe.data, black + PROBE_LEVEL, PROBE_SIGMA, index);
 
-        align_cmd::warp_frame_in_place(
-            &mut probe,
-            t,
-            self.domain.full,
-            resampler,
-            scratch,
-        )
+        align_cmd::warp_frame_in_place(&mut probe, t, self.domain.full, resampler, scratch)
             .context("warping the noise probe for the band-noise floor")?;
 
         // Deinterleave the two green phases exactly as `load_frame` does, and
