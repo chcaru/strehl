@@ -535,6 +535,77 @@ It did not.
 
 ---
 
+## Ask 2c — three short flat captures for M4. **$0.** *New tonight, and the only capture finding that changed.*
+
+**Good news first: M3 no longer needs anything from you.** I had been carrying
+occlusion-halo and broad-veil as capture-blocked. A frozen input-only census
+(M152, `docs/research/M152-site-census.md`) counted what your archive actually
+contains and found **1,233 broad-eligible edges** where M3 needs 500 — 221 duck
+tape, 399 chia, 511 flower/fern, 102 razor — every site carrying the full 400
+native-pixel background reach, every capture clearing the 50-per-capture floor.
+**M3's input requirement is met with photons already on disk.** That census was
+frozen and hash-stamped before a protected pixel was decoded, and it read no
+output of any kind.
+
+**M4 is short, and only on one arm.** Its edge arm is comfortable: `10,355`
+eligible sites against a need of 250. Its *flat* arm is not. The archive holds
+**178 eligible flat tiles**, but supplies only **138 of the 250 flat sites M4
+scores**, because the bee background's 123 eligible tiles are capped at its
+quota of 83:
+
+| flat subject | eligible tiles | frozen quota | selected |
+|---|---|---|---|
+| medication pill | 55 | 84 | 55 |
+| exact bee background | 123 | 83 | 83 |
+| foam | **0** | 83 | **0** |
+| | | `250` | **`138`** |
+
+Eligible and selected are different populations and I nearly quoted the wrong
+one: `178` is what qualifies, `138` is what scores. That is `388` of `500`
+scored sites overall, and the edge surplus is deliberately unable to dilute the
+missing flat population.
+
+**What would close it — three short sittings, none of them a full stack.**
+
+1. A fresh, untouched **medication-pill** flat/background session supplying at
+   least `84` qualifying tiles.
+2. A fresh, untouched **foam** flat/background session supplying at least `83`.
+3. A **separate, deliberately non-holdout development** flat session supplying
+   at least `100` tiles, for commissioning the checker.
+
+**Item 3 is not padding and it cannot be folded into items 1 and 2.**
+Commissioning an instrument on a protected capture burns that capture for
+scoring. Coffee bubbles and every existing flat-slide stack supply zero
+qualifying tiles, so there is currently nothing to commission against at all.
+
+**How to shoot them.** Reserve broad, truly featureless background; keep each
+`128x128` tile above the ten-sigma black floor and below clipping; avoid
+`20–60 px` texture in every focus frame. These are backgrounds, not subjects —
+they should be quick, and they are independent of the 891-frame session.
+
+**One choice here is genuinely yours, and I am flagging it rather than taking
+it.** The near-equal `84/83/83` split is M152's, frozen before any pixel was
+decoded. The scorecard itself asks only for `500` sites overall and `50` per
+scored capture. Under that literal rule your existing medication capture
+already clears `50`, and **one** new protected flat session supplying `>=72`
+sites would close the 250-flat total — two sittings saved. **But changing the
+quotas now, after seeing that foam returned zero, is a post-hoc population
+change**, and that is precisely the move that makes a scorecard stop meaning
+anything. It may still be right, because the `50`-per-capture rule predates the
+census and is the more firmly pre-registered of the two. M152 declined to make
+this call after seeing the result, which was correct of it. I am declining too:
+
+- **Option A — shoot all three.** Keeps M152's pre-decode quotas untouched.
+- **Option B — shoot one protected flat session of `>=72` sites, plus the
+  development session.** Falls back to the scorecard's own literal minimum,
+  recorded openly as a post-hoc population version.
+
+I recommend **B if sittings are expensive to you, A if they are not.** Either
+way item 3 is required, and neither option is urgent: M4 also needs a scorer
+that does not yet exist.
+
+---
+
 ## Ask 2b — one more free email, this time to ISA. **$0.** *Do this instead of spending $660.*
 
 **I owe you a correction first.** I have been describing the `$660` as buying a
