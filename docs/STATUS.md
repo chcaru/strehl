@@ -1989,6 +1989,92 @@ is unchanged at **0/12 MEASURED**.
 
 ---
 
+### 2.9.12 The scoreboard moved, and the first number it produced says the picture is wrong
+
+**M8 is measured. It reads FAIL.** After eleven closed gates and nine refusals,
+an axis finally carries a value instead of a reason it cannot be read.
+
+`1.030569%` of merged pixels lie outside the hull of the frames they were merged
+from -- `63,191,176` of `6,131,678,976` -- with excursions running
+`-240.040039` DN below and `+586.215820` DN above the source range. The identity
+arm is clean at `0/32,919,152`, and commissioning separates the kernels the way
+the physics says it must: Catmull-Rom, which has negative lobes, trips `28/252`;
+copy trips `0/252` at exactly zero error; bilinear, which has no negative lobes,
+trips `0/300`. The instrument fires on overshoot and only on overshoot.
+`docs/research/M8-overshoot.md`, commit `76b3d9cc`. Every number above was
+checked against that file before this section was written.
+
+**This is a real defect in the pictures, not a measurement artifact.** Values
+outside the source hull are invented. At `+586` DN they are visible, and they
+are the signature of ringing -- which is the same family as the halo already
+recorded as the largest visible defect in the renders.
+
+### A second lane found that the default output path resamples every picture
+
+Independently, the scorecard baseline lane measured every one of eight renders
+failing the scorecard's native-scale prerequisite -- `scorecard.md:225`,
+*"Outputs must retain native scale. Resize is a hard invalidation."* -- against
+a `<=0.10%` bar. The measured disagreement runs `0.2901%`-`0.4619%` across the
+eight -- **three to four and a half times the bar, with no render close to
+passing.**
+
+**The reader that took that measurement was commissioned, which is why I am
+treating it as a fact rather than a suspicion.** A planted `0.300%` scale error
+read back `0.3031%` and correctly failed; the identity null read `0`; a
+translation-only null read `0.0084%`, so the reader does not confuse a shift for
+a scale (`SCORECARD-BASELINE.md:47`). Per-render scale factors were reported to
+me but are not in that committed file, so they are not repeated here.
+
+The cause is `cover=scale`: 0.3-0.4% of width is dropped and the result
+upsampled back to native dimensions. **That is strehl's shipping default** --
+`crates/strehl-cli/src/align_cmd.rs:1003`, `DEFAULT_COVER_MODE =
+CoverMode::Scale`. Every picture the tool produces is silently resampled on its
+way out.
+
+**The blocker is strehl's own output path, not the comparator's.** I had been
+carrying this as a possible bar on M1's competitive half, and it is not one:
+all eight failing renders were strehl's. Comparator native-scale viability is
+unmeasured.
+
+### The two findings may be one finding
+
+The coverage rescale is a whole-frame Catmull-Rom resample applied to the
+finished picture. Catmull-Rom has negative lobes. **A whole-frame Catmull-Rom
+resample is an overshoot generator applied to 100% of pixels**, which makes it a
+live candidate for the source of M8's `1.030569%`.
+
+If that holds, one setting change closes M8 and unblocks M1's native-scale
+prerequisite together, and `CoverMode::Crop` is already shipped
+(`align_cmd.rs:986`) -- no new code. Both lanes are measuring it now. I am
+recording the hypothesis before the answer arrives so that it cannot be
+retrofitted to whatever comes back.
+
+**The counter-case is priced and it is not small.** `align.rs:2752-2754`
+records removing the coverage rescale recovering `+0.0179` dex of detail
+against `+0.1160` dex for changing the kernel -- so the rescale is real but it
+is the smaller factor by `6.5x`. And `scorecard.md:226-227` permits crops only
+when they are *"fixed from the common-input overlap before outputs exist"* with
+retained field of view `>=99.0%`. `CoverMode::Crop`'s rectangle is derived from
+the alignment solution, so it is data-dependent by construction. **A mode that
+trades one hard invalidation for another is not a fix**, and that question is
+asked explicitly of the lane rather than assumed away.
+
+### What this changes about where the program is pointed
+
+For four gates I have been reporting refusals. The honest summary of those was
+that the program could prove things wrong and could not prove anything right.
+That is now partly false: **the program can prove its own output wrong**, which
+is the direction a real quality claim gets built from.
+
+It also names a candidate axis that is genuinely competitive rather than
+merely defensive. `align.rs:2759` records a sharper kernel measuring
+`9.9x` Catmull-Rom's p99.9 overshoot while `align.rs:2752` records it
+recovering `+0.1160` dex of detail. **That is a detail-versus-overshoot
+frontier**, both ends of it are measurable with instruments that already exist
+and are commissioned, and neither end depends on the dead detail statistic or
+on the capture that has not been shot. It is the first thing in this program
+that could be pushed rather than only audited.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
