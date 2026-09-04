@@ -2821,7 +2821,7 @@ def validate_checker_fixture(
     if source.shape != (8, 8) or source.dtype != np.float64:
         raise Unmeasured("checker crop-origin source grid has wrong shape/dtype")
     expected_source = np.asarray(
-        8 * np.indices((8, 8), dtype=np.float64)[0]
+        100 * np.indices((8, 8), dtype=np.float64)[0]
         + np.indices((8, 8), dtype=np.float64)[1],
         dtype=np.float64,
     )
