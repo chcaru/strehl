@@ -3320,6 +3320,164 @@ is unambiguous that a confident wrong brief is far worse than a vague one.
 entirely if M131 rules in Candidate 2's favour. Blockers 1 and 2 on the capture
 request need one dry-run rehearsal at 1.30x before the real session.
 
+### 2.9.29 The honest scoreboard is zero, and the one axis we scored is a FAIL
+
+Three lanes returned together and they change the program's self-description
+more than anything since the conjunctive result.
+
+#### The scoreboard, stated honestly
+
+Every discussion in this program — including the roadmap I was about to put to
+the owner with a **$189** price tag on it — has been framed as *"how do we get
+from `2 of 12` measurable to `12 of 12`"*. That framing quietly conflates two
+different things, and the scorecard's own legend warns against exactly that:
+*"An **(e)** does not mean a result has been run."*
+
+I asked lane M133 to check. The answer:
+
+> **`0 of 12` axes pass. `1 of 12` has a produced-and-read score. That one is a
+> FAIL.**
+
+M8 is scored **FAIL**. M12 is formally **UNMEASURED** — confirming my reading
+that the absent `out/RUN-MANIFEST.json` means the scored matrix never closed,
+despite a commissioned harness and a partial campaign on disk.
+
+**And the scoring instrument did not know.** The scorecard said M8 was
+`UNMEASURED` and that *"its checker still must be commissioned before a result
+is admitted"*. Both statements were superseded fifteen minutes after the
+scorecard was last touched:
+
+```text
+scorecard last edit   2fd2b131   2026-09-03 10:10:54 -0700
+M8 reading landed     76b3d9cc   2026-09-03 10:25:49 -0700
+```
+
+None of the M8 numbers appeared anywhere in the scorecard. I have recorded the
+result in both M8 rows (`a0413b73`). The legend's warning turned out to apply to
+the scorecard itself.
+
+#### What M8 actually measures, and why the FAIL matters more than it looks
+
+M8 is the **source-hull certificate**: every emitted value must lie inside the
+convex hull of the source values that produced it. Plainly, **the stacker must
+not invent data.** For a scientific-imaging SOTA claim that is close to the most
+fundamental correctness property there is — and we currently violate it:
+
+| census | measured | bar |
+|---|---|---|
+| **M8-R** resampler | `63,191,176 / 6,131,678,976` = **1.030569%** | exactly `0.0000%` |
+| **M8-O** final output | `983,648 / 74,173,536` = **1.326144%** | exactly `0.0000%` |
+
+The reading is admissible. The checker was commissioned in **both** directions
+before it ran: a fractional Catmull hard step gave `28/252` violations with 14
+of each sign at extrema `-0.0625/+0.0625`; the copy null gave `0/252` at
+exact-copy error `0`; the convex bilinear null gave `0/300`
+(`docs/research/M8-overshoot.md:37-40`).
+
+**The cause is fully attributed, and it is not what I guessed.** My first
+instinct was that `cover=scale` resampling produced the overshoot, since Scale
+changes 98.1462% of samples while Crop is byte-exact. I checked instead of
+briefing on it, and the diagnosis refutes it outright: **crop removes only
+`0.010381` of the `1.030569` percentage points and worsens the extrema.** Crop
+is explicitly *"not a material M8-R fix"*. Nor does either geometry component
+own the count — registration without cover scale gives `1.075555%`, zoom-only
+gives `1.080580%`, and *"either fractional transform supplies phases at which the
+same negative-lobe kernel overshoots."*
+
+The real cause is the kernel. Changing **only** the warp-map resampler line,
+every placement held fixed, gives bilinear M8-R **`0 / 6,131,678,976` =
+`0.000000%`**. Catmull-Rom has negative taps; bilinear is convex. **All
+63,191,176 violations are attributable to the Catmull-Rom gather.**
+
+#### The tension this creates is the real problem
+
+| kernel | M8-R | band detail |
+|---|---|---|
+| Catmull-Rom | `1.030569%` | reference |
+| bilinear | `0.000000%` | **−0.3404 dex** |
+
+Neither endpoint is acceptable. A stacker that invents 1% of its values cannot
+claim scientific correctness; a stacker that surrenders 0.34 dex of detail
+cannot claim state of the art. **This is a genuine SOTA-relevant tradeoff and
+the program has never had a third point on that frontier.** Lanczos-3 is
+`UNMEASURED` for M8 and, having larger negative lobes than Catmull-Rom, is
+unlikely to help.
+
+**So I dispatched M134 to build the third point:** a **clamped cubic** — the
+Catmull-Rom gather followed by a clamp to the min/max of the taps that fed it.
+Hull compliance then holds *by construction*, and it modifies only the
+**1.030569%** of samples that would have violated, leaving 98.97% bit-identical
+to Catmull-Rom. If that works, the detail cost should be very much smaller than
+bilinear's.
+
+**And it opens a question that matters for the honesty of the whole claim.**
+Negative-lobe kernels produce edge overshoot, and overshoot reads as acutance —
+it *looks* sharper and *scores* sharper on many detail metrics, while being
+literally data that was not in the input. So: **how much of Catmull-Rom's 0.3404
+dex advantage over bilinear is resolved detail, and how much is invented
+overshoot?** A clamped kernel separates them. If a material part of that gap is
+overshoot, this program has been pricing invented contrast as resolution. M134
+is charged with reporting that decomposition explicitly, and a negative answer
+is an acceptable result.
+
+**M8-O is a separate defect and I have deliberately not sent anyone to fix it.**
+Bilinear barely moves it (`980,097/74,173,536` = `1.321357%`), and **977,684 of
+those 980,097 are full-rail values below a source hull above 1**. A one-frame
+bilinear null has M8-R zero but M8-O `52,570/24,724,512` = `0.212623%`. That
+pattern suggests the bar may be counting an unavoidable consequence of a finite
+output range against a hull that extends beyond it. M134 is asked **only whether
+the `0.0000%` bar is achievable in principle** — because if it is not, that is a
+finding about the scorecard, not about the code, and amending it is my call.
+
+#### Candidate 2 does not clear blocker (a)
+
+Lane M131 returned a clean **no** (`1e70edb4`), which is the outcome I told it
+would count as success. The ruling is precise rather than dismissive:
+
+> *"Candidate 2 really does resolve both synthetic optical arms in the correct
+> direction. That result survives my choice audit. It still does not furnish the
+> registered target task."*
+
+The decisive killer is the one I flagged as the crux at dispatch — the
+limitation `M-CAND2.md` states in its own text, that Hotelling `d'^2` cannot
+lawfully score two natural renders by treating dense and sparse as classes.
+M131's verdict on it: *"YES IN A NARROW TASK-BASED EXPERIMENT; NO FOR CANDIDATE
+2 ON THE AVAILABLE NATURAL RENDERS."* Supporting failures: the flat control
+returned unqualified `NUMERIC` readings in **16/16** trials, the frozen M55
+contract rejects it at B0 on **all ten** required fields, and image-derived
+coverage reaches only **63/64** sites with the IBIS and geometry gates failing —
+vindicating the earlier finding that coverage must be read from pixels, not EXIF.
+
+**So `(a)` still requires the bench session, and that settles the spending
+order.** From the §2.9.26 audit, with `(a)` unavailable from disk:
+
+| step | reaches | owner cost |
+|---|---|---|
+| crop-early (in flight, M130) | `2 of 12` | nothing |
+| **+ bench session** → `a+b+c` | **`4 of 12`** | 45-60 min, **$0** |
+| **+ Zerene Prosumer** → all four | **`12 of 12`** | **$189** |
+
+**The free step now strictly precedes the paid one.** Had Candidate 2 survived,
+$189 alone would have bought `6 of 12` with no bench time and the order would
+have reversed. That is precisely why the lane was dispatched before either ask
+was put to the owner, and it is the clearest return the orchestration has
+produced so far.
+
+#### What this does to the priority order
+
+The single most important consequence is that **there is now free, owner-free
+work that improves the product rather than merely unlocking measurements.**
+Fixing M8 needs no purchase, no capture, and no bench time. It is the only axis
+we have scored, we fail it, and the failure is a correctness defect rather than
+a competitive shortfall.
+
+1. **M130 crop-early** — strict necessary condition for all ten blocked axes.
+2. **M134 kernel frontier** — the only scored axis, currently failing.
+3. **M12 formal run** — needs a reserved quiet host and roughly 3.5 hours; its
+   harness is commissioned and the diagnostic matrix is complete. M133
+   recommends closing it **before** any purchase, and I agree: it is free.
+4. **Then** the owner asks, in the order the table above now fixes.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
