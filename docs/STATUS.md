@@ -6240,6 +6240,91 @@ applied it to how the instruments are scheduled.
 
 ---
 
+### 2.9.57 The detail axis has a gate at last, and three candidates are dead by measurement rather than by argument (M167, 2026-09-06)
+
+**M167 built and commissioned the adversarial detail battery** (`b6c0a76f`, `f412d01a`;
+`docs/research/M167-detail-battery.md`, `experiments/M167-detail-battery/`). Six pass
+predicates — flat-ROI null, planted improvement, planted degradation, signed blur
+monotonicity, sharpening discrimination, fail-closed — were **frozen in a committed
+preregistration before any candidate was run**, so nothing could be tuned after seeing an
+outcome.
+
+**The single most important property is that the battery can emit a pass.** A gate that
+rejects everything and a gate that accepts everything are indistinguishable from outside,
+and this program has now been burned twice by instruments that were quiet because they were
+dead rather than because the input was clean. M167's constructed oracle clears all six
+predicates, so the battery is demonstrably capable of passing something.
+
+**M167 found the weak point in its own positive control and repaired it.** Its first oracle
+"proved that a score vector could pass but did not instantiate the rendered arrays in the
+oracle process" — that is, it passed on labels rather than on pixels, which proves nothing at
+all. The repaired oracle is pinned to rendered fixtures at source SHA
+`7082DD08A51E3D74D9C402275F68342344AAB7E17112E753985FA4692F626B36`, with a maximum
+repeat-difference of `1.6653345369377348e-16`. **The oracle reads private construction truth
+and is permanently ineligible as a deployable instrument** — it is the battery's calibration,
+not a candidate.
+
+**All three previously-suspected instruments are now rejected by measurement**
+(`docs/research/M167-detail-battery.md:123-134`):
+
+| candidate | verdict | the measurement that killed it |
+| --- | --- | --- |
+| **D8 per-tile FRC** | REJECTED (P1, P4) | detail and a **no-scene flat** both returned `LOWER_BOUND 0.5` — it cannot establish that a scene contains more detail than a blank field |
+| **M137 band power** | REJECTED (P1, P5, P6) | flat gap `0.3488548829813006` **exceeded** detail gap `0.3403664343410666`; ratio **`1.0249391472947889`** — it scores a featureless flat *above* real detail |
+| **M2 `R_box9`** | REJECTED (P4, and the other five) | blurred/unblurred = **`0.5712148772282098`** — blur *improves* the score, and all three blur steps moved the favourable way |
+
+**The distinction that makes this result trustworthy: M2 is rejected here because M167
+measured it, not because M164 declared it broken.** M167 was explicitly told not to design
+around M164's identifiability ruling, and its report records that it does not treat that
+ruling as a universal impossibility theorem. An empirical rejection and a theoretical one are
+different evidence, and the program now holds both independently.
+
+**Commissioning evidence.** 8 of 8 checker sabotages caught; 15 of 15 battery commissioning
+checks pass; repeated full runs produce an identical `results.json` at SHA
+`210675AB3BC25FCE53EE090AAEE98E69330E95F3EC8C19FDC1CA59BCEF9229B0`
+(`docs/research/M167-detail-battery.md:245`). An independent verifier reran both commissioning
+commands and audited imports, hashes, citations, predicates and git history: **VERIFIED, no
+logic defects**.
+
+#### 2.9.57.1 What this does not do
+
+**No axis moved and no score was produced.** There is still **no deployable detail
+instrument**, and M167 correctly claimed none. Two limitations are stated in its own report
+and are now on the critical path: the battery is **synthetic**, so physical false-accept and
+false-refusal rates remain unmeasured; and **candidate adapter provenance and non-branching on
+arm identity are not yet frozen**, which is a live bypass — a candidate that can detect which
+arm it is being run on could pass while being useless. Both are routed back to M167.
+
+**What changed is the shape of the problem.** Detail-instrument candidates can now be
+*adjudicated* instead of argued about, and the program can tell the difference between "we
+have not found an instrument" and "no instrument exists". Those had been the same sentence.
+
+#### 2.9.57.2 The opening this creates, and the capture that may already exist
+
+M164's argument — confirmed sound at its core by an independent attack, §16 of the owner's
+plan — says a statistic of two rendered outputs cannot separate degradation from improvement
+**"without an assumption or observation outside those outputs."** That hedge is load-bearing,
+and it is also the licensed route through.
+
+**The f-number is such an observation: it is metadata, not a function of the pixels.** The
+owner has already shot a razor edge at three apertures — `19-razor-edge`, with
+`diagonal-tilt-all-axes` at `279`/`210`/`143` frames for f/5.6, f/8 and f/11 and
+`horizontal-flat` at `67`/`50`/`40`, plus `razor-flat-vertical-slightly-tilted-sw1-cpl` and a
+`7-aperture-pairs` set. With the 2x teleconverter these are **effectively f/11, f/16 and
+f/22**, deep into the diffraction-limited regime where resolving power is monotone decreasing
+in f-number and the usual aberration reversal at the lens's sweet spot does not apply.
+
+**If that ordering is physically forced, it is an external truth reference sitting in the
+archive already** — and the detail axis's capture blocker would be substantially smaller than
+the program has assumed. Routed to M171, which must verify the optics from EXIF rather than
+from directory names, declare a development/holdout split before reading any outcome, and
+control the confound that **frame count is perfectly aligned with the hypothesis** (the widest
+aperture also has the most frames, so a statistic tracking post-stack noise would rank the
+arms correctly while measuring nothing about resolution). M171 builds; **M167 adjudicates**,
+because in this program the author does not verify their own work.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking

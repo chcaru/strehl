@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
-SECTIONS = ["2.9.54", "2.9.55", "2.9.56"]
+SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57"]
 
 
 def collapse(s):
@@ -133,6 +133,14 @@ CLAIMS = [
     # --- scorecard ---
     ("m8r score", "1.030569", "docs/proposals/2026-09-sota-scorecard.md"),
     ("m1 withdrawn", "NO ADMISSIBLE BAR", "docs/proposals/2026-09-sota-scorecard.md"),
+    # --- M167 detail battery ---
+    ("m137 flat beats detail", "1.0249391472947889", R + "M167-detail-battery.md", None,
+     "exceeded detail"),
+    ("m2 battery replay", "0.5712148772282098", R + "M167-detail-battery.md", None,
+     "Independent replay returned"),
+    ("m167 results sha",
+     "210675AB3BC25FCE53EE090AAEE98E69330E95F3EC8C19FDC1CA59BCEF9229B0",
+     R + "M167-detail-battery.md"),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
