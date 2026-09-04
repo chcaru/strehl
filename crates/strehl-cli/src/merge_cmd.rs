@@ -38,7 +38,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Instant;
 
 use anyhow::{Context, Result, bail, ensure};
-use rayon::prelude::*;
+use rayon::{ThreadPoolBuilder, prelude::*};
 use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};
 use strehl_core::align::Resampler;
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
@@ -4673,17 +4673,23 @@ fn extract_planes(
         "Crop rectangle exceeds the decoded active area"
     );
 
-    for (plane_index, (dx, dy)) in offsets.iter().copied().enumerate() {
-        let out = &mut planes[plane_index];
-        for local_y in 0..local.height {
-            let full_y = domain.rect.y + local_y;
-            let row = (active_y + 2 * full_y + dy) * stride + active_x + 2 * domain.rect.x + dx;
-            let dst = &mut out[local_y * local.width..(local_y + 1) * local.width];
-            for (local_x, value) in dst.iter_mut().enumerate() {
-                *value = (f32::from(data[row + 2 * local_x]) - black).max(0.0);
-            }
-        }
-    }
+    planes
+        .par_iter_mut()
+        .zip(offsets.par_iter().copied())
+        .for_each(|(out, (dx, dy))| {
+            out.par_chunks_mut(local.width)
+                .enumerate()
+                .for_each(|(local_y, dst)| {
+                    let full_y = domain.rect.y + local_y;
+                    let row = (active_y + 2 * full_y + dy) * stride
+                        + active_x
+                        + 2 * domain.rect.x
+                        + dx;
+                    for (local_x, value) in dst.iter_mut().enumerate() {
+                        *value = (f32::from(data[row + 2 * local_x]) - black).max(0.0);
+                    }
+                });
+        });
     Ok(())
 }
 
@@ -4990,14 +4996,17 @@ fn load_frame(
     // computes it -- the same plane the estimator's election runs on.
     // Selecting on green only is what keeps chroma noise out of the
     // decision.
-    for i in 0..luma.len() {
-        luma[i] = 0.5 * (planes[1][i] + planes[2][i]);
-    }
+    luma.par_iter_mut()
+        .zip(planes[1].par_iter().zip(planes[2].par_iter()))
+        .for_each(|(luma, (g1, g2))| *luma = 0.5 * (*g1 + *g2));
     Ok(true)
 }
 
-/// Env twin of `--pyramid-workers`, and the only way to raise the fold's
-/// parallelism on a machine with more RAM than the budget assumes.
+/// Environment control used by the registered Pyramid worker ladder.
+///
+/// This controls execution threads, not reduction boundaries. Conflating those
+/// two jobs made the image depend on the worker count because floating-point
+/// sums are not associative.
 const BAND_WORKERS_ENV: &str = "STREHL_PYRAMID_WORKERS";
 
 /// Env twin of `--confidence-map`, for a harness that cannot edit the command
@@ -5425,14 +5434,14 @@ fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Res
     Ok(())
 }
 
-/// How many workers the band merge's fold gets.
+/// Canonical number of partial accumulators in the band merge's fold.
 ///
 /// Each worker holds a whole accumulator plus one frame's working set, which is
 /// hundreds of megabytes, so defaulting to the core count would ask for tens of
 /// gigabytes. Solved against the same [`MEMORY_BUDGET_BYTES`] the estimator's
-/// plan uses rather than against a hardcoded 3, which is what the example did.
+/// plan uses rather than against a hardcoded count.
 ///
-/// # Why the core count is deliberately not an input
+/// # Why execution threads are deliberately not an input
 ///
 /// This started as `by_memory.min(available_parallelism()).min(frames)`, and
 /// that was wrong for a reason worth writing down, because it was measured
@@ -5456,10 +5465,18 @@ fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Res
 /// per-worker size implied by the plane geometry, the frame count -- is a
 /// property of the build and the stack, not of the host.
 ///
-/// Nothing is lost on a machine with fewer cores than workers: the workers are
-/// rayon tasks, so a core-poor host simply runs them in more passes, and peak
-/// memory is bounded by however many are genuinely in flight, which is at most
-/// this many and possibly fewer.
+/// Keeping this value independent of [`BAND_WORKERS_ENV`] makes both the chunk
+/// boundaries and the left-to-right absorb order canonical. Rayon still gets
+/// the requested execution-thread count, and the pyramid's spatial operators
+/// expose row-level work inside each accumulator, so a 16-thread run is not
+/// capped at this number of chunks.
+fn canonical_band_workers(per_worker_bytes: usize, frames: usize) -> usize {
+    let by_memory = (MEMORY_BUDGET_BYTES / per_worker_bytes.max(1)).max(1);
+    by_memory.min(frames.max(1))
+}
+
+/// Execution threads for the fold. Unlike [`canonical_band_workers`], this is
+/// operational only and must not affect arithmetic grouping.
 fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
     if let Ok(v) = std::env::var(BAND_WORKERS_ENV)
         && !v.trim().is_empty()
@@ -5471,8 +5488,7 @@ fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
         ensure!(n >= 1, "{BAND_WORKERS_ENV} must be at least 1");
         return Ok(n.min(frames.max(1)));
     }
-    let by_memory = (MEMORY_BUDGET_BYTES / per_worker_bytes.max(1)).max(1);
-    Ok(by_memory.min(frames.max(1)))
+    Ok(canonical_band_workers(per_worker_bytes, frames))
 }
 
 /// The `lateral CA` prologue line, reporting the **resolved decision** rather
@@ -5773,9 +5789,9 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // ---- the fold ---------------------------------------------------------
     // Budget against the original full plane even under Crop. A worker still
     // owns a full decoded frame and full-plane warp scratch, and retaining the
-    // pre-M130 budget keeps the worker count (hence floating-point reduction
-    // order) stable. The actual BandMerge and frame workspaces below use the
-    // smaller analysis domain.
+    // pre-M130 budget keeps the canonical accumulator count (hence
+    // floating-point reduction order) stable. The actual BandMerge and frame
+    // workspaces below use the smaller analysis domain.
     let budget_sizes = level_sizes(geom.width, geom.height, cfg.bands);
     let acc_floats = BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg).accumulator_floats();
     let ws_floats = FrameWorkspace::new(&budget_sizes, BAND_PLANES).floats();
@@ -5783,39 +5799,47 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // decoded frame, all of which are live at once inside `fold`.
     let per_worker_bytes =
         4 * (acc_floats + ws_floats + (BAND_PLANES + 2) * geom.pixels()) + frame_bytes;
+    let canonical_workers = canonical_band_workers(per_worker_bytes, paths.len());
     let workers = band_workers(per_worker_bytes, paths.len())?;
-    let per_chunk = paths.len().div_ceil(workers);
+    let per_chunk = paths.len().div_ceil(canonical_workers);
     eprintln!(
-        "memory plan     : {workers} workers x {:.0} MB = {:.1} GB against a {} MB budget, \
-         CONSTANT in\n                  the frame count. The merge is a fold: every accumulator \
-         is a sum, so a\n                  frame is built, added and dropped. \
-         {BAND_WORKERS_ENV}=N overrides.",
+        "memory plan     : {canonical_workers} workers x {:.0} MB = {:.1} GB against a {} MB \
+         budget,\n                  CONSTANT in the frame count and reduction order; {workers} \
+         execution threads.\n                  The merge is a fold: every accumulator is a sum, so a \
+         frame is built,\n                  added and dropped. {BAND_WORKERS_ENV}=N changes threads, \
+         never arithmetic.",
         per_worker_bytes as f64 / (1 << 20) as f64,
-        workers as f64 * per_worker_bytes as f64 / (1 << 30) as f64,
+        canonical_workers as f64 * per_worker_bytes as f64 / (1 << 30) as f64,
         MEMORY_BUDGET_BYTES / (1 << 20),
     );
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
     let t_fold = Instant::now();
     let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
-    let parts: Vec<Result<FoldPart>> = indexed
-        .par_chunks(per_chunk)
-        .map(|chunk| {
-            let mut w = BandWorker::new(domain, cfg);
-            let mut folded = 0usize;
-            for (i, p) in chunk {
-                if w.fold(p, *i, levels, &noise, warps, defect)? {
-                    folded += 1;
+    let pool = ThreadPoolBuilder::new()
+        .num_threads(workers)
+        .build()
+        .context("building Pyramid execution pool")?;
+    let parts: Vec<Result<FoldPart>> = pool.install(|| {
+        indexed
+            .par_chunks(per_chunk)
+            .map(|chunk| {
+                let mut w = BandWorker::new(domain, cfg);
+                let mut folded = 0usize;
+                for (i, p) in chunk {
+                    if w.fold(p, *i, levels, &noise, warps, defect)? {
+                        folded += 1;
+                    }
                 }
-            }
-            Ok(FoldPart {
-                merge: w.merge,
-                folded,
-                beta_sum: w.beta_sum,
-                beta_n: w.beta_n,
+                Ok(FoldPart {
+                    merge: w.merge,
+                    folded,
+                    beta_sum: w.beta_sum,
+                    beta_n: w.beta_n,
+                })
             })
-        })
-        .collect();
+            .collect()
+    });
 
     let mut merged: Option<BandMerge> = None;
     let mut folded_total = 0usize;
@@ -9228,9 +9252,14 @@ mod tests {
 
         let third = MEMORY_BUDGET_BYTES / 3;
         assert_eq!(
+            canonical_band_workers(third, 64),
+            3,
+            "the canonical reduction count did not follow the memory budget"
+        );
+        assert_eq!(
             band_workers(third, 64).unwrap(),
             3,
-            "the memory budget did not bound the worker count"
+            "the unset execution count did not follow the canonical count"
         );
         assert_eq!(
             band_workers(third, 2).unwrap(),
@@ -9251,13 +9280,23 @@ mod tests {
         assert_eq!(
             band_workers(third, 64).unwrap(),
             2,
-            "{BAND_WORKERS_ENV} did not override the solved count"
+            "{BAND_WORKERS_ENV} did not override the execution-thread count"
+        );
+        assert_eq!(
+            canonical_band_workers(third, 64),
+            3,
+            "{BAND_WORKERS_ENV} changed the floating-point reduction partition"
         );
         unsafe { std::env::set_var(BAND_WORKERS_ENV, "999") };
         assert_eq!(
             band_workers(third, 5).unwrap(),
             5,
             "{BAND_WORKERS_ENV} was not clamped to the frame count"
+        );
+        assert_eq!(
+            canonical_band_workers(third, 5),
+            3,
+            "a large execution-thread override changed the canonical partition"
         );
         for bad in ["0", "abc", "-1", "2.5"] {
             unsafe { std::env::set_var(BAND_WORKERS_ENV, bad) };

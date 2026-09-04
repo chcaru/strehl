@@ -1193,6 +1193,7 @@ name = "strehl-core"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "rayon",
  "thiserror",
 ]
 

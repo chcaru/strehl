@@ -11,3 +11,4 @@ description = "Core types for strehl: noise model, CFA planes, geometry."
 [dependencies]
 thiserror.workspace = true
 anyhow.workspace = true
+rayon.workspace = true

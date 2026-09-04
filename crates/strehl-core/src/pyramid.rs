@@ -54,18 +54,21 @@
 //! Real stacks here are 20-300 frames at 33 MP. Holding every frame's pyramid
 //! is not an option. Every accumulator in [`BandMerge`] is a **sum**, so the
 //! merge is a fold: build one frame's pyramid, accumulate, drop it. [`BandMerge::absorb`]
-//! makes it a monoid, so a caller can run several accumulators over disjoint
-//! frame chunks in parallel and combine them, and the result is the same
-//! merge.
+//! lets a caller run several accumulators over disjoint frame chunks in
+//! parallel and combine them. The mathematical result is the same, but the
+//! floating-point bits are not: changing chunk boundaries changes the
+//! association of the sums. A caller that promises byte reproducibility must
+//! therefore keep those boundaries canonical.
 //!
-//! This crate has no `rayon` dependency and this module is therefore
-//! single-threaded by construction. Parallelism belongs to the caller, which is
-//! why the chunk/absorb shape is part of the API rather than an internal
-//! detail.
+//! Spatial operators are parallel over independent destination samples. That
+//! gives a caller useful thread-level parallelism without changing the order
+//! in which any one coefficient sees frames. Frame chunking remains a caller
+//! decision because it owns the much larger decode and warp working sets.
 
 use std::sync::{Mutex, OnceLock};
 
 use crate::noise::NoiseModel;
+use rayon::prelude::*;
 
 /// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
 ///
@@ -153,27 +156,29 @@ pub fn reduce(src: &[f32], src_size: LevelSize, dst: &mut [f32], scratch: &mut [
     assert_eq!(src.len(), src_size.pixels(), "reduce: source is not level-sized");
     assert_eq!(dst.len(), dst_size.pixels(), "reduce: destination is not level-sized");
     let (sw, sh) = (src_size.width, src_size.height);
-    let (dw, dh) = (dst_size.width, dst_size.height);
+    let dw = dst_size.width;
     assert!(scratch.len() >= dw * sh, "reduce: scratch is too small");
 
-    // Horizontal: sw -> dw, all sh rows.
-    for y in 0..sh {
-        let row = &src[y * sw..y * sw + sw];
-        let out = &mut scratch[y * dw..y * dw + dw];
-        for (x, o) in out.iter_mut().enumerate() {
-            let c = 2 * x;
-            let mut acc = 0.0f32;
-            for (t, k) in KERNEL.iter().enumerate() {
-                let sx = clamp_tap(c, t, sw);
-                acc += k * row[sx];
+    // Horizontal: sw -> dw, all sh rows. Rows are independent; each output
+    // sample retains the exact serial tap order.
+    scratch[..dw * sh]
+        .par_chunks_mut(dw)
+        .enumerate()
+        .for_each(|(y, out)| {
+            let row = &src[y * sw..y * sw + sw];
+            for (x, o) in out.iter_mut().enumerate() {
+                let c = 2 * x;
+                let mut acc = 0.0f32;
+                for (t, k) in KERNEL.iter().enumerate() {
+                    let sx = clamp_tap(c, t, sw);
+                    acc += k * row[sx];
+                }
+                *o = acc;
             }
-            *o = acc;
-        }
-    }
+        });
     // Vertical: sh -> dh.
-    for y in 0..dh {
+    dst.par_chunks_mut(dw).enumerate().for_each(|(y, out)| {
         let c = 2 * y;
-        let out = &mut dst[y * dw..y * dw + dw];
         out.fill(0.0);
         for (t, k) in KERNEL.iter().enumerate() {
             let sy = clamp_tap(c, t, sh);
@@ -182,7 +187,7 @@ pub fn reduce(src: &[f32], src_size: LevelSize, dst: &mut [f32], scratch: &mut [
                 *o += k * v;
             }
         }
-    }
+    });
 }
 
 /// Index of tap `t` (of 5, centred) at centre `c`, clamped into `0..n`.
@@ -223,18 +228,19 @@ pub fn expand(
         "expand: destination does not reduce to the source size"
     );
     let (sw, sh) = (src_size.width, src_size.height);
-    let (dw, dh) = (dst_size.width, dst_size.height);
+    let dw = dst_size.width;
     assert!(scratch.len() >= dw * sh, "expand: scratch is too small");
 
-    for y in 0..sh {
-        let row = &src[y * sw..y * sw + sw];
-        let out = &mut scratch[y * dw..y * dw + dw];
-        for (x, o) in out.iter_mut().enumerate() {
-            *o = expand_tap(row, sw, x);
-        }
-    }
-    for y in 0..dh {
-        let out = &mut dst[y * dw..y * dw + dw];
+    scratch[..dw * sh]
+        .par_chunks_mut(dw)
+        .enumerate()
+        .for_each(|(y, out)| {
+            let row = &src[y * sw..y * sw + sw];
+            for (x, o) in out.iter_mut().enumerate() {
+                *o = expand_tap(row, sw, x);
+            }
+        });
+    dst.par_chunks_mut(dw).enumerate().for_each(|(y, out)| {
         if y % 2 == 0 {
             let c = y / 2;
             let a = &scratch[clamp_idx(c as isize - 1, sh) * dw..][..dw];
@@ -251,7 +257,7 @@ pub fn expand(
                 *o = 0.5 * (a[i] + b[i]);
             }
         }
-    }
+    });
 }
 
 #[inline]
@@ -342,9 +348,10 @@ impl Pyramid {
                 self.sizes[k],
                 &mut ws.scratch,
             );
-            for (d, e) in self.data[k].iter_mut().zip(&ws.expanded[..px]) {
-                *d -= e;
-            }
+            self.data[k]
+                .par_iter_mut()
+                .zip(&ws.expanded[..px])
+                .for_each(|(d, e)| *d -= e);
         }
     }
 
@@ -362,9 +369,7 @@ impl Pyramid {
                 &mut ws.scratch,
             );
             acc = ws.expanded[..px].to_vec();
-            for (a, l) in acc.iter_mut().zip(&self.data[k]) {
-                *a += l;
-            }
+            acc.par_iter_mut().zip(&self.data[k]).for_each(|(a, l)| *a += l);
         }
         acc
     }
@@ -546,10 +551,10 @@ impl BandGain {
 /// operators act on.
 pub fn luma_variance(luma: &[f32], noise: &NoiseModel, dst: &mut [f32]) {
     assert_eq!(luma.len(), dst.len());
-    for (d, l) in dst.iter_mut().zip(luma) {
+    dst.par_iter_mut().zip(luma).for_each(|(d, l)| {
         let s = noise.green_luma_sigma(*l);
         *d = s * s;
-    }
+    });
 }
 
 // ---------------------------------------------------------------------------
@@ -1304,8 +1309,10 @@ impl Default for MergeConfig {
 
 /// A streaming multi-band merge over any number of frames and colour planes.
 ///
-/// Every field is a sum over frames, which is what makes this a fold and makes
-/// [`absorb`](Self::absorb) exact.
+/// Every field is a sum over frames, which is what makes this a fold.
+/// [`absorb`](Self::absorb) is mathematically exact, but floating-point
+/// addition is not associative: callers that require byte identity must use
+/// worker-independent chunk boundaries and absorb order.
 #[derive(Debug, Clone)]
 pub struct BandMerge {
     cfg: MergeConfig,
@@ -1389,8 +1396,9 @@ pub struct BandMerge {
     /// winner-take-all, so `n_eff` at one frame count is directly comparable
     /// with `n_eff` at another.
     ///
-    /// Like `den` it absorbs by summation, so it is exact and independent of the
-    /// order frames were folded in.
+    /// Like `den` it absorbs by summation. Its diagnostic value is numerically
+    /// stable, but its last bits still depend on the association of those
+    /// floating-point additions.
     ///
     /// HELD IN `f64`, AND THAT IS NOT FASTIDIOUSNESS. `select_weight` clamps
     /// `p * ln(r)` to `[-80, 80]`, so a thoroughly out-of-focus frame lands at
@@ -1635,9 +1643,7 @@ impl BandMerge {
             let px = sz.pixels();
             let lv = ws.luma.level(k);
             let sq = &mut ws.sq[..px];
-            for (s, l) in sq.iter_mut().zip(lv) {
-                *s = l * l;
-            }
+            sq.par_iter_mut().zip(lv).for_each(|(s, l)| *s = l * l);
             // Smooth the squared coefficients with the same binomial kernel,
             // at the same scale. An unsmoothed |L| is a single noisy sample and
             // makes the weight field as noisy as the data.
@@ -1668,13 +1674,13 @@ impl BandMerge {
                 // weight bit for bit: see `select_weight`.
                 let r_floor = significance_floor(gate) * self.cfg.significance_scale;
                 let vv = ws.var.level(k);
-                for ((w, e), v) in w.iter_mut().zip(sq.iter()).zip(vv) {
+                w.par_iter_mut().zip(sq.par_iter()).zip(vv).for_each(|((w, e), v)| {
                     // The floor at this band's scale: the level-0 variance
                     // carried down to this grid, times the measured band gain.
                     let floor = gate * beta * v.max(0.0);
                     let excess = (*e - floor).max(0.0);
                     *w = select_weight(excess, floor, p, r_floor);
-                }
+                });
             }
             self.accumulate_level(k, planes, &mut ws.plane, w);
         }
@@ -1708,13 +1714,20 @@ impl BandMerge {
         //    decomposition — because it is a statement about the observations,
         //    not about the representation.
         if self.cfg.hull.bounds() {
-            for c in 0..self.planes {
-                let (lo, hi) = (&mut self.lo[c][..n0], &mut self.hi[c][..n0]);
-                for ((l, h), v) in lo.iter_mut().zip(hi.iter_mut()).zip(planes[c]) {
-                    *l = l.min(*v);
-                    *h = h.max(*v);
-                }
-            }
+            self.lo
+                .par_iter_mut()
+                .zip(self.hi.par_iter_mut())
+                .zip(planes.par_iter())
+                .for_each(|((lo, hi), plane)| {
+                    lo[..n0]
+                        .par_iter_mut()
+                        .zip(hi[..n0].par_iter_mut())
+                        .zip(plane.par_iter())
+                        .for_each(|((l, h), v)| {
+                            *l = l.min(*v);
+                            *h = h.max(*v);
+                        });
+                });
         }
         // 4b. The same statement about the observations, made at every coarser
         //     scale. See [`Hull::PerLevel`]. The frame's GAUSSIAN pyramid is the
@@ -1730,10 +1743,10 @@ impl BandMerge {
                     let idx = (k - 1) * self.planes + c;
                     let g = ws.ghull.level(k);
                     let (lo, hi) = (&mut self.lo_lv[idx], &mut self.hi_lv[idx]);
-                    for ((l, h), v) in lo.iter_mut().zip(hi.iter_mut()).zip(g) {
+                    lo.par_iter_mut().zip(hi.par_iter_mut()).zip(g).for_each(|((l, h), v)| {
                         *l = l.min(*v);
                         *h = h.max(*v);
-                    }
+                    });
                     // The margin's scale. `beta * var` is the module's own
                     // calibrated statement of noise power at level `k` -- the
                     // identical quantity the selection gate thresholds on -- so
@@ -1756,10 +1769,10 @@ impl BandMerge {
                     );
                     let vv = ws.var.level(k);
                     let sig = &mut self.sig_lv[idx];
-                    for (s, v) in sig.iter_mut().zip(vv) {
+                    sig.par_iter_mut().zip(vv).for_each(|(s, v)| {
                         let cur = (beta * v.max(0.0)).sqrt();
                         *s = s.max(cur);
-                    }
+                    });
                 }
             }
         }
@@ -1784,51 +1797,68 @@ impl BandMerge {
             let dm = &mut self.dmax[k][..px];
             let da = &mut self.darg[k][..px];
             let ds = &mut self.dsq[k][..px];
-            for i in 0..px {
-                if w[i] > dm[i] {
-                    dm[i] = w[i];
-                    da[i] = fr;
-                }
-                ds[i] += f64::from(w[i]) * f64::from(w[i]);
-            }
+            dm.par_iter_mut()
+                .zip(da.par_iter_mut())
+                .zip(ds.par_iter_mut())
+                .zip(w.par_iter())
+                .for_each(|(((dm, da), ds), w)| {
+                    if *w > *dm {
+                        *dm = *w;
+                        *da = fr;
+                    }
+                    *ds += f64::from(*w) * f64::from(*w);
+                });
         }
         let den = &mut self.den[k][..px];
         match self.cfg.select {
             SelectMode::SoftPower => {
-                for (d, wv) in den.iter_mut().zip(w) {
-                    *d += wv;
-                }
-                for c in 0..self.planes {
-                    let lv = cache.pyramids[c].level(k);
-                    let num = &mut self.num[k * self.planes + c][..px];
-                    let usum = &mut self.usum[k * self.planes + c][..px];
-                    for i in 0..px {
-                        num[i] += w[i] * lv[i];
-                        usum[i] += lv[i];
-                    }
-                }
+                den.par_iter_mut().zip(w).for_each(|(d, wv)| *d += wv);
+                let first = k * self.planes;
+                self.num[first..first + self.planes]
+                    .par_iter_mut()
+                    .zip(self.usum[first..first + self.planes].par_iter_mut())
+                    .zip(cache.pyramids.par_iter())
+                    .for_each(|((num, usum), pyramid)| {
+                        let lv = pyramid.level(k);
+                        num[..px]
+                            .par_iter_mut()
+                            .zip(usum[..px].par_iter_mut())
+                            .zip(w.par_iter())
+                            .zip(lv.par_iter())
+                            .for_each(|(((num, usum), w), lv)| {
+                                *num += *w * *lv;
+                                *usum += *lv;
+                            });
+                    });
             }
             SelectMode::HardMax => {
                 let best = &mut self.best[k][..px];
-                for c in 0..self.planes {
-                    let lv = cache.pyramids[c].level(k);
-                    let num = &mut self.num[k * self.planes + c][..px];
-                    let usum = &mut self.usum[k * self.planes + c][..px];
-                    for i in 0..px {
-                        if w[i] > best[i] {
-                            num[i] = lv[i];
-                        }
-                        usum[i] += lv[i];
-                    }
-                }
-                for (b, wv) in best.iter_mut().zip(w) {
+                let first = k * self.planes;
+                self.num[first..first + self.planes]
+                    .par_iter_mut()
+                    .zip(self.usum[first..first + self.planes].par_iter_mut())
+                    .zip(cache.pyramids.par_iter())
+                    .for_each(|((num, usum), pyramid)| {
+                        let lv = pyramid.level(k);
+                        num[..px]
+                            .par_iter_mut()
+                            .zip(usum[..px].par_iter_mut())
+                            .zip(best.par_iter())
+                            .zip(w.par_iter())
+                            .zip(lv.par_iter())
+                            .for_each(|((((num, usum), best), w), lv)| {
+                                if *w > *best {
+                                    *num = *lv;
+                                }
+                                *usum += *lv;
+                            });
+                    });
+                best.par_iter_mut().zip(w).for_each(|(b, wv)| {
                     if wv > b {
                         *b = *wv;
                     }
-                }
-                for (d, wv) in den.iter_mut().zip(w) {
-                    *d = d.max(*wv);
-                }
+                });
+                den.par_iter_mut().zip(w).for_each(|(d, wv)| *d = d.max(*wv));
             }
         }
         if self.cfg.fallback != Fallback::Mean {
@@ -1905,12 +1935,14 @@ impl BandMerge {
 
     /// Combine another accumulator's frames into this one.
     ///
-    /// Exact for [`SelectMode::SoftPower`], because every field is a sum. For
-    /// [`SelectMode::HardMax`] it is exact too — a maximum is associative —
-    /// **except** for ties, where which frame wins depends on the order frames
-    /// were folded. Ties on a continuous statistic are measure-zero and only
-    /// arise where both weights are exactly zero, in which case the fallback
-    /// mean is used and the tie does not reach the output.
+    /// Mathematically exact for [`SelectMode::SoftPower`], because every field
+    /// is a sum, but not bit-associative in floating point. Callers promising
+    /// byte identity must keep chunk boundaries and absorb order canonical.
+    /// For [`SelectMode::HardMax`] maxima are bit-associative except for ties,
+    /// where which frame wins depends on fold order. Ties on a continuous
+    /// statistic are measure-zero and only arise where both weights are exactly
+    /// zero, in which case the fallback mean is used and the tie does not reach
+    /// the output.
     pub fn absorb(&mut self, other: &BandMerge) {
         assert_eq!(self.sizes, other.sizes, "cannot absorb a differently shaped merge");
         assert_eq!(self.planes, other.planes, "cannot absorb a different plane count");
@@ -2464,23 +2496,24 @@ impl PlaneCache {
 fn smooth5(data: &mut [f32], size: LevelSize, scratch: &mut [f32]) {
     let (w, h) = (size.width, size.height);
     assert!(scratch.len() >= w * h + w, "smooth5: scratch is too small");
-    for y in 0..h {
-        let row = &data[y * w..y * w + w];
-        let out = &mut scratch[..w];
-        for (x, o) in out.iter_mut().enumerate() {
-            let mut acc = 0.0f32;
-            for (t, k) in KERNEL.iter().enumerate() {
-                acc += k * row[clamp_tap(x, t, w)];
+    // Write the horizontal pass to a full image before touching `data`.
+    // This is the same two-pass arithmetic as the former row-at-a-time copy,
+    // but makes rows independent work units for Rayon.
+    scratch[..w * h]
+        .par_chunks_mut(w)
+        .enumerate()
+        .for_each(|(y, out)| {
+            let row = &data[y * w..y * w + w];
+            for (x, o) in out.iter_mut().enumerate() {
+                let mut acc = 0.0f32;
+                for (t, k) in KERNEL.iter().enumerate() {
+                    acc += k * row[clamp_tap(x, t, w)];
+                }
+                *o = acc;
             }
-            *o = acc;
-        }
-        data[y * w..y * w + w].copy_from_slice(&scratch[..w]);
-    }
-    // Vertical needs a full copy, because a row is read after it is written.
-    let col = &mut scratch[..w * h];
-    col.copy_from_slice(&data[..w * h]);
-    for y in 0..h {
-        let out = &mut data[y * w..y * w + w];
+        });
+    let col = &scratch[..w * h];
+    data.par_chunks_mut(w).enumerate().for_each(|(y, out)| {
         out.fill(0.0);
         for (t, k) in KERNEL.iter().enumerate() {
             let sy = clamp_tap(y, t, h);
@@ -2489,7 +2522,7 @@ fn smooth5(data: &mut [f32], size: LevelSize, scratch: &mut [f32]) {
                 *o += k * v;
             }
         }
-    }
+    });
 }
 
 /// The signal-to-noise ratio at which a coefficient is considered plainly real.
@@ -3415,10 +3448,11 @@ mod tests {
     }
 
     #[test]
-    fn chunked_folding_gives_the_same_merge() {
-        // The streaming property, asserted rather than assumed. A 300-frame
-        // stack at 33 MP cannot be merged any other way, and a fold that is not
-        // associative would make the render depend on the worker count.
+    fn chunked_folding_is_close_but_proves_why_boundaries_must_be_canonical() {
+        // The streaming property and its floating-point limit, both asserted
+        // rather than assumed. A 300-frame stack at 33 MP must be chunkable,
+        // but regrouping f32 sums is not bit-identical. The CLI therefore keeps
+        // this partition canonical while varying execution threads.
         let (w, h) = (64usize, 48usize);
         let cfg = MergeConfig { bands: 3, ..Default::default() };
         let sizes = level_sizes(w, h, cfg.bands);
@@ -3455,7 +3489,51 @@ mod tests {
         let three = run(3);
         let err = one.iter().zip(&three).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
         let scale = one.iter().fold(0.0f32, |a, v| a.max(v.abs()));
+        assert_ne!(
+            one, three,
+            "negative control did not expose the worker-dependent f32 reduction"
+        );
         assert!(err < 1e-3 * scale, "chunking changed the merge: {err} on a scale of {scale}");
+    }
+
+    #[test]
+    fn spatial_parallelism_is_bit_identical_across_worker_counts() {
+        let (w, h) = (64usize, 48usize);
+        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let var = vec![9.0f32; w * h];
+        let frames: Vec<Vec<f32>> = (0..6)
+            .map(|i| {
+                let mut v = split_focus(w, h, i % 2 == 0);
+                for (j, x) in v.iter_mut().enumerate() {
+                    *x += ((i * 31 + j * 17) % 13) as f32;
+                }
+                v
+            })
+            .collect();
+
+        let run = |workers: usize| -> Vec<f32> {
+            rayon::ThreadPoolBuilder::new()
+                .num_threads(workers)
+                .build()
+                .unwrap()
+                .install(|| {
+                    let mut merge = BandMerge::new(w, h, 1, cfg);
+                    let mut fws = FrameWorkspace::new(&sizes, 1);
+                    for frame in &frames {
+                        fws.next_frame();
+                        merge.add_frame(&[frame.as_slice()], frame, &var, &mut fws);
+                    }
+                    let mut ws = Workspace::new(&sizes);
+                    merge.finish(&mut ws)[0].clone()
+                })
+        };
+
+        assert_eq!(
+            run(1),
+            run(4),
+            "spatial work scheduling changed a destination sample's arithmetic"
+        );
     }
 
     #[test]
