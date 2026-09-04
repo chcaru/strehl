@@ -2551,3 +2551,105 @@ suspended steps. Amendments 1–3 stand. Removing A2 and D8 from the schedule
 lowers no quality bar — it removes two steps that could not honestly be executed,
 and it removes them from the instruction rather than merely noting them in an
 appendix.
+
+## 15. Amendment 5 — the two ungated items are deferred on the record, and Phase 3's label is false (orchestrator, 2026-09-05)
+
+An independent audit (`docs/research/M133-blocker-audit.md`) established that two
+plan items have never produced a tracked gate result, and that section 9
+describes a set of channels in terms its own evidence contradicts. This
+amendment rules on both. It defers work rather than adding any, and it removes a
+claim rather than making one.
+
+### 15.1 C13 / MAKERNOTE is deferred, and the precondition is its own missing bar
+
+**Standing state: UNGATED.** No tracked artifact and no later GO/KILL document
+exists for `M-PHASE0-MAKERNOTE` (`docs/research/M133-blocker-audit.md:1426-1434`).
+
+**Ruling: do not schedule it, and do not treat "never run" as a reason to run
+it.** Three findings support deferral, and the first is disqualifying on its own:
+
+1. **Its acceptance bar is unspecified** (`docs/proposals/2026-09-phase0-triage.md:194-206`).
+   Running a gate whose bar does not yet exist is the precise failure this
+   program has spent its entire phase-zero effort correcting. It would produce a
+   number with nothing to compare it against, and the bar would then be chosen
+   with the number already in view. **The bar must be frozen before the lane
+   opens, not after.**
+2. **The existing semantic interpretation crosses the GPL fence**, and the
+   clean walker does not read these arrays. A clean-room decode and a held-out
+   grid are prerequisites, not implementation details.
+3. It is priced at **2 to 5 engineering days** and gates nothing on the path to
+   the resolution claim.
+
+The audit's own summary is adopted verbatim as the operative principle here:
+**"Unrun is not the same as highest decision value."**
+(`docs/research/M133-blocker-audit.md:1582-1585`)
+
+**Precondition to reopen:** a frozen clean-room method, a held-out geometry, and
+a numeric acceptance bar, all three preregistered.
+
+### 15.2 D10 / TETHER is deferred, and it is already in the right phase
+
+**Standing state: UNGATED, correctly still phase 4**
+(`docs/research/M133-blocker-audit.md:1436-1451`).
+
+**Ruling: leave it in phase 4 and do not front-load it.** It requires an owner
+hardware day — camera, cable, and SDK access — plus a fresh run of roughly 299
+frames, so it is neither a corpus-only task nor an idle-box task. Its B5/D2/D3
+substrate is not ready. Scheduling it now would consume the scarcest resource in
+the program, which is owner capture time, on an item that serves workflow rather
+than the resolution claim.
+
+**This is also the drift I am most exposed to.** D10 is a live closed loop and
+C13 is metadata; both are interesting, both are tractable, and **neither moves
+the resolution claim.** The goal of this program is a defensible statement about
+resolved detail. Work that is merely available is not thereby work that is
+warranted.
+
+### 15.3 Section 9's "cleared physics channels" is false and is struck
+
+Section 9's Phase 3 heading reads:
+
+> **Phase 3 — the fusion bet (C4 then C1), and the cleared physics channels (C2, C7,
+> C10 exploits, C12, C13) in whatever order phase 0 ranked them.**
+
+**The label is verified false** (`docs/research/M133-blocker-audit.md:1548`). The
+actual states are:
+
+| Channel | Actual state |
+|---|---|
+| C2 | inconclusive / STOP |
+| C7 | inconclusive / STOP |
+| C10 | inconclusive / STOP |
+| C12 | partly gated only |
+| C13 | ungated — never run (§15.1) |
+| C1 | adverse / not robust |
+| C4c | killed as a decision gate |
+
+**Read the Phase 3 heading as "the physics channels (C2, C7, C10 exploits, C12,
+C13), none of which is currently cleared."** None of C1, C2, C7, C10, C12 or C13
+is licensed as a complete Phase 3 build. Each requires independent justification
+before it is scheduled. C4a and C4b may proceed when independently justified.
+
+The Phase 3 exit language referring to split-half scoring is **obsolete** after
+D8's withdrawal (Amendment 4, §14.1) and should be read as FRC-scored and
+moiré-scored only.
+
+**Why strike a word rather than leave it.** A future reader — including a future
+instance of me — would take "cleared" at face value and schedule a build on it.
+The plan is the program's memory, and a false label in it is worse than a gap,
+because a gap invites a check and a label suppresses one.
+
+### 15.4 What this amendment does not change
+
+- **Phase 3's exit condition stands**, and it remains the point of the whole
+  program: *"either the first defensible resolution claim in the project's
+  history, or a measured negative with the phase/conditioning census explaining
+  exactly why."* Deferring C13 and D10 protects that exit rather than delaying
+  it.
+- **No axis, bar, or holdout is altered.** The scorecard is untouched by this
+  amendment.
+- **No result is retracted.** C13 and D10 have no results to retract; that is
+  the entire finding.
+- **Neither item is killed.** Both are deferred with stated preconditions, and
+  either may be reopened the moment its precondition is met.
+
