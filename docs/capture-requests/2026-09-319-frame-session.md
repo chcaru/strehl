@@ -1,48 +1,55 @@
-# Capture request: the 383-frame session for M1, M5 and M9
+# Capture request: 383 claim frames + 60 witnesses for M1, M5 and M9
 
 Status: REQUESTED — awaiting owner
 Owner of this file: orchestrator
 Raised: 2026-09
-Amended: 2026-09 (supersedes the 319-frame and interim 407-frame versions)
+Amended: 2026-09 (Sony A7C II automated-bracketing protocol)
 
 ---
 
 ## AMENDED — read this before shooting
 
-**The 319-frame request was reviewed and found insufficient.** The mechanical
-core was right and is unchanged: **stabilisation off, fixed exposure, and a
-coplanar nonperiodic patch.** The acquisition and calibration instructions below
-replace the version already sent.
+**Do not use the earlier paired-node instructions.** The Sony A7C II cannot
+take A and B at one focus node before advancing; Focus Bracket drives a complete
+ladder automatically. The whole-pass sequence below replaces every earlier
+version of this request.
 
 | # | Change | Why |
 | --- | --- | --- |
-| 1 | **Take A and B back-to-back at every focus node** | This guarantees that `A[i]` and `B[i]` share one focus command |
+| 1 | **Two complete automated A/B brackets, with fixed-focus start/end sentinels** | Per-node A/B interleaving is unavailable on this body |
 | 2 | **Patch must be physically large enough** for 64 guarded sites | Frame count is not site count |
 | 3 | **Use separate 32-flat/32-dark groups for A and B** | Shared calibration structure correlates the two realizations |
-| 4 | **Wait after every focus move before exposing** | A 1 s shooting interval is not a settling delay |
+| 4 | **Use a 3 s bracket interval and freeze the repeatability gate before shooting** | The old 1 s interval did not provide a settling margin or a defensible node test |
 
-**Frame budget changed from 319 to 383.** The focus data remain 255 frames.
-The old plan allowed four 16-frame calibration groups; this request uses four
-32-frame groups instead, adding 64 frames and leaving reserve after dark-frame
-settling discards. The primary paired-node protocol needs no witness frames:
-**255 focus frames + 128 calibration frames = 383 acquired session frames.**
-The four discarded settling darks remain part of that acquired-frame total.
+**The claim-frame budget changed from 319 to 383.** The focus data remain 255
+frames. The old plan allowed four 16-frame calibration groups; this request
+uses four 32-frame groups instead, adding 64 frames and leaving reserve after
+dark-frame settling discards:
 
-If the body cannot take two exposures at one focus node before advancing, use
-the frozen whole-pass fallback described below. That fallback adds 24 witness
-frames and is **407 total**, not 383.
+- **383 claim/calibration frames:** 255 focus + 128 calibration.
+- **60 fixed-focus witness frames:** 12 reset pre-flight + 48 start/end
+  sentinels around the four automated passes.
+- **443 acquired session frames total.**
+- One throwaway histogram exposure comes first and is not part of the 443.
 
-**Before the first session frame:** confirm how you will take two exposures
-without moving focus, then take the throwaway test exposure described in
-*Before you shoot*. Do not start and improvise the pairing halfway through.
+The four discarded settling darks are still counted among the 443 shutter
+releases. The owner-approved 319 -> 383 amendment is the calibration increase;
+the additional 60 are the evidence needed to decide whether two automated
+ladders may be paired.
+
+**Before the first session frame:** confirm the G0-G3 reader has passed its
+development-data dry run without changing the bars below. Then take the
+throwaway test exposure, run the 12-frame reset pre-flight, and read its frozen
+gate. Do not begin `sw4-A` unless that pre-flight passes.
 
 ## Why this exists
 
 Three scorecard axes — M1 (detail), M5, M9 — are blocked on captures, not on
 code. Two lanes arrived at the required session independently and from
-different requirements, and they specified the same 319 frames. Review retained
-their 255 focus frames but doubled the four calibration groups, making the
-primary session **383 frames**. This document is the single consolidated
+different requirements, and they specified the same 319 claim frames. Review
+retained their 255 focus frames but doubled the four calibration groups, making
+**383 claim/calibration frames**. Automated-bracket eligibility adds 60 fixed
+witnesses, for 443 session frames. This document is the single consolidated
 request. It is written to be followed at the bench.
 
 **What is wrong with every capture we currently hold:** in-body stabilisation
@@ -112,53 +119,185 @@ Thorlabs R1DS1P USAF 1951 target would add a clean frequency ladder. Neither
 replaces the nonperiodic patch — the star's radial pattern is deterministic and
 the USAF bars are sparse and repeated, so both risk carrying their own answer.
 
-## Frame counts — 383 total
+## Frame counts — 383 claim/calibration + 60 witness = 443
 
 | Block | Frames | Purpose |
 | --- | ---: | --- |
-| `sw4` paired A/B | 110 | 55 focus nodes, two back-to-back exposures at each node |
+| reset pre-flight P0 | 6 | fixed focus at the recorded near-focus reset |
+| reset pre-flight P1 | 6 | same reset after moving away and returning by the recorded approach |
+| start `sw4-A` | 6 | fixed-focus sentinel immediately before A |
+| `sw4-A` | 55 | automated Focus Bracket, step width 4 |
+| end `sw4-A` | 6 | fixed-focus sentinel at A's untouched final position |
+| start `sw4-B` | 6 | fixed-focus sentinel after the repeated reset |
+| `sw4-B` | 55 | identical automated repeat of A |
+| end `sw4-B` | 6 | fixed-focus sentinel at B's untouched final position |
+| start `sw10-A` | 6 | fixed-focus sentinel immediately before A |
+| `sw10-A` | 27 | automated Focus Bracket, step width 10 |
+| end `sw10-A` | 6 | fixed-focus sentinel at A's untouched final position |
+| start `sw10-B` | 6 | fixed-focus sentinel after the repeated reset |
+| `sw10-B` | 27 | identical automated repeat of A |
+| end `sw10-B` | 6 | fixed-focus sentinel at B's untouched final position |
 | `sw1` checker-only | 91 | dense reference. **Never feed this to a stacker.** |
-| `sw10` paired A/B | 54 | 27 focus nodes, two back-to-back exposures at each node |
-| flats A | 32 | calibration for every A exposure |
-| flats B | 32 | calibration for every B exposure; **move or rotate the diffuser first** |
-| darks A | 32 | calibration for every A exposure |
-| darks B | 32 | calibration for every B exposure |
-| **total** | **383** | |
+| flats A | 32 | calibration for the complete A passes |
+| flats B | 32 | calibration for the complete B passes; **move or rotate the diffuser first** |
+| darks A | 32 | calibration for the complete A passes |
+| darks B | 32 | calibration for the complete B passes |
+| **claim/calibration** | **383** | |
+| **fixed-focus witnesses** | **60** | |
+| **session total** | **443** | |
 
-Within each paired block, the file order is
-`A1, B1, A2, B2, ...`. Build stack A from the odd exposures and stack B from
-the even exposures. Do not reorder by measured sharpness or metadata.
+## Literal shooting order
 
-## Focus nodes — take the pair before advancing
+### 1. Reset pre-flight — do this before any bracket
 
-For each of the 55 `sw4` nodes and each of the 27 `sw10` nodes:
+1. Establish the near-focus reset. Record exactly how you approached it.
+2. Lock the lens at that position without turning the focus ring or issuing
+   another AF command. Take six RAWs: `P0`.
+3. Move focus well away, then return to the reset using the same direction and
+   method. Lock it the same way. Take six RAWs: `P1`.
+4. Run the pre-flight gate below. If it fails, **stop without shooting any
+   bracket**. Correct the reset/rig problem and begin a new pre-flight.
 
-1. Move to the next focus position in direction `0 -> +`.
-2. After focus motion has stopped, wait **at least 2 full seconds** before
-   the next exposure. If the controller offers 1 s or 3 s, choose 3 s.
-3. Take exposure A.
-4. Without moving focus, refocusing, or touching the rig, take exposure B.
-5. Only then advance to the next focus position.
+### 2. `sw4` pair — gate it before continuing
 
-The second exposure does not need another settling delay because focus has not
-moved. Keep AF off. Before each ladder, approach the near-focus reset from the
-same direction so backlash is taken up the same way. Use a tethered controller,
-indexed lens-focus control, or a manual sequence that can hold one focus command
-for both exposures. Do not substitute a camera rail.
+1. Return to the reset by the recorded approach. Lock focus and take six
+   `S4-A` frames.
+2. Without refocusing, set Focus Bracket to step width 4, 55 shots, order
+   `0 -> +`, and 3 s interval. Run `sw4-A`.
+3. At the untouched final focus position, lock focus and take six `E4-A`
+   frames. Do not reset first.
+4. Return to the reset by the identical approach. Lock focus and take six
+   `S4-B` frames.
+5. Without refocusing or changing a setting, run `sw4-B`.
+6. At the untouched final focus position, lock focus and take six `E4-B`
+   frames.
+7. Run the frozen witness and node gate. Do not continue if it fails.
 
-### Fallback only if paired-node capture is impossible
+### 3. `sw10` pair — repeat the same pattern
 
-If the body cannot take A and B before advancing focus, stop and use four whole
-passes: `sw4-A` 55, `sw4-B` 55, `sw10-A` 27, and `sw10-B` 27. Approach every
-reset from the same direction and repeat the exact start command, step width,
-frame count, direction, and lens state. No result-time re-indexing.
+Repeat the seven steps above using `S10-A`, `sw10-A` (27 shots, step width 10),
+`E10-A`, `S10-B`, `sw10-B`, and `E10-B`. Keep order `0 -> +`, interval 3 s,
+and every other camera/lens setting unchanged. Gate the pair before continuing.
 
-Immediately before each fallback pass, lock focus at the reset and take six
-witness frames. Follow
-[`2026-09-node-coincidence-gate.md`](2026-09-node-coincidence-gate.md) and the
-input-only ladder-equivalence check below. The 24 witnesses make the fallback
-**407 frames total**. A witness pass alone does not prove node equality; if
-either frozen gate fails, that A/B pair is not usable as a repeat pair.
+### 4. Finish the session
+
+After both A/B pairs pass their input-only gates, shoot the 91-frame `sw1`
+checker-only bracket, then the four 32-frame calibration groups.
+
+For every six-frame fixed-focus burst, use the same lock method. Switching
+between the lock and Focus Bracket must not move focus. If it does, this setup
+cannot support the gate and the session must not be used as paired data.
+
+## Frozen repeatability gate — both parts must pass
+
+**A fixed-focus witness-only proof of the complete ladder is impossible.**
+Start and endpoint frames cannot see an interior motor error that later catches
+up. A sacrificial duplicate bracket would prove only that duplicate, not the
+later claim run. This request therefore freezes two complementary tests:
+
+1. the 60 fixed-focus frames gate reset, endpoint, stability, and focus profile;
+2. the actual A/B bracket RAWs gate every corresponding node before any stack
+   is rendered.
+
+Both are input-only eligibility tests. Neither may inspect a merged image or a
+competitor result, and neither permits result-time re-indexing.
+
+### G0 — every fixed-focus burst must be stable
+
+For each six-frame burst, compute the within-burst local-registration RMS using
+the existing four-quadrant estimator.
+
+> **Pass only if every burst is `<= 0.033` native-pixel local RMS.**
+
+Run this first on P0 and P1. If either fails, do not shoot a bracket.
+
+### G1 — reset and endpoint geometry must repeat
+
+Average the six RAWs in each burst after black subtraction. For each pair
+P0/P1, S4-A/S4-B, E4-A/E4-B, S10-A/S10-B, and E10-A/E10-B, estimate one global
+translation and four quadrant translations. The statistic is
+
+```text
+R = 2 * sqrt(mean_q(||shift_q - shift_global||^2))
+```
+
+in native pixels.
+
+> **Pass only if every `R < 0.10` native pixel.**
+
+This is the same family of statistic and the same strict bar under which
+SPLIT2 passed at `0.064031` and failed at `0.107703` (independently reproduced
+at `0.105202`). Use one common integer shift and crop for comparison. Measuring
+a fractional residual is allowed; applying sub-pixel resampling, scale,
+rotation, or local warp is not.
+
+### G2 — fixed-focus spectral profile must repeat
+
+On each of at least 64 predeclared 256-pixel patch sites, compute
+
+```text
+q = log(P[0.18, 0.35] / P[0.05, 0.15])
+```
+
+from each six-frame burst mean. For the same five burst pairs used by G1,
+compute the RMS of the per-site A/B differences.
+
+> **Pass only if every spectral-profile RMS is `< 0.10` log-ratio unit.**
+
+The `q` statistic and `0.10` stability bar have existing commissioning
+precedent. Their cross-burst, per-site use here is a new frozen application and
+must be dry-run on development data before any frame from this session is read.
+It catches a reset or endpoint that registers geometrically but has a different
+focus profile.
+
+### G3 — the actual A/B ladder nodes must match
+
+For each step width, compare A frame `i` only with B frame `i`; do not shift the
+index. On every corresponding pair:
+
+- require the G1 local-geometry statistic to remain `< 0.10` native pixel;
+- compute the per-site `q` curves across frame index;
+- require each retained site's A/B curve correlation to have a unique maximum
+  at integer lag zero; and
+- require the RMS of all same-index A/B `q` differences to be `< 0.10`
+  log-ratio unit.
+
+At least 64 guarded sites must survive clipping, texture, and interior-peak
+eligibility in both A and B. The gate and all bars are frozen by this document
+before the RAWs exist. G3 must likewise be dry-run on development data without
+changing these bars before it reads this session.
+
+> **A step width passes only if G0, G1, G2, and G3 all pass.**
+
+### Failure action
+
+- **P0/P1 failure:** stop before any bracket. Correct the rig or reset method,
+  then restart the pre-flight from P0.
+- **Any later failure:** stop the session. The affected A/B pair is not
+  same-node repeat data, and the shared claim session is unusable. Do not
+  re-index, choose a favorable subset, widen a bar, or replace one failed node.
+  Reshoot the complete session after correcting the cause.
+- Failed brackets remain ordinary stacks for work that does not require paired
+  realizations; they may not provide the claim-bearing pair.
+
+Keep the rig and subject untouched while each gate is read.
+
+## Why automated in-camera bracketing helps
+
+The camera, not a human, issues every focus move. With the same starting state,
+step width, count, direction, aperture, interval, and lens state, it replays the
+same command program and removes manual per-node placement error. Record those
+settings before A and confirm them again before B. G1/G2 check the program's
+start and accumulated endpoint; G3 checks the actual interior nodes.
+
+That determinism is useful, but it is not permission to ignore a failed gate.
+Sony's step width is relative to the initial focus and shooting conditions.
+Step width 10 does not make an offset harmless; it must pass separately.
+
+**Do not shoot one finer bracket and split odd/even files.** Odd and even files
+are adjacent commanded focus positions, one minimum step apart. A smaller
+offset is still not an independent exposure at the same node, so those two
+sub-stacks cannot serve either repeat consumer.
 
 ## The patch must be physically large enough
 
@@ -205,11 +344,9 @@ real detail.
 - Lens cap on, and no light leaks.
 
 Capture all 32 frames in each group; the first-two discard is included in that
-count, leaving 30 darks per realization. In the primary paired-node protocol,
-apply the A flat and dark only to odd-numbered exposures and the B flat and dark
-only to even-numbered exposures. In the fallback, apply A calibration to the
-complete named A passes and B calibration to the complete named B passes. Never
-build one master and apply it to both.
+count, leaving 30 darks per realization. Apply A calibration to the complete
+named A passes and B calibration to the complete named B passes. Never build
+one master and apply it to both.
 
 ## Settings
 
@@ -225,33 +362,35 @@ build one master and apply it to both.
 **File:** 14-bit lossless compressed RAW. Fixed white balance — pick a value,
 do not use auto. EFCS on.
 
-**All off:** DRO, HDR, long-exposure NR, high-ISO NR, pixel shift, AF, and
-in-camera auto lens corrections.
+**All off:** DRO, HDR, long-exposure NR, high-ISO NR, pixel shift, Pre-AF,
+continuous/tracking AF, and in-camera auto lens corrections. Use the focus mode
+required by Focus Bracket, unchanged between A and B; do not issue a new
+autofocus command after establishing the reset.
 
 **Rig:** tripod, remote or self-timer release. Nothing touching the rig during
-a paired block or fallback pass.
+an automated pass or fixed-focus burst.
 
 **Lighting:** flicker-free diffused LED, warmed up at least 15 minutes before
 the first frame so output has stabilised. Source polariser plus crossed CPL on
 the lens. Matte-white backing behind the target. Tilt the target roughly 1° so
 the focus sweep has something to resolve through.
 
-**Sweep:** direction `0 → +`. For `sw4` and `sw10`, take A then B at every node
-before advancing, exactly as described in *Focus nodes*. For `sw1`, take one
-exposure per node. Approach every near-focus reset from the same direction.
+**Sweep:** automated Focus Bracket, direction `0 → +`. Use step width 4 / 55
+shots for each `sw4` pass, step width 10 / 27 shots for each `sw10` pass, and
+step width 1 / 91 shots for `sw1`. Approach every near-focus reset from the
+same recorded direction.
 
-**Settling:** after every focus move, wait at least **2 full seconds after lens
-motion stops before the next exposure**. This applies to each `sw1` frame, each
-frame in a fallback whole pass, and the first witness after moving to reset. If
-the controller offers 1 s or 3 s, choose 3 s. The old 1 s shooting interval is
-not a substitute. Paired-node exposure B needs no second delay because focus
-did not move after A.
+**Settling:** set Focus Bracket **Shooting Interval to 3 s** for every automated
+pass. If the menu does not offer 3 s, choose the next longer value; never use
+the old 1 s interval. After manually moving to a reset or endpoint witness
+position, wait at least 3 s after lens motion stops before the first fixed-focus
+witness.
 
 ## What this unlocks, and what it does not
 
-**Unlocks:** the independent same-focus evidence needed by the head-to-head
-physical-detail question, M5, M9, and any future M1 instrument that requires
-paired realizations.
+**Unlocks if every frozen gate passes:** the independent same-focus evidence
+needed by the head-to-head physical-detail question, M5, M9, and any future M1
+instrument that requires paired realizations.
 
 **Does not by itself provide:** an admitted M1 detail statistic, M10 depth
 accuracy, or any claim in cycles/mm or physical units. Physical scale needs the
@@ -260,9 +399,8 @@ certified artifact and a separate small session.
 ## Interim option, and why it is not recommended
 
 A minimal fixed-focus repeat would not answer the focus-stack question or
-provide the through-focus pairs this session exists to collect. **Shoot the
-383-frame paired-node session.** Use the 407-frame fallback only if the body
-cannot hold focus for the second exposure at a node.
+provide the through-focus pairs this session exists to collect. The automated
+whole-pass protocol above is the only approved acquisition on this body.
 
 ## Before you shoot: one test exposure
 
@@ -274,20 +412,21 @@ rear-screen brightness.
 
 While you are there, confirm the nonperiodic patch fills enough of the frame
 (see *The patch must be physically large enough*). This test exposure is not
-one of the 383 acquired session frames.
+one of the 443 acquired session frames. After it passes, run P0/P1 and obtain
+the pre-flight verdict before starting `sw4-A`.
 
 ## Checks on arrival
 
 All of these are **input-only**: they read RAW frames and never a render, so they
 spend none of the holdout.
 
-1. **Pairing manifest.** For the primary protocol, confirm `sw4` contains 110
-   files and `sw10` contains 54, with no focus command between each odd/even
-   pair. Build A from odd files and B from even files.
-2. **Fallback only: node repeat.** Confirm exact A/B bracket state and start
-   command, apply the frozen pixel-domain ladder-equivalence gate, and apply
-   [`2026-09-node-coincidence-gate.md`](2026-09-node-coincidence-gate.md) to
-   the four witness bursts. Failure of either gate invalidates that pair.
+1. **Manifest.** Confirm the named file ranges contain P0/P1, all eight
+   start/end bursts of six, `sw4-A/B` at 55 each, `sw10-A/B` at 27 each,
+   `sw1` at 91, and four calibration groups at 32 each. Confirm A and B used
+   identical bracket settings and the recorded reset approach.
+2. **Repeatability.** Run G0 through G3 exactly as frozen above. Compare only
+   A frame `i` with B frame `i`; no re-indexing, fractional resampling, scale,
+   rotation, warp, or favorable subset.
 3. **Spectral eligibility, per site.** Confirm the patch carries power out to
    `0.25 cyc/native px` — measured **per site**, not as a frame average, and
    measured as **cross-power attributable to the subject** rather than raw
@@ -295,8 +434,7 @@ spend none of the holdout.
 4. **Site count.** Confirm at least **64 guarded, non-overlapping eligible
    sites** survive. Freeze the site manifest before any render exists.
 5. **Clipping and focus.** Reject clipping per site. Verify every retained site
-   has a through-focus peak **interior** to both A and B: the odd/even stacks in
-   the primary protocol, or the two complete named passes in the fallback.
+   has a through-focus peak **interior** to both complete named A and B passes.
 
 If the patch is too smooth, or too few sites survive, the session is still fine
 for everything else, but the detail axis would need the patch replaced and those

@@ -1,7 +1,11 @@
-# Frozen gate: witness geometry for a candidate repeat pair
+# Superseded gate: witness geometry for the former 407-frame protocol
 
-**Status: FROZEN before the data exists. Written 2026-09, before the 407-frame
-session was shot.**
+**Status: SUPERSEDED for the current shoot.** The active A7C II automated-
+bracketing gate is frozen inside
+[`2026-09-319-frame-session.md`](2026-09-319-frame-session.md) under *Frozen
+repeatability gate*. This file is retained only as the historical 24-witness
+geometry gate for the former 407-frame protocol; do not apply it to the current
+443-frame shot list.
 
 This document fixes, in advance, the witness-geometry prerequisite for pass A
 and pass B of a given step width. Passing it does **not** by itself make them a
