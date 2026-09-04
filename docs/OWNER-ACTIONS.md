@@ -324,6 +324,46 @@ It did not.
 
 ---
 
+## Ask 2b — one more free email, this time to ISA. **$0.** *Do this instead of spending $660.*
+
+**I owe you a correction first.** I have been describing the `$660` as buying a
+better reference. **It does not.** It is one matte **ISA ColorGauge Nano** target
+(`$330`) plus its calibration-certificate option (`$330`), and it serves **M7,
+colour accuracy** — not the detail reference. Nothing in the `$925` improves the
+detail work that is currently the critical path. I had this wrong in my own head
+until a lane checked it, and you may have been reading it the same way.
+
+**Verdict: do not spend the `$660` yet.** It changes no current verdict. M7 has
+no capture, and — decisively — **ISA has not published the certificate's
+numerical uncertainty**, so nobody can yet say whether the certificate is precise
+enough to matter (`docs/research/M144-reference-uncertainty.md`).
+
+Buying a ruler before knowing its precision is the mistake here, and it is
+avoidable for free.
+
+**The email, and it is falsifiable.** Ask ISA for three things at `$0`:
+
+1. a sample of the exact certificate supplied with the matte Nano option;
+2. confirmation that it is serial-linked to the delivered unit;
+3. the per-patch covariance or expanded uncertainty.
+
+**Then the decision makes itself.** Reject the purchase if any scored patch, or
+any required patch-to-patch difference, carries `U95 > 0.25 ΔE00`. If ISA
+reports only independent equal per-patch uncertainties, each must be at most
+`0.1414 ΔE00`. A conforming certificate **reverses** this recommendation and I
+will tell you to buy it; a missing or larger uncertainty confirms it. Today the
+answer is no, and it is no for a reason that a reply from ISA can overturn.
+
+**Why this matters more than it sounds.** The largest quantified term in the M7
+reference budget is not sensor noise — it is variation between individual target
+units. Modelled from ISA's own nominal batch statistics, the worst patch sits at
+**p95 `2.6445 ΔE00`** and **p99 `3.4567 ΔE00`**, against bars of `1.0` median and
+`2.0` p95. That figure is a screening model rather than a measurement of the paid
+certificate, and it is exactly why the free nominal values cannot carry a scored
+result — and why the certificate's *actual* uncertainty is the whole question.
+
+---
+
 ## Ask 3 — buy Zerene. **Not $189. The real figure is $925.** *Not yet. Wait.*
 
 **Correcting myself again, and this one is worth reading.** I previously wrote
