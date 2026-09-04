@@ -10,11 +10,12 @@ at the median on twelve frozen coffee-bean flat sites, with `0/12` below one.
 
 The repository history narrows the live question to a small factorial.
 Full-resolution gather is a deliberate **trade** candidate. A source-only
-deployment audit corrected the earlier gate premise: DELIVER-V6 did run at
-the pyramid default `2.0`, but that default was deliberately retained rather
-than reached by an accidental flag omission. SHIP-V2's actual argv is not
-recoverable to the primary-record standard. The required A/B remains blocked
-on compute.
+deployment audit confirms DELIVER-V6 ran at the pyramid default `2.0`, but
+does **not** support the earlier claim that this was settled policy. The cited
+ORCH decision was provisional; the later README calls `2.0` wrong and leaves
+an explicit default-or-rerender obligation. SHIP-V2's original argv is not
+recoverable to the primary-record standard, although the surviving records
+fix the 26-subject survey at `4.5`. The required A/B remains blocked on compute.
 
 ## 1. Correction to the premise: there is no fork-to-Strehl change set
 
@@ -69,7 +70,7 @@ the frozen DELIVER-V6 master.
 
 | point | retained binary SHA-256 | output-affecting fact |
 |---|---|---|
-| `b9b6921e` / SHIP-V2 | `CF33AE08...F0D6E6` | A same-day report says the 26-subject run used explicit pyramid gate `4.5`; no surviving script, log, manifest, or argv record proves that deployment value directly. Gather was the CFA phase-plane path. Historical output is gone. |
+| `b9b6921e` / SHIP-V2 | `CF33AE08...F0D6E6` | A same-day report and a surviving transcription of the vanished driver say the 26-subject run used explicit pyramid gate `4.5`; no original script, log, manifest, or argv record survives. Gather was the CFA phase-plane path. Historical output is gone. |
 | `740e7056` / SHIP-V3 | `15EA7346...82A7B0` | Full-resolution gather became default. All 26 archived provenance records say `gate : (backend default)`; the pin's pyramid default is `2.0`. |
 | `9b05d0b7` / SHIP-V4 | `44C2F2CD...59F490` | All 26 archived provenance records again say `gate : (backend default)`; the pin's pyramid default is `2.0`. |
 | ORCH-FAITHFUL | `CBC09099...` | The archived run header names Git HEAD `5f367a94`; its binary banner reports `8a480af9-dirty`. Both sources have pyramid default `2.0`. The 26-render driver passes only `--srgb`. |
@@ -80,7 +81,7 @@ the frozen DELIVER-V6 master.
 
 ### 3.1 Source-only deployment-gate audit
 
-#### SHIP-V2: deployed value not recoverable to the requested standard
+#### SHIP-V2: original deployed record missing; survey gate `4.5`
 
 The strongest surviving statement is contemporaneous but secondary:
 `b66f6157:docs/research/BUILD-RENDER.md:2030-2037` says one binary rendered
@@ -88,7 +89,13 @@ The strongest surviving statement is contemporaneous but secondary:
 `--merge pyramid --pyramid-gate 4.5 --srgb --auto-exposure`. Commit
 `580e04a2` later records byte-identical reproduction of two SHIP-V1 masters at
 `4.5`, failure to reproduce them at the compiled `2.0`, and explicitly says
-SHIP-V1 preserved no render script or argv.
+SHIP-V1 preserved no render script or argv. The surviving contemporaneous
+transcription at `docs/research/ORCH-veiling.md:5836-5842` quotes the vanished
+`C:\dev\strehl-out\ORCH-SHIP\render_ship.ps1` driver as:
+
+```
+stack <subject> --merge pyramid --pyramid-gate 4.5 --srgb --auto-exposure -o <out>
+```
 
 That is strong corroboration for `4.5`, but it is not the actual SHIP-V2
 invocation, script, manifest, or run log demanded by this audit. The
@@ -97,6 +104,14 @@ and no matching primary-record path exists in reachable Git objects.
 Therefore the deployed SHIP-V2 value is **NOT RECOVERABLE** under the stated
 evidence rule. This report will not promote the prose reconstruction into a
 primary record.
+
+The narrower question about the **26-subject survey's configuration** is
+answerable. The records above place it at `4.5`; then commit `5dd9b649`
+records a new 26-subject, 4,825-frame run at the explicit invocation
+`--merge pyramid --pyramid-gate 4.5 --srgb`
+(`docs/research/ORCH-veiling.md:7853-7859`), and commit `f2bcb349` closes the
+survey at 26/26 opened (`:8459-8476`). Thus `4.5` is the survey configuration
+even though the original SHIP-V2 primary invocation record is gone.
 
 #### DELIVER-V6: default `2.0`, not overridden
 
@@ -115,30 +130,48 @@ The source pin is direct:
 
 DELIVER-V6 therefore ran at pyramid gate **`2.0`**, with **no override**.
 
-#### Intent: deliberate policy, implemented by omission
+#### Intent: unresolved conflict, implemented by omission
 
 There was no source edit from pyramid gate `4.5` to `2.0`; the compiled
-pyramid default was already `2.0`. More importantly, the repository records a
-decision to keep it there:
+pyramid default was already `2.0`. The earlier ORCH passages record a
+provisional decision not to move it:
 
 - commit `5ea8c058` is titled “gate 4.5 is not a safe universal default”;
   `docs/research/ORCH-veiling.md:4296-4315` records the second-subject reversal,
   where `4.5` bought little on `couch-fibers-cpl` and reduced the then-used
-  detail proxies, and `:4346-4349` explicitly withdraws the recommendation to
-  raise the default;
+  detail proxies, and `:4346-4349` withdraws the recommendation to raise the
+  **universal default** rather than rejecting the value `4.5`;
 - commit `befded0c` states at
   `docs/research/ORCH-veiling.md:4763-4768` that the backend flip needs no gate
-  change and “the default stays” at `2.0`;
+  change and “the default stays” at `2.0` **pending BUILD-BLEND**;
 - the DELIVER pin's source comment,
   `6af834da:crates/strehl-core/src/pyramid.rs:992-1001`, explains the intended
   balance: high enough to reject noise, low enough not to throw away real
   low-contrast detail.
 
+The relevant README evidence is later and points the other way:
+
+- the cited ORCH passages were committed at 02:40 and 04:08 on 2026-08-26;
+- commit `fd8f8b38` at 05:21 says users should keep
+  `--pyramid-gate 4.5`, because `2.0` does not produce the measured picture
+  (`README.md:666-677`);
+- commit `580e04a2` at 11:38 states the open obligation: either move the
+  default to `4.5` or rerender and resurvey the gallery at `2.0`
+  (`README.md:354-361`);
+- commit `244cad54` at 12:11 calls `2.0` “the wrong default”
+  (`README.md:347-353`);
+- the later ORCH corpus work at 12:55 and 15:03 rendered and surveyed the
+  26 subjects at `4.5`, including the adversarial defocused-background case.
+
+No later commit message, comment, or note records a decision that this newer
+evidence was rejected and `2.0` was chosen as the correct default. The source
+stayed at `2.0`, and later drivers stopped passing `--pyramid-gate`. That
+settles the mechanism as **flag omission**, but leaves intent as an
+**UNRESOLVED CONFLICT**. The earlier report's `DELIBERATE` verdict is retracted.
+
 Those historical detail statistics remain proxies, not truth-referenced
-detail measurements. They do not settle M162's artifact verdict. They do,
-however, settle intent: the later `2.0` policy was **DELIBERATE**, even though
-the command-line mechanism was omission of the optional override. Calling it
-an accidental configuration defect is contradicted by the commit record.
+detail measurements. They do not settle M162's artifact verdict in either
+direction.
 
 #### Blast radius
 
@@ -162,6 +195,24 @@ are not independent stack runs. SHIP-V3, SHIP-V4, and ORCH-FAITHFUL TIFFs have
 since been purged after their text/hash records were banked; DELIVER-V6 is the
 surviving current corpus.
 
+#### README obligation and publication state
+
+The compiled default never moved to `4.5`. The alternative branch was later
+performed in artifacts: DELIVER-V6 used the no-override/default-`2.0`
+invocation (`docs/research/DELIVER-V6.md:57-69`), rendered all original 26
+subjects, and records that all 26 were inspected at 1:1 with subject-by-subject
+findings (`:3-12`, `:245-381`). The run was then extended to 33 subjects.
+Therefore the README's technical “rerender at `2.0` and re-survey” obligation
+was discharged by DELIVER-V6.
+
+The README was not updated to say so. It still calls the corpus-wide sweep
+open, says dropping `4.5` produces an uncertified render, and bases every
+reference-gallery quality claim on `4.5` (`README.md:666-677`). It explicitly
+discloses that `4.5` is not the compiled default (`:198-206`, `:666-677`), so
+it does not silently present those pixels as bare-command/default output.
+Publication-facing quality evidence nevertheless remains scoped to the
+non-default configuration, and the notice about default output is stale.
+
 ## 4. What existing evidence says, and does not say
 
 ### Full-resolution gather: a deliberate trade candidate
@@ -181,7 +232,7 @@ truth-referenced general detail measurement. It does establish that turning
 full-resolution gather off is not an innocent “denoise” operation: that path
 was introduced to retain information the plane path discarded.
 
-### Gate `2.0`: a deliberate trade policy whose contribution remains unmeasured
+### Gate `2.0`: an unresolved configuration choice whose contribution remains unmeasured
 
 Independent existing evidence shows why gate `4.5` remains an important
 counterfactual:
@@ -194,14 +245,19 @@ counterfactual:
   anti-correlated with scene detail. The lower gates added grain and mottle
   without a visible acuity gain in the inspected crops.
 
-But commit `5ea8c058` records the opposite outcome on the deliberately
-adversarial `couch-fibers-cpl`: raising the gate bought little and reduced the
-available detail proxies. Those results are not truth-referenced, are not the
-M159 sites, and do not settle this lane. Together they establish a
-subject-dependent trade and explain the deliberate `2.0` default. The
-`4.5` arm remains necessary to attribute how much of M159's residual gap comes
-from gate policy; it is no longer eligible to prove a configuration regression
-by itself.
+Commit `5ea8c058` records the opposite outcome on the deliberately adversarial
+`couch-fibers-cpl`: raising the gate bought little and reduced the available
+detail proxies. Those results are not truth-referenced, are not the M159
+sites, and do not settle this lane. Later README measurements and the
+26-subject `4.5` survey superseded that provisional default decision without
+ever changing the compiled value. The record therefore shows conflicting
+evidence, not a settled `2.0` trade policy.
+
+The `4.5` arm is necessary both to attribute how much of M159's residual gap
+comes from gate selection and to test the live configuration-regression
+hypothesis. It is eligible under the same precommitted residual, proxy, gain,
+clipping, and geometry guards as the other current-binary reversions. A proxy
+loss still forbids calling it a fix.
 
 ### Measured gate floor: probably the wrong sign to explain the gap
 
@@ -277,24 +333,18 @@ A candidate residual reduction with proxy loss is not a win.
 
 ## 7. Precommitted ruling
 
-**REGRESSION** requires an attributed change with no documented intended
-benefit to lower paired residual by at least 10%, with its 95% lower bound
-above one, while the structure proxy, gain, clipping, and geometry guards
-hold. The measured-floor and CA controls remain eligible. Gate `4.5` is now an
-attribution/policy counterfactual, not an automatic regression reversion:
-`2.0` was deliberately retained for low-contrast detail, and this lane's proxy
-explicitly cannot rule out loss of dense low-contrast texture.
+**REGRESSION** requires an attributed change to lower paired residual by at
+least 10%, with its 95% lower bound above one, while the reverted candidate
+holds or improves the structure proxy and passes the gain, clipping, and
+geometry guards. Gate `4.5`, measured-floor, and CA-off are eligible
+current-binary reversions. Gate eligibility does not imply that this proxy is
+a complete detail instrument; its blindness remains part of the scope of any
+verdict.
 
 **TRADE** requires no admissible quieter reversion and requires
 either full-resolution gather, at a fixed gate, or gate `2.0`, at fixed
 gather, to be materially noisier while materially increasing the proxy, with
 both 95% intervals above one.
-
-If gate `4.5` lowers residual while the proxy merely holds, that attributes a
-gate component but cannot establish regression: the proxy is blind to the
-specific low-contrast benefit for which `2.0` was retained. The result remains
-unresolved unless another eligible regression control passes or a gate trade
-is positively detected.
 
 If the proxy cannot distinguish the arms, the answer remains unresolved. The
 absence of an admissible truth-referenced detail instrument is not permission
@@ -309,8 +359,12 @@ Answerable without compute:
 - full-resolution gather was explicitly for preserving previously discarded
   detail;
 - SHIP-V2's actual deployed argv is not recoverable from a primary record;
+- the 26-subject survey was nevertheless rendered and assessed at gate `4.5`;
 - DELIVER-V6 ran at the compiled pyramid default `2.0`, with no override;
-- retaining `2.0` was deliberate policy, not accidental configuration drift;
+- the relevant source record is an unresolved conflict, not a settled choice
+  that `2.0` is correct;
+- DELIVER-V6 technically discharged the README's default-`2.0` rerender and
+  re-survey branch, but the README still says that work is open;
 - SHIP-V3, SHIP-V4, ORCH-FAITHFUL, and DELIVER-V6 were all produced at that
   default, while DELIVER-V5 derivatives inherit SHIP-V4's merge.
 

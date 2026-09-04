@@ -869,9 +869,10 @@ def evaluate_gate_trade(
             residual_cost and detail_gain and gain_holds and clipping["passed"]
         ),
         "scope": (
-            "The proxy cannot exclude dense low-contrast texture loss. A quieter "
-            "gate-4.5 arm with no detected proxy loss is attribution, not proof "
-            "that the deliberately retained gate-2.0 policy regressed."
+            "The source record conflicts on whether gate 2.0 was intended to "
+            "remain the product default. This proxy cannot exclude dense "
+            "low-contrast texture loss, so any verdict is scoped to its stated "
+            "blindness."
         ),
     }
 
@@ -966,11 +967,11 @@ def make_markdown(result: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "## Gate-policy attribution",
+            "## Gate attribution",
             "",
-            "Gate `4.5` is a policy counterfactual, not an eligible regression "
-            "reversion. Gate `2.0` was deliberately retained for low-contrast "
-            "detail that this proxy can miss.",
+            "The intent record for gate `2.0` is conflicted. Gate `4.5` is an "
+            "eligible regression reversion under the same residual, proxy, "
+            "gain, and clipping guards as the other candidates.",
             "",
             "| residual g2/g4.5 | detail g2/g4.5 | admissible trade |",
             "|---:|---:|---|",
@@ -1114,13 +1115,13 @@ def run_analysis(
     gate_counterfactual["passes_reversion_checks"] = gate_counterfactual[
         "admissible_regression_fix"
     ]
-    gate_counterfactual["eligible_for_regression_verdict"] = False
-    gate_counterfactual["admissible_regression_fix"] = False
-    gate_counterfactual["ineligible_reason"] = (
-        "Gate 2.0 was deliberately retained for low-contrast detail that the "
-        "commissioned proxy cannot exclude."
+    gate_counterfactual["eligible_for_regression_verdict"] = True
+    gate_counterfactual["intent_status"] = (
+        "UNRESOLVED CONFLICT: early ORCH notes provisionally retained 2.0; "
+        "later README measurements call 2.0 wrong and recommend 4.5."
     )
     regression_tests = {
+        "v6-g4p5-full": gate_counterfactual,
         "v6-g2-full-white-floor": evaluate_reversion(
             scored,
             "v6-g2-full-white-floor",
@@ -1139,9 +1140,10 @@ def run_analysis(
     ]
     gate_plane_test["eligible_for_regression_verdict"] = False
     gate_plane_test["admissible_regression_fix"] = False
-    gate_plane_test["ineligible_reason"] = gate_counterfactual[
-        "ineligible_reason"
-    ]
+    gate_plane_test["ineligible_reason"] = (
+        "This is interaction corroboration on the non-delivered plane-gather "
+        "configuration, not a direct reversion of DELIVER-V6."
+    )
     gate_trade_test = evaluate_gate_trade(
         scored, "v6-g2-full", "v6-g4p5-full", BOOTSTRAP_SEED + 45
     )
@@ -1179,7 +1181,7 @@ def run_analysis(
         if record["admissible_trade"]
     ]
     if gate_trade_test["admissible_trade"]:
-        admissible_trades.append("gate-2.0-policy")
+        admissible_trades.append("gate-2.0")
     if not baseline_reproduction["pixel_identical"]:
         verdict = "UNRESOLVED"
         verdict_reason = "the M162 baseline did not reproduce DELIVER-V6 pixels"
@@ -1196,7 +1198,7 @@ def run_analysis(
         verdict = "TRADE"
         verdict_reason = (
             "no admissible regression reversion was found and at least one "
-            "deliberate policy paid residual for a material structure-proxy gain"
+            "attributed choice paid residual for a material structure-proxy gain"
         )
     else:
         verdict = "UNRESOLVED"

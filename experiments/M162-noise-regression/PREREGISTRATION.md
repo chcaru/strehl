@@ -5,11 +5,13 @@ Status: **frozen before any M162 render or real-image score**.
 Source-audit amendment, still before any M162 render or real-image score:
 SHIP-V2's actual invocation is not recoverable from a surviving script, log,
 manifest, or argv record. A same-day report and later byte reproduction support
-`4.5`, so the historical arm remains useful as a clearly labelled
-reconstruction. The audit also found explicit commits retaining the pyramid
-default `2.0` to protect low-contrast detail. Thresholds, sites, arms, and
-commissioning controls below are unchanged; only the gate arm's verdict
-eligibility is corrected.
+`4.5`, and a surviving transcription plus a later explicit 26-subject rerender
+fix the survey configuration at `4.5`; the historical arm remains a clearly
+labelled reconstruction. Early commits provisionally retained the pyramid
+default `2.0`, but later README measurements call it wrong and leave an
+explicit default-or-rerender obligation. There is no later record resolving
+that conflict. Thresholds, sites, arms, and commissioning controls below are
+unchanged; the gate arm remains eligible under those controls.
 
 M159 established that DELIVER-V6 carries `1.515208x` the fork's median
 fractional box9 residual on twelve frozen coffee-bean flat sites. This
@@ -71,9 +73,9 @@ arms add only `STREHL_FULLRES_GATHER=0`.
 | arm | gate | gather | other change |
 |---|---:|---|---|
 | `v6-g2-full` | compiled `2.0` | compiled full-resolution default | exact DELIVER-V6 flags |
-| `v6-g4p5-full` | `4.5` | full resolution | gate-policy counterfactual |
+| `v6-g4p5-full` | `4.5` | full resolution | gate counterfactual |
 | `v6-g2-plane` | compiled `2.0` | CFA phase plane | none |
-| `v6-g4p5-plane` | `4.5` | CFA phase plane | gate-policy counterfactual |
+| `v6-g4p5-plane` | `4.5` | CFA phase plane | gate counterfactual |
 
 Two current-binary controls isolate later changes:
 
@@ -218,21 +220,16 @@ Classification:
 
 - **REGRESSION:** at least one eligible current-binary reversion materially
   lowers residual, the proxy holds or improves, and all guards pass.
-  Measured-floor and CA-off are eligible. Gate `4.5` is not: source history
-  shows `2.0` was deliberately retained for low-contrast detail, and this
-  proxy is explicitly blind to dense low-contrast texture.
+  Gate `4.5`, measured-floor, and CA-off are eligible. The source record for
+  the gate is conflicted rather than a settled decision for `2.0`; any gate
+  verdict remains explicitly limited by this proxy's blindness to dense
+  low-contrast texture.
 - **TRADE:** no admissible eligible reversion exists, while either
   full-resolution gather at a fixed gate or gate `2.0` at fixed gather is
   materially noisier and materially raises the proxy, with both 95% intervals
   above one.
 - **UNRESOLVED:** baseline reproduction fails, commissioning fails, the proxy
   cannot discriminate, a guard fails, or neither rule is met.
-
-Gate `4.5` still attributes a gate-policy component of the residual gap. If it
-is quieter while this proxy merely holds, that is not enough to call the
-deliberate `2.0` policy a regression because the instrument cannot see the
-documented intended benefit. That outcome remains **UNRESOLVED** unless an
-eligible regression control or a positive trade test decides it.
 
 No residual reduction accompanied by proxy loss will be reported as a win.
 
