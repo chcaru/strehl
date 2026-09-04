@@ -189,6 +189,21 @@ def _repeatable_power(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.mean(powers))
 
 
+def _valid_array_bundle(captures: CaptureSet) -> bool:
+    arrays = (
+        captures.reference_a,
+        captures.reference_b,
+        captures.output_a,
+        captures.output_b,
+    )
+    return bool(
+        all(a.ndim == 2 for a in arrays)
+        and len({a.shape for a in arrays}) == 1
+        and arrays[0].shape[1] == len(FREQUENCIES)
+        and all(np.all(np.isfinite(a)) for a in arrays)
+    )
+
+
 def _evaluate_core(captures: CaptureSet) -> dict[str, Any]:
     status, diagnostics = _status(captures)
     if status != "ELIGIBLE":
@@ -252,27 +267,9 @@ def _flat_diagnostic(
 ) -> dict[str, Any]:
     flat_status, flat_reference = _status(flat_control)
     flat_information: float | None = None
-    valid_shape = (
-        flat_control.reference_a.ndim == 2
-        and flat_control.reference_b.ndim == 2
-        and flat_control.output_a.ndim == 2
-        and flat_control.output_b.ndim == 2
-        and len(
-            {
-                flat_control.reference_a.shape,
-                flat_control.reference_b.shape,
-                flat_control.output_a.shape,
-                flat_control.output_b.shape,
-            }
-        )
-        == 1
-        and flat_control.reference_a.shape[1] == len(FREQUENCIES)
-        and np.all(np.isfinite(flat_control.reference_a))
-        and np.all(np.isfinite(flat_control.reference_b))
-        and np.all(np.isfinite(flat_control.output_a))
-        and np.all(np.isfinite(flat_control.output_b))
-    )
-    if valid_shape:
+    flat_arrays_valid = _valid_array_bundle(flat_control)
+    detail_arrays_valid = _valid_array_bundle(captures)
+    if flat_arrays_valid:
         flat_information = _information_summary(flat_control)[
             "information_bits_per_site"
         ]
@@ -288,7 +285,11 @@ def _flat_diagnostic(
 
     reference_ratio = None
     output_ratio = None
-    if valid_shape and captures.reference_a.shape == flat_control.reference_a.shape:
+    if (
+        flat_arrays_valid
+        and detail_arrays_valid
+        and captures.reference_a.shape == flat_control.reference_a.shape
+    ):
         detail_reference_power = _repeatable_power(
             captures.reference_a, captures.reference_b
         )
