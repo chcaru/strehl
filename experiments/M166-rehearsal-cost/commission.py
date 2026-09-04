@@ -68,6 +68,48 @@ MUTATIONS = [
         '"rehearsal_gap": 122',
     ),
     Mutation(
+        "reference change is net 32",
+        "analysis",
+        '"reference_net_increment": 32',
+        '"reference_net_increment": 31',
+    ),
+    Mutation(
+        "expanded score reconstruction",
+        "analysis",
+        '"expanded_corrected_total": 1215',
+        '"expanded_corrected_total": 1214',
+    ),
+    Mutation(
+        "dominance witness is disjoint",
+        "analysis",
+        '"dominance_witness_vs_candidate_raw_overlap": 0',
+        '"dominance_witness_vs_candidate_raw_overlap": 1',
+    ),
+    Mutation(
+        "held-out V is disjoint",
+        "analysis",
+        '"held_out_v_vs_ab_raw_overlap": 0',
+        '"held_out_v_vs_ab_raw_overlap": 1',
+    ),
+    Mutation(
+        "rehearsal shares no score raws",
+        "analysis",
+        '"shared_raws_with_score": 0',
+        '"shared_raws_with_score": 1',
+    ),
+    Mutation(
+        "m151 remains zero-frame",
+        "analysis",
+        '"m151_added_frames": 0',
+        '"m151_added_frames": 1',
+    ),
+    Mutation(
+        "m151 survives staging",
+        "analysis",
+        '"survives_staged_structure": true',
+        '"survives_staged_structure": false',
+    ),
+    Mutation(
         "required lead",
         "report",
         "STAGED RELEASE: 128 frames",
@@ -113,6 +155,21 @@ MUTATIONS = [
         (
             "### Development rehearsal — one clean pass needs fewer "
             "registered frames"
+        ),
+    ),
+    Mutation(
+        "disjointness quote present",
+        "report",
+        (
+            "The corrected `1,215`-frame plan double-counts nothing: `+32` "
+            "is the net replacement of the base `96`-frame reference by "
+            "`128` frames, `+164` is a new candidate-excluded `TC0-DOM-*` "
+            "witness, and `+128` is new held-out V calibration; none of the "
+            "new DOM or V RAWs is already inside the base `891`."
+        ),
+        (
+            "The corrected `1,215`-frame plan may double-count one or more "
+            "blocks from the base `891`."
         ),
     ),
 ]

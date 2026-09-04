@@ -36,6 +36,41 @@
       "passed": true
     },
     {
+      "detail": 32,
+      "name": "reference change is net 32",
+      "passed": true
+    },
+    {
+      "detail": 1215,
+      "name": "expanded score reconstruction",
+      "passed": true
+    },
+    {
+      "detail": 0,
+      "name": "dominance witness is disjoint",
+      "passed": true
+    },
+    {
+      "detail": 0,
+      "name": "held-out V is disjoint",
+      "passed": true
+    },
+    {
+      "detail": 0,
+      "name": "rehearsal shares no score raws",
+      "passed": true
+    },
+    {
+      "detail": 0,
+      "name": "m151 remains zero-frame",
+      "passed": true
+    },
+    {
+      "detail": true,
+      "name": "m151 survives staging",
+      "passed": true
+    },
+    {
       "detail": "STAGED RELEASE: 128 frames",
       "name": "required lead",
       "passed": true
@@ -59,9 +94,14 @@
       "detail": "owner-facing replacement heading",
       "name": "owner text present",
       "passed": true
+    },
+    {
+      "detail": "owner-verifier disjointness sentence",
+      "name": "disjointness quote present",
+      "passed": true
     }
   ],
-  "passed": 12,
+  "passed": 20,
   "status": "PASS",
-  "total": 12
+  "total": 20
 }

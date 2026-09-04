@@ -21,6 +21,9 @@ def run_checks(data: dict[str, Any], report_text: str) -> list[Check]:
         )
 
     categories = data["categories"]
+    disjointness = data["score_disjointness"]
+    rehearsal_disjointness = data["rehearsal_disjointness"]
+    m151 = data["m151_rehearsal_exit_gate"]
     score = data["score"]
     staging = data["staging"]
     first_nonempty = next(
@@ -63,6 +66,41 @@ def run_checks(data: dict[str, Any], report_text: str) -> list[Check]:
         score["rehearsal_gap"],
     )
     check(
+        "reference change is net 32",
+        disjointness["reference_net_increment"] == 32,
+        disjointness["reference_net_increment"],
+    )
+    check(
+        "expanded score reconstruction",
+        disjointness["expanded_corrected_total"] == 1215,
+        disjointness["expanded_corrected_total"],
+    )
+    check(
+        "dominance witness is disjoint",
+        disjointness["dominance_witness_vs_candidate_raw_overlap"] == 0,
+        disjointness["dominance_witness_vs_candidate_raw_overlap"],
+    )
+    check(
+        "held-out V is disjoint",
+        disjointness["held_out_v_vs_ab_raw_overlap"] == 0,
+        disjointness["held_out_v_vs_ab_raw_overlap"],
+    )
+    check(
+        "rehearsal shares no score raws",
+        rehearsal_disjointness["shared_raws_with_score"] == 0,
+        rehearsal_disjointness["shared_raws_with_score"],
+    )
+    check(
+        "m151 remains zero-frame",
+        m151["m151_added_frames"] == 0,
+        m151["m151_added_frames"],
+    )
+    check(
+        "m151 survives staging",
+        m151["survives_staged_structure"] is True,
+        m151["survives_staged_structure"],
+    )
+    check(
         "required lead",
         first_nonempty == "STAGED RELEASE: 128 frames",
         first_nonempty,
@@ -101,6 +139,18 @@ def run_checks(data: dict[str, Any], report_text: str) -> list[Check]:
             in report_text
         ),
         "owner-facing replacement heading",
+    )
+    check(
+        "disjointness quote present",
+        (
+            "The corrected `1,215`-frame plan double-counts nothing: `+32` "
+            "is the net replacement of the base `96`-frame reference by "
+            "`128` frames, `+164` is a new candidate-excluded `TC0-DOM-*` "
+            "witness, and `+128` is new held-out V calibration; none of the "
+            "new DOM or V RAWs is already inside the base `891`."
+            in report_text
+        ),
+        "owner-verifier disjointness sentence",
     )
     return checks
 

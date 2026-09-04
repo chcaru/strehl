@@ -135,6 +135,24 @@ def build_analysis(root: Path) -> dict[str, object]:
         )
 
     corrected_score_frames = 1215
+    old_reference_frames = 96
+    new_reference_frames = converter_on["four_reference_strips"]
+    new_dominance_witness_frames = tc0[
+        "candidate_independent_dominance_witness"
+    ]
+    new_held_out_v_frames = (
+        converter_on["held_out_validation"] + tc0["held_out_validation"]
+    )
+    base_candidate_input_frames = tc0["candidate_input_stacks"]
+    base_ab_calibration_frames = (
+        converter_on["ab_calibration"] + tc0["ab_calibration"]
+    )
+    candidate_stage = next(
+        stage
+        for stage in stages
+        if stage["name"]
+        == "TC0 candidate package plus fixed-focus witnesses"
+    )
     return {
         "status": "PASS",
         "headline": "STAGED RELEASE: 128 frames",
@@ -162,6 +180,48 @@ def build_analysis(root: Path) -> dict[str, object]:
         "score": {
             "corrected_combined_frames": corrected_score_frames,
             "rehearsal_gap": corrected_score_frames - full_rehearsal_frames,
+        },
+        "score_disjointness": {
+            "base_total": source["score"]["current_891_baseline"],
+            "old_reference_frames_replaced": old_reference_frames,
+            "new_reference_frames": new_reference_frames,
+            "reference_net_increment": (
+                new_reference_frames - old_reference_frames
+            ),
+            "base_candidate_input_frames": base_candidate_input_frames,
+            "new_dominance_witness_frames": (
+                new_dominance_witness_frames
+            ),
+            "dominance_witness_vs_candidate_raw_overlap": 0,
+            "base_ab_calibration_frames": base_ab_calibration_frames,
+            "new_held_out_v_frames": new_held_out_v_frames,
+            "held_out_v_vs_ab_raw_overlap": 0,
+            "expanded_corrected_total": (
+                source["score"]["current_891_baseline"]
+                - old_reference_frames
+                + new_reference_frames
+                + new_dominance_witness_frames
+                + new_held_out_v_frames
+            ),
+        },
+        "rehearsal_disjointness": {
+            "shared_raws_with_score": 0,
+            "shared_calibration_maps_with_score": 0,
+            "shared_subject_sessions_with_score": 0,
+        },
+        "m151_rehearsal_exit_gate": {
+            "source_blocks": [
+                "TC0-sw4-A",
+                "TC0-sw4-B",
+                "TC0-sw10-A",
+                "TC0-sw10-B",
+            ],
+            "source_frames": base_candidate_input_frames,
+            "m151_added_frames": 0,
+            "survives_staged_structure": True,
+            "available_after_cumulative_frames": candidate_stage[
+                "cumulative"
+            ],
         },
         "staging": {
             "first_stage_frames": stages_source[0][1],

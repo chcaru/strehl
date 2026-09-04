@@ -79,6 +79,100 @@ M1 instrument. No further score-only block has the same property: the
 `224`-frame TC0 candidate package is the M1 score input and its eligibility
 control.
 
+### 1.1 Scored-session disjointness
+
+**INFERRED BY READING — ANSWER: CONFIRMED, WITH ONE BOOKKEEPING
+QUALIFICATION.** The corrected `1,215` total contains no double count. The
+`+32` is not a standalone new folder: it is the net change from replacing the
+base `96`-frame, three-strip converter-on reference with the new `128`-frame,
+four-strip reference. The `+164` DOM witness and `+128` V-validation package
+are genuinely new physical blocks.
+
+**VERIFIED BY RUNNING.** The expanded arithmetic is:
+
+```text
+base scored plan                                      891
+remove superseded three-strip reference              - 96
+install four-strip reference                         +128
+add candidate-excluded TC0-DOM sw4/sw10 A/B          +164
+add TR-V and TC0-V flat/dark validation              +128
+                                                      ----
+corrected combined score                            1,215
+```
+
+**INFERRED BY READING.** The two `164` counts name different RAW roles. The
+base block is candidate input:
+
+```text
+TC0-sw4-A/B + TC0-sw10-A/B = 55 + 55 + 27 + 27 = 164.
+```
+
+**INFERRED BY READING.** The added block is candidate-excluded physical
+witness input:
+
+```text
+TC0-DOM-sw4-A/B + TC0-DOM-sw10-A/B = 55 + 55 + 27 + 27 = 164.
+```
+
+**INFERRED BY READING.** No `TC0-DOM-*` RAW may appear in a candidate or
+comparator manifest. Equal budgets do not make the files interchangeable.
+Likewise, the base converter-on and TC0 calibration rows contain only A/B
+sources; the added `128` contains the four new V groups
+`TR-FLAT-V`, `TR-DARK-V`, `TC0-FLAT-V`, and `TC0-DARK-V`, `32` each.
+
+**INFERRED BY READING — VERBATIM OWNER/VERIFIER SENTENCE.**
+The corrected `1,215`-frame plan double-counts nothing: `+32` is the net replacement of the base `96`-frame reference by `128` frames, `+164` is a new candidate-excluded `TC0-DOM-*` witness, and `+128` is new held-out V calibration; none of the new DOM or V RAWs is already inside the base `891`.
+
+**INFERRED BY READING.** The `1,092` rehearsal shares zero RAWs, calibration
+maps, references, selected sites, renders or subject/session identity with
+either the base `891` roles or the added score roles. It repeats analogous
+roles on `D-REHEARSAL-01` in a separate development sitting; it is not frame
+credit toward `1,215`.
+
+### 1.2 M151's free M5 exit gate
+
+**INFERRED BY READING — SURVIVES UNCHANGED.** M151 consumes the rehearsal's
+candidate `TC0-sw4-A/B` and `TC0-sw10-A/B` blocks, not the candidate-excluded
+`TC0-DOM-*` witness. Those four candidate stacks remain present as the
+`164`-frame part of the staged rehearsal's `224`-frame candidate package.
+The M5 eligibility gate therefore still costs zero additional frames.
+
+**VERIFIED BY RUNNING.** Under the staged order it becomes available after
+the candidate package closes at cumulative frame `836`. The frozen exit
+predicate remains at least `133` eligible pass-averaged sw4 tiles, at least
+`133` eligible pass-averaged sw10 tiles, and at least `133` common eligible
+physical tiles in their intersection.
+
+**INFERRED BY READING.** If the rehearsal aborts before frame `836`, M5 has no
+exit result and the score remains stopped. If the candidate package fails any
+M151 count, that is an additional STOP before the final controls and TC0 V.
+The rejected `676`-frame estimator-only reduction would have deleted the
+candidate stacks and therefore would also have destroyed this zero-frame M5
+gate.
+
+### 1.3 Paste-ready capture-request insertion
+
+**INFERRED BY READING — EXACT REPLACEMENT TEXT FOLLOWS.**
+
+> **COUNTING CHECK — the corrected total double-counts nothing.** The
+> corrected `1,215`-frame plan is
+> `891 - 96 + 128 + 164 + 128`: replace the base `96`-frame three-strip
+> reference with the `128`-frame four-strip reference (`+32` net); add a new
+> candidate-excluded `TC0-DOM-sw4-A/B` plus `TC0-DOM-sw10-A/B` witness
+> (`+164`); and add the four new held-out V groups (`+128`). The DOM RAWs are
+> different files from the base `TC0-sw4/sw10` candidate inputs, and the V
+> RAWs are different files from every base A/B calibration group.
+>
+> **The rehearsal is entirely separate acquisition.** Its `1,092` RAWs come
+> from the independently seeded development panel and development sitting.
+> None is reused in the `1,215`-frame score, and no rehearsal calibration map,
+> reference, site, render or fitted value receives score credit.
+>
+> **The M5 rehearsal exit gate remains free.** It reads the rehearsal's
+> existing candidate `TC0-sw4-A/B` and `TC0-sw10-A/B` stacks after that
+> `164`-frame block is complete. It adds zero frames. Failure of any frozen
+> `133`-tile count is STOP before the scored sitting.
+
 ## 2. Candidate savings, tested and rejected
 
 **VERIFIED BY RUNNING.** These are the apparent smaller totals. None preserves
@@ -196,7 +290,7 @@ reorder those facts.
 | TC0 A/B calibration after the live scale/field check | `128` | `448` | `644` | live geometry or either provisional TC0 map fails the frozen predicate | placement/calibration before long TC0 blocks | **INFERRED BY READING** |
 | `TC0-DOM-sw4-A/B` | `110` | `558` | `534` | incomplete budget, failed node/coverage/focus/lineage, or a manifest-issued best-case impossibility certificate for any sw4 cell | focus error; severe Viltrox/TC0 transfer or information reversal | **INFERRED BY READING** |
 | `TC0-DOM-sw10-A/B` | `54` | `612` | `480` | same predicate for sw10; one weak licensed cell is enough | width-specific focus/reduction defect versus persistent optical failure | **INFERRED BY READING** |
-| exact candidate package plus fixed witnesses | `224` | `836` | `256` | missing/duplicate frame, interruption, or any G0-G3 reset, endpoint, stability, spectral-profile or node failure | score-input execution rather than reference optics | **INFERRED BY READING** |
+| exact candidate package plus fixed witnesses | `224` | `836` | `256` | missing/duplicate frame, interruption, any G0-G3 failure, or any M151 sw4/sw10/intersection count below `133` | score-input execution and free M5 feasibility gate | **INFERRED BY READING** |
 | sharp control | `96` | `932` | `160` | complete frozen control has `Q05 <= 1.10` or an eligibility refusal | absent/reversed positive response | **INFERRED BY READING** |
 | blur control | `96` | `1,028` | `64` | complete frozen control has `Q95 >= 0.90` or an eligibility refusal | blindness to physical degradation | **INFERRED BY READING** |
 | TC0 V plus final family | `64` | `1,092` | `0` | either TC0 map/common-mode closure fails, or any final licensed cell/control/eligibility bound fails | separates calibration/drift from the final optical verdict | **INFERRED BY READING** |
@@ -357,7 +451,10 @@ actually supported.
 >    candidate `sw4-A/B` and `sw10-A/B` stacks plus all `60` registered
 >    reset/start/end witnesses in the frozen order. Any interruption, missing
 >    frame or failed stability, reset, endpoint, spectral-profile or node gate
->    is **STOP**.
+>    is **STOP**. Run the input-only M5 exit gate on these same stacks; sw4,
+>    sw10 and their physical-coordinate intersection must each retain at least
+>    `133` eligible tiles. That gate adds no frames. Any failed count is
+>    **STOP**.
 >
 > 9. **Physical controls — 192 more frames.** Capture the `96` sharp-control
 >    frames and run its frozen check; `Q05` must be strictly above `1.10`.
@@ -393,14 +490,14 @@ experiments\M166-rehearsal-cost\analysis.json
 **VERIFIED BY RUNNING.** The fail-closed report verifier reports:
 
 ```text
-PASS: 12/12 checks
+PASS: 20/20 checks
 ```
 
 **VERIFIED BY RUNNING.** Every verifier check was then exercised by an
 in-memory planted defect whose anchor was required to occur exactly once:
 
 ```text
-COMMISSIONED: 12/12 planted defects caught; missing-anchor guard fired
+COMMISSIONED: 20/20 planted defects caught; missing-anchor guard fired
 ```
 
 **INFERRED BY READING.** The accounting and staging conclusions use

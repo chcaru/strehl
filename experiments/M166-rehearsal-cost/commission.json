@@ -1,5 +1,5 @@
 {
-  "caught": 12,
+  "caught": 20,
   "missing_anchor_guard_fired": true,
   "mutations": [
     {
@@ -45,6 +45,48 @@
       "target": "analysis"
     },
     {
+      "anchor": "\"reference_net_increment\": 32",
+      "caught": true,
+      "check": "reference change is net 32",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"expanded_corrected_total\": 1215",
+      "caught": true,
+      "check": "expanded score reconstruction",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"dominance_witness_vs_candidate_raw_overlap\": 0",
+      "caught": true,
+      "check": "dominance witness is disjoint",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"held_out_v_vs_ab_raw_overlap\": 0",
+      "caught": true,
+      "check": "held-out V is disjoint",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"shared_raws_with_score\": 0",
+      "caught": true,
+      "check": "rehearsal shares no score raws",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"m151_added_frames\": 0",
+      "caught": true,
+      "check": "m151 remains zero-frame",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"survives_staged_structure\": true",
+      "caught": true,
+      "check": "m151 survives staging",
+      "target": "analysis"
+    },
+    {
       "anchor": "STAGED RELEASE: 128 frames",
       "caught": true,
       "check": "required lead",
@@ -73,8 +115,14 @@
       "caught": true,
       "check": "owner text present",
       "target": "report"
+    },
+    {
+      "anchor": "The corrected `1,215`-frame plan double-counts nothing: `+32` is the net replacement of the base `96`-frame reference by `128` frames, `+164` is a new candidate-excluded `TC0-DOM-*` witness, and `+128` is new held-out V calibration; none of the new DOM or V RAWs is already inside the base `891`.",
+      "caught": true,
+      "check": "disjointness quote present",
+      "target": "report"
     }
   ],
   "status": "PASS",
-  "total": 12
+  "total": 20
 }

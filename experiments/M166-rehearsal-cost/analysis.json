@@ -70,9 +70,39 @@
     "symbol": "p",
     "two_package_detection": "1-(1-p)^2"
   },
+  "m151_rehearsal_exit_gate": {
+    "available_after_cumulative_frames": 836,
+    "m151_added_frames": 0,
+    "source_blocks": [
+      "TC0-sw4-A",
+      "TC0-sw4-B",
+      "TC0-sw10-A",
+      "TC0-sw10-B"
+    ],
+    "source_frames": 164,
+    "survives_staged_structure": true
+  },
+  "rehearsal_disjointness": {
+    "shared_calibration_maps_with_score": 0,
+    "shared_raws_with_score": 0,
+    "shared_subject_sessions_with_score": 0
+  },
   "score": {
     "corrected_combined_frames": 1215,
     "rehearsal_gap": 123
+  },
+  "score_disjointness": {
+    "base_ab_calibration_frames": 256,
+    "base_candidate_input_frames": 164,
+    "base_total": 891,
+    "dominance_witness_vs_candidate_raw_overlap": 0,
+    "expanded_corrected_total": 1215,
+    "held_out_v_vs_ab_raw_overlap": 0,
+    "new_dominance_witness_frames": 164,
+    "new_held_out_v_frames": 128,
+    "new_reference_frames": 128,
+    "old_reference_frames_replaced": 96,
+    "reference_net_increment": 32
   },
   "source": {
     "path": "experiments\\M166-reference-dominance-rehearsal\\analysis.json",
