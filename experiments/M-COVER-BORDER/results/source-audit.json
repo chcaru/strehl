@@ -1,0 +1,167 @@
+{
+  "commit": "4e5278870a5e6ff6e0da38762f716e5291508c16",
+  "files": {
+    "crates/strehl-cli/src/align_cmd.rs": {
+      "literal_128_256_hits": [
+        {
+          "line": 48,
+          "text": "pub const DEFAULT_SPANS: [usize; 9] = [1, 2, 4, 8, 16, 32, 64, 96, 128];"
+        },
+        {
+          "line": 109,
+          "text": "#[arg(long, value_delimiter = ',', default_values_t = [1usize, 2, 4, 8, 16, 32, 64, 96, 128])]"
+        }
+      ],
+      "symbol_lines": {
+        "black_dn": [
+          1886,
+          1952,
+          2024,
+          2135
+        ],
+        "if mode == CoverMode::Crop": [
+          1667
+        ],
+        "match resampler.sample_checked": [
+          2108
+        ],
+        "pub const COVER_MARGIN_PX": [
+          1738
+        ],
+        "pub fn cover_rect": [
+          1761
+        ]
+      }
+    },
+    "crates/strehl-cli/src/merge_cmd.rs": {
+      "literal_128_256_hits": [
+        {
+          "line": 2204,
+          "text": "sep.iter().map(|&s| s.saturating_mul(256)).collect(),"
+        },
+        {
+          "line": 3831,
+          "text": "// that is proved by SHA-256 in M125, not argued from this comment."
+        },
+        {
+          "line": 7496,
+          "text": "// `docs/research/M85-output-correctness.md` carries the SHA-256 proof that"
+        }
+      ],
+      "symbol_lines": {
+        "THE ONE PLACE THE CROP IS APPLIED": [
+          7079
+        ],
+        "align_cmd::warp_frame_in_place": [
+          1561,
+          4801
+        ],
+        "alignment.as_ref().and_then(|(_, _, fit)| fit.rect())": [
+          4466,
+          5922
+        ],
+        "fn prepare_frame": [
+          4751
+        ],
+        "fn run_pyramid": [
+          5433
+        ],
+        "fn write_merged": [
+          7052
+        ],
+        "let planes = merge.finish": [
+          5829
+        ],
+        "not applied     : photometric gain": [
+          5579
+        ]
+      }
+    },
+    "crates/strehl-core/src/align.rs": {
+      "literal_128_256_hits": [
+        {
+          "line": 602,
+          "text": "/// `bee-3-cpl` a 128 px tile is mismatched by 18.3 px, which no search"
+        },
+        {
+          "line": 605,
+          "text": "/// over-shooting to 1.27 of truth at span 256 while the default under-shot"
+        },
+        {
+          "line": 624,
+          "text": "fine_tile: 128,"
+        },
+        {
+          "line": 971,
+          "text": "/// `t*|1-s|` \u2014 18.3 plane px for the 128 px tile and 14.3% end-to-end scale of"
+        }
+      ],
+      "symbol_lines": {
+        "one more px of the coverage-cropped field is unavailable per side": [
+          2765
+        ],
+        "pub fn sample_checked": [
+          2888
+        ],
+        "pub fn support": [
+          2867
+        ]
+      }
+    },
+    "crates/strehl-core/src/photometric.rs": {
+      "literal_128_256_hits": [],
+      "symbol_lines": {}
+    },
+    "crates/strehl-core/src/pyramid.rs": {
+      "literal_128_256_hits": [
+        {
+          "line": 415,
+          "text": "/// The tempting derivation is \"the kernel's squared weights sum to `70/256`, so"
+        },
+        {
+          "line": 462,
+          "text": "let n = (MIN_LEVEL_EXTENT << bands.min(12)).max(256);"
+        },
+        {
+          "line": 1242,
+          "text": "/// with twice another's band energy gets 256 times the weight. If more"
+        },
+        {
+          "line": 2513,
+          "text": "/// sum a^2 (1-D)  = (1 + 16 + 36 + 16 + 1) / 256 = 70/256 = 0.2734375"
+        },
+        {
+          "line": 2555,
+          "text": "/// At the shipping `gate = 2.0` this is `0.386699 / 128 = 0.0030211`."
+        },
+        {
+          "line": 2799,
+          "text": "// Regression. The probe was a fixed 256 x 256, which truncates at five"
+        }
+      ],
+      "symbol_lines": {
+        "fn smooth5": [
+          2464
+        ],
+        "pub const DEFAULT_BANDS": [
+          136
+        ],
+        "pub const KERNEL": [
+          79
+        ],
+        "pub fn add_frame_with_gain": [
+          1614
+        ],
+        "pub fn expand": [
+          211
+        ],
+        "pub fn finish": [
+          2185
+        ],
+        "pub fn reduce": [
+          151
+        ]
+      }
+    }
+  }
+}

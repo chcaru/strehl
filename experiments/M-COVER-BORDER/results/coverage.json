@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "all_22_crop_conservative": true,
+    "all_22_crop_exact_sites": true,
+    "all_22_scale_conservative": true,
+    "all_22_scale_exact_sites": true,
+    "rect_matches_cover": true,
+    "unscaled_grid_has_missing_frames": true
+  },
+  "cover_scale": 0.9870480668413858,
+  "crop_contribution_count_max": 22,
+  "crop_contribution_count_min": 22,
+  "crop_min_conservative_margin_slack_px": 0.8416668217178085,
+  "crop_min_exact_fullres_site_slack_px": 3.0866280879586157,
+  "crop_rect": {
+    "height": 2312,
+    "width": 3470,
+    "x": 23,
+    "y": 16
+  },
+  "frames_covering_whole_unscaled_grid_at_margin3": 7,
+  "passed": true,
+  "placements": 22,
+  "plane": [
+    3516,
+    2344
+  ],
+  "scale_min_conservative_margin_slack_px": 0.0,
+  "scale_min_exact_fullres_site_slack_px": 2.2515024941631054,
+  "sidecar": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\out\\real-109\\109-warpmap.txt",
+  "sidecar_sha256": "C29CAB9C6F944F4D03C4402998E54AAD4D4221CC450AC4BEF42A453DE848434D"
+}

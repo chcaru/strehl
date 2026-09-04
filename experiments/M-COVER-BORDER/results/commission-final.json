@@ -1,0 +1,98 @@
+{
+  "detector": {
+    "checks": {
+      "defect_mass_fires": true,
+      "defect_peak": true,
+      "defect_safe": true,
+      "improvement_mass": true,
+      "improvement_peak": true,
+      "improvement_reduction": true,
+      "improvement_safe": true,
+      "null_mass": true,
+      "null_peak": true,
+      "null_safe": true,
+      "restoration_mass": true,
+      "restoration_peak": true,
+      "restoration_safe": true
+    },
+    "passed": true,
+    "readings": {
+      "defect_peak": 0.020000000000000018,
+      "defect_radial_mass": {
+        "absolute_fraction": 0.0046874999999999886,
+        "negative_fraction": 0.0,
+        "positive_fraction": 0.0046874999999999886,
+        "signed_fraction": 0.0046874999999999886
+      },
+      "defect_safe_inset_px": 64,
+      "improved_radial_mass": {
+        "absolute_fraction": 0.00011718749999999002,
+        "negative_fraction": 0.0,
+        "positive_fraction": 0.00011718749999999002,
+        "signed_fraction": 0.00011718749999999002
+      },
+      "improvement_fraction_of_defect": 0.025000000000008328,
+      "improvement_peak": 0.000500000000000167,
+      "improvement_safe_inset_px": 8,
+      "null_peak": 0.0,
+      "null_radial_mass": {
+        "absolute_fraction": 0.0,
+        "negative_fraction": 0.0,
+        "positive_fraction": 0.0,
+        "signed_fraction": 0.0
+      },
+      "null_safe_inset_px": 8,
+      "restored_peak": 0.020000000000000018,
+      "restored_radial_mass": {
+        "absolute_fraction": 0.0046874999999999886,
+        "negative_fraction": 0.0,
+        "positive_fraction": 0.0046874999999999886,
+        "signed_fraction": 0.0046874999999999886
+      },
+      "restored_safe_inset_px": 64
+    }
+  },
+  "passed": true,
+  "pyramid_model": {
+    "bands": {
+      "2": {
+        "defect_abs_peak": 0.434814453125,
+        "defect_positive_peak": 0.434814453125,
+        "improved_abs_peak": 0.0,
+        "operator_null_max_abs": 0.0,
+        "restoration_max_abs_delta": 0.0,
+        "threshold_reach_px": 10
+      },
+      "4": {
+        "defect_abs_peak": 0.48433423042297363,
+        "defect_positive_peak": 0.48433423042297363,
+        "improved_abs_peak": 0.0,
+        "operator_null_max_abs": 0.0,
+        "restoration_max_abs_delta": 0.0,
+        "threshold_reach_px": 40
+      },
+      "7": {
+        "defect_abs_peak": 0.498046795524715,
+        "defect_positive_peak": 0.498046795524715,
+        "improved_abs_peak": 0.0,
+        "operator_null_max_abs": 0.0,
+        "restoration_max_abs_delta": 0.0,
+        "threshold_reach_px": 317
+      }
+    },
+    "checks": {
+      "defect_fires": true,
+      "improvement_reduces_95pct": true,
+      "operator_null": true,
+      "reach_monotone": true,
+      "reach_slope": true,
+      "restoration_returns": true
+    },
+    "fit": {
+      "intercept": 1.329795448162495,
+      "r2": 0.9999984565911457,
+      "slope": 0.9971391442635887
+    },
+    "passed": true
+  }
+}

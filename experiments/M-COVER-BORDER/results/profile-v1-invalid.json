@@ -1,0 +1,4765 @@
+{
+  "crop": {
+    "b7_peak_abs_effect_through_256": 0.02610634876649387,
+    "b7_positive_radial_level_mass_through_256": 0.014430362601493671,
+    "h2_checks": {
+      "endpoint_ratio": false,
+      "r2": false,
+      "reach_monotone": false,
+      "slope": false
+    },
+    "h2_passed": false,
+    "log2_reach_fit": {
+      "intercept": NaN,
+      "r2": NaN,
+      "slope": NaN
+    },
+    "profiles": {
+      "2": {
+        "deep_ratio": 1.0,
+        "rows": [
+          {
+            "candidate_mean": 6681.605543270898,
+            "hi": 8,
+            "lo": 0,
+            "normalised_effect": 0.0,
+            "reference_mean": 6681.605543270898,
+            "samples": 92256
+          },
+          {
+            "candidate_mean": 6617.141229944193,
+            "hi": 16,
+            "lo": 8,
+            "normalised_effect": 0.0,
+            "reference_mean": 6617.141229944193,
+            "samples": 91744
+          },
+          {
+            "candidate_mean": 6615.222323307611,
+            "hi": 24,
+            "lo": 16,
+            "normalised_effect": 0.0,
+            "reference_mean": 6615.222323307611,
+            "samples": 91232
+          },
+          {
+            "candidate_mean": 6610.090718694885,
+            "hi": 32,
+            "lo": 24,
+            "normalised_effect": 0.0,
+            "reference_mean": 6610.090718694885,
+            "samples": 90720
+          },
+          {
+            "candidate_mean": 6614.943020574672,
+            "hi": 40,
+            "lo": 32,
+            "normalised_effect": 0.0,
+            "reference_mean": 6614.943020574672,
+            "samples": 90208
+          },
+          {
+            "candidate_mean": 6621.55248840528,
+            "hi": 48,
+            "lo": 40,
+            "normalised_effect": 0.0,
+            "reference_mean": 6621.55248840528,
+            "samples": 89696
+          },
+          {
+            "candidate_mean": 6623.522649802655,
+            "hi": 56,
+            "lo": 48,
+            "normalised_effect": 0.0,
+            "reference_mean": 6623.522649802655,
+            "samples": 89184
+          },
+          {
+            "candidate_mean": 6625.501962287983,
+            "hi": 64,
+            "lo": 56,
+            "normalised_effect": 0.0,
+            "reference_mean": 6625.501962287983,
+            "samples": 88672
+          },
+          {
+            "candidate_mean": 6622.102495462795,
+            "hi": 72,
+            "lo": 64,
+            "normalised_effect": 0.0,
+            "reference_mean": 6622.102495462795,
+            "samples": 88160
+          },
+          {
+            "candidate_mean": 6621.567725447244,
+            "hi": 80,
+            "lo": 72,
+            "normalised_effect": 0.0,
+            "reference_mean": 6621.567725447244,
+            "samples": 87648
+          },
+          {
+            "candidate_mean": 6615.619548751377,
+            "hi": 88,
+            "lo": 80,
+            "normalised_effect": 0.0,
+            "reference_mean": 6615.619548751377,
+            "samples": 87136
+          },
+          {
+            "candidate_mean": 6600.47849325822,
+            "hi": 96,
+            "lo": 88,
+            "normalised_effect": 0.0,
+            "reference_mean": 6600.47849325822,
+            "samples": 86624
+          },
+          {
+            "candidate_mean": 6592.693654775177,
+            "hi": 104,
+            "lo": 96,
+            "normalised_effect": 0.0,
+            "reference_mean": 6592.693654775177,
+            "samples": 86112
+          },
+          {
+            "candidate_mean": 6599.271588785046,
+            "hi": 112,
+            "lo": 104,
+            "normalised_effect": 0.0,
+            "reference_mean": 6599.271588785046,
+            "samples": 85600
+          },
+          {
+            "candidate_mean": 6602.406214742385,
+            "hi": 120,
+            "lo": 112,
+            "normalised_effect": 0.0,
+            "reference_mean": 6602.406214742385,
+            "samples": 85088
+          },
+          {
+            "candidate_mean": 6597.728303537647,
+            "hi": 128,
+            "lo": 120,
+            "normalised_effect": 0.0,
+            "reference_mean": 6597.728303537647,
+            "samples": 84576
+          },
+          {
+            "candidate_mean": 6588.249595546251,
+            "hi": 136,
+            "lo": 128,
+            "normalised_effect": 0.0,
+            "reference_mean": 6588.249595546251,
+            "samples": 84064
+          },
+          {
+            "candidate_mean": 6594.303308119494,
+            "hi": 144,
+            "lo": 136,
+            "normalised_effect": 0.0,
+            "reference_mean": 6594.303308119494,
+            "samples": 83552
+          },
+          {
+            "candidate_mean": 6597.463547687861,
+            "hi": 152,
+            "lo": 144,
+            "normalised_effect": 0.0,
+            "reference_mean": 6597.463547687861,
+            "samples": 83040
+          },
+          {
+            "candidate_mean": 6592.910660624273,
+            "hi": 160,
+            "lo": 152,
+            "normalised_effect": 0.0,
+            "reference_mean": 6592.910660624273,
+            "samples": 82528
+          },
+          {
+            "candidate_mean": 6589.099773214983,
+            "hi": 168,
+            "lo": 160,
+            "normalised_effect": 0.0,
+            "reference_mean": 6589.099773214983,
+            "samples": 82016
+          },
+          {
+            "candidate_mean": 6589.9566401649,
+            "hi": 176,
+            "lo": 168,
+            "normalised_effect": 0.0,
+            "reference_mean": 6589.9566401649,
+            "samples": 81504
+          },
+          {
+            "candidate_mean": 6582.673831983406,
+            "hi": 184,
+            "lo": 176,
+            "normalised_effect": 0.0,
+            "reference_mean": 6582.673831983406,
+            "samples": 80992
+          },
+          {
+            "candidate_mean": 6573.335673459244,
+            "hi": 192,
+            "lo": 184,
+            "normalised_effect": 0.0,
+            "reference_mean": 6573.335673459244,
+            "samples": 80480
+          },
+          {
+            "candidate_mean": 6569.218925070028,
+            "hi": 200,
+            "lo": 192,
+            "normalised_effect": 0.0,
+            "reference_mean": 6569.218925070028,
+            "samples": 79968
+          },
+          {
+            "candidate_mean": 6570.776014397906,
+            "hi": 208,
+            "lo": 200,
+            "normalised_effect": 0.0,
+            "reference_mean": 6570.776014397906,
+            "samples": 79456
+          },
+          {
+            "candidate_mean": 6567.79561461289,
+            "hi": 216,
+            "lo": 208,
+            "normalised_effect": 0.0,
+            "reference_mean": 6567.79561461289,
+            "samples": 78944
+          },
+          {
+            "candidate_mean": 6562.458193084455,
+            "hi": 224,
+            "lo": 216,
+            "normalised_effect": 0.0,
+            "reference_mean": 6562.458193084455,
+            "samples": 78432
+          },
+          {
+            "candidate_mean": 6557.292646303901,
+            "hi": 232,
+            "lo": 224,
+            "normalised_effect": 0.0,
+            "reference_mean": 6557.292646303901,
+            "samples": 77920
+          },
+          {
+            "candidate_mean": 6573.49656366267,
+            "hi": 240,
+            "lo": 232,
+            "normalised_effect": 0.0,
+            "reference_mean": 6573.49656366267,
+            "samples": 77408
+          },
+          {
+            "candidate_mean": 6569.121319704536,
+            "hi": 248,
+            "lo": 240,
+            "normalised_effect": 0.0,
+            "reference_mean": 6569.121319704536,
+            "samples": 76896
+          },
+          {
+            "candidate_mean": 6565.595334101383,
+            "hi": 256,
+            "lo": 248,
+            "normalised_effect": 0.0,
+            "reference_mean": 6565.595334101383,
+            "samples": 76384
+          },
+          {
+            "candidate_mean": 6564.794377372416,
+            "hi": 264,
+            "lo": 256,
+            "normalised_effect": 0.0,
+            "reference_mean": 6564.794377372416,
+            "samples": 75872
+          },
+          {
+            "candidate_mean": 6560.0956342887475,
+            "hi": 272,
+            "lo": 264,
+            "normalised_effect": 0.0,
+            "reference_mean": 6560.0956342887475,
+            "samples": 75360
+          },
+          {
+            "candidate_mean": 6545.814490701155,
+            "hi": 280,
+            "lo": 272,
+            "normalised_effect": 0.0,
+            "reference_mean": 6545.814490701155,
+            "samples": 74848
+          },
+          {
+            "candidate_mean": 6539.387578024107,
+            "hi": 288,
+            "lo": 280,
+            "normalised_effect": 0.0,
+            "reference_mean": 6539.387578024107,
+            "samples": 74336
+          },
+          {
+            "candidate_mean": 6551.210866384916,
+            "hi": 296,
+            "lo": 288,
+            "normalised_effect": 0.0,
+            "reference_mean": 6551.210866384916,
+            "samples": 73824
+          },
+          {
+            "candidate_mean": 6553.834515495417,
+            "hi": 304,
+            "lo": 296,
+            "normalised_effect": 0.0,
+            "reference_mean": 6553.834515495417,
+            "samples": 73312
+          },
+          {
+            "candidate_mean": 6540.139217032967,
+            "hi": 312,
+            "lo": 304,
+            "normalised_effect": 0.0,
+            "reference_mean": 6540.139217032967,
+            "samples": 72800
+          },
+          {
+            "candidate_mean": 6534.666403829128,
+            "hi": 320,
+            "lo": 312,
+            "normalised_effect": 0.0,
+            "reference_mean": 6534.666403829128,
+            "samples": 72288
+          },
+          {
+            "candidate_mean": 6532.2129959875165,
+            "hi": 328,
+            "lo": 320,
+            "normalised_effect": 0.0,
+            "reference_mean": 6532.2129959875165,
+            "samples": 71776
+          },
+          {
+            "candidate_mean": 6529.808556915133,
+            "hi": 336,
+            "lo": 328,
+            "normalised_effect": 0.0,
+            "reference_mean": 6529.808556915133,
+            "samples": 71264
+          },
+          {
+            "candidate_mean": 6517.9180800542745,
+            "hi": 344,
+            "lo": 336,
+            "normalised_effect": 0.0,
+            "reference_mean": 6517.9180800542745,
+            "samples": 70752
+          },
+          {
+            "candidate_mean": 6509.421867881549,
+            "hi": 352,
+            "lo": 344,
+            "normalised_effect": 0.0,
+            "reference_mean": 6509.421867881549,
+            "samples": 70240
+          },
+          {
+            "candidate_mean": 6494.097364043139,
+            "hi": 360,
+            "lo": 352,
+            "normalised_effect": 0.0,
+            "reference_mean": 6494.097364043139,
+            "samples": 69728
+          },
+          {
+            "candidate_mean": 6480.699404761905,
+            "hi": 368,
+            "lo": 360,
+            "normalised_effect": 0.0,
+            "reference_mean": 6480.699404761905,
+            "samples": 69216
+          },
+          {
+            "candidate_mean": 6474.3383209129015,
+            "hi": 376,
+            "lo": 368,
+            "normalised_effect": 0.0,
+            "reference_mean": 6474.3383209129015,
+            "samples": 68704
+          },
+          {
+            "candidate_mean": 6452.494251525106,
+            "hi": 384,
+            "lo": 376,
+            "normalised_effect": 0.0,
+            "reference_mean": 6452.494251525106,
+            "samples": 68192
+          },
+          {
+            "candidate_mean": 6442.8350177304965,
+            "hi": 392,
+            "lo": 384,
+            "normalised_effect": 0.0,
+            "reference_mean": 6442.8350177304965,
+            "samples": 67680
+          },
+          {
+            "candidate_mean": 6419.802554787994,
+            "hi": 400,
+            "lo": 392,
+            "normalised_effect": 0.0,
+            "reference_mean": 6419.802554787994,
+            "samples": 67168
+          },
+          {
+            "candidate_mean": 6400.875300048007,
+            "hi": 408,
+            "lo": 400,
+            "normalised_effect": 0.0,
+            "reference_mean": 6400.875300048007,
+            "samples": 66656
+          },
+          {
+            "candidate_mean": 6382.6526971456215,
+            "hi": 416,
+            "lo": 408,
+            "normalised_effect": 0.0,
+            "reference_mean": 6382.6526971456215,
+            "samples": 66144
+          },
+          {
+            "candidate_mean": 6356.926499268649,
+            "hi": 424,
+            "lo": 416,
+            "normalised_effect": 0.0,
+            "reference_mean": 6356.926499268649,
+            "samples": 65632
+          },
+          {
+            "candidate_mean": 6358.706633906634,
+            "hi": 432,
+            "lo": 424,
+            "normalised_effect": 0.0,
+            "reference_mean": 6358.706633906634,
+            "samples": 65120
+          },
+          {
+            "candidate_mean": 6357.456011639425,
+            "hi": 440,
+            "lo": 432,
+            "normalised_effect": 0.0,
+            "reference_mean": 6357.456011639425,
+            "samples": 64608
+          },
+          {
+            "candidate_mean": 6355.745475536695,
+            "hi": 448,
+            "lo": 440,
+            "normalised_effect": 0.0,
+            "reference_mean": 6355.745475536695,
+            "samples": 64096
+          },
+          {
+            "candidate_mean": 6352.775383744338,
+            "hi": 456,
+            "lo": 448,
+            "normalised_effect": 0.0,
+            "reference_mean": 6352.775383744338,
+            "samples": 63584
+          },
+          {
+            "candidate_mean": 6352.82424847793,
+            "hi": 464,
+            "lo": 456,
+            "normalised_effect": 0.0,
+            "reference_mean": 6352.82424847793,
+            "samples": 63072
+          },
+          {
+            "candidate_mean": 6349.219197570333,
+            "hi": 472,
+            "lo": 464,
+            "normalised_effect": 0.0,
+            "reference_mean": 6349.219197570333,
+            "samples": 62560
+          },
+          {
+            "candidate_mean": 6350.493359979371,
+            "hi": 480,
+            "lo": 472,
+            "normalised_effect": 0.0,
+            "reference_mean": 6350.493359979371,
+            "samples": 62048
+          },
+          {
+            "candidate_mean": 6343.671103094124,
+            "hi": 488,
+            "lo": 480,
+            "normalised_effect": 0.0,
+            "reference_mean": 6343.671103094124,
+            "samples": 61536
+          },
+          {
+            "candidate_mean": 6336.750098321972,
+            "hi": 496,
+            "lo": 488,
+            "normalised_effect": 0.0,
+            "reference_mean": 6336.750098321972,
+            "samples": 61024
+          },
+          {
+            "candidate_mean": 6329.353797593865,
+            "hi": 504,
+            "lo": 496,
+            "normalised_effect": 0.0,
+            "reference_mean": 6329.353797593865,
+            "samples": 60512
+          },
+          {
+            "candidate_mean": 6319.231716666666,
+            "hi": 512,
+            "lo": 504,
+            "normalised_effect": 0.0,
+            "reference_mean": 6319.231716666666,
+            "samples": 60000
+          },
+          {
+            "candidate_mean": 6309.463992738031,
+            "hi": 520,
+            "lo": 512,
+            "normalised_effect": 0.0,
+            "reference_mean": 6309.463992738031,
+            "samples": 59488
+          },
+          {
+            "candidate_mean": 6305.491352414541,
+            "hi": 528,
+            "lo": 520,
+            "normalised_effect": 0.0,
+            "reference_mean": 6305.491352414541,
+            "samples": 58976
+          },
+          {
+            "candidate_mean": 6291.718151340996,
+            "hi": 536,
+            "lo": 528,
+            "normalised_effect": 0.0,
+            "reference_mean": 6291.718151340996,
+            "samples": 58464
+          },
+          {
+            "candidate_mean": 6286.356467421314,
+            "hi": 544,
+            "lo": 536,
+            "normalised_effect": 0.0,
+            "reference_mean": 6286.356467421314,
+            "samples": 57952
+          },
+          {
+            "candidate_mean": 6267.564519498607,
+            "hi": 552,
+            "lo": 544,
+            "normalised_effect": 0.0,
+            "reference_mean": 6267.564519498607,
+            "samples": 57440
+          },
+          {
+            "candidate_mean": 6247.876686340641,
+            "hi": 560,
+            "lo": 552,
+            "normalised_effect": 0.0,
+            "reference_mean": 6247.876686340641,
+            "samples": 56928
+          },
+          {
+            "candidate_mean": 6233.521820051049,
+            "hi": 568,
+            "lo": 560,
+            "normalised_effect": 0.0,
+            "reference_mean": 6233.521820051049,
+            "samples": 56416
+          },
+          {
+            "candidate_mean": 6223.6064682312535,
+            "hi": 576,
+            "lo": 568,
+            "normalised_effect": 0.0,
+            "reference_mean": 6223.6064682312535,
+            "samples": 55904
+          },
+          {
+            "candidate_mean": 6207.716457250144,
+            "hi": 584,
+            "lo": 576,
+            "normalised_effect": 0.0,
+            "reference_mean": 6207.716457250144,
+            "samples": 55392
+          },
+          {
+            "candidate_mean": 6205.4448250728865,
+            "hi": 592,
+            "lo": 584,
+            "normalised_effect": 0.0,
+            "reference_mean": 6205.4448250728865,
+            "samples": 54880
+          },
+          {
+            "candidate_mean": 6209.499650529723,
+            "hi": 600,
+            "lo": 592,
+            "normalised_effect": 0.0,
+            "reference_mean": 6209.499650529723,
+            "samples": 54368
+          },
+          {
+            "candidate_mean": 6189.1849561794415,
+            "hi": 608,
+            "lo": 600,
+            "normalised_effect": 0.0,
+            "reference_mean": 6189.1849561794415,
+            "samples": 53856
+          },
+          {
+            "candidate_mean": 6175.836007798441,
+            "hi": 616,
+            "lo": 608,
+            "normalised_effect": 0.0,
+            "reference_mean": 6175.836007798441,
+            "samples": 53344
+          },
+          {
+            "candidate_mean": 6174.73368413083,
+            "hi": 624,
+            "lo": 616,
+            "normalised_effect": 0.0,
+            "reference_mean": 6174.73368413083,
+            "samples": 52832
+          },
+          {
+            "candidate_mean": 6179.526165902141,
+            "hi": 632,
+            "lo": 624,
+            "normalised_effect": 0.0,
+            "reference_mean": 6179.526165902141,
+            "samples": 52320
+          },
+          {
+            "candidate_mean": 6176.687905342804,
+            "hi": 640,
+            "lo": 632,
+            "normalised_effect": 0.0,
+            "reference_mean": 6176.687905342804,
+            "samples": 51808
+          },
+          {
+            "candidate_mean": 6166.095368059888,
+            "hi": 648,
+            "lo": 640,
+            "normalised_effect": 0.0,
+            "reference_mean": 6166.095368059888,
+            "samples": 51296
+          },
+          {
+            "candidate_mean": 6160.473633427851,
+            "hi": 656,
+            "lo": 648,
+            "normalised_effect": 0.0,
+            "reference_mean": 6160.473633427851,
+            "samples": 50784
+          },
+          {
+            "candidate_mean": 6170.210216422661,
+            "hi": 664,
+            "lo": 656,
+            "normalised_effect": 0.0,
+            "reference_mean": 6170.210216422661,
+            "samples": 50272
+          },
+          {
+            "candidate_mean": 6168.630164790997,
+            "hi": 672,
+            "lo": 664,
+            "normalised_effect": 0.0,
+            "reference_mean": 6168.630164790997,
+            "samples": 49760
+          },
+          {
+            "candidate_mean": 6160.008650097466,
+            "hi": 680,
+            "lo": 672,
+            "normalised_effect": 0.0,
+            "reference_mean": 6160.008650097466,
+            "samples": 49248
+          },
+          {
+            "candidate_mean": 6157.9176173670385,
+            "hi": 688,
+            "lo": 680,
+            "normalised_effect": 0.0,
+            "reference_mean": 6157.9176173670385,
+            "samples": 48736
+          },
+          {
+            "candidate_mean": 6148.16529114134,
+            "hi": 696,
+            "lo": 688,
+            "normalised_effect": 0.0,
+            "reference_mean": 6148.16529114134,
+            "samples": 48224
+          },
+          {
+            "candidate_mean": 6150.743565560027,
+            "hi": 704,
+            "lo": 696,
+            "normalised_effect": 0.0,
+            "reference_mean": 6150.743565560027,
+            "samples": 47712
+          },
+          {
+            "candidate_mean": 6164.602838983051,
+            "hi": 712,
+            "lo": 704,
+            "normalised_effect": 0.0,
+            "reference_mean": 6164.602838983051,
+            "samples": 47200
+          },
+          {
+            "candidate_mean": 6184.174584475668,
+            "hi": 720,
+            "lo": 712,
+            "normalised_effect": 0.0,
+            "reference_mean": 6184.174584475668,
+            "samples": 46688
+          },
+          {
+            "candidate_mean": 6202.536923943174,
+            "hi": 728,
+            "lo": 720,
+            "normalised_effect": 0.0,
+            "reference_mean": 6202.536923943174,
+            "samples": 46176
+          },
+          {
+            "candidate_mean": 6198.177601611773,
+            "hi": 736,
+            "lo": 728,
+            "normalised_effect": 0.0,
+            "reference_mean": 6198.177601611773,
+            "samples": 45664
+          },
+          {
+            "candidate_mean": 6210.367425584692,
+            "hi": 744,
+            "lo": 736,
+            "normalised_effect": 0.0,
+            "reference_mean": 6210.367425584692,
+            "samples": 45152
+          },
+          {
+            "candidate_mean": 6133.45539874552,
+            "hi": 752,
+            "lo": 744,
+            "normalised_effect": 0.0,
+            "reference_mean": 6133.45539874552,
+            "samples": 44640
+          },
+          {
+            "candidate_mean": 5897.678911348804,
+            "hi": 760,
+            "lo": 752,
+            "normalised_effect": 0.0,
+            "reference_mean": 5897.678911348804,
+            "samples": 44128
+          },
+          {
+            "candidate_mean": 6056.968841709465,
+            "hi": 768,
+            "lo": 760,
+            "normalised_effect": 0.0,
+            "reference_mean": 6056.968841709465,
+            "samples": 43616
+          },
+          {
+            "candidate_mean": 6251.853563474388,
+            "hi": 776,
+            "lo": 768,
+            "normalised_effect": 0.0,
+            "reference_mean": 6251.853563474388,
+            "samples": 43104
+          },
+          {
+            "candidate_mean": 6251.644675056348,
+            "hi": 784,
+            "lo": 776,
+            "normalised_effect": 0.0,
+            "reference_mean": 6251.644675056348,
+            "samples": 42592
+          },
+          {
+            "candidate_mean": 6245.85658269962,
+            "hi": 792,
+            "lo": 784,
+            "normalised_effect": 0.0,
+            "reference_mean": 6245.85658269962,
+            "samples": 42080
+          },
+          {
+            "candidate_mean": 6043.072483641263,
+            "hi": 800,
+            "lo": 792,
+            "normalised_effect": 0.0,
+            "reference_mean": 6043.072483641263,
+            "samples": 41568
+          },
+          {
+            "candidate_mean": 5801.666090218238,
+            "hi": 808,
+            "lo": 800,
+            "normalised_effect": 0.0,
+            "reference_mean": 5801.666090218238,
+            "samples": 41056
+          },
+          {
+            "candidate_mean": 5745.290425217048,
+            "hi": 816,
+            "lo": 808,
+            "normalised_effect": 0.0,
+            "reference_mean": 5745.290425217048,
+            "samples": 40544
+          },
+          {
+            "candidate_mean": 5728.418415267785,
+            "hi": 824,
+            "lo": 816,
+            "normalised_effect": 0.0,
+            "reference_mean": 5728.418415267785,
+            "samples": 40032
+          },
+          {
+            "candidate_mean": 5747.198658906883,
+            "hi": 832,
+            "lo": 824,
+            "normalised_effect": 0.0,
+            "reference_mean": 5747.198658906883,
+            "samples": 39520
+          },
+          {
+            "candidate_mean": 5709.337341058244,
+            "hi": 840,
+            "lo": 832,
+            "normalised_effect": 0.0,
+            "reference_mean": 5709.337341058244,
+            "samples": 39008
+          },
+          {
+            "candidate_mean": 5445.953137988363,
+            "hi": 848,
+            "lo": 840,
+            "normalised_effect": 0.0,
+            "reference_mean": 5445.953137988363,
+            "samples": 38496
+          },
+          {
+            "candidate_mean": 5079.549468197136,
+            "hi": 856,
+            "lo": 848,
+            "normalised_effect": 0.0,
+            "reference_mean": 5079.549468197136,
+            "samples": 37984
+          },
+          {
+            "candidate_mean": 4899.7198708368915,
+            "hi": 864,
+            "lo": 856,
+            "normalised_effect": 0.0,
+            "reference_mean": 4899.7198708368915,
+            "samples": 37472
+          },
+          {
+            "candidate_mean": 4848.280492424243,
+            "hi": 872,
+            "lo": 864,
+            "normalised_effect": 0.0,
+            "reference_mean": 4848.280492424243,
+            "samples": 36960
+          },
+          {
+            "candidate_mean": 4823.826821773486,
+            "hi": 880,
+            "lo": 872,
+            "normalised_effect": 0.0,
+            "reference_mean": 4823.826821773486,
+            "samples": 36448
+          },
+          {
+            "candidate_mean": 4790.74142920748,
+            "hi": 888,
+            "lo": 880,
+            "normalised_effect": 0.0,
+            "reference_mean": 4790.74142920748,
+            "samples": 35936
+          },
+          {
+            "candidate_mean": 4774.514227642277,
+            "hi": 896,
+            "lo": 888,
+            "normalised_effect": 0.0,
+            "reference_mean": 4774.514227642277,
+            "samples": 35424
+          },
+          {
+            "candidate_mean": 4758.0,
+            "hi": 904,
+            "lo": 896,
+            "normalised_effect": 0.0,
+            "reference_mean": 4758.0,
+            "samples": 34912
+          },
+          {
+            "candidate_mean": 4689.231860465116,
+            "hi": 912,
+            "lo": 904,
+            "normalised_effect": 0.0,
+            "reference_mean": 4689.231860465116,
+            "samples": 34400
+          },
+          {
+            "candidate_mean": 4607.296033994335,
+            "hi": 920,
+            "lo": 912,
+            "normalised_effect": 0.0,
+            "reference_mean": 4607.296033994335,
+            "samples": 33888
+          },
+          {
+            "candidate_mean": 4552.444361217641,
+            "hi": 928,
+            "lo": 920,
+            "normalised_effect": 0.0,
+            "reference_mean": 4552.444361217641,
+            "samples": 33376
+          },
+          {
+            "candidate_mean": 4546.33316090555,
+            "hi": 936,
+            "lo": 928,
+            "normalised_effect": 0.0,
+            "reference_mean": 4546.33316090555,
+            "samples": 32864
+          },
+          {
+            "candidate_mean": 4577.507542037587,
+            "hi": 944,
+            "lo": 936,
+            "normalised_effect": 0.0,
+            "reference_mean": 4577.507542037587,
+            "samples": 32352
+          },
+          {
+            "candidate_mean": 4554.1625,
+            "hi": 952,
+            "lo": 944,
+            "normalised_effect": 0.0,
+            "reference_mean": 4554.1625,
+            "samples": 31840
+          },
+          {
+            "candidate_mean": 4488.869860827375,
+            "hi": 960,
+            "lo": 952,
+            "normalised_effect": 0.0,
+            "reference_mean": 4488.869860827375,
+            "samples": 31328
+          },
+          {
+            "candidate_mean": 4445.2455218068535,
+            "hi": 968,
+            "lo": 960,
+            "normalised_effect": 0.0,
+            "reference_mean": 4445.2455218068535,
+            "samples": 30816
+          },
+          {
+            "candidate_mean": 4403.390509503696,
+            "hi": 976,
+            "lo": 968,
+            "normalised_effect": 0.0,
+            "reference_mean": 4403.390509503696,
+            "samples": 30304
+          },
+          {
+            "candidate_mean": 4352.480229591837,
+            "hi": 984,
+            "lo": 976,
+            "normalised_effect": 0.0,
+            "reference_mean": 4352.480229591837,
+            "samples": 29792
+          },
+          {
+            "candidate_mean": 4314.918545081967,
+            "hi": 992,
+            "lo": 984,
+            "normalised_effect": 0.0,
+            "reference_mean": 4314.918545081967,
+            "samples": 29280
+          },
+          {
+            "candidate_mean": 4290.8606785317015,
+            "hi": 1000,
+            "lo": 992,
+            "normalised_effect": 0.0,
+            "reference_mean": 4290.8606785317015,
+            "samples": 28768
+          },
+          {
+            "candidate_mean": 4291.861586919592,
+            "hi": 1008,
+            "lo": 1000,
+            "normalised_effect": 0.0,
+            "reference_mean": 4291.861586919592,
+            "samples": 28256
+          },
+          {
+            "candidate_mean": 4258.449971164937,
+            "hi": 1016,
+            "lo": 1008,
+            "normalised_effect": 0.0,
+            "reference_mean": 4258.449971164937,
+            "samples": 27744
+          },
+          {
+            "candidate_mean": 4249.980574324324,
+            "hi": 1024,
+            "lo": 1016,
+            "normalised_effect": 0.0,
+            "reference_mean": 4249.980574324324,
+            "samples": 27232
+          },
+          {
+            "candidate_mean": 4226.654416167665,
+            "hi": 1032,
+            "lo": 1024,
+            "normalised_effect": 0.0,
+            "reference_mean": 4226.654416167665,
+            "samples": 26720
+          },
+          {
+            "candidate_mean": 4201.938148656899,
+            "hi": 1040,
+            "lo": 1032,
+            "normalised_effect": 0.0,
+            "reference_mean": 4201.938148656899,
+            "samples": 26208
+          },
+          {
+            "candidate_mean": 4272.326042963886,
+            "hi": 1048,
+            "lo": 1040,
+            "normalised_effect": 0.0,
+            "reference_mean": 4272.326042963886,
+            "samples": 25696
+          },
+          {
+            "candidate_mean": 4582.794393265565,
+            "hi": 1056,
+            "lo": 1048,
+            "normalised_effect": 0.0,
+            "reference_mean": 4582.794393265565,
+            "samples": 25184
+          },
+          {
+            "candidate_mean": 4806.33994001297,
+            "hi": 1064,
+            "lo": 1056,
+            "normalised_effect": 0.0,
+            "reference_mean": 4806.33994001297,
+            "samples": 24672
+          },
+          {
+            "candidate_mean": 4646.505753311259,
+            "hi": 1072,
+            "lo": 1064,
+            "normalised_effect": 0.0,
+            "reference_mean": 4646.505753311259,
+            "samples": 24160
+          },
+          {
+            "candidate_mean": 4564.636882611638,
+            "hi": 1080,
+            "lo": 1072,
+            "normalised_effect": 0.0,
+            "reference_mean": 4564.636882611638,
+            "samples": 23648
+          },
+          {
+            "candidate_mean": 4620.737508644536,
+            "hi": 1088,
+            "lo": 1080,
+            "normalised_effect": 0.0,
+            "reference_mean": 4620.737508644536,
+            "samples": 23136
+          },
+          {
+            "candidate_mean": 4527.5282001414425,
+            "hi": 1096,
+            "lo": 1088,
+            "normalised_effect": 0.0,
+            "reference_mean": 4527.5282001414425,
+            "samples": 22624
+          },
+          {
+            "candidate_mean": 4306.45147431259,
+            "hi": 1104,
+            "lo": 1096,
+            "normalised_effect": 0.0,
+            "reference_mean": 4306.45147431259,
+            "samples": 22112
+          },
+          {
+            "candidate_mean": 3982.478472222222,
+            "hi": 1112,
+            "lo": 1104,
+            "normalised_effect": 0.0,
+            "reference_mean": 3982.478472222222,
+            "samples": 21600
+          },
+          {
+            "candidate_mean": 3820.559844461305,
+            "hi": 1120,
+            "lo": 1112,
+            "normalised_effect": 0.0,
+            "reference_mean": 3820.559844461305,
+            "samples": 21088
+          },
+          {
+            "candidate_mean": 3603.501458009331,
+            "hi": 1128,
+            "lo": 1120,
+            "normalised_effect": 0.0,
+            "reference_mean": 3603.501458009331,
+            "samples": 20576
+          },
+          {
+            "candidate_mean": 3611.6480761563,
+            "hi": 1136,
+            "lo": 1128,
+            "normalised_effect": 0.0,
+            "reference_mean": 3611.6480761563,
+            "samples": 20064
+          },
+          {
+            "candidate_mean": 4059.7340936988544,
+            "hi": 1144,
+            "lo": 1136,
+            "normalised_effect": 0.0,
+            "reference_mean": 4059.7340936988544,
+            "samples": 19552
+          },
+          {
+            "candidate_mean": 4073.987552521008,
+            "hi": 1152,
+            "lo": 1144,
+            "normalised_effect": 0.0,
+            "reference_mean": 4073.987552521008,
+            "samples": 19040
+          },
+          {
+            "candidate_mean": 3980.871355060034,
+            "hi": 1156,
+            "lo": 1152,
+            "normalised_effect": 0.0,
+            "reference_mean": 3980.871355060034,
+            "samples": 9328
+          }
+        ],
+        "safe_inset_px": 8
+      },
+      "4": {
+        "deep_ratio": 0.9997922963211959,
+        "rows": [
+          {
+            "candidate_mean": 6798.076125130073,
+            "hi": 8,
+            "lo": 0,
+            "normalised_effect": 0.017642894338976367,
+            "reference_mean": 6681.605543270898,
+            "samples": 92256
+          },
+          {
+            "candidate_mean": 6782.80089161144,
+            "hi": 16,
+            "lo": 8,
+            "normalised_effect": 0.025247876875496233,
+            "reference_mean": 6617.141229944193,
+            "samples": 91744
+          },
+          {
+            "candidate_mean": 6719.994168712732,
+            "hi": 24,
+            "lo": 16,
+            "normalised_effect": 0.016049030205336212,
+            "reference_mean": 6615.222323307611,
+            "samples": 91232
+          },
+          {
+            "candidate_mean": 6632.387731481482,
+            "hi": 32,
+            "lo": 24,
+            "normalised_effect": 0.0035816256253182743,
+            "reference_mean": 6610.090718694885,
+            "samples": 90720
+          },
+          {
+            "candidate_mean": 6614.223472419298,
+            "hi": 40,
+            "lo": 32,
+            "normalised_effect": 9.894806236965259e-05,
+            "reference_mean": 6614.943020574672,
+            "samples": 90208
+          },
+          {
+            "candidate_mean": 6620.18722128077,
+            "hi": 48,
+            "lo": 40,
+            "normalised_effect": 1.518643152786936e-06,
+            "reference_mean": 6621.55248840528,
+            "samples": 89696
+          },
+          {
+            "candidate_mean": 6621.927812163617,
+            "hi": 56,
+            "lo": 48,
+            "normalised_effect": -3.308709708294e-05,
+            "reference_mean": 6623.522649802655,
+            "samples": 89184
+          },
+          {
+            "candidate_mean": 6623.6364579574165,
+            "hi": 64,
+            "lo": 56,
+            "normalised_effect": -7.38758912930404e-05,
+            "reference_mean": 6625.501962287983,
+            "samples": 88672
+          },
+          {
+            "candidate_mean": 6620.078924682396,
+            "hi": 72,
+            "lo": 64,
+            "normalised_effect": -9.789494790513054e-05,
+            "reference_mean": 6622.102495462795,
+            "samples": 88160
+          },
+          {
+            "candidate_mean": 6619.958801113545,
+            "hi": 80,
+            "lo": 72,
+            "normalised_effect": -3.5286037551096605e-05,
+            "reference_mean": 6621.567725447244,
+            "samples": 87648
+          },
+          {
+            "candidate_mean": 6614.333088505325,
+            "hi": 88,
+            "lo": 80,
+            "normalised_effect": 1.3248415456912355e-05,
+            "reference_mean": 6615.619548751377,
+            "samples": 87136
+          },
+          {
+            "candidate_mean": 6597.881891854451,
+            "hi": 96,
+            "lo": 88,
+            "normalised_effect": -0.00018573083248618616,
+            "reference_mean": 6600.47849325822,
+            "samples": 86624
+          },
+          {
+            "candidate_mean": 6589.692888331475,
+            "hi": 104,
+            "lo": 96,
+            "normalised_effect": -0.00024751319115556836,
+            "reference_mean": 6592.693654775177,
+            "samples": 86112
+          },
+          {
+            "candidate_mean": 6596.81636682243,
+            "hi": 112,
+            "lo": 104,
+            "normalised_effect": -0.00016437485093012683,
+            "reference_mean": 6599.271588785046,
+            "samples": 85600
+          },
+          {
+            "candidate_mean": 6600.84885060173,
+            "hi": 120,
+            "lo": 112,
+            "normalised_effect": -2.8180442087966107e-05,
+            "reference_mean": 6602.406214742385,
+            "samples": 85088
+          },
+          {
+            "candidate_mean": 6596.78013857359,
+            "hi": 128,
+            "lo": 120,
+            "normalised_effect": 6.400615017376765e-05,
+            "reference_mean": 6597.728303537647,
+            "samples": 84576
+          },
+          {
+            "candidate_mean": 6587.016618290826,
+            "hi": 136,
+            "lo": 128,
+            "normalised_effect": 2.0560022035320813e-05,
+            "reference_mean": 6588.249595546251,
+            "samples": 84064
+          },
+          {
+            "candidate_mean": 6593.574109536576,
+            "hi": 144,
+            "lo": 136,
+            "normalised_effect": 9.714377659686413e-05,
+            "reference_mean": 6594.303308119494,
+            "samples": 83552
+          },
+          {
+            "candidate_mean": 6597.201457129095,
+            "hi": 152,
+            "lo": 144,
+            "normalised_effect": 0.00016801261779986199,
+            "reference_mean": 6597.463547687861,
+            "samples": 83040
+          },
+          {
+            "candidate_mean": 6592.265376599457,
+            "hi": 160,
+            "lo": 152,
+            "normalised_effect": 0.00010985105633043446,
+            "reference_mean": 6592.910660624273,
+            "samples": 82528
+          },
+          {
+            "candidate_mean": 6587.711117342958,
+            "hi": 168,
+            "lo": 160,
+            "normalised_effect": -3.0474238449373914e-06,
+            "reference_mean": 6589.099773214983,
+            "samples": 82016
+          },
+          {
+            "candidate_mean": 6588.037323321555,
+            "hi": 176,
+            "lo": 168,
+            "normalised_effect": -8.356245919305394e-05,
+            "reference_mean": 6589.9566401649,
+            "samples": 81504
+          },
+          {
+            "candidate_mean": 6580.027620011853,
+            "hi": 184,
+            "lo": 176,
+            "normalised_effect": -0.00019433320473527527,
+            "reference_mean": 6582.673831983406,
+            "samples": 80992
+          },
+          {
+            "candidate_mean": 6571.085748011928,
+            "hi": 192,
+            "lo": 184,
+            "normalised_effect": -0.0001346049048402964,
+            "reference_mean": 6573.335673459244,
+            "samples": 80480
+          },
+          {
+            "candidate_mean": 6567.00431422569,
+            "hi": 200,
+            "lo": 192,
+            "normalised_effect": -0.00012944256150615452,
+            "reference_mean": 6569.218925070028,
+            "samples": 79968
+          },
+          {
+            "candidate_mean": 6569.275674587193,
+            "hi": 208,
+            "lo": 200,
+            "normalised_effect": -2.063586141454188e-05,
+            "reference_mean": 6570.776014397906,
+            "samples": 79456
+          },
+          {
+            "candidate_mean": 6566.869717774625,
+            "hi": 216,
+            "lo": 208,
+            "normalised_effect": 6.674225951175394e-05,
+            "reference_mean": 6567.79561461289,
+            "samples": 78944
+          },
+          {
+            "candidate_mean": 6561.101093941248,
+            "hi": 224,
+            "lo": 216,
+            "normalised_effect": 9.064897492638835e-07,
+            "reference_mean": 6562.458193084455,
+            "samples": 78432
+          },
+          {
+            "candidate_mean": 6555.373434291581,
+            "hi": 232,
+            "lo": 224,
+            "normalised_effect": -8.499757464264235e-05,
+            "reference_mean": 6557.292646303901,
+            "samples": 77920
+          },
+          {
+            "candidate_mean": 6572.86142259198,
+            "hi": 240,
+            "lo": 232,
+            "normalised_effect": 0.00011110525996427256,
+            "reference_mean": 6573.49656366267,
+            "samples": 77408
+          },
+          {
+            "candidate_mean": 6567.9124531835205,
+            "hi": 248,
+            "lo": 240,
+            "normalised_effect": 2.368603866220731e-05,
+            "reference_mean": 6569.121319704536,
+            "samples": 76896
+          },
+          {
+            "candidate_mean": 6564.566872643485,
+            "hi": 256,
+            "lo": 248,
+            "normalised_effect": 5.107023413164491e-05,
+            "reference_mean": 6565.595334101383,
+            "samples": 76384
+          },
+          {
+            "candidate_mean": 6563.8787167861665,
+            "hi": 264,
+            "lo": 256,
+            "normalised_effect": 6.823738484795783e-05,
+            "reference_mean": 6564.794377372416,
+            "samples": 75872
+          },
+          {
+            "candidate_mean": 6559.584859341826,
+            "hi": 272,
+            "lo": 264,
+            "normalised_effect": 0.00012986975372508702,
+            "reference_mean": 6560.0956342887475,
+            "samples": 75360
+          },
+          {
+            "candidate_mean": 6544.115580910646,
+            "hi": 280,
+            "lo": 272,
+            "normalised_effect": -5.184848014949672e-05,
+            "reference_mean": 6545.814490701155,
+            "samples": 74848
+          },
+          {
+            "candidate_mean": 6537.293989453293,
+            "hi": 288,
+            "lo": 280,
+            "normalised_effect": -0.00011247023795490918,
+            "reference_mean": 6539.387578024107,
+            "samples": 74336
+          },
+          {
+            "candidate_mean": 6550.022513003902,
+            "hi": 296,
+            "lo": 288,
+            "normalised_effect": 2.6314680863670503e-05,
+            "reference_mean": 6551.210866384916,
+            "samples": 73824
+          },
+          {
+            "candidate_mean": 6552.822539284155,
+            "hi": 304,
+            "lo": 296,
+            "normalised_effect": 5.330496043587374e-05,
+            "reference_mean": 6553.834515495417,
+            "samples": 73312
+          },
+          {
+            "candidate_mean": 6538.314326923077,
+            "hi": 312,
+            "lo": 304,
+            "normalised_effect": -7.13403841569038e-05,
+            "reference_mean": 6540.139217032967,
+            "samples": 72800
+          },
+          {
+            "candidate_mean": 6533.326347388225,
+            "hi": 320,
+            "lo": 312,
+            "normalised_effect": 2.6353889870378566e-06,
+            "reference_mean": 6534.666403829128,
+            "samples": 72288
+          },
+          {
+            "candidate_mean": 6531.032420307623,
+            "hi": 328,
+            "lo": 320,
+            "normalised_effect": 2.6977931202987193e-05,
+            "reference_mean": 6532.2129959875165,
+            "samples": 71776
+          },
+          {
+            "candidate_mean": 6528.69611585092,
+            "hi": 336,
+            "lo": 328,
+            "normalised_effect": 3.7347932412279405e-05,
+            "reference_mean": 6529.808556915133,
+            "samples": 71264
+          },
+          {
+            "candidate_mean": 6516.176150497512,
+            "hi": 344,
+            "lo": 336,
+            "normalised_effect": -5.956113934380003e-05,
+            "reference_mean": 6517.9180800542745,
+            "samples": 70752
+          },
+          {
+            "candidate_mean": 6508.019832004556,
+            "hi": 352,
+            "lo": 344,
+            "normalised_effect": -7.683538959857295e-06,
+            "reference_mean": 6509.421867881549,
+            "samples": 70240
+          },
+          {
+            "candidate_mean": 6493.092430587425,
+            "hi": 360,
+            "lo": 352,
+            "normalised_effect": 5.296900941953453e-05,
+            "reference_mean": 6494.097364043139,
+            "samples": 69728
+          },
+          {
+            "candidate_mean": 6479.633235090153,
+            "hi": 368,
+            "lo": 360,
+            "normalised_effect": 4.3198050973414226e-05,
+            "reference_mean": 6480.699404761905,
+            "samples": 69216
+          },
+          {
+            "candidate_mean": 6473.865189799721,
+            "hi": 376,
+            "lo": 368,
+            "normalised_effect": 0.00013465373687204796,
+            "reference_mean": 6474.3383209129015,
+            "samples": 68704
+          },
+          {
+            "candidate_mean": 6451.2214629282025,
+            "hi": 384,
+            "lo": 376,
+            "normalised_effect": 1.0450563749264674e-05,
+            "reference_mean": 6452.494251525106,
+            "samples": 68192
+          },
+          {
+            "candidate_mean": 6442.189790189125,
+            "hi": 392,
+            "lo": 384,
+            "normalised_effect": 0.0001075794979652489,
+            "reference_mean": 6442.8350177304965,
+            "samples": 67680
+          },
+          {
+            "candidate_mean": 6418.469702834684,
+            "hi": 400,
+            "lo": 392,
+            "normalised_effect": 8.797339412502936e-08,
+            "reference_mean": 6419.802554787994,
+            "samples": 67168
+          },
+          {
+            "candidate_mean": 6400.063595175228,
+            "hi": 408,
+            "lo": 400,
+            "normalised_effect": 8.090894097789736e-05,
+            "reference_mean": 6400.875300048007,
+            "samples": 66656
+          },
+          {
+            "candidate_mean": 6382.054562772134,
+            "hi": 416,
+            "lo": 408,
+            "normalised_effect": 0.0001140148550002884,
+            "reference_mean": 6382.6526971456215,
+            "samples": 66144
+          },
+          {
+            "candidate_mean": 6355.3640145051195,
+            "hi": 424,
+            "lo": 416,
+            "normalised_effect": -3.809671938836967e-05,
+            "reference_mean": 6356.926499268649,
+            "samples": 65632
+          },
+          {
+            "candidate_mean": 6358.111041154792,
+            "hi": 432,
+            "lo": 424,
+            "normalised_effect": 0.00011406166292982078,
+            "reference_mean": 6358.706633906634,
+            "samples": 65120
+          },
+          {
+            "candidate_mean": 6356.61315936107,
+            "hi": 440,
+            "lo": 432,
+            "normalised_effect": 7.514231245431269e-05,
+            "reference_mean": 6357.456011639425,
+            "samples": 64608
+          },
+          {
+            "candidate_mean": 6354.944302296555,
+            "hi": 448,
+            "lo": 440,
+            "normalised_effect": 8.16656813102945e-05,
+            "reference_mean": 6355.745475536695,
+            "samples": 64096
+          },
+          {
+            "candidate_mean": 6351.406139909411,
+            "hi": 456,
+            "lo": 448,
+            "normalised_effect": -7.832695051002148e-06,
+            "reference_mean": 6352.775383744338,
+            "samples": 63584
+          },
+          {
+            "candidate_mean": 6351.826119355657,
+            "hi": 464,
+            "lo": 456,
+            "normalised_effect": 5.0598379110144975e-05,
+            "reference_mean": 6352.82424847793,
+            "samples": 63072
+          },
+          {
+            "candidate_mean": 6348.350527493606,
+            "hi": 472,
+            "lo": 464,
+            "normalised_effect": 7.090314542557152e-05,
+            "reference_mean": 6349.219197570333,
+            "samples": 62560
+          },
+          {
+            "candidate_mean": 6349.57752062919,
+            "hi": 480,
+            "lo": 472,
+            "normalised_effect": 6.350140370559032e-05,
+            "reference_mean": 6350.493359979371,
+            "samples": 62048
+          },
+          {
+            "candidate_mean": 6342.287116484659,
+            "hi": 488,
+            "lo": 480,
+            "normalised_effect": -1.0466585351420754e-05,
+            "reference_mean": 6343.671103094124,
+            "samples": 61536
+          },
+          {
+            "candidate_mean": 6335.6360776088095,
+            "hi": 496,
+            "lo": 488,
+            "normalised_effect": 3.19071426031492e-05,
+            "reference_mean": 6336.750098321972,
+            "samples": 61024
+          },
+          {
+            "candidate_mean": 6328.519252379693,
+            "hi": 504,
+            "lo": 496,
+            "normalised_effect": 7.586628990918776e-05,
+            "reference_mean": 6329.353797593865,
+            "samples": 60512
+          },
+          {
+            "candidate_mean": 6318.363733333334,
+            "hi": 512,
+            "lo": 504,
+            "normalised_effect": 7.036246082559039e-05,
+            "reference_mean": 6319.231716666666,
+            "samples": 60000
+          },
+          {
+            "candidate_mean": 6308.387742065626,
+            "hi": 520,
+            "lo": 512,
+            "normalised_effect": 3.7134196305910194e-05,
+            "reference_mean": 6309.463992738031,
+            "samples": 59488
+          },
+          {
+            "candidate_mean": 6304.61026519262,
+            "hi": 528,
+            "lo": 520,
+            "normalised_effect": 6.79844824416076e-05,
+            "reference_mean": 6305.491352414541,
+            "samples": 58976
+          },
+          {
+            "candidate_mean": 6290.422191434045,
+            "hi": 536,
+            "lo": 528,
+            "normalised_effect": 1.7253401243255695e-06,
+            "reference_mean": 6291.718151340996,
+            "samples": 58464
+          },
+          {
+            "candidate_mean": 6285.50471079514,
+            "hi": 544,
+            "lo": 536,
+            "normalised_effect": 7.222578705179394e-05,
+            "reference_mean": 6286.356467421314,
+            "samples": 57952
+          },
+          {
+            "candidate_mean": 6266.362343314763,
+            "hi": 552,
+            "lo": 544,
+            "normalised_effect": 1.5897837099432266e-05,
+            "reference_mean": 6267.564519498607,
+            "samples": 57440
+          },
+          {
+            "candidate_mean": 6247.107100196739,
+            "hi": 560,
+            "lo": 552,
+            "normalised_effect": 8.454560973447656e-05,
+            "reference_mean": 6247.876686340641,
+            "samples": 56928
+          },
+          {
+            "candidate_mean": 6232.653715258083,
+            "hi": 568,
+            "lo": 560,
+            "normalised_effect": 6.845395947308042e-05,
+            "reference_mean": 6233.521820051049,
+            "samples": 56416
+          },
+          {
+            "candidate_mean": 6222.6392386949055,
+            "hi": 576,
+            "lo": 568,
+            "normalised_effect": 5.230151240742664e-05,
+            "reference_mean": 6223.6064682312535,
+            "samples": 55904
+          },
+          {
+            "candidate_mean": 6206.342901502022,
+            "hi": 584,
+            "lo": 576,
+            "normalised_effect": -1.3565003138649168e-05,
+            "reference_mean": 6207.716457250144,
+            "samples": 55392
+          },
+          {
+            "candidate_mean": 6204.441490524781,
+            "hi": 592,
+            "lo": 584,
+            "normalised_effect": 4.602707827427999e-05,
+            "reference_mean": 6205.4448250728865,
+            "samples": 54880
+          },
+          {
+            "candidate_mean": 6209.323462330783,
+            "hi": 600,
+            "lo": 592,
+            "normalised_effect": 0.00017936695719433793,
+            "reference_mean": 6209.499650529723,
+            "samples": 54368
+          },
+          {
+            "candidate_mean": 6188.5210375817,
+            "hi": 608,
+            "lo": 600,
+            "normalised_effect": 0.00010045377959233548,
+            "reference_mean": 6189.1849561794415,
+            "samples": 53856
+          },
+          {
+            "candidate_mean": 6175.132329784044,
+            "hi": 616,
+            "lo": 608,
+            "normalised_effect": 9.378262999115705e-05,
+            "reference_mean": 6175.836007798441,
+            "samples": 53344
+          },
+          {
+            "candidate_mean": 6173.764953058752,
+            "hi": 624,
+            "lo": 616,
+            "normalised_effect": 5.0827943908648976e-05,
+            "reference_mean": 6174.73368413083,
+            "samples": 52832
+          },
+          {
+            "candidate_mean": 6178.785607798165,
+            "hi": 632,
+            "lo": 624,
+            "normalised_effect": 8.78813352300778e-05,
+            "reference_mean": 6179.526165902141,
+            "samples": 52320
+          },
+          {
+            "candidate_mean": 6176.1011233786285,
+            "hi": 640,
+            "lo": 632,
+            "normalised_effect": 0.00011272764107483901,
+            "reference_mean": 6176.687905342804,
+            "samples": 51808
+          },
+          {
+            "candidate_mean": 6165.247602152214,
+            "hi": 648,
+            "lo": 640,
+            "normalised_effect": 7.02299759025582e-05,
+            "reference_mean": 6166.095368059888,
+            "samples": 51296
+          },
+          {
+            "candidate_mean": 6158.709416351607,
+            "hi": 656,
+            "lo": 648,
+            "normalised_effect": -7.868952221357084e-05,
+            "reference_mean": 6160.473633427851,
+            "samples": 50784
+          },
+          {
+            "candidate_mean": 6168.870424888606,
+            "hi": 664,
+            "lo": 656,
+            "normalised_effect": -9.436998950174136e-06,
+            "reference_mean": 6170.210216422661,
+            "samples": 50272
+          },
+          {
+            "candidate_mean": 6167.741057073955,
+            "hi": 672,
+            "lo": 664,
+            "normalised_effect": 6.358314838439405e-05,
+            "reference_mean": 6168.630164790997,
+            "samples": 49760
+          },
+          {
+            "candidate_mean": 6159.30049951267,
+            "hi": 680,
+            "lo": 672,
+            "normalised_effect": 9.27635970557894e-05,
+            "reference_mean": 6160.008650097466,
+            "samples": 49248
+          },
+          {
+            "candidate_mean": 6157.43395026264,
+            "hi": 688,
+            "lo": 680,
+            "normalised_effect": 0.00012918657254257226,
+            "reference_mean": 6157.9176173670385,
+            "samples": 48736
+          },
+          {
+            "candidate_mean": 6147.175161745189,
+            "hi": 696,
+            "lo": 688,
+            "normalised_effect": 4.6668678356676097e-05,
+            "reference_mean": 6148.16529114134,
+            "samples": 48224
+          },
+          {
+            "candidate_mean": 6149.895015928907,
+            "hi": 704,
+            "lo": 696,
+            "normalised_effect": 6.975929820418614e-05,
+            "reference_mean": 6150.743565560027,
+            "samples": 47712
+          },
+          {
+            "candidate_mean": 6163.6201483050845,
+            "hi": 712,
+            "lo": 704,
+            "normalised_effect": 4.8305116845615004e-05,
+            "reference_mean": 6164.602838983051,
+            "samples": 47200
+          },
+          {
+            "candidate_mean": 6183.960825051405,
+            "hi": 720,
+            "lo": 712,
+            "normalised_effect": 0.00017317409309902665,
+            "reference_mean": 6184.174584475668,
+            "samples": 46688
+          },
+          {
+            "candidate_mean": 6202.39579002079,
+            "hi": 728,
+            "lo": 720,
+            "normalised_effect": 0.00018498787620124801,
+            "reference_mean": 6202.536923943174,
+            "samples": 46176
+          },
+          {
+            "candidate_mean": 6197.04436755431,
+            "hi": 736,
+            "lo": 728,
+            "normalised_effect": 2.4875417647729492e-05,
+            "reference_mean": 6198.177601611773,
+            "samples": 45664
+          },
+          {
+            "candidate_mean": 6210.957255492558,
+            "hi": 744,
+            "lo": 736,
+            "normalised_effect": 0.00030274160147514273,
+            "reference_mean": 6210.367425584692,
+            "samples": 45152
+          },
+          {
+            "candidate_mean": 6135.8356406810035,
+            "hi": 752,
+            "lo": 744,
+            "normalised_effect": 0.0005959026507795784,
+            "reference_mean": 6133.45539874552,
+            "samples": 44640
+          },
+          {
+            "candidate_mean": 5888.212019579405,
+            "hi": 760,
+            "lo": 752,
+            "normalised_effect": -0.0013977760607540857,
+            "reference_mean": 5897.678911348804,
+            "samples": 44128
+          },
+          {
+            "candidate_mean": 6056.990301724138,
+            "hi": 768,
+            "lo": 760,
+            "normalised_effect": 0.00021129059337576805,
+            "reference_mean": 6056.968841709465,
+            "samples": 43616
+          },
+          {
+            "candidate_mean": 6254.42439216778,
+            "hi": 776,
+            "lo": 768,
+            "normalised_effect": 0.0006190428944303772,
+            "reference_mean": 6251.853563474388,
+            "samples": 43104
+          },
+          {
+            "candidate_mean": 6248.892843726521,
+            "hi": 784,
+            "lo": 776,
+            "normalised_effect": -0.00023252179785226978,
+            "reference_mean": 6251.644675056348,
+            "samples": 42592
+          },
+          {
+            "candidate_mean": 6247.9723621673,
+            "hi": 792,
+            "lo": 784,
+            "normalised_effect": 0.0005465664902488676,
+            "reference_mean": 6245.85658269962,
+            "samples": 42080
+          },
+          {
+            "candidate_mean": 6041.9949720939185,
+            "hi": 800,
+            "lo": 792,
+            "normalised_effect": 2.940453666799847e-05,
+            "reference_mean": 6043.072483641263,
+            "samples": 41568
+          },
+          {
+            "candidate_mean": 5796.908417770849,
+            "hi": 808,
+            "lo": 800,
+            "normalised_effect": -0.0006124763219298446,
+            "reference_mean": 5801.666090218238,
+            "samples": 41056
+          },
+          {
+            "candidate_mean": 5743.76008780584,
+            "hi": 816,
+            "lo": 808,
+            "normalised_effect": -5.8672311383234366e-05,
+            "reference_mean": 5745.290425217048,
+            "samples": 40544
+          },
+          {
+            "candidate_mean": 5726.805705435651,
+            "hi": 824,
+            "lo": 816,
+            "normalised_effect": -7.383959729301282e-05,
+            "reference_mean": 5728.418415267785,
+            "samples": 40032
+          },
+          {
+            "candidate_mean": 5747.419357287449,
+            "hi": 832,
+            "lo": 824,
+            "normalised_effect": 0.0002461558419242227,
+            "reference_mean": 5747.198658906883,
+            "samples": 39520
+          },
+          {
+            "candidate_mean": 5712.5838289581625,
+            "hi": 840,
+            "lo": 832,
+            "normalised_effect": 0.0007764927536384469,
+            "reference_mean": 5709.337341058244,
+            "samples": 39008
+          },
+          {
+            "candidate_mean": 5445.807564422277,
+            "hi": 848,
+            "lo": 840,
+            "normalised_effect": 0.00018101068068854254,
+            "reference_mean": 5445.953137988363,
+            "samples": 38496
+          },
+          {
+            "candidate_mean": 5074.703190817187,
+            "hi": 856,
+            "lo": 848,
+            "normalised_effect": -0.0007465276024557488,
+            "reference_mean": 5079.549468197136,
+            "samples": 37984
+          },
+          {
+            "candidate_mean": 4896.978357173356,
+            "hi": 864,
+            "lo": 856,
+            "normalised_effect": -0.00035189398284729556,
+            "reference_mean": 4899.7198708368915,
+            "samples": 37472
+          },
+          {
+            "candidate_mean": 4847.190232683983,
+            "hi": 872,
+            "lo": 864,
+            "normalised_effect": -1.7175438179362068e-05,
+            "reference_mean": 4848.280492424243,
+            "samples": 36960
+          },
+          {
+            "candidate_mean": 4823.158335162423,
+            "hi": 880,
+            "lo": 872,
+            "normalised_effect": 6.913789593832043e-05,
+            "reference_mean": 4823.826821773486,
+            "samples": 36448
+          },
+          {
+            "candidate_mean": 4789.640611086375,
+            "hi": 888,
+            "lo": 880,
+            "normalised_effect": -2.208123223812475e-05,
+            "reference_mean": 4790.74142920748,
+            "samples": 35936
+          },
+          {
+            "candidate_mean": 4773.520212285456,
+            "hi": 896,
+            "lo": 888,
+            "normalised_effect": -4.883578563763535e-07,
+            "reference_mean": 4774.514227642277,
+            "samples": 35424
+          },
+          {
+            "candidate_mean": 4757.863943629697,
+            "hi": 904,
+            "lo": 896,
+            "normalised_effect": 0.00017914560210652297,
+            "reference_mean": 4758.0,
+            "samples": 34912
+          },
+          {
+            "candidate_mean": 4688.486918604651,
+            "hi": 912,
+            "lo": 904,
+            "normalised_effect": 4.8851589034670795e-05,
+            "reference_mean": 4689.231860465116,
+            "samples": 34400
+          },
+          {
+            "candidate_mean": 4606.326959395657,
+            "hi": 920,
+            "lo": 912,
+            "normalised_effect": -2.631648010065213e-06,
+            "reference_mean": 4607.296033994335,
+            "samples": 33888
+          },
+          {
+            "candidate_mean": 4551.095577660594,
+            "hi": 928,
+            "lo": 920,
+            "normalised_effect": -8.859150210338562e-05,
+            "reference_mean": 4552.444361217641,
+            "samples": 33376
+          },
+          {
+            "candidate_mean": 4545.012779941578,
+            "hi": 936,
+            "lo": 928,
+            "normalised_effect": -8.274118058437807e-05,
+            "reference_mean": 4546.33316090555,
+            "samples": 32864
+          },
+          {
+            "candidate_mean": 4577.831076904055,
+            "hi": 944,
+            "lo": 936,
+            "normalised_effect": 0.00027844077651151267,
+            "reference_mean": 4577.507542037587,
+            "samples": 32352
+          },
+          {
+            "candidate_mean": 4554.425659547739,
+            "hi": 952,
+            "lo": 944,
+            "normalised_effect": 0.00026554323314864625,
+            "reference_mean": 4554.1625,
+            "samples": 31840
+          },
+          {
+            "candidate_mean": 4487.277962206333,
+            "hi": 960,
+            "lo": 952,
+            "normalised_effect": -0.00014695922935381578,
+            "reference_mean": 4488.869860827375,
+            "samples": 31328
+          },
+          {
+            "candidate_mean": 4444.421664070613,
+            "hi": 968,
+            "lo": 960,
+            "normalised_effect": 2.2373740409697973e-05,
+            "reference_mean": 4445.2455218068535,
+            "samples": 30816
+          },
+          {
+            "candidate_mean": 4402.834972280887,
+            "hi": 976,
+            "lo": 968,
+            "normalised_effect": 8.155937536957758e-05,
+            "reference_mean": 4403.390509503696,
+            "samples": 30304
+          },
+          {
+            "candidate_mean": 4351.965225563909,
+            "hi": 984,
+            "lo": 976,
+            "normalised_effect": 8.939798121287978e-05,
+            "reference_mean": 4352.480229591837,
+            "samples": 29792
+          },
+          {
+            "candidate_mean": 4314.355806010929,
+            "hi": 992,
+            "lo": 984,
+            "normalised_effect": 7.730265625216504e-05,
+            "reference_mean": 4314.918545081967,
+            "samples": 29280
+          },
+          {
+            "candidate_mean": 4289.6780450500555,
+            "hi": 1000,
+            "lo": 992,
+            "normalised_effect": -6.792727472970661e-05,
+            "reference_mean": 4290.8606785317015,
+            "samples": 28768
+          },
+          {
+            "candidate_mean": 4291.927873725935,
+            "hi": 1008,
+            "lo": 1000,
+            "normalised_effect": 0.00022319480515009538,
+            "reference_mean": 4291.861586919592,
+            "samples": 28256
+          },
+          {
+            "candidate_mean": 4256.85196799308,
+            "hi": 1016,
+            "lo": 1008,
+            "normalised_effect": -0.00016758578369702182,
+            "reference_mean": 4258.449971164937,
+            "samples": 27744
+          },
+          {
+            "candidate_mean": 4249.5794653349,
+            "hi": 1024,
+            "lo": 1016,
+            "normalised_effect": 0.00011334820451369687,
+            "reference_mean": 4249.980574324324,
+            "samples": 27232
+          },
+          {
+            "candidate_mean": 4225.571407185629,
+            "hi": 1032,
+            "lo": 1024,
+            "normalised_effect": -4.853955470074389e-05,
+            "reference_mean": 4226.654416167665,
+            "samples": 26720
+          },
+          {
+            "candidate_mean": 4199.287355006105,
+            "hi": 1040,
+            "lo": 1032,
+            "normalised_effect": -0.0004232344593279036,
+            "reference_mean": 4201.938148656899,
+            "samples": 26208
+          },
+          {
+            "candidate_mean": 4265.785491905355,
+            "hi": 1048,
+            "lo": 1040,
+            "normalised_effect": -0.0013234822422967252,
+            "reference_mean": 4272.326042963886,
+            "samples": 25696
+          },
+          {
+            "candidate_mean": 4581.707433290979,
+            "hi": 1056,
+            "lo": 1048,
+            "normalised_effect": -2.948523852963625e-05,
+            "reference_mean": 4582.794393265565,
+            "samples": 25184
+          },
+          {
+            "candidate_mean": 4810.928258754864,
+            "hi": 1064,
+            "lo": 1056,
+            "normalised_effect": 0.0011625839828099949,
+            "reference_mean": 4806.33994001297,
+            "samples": 24672
+          },
+          {
+            "candidate_mean": 4642.000745033112,
+            "hi": 1072,
+            "lo": 1064,
+            "normalised_effect": -0.0007620021437733104,
+            "reference_mean": 4646.505753311259,
+            "samples": 24160
+          },
+          {
+            "candidate_mean": 4560.188345737483,
+            "hi": 1080,
+            "lo": 1072,
+            "normalised_effect": -0.0007670209696012398,
+            "reference_mean": 4564.636882611638,
+            "samples": 23648
+          },
+          {
+            "candidate_mean": 4622.321187759336,
+            "hi": 1088,
+            "lo": 1080,
+            "normalised_effect": 0.0005505510056558194,
+            "reference_mean": 4620.737508644536,
+            "samples": 23136
+          },
+          {
+            "candidate_mean": 4527.0605551626595,
+            "hi": 1096,
+            "lo": 1088,
+            "normalised_effect": 0.00010443612352273313,
+            "reference_mean": 4527.5282001414425,
+            "samples": 22624
+          },
+          {
+            "candidate_mean": 4306.772069464544,
+            "hi": 1104,
+            "lo": 1096,
+            "normalised_effect": 0.000282207612943397,
+            "reference_mean": 4306.45147431259,
+            "samples": 22112
+          },
+          {
+            "candidate_mean": 3977.275277777778,
+            "hi": 1112,
+            "lo": 1104,
+            "normalised_effect": -0.001099046272216464,
+            "reference_mean": 3982.478472222222,
+            "samples": 21600
+          },
+          {
+            "candidate_mean": 3822.8827295144156,
+            "hi": 1120,
+            "lo": 1112,
+            "normalised_effect": 0.000815869124713986,
+            "reference_mean": 3820.559844461305,
+            "samples": 21088
+          },
+          {
+            "candidate_mean": 3600.526778771384,
+            "hi": 1128,
+            "lo": 1120,
+            "normalised_effect": -0.0006179215533475002,
+            "reference_mean": 3603.501458009331,
+            "samples": 20576
+          },
+          {
+            "candidate_mean": 3601.9479166666665,
+            "hi": 1136,
+            "lo": 1128,
+            "normalised_effect": -0.00247860977715908,
+            "reference_mean": 3611.6480761563,
+            "samples": 20064
+          },
+          {
+            "candidate_mean": 4068.927782324059,
+            "hi": 1144,
+            "lo": 1136,
+            "normalised_effect": 0.0024728209375346477,
+            "reference_mean": 4059.7340936988544,
+            "samples": 19552
+          },
+          {
+            "candidate_mean": 4071.8821428571428,
+            "hi": 1152,
+            "lo": 1144,
+            "normalised_effect": -0.00030915388083041506,
+            "reference_mean": 4073.987552521008,
+            "samples": 19040
+          },
+          {
+            "candidate_mean": 3975.3487349914235,
+            "hi": 1156,
+            "lo": 1152,
+            "normalised_effect": -0.0011798306344233955,
+            "reference_mean": 3980.871355060034,
+            "samples": 9328
+          }
+        ],
+        "safe_inset_px": null
+      },
+      "7": {
+        "deep_ratio": 0.9999192003607008,
+        "rows": [
+          {
+            "candidate_mean": 6796.159490981617,
+            "hi": 8,
+            "lo": 0,
+            "normalised_effect": 0.01722686539539864,
+            "reference_mean": 6681.605543270898,
+            "samples": 92256
+          },
+          {
+            "candidate_mean": 6789.342006016742,
+            "hi": 16,
+            "lo": 8,
+            "normalised_effect": 0.02610634876649387,
+            "reference_mean": 6617.141229944193,
+            "samples": 91744
+          },
+          {
+            "candidate_mean": 6782.648643019993,
+            "hi": 24,
+            "lo": 16,
+            "normalised_effect": 0.025392101935721056,
+            "reference_mean": 6615.222323307611,
+            "samples": 91232
+          },
+          {
+            "candidate_mean": 6773.172541887126,
+            "hi": 32,
+            "lo": 24,
+            "normalised_effect": 0.024754446538916453,
+            "reference_mean": 6610.090718694885,
+            "samples": 90720
+          },
+          {
+            "candidate_mean": 6776.138768180206,
+            "hi": 40,
+            "lo": 32,
+            "normalised_effect": 0.024451201002475553,
+            "reference_mean": 6614.943020574672,
+            "samples": 90208
+          },
+          {
+            "candidate_mean": 6781.070136906886,
+            "hi": 48,
+            "lo": 40,
+            "normalised_effect": 0.02417342474855566,
+            "reference_mean": 6621.55248840528,
+            "samples": 89696
+          },
+          {
+            "candidate_mean": 6779.65063240043,
+            "hi": 56,
+            "lo": 48,
+            "normalised_effect": 0.02365445526078136,
+            "reference_mean": 6623.522649802655,
+            "samples": 89184
+          },
+          {
+            "candidate_mean": 6778.067089949477,
+            "hi": 64,
+            "lo": 56,
+            "normalised_effect": 0.023109620699496958,
+            "reference_mean": 6625.501962287983,
+            "samples": 88672
+          },
+          {
+            "candidate_mean": 6769.321778584392,
+            "hi": 72,
+            "lo": 64,
+            "normalised_effect": 0.022314104346541352,
+            "reference_mean": 6622.102495462795,
+            "samples": 88160
+          },
+          {
+            "candidate_mean": 6763.490062522818,
+            "hi": 80,
+            "lo": 72,
+            "normalised_effect": 0.02151588184246389,
+            "reference_mean": 6621.567725447244,
+            "samples": 87648
+          },
+          {
+            "candidate_mean": 6751.0561995042235,
+            "hi": 88,
+            "lo": 80,
+            "normalised_effect": 0.020554715508497523,
+            "reference_mean": 6615.619548751377,
+            "samples": 87136
+          },
+          {
+            "candidate_mean": 6728.869401089767,
+            "hi": 96,
+            "lo": 88,
+            "normalised_effect": 0.01953413561111761,
+            "reference_mean": 6600.47849325822,
+            "samples": 86624
+          },
+          {
+            "candidate_mean": 6712.686954199183,
+            "hi": 104,
+            "lo": 96,
+            "normalised_effect": 0.018283228714744748,
+            "reference_mean": 6592.693654775177,
+            "samples": 86112
+          },
+          {
+            "candidate_mean": 6713.007862149533,
+            "hi": 112,
+            "lo": 104,
+            "normalised_effect": 0.01731686963793555,
+            "reference_mean": 6599.271588785046,
+            "samples": 85600
+          },
+          {
+            "candidate_mean": 6709.955152312899,
+            "hi": 120,
+            "lo": 112,
+            "normalised_effect": 0.01637147727978494,
+            "reference_mean": 6602.406214742385,
+            "samples": 85088
+          },
+          {
+            "candidate_mean": 6700.295048240636,
+            "hi": 128,
+            "lo": 120,
+            "normalised_effect": 0.01562782902378035,
+            "reference_mean": 6597.728303537647,
+            "samples": 84576
+          },
+          {
+            "candidate_mean": 6683.804946231443,
+            "hi": 136,
+            "lo": 128,
+            "normalised_effect": 0.014585883846636394,
+            "reference_mean": 6588.249595546251,
+            "samples": 84064
+          },
+          {
+            "candidate_mean": 6683.8094480084255,
+            "hi": 144,
+            "lo": 136,
+            "normalised_effect": 0.013655154868282171,
+            "reference_mean": 6594.303308119494,
+            "samples": 83552
+          },
+          {
+            "candidate_mean": 6680.870062620424,
+            "hi": 152,
+            "lo": 144,
+            "normalised_effect": 0.012724037023801094,
+            "reference_mean": 6597.463547687861,
+            "samples": 83040
+          },
+          {
+            "candidate_mean": 6667.37571490888,
+            "hi": 160,
+            "lo": 152,
+            "normalised_effect": 0.01137643496633789,
+            "reference_mean": 6592.910660624273,
+            "samples": 82528
+          },
+          {
+            "candidate_mean": 6653.979955130706,
+            "hi": 168,
+            "lo": 160,
+            "normalised_effect": 0.009928194562554893,
+            "reference_mean": 6589.099773214983,
+            "samples": 82016
+          },
+          {
+            "candidate_mean": 6645.260723400079,
+            "hi": 176,
+            "lo": 168,
+            "normalised_effect": 0.008473661412575773,
+            "reference_mean": 6589.9566401649,
+            "samples": 81504
+          },
+          {
+            "candidate_mean": 6628.776595219281,
+            "hi": 184,
+            "lo": 176,
+            "normalised_effect": 0.007085025092260944,
+            "reference_mean": 6582.673831983406,
+            "samples": 80992
+          },
+          {
+            "candidate_mean": 6612.332219184891,
+            "hi": 192,
+            "lo": 184,
+            "normalised_effect": 0.006013820824050331,
+            "reference_mean": 6573.335673459244,
+            "samples": 80480
+          },
+          {
+            "candidate_mean": 6601.318014705882,
+            "hi": 200,
+            "lo": 192,
+            "normalised_effect": 0.004967488102205486,
+            "reference_mean": 6569.218925070028,
+            "samples": 79968
+          },
+          {
+            "candidate_mean": 6597.903946838502,
+            "hi": 208,
+            "lo": 200,
+            "normalised_effect": 0.004209713391151393,
+            "reference_mean": 6570.776014397906,
+            "samples": 79456
+          },
+          {
+            "candidate_mean": 6590.633525030401,
+            "hi": 216,
+            "lo": 208,
+            "normalised_effect": 0.003558343717039003,
+            "reference_mean": 6567.79561461289,
+            "samples": 78944
+          },
+          {
+            "candidate_mean": 6580.389687882497,
+            "hi": 224,
+            "lo": 216,
+            "normalised_effect": 0.002813462628197927,
+            "reference_mean": 6562.458193084455,
+            "samples": 78432
+          },
+          {
+            "candidate_mean": 6571.002656570842,
+            "hi": 232,
+            "lo": 224,
+            "normalised_effect": 0.0021717785955834845,
+            "reference_mean": 6557.292646303901,
+            "samples": 77920
+          },
+          {
+            "candidate_mean": 6585.988037412154,
+            "hi": 240,
+            "lo": 232,
+            "normalised_effect": 0.0019812381556512104,
+            "reference_mean": 6573.49656366267,
+            "samples": 77408
+          },
+          {
+            "candidate_mean": 6578.078573657927,
+            "hi": 248,
+            "lo": 240,
+            "normalised_effect": 0.0014444554783843433,
+            "reference_mean": 6569.121319704536,
+            "samples": 76896
+          },
+          {
+            "candidate_mean": 6572.708433703393,
+            "hi": 256,
+            "lo": 248,
+            "normalised_effect": 0.0011642836022653924,
+            "reference_mean": 6565.595334101383,
+            "samples": 76384
+          },
+          {
+            "candidate_mean": 6570.381062842683,
+            "hi": 264,
+            "lo": 256,
+            "normalised_effect": 0.0009318818590913214,
+            "reference_mean": 6564.794377372416,
+            "samples": 75872
+          },
+          {
+            "candidate_mean": 6564.843776539278,
+            "hi": 272,
+            "lo": 264,
+            "normalised_effect": 0.0008046562758508014,
+            "reference_mean": 6560.0956342887475,
+            "samples": 75360
+          },
+          {
+            "candidate_mean": 6547.5987067122705,
+            "hi": 280,
+            "lo": 272,
+            "normalised_effect": 0.00035340176202169893,
+            "reference_mean": 6545.814490701155,
+            "samples": 74848
+          },
+          {
+            "candidate_mean": 6539.869148191993,
+            "hi": 288,
+            "lo": 280,
+            "normalised_effect": 0.00015445359731214303,
+            "reference_mean": 6539.387578024107,
+            "samples": 74336
+          },
+          {
+            "candidate_mean": 6552.460609016038,
+            "hi": 296,
+            "lo": 288,
+            "normalised_effect": 0.00027158671929083944,
+            "reference_mean": 6551.210866384916,
+            "samples": 73824
+          },
+          {
+            "candidate_mean": 6554.816169249236,
+            "hi": 304,
+            "lo": 296,
+            "normalised_effect": 0.00023060138755481852,
+            "reference_mean": 6553.834515495417,
+            "samples": 73312
+          },
+          {
+            "candidate_mean": 6539.361195054945,
+            "hi": 312,
+            "lo": 304,
+            "normalised_effect": -3.816451725691117e-05,
+            "reference_mean": 6540.139217032967,
+            "samples": 72800
+          },
+          {
+            "candidate_mean": 6534.0709938025675,
+            "hi": 320,
+            "lo": 312,
+            "normalised_effect": -1.0316790678643883e-05,
+            "reference_mean": 6534.666403829128,
+            "samples": 72288
+          },
+          {
+            "candidate_mean": 6531.7001226036555,
+            "hi": 328,
+            "lo": 320,
+            "normalised_effect": 2.2853321299809437e-06,
+            "reference_mean": 6532.2129959875165,
+            "samples": 71776
+          },
+          {
+            "candidate_mean": 6529.172934440952,
+            "hi": 336,
+            "lo": 328,
+            "normalised_effect": -1.654336808354362e-05,
+            "reference_mean": 6529.808556915133,
+            "samples": 71264
+          },
+          {
+            "candidate_mean": 6516.257943238354,
+            "hi": 344,
+            "lo": 336,
+            "normalised_effect": -0.00017391795435961477,
+            "reference_mean": 6517.9180800542745,
+            "samples": 70752
+          },
+          {
+            "candidate_mean": 6508.1634538724375,
+            "hi": 352,
+            "lo": 344,
+            "normalised_effect": -0.0001125313847981646,
+            "reference_mean": 6509.421867881549,
+            "samples": 70240
+          },
+          {
+            "candidate_mean": 6493.26687987609,
+            "hi": 360,
+            "lo": 352,
+            "normalised_effect": -4.708709045952997e-05,
+            "reference_mean": 6494.097364043139,
+            "samples": 69728
+          },
+          {
+            "candidate_mean": 6479.862098358761,
+            "hi": 368,
+            "lo": 360,
+            "normalised_effect": -4.840427792862645e-05,
+            "reference_mean": 6480.699404761905,
+            "samples": 69216
+          },
+          {
+            "candidate_mean": 6474.2751804843965,
+            "hi": 376,
+            "lo": 368,
+            "normalised_effect": 7.105296622600399e-05,
+            "reference_mean": 6474.3383209129015,
+            "samples": 68704
+          },
+          {
+            "candidate_mean": 6451.327501759737,
+            "hi": 384,
+            "lo": 376,
+            "normalised_effect": -0.00010002995487390365,
+            "reference_mean": 6452.494251525106,
+            "samples": 68192
+          },
+          {
+            "candidate_mean": 6442.525369385343,
+            "hi": 392,
+            "lo": 384,
+            "normalised_effect": 3.274140098885603e-05,
+            "reference_mean": 6442.8350177304965,
+            "samples": 67680
+          },
+          {
+            "candidate_mean": 6418.521438780372,
+            "hi": 400,
+            "lo": 392,
+            "normalised_effect": -0.00011876687433931554,
+            "reference_mean": 6419.802554787994,
+            "samples": 67168
+          },
+          {
+            "candidate_mean": 6400.289006240999,
+            "hi": 408,
+            "lo": 400,
+            "normalised_effect": -1.0797113280225368e-05,
+            "reference_mean": 6400.875300048007,
+            "samples": 66656
+          },
+          {
+            "candidate_mean": 6382.257710449928,
+            "hi": 416,
+            "lo": 408,
+            "normalised_effect": 1.8916757876796808e-05,
+            "reference_mean": 6382.6526971456215,
+            "samples": 66144
+          },
+          {
+            "candidate_mean": 6355.02085872745,
+            "hi": 424,
+            "lo": 416,
+            "normalised_effect": -0.0002189919382598049,
+            "reference_mean": 6356.926499268649,
+            "samples": 65632
+          },
+          {
+            "candidate_mean": 6358.22328009828,
+            "hi": 432,
+            "lo": 424,
+            "normalised_effect": 4.785541234619828e-06,
+            "reference_mean": 6358.706633906634,
+            "samples": 65120
+          },
+          {
+            "candidate_mean": 6356.803971644378,
+            "hi": 440,
+            "lo": 432,
+            "normalised_effect": -2.1765156144493147e-05,
+            "reference_mean": 6357.456011639425,
+            "samples": 64608
+          },
+          {
+            "candidate_mean": 6355.162521842237,
+            "hi": 448,
+            "lo": 440,
+            "normalised_effect": -1.0921985740708351e-05,
+            "reference_mean": 6355.745475536695,
+            "samples": 64096
+          },
+          {
+            "candidate_mean": 6351.290072974333,
+            "hi": 456,
+            "lo": 448,
+            "normalised_effect": -0.0001530177435903335,
+            "reference_mean": 6352.775383744338,
+            "samples": 63584
+          },
+          {
+            "candidate_mean": 6351.929477422628,
+            "hi": 464,
+            "lo": 456,
+            "normalised_effect": -6.005139719111874e-05,
+            "reference_mean": 6352.82424847793,
+            "samples": 63072
+          },
+          {
+            "candidate_mean": 6348.544804987212,
+            "hi": 472,
+            "lo": 464,
+            "normalised_effect": -2.5419031449036567e-05,
+            "reference_mean": 6349.219197570333,
+            "samples": 62560
+          },
+          {
+            "candidate_mean": 6349.665355853533,
+            "hi": 480,
+            "lo": 472,
+            "normalised_effect": -4.958858783177256e-05,
+            "reference_mean": 6350.493359979371,
+            "samples": 62048
+          },
+          {
+            "candidate_mean": 6342.184802392096,
+            "hi": 488,
+            "lo": 480,
+            "normalised_effect": -0.00015350938486291543,
+            "reference_mean": 6343.671103094124,
+            "samples": 61536
+          },
+          {
+            "candidate_mean": 6335.620182223388,
+            "hi": 496,
+            "lo": 488,
+            "normalised_effect": -9.751984812067516e-05,
+            "reference_mean": 6336.750098321972,
+            "samples": 61024
+          },
+          {
+            "candidate_mean": 6328.595534769963,
+            "hi": 504,
+            "lo": 496,
+            "normalised_effect": -3.900449796701011e-05,
+            "reference_mean": 6329.353797593865,
+            "samples": 60512
+          },
+          {
+            "candidate_mean": 6318.501683333333,
+            "hi": 512,
+            "lo": 504,
+            "normalised_effect": -3.472881389077198e-05,
+            "reference_mean": 6319.231716666666,
+            "samples": 60000
+          },
+          {
+            "candidate_mean": 6308.398214766004,
+            "hi": 520,
+            "lo": 512,
+            "normalised_effect": -8.812483661646553e-05,
+            "reference_mean": 6309.463992738031,
+            "samples": 59488
+          },
+          {
+            "candidate_mean": 6304.767006918069,
+            "hi": 528,
+            "lo": 520,
+            "normalised_effect": -3.4078459540398676e-05,
+            "reference_mean": 6305.491352414541,
+            "samples": 58976
+          },
+          {
+            "candidate_mean": 6290.314278872468,
+            "hi": 536,
+            "lo": 528,
+            "normalised_effect": -0.00014234208399432902,
+            "reference_mean": 6291.718151340996,
+            "samples": 58464
+          },
+          {
+            "candidate_mean": 6285.4507868580895,
+            "hi": 544,
+            "lo": 536,
+            "normalised_effect": -6.327629851732297e-05,
+            "reference_mean": 6286.356467421314,
+            "samples": 57952
+          },
+          {
+            "candidate_mean": 6266.174007660167,
+            "hi": 552,
+            "lo": 544,
+            "normalised_effect": -0.00014107015947739665,
+            "reference_mean": 6267.564519498607,
+            "samples": 57440
+          },
+          {
+            "candidate_mean": 6247.370678752108,
+            "hi": 560,
+            "lo": 552,
+            "normalised_effect": -1.8910446142328396e-07,
+            "reference_mean": 6247.876686340641,
+            "samples": 56928
+          },
+          {
+            "candidate_mean": 6232.821593165059,
+            "hi": 568,
+            "lo": 560,
+            "normalised_effect": -3.153537604383416e-05,
+            "reference_mean": 6233.521820051049,
+            "samples": 56416
+          },
+          {
+            "candidate_mean": 6222.712703921007,
+            "hi": 576,
+            "lo": 568,
+            "normalised_effect": -6.281418041631515e-05,
+            "reference_mean": 6223.6064682312535,
+            "samples": 55904
+          },
+          {
+            "candidate_mean": 6206.119421577123,
+            "hi": 584,
+            "lo": 576,
+            "normalised_effect": -0.00017648082824384126,
+            "reference_mean": 6207.716457250144,
+            "samples": 55392
+          },
+          {
+            "candidate_mean": 6204.5872266763845,
+            "hi": 592,
+            "lo": 584,
+            "normalised_effect": -5.740595335235188e-05,
+            "reference_mean": 6205.4448250728865,
+            "samples": 54880
+          },
+          {
+            "candidate_mean": 6209.833137139493,
+            "hi": 600,
+            "lo": 592,
+            "normalised_effect": 0.00013451638280836953,
+            "reference_mean": 6209.499650529723,
+            "samples": 54368
+          },
+          {
+            "candidate_mean": 6188.809306298277,
+            "hi": 608,
+            "lo": 600,
+            "normalised_effect": 2.0106700117983323e-05,
+            "reference_mean": 6189.1849561794415,
+            "samples": 53856
+          },
+          {
+            "candidate_mean": 6175.287436262747,
+            "hi": 616,
+            "lo": 608,
+            "normalised_effect": -8.026479182077217e-06,
+            "reference_mean": 6175.836007798441,
+            "samples": 53344
+          },
+          {
+            "candidate_mean": 6173.756851907935,
+            "hi": 624,
+            "lo": 616,
+            "normalised_effect": -7.740489087570968e-05,
+            "reference_mean": 6174.73368413083,
+            "samples": 52832
+          },
+          {
+            "candidate_mean": 6178.991418195718,
+            "hi": 632,
+            "lo": 624,
+            "normalised_effect": -5.736214126694783e-06,
+            "reference_mean": 6179.526165902141,
+            "samples": 52320
+          },
+          {
+            "candidate_mean": 6176.510963557752,
+            "hi": 640,
+            "lo": 632,
+            "normalised_effect": 5.215714392292625e-05,
+            "reference_mean": 6176.687905342804,
+            "samples": 51808
+          },
+          {
+            "candidate_mean": 6165.526025421085,
+            "hi": 648,
+            "lo": 640,
+            "normalised_effect": -1.1535680235152945e-05,
+            "reference_mean": 6166.095368059888,
+            "samples": 51296
+          },
+          {
+            "candidate_mean": 6158.5905206364205,
+            "hi": 656,
+            "lo": 648,
+            "normalised_effect": -0.00022489515759693823,
+            "reference_mean": 6160.473633427851,
+            "samples": 50784
+          },
+          {
+            "candidate_mean": 6168.960415340547,
+            "hi": 664,
+            "lo": 656,
+            "normalised_effect": -0.00012176425138432645,
+            "reference_mean": 6170.210216422661,
+            "samples": 50272
+          },
+          {
+            "candidate_mean": 6167.874738745981,
+            "hi": 672,
+            "lo": 664,
+            "normalised_effect": -4.1666255438999045e-05,
+            "reference_mean": 6168.630164790997,
+            "samples": 49760
+          },
+          {
+            "candidate_mean": 6159.434352664068,
+            "hi": 680,
+            "lo": 672,
+            "normalised_effect": -1.2431337055751612e-05,
+            "reference_mean": 6160.008650097466,
+            "samples": 49248
+          },
+          {
+            "candidate_mean": 6157.871573374918,
+            "hi": 688,
+            "lo": 680,
+            "normalised_effect": 7.33283624974046e-05,
+            "reference_mean": 6157.9176173670385,
+            "samples": 48736
+          },
+          {
+            "candidate_mean": 6147.148432315859,
+            "hi": 696,
+            "lo": 688,
+            "normalised_effect": -8.45994356685198e-05,
+            "reference_mean": 6148.16529114134,
+            "samples": 48224
+          },
+          {
+            "candidate_mean": 6149.901198859826,
+            "hi": 704,
+            "lo": 696,
+            "normalised_effect": -5.615853506957258e-05,
+            "reference_mean": 6150.743565560027,
+            "samples": 47712
+          },
+          {
+            "candidate_mean": 6163.816186440678,
+            "hi": 712,
+            "lo": 704,
+            "normalised_effect": -4.6812127416751004e-05,
+            "reference_mean": 6164.602838983051,
+            "samples": 47200
+          },
+          {
+            "candidate_mean": 6184.716650959562,
+            "hi": 720,
+            "lo": 712,
+            "normalised_effect": 0.0001684670645885067,
+            "reference_mean": 6184.174584475668,
+            "samples": 46688
+          },
+          {
+            "candidate_mean": 6203.307778932779,
+            "hi": 728,
+            "lo": 720,
+            "normalised_effect": 0.00020509680768987515,
+            "reference_mean": 6202.536923943174,
+            "samples": 46176
+          },
+          {
+            "candidate_mean": 6197.803587070778,
+            "hi": 736,
+            "lo": 728,
+            "normalised_effect": 2.0458629548025797e-05,
+            "reference_mean": 6198.177601611773,
+            "samples": 45664
+          },
+          {
+            "candidate_mean": 6212.963722537208,
+            "hi": 744,
+            "lo": 736,
+            "normalised_effect": 0.0004988984601186353,
+            "reference_mean": 6210.367425584692,
+            "samples": 45152
+          },
+          {
+            "candidate_mean": 6137.844534050179,
+            "hi": 752,
+            "lo": 744,
+            "normalised_effect": 0.0007964696384261671,
+            "reference_mean": 6133.45539874552,
+            "samples": 44640
+          },
+          {
+            "candidate_mean": 5884.313406453952,
+            "hi": 760,
+            "lo": 752,
+            "normalised_effect": -0.0021856083161730933,
+            "reference_mean": 5897.678911348804,
+            "samples": 44128
+          },
+          {
+            "candidate_mean": 6058.206438004402,
+            "hi": 768,
+            "lo": 760,
+            "normalised_effect": 0.0002851486923172164,
+            "reference_mean": 6056.968841709465,
+            "samples": 43616
+          },
+          {
+            "candidate_mean": 6258.04732739421,
+            "hi": 776,
+            "lo": 768,
+            "normalised_effect": 0.0010715946363826223,
+            "reference_mean": 6251.853563474388,
+            "samples": 43104
+          },
+          {
+            "candidate_mean": 6249.501385236664,
+            "hi": 784,
+            "lo": 776,
+            "normalised_effect": -0.00026205768936560236,
+            "reference_mean": 6251.644675056348,
+            "samples": 42592
+          },
+          {
+            "candidate_mean": 6250.410979087453,
+            "hi": 792,
+            "lo": 784,
+            "normalised_effect": 0.0008100519253106953,
+            "reference_mean": 6245.85658269962,
+            "samples": 42080
+          },
+          {
+            "candidate_mean": 6042.724355273287,
+            "hi": 800,
+            "lo": 792,
+            "normalised_effect": 2.3193670819265932e-05,
+            "reference_mean": 6043.072483641263,
+            "samples": 41568
+          },
+          {
+            "candidate_mean": 5795.445221161341,
+            "hi": 808,
+            "lo": 800,
+            "normalised_effect": -0.0009915360940978557,
+            "reference_mean": 5801.666090218238,
+            "samples": 41056
+          },
+          {
+            "candidate_mean": 5743.547997237569,
+            "hi": 816,
+            "lo": 808,
+            "normalised_effect": -0.00022249769431004207,
+            "reference_mean": 5745.290425217048,
+            "samples": 40544
+          },
+          {
+            "candidate_mean": 5726.721622701839,
+            "hi": 824,
+            "lo": 816,
+            "normalised_effect": -0.0002154238822332788,
+            "reference_mean": 5728.418415267785,
+            "samples": 40032
+          },
+          {
+            "candidate_mean": 5748.745192307692,
+            "hi": 832,
+            "lo": 824,
+            "normalised_effect": 0.0003499213429554171,
+            "reference_mean": 5747.198658906883,
+            "samples": 39520
+          },
+          {
+            "candidate_mean": 5715.842980926989,
+            "hi": 840,
+            "lo": 832,
+            "normalised_effect": 0.0012203719666643575,
+            "reference_mean": 5709.337341058244,
+            "samples": 39008
+          },
+          {
+            "candidate_mean": 5447.041614713217,
+            "hi": 848,
+            "lo": 840,
+            "normalised_effect": 0.0002806912303812137,
+            "reference_mean": 5445.953137988363,
+            "samples": 38496
+          },
+          {
+            "candidate_mean": 5073.154617733782,
+            "hi": 856,
+            "lo": 848,
+            "normalised_effect": -0.0011782360452284868,
+            "reference_mean": 5079.549468197136,
+            "samples": 37984
+          },
+          {
+            "candidate_mean": 4896.119529248505,
+            "hi": 864,
+            "lo": 856,
+            "normalised_effect": -0.0006540588061436647,
+            "reference_mean": 4899.7198708368915,
+            "samples": 37472
+          },
+          {
+            "candidate_mean": 4846.966071428571,
+            "hi": 872,
+            "lo": 864,
+            "normalised_effect": -0.00019032649626515852,
+            "reference_mean": 4848.280492424243,
+            "samples": 36960
+          },
+          {
+            "candidate_mean": 4823.397991659351,
+            "hi": 880,
+            "lo": 872,
+            "normalised_effect": -8.099337966305242e-06,
+            "reference_mean": 4823.826821773486,
+            "samples": 36448
+          },
+          {
+            "candidate_mean": 4789.712405387355,
+            "hi": 888,
+            "lo": 880,
+            "normalised_effect": -0.00013400546081521192,
+            "reference_mean": 4790.74142920748,
+            "samples": 35936
+          },
+          {
+            "candidate_mean": 4773.708672086721,
+            "hi": 896,
+            "lo": 888,
+            "normalised_effect": -8.792736363316678e-05,
+            "reference_mean": 4774.514227642277,
+            "samples": 35424
+          },
+          {
+            "candidate_mean": 4758.636829743355,
+            "hi": 904,
+            "lo": 896,
+            "normalised_effect": 0.00021466098201217143,
+            "reference_mean": 4758.0,
+            "samples": 34912
+          },
+          {
+            "candidate_mean": 4689.068430232558,
+            "hi": 912,
+            "lo": 904,
+            "normalised_effect": 4.595111248617556e-05,
+            "reference_mean": 4689.231860465116,
+            "samples": 34400
+          },
+          {
+            "candidate_mean": 4606.490439093484,
+            "hi": 920,
+            "lo": 912,
+            "normalised_effect": -9.405995522315802e-05,
+            "reference_mean": 4607.296033994335,
+            "samples": 33888
+          },
+          {
+            "candidate_mean": 4550.816514860978,
+            "hi": 928,
+            "lo": 920,
+            "normalised_effect": -0.0002767990580406776,
+            "reference_mean": 4552.444361217641,
+            "samples": 33376
+          },
+          {
+            "candidate_mean": 4544.836021178189,
+            "hi": 936,
+            "lo": 928,
+            "normalised_effect": -0.0002485275281101096,
+            "reference_mean": 4546.33316090555,
+            "samples": 32864
+          },
+          {
+            "candidate_mean": 4578.841308110781,
+            "hi": 944,
+            "lo": 936,
+            "normalised_effect": 0.0003722035800937107,
+            "reference_mean": 4577.507542037587,
+            "samples": 32352
+          },
+          {
+            "candidate_mean": 4555.464541457286,
+            "hi": 952,
+            "lo": 944,
+            "normalised_effect": 0.00036673067599179987,
+            "reference_mean": 4554.1625,
+            "samples": 31840
+          },
+          {
+            "candidate_mean": 4487.294337334014,
+            "hi": 960,
+            "lo": 952,
+            "normalised_effect": -0.00027020663753807295,
+            "reference_mean": 4488.869860827375,
+            "samples": 31328
+          },
+          {
+            "candidate_mean": 4444.670690550363,
+            "hi": 968,
+            "lo": 960,
+            "normalised_effect": -4.8518005831499345e-05,
+            "reference_mean": 4445.2455218068535,
+            "samples": 30816
+          },
+          {
+            "candidate_mean": 4403.337480200634,
+            "hi": 976,
+            "lo": 968,
+            "normalised_effect": 6.876236079178533e-05,
+            "reference_mean": 4403.390509503696,
+            "samples": 30304
+          },
+          {
+            "candidate_mean": 4352.284640171858,
+            "hi": 984,
+            "lo": 976,
+            "normalised_effect": 3.586507402264516e-05,
+            "reference_mean": 4352.480229591837,
+            "samples": 29792
+          },
+          {
+            "candidate_mean": 4314.714446721311,
+            "hi": 992,
+            "lo": 984,
+            "normalised_effect": 3.350171736737906e-05,
+            "reference_mean": 4314.918545081967,
+            "samples": 29280
+          },
+          {
+            "candidate_mean": 4289.670084816463,
+            "hi": 1000,
+            "lo": 992,
+            "normalised_effect": -0.00019668825794583178,
+            "reference_mean": 4290.8606785317015,
+            "samples": 28768
+          },
+          {
+            "candidate_mean": 4292.6775198188,
+            "hi": 1008,
+            "lo": 1000,
+            "normalised_effect": 0.0002709331832466688,
+            "reference_mean": 4291.861586919592,
+            "samples": 28256
+          },
+          {
+            "candidate_mean": 4257.037485582468,
+            "hi": 1016,
+            "lo": 1008,
+            "normalised_effect": -0.00025091070735183685,
+            "reference_mean": 4258.449971164937,
+            "samples": 27744
+          },
+          {
+            "candidate_mean": 4249.878158049353,
+            "hi": 1024,
+            "lo": 1016,
+            "normalised_effect": 5.6706163938713416e-05,
+            "reference_mean": 4249.980574324324,
+            "samples": 27232
+          },
+          {
+            "candidate_mean": 4225.680501497006,
+            "hi": 1032,
+            "lo": 1024,
+            "normalised_effect": -0.00014963457102035171,
+            "reference_mean": 4226.654416167665,
+            "samples": 26720
+          },
+          {
+            "candidate_mean": 4198.8153998779,
+            "hi": 1040,
+            "lo": 1032,
+            "normalised_effect": -0.0006624225526904448,
+            "reference_mean": 4201.938148656899,
+            "samples": 26208
+          },
+          {
+            "candidate_mean": 4264.415589975093,
+            "hi": 1048,
+            "lo": 1040,
+            "normalised_effect": -0.0017708999332871622,
+            "reference_mean": 4272.326042963886,
+            "samples": 25696
+          },
+          {
+            "candidate_mean": 4584.660935514613,
+            "hi": 1056,
+            "lo": 1048,
+            "normalised_effect": 0.00048813255423074686,
+            "reference_mean": 4582.794393265565,
+            "samples": 25184
+          },
+          {
+            "candidate_mean": 4815.765969520104,
+            "hi": 1064,
+            "lo": 1056,
+            "normalised_effect": 0.0020421304413720254,
+            "reference_mean": 4806.33994001297,
+            "samples": 24672
+          },
+          {
+            "candidate_mean": 4640.757408940397,
+            "hi": 1072,
+            "lo": 1064,
+            "normalised_effect": -0.0011564265345637148,
+            "reference_mean": 4646.505753311259,
+            "samples": 24160
+          },
+          {
+            "candidate_mean": 4558.934455345061,
+            "hi": 1080,
+            "lo": 1072,
+            "normalised_effect": -0.0011685567501621419,
+            "reference_mean": 4564.636882611638,
+            "samples": 23648
+          },
+          {
+            "candidate_mean": 4625.190266251729,
+            "hi": 1088,
+            "lo": 1080,
+            "normalised_effect": 0.001044530554211054,
+            "reference_mean": 4620.737508644536,
+            "samples": 23136
+          },
+          {
+            "candidate_mean": 4529.648382248939,
+            "hi": 1096,
+            "lo": 1088,
+            "normalised_effect": 0.0005491309004825862,
+            "reference_mean": 4527.5282001414425,
+            "samples": 22624
+          },
+          {
+            "candidate_mean": 4308.529395803183,
+            "hi": 1104,
+            "lo": 1096,
+            "normalised_effect": 0.0005633587785707217,
+            "reference_mean": 4306.45147431259,
+            "samples": 22112
+          },
+          {
+            "candidate_mean": 3976.149027777778,
+            "hi": 1112,
+            "lo": 1104,
+            "normalised_effect": -0.0015086452113665105,
+            "reference_mean": 3982.478472222222,
+            "samples": 21600
+          },
+          {
+            "candidate_mean": 3824.5581847496205,
+            "hi": 1120,
+            "lo": 1112,
+            "normalised_effect": 0.0011274232982698695,
+            "reference_mean": 3820.559844461305,
+            "samples": 21088
+          },
+          {
+            "candidate_mean": 3599.935458786936,
+            "hi": 1128,
+            "lo": 1120,
+            "normalised_effect": -0.0009088666314185367,
+            "reference_mean": 3603.501458009331,
+            "samples": 20576
+          },
+          {
+            "candidate_mean": 3598.2375398724084,
+            "hi": 1136,
+            "lo": 1128,
+            "normalised_effect": -0.0036326287109439415,
+            "reference_mean": 3611.6480761563,
+            "samples": 20064
+          },
+          {
+            "candidate_mean": 4075.83531096563,
+            "hi": 1144,
+            "lo": 1136,
+            "normalised_effect": 0.004047203467542726,
+            "reference_mean": 4059.7340936988544,
+            "samples": 19552
+          },
+          {
+            "candidate_mean": 4074.131670168067,
+            "hi": 1152,
+            "lo": 1144,
+            "normalised_effect": 0.00011618410974856275,
+            "reference_mean": 4073.987552521008,
+            "samples": 19040
+          },
+          {
+            "candidate_mean": 3975.567538593482,
+            "hi": 1156,
+            "lo": 1152,
+            "normalised_effect": -0.0012516270037654653,
+            "reference_mean": 3980.871355060034,
+            "samples": 9328
+          }
+        ],
+        "safe_inset_px": null
+      }
+    },
+    "reaches_px": {
+      "2": 8,
+      "4": 0,
+      "7": 0
+    }
+  },
+  "inputs": {
+    "crop_b2": {
+      "path": "D:\\strehl-out\\cover-default\\q3-109-crop-b2.tiff",
+      "sha256": "02C1470ED0750248EFB5D321F05205CF1F1BD502931D2E50C0B65C46FFC2EC34",
+      "shape": [
+        2312,
+        3470,
+        3
+      ]
+    },
+    "crop_b4": {
+      "path": "D:\\strehl-out\\M-COVER-BORDER\\q3-109-crop-b4.tiff",
+      "sha256": "4B98B8D31F8FBB9F37B484B928508A74894C0259FF30AFA7E69C97A3CF39BC10",
+      "shape": [
+        2312,
+        3470,
+        3
+      ]
+    },
+    "crop_b7": {
+      "path": "D:\\strehl-out\\cover-default\\q3-109-crop-b7.tiff",
+      "sha256": "B2489C692AA924AEF230B21388407B902845219851C54FCA892E2DB362A0A83D",
+      "shape": [
+        2312,
+        3470,
+        3
+      ]
+    },
+    "scale_b2": {
+      "path": "D:\\strehl-out\\cover-default\\q3-109-scale-b2.tiff",
+      "sha256": "23EBAA7DE115D1294DC7A2220EF371F54E4B6CCB5B3BE7495B31737875C12E47",
+      "shape": [
+        2344,
+        3516,
+        3
+      ]
+    },
+    "scale_b7": {
+      "path": "D:\\strehl-out\\cover-default\\q3-109-scale-b7.tiff",
+      "sha256": "F9101E47F21726125EB0D46A12B0415DC439EDBC30FA3DD2CA47AACCAAD4B684",
+      "shape": [
+        2344,
+        3516,
+        3
+      ]
+    }
+  },
+  "scale": {
+    "peak_abs_effect_through_256": 0.0007223896070469582,
+    "positive_radial_level_mass_through_256": 8.417270794019762e-06,
+    "profile_b7_vs_b2": {
+      "deep_ratio": 0.999916701996349,
+      "rows": [
+        {
+          "candidate_mean": 6615.34109770705,
+          "hi": 8,
+          "lo": 0,
+          "normalised_effect": -0.00038007390974492683,
+          "reference_mean": 6618.407672399042,
+          "samples": 93504
+        },
+        {
+          "candidate_mean": 6613.551466792843,
+          "hi": 16,
+          "lo": 8,
+          "normalised_effect": -0.00047162655277810384,
+          "reference_mean": 6617.22326651755,
+          "samples": 92992
+        },
+        {
+          "candidate_mean": 6611.442538927336,
+          "hi": 24,
+          "lo": 16,
+          "normalised_effect": -0.0005724460638937279,
+          "reference_mean": 6615.780482266436,
+          "samples": 92480
+        },
+        {
+          "candidate_mean": 6604.556791492693,
+          "hi": 32,
+          "lo": 24,
+          "normalised_effect": -0.0007223896070469582,
+          "reference_mean": 6609.881893702157,
+          "samples": 91968
+        },
+        {
+          "candidate_mean": 6609.687685881736,
+          "hi": 40,
+          "lo": 32,
+          "normalised_effect": -0.000587035726117624,
+          "reference_mean": 6614.1210308782365,
+          "samples": 91456
+        },
+        {
+          "candidate_mean": 6618.483737244898,
+          "hi": 48,
+          "lo": 40,
+          "normalised_effect": -0.0002499066731105337,
+          "reference_mean": 6620.689644176636,
+          "samples": 90944
+        },
+        {
+          "candidate_mean": 6621.462944532908,
+          "hi": 56,
+          "lo": 48,
+          "normalised_effect": -0.0002169077487492732,
+          "reference_mean": 6623.451223018401,
+          "samples": 90432
+        },
+        {
+          "candidate_mean": 6623.595885231317,
+          "hi": 64,
+          "lo": 56,
+          "normalised_effect": -0.0002220384450976054,
+          "reference_mean": 6625.618805604982,
+          "samples": 89920
+        },
+        {
+          "candidate_mean": 6621.534817913386,
+          "hi": 72,
+          "lo": 64,
+          "normalised_effect": -0.0002726360381536397,
+          "reference_mean": 6623.892336256264,
+          "samples": 89408
+        },
+        {
+          "candidate_mean": 6618.8216342692585,
+          "hi": 80,
+          "lo": 72,
+          "normalised_effect": -0.00026795143760738327,
+          "reference_mean": 6621.147160727141,
+          "samples": 88896
+        },
+        {
+          "candidate_mean": 6617.356670890659,
+          "hi": 88,
+          "lo": 80,
+          "normalised_effect": -0.0001076063351576062,
+          "reference_mean": 6618.620134866039,
+          "samples": 88384
+        },
+        {
+          "candidate_mean": 6600.9770347778585,
+          "hi": 96,
+          "lo": 88,
+          "normalised_effect": -0.00037119238196503535,
+          "reference_mean": 6603.978275218499,
+          "samples": 87872
+        },
+        {
+          "candidate_mean": 6588.520272435898,
+          "hi": 104,
+          "lo": 96,
+          "normalised_effect": -0.0005712472652341649,
+          "reference_mean": 6592.835267857143,
+          "samples": 87360
+        },
+        {
+          "candidate_mean": 6594.057594878408,
+          "hi": 112,
+          "lo": 104,
+          "normalised_effect": -0.00042873992963665675,
+          "reference_mean": 6597.435496499632,
+          "samples": 86848
+        },
+        {
+          "candidate_mean": 6599.761513157895,
+          "hi": 120,
+          "lo": 112,
+          "normalised_effect": -0.00025678148210595,
+          "reference_mean": 6602.006578947368,
+          "samples": 86336
+        },
+        {
+          "candidate_mean": 6598.930415734527,
+          "hi": 128,
+          "lo": 120,
+          "normalised_effect": -9.957544326277823e-05,
+          "reference_mean": 6600.137350857569,
+          "samples": 85824
+        },
+        {
+          "candidate_mean": 6590.094113372093,
+          "hi": 136,
+          "lo": 128,
+          "normalised_effect": -8.753316030851721e-05,
+          "reference_mean": 6591.220051106527,
+          "samples": 85312
+        },
+        {
+          "candidate_mean": 6588.946568396226,
+          "hi": 144,
+          "lo": 136,
+          "normalised_effect": -9.813466429442474e-05,
+          "reference_mean": 6590.142181603774,
+          "samples": 84800
+        },
+        {
+          "candidate_mean": 6597.771284168565,
+          "hi": 152,
+          "lo": 144,
+          "normalised_effect": 0.00012274961391867123,
+          "reference_mean": 6597.511069191344,
+          "samples": 84288
+        },
+        {
+          "candidate_mean": 6595.100732906799,
+          "hi": 160,
+          "lo": 152,
+          "normalised_effect": 7.726839920585427e-05,
+          "reference_mean": 6595.14054144385,
+          "samples": 83776
+        },
+        {
+          "candidate_mean": 6587.799144888547,
+          "hi": 168,
+          "lo": 160,
+          "normalised_effect": -0.00011122736965674118,
+          "reference_mean": 6589.080827248271,
+          "samples": 83264
+        },
+        {
+          "candidate_mean": 6588.3291521655065,
+          "hi": 176,
+          "lo": 168,
+          "normalised_effect": -0.00023578859280204423,
+          "reference_mean": 6590.431941221965,
+          "samples": 82752
+        },
+        {
+          "candidate_mean": 6582.590199416342,
+          "hi": 184,
+          "lo": 176,
+          "normalised_effect": -0.00036796516628867515,
+          "reference_mean": 6585.561819066148,
+          "samples": 82240
+        },
+        {
+          "candidate_mean": 6574.723497454973,
+          "hi": 192,
+          "lo": 184,
+          "normalised_effect": -0.000357307730560974,
+          "reference_mean": 6577.62143940877,
+          "samples": 81728
+        },
+        {
+          "candidate_mean": 6567.223231875492,
+          "hi": 200,
+          "lo": 192,
+          "normalised_effect": -0.00030368865093943764,
+          "reference_mean": 6569.765477245863,
+          "samples": 81216
+        },
+        {
+          "candidate_mean": 6567.5123537866775,
+          "hi": 208,
+          "lo": 200,
+          "normalised_effect": -0.00026534299293867747,
+          "reference_mean": 6569.802711141951,
+          "samples": 80704
+        },
+        {
+          "candidate_mean": 6568.87834197925,
+          "hi": 216,
+          "lo": 208,
+          "normalised_effect": -5.40887586740757e-05,
+          "reference_mean": 6569.780913308061,
+          "samples": 80192
+        },
+        {
+          "candidate_mean": 6562.644026104418,
+          "hi": 224,
+          "lo": 216,
+          "normalised_effect": -0.00013727381580597164,
+          "reference_mean": 6564.091804718875,
+          "samples": 79680
+        },
+        {
+          "candidate_mean": 6555.258033548908,
+          "hi": 232,
+          "lo": 224,
+          "normalised_effect": -0.00022516948309270202,
+          "reference_mean": 6557.28061843169,
+          "samples": 79168
+        },
+        {
+          "candidate_mean": 6564.038102624085,
+          "hi": 240,
+          "lo": 232,
+          "normalised_effect": -9.760480923648451e-05,
+          "reference_mean": 6565.225717046379,
+          "samples": 78656
+        },
+        {
+          "candidate_mean": 6573.764614045864,
+          "hi": 248,
+          "lo": 240,
+          "normalised_effect": 1.2718135961486965e-05,
+          "reference_mean": 6574.22862919738,
+          "samples": 78144
+        },
+        {
+          "candidate_mean": 6564.904948990107,
+          "hi": 256,
+          "lo": 248,
+          "normalised_effect": -8.910698369746228e-05,
+          "reference_mean": 6566.0369177658695,
+          "samples": 77632
+        },
+        {
+          "candidate_mean": 6564.460230809129,
+          "hi": 264,
+          "lo": 256,
+          "normalised_effect": -3.3583700190242816e-05,
+          "reference_mean": 6565.227567427386,
+          "samples": 77120
+        },
+        {
+          "candidate_mean": 6563.803310359232,
+          "hi": 272,
+          "lo": 264,
+          "normalised_effect": 4.960466872638847e-05,
+          "reference_mean": 6564.02450135756,
+          "samples": 76608
+        },
+        {
+          "candidate_mean": 6554.15877312868,
+          "hi": 280,
+          "lo": 272,
+          "normalised_effect": -4.276204069120215e-05,
+          "reference_mean": 6554.985071488646,
+          "samples": 76096
+        },
+        {
+          "candidate_mean": 6536.13946073243,
+          "hi": 288,
+          "lo": 280,
+          "normalised_effect": -0.0003576260601327874,
+          "reference_mean": 6539.022478302286,
+          "samples": 75584
+        },
+        {
+          "candidate_mean": 6542.878529944586,
+          "hi": 296,
+          "lo": 288,
+          "normalised_effect": -0.00019791923812284562,
+          "reference_mean": 6544.718909846547,
+          "samples": 75072
+        },
+        {
+          "candidate_mean": 6555.252870171674,
+          "hi": 304,
+          "lo": 296,
+          "normalised_effect": 4.606815729202296e-05,
+          "reference_mean": 6555.496955472103,
+          "samples": 74560
+        },
+        {
+          "candidate_mean": 6544.648579299914,
+          "hi": 312,
+          "lo": 304,
+          "normalised_effect": -0.00018687381676019132,
+          "reference_mean": 6546.41713483146,
+          "samples": 74048
+        },
+        {
+          "candidate_mean": 6536.749864012185,
+          "hi": 320,
+          "lo": 312,
+          "normalised_effect": -0.0001544515997942142,
+          "reference_mean": 6538.304259138381,
+          "samples": 73536
+        },
+        {
+          "candidate_mean": 6529.782414000876,
+          "hi": 328,
+          "lo": 320,
+          "normalised_effect": -0.00017643317950111204,
+          "reference_mean": 6531.478746713409,
+          "samples": 73024
+        },
+        {
+          "candidate_mean": 6532.695112533098,
+          "hi": 336,
+          "lo": 328,
+          "normalised_effect": -7.289942062893573e-06,
+          "reference_mean": 6533.286945609003,
+          "samples": 72512
+        },
+        {
+          "candidate_mean": 6523.447958333333,
+          "hi": 344,
+          "lo": 336,
+          "normalised_effect": -0.0001449112494643634,
+          "reference_mean": 6524.936930555556,
+          "samples": 72000
+        },
+        {
+          "candidate_mean": 6512.300721799463,
+          "hi": 352,
+          "lo": 344,
+          "normalised_effect": -0.0002401047926263722,
+          "reference_mean": 6514.407369068935,
+          "samples": 71488
+        },
+        {
+          "candidate_mean": 6505.027939021641,
+          "hi": 360,
+          "lo": 352,
+          "normalised_effect": -7.291252728236497e-05,
+          "reference_mean": 6506.044212128043,
+          "samples": 70976
+        },
+        {
+          "candidate_mean": 6485.758813010899,
+          "hi": 368,
+          "lo": 360,
+          "normalised_effect": -0.00010833863057224669,
+          "reference_mean": 6487.001901680291,
+          "samples": 70464
+        },
+        {
+          "candidate_mean": 6480.584858188472,
+          "hi": 376,
+          "lo": 368,
+          "normalised_effect": 2.83169364891922e-05,
+          "reference_mean": 6480.941202538884,
+          "samples": 69952
+        },
+        {
+          "candidate_mean": 6465.556970046083,
+          "hi": 384,
+          "lo": 376,
+          "normalised_effect": -5.7445246187337595e-05,
+          "reference_mean": 6466.467050691244,
+          "samples": 69440
+        },
+        {
+          "candidate_mean": 6448.760648792943,
+          "hi": 392,
+          "lo": 384,
+          "normalised_effect": -5.633168057272986e-05,
+          "reference_mean": 6449.66118268338,
+          "samples": 68928
+        },
+        {
+          "candidate_mean": 6437.399365645463,
+          "hi": 400,
+          "lo": 392,
+          "normalised_effect": 1.4004388411370527e-05,
+          "reference_mean": 6437.84547474275,
+          "samples": 68416
+        },
+        {
+          "candidate_mean": 6411.104367931197,
+          "hi": 408,
+          "lo": 400,
+          "normalised_effect": -0.00014928330526053912,
+          "reference_mean": 6412.595738100848,
+          "samples": 67904
+        },
+        {
+          "candidate_mean": 6398.529128086419,
+          "hi": 416,
+          "lo": 408,
+          "normalised_effect": 8.267178776866224e-05,
+          "reference_mean": 6398.5331790123455,
+          "samples": 67392
+        },
+        {
+          "candidate_mean": 6375.264862440192,
+          "hi": 424,
+          "lo": 416,
+          "normalised_effect": -3.983683166242091e-05,
+          "reference_mean": 6376.0499551435405,
+          "samples": 66880
+        },
+        {
+          "candidate_mean": 6352.634507594021,
+          "hi": 432,
+          "lo": 424,
+          "normalised_effect": -0.00020958334678045087,
+          "reference_mean": 6354.495509884282,
+          "samples": 66368
+        },
+        {
+          "candidate_mean": 6358.634687803693,
+          "hi": 440,
+          "lo": 432,
+          "normalised_effect": 4.926659611204087e-05,
+          "reference_mean": 6358.851114552964,
+          "samples": 65856
+        },
+        {
+          "candidate_mean": 6356.732263099902,
+          "hi": 448,
+          "lo": 440,
+          "normalised_effect": 1.2459525230656965e-05,
+          "reference_mean": 6357.182602840353,
+          "samples": 65344
+        },
+        {
+          "candidate_mean": 6352.940862537019,
+          "hi": 456,
+          "lo": 448,
+          "normalised_effect": -7.069734101183833e-05,
+          "reference_mean": 6353.91929911155,
+          "samples": 64832
+        },
+        {
+          "candidate_mean": 6352.465578358209,
+          "hi": 464,
+          "lo": 456,
+          "normalised_effect": -0.00010400000883392657,
+          "reference_mean": 6353.655550373134,
+          "samples": 64320
+        },
+        {
+          "candidate_mean": 6351.043129388165,
+          "hi": 472,
+          "lo": 464,
+          "normalised_effect": -4.8326814068855306e-05,
+          "reference_mean": 6351.879168756269,
+          "samples": 63808
+        },
+        {
+          "candidate_mean": 6348.6749083670375,
+          "hi": 480,
+          "lo": 472,
+          "normalised_effect": 4.3887392662256275e-06,
+          "reference_mean": 6349.175919489383,
+          "samples": 63296
+        },
+        {
+          "candidate_mean": 6348.722970820591,
+          "hi": 488,
+          "lo": 480,
+          "normalised_effect": -6.037493028265839e-05,
+          "reference_mean": 6349.635209607543,
+          "samples": 62784
+        },
+        {
+          "candidate_mean": 6339.986237795478,
+          "hi": 496,
+          "lo": 488,
+          "normalised_effect": -0.00016018218266988793,
+          "reference_mean": 6341.530190133607,
+          "samples": 62272
+        },
+        {
+          "candidate_mean": 6335.434439766839,
+          "hi": 504,
+          "lo": 496,
+          "normalised_effect": -7.819483944537797e-05,
+          "reference_mean": 6336.457691062176,
+          "samples": 61760
+        },
+        {
+          "candidate_mean": 6327.0401155956115,
+          "hi": 512,
+          "lo": 504,
+          "normalised_effect": -5.44306422274321e-05,
+          "reference_mean": 6327.911621603971,
+          "samples": 61248
+        },
+        {
+          "candidate_mean": 6317.155937170706,
+          "hi": 520,
+          "lo": 512,
+          "normalised_effect": -4.052018633315946e-05,
+          "reference_mean": 6317.938191517387,
+          "samples": 60736
+        },
+        {
+          "candidate_mean": 6307.3707325983,
+          "hi": 528,
+          "lo": 520,
+          "normalised_effect": -7.87204071176495e-05,
+          "reference_mean": 6308.392767003188,
+          "samples": 60224
+        },
+        {
+          "candidate_mean": 6304.939794346195,
+          "hi": 536,
+          "lo": 528,
+          "normalised_effect": -3.772264861146013e-06,
+          "reference_mean": 6305.488812968917,
+          "samples": 59712
+        },
+        {
+          "candidate_mean": 6289.300067567568,
+          "hi": 544,
+          "lo": 536,
+          "normalised_effect": -0.00012713407794207043,
+          "reference_mean": 6290.62375,
+          "samples": 59200
+        },
+        {
+          "candidate_mean": 6285.050027262813,
+          "hi": 552,
+          "lo": 544,
+          "normalised_effect": -4.010378314533991e-05,
+          "reference_mean": 6285.825688386041,
+          "samples": 58688
+        },
+        {
+          "candidate_mean": 6265.664019526953,
+          "hi": 560,
+          "lo": 552,
+          "normalised_effect": -0.0001365457520754454,
+          "reference_mean": 6267.0417182343235,
+          "samples": 58176
+        },
+        {
+          "candidate_mean": 6246.745300360711,
+          "hi": 568,
+          "lo": 560,
+          "normalised_effect": 7.532394214582183e-06,
+          "reference_mean": 6247.218628607103,
+          "samples": 57664
+        },
+        {
+          "candidate_mean": 6232.048904675252,
+          "hi": 576,
+          "lo": 568,
+          "normalised_effect": -1.7048773901851e-05,
+          "reference_mean": 6232.674324608062,
+          "samples": 57152
+        },
+        {
+          "candidate_mean": 6222.454766949152,
+          "hi": 584,
+          "lo": 576,
+          "normalised_effect": -6.450649543299214e-05,
+          "reference_mean": 6223.374576271186,
+          "samples": 56640
+        },
+        {
+          "candidate_mean": 6206.5512756556445,
+          "hi": 592,
+          "lo": 584,
+          "normalised_effect": -0.00015384334598211868,
+          "reference_mean": 6208.023375142531,
+          "samples": 56128
+        },
+        {
+          "candidate_mean": 6203.485669591484,
+          "hi": 600,
+          "lo": 592,
+          "normalised_effect": -5.0567277677715516e-05,
+          "reference_mean": 6204.316185989644,
+          "samples": 55616
+        },
+        {
+          "candidate_mean": 6210.863712253194,
+          "hi": 608,
+          "lo": 600,
+          "normalised_effect": 0.00016686760190864902,
+          "reference_mean": 6210.344802555169,
+          "samples": 55104
+        },
+        {
+          "candidate_mean": 6191.125696072685,
+          "hi": 616,
+          "lo": 608,
+          "normalised_effect": 4.673662329568451e-05,
+          "reference_mean": 6191.352084554514,
+          "samples": 54592
+        },
+        {
+          "candidate_mean": 6175.650073964497,
+          "hi": 624,
+          "lo": 616,
+          "normalised_effect": -2.363632926483117e-05,
+          "reference_mean": 6176.3105214497045,
+          "samples": 54080
+        },
+        {
+          "candidate_mean": 6173.271169354839,
+          "hi": 632,
+          "lo": 624,
+          "normalised_effect": -8.511954578371839e-05,
+          "reference_mean": 6174.310987903225,
+          "samples": 53568
+        },
+        {
+          "candidate_mean": 6177.712944813028,
+          "hi": 640,
+          "lo": 632,
+          "normalised_effect": -2.4202494918523776e-05,
+          "reference_mean": 6178.3771109770805,
+          "samples": 53056
+        },
+        {
+          "candidate_mean": 6176.684626218027,
+          "hi": 648,
+          "lo": 640,
+          "normalised_effect": 3.517781502027084e-05,
+          "reference_mean": 6176.9818818514,
+          "samples": 52544
+        },
+        {
+          "candidate_mean": 6169.194687884379,
+          "hi": 656,
+          "lo": 648,
+          "normalised_effect": 7.470916559970675e-05,
+          "reference_mean": 6169.247712945879,
+          "samples": 52032
+        },
+        {
+          "candidate_mean": 6157.251125776397,
+          "hi": 664,
+          "lo": 656,
+          "normalised_effect": -0.0002264808515383132,
+          "reference_mean": 6159.1589868012425,
+          "samples": 51520
+        },
+        {
+          "candidate_mean": 6167.980375627352,
+          "hi": 672,
+          "lo": 664,
+          "normalised_effect": -0.00010911161564508554,
+          "reference_mean": 6169.167326693852,
+          "samples": 51008
+        },
+        {
+          "candidate_mean": 6169.256931242078,
+          "hi": 680,
+          "lo": 672,
+          "normalised_effect": -4.730211257375494e-05,
+          "reference_mean": 6170.062717839037,
+          "samples": 50496
+        },
+        {
+          "candidate_mean": 6159.54921574904,
+          "hi": 688,
+          "lo": 680,
+          "normalised_effect": -3.234392891116045e-05,
+          "reference_mean": 6160.261583706786,
+          "samples": 49984
+        },
+        {
+          "candidate_mean": 6157.889432406209,
+          "hi": 696,
+          "lo": 688,
+          "normalised_effect": 5.72106225451563e-05,
+          "reference_mean": 6158.050109152652,
+          "samples": 49472
+        },
+        {
+          "candidate_mean": 6149.496180555556,
+          "hi": 704,
+          "lo": 696,
+          "normalised_effect": -3.6097813587709915e-05,
+          "reference_mean": 6150.230473856209,
+          "samples": 48960
+        },
+        {
+          "candidate_mean": 6148.023489101717,
+          "hi": 712,
+          "lo": 704,
+          "normalised_effect": -5.86832302551521e-05,
+          "reference_mean": 6148.8964869550855,
+          "samples": 48448
+        },
+        {
+          "candidate_mean": 6159.630861982643,
+          "hi": 720,
+          "lo": 712,
+          "normalised_effect": -6.951166230850792e-05,
+          "reference_mean": 6160.57222129506,
+          "samples": 47936
+        },
+        {
+          "candidate_mean": 6180.339469466937,
+          "hi": 728,
+          "lo": 720,
+          "normalised_effect": 0.00016515842205100384,
+          "reference_mean": 6179.833670715249,
+          "samples": 47424
+        },
+        {
+          "candidate_mean": 6195.988744884038,
+          "hi": 736,
+          "lo": 728,
+          "normalised_effect": 0.00015089093034736933,
+          "reference_mean": 6195.5700460436565,
+          "samples": 46912
+        },
+        {
+          "candidate_mean": 6206.6108836206895,
+          "hi": 744,
+          "lo": 736,
+          "normalised_effect": 0.0002259409482834318,
+          "reference_mean": 6205.725797413793,
+          "samples": 46400
+        },
+        {
+          "candidate_mean": 6191.4748953974895,
+          "hi": 752,
+          "lo": 744,
+          "normalised_effect": -9.557068803056623e-05,
+          "reference_mean": 6192.582505230125,
+          "samples": 45888
+        },
+        {
+          "candidate_mean": 6205.8476948166435,
+          "hi": 760,
+          "lo": 752,
+          "normalised_effect": 0.001343085385874021,
+          "reference_mean": 6198.040175423132,
+          "samples": 45376
+        },
+        {
+          "candidate_mean": 5945.096781383738,
+          "hi": 768,
+          "lo": 760,
+          "normalised_effect": -0.0015064557003079404,
+          "reference_mean": 5954.562321683309,
+          "samples": 44864
+        },
+        {
+          "candidate_mean": 5967.297258297258,
+          "hi": 776,
+          "lo": 768,
+          "normalised_effect": -0.0006340245727400884,
+          "reference_mean": 5971.580492424242,
+          "samples": 44352
+        },
+        {
+          "candidate_mean": 6196.9893248175185,
+          "hi": 784,
+          "lo": 776,
+          "normalised_effect": 0.0008809784145407118,
+          "reference_mean": 6192.050501824818,
+          "samples": 43840
+        },
+        {
+          "candidate_mean": 6270.108105612999,
+          "hi": 792,
+          "lo": 784,
+          "normalised_effect": 0.0003306598403702843,
+          "reference_mean": 6268.557676329395,
+          "samples": 43328
+        },
+        {
+          "candidate_mean": 6251.33071748879,
+          "hi": 800,
+          "lo": 792,
+          "normalised_effect": 0.0002112793224704479,
+          "reference_mean": 6250.530876307922,
+          "samples": 42816
+        },
+        {
+          "candidate_mean": 6175.268887102874,
+          "hi": 808,
+          "lo": 800,
+          "normalised_effect": 0.0010630369321318334,
+          "reference_mean": 6169.225203290469,
+          "samples": 42304
+        },
+        {
+          "candidate_mean": 5850.903402565084,
+          "hi": 816,
+          "lo": 808,
+          "normalised_effect": -0.0014331125159775526,
+          "reference_mean": 5859.788548047473,
+          "samples": 41792
+        },
+        {
+          "candidate_mean": 5765.0734980620155,
+          "hi": 824,
+          "lo": 816,
+          "normalised_effect": -0.00019774868750499497,
+          "reference_mean": 5766.694113372093,
+          "samples": 41280
+        },
+        {
+          "candidate_mean": 5730.975127551021,
+          "hi": 832,
+          "lo": 824,
+          "normalised_effect": -0.00019206970036145243,
+          "reference_mean": 5732.553595957614,
+          "samples": 40768
+        },
+        {
+          "candidate_mean": 5734.347004173291,
+          "hi": 840,
+          "lo": 832,
+          "normalised_effect": -5.182384883894997e-05,
+          "reference_mean": 5735.121919713832,
+          "samples": 40256
+        },
+        {
+          "candidate_mean": 5743.662062198067,
+          "hi": 848,
+          "lo": 840,
+          "normalised_effect": 0.0007392676709994106,
+          "reference_mean": 5739.897217190016,
+          "samples": 39744
+        },
+        {
+          "candidate_mean": 5625.948409461664,
+          "hi": 856,
+          "lo": 848,
+          "normalised_effect": 0.0014090544572902264,
+          "reference_mean": 5618.500305872757,
+          "samples": 39232
+        },
+        {
+          "candidate_mean": 5241.544912190083,
+          "hi": 864,
+          "lo": 856,
+          "normalised_effect": -0.0007588187593990936,
+          "reference_mean": 5245.962293388429,
+          "samples": 38720
+        },
+        {
+          "candidate_mean": 4950.780307788945,
+          "hi": 872,
+          "lo": 864,
+          "normalised_effect": -0.0013116056198674286,
+          "reference_mean": 4957.695273241206,
+          "samples": 38208
+        },
+        {
+          "candidate_mean": 4869.119906621392,
+          "hi": 880,
+          "lo": 872,
+          "normalised_effect": -0.00019496287344211716,
+          "reference_mean": 4870.475090195247,
+          "samples": 37696
+        },
+        {
+          "candidate_mean": 4832.365425989673,
+          "hi": 888,
+          "lo": 880,
+          "normalised_effect": -0.0001730914976312281,
+          "reference_mean": 4833.604641781411,
+          "samples": 37184
+        },
+        {
+          "candidate_mean": 4810.961332897034,
+          "hi": 896,
+          "lo": 888,
+          "normalised_effect": 6.13739182422357e-05,
+          "reference_mean": 4811.066835732984,
+          "samples": 36672
+        },
+        {
+          "candidate_mean": 4781.3606194690265,
+          "hi": 904,
+          "lo": 896,
+          "normalised_effect": -0.00015250879944106455,
+          "reference_mean": 4782.48830199115,
+          "samples": 36160
+        },
+        {
+          "candidate_mean": 4767.782652603231,
+          "hi": 912,
+          "lo": 904,
+          "normalised_effect": -9.685577039508786e-06,
+          "reference_mean": 4768.22601548474,
+          "samples": 35648
+        },
+        {
+          "candidate_mean": 4740.88860428051,
+          "hi": 920,
+          "lo": 912,
+          "normalised_effect": 0.000349943439837741,
+          "reference_mean": 4739.624943078325,
+          "samples": 35136
+        },
+        {
+          "candidate_mean": 4645.832746072088,
+          "hi": 928,
+          "lo": 920,
+          "normalised_effect": -0.0002697077958833116,
+          "reference_mean": 4647.473226663586,
+          "samples": 34624
+        },
+        {
+          "candidate_mean": 4587.42568597561,
+          "hi": 936,
+          "lo": 928,
+          "normalised_effect": 9.13702851941256e-05,
+          "reference_mean": 4587.388690196998,
+          "samples": 34112
+        },
+        {
+          "candidate_mean": 4539.221785714286,
+          "hi": 944,
+          "lo": 936,
+          "normalised_effect": -0.00040149274228606924,
+          "reference_mean": 4541.423273809523,
+          "samples": 33600
+        },
+        {
+          "candidate_mean": 4555.1816368471955,
+          "hi": 952,
+          "lo": 944,
+          "normalised_effect": -9.236006131174701e-05,
+          "reference_mean": 4555.981896760155,
+          "samples": 33088
+        },
+        {
+          "candidate_mean": 4580.5743492141455,
+          "hi": 960,
+          "lo": 952,
+          "normalised_effect": 0.00053095864087771,
+          "reference_mean": 4578.524926326129,
+          "samples": 32576
+        },
+        {
+          "candidate_mean": 4531.5843001497005,
+          "hi": 968,
+          "lo": 960,
+          "normalised_effect": 0.00013975439590852012,
+          "reference_mean": 4531.328530439122,
+          "samples": 32064
+        },
+        {
+          "candidate_mean": 4469.213298681541,
+          "hi": 976,
+          "lo": 968,
+          "normalised_effect": -0.00023449278149656472,
+          "reference_mean": 4470.633937626775,
+          "samples": 31552
+        },
+        {
+          "candidate_mean": 4432.024162371134,
+          "hi": 984,
+          "lo": 976,
+          "normalised_effect": 6.108217574740671e-05,
+          "reference_mean": 4432.1226481958765,
+          "samples": 31040
+        },
+        {
+          "candidate_mean": 4386.908182651991,
+          "hi": 992,
+          "lo": 984,
+          "normalised_effect": 3.520117325739314e-05,
+          "reference_mean": 4387.119202044025,
+          "samples": 30528
+        },
+        {
+          "candidate_mean": 4339.594749466951,
+          "hi": 1000,
+          "lo": 992,
+          "normalised_effect": 7.795357697371053e-05,
+          "reference_mean": 4339.6179704157785,
+          "samples": 30016
+        },
+        {
+          "candidate_mean": 4305.614120119306,
+          "hi": 1008,
+          "lo": 1000,
+          "normalised_effect": 9.638241574849715e-06,
+          "reference_mean": 4305.931297451193,
+          "samples": 29504
+        },
+        {
+          "candidate_mean": 4286.7690742273735,
+          "hi": 1016,
+          "lo": 1008,
+          "normalised_effect": -0.00021315103868957408,
+          "reference_mean": 4288.040183498896,
+          "samples": 28992
+        },
+        {
+          "candidate_mean": 4289.380196629213,
+          "hi": 1024,
+          "lo": 1016,
+          "normalised_effect": 0.000339192330699456,
+          "reference_mean": 4288.282970505618,
+          "samples": 28480
+        },
+        {
+          "candidate_mean": 4246.814931350114,
+          "hi": 1032,
+          "lo": 1024,
+          "normalised_effect": -0.00042909173422822633,
+          "reference_mean": 4248.991919336385,
+          "samples": 27968
+        },
+        {
+          "candidate_mean": 4248.5659965034965,
+          "hi": 1040,
+          "lo": 1032,
+          "normalised_effect": 0.00017974003790155457,
+          "reference_mean": 4248.156359265734,
+          "samples": 27456
+        },
+        {
+          "candidate_mean": 4220.539860451307,
+          "hi": 1048,
+          "lo": 1040,
+          "normalised_effect": -0.00017273993666455656,
+          "reference_mean": 4221.620694774347,
+          "samples": 26944
+        },
+        {
+          "candidate_mean": 4193.138165859564,
+          "hi": 1056,
+          "lo": 1048,
+          "normalised_effect": -0.0009646124525114486,
+          "reference_mean": 4197.53647094431,
+          "samples": 26432
+        },
+        {
+          "candidate_mean": 4307.029012345679,
+          "hi": 1064,
+          "lo": 1056,
+          "normalised_effect": -0.0014715053078964146,
+          "reference_mean": 4313.73549382716,
+          "samples": 25920
+        },
+        {
+          "candidate_mean": 4647.476582178841,
+          "hi": 1072,
+          "lo": 1064,
+          "normalised_effect": 0.001091126764823258,
+          "reference_mean": 4642.797858942065,
+          "samples": 25408
+        },
+        {
+          "candidate_mean": 4800.798803020565,
+          "hi": 1080,
+          "lo": 1072,
+          "normalised_effect": 0.0015676478213870748,
+          "reference_mean": 4793.683925128535,
+          "samples": 24896
+        },
+        {
+          "candidate_mean": 4614.832964238845,
+          "hi": 1088,
+          "lo": 1080,
+          "normalised_effect": -0.001324183616686403,
+          "reference_mean": 4621.336901246719,
+          "samples": 24384
+        },
+        {
+          "candidate_mean": 4561.312164879357,
+          "hi": 1096,
+          "lo": 1088,
+          "normalised_effect": -0.0009182849079514277,
+          "reference_mean": 4565.884927949061,
+          "samples": 23872
+        },
+        {
+          "candidate_mean": 4624.995933219178,
+          "hi": 1104,
+          "lo": 1096,
+          "normalised_effect": 0.001255072820149028,
+          "reference_mean": 4619.583304794521,
+          "samples": 23360
+        },
+        {
+          "candidate_mean": 4509.218268557423,
+          "hi": 1112,
+          "lo": 1104,
+          "normalised_effect": 0.00045561132836535734,
+          "reference_mean": 4507.540222338936,
+          "samples": 22848
+        },
+        {
+          "candidate_mean": 4282.667532234957,
+          "hi": 1120,
+          "lo": 1112,
+          "normalised_effect": 0.000592399887031636,
+          "reference_mean": 4280.488538681949,
+          "samples": 22336
+        },
+        {
+          "candidate_mean": 3953.2592100439883,
+          "hi": 1128,
+          "lo": 1120,
+          "normalised_effect": -0.0015303042391007216,
+          "reference_mean": 3959.6480021994134,
+          "samples": 21824
+        },
+        {
+          "candidate_mean": 3809.768674924925,
+          "hi": 1136,
+          "lo": 1128,
+          "normalised_effect": 0.001144883281796627,
+          "reference_mean": 3805.728932057057,
+          "samples": 21312
+        },
+        {
+          "candidate_mean": 3589.572980769231,
+          "hi": 1144,
+          "lo": 1136,
+          "normalised_effect": -0.001061145395919838,
+          "reference_mean": 3593.6854326923076,
+          "samples": 20800
+        },
+        {
+          "candidate_mean": 3607.7027306782334,
+          "hi": 1152,
+          "lo": 1144,
+          "normalised_effect": -0.0035146742804640363,
+          "reference_mean": 3620.72895307571,
+          "samples": 20288
+        },
+        {
+          "candidate_mean": 4082.972137944984,
+          "hi": 1160,
+          "lo": 1152,
+          "normalised_effect": 0.004170558086318499,
+          "reference_mean": 4066.353307038835,
+          "samples": 19776
+        },
+        {
+          "candidate_mean": 4070.905575166113,
+          "hi": 1168,
+          "lo": 1160,
+          "normalised_effect": 0.00014138364795912572,
+          "reference_mean": 4070.669175664452,
+          "samples": 19264
+        },
+        {
+          "candidate_mean": 3972.717372881356,
+          "hi": 1172,
+          "lo": 1168,
+          "normalised_effect": -0.001234792508930993,
+          "reference_mean": 3977.960275423729,
+          "samples": 9440
+        }
+      ],
+      "safe_inset_px": null
+    }
+  },
+  "scale_vs_crop": {
+    "h5_checks": {
+      "scale_peak_below_20pct": true,
+      "scale_positive_mass_below_20pct": true
+    },
+    "h5_measurement_passed": true,
+    "peak_ratio": 0.027671031805646732,
+    "positive_mass_ratio": 0.0005833027919304328
+  }
+}
