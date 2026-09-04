@@ -364,14 +364,22 @@ The last schema probe put JSON Booleans in the blur-ladder sigma fields.
 Those metadata now require finite non-Boolean numbers as well; the correction
 and final freeze are `379c4e38` and `9c2554e6`.
 
-A final sealed-evidence audit then tried extra, missing and hash-forged
+A sealed-evidence audit then tried extra, missing and hash-forged
 packets, and source aliases of `open`, `__import__` and `numpy.fromfile`.
 The runner now requires the exact transcript schema, three commitments, 45
 unique tokens, per-instance cardinalities and nonce-derived packet hashes;
 any mismatch emits `NOT_COMMISSIONED` rather than unblinding or throwing.
 The conservative source audit now rejects dangerous identifiers even when
 aliased and rejects NumPy filesystem attributes.  Those changes were frozen
-at `738528b6` and `1a6fd10c` before drawing the final nonce.
+at `738528b6` and `1a6fd10c` before drawing a superseded nonce.
+
+Independent sign-off then swapped valid packets between committed instances
+and reached built-ins through `__builtins__` and a NumPy wildcard import.
+The final runner also binds each ordered token/hash sequence to its instance,
+rejects those alias forms plus module metadata and additional file/clock
+attributes, and makes a wrong child-call count fail commissioning as well as
+admission.  The final correction and freeze are `4bf0a02b` and `b9c3392f`;
+the preceding challenge is superseded.
 
 **VERIFIED BY RUNNING.** The final run made 45 fresh child calls and produced:
 
@@ -390,12 +398,12 @@ state, so A2 is also false.
 All nine canary-commissioning checks are true.
 
 The disclosed replay nonce is
-`233396793EDAEC9D50C7EB6259363A99589D3C5FDEE4986A0332713436AA8A19`.
+`40AB196AC02E8502288F1F027A0AECFCCFA10874B3B1FB5F27EA98B1986B5213`.
 The semantic-free transcript is
 `experiments/M167-detail-battery/admission-sealed.json`, SHA-256
-`33C45474D45ED7AC9DC8CD790FFB91D3D90EA024E8B67EE294777F8F537DA0A2`.
+`8A0823178F861290D4B0DA601196709C0858F9F3DBF58D0EA83FE49E12932A29`.
 The unblinded record is `admission-results.json`, SHA-256
-`246E4130330B7BE947B89AE84B9DFCA946F3D3B028BF06DF9A4603011C18B499`.
+`957EABB26CF5CC0C7362D5CBB21D7226A8D4B17D0ABAEA7BEB798B206D467251`.
 A full replay with that nonce reproduced both hashes exactly.
 
 ### 8.3 What is and is not closed
@@ -431,7 +439,7 @@ $env:BLIS_NUM_THREADS='1'
 $env:VECLIB_MAXIMUM_THREADS='1'
 $env:PYTHONDONTWRITEBYTECODE='1'
 python -B experiments\M167-detail-battery\admission.py `
-  --nonce 233396793EDAEC9D50C7EB6259363A99589D3C5FDEE4986A0332713436AA8A19
+  --nonce 40AB196AC02E8502288F1F027A0AECFCCFA10874B3B1FB5F27EA98B1986B5213
 ```
 
 No timing result is produced or used.
