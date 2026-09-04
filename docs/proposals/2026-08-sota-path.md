@@ -2247,3 +2247,94 @@ that a negative result is a publishable stopping point all stand and have been
 load-bearing. Section 10 item 9's instruction -- that if only one thing
 survives triage it should be phase 1, with phase 0's capture session alongside
 -- is unaffected and, if anything, reinforced.
+
+## 12. Amendment 2 — the blockers are conjunctive, and what that does to section 9 (orchestrator, 2026-09-04)
+
+*Appended by the execution orchestrator. No text above this line has been
+altered. Evidence for every claim here is in `docs/STATUS.md` sections
+2.9.24--2.9.27 and in `docs/proposals/2026-09-sota-scorecard.md` section 3.1.*
+
+**The finding that reorders execution.** I parsed the scorecard's own readiness
+table mechanically rather than reasoning about it. Its twelve axes carry four
+blocker codes: **(a)** missing admissible detail instrument, **(b)** unresolved
+native-scale/`cover=scale` geometry, **(c)** missing or under-powered capture,
+**(d)** unavailable common-input Zerene/Helicon output. Counted: `(b)` blocks
+**10** axes, `(a)` **8**, `(d)` **8**, `(c)` **6**. Two axes -- M8 and M12 --
+are measurable today.
+
+Then the part that matters:
+
+| cleared | axes measurable |
+|---|---|
+| nothing -- today | **2 of 12** |
+| any **one** blocker | **2** |
+| any **two** except `b+c` | **2** |
+| `b+c` | **3** |
+| **`a+b+d`** | **6** |
+| **`a+b+c+d`** | **12** |
+
+**Clearing the single largest blocker in the program, alone, changes the
+scoreboard by nothing.** Ten axes wait on `(b)`; not one of them is freed by
+`(b)` alone, because every one of them also carries `(a)` or `(c)` or `(d)`.
+
+**This directly contradicts how section 9 has been executed.** Section 9
+sequences workstreams; execution turned that into lanes each working one
+blocker in isolation. Against a conjunctive readiness table that is a strategy
+with a provably zero payoff, and it is the honest explanation for a week that
+produced **283** `docs/` and **425** `experiments/` commits with **no change to
+merge quality since 2026-08-28** and a scoreboard still reading `2 of 12`. The
+lanes were not idle and they were not wrong; they were each buying a factor in
+a product whose other factors were zero.
+
+**The amended execution rule: schedule blockers as a set, not as a queue.** Work
+`a`, `b`, `c`, `d` toward a **simultaneous** clearance. Do not celebrate, report
+or re-plan around clearing one. The first meaningful milestone is `a+b+d` at
+`6 of 12`; the only complete one is all four at `12 of 12`.
+
+**The concrete critical path is three items, and two of them need the owner.**
+
+1. **`(b)` -- build `crop-early`.** Pure software, no capture, no purchase.
+   Authorised, with a registered prediction of `96.22496%` retained area against
+   an `80%` gate, replacing a `64.6047%` produced by late-crop boundary
+   poisoning. It had **zero occurrences** across every `.rs` file in `crates/`
+   when found, having sat unbuilt for six days while being described in the
+   program record as the most consequential open build.
+2. **`(d)` -- licence a commercial comparator.** Zerene Stacker is already
+   installed here but its trial **expired 2026-06-06**; the common-input export
+   we need, *Save Adjusted Input Images*, is licensed only to **Prosumer
+   ($189)** or **Professional ($289)**. This is an owner purchase, not a build.
+   An earlier draft of this roadmap wrongly said `(d)` was cleared by building
+   the free upstream `focus-stack`; that is corrected in `STATUS.md` 2.9.26. An
+   open-source stacker is a useful foreign arm and repairs a real provenance
+   defect, but it clears **no** blocker.
+3. **`(a)`+`(c)` -- one capture session.** `docs/capture-requests/2026-09-319-frame-session.md`,
+   **603 frames**. Supplies the truth instrument and the missing captures
+   together. It is the master key.
+
+**Amendment 1's route 1 is no longer blocked, and its arithmetic is superseded.**
+Amendment 1 recorded the truth reference as *"blocked on capture geometry"* with
+an inversion *"under assessment ... giving exactly `2.0x`."* That assessment
+completed and ruled **GO**, but not at those numbers. Against a reference at the
+rig's maximum `>=2.70x`, a `1.40x` main sweep yields only `1.929x` -- **below the
+`2.0x` desired threshold**. The main sweeps are therefore pinned to **`1.30x`**
+effective reproduction, giving **`2.078x`**, with the 2x teleconverter installed
+throughout so no comparison ever spans a bare-lens/TC change. The 160-frame
+reference block was ruled `GO` before it existed anywhere in the shooting
+document; it is now integrated.
+
+**One measurement rule earned during execution, recorded because it generalises.**
+Two lanes wanted the same exclusive host and proposed sharing one run by folding
+the cheaper lane's instrumentation inside the expensive lane's timer. That is
+unsafe whenever the timer reports a **ratio**: instrumentation is fixed serial
+work, so it adds a constant to every cell, and adding a positive constant to
+both sides of a ratio greater than one drives it toward one. With `S=1`, `P=15`,
+five units of added work take an apparent W16/W1 speedup from `8.2581x` to
+`3.0270x` -- destroying `63%` of the measured scaling, with nothing in the
+output to reveal it. **Merging two measurements into one run is safe only when
+the shared timer is not reporting a ratio, or when the timers are nested.**
+
+**What this amendment does not change.** Workstreams A, B and C stand.
+Amendment 1 stands in full, including its central finding that no single-image
+high-frequency statistic separates resolved detail from sharpening. The phase
+gates, comparator pinning, banked-purge discipline and the rule that a negative
+result is a publishable stopping point all stand.
