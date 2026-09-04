@@ -20,6 +20,15 @@ form (`docs/research/M-PHASE0-SPLIT.md:73-103,252-280`;
 sharpening invariance belong to different statistics. The capture decision is
 unchanged (`docs/proposals/2026-08-sota-path.md:1694-1746`).
 
+**MEASURED.** **Revision 2:** the commissioned M8 source-hull checker reports
+Strehl at M8-R `1.030569%` and M8-O `1.326144%`, with an exact zero identity
+arm (`docs/research/M8-overshoot.md:21-62`).
+
+**DERIVED.** M8 does not supply the missing detail coordinate. Moderate
+sharpening can remain inside a broad all-frame hull, and projection back into
+that hull extends the attack to stronger sharpening. M8 remains strong
+one-way artifact evidence; the capture decision is unchanged.
+
 ## 0. Decision first
 
 **ARGUED.** Yes, a truth-referenced M1 instrument requires additional physical
@@ -46,6 +55,13 @@ the product form
 Its confirmed numbers do not supply one statistic that is both
 sharpening-safe and blur-sensitive, and its same-capture product status is
 already closed.
+
+**DERIVED.** M8 does not remove the requirement either. The scorecard defines
+M8 as source-support evidence rather than a resolution statistic and names
+final clamping as a defeat
+(`docs/proposals/2026-09-sota-scorecard.md:833-879`). A clean hull census
+therefore cannot certify that a rise in a separate detail proxy came from
+resolved scene structure.
 
 **ARGUED.** Add **160 frames** after all main sweeps and their fixed-focus
 witnesses:
@@ -390,6 +406,95 @@ to a separately sampled physical image that neither half-stack nor the
 algorithm produced. D8 can remain an offline diagnostic or a future M2-style
 matched-contrast efficiency channel. It cannot replace independent truth for
 M1.
+
+### 1.4 M8 source-hull frontier audit
+
+**MEASURED.** M8 is a commissioned and independent source-hull instrument.
+Its checker imports no Strehl code, passed positive and negative plants, and
+reported an exact `0 / 32,919,152` real copy/reference arm. Strehl nevertheless
+failed at aggregate M8-R `63,191,176 / 6,131,678,976` (`1.030569%`) and M8-O
+`983,648 / 74,173,536` (`1.326144%`)
+(`docs/research/M8-overshoot.md:21-62`).
+
+**MEASURED.** The two censuses answer narrower questions. M8-R checks each
+pre-merge resampler result against that frame's exact local source support.
+M8-O checks the final output against the broader hull over every valid frame.
+The scorecard explicitly calls this "sharpening-independent source support,
+not a resolution statistic" and records that a broad hull or final clamp can
+hide the excursion (`docs/proposals/2026-09-sota-scorecard.md:833-879`).
+
+**DERIVED.** The proposed frontier therefore lacks unique directions in both
+senses. Post-merge sharpening need not move M8-R and can remain inside M8-O;
+conversely, a pre-merge resampler excursion can move M8-R without any
+sharpening. Motion on the M8 axis is neither necessary nor sufficient for the
+mechanism the frontier assigns to it.
+
+**DERIVED.** Let the final all-frame source hull at pixel `i` be
+`[lo_i, hi_i]`, and let `U(y)` be any sharpened version of output `y`. The
+attack
+
+```text
+z_i = min(hi_i, max(lo_i, U(y)_i))
+```
+
+**DERIVED.** This attack has zero M8-O violations by construction. It does not
+undo sharpening values that already lie inside the hull, and clipping only
+the excursions can retain much of the edge steepening. If `U` is applied
+after merge, M8-R is unchanged; a hull-constrained merge or direct
+source-value selector can also avoid a resampler excursion entirely.
+
+**DERIVED.** A six-sample construction is sufficient to kill the proposed
+frontier. Take two source observations with equal-and-opposite perturbations
+around their mean:
+
+```text
+A = [0.10, 0.20, 0.40, 0.60, 0.80, 0.90]
+B = [0.00, 0.15, 0.35, 0.65, 0.85, 1.00]
+y = (A + B) / 2
+  = [0.05, 0.175, 0.375, 0.625, 0.825, 0.95].
+```
+
+**DERIVED.** Apply strength-1 USM with the three-tap blur `[1, 2, 1] / 4` and
+endpoint replication. Without any clamp, the result is
+
+```text
+u = [0.01875, 0.15625, 0.36250, 0.63750, 0.84375, 0.98125].
+```
+
+**DERIVED.** Every output sample is already inside
+`[min(A_i,B_i), max(A_i,B_i)]`, so M8-O is zero while squared gradient energy
+rises `1.142536x` and total variation rises `1.069444x`. Identity placement
+can keep M8-R zero as well (`docs/research/M8-overshoot.md:37-43`). The
+construction uses only the two same-coordinate samples; M8-O's actual
+all-frame 4x4-support hull is at least as broad
+(`experiments/M8-overshoot/checker.py:252-278,409-420`).
+
+**DERIVED.** The clamp extends the attack rather than creating it. At
+strength 2, project the oversharpened result back into the same hull:
+
+```text
+z_i = min(hi_i, max(lo_i, U_2(y)_i))
+z   = [0.00, 0.15, 0.35, 0.65, 0.85, 1.00].
+```
+
+**DERIVED.** M8-O remains zero, while squared gradient energy rises
+`1.237410x` and total variation rises `1.111111x`. This is sharpening moving
+up a conventional high-frequency detail proxy at constant zero overshoot.
+
+**ARGUED.** Clipping is therefore not a secondary caveat; it is an exact
+projection attack on the proposed two-dimensional separator. More generally,
+M8 constrains amplitude provenance, not spatial choice, phase or information.
+A selector can choose `lo_i` or `hi_i` according to an edge or checkerboard
+rule and synthesize high-frequency structure entirely from observed values.
+Constrained deconvolution and monotone local-contrast operators can have the
+same opening.
+
+**ARGUED.** The frontier is **NO-GO as an M1 instrument**. An M8 failure is
+strong evidence that a source-hull invariant was violated and remains useful
+as an independent veto or artifact coordinate. A clean or unchanged M8 result
+cannot establish absence of sharpening, cannot make any of the six dead
+statistics admissible, and cannot replace independent truth. There is no
+reason to re-scope lane-TRUTH away from `TRD`.
 
 ## 2. What truth-referencing does and does not solve
 
@@ -908,6 +1013,7 @@ and do not use later arms to rehabilitate the statistic.
 | 2 | Finite-matrix congruence self-test | `J_TR(Y) == J_TR(AY)` to numerical tolerance for random full-rank `A` | Actual code is not equivariant |
 | 3a | Site-local information-free USM after all noise | Exact finite-sample `J_TR` equality; the joint verdict is never `BETTER` | Equality fails or fidelity alone promotes the arm |
 | 3b | Full-frame information-free USM after all noise | Empirical `J_TR` equivalence on ordinary extracted sites | Recommended one-sided UCB for the ratio exceeds `1.01` |
+| 3c | Identity-placed hull-safe/projected USM and source-endpoint selector | Both M8 censuses remain zero, but the joint truth-referenced verdict is never `BETTER` | In-hull sharpening, hull projection or selection among observed extrema creates a valid detail win |
 | 4 | Common post-render Gaussian blur | `J_TR` remains equivalent and `F_TR` ranks blur below truth | Blur is called better/equivalent to truth or the fidelity channel is blind |
 | 5 | Truth-sided filter pair | Exact truth beats both a low-pass copy and an over-sharpened copy | Either side is not worse than truth |
 | 6 | Pre-sensor blur ladder | `J_TR` decreases monotonically and attenuation worsens | Any blur rung rises, or the effect is underpowered |
@@ -938,6 +1044,11 @@ clipping (`docs/research/M-CAND2.md:20-32`). Tone stability also cannot
 substitute for optical-direction arms: `Q25` was nearly invariant to affine,
 gamma and logistic tone and still rewarded USM and reversed genuine optical
 improvement (`docs/research/M-PHASE0-SLANTEDGE.md:202-212`).
+
+**DERIVED.** Arm 3c carries the M8 frontier attack into commissioning without
+making M8 part of the M1 promotion rule. It must be potent enough to raise a
+registered high-frequency proxy while both M8 censuses remain zero; `TRD`
+must still refuse or demote it.
 
 ## 8. Leakage firewall and authority
 
@@ -1025,6 +1136,11 @@ AND
 no regression in transfer fidelity to independent physical truth.
 ```
 
+**ARGUED.** M8 does not simplify that conjunction into an output-only
+frontier. It can veto a source-hull violation, but a zero or unchanged M8
+reading cannot turn a sharpening-sensitive detail proxy into evidence of
+resolved truth.
+
 **ARGUED.** That certificate has a structural answer to both known failure
 modes, an independently sampled reference, a native-output geometry contract
 and arms that can kill it. It is therefore worth commissioning. It is not yet
@@ -1039,7 +1155,9 @@ an admitted M1 instrument.
   implementation audit;
 - **NO-GO:** do not use D8's same-capture split, the dense stack, current grid,
   development-only high-resolution slide, direct MSE/PSNR/SSIM, learned
-  perceptual score, FRC or any weighted information/fidelity scalar as the M1
-  truth instrument; D8 may remain an offline matched-contrast diagnostic; and
+  perceptual score, FRC, a detail-proxy/M8 frontier or any weighted
+  information/fidelity scalar as the M1 truth instrument; D8 may remain an
+  offline matched-contrast diagnostic and M8 remains an independent
+  one-way artifact gate; and
 - **CURRENT STATUS:** M1 remains `UNMEASURED`, and no detail-qualified SOTA
   claim is licensed.
