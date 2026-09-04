@@ -1,9 +1,34 @@
 # What the program needs from Chris
 
 One page, decision-ready. Everything here is verified at source; citations are
-in `docs/STATUS.md` §2.9.28-2.9.30 and the lane reports named below.
+in `docs/STATUS.md` §2.9.28-2.9.47 and the lane reports named below.
 
-Maintained by the orchestrator. Last updated after lanes M130-M134.
+Maintained by the orchestrator. Last updated after lanes M147, M149, M150.
+
+> # DO THIS FIRST — two frames, five minutes
+>
+> **If you read nothing else on this page, shoot Ask 2a** (full instructions
+> below). It is two exposures of one flat calibration slide that must not move
+> between them.
+>
+> **It is the only blocker on the big session that needs you rather than me.**
+> The rest of what stands in front of the 891-frame scored session is mine to
+> clear. This one is not, and nothing in the archive can substitute for it:
+> across the full inventory of **10,509** frames, every single one was shot
+> through the teleconverter. There is no bare-lens frame in the archive at all.
+>
+> **Why it matters more than its size suggests.** The preflight that sets the
+> session's magnification target has so far been commissioned only against a
+> *synthetic* plant. The lane that built it is refreshingly blunt about the
+> limit: the plant *"reuses correlated source pixels"*, its narrow interval is
+> *"suspicious rather than evidence that the optical case will be equally
+> precise"*, and the real-optics interval width is **"the gating unknown."**
+> These two frames settle it.
+>
+> If they come back wide, **the magnification target moves, not the bar** — and
+> learning that from two frames is enormously cheaper than learning it from 891.
+
+---
 
 > **CORRECTION, and it is mine.** An earlier version of this page told you the
 > capture session reaches `4 of 12` and that buying Zerene reaches `12 of 12`.
