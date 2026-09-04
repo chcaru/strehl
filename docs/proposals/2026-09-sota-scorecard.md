@@ -123,7 +123,7 @@ document’s proposed completions, not claims that the governing proposal alread
    > comparator-envelope definition requires *"the fastest mode that passes the
    > complete quality scorecard"* (the comparator-envelope clause, line `267` at
    > this edit), and M11's own computation step 7 independently repeats *"the
-   > fastest mode that passes all quality gates"* (line `1132` at this edit).
+   > fastest mode that passes all quality gates"* (line `1162` at this edit).
    > Neither clause is rule 4. Both quotations were re-verified against this file
    > directly rather than taken from the owner page, which cited them as
    > `:245-246` and `:1089-1090` -- stale by `+21` and `+42` lines. **Cite the
@@ -689,8 +689,38 @@ background reach; otherwise that capture is `UNMEASURED` for veil.
 3. At each normal coordinate `s`, externally warp every source profile and form its
    sample interval `[L(s), U(s)]`.
 4. `h_e = max_{2<=|s|<=32} max(O(s)-U(s), L(s)-O(s), 0)`.
-5. Select the far-side reference frame using the opposite-side low band. For
-   `16<=|s|<=200`, `v_e = mean(|O(s)-R_far(s)|)`.
+5. Select the far-side reference frame using the opposite-side low band. Over
+   `16<=|s|<=200`, form the two per-side means
+   `v_e_neg = mean` of `|O(s)-R_far(s)|` for `-200<=s<=-16` and
+   `v_e_pos = mean` of `|O(s)-R_far(s)|` for `16<=s<=200`, then take
+   `v_e = max(v_e_neg, v_e_pos)`.
+
+   > **SCORECARD AMENDMENT — 2026-09. It TIGHTENS this bar.** This step
+   > previously read `v_e = mean(|O(s)-R_far(s)|)` across the whole band, which
+   > averages the two sides together. M152 commissioned that literal reduction
+   > against a required one-sided plant occupying offsets `+33` to `+232` -- a
+   > `6%` veil -- and the unaffected side diluted it to `0.027243`, so **no site
+   > crossed the `5%` affected threshold and the affected count stayed zero**.
+   > Median, p99 and affected-rate gates therefore passed *simultaneously* on a
+   > population carrying a real one-sided veil, leaving M3 unfalsifiable for a
+   > substantial class of sparse one-sided far-field veils. The per-side maximum
+   > detects `100%` of those sites, reading approximately `0.0545`.
+   >
+   > The band is symmetric, so the old whole-band mean equals
+   > `(v_e_neg + v_e_pos)/2`, and `max(a,b) >= (a+b)/2` for all real `a,b`.
+   > **The amended statistic is therefore greater than or equal to the old one
+   > at every site, with equality only when the two sides agree exactly.** It
+   > cannot make any output easier to pass, which is why it is admissible as a
+   > post-registration amendment.
+   >
+   > M152 detected this in its own instrument, declined to substitute the repair
+   > silently, and returned `NOT_ADMITTED_COMMISSIONING_FAILED` with
+   > `failed: one_sided_far_veil_detected_at_least_95pct`
+   > (`docs/research/M152-site-census.md`, "Commissioning failure"). The
+   > amendment is made here, in the pre-registered document, by its owner. No
+   > scored M3 result exists, so nothing is re-graded. This is the M3 counterpart
+   > of M145's sparse-seam lesson: a pooled reduction can be numerically correct
+   > and still fail to charge the spatial failure it names.
 6. Record the 10–90% edge-width ratio to the independently selected sharp source.
 7. In the surrounding 128x128 patch, compute M5's normalized complex coherence
    `rho_edge` to that same sharp source over `0.15–0.25 cyc/px`.
