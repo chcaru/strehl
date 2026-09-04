@@ -2,15 +2,13 @@
 
 Date: 2026-09-03
 
-> **Correction frozen before follow-up scoring.** The two-worker b2/b7
-> rerenders reported below do not equal the old cover-default files. The
-> previous sentence claiming exact equality was wrong. Consequently,
-> `profile-final.json` combined a fresh two-worker b4 with old b2/b7 files and
-> the real 8/40/264 causal ladder is withdrawn pending a matched-worker rerun.
-> The source-ordering audit, exact coverage audit, synthetic commission, and
-> original matched b7/b2 Scale-versus-Crop conserved-error test are unaffected.
-> Predicates for the correction and the newly assigned numerical contradiction
-> are frozen in `CONTRADICTION-PREREGISTRATION.md`.
+> **Correction resolved.** The two-worker b2/b7 rerenders do not equal the old
+> cover-default files; the previous claim that they did was wrong.
+> `profile-final.json` therefore mixed worker/order histories in its b4 ladder
+> and is superseded for that intervention. A fully matched rerun reproduces
+> Scale 8 px / Crop 256 px and gives the exact Crop ladder 8/32/256,
+> log2 slope 1 and `R²=1`. The correction, contradiction predicates and two
+> instrument amendments were committed before their corresponding scores.
 
 ## Verdict
 
@@ -35,10 +33,13 @@ Catmull-Rom samples at every emitted pixel. The bad values are produced by
 allowing invalid samples *outside* that rectangle to participate in nonlocal
 filtering before the rectangle is cut out.
 
-`Scale` is not concealing the same defect by smearing it thinly. It contracts
-the placements before the gather, so all 22 frames cover the full pyramid
-domain and the artificial black step does not exist. Its preregistered positive
-residual mass is `0.05833%` of Crop's, not approximately conserved.
+On 109, `Scale` is not concealing the same defect by smearing it thinly. It
+contracts the placements before the gather, so all 22 frames cover the full
+pyramid domain and the artificial black step does not exist. Its
+preregistered positive residual mass through 256 px is `0.05833%` of Crop's,
+not approximately conserved. The same conserved-error test is unresolved on
+113, whose radial statistic fails a new artificial-boundary specificity
+control.
 
 This is a software defect, not a physical necessity.
 
@@ -62,6 +63,124 @@ frozen before another Crop score in `AMENDMENT-1.md` and commit `447b988c`.
 the preregistered 8 px candidate before another Crop score. Commit `38b23a4c`
 commissioned the residual-mass statistic, including an improvement plant,
 before `results/profile-final.json` was generated.
+
+The contradiction follow-up was preregistered in
+`CONTRADICTION-PREREGISTRATION.md`, commit `61196edc`, before matched Scale or
+113 renders. `contradiction.py` and its GREEN commission were committed as
+`75fcf84e` before real scoring. A concentration-denominator implementation
+error was frozen and corrected in `CONTRADICTION-AMENDMENT-1.md`, commit
+`25f5f85f`, before the corrected 109 score or any 113 score. The centered
+artificial-boundary control was frozen and commissioned in
+`CONTRADICTION-AMENDMENT-2.md`, commit `ed69e7b2`, before that control was read
+on either source.
+
+## Numerical contradiction resolved
+
+The three disputed records do not measure one admitted physical safe inset.
+They mix two sources, two output spaces, two coordinate systems, and—most
+importantly—nominal tail statistics with geometry after a failed specificity
+gate.
+
+### Common definition
+
+The independent rerun used one pinned executable, one environment and default
+camera-linear RGB16 for both sources and both cover modes. For green:
+
+```text
+E(lo,hi) =
+  (mean G_b7(lo,hi) / mean G_b2(lo,hi)) / R_deep - 1
+
+R_deep =
+  mean G_b7(distance >= 768) / mean G_b2(distance >= 768)
+```
+
+Distance is from the emitted boundary in **binned linear-plane pixels**.
+Threshold is `abs(E) <= 0.001`. Fixed edges are
+`0,2,4,8,16,32,64,96,128,160,192,256,320,384,448,512,640,768`.
+The nominal safe inset is the smallest registered edge at least 8 for which
+that and every deeper annulus pass. It becomes an admitted black-fill reach
+only when the statistic is specific to a physical boundary.
+
+One linear-plane pixel is two full-resolution sRGB-output pixels, and two
+sensor photosites, per axis.
+
+### What each historical number means
+
+| Record | Source/space | Native statistic | Linear-plane px | Full-resolution output/sensor px | Admission |
+| --- | --- | ---: | ---: | ---: | --- |
+| cover-default | 109, default linear | Scale 8 / Crop 256 plane px | 8 / 256 | 16 / 512 | specific on 109 |
+| deleted `COVER-BORDER-RESULT` | 113, nonlinear full-resolution sRGB | 768 / 768 output px | 384 / 384 | 768 / 768 | withdrawn |
+| deleted corrected-linear profile | 113, default linear | 640 / 320 plane px | 640 / 320 | 1280 / 640 | nonspecific |
+| sensitivity required clearance | full-resolution site coordinates | 1280 / 640 output px | 640 / 320 | 1280 / 640 | copied conservative gates |
+
+The sRGB record also used `deep_start=768` **sRGB output pixels**, equivalent
+to 384 plane px, not the linear profile's 768 plane px. It was rendered through
+a nonlinear viewing path explicitly documented as not for measurement.
+Both linear profile records use threshold `0.001`, deep start 768 plane px and
+the fixed edges above. The sensitivity file performs no new border profile; it
+copies the corrected-linear nominal values into a site-clearance filter.
+
+The sensitivity file does not say that Scale physically needs 1280 px and
+Crop 640 px. Those are the nonspecific linear nominal tails multiplied by two
+to filter a full-resolution site list. Its
+`minimum_retained_clearance_px={scale:1289,crop:1263}` reports where the few
+surviving paired patches happened to lie after the stricter Scale gate removed
+38 sites. Those observed coordinates are geometry; they are not minimum safe
+requirements. Inferring “Crop needs half of Scale” from them is a category
+error.
+
+### Independent matched rerun
+
+**MEASURED** (`results/common-linear-109.json`,
+`results/common-linear-113.json`):
+
+| Source | Scale nominal safe | Crop nominal safe | Scale specificity | centered artificial-window safe, Scale/Crop |
+| --- | ---: | ---: | --- | ---: |
+| 109 | **8 px** | **256 px** | passes | 8 / 8 |
+| 113 | **640 px** | **320 px** | fails | 320 / 320 |
+
+The 109 result uses fresh b2/b7 renders for both modes with identical
+two-worker ordering. It reproduces cover-default's 8/256 exactly.
+
+The 113 rerun independently reproduces the deleted corrected-linear nominal
+safe values. Its serialized map also reproduces the deleted map SHA-256
+`A5DF650CCE1224A7B6F54B5570B0BC1E643F1728B030D2496BD2BC13E462623E`.
+Against the deleted JSON, maximum row-effect disagreement is
+`9.06e-8`; neither historical JSON value was adopted on trust.
+
+The decisive specificity control profiles a centered `1024x1024` window whose
+edge is artificial, not an output boundary. On 113 that control returns 320 px
+for **both** modes and peaks at `1.0088%` for Scale and `1.0213%` for Crop,
+despite the window being 660/637 px from the physical output edge. The 113
+tail statistic therefore fires on scene structure away from any emitted
+boundary. Its physical 640/320 values cannot be interpreted as required safe
+insets or as evidence that Crop is twice better.
+
+On 109 the same artificial control returns 8 px for both modes, with peaks
+`0.0983%` and `0.0897%`, below threshold. Crop's physical 256 px profile is
+therefore boundary-specific on that source.
+
+### Program-level disposition
+
+**The 8 px / 256 px cover-default result survives exactly on 109. It is not a
+measurement artifact on that source.** The repaired matched Crop ladder and
+the artificial-window control strengthen that conclusion.
+
+**It does not survive as a general 32x law.** On 113 the common statistic is
+nonspecific, so neither 640 nor 320 is an admissible boundary requirement and
+their reversed ordering says nothing about which cover mode is safer.
+
+The shipping default therefore is not resampling 98% of 109 to avoid an
+imaginary defect. It is avoiding a real, stack-specific late-crop/pyramid
+boundary defect. But the evidence does not establish that Scale always settles
+at 8 px, that Crop always needs 256 px, or any finite general inset. Scale can
+itself produce a large b7/b2 radial statistic on structured scenes; absence of
+black fill does not guarantee this particular statistic will read 8.
+
+This does not vindicate Scale's resampling or weaken the case for repairing
+Crop. Scale still changes `98.1462%` of the registered external overlap and may
+remain implicated in M8 overshoot. It establishes only that the 109 border
+blocker was real rather than invented by a unit or output-space mistake.
 
 ## Recovered prior-corpus review
 
@@ -107,8 +226,9 @@ was explicitly withdrawn for output-space specificity failure. Its corrected
 camera-linear result reports `specific=false` and
 `PROFILE_NOT_SPECIFIC_ON_113`; the sensitivity result keeps
 `black_fill_reach="UNRESOLVED"` and stops for insufficient central sites.
-Those are dispositions of the old files, not independently accepted numeric
-results here.
+None of its values was imported. The later common-linear rerender independently
+reproduced its 640/320 nominal profile before retaining the same nonspecific
+disposition.
 
 **Decision:** keep the M-COVER-BORDER harness. It had already been
 preregistered, commissioned and reproduced; it uses the already-burned 109
@@ -119,7 +239,7 @@ without benefit. The prior corpus is cited here as a convergent instrument
 design and an independent warning about narrow-annulus specificity, not as a
 source of results. The frozen preregistration was not edited retroactively.
 
-## Prior result used, not re-derived
+## Prior result and independent re-derivation
 
 The prior lane established:
 
@@ -140,8 +260,10 @@ The prior lane established:
   safe inset on 109; no finite general safe inset”
   (`cover-default.md:399`).
 
-Those facts motivate this mechanism experiment. The present lane does not claim
-a new external-decoder comparison or a general safe inset.
+Those facts motivated this mechanism experiment. The external-decoder result
+was not repeated here. The 109 border profile was subsequently re-rendered and
+re-derived independently under the common-linear follow-up; no general safe
+inset is claimed.
 
 ## Frozen source and render
 
@@ -249,6 +371,14 @@ The improvement retained `2.5%` of the defect's positive mass, a `97.5%`
 reduction. This commissions both the threshold/reach detector and the
 nonnegative mass statistic against a possible no-op.
 
+The common-linear contradiction instrument was separately commissioned
+(`results/contradiction-commission.json`). It passed 24 controls/plants:
+null, defect, improvement and restoration; swapped bands; threshold, edge and
+normalization mutations; binary/map/exit/shape/dtype guards; all unit
+conversions; and the centered artificial-boundary control. A physical outer-64
+plant left the central control at 8, while a planted ring on the artificial
+window returned 64.
+
 A separate synthetic operator commission fed a real-to-zero boundary step
 through the production five-tap reduce/expand geometry and deliberately mixed
 the affected reconstruction. Its measured threshold reaches were:
@@ -285,25 +415,22 @@ the pyramid's filter support.
 
 ### Band depth moves the boundary in octaves
 
-The preregistered intervention held capture, sidecar, placements, cover mode,
-resampler and backend constant and changed only `--pyramid-bands`.
+The corrected intervention held capture, sidecar, placements, cover mode,
+resampler, worker count and backend constant and changed only
+`--pyramid-bands`. It uses the fixed historical edges, not the superseded
+Scale-selected uniform bins.
 
-The initial 8 px-annulus real statistic was invalid because narrow
-scene-structure bins made Scale fail its own specificity control far from the
-boundary. Per the committed amendments, the bin width was selected using Scale
-alone before scoring Crop. The smallest specific width was 32 px.
-
-**MEASURED** (`results/profile-final.json`):
+**MEASURED** (`results/common-linear-109.json`):
 
 | Crop bands | safe inset versus Crop b2 | peak absolute level effect |
 | ---: | ---: | ---: |
 | 2 | `8 px` | `0` (self-control) |
-| 4 | `40 px` | `1.7643%` |
-| 7 | `264 px` | `2.5180%` |
+| 4 | `32 px` | `2.5765%` |
+| 7 | `256 px` | `2.6106%` |
 
-The log2-reach fit had slope `1.000874`, `R²=0.995226`. Five additional bands
-predict a spatial ratio of `2^(7-2)=32`; the measured endpoint ratio was
-`264/8=33`.
+The log2-reach fit has slope `1.000000`, `R²=1.000000`. Five additional bands
+predict a spatial ratio of `2^(7-2)=32`; the measured endpoint ratio is exactly
+`256/8=32`.
 
 **ARGUED.** This is the decisive discriminator. Neither an alignment window,
 photometric fit, a fixed contributor-count profile nor Catmull-Rom's 2 px
@@ -311,43 +438,46 @@ support changes when only pyramid depth changes. Repeated dyadic pyramid
 support does. The observed reach tracks it almost one-for-one over the three
 registered depths.
 
-The old “256 px” should not be interpreted as a literal or exact physical
-radius. The prior audit's profile edges explicitly included 256
-(`experiments/cover-default/audit.py:23`). With the repaired 32 px annuli the
-last failing interval is 232--264 px, and all intervals beginning at 264 px
-pass. The prior 256 and present 264 are compatible coarse estimates of a
-pyramid-scale boundary field.
+The old “256 px” is still a registered bin edge rather than a literal kernel
+radius: the last failing interval is 192--256 px and every interval beginning
+at 256 passes. The exact octave ladder shows why that coarse edge is selected.
 
 ### Scale does not smear a conserved Crop defect
 
-The preregistered test compared b7 to b2 within each mode, normalized by the
-deep interior, using the same selected annuli.
+The preregistered test compares b7 to b2 within each mode, normalized by the
+deep interior. The authoritative 109 values below use matched fresh renders.
 
-**MEASURED** (`results/profile-final.json`):
+**MEASURED** (`results/common-linear-109.json`):
 
 ```text
-Crop peak through 256 px:                         2.518012%
-Scale peak through 256 px:                        0.058796%
-Scale / Crop peak ratio:                          2.335151%
+Crop peak before deep region:                     2.610634%
+Scale peak before deep region:                    0.064717%
+Scale / Crop peak ratio:                          2.478976%
 
 Scale / Crop positive radial residual mass
-through 256 px:                                   0.058330%
-preregistered maximum for either ratio:           20%
+through 256 px:                                   0.058335%
+over the full plane:                              1.437374%
+preregistered rejection maximum:                  20% in both scopes
 ```
 
 Both preregistered rejection predicates pass by wide margins. A rescale that
 merely spread the same positive error over a larger area could lower its peak,
 but it would approximately conserve positive residual mass. It does not.
 
-**POST-HOC CORROBORATION, not a registered gate.** Over the complete radial
-profile, Scale retains `0.052204%` of Crop's positive residual mass and
-`2.36664%` of its absolute residual mass. This is consistent with removing the
-causal zero boundary, not concealing it.
+Crop places `98.1615%` of its positive residual level mass within 256 px;
+Scale places only `3.9346%` there. This is consistent with a localized Crop
+boundary field and a much smaller, mostly non-boundary Scale difference.
 
 The physical explanation is direct: Scale composes the contraction *before*
 gathering, and geometry confirms all 22 contracted frames cover the complete
 full-plane pyramid domain. Crop leaves the unavailable exterior in place until
 after reconstruction.
+
+On 113, Scale/Crop positive-mass ratios are `15.2404%` through 256 px and
+`33.4610%` over the full plane. Per the frozen predicate, that is
+**UNRESOLVED**, not conserved-error support. Its artificial-boundary control
+also fires, so the nominal 640 px Scale tail cannot be assigned wholly to a
+physical output boundary.
 
 ## Alternatives tested
 
@@ -369,7 +499,7 @@ Relevant hits were:
 The `BandGain` field produces spatially homogeneous per-band coefficients, not
 a 256 px image neighbourhood. It may influence amplitude, which this lane did
 not isolate, but it cannot explain why the same sidecar's reach changes
-8→40→264 when pyramid depth changes. The round number came from measurement
+8→32→256 when pyramid depth changes. The round number came from measurement
 binning, while the causal scale comes from repeated dyadic filtering.
 
 ### Fewer contributing frames near the Crop border
@@ -396,15 +526,20 @@ this one.
 2 px (`align.rs:2867,2888`); the source's warning about one additional
 unavailable pixel per side is at `align.rs:2765`. The measured Crop rectangle
 still has `3.086628 px` exact full-resolution site slack. This can govern the
-last few valid coordinates, not a 264 px field. Most importantly, changing
-only pyramid depth moves the reach by 33x.
+last few valid coordinates, not a 256 px field. Most importantly, changing
+only pyramid depth moves the reach by exactly 32x.
 
 ### Scale masks the same defect
 
-**TESTED AND REJECTED.** Its positive residual mass is not conserved, as shown
-above. Scale removes the artificial uncovered region before pyramid analysis.
-Its 8 px result is not evidence that it smeared a 256 px Crop defect below the
-threshold.
+**TESTED.** On 109, rejected: Scale's positive residual mass is not conserved,
+and the centered artificial-boundary control remains at 8. Scale removes the
+artificial uncovered region before pyramid analysis; its 8 px result is not a
+smeared Crop defect.
+
+On 113, the conserved-error predicate is unresolved, but the radial instrument
+is also nonspecific: a centered artificial boundary returns 320 px in both
+modes. Therefore 113 supplies neither evidence that Scale cleanly mitigates the
+Crop defect nor evidence that it conserves and conceals it.
 
 ## Defect versus physical necessity
 
@@ -460,7 +595,7 @@ leave the poisoning path intact.
 ## Predicted effect
 
 **PREDICTION, not measured:** on 109, the safe inset should fall from the
-present 256/264 px estimate to the Scale/control floor, `<=8 px`.
+present 256 px estimate to the Scale/control floor, `<=8 px`.
 
 An 8 px inset on the `3470x2312` Crop rectangle leaves `3454x2296`:
 
@@ -520,8 +655,35 @@ b7: 0465D253F14431CE76BA1DD68E54C1BD2CBAE56DA17F079D5DD572852FCAD304
 They **do not** equal the preregistered existing b2/b7 inputs
 (`02C147...` and `B2489C...`). They were not used by
 `profile-final.json`; that file used the old inputs. Their logs are
-`results/render-b2.log` and `results/render-b7.log`. The resulting worker/order
-confound in the b4 ladder is the subject of the frozen follow-up above.
+`results/render-b2.log` and `results/render-b7.log`. That discovery withdrew
+the mixed-history b4 ladder before it was replaced.
+
+The authoritative matched 109 rerun uses:
+
+| arm | SHA-256 |
+| --- | --- |
+| Scale b2 | `A23EA4CE25DC9616971E0841D19DCE58642F4827898BADFAB5E965D20EB92185` |
+| Scale b7 | `84901F122C256961199EB153674309C328AE7ABF9C33D371A4BBBEE26CD4F594` |
+| Crop b2 | `10F7DEAF5A82CA2A311C76A323AE5627207520E7DA3BB71D237BB861CC7CC977` |
+| Crop b4 | `4B98B8D31F8FBB9F37B484B928508A74894C0259FF30AFA7E69C97A3CF39BC10` |
+| Crop b7 | `0465D253F14431CE76BA1DD68E54C1BD2CBAE56DA17F079D5DD572852FCAD304` |
+
+The Crop b2/b7 hashes reproduced the earlier two-worker files exactly.
+
+The same binary and environment produced the independent 113 arms:
+
+| arm | SHA-256 |
+| --- | --- |
+| Scale b2 | `EA61568B0BF00C521D97303D3D1415AD87168880CF5247427681DBE39D2FBA29` |
+| Scale b7 | `D5D7693DE2BA02ABDACD1527CFF64131EEB7025E1A2F81779CB96B6671ED303E` |
+| Crop b2 | `983E687A02F2E26B4D00DC22492F1A90A3E1A0FE95A31FB1923B9A4F8AB03A7C` |
+| Crop b7 | `8959EEF23E1E87BC3E475E2C845FCF0295CE4F36C8D16BC4106727CD5649A3F5` |
+
+Its private-cache map hash is
+`A5DF650CCE1224A7B6F54B5570B0BC1E643F1728B030D2496BD2BC13E462623E`.
+All eight new b2/b7 render logs are retained under
+`results/common-<109|113>-<scale|crop>-b<2|7>.log`. Every render placed all
+frames and exited zero. The source capture tree remained read-only.
 
 Instrument commands:
 
@@ -549,13 +711,33 @@ python experiments\M-COVER-BORDER\instrument.py profile `
 The instrument verifies all five TIFF hashes before profiling. Python used
 `PYTHONIOENCODING=utf-8`. No Rust source was edited.
 
+The common-linear follow-up commands are frozen in
+`CONTRADICTION-PREREGISTRATION.md`. Its scored commands were:
+
+```powershell
+python experiments\M-COVER-BORDER\contradiction.py commission `
+  --out experiments\M-COVER-BORDER\results\contradiction-commission.json
+
+python experiments\M-COVER-BORDER\contradiction.py profile `
+  --source-label <109MSDCF|113MSDCF> `
+  --binary D:\strehl-out\cover-default\target\release\strehl.exe `
+  --expected-binary-sha 1AC423529D5AAD88B7141801E47DCD612FCA8061558578A88592DB715CE81A0F `
+  --source D:\personal\macro\<source> `
+  --map <frozen-map> --expected-map-sha <map-sha> `
+  --scale-b2 <scale-b2.tiff> --scale-b7 <scale-b7.tiff> `
+  --crop-b2 <crop-b2.tiff> --crop-b7 <crop-b7.tiff> `
+  --commission experiments\M-COVER-BORDER\results\contradiction-commission.json `
+  --out experiments\M-COVER-BORDER\results\common-linear-<109|113>.json
+```
+
+The 109 invocation additionally supplied the matched `--crop-b4` arm.
+
 ## What this lane could not determine
 
 1. **UNKNOWN:** the proposed fix was not implemented, so its actual residual
    and safe inset are unmeasured.
 2. **UNKNOWN:** this experiment cannot supply a finite safe inset valid for all
-   scenes. The previous lane's COVER specificity failure remains; this lane
-   used only the already-burned 109 unit for the causal intervention.
+   scenes. 109 is specific and 113 is not; no third source was opened.
 3. **UNKNOWN:** early domain restriction and continuous boundary extension
    were not compared experimentally.
 4. **UNKNOWN:** the amplitude contribution of individual production choices
@@ -566,10 +748,12 @@ The instrument verifies all five TIFF hashes before profiling. Python used
 5. **UNKNOWN:** the post-fix output's external-decoder byte equality was not
    tested. Preserving it requires retaining Crop's original sample addressing
    and avoiding any resampling of emitted sites.
-6. The results have not received an independent implementation or analysis
-   replication. Exact b2/b7 rerender hashes and instrument restoration checks
-   establish reproducibility within this lane, not independent verification.
-   The recovered V-HEADTOHEAD3 corpus independently converges on the annular
-   profile design, but its 113 result is nonspecific and it contains neither
-   the causal band ladder nor the conserved-error test, so it is not a
-   replication of this diagnosis.
+6. **UNKNOWN:** 113 may contain some genuine Scale boundary-local band-depth
+   component in addition to scene structure. The artificial-boundary control
+   proves that its 640 px nominal tail is nonspecific, but it does not decompose
+   every physical-edge pixel into causal components.
+7. The independently written V-HEADTOHEAD3 harness and this lane agree on the
+   113 corrected-linear rows to `9.06e-8`, but that corpus contains neither the
+   causal band ladder nor the conserved-error test. It is an independent
+   replication of the nominal nonspecific profile, not of the full mechanism
+   diagnosis.

@@ -1,0 +1,859 @@
+{
+  "commission": {
+    "passed": true,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-COVER-BORDER\\results\\contradiction-commission.json",
+    "schema": "M-COVER-BORDER-CONTRADICTION-COMMISSION-1"
+  },
+  "crop": {
+    "boundary_specificity_disposition": "NONSPECIFIC_ARTIFICIAL_BOUNDARY_CONTROL_FIRES",
+    "central_artificial_boundary_control": {
+      "descriptors": {
+        "peak_abs_effect_before_deep": 0.010213380955457652,
+        "sign_changes_from_8_to_deep": 6,
+        "signs_from_8_to_deep": [
+          -1,
+          1,
+          -1,
+          -1,
+          1,
+          -1,
+          1,
+          1,
+          1,
+          -1
+        ]
+      },
+      "minimum_physical_border_clearance_px": 637,
+      "profile": {
+        "deep_ratio": 0.9914401784233496,
+        "deep_start_px": 384,
+        "rows": [
+          {
+            "candidate_mean": 2508.035102739726,
+            "hi": 2,
+            "lo": 0,
+            "normalised_effect": 0.005173652411631258,
+            "ratio": 0.9965695452934377,
+            "reference_mean": 2516.668419765166,
+            "samples": 8176
+          },
+          {
+            "candidate_mean": 2548.8467583497054,
+            "hi": 4,
+            "lo": 2,
+            "normalised_effect": 0.00783712886664234,
+            "ratio": 0.9992102228652202,
+            "reference_mean": 2550.8613703339884,
+            "samples": 8144
+          },
+          {
+            "candidate_mean": 2585.722084980237,
+            "hi": 8,
+            "lo": 4,
+            "normalised_effect": 0.009158864154963142,
+            "ratio": 1.0005206443353014,
+            "reference_mean": 2584.376543972332,
+            "samples": 16192
+          },
+          {
+            "candidate_mean": 2516.93721875,
+            "hi": 16,
+            "lo": 8,
+            "normalised_effect": -0.002067161524088146,
+            "ratio": 0.9893907114330778,
+            "reference_mean": 2543.92646875,
+            "samples": 32000
+          },
+          {
+            "candidate_mean": 2578.6374391649592,
+            "hi": 32,
+            "lo": 16,
+            "normalised_effect": 0.010213380955457652,
+            "ratio": 1.001566134660134,
+            "reference_mean": 2574.6052606301228,
+            "samples": 62464
+          },
+          {
+            "candidate_mean": 2318.4795511179955,
+            "hi": 64,
+            "lo": 32,
+            "normalised_effect": -0.0004985960715299109,
+            "ratio": 0.9909458502452309,
+            "reference_mean": 2339.6632122171336,
+            "samples": 118784
+          },
+          {
+            "candidate_mean": 2217.148021556713,
+            "hi": 96,
+            "lo": 64,
+            "normalised_effect": -0.0005807162616808803,
+            "ratio": 0.9908644329892554,
+            "reference_mean": 2237.589671947338,
+            "samples": 110592
+          },
+          {
+            "candidate_mean": 2332.5566015625,
+            "hi": 128,
+            "lo": 96,
+            "normalised_effect": 0.00816987264789848,
+            "ratio": 0.9995401184190781,
+            "reference_mean": 2333.629794921875,
+            "samples": 102400
+          },
+          {
+            "candidate_mean": 2015.9143384850543,
+            "hi": 160,
+            "lo": 128,
+            "normalised_effect": -0.0015458619134111062,
+            "ratio": 0.9899075488120995,
+            "reference_mean": 2036.46728515625,
+            "samples": 94208
+          },
+          {
+            "candidate_mean": 1868.7171572730654,
+            "hi": 192,
+            "lo": 160,
+            "normalised_effect": 0.0017021629873821276,
+            "ratio": 0.9931277711992654,
+            "reference_mean": 1881.6482747395833,
+            "samples": 86016
+          },
+          {
+            "candidate_mean": 2245.4166802300347,
+            "hi": 256,
+            "lo": 192,
+            "normalised_effect": 0.004804420285899891,
+            "ratio": 0.9962034737288229,
+            "reference_mean": 2253.9739515516494,
+            "samples": 147456
+          },
+          {
+            "candidate_mean": 2026.761195591518,
+            "hi": 320,
+            "lo": 256,
+            "normalised_effect": 0.00366376986442285,
+            "ratio": 0.9950725870714351,
+            "reference_mean": 2036.7973371233259,
+            "samples": 114688
+          },
+          {
+            "candidate_mean": 1349.8245727539063,
+            "hi": 384,
+            "lo": 320,
+            "normalised_effect": -0.0006510210305442632,
+            "ratio": 0.9907947300166695,
+            "reference_mean": 1362.3655151367188,
+            "samples": 81920
+          },
+          {
+            "candidate_mean": 974.5611877441406,
+            "hi": 512,
+            "lo": 384,
+            "normalised_effect": 0.0,
+            "ratio": 0.9914401784233496,
+            "reference_mean": 982.9752807617188,
+            "samples": 65536
+          }
+        ],
+        "safe_inset_px": 320,
+        "threshold": 0.001
+      },
+      "window_xywh": [
+        1212,
+        637,
+        1024,
+        1024
+      ]
+    },
+    "descriptors": {
+      "peak_abs_effect_before_deep": 0.08846386080814073,
+      "sign_changes_from_8_to_deep": 5,
+      "signs_from_8_to_deep": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        -1,
+        1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ]
+    },
+    "positive_mass_concentration_ratio": 0.7986348337981054,
+    "positive_residual_mass_through_256": {
+      "absolute_fraction": 0.014863239361118979,
+      "absolute_level_sum": 57356531.76263033,
+      "denominator_level_sum": 3858952303.0,
+      "negative_fraction": 0.0008348715280791687,
+      "negative_level_sum": 3221729.405990237,
+      "positive_fraction": 0.014028367833039807,
+      "positive_level_sum": 54134802.356640086,
+      "signed_fraction": 0.013193496304960637,
+      "signed_level_sum": 50913072.95064984
+    },
+    "profile": {
+      "deep_ratio": 0.9948436344957918,
+      "deep_start_px": 768,
+      "rows": [
+        {
+          "candidate_mean": 1602.997692441658,
+          "hi": 2,
+          "lo": 0,
+          "normalised_effect": 0.08486121299584792,
+          "ratio": 1.0792672720603027,
+          "reference_mean": 1485.2648032044583,
+          "samples": 22968
+        },
+        {
+          "candidate_mean": 1592.2090163934427,
+          "hi": 4,
+          "lo": 2,
+          "normalised_effect": 0.08846386080814073,
+          "ratio": 1.0828513433036924,
+          "reference_mean": 1470.3855946982908,
+          "samples": 22936
+        },
+        {
+          "candidate_mean": 1582.443005068158,
+          "hi": 8,
+          "lo": 4,
+          "normalised_effect": 0.08121966925920776,
+          "ratio": 1.0756445054541681,
+          "reference_mean": 1471.1579867179307,
+          "samples": 45776
+        },
+        {
+          "candidate_mean": 1600.6528387153387,
+          "hi": 16,
+          "lo": 8,
+          "normalised_effect": 0.07065589576515596,
+          "ratio": 1.0651352026373555,
+          "reference_mean": 1502.7696340821342,
+          "samples": 91168
+        },
+        {
+          "candidate_mean": 1525.357228982301,
+          "hi": 32,
+          "lo": 16,
+          "normalised_effect": 0.0421799590785954,
+          "ratio": 1.0368060982884255,
+          "reference_mean": 1471.2078097345134,
+          "samples": 180800
+        },
+        {
+          "candidate_mean": 1462.9766412720562,
+          "hi": 64,
+          "lo": 32,
+          "normalised_effect": 0.023178228632620534,
+          "ratio": 1.0179023477098426,
+          "reference_mean": 1437.2465537225423,
+          "samples": 355456
+        },
+        {
+          "candidate_mean": 1445.477115393476,
+          "hi": 96,
+          "lo": 64,
+          "normalised_effect": 0.010381234476349643,
+          "ratio": 1.0051713395327966,
+          "reference_mean": 1438.040519604681,
+          "samples": 347264
+        },
+        {
+          "candidate_mean": 1469.4398121932804,
+          "hi": 128,
+          "lo": 96,
+          "normalised_effect": 0.003643416212189443,
+          "ratio": 0.9984682639223073,
+          "reference_mean": 1471.6940590788977,
+          "samples": 339072
+        },
+        {
+          "candidate_mean": 1408.3620617746615,
+          "hi": 160,
+          "lo": 128,
+          "normalised_effect": -0.0017135470221274485,
+          "ratio": 0.9931389231484191,
+          "reference_mean": 1418.0916978965183,
+          "samples": 330880
+        },
+        {
+          "candidate_mean": 1440.971557665609,
+          "hi": 192,
+          "lo": 160,
+          "normalised_effect": 0.0019330400820944948,
+          "ratio": 0.9967667071166887,
+          "reference_mean": 1445.6457537931376,
+          "samples": 322688
+        },
+        {
+          "candidate_mean": 1403.0321407860824,
+          "hi": 256,
+          "lo": 192,
+          "normalised_effect": -0.00031509414176777994,
+          "ratio": 0.9945301650945872,
+          "reference_mean": 1410.7487032860824,
+          "samples": 620800
+        },
+        {
+          "candidate_mean": 1464.1461502095124,
+          "hi": 320,
+          "lo": 256,
+          "normalised_effect": 0.0010246394261093084,
+          "ratio": 0.9958629905065102,
+          "reference_mean": 1470.2284994694166,
+          "samples": 588032
+        },
+        {
+          "candidate_mean": 1438.7935558581144,
+          "hi": 384,
+          "lo": 320,
+          "normalised_effect": -0.0003579997665934531,
+          "ratio": 0.9944874807068453,
+          "reference_mean": 1446.7688973173122,
+          "samples": 555264
+        },
+        {
+          "candidate_mean": 1512.6085137493876,
+          "hi": 448,
+          "lo": 384,
+          "normalised_effect": -4.2644602427088785e-05,
+          "ratio": 0.9948012097845217,
+          "reference_mean": 1520.513343642822,
+          "samples": 522496
+        },
+        {
+          "candidate_mean": 1566.723750735102,
+          "hi": 512,
+          "lo": 448,
+          "normalised_effect": -0.0003174820169552506,
+          "ratio": 0.994527789532157,
+          "reference_mean": 1575.3443666688447,
+          "samples": 489728
+        },
+        {
+          "candidate_mean": 1726.9134893866212,
+          "hi": 640,
+          "lo": 512,
+          "normalised_effect": -0.000605554495479943,
+          "ratio": 0.9942412024606233,
+          "reference_mean": 1736.9160371876815,
+          "samples": 881152
+        },
+        {
+          "candidate_mean": 1987.3507945819113,
+          "hi": 768,
+          "lo": 640,
+          "normalised_effect": -9.492656521459253e-05,
+          "ratio": 0.9947491974066436,
+          "reference_mean": 1997.8410636198805,
+          "samples": 750080
+        },
+        {
+          "candidate_mean": 2105.7025582314764,
+          "hi": 1149,
+          "lo": 768,
+          "normalised_effect": 0.0,
+          "ratio": 0.9948436344957918,
+          "reference_mean": 2116.616607089909,
+          "samples": 1456944
+        }
+      ],
+      "safe_inset_px": 320,
+      "threshold": 0.001
+    },
+    "residual_mass_full_plane": {
+      "absolute_fraction": 0.006467321212234365,
+      "absolute_level_sum": 85404884.87443656,
+      "denominator_level_sum": 13205604310.0,
+      "negative_fraction": 0.0013343358384945323,
+      "negative_level_sum": 17620711.09981086,
+      "positive_fraction": 0.005132985373739832,
+      "positive_level_sum": 67784173.77462569,
+      "signed_fraction": 0.0037986495352452993,
+      "signed_level_sum": 50163462.67481482
+    }
+  },
+  "crop_ladder": null,
+  "definition": {
+    "deep_start_px": 768,
+    "distance_unit": "binned plane pixels",
+    "edges_px": [
+      0,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      96,
+      128,
+      160,
+      192,
+      256,
+      320,
+      384,
+      448,
+      512,
+      640,
+      768
+    ],
+    "full_resolution_pixels_per_plane_pixel": 2,
+    "safe": "smallest registered lo>=8 with abs(effect)<=threshold in every deeper annulus",
+    "space": "default linear camera-native RGB16",
+    "threshold": 0.001
+  },
+  "original_specificity_condition": {
+    "scale_safe_equals_8": false,
+    "specific": false
+  },
+  "provenance": {
+    "binary": {
+      "path": "D:\\strehl-out\\cover-default\\target\\release\\strehl.exe",
+      "sha256": "1AC423529D5AAD88B7141801E47DCD612FCA8061558578A88592DB715CE81A0F"
+    },
+    "inputs": {
+      "crop_b2": {
+        "dtype": "uint16",
+        "path": "D:\\strehl-out\\M-COVER-BORDER\\common-113\\113-crop-b2.tiff",
+        "sha256": "983E687A02F2E26B4D00DC22492F1A90A3E1A0FE95A31FB1923B9A4F8AB03A7C",
+        "shape": [
+          2298,
+          3448,
+          3
+        ]
+      },
+      "crop_b7": {
+        "dtype": "uint16",
+        "path": "D:\\strehl-out\\M-COVER-BORDER\\common-113\\113-crop-b7.tiff",
+        "sha256": "8959EEF23E1E87BC3E475E2C845FCF0295CE4F36C8D16BC4106727CD5649A3F5",
+        "shape": [
+          2298,
+          3448,
+          3
+        ]
+      },
+      "scale_b2": {
+        "dtype": "uint16",
+        "path": "D:\\strehl-out\\M-COVER-BORDER\\common-113\\113-scale-b2.tiff",
+        "sha256": "EA61568B0BF00C521D97303D3D1415AD87168880CF5247427681DBE39D2FBA29",
+        "shape": [
+          2344,
+          3516,
+          3
+        ]
+      },
+      "scale_b7": {
+        "dtype": "uint16",
+        "path": "D:\\strehl-out\\M-COVER-BORDER\\common-113\\113-scale-b7.tiff",
+        "sha256": "D5D7693DE2BA02ABDACD1527CFF64131EEB7025E1A2F81779CB96B6671ED303E",
+        "shape": [
+          2344,
+          3516,
+          3
+        ]
+      }
+    },
+    "map": {
+      "path": "D:\\strehl-out\\M-COVER-BORDER\\common-113-cache\\113MSDCF-7f5a36c866189cc7.warpmap.txt",
+      "sha256": "A5DF650CCE1224A7B6F54B5570B0BC1E643F1728B030D2496BD2BC13E462623E"
+    },
+    "source": {
+      "counts": {
+        ".arw": 63,
+        ".xmp": 63
+      },
+      "digest": "84BE8404E77898C4AC1617F2AF131B01BE15177855919483110AD1F7B14AC909",
+      "path": "D:\\personal\\macro\\113MSDCF"
+    }
+  },
+  "scale": {
+    "boundary_specificity_disposition": "NONSPECIFIC_ARTIFICIAL_BOUNDARY_CONTROL_FIRES",
+    "central_artificial_boundary_control": {
+      "descriptors": {
+        "peak_abs_effect_before_deep": 0.010087830958428023,
+        "sign_changes_from_8_to_deep": 3,
+        "signs_from_8_to_deep": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          -1,
+          1,
+          1,
+          -1
+        ]
+      },
+      "minimum_physical_border_clearance_px": 660,
+      "profile": {
+        "deep_ratio": 0.9920122564026366,
+        "deep_start_px": 384,
+        "rows": [
+          {
+            "candidate_mean": 2508.3116438356165,
+            "hi": 2,
+            "lo": 0,
+            "normalised_effect": -0.002914781291362245,
+            "ratio": 0.9891207576368721,
+            "reference_mean": 2535.900318003914,
+            "samples": 8176
+          },
+          {
+            "candidate_mean": 2471.32576129666,
+            "hi": 4,
+            "lo": 2,
+            "normalised_effect": -0.007932145852091566,
+            "ratio": 0.9841434704977884,
+            "reference_mean": 2511.1437868369353,
+            "samples": 8144
+          },
+          {
+            "candidate_mean": 2558.604125494071,
+            "hi": 8,
+            "lo": 4,
+            "normalised_effect": 5.53589191509829e-06,
+            "ratio": 0.9920177480752664,
+            "reference_mean": 2579.191884881423,
+            "samples": 16192
+          },
+          {
+            "candidate_mean": 2594.76765625,
+            "hi": 16,
+            "lo": 8,
+            "normalised_effect": 0.010087830958428023,
+            "ratio": 1.0020195083539152,
+            "reference_mean": 2589.5380625,
+            "samples": 32000
+          },
+          {
+            "candidate_mean": 2444.0395427766393,
+            "hi": 32,
+            "lo": 16,
+            "normalised_effect": 0.002443376257741825,
+            "ratio": 0.9944361155973196,
+            "reference_mean": 2457.7139792520493,
+            "samples": 62464
+          },
+          {
+            "candidate_mean": 2287.3636432516164,
+            "hi": 64,
+            "lo": 32,
+            "normalised_effect": 0.0004648581364203874,
+            "ratio": 0.9924734013714541,
+            "reference_mean": 2304.710272427263,
+            "samples": 118784
+          },
+          {
+            "candidate_mean": 2232.621844256366,
+            "hi": 96,
+            "lo": 64,
+            "normalised_effect": 0.00015482379358644494,
+            "ratio": 0.9921658435034572,
+            "reference_mean": 2250.250660083912,
+            "samples": 110592
+          },
+          {
+            "candidate_mean": 2286.99513671875,
+            "hi": 128,
+            "lo": 96,
+            "normalised_effect": 0.0048503204963192825,
+            "ratio": 0.9968238337824663,
+            "reference_mean": 2294.282158203125,
+            "samples": 102400
+          },
+          {
+            "candidate_mean": 1974.9527534816575,
+            "hi": 160,
+            "lo": 128,
+            "normalised_effect": 0.0020114392075685217,
+            "ratio": 0.9940076287495534,
+            "reference_mean": 1986.8587487262228,
+            "samples": 94208
+          },
+          {
+            "candidate_mean": 1866.5482584635417,
+            "hi": 192,
+            "lo": 160,
+            "normalised_effect": -0.0040972831732125625,
+            "ratio": 0.9879477012768574,
+            "reference_mean": 1889.3188941592261,
+            "samples": 86016
+          },
+          {
+            "candidate_mean": 2285.7794392903647,
+            "hi": 256,
+            "lo": 192,
+            "normalised_effect": 0.006173776415840493,
+            "ratio": 0.9981367182754399,
+            "reference_mean": 2290.046440972222,
+            "samples": 147456
+          },
+          {
+            "candidate_mean": 1969.4845406668526,
+            "hi": 320,
+            "lo": 256,
+            "normalised_effect": 0.0014706960100583366,
+            "ratio": 0.9934712048700568,
+            "reference_mean": 1982.4274030412946,
+            "samples": 114688
+          },
+          {
+            "candidate_mean": 1336.7110229492187,
+            "hi": 384,
+            "lo": 320,
+            "normalised_effect": -0.0007773098161250047,
+            "ratio": 0.9912411555380185,
+            "reference_mean": 1348.5225219726562,
+            "samples": 81920
+          },
+          {
+            "candidate_mean": 967.5840454101562,
+            "hi": 512,
+            "lo": 384,
+            "normalised_effect": 0.0,
+            "ratio": 0.9920122564026366,
+            "reference_mean": 975.3750915527344,
+            "samples": 65536
+          }
+        ],
+        "safe_inset_px": 320,
+        "threshold": 0.001
+      },
+      "window_xywh": [
+        1246,
+        660,
+        1024,
+        1024
+      ]
+    },
+    "descriptors": {
+      "peak_abs_effect_before_deep": 0.011090042565397473,
+      "sign_changes_from_8_to_deep": 8,
+      "signs_from_8_to_deep": [
+        1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        1,
+        1,
+        1,
+        -1,
+        1,
+        -1,
+        -1,
+        1
+      ]
+    },
+    "positive_mass_concentration_ratio": 0.35742511051851017,
+    "positive_residual_mass_through_256": {
+      "absolute_fraction": 0.003751789950747299,
+      "absolute_level_sum": 14797251.589860607,
+      "denominator_level_sum": 3944051182.0,
+      "negative_fraction": 0.0016138138699006107,
+      "negative_level_sum": 6364964.501109498,
+      "positive_fraction": 0.002137976080846688,
+      "positive_level_sum": 8432287.088751107,
+      "signed_fraction": 0.0005241622109460777,
+      "signed_level_sum": 2067322.587641611
+    },
+    "profile": {
+      "deep_ratio": 0.994692215258287,
+      "deep_start_px": 768,
+      "rows": [
+        {
+          "candidate_mean": 1427.2703637295083,
+          "hi": 2,
+          "lo": 0,
+          "normalised_effect": -0.003920869347527223,
+          "ratio": 0.9907921570412568,
+          "reference_mean": 1440.5345799180327,
+          "samples": 23424
+        },
+        {
+          "candidate_mean": 1445.2905694254446,
+          "hi": 4,
+          "lo": 2,
+          "normalised_effect": -0.0033032655872216043,
+          "ratio": 0.9914064826937471,
+          "reference_mean": 1457.8183567031463,
+          "samples": 23392
+        },
+        {
+          "candidate_mean": 1462.1090430089102,
+          "hi": 8,
+          "lo": 4,
+          "normalised_effect": 0.0007651715261236536,
+          "ratio": 0.9954533254186594,
+          "reference_mean": 1468.7871401644961,
+          "samples": 46688
+        },
+        {
+          "candidate_mean": 1510.679155196146,
+          "hi": 16,
+          "lo": 8,
+          "normalised_effect": 0.011090042565397473,
+          "ratio": 1.0057233942649708,
+          "reference_mean": 1502.082146851342,
+          "samples": 92992
+        },
+        {
+          "candidate_mean": 1462.8559973542679,
+          "hi": 32,
+          "lo": 16,
+          "normalised_effect": -0.0007913378555856054,
+          "ratio": 0.9939050776536968,
+          "reference_mean": 1471.8266665943788,
+          "samples": 184448
+        },
+        {
+          "candidate_mean": 1432.2544079701836,
+          "hi": 64,
+          "lo": 32,
+          "normalised_effect": -0.0006430402244332889,
+          "ratio": 0.9940525881529453,
+          "reference_mean": 1440.8235791946013,
+          "samples": 362752
+        },
+        {
+          "candidate_mean": 1429.081752030686,
+          "hi": 96,
+          "lo": 64,
+          "normalised_effect": 0.0009905744094009794,
+          "ratio": 0.9956775319119522,
+          "reference_mean": 1435.2857287906138,
+          "samples": 354560
+        },
+        {
+          "candidate_mean": 1463.5683665927568,
+          "hi": 128,
+          "lo": 96,
+          "normalised_effect": 0.001275039302946368,
+          "ratio": 0.9959604869270762,
+          "reference_mean": 1469.5044490253142,
+          "samples": 346368
+        },
+        {
+          "candidate_mean": 1414.379196039932,
+          "hi": 160,
+          "lo": 128,
+          "normalised_effect": -0.0016548720129798689,
+          "ratio": 0.9930461269497272,
+          "reference_mean": 1424.2834825652915,
+          "samples": 338176
+        },
+        {
+          "candidate_mean": 1437.7650946712567,
+          "hi": 192,
+          "lo": 160,
+          "normalised_effect": 0.0017206278035444278,
+          "ratio": 0.9964037103398297,
+          "reference_mean": 1442.954376575834,
+          "samples": 329984
+        },
+        {
+          "candidate_mean": 1406.1203981164383,
+          "hi": 256,
+          "lo": 192,
+          "normalised_effect": 9.616600322681634e-05,
+          "ratio": 0.9947878708330693,
+          "reference_mean": 1413.487678472502,
+          "samples": 635392
+        },
+        {
+          "candidate_mean": 1464.2847596511258,
+          "hi": 320,
+          "lo": 256,
+          "normalised_effect": 0.0015817857626581056,
+          "ratio": 0.9962656052426094,
+          "reference_mean": 1469.7734740070093,
+          "samples": 602624
+        },
+        {
+          "candidate_mean": 1436.024693957772,
+          "hi": 384,
+          "lo": 320,
+          "normalised_effect": -0.0006206844531981837,
+          "ratio": 0.9940748252645589,
+          "reference_mean": 1444.5841072130504,
+          "samples": 569856
+        },
+        {
+          "candidate_mean": 1495.3874169596045,
+          "hi": 448,
+          "lo": 384,
+          "normalised_effect": 0.0007845337229916982,
+          "ratio": 0.9954725848451544,
+          "reference_mean": 1502.1884477031697,
+          "samples": 537088
+        },
+        {
+          "candidate_mean": 1569.1183871351523,
+          "hi": 512,
+          "lo": 448,
+          "normalised_effect": -0.0003653238101278822,
+          "ratio": 0.9943288305083043,
+          "reference_mean": 1578.0678775380711,
+          "samples": 504320
+        },
+        {
+          "candidate_mean": 1695.7839709733548,
+          "hi": 640,
+          "lo": 512,
+          "normalised_effect": -0.001084671606849219,
+          "ratio": 0.9936133008548423,
+          "reference_mean": 1706.6840485271373,
+          "samples": 910336
+        },
+        {
+          "candidate_mean": 1975.6971539811925,
+          "hi": 768,
+          "lo": 640,
+          "normalised_effect": 0.0006797935993017035,
+          "ratio": 0.9953684006594947,
+          "reference_mean": 1984.8903709140934,
+          "samples": 779264
+        },
+        {
+          "candidate_mean": 2101.304009150915,
+          "hi": 1172,
+          "lo": 768,
+          "normalised_effect": 0.0,
+          "ratio": 0.994692215258287,
+          "reference_mean": 2112.5167935543554,
+          "samples": 1599840
+        }
+      ],
+      "safe_inset_px": 640,
+      "threshold": 0.001
+    },
+    "residual_mass_full_plane": {
+      "absolute_fraction": 0.003241008818862323,
+      "absolute_level_sum": 44517634.57704683,
+      "denominator_level_sum": 13735733861.0,
+      "negative_fraction": 0.001523462505205334,
+      "negative_level_sum": 20925875.518712793,
+      "positive_fraction": 0.0017175463136569896,
+      "positive_level_sum": 23591759.058334038,
+      "signed_fraction": 0.00019408380845165561,
+      "signed_level_sum": 2665883.539621244
+    }
+  },
+  "scale_vs_crop": {
+    "concealment_disposition": "UNRESOLVED",
+    "nominal_safe_ratio": 0.5,
+    "peak_ratio": 0.1253624074744987,
+    "positive_mass_ratio_full_plane": 0.33460962551031115,
+    "positive_mass_ratio_through_256": 0.15240376544812984
+  },
+  "schema": "M-COVER-BORDER-COMMON-LINEAR-PROFILE-1",
+  "source_label": "113MSDCF"
+}
