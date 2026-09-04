@@ -36,6 +36,7 @@ UNEXPECTED_ERROR_EXIT_CODE = 3
 BUNDLE_SOURCE_NAMES = (
     "M138-ADAPTER-PREREGISTRATION.md",
     "M138-ADAPTER-AMENDMENT-1.md",
+    "M138-ADAPTER-AMENDMENT-2.md",
     "comparison-binding.json",
     "comparison-contract.json",
     "comparison_checker.py",
@@ -806,8 +807,10 @@ def self_test_binding_hashes(
         "environment_manifest_sha256": file_sha256(
             runtime / ENVIRONMENT_PATH.name
         ),
-        "physical_preregistration_sha256": binding.get(
-            "physical_preregistration_sha256", "f" * 64
+        "physical_preregistration_sha256": (
+            binding.get("physical_preregistration_sha256")
+            if valid_sha256(binding.get("physical_preregistration_sha256"))
+            else "f" * 64
         ),
         "comparison_rule_sha256": file_sha256(
             runtime / CORE_CONTRACT_PATH.name
