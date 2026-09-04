@@ -1,0 +1,129 @@
+{
+  "schema": "M146-verification-v1",
+  "method": "Whitespace-collapsed exact quote checks, source-hash checks, and metadata/status assertions; no image pixels or score outcomes read.",
+  "report": "docs\\research\\M146-unlock-audit.md",
+  "passed": true,
+  "failed": [],
+  "checks": [
+    {
+      "name": "M2 success bar exact at lines 633-635",
+      "passed": true,
+      "source_exact": true,
+      "report_contains_exact": true
+    },
+    {
+      "name": "M3 success bar exact at lines 678-681",
+      "passed": true,
+      "source_exact": true,
+      "report_contains_exact": true
+    },
+    {
+      "name": "M4 success bar exact at lines 716-718",
+      "passed": true,
+      "source_exact": true,
+      "report_contains_exact": true
+    },
+    {
+      "name": "M11 success bar exact at lines 1092-1098",
+      "passed": true,
+      "source_exact": true,
+      "report_contains_exact": true
+    },
+    {
+      "name": "M2 capture requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+      "passed": true
+    },
+    {
+      "name": "M2 capture requests\\10-paper-iso-var",
+      "passed": true
+    },
+    {
+      "name": "M2 capture requests\\6-11-extended-dark-frames",
+      "passed": true
+    },
+    {
+      "name": "M3 capture duck-tape-side-layers-cpl",
+      "passed": true
+    },
+    {
+      "name": "M3 capture chia-seeds-cpl",
+      "passed": true
+    },
+    {
+      "name": "M3 capture flower-bud-with-background-fern-cpl",
+      "passed": true
+    },
+    {
+      "name": "M3 capture requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+      "passed": true
+    },
+    {
+      "name": "M11 capture bee-1-cpl",
+      "passed": true
+    },
+    {
+      "name": "M11 capture coffee-bean",
+      "passed": true
+    },
+    {
+      "name": "M2 exact ISO-100 blocks",
+      "passed": true
+    },
+    {
+      "name": "manifest universal stabilization finding",
+      "passed": true
+    },
+    {
+      "name": "source hash docs\\proposals\\2026-09-sota-scorecard.md",
+      "passed": true
+    },
+    {
+      "name": "source hash docs\\capture-requests\\2026-09-319-frame-session.md",
+      "passed": true
+    },
+    {
+      "name": "source hash docs\\research\\M-PHASE0-SPLIT2.md",
+      "passed": true
+    },
+    {
+      "name": "source hash docs\\research\\M133-blocker-audit.md",
+      "passed": true
+    },
+    {
+      "name": "source hash docs\\research\\M140-readiness.md",
+      "passed": true
+    },
+    {
+      "name": "source hash docs\\research\\M141-capture-inventory.md",
+      "passed": true
+    },
+    {
+      "name": "source hash docs\\research\\M144-reference-uncertainty.md",
+      "passed": true
+    },
+    {
+      "name": "source hash experiments\\M141-capture-inventory\\capture-manifest.json",
+      "passed": true
+    },
+    {
+      "name": "source hash experiments\\M141-capture-inventory\\holdout-register.json",
+      "passed": true
+    },
+    {
+      "name": "report verdict M2",
+      "passed": true
+    },
+    {
+      "name": "report verdict M3",
+      "passed": true
+    },
+    {
+      "name": "report verdict M4",
+      "passed": true
+    },
+    {
+      "name": "report verdict M11",
+      "passed": true
+    }
+  ]
+}

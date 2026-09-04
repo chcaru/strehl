@@ -1,0 +1,2402 @@
+{
+  "schema": "M146-capture-map-v1",
+  "method": "Metadata-only join of the M141 capture manifest and holdout register; no image pixels or score outcomes read.",
+  "sources": {
+    "docs\\proposals\\2026-09-sota-scorecard.md": "8D419BA344CFF97FD41ADEC41245A0814E7AEBF81633F9C87EC181886A2D1CC9",
+    "docs\\capture-requests\\2026-09-319-frame-session.md": "81F53E7D87D89DC3515928A2016A23CFAB6C9206275E12D9D1BB62B85346ECF9",
+    "docs\\research\\M-PHASE0-SPLIT2.md": "4A2B50040A44CAD491E794D22BB6DB4691965EA4EE600F304FC96BE4798EFED3",
+    "docs\\research\\M133-blocker-audit.md": "915F73FDF0044DA60723FC44410ADF0799644E1AC7F6AAA8CE93FE63DB6D43D7",
+    "docs\\research\\M140-readiness.md": "873801D134DAA5B8E85EE6B9E86EEC38F8F00A5413616476085C8B4D484EFBC2",
+    "docs\\research\\M141-capture-inventory.md": "35DC06D2FBFF65CD01E93A55BF017103A603598070FBDA5D4A5C4FC2DCE26D85",
+    "docs\\research\\M144-reference-uncertainty.md": "46E48BAE6CDF9B4459C0A17DFA1B9E15ACE0B2A69473D6EB9AA6C91F1FF1ECAA",
+    "experiments\\M141-capture-inventory\\capture-manifest.json": "E2849D543CB126AB95AD342F2A3A1A96F4B6F5658548025007F593DDD5764B03",
+    "experiments\\M141-capture-inventory\\holdout-register.json": "804102B54CBA607BD500E595E636142D2D8B80F0AD053E43F56F1DF9BFD31488"
+  },
+  "manifest_summary": {
+    "stack_directory_count": 68,
+    "request_stack_directory_count": 32,
+    "general_stack_directory_count": 36,
+    "arw_frame_count": 10509,
+    "request_arw_frame_count": 3908,
+    "general_arw_frame_count": 6601,
+    "all_arw_image_stabilization": [
+      "On"
+    ],
+    "numeric_status": "VERIFIED"
+  },
+  "axes": {
+    "M2": [
+      {
+        "stack_id": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+        "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+        "role": "two score-bearing ISO-100 fixed-focus 32-frame light blocks",
+        "frame_count": 576,
+        "first_file": "DSC00296.ARW",
+        "last_file": "DSC00871.ARW",
+        "capture_contiguous": false,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 64
+            },
+            {
+              "value": 200,
+              "frames": 64
+            },
+            {
+              "value": 320,
+              "frames": 64
+            },
+            {
+              "value": 400,
+              "frames": 64
+            },
+            {
+              "value": 50,
+              "frames": 64
+            },
+            {
+              "value": 500,
+              "frames": 64
+            },
+            {
+              "value": 64,
+              "frames": 64
+            },
+            {
+              "value": 640,
+              "frames": 64
+            },
+            {
+              "value": 80,
+              "frames": 64
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1.6,
+              "frames": 576
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 576
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 576
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Normal",
+              "frames": 576
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 2,
+            "frame_count": 32,
+            "first_file": "DSC00328.ARW",
+            "last_file": "DSC00359.ARW",
+            "iso": 100,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 10,
+            "frame_count": 32,
+            "first_file": "DSC00584.ARW",
+            "last_file": "DSC00615.ARW",
+            "iso": 100,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "requests\\10-paper-iso-var",
+        "path": "D:\\personal\\macro\\requests\\10-paper-iso-var",
+        "role": "ISO-100 paper transfer/control block",
+        "frame_count": 110,
+        "first_file": "DSC00165.ARW",
+        "last_file": "DSC00274.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 10
+            },
+            {
+              "value": 125,
+              "frames": 10
+            },
+            {
+              "value": 160,
+              "frames": 10
+            },
+            {
+              "value": 200,
+              "frames": 10
+            },
+            {
+              "value": 250,
+              "frames": 10
+            },
+            {
+              "value": 320,
+              "frames": 10
+            },
+            {
+              "value": 400,
+              "frames": 10
+            },
+            {
+              "value": 50,
+              "frames": 10
+            },
+            {
+              "value": 500,
+              "frames": 5
+            },
+            {
+              "value": 64,
+              "frames": 10
+            },
+            {
+              "value": 640,
+              "frames": 5
+            },
+            {
+              "value": 80,
+              "frames": 10
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.125,
+              "frames": 60
+            },
+            {
+              "value": 0.5,
+              "frames": 50
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 110
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 110
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Continuous",
+              "frames": 110
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 5,
+            "first_file": "DSC00165.ARW",
+            "last_file": "DSC00169.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.5,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 17,
+            "frame_count": 5,
+            "first_file": "DSC00245.ARW",
+            "last_file": "DSC00249.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.125,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "NOT HOLDOUT",
+        "evidence_class": "CONTROL — NOT HOLDOUT",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+      },
+      {
+        "stack_id": "requests\\6-11-extended-dark-frames",
+        "path": "D:\\personal\\macro\\requests\\6-11-extended-dark-frames",
+        "role": "dark/FPN control",
+        "frame_count": 506,
+        "first_file": "DSC00872.ARW",
+        "last_file": "DSC01377.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 88
+            },
+            {
+              "value": 1000,
+              "frames": 88
+            },
+            {
+              "value": 160,
+              "frames": 88
+            },
+            {
+              "value": 2000,
+              "frames": 88
+            },
+            {
+              "value": 400,
+              "frames": 66
+            },
+            {
+              "value": 800,
+              "frames": 88
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.125,
+              "frames": 88
+            },
+            {
+              "value": 1,
+              "frames": 132
+            },
+            {
+              "value": 10,
+              "frames": 22
+            },
+            {
+              "value": 2.5,
+              "frames": 132
+            },
+            {
+              "value": 5,
+              "frames": 132
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 506
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 506
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Normal",
+              "frames": 506
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 10,
+            "frame_count": 22,
+            "first_file": "DSC01070.ARW",
+            "last_file": "DSC01091.ARW",
+            "iso": 100,
+            "exposure_seconds": 1,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 11,
+            "frame_count": 22,
+            "first_file": "DSC01092.ARW",
+            "last_file": "DSC01113.ARW",
+            "iso": 100,
+            "exposure_seconds": 2.5,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 17,
+            "frame_count": 22,
+            "first_file": "DSC01224.ARW",
+            "last_file": "DSC01245.ARW",
+            "iso": 100,
+            "exposure_seconds": 5,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 23,
+            "frame_count": 22,
+            "first_file": "DSC01356.ARW",
+            "last_file": "DSC01377.ARW",
+            "iso": 100,
+            "exposure_seconds": 10,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "NOT HOLDOUT",
+        "evidence_class": "CONTROL — NOT HOLDOUT",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+      },
+      {
+        "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+        "role": "burned SNR-ladder commissioning source; not a matched repeat",
+        "frame_count": 65,
+        "first_file": "DSC00015.ARW",
+        "last_file": "DSC00079.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 65
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 6,
+              "frames": 65
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 65
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 65
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 65
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 65,
+            "first_file": "DSC00015.ARW",
+            "last_file": "DSC00079.ARW",
+            "iso": 100,
+            "exposure_seconds": 6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "evidence_class": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:36-41",
+          "docs\\proposals\\2026-09-sota-scorecard.md:363-379",
+          "docs\\STATUS.md:2535-2547",
+          "experiments\\cover-default\\slide-series-preregistration.md:9-15"
+        ],
+        "unit_id": "high-res-calibration-slide-2026-09-02"
+      },
+      {
+        "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+        "role": "burned SNR-ladder commissioning source; not a matched repeat",
+        "frame_count": 61,
+        "first_file": "DSC00020.ARW",
+        "last_file": "DSC00080.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 61
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 2.5,
+              "frames": 61
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 61
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 61
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 61
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 61,
+            "first_file": "DSC00020.ARW",
+            "last_file": "DSC00080.ARW",
+            "iso": 100,
+            "exposure_seconds": 2.5,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "evidence_class": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:36-41",
+          "docs\\proposals\\2026-09-sota-scorecard.md:363-379",
+          "docs\\STATUS.md:2535-2547",
+          "experiments\\cover-default\\slide-series-preregistration.md:9-15"
+        ],
+        "unit_id": "high-res-calibration-slide-2026-09-02"
+      },
+      {
+        "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+        "role": "burned SNR-ladder commissioning source; not a matched repeat",
+        "frame_count": 60,
+        "first_file": "DSC00016.ARW",
+        "last_file": "DSC00075.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 60
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1,
+              "frames": 60
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 60
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 60
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 60
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 60,
+            "first_file": "DSC00016.ARW",
+            "last_file": "DSC00075.ARW",
+            "iso": 100,
+            "exposure_seconds": 1,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "evidence_class": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:36-41",
+          "docs\\proposals\\2026-09-sota-scorecard.md:363-379",
+          "docs\\STATUS.md:2535-2547",
+          "experiments\\cover-default\\slide-series-preregistration.md:9-15"
+        ],
+        "unit_id": "high-res-calibration-slide-2026-09-02"
+      }
+    ],
+    "M3": [
+      {
+        "stack_id": "duck-tape-side-layers-cpl",
+        "path": "D:\\personal\\macro\\duck-tape-side-layers-cpl",
+        "role": "score-bearing fibre/occlusion boundaries",
+        "frame_count": 197,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00197.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 50,
+              "frames": 197
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.625,
+              "frames": 197
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 197
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 197
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 197
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 197,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00197.ARW",
+            "iso": 50,
+            "exposure_seconds": 0.625,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "chia-seeds-cpl",
+        "path": "D:\\personal\\macro\\chia-seeds-cpl",
+        "role": "score-bearing broad-veil crevices",
+        "frame_count": 130,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00130.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 50,
+              "frames": 130
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1.3,
+              "frames": 130
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 130
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 130
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 130
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 130,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00130.ARW",
+            "iso": 50,
+            "exposure_seconds": 1.3,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "flower-bud-with-background-fern-cpl",
+        "path": "D:\\personal\\macro\\flower-bud-with-background-fern-cpl",
+        "role": "score-bearing multilayer boundaries",
+        "frame_count": 299,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00299.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 299
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.125,
+              "frames": 299
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 299
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 299
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 299
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 299,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00299.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.125,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+        "role": "isolated-boundary control",
+        "frame_count": 67,
+        "first_file": "DSC00018.ARW",
+        "last_file": "DSC00084.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 67
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 3.2,
+              "frames": 67
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 67
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 67
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 67
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 67,
+            "first_file": "DSC00018.ARW",
+            "last_file": "DSC00084.ARW",
+            "iso": 100,
+            "exposure_seconds": 3.2,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "NOT HOLDOUT",
+        "evidence_class": "CONTROL — NOT HOLDOUT",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+      }
+    ],
+    "M4": [
+      {
+        "stack_id": "medication-pill-cpl",
+        "path": "D:\\personal\\macro\\medication-pill-cpl",
+        "role": "named input-flat commissioning source",
+        "frame_count": 146,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00146.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 50,
+              "frames": 146
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.2,
+              "frames": 146
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 146
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 146
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 146
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 146,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00146.ARW",
+            "iso": 50,
+            "exposure_seconds": 0.2,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "bee-1-cpl",
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "role": "possible referent of ambiguous 'bee background'",
+        "frame_count": 299,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00299.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 299
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.3333333,
+              "frames": 70
+            },
+            {
+              "value": 0.4,
+              "frames": 166
+            },
+            {
+              "value": 0.5,
+              "frames": 63
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 299
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 299
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 299
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 63,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00063.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.5,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 2,
+            "frame_count": 166,
+            "first_file": "DSC00064.ARW",
+            "last_file": "DSC00229.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.4,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 3,
+            "frame_count": 70,
+            "first_file": "DSC00230.ARW",
+            "last_file": "DSC00299.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.3333333,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — PERFORMANCE",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "bee-2-cpl",
+        "path": "D:\\personal\\macro\\bee-2-cpl",
+        "role": "possible referent of ambiguous 'bee background'",
+        "frame_count": 299,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00299.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 400,
+              "frames": 299
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.04,
+              "frames": 148
+            },
+            {
+              "value": 0.05,
+              "frames": 151
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 299
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 299
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 299
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 151,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00151.ARW",
+            "iso": 400,
+            "exposure_seconds": 0.05,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 2,
+            "frame_count": 148,
+            "first_file": "DSC00152.ARW",
+            "last_file": "DSC00299.ARW",
+            "iso": 400,
+            "exposure_seconds": 0.04,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "INDETERMINATE — DO NOT ASSUME CLEAN",
+        "evidence_class": "INDETERMINATE — DO NOT ASSUME CLEAN",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+      },
+      {
+        "stack_id": "bee-3-cpl",
+        "path": "D:\\personal\\macro\\bee-3-cpl",
+        "role": "possible referent of ambiguous 'bee background'",
+        "frame_count": 299,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00299.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 299
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.1666667,
+              "frames": 151
+            },
+            {
+              "value": 0.2,
+              "frames": 148
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 299
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 299
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 299
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 148,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00148.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.2,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 2,
+            "frame_count": 151,
+            "first_file": "DSC00149.ARW",
+            "last_file": "DSC00299.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.1666667,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "INDETERMINATE — DO NOT ASSUME CLEAN",
+        "evidence_class": "INDETERMINATE — DO NOT ASSUME CLEAN",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:299-303"
+      },
+      {
+        "stack_id": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+        "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+        "role": "possible referent of ambiguous 'bee background'",
+        "frame_count": 576,
+        "first_file": "DSC00296.ARW",
+        "last_file": "DSC00871.ARW",
+        "capture_contiguous": false,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 64
+            },
+            {
+              "value": 200,
+              "frames": 64
+            },
+            {
+              "value": 320,
+              "frames": 64
+            },
+            {
+              "value": 400,
+              "frames": 64
+            },
+            {
+              "value": 50,
+              "frames": 64
+            },
+            {
+              "value": 500,
+              "frames": 64
+            },
+            {
+              "value": 64,
+              "frames": 64
+            },
+            {
+              "value": 640,
+              "frames": 64
+            },
+            {
+              "value": 80,
+              "frames": 64
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1.6,
+              "frames": 576
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 576
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 576
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Normal",
+              "frames": 576
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 32,
+            "first_file": "DSC00296.ARW",
+            "last_file": "DSC00327.ARW",
+            "iso": 400,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 2,
+            "frame_count": 32,
+            "first_file": "DSC00328.ARW",
+            "last_file": "DSC00359.ARW",
+            "iso": 100,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 3,
+            "frame_count": 32,
+            "first_file": "DSC00360.ARW",
+            "last_file": "DSC00391.ARW",
+            "iso": 200,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 4,
+            "frame_count": 32,
+            "first_file": "DSC00392.ARW",
+            "last_file": "DSC00423.ARW",
+            "iso": 320,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 5,
+            "frame_count": 32,
+            "first_file": "DSC00424.ARW",
+            "last_file": "DSC00455.ARW",
+            "iso": 500,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 6,
+            "frame_count": 32,
+            "first_file": "DSC00456.ARW",
+            "last_file": "DSC00487.ARW",
+            "iso": 640,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 7,
+            "frame_count": 32,
+            "first_file": "DSC00488.ARW",
+            "last_file": "DSC00519.ARW",
+            "iso": 80,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 8,
+            "frame_count": 32,
+            "first_file": "DSC00520.ARW",
+            "last_file": "DSC00551.ARW",
+            "iso": 64,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 9,
+            "frame_count": 32,
+            "first_file": "DSC00552.ARW",
+            "last_file": "DSC00583.ARW",
+            "iso": 50,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 10,
+            "frame_count": 32,
+            "first_file": "DSC00584.ARW",
+            "last_file": "DSC00615.ARW",
+            "iso": 100,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 11,
+            "frame_count": 32,
+            "first_file": "DSC00616.ARW",
+            "last_file": "DSC00647.ARW",
+            "iso": 640,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 12,
+            "frame_count": 32,
+            "first_file": "DSC00648.ARW",
+            "last_file": "DSC00679.ARW",
+            "iso": 400,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 13,
+            "frame_count": 32,
+            "first_file": "DSC00680.ARW",
+            "last_file": "DSC00711.ARW",
+            "iso": 50,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 14,
+            "frame_count": 32,
+            "first_file": "DSC00712.ARW",
+            "last_file": "DSC00743.ARW",
+            "iso": 200,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 15,
+            "frame_count": 32,
+            "first_file": "DSC00744.ARW",
+            "last_file": "DSC00775.ARW",
+            "iso": 64,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 16,
+            "frame_count": 32,
+            "first_file": "DSC00776.ARW",
+            "last_file": "DSC00807.ARW",
+            "iso": 500,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 17,
+            "frame_count": 32,
+            "first_file": "DSC00808.ARW",
+            "last_file": "DSC00839.ARW",
+            "iso": 80,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 18,
+            "frame_count": 32,
+            "first_file": "DSC00840.ARW",
+            "last_file": "DSC00871.ARW",
+            "iso": 320,
+            "exposure_seconds": 1.6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "foam",
+        "path": "D:\\personal\\macro\\foam",
+        "role": "named input-flat commissioning source",
+        "frame_count": 100,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00100.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 1000,
+              "frames": 100
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1.6,
+              "frames": 74
+            },
+            {
+              "value": 2,
+              "frames": 26
+            }
+          ],
+          "aperture": [
+            {
+              "value": 8,
+              "frames": 100
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 100
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 100
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 26,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00026.ARW",
+            "iso": 1000,
+            "exposure_seconds": 2,
+            "aperture": 8,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 2,
+            "frame_count": 74,
+            "first_file": "DSC00027.ARW",
+            "last_file": "DSC00100.ARW",
+            "iso": 1000,
+            "exposure_seconds": 1.6,
+            "aperture": 8,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "coffee-bubbles",
+        "path": "D:\\personal\\macro\\coffee-bubbles",
+        "role": "named input-flat commissioning source",
+        "frame_count": 19,
+        "first_file": "DSC00034.ARW",
+        "last_file": "DSC00052.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 1000,
+              "frames": 19
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 2.5,
+              "frames": 19
+            }
+          ],
+          "aperture": [
+            {
+              "value": 8,
+              "frames": 19
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 19
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 19
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 19,
+            "first_file": "DSC00034.ARW",
+            "last_file": "DSC00052.ARW",
+            "iso": 1000,
+            "exposure_seconds": 2.5,
+            "aperture": 8,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "NOT HOLDOUT",
+        "evidence_class": "DEVELOPMENT — NOT HOLDOUT",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+      },
+      {
+        "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+        "role": "burned flat-path commissioning source; cannot score",
+        "frame_count": 65,
+        "first_file": "DSC00015.ARW",
+        "last_file": "DSC00079.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 65
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 6,
+              "frames": 65
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 65
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 65
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 65
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 65,
+            "first_file": "DSC00015.ARW",
+            "last_file": "DSC00079.ARW",
+            "iso": 100,
+            "exposure_seconds": 6,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "evidence_class": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:36-41",
+          "docs\\proposals\\2026-09-sota-scorecard.md:363-379",
+          "docs\\STATUS.md:2535-2547",
+          "experiments\\cover-default\\slide-series-preregistration.md:9-15"
+        ],
+        "unit_id": "high-res-calibration-slide-2026-09-02"
+      },
+      {
+        "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+        "role": "burned flat-path commissioning source; cannot score",
+        "frame_count": 61,
+        "first_file": "DSC00020.ARW",
+        "last_file": "DSC00080.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 61
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 2.5,
+              "frames": 61
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 61
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 61
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 61
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 61,
+            "first_file": "DSC00020.ARW",
+            "last_file": "DSC00080.ARW",
+            "iso": 100,
+            "exposure_seconds": 2.5,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "evidence_class": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:36-41",
+          "docs\\proposals\\2026-09-sota-scorecard.md:363-379",
+          "docs\\STATUS.md:2535-2547",
+          "experiments\\cover-default\\slide-series-preregistration.md:9-15"
+        ],
+        "unit_id": "high-res-calibration-slide-2026-09-02"
+      },
+      {
+        "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+        "role": "burned flat-path commissioning source; cannot score",
+        "frame_count": 60,
+        "first_file": "DSC00016.ARW",
+        "last_file": "DSC00075.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 60
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1,
+              "frames": 60
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 60
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 60
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 60
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 60,
+            "first_file": "DSC00016.ARW",
+            "last_file": "DSC00075.ARW",
+            "iso": 100,
+            "exposure_seconds": 1,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "evidence_class": "BURNED — DELIBERATELY SPENT DEVELOPMENT, NOT HOLDOUT",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:36-41",
+          "docs\\proposals\\2026-09-sota-scorecard.md:363-379",
+          "docs\\STATUS.md:2535-2547",
+          "experiments\\cover-default\\slide-series-preregistration.md:9-15"
+        ],
+        "unit_id": "high-res-calibration-slide-2026-09-02"
+      },
+      {
+        "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+        "role": "score-bearing structured-edge fabric source",
+        "frame_count": 210,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00210.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 210
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1.3,
+              "frames": 210
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 210
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 210
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 210
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 210,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00210.ARW",
+            "iso": 100,
+            "exposure_seconds": 1.3,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+        "role": "score-bearing structured-edge fabric source",
+        "frame_count": 150,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00150.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 150
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1.3,
+              "frames": 150
+            }
+          ],
+          "aperture": [
+            {
+              "value": 8,
+              "frames": 150
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 150
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 150
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 150,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00150.ARW",
+            "iso": 100,
+            "exposure_seconds": 1.3,
+            "aperture": 8,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+        "role": "score-bearing structured-edge fabric source",
+        "frame_count": 109,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00109.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 109
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1.3,
+              "frames": 109
+            }
+          ],
+          "aperture": [
+            {
+              "value": 11,
+              "frames": 109
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 109
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 109
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 109,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00109.ARW",
+            "iso": 100,
+            "exposure_seconds": 1.3,
+            "aperture": 11,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "duck-tape-side-layers-cpl",
+        "path": "D:\\personal\\macro\\duck-tape-side-layers-cpl",
+        "role": "score-bearing structured-edge source",
+        "frame_count": 197,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00197.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 50,
+              "frames": 197
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.625,
+              "frames": 197
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 197
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 197
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 197
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 197,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00197.ARW",
+            "iso": 50,
+            "exposure_seconds": 0.625,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "flower-bud-with-background-fern-cpl",
+        "path": "D:\\personal\\macro\\flower-bud-with-background-fern-cpl",
+        "role": "score-bearing structured-edge source",
+        "frame_count": 299,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00299.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 299
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.125,
+              "frames": 299
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 299
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 299
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 299
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 299,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00299.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.125,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — QUALITY",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+        "role": "burned detector-commissioning source",
+        "frame_count": 91,
+        "first_file": "DSC00026.ARW",
+        "last_file": "DSC00116.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 91
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1,
+              "frames": 91
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 91
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 91
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 91
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 91,
+            "first_file": "DSC00026.ARW",
+            "last_file": "DSC00116.ARW",
+            "iso": 100,
+            "exposure_seconds": 1,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "evidence_class": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:304-308",
+          "docs\\proposals\\2026-09-sota-scorecard.md:345-360",
+          "experiments\\PHASE1-DESIGN\\quarantine\\f5658e5d-grid-sw4-exposed\\ACCESS.md:6-18"
+        ],
+        "unit_id": "calibration-grid-2026-09-01"
+      },
+      {
+        "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+        "role": "burned detector-commissioning source",
+        "frame_count": 55,
+        "first_file": "DSC00015.ARW",
+        "last_file": "DSC00069.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 55
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1,
+              "frames": 55
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 55
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 55
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 55
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 55,
+            "first_file": "DSC00015.ARW",
+            "last_file": "DSC00069.ARW",
+            "iso": 100,
+            "exposure_seconds": 1,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "evidence_class": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:304-308",
+          "docs\\proposals\\2026-09-sota-scorecard.md:345-360",
+          "experiments\\PHASE1-DESIGN\\quarantine\\f5658e5d-grid-sw4-exposed\\ACCESS.md:6-18"
+        ],
+        "unit_id": "calibration-grid-2026-09-01"
+      },
+      {
+        "stack_id": "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+        "role": "burned detector-commissioning source",
+        "frame_count": 46,
+        "first_file": "DSC00024.ARW",
+        "last_file": "DSC00069.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 46
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1,
+              "frames": 46
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 46
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 46
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 46
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 46,
+            "first_file": "DSC00024.ARW",
+            "last_file": "DSC00069.ARW",
+            "iso": 100,
+            "exposure_seconds": 1,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "evidence_class": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:304-308",
+          "docs\\proposals\\2026-09-sota-scorecard.md:345-360",
+          "experiments\\PHASE1-DESIGN\\quarantine\\f5658e5d-grid-sw4-exposed\\ACCESS.md:6-18"
+        ],
+        "unit_id": "calibration-grid-2026-09-01"
+      },
+      {
+        "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+        "role": "burned detector-commissioning source",
+        "frame_count": 23,
+        "first_file": "DSC00007.ARW",
+        "last_file": "DSC00029.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 23
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1,
+              "frames": 23
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 23
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 23
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 23
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 23,
+            "first_file": "DSC00007.ARW",
+            "last_file": "DSC00029.ARW",
+            "iso": 100,
+            "exposure_seconds": 1,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "evidence_class": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:304-308",
+          "docs\\proposals\\2026-09-sota-scorecard.md:345-360",
+          "experiments\\PHASE1-DESIGN\\quarantine\\f5658e5d-grid-sw4-exposed\\ACCESS.md:6-18"
+        ],
+        "unit_id": "calibration-grid-2026-09-01"
+      },
+      {
+        "stack_id": "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+        "role": "burned detector-commissioning source",
+        "frame_count": 27,
+        "first_file": "DSC00008.ARW",
+        "last_file": "DSC00034.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 27
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 1,
+              "frames": 27
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 27
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 27
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 27
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 27,
+            "first_file": "DSC00008.ARW",
+            "last_file": "DSC00034.ARW",
+            "iso": 100,
+            "exposure_seconds": 1,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "evidence_class": "BURNED — QUARANTINED DEVELOPMENT ONLY",
+        "source": [
+          "docs\\proposals\\2026-09-sota-scorecard.md:304-308",
+          "docs\\proposals\\2026-09-sota-scorecard.md:345-360",
+          "experiments\\PHASE1-DESIGN\\quarantine\\f5658e5d-grid-sw4-exposed\\ACCESS.md:6-18"
+        ],
+        "unit_id": "calibration-grid-2026-09-01"
+      }
+    ],
+    "M11": [
+      {
+        "stack_id": "bee-1-cpl",
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "role": "N=299, first N=33/100, and N=96/97/98/99 prefixes",
+        "frame_count": 299,
+        "first_file": "DSC00001.ARW",
+        "last_file": "DSC00299.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 100,
+              "frames": 299
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.3333333,
+              "frames": 70
+            },
+            {
+              "value": 0.4,
+              "frames": 166
+            },
+            {
+              "value": 0.5,
+              "frames": 63
+            }
+          ],
+          "aperture": [
+            {
+              "value": 5.6,
+              "frames": 299
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 299
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 299
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 63,
+            "first_file": "DSC00001.ARW",
+            "last_file": "DSC00063.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.5,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 2,
+            "frame_count": 166,
+            "first_file": "DSC00064.ARW",
+            "last_file": "DSC00229.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.4,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 3,
+            "frame_count": 70,
+            "first_file": "DSC00230.ARW",
+            "last_file": "DSC00299.ARW",
+            "iso": 100,
+            "exposure_seconds": 0.3333333,
+            "aperture": 5.6,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "CLEAN REGISTERED HOLDOUT",
+        "evidence_class": "HOLDOUT — PERFORMANCE",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:315-334"
+      },
+      {
+        "stack_id": "coffee-bean",
+        "path": "D:\\personal\\macro\\coffee-bean",
+        "role": "N=105",
+        "frame_count": 105,
+        "first_file": "DSC00016.ARW",
+        "last_file": "DSC00120.ARW",
+        "capture_contiguous": true,
+        "settings": {
+          "iso": [
+            {
+              "value": 50,
+              "frames": 105
+            }
+          ],
+          "exposure_seconds": [
+            {
+              "value": 0.625,
+              "frames": 65
+            },
+            {
+              "value": 0.8,
+              "frames": 40
+            }
+          ],
+          "aperture": [
+            {
+              "value": 8,
+              "frames": 105
+            }
+          ],
+          "image_stabilization": [
+            {
+              "value": "On",
+              "frames": 105
+            }
+          ],
+          "release_mode": [
+            {
+              "value": "Exposure Bracketing",
+              "frames": 105
+            }
+          ]
+        },
+        "magnification_status": "not_recoverable_from_metadata",
+        "relevant_segments": [
+          {
+            "segment_index": 1,
+            "frame_count": 40,
+            "first_file": "DSC00016.ARW",
+            "last_file": "DSC00055.ARW",
+            "iso": 50,
+            "exposure_seconds": 0.8,
+            "aperture": 8,
+            "image_stabilization": 1
+          },
+          {
+            "segment_index": 2,
+            "frame_count": 65,
+            "first_file": "DSC00056.ARW",
+            "last_file": "DSC00120.ARW",
+            "iso": 50,
+            "exposure_seconds": 0.625,
+            "aperture": 8,
+            "image_stabilization": 1
+          }
+        ],
+        "ruling": "NOT HOLDOUT",
+        "evidence_class": "FIXED HISTORICAL BENCHMARK — NOT HOLDOUT",
+        "source": "docs\\proposals\\2026-09-sota-scorecard.md:321-336"
+      }
+    ]
+  }
+}
