@@ -1,0 +1,427 @@
+{
+  "commissioning": {
+    "determinism": {
+      "hash_gate": {
+        "baseline_sha256": "790570CF966ADDF883D1E1BF8CE093A0978676540EAB447D3CFA159A5EE8B8CC",
+        "lsb_after": 6576,
+        "lsb_before": 6577,
+        "lsb_coordinate": [
+          2344,
+          3516,
+          1
+        ],
+        "lsb_sha256": "15098E47164E77BC1C70D7E2F373631B74537DB999CADCE72E3C9AE250190061",
+        "one_output_lsb_went_red": true,
+        "plant_pixels_went_red": true,
+        "plant_went_red": true,
+        "planted_sha256": "8701BB33D55BBFF13878F1C488970429CDB7BE1D73D72A768640AA3AB7BE1CDD",
+        "provenance_stayed_green": true,
+        "restore_pixels_returned_green": true,
+        "restore_returned_green": true,
+        "restored_sha256": "790570CF966ADDF883D1E1BF8CE093A0978676540EAB447D3CFA159A5EE8B8CC"
+      },
+      "status": "COMMISSIONED"
+    },
+    "memory": {
+      "status": "COMMISSIONED",
+      "verdict": {
+        "null_peak_private_committed_bytes": 80920576,
+        "null_stayed_below_one_gib": true,
+        "plant_peak_private_committed_bytes": 7544352768,
+        "plant_peak_process_count": 2,
+        "seven_gib_child_exceeded_six_gib_bar": true
+      }
+    },
+    "smoke": {
+      "status": "PASS",
+      "verdict": {
+        "all_runs_valid": true,
+        "repeat_byte_identical": true,
+        "repeat_count": 2,
+        "repeat_output_hashes": [
+          "0D1CC91E7715B2723193B7B70EC2E43CB3990C6EA8290C9EAE8FF469DA4875D4"
+        ],
+        "repeat_pixel_hashes": [
+          "1E8DB3888022EE7A4CC55C0966E30264C860068A5CBCE2E8E520774CF60F5AFD"
+        ]
+      }
+    }
+  },
+  "could_not_determine": [
+    {
+      "item": "M11 joint requirement",
+      "reason": "M11 remains UNMEASURED; M12 can nevertheless close FAIL if an independent M12 hard bar fails."
+    },
+    {
+      "item": "comparative common-TIFF memory",
+      "reason": "No registered common-TIFF product/comparator arm exists; the M12 absolute bars apply to the native product arm."
+    },
+    {
+      "item": "true unsampled instantaneous memory peak",
+      "reason": "A sampled monitor reports an observed lower bound. Any sampling gaps can hide a higher peak but cannot manufacture an observed above-bar allocation."
+    }
+  ],
+  "evidence_tag": "VERIFIED",
+  "formal_m12": {
+    "hard_failures": [
+      "absolute-memory"
+    ],
+    "m11_joint_verdict": "UNMEASURED",
+    "reason_if_unmeasured": null,
+    "verdict": "FAIL"
+  },
+  "generated_utc": "2026-09-04T20:39:45.111808+00:00",
+  "host_conditions": {
+    "campaign": {
+      "accepted_runs_all_passed": true,
+      "maximum_accepted_external_busy_fraction": 0.09911974767219173,
+      "rejected_run_count": 97,
+      "total_preload_rejected_samples": 5,
+      "total_wait_seconds": 1032.9528889995418
+    },
+    "end": {
+      "evidence_tag": "VERIFIED",
+      "generated_utc": "2026-09-04T20:39:39.889905+00:00",
+      "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+      "sample": {
+        "completed_utc": "2026-09-04T20:39:44.901989+00:00",
+        "elapsed_seconds": 5.01956289994996,
+        "logical_processors": 32,
+        "memory_end": {
+          "available_page_file_bytes": 73679020032,
+          "available_physical_bytes": 37847957504,
+          "available_virtual_bytes": 140732202598400,
+          "memory_load_percent": 42,
+          "total_page_file_bytes": 117633830912,
+          "total_physical_bytes": 66094223360,
+          "total_virtual_bytes": 140737488224256
+        },
+        "memory_start": {
+          "available_page_file_bytes": 73673699328,
+          "available_physical_bytes": 37842935808,
+          "available_virtual_bytes": 140732202598400,
+          "memory_load_percent": 42,
+          "total_page_file_bytes": 117633830912,
+          "total_physical_bytes": 66094223360,
+          "total_virtual_bytes": 140737488224256
+        },
+        "requested_seconds": 5.0,
+        "started_utc": "2026-09-04T20:39:39.889905+00:00",
+        "top_process_cpu": [
+          {
+            "capacity_fraction": 0.14746988726994123,
+            "cpu_seconds": 23.6875,
+            "name": "copilot.exe",
+            "parent_pid": 36064,
+            "pid": 11336
+          },
+          {
+            "capacity_fraction": 0.0024318912808367617,
+            "cpu_seconds": 0.390625,
+            "name": "Code.exe",
+            "parent_pid": 6972,
+            "pid": 10812
+          },
+          {
+            "capacity_fraction": 0.0010700321635681751,
+            "cpu_seconds": 0.171875,
+            "name": "Code.exe",
+            "parent_pid": 12952,
+            "pid": 6972
+          },
+          {
+            "capacity_fraction": 0.0003891026049338819,
+            "cpu_seconds": 0.0625,
+            "name": "Code.exe",
+            "parent_pid": 6972,
+            "pid": 37952
+          },
+          {
+            "capacity_fraction": 0.00019455130246694095,
+            "cpu_seconds": 0.03125,
+            "name": "Code.exe",
+            "parent_pid": 6972,
+            "pid": 9784
+          },
+          {
+            "capacity_fraction": 9.727565123347048e-05,
+            "cpu_seconds": 0.015625,
+            "name": "Code.exe",
+            "parent_pid": 6972,
+            "pid": 43516
+          },
+          {
+            "capacity_fraction": 9.727565123347048e-05,
+            "cpu_seconds": 0.015625,
+            "name": "copilot.exe",
+            "parent_pid": 11336,
+            "pid": 32516
+          },
+          {
+            "capacity_fraction": 9.727565123347048e-05,
+            "cpu_seconds": 0.015625,
+            "name": "python.exe",
+            "parent_pid": 30456,
+            "pid": 41232
+          }
+        ],
+        "whole_host_busy_cpu_seconds": 26.0625,
+        "whole_host_busy_fraction": 0.16335324649887376,
+        "whole_host_busy_fraction_of_wall_capacity": 0.16225578625742876
+      },
+      "schema": 1
+    },
+    "start": {
+      "evidence_tag": "VERIFIED",
+      "gate": {
+        "attempts": [
+          {
+            "accepted": true,
+            "completed_utc": "2026-09-04T11:00:09.064950+00:00",
+            "elapsed_seconds": 5.015970399952494,
+            "logical_processors": 32,
+            "memory_end": {
+              "available_page_file_bytes": 86374576128,
+              "available_physical_bytes": 47792947200,
+              "available_virtual_bytes": 140732206792704,
+              "memory_load_percent": 27,
+              "total_page_file_bytes": 117633830912,
+              "total_physical_bytes": 66094223360,
+              "total_virtual_bytes": 140737488224256
+            },
+            "memory_start": {
+              "available_page_file_bytes": 86257057792,
+              "available_physical_bytes": 47668408320,
+              "available_virtual_bytes": 140732206792704,
+              "memory_load_percent": 27,
+              "total_page_file_bytes": 117633830912,
+              "total_physical_bytes": 66094223360,
+              "total_virtual_bytes": 140737488224256
+            },
+            "requested_seconds": 5.0,
+            "started_utc": "2026-09-04T11:00:04.048016+00:00",
+            "top_process_cpu": [
+              {
+                "capacity_fraction": 0.02161066131909922,
+                "cpu_seconds": 3.46875,
+                "name": "copilot.exe",
+                "parent_pid": 36064,
+                "pid": 11336
+              },
+              {
+                "capacity_fraction": 0.00447788477783137,
+                "cpu_seconds": 0.71875,
+                "name": "Code.exe",
+                "parent_pid": 6972,
+                "pid": 10812
+              },
+              {
+                "capacity_fraction": 0.0010707985338292406,
+                "cpu_seconds": 0.171875,
+                "name": "Code.exe",
+                "parent_pid": 6972,
+                "pid": 43516
+              },
+              {
+                "capacity_fraction": 0.0004867266062860185,
+                "cpu_seconds": 0.078125,
+                "name": "Code.exe",
+                "parent_pid": 12952,
+                "pid": 6972
+              },
+              {
+                "capacity_fraction": 9.73453212572037e-05,
+                "cpu_seconds": 0.015625,
+                "name": "Code.exe",
+                "parent_pid": 6972,
+                "pid": 9784
+              },
+              {
+                "capacity_fraction": 9.73453212572037e-05,
+                "cpu_seconds": 0.015625,
+                "name": "Code.exe",
+                "parent_pid": 6972,
+                "pid": 37952
+              },
+              {
+                "capacity_fraction": 9.73453212572037e-05,
+                "cpu_seconds": 0.015625,
+                "name": "Code.exe",
+                "parent_pid": 6972,
+                "pid": 45428
+              },
+              {
+                "capacity_fraction": 9.73453212572037e-05,
+                "cpu_seconds": 0.015625,
+                "name": "python.exe",
+                "parent_pid": 45592,
+                "pid": 26036
+              }
+            ],
+            "whole_host_busy_cpu_seconds": 6.609375,
+            "whole_host_busy_fraction": 0.04126024190401873,
+            "whole_host_busy_fraction_of_wall_capacity": 0.04117707089179716
+          }
+        ],
+        "rejected_sample_count": 0,
+        "retry_seconds": 30.0,
+        "sample_seconds": 5.0,
+        "threshold": 0.15,
+        "wait_seconds": 5.016066400043201
+      },
+      "generated_utc": "2026-09-04T11:00:09.064950+00:00",
+      "host": {
+        "logical_processors": 32,
+        "memory": {
+          "available_page_file_bytes": 86364880896,
+          "available_physical_bytes": 47771389952,
+          "available_virtual_bytes": 140732196388864,
+          "memory_load_percent": 27,
+          "total_page_file_bytes": 117633830912,
+          "total_physical_bytes": 66094223360,
+          "total_virtual_bytes": 140737488224256
+        },
+        "node": "Chris",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "workspace_drive": {
+          "free": 908999405568,
+          "total": 1999270572032,
+          "used": 1090271166464
+        }
+      },
+      "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+      "phase": "campaign-start",
+      "schema": 1
+    }
+  },
+  "integrity": {
+    "artifacts": {
+      "build": {
+        "bytes": 1086,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\build.json",
+        "sha256": "C5C0F075A8EA9B524133DEE91E298E1229B31D2010ED5F075C1B2F37A51D8155"
+      },
+      "determinism_commission": {
+        "bytes": 22232,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\determinism-commission.json",
+        "sha256": "C0A31ADDF58904FF844161734D717704E6F1FBD302C87E3988C576E3D8956DCF"
+      },
+      "host_end": {
+        "bytes": 2712,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\host-end.json",
+        "sha256": "61957340F73451794B8F1522BF8C182F585CC8B59F8D34A61DAABD87FCFB3722"
+      },
+      "host_start": {
+        "bytes": 3846,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\host-start.json",
+        "sha256": "DB5299F261725563D536EEE6E25668255CE1FE8AC53CA7786CA246A712154E62"
+      },
+      "input_exif": {
+        "bytes": 3719829,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\input-exif.json",
+        "sha256": "88BF2EC3297F0FB962C78021740F2C59FA6E2C4D3DBA60D144D98F53ABCFA4F5"
+      },
+      "input_manifest": {
+        "bytes": 123598,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\input-manifest.json",
+        "sha256": "42532FB4BD17D626E7328636F7EB50F7FEF1F5E1AE25663D5042BD825A626F99"
+      },
+      "memory_commission": {
+        "bytes": 7943,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\memory-commission.json",
+        "sha256": "DB2572CAE5E1C39CA6FC3DE9BC6A2F65ABE22CD29A05F47647E4E3A99BAA6FAF"
+      },
+      "preflight": {
+        "bytes": 4751,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\preflight.json",
+        "sha256": "31E16D38DA95C92ED03F8975D17912DF326E8CF2CCD1DF4B0529BB0945CE84B3"
+      },
+      "read_only_after": {
+        "bytes": 797,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-after.json",
+        "sha256": "D5577CE12103A5DD7649AD4C9766472E6A844E6D0157595BB8B337AB520DC92F"
+      },
+      "read_only_before": {
+        "bytes": 798,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-before.json",
+        "sha256": "6F8396AE2A54B9C515EACEE5DC3A2C6757244ADE8EE8CCA51F922FDC76838E88"
+      },
+      "records": {
+        "bytes": 1481270,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records.jsonl",
+        "sha256": "563E40F7B5CEBACC4BDA0AA175159F2F614886A2C6C1A148EB45049F6C05F06B"
+      },
+      "registration": {
+        "bytes": 10920,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\registration.json",
+        "sha256": "282E2FE10CD8D2835A8763D71C82C062FF2D0AD68FCEF6CB70B247CD3A7A4BC7"
+      },
+      "run_manifest": {
+        "bytes": 7934,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\RUN-MANIFEST.json",
+        "sha256": "BFFFF91C0FB01854E30C0C34481E99FEA524E9BF314EFA8FC198D0B623238DB5"
+      },
+      "smoke": {
+        "bytes": 21155,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\smoke.json",
+        "sha256": "A38FB3AC38018E0A7463C57BF983AB19136D42F67766926BFB4C51A6D99B6C54"
+      },
+      "summary": {
+        "bytes": 15784,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\summary.json",
+        "sha256": "785945ED1895FD159D38635604AA3F9CE22E3EE883878BF52C534F28108981C7"
+      }
+    },
+    "mismatched_measured_commits": {},
+    "pass": true,
+    "record_count": 171,
+    "record_measured_commits": [
+      "8009447e059febb8f9c59fda509f141835d6abdb"
+    ]
+  },
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "read_only_inputs": {
+    "comparison": {
+      "D:\\edited\\macro": {
+        "after": {
+          "bytes": 141333902406,
+          "directory_count": 5,
+          "file_count": 387,
+          "item_count": 392,
+          "metadata_sha256": "40003B9F15D0AE552AD2947E22C29122664E0BDCD7E690D53FE02341DCA12FD1",
+          "path": "D:\\edited\\macro"
+        },
+        "before": {
+          "bytes": 141333902406,
+          "directory_count": 5,
+          "file_count": 387,
+          "item_count": 392,
+          "metadata_sha256": "40003B9F15D0AE552AD2947E22C29122664E0BDCD7E690D53FE02341DCA12FD1",
+          "path": "D:\\edited\\macro"
+        },
+        "unchanged": true
+      },
+      "D:\\personal\\macro": {
+        "after": {
+          "bytes": 487169829957,
+          "directory_count": 82,
+          "file_count": 10724,
+          "item_count": 10806,
+          "metadata_sha256": "46CD6FE5C018AE4ACEC946170EEEC760DBF5B0C8954CA561368F92B9184A5C42",
+          "path": "D:\\personal\\macro"
+        },
+        "before": {
+          "bytes": 487169829957,
+          "directory_count": 82,
+          "file_count": 10724,
+          "item_count": 10806,
+          "metadata_sha256": "46CD6FE5C018AE4ACEC946170EEEC760DBF5B0C8954CA561368F92B9184A5C42",
+          "path": "D:\\personal\\macro"
+        },
+        "unchanged": true
+      }
+    },
+    "unchanged": true
+  },
+  "schema": 1
+}

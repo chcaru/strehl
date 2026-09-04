@@ -1,0 +1,801 @@
+{
+  "schema": 1,
+  "evidence_tag": "VERIFIED",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "generated_utc": "2026-09-04T20:39:44.901989+00:00",
+  "campaign_status": {
+    "registered_campaign_complete": false,
+    "stopped_at_position": "warmup:N299:W16:R0",
+    "reason": "The formal result was already conclusively FAIL on two independent hard bars, while shared-host work repeatedly prevented the remaining N299/W16 position from passing the preregistered load gate.",
+    "formal_m12_verdict": "FAIL",
+    "hard_failures": [
+      "absolute-memory",
+      "cross-worker-scaling-invariance"
+    ],
+    "logic": "M12 is conjunctive. A verified failure of either the <=6 GiB absolute-memory bar or cross-worker byte invariance is sufficient to make the overall axis FAIL; missing arms cannot reverse it."
+  },
+  "provenance": {
+    "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\RUN-MANIFEST.json",
+    "manifest_sha256": "BFFFF91C0FB01854E30C0C34481E99FEA524E9BF314EFA8FC198D0B623238DB5",
+    "records_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records.jsonl",
+    "records_sha256": "563E40F7B5CEBACC4BDA0AA175159F2F614886A2C6C1A148EB45049F6C05F06B",
+    "harness_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+    "binary": {
+      "bytes": 9864704,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\bin\\strehl.exe",
+      "sha256": "DD5C98C2FF091DFFBF08A580E41C5C5F2C2F6E6996BB831CFC499ED833996A24",
+      "version": "strehl 0.0.0 (8009447e059f)"
+    },
+    "input_manifest": {
+      "capture_manifest_sha256": {
+        "bee-1-cpl": "E489BED321811F27C590B6F13312715E13DEFA52BC28D41DF338120009FDF58F",
+        "coffee-bean": "416068118897A1B07C9794F1B8E00CB022A78573BFB7741D1EFFA3734F0A8B38"
+      },
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\input-manifest.json",
+      "sha256": "42532FB4BD17D626E7328636F7EB50F7FEF1F5E1AE25663D5042BD825A626F99"
+    }
+  },
+  "registered_bars": {
+    "evidence_tag": "INHERITED",
+    "source": "docs/proposals/2026-09-sota-scorecard.md",
+    "source_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+    "source_lines": "1038-1103",
+    "absolute_process_tree_private_committed_bytes_max": 6442450944,
+    "peak_n299_over_peak_n33_max": 1.1,
+    "fixed_worker_distinct_output_hashes_max": 1,
+    "cross_worker_distinct_output_hashes_max": 1,
+    "n_mod_4_per_frame_spread_max": 0.02
+  },
+  "record_accounting": {
+    "evidence_tag": "VERIFIED",
+    "total_records": 171,
+    "accepted_records": 74,
+    "rejected_for_host_load": 97,
+    "invalid_records": 0,
+    "accepted_matrix_positions": 74,
+    "expected_matrix_positions": 105,
+    "missing_matrix_positions": [
+      "scored:N299:W16:R1",
+      "scored:N299:W16:R2",
+      "scored:N299:W16:R3",
+      "scored:N299:W16:R4",
+      "scored:N299:W16:R5",
+      "scored:N299:W16:R6",
+      "scored:N299:W1:R1",
+      "scored:N299:W1:R2",
+      "scored:N299:W1:R3",
+      "scored:N299:W1:R4",
+      "scored:N299:W1:R5",
+      "scored:N299:W1:R6",
+      "scored:N299:W2:R1",
+      "scored:N299:W2:R2",
+      "scored:N299:W2:R3",
+      "scored:N299:W2:R4",
+      "scored:N299:W2:R5",
+      "scored:N299:W2:R6",
+      "scored:N299:W4:R1",
+      "scored:N299:W4:R2",
+      "scored:N299:W4:R3",
+      "scored:N299:W4:R4",
+      "scored:N299:W4:R5",
+      "scored:N299:W4:R6",
+      "scored:N299:W8:R1",
+      "scored:N299:W8:R2",
+      "scored:N299:W8:R3",
+      "scored:N299:W8:R4",
+      "scored:N299:W8:R5",
+      "scored:N299:W8:R6",
+      "warmup:N299:W16:R0"
+    ],
+    "accepted_modulo_positions": 0,
+    "expected_modulo_positions": 28,
+    "missing_modulo_positions": [
+      "modulo-scored:N96:W16:R1",
+      "modulo-scored:N96:W16:R2",
+      "modulo-scored:N96:W16:R3",
+      "modulo-scored:N96:W16:R4",
+      "modulo-scored:N96:W16:R5",
+      "modulo-scored:N96:W16:R6",
+      "modulo-scored:N97:W16:R1",
+      "modulo-scored:N97:W16:R2",
+      "modulo-scored:N97:W16:R3",
+      "modulo-scored:N97:W16:R4",
+      "modulo-scored:N97:W16:R5",
+      "modulo-scored:N97:W16:R6",
+      "modulo-scored:N98:W16:R1",
+      "modulo-scored:N98:W16:R2",
+      "modulo-scored:N98:W16:R3",
+      "modulo-scored:N98:W16:R4",
+      "modulo-scored:N98:W16:R5",
+      "modulo-scored:N98:W16:R6",
+      "modulo-scored:N99:W16:R1",
+      "modulo-scored:N99:W16:R2",
+      "modulo-scored:N99:W16:R3",
+      "modulo-scored:N99:W16:R4",
+      "modulo-scored:N99:W16:R5",
+      "modulo-scored:N99:W16:R6",
+      "modulo-warmup:N96:W16:R0",
+      "modulo-warmup:N97:W16:R0",
+      "modulo-warmup:N98:W16:R0",
+      "modulo-warmup:N99:W16:R0"
+    ]
+  },
+  "cells": {
+    "N33-W1": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "E36EE6FDC9B6CF542059793847C09B79626E7F87C85732BD261E9EC6A36395C3"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "D42D0552A5FB5710BA4AE33C305721F8E98C695B11C89CDFB34859B7982B9F1D"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 2411933696,
+      "maximum_kernel_job_peak_memory_bytes": 2411933696,
+      "maximum_sampled_process_tree_private_committed_gib": 2.246288299560547,
+      "maximum_kernel_job_peak_memory_gib": 2.246288299560547,
+      "memory_ceiling_verdict": "PASS",
+      "wall_seconds": [
+        28.410232299997006,
+        28.37034379999386,
+        28.49070840002969,
+        28.750740799994674,
+        28.75063920003595,
+        28.730323199997656
+      ],
+      "minimum_sampling_coverage": 0.9631176061238692,
+      "maximum_sampling_gap_ms": 41.22280003502965,
+      "maximum_accepted_external_busy_fraction": 0.09308556629400622
+    },
+    "N33-W2": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "545B10BC143BF5CDFCD737BBB0FD7E5FE64A1F0002E1A2B45780C55EB0DF9A55"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "78D78FC0A8C284C343EAB7472B34A3990BC3D8E18D21DDCFEF70A39E3BCBBB45"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 4804431872,
+      "maximum_kernel_job_peak_memory_bytes": 4804636672,
+      "maximum_sampled_process_tree_private_committed_gib": 4.474475860595703,
+      "maximum_kernel_job_peak_memory_gib": 4.474666595458984,
+      "memory_ceiling_verdict": "PASS",
+      "wall_seconds": [
+        18.38078609999502,
+        17.960541300009936,
+        18.250605100009125,
+        18.150844100047834,
+        18.620628700009547,
+        18.210797199979424
+      ],
+      "minimum_sampling_coverage": 0.9393433500278241,
+      "maximum_sampling_gap_ms": 40.98540003178641,
+      "maximum_accepted_external_busy_fraction": 0.08480388003758382
+    },
+    "N33-W4": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "F3E54ADE7C64A3DB231CC3E183B3F15D5F9002750BF77530A4539F2A4FD654C2"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 9589800960,
+      "maximum_kernel_job_peak_memory_bytes": 9589813248,
+      "maximum_sampled_process_tree_private_committed_gib": 8.931198120117188,
+      "maximum_kernel_job_peak_memory_gib": 8.931209564208984,
+      "memory_ceiling_verdict": "FAIL",
+      "wall_seconds": [
+        13.170282900042366,
+        13.360234000021592,
+        12.970655800017994,
+        13.600589599984232,
+        13.130352400010452,
+        13.720731599954888
+      ],
+      "minimum_sampling_coverage": 0.8973051711580481,
+      "maximum_sampling_gap_ms": 43.70320000452921,
+      "maximum_accepted_external_busy_fraction": 0.08228618449021485
+    },
+    "N33-W8": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "914AAA852A555729BFEA710EEF5880D45B35B9392D89CB313F698258BC7B8985"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "2E397E4DD5D5BC1ECD0AC652C446D4700DAE872F55FF50C99694B8392CC9EF8F"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 16761511936,
+      "maximum_kernel_job_peak_memory_bytes": 16762736640,
+      "maximum_sampled_process_tree_private_committed_gib": 15.610374450683594,
+      "maximum_kernel_job_peak_memory_gib": 15.611515045166016,
+      "memory_ceiling_verdict": "FAIL",
+      "wall_seconds": [
+        12.08035479998216,
+        11.570493299979717,
+        11.29049759998452,
+        11.150714999996126,
+        12.270497700024862,
+        11.180504999996629
+      ],
+      "minimum_sampling_coverage": 0.8794788273615635,
+      "maximum_sampling_gap_ms": 44.39609998371452,
+      "maximum_accepted_external_busy_fraction": 0.09712451735161165
+    },
+    "N33-W16": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "5D5FD76C5141E59BE2EC8949AC59817A3FD94797F1C1D349542D8646B4B50676"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "A9913288AE46442E553E598347150026AD503E94F5EB5DDD8EA2375E6FE9C88D"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 26195660800,
+      "maximum_kernel_job_peak_memory_bytes": 26195722240,
+      "maximum_sampled_process_tree_private_committed_gib": 24.396610260009766,
+      "maximum_kernel_job_peak_memory_gib": 24.39666748046875,
+      "memory_ceiling_verdict": "FAIL",
+      "wall_seconds": [
+        11.020812599977944,
+        11.24028080003336,
+        10.570356999989599,
+        10.88103929994395,
+        10.810803100001067,
+        10.750790400023106
+      ],
+      "minimum_sampling_coverage": 0.8462222222222222,
+      "maximum_sampling_gap_ms": 42.31200000504032,
+      "maximum_accepted_external_busy_fraction": 0.09057304033249583
+    },
+    "N105-W1": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "C521C9A20AA8B1B1CCA54CC231351F109BC29AAC83D7FCC8324ED0024BF241E9"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "C9EA803BC5FC70F1D028BDDF057AB08E181E4D1C6977EC736823C78F267499A1"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 2411720704,
+      "maximum_kernel_job_peak_memory_bytes": 2411720704,
+      "maximum_sampled_process_tree_private_committed_gib": 2.2460899353027344,
+      "maximum_kernel_job_peak_memory_gib": 2.2460899353027344,
+      "memory_ceiling_verdict": "PASS",
+      "wall_seconds": [
+        90.42051129997708,
+        91.35055350000039,
+        90.330532699998,
+        90.13052609999431,
+        89.73041150002973,
+        90.08052329998463
+      ],
+      "minimum_sampling_coverage": 0.9622808963834036,
+      "maximum_sampling_gap_ms": 46.88549996353686,
+      "maximum_accepted_external_busy_fraction": 0.09014039526317665
+    },
+    "N105-W2": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "9E678339C3ABBFA602F7A9800E769E92C0CC1DD5859E6467C19E6F6462223758"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "CDCDB21783F0657A1656BE72452EB40388B1A40F6B7A588890861023413C6D1B"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 4805816320,
+      "maximum_kernel_job_peak_memory_bytes": 4805816320,
+      "maximum_sampled_process_tree_private_committed_gib": 4.475765228271484,
+      "maximum_kernel_job_peak_memory_gib": 4.475765228271484,
+      "memory_ceiling_verdict": "PASS",
+      "wall_seconds": [
+        56.22039039997617,
+        56.17031459999271,
+        56.040589199983515,
+        55.080529499973636,
+        55.400560300040524,
+        55.53027520002797
+      ],
+      "minimum_sampling_coverage": 0.939323010442924,
+      "maximum_sampling_gap_ms": 45.139499998185784,
+      "maximum_accepted_external_busy_fraction": 0.08181729366708224
+    },
+    "N105-W4": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "BFAEAD84A8567E92C27C229090B279850D6EB6C62BD24A17562035070AFE6A1F"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 9591635968,
+      "maximum_kernel_job_peak_memory_bytes": 9591635968,
+      "maximum_sampled_process_tree_private_committed_gib": 8.932907104492188,
+      "maximum_kernel_job_peak_memory_gib": 8.932907104492188,
+      "memory_ceiling_verdict": "FAIL",
+      "wall_seconds": [
+        40.050696899998,
+        39.1107597000082,
+        40.570518299995456,
+        38.21033669996541,
+        37.830671500007156,
+        39.400507000042126
+      ],
+      "minimum_sampling_coverage": 0.8870844963207308,
+      "maximum_sampling_gap_ms": 52.751699986401945,
+      "maximum_accepted_external_busy_fraction": 0.09619872249082007
+    },
+    "N105-W8": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "189E9E7DD03D31E7E86E5FC8F75B486DE677C7B0D7844AAAFAD3FC243315180B"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "394879B0A0F9236CA0D874E0036567D840F2AFB53C370D688EAB67AAB32ECB18"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 19152465920,
+      "maximum_kernel_job_peak_memory_bytes": 19152510976,
+      "maximum_sampled_process_tree_private_committed_gib": 17.83712387084961,
+      "maximum_kernel_job_peak_memory_gib": 17.83716583251953,
+      "memory_ceiling_verdict": "FAIL",
+      "wall_seconds": [
+        30.490305299987085,
+        32.250501699978486,
+        31.77030139998533,
+        30.28080280002905,
+        29.820795200008433,
+        31.170636199996807
+      ],
+      "minimum_sampling_coverage": 0.8427757291317466,
+      "maximum_sampling_gap_ms": 60.85830001393333,
+      "maximum_accepted_external_busy_fraction": 0.08891030008457221
+    },
+    "N105-W16": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 6,
+      "complete": true,
+      "distinct_output_sha256": 1,
+      "output_sha256": [
+        "ED1774FBC8A03BEDD67A614CC8C883E562E5FEAC59B1CFE6AAEBA2FEECCEC9CE"
+      ],
+      "distinct_pixel_sha256": 1,
+      "pixel_sha256": [
+        "018B674A3DC5082EC50F15AFC74C112DDE85971B1D1651C34B66F9941F054481"
+      ],
+      "fixed_worker_determinism_verdict": "PASS",
+      "maximum_sampled_process_tree_private_committed_bytes": 35628167168,
+      "maximum_kernel_job_peak_memory_bytes": 35893321728,
+      "maximum_sampled_process_tree_private_committed_gib": 33.18131637573242,
+      "maximum_kernel_job_peak_memory_gib": 33.428260803222656,
+      "memory_ceiling_verdict": "FAIL",
+      "wall_seconds": [
+        31.750486899982207,
+        31.260693499993067,
+        31.180718899995554,
+        30.44042840000475,
+        31.340666999982204,
+        30.83077790000243
+      ],
+      "minimum_sampling_coverage": 0.7957678743186919,
+      "maximum_sampling_gap_ms": 56.81340000592172,
+      "maximum_accepted_external_busy_fraction": 0.09911083244188136
+    },
+    "N299-W1": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 0,
+      "complete": false,
+      "distinct_output_sha256": 0,
+      "output_sha256": [],
+      "distinct_pixel_sha256": 0,
+      "pixel_sha256": [],
+      "fixed_worker_determinism_verdict": "UNMEASURED",
+      "maximum_sampled_process_tree_private_committed_bytes": null,
+      "maximum_kernel_job_peak_memory_bytes": null,
+      "maximum_sampled_process_tree_private_committed_gib": null,
+      "maximum_kernel_job_peak_memory_gib": null,
+      "memory_ceiling_verdict": "UNMEASURED",
+      "wall_seconds": [],
+      "minimum_sampling_coverage": null,
+      "maximum_sampling_gap_ms": null,
+      "maximum_accepted_external_busy_fraction": null
+    },
+    "N299-W2": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 0,
+      "complete": false,
+      "distinct_output_sha256": 0,
+      "output_sha256": [],
+      "distinct_pixel_sha256": 0,
+      "pixel_sha256": [],
+      "fixed_worker_determinism_verdict": "UNMEASURED",
+      "maximum_sampled_process_tree_private_committed_bytes": null,
+      "maximum_kernel_job_peak_memory_bytes": null,
+      "maximum_sampled_process_tree_private_committed_gib": null,
+      "maximum_kernel_job_peak_memory_gib": null,
+      "memory_ceiling_verdict": "UNMEASURED",
+      "wall_seconds": [],
+      "minimum_sampling_coverage": null,
+      "maximum_sampling_gap_ms": null,
+      "maximum_accepted_external_busy_fraction": null
+    },
+    "N299-W4": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 0,
+      "complete": false,
+      "distinct_output_sha256": 0,
+      "output_sha256": [],
+      "distinct_pixel_sha256": 0,
+      "pixel_sha256": [],
+      "fixed_worker_determinism_verdict": "UNMEASURED",
+      "maximum_sampled_process_tree_private_committed_bytes": null,
+      "maximum_kernel_job_peak_memory_bytes": null,
+      "maximum_sampled_process_tree_private_committed_gib": null,
+      "maximum_kernel_job_peak_memory_gib": null,
+      "memory_ceiling_verdict": "UNMEASURED",
+      "wall_seconds": [],
+      "minimum_sampling_coverage": null,
+      "maximum_sampling_gap_ms": null,
+      "maximum_accepted_external_busy_fraction": null
+    },
+    "N299-W8": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 1,
+      "accepted_scored_runs": 0,
+      "complete": false,
+      "distinct_output_sha256": 0,
+      "output_sha256": [],
+      "distinct_pixel_sha256": 0,
+      "pixel_sha256": [],
+      "fixed_worker_determinism_verdict": "UNMEASURED",
+      "maximum_sampled_process_tree_private_committed_bytes": null,
+      "maximum_kernel_job_peak_memory_bytes": null,
+      "maximum_sampled_process_tree_private_committed_gib": null,
+      "maximum_kernel_job_peak_memory_gib": null,
+      "memory_ceiling_verdict": "UNMEASURED",
+      "wall_seconds": [],
+      "minimum_sampling_coverage": null,
+      "maximum_sampling_gap_ms": null,
+      "maximum_accepted_external_busy_fraction": null
+    },
+    "N299-W16": {
+      "evidence_tag": "VERIFIED",
+      "accepted_warmups": 0,
+      "accepted_scored_runs": 0,
+      "complete": false,
+      "distinct_output_sha256": 0,
+      "output_sha256": [],
+      "distinct_pixel_sha256": 0,
+      "pixel_sha256": [],
+      "fixed_worker_determinism_verdict": "UNMEASURED",
+      "maximum_sampled_process_tree_private_committed_bytes": null,
+      "maximum_kernel_job_peak_memory_bytes": null,
+      "maximum_sampled_process_tree_private_committed_gib": null,
+      "maximum_kernel_job_peak_memory_gib": null,
+      "memory_ceiling_verdict": "UNMEASURED",
+      "wall_seconds": [],
+      "minimum_sampling_coverage": null,
+      "maximum_sampling_gap_ms": null,
+      "maximum_accepted_external_busy_fraction": null
+    }
+  },
+  "cross_worker_scaling": {
+    "33": {
+      "evidence_tag": "VERIFIED",
+      "workers_present": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "all_cells_complete": true,
+      "distinct_output_sha256": 5,
+      "output_sha256": [
+        "545B10BC143BF5CDFCD737BBB0FD7E5FE64A1F0002E1A2B45780C55EB0DF9A55",
+        "5D5FD76C5141E59BE2EC8949AC59817A3FD94797F1C1D349542D8646B4B50676",
+        "914AAA852A555729BFEA710EEF5880D45B35B9392D89CB313F698258BC7B8985",
+        "E36EE6FDC9B6CF542059793847C09B79626E7F87C85732BD261E9EC6A36395C3",
+        "F3E54ADE7C64A3DB231CC3E183B3F15D5F9002750BF77530A4539F2A4FD654C2"
+      ],
+      "distinct_pixel_sha256": 5,
+      "pixel_sha256": [
+        "2E397E4DD5D5BC1ECD0AC652C446D4700DAE872F55FF50C99694B8392CC9EF8F",
+        "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89",
+        "78D78FC0A8C284C343EAB7472B34A3990BC3D8E18D21DDCFEF70A39E3BCBBB45",
+        "A9913288AE46442E553E598347150026AD503E94F5EB5DDD8EA2375E6FE9C88D",
+        "D42D0552A5FB5710BA4AE33C305721F8E98C695B11C89CDFB34859B7982B9F1D"
+      ],
+      "verdict": "FAIL"
+    },
+    "105": {
+      "evidence_tag": "VERIFIED",
+      "workers_present": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "all_cells_complete": true,
+      "distinct_output_sha256": 5,
+      "output_sha256": [
+        "189E9E7DD03D31E7E86E5FC8F75B486DE677C7B0D7844AAAFAD3FC243315180B",
+        "9E678339C3ABBFA602F7A9800E769E92C0CC1DD5859E6467C19E6F6462223758",
+        "BFAEAD84A8567E92C27C229090B279850D6EB6C62BD24A17562035070AFE6A1F",
+        "C521C9A20AA8B1B1CCA54CC231351F109BC29AAC83D7FCC8324ED0024BF241E9",
+        "ED1774FBC8A03BEDD67A614CC8C883E562E5FEAC59B1CFE6AAEBA2FEECCEC9CE"
+      ],
+      "distinct_pixel_sha256": 5,
+      "pixel_sha256": [
+        "018B674A3DC5082EC50F15AFC74C112DDE85971B1D1651C34B66F9941F054481",
+        "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9",
+        "394879B0A0F9236CA0D874E0036567D840F2AFB53C370D688EAB67AAB32ECB18",
+        "C9EA803BC5FC70F1D028BDDF057AB08E181E4D1C6977EC736823C78F267499A1",
+        "CDCDB21783F0657A1656BE72452EB40388B1A40F6B7A588890861023413C6D1B"
+      ],
+      "verdict": "FAIL"
+    },
+    "299": {
+      "evidence_tag": "VERIFIED",
+      "workers_present": [],
+      "all_cells_complete": false,
+      "distinct_output_sha256": 0,
+      "output_sha256": [],
+      "distinct_pixel_sha256": 0,
+      "pixel_sha256": [],
+      "verdict": "UNMEASURED"
+    }
+  },
+  "conclusive_failures": {
+    "absolute_memory": {
+      "evidence_tag": "VERIFIED",
+      "verdict": "FAIL",
+      "ceiling_bytes": 6442450944,
+      "strongest_accepted_scored_observation": {
+        "position_key": "scored:N105:W16:R2",
+        "started_utc": "2026-09-04T15:45:44.927855+00:00",
+        "sampled_private_committed_bytes": 35087437824,
+        "kernel_job_peak_memory_bytes": 35893321728,
+        "sampled_private_committed_gib": 32.6777229309082,
+        "kernel_job_peak_memory_gib": 33.428260803222656,
+        "accepted_external_busy_fraction": 0.09876307906447068
+      }
+    },
+    "cross_worker_scaling_invariance": {
+      "evidence_tag": "VERIFIED",
+      "verdict": "FAIL",
+      "failed_n_values": [
+        "33",
+        "105"
+      ]
+    }
+  },
+  "unmeasured_registered_quantities": {
+    "evidence_tag": "VERIFIED",
+    "fixed_worker_determinism_over_full_matrix": "UNMEASURED",
+    "peak_n299_over_peak_n33": "UNMEASURED",
+    "n_mod_4_per_frame_spread": "UNMEASURED",
+    "m11_joint_requirement": "UNMEASURED"
+  },
+  "host_conditions": {
+    "evidence_tag": "VERIFIED",
+    "start_artifact": "host-start.json",
+    "end_artifact": "host-end.json",
+    "resume_waits": {
+      "resume-wait-r3.json": {
+        "evidence_tag": "VERIFIED",
+        "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+        "criterion": "six consecutive 5-second samples <=5% whole-host busy and no strehl/cargo/rustc/ExifTool process before resuming the unchanged registered <=15%/<=10% gates",
+        "complete": true,
+        "sample_count": 57,
+        "minimum_busy_fraction": 0.03163949073717493,
+        "maximum_busy_fraction": 0.10592418145490579,
+        "started_utc": "2026-09-04T11:33:26.032283+00:00",
+        "completed_or_last_updated_utc": "2026-09-04T12:05:11.997135+00:00"
+      },
+      "resume-wait-r4.json": {
+        "evidence_tag": "VERIFIED",
+        "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+        "criterion": "six consecutive 5-second samples <=3% whole-host busy and no strehl/cargo/rustc/ExifTool process before resuming the unchanged registered <=15%/<=10% gates",
+        "complete": false,
+        "sample_count": 113,
+        "minimum_busy_fraction": 0.041365877417780535,
+        "maximum_busy_fraction": 0.6170451258220061,
+        "started_utc": "2026-09-04T12:48:16.845829+00:00",
+        "completed_or_last_updated_utc": "2026-09-04T14:49:44.265389+00:00"
+      },
+      "resume-wait-r5.json": {
+        "evidence_tag": "VERIFIED",
+        "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+        "criterion": "six consecutive 5-second samples <=5% whole-host busy and no strehl/cargo/rustc/ExifTool process before resuming the unchanged registered <=15%/<=10% gates",
+        "complete": false,
+        "sample_count": 30,
+        "minimum_busy_fraction": 0.0455495165429678,
+        "maximum_busy_fraction": 0.18625074908126685,
+        "started_utc": "2026-09-04T14:50:47.691059+00:00",
+        "completed_or_last_updated_utc": "2026-09-04T15:21:18.215114+00:00"
+      },
+      "resume-wait-r6.json": {
+        "evidence_tag": "VERIFIED",
+        "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+        "criterion": "one 5-second sample <=5% whole-host busy and no strehl/cargo/rustc/ExifTool process before resuming the unchanged registered <=15%/<=10% gates",
+        "complete": true,
+        "sample_count": 7,
+        "minimum_busy_fraction": 0.03299520339962692,
+        "maximum_busy_fraction": 0.09783552751892037,
+        "started_utc": "2026-09-04T15:21:50.896731+00:00",
+        "completed_or_last_updated_utc": "2026-09-04T15:28:26.014921+00:00"
+      },
+      "resume-wait-r7.json": {
+        "evidence_tag": "VERIFIED",
+        "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+        "criterion": "one 5-second sample <=3% whole-host busy and no strehl/cargo/rustc/ExifTool process before resuming the unchanged registered <=15%/<=10% gates",
+        "complete": false,
+        "sample_count": 29,
+        "minimum_busy_fraction": 0.03153013457996495,
+        "maximum_busy_fraction": 0.1420600065859283,
+        "started_utc": "2026-09-04T16:22:49.315841+00:00",
+        "completed_or_last_updated_utc": "2026-09-04T16:53:14.811490+00:00"
+      },
+      "resume-wait-r8.json": {
+        "evidence_tag": "VERIFIED",
+        "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+        "criterion": "one 5-second sample <=3.5% whole-host busy and no strehl/cargo/rustc/ExifTool process before resuming the unchanged registered <=15%/<=10% gates",
+        "complete": true,
+        "sample_count": 16,
+        "minimum_busy_fraction": 0.01830353968605635,
+        "maximum_busy_fraction": 0.10393863386892577,
+        "started_utc": "2026-09-04T16:54:20.634093+00:00",
+        "completed_or_last_updated_utc": "2026-09-04T17:10:40.898974+00:00"
+      },
+      "resume-wait-r9.json": {
+        "evidence_tag": "VERIFIED",
+        "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+        "criterion": "one 5-second sample <=2% whole-host busy and no strehl/cargo/rustc/ExifTool process before resuming the unchanged registered <=15%/<=10% gates",
+        "complete": false,
+        "sample_count": 136,
+        "minimum_busy_fraction": 0.05722126753578989,
+        "maximum_busy_fraction": 0.9536972465985408,
+        "started_utc": "2026-09-04T18:05:50.364660+00:00",
+        "completed_or_last_updated_utc": "2026-09-04T20:32:22.204386+00:00"
+      }
+    },
+    "accepted_external_busy_fraction_max": 0.09911974767219173,
+    "rejected_external_busy_fraction_min": 0.1002633343374017,
+    "rejected_external_busy_fraction_max": 0.19377434476991048,
+    "orphaned_process_interventions": [
+      {
+        "description": "Recursive ExifTool scan of D:\\personal\\macro, launched before this lane's resumed campaign and still running after its owning lane was cancelled.",
+        "observed_process_ids": [
+          12548,
+          11552
+        ],
+        "action": "Stopped by exact PID while the campaign was paused."
+      },
+      {
+        "description": "Two stale M130 byte-freeze cargo/test process trees whose starts predated the resumed campaign by more than six hours.",
+        "observed_process_ids": [
+          624,
+          22316,
+          29928,
+          13756,
+          8820,
+          45752,
+          13536,
+          42000,
+          13988,
+          35464,
+          11552
+        ],
+        "action": "Stopped surviving members by exact PID while the campaign was paused; PID reuse is possible and start times are retained only in the session command transcript."
+      }
+    ],
+    "m130_overlap_assessment": "No accepted or rejected modulo-arm run exists. M130 overlap therefore did not contaminate the only timing-derived M12 bar. Accepted matrix runs passed the measured external-load gate; rejected attempts are not scored."
+  },
+  "read_only_input_trees": {
+    "D:\\edited\\macro": {
+      "evidence_tag": "VERIFIED",
+      "before": {
+        "path": "D:\\edited\\macro",
+        "item_count": 392,
+        "file_count": 387,
+        "directory_count": 5,
+        "bytes": 141333902406,
+        "metadata_sha256": "40003B9F15D0AE552AD2947E22C29122664E0BDCD7E690D53FE02341DCA12FD1"
+      },
+      "after": {
+        "path": "D:\\edited\\macro",
+        "item_count": 392,
+        "file_count": 387,
+        "directory_count": 5,
+        "bytes": 141333902406,
+        "metadata_sha256": "40003B9F15D0AE552AD2947E22C29122664E0BDCD7E690D53FE02341DCA12FD1"
+      },
+      "unchanged": true
+    },
+    "D:\\personal\\macro": {
+      "evidence_tag": "VERIFIED",
+      "before": {
+        "path": "D:\\personal\\macro",
+        "item_count": 10806,
+        "file_count": 10724,
+        "directory_count": 82,
+        "bytes": 487169829957,
+        "metadata_sha256": "46CD6FE5C018AE4ACEC946170EEEC760DBF5B0C8954CA561368F92B9184A5C42"
+      },
+      "after": {
+        "path": "D:\\personal\\macro",
+        "item_count": 10806,
+        "file_count": 10724,
+        "directory_count": 82,
+        "bytes": 487169829957,
+        "metadata_sha256": "46CD6FE5C018AE4ACEC946170EEEC760DBF5B0C8954CA561368F92B9184A5C42"
+      },
+      "unchanged": true
+    }
+  },
+  "could_not_determine": [
+    "The full N=299 scored matrix was not completed.",
+    "The registered peak_N299/peak_N33 ratio was not measured.",
+    "The registered N=96/97/98/99 timing arm was not started.",
+    "The joint M11 requirement was not supplied.",
+    "Complete process-tree read/write byte counters were not captured.",
+    "Exact causal attribution of every external-CPU interval to another lane.",
+    "Exact UTC stop times for the stale processes terminated during pauses."
+  ]
+}

@@ -1,0 +1,1644 @@
+{
+  "schema": 1,
+  "evidence_tag": "VERIFIED",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "generated_utc": "2026-09-04T17:10:40.898974+00:00",
+  "started_utc": "2026-09-04T16:54:20.634093+00:00",
+  "criterion": "one 5-second sample <=3.5% whole-host busy and no strehl/cargo/rustc/ExifTool process before resuming the unchanged registered <=15%/<=10% gates",
+  "threshold": 0.035,
+  "required_consecutive_samples": 1,
+  "attempts": [
+    {
+      "sample": {
+        "started_utc": "2026-09-04T16:54:20.634093+00:00",
+        "completed_utc": "2026-09-04T16:54:25.651165+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.01619589998154,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 9.84375,
+        "whole_host_busy_fraction": 0.061764705882352944,
+        "whole_host_busy_fraction_of_wall_capacity": 0.06132479544930294,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42862555136,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82135961600,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42940485632,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82212040704,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 5.25,
+            "capacity_fraction": 0.03270655757296157
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.96875,
+            "capacity_fraction": 0.0060351385997726706
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.734375,
+            "capacity_fraction": 0.0045750244224083145
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.109375,
+            "capacity_fraction": 0.000681386616103366
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.09375,
+            "capacity_fraction": 0.0005840456709457423
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.00029202283547287113
+          },
+          {
+            "pid": 6368,
+            "parent_pid": 8004,
+            "name": "bun.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734094515762372e-05
+          },
+          {
+            "pid": 25068,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734094515762372e-05
+          },
+          {
+            "pid": 38404,
+            "parent_pid": 9784,
+            "name": "OpenConsole.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734094515762372e-05
+          },
+          {
+            "pid": 24212,
+            "parent_pid": 11336,
+            "name": "pwsh.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734094515762372e-05
+          },
+          {
+            "pid": 46716,
+            "parent_pid": 24212,
+            "name": "python.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734094515762372e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T16:55:25.659764+00:00",
+        "completed_utc": "2026-09-04T16:55:30.675112+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.015452799969353,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 10.25,
+        "whole_host_busy_fraction": 0.06480932622011461,
+        "whole_host_busy_fraction_of_wall_capacity": 0.06386512101199662,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42654486528,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81895755776,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42642448384,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81887338496,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 4.578125,
+            "capacity_fraction": 0.02852512264712654
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.875,
+            "capacity_fraction": 0.005451900574194833
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.515625,
+            "capacity_fraction": 0.0032127271240790984
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.140625,
+            "capacity_fraction": 0.0008761983065670268
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.00029206610218900894
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019471073479267263
+          },
+          {
+            "pid": 32516,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019471073479267263
+          },
+          {
+            "pid": 6368,
+            "parent_pid": 8004,
+            "name": "bun.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.735536739633631e-05
+          },
+          {
+            "pid": 25068,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.735536739633631e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T16:56:30.675217+00:00",
+        "completed_utc": "2026-09-04T16:56:35.688088+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.014851099986117,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 11.71875,
+        "whole_host_busy_fraction": 0.07327796775769418,
+        "whole_host_busy_fraction_of_wall_capacity": 0.07302528633422711,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42494992384,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81720803328,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42509844480,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81727102976,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 5.046875,
+            "capacity_fraction": 0.031449556647940476
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 1.46875,
+            "capacity_fraction": 0.009152502553889798
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.75,
+            "capacity_fraction": 0.004673618325390535
+          },
+          {
+            "pid": 31032,
+            "parent_pid": 3224,
+            "name": "pwsh.exe",
+            "cpu_seconds": 0.375,
+            "capacity_fraction": 0.0023368091626952674
+          },
+          {
+            "pid": 3224,
+            "parent_pid": 11336,
+            "name": "pwsh.exe",
+            "cpu_seconds": 0.296875,
+            "capacity_fraction": 0.0018499739204670869
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.09375,
+            "capacity_fraction": 0.0005842022906738169
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.0001947340968912723
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.0001947340968912723
+          },
+          {
+            "pid": 12952,
+            "parent_pid": 16236,
+            "name": "explorer.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.736704844563615e-05
+          },
+          {
+            "pid": 6368,
+            "parent_pid": 8004,
+            "name": "bun.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.736704844563615e-05
+          },
+          {
+            "pid": 45428,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.736704844563615e-05
+          },
+          {
+            "pid": 38404,
+            "parent_pid": 9784,
+            "name": "OpenConsole.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.736704844563615e-05
+          },
+          {
+            "pid": 32516,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.736704844563615e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T16:57:35.689838+00:00",
+        "completed_utc": "2026-09-04T16:57:40.706591+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.017233299964573,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 16.6875,
+        "whole_host_busy_fraction": 0.10422562701278423,
+        "whole_host_busy_fraction_of_wall_capacity": 0.10393863386892577,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42335645696,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81481322496,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42577199104,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81740685312,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 6.625,
+            "capacity_fraction": 0.04126402692923645
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 1.0625,
+            "capacity_fraction": 0.006617815639594525
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.15625,
+            "capacity_fraction": 0.0009732081822933124
+          },
+          {
+            "pid": 45428,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.078125,
+            "capacity_fraction": 0.0004866040911466562
+          },
+          {
+            "pid": 25068,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.00029196245468799374
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.00029196245468799374
+          },
+          {
+            "pid": 12952,
+            "parent_pid": 16236,
+            "name": "explorer.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.0001946416364586625
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.0001946416364586625
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.732081822933125e-05
+          },
+          {
+            "pid": 32516,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.732081822933125e-05
+          },
+          {
+            "pid": 42544,
+            "parent_pid": 17392,
+            "name": "vctip.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.732081822933125e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T16:58:40.707135+00:00",
+        "completed_utc": "2026-09-04T16:58:45.719476+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.016000900010113,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 9.0,
+        "whole_host_busy_fraction": 0.0570409982174688,
+        "whole_host_busy_fraction_of_wall_capacity": 0.05607056410205847,
+        "memory_start": {
+          "memory_load_percent": 34,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42985848832,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82143088640,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42910720000,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82065555456,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 3.859375,
+            "capacity_fraction": 0.024044148147931325
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 1.265625,
+            "capacity_fraction": 0.007884923076851973
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.453125,
+            "capacity_fraction": 0.0028229971509716937
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.125,
+            "capacity_fraction": 0.0007787578347508121
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.078125,
+            "capacity_fraction": 0.00048672364671925757
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.0002920341880315545
+          },
+          {
+            "pid": 25068,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734472934385152e-05
+          },
+          {
+            "pid": 14868,
+            "parent_pid": 2416,
+            "name": "XboxPcAppFT.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734472934385152e-05
+          },
+          {
+            "pid": 45428,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734472934385152e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T16:59:45.723661+00:00",
+        "completed_utc": "2026-09-04T16:59:50.731816+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.0157265000161715,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 7.640625,
+        "whole_host_busy_fraction": 0.04738831282100979,
+        "whole_host_busy_fraction_of_wall_capacity": 0.047604176832454916,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42550444032,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81657147392,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732209872896
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42943143936,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82073743360,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732209872896
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 5.078125,
+            "capacity_fraction": 0.031638767833431176
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.8125,
+            "capacity_fraction": 0.005062202853348989
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.171875,
+            "capacity_fraction": 0.0010708506035930552
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.00038940021948838377
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.00038940021948838377
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019470010974419189
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:00:50.739691+00:00",
+        "completed_utc": "2026-09-04T17:00:55.756740+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.018450999981724,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 5.828125,
+        "whole_host_busy_fraction": 0.034620382402079077,
+        "whole_host_busy_fraction_of_wall_capacity": 0.03629185703928628,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42575515648,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81676673024,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732209872896
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42943410176,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82052440064,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732209872896
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 3.484375,
+            "capacity_fraction": 0.02169727646048483
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.875,
+            "capacity_fraction": 0.005448643416085876
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.00038918881543470544
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.0002918916115760291
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.729720385867636e-05
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.729720385867636e-05
+          },
+          {
+            "pid": 31628,
+            "parent_pid": 37084,
+            "name": "msedge.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.729720385867636e-05
+          },
+          {
+            "pid": 46716,
+            "parent_pid": 24212,
+            "name": "python.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.729720385867636e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:01:55.758921+00:00",
+        "completed_utc": "2026-09-04T17:02:00.769679+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.016289499995764,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 9.375,
+        "whole_host_busy_fraction": 0.05921831819976313,
+        "whole_host_busy_fraction_of_wall_capacity": 0.05840347731131693,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42744078336,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81890856960,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42823864320,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81993011200,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 5.609375,
+            "capacity_fraction": 0.03494474725793797
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 1.015625,
+            "capacity_fraction": 0.006327043375392668
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.171875,
+            "capacity_fraction": 0.001070730417374144
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.078125,
+            "capacity_fraction": 0.00048669564426097447
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.00038935651540877956
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.0002920173865565847
+          },
+          {
+            "pid": 12952,
+            "parent_pid": 16236,
+            "name": "explorer.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019467825770438978
+          },
+          {
+            "pid": 31628,
+            "parent_pid": 37084,
+            "name": "msedge.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.733912885219489e-05
+          },
+          {
+            "pid": 37060,
+            "parent_pid": 31628,
+            "name": "msedge.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.733912885219489e-05
+          },
+          {
+            "pid": 46716,
+            "parent_pid": 24212,
+            "name": "python.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.733912885219489e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:03:00.775626+00:00",
+        "completed_utc": "2026-09-04T17:03:05.783792+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.015937999996822,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 11.453125,
+        "whole_host_busy_fraction": 0.07161700048851978,
+        "whole_host_busy_fraction_of_wall_capacity": 0.07135458138641801,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42707415040,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81823752192,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42678194176,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81780441088,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 6.40625,
+            "capacity_fraction": 0.03991183952037023
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 1.203125,
+            "capacity_fraction": 0.007495638153825629
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.125,
+            "capacity_fraction": 0.0007787676003974679
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.125,
+            "capacity_fraction": 0.0007787676003974679
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.109375,
+            "capacity_fraction": 0.0006814216503477845
+          },
+          {
+            "pid": 19652,
+            "parent_pid": 5624,
+            "name": "nvcontainer.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019469190009936699
+          },
+          {
+            "pid": 12952,
+            "parent_pid": 16236,
+            "name": "explorer.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734595004968349e-05
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734595004968349e-05
+          },
+          {
+            "pid": 34680,
+            "parent_pid": 31628,
+            "name": "msedge.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734595004968349e-05
+          },
+          {
+            "pid": 46716,
+            "parent_pid": 24212,
+            "name": "python.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734595004968349e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:04:05.792181+00:00",
+        "completed_utc": "2026-09-04T17:04:10.807617+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.015467400022317,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 7.5625,
+        "whole_host_busy_fraction": 0.04716429545897486,
+        "whole_host_busy_fraction_of_wall_capacity": 0.04711986065325605,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42564153344,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81578524672,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42576613376,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81590034432,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 4.96875,
+            "capacity_fraction": 0.030958916710197158
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.78125,
+            "capacity_fraction": 0.004867754199716534
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.09375,
+            "capacity_fraction": 0.0005841305039659842
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.078125,
+            "capacity_fraction": 0.00048677541997165343
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.078125,
+            "capacity_fraction": 0.00048677541997165343
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.00038942033597732275
+          },
+          {
+            "pid": 45428,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.00038942033597732275
+          },
+          {
+            "pid": 6368,
+            "parent_pid": 8004,
+            "name": "bun.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.735508399433069e-05
+          },
+          {
+            "pid": 32516,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.735508399433069e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:05:10.808104+00:00",
+        "completed_utc": "2026-09-04T17:05:15.822838+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.015980800031684,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 7.25,
+        "whole_host_busy_fraction": 0.04517573751338721,
+        "whole_host_busy_fraction_of_wall_capacity": 0.045168135412035244,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42499162112,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81445859328,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732209872896
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42475859968,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81402044416,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732209872896
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 4.640625,
+            "capacity_fraction": 0.028911500468479456
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.765625,
+            "capacity_fraction": 0.004769910851701998
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.15625,
+            "capacity_fraction": 0.0009734511942248975
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.140625,
+            "capacity_fraction": 0.0008761060748024077
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.078125,
+            "capacity_fraction": 0.00048672559711244876
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.00029203535826746924
+          },
+          {
+            "pid": 32516,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.046875,
+            "capacity_fraction": 0.00029203535826746924
+          },
+          {
+            "pid": 25068,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734511942248976e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:06:15.824758+00:00",
+        "completed_utc": "2026-09-04T17:06:20.832593+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.016633899998851,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 7.09375,
+        "whole_host_busy_fraction": 0.04472025216706068,
+        "whole_host_busy_fraction_of_wall_capacity": 0.04418893064930466,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42899857408,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81971109888,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42951208960,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82023755776,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 2.78125,
+            "capacity_fraction": 0.01732517545281108
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.859375,
+            "capacity_fraction": 0.005353284550025895
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.640625,
+            "capacity_fraction": 0.003990630300928394
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.28125,
+            "capacity_fraction": 0.0017519840345539292
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.171875,
+            "capacity_fraction": 0.001070656910005179
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.00038932978545642874
+          },
+          {
+            "pid": 32516,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.00038932978545642874
+          },
+          {
+            "pid": 12952,
+            "parent_pid": 16236,
+            "name": "explorer.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019466489272821437
+          },
+          {
+            "pid": 6368,
+            "parent_pid": 8004,
+            "name": "bun.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019466489272821437
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:07:20.842166+00:00",
+        "completed_utc": "2026-09-04T17:07:25.857620+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.015738699992653,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 7.859375,
+        "whole_host_busy_fraction": 0.04830500336118314,
+        "whole_host_busy_fraction_of_wall_capacity": 0.048966958496135325,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42836054016,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81933127680,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42528485376,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81612021760,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 4.25,
+            "capacity_fraction": 0.026479150518784907
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 1.28125,
+            "capacity_fraction": 0.00798268508286898
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.203125,
+            "capacity_fraction": 0.0012655476350889846
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.109375,
+            "capacity_fraction": 0.0006814487265863763
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.0625,
+            "capacity_fraction": 0.0003893992723350722
+          },
+          {
+            "pid": 31888,
+            "parent_pid": 31752,
+            "name": "msedgewebview2.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734981808376805e-05
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734981808376805e-05
+          },
+          {
+            "pid": 46976,
+            "parent_pid": 38620,
+            "name": "CodeSetup-stable-a44adf7f53e00964ab890f9f8758a334f1fc15bc.tmp",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734981808376805e-05
+          },
+          {
+            "pid": 32516,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734981808376805e-05
+          },
+          {
+            "pid": 46716,
+            "parent_pid": 24212,
+            "name": "python.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.734981808376805e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:08:25.858129+00:00",
+        "completed_utc": "2026-09-04T17:08:30.873884+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.016331399965566,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 11.234375,
+        "whole_host_busy_fraction": 0.06979227334498156,
+        "whole_host_busy_fraction_of_wall_capacity": 0.06998624906488633,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42918383616,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82109394944,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732211904512
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42927874048,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 82088726528,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732211904512
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 5.421875,
+            "capacity_fraction": 0.033776395584861695
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 1.078125,
+            "capacity_fraction": 0.006716343790649731
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.3125,
+            "capacity_fraction": 0.0019467663161303569
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.09375,
+            "capacity_fraction": 0.000584029894839107
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.09375,
+            "capacity_fraction": 0.000584029894839107
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019467663161303568
+          },
+          {
+            "pid": 12952,
+            "parent_pid": 16236,
+            "name": "explorer.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.733831580651784e-05
+          },
+          {
+            "pid": 6368,
+            "parent_pid": 8004,
+            "name": "bun.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.733831580651784e-05
+          },
+          {
+            "pid": 31628,
+            "parent_pid": 37084,
+            "name": "msedge.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.733831580651784e-05
+          },
+          {
+            "pid": 32516,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.733831580651784e-05
+          },
+          {
+            "pid": 46716,
+            "parent_pid": 24212,
+            "name": "python.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.733831580651784e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:09:30.875142+00:00",
+        "completed_utc": "2026-09-04T17:09:35.883089+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.01564800000051,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 8.03125,
+        "whole_host_busy_fraction": 0.05093143083630598,
+        "whole_host_busy_fraction_of_wall_capacity": 0.050038711348957196,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42804543488,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81895686144,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732211904512
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42873069568,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81948061696,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732211904512
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 4.40625,
+            "capacity_fraction": 0.027453145136976515
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 1.296875,
+            "capacity_fraction": 0.008080181015493088
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.171875,
+            "capacity_fraction": 0.001070867363499084
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.125,
+            "capacity_fraction": 0.0007788126279993338
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.109375,
+            "capacity_fraction": 0.0006814610494994171
+          },
+          {
+            "pid": 9784,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.00019470315699983344
+          },
+          {
+            "pid": 25548,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.735157849991672e-05
+          },
+          {
+            "pid": 31628,
+            "parent_pid": 37084,
+            "name": "msedge.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.735157849991672e-05
+          },
+          {
+            "pid": 46716,
+            "parent_pid": 24212,
+            "name": "python.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.735157849991672e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": false,
+      "consecutive_clean_samples": 0
+    },
+    {
+      "sample": {
+        "started_utc": "2026-09-04T17:10:35.891378+00:00",
+        "completed_utc": "2026-09-04T17:10:40.898974+00:00",
+        "requested_seconds": 5.0,
+        "elapsed_seconds": 5.015252600016538,
+        "logical_processors": 32,
+        "whole_host_busy_cpu_seconds": 2.9375,
+        "whole_host_busy_fraction": 0.018871712507528608,
+        "whole_host_busy_fraction_of_wall_capacity": 0.01830353968605635,
+        "memory_start": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42881335296,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81884635136,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "memory_end": {
+          "memory_load_percent": 35,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 42631483392,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 81640763392,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732213936128
+        },
+        "top_process_cpu": [
+          {
+            "pid": 11336,
+            "parent_pid": 36064,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.5,
+            "capacity_fraction": 0.003115496116775549
+          },
+          {
+            "pid": 10812,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.421875,
+            "capacity_fraction": 0.0026286998485293696
+          },
+          {
+            "pid": 43516,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.140625,
+            "capacity_fraction": 0.0008762332828431232
+          },
+          {
+            "pid": 37952,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.09375,
+            "capacity_fraction": 0.0005841555218954154
+          },
+          {
+            "pid": 6972,
+            "parent_pid": 12952,
+            "name": "Code.exe",
+            "cpu_seconds": 0.03125,
+            "capacity_fraction": 0.0001947185072984718
+          },
+          {
+            "pid": 12952,
+            "parent_pid": 16236,
+            "name": "explorer.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.73592536492359e-05
+          },
+          {
+            "pid": 3996,
+            "parent_pid": 2416,
+            "name": "RuntimeBroker.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.73592536492359e-05
+          },
+          {
+            "pid": 25068,
+            "parent_pid": 6972,
+            "name": "Code.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.73592536492359e-05
+          },
+          {
+            "pid": 27676,
+            "parent_pid": 11336,
+            "name": "copilot.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.73592536492359e-05
+          },
+          {
+            "pid": 46716,
+            "parent_pid": 24212,
+            "name": "python.exe",
+            "cpu_seconds": 0.015625,
+            "capacity_fraction": 9.73592536492359e-05
+          }
+        ]
+      },
+      "named_contenders": [],
+      "accepted": true,
+      "consecutive_clean_samples": 1
+    }
+  ],
+  "complete": true
+}
