@@ -1,0 +1,190 @@
+{
+  "schema": 1,
+  "status": "PREREGISTERED_NO_CAMPAIGN_EXECUTED",
+  "numeric_evidence_tags": {
+    "preregistered": "VERIFIED-PREREGISTERED",
+    "inherited": "INHERITED",
+    "estimate": "VERIFIED-ESTIMATE"
+  },
+  "source_baseline": {
+    "git_head_at_authoring": "6712449e9defdd93e301c6ed5dcd949a3c17c4b6",
+    "files": {
+      "crates/strehl-core/src/merge.rs": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+      "crates/strehl-core/src/pyramid.rs": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47",
+      "docs/proposals/2026-09-phase1-design.md": "497ba0edbd093e333acb06dff8621485b1259e35a5c7efe8458ee011a10f32f5",
+      "docs/research/M62-sqrt-n.md": "2d752281728a3b51a930e687c8889aedef5120eb0d6655cd26dfd18828e94597",
+      "experiments/M135-detail-instrument/PREREGISTRATION.md": "7f584ae5b4437dfc4c592248ca27ce8d7d2afc4b1e953d8d9bffd3e9f3e8e807",
+      "experiments/M135-detail-instrument/instrument.py": "b20edd39d02c5483afb3f8c1f57c3913ced25a7258a638c79f514d0bcba37ebc",
+      "experiments/PHASE1-DESIGN/PREREGISTRATION.md": "a42f54c92b06711d9a70870d6c2c3bed80ec3e9c48fc14be22ef9f1067ad0d32",
+      "experiments/PHASE1-DESIGN/measure.py": "9a7e2682c8c24d46c66fbbf7e3444ce43415e8535c58fadd1323cac58781310b",
+      "experiments/PHASE1-DESIGN/reference.py": "aa613796fada0b282a919c6e55baf9b9113b0d3a0fa1b4d7bec4b1d9888a36f2",
+      "experiments/PHASE1-DESIGN/results/gate.json": "455b6bfb37ed24584e8aea974aa905d2551c9b426101012b5619176eec1bb8ce",
+      "experiments/PHASE1-DESIGN/results/run.json": "5435de01c384b937ffedc99519e2571c73179562c84f9ea10f35e14af71fbf7f"
+    }
+  },
+  "threshold_coordinate": {
+    "name": "tau",
+    "meaning": "null-compatibility quantile; admit a non-winner when u_i <= tau",
+    "grid_start": 0.0,
+    "grid_stop": 1.0,
+    "grid_step": 0.01,
+    "robust_neighbour_steps": 1,
+    "selection_rule": "largest passing centre whose immediate lower and upper neighbours also pass",
+    "evidence_tag": "VERIFIED-PREREGISTERED"
+  },
+  "standardisation": {
+    "calibration_replicates": 4095,
+    "validation_replicates": 8192,
+    "q_over_f_anchors": [
+      0.0,
+      0.5,
+      2.0,
+      8.0,
+      32.0
+    ],
+    "q_over_f_bins": [
+      {
+        "lower_inclusive": 0.0,
+        "upper_exclusive": 0.25,
+        "anchor": 0.0
+      },
+      {
+        "lower_inclusive": 0.25,
+        "upper_exclusive": 1.0,
+        "anchor": 0.5
+      },
+      {
+        "lower_inclusive": 1.0,
+        "upper_exclusive": 4.0,
+        "anchor": 2.0
+      },
+      {
+        "lower_inclusive": 4.0,
+        "upper_exclusive": 16.0,
+        "anchor": 8.0
+      },
+      {
+        "lower_inclusive": 16.0,
+        "upper_exclusive": null,
+        "anchor": 32.0
+      }
+    ],
+    "coverage_checkpoints": [
+      0.01,
+      0.05,
+      0.25,
+      0.5,
+      0.75,
+      0.95,
+      0.99
+    ],
+    "maximum_absolute_admission_error": 0.03,
+    "physical_null_minimum_sites_per_stratum": 256,
+    "physical_null_interval_confidence": 0.99,
+    "focus_offset_sigma_anchors": [
+      0.0,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "required_band_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "required_cfa_planes": [
+      "R",
+      "G1",
+      "G2",
+      "B"
+    ],
+    "required_gain_modes": 2,
+    "required_signal_quantiles": 4,
+    "evidence_tag": "VERIFIED-PREREGISTERED"
+  },
+  "detail_instrument": {
+    "binding_state": "UNBOUND",
+    "required_provider": "M135 truth-referenced certificate",
+    "minimum_sites": 64,
+    "required_inputs": [
+      "R1",
+      "R2",
+      "Y1",
+      "Y2"
+    ],
+    "required_outputs": [
+      "status",
+      "information_bits_per_site",
+      "transfer",
+      "unexplained_fraction",
+      "noise_to_explained"
+    ],
+    "required_comparison_output": "detail_pass",
+    "preregistration_sha256": null,
+    "physical_commissioning_sha256": null,
+    "checker_sha256": null,
+    "binding_rule": "A separately frozen physical M135 preregistration, physical commissioning artifact, comparison rule, and checker must replace UNBOUND before any corrected-gate candidate render.",
+    "evidence_tag": "INHERITED"
+  },
+  "noise_instrument": {
+    "kind": "paired-static-repeat temporal-power",
+    "minimum_sites": 64,
+    "power_ratio_upper95": 0.9,
+    "cfa_planes": [
+      "R",
+      "G1",
+      "G2",
+      "B"
+    ],
+    "evidence_tag": "INHERITED"
+  },
+  "capture_ledgers": {
+    "binding_state": "UNBOUND",
+    "development": null,
+    "holdout": null,
+    "binding_rule": "Freeze exact detail, noise, and hull capture-family IDs before any corrected-gate candidate render.",
+    "evidence_tag": "VERIFIED-PREREGISTERED"
+  },
+  "output_gate": {
+    "bootstrap_replicates": 8192,
+    "bootstrap_seed": 138138,
+    "interval_quantiles": [
+      0.025,
+      0.975
+    ],
+    "maximum_hull_excess_dn": 1.0,
+    "width_role": "DIAGNOSTIC_ONLY",
+    "required_commissioning_flags": [
+      "null_stays_null",
+      "defect_lowers_score",
+      "improvement_raises_score",
+      "checker_mutations_rejected"
+    ],
+    "evidence_tag": "VERIFIED-PREREGISTERED"
+  },
+  "verdicts": {
+    "blocked_detail": "BLOCKED_DETAIL_INSTRUMENT",
+    "invalid_instrument": "INSTRUMENT_INVALID",
+    "refuted_development": "PHASE1_REFUTED_NO_GLOBAL_OUTPUT_OPERATING_POINT",
+    "awaiting_holdout": "AWAITING_HOLDOUT",
+    "refuted_holdout": "PHASE1_REFUTED_HOLDOUT",
+    "go": "PHASE1_GO"
+  },
+  "cost": {
+    "authoring_host_physical_cores": 16,
+    "authoring_host_logical_processors": 32,
+    "authoring_host_ram_gib": 61.6,
+    "frozen_width_only_seconds": 263.6871026000008,
+    "frozen_width_only_frames": 161,
+    "exclusive_wall_hours": 16.0,
+    "shared_host_wall_hours": 24.0,
+    "requested_cpu_threads": 8,
+    "requested_memory_gib": 16,
+    "maximum_thresholds_per_render_batch": 8,
+    "evidence_tag": "VERIFIED-ESTIMATE"
+  }
+}
