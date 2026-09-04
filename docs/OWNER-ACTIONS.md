@@ -110,8 +110,10 @@ a bar of exactly `0.0000%`. The checker was commissioned in both directions
 before it ran, so the failure is real and not an instrument artifact.
 
 **Nothing you can buy or shoot fixes M8.** It is a software defect and it is
-being worked now — and as of tonight there is **a repair with a price we can
-afford**. See the M137 row below.
+being worked now. Tonight's picture changed twice: a promising repair looked
+excellent, then failed the control I demanded of it. The honest summary is that
+**we no longer have evidence that fixing M8 costs any image quality at all** —
+which is better news than it sounds. See the M137 row.
 
 ---
 
@@ -121,11 +123,14 @@ No action needed on any of these. They cost nothing and need none of your time.
 
 | lane | what | why it matters |
 | --- | --- | --- |
-| **M130** | Build `crop-early` | Every one of the ten blocked axes carries blocker `(b)`. Nothing can be unlocked without this, and it is one of only two gates left on resuming *any* new build. |
-| **M137** | Clamped resampler — **the answer came back good** | M8 is the only axis we actually score, and it fails. Bilinear fixes it exactly but costs `0.3404` dex of real detail. A clamped kernel scores **zero violations across 6,131,678,976 samples** *and* keeps **`99.76%`** of that detail — so hull compliance costs about a quarter of one percent of sharpness, not all of it. **The sharpness was not made of overshoot.** One control still outstanding before I call it settled. |
+| **M130** | Build `crop-early` — **landed** | Every one of the ten blocked axes carries blocker `(b)`, so nothing could be unlocked without this. **Done, verified by me independently, and committed.** The usable area of a cropped stack goes from **64.60% to 96.22%** of the frame — it now passes the ≥80% gate it used to fail — and existing default output is byte-for-byte unchanged. This was one of only two gates on resuming any new build; the other is now running. |
+| **M137** | Clamped resampler — **good news, then retracted** | The fear was that fixing M8 costs sharpness. A clamped kernel scored **zero violations across 6,131,678,976 samples** while keeping `99.76%` of what we were calling detail. Then I made it test the measurement itself against a **blank patch of image** — and the blank patch scored *higher* than the detailed one. So that number was never measuring detail; it was measuring amplified noise. Claim withdrawn. **The silver lining is real: we no longer have any evidence that fixing M8 costs image quality.** |
+| **M138** | Re-examining a design we declared dead | Phase 1 of the plan — the merge rule the whole roadmap was built on — was declared refuted in September, leaving the plan with no bridge at its first step. **The test that killed it was self-contradictory.** It required a single fixed setting to match a comparator whose own setting deliberately changes across seven frequency bands, to within 5%, and threw out every candidate that failed *before* it ever measured quality. I verified that in the test's own source code. The refutation is withdrawn — **Phase 1 is untested, not dead**, which is a far better place to be. |
+| **M135** | A detail measurement we can trust | **Now the single most important thing in the program.** Two separate attempts to measure image detail have now failed the same test: both scored a blank patch as highly as a detailed one. Until we can measure detail honestly, we cannot make a resolution claim at all — and a resolution claim is the whole point. This cannot be bought or shot around. |
 | **M136** | The M8 bar itself — **ruled** | We were scoring the resampler for something it cannot control: at long exposures the output format physically cannot represent the correct value, so it counted as a violation no matter what. Ruling: fixing that is a **legitimate repair, not moving the goalposts** — and critically, the repaired bar **still fails our current code** (`31,148` violations) while a clean kernel scores zero. It still bites. |
-| **M12** | Formal memory/determinism run | Free, ~3.5 hours, no input from you. **Correctly waiting for M130** — `crop-early` changes the output bytes, so measuring now would just be thrown away. |
-| **M138** | Re-examining a design we declared dead | Phase 1 of the plan — the merge rule the whole roadmap was built on — was refuted in September and the plan has had no bridge at its first step ever since. I have one specific suspicion that the *test* that killed it was self-contradictory. Auditing that now, because if the refutation was wrong we threw away a year's direction, and if it was right we need to know the road ahead has to be designed from scratch. |
+| **M12** | Formal memory/determinism run | Superseded by the **M139** row below — its blocker has cleared. |
+| **M138** | Re-examining a design we declared dead | Phase 1 of the plan — the merge rule the whole roadmap was built on — was declared refuted in September and the plan has had no bridge at its first step ever since. **Answered tonight: the test that killed it was self-contradictory.** See the row above. |
+| **M139** | Formal memory/determinism run | Free, ~3.5 hours, no input from you. **Now unblocked** — `crop-early` landed and I verified and committed it. |
 
 ---
 
