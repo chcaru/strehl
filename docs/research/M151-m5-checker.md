@@ -3,6 +3,13 @@
 **State at freeze:** definitions and controls frozen before measurement code;
 commissioning results pending.
 
+**Commissioning verdict:** **PARTIAL, and the planned capture is not yet
+demonstrated sufficient.** The checker responds in both directions, but the
+frozen real-input eligibility arm does not produce enough sites to commission
+the complete scorecard bar. The non-zero commissioning exit is an intentional
+fail-closed result, not a runtime failure. The result verifier asserts that
+exact partial verdict and exits zero.
+
 ## Question and registered bar
 
 The real question is whether the planned sealed capture contains everything
@@ -224,3 +231,160 @@ no holdout output, metric, visual verdict, or tuning read is permitted before
 the registered score run
 (`docs/proposals/2026-09-sota-scorecard.md:345-349`). All writes go under this
 lane; `D:\personal\macro` and `D:\edited\macro` remain read-only.
+
+## Post-freeze commissioning results
+
+The frozen definition file has SHA-256
+`04bad98c8bb8099f3a674d464ffbf72f57c97559d038af07e4ee8d450731b09f`.
+It was committed before measurement code in `6783d497`; the pre-code
+noise-null correction was committed in `697e735f`.
+
+### Exact reproduction
+
+Run from the `strehl` repository root:
+
+```powershell
+python experiments/M151-m5-checker/checker.py self-test
+python experiments/M151-m5-checker/test_checker.py
+python experiments/M151-m5-checker/commission.py --refresh
+python experiments/M151-m5-checker/verify_results.py
+```
+
+The self-test exits 0. The unit suite runs 14 tests and exits 0. The full
+commission command forces all numerical thread pools to one, reads 174
+explicitly development/burned RAWs in 67.9 seconds of RAW preparation on this
+run, writes only under the lane, and exits **1** because the real-input site
+count and exact-length capture-sufficiency controls correctly remain red.
+`commission-results.json` is the compact result; detailed manifests and site
+rows are reproducible caches under ignored `out/`.
+
+### Null, defect, improvement, and FOV magnitudes
+
+| arm | eligible | coverage | Wilson LCB95 | longest failed run | retained FOV |
+|---|---:|---:|---:|---:|---:|
+| synthetic complete oracle null | 160 | **100.0%** | **98.3372%** | **0 / 21 nodes = 0%** | **100%** |
+| synthetic three-node slab deletion | 160 | **95.0%** (8 fail; **-5.0 pp**) | **91.3434%** | **1 / 21 = 4.7619%** | **100%** |
+| synthetic far-only defect | 160 | **0%** | **0%** | **21 / 21 = 100%** | **100%** |
+| development tilted-sw10 complete oracle null | 4 | **100.0%** | **59.6521%** | **0 / 14 nodes = 0%** | **100%** |
+| development tilted-sw10 three-node slab deletion | 4 | **75.0%** (1 fail; **-25.0 pp**) | **35.6168%** | **3.5 / 14 = 25.0%** | **100%** |
+| development tilted-sw10 far-only defect | 4 | **0%** | **0%** | **14 / 14 = 100%** | **100%** |
+
+The synthetic plant deleted nodes 5-7, covering 14.2857% of eligible depth.
+Twenty-four elected sites lay in the slab, eight failed, coverage moved exactly
+5.0 percentage points, and the longest failure overlapped the planted slab by
+one node. Replacing the far-only output with the complete best-source oracle is
+a planted improvement: coverage moved **0% -> 100%** and the failed run moved
+**100% -> 0%**.
+
+On real development data, the selected slab was nodes 17-19. One of the four
+eligible sites changed source, coverage moved **100% -> 75%**, and longest
+failed run moved **0 -> 3.5 nodes** (**25%** of represented depth). The reverse
+far-to-best improvement again moved **0% -> 100%**. These real magnitudes prove
+that the scoring path is not constant, but four sites are not a commissioned
+M5 population.
+
+The independent FOV plant removed a two-percent geometric strip and read
+**100% -> 98%** on both fixtures, correctly failing the 99% bar without
+changing spectral coverage. The noise-only source-signal null admitted **0 of
+64** sites. Permuting site coordinates while preserving measured depths and
+statuses left the non-planar run JSON byte-identical. Four synthetic captures
+of 160 distinct physical units gave pooled **640/640**, Wilson LCB95
+**99.5790%**, confirming the frozen pooled-unit implementation.
+
+### Real eligibility and the capture blocker
+
+The decisive red result is input-only and precedes every candidate output:
+
+| explicitly non-holdout input | frames | point ratio `>=2` | bootstrap LCB `>=1.5` | eligible |
+|---|---:|---:|---:|---:|
+| burned calibration grid sw4 | exact planned **55** | **0/64**; max 1.08784 | **0/64**; max 1.04749 | **0/64** |
+| burned calibration grid sw10 | exact planned **27** | **0/64**; max 1.27195 | **0/64**; max 1.18673 | **0/64** |
+| development tilted-sw10, full | 92 | **4/64** | **5/64** | **4/64** |
+| development tilted-sw10, best of all 66 contiguous 27-frame windows | 27 | point upper bound **15/64** | **17/64** separately | **13/64** |
+
+The best 27-frame development window was nodes 6-32. Its median point ratio
+was 1.39945 and maximum 12.3001. Because point ratio `>=2` is conjunctive, 15
+is a hard upper bound even before bootstrap; the frozen combined result is 13.
+
+Existing M131 focus curves independently show the same broad-through-focus
+mechanism with different statistics: best/far-at-three ratios reached the 2.0
+bar at **0/64** sites for Tenengrad and Laplacian on both sw4 and sw10. Their
+maxima were 1.1374 / 1.1478 on sw4 and 1.2447 / 1.6234 on sw10. Those are
+corroboration, not substitutions for F1.
+
+There is a second arithmetic blocker hidden by the scorecard's nominal
+"at least 50" wording. Under F5, even 50/50 successes have Wilson LCB95
+0.948667; 64/64 have 0.959441; and 128/128 have 0.979300. The first population
+that can reach 0.98 with zero failures is **133/133**. At 256 sites only one
+failure is permitted. Thus 50 is merely an eligibility floor, not a passable
+sample size.
+
+## Final capture-sufficiency ruling
+
+The sealed 891-frame sitting is **structurally complete but not empirically
+sufficient for M5 as presently planned**.
+
+It does contain every frame type the checker consumes: converter-on paired
+sw4/sw10 passes, dense sw1, independent calibration, ordered nodes, witnesses,
+and a full-frame FOV reference. No additional frame type is required inside
+the scored sitting. Its 2048x2048 patch also has geometric room for 256
+non-overlapping 128-pixel M5 tiles.
+
+What is missing is an exact-configuration **converter-on M5 rehearsal on the
+final patch and tilt**. It must run this frozen input-only manifest separately
+on the planned 55-frame sw4 and 27-frame sw10 arms and demonstrate:
+
+1. at least **133 distinct eligible 128x128 physical tiles per capture**
+   (not 64 larger M1 sites and not merely the nominal 50);
+2. enough distinct elected depths that the largest Voronoi depth cell and any
+   one failure do not make the 1% run bar meaningless;
+3. interior peaks and gap-free depth support in both arms; and
+4. the same input geometry needed to reconstruct retained FOV.
+
+The documented 768-frame rehearsal contains TC0 ladders and a converter-on
+fixed-focus atlas, not the converter-on through-focus M5 arms. Existing exact
+55/27 converter-on data measured 0/64 eligible on the burned grid. Therefore
+the 891 must not be shot on the assumption that its current target will pass.
+If the exact rehearsal misses, the owner must enlarge/change the nonperiodic
+target, change tilt/step sampling, or explicitly amend/retire the
+three-node/2.0 eligibility clause before capture. More sealed frames of the
+same unverified design are not a repair.
+
+## Can this bar bite?
+
+**The scoring core can bite.** It stayed quiet on both complete-oracle nulls,
+charged the synthetic deletion 5.0 points and the real deletion 25.0 points,
+localized a failed run in both, rejected a 2% crop, rejected far-only outputs,
+and moved 100 points in the planted-improvement direction. It is not an
+always-green statistic and its error sign is not one-sided by construction.
+
+**The complete registered bar cannot yet bite on a claim-bearing real
+population.** Its input-only eligibility denominator is underfilled by more
+than an order of magnitude on the available exact-length data, so the correct
+verdict is `UNMEASURED`, not pass. `all_commissioned` is consequently `false`.
+If an exact final-patch rehearsal cannot reach 133 sites, retaining the current
+eligibility clause would create a bar that rejects every real candidate before
+examining an output. Retiring or amending that clause would then be more honest
+than calling the checker commissioned.
+
+## Not commissioned
+
+- No scored common-input ProPhoto adapter was available. The real-data arm
+  uses a documented linear green RAW proxy and no final geometric
+  registration. It is diagnostic evidence and cannot substitute for the
+  registered common-input score path.
+- No production Strehl or commercial-comparator output was rendered. The
+  complete and defective outputs are input-only oracle tile mosaics. This
+  avoided sustained rendering during M139's timing campaign.
+- The real null/defect response has only four eligible sites and therefore
+  does not commission Wilson, per-capture coverage, or comparator parity.
+- The source-signal noise null uses independent centered cross-power at unit
+  scale. Because the eligibility ratios are scale-invariant it exercises the
+  zero-signal sign path, but it does not reproduce measured sensor
+  fixed-pattern correlation; the stronger measured-noise null registered
+  before code remains uncommissioned.
+- FOV arithmetic and its crop plant are commissioned; an actual output-adapter
+  geometry trace is not.
+- The non-planar constructor is commissioned by an invariant permutation
+  plant. The all-axis real stack was not reread for a separate output score.
+- No holdout outcome was rendered, scored, or viewed.
