@@ -37,6 +37,14 @@ were frozen in `experiments/M-PHASE0-PIPE/PREREGISTRATION.md` at `867c6041`.
 | timing | whole-process QPC wall time plus the binary's fold `Instant`; ascending and descending worker sweeps |
 | load gate | ≤15% five-second pre-load and ≤10% during-run external busy after subtracting child CPU |
 
+The untracked pre-commit scratch tree at `out/source-prototype` is **not**
+provenance evidence. It omitted `decode_queue.rs` and its `merge_cmd.rs`
+resolved that module through an absolute path into the live working tree.
+That generator/checker cancellation makes the snapshot inadmissible under
+rule 35; no result in this report relies on it. The candidate is identified
+instead by the committed source at `1da5e87b`, its embedded build id, and the
+executable hash above.
+
 The accepted commissioning pair measured 1.298 s normally and 3.326 s with an
 independently requested 2,000 ms sleep: **+2.028 s**, inside the registered
 1.750–2.500 s interval. Both rendered the same nonzero TIFF, SHA-256

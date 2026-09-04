@@ -618,7 +618,7 @@ def load_records(path: Path) -> list[dict[str, Any]]:
 def median(values: list[float]) -> float:
     ordered = sorted(values)
     middle = len(ordered) // 2
-    if len(ordered).is_multiple_of(2):
+    if len(ordered) % 2 == 0:
         return 0.5 * (ordered[middle - 1] + ordered[middle])
     return ordered[middle]
 
