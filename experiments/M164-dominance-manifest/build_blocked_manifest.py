@@ -179,10 +179,13 @@ def build() -> tuple[str, str]:
             {
                 "id": "production-software",
                 "missing": (
-                    "every candidate/comparator binary, native-output "
-                    "adapter, setting, and environment freeze"
+                    "the Strehl candidate binary, native-output adapter, "
+                    "settings, reduction/extraction software, and "
+                    "environment freeze required by the exact rehearsal"
                 ),
-                "producer": "orchestrator and comparator execution owners",
+                "producer": (
+                    "M164 registrar with the Strehl candidate execution owner"
+                ),
             },
             {
                 "id": "production-seed",

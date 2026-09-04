@@ -1,6 +1,134 @@
-MANIFEST BLOCKED: M164 must freeze the complete cell expansion, calibrated bars, complete-S reduction, and production seed; M135/M147 must supply the final target, geometry, and resampler bindings, and execution owners must freeze candidate/comparator software
+MANIFEST BLOCKED: M164 must freeze the complete cell expansion, calibrated bars, complete-S reduction, and production seed; M135/M147 must supply the final target, geometry, and resampler bindings, and the Strehl execution owner must freeze candidate software
 
 # M164 — production dominance manifest and fail-closed reader
+
+## Clarification — licence and Ask 2a critical paths
+
+`LICENCE NOT ON CRITICAL PATH: comparator freeze is an over-broad blocked-record
+description; M164's pre-render dominance witness contains no comparator render,
+and the 1,092-frame rehearsal needs the Strehl candidate renderer/adapter
+package, not a licensed Zerene PMax/DMap binary.`
+
+**INFERRED BY READING.** M164 §5 says explicitly that `S_1/S_2` are not
+candidate or comparator renders. M166's rehearsal nevertheless contains a
+separate 224-frame **candidate** package so the exact Strehl M1 acquisition,
+renderer/adapter/settings, focus-return gates, and execution load are exercised.
+The external comparator products do not consume those rehearsal RAWs and are
+not needed to decide `REFERENCE_INFORMATION_DOMINANCE`.
+
+**INFERRED BY READING.** M166's phrases “every candidate and comparator
+binary” and “all ... renderer, comparator ... hashes” describe the broader
+eventual exact score/comparison configuration. Read literally as a prerequisite
+to the development dominance rehearsal, they conflict with M164's pre-render
+estimand and M153's licensed-unit separation. M153 explicitly says
+product-native Strehl measurement is not gated by comparator qualification or
+availability, while a purchased licence is required before a commercial
+comparative run.
+
+**INFERRED BY READING.** Therefore there is no Zerene-binary field that must be
+filled to freeze the M164 rehearsal manifest. The required software fields are:
+
+- the M164 extraction/reduction/bootstrap/checker/schema bundle; and
+- the Strehl candidate executable, settings, native-output adapter, and
+  environment needed by the rehearsal's separate candidate package and
+  physical controls.
+
+Zerene PMax/DMap, the fresh fork, and other external products belong in their
+later comparator execution manifests. The licence purchase can proceed in
+parallel; it remains on the commercial comparison path, not the M164 rehearsal
+release path.
+
+`ASK 2A IS A MANIFEST INPUT: it resolves the accepted M_work, measured
+reference/scored sampling-ratio bound, common-field mapping, and viable target
+scale/carrier geometry; the final artwork, guard/support, target hash,
+resampler/payload generator, geometry contract, and physical target
+qualification still remain.`
+
+**INFERRED BY READING.** M147 says the two RAWs decide whether the intended
+placement has `LCB95(M_reference/M_work) >= 2.0`, whether the complete target
+and guards remain in the common field, and whether local mapping/geometry is
+valid. M135 says the exact `M_work`, target scale, focus-offset control, and
+final physical cell/carrier dimensions cannot be frozen before that result.
+Ask 2a is consequently a direct critical-path input, not a side errand.
+
+**INFERRED BY READING.** Ask 2a alone does **not** close the target/geometry row.
+On an accepted result, software still has to compute and freeze the feasible
+geometry, generate final-size artwork from the measured placement, prove every
+carrier maps at or below `0.25 cyc/native scored px`, freeze guard width against
+the maximum registered support, build and commission the physical payload
+generator/resampler, and bind the resulting artifacts. The fabricated
+development panel must then qualify optically in the full rehearsal. A failed
+or quality-refused Ask 2a instead prescribes a corrected two-frame pair or
+falsifies the current shared-optic geometry; it cannot be replaced by nominal
+lens arithmetic.
+
+### Shortest honest route from the blocked record
+
+**INFERRED BY READING.** The shortest dependency graph is:
+
+1. **M164/M135 — `software`, now, parallel:** freeze the production cell
+   semantics (channel and field partitions), scalar-versus-vector architecture,
+   target class, site/focus rule, support/guard rule, nuisance grid, calibration
+   design, and registered software inventory. This fixes what Ask 2a must map.
+2. **M147 + owner — `owner-capture`, now, parallel with step 1:** execute and
+   adjudicate Ask 2a. If it refuses for input quality, retake the prescribed
+   pair. If no feasible `M_work` survives ratio, common-field, and carrier
+   constraints, stop and redesign the reference geometry.
+3. **M135/M164 — `software`, after 1+2:** calculate the feasible placement and
+   final physical cell dimensions; generate the independently seeded D/H
+   artwork class, tone strip, sentinels, fiducials, and exact target manifest;
+   freeze the target-code/randomization/checker seed policy only after the
+   registered renderer/settings hashes are fixed.
+4. **Target owner/vendor — `purchase`, after step 3:** fabricate the
+   development and holdout target instances. This is target fabrication, not a
+   Zerene licence. Vendor inspection and fabrication can overlap only after the
+   final-size artifact and no-rescale instructions exist.
+5. **M164/M135/M165 — `software`, parallel with step 4:** implement and
+   commission the candidate-blind complete-`S` reduction/payload generator,
+   M165 physical-evidence consumer, mapping/tone/power/rank/conditioning/
+   common-mode gates, persistent reader, and exact capture-sheet validator.
+   Freeze the Strehl candidate executable/settings/native-output adapter and all
+   checker/environment hashes. No external comparator binary is required.
+6. **M164 calibration — `software`, after 1+3+5:** run the preregistered
+   two-part known-ratio development calibration; freeze positive per-cell
+   `delta_I,k`/`delta_H,k`, `epsilon_common`, signal/noise floors, rank,
+   conditioning, control-site bars, bootstrap settings, and any cells rejected
+   before physical outcome access.
+7. **M164 registrar — `software`, after 2–6:** replace every blocked/null item,
+   enumerate the complete Cartesian family, bind target, geometry, calibration,
+   reduction, candidate software, seed, and checker artifacts, regenerate the
+   freeze record, and rerun the full mutation/byte-binding commission. Only
+   then may the record say `FROZEN`.
+8. **Owner + M164/M135/M165 — `owner-capture`, after step 7:** perform the
+   1,092-frame development rehearsal on D and run the frozen family once. A
+   pass licenses a fresh scored attempt; a refusal follows the frozen
+   diagnosis/remediation policy and may require a new D panel/session.
+9. **Comparator execution owners — `purchase` plus `software`, parallel with
+   steps 1–8 unless needed earlier to bound proprietary support:** buy the
+   required Zerene tier, acquire/pin PMax/DMap and fork builds, and commission
+   native-output adapters. This joins the later commercial comparison/score
+   path, not the prerequisite chain to step 8.
+
+**INFERRED BY READING.** One qualification prevents a false parallelism claim:
+if the registered target guard must cover an unknown proprietary Zerene
+postfilter support, then either that support must be conservatively bounded
+without running Zerene or the target layout must defer until the licensed
+product can be measured. That is a **target-universality** dependency, not an
+M164 dominance dependency. The shortest rehearsal-only route can freeze guards
+against the Strehl candidate path and state that later external-comparator
+admission requires its own support check; a single universal target intended
+to serve every future comparator may place the purchase on the target-design
+subchain.
+
+**INFERRED BY READING — ROUTE TEXT FOR THE ORCHESTRATOR.** Replace the earlier
+decision shorthand with:
+
+> The Zerene licence is not on the M164 dominance-rehearsal critical path.
+> Freeze the Strehl candidate/reduction/checker execution bundle before the
+> rehearsal. Purchase and pin Zerene before a commercial comparative run.
+> Ask 2a is a direct manifest input: it fixes the accepted working
+> magnification, sampling-ratio lower bound, common field, and target carrier
+> scale. It does not by itself freeze or fabricate the final target.
 
 ## 0. Ruling
 
@@ -11,10 +139,10 @@ independent 17-check verifier under
 
 **VERIFIED BY RUNNING.** The bytes currently serialized as
 `production-manifest-v1.json` have SHA-256
-`7dd9c5e5da63bd68ffa49b645e59cedc4495fc08b5e5b8e423f6eb68552a22d9`.
+`9ff16920bee0bb386cadf928c1fa160ae48e4253d937b063b7410c9027576dc5`.
 The separate freeze record binds those manifest bytes, the launcher, and the
 reader core. Its SHA-256 is
-`2f1ca6ab1dcb97c0b41df938b5167f847456bb7375064df7324edf7d30e2eb7a`.
+`7149b02d6520e8a8afcaf4bf0cba1c459076075612f662b3f531a10591429803`.
 
 **INFERRED BY READING.** That digest identifies a **blocked-state record**, not
 a production-ready manifest. The record deliberately says `status =
@@ -50,7 +178,7 @@ of the 1,092-frame dominance rehearsal is licensed.
 | positive `delta_I,k`, `delta_H,k` | **INFERRED BY READING:** M164 §4 requires a predeclared finite candidate grid, two disjoint known-ratio development partitions, bias/power selection, and untouched validation. No production calibration artifact exists. M164 explicitly says its `0.08` values are commissioning-only. | M164 calibration owner |
 | `epsilon_common`, power floors, rank and conditioning bars | **INFERRED BY READING:** the current M164 implementation values were not validated as production physical bars, and M166's truth-reference audit leaves the design dimensions, support, rank evidence, and condition-number bar unresolved. | M164 calibration owner, after the target/reduction design fixes the measured design matrix |
 | complete-`S` scalar or vector reduction | **INFERRED BY READING:** M164 §5 requires each `S_1/S_2` to represent a complete independently acquired input. M166 corrects that lineage to `55 + 55 + 27 + 27` frames. No candidate-blind sufficient scalar reducer or lossless vector checker is frozen. M135 also records that the physical payload generator is not implemented or commissioned. | M164 complete-input reduction owner |
-| calibration, target, resampler, geometry, software, seed, checker hashes | **VERIFIED BY RUNNING / INFERRED BY READING:** the blocked record binds the available M165 calibration contracts, M135 rule/binding records, M147 preflight code, M164 estimator, and new checker. M135's physical binding still contains null commissioning/payload hashes; M147 has no accepted real scale/field result; the final target, native-output resampler, production seed, and complete candidate/comparator freezes do not exist. | M135/M147 target and geometry owners; M164 seed registrar; candidate/comparator execution owners |
+| calibration, target, resampler, geometry, software, seed, checker hashes | **VERIFIED BY RUNNING / INFERRED BY READING:** the blocked record binds the available M165 calibration contracts, M135 rule/binding records, M147 preflight code, M164 estimator, and new checker. M135's physical binding still contains null commissioning/payload hashes; M147 has no accepted real scale/field result; the final target, native-output resampler, production seed, and complete Strehl candidate/reduction execution freeze do not exist. | M135/M147 target and geometry owners; M164 seed registrar; Strehl candidate execution owner |
 | fail-closed reader | **VERIFIED BY RUNNING:** delivered and commissioned. | complete |
 
 **INFERRED BY READING.** The M165 real A/B/V maps are run evidence, not values
@@ -64,6 +192,12 @@ capture.
 existing M164 scalar estimator. If the program selects a lossless vector
 reduction instead, it needs a new versioned estimator and reader rather than a
 string change that silently feeds vector data to the scalar gate.
+
+**INFERRED BY READING — CORRECTION.** The original blocked record's
+`production-software` wording, “every candidate/comparator binary,” was too
+broad for the M164 rehearsal gate. The corrected record requires the Strehl
+candidate and M164 execution bundle only. External commercial comparator
+freezes remain prerequisites to their later comparative runs.
 
 ## 2. Delivered fail-closed mechanism
 
@@ -170,11 +304,11 @@ checker. The common-mode charge is therefore load-bearing, not decorative.
 
 **VERIFIED BY RUNNING.** The persistent production refusal is
 `out/production-refusal.json`, SHA-256
-`8913fb83f0114c8bf1aa88e8bf3b8ad66e92d2151927e8f732afc2cdadc66d7d`.
+`6dd38bafecb949d7e3ec6d22aa3b0bb02d5b0015d896cb80f15204dc3e22ee10`.
 
 **VERIFIED BY RUNNING.** The independent verification record is
 `out/verification.json`, SHA-256
-`6ca0ab021ccf70deee5dfaff95558f47172c9b327664d0f0f63e9b3e37eb9485`.
+`a48bc69fb3e5cc963ecaf7bae2a9cdeb9f86df4a2fdc29be120a32256e952c63`.
 
 ## 5. Exact release path
 
@@ -189,8 +323,8 @@ entries in `production-manifest-v1.json.unresolved` are replaced by:
    a newly versioned vector estimator/reader;
 4. the final target, resampler, accepted M147 scale/field, and geometry
    artifacts;
-5. all candidate/comparator binaries, settings, adapters, and environment
-   records; and
+5. the Strehl candidate binary, settings, native-output adapter, M164
+   reduction/extraction software, and environment records; and
 6. the target/randomization/checker seed artifact.
 
 **INFERRED BY READING.** Changing `status` to `FROZEN` without those values

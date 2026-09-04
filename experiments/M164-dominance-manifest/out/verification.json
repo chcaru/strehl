@@ -2,8 +2,8 @@
   "checks": [
     {
       "detail": {
-        "consumed": "7dd9c5e5da63bd68ffa49b645e59cedc4495fc08b5e5b8e423f6eb68552a22d9",
-        "expected": "7dd9c5e5da63bd68ffa49b645e59cedc4495fc08b5e5b8e423f6eb68552a22d9"
+        "consumed": "9ff16920bee0bb386cadf928c1fa160ae48e4253d937b063b7410c9027576dc5",
+        "expected": "9ff16920bee0bb386cadf928c1fa160ae48e4253d937b063b7410c9027576dc5"
       },
       "name": "freeze-binds-consumed-manifest-bytes",
       "passed": true
@@ -72,8 +72,8 @@
           "id": "dominance-core"
         },
         {
-          "consumed": "fa62585f0ad010e0b51af68c64222490824e09ca9a7e8f692467e080622c5f0b",
-          "expected": "fa62585f0ad010e0b51af68c64222490824e09ca9a7e8f692467e080622c5f0b",
+          "consumed": "29dde870d1c163b75a54453e1d10b83222dc8a8602bedffd587a1fb2c158a406",
+          "expected": "29dde870d1c163b75a54453e1d10b83222dc8a8602bedffd587a1fb2c158a406",
           "group": "software",
           "id": "manifest-builder"
         },
@@ -159,8 +159,8 @@
     },
     {
       "detail": {
-        "recorded_sha256": "8913fb83f0114c8bf1aa88e8bf3b8ad66e92d2151927e8f732afc2cdadc66d7d",
-        "replay_sha256": "8913fb83f0114c8bf1aa88e8bf3b8ad66e92d2151927e8f732afc2cdadc66d7d"
+        "recorded_sha256": "6dd38bafecb949d7e3ec6d22aa3b0bb02d5b0015d896cb80f15204dc3e22ee10",
+        "replay_sha256": "6dd38bafecb949d7e3ec6d22aa3b0bb02d5b0015d896cb80f15204dc3e22ee10"
       },
       "name": "production-refusal-is-reproducible",
       "passed": true
@@ -220,7 +220,7 @@
       "passed": true
     }
   ],
-  "manifest_sha256": "7dd9c5e5da63bd68ffa49b645e59cedc4495fc08b5e5b8e423f6eb68552a22d9",
+  "manifest_sha256": "9ff16920bee0bb386cadf928c1fa160ae48e4253d937b063b7410c9027576dc5",
   "schema": "m164-dominance-manifest-verification/v1",
   "source_sha256": {
     "commission.py": "ab6e73dc2885089438fc0e03b9a412f4e2fad77bb4b4ad39a2f22061699d4407",
