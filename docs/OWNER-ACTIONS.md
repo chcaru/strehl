@@ -49,6 +49,47 @@ Maintained by the orchestrator. Last updated after lanes M147, M149, M150.
 It is the only blocker that cannot be bought, shot, or coded around. It has to
 be invented, and it has already defeated several attempts.**
 
+> ### Updated 2026-09-06, and this is the first genuinely good news on this blocker
+>
+> **Two things changed today, and together they move the detail blocker from
+> "must be invented" to "must be commissioned and shot once."**
+>
+> **First, the goal is smaller than this page has been telling you.** Your plan's
+> printable end-state sentence is six clauses, but one clause carries two axes,
+> so it licenses **seven**: M1, M2, M3, M8, M9, M10, M11. It names no instrument
+> for M4, M5, M6, M7 or M12. My scorecard had made all five fatal to publication
+> anyway, and separately had made **Helicon mandatory** where your plan says
+> *"Helicon if obtainable"* — which was blocking eight axes on a product you never
+> asked for. Both were my inventions, not your requirements, and both are
+> corrected (commit `6b966d8c`). **The five extra axes remain engineering gates
+> and their results will still be published; they no longer gate your claim.**
+> The `12 of 12` row in the table below is therefore the *engineering* target.
+> **Your claim needs seven.**
+>
+> **Second, the detail instrument now exists as a design and has been ruled
+> admissible — and the route costs `$0`.** The instrument was blocked on a
+> reference captured at twice the scored sampling, which nothing on hand
+> provided, and the proposed fix was a manufactured coded target plus a second
+> calibrated optic. Your own plan already contained a cheaper escape: **score the
+> *lower* magnification and use the higher one as the truth.** That inverts the
+> problem and needs no new hardware at all — **a second macro optic is not
+> required.**
+>
+> **One correction, and it is mine.** I wrote that this yields `2.8/1.4 = 2.0`
+> exactly. Those are **lens labels, not measured magnifications**. On your
+> measured rig the conservative converter-on ratio is `2.7015`, so a nominal
+> `1.40x` scored state gives `1.9296` — **below the bar, not at it.** The route
+> survives on a tighter scored state: a `1.32x` target with a hard `1.33x`
+> maximum gives `2.0312`. **This is already in the capture request; there is
+> nothing for you to compute and nothing for you to buy.**
+>
+> **What this does not mean.** The instrument is designed and ruled, not
+> commissioned. It measures *detail recoverable through your shared prime*, not
+> absolute object truth, and any published claim will say so. Its state is
+> `BLOCKED_ON_PHYSICAL_COMMISSIONING_AND_FRESH_INVERTED_CAPTURE`. **Do not shoot
+> yet** — the commissioning run has to clear first, and it is queued behind a
+> timing-sensitive campaign currently holding the machine.
+
 Here is what each step really reaches. This is a mechanical re-derivation from
 the blocker table at `docs/proposals/2026-09-sota-scorecard.md:423-434`, not a
 summary of one:
@@ -701,6 +742,46 @@ certificate, and it is exactly why the free nominal values cannot carry a scored
 result — and why the certificate's *actual* uncertainty is the whole question.
 
 ---
+
+## Ask 5 — reshoot the calibration slide, eventually. **$0.** *Not urgent. I spent your existing one, deliberately, and you should know why.*
+
+**What I did.** Your 2026-09-02 `high-res-calibration-slide-cpl` session — 657
+frames across `tilted-sw4` (182), `tilted-sw10` (92), `flat-sw4` (186) and
+`very-tilted-all-axis-sw10` (197) — has been **deliberately burned for instrument
+development.** Under this program's holdout rule, reading any outcome on one
+member of a capture session burns every member of it, so those 657 frames can no
+longer be used to *score* anything.
+
+**Why I spent it rather than protecting it.** That session contains something no
+other capture here does and nothing this program ever asked for: a **genuine
+optical improvement pair.** `tilted-sw4` against `tilted-sw10` is the same
+subject over the same focus-encoder range at a finer focus step — real added
+detail, from real photons, with fresh noise in both arms. That matters because
+every detail metric this program has built was retired after being tested only
+against *simulated* improvements, and a simulated improvement is exactly what a
+sharpening filter can fake. **Six candidate families across eight implementations
+were all discarded without a real optical arm ever being run against them.** With
+no detail instrument existing at all, the choice was between protecting a capture
+I could not yet use and spending it to build the thing that would let me use
+anything. I spent it, and I would make the same call again.
+
+**What I need back, and when.** A fresh equivalent sitting — the same slide, the
+same rig, the same four stacks — to serve as the **scoring** holdout once the
+instrument commissions. It is a static target on unchanged equipment, so it is
+`$0` and reproducible on demand.
+
+**Do not shoot it yet, and do not shoot it in the same sitting as the main
+session.** It is only needed after commissioning clears, and shooting it early
+risks it drifting into the development set the same way the first one did. I
+will fold the exact shot list into the capture request when the instrument is
+commissioned, so that you shoot from one document rather than from this note.
+
+**One thing to know about what that session can and cannot settle.** Even burned,
+it cannot finish the detail question on its own: the four stacks lack the
+independent repeat lineages the instrument needs, and using the finer-step stack
+as its own truth would be circular. It commissions the instrument. It cannot
+score it. That limitation was reported by the lane that wanted the result, against
+its own interest, which is the reason I trust it.
 
 ## Ask 3 — buy Zerene **Professional, $289**. *Necessary either way, and the only thing on the board that unblocks an axis.*
 

@@ -5455,19 +5455,48 @@ reference at `>=2.0x` the scored sampling, and proposed a manufactured coded tar
 an independently calibrated optical path. The main sweeps top out at `2.8x`, so a `2.8x`
 reference against a `2.8x` scored stack yields `1.0x` and fails a `1.25x` automatic
 no-go. Inverting it — score the *lower* magnification and let the existing high
-magnification be the truth — yields `2.8/1.4 = 2.0x` **exactly**, clearing the bar with
-no manufactured target at all. The difference between the two routes is a `$0` lens-off
-reshoot versus a fabricated target and a second calibrated optic.
+magnification be the truth — appeared to yield `2.8/1.4 = 2.0x` **exactly**, clearing
+the bar with no manufactured target at all. The difference between the two routes is a
+`$0` lens-off reshoot versus a fabricated target and a second calibrated optic.
 
-**There is one honest objection and it may kill the route.** The inversion uses the same
-prime lens at two magnifications, so it is not an independent optical path, and M135's
-protocol asks for independence precisely so the reference's errors are not correlated
-with the scored path's. Whether a shared-optic, magnification-differentiated reference
-is admissible in `J_TR` is with M135 as a yes/no with conditions. **I have not written
-the owner ask, and I will not write it until that ruling lands** — the two routes differ
-by orders of magnitude in cost, and asking for the expensive one before checking whether
-the free one works is exactly how a program spends its owner's money on an unexamined
-assumption.
+**AMENDED 2026-09-06 after M135's ruling. The route survives; the arithmetic above does
+not, and it was mine.** `2.8` and `1.4` are **lens labels, not measured
+magnifications.** On the measured rig the conservative converter-on reproduction ratio
+is `2.7015`, so a nominal `1.40x` scored state gives `2.7015/1.40 = 1.9296` — **below
+the `2.0` bar, not at it.** The plan's inversion as literally written fails. What
+rescues it is a tighter scored state: a `1.32x` target with a hard `1.33x` maximum gives
+`2.7015/1.33 = 2.0312`, and the gate is not that point estimate but a preflight
+`LCB95(M_reference / M_scored) >= 2.0` measured from common target periods. M135's
+words: *"Do not use nominal lens labels as the ratio."*
+
+**How I got this wrong is worth more than the correction.** I checked that
+`2.8/1.4 = 2.0` and recorded the check as passing, in a verifier, under the name *"the
+inversion arithmetic is true"*. It is true. It is also empty: it confirms a correct
+division and says nothing whatever about whether the rig delivers `2.8` and `1.4`. **A
+check that verifies a computation without verifying its inputs will confirm any
+arithmetic performed on fiction.** The check has been replaced with one that asserts the
+measured `2.7015`, both derived ratios, and the fact that the nominal figure fails.
+
+**The shared-optic objection was real and M135 ruled on it: conditionally admissible.**
+The inversion measures *detail recoverable through the shared prime*, not absolute
+object truth, and any claim built on it must say so — the shared prime's zeros and
+common aberrations lie outside the identified truth. Admissibility rests on eight
+predicates, including blank-residual correlation `<=0.05`, demonstrably stronger
+converter-on transfer in **every** registered cell, at least 64 common guarded
+stochastic sites, and no crop, digital zoom, resample or source-derived oracle anywhere
+in the reference's construction. **A second macro optic is not required.**
+
+**The burned slide cannot finish the job, and M135 says so against its own interest.**
+If the authorized inventory is exactly the four recorded stacks, it cannot identify a
+full `J_TR(sw4)/J_TR(sw10)` contrast, because independent `R1/R2` and A/B lineages are
+absent — and **using `sw4` as truth is circular**. So the slide commissions the
+instrument; it cannot score it.
+
+Phase 1's state is therefore no longer `BLOCKED_DETAIL_INSTRUMENT` but
+`BLOCKED_ON_PHYSICAL_COMMISSIONING_AND_FRESH_INVERTED_CAPTURE`. That is the distinction
+I asked for and it is the whole value of the day: the program is no longer blocked on
+hardware that does not exist, but on one specified capture with equipment the owner
+already owns.
 
 #### 2.9.50.4 I burned a capture session on purpose, and the owner should see the reasoning
 

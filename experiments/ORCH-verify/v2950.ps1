@@ -96,7 +96,24 @@ if (Test-Path $hr) {
   Check 'capture tree reachable' $false "missing $hr"
 }
 Check 'the inversion arithmetic is stated' ($sec -match '2\.8/1\.4 = 2\.0x')
-Check 'the inversion arithmetic is true'   ([Math]::Abs((2.8 / 1.4) - 2.0) -lt 1e-12)
+# NOT a check that 2.8/1.4 = 2.0. That is trivially true and says nothing about
+# whether the rig delivers 2.8 and 1.4 -- it does not. The nominal figures are lens
+# labels; the measured conservative converter-on ratio is 2.7015. A check that
+# verifies a computation without verifying its inputs will confirm any arithmetic
+# performed on fiction, which is exactly how this section was wrong when committed.
+Check 'section records the nominal figure as AMENDED, not as fact' ($sec -match 'AMENDED 2026-09-06 after M135''s ruling')
+Check 'section states the measured 2.7015'      ($sec.Contains('2.7015'))
+Check 'section states nominal 1.40x FAILS'      ($sec -match '2\.7015/1\.40 = 1\.9296')
+Check 'section states 1.33x max clears'         ($sec -match '2\.7015/1\.33 = 2\.0312')
+Check 'measured ratio at 1.40 really is 1.9296' ([Math]::Round(2.7015 / 1.40, 4) -eq 1.9296)
+Check 'measured ratio at 1.33 really is 2.0312' ([Math]::Round(2.7015 / 1.33, 4) -eq 2.0312)
+Check 'nominal 1.40x really is below the 2.0 bar' ((2.7015 / 1.40) -lt 2.0)
+Check 'the gate is LCB95, not a point estimate'  ($sec -match 'LCB95\(M_reference / M_scored\) >= 2\.0')
+$m135 = Flat "$root\docs\research\M135-detail-instrument.md"
+Check 'M135 report states the measured 2.7015'   ($m135.Contains('2.7015'))
+Check 'M135 warns against nominal lens labels'   ($m135.Contains('Do not use nominal lens labels as the ratio'))
+Check 'M135 revised state is quoted correctly'   ($sec.Contains('BLOCKED_ON_PHYSICAL_COMMISSIONING_AND_FRESH_INVERTED_CAPTURE') -and $m135.Contains('BLOCKED_ON_PHYSICAL_COMMISSIONING_AND_FRESH_INVERTED_CAPTURE'))
+Check 'section records the circularity of using sw4 as truth' ($sec -match 'using `sw4` as truth is circular')
 
 Write-Output ''
 Write-Output 'F. the burn decision is recorded as a decision, with its limit'
