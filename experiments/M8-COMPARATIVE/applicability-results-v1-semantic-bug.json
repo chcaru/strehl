@@ -1,0 +1,518 @@
+{
+  "admissible_ids": [],
+  "checker": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE\\checker.py",
+  "checker_sha256": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+  "comparators": [
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 63,
+      "failed_predicates": [
+        "exact_output_to_source_placement_for_every_frame",
+        "exact_resampler_discrete_support",
+        "exact_output_crop_rotation_and_scale_map",
+        "source_and_output_in_one_documented_linear_rgb_domain",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "Software": "Adobe Lightroom 9.0 (Windows)"
+        }
+      },
+      "geometry_log": {
+        "contrast_maps": 0,
+        "crop_size_only": false,
+        "identity_references": 0,
+        "linear_rec2020_gamma1": false,
+        "photometric_formula_named": false,
+        "present": false,
+        "resampler_support_named": false,
+        "transforms": 0,
+        "white_balance_maps": 0
+      },
+      "id": "113-pmax-0",
+      "observed_sha256": "B240FE4016E97EBB194497B2798A095C63C490C4FFF54018D48D34C7523719A0",
+      "output": "D:\\edited\\macro\\test2\\2026-05-09-12.12.17 ZS PMax.tif",
+      "output_metadata": {
+        "dtype": "uint16",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {}
+      },
+      "predicates": {
+        "all_source_images_present": true,
+        "exact_output_crop_rotation_and_scale_map": false,
+        "exact_output_to_source_placement_for_every_frame": false,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": false,
+        "source_identity_auditable": true
+      },
+      "source_count": 63,
+      "stack": "113MSDCF"
+    },
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 63,
+      "failed_predicates": [
+        "exact_output_to_source_placement_for_every_frame",
+        "exact_resampler_discrete_support",
+        "exact_output_crop_rotation_and_scale_map",
+        "source_and_output_in_one_documented_linear_rgb_domain",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "Software": "Adobe Lightroom 9.0 (Windows)"
+        }
+      },
+      "geometry_log": {
+        "contrast_maps": 0,
+        "crop_size_only": false,
+        "identity_references": 0,
+        "linear_rec2020_gamma1": false,
+        "photometric_formula_named": false,
+        "present": false,
+        "resampler_support_named": false,
+        "transforms": 0,
+        "white_balance_maps": 0
+      },
+      "id": "113-pmax-40",
+      "observed_sha256": "4D490F71EF63DA33758A49BF583AD2166CD014A5401ED64EDB5E5EDCABB47A3E",
+      "output": "D:\\edited\\macro\\test\\2026-05-07-21.31.06 ZS PMax.tif",
+      "output_metadata": {
+        "dtype": "uint16",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {}
+      },
+      "predicates": {
+        "all_source_images_present": true,
+        "exact_output_crop_rotation_and_scale_map": false,
+        "exact_output_to_source_placement_for_every_frame": false,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": false,
+        "source_identity_auditable": true
+      },
+      "source_count": 63,
+      "stack": "113MSDCF"
+    },
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 33,
+      "failed_predicates": [
+        "exact_output_to_source_placement_for_every_frame",
+        "exact_resampler_discrete_support",
+        "exact_output_crop_rotation_and_scale_map",
+        "source_and_output_in_one_documented_linear_rgb_domain",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "Software": "Adobe Lightroom 9.0 (Windows)"
+        }
+      },
+      "geometry_log": {
+        "contrast_maps": 0,
+        "crop_size_only": false,
+        "identity_references": 0,
+        "linear_rec2020_gamma1": false,
+        "photometric_formula_named": false,
+        "present": false,
+        "resampler_support_named": false,
+        "transforms": 0,
+        "white_balance_maps": 0
+      },
+      "id": "119-pmax",
+      "observed_sha256": "B94C04421C8EB5FADD766E99A361F2C0BE4DE5425BECABAEB8D1FC1C82AA146B",
+      "output": "D:\\edited\\macro\\marker\\2026-05-09-13.35.07 ZS PMax.tif",
+      "output_metadata": {
+        "dtype": "uint16",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {}
+      },
+      "predicates": {
+        "all_source_images_present": true,
+        "exact_output_crop_rotation_and_scale_map": false,
+        "exact_output_to_source_placement_for_every_frame": false,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": false,
+        "source_identity_auditable": true
+      },
+      "source_count": 33,
+      "stack": "119MSDCF"
+    },
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 33,
+      "failed_predicates": [
+        "exact_output_to_source_placement_for_every_frame",
+        "exact_resampler_discrete_support",
+        "exact_output_crop_rotation_and_scale_map",
+        "source_and_output_in_one_documented_linear_rgb_domain",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "Software": "Adobe Lightroom 9.0 (Windows)"
+        }
+      },
+      "geometry_log": {
+        "contrast_maps": 0,
+        "crop_size_only": false,
+        "identity_references": 0,
+        "linear_rec2020_gamma1": false,
+        "photometric_formula_named": false,
+        "present": false,
+        "resampler_support_named": false,
+        "transforms": 0,
+        "white_balance_maps": 0
+      },
+      "id": "119-pmax-udr",
+      "observed_sha256": "412E92611996DB808C60F522334881B9F4F108ED659F665560617FF19BA3A0EA",
+      "output": "D:\\edited\\macro\\marker\\2026-05-09-13.40.00 ZS PMax UDR.tif",
+      "output_metadata": {
+        "dtype": "uint16",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {}
+      },
+      "predicates": {
+        "all_source_images_present": true,
+        "exact_output_crop_rotation_and_scale_map": false,
+        "exact_output_to_source_placement_for_every_frame": false,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": false,
+        "source_identity_auditable": true
+      },
+      "source_count": 33,
+      "stack": "119MSDCF"
+    },
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 33,
+      "failed_predicates": [
+        "exact_output_to_source_placement_for_every_frame",
+        "exact_resampler_discrete_support",
+        "exact_output_crop_rotation_and_scale_map",
+        "source_and_output_in_one_documented_linear_rgb_domain",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "Software": "Adobe Lightroom 9.0 (Windows)"
+        }
+      },
+      "geometry_log": {
+        "contrast_maps": 0,
+        "crop_size_only": false,
+        "identity_references": 0,
+        "linear_rec2020_gamma1": false,
+        "photometric_formula_named": false,
+        "present": false,
+        "resampler_support_named": false,
+        "transforms": 0,
+        "white_balance_maps": 0
+      },
+      "id": "119-pmax-udr-neutral",
+      "observed_sha256": "91A23716F5D1DAAB1A25A09BC2407EC386840858A559C72D7C074B89FABD5F97",
+      "output": "D:\\edited\\macro\\marker2\\2026-05-09-13.47.08 ZS PMax UDR.tif",
+      "output_metadata": {
+        "dtype": "uint16",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {}
+      },
+      "predicates": {
+        "all_source_images_present": true,
+        "exact_output_crop_rotation_and_scale_map": false,
+        "exact_output_to_source_placement_for_every_frame": false,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": false,
+        "source_identity_auditable": true
+      },
+      "source_count": 33,
+      "stack": "119MSDCF"
+    },
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 33,
+      "failed_predicates": [
+        "all_source_images_present",
+        "source_identity_auditable",
+        "exact_output_to_source_placement_for_every_frame",
+        "exact_resampler_discrete_support",
+        "exact_output_crop_rotation_and_scale_map",
+        "source_and_output_in_one_documented_linear_rgb_domain",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": null,
+      "geometry_log": {
+        "contrast_maps": 0,
+        "crop_size_only": false,
+        "identity_references": 0,
+        "linear_rec2020_gamma1": false,
+        "photometric_formula_named": false,
+        "present": false,
+        "resampler_support_named": false,
+        "transforms": 0,
+        "white_balance_maps": 0
+      },
+      "id": "119-focus-stack-float",
+      "observed_sha256": "2D1CCEC678F81173A231FBC7FD84E5457F361C57D32DFB06B24CBD82C1BBD6C2",
+      "output": "C:\\dev\\macro\\out\\stack_test2_rec2020.tif",
+      "output_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "ImageDescription": "{\"shape\": [4672, 7008, 3]}",
+          "Orientation": 1,
+          "Software": "tifffile.py"
+        }
+      },
+      "predicates": {
+        "all_source_images_present": false,
+        "exact_output_crop_rotation_and_scale_map": false,
+        "exact_output_to_source_placement_for_every_frame": false,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": false,
+        "source_identity_auditable": false
+      },
+      "source_count": 0,
+      "stack": "119MSDCF"
+    },
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 33,
+      "failed_predicates": [
+        "all_source_images_present",
+        "source_identity_auditable",
+        "exact_output_to_source_placement_for_every_frame",
+        "exact_resampler_discrete_support",
+        "exact_output_crop_rotation_and_scale_map",
+        "source_and_output_in_one_documented_linear_rgb_domain",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": null,
+      "geometry_log": {
+        "contrast_maps": 0,
+        "crop_size_only": false,
+        "identity_references": 0,
+        "linear_rec2020_gamma1": false,
+        "photometric_formula_named": false,
+        "present": false,
+        "resampler_support_named": false,
+        "transforms": 0,
+        "white_balance_maps": 0
+      },
+      "id": "119-focus-stack-defringed",
+      "observed_sha256": "82E1606DDF2627B938588F8DD4D7D8480392680CBCFD7D20900C84A043AAAA3B",
+      "output": "C:\\dev\\macro\\out\\stack_test2_rec2020_defringed.tif",
+      "output_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "ImageDescription": "{\"shape\": [4672, 7008, 3]}",
+          "Software": "tifffile.py"
+        }
+      },
+      "predicates": {
+        "all_source_images_present": false,
+        "exact_output_crop_rotation_and_scale_map": false,
+        "exact_output_to_source_placement_for_every_frame": false,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": false,
+        "source_identity_auditable": false
+      },
+      "source_count": 0,
+      "stack": "119MSDCF"
+    },
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 33,
+      "failed_predicates": [
+        "all_source_images_present",
+        "source_identity_auditable",
+        "exact_output_to_source_placement_for_every_frame",
+        "exact_resampler_discrete_support",
+        "exact_output_crop_rotation_and_scale_map",
+        "source_and_output_in_one_documented_linear_rgb_domain",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": null,
+      "geometry_log": {
+        "contrast_maps": 0,
+        "crop_size_only": false,
+        "identity_references": 0,
+        "linear_rec2020_gamma1": false,
+        "photometric_formula_named": false,
+        "present": false,
+        "resampler_support_named": false,
+        "transforms": 0,
+        "white_balance_maps": 0
+      },
+      "id": "119-focus-stack-u16",
+      "observed_sha256": "930014DEAB9F4833ABD7F2D93880CECBA282C900C7FC29C13AA6155797404086",
+      "output": "C:\\dev\\macro\\out\\stack_test2_rec2020_16bit.tif",
+      "output_metadata": {
+        "dtype": "uint16",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "ImageDescription": "{\"shape\": [4672, 7008, 3]}",
+          "Software": "tifffile.py"
+        }
+      },
+      "predicates": {
+        "all_source_images_present": false,
+        "exact_output_crop_rotation_and_scale_map": false,
+        "exact_output_to_source_placement_for_every_frame": false,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": false,
+        "source_identity_auditable": false
+      },
+      "source_count": 0,
+      "stack": "119MSDCF"
+    },
+    {
+      "admissible_exact_m8_o": false,
+      "expected_sources": 105,
+      "failed_predicates": [
+        "exact_resampler_discrete_support",
+        "exact_per_frame_photometric_map_into_that_domain"
+      ],
+      "first_source_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "Software": "Adobe Lightroom 9.3.1 (Windows)"
+        }
+      },
+      "geometry_log": {
+        "contrast_maps": 104,
+        "crop_size_only": true,
+        "identity_references": 1,
+        "linear_rec2020_gamma1": true,
+        "photometric_formula_named": false,
+        "present": true,
+        "resampler_support_named": false,
+        "transforms": 104,
+        "white_balance_maps": 104
+      },
+      "id": "coffee-focus-stack",
+      "observed_sha256": "8636C20D73CA0CB1F57DB89BF8553ABC166E0FBC517E5C62A07C74DEE509066E",
+      "output": "C:\\dev\\macro\\out\\coffee-bean\\stack.tif",
+      "output_metadata": {
+        "dtype": "float32",
+        "shape": [
+          4672,
+          7008,
+          3
+        ],
+        "tags": {
+          "ImageDescription": "{\"shape\": [4672, 7008, 3]}",
+          "Orientation": 1,
+          "Software": "tifffile.py"
+        }
+      },
+      "predicates": {
+        "all_source_images_present": true,
+        "exact_output_crop_rotation_and_scale_map": true,
+        "exact_output_to_source_placement_for_every_frame": true,
+        "exact_per_frame_photometric_map_into_that_domain": false,
+        "exact_resampler_discrete_support": false,
+        "output_hash_matches": true,
+        "serialization_contract_known": true,
+        "source_and_output_in_one_documented_linear_rgb_domain": true,
+        "source_identity_auditable": true
+      },
+      "source_count": 105,
+      "stack": "coffee-bean"
+    }
+  ],
+  "registered_at": "2026-09-03T19:41:01.975-07:00",
+  "selection_rule": "Audit every one of the nine unique-byte comparator renders already censused by V-HEADTOHEAD3; do not select by outcome. Measure the full geometrically valid frame in all three channels if and only if every exact-M8-O applicability predicate passes."
+}

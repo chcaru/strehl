@@ -1,0 +1,40 @@
+{
+  "preregistration_commit": "7601657fe87852049095b1c1cf67f28f4185fc37",
+  "registered_comparator_renders": 9,
+  "exact_m8_o_admissible_comparator_renders": 0,
+  "admissible_comparator_ids": [],
+  "common_stacks_with_exact_m8_o_on_both_tools": [],
+  "outcome_pixel_samples_read_by_this_lane": false,
+  "new_same_stack_strehl_m8_o": {
+    "status": "UNMEASURED",
+    "reason": "No comparator passed applicability; registered strehl artifacts are display-referred sRGB masters, not final linear M8-O inputs."
+  },
+  "new_comparator_m8_o": {
+    "status": "UNMEASURED",
+    "denominator": null,
+    "violations": null,
+    "percent": null,
+    "min_lower_signed_excess_linear": null,
+    "max_upper_signed_excess_linear": null
+  },
+  "prior_strehl_m8_o_not_common_stack_not_remeasured": {
+    "captures": [
+      "flat-et1s-sw4-cpl",
+      "flat-et2.5s-sw4-cpl",
+      "flat-et6s-sw4-cpl"
+    ],
+    "violations": 983648,
+    "denominator": 74173536,
+    "percent": 1.326144,
+    "min_lower_signed_excess_linear": -1.049185276,
+    "max_upper_signed_excess_linear": 0.00370329,
+    "source": "docs/research/M8-overshoot.md; not remeasured"
+  },
+  "sharpening_prediction": {
+    "prediction": "A sharpened render overshoots more than an unsharpened render of the same stack.",
+    "status": "UNTESTED",
+    "reason": "The retained PMax pair lacks exact geometry/domain contracts, differs in eleven development fields, and upstream Lightroom sharpening is already inside each arm's own input hull."
+  },
+  "theory_disposition": "NEITHER CONFIRMED NOR REFUTED",
+  "one_sided_caveat": "A nonzero M8-O is evidence of invented values. Zero cannot establish their absence because final clamping can erase overshoot."
+}

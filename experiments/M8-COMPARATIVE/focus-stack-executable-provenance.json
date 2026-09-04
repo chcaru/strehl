@@ -1,0 +1,30 @@
+{
+  "archived_render": {
+    "path": "C:\\dev\\macro\\out\\coffee-bean\\stack.tif",
+    "last_write_utc": "2026-05-11T03:01:58.7508128Z",
+    "sha256": "8636C20D73CA0CB1F57DB89BF8553ABC166E0FBC517E5C62A07C74DEE509066E"
+  },
+  "archived_log": {
+    "path": "C:\\dev\\macro\\out\\coffee-bean\\stack.log",
+    "last_write_utc": "2026-05-10T23:45:16.3564650Z",
+    "contains_version_or_commit": false
+  },
+  "available_binaries": [
+    {
+      "path": "C:\\dev\\macro\\focus-stack\\dist\\focus-stack.exe",
+      "last_write_utc": "2026-05-17T10:01:25.1680714Z",
+      "bytes": 858624,
+      "sha256": "0ABA0CF0936AF8B1CACE2681CA43D49729D253E8ED1F786F2A8960B7974CA45D",
+      "relationship_to_render": "postdates archived render by more than six days; no retained record identifies it as the producing binary"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\focus-stack.exe",
+      "last_write_utc": "2026-01-12T03:05:26.0000000Z",
+      "bytes": 1895424,
+      "sha256": "E256176D70BEC54BB51A448B2ADC452E7F49D21BC5042B40689A3257BBFDEE9E",
+      "relationship_to_render": "different binary; retained record does not identify it as producer"
+    }
+  ],
+  "source_tree_git_metadata_present": false,
+  "conclusion": "No available executable or source revision can be bound to the archived coffee render."
+}

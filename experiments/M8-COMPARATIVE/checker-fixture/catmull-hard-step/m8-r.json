@@ -1,0 +1,33 @@
+{
+  "capture": "catmull-hard-step",
+  "copy_denominator": 0,
+  "copy_fraction": null,
+  "copy_max_abs": 0.0,
+  "copy_violations": 0,
+  "coverage_mismatches": 0,
+  "denominator": 252,
+  "fraction": 0.1111111111111111,
+  "frame_sites": {
+    "catmull-hard-step": [
+      "R"
+    ]
+  },
+  "frames": 1,
+  "lower_violations": 14,
+  "max_abs_signed_excess": 0.0625,
+  "max_upper_signed_excess": 0.0625,
+  "min_lower_signed_excess": -0.0625,
+  "percent": 11.11111111111111,
+  "sites": 1,
+  "upper_violations": 14,
+  "violation_manifests": [
+    {
+      "count": 28,
+      "frame": "catmull-hard-step",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\commission\\catmull-hard-step\\r-violations\\catmull-hard-step-R.npy",
+      "sha256": "28C10B169D000204B50AE3E886FB20C731367E3322F5E390ADA07ACB0E8EFAA9",
+      "site": "R"
+    }
+  ],
+  "violations": 28
+}

@@ -1,0 +1,33 @@
+{
+  "capture": "explicit-hi-lo-plant",
+  "copy_denominator": 252,
+  "copy_fraction": 0.007936507936507936,
+  "copy_max_abs": 3.0517578125e-05,
+  "copy_violations": 2,
+  "coverage_mismatches": 0,
+  "denominator": 252,
+  "fraction": 0.007936507936507936,
+  "frame_sites": {
+    "explicit-hi-lo-plant": [
+      "R"
+    ]
+  },
+  "frames": 1,
+  "lower_violations": 1,
+  "max_abs_signed_excess": 3.0517578125e-05,
+  "max_upper_signed_excess": 3.0517578125e-05,
+  "min_lower_signed_excess": -3.0517578125e-05,
+  "percent": 0.7936507936507936,
+  "sites": 1,
+  "upper_violations": 1,
+  "violation_manifests": [
+    {
+      "count": 2,
+      "frame": "explicit-hi-lo-plant",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\commission\\explicit-hi-lo-plant\\r-violations\\explicit-hi-lo-plant-R.npy",
+      "sha256": "12379C41BD6BE5D05763CE34DDD177D4A2DEDEA2F83934FC02E1532A973D564A",
+      "site": "R"
+    }
+  ],
+  "violations": 2
+}

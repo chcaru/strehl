@@ -48,13 +48,22 @@ def tiff_metadata(path: Path) -> dict[str, Any]:
             in {
                 "ImageDescription",
                 "ICCProfile",
+                "InterColorProfile",
                 "Orientation",
                 "Software",
             }
         }
-        icc = tags.get("ICCProfile")
-        if isinstance(icc, bytes):
-            tags["ICCProfile"] = {
+        profile_key = next(
+            (
+                key
+                for key in ("ICCProfile", "InterColorProfile")
+                if isinstance(tags.get(key), bytes)
+            ),
+            None,
+        )
+        if profile_key is not None:
+            icc = tags[profile_key]
+            tags[profile_key] = {
                 "bytes": len(icc),
                 "sha256": hashlib.sha256(icc).hexdigest().upper(),
             }
@@ -146,13 +155,13 @@ def audit(candidate: dict[str, Any]) -> dict[str, Any]:
     metadata = tiff_metadata(output) if output_exists else None
     source_metadata = tiff_metadata(sources[0]) if sources else None
 
-    exact_geometry_manifest = (
-        candidate.get("crop_rotation_scale_contract") is not None
-        and log["present"]
+    complete_geometry_log = bool(
+        log["present"]
         and log["transforms"] + log["identity_references"] == expected_sources
     )
-    exact_domain = bool(
-        candidate.get("source_domain_contract")
+    documented_linear_domain = bool(
+        candidate.get("exact_common_linear_domain_contract") is True
+        and candidate.get("source_domain_contract")
         and candidate.get("output_domain_contract")
         and log["linear_rec2020_gamma1"]
         and source_metadata is not None
@@ -169,19 +178,26 @@ def audit(candidate: dict[str, Any]) -> dict[str, Any]:
         "source_identity_auditable": bool(
             all_sources and candidate.get("identity_evidence")
         ),
-        "exact_output_to_source_placement_for_every_frame": exact_geometry_manifest,
+        "exact_output_to_source_placement_for_every_frame": bool(
+            candidate.get("exact_placement_contract") is True
+            and complete_geometry_log
+        ),
         "exact_resampler_discrete_support": bool(
-            candidate.get("resampler_support") and log["resampler_support_named"]
+            candidate.get("exact_resampler_support_contract") is True
+            and candidate.get("resampler_support")
+            and log["resampler_support_named"]
         ),
         "exact_output_crop_rotation_and_scale_map": bool(
-            exact_geometry_manifest
+            candidate.get("exact_crop_rotation_scale_contract") is True
+            and complete_geometry_log
             and log["crop_size_only"]
-            and candidate.get("crop_rotation_scale_contract")
-            and "exact" in candidate["crop_rotation_scale_contract"].lower()
         ),
-        "source_and_output_in_one_documented_linear_rgb_domain": exact_domain,
+        "source_and_output_in_one_documented_linear_rgb_domain": (
+            documented_linear_domain
+        ),
         "exact_per_frame_photometric_map_into_that_domain": bool(
-            candidate.get("per_frame_photometric_contract")
+            candidate.get("exact_per_frame_photometric_contract") is True
+            and candidate.get("per_frame_photometric_contract")
             and log["photometric_formula_named"]
         ),
         "serialization_contract_known": bool(
@@ -257,12 +273,39 @@ def main() -> int:
 
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     rows = [audit(candidate) for candidate in manifest["comparators"]]
+    strehl_rows = []
+    for master in manifest["strehl_display_masters"]:
+        path = Path(master["output"])
+        exists = path.is_file()
+        observed_hash = sha256(path) if exists else None
+        metadata = tiff_metadata(path) if exists else None
+        description = (
+            str(metadata["tags"].get("ImageDescription", ""))
+            if metadata is not None
+            else ""
+        )
+        strehl_rows.append(
+            {
+                "stack": master["stack"],
+                "output": str(path),
+                "observed_sha256": observed_hash,
+                "hash_matches": observed_hash == master["sha256"],
+                "output_metadata": metadata,
+                "is_registered_final_linear_m8_output": bool(
+                    metadata is not None
+                    and metadata["dtype"] == "uint16"
+                    and "For viewing" not in description
+                    and "sRGB" not in description
+                ),
+            }
+        )
     payload = {
         "registered_at": manifest["registered_at"],
         "selection_rule": manifest["selection_rule"],
         "checker": str((ROOT / "checker.py").resolve()),
         "checker_sha256": sha256(ROOT / "checker.py"),
         "comparators": rows,
+        "strehl_display_masters": strehl_rows,
         "admissible_ids": [
             row["id"] for row in rows if row["admissible_exact_m8_o"]
         ],

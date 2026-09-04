@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "green_untouched_complete_contract": true,
+    "improvement_restoring_support_changes_reject_to_admit": true,
+    "red_every_single_missing_predicate": true
+  },
+  "passed": true,
+  "red_cases": {
+    "all_source_images_present": true,
+    "exact_output_crop_rotation_and_scale_map": true,
+    "exact_output_to_source_placement_for_every_frame": true,
+    "exact_per_frame_photometric_map_into_that_domain": true,
+    "exact_resampler_discrete_support": true,
+    "output_hash_matches": true,
+    "serialization_contract_known": true,
+    "source_and_output_in_one_documented_linear_rgb_domain": true,
+    "source_identity_auditable": true
+  }
+}

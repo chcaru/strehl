@@ -1,0 +1,24 @@
+{
+  "checker": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE\\checker.py",
+  "coordinate_reconstruction_function": "row_coordinates",
+  "forbidden_strehl_imports": [],
+  "imports": [
+    "__future__",
+    "argparse",
+    "ast",
+    "dataclasses",
+    "hashlib",
+    "json",
+    "math",
+    "numpy",
+    "os",
+    "pathlib",
+    "struct",
+    "tifffile",
+    "typing"
+  ],
+  "independent": true,
+  "sha256": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+  "support_reconstruction_function": "exact_support",
+  "tolerance_function": "tau_r"
+}
