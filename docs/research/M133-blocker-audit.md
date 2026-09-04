@@ -1050,3 +1050,315 @@ values.
   disqualifying, but the governing document supplies no tolerance.
 - Whether the named commercial outputs make M2's strict 5% advantage and
   M11's 2x advantage attainable in practice. Those outputs do not yet exist.
+
+## 8. Did the scorecard drift from the plan?
+
+**VERIFIED — summary: yes, in bounded but material ways.** Across the 19
+required primary trace rows (M1–M12 plus decision rules 1–7), the relationship
+is **3 faithful, 11 legitimate completions, 2 weakenings, and 3
+contradictions**. The mixed decision-rule rows additionally contain **one
+omission** (the proposal-pinned fork comparator) and **one unlabelled
+addition** (rule 4's `98%` threshold). Counting distinct material divergences
+rather than rows gives **9: 5 contradictions, 2 weakenings, 1 omission, and 1
+unlabelled addition**. The nine are enumerated in §8.4.
+
+The audit treats the proposal including its two appended amendments as the
+authoritative plan. For negative phrase checks, I stripped Markdown
+blockquote markers and collapsed all whitespace before searching. The
+normalised proposal contains zero occurrences of `98%`, `replacement M1`,
+`quality-qualified`, `information score`, `each capture must pass`, `pooling
+may not rescue`, `0.25 cyc/native px`, and `UNLICENSED_GT_0.25`.
+
+### 8.1 Q1 — D8/M115 was genuinely withdrawn
+
+**VERIFIED — the M1 state is not a silent omission of a still-admitted D8/M115
+instrument.** The original proposal did prescribe it:
+
+> The best-commissioned instrument in the corpus is **M115 §2's split-half
+> channel**: fold two interleaved disjoint half-stacks through the entire
+> pipeline, each re-deriving every data-dependent weight inside its own half;
+> the cross-spectrum of the two outputs is signal
+> (`docs/proposals/2026-08-sota-path.md:1696-1699`)
+
+and turned it into three product faces: per-stack tuning, per-tile FRC acuity,
+and a shipped half-difference null
+(`docs/proposals/2026-08-sota-path.md:1706-1725`).
+
+The commissioned implementation lane then withdrew that product path:
+
+> **Verdict: KILL — STOP/REMOVE RUST; retain the split instrument offline.**
+> (`docs/research/M-PHASE0-SPLIT.md:3`)
+
+> the exact historical M115 numbers reproduce, but their controls do not
+> transfer to the common-mode and data-dependent-tuning failures on which D8
+> depends.
+> (`docs/research/M-PHASE0-SPLIT.md:5-8`)
+
+That is a withdrawal of productisation, tuning, and certification, not a claim
+that the arithmetic vanished. The report says the useful instrument remains
+offline and that reopening needs a genuinely independent repeat or
+independently commissioned sensor-pattern subtraction, a non-degenerate
+partition, and a transferring tuner plant
+(`docs/research/M-PHASE0-SPLIT.md:266-274`).
+
+The authoritative proposal itself then recorded the retirement:
+
+> **The headline clause at lines 192--197 currently has no licensing instrument
+> for its first and most important claim.**
+> (`docs/proposals/2026-08-sota-path.md:2179-2181`)
+
+> Both are now dead
+> (`docs/proposals/2026-08-sota-path.md:2181-2183`)
+
+> **Consequence, stated plainly: strehl can currently prove harm and cannot
+> prove benefit.**
+> (`docs/proposals/2026-08-sota-path.md:2208-2210`)
+
+> **Independent repeats. Closed; this was FRC's route.**
+> (`docs/proposals/2026-08-sota-path.md:2224-2231`)
+
+Amendment 2 later says, without qualification, “Amendment 1 stands in full”
+(`docs/proposals/2026-08-sota-path.md:2336-2339`). The scorecard agrees:
+
+> **Same-frame split-half FRC/SNR: dropped.**
+> (`docs/proposals/2026-09-sota-scorecard.md:1119`)
+
+and says M1/M9 use repeated exposures only after the failed common-mode and
+null controls (`docs/proposals/2026-09-sota-scorecard.md:1119-1124`).
+
+The first repeat-capture attempt did not revive it:
+
+> **Final verdict: NOT ROBUST / NO BUILD.**
+> (`docs/research/M-PHASE0-SPLIT2.md:3`)
+
+> No real FRC or `P_sig/P_noise` result was retained
+> (`docs/research/M-PHASE0-SPLIT2.md:11-13`)
+
+There is a distinct repeat-pair research route, but it is not an admitted
+revival:
+
+> **GO to commission repeat-pair FRC now on synthetic and existing development
+> data; NO-GO to admit the current Hann-tiled estimator as M1 before that
+> battery passes.**
+> (`docs/research/M-FRC-VIABILITY.md:6-8`)
+
+and even a complete GREEN would license FRC only “as one component of M1,”
+never the proposal's full `FRC + slant-edge` claim
+(`docs/research/M-FRC-VIABILITY.md:631-636`). Git history places both revisions
+of that memo before proposal Amendment 1 (`58d04408` and `bc3b3af0`, followed
+by `7d1e4b96`). **VERIFIED conclusion:** same-stack D8/M115 is a killed offline
+instrument, not an omitted active answer; repeat-pair FRC is a separate,
+unadmitted candidate. M1's “no admissible bar” state is documentarily correct.
+
+### 8.2 Axis-by-axis trace
+
+The scorecard declares that numbers it supplies where the proposal is silent,
+approximate, or contains `[bar]` are **SCORECARD ADDITIONS**
+(`docs/proposals/2026-09-sota-scorecard.md:405-410`). I treat a disclosed
+numeric completion with a proposal basis as legitimate completion, not drift.
+
+| Axis | Scorecard bar, verbatim | Proposal source, verbatim | Relationship and consequence |
+|---|---|---|---|
+| M1 | “**NO ADMISSIBLE BAR — WITHDRAWN.** `f_licensed` is blind; native `S_25` fails sharpening and tone, while tone-hardened derivatives reverse the optical controls.” (`docs/proposals/2026-09-sota-scorecard.md:392`) | “The headline clause ... currently has no licensing instrument” and “Both are now dead” (`docs/proposals/2026-08-sota-path.md:2179-2183`). | **VERIFIED — faithful.** The later amendment supersedes original D1/D8. No integration-only M115 lane is licensed. |
+| M2 | “Cross-fit efficiency `<=1.10`; 95% upper bound of strehl / quietest qualifying comparator `<=0.950`.” (`docs/proposals/2026-09-sota-scorecard.md:393`) | “at strictly lower noise (existing flat-ROI instrument)” (`docs/proposals/2026-08-sota-path.md:192-194`). | **VERIFIED — legitimate completion.** It turns “strictly lower” into an executable margin and adds a self-efficiency guard. **Consequence: checker/claim; no new owner purchase.** |
+| M3 | “Median excess `<=1%` edge step, p99 `<=5%`; edges above 5% `<=1%` with Wilson upper bound `<=2%`; local source coherence `>=0.90`; no worse than best comparator.” (`docs/proposals/2026-09-sota-scorecard.md:394`) | “no occlusion veil above [bar] (halo instrument at full reach)” (`docs/proposals/2026-08-sota-path.md:195`). | **VERIFIED — legitimate completion.** It fills the literal placeholder and supplies anti-blur controls. **Consequence: checker and the already-planned full-reach capture.** |
+| M4 | “Median flat-patchwork ratio `<=1.00`; sites above `1.25` or ghost ratio above `0.10`: `<=1%`, Wilson upper bound `<=2%`; no worse than best comparator.” (`docs/proposals/2026-09-sota-scorecard.md:395`) | The plan requires a “flat-ground plateau census ... [with] no band-domain patchwork” (`docs/proposals/2026-08-sota-path.md:518-524`) and says the depth field closes that class structurally (`docs/proposals/2026-08-sota-path.md:647-650`). | **VERIFIED — legitimate completion.** It promotes a named acceptance failure into a quantified primary gate. **Consequence: checker/lane priority, not owner action.** |
+| M5 | “`>=99%` of eligible tiles pass `rho_best>=0.90` and focus margin `>=0.05`; Wilson lower bound `>=98%`; longest failed run `<=1%` of sweep.” (`docs/proposals/2026-09-sota-scorecard.md:396`) | A5 requires recovered depth “within [bar] of truth,” no planted-defect regression, and no excessive displaced depth steps (`docs/proposals/2026-08-sota-path.md:657-665`); D3 expressly consumes “M27's coverage criterion” (`docs/proposals/2026-08-sota-path.md:1595-1598`). | **VERIFIED — legitimate completion.** It supplies the missing output-coverage definition; M10 separately owns depth accuracy. **Consequence: checker plus a fresh controlled-slide holdout after the old unit burned (`docs/proposals/2026-09-sota-scorecard.md:704-716`).** |
+| M6 | “Recoverable high-rail and low-rail clipping each `<=0.10%`; highlight-detail retention `>=0.90`; no worse than best comparator.” (`docs/proposals/2026-09-sota-scorecard.md:397`) | The plan keeps “Highlight retention” as an axis (`docs/proposals/2026-08-sota-path.md:175`) and B2 requires the foam colour climb to flatten while forbidding values beyond their evidence (`docs/proposals/2026-08-sota-path.md:746-749`). | **VERIFIED — legitimate completion.** It numerically completes the claim and adds the symmetric low-rail arm. **Consequence: capture power/checker; each scored capture needs 10,000 recoverable pixels (`docs/proposals/2026-09-sota-scorecard.md:754-758`).** |
+| M7 | “Median DeltaE00 `<=1.0`, p95 `<=2.0`, maximum `<=3.0`, boundary-seam p99 `<=1.0`; ICC/300-DPI conformance `100%`; no worse than best comparator.” (`docs/proposals/2026-09-sota-scorecard.md:398`) | D7 requires “ICC + 300 DPI” and owner decisions on paper-profile soft proof and tone (`docs/proposals/2026-08-sota-path.md:1682-1691`). | **VERIFIED — legitimate completion.** It adds the absent colourimetric score. **Consequence: new owner capture — a tilted traceable ColorChecker under a measured illuminant (`docs/proposals/2026-09-sota-scorecard.md:786-792`).** D7's untested residue is recorded in §8.6. |
+| M8 | “Per-frame resampler-hull violations and final-output source-hull violations: each exactly `0.0000%`.” (`docs/proposals/2026-09-sota-scorecard.md:399`) | The manifest must carry “the out-of-hull census result (`0.0000%` or the exceptions, with coordinates)” (`docs/proposals/2026-08-sota-path.md:1581-1584`). | **VERIFIED — legitimate completion.** M8-O preserves the proposal; M8-R is an expressly labelled extra stage gate. **Consequence: checker/spec only; the achievability defect is separately proved in §7.** |
+| M9 | “False-certification Wilson upper bound `<=1%`; true-band coverage `>=90%`; nominal 95% interval coverage `93%`–`97%`; variance ratio `0.90`–`1.10`.” (`docs/proposals/2026-09-sota-scorecard.md:400`) | D2 requires an empirical FRC channel, a single-image decorrelation channel, and an explicit disagreement flag beside the model channel (`docs/proposals/2026-08-sota-path.md:1568-1574`). | **VERIFIED — weakening.** Removing same-frame FRC is justified by Amendment 1, but M9 does not require the surviving decorrelation channel, a replacement independent product channel, or a shipped disagreement result. A pass licenses less than D2's still-written product claim. |
+| M10 | “Valid target pixels `>=99%`; rank correlation `>=0.99`; median error `<=0.5` focus step, p95 `<=1.0` step; physical slope error `<=5%`.” (`docs/proposals/2026-09-sota-scorecard.md:401`) | C5 says A5 supplies `z(x,y) ± σ_z` and calls for a “depth + uncertainty TIFF,” normals, physical reshoot advice, and synthetic-aperture re-rendering (`docs/proposals/2026-08-sota-path.md:1159-1163,1179-1185`). | **VERIFIED — weakening.** M10 tests depth values, not uncertainty calibration; a pass cannot license the uncertainty or derivative-product claims. |
+| M11 | “Warm common-input throughput `>=2.00x` fastest quality-qualified comparator; candidate/default baseline ratio `<=2.00`; native-RAW CPU at 16 workers `<=0.15 s/frame`; hybrid `<=0.06 s/frame`; cold `<=warm+20 s`; 100-frame live master `<=10 s` after last shutter.” (`docs/proposals/2026-09-sota-scorecard.md:402`) | D15 registers “≥2×,” `≤0.15 s/frame`, `≤0.06 s/frame`, cold `≤ warm + 20 s`, and master `≤10 s` after the last shutter (`docs/proposals/2026-08-sota-path.md:1975-1984`); D5 says quality must stay within “roughly 2×” the current wall (`docs/proposals/2026-08-sota-path.md:1648-1652`). | **VERIFIED — legitimate completion.** The exact bars are faithful; freezing “roughly” at `2.00` is disclosed. **Consequence: lane/quiet-host work plus comparator access; rule 4 separately changes its priority.** |
+| M12 | “Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; every fixed-worker repeat is byte-identical and the outputs at 1/2/4/8/16 workers are mutually byte-identical while 16 workers passes M11; N-mod-4 per-frame spread `<=2%`.” (`docs/proposals/2026-09-sota-scorecard.md:403`) | D15 requires “memory ≤6 GiB warm; bytes invariant to worker count ... per-frame cost flat in N mod 4” (`docs/proposals/2026-08-sota-path.md:1981-1982`), while D9 fixes the reduction lattice so bytes are invariant by construction (`docs/proposals/2026-08-sota-path.md:1755-1765`). | **VERIFIED — legitimate completion.** The scorecard supplies numeric meanings for “flat” and separates fixed-worker determinism from cross-worker invariance. **Consequence: quiet-host/checker work, not a purchase.** |
+
+### 8.3 Q3 — decision-rule trace
+
+**VERIFIED — rule 4 is the scorecard author's rule, not a requirement traceable
+to the owner's proposal.** Its general concern about comparing matched quality
+has support, but its M1 dependency and `98%` cutoff do not
+(`docs/proposals/2026-09-sota-scorecard.md:93-98`;
+`docs/proposals/2026-08-sota-path.md:174,1975-1978,2208-2210`).
+`git blame` places the original rule in scorecard commit `90bced75` and its
+replacement-M1 wording in `64d9d675`; neither originates in the proposal.
+
+| Rule | Scorecard requirement | Proposal trace | Relationship and consequence |
+|---|---|---|---|
+| 1 | “Every primary metric is a hard gate. No win compensates for a loss.” (`docs/proposals/2026-09-sota-scorecard.md:86`) | The intended public sentence joins detail, noise, hull, veil, trust/depth, and speed conjunctively (`docs/proposals/2026-08-sota-path.md:192-197`). | **VERIFIED — faithful.** A conjunctive sentence is reasonably formalised as non-compensating gates. |
+| 2 | Missing instrumentation, comparator validity, or power blocks SOTA (`docs/proposals/2026-09-sota-scorecard.md:87-88`). | The proposal admits an instrument only after a planted-defect failure and untuned-null pass (`docs/proposals/2026-08-sota-path.md:164-167`) and makes detail contingent on missing capture/licence inputs (`docs/proposals/2026-08-sota-path.md:183-187`). | **VERIFIED — faithful.** It supplies an honest `UNMEASURED` state rather than treating absence as failure or success. |
+| 3 | The envelope is Zerene PMax/DMap plus Helicon A/B/C, best per metric (`docs/proposals/2026-09-sota-scorecard.md:89-92`). | D1 pins “licensed Zerene (PMax *and* DMap), the fork rebuilt at its best-known build, Helicon if obtainable” (`docs/proposals/2026-08-sota-path.md:1535-1539`). | **VERIFIED — contradiction, with an embedded omission.** The scorecard changes optional Helicon into a mandatory named product and drops the fork. Exact mode/settings and comparator-favouring direction are legitimate completions; the product-set changes are not. |
+| 4 | Every noise, artifact, speed, or memory comparator mode must retain `98%` of the best replacement-M1 score; none qualifies before M1 exists (`docs/proposals/2026-09-sota-scorecard.md:93-98`). | The proposal instead calls noise “Nothing — quotable now” (`docs/proposals/2026-08-sota-path.md:174`) and Amendment 1 says the noise, veil, and invented-structure clauses retain live instruments while detail does not (`docs/proposals/2026-08-sota-path.md:2208-2210`). D15 asks only for comparators “at matched output” (`docs/proposals/2026-08-sota-path.md:1975-1978`). | **VERIFIED — contradiction.** The dependency is scorecard-authored, not the owner's rule. The `98%` number itself is an **unlabelled addition** with no proposal occurrence. |
+| 5 | Every capture and the pooled one-sided 95% bar must pass; pooling cannot rescue one (`docs/proposals/2026-09-sota-scorecard.md:99-100`). | The terminal claim is explicitly “On [subjects]” and the detail evidence is said to need its CI (`docs/proposals/2026-08-sota-path.md:178-179,192-197`), but no aggregation rule is supplied. | **VERIFIED — legitimate completion.** It resolves a missing multi-capture decision rule conservatively. **Consequence: capture design/power; one bad subject can now fail an otherwise-green pool.** |
+| 6 | CIs resample physical sites with 10,000 fixed-seed hierarchical draws; rates use one-sided Wilson bounds (`docs/proposals/2026-09-sota-scorecard.md:101-103`). | The proposal requires pre-registration and commissioned instruments and repeatedly leaves statistical bars/CI details open (`docs/proposals/2026-08-sota-path.md:164-167,178-179`). | **VERIFIED — legitimate completion.** The statistical unit and resampling count make the intended claim executable. **Consequence: checker/sample-size work, not a purchase.** |
+| 7 | No pass/fail or public detail number may use frequency above `0.25 cyc/native px` (`docs/proposals/2026-09-sota-scorecard.md:104-106`). | The owner plan says the scorecard needs a subject “with real contrast above 0.25 cyc/px” (`docs/proposals/2026-08-sota-path.md:183-187`), and C1 claims genuine super-Nyquist recovery (`docs/proposals/2026-08-sota-path.md:1015-1018`) with C12 explicitly reading energy between plane and sensor Nyquist (`docs/proposals/2026-08-sota-path.md:1441-1453`). | **VERIFIED — contradiction.** The rule makes the planned high-frequency capture and the defining C1/C12 claims incapable of earning a score. Amendments preserve workstreams A/B/C (`docs/proposals/2026-08-sota-path.md:2241-2246,2336-2339`), so no proposal retirement resolves it. |
+
+### 8.4 Material divergence register
+
+The following count is clause-based so mixed rule rows are not hidden:
+
+| Divergence | Class | Consequence |
+|---|---|---|
+| After legitimately removing same-frame FRC, M9 still does not require D2's surviving decorrelation channel, a replacement independent product channel, or the disagreement flag (`docs/proposals/2026-08-sota-path.md:1568-1574`; `docs/proposals/2026-09-sota-scorecard.md:908-925`). | **VERIFIED — weakening** | A green M9 would license calibrated reported bands and variance, not the planned multi-channel trust product. Add product-presence/disagreement gates or narrow the claim. |
+| M10 has no depth-uncertainty calibration bar despite C5's `z ± σ_z` and uncertainty TIFF (`docs/proposals/2026-08-sota-path.md:1159-1163,1179-1185`; `docs/proposals/2026-09-sota-scorecard.md:953-969`). | **VERIFIED — weakening** | A green M10 cannot license calibrated uncertainty, normals, physical reshoot advice, or refocusability. |
+| Helicon changes from “if obtainable” to required; the scorecard says failure of either commercial product to produce a valid linear output leaves SOTA `UNMEASURED` (`docs/proposals/2026-08-sota-path.md:1535-1539`; `docs/proposals/2026-09-sota-scorecard.md:198-218`). | **VERIFIED — contradiction** | The literal purchase/access requirement is not just Zerene Prosumer; it includes Helicon. The owner must ratify that expansion before `$189` is represented as clearing `(d)`. |
+| Rule 4 makes M1 a prerequisite for otherwise independently live comparative clauses (`docs/proposals/2026-09-sota-scorecard.md:93-98,559-562`) despite the proposal preserving the noise/veil/hull instruments (`docs/proposals/2026-08-sota-path.md:2208-2210`). | **VERIFIED — contradiction** | The `(a)` assignments and purchase ordering cannot be presented as owner-mandated. Re-derive readiness after the owner accepts, narrows, or rejects this coupling. |
+| Rule 7 suppresses every claim above `0.25 cyc/native px` although the plan asks the owner for such a subject and proposes super-Nyquist channels (`docs/proposals/2026-09-sota-scorecard.md:104-106`; `docs/proposals/2026-08-sota-path.md:183-187,1015-1018,1441-1453`). | **VERIFIED — contradiction** | Do not spend capture or implementation effort on C1/C12 expecting scorecard credit until this is reconciled. |
+| The proposal requires a perceptual axis using SSIMULACRA2/butteraugli (`docs/proposals/2026-08-sota-path.md:1528-1536`); the scorecard explicitly rejects them for natural stacks (`docs/proposals/2026-09-sota-scorecard.md:1125-1128`). | **VERIFIED — contradiction** | A 12/12 score supports no perceptual-superiority claim. This is a transparent evidence-based rejection, but the proposal has not been amended to narrow the claim set. |
+| Competitive quality must consume a common already-demosaiced TIFF, and a native-RAW run cannot establish the competitive quality win (`docs/proposals/2026-09-sota-scorecard.md:147-169`). C1's defining claim is to stop feeding “resampled estimates” and consume actual photosites, including 2× super-Nyquist recovery (`docs/proposals/2026-08-sota-path.md:912-918,1008-1018`). | **VERIFIED — contradiction** | The current competitive protocol cannot exercise the plan's main RAW-fusion mechanism. A C1 build can improve the product yet receive no competitive quality credit. |
+| D1 pins “the fork rebuilt at its best-known build” (`docs/proposals/2026-08-sota-path.md:1535-1539`); the scorecard's exhaustive comparator list contains only Zerene and Helicon (`docs/proposals/2026-09-sota-scorecard.md:89-92,198-213`). | **VERIFIED — omission** | Restore it as a registered free comparator or formally retire it. Its restoration does not remove the proposal's explicit Zerene PMax/DMap requirement. |
+| Rule 4's `98%` retained-information threshold appears in the scorecard (`docs/proposals/2026-09-sota-scorecard.md:93-98`) but nowhere in the whitespace-normalised proposal; the nearest source says only “matched output” (`docs/proposals/2026-08-sota-path.md:1975-1978`). | **VERIFIED — unlabelled addition** | The exact threshold needs owner ratification or an explicit SCORECARD ADDITION label before it governs lanes or purchases. |
+
+**VERIFIED counts for this register:** contradictions **5**; weakenings **2**;
+omissions **1**; unlabelled additions **1**.
+
+### 8.5 Q2 — information-ledger coverage
+
+The proposal says a novel-physics plan “owes an argument that the list is
+complete” and then enumerates fourteen channels
+(`docs/proposals/2026-08-sota-path.md:875-897`). Against the exhaustive M1–M12
+list (`docs/proposals/2026-09-sota-scorecard.md:388-403`):
+
+| Proposal ledger channel | Scorecard representation |
+|---|---|
+| Focus modulus — depth/through-focus shape (`docs/proposals/2026-08-sota-path.md:884`) | **VERIFIED — direct:** M5 coverage and M10 depth. |
+| Focus phase — signed defocus, registration, pupil, inversion (`docs/proposals/2026-08-sota-path.md:885`) | **VERIFIED — none:** XSPEC is only a closed phase-0 decision gate expressly carrying “No axis score” (`docs/proposals/2026-09-sota-scorecard.md:454`). |
+| Spatial sampling phase — aliased super-Nyquist structure (`docs/proposals/2026-08-sota-path.md:886`) | **VERIFIED — none:** there is no alias/SR axis, and rule 7 forbids its defining frequency region (`docs/proposals/2026-09-sota-scorecard.md:104-106`). |
+| Wavelength/CFA — longitudinal CA and per-wavelength cutoff (`docs/proposals/2026-08-sota-path.md:887`) | **VERIFIED — partial:** M7 can see final colour error, but the LCA gate expressly “is not M7 colour fidelity” and supplies no axis score (`docs/proposals/2026-09-sota-scorecard.md:456`). |
+| G1/G2 quincunx — within-frame noise and alias energy (`docs/proposals/2026-08-sota-path.md:888`) | **VERIFIED — none:** neither the noise probe nor `alias_energy_present` is an M-axis output. |
+| Orientation — astigmatism/coma anisotropy (`docs/proposals/2026-08-sota-path.md:889`) | **VERIFIED — none:** M1/M9 have no orientation-resolved result or coverage bar. |
+| Amplitude statistics — self-calibration and censoring (`docs/proposals/2026-08-sota-path.md:890`) | **VERIFIED — direct:** M2, M6, and M9 test noise, recoverable rails, and variance calibration. |
+| Fixed pattern versus sliding scene (`docs/proposals/2026-08-sota-path.md:891`) | **VERIFIED — partial:** M2/M9 consume independent FPN controls, but no axis tests C6's in-situ calibration product. |
+| Depth-dependent geometry (`docs/proposals/2026-08-sota-path.md:892`) | **VERIFIED — partial:** M10 sees final physical depth; the C4c mechanism was killed as a decision gate, explicitly not an axis (`docs/proposals/2026-09-sota-scorecard.md:453`). |
+| Time within bracket — sensor/light/rig state and frame quality (`docs/proposals/2026-08-sota-path.md:893`) | **VERIFIED — none:** M11 times computation, not capture-state inference; no axis tests B5's ledger. |
+| The file itself — vendor tables, compression, capture flags (`docs/proposals/2026-08-sota-path.md:894`) | **VERIFIED — none:** manifests record metadata, but no axis tests C13 use or B5 classifier behavior. |
+| Split-stack halves — empirical noise/resolution truth (`docs/proposals/2026-08-sota-path.md:895`) | **VERIFIED — retired:** same-frame D8 was withdrawn; independent repeats are only an unadmitted future M1/M9 input (`docs/proposals/2026-09-sota-scorecard.md:1119-1124`). |
+| Illumination — active texture/specular split/normals (`docs/proposals/2026-08-sota-path.md:896`) | **VERIFIED — partial:** M3/M6 may observe output consequences, but no axis tests the C8/C9/D3 capture capability or its product artifacts. |
+| Aperture — blur-ratio depth, occlusion discs, PSF family, pupil factor (`docs/proposals/2026-08-sota-path.md:897`) | **VERIFIED — partial:** M5/M10 use multi-aperture captures, but no axis tests C11 fusion, blur-ratio agreement, or PSF/pupil calibration. |
+
+**VERIFIED tally:** **2 direct, 5 partial, 6 with no direct M-axis, and 1
+retired**. The six wholly unrepresented channels are focus phase, spatial
+sampling phase, G1/G2 quincunx, orientation, time within bracket, and the
+vendor-file payload.
+
+This is not automatically a hole in the narrow terminal SOTA claim. The
+proposal expressly says:
+
+> Nothing in C is load-bearing for A/B/D; the plan degrades gracefully if any
+> bet dies
+> (`docs/proposals/2026-08-sota-path.md:428-431`)
+
+**VERIFIED consequence:** a scorecard pass may still license the proposal's
+core output claim, but it cannot license claims that those six channels were
+exploited, nor the four partially represented channel-specific product claims.
+
+### 8.6 Q4 — explicit plan commitments no axis would test
+
+**VERIFIED — yes.** A complete 12/12 pass, as presently written, would not prove
+completion of the owner's whole plan:
+
+1. **Architecture/default:** the plan says “one merge,” “the backend fork
+   retires,” and “confidence ships by default”
+   (`docs/proposals/2026-08-sota-path.md:435-438,559-564`). No M-axis tests
+   backend retirement or one-path architecture.
+2. **Portability, state, and persistence:** phase 2 promises
+   `Provenance::Measured` on an unknown body, B5's state/quality ledger, and B7's
+   re-renderable master (`docs/proposals/2026-08-sota-path.md:675-711,771-813,
+   839-869,2084-2091`). M2/M9 contain only the registered current-body
+   repeat/calibration inputs (`docs/proposals/2026-09-sota-scorecard.md:583-588,
+   898-905`); no axis exercises an unknown body, per-frame anomaly verdict, or
+   re-render.
+3. **Trust-product form:** D2 as still written requires model,
+   empirical/decorrelation, and disagreement outputs
+   (`docs/proposals/2026-08-sota-path.md:1554-1584`). Amendment 1 retires the
+   same-frame FRC face, but neither amendment defines a reduced replacement
+   product; M9 does not test the surviving decorrelation/disagreement
+   obligations.
+4. **Depth-product form:** C5 requires uncertainty, normals, physical reshoot
+   advice, and refocusable output (`docs/proposals/2026-08-sota-path.md:1154-1185`).
+   M10 tests only the depth values.
+5. **Planner/live semantics:** D3 specifies predicted step, count, coverage,
+   noise, and acuity, while D10 claims a live closed loop that tells the owner
+   whether and where to continue shooting
+   (`docs/proposals/2026-08-sota-path.md:1586-1627,1777-1798`). M11 tests only
+   the ten-second delivery latency, not advice correctness or tether operation.
+6. **Print decisions:** D7 still requires the owner's paper-profile soft-proof
+   census, tone-policy decision, and dust-default decision
+   (`docs/proposals/2026-08-sota-path.md:1682-1691`). M7 does not test them.
+7. **Novel channel products:** phase 3 expressly expects a demosaic-free 1×
+   merge, 2× fusion, C12 alias gating, and C10 products
+   (`docs/proposals/2026-08-sota-path.md:2093-2101`). Its FRC/split-half exit
+   language is superseded by Amendment 1 and is not counted as a live
+   omission. Rule 7 and the common-TIFF contract still make the surviving
+   C1/C12 high-frequency claim unscoreable; the remaining ledger gaps are in
+   §8.5.
+8. **Perceptual quality:** D1 names a perceptual axis
+   (`docs/proposals/2026-08-sota-path.md:1528-1536`), and the scorecard rejects
+   it rather than replacing it (`docs/proposals/2026-09-sota-scorecard.md:1125-1128`).
+
+The proposal also says the scorecard, not the roadmap document, decides “SOTA”
+(`docs/proposals/2026-08-sota-path.md:2108-2113`). **VERIFIED interpretation:**
+these omissions do not all need to become M-axes; they do require a separate
+plan-completion ledger so “12/12” is never reported as “the owner's plan is
+complete.”
+
+### 8.7 Consequences for lanes, owner action, and purchases
+
+1. **D8/M115:** **VERIFIED — no owner action changes.** Do not restore the old
+   same-stack split implementation on documentary grounds. Its product path was
+   explicitly killed; any repeat-pair successor must win admission as a new
+   instrument.
+2. **Rule 4:** **VERIFIED — owner decision required before it governs the
+   roadmap.** It is not traceable to the owner's plan and conflicts with the
+   plan's statement that noise/veil/hull retain live instruments. The current
+   `(a)` assignments and `a+b+c`/purchase ordering are valid under the
+   scorecard, but they are not owner-authored requirements. Removing or
+   narrowing rule 4 would require re-deriving the blocker table; this audit
+   does not assume which `(a)` cells disappear.
+3. **Comparator purchase:** **VERIFIED — `$189` Zerene alone does not clear the
+   scorecard literally.** The proposal requires Zerene PMax/DMap and makes
+   Helicon conditional; the scorecard requires both commercial products.
+   Resolve that governance choice, and whether the fork returns, before telling
+   the owner what purchase clears `(d)`.
+4. **High-frequency capture/C1/C12:** **VERIFIED — pause scorecard-motivated
+   spend.** The proposal asks for content above `0.25 cyc/px`, but the scorecard
+   forbids using it and its common-TIFF arm bypasses raw photosite fusion.
+   Reconcile the protocol before building or shooting these channels for
+   scorecard credit.
+5. **M9/M10:** **VERIFIED — checker/spec work precedes claim work.** Add or
+   explicitly waive the D2 multi-channel/disagreement outputs and depth
+   uncertainty/product bars. A present-form pass would overstate the plan.
+6. **Additional capture obligations:** **VERIFIED — disclose them as scorecard
+   completions, not owner-plan quotations.** M5 needs a fresh controlled-slide
+   holdout (`docs/proposals/2026-09-sota-scorecard.md:704-716`), M6 needs
+   10,000 recoverable rail samples per scored capture
+   (`docs/proposals/2026-09-sota-scorecard.md:754-758`), M7 needs a tilted
+   traceable ColorChecker under a measured illuminant
+   (`docs/proposals/2026-09-sota-scorecard.md:786-792`), and M10 may need new
+   external angle metrology (`docs/proposals/2026-09-sota-scorecard.md:368-380`).
+
+### 8.8 Assumptions
+
+- **ASSUMED:** “owner's plan” means the full current
+  `2026-08-sota-path.md`, including Amendments 1 and 2, rather than only the
+  unamended revision-3 body. That is the only reading under which later
+  evidence can supersede D8 without rewriting history.
+- **ASSUMED:** an outcome axis may legitimately cover several implementation
+  workstreams; lack of a one-to-one workstream axis is not itself drift unless
+  the scorecard can pass while the proposal's stated claim remains untested.
+- **ASSUMED:** the six wholly absent C-ledger channels remain non-load-bearing
+  for the narrow SOTA sentence because the proposal says so explicitly. They
+  remain load-bearing for any channel-specific novelty or product claim.
+
+### 8.9 Could not determine
+
+- Whether the owner has independently ratified rule 4, its `98%` threshold, or
+  the change from optional to mandatory Helicon. No such ratification appears
+  in the authoritative proposal.
+- Whether “matched output” was intended to imply some quality floor for speed
+  and noise comparators. It supports a floor in principle, but it does not
+  specify M1, `98%`, or that no comparator can qualify before M1 exists.
+- Whether a future common-input protocol can expose raw-CFA/sample-level fusion
+  fairly. No such protocol is written in either governing document.
+- Whether the live M135 technical adjudication will justify a new D8-derived
+  instrument. This documentary audit neither reads that lane as authority nor
+  pre-judges its technical result.
