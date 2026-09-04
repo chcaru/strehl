@@ -2000,14 +2000,73 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
         )
 
     commands = receipt["commands"]
+    expected_command_count = 9 if receipt["kind"] == "identity" else 7
     require(
-        isinstance(commands, list) and commands,
-        "receipt has no executed-command identities",
+        isinstance(commands, list) and len(commands) == expected_command_count,
+        f"receipt needs exactly {expected_command_count} executed commands",
     )
+    command_paths: set[Path] = set()
+    log_paths: set[Path] = set()
+    parsed_commands: list[dict[str, Any]] = []
     for index, command in enumerate(commands):
         require(isinstance(command, dict), f"command {index}: not an object")
-        _verify_hash_record(command.get("command"), f"command {index} record")
-        _verify_hash_record(command.get("log"), f"command {index} log")
+        require(
+            set(command)
+            == {"file", "arguments", "exit_code", "command", "log"}
+            and command.get("exit_code") == 0
+            and isinstance(command.get("file"), str)
+            and isinstance(command.get("arguments"), list),
+            f"command {index}: malformed execution record",
+        )
+        command_record = _verify_hash_record(
+            command["command"], f"command {index} record"
+        )
+        log_record = _verify_hash_record(command["log"], f"command {index} log")
+        command_path = Path(command_record["path"]).resolve()
+        log_path = Path(log_record["path"]).resolve()
+        require(
+            command_path == Path(str(log_path) + ".command.json")
+            and log_path.is_relative_to((arm_root / "logs").resolve()),
+            f"command {index}: command/log paths are not the arm log pair",
+        )
+        require(
+            command_path not in command_paths and log_path not in log_paths,
+            f"command {index}: duplicate command/log identity",
+        )
+        command_paths.add(command_path)
+        log_paths.add(log_path)
+        command_payload = read_json(command_path)
+        require(
+            isinstance(command_payload, dict)
+            and command_payload.get("schema") == "strehl-m8-v2-command"
+            and command_payload.get("version") == VERSION
+            and command_payload.get("file") == command["file"]
+            and command_payload.get("arguments") == command["arguments"]
+            and Path(command_payload.get("working_directory", "")).resolve()
+            == repo,
+            f"command {index}: command JSON disagrees with its execution record",
+        )
+        require(
+            isinstance(command_payload.get("environment"), dict),
+            f"command {index}: command JSON has no environment",
+        )
+        parsed_commands.append(command_payload)
+    for role in ("uninstrumented", "instrumented_off", "instrumented_on"):
+        planned = entry["render_commands"][role]
+        matches = [
+            command
+            for command in parsed_commands
+            if command["file"] == planned["file"]
+            and command["arguments"] == planned["arguments"]
+            and all(
+                command["environment"].get(name) == value
+                for name, value in planned["environment"].items()
+            )
+        ]
+        require(
+            len(matches) == 1,
+            f"receipt does not bind exactly one {role} planned render command",
+        )
 
     external_identity = receipt["external_identity"]
     if receipt["kind"] == "identity":

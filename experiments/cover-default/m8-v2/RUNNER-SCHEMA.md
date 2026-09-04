@@ -309,6 +309,11 @@ their fixed arm paths, reruns the independent checker verification, and
 requires the retained-file index to equal every file below the arm plus its
 single create-only lock. Empty or internally consistent substitute trees,
 results, audits, writers, and file lists are refused.
+Each real-arm receipt also requires the exact number of executed commands,
+unique `logs\*.log` / `*.log.command.json` pairs, the command-record schema and
+repo working directory, zero exit codes, and one exact file/argument/environment
+match for each of the three planned render roles. Arbitrary hash-valid files
+cannot stand in for command or log provenance.
 
 Do not pass `-ContinueAfterFlat1s` until both flat-1s receipts have been
 independently verified and the operator has read the Crop stopping result.
