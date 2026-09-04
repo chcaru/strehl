@@ -2,6 +2,15 @@
 
 Status: **DESIGN RULING; REAL-PAIR JOB PREPARED BUT NOT RUN**
 
+> **COUNT CORRECTION / STAGED FOLLOW-UP.** Section 3.2 below correctly
+> decomposes the then-current `891`-frame combined M1/M5/M9 session, but it
+> incorrectly presents that bundle as the minimum M1 claim-bearing sitting.
+> A standalone M1 sitting restores the `128` converter-on calibration frames
+> used by the `96`-frame reference and omits `315` converter-on M5/M9
+> focus/witness frames: `96 + 128 + 164 + 60 + 128 = 576`. The staged,
+> falsifiable plan and full waste-mode audit supersede the owner-count
+> conclusion here; see `docs/research/M164-m1-staged-capture.md`.
+
 ## 0. Ruling first
 
 **ARGUED — YES, BUT ONLY AS A NECESSARY GATE.** M164 changes M1 by making one
@@ -176,9 +185,9 @@ value (`docs/research/M147-preflight.md`, §§0, 4 and 6).
 
 ### 3.2 Minimum claim-bearing data versus minimum defensible program
 
-**ARGUED.** The minimum **claim-bearing sitting** currently designed is the
-registered **891-frame uninterrupted scored session**. Within it, M1's
-inverted block adds **448 frames**:
+**ARGUED — CORRECTED.** The registered **891-frame uninterrupted scored
+session** is the combined M1/M5/M9 design. Within it, M1's inverted block adds
+**448 frames**:
 
 - `96` converter-on fixed-focus reference frames: near, middle and far,
   `32` each;
@@ -188,21 +197,34 @@ inverted block adds **448 frames**:
 - `128` converter-off calibration frames: flat A/B and dark A/B,
   `32` each.
 
-The 448-frame block replaces a superseded block inside the wider session; it
-is not a standalone 448-frame score session
+The 448-frame block replaces a superseded block inside the wider session and
+relies on the bundle's existing `128` converter-on calibration frames. It is
+therefore not a standalone 448-frame score session. A standalone M1 sitting
+needs those `128` frames but not the bundle's `315` converter-on M5/M9
+focus/witness frames:
+
+```text
+96 reference + 128 reference calibration
++ 164 TC0 focus + 60 TC0 witnesses + 128 TC0 calibration
+= 576 M1-only scored frames.
+```
+
+This unbundles other axes; it does not remove an M1 role
 (`docs/proposals/2026-09-truth-referenced-detail.md`, §0).
 
 **ARGUED.** The minimum **defensible owner program before admission** is
-larger: **768 non-holdout rehearsal frames plus 891 sealed scored frames =
-1,659 frames**, after the two-frame preflight. Including that preflight, the
-complete path is **1,661 exposures**. The rehearsal must be read to bind the
-physical blur and genuine-improvement controls, reference transfer, target
-eligibility, registration, calibration independence and physical
-allowances. It cannot share a subject/session, reference or calibration with
-the score. Combining rehearsal and score would burn the holdout before the
-physical instrument was frozen
+larger. The M1-only route is **768 non-holdout rehearsal frames plus 576
+sealed scored frames = 1,344 frames**, after the two-frame preflight. Including
+that preflight, the current M1-only path is **1,346 registered/setup
+exposures**. Preserving the combined M1/M5/M9 score instead retains the
+original `1,661` total. The rehearsal must be read to bind the physical blur
+and genuine-improvement controls, reference transfer, target eligibility,
+registration, calibration independence and physical allowances. It cannot
+share a subject/session, reference or calibration with the score. Combining
+rehearsal and score would burn the holdout before the physical instrument was
+frozen
 (`docs/research/M135-detail-instrument.md`, §§6.4 and 8;
-`docs/OWNER-ACTIONS.md`, “The capture ask is now two sittings, not one”).
+`docs/research/M164-m1-staged-capture.md`).
 
 ### 3.3 Subject and conditions
 
