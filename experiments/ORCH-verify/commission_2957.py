@@ -33,6 +33,15 @@ MUTATIONS = [
     ("m167 results sha",
      "`210675AB3BC25FCE53EE090AAEE98E69330E95F3EC8C19FDC1CA59BCEF9229B0`",
      "`210675AB3BC25FCE53EE090AAEE98E69330E95F3EC8C19FDC1CA59BCEF9229B1`"),
+    ("m8r first run numerator",
+     "three Rust runs at `0 / 1,977,960,960`,",
+     "three Rust runs at `0 / 1,977,960,961`,"),
+    ("clamped flat null structure",
+     "`13.314850036584688%` of the structure",
+     "`13.314850036584680%` of the structure"),
+    ("preflight design ratio",
+     "`2.7015 / 1.33 = 2.0312x` with a margin",
+     "`2.7015 / 1.33 = 2.0313x` with a margin"),
 ]
 
 

@@ -6323,6 +6323,132 @@ aperture also has the most frames, so a statistic tracking post-stack noise woul
 arms correctly while measuring nothing about resolution). M171 builds; **M167 adjudicates**,
 because in this program the author does not verify their own work.
 
+### 2.9.58 M8-R can be forced to exactly zero, and that still does not pass M8
+
+M170 assessed the smallest defensible path to making the shipping default's M8-R count an
+integer zero, and corrected my framing of the question twice.
+
+**My description of M8-R was wrong.** I had assumed the census compares merged output against
+the frames it was merged from, and therefore worried that a merge, cover or colour stage
+downstream of the resample could reintroduce violations that clamping could not reach. It
+does not. M8-R records each frame's actual gathered `f32` value **before merge and before
+downstream container clamping**, then compares it against that frame's independently
+reconstructed 16-value support (`2026-09-sota-scorecard.md:1384-1402`). **Merge and colour
+stages cannot contribute to M8-R at all.** The clamp therefore forces the violation count to
+exactly zero by construction rather than merely to something small, which matters because at
+this bar "very small" fails identically to one per cent.
+
+**The development census corroborates it**: three Rust runs at `0 / 1,977,960,960`,
+`0 / 2,010,926,976` and `0 / 2,142,791,040`, aggregating to `0 / 6,131,678,976` — the same
+figure recorded independently at 2.8 above. Commissioning was bidirectional: ordinary Catmull
+`28/252` on a hard step, clamped `0/252`, an explicit high/low plant `2/252`, and a
+deliberately widened clamp back to `28/252`.
+
+**But closing M8-R does not close M8.** The axis requires M8-R, M8-O v1.5, and the
+crop/reference identity arm **all** at integer zero (`2026-09-sota-scorecard.md:1408-1417`).
+M8-O v1.5 observes final serialised RGB *after* intermediate quantisation, merge, gains and
+saturation, so it is a genuinely different measurement and the clamp's by-construction
+argument does not reach it. There is also a configuration gap: M142 runs `--cover crop
+--resampler clamped-catmull`, while the shipping defaults remain `cover=scale` and ordinary
+Catmull-Rom. **M142 can commission the mechanism; it cannot by itself score the shipping
+default.**
+
+#### 2.9.58.1 The kernel lands opt-in, and the default does not move
+
+M170's decision, which I have adopted and dispatched to M172: land the clamp as a **named
+opt-in kernel** with production tests and fail-closed restoration, and **do not** promote it
+to the default. Restoration assumes a linear kernel and this one is not linear, so requesting
+it must fail closed rather than silently alias to Catmull-Rom.
+
+The reason not to promote is the strongest argument against this whole line, and it is
+recorded here against interest: **the clamp is a post-failure nonlinear limiter.** It was
+invented after seeing the metric fail, it can flatten extrema and introduce derivative kinks
+while remaining inside the scalar hull, and M8-R certifies a value-range invariant rather
+than spatial fidelity. Because **no admitted resolved-detail instrument exists**, promoting it
+could improve the scorecard while degrading the image. The defence — that M8-R's population,
+support, tolerance and zero bar are unchanged and that independent red/green controls survive
+— is real but does not answer the quality question.
+
+#### 2.9.58.2 The detail instrument gates both routes, not one
+
+M170 independently reached the withdrawal already recorded at 2.8: the `99.758712%` figure is
+arithmetically correct but **is not a detail measurement**. It rests on one frame of one
+subject, 24 tiles, no confidence interval on the retained fraction, computed offline rather
+than end to end — and its own flat-ROI null failed. The flat arm carries only
+`13.314850036584688%` of the structure of the detailed arm, and still produced a *larger*
+band-power gap than the detailed arm did — the same flat-over-detail ratio, from the same
+source, by which M167's battery later rejected M137's band power outright (2.9.57). **The
+statistic responds slightly more to featureless flats than to real detail.** Two independent
+parties now reach that withdrawal. **I restated the superseded claim in a status report to the
+owner by quoting a commit message instead of re-reading this document, and that is corrected
+here.**
+
+The strategic consequence is the finding. The detail axis was being treated as one of two
+independent routes to a first passing axis, alongside M8. It is not independent: **M8's
+promotion decision is itself blocked on having an admitted detail instrument.** Both routes
+pass through the same gate, so the aperture-reference question is not one bet among several —
+it is the program's critical path.
+
+### 2.9.59 The truth reference was already designed, and the whole program is behind two photographs
+
+I found `docs/proposals/2026-09-truth-referenced-detail.md` (1,418 lines) while verifying an
+unrelated figure. **It already contains an argued design for the external reference the detail
+axis needs**, and it is materially stronger than the aperture ladder I proposed this session.
+
+§3.1 specifies a **higher-magnification, same-subject, fixed-focus RAW atlas**: not a rendered
+JPEG, not a focus-stack output, not a deconvolution, not a synthetic target inferred from the
+candidate. Each 32-frame burst splits odd/even against independent converter-on A/B masters,
+both disjoint from the scored TC0 masters; sites are assigned by a geometry-frozen strip map
+estimated without looking at any candidate's score; the algorithm under test never receives the
+reference. It is licensed by seven later-frozen gates, and **a failed gate yields `UNMEASURED`
+rather than a lower score.**
+
+The decisive difference from the aperture ladder: the atlas supplies **more measured subject
+samples per millimetre**. It adds information about the subject rather than an ordering over
+renders, which is the property the identifiability hedge actually requires.
+
+#### 2.9.59.1 The chain, and the five-minute link at the end of it
+
+The atlas needs the 891-frame session (Ask 2). Ask 2 is blocked on the M147 in-field
+magnification preflight. M147 reads **`SYNTHETIC COMMISSIONING PASS; FIELD COMMISSIONING
+BLOCKED; DO NOT SHOOT`** — it passes all 38 synthetic arms and resolves the `1.54%` design
+margin on burned real material, but it has never been tested at the ratio that matters on real
+optics.
+
+**It cannot be, and the reason is a property of the whole archive.** The design compares a
+converter-on reference at `2.7015x` against a TC0 state at `1.32x`, a required ratio of
+`2.7015 / 1.33 = 2.0312x` with a margin of `0.0312x` — `1.54%` relative. Testing that needs one
+converter-on/converter-off pair of a physically unmoved target. **Across the full inventory of
+10,509 ARWs, every lens string reads `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter` and every
+focal length reads `200 mm`. There is not one bare-lens frame in the archive.** The TC0 state
+the design depends on is an optical configuration this rig has never been recorded in, so no
+existing capture can substitute and no amount of analysis can supply it.
+
+The synthetic pass cannot close it either, and the lane says so against its own interest:
+making a synthetic `2x` frame means resampling a real one, and resampling injects interpolation
+blur into precisely the quantity being measured.
+
+**So the terminal blocker of this entire program is Ask 2a: two frames, five minutes.** One
+exposure of the calibration slide with the converter fitted at maximum reproduction, one of the
+same physically unmoved slide with it removed near `1.32x`. Everything else on the board —
+both routes to a first passing axis, the detail instrument, the M8 promotion decision — sits
+downstream of those two exposures.
+
+#### 2.9.59.2 What this does to the aperture ladder, and an omission of mine
+
+The aperture ladder is demoted from main line to **hedge**. It uses material already on disk
+and can run while the owner is away, so it retains value as a *screen* that kills bad candidates
+cheaply — three have already died that way. But it is not the designed reference, and the
+program should stop treating it as the thing that unblocks the detail axis. Whether it is even a
+valid screen is with M164, which owns the identifiability theorem; M166 is separately testing
+whether the physical ordering is forced at all.
+
+**The omission is mine.** Ask 2a has been correctly placed at line 10 of the owner's file —
+*"If you read nothing else on this page, shoot Ask 2a"* — since before this session. I did not
+lead any status report with it, and instead reported lane mechanics while the cheapest and most
+consequential action on the board went unmentioned. An orchestrator that does not surface the
+five-minute action blocking everything is not orchestrating.
+
 ---
 
 ## 3. Gaps, ranked by what stands between here and print-worthy

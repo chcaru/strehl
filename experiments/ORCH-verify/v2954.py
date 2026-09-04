@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
-SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57"]
+SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59"]
 
 
 def collapse(s):
@@ -141,6 +141,12 @@ CLAIMS = [
     ("m167 results sha",
      "210675AB3BC25FCE53EE090AAEE98E69330E95F3EC8C19FDC1CA59BCEF9229B0",
      R + "M167-detail-battery.md"),
+    # --- M170 / M8-R closure assessment ---
+    ("m8r first run numerator", "1,977,960,960", R + "M8-overshoot.md"),
+    ("clamped flat null structure", "13.314850036584688",
+     "experiments/M134-kernel-frontier/M137-clamped-detail.md"),
+    # --- M147 preflight: the terminal blocker ---
+    ("preflight design ratio", "2.0312", R + "M147-preflight.md"),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
