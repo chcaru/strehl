@@ -5,43 +5,56 @@ in `docs/STATUS.md` §2.9.28-2.9.52 and the lane reports named below.
 
 Maintained by the orchestrator. Last updated after lanes M157, M159, M160, M161.
 
-> # ⛔ HOLD — do not shoot yet. Read this first.
+> # ✅ HOLD LIFTED — go ahead and shoot Ask 2a
 >
-> **Status as of lane M164's identifiability ruling (commit `a78a901e`): Ask 2a
-> is on hold for a few hours while one question is settled. Please do not shoot
-> it until this banner is gone.**
+> **Status as of lanes M166 (commit `db5379b8`) and M164 (commit `ec7fa237`):
+> the hold is lifted and Ask 2a is unchanged. Shoot it whenever suits you.**
 >
-> Ask 2a measures whether the reference optical state *samples* the subject at
-> least `2.0x` more finely than the scored state. **That test has just been
-> ruled necessary but not sufficient.** M164 constructed an explicit case in
-> which a design passes the sampling gate at the exact designed ratio
-> `2.031203x` and the reference is nevertheless **less informative** than the
-> scored path — `1.160964` bits against `1.660964`, a ratio of `0.698970`. Its
-> verdict on the sampling threshold, quoted from its committed report: *"There
-> is no identifiability discontinuity at exactly `2.0x`... The physical
-> information gate, not the integer-looking sampling threshold, decides the
-> theorem."*
+> Yesterday I stopped you because M164 ruled the `2.0x` sampling test necessary
+> but not sufficient, and I did not know whether the repair was an analysis
+> change or a change to what you must photograph. **The answer is: a change to
+> what you must photograph — but it lands on the big scored session, not on the
+> two frames.** Two lanes settled it from different directions:
 >
-> **Why that means "wait" rather than "never".** The route is not dead; its
-> admission contract changed. The replacement condition,
-> `REFERENCE_INFORMATION_DOMINANCE`, requires a *pre-render scored-path physical
-> witness* — repeat observations taken through the scored optical state — which
-> the current two-frame ask does not collect. **I do not yet know whether that
-> is an analysis change or a change to what must be photographed.** Lane M171
-> is answering exactly that question now.
+> - **The magnification target did not move.** M166 checked whether the new
+>   condition pushes the TC0 target off `1.32x` and led with *"TARGET HOLDS AT
+>   1.32x."* Your two frames measure the right thing at the right placement.
+> - **You do not need to buy a different lens.** M164 asked whether the
+>   reference can ever be provably more informative than the scored path when
+>   both pass through the same Sony prime, and answered `SHARED OBJECTIVE
+>   SUFFICIENT` on the measurable band. That was the outcome that would have
+>   cost money, and it did not happen.
 >
-> - If it is an **analysis** change, Ask 2a is unchanged and you should shoot
->   the seven-step version below as written.
-> - If it is a **protocol** change, the frames you would shoot tonight would be
->   the wrong frames, and the specification below changes before you shoot.
+> **What Ask 2a can and cannot do.** M166 is explicit: the two-frame pair
+> *"can establish scale and field only. It cannot establish `I_R/I_S` or
+> `|H_R|/|H_S|`."* So passing it confirms the placement and clears the way — it
+> does **not** license the scored session. Something else now stands in
+> between, and you should know about it before you plan a long evening.
 >
-> **The reason I am stopping you rather than letting you shoot a cheap test:**
-> the ask requires you to break the rig down — remove the teleconverter, then
-> leave the whole assembly locked and unmoved. That state cannot be reassembled
-> identically later. Two frames are cheap; a rig teardown spent on a superseded
-> specification is not.
+> **The scored session grew, and a rehearsal now sits in front of it.** The
+> session goes from `891` to `1,147` registered frames: three reference strips
+> become four (`+32`), a new converter-off witness adds `96`, and held-out
+> calibration adds `128`. Before any of that counts, M166 requires an
+> **exact-configuration non-holdout rehearsal** that must pass the new
+> condition in every measured cell. Its ruling: *"The owner should perform the
+> exact-configuration non-holdout rehearsal first; only a pass licenses the
+> `1,147`-frame holdout sitting."*
 >
-> Nothing else on this page is blocked by the hold.
+> **Why a rehearsal is worth your time rather than an annoyance.** The margin
+> the whole route depends on is thin. From diffraction alone the reference
+> beats the scored path by only `1.03405x` at the weakest measured frequency,
+> and M166 says plainly that *"Viltrox aberration, transmission loss, focus
+> error, or bare-lens pupil behavior can erase or reverse it. Diffraction
+> arithmetic cannot admit the rig."* Nothing in the existing `10,509`-frame
+> archive can settle it — every inventoried frame is converter-on. **So this
+> can still fail, and the rehearsal exists so that it fails on a throwaway
+> sitting instead of on the holdout one.** A rehearsal is not holdout, so a
+> failure there costs you an evening rather than the experiment.
+>
+> I am writing the full rehearsal and revised session specification into Ask 2
+> next. **Ask 2a below is current and needs no changes — that part you can do
+> now.**
+
 
 > # DO THIS FIRST — two frames, five minutes
 >

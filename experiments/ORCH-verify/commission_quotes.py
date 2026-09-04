@@ -9,6 +9,7 @@ never written.
 v2954.py takes a repo root as argv[1], which is what makes this possible.
 """
 import shutil
+import re
 import subprocess
 import sys
 import tempfile
@@ -76,6 +77,58 @@ def run():
     return r.returncode, r.stdout + r.stderr
 
 
+VOWNER = ROOT / "experiments" / "ORCH-verify" / "vowner0906.py"
+
+# Mutations checked against vowner0906.py rather than v2954.py. The banner tells
+# the owner to shoot on the strength of six verbatim lane quotes; each must be
+# shown to fail when its source no longer says what the banner claims.
+OWNER_MUTATIONS = [
+    ("banner m166 target holds",
+     "docs/research/M166-reference-information-dominance-physical.md",
+     "TARGET HOLDS AT 1.32x", "TARGET MOVES TO 1.20x"),
+    ("banner m166 cannot admit rig",
+     "docs/research/M166-reference-information-dominance-physical.md",
+     "Diffraction arithmetic cannot admit the rig.",
+     "Diffraction arithmetic is sufficient to admit the rig."),
+    ("banner m164 shared objective",
+     "docs/research/M164-reference-dominance.md",
+     "SHARED OBJECTIVE SUFFICIENT", "SHARED OBJECTIVE INSUFFICIENT"),
+    ("banner m166 rehearsal first",
+     "docs/research/M166-reference-information-dominance-physical.md",
+     "only a pass licenses the `1,147`-frame holdout sitting.",
+     "the holdout sitting may proceed regardless."),
+    # Drift the owner-facing total away from the lane's figure.
+    ("revsn  owner states the revised total in context", "docs/OWNER-ACTIONS.md",
+     "`891` to `1,147` registered frames", "`891` to `1,203` registered frames"),
+    ("revsn  owner attributes the +256 to its components", "docs/OWNER-ACTIONS.md",
+     "three reference strips become four (`+32`)",
+     "three reference strips become five (`+64`)"),
+]
+
+
+def run_owner():
+    r = subprocess.run([sys.executable, "-B", str(VOWNER), str(SCRATCH)],
+                       capture_output=True, text=True, cwd=str(ROOT))
+    return r.returncode, r.stdout + r.stderr
+
+
+def apply_mutation(text, anchor, replacement):
+    """Replace a quotation that may be wrapped across lines in the source.
+
+    Markdown reflows prose, so a quoted sentence rarely exists as one literal
+    line, and inside a blockquote a wrap inserts "\\n> " mid-sentence. Joining
+    the anchor's tokens on [\\s>]+ makes the mutation land in either case.
+    Requires exactly one match: a missing anchor is a broken control, and
+    multiple matches make the control ambiguous.
+    """
+    pattern = r"[\s>]+".join(re.escape(tok) for tok in anchor.split())
+    hits = list(re.finditer(pattern, text))
+    if len(hits) != 1:
+        raise SystemExit("MUTATION ANCHOR MATCHED %d TIMES (need exactly 1): %r"
+                         % (len(hits), anchor))
+    return text[:hits[0].start()] + replacement + text[hits[0].end():]
+
+
 def main() -> int:
     for _lbl, _rel, _a, _r in MUTATIONS:
         if not _rel.startswith("docs/"):
@@ -117,13 +170,39 @@ def main() -> int:
 
     rc, out = run()
     print("\nfinal run    : %s" % ("GREEN" if rc == 0 else "RED"))
-    total = len(MUTATIONS)
+
+    # ---- owner banner controls, checked against vowner0906.py ----
+    orc, oout = run_owner()
+    if orc != 0 or "VERDICT: GREEN" not in oout:
+        print("\nOWNER PRECONDITION FAILED: vowner is not GREEN on the scratch tree.")
+        print(oout[-1500:])
+        teardown()
+        return 1
+    print("\nowner precondition : GREEN")
+    for label, rel, anchor, replacement in OWNER_MUTATIONS:
+        target = SCRATCH / rel
+        pristine = target.read_text(encoding="utf-8")
+        target.write_text(apply_mutation(pristine, anchor, replacement),
+                          encoding="utf-8", newline="")
+        orc, oout = run_owner()
+        if orc != 0 and ("RED   " + label) in oout:
+            print("  RED   %-32s control PASSED" % label)
+            caught += 1
+        else:
+            print("  %-5s %-32s *** CONTROL FAILED -- NO-OP ***"
+                  % ("GREEN" if orc == 0 else "RED", label))
+            missed.append(label)
+        target.write_text(pristine, encoding="utf-8", newline="")
+    orc, _ = run_owner()
+    print("owner final run    : %s" % ("GREEN" if orc == 0 else "RED"))
+
+    total = len(MUTATIONS) + len(OWNER_MUTATIONS)
     print("\ncontrols     : %d caught + %d missed = %d of %d"
           % (caught, len(missed), caught + len(missed), total))
     if missed:
         print("MISSED       : %s" % missed)
     teardown()
-    ok = (caught == total and rc == 0)
+    ok = (caught == total and rc == 0 and orc == 0)
     print("\nVERDICT: " + ("COMMISSIONED" if ok else "NOT COMMISSIONED"))
     return 0 if ok else 1
 

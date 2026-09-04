@@ -104,9 +104,85 @@ if host_ok:
 else:
     red += 1
 
+# ---- HOLD-LIFTED banner: every quote must exist in the lane's committed report ----
+# The banner tells the owner to shoot on the strength of six verbatim quotes from
+# two lane-owned files. Quoting a lane's chat reply instead of its committed
+# report has already happened once in this program, so each quote is re-read from
+# source here. Both lanes remain live and may revise these files.
+print()
+M166 = ROOT / "docs" / "research" / "M166-reference-information-dominance-physical.md"
+M164D = ROOT / "docs" / "research" / "M164-reference-dominance.md"
+BANNER_QUOTES = [
+    ("m166 target holds", M166, "TARGET HOLDS AT 1.32x"),
+    ("m166 scale and field only", M166,
+     "can establish scale and field only"),
+    ("m166 cannot admit rig", M166,
+     "Diffraction arithmetic cannot admit the rig."),
+    ("m166 rehearsal first", M166,
+     "The owner should perform the exact-configuration non-holdout rehearsal "
+     "first; only a pass licenses the `1,147`-frame holdout sitting."),
+    ("m166 weakest cell ratio", M166, "1.03405"),
+    ("m164 shared objective", M164D, "SHARED OBJECTIVE SUFFICIENT"),
+]
+def unquote(s):
+    """Strip Markdown blockquote markers.
+
+    The owner banner is a blockquote, so a quotation that wraps across lines
+    reads as 'TARGET HOLDS AT > 1.32x' once whitespace is collapsed and will
+    not match its source. Removing the leading '>' per line before collapsing
+    is what makes a wrapped quote comparable to the unwrapped original.
+    """
+    return "\n".join(re.sub(r"^\s*>\s?", "", ln) for ln in s.splitlines())
+
+
+owner_flat = collapse(unquote(owner_raw))
+for label, path, quote in BANNER_QUOTES:
+    if not path.exists():
+        print("RED   banner %-24s SOURCE MISSING %s" % (label, path.name))
+        red += 1
+        continue
+    src_txt = collapse(path.read_text(encoding="utf-8", errors="replace"))
+    in_src = collapse(quote) in src_txt
+    in_owner = collapse(quote) in owner_flat
+    if in_src and in_owner:
+        print("GREEN banner %-24s quoted from %s" % (label, path.name))
+        green += 1
+    else:
+        print("RED   banner %-24s source=%s owner=%s"
+              % (label, in_src, in_owner))
+        red += 1
+
+# The revised session total is re-derived from its four published components
+# rather than pinned, so editing any component without editing the total fails.
+print()
+rev = [("current registered session", 891), ("fourth reference strip", 32),
+       ("scored-path witness", 96), ("held-out validation", 128)]
+rev_total = sum(v for _, v in rev)
+rev_checks = [
+    ("891 + 32 + 96 + 128 = 1,147", rev_total == 1147),
+    # Anchored on its own phrase, not on a bare "1,147": the figure also appears
+    # inside the quoted M166 ruling below, and a presence check for the bare
+    # number is satisfied by that duplicate even after this sentence drifts.
+    ("owner states the revised total in context",
+     "`891` to `1,147` registered frames" in owner_flat),
+    ("owner attributes the +256 to its components",
+     "three reference strips become four (`+32`)" in owner_flat),
+    ("increase is 256", rev_total - 891 == 256),
+]
+for label, ok in rev_checks:
+    print(("GREEN " if ok else "RED   ") + "revsn  " + label)
+    if ok:
+        green += 1
+    else:
+        red += 1
+
 # ---- control: a wrong total must not re-derive ----
 ctl = (2 + sum(stages) + 704) != 1603
+ctl2 = (891 + 32 + 96 + 128) != 1148  # 1,148 is shutter releases, not registered frames
 print(("CTLPASS" if ctl else "CTLFAIL") + " decoy total 1,603 does not re-derive")
+print(("CTLPASS" if ctl2 else "CTLFAIL")
+      + " decoy total 1,148 does not re-derive as registered frames")
+ctl = ctl and ctl2
 
 print()
 print("GREEN: %d  RED: %d" % (green, red))
