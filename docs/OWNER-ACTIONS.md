@@ -30,7 +30,7 @@ summary of one:
 | --- | --- | --- | --- |
 | `crop-early` (in progress, free) | `b` | **`2 of 12`** | M8, M12 |
 | \+ capture session (`$0`, 45-60 min) | `b+c` | **`3 of 12`** | M8, M10, M12 |
-| \+ **Zerene `$189`** | `b+c+d` | **`4 of 12`** | M7, M8, M10, M12 |
+| \+ **Zerene `$189`** + a colour target | `b+c+d` | **`4 of 12`** | M7, M8, M10, M12 |
 | \+ a working detail instrument | `a` | **`12 of 12`** | all |
 
 **Read the third row carefully. $189 buys exactly one additional axis** — M7,
@@ -120,9 +120,10 @@ No action needed on any of these. They cost nothing and need none of your time.
 
 | lane | what | why it matters |
 | --- | --- | --- |
-| **M130** | Build `crop-early` | Every one of the ten blocked axes carries blocker `(b)`. Nothing can be unlocked without this. |
-| **M134** | Clamped-cubic resampler | The M8 failure is entirely the Catmull-Rom kernel. Bilinear fixes it exactly but costs `0.3404` dex of detail. This builds a third option that should cost far less. |
-| **M12** | Formal memory/determinism run | Queued for a quiet host, ~3.5 hours. Free. Should close **before** any purchase. |
+| **M130** | Build `crop-early` | Every one of the ten blocked axes carries blocker `(b)`. Nothing can be unlocked without this, and it is one of only two gates left on resuming *any* new build. |
+| **M137** | Clamped resampler — **partly good news** | M8 is the only axis we actually score, and it fails. Bilinear fixes it exactly but costs `0.3404` dex of real detail. A clamped kernel now scores **zero violations across 6,131,678,976 samples** — the open question is only what it costs in sharpness, which this settles. |
+| **M136** | The M8 bar itself | We appear to have been scoring the resampler for something it cannot control: at long exposures the output format physically cannot represent the value, so it is counted as a violation no matter what. Ruling on whether fixing that is honest or moving the goalposts. |
+| **M12** | Formal memory/determinism run | Free, ~3.5 hours, no input from you. **Correctly waiting for M130** — `crop-early` changes the output bytes, so measuring now would just be thrown away. |
 
 ---
 
@@ -224,24 +225,58 @@ It did not.
 
 ---
 
-## Ask 3 — buy Zerene. **$189, or $289 depending on Ask 1.** *Not yet. Wait.*
+## Ask 3 — buy Zerene. **Not $189. The real figure is $925.** *Not yet. Wait.*
 
-**Recommendation: do not buy this now.** It clears `(d)` and, with the two steps
-above, reaches **`4 of 12`** — one axis more than the session alone. It does
-*not* reach `12 of 12`; that needs the detail instrument, which no purchase
-provides.
+**Correcting myself again, and this one is worth reading.** I previously wrote
+that `$189` gets you from `3 of 12` to `4 of 12`. That was wrong, and it was
+wrong in your favour to know: **the single axis the $189 buys is M7, colour
+fidelity — and M7 needs hardware nobody had priced.**
 
-Two reasons to wait, neither of which is about the money:
+The scorecard's readiness note for M7 is one sentence: *"No traceable colour
+target exists."* So the purchase unlocks an axis that is itself blocked. Priced
+properly, the floor for `4 of 12` is:
+
+| item | cost | why |
+|---|---|---|
+| Zerene Prosumer | `$189` | clears `(d)`, the comparator |
+| ISA ColorGauge Nano, matte, with NIST-traceable certificate | `$660` | the only target that **physically fits** at 1.3x |
+| Sekonic C-800 illuminant meter, 3-day rental | `$76` | M7 requires a *measured* illuminant |
+| **total** | **`$925`** | plus tax and shipping |
+
+`$849` if you already have a usable illuminant meter; **`$2,748`** if you buy
+the C-800 outright at `$1,899` rather than renting.
+
+**One genuinely good piece of news in that table.** M7 *is* shootable at your
+magnification, which was not obvious. Your sensor field is about
+`27.62 x 18.38 mm`; the ColorGauge Nano is `20.64 x 17.46 mm` and fits with
+hundreds of pixels per patch after erosion. **Ordinary ColorCheckers do not
+fit at all**, and the Calibrite Nano would need `62.64°` of tilt and
+`35.52 mm` of depth travel to be usable. So the axis is not impossible — it
+just needs the right, and more expensive, target.
+
+**Three reasons to wait, none of which is about the money:**
 
 1. **The scoring rules will not let us use it yet.** No comparator can be
    quality-qualified until a replacement M1 is admitted, so five of the axes
    Zerene is meant to unlock stay blocked with it sitting installed.
 2. **A licence bought now starts ageing against a program whose gating work is
    measured in research, not weeks.** We already lost one trial that way.
+3. **We cannot yet prove the `$660` target would even clear the bar.** M7 demands
+   median `ΔE00 ≤ 1.0`. A chart whose *own reference values* carry uncertainty
+   near `1.0` cannot support that bar at any price — and the published data does
+   not yet state its uncertainty. NIST is explicit that *"traceability alone does
+   not signify or guarantee fitness for purpose"*. Worse, our own scorecard
+   **specifies no uncertainty budget for reference values at all**, which is a
+   gap on our side that I need to close before recommending you spend anything.
 
-Buy it when the detail instrument is admitted and the capture exists — then it
-converts immediately, and Ask 1's answer will already be in hand. Nothing is
-lost by the delay and the $189 stays in your pocket meanwhile.
+**So there is a new `$0` step ahead of this ask:** request ISA's sample
+certificate and its numerical uncertainty, which they supply at no charge, and
+let me confirm the scorecard accepts a non-Calibrite target. If the certificate
+does not support a `ΔE00 ≤ 1.0` bar, the `$660` is dead money and the `$189`
+buys nothing — and we will have learned that for free.
+
+Buy when the detail instrument is admitted, the capture exists, and the
+certificate checks out. Nothing is lost by the delay.
 
 Zerene is already installed here at `1.04T2026-05-04-0750`, but its trial is
 **consumed and expired** (`License category = TRIAL`, expired `2026-06-06`), so
