@@ -2167,3 +2167,83 @@ maker notes or comparator internals; and the scorecard — not this document —
    thesis shipping by default is worth more than any single novel technique in this
    file — with **phase 0's capture session** alongside, because it is the only item
    here that no amount of software can substitute for.
+
+---
+
+## 11. Amendment 1 — D1's two named instruments are dead (orchestrator, 2026-09-03)
+
+*Appended by the execution orchestrator. No text above this line has been
+altered. This section records where execution has diverged from the plan, in
+the spirit of section 10. Evidence for every claim here is in
+`docs/STATUS.md` sections 3.1 and 2.9.16--2.9.19.*
+
+**The headline clause at lines 192--197 currently has no licensing instrument
+for its first and most important claim.** That sentence licenses *"resolves
+detail at or beyond the best shipping comparator"* with `(D1: FRC +
+slant-edge)`. Both are now dead:
+
+- **FRC.** Line 251 calls it *"the one ground-truth-free sharpness metric that
+  cannot be fooled upward by noise amplification"* and makes it D1's **spine**.
+  It cannot be fooled upward by a common linear filter because it is *exactly
+  invariant* to one -- `M-FRC-VIABILITY.md:11-12` records common post-noise
+  filtering as an **"ideal null."** Blur is also a common linear filter.
+  The invariance and the blindness are one property, not two.
+- **Slant-edge.** Three builds, all refused. `M-PHASE0-SLANTEDGE.md:271-274`
+  records variants whose optical arms *reverse*: blur scores sharper
+  (`1.268326`) and genuine improvement scores worse (`.923468`).
+
+Six candidate families across eight implementations have now failed the same
+way. The structural cause is that **no single-image high-frequency statistic
+separates resolved detail from sharpening, because sharpening adds exactly what
+such a statistic measures.** Every candidate has bought one invariance by
+forfeiting the other: `Q25` is tone-proof and sharpening-fooled (`5.560744x`);
+candidate 2 is sharpening-proof to fifteen decimals and tone-destroyed.
+
+**Section 3's diagnosis was right, and it applied to itself.** Lines 264--267
+name instrument churn as what *"ate the project's middle"* and prescribe D1 as
+the cure -- *"build the instruments once, first."* D1's own instruments then
+churned. The prescription was correct; the specific instruments named in it
+were not available to fill it.
+
+**Consequence, stated plainly: strehl can currently prove harm and cannot prove
+benefit.** The noise clause, the veil clause and the invented-structure clause
+of lines 192--197 retain live instruments. The detail clause does not.
+
+**What survives, and what has changed role.** Line 194's *"zero invented
+structure (hull census, stamped per file)"* is alive and has been **promoted
+from a per-file self-check to a comparative axis**, which is a change of role
+rather than a new instrument. Its licensed claim is narrower than first hoped
+and is stated here in the only form the evidence supports: **it can establish
+invention; it cannot name the inventor.** Exceeding a resampler's exact
+phase-dependent bound rejects that resampler as the sole explanation but does
+not distinguish sharpening from local contrast, deconvolution, non-convex
+merging or an omitted transform. A `~6%` Catmull-Rom ceiling proposed during
+execution was **wrong** -- the exact separable two-dimensional bound is
+`0.28125`, not `0.0625`, the latter being one plant at one phase.
+
+**Three routes to a detail claim were identified; two remain open.**
+
+1. **A truth reference.** Blocked on capture geometry: the main sweeps are at
+   maximum 2.8x, so a 2.8x reference yields a sampling ratio of `1.0x` against
+   a `1.25x` automatic no-go. Under assessment is an inversion -- score a 1.4x
+   TC-off stack and use 2.8x bursts as its truth, giving exactly `2.0x`.
+2. **Independent repeats.** Closed; this was FRC's route.
+3. **A physical constraint sharpening must violate.** The hull census, above.
+
+**A dependency in section 3 may now be discharged.** Lines 268--270 list
+questions *"blocked on captures, not analysis -- and have been for weeks,"*
+including the sharp chart that D1 needs at lines 1542--1552 (M88's verdict was
+*"nothing sharp enough to point at"*). The owner's 2026-09-02
+`high-res-calibration-slide-cpl` session, 657 frames, is plausibly that chart.
+It also contains something the plan never asked for and the program badly
+needed: a **genuine optical improvement pair** -- `tilted-sw4` (182 frames)
+against `tilted-sw10` (92 frames) over an identical focus-encoder range -- plus
+a real photon-SNR ladder and a flat null. Every candidate above was retired
+without such an arm ever being run.
+
+**What this amendment does not change.** Workstreams A, B and C stand. The
+phase gates, the comparator pinning, the banked-purge discipline and the rule
+that a negative result is a publishable stopping point all stand and have been
+load-bearing. Section 10 item 9's instruction -- that if only one thing
+survives triage it should be phase 1, with phase 0's capture session alongside
+-- is unaffected and, if anything, reinforced.
