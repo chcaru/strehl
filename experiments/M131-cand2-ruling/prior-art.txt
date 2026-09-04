@@ -1,0 +1,41 @@
+terms: detail, metric, detectability, hotelling, sharpness
+==============================================================================
+CITE THESE IN THE BRIEF (rule 40):
+
+  M46-detail-metric-measured.md        score   205  <-- HEADLINE MATCH
+      M46 — Is there an admissible detail metric on this sensor?
+  M99-photometric.md                   score   147  <-- HEADLINE MATCH
+      M99 — Per-frame photometric drift: is it geometry, or is it the camera?
+  M39-verify-detail-metric.md          score   141  <-- HEADLINE MATCH
+      M39 - independent verification of the M38 detail metric
+  M55-acceptance-spec.md               score   134  <-- HEADLINE MATCH
+      M55b — Pre-registered acceptance specification for a detail metric, v1
+  M55-sigpow-verification.md           score   125  <-- HEADLINE MATCH
+      M55 — Adversarial verification of M46's `sigpow` detail metric
+  M57-detail-metric-from-first-principles.md score   124  <-- HEADLINE MATCH
+      M57 — a detail metric from first principles: measurements
+  BUILD-SHARPMETRIC.md                 score   106  <-- HEADLINE MATCH
+      BUILD-SHARPMETRIC — the 1:1 sharpness statistic: what its ceiling arm actually was, and what the instrum
+  M93-election-gate.md                 score   105  <-- HEADLINE MATCH
+      M93 — Gating the focus election, and whether the gate eats detail
+  M98-gate-adjudication.md             score    97  <-- HEADLINE MATCH
+      M98 — the gate, adjudicated: two milestones, two metrics, one photograph
+  M95-merge-vs-frame-sharpness.md      score    80  <-- HEADLINE MATCH
+      M95 — Is the merge losing sharpness? Merged output vs. the frame that went in
+
+  also mentions it: ORCH-veiling.md, M87-occlusion.md, M116-promotion.md, M41-r3-kill-measured.md, BUILD-TRIAGE.md, BUILD-SHARP.md
+
+IN THE SOURCE (a test name can be the whole answer):
+  crates\strehl-cli\examples\m89-robust.rs:406  fn detail_axis(ld: &Loader, stride: usize) -> Result<(Vec<f32>, Vec<f32>, usize)> {
+  crates\strehl-cli\examples\m89-robust.rs:448  fn detail_snr(detail: &[f32], level: &[f32], model: &NoiseModel) -> Vec<f32> {
+  crates\strehl-cli\examples\m93-election.rs:328  fn detail_axis(ld: &Loader, stride: usize) -> Result<(Vec<f32>, Vec<f32>)> {
+  crates\strehl-cli\examples\m93-election.rs:370  fn detail_snr(detail: &[f32], level: &[f32], model: &NoiseModel) -> Vec<f32> {
+  crates\strehl-cli\examples\m96-election-margin.rs:621  fn detail_axis(luma: &[f32], geom: PlaneGeometry) -> Vec<f32> {
+  crates\strehl-cli\src\image_out.rs:2658  fn only_the_colorimetric_paths_get_a_profile() {
+  crates\strehl-cli\src\main.rs:1342  fn exhaustive_photometric(mode: PhotometricMode) {
+  crates\strehl-cli\src\main.rs:1536  fn the_photometric_flag_help_names_the_same_default() {
+  crates\strehl-cli\src\merge_cmd.rs:867  fn detail_metrics(v: &[f32], sigma: &[f32], w: usize, h: usize) -> DetailMetrics {
+  crates\strehl-cli\src\merge_cmd.rs:1009  fn cross_fitted_detail(detail: GradientRoi<'_>, flat: GradientRoi<'_>) -> Result<ControlledDetail> {
+  crates\strehl-cli\src\merge_cmd.rs:1113  fn detail_target_is_measurable(detail: ControlledDetail) -> bool {
+  crates\strehl-cli\src\merge_cmd.rs:1212  fn new(flat: Roi, detail: Roi) -> Self {
+==============================================================================

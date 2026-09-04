@@ -1,0 +1,259 @@
+{
+  "all_registered_choice_directions_pass": true,
+  "independent_same_optics_null": {
+    "base_d2": 6.0122885561019395,
+    "independent_null_d2": [
+      5.33858904175189,
+      5.919898883466153,
+      5.552522607866477,
+      5.950698249433286,
+      5.45362468125104,
+      5.402391056581753,
+      5.921486497039906,
+      5.999242467988822
+    ],
+    "input_manifest_sha256": "b956763f023c319b7e4c16344bddfe54d2337221bf9105216342b7be957e7cdc",
+    "n": 8,
+    "ratio_maximum": 0.997830096145356,
+    "ratio_mean": 0.9467786904364778,
+    "ratio_minimum": 0.8879462440859888,
+    "ratio_standard_deviation": 0.046663406612240554,
+    "ratio_standard_error": 0.016498005624390237,
+    "ratios": [
+      0.8879462440859888,
+      0.9846331938705737,
+      0.923528961734739,
+      0.9897559296940023,
+      0.9070796636525529,
+      0.8985581789980466,
+      0.9848972553105626,
+      0.997830096145356
+    ]
+  },
+  "interpretation": "The synthetic optical sign is robust within this supplied-target forward model. This does not establish natural-capture task admissibility or transfer.",
+  "planted_failure_self_test": {
+    "blur_gate_rejects_exact_copy": true,
+    "blur_gate_rejects_improvement": true,
+    "exact_copy_ratio": 1.0,
+    "improvement_gate_rejects_exact_copy": true,
+    "improvement_mislabeled_as_blur_ratio": 2.462749497014092,
+    "passed": true
+  },
+  "protocol": "M131-synthetic-choice-audit-v1",
+  "source_artifacts": {
+    "degraded": {
+      "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\cand2-postmortem-optics\\degraded-scores.npz",
+      "sha256": "8c45a6b0563ae20006ed6c7b49c64d3d8296d0f630fadca5e9e96f3439e61824"
+    },
+    "improved": {
+      "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\cand2-postmortem-optics\\improved-scores.npz",
+      "sha256": "2b5170d8c3332ec9ea4d79ecb1b899d4c68d43135d108fcce6f11e45a68c7ec4"
+    }
+  },
+  "variants": {
+    "degraded": {
+      "display": {
+        "all_subset_directions_pass": true,
+        "arm_d2_by_task": [
+          1.4783140937884283,
+          1.970352689792159,
+          1.951653691857601,
+          1.2834235910804075
+        ],
+        "arm_over_base_by_task": [
+          0.19424049324592363,
+          0.35048472983297785,
+          0.3073803123009123,
+          0.2872924403851285
+        ],
+        "balanced_macro_subsets": {
+          "even_macros": 0.28348613338186535,
+          "first_half_macros": 0.25357809855591135,
+          "odd_macros": 0.27260655124149163,
+          "second_half_macros": 0.30270512219691
+        },
+        "base_d2_by_task": [
+          7.610741041090579,
+          5.621793253963227,
+          6.349312606420332,
+          4.467307212678204
+        ],
+        "block_jackknife": {
+          "leave_one_block_out": [
+            0.2942780163517193,
+            0.27492576062705454,
+            0.27067248768318375,
+            0.2639001155007368,
+            0.28504481678624616
+          ],
+          "mean": 0.27776423938978817,
+          "normal_ci95": [
+            0.23568032461937782,
+            0.3198481541601985
+          ],
+          "standard_error": 0.02147138508694405
+        },
+        "frozen_ratio_of_task_means": 0.27792013119435977,
+        "task_ratio_aggregations": {
+          "arithmetic_mean": 0.28484949394123554,
+          "maximum": 0.35048472983297785,
+          "median": 0.2973363763430204,
+          "minimum": 0.19424049324592363,
+          "strict_all_tasks_direction_pass": true
+        }
+      },
+      "native": {
+        "all_subset_directions_pass": true,
+        "arm_d2_by_task": [
+          1.47831409378847,
+          1.970360473527987,
+          1.9516536918576146,
+          1.2834235910804375
+        ],
+        "arm_over_base_by_task": [
+          0.19424049043207645,
+          0.35048611439745353,
+          0.3073803123009076,
+          0.28729244038506824
+        ],
+        "balanced_macro_subsets": {
+          "even_macros": 0.2834869460406364,
+          "first_half_macros": 0.25357797216456834,
+          "odd_macros": 0.2726064502816698,
+          "second_half_macros": 0.30270593880460694
+        },
+        "base_d2_by_task": [
+          7.610741151343101,
+          5.621793253964936,
+          6.349312606420472,
+          4.467307212679246
+        ],
+        "block_jackknife": {
+          "leave_one_block_out": [
+            0.29427718642635253,
+            0.2749261701764047,
+            0.2706728815338521,
+            0.26390168223906085,
+            0.28504463230501187
+          ],
+          "mean": 0.2777645105361365,
+          "normal_ci95": [
+            0.23568356982574978,
+            0.3198454512465232
+          ],
+          "standard_error": 0.021469867709380974
+        },
+        "frozen_ratio_of_task_means": 0.2779204535796563,
+        "task_ratio_aggregations": {
+          "arithmetic_mean": 0.2848498393788765,
+          "maximum": 0.35048611439745353,
+          "median": 0.29733637634298793,
+          "minimum": 0.19424049043207645,
+          "strict_all_tasks_direction_pass": true
+        }
+      }
+    },
+    "improved": {
+      "display": {
+        "all_subset_directions_pass": true,
+        "arm_d2_by_task": [
+          18.406108592030673,
+          14.751315924259153,
+          15.95268561216457,
+          10.116846347901465
+        ],
+        "arm_over_base_by_task": [
+          2.418438427040894,
+          2.623952048371725,
+          2.512505935844685,
+          2.2646408375922493
+        ],
+        "balanced_macro_subsets": {
+          "even_macros": 2.5337496487935187,
+          "first_half_macros": 2.4517081123042384,
+          "odd_macros": 2.394800913895623,
+          "second_half_macros": 2.4799822825105604
+        },
+        "base_d2_by_task": [
+          7.610741041090579,
+          5.621793253963227,
+          6.349312606420332,
+          4.467307212678204
+        ],
+        "block_jackknife": {
+          "leave_one_block_out": [
+            2.5473593747436194,
+            2.448601554837834,
+            2.441274604127092,
+            2.3257524224842467,
+            2.548797176375885
+          ],
+          "mean": 2.462357026513735,
+          "normal_ci95": [
+            2.139144537224313,
+            2.7855695158031573
+          ],
+          "standard_error": 0.16490433127011336
+        },
+        "frozen_ratio_of_task_means": 2.4627459325690895,
+        "task_ratio_aggregations": {
+          "arithmetic_mean": 2.4548843122123882,
+          "maximum": 2.623952048371725,
+          "median": 2.4654721814427893,
+          "minimum": 2.2646408375922493,
+          "strict_all_tasks_direction_pass": true
+        }
+      },
+      "native": {
+        "all_subset_directions_pass": true,
+        "arm_d2_by_task": [
+          18.40611416490413,
+          14.751314557981722,
+          15.952676375579395,
+          10.116937371309275
+        ],
+        "arm_over_base_by_task": [
+          2.4184391242442826,
+          2.6239518053386117,
+          2.51250448110681,
+          2.2646612130446457
+        ],
+        "balanced_macro_subsets": {
+          "even_macros": 2.5337499372385017,
+          "first_half_macros": 2.4517132213707953,
+          "odd_macros": 2.394808900427695,
+          "second_half_macros": 2.479981752014782
+        },
+        "base_d2_by_task": [
+          7.610741151343101,
+          5.621793253964936,
+          6.349312606420472,
+          4.467307212679246
+        ],
+        "block_jackknife": {
+          "leave_one_block_out": [
+            2.5473627210466234,
+            2.448606260000072,
+            2.441275989051399,
+            2.3257579332651575,
+            2.5487977496629597
+          ],
+          "mean": 2.4623601306052425,
+          "normal_ci95": [
+            2.1391525164760776,
+            2.7855677447344074
+          ],
+          "standard_error": 0.1649018439434514
+        },
+        "frozen_ratio_of_task_means": 2.462749497014092,
+        "task_ratio_aggregations": {
+          "arithmetic_mean": 2.4548891559335875,
+          "maximum": 2.6239518053386117,
+          "median": 2.4654718026755464,
+          "minimum": 2.2646612130446457,
+          "strict_all_tasks_direction_pass": true
+        }
+      }
+    }
+  }
+}

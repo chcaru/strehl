@@ -12,9 +12,7 @@ ROOT = Path(
     r"D:\personal\macro\requests\misc-diagnostic"
     r"\high-res-calibration-slide-cpl"
 )
-EXIFTOOL = Path(
-    r"C:\Users\chris\AppData\Local\Programs\ExifTool\ExifTool.exe"
-)
+EXIFTOOL = Path(r"C:\Users\chris\AppData\Local\Programs\ExifTool\ExifTool.exe")
 STACKS = {
     "flat-6s": ROOT / "flat-sw4-cpl" / "flat-et6s-sw4-cpl",
     "flat-2p5s": ROOT / "flat-sw4-cpl" / "flat-et2.5s-sw4-cpl",
@@ -116,9 +114,7 @@ def run(output: Path) -> int:
         expected_focus = EXPECTED_FOCUS.get(label)
         focus_ok = expected_focus is None or observed_focus == expected_focus
         count_ok = len(files) == EXPECTED[label]
-        ibis_values = counts(
-            record.get("ImageStabilization") for record in numeric
-        )
+        ibis_values = counts(record.get("ImageStabilization") for record in numeric)
         ibis_on = ibis_values == {"1": len(files)}
         counts_match &= count_ok
         focus_match &= focus_ok
@@ -170,9 +166,7 @@ def run(output: Path) -> int:
 
     sw4 = rows["tilted-sw4"]["focus_position_2"]["histogram"]
     sw10 = rows["tilted-sw10"]["focus_position_2"]["histogram"]
-    bucket_ratios = {
-        key: sw4[key] / sw10[key] for key in sorted(sw10)
-    }
+    bucket_ratios = {key: sw4[key] / sw10[key] for key in sorted(sw10)}
     record = {
         "protocol": "M131-capture-metadata-audit-v1",
         "enumeration": (

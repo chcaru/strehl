@@ -229,29 +229,21 @@ def jitter_summary(
         },
         "increment_raw_px": {
             "rms": float(
-                RAW_PIXELS_PER_LOWRES_PIXEL
-                * math.sqrt(np.mean(increment_magnitude**2))
+                RAW_PIXELS_PER_LOWRES_PIXEL * math.sqrt(np.mean(increment_magnitude**2))
             ),
             "p95": float(
-                RAW_PIXELS_PER_LOWRES_PIXEL
-                * np.quantile(increment_magnitude, 0.95)
+                RAW_PIXELS_PER_LOWRES_PIXEL * np.quantile(increment_magnitude, 0.95)
             ),
-            "maximum": float(
-                RAW_PIXELS_PER_LOWRES_PIXEL * increment_magnitude.max()
-            ),
+            "maximum": float(RAW_PIXELS_PER_LOWRES_PIXEL * increment_magnitude.max()),
         },
         "detrended_residual_raw_px": {
             "rms": float(
-                RAW_PIXELS_PER_LOWRES_PIXEL
-                * math.sqrt(np.mean(residual_magnitude**2))
+                RAW_PIXELS_PER_LOWRES_PIXEL * math.sqrt(np.mean(residual_magnitude**2))
             ),
             "p95": float(
-                RAW_PIXELS_PER_LOWRES_PIXEL
-                * np.quantile(residual_magnitude, 0.95)
+                RAW_PIXELS_PER_LOWRES_PIXEL * np.quantile(residual_magnitude, 0.95)
             ),
-            "maximum": float(
-                RAW_PIXELS_PER_LOWRES_PIXEL * residual_magnitude.max()
-            ),
+            "maximum": float(RAW_PIXELS_PER_LOWRES_PIXEL * residual_magnitude.max()),
         },
         "cumulative_span_raw_px": {
             "x": float(
@@ -374,27 +366,17 @@ def cross_stack_summary(arrays: dict[str, dict[str, np.ndarray]]) -> dict:
         predicted = slope * peaks10 + intercept
         residual = peaks4 - predicted
         normalized4 = peaks4 / (STACKS["tilted-sw4"]["expected_frames"] - 1)
-        normalized10 = peaks10 / (
-            STACKS["tilted-sw10"]["expected_frames"] - 1
-        )
+        normalized10 = peaks10 / (STACKS["tilted-sw10"]["expected_frames"] - 1)
         rows[metric] = {
             "sw4_from_sw10_linear_slope": float(slope),
             "sw4_from_sw10_linear_intercept": float(intercept),
-            "peak_mapping_residual_rms_frames": float(
-                math.sqrt(np.mean(residual**2))
-            ),
+            "peak_mapping_residual_rms_frames": float(math.sqrt(np.mean(residual**2))),
             "normalized_peak_difference": {
                 "mean": float(np.mean(normalized4 - normalized10)),
-                "rms": float(
-                    math.sqrt(np.mean((normalized4 - normalized10) ** 2))
-                ),
-                "maximum_absolute": float(
-                    np.max(np.abs(normalized4 - normalized10))
-                ),
+                "rms": float(math.sqrt(np.mean((normalized4 - normalized10) ** 2))),
+                "maximum_absolute": float(np.max(np.abs(normalized4 - normalized10))),
             },
-            "peak_rank_correlation": float(
-                np.corrcoef(peaks4, peaks10)[0, 1]
-            ),
+            "peak_rank_correlation": float(np.corrcoef(peaks4, peaks10)[0, 1]),
         }
     return rows
 

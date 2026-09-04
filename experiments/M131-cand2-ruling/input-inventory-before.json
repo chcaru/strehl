@@ -1,0 +1,18 @@
+{
+  "command": "Get-ChildItem -Force -Recurse -File",
+  "timestamp_utc": "2026-09-04T07:33:53.7645665Z",
+  "roots": [
+    {
+      "root": "D:\\personal\\macro",
+      "files": 10724,
+      "arw_files": 10509,
+      "bytes": 487169829957
+    },
+    {
+      "root": "D:\\personal\\macro\\requests",
+      "files": 3918,
+      "arw_files": 3908,
+      "bytes": 149982011502
+    }
+  ]
+}

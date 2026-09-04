@@ -1,0 +1,221 @@
+{
+  "flat_gate": {
+    "null_accuracy": {
+      "maximum": 0.5062500000000001,
+      "mean": 0.4993815104166667,
+      "minimum": 0.4869791666666667,
+      "n": 16,
+      "standard_deviation": 0.005655200402667327,
+      "standard_error": 0.0014138001006668319
+    },
+    "null_d2": {
+      "maximum": 0.009209560459174157,
+      "mean": 0.003032001595761148,
+      "minimum": 0.001020224598245652,
+      "n": 16,
+      "standard_deviation": 0.002221043582385286,
+      "standard_error": 0.0005552608955963215
+    },
+    "numeric_rows": 16,
+    "passed": false,
+    "required": "typed non-numeric NO_TARGET refusal"
+  },
+  "input": {
+    "blocks": 5,
+    "dimension": 256,
+    "independent_streams": [
+      "covariance",
+      "derivative-plus",
+      "derivative-minus",
+      "test-plus",
+      "test-minus"
+    ],
+    "sites_per_block": 96,
+    "spatial_content": "constant per channel and site",
+    "target_amplitude": 0.0,
+    "templates": 4
+  },
+  "null_rows": [
+    {
+      "accuracy": 0.4869791666666667,
+      "condition_number_max": 18490.91905514522,
+      "d2": 0.005464099721192299,
+      "refusal": null,
+      "seed": 6823890621216940184,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.5041666666666667,
+      "condition_number_max": 18568.83331202273,
+      "d2": 0.006123462601411497,
+      "refusal": null,
+      "seed": 15537772989588053009,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.50078125,
+      "condition_number_max": 17149.510100545634,
+      "d2": 0.001902386003879608,
+      "refusal": null,
+      "seed": 11906469459953309212,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.4966145833333333,
+      "condition_number_max": 16104.451074014429,
+      "d2": 0.0019921582651235233,
+      "refusal": null,
+      "seed": 2251098125188825676,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.5059895833333333,
+      "condition_number_max": 19102.887324016123,
+      "d2": 0.00446311959083813,
+      "refusal": null,
+      "seed": 4967070179786030353,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.50546875,
+      "condition_number_max": 17510.336947313892,
+      "d2": 0.0016800319776610337,
+      "refusal": null,
+      "seed": 13422233740741989061,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.49713541666666666,
+      "condition_number_max": 17037.65450447342,
+      "d2": 0.009209560459174157,
+      "refusal": null,
+      "seed": 769456257159551972,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.490625,
+      "condition_number_max": 18385.303383832685,
+      "d2": 0.002595452272480358,
+      "refusal": null,
+      "seed": 6791489964045748700,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.5044270833333333,
+      "condition_number_max": 17837.97459751473,
+      "d2": 0.00267777857231664,
+      "refusal": null,
+      "seed": 8368005983192028358,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.496875,
+      "condition_number_max": 16519.959488948185,
+      "d2": 0.0024798298536588648,
+      "refusal": null,
+      "seed": 10022780089900374912,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.5049479166666666,
+      "condition_number_max": 21103.802318386857,
+      "d2": 0.0011382256053592541,
+      "refusal": null,
+      "seed": 18141360795874510610,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.4979166666666667,
+      "condition_number_max": 19740.161818673518,
+      "d2": 0.002011475999494385,
+      "refusal": null,
+      "seed": 126181728865054206,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.5062500000000001,
+      "condition_number_max": 17341.31832717257,
+      "d2": 0.002449257293554248,
+      "refusal": null,
+      "seed": 10451692589108895475,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.496875,
+      "condition_number_max": 15402.661020272324,
+      "d2": 0.002238157977152639,
+      "refusal": null,
+      "seed": 3753877379522421149,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.49583333333333335,
+      "condition_number_max": 18018.427791230482,
+      "d2": 0.001066804740636087,
+      "refusal": null,
+      "seed": 13818333115370713045,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.49921875000000004,
+      "condition_number_max": 16069.187387631971,
+      "d2": 0.001020224598245652,
+      "refusal": null,
+      "seed": 17946296767701484086,
+      "status": "NUMERIC"
+    }
+  ],
+  "planted_wrong_answer": {
+    "caught": true,
+    "mutation": "accept every finite NUMERIC zero-target result"
+  },
+  "power_control": {
+    "all_power_above_all_null": true,
+    "d2": {
+      "maximum": 38.00794776975818,
+      "mean": 32.674776962208846,
+      "minimum": 29.440925683462794,
+      "n": 4,
+      "standard_deviation": 3.7236160024653846,
+      "standard_error": 1.8618080012326923
+    },
+    "passed": true,
+    "registered_target_amplitude": 0.0045
+  },
+  "power_rows": [
+    {
+      "accuracy": 0.99921875,
+      "condition_number_max": 17652.83879206938,
+      "d2": 38.00794776975818,
+      "refusal": null,
+      "seed": 14040400676890145950,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.9971354166666666,
+      "condition_number_max": 18798.814128910253,
+      "d2": 32.12103664887639,
+      "refusal": null,
+      "seed": 10690037294742510247,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.9940104166666667,
+      "condition_number_max": 16744.65769608162,
+      "d2": 29.440925683462794,
+      "refusal": null,
+      "seed": 815406503582918915,
+      "status": "NUMERIC"
+    },
+    {
+      "accuracy": 0.9966145833333333,
+      "condition_number_max": 18257.849230499844,
+      "d2": 31.129197746738015,
+      "refusal": null,
+      "seed": 15918544279433544656,
+      "status": "NUMERIC"
+    }
+  ],
+  "protocol": "M131-flat-control-v1",
+  "verdict": "FAIL"
+}

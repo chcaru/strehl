@@ -53,9 +53,7 @@ def score(
         plus = plus[:, indices]
         minus = minus[:, indices]
     difference = plus.mean(axis=1) - minus.mean(axis=1)
-    variance = 0.5 * (
-        plus.var(axis=1, ddof=1) + minus.var(axis=1, ddof=1)
-    )
+    variance = 0.5 * (plus.var(axis=1, ddof=1) + minus.var(axis=1, ddof=1))
     if np.any(variance <= 0.0):
         raise RuntimeError("non-positive held-out variance")
     by_task = difference * difference / variance
@@ -77,11 +75,7 @@ def ratio_for(
 def jackknife(values: list[float]) -> dict:
     array = np.asarray(values, dtype=np.float64)
     mean = float(array.mean())
-    se = math.sqrt(
-        (len(array) - 1)
-        / len(array)
-        * float(np.sum((array - mean) ** 2))
-    )
+    se = math.sqrt((len(array) - 1) / len(array) * float(np.sum((array - mean) ** 2)))
     return {
         "leave_one_block_out": array.tolist(),
         "mean": mean,
@@ -135,9 +129,7 @@ def summarize_variant(
             np.flatnonzero(mask),
         )[0]
     direction_pass = (
-        max(task_ratios) < 1.0
-        if arm == "degraded"
-        else min(task_ratios) > 1.0
+        max(task_ratios) < 1.0 if arm == "degraded" else min(task_ratios) > 1.0
     )
     return {
         "frozen_ratio_of_task_means": ratio,
@@ -194,9 +186,7 @@ def null_audit() -> dict:
         rel_tol=BASE_TOLERANCE,
         abs_tol=BASE_TOLERANCE,
     ):
-        raise RuntimeError(
-            f"baseline changed: {base.d2} versus {EXPECTED_BASE_D2}"
-        )
+        raise RuntimeError(f"baseline changed: {base.d2} versus {EXPECTED_BASE_D2}")
     ratios = []
     d2s = []
     for index in range(NULL_REPEATS):
@@ -219,9 +209,7 @@ def null_audit() -> dict:
         "ratios": ratios,
         "ratio_mean": float(array.mean()),
         "ratio_standard_deviation": float(array.std(ddof=1)),
-        "ratio_standard_error": float(
-            array.std(ddof=1) / math.sqrt(len(array))
-        ),
+        "ratio_standard_error": float(array.std(ddof=1) / math.sqrt(len(array))),
         "ratio_minimum": float(array.min()),
         "ratio_maximum": float(array.max()),
         "n": len(array),
@@ -248,9 +236,7 @@ def self_test(loaded: dict[str, dict[str, np.ndarray]]) -> dict:
     return {
         "exact_copy_ratio": ratio,
         "blur_gate_rejects_exact_copy": blur_gate_rejects_exact_copy,
-        "improvement_gate_rejects_exact_copy": (
-            improvement_gate_rejects_exact_copy
-        ),
+        "improvement_gate_rejects_exact_copy": (improvement_gate_rejects_exact_copy),
         "improvement_mislabeled_as_blur_ratio": wrong_arm_ratio,
         "blur_gate_rejects_improvement": blur_gate_rejects_improvement,
         "passed": bool(
@@ -283,8 +269,7 @@ def run(output: Path) -> int:
         and (
             variants[arm][variant]["block_jackknife"]["normal_ci95"][1] < 1.0
             if arm == "degraded"
-            else variants[arm][variant]["block_jackknife"]["normal_ci95"][0]
-            > 1.0
+            else variants[arm][variant]["block_jackknife"]["normal_ci95"][0] > 1.0
         )
         for arm in ("degraded", "improved")
         for variant in ("native", "display")

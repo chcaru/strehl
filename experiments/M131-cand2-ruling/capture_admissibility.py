@@ -26,11 +26,7 @@ def run(output: Path) -> int:
     focus = read_json(HERE / "focus-coverage-audit.json")
     m55 = read_json(HERE / "m55-audit.json")
     downstream = read_json(
-        REPO
-        / "experiments"
-        / "M-CAND2"
-        / "out"
-        / "amendment-downstream-gate.json"
+        REPO / "experiments" / "M-CAND2" / "out" / "amendment-downstream-gate.json"
     )
 
     sw4_focus = focus["stacks"]["tilted-sw4"]
@@ -88,9 +84,7 @@ def run(output: Path) -> int:
             "image_coverage": {
                 "passed": coverage_count == 64,
                 "required_sites": 64,
-                "qualifying_sites_in_both_stacks_and_metrics_at_1p05": (
-                    coverage_count
-                ),
+                "qualifying_sites_in_both_stacks_and_metrics_at_1p05": (coverage_count),
                 "sw4": sw4_focus["both_metrics_qualifying_sites"],
                 "sw10": sw10_focus["both_metrics_qualifying_sites"],
                 "reason": (
@@ -122,22 +116,20 @@ def run(output: Path) -> int:
             },
             "ibis_and_geometry": {
                 "passed": False,
-                "all_six_stacks_ibis_on": metadata["checks"][
-                    "all_six_stacks_ibis_on"
-                ],
+                "all_six_stacks_ibis_on": metadata["checks"]["all_six_stacks_ibis_on"],
                 "image_motion": {
-                    "sw4_increment_rms_raw_px": sw4_focus[
-                        "phase_correlation"
-                    ]["increment_raw_px"]["rms"],
-                    "sw10_increment_rms_raw_px": sw10_focus[
-                        "phase_correlation"
-                    ]["increment_raw_px"]["rms"],
-                    "sw4_detrended_rms_raw_px": sw4_focus[
-                        "phase_correlation"
-                    ]["detrended_residual_raw_px"]["rms"],
-                    "sw10_detrended_rms_raw_px": sw10_focus[
-                        "phase_correlation"
-                    ]["detrended_residual_raw_px"]["rms"],
+                    "sw4_increment_rms_raw_px": sw4_focus["phase_correlation"][
+                        "increment_raw_px"
+                    ]["rms"],
+                    "sw10_increment_rms_raw_px": sw10_focus["phase_correlation"][
+                        "increment_raw_px"
+                    ]["rms"],
+                    "sw4_detrended_rms_raw_px": sw4_focus["phase_correlation"][
+                        "detrended_residual_raw_px"
+                    ]["rms"],
+                    "sw10_detrended_rms_raw_px": sw10_focus["phase_correlation"][
+                        "detrended_residual_raw_px"
+                    ]["rms"],
                 },
                 "existing_product_map_evidence": {
                     "source": "docs/research/cover-default.md:590-599",
@@ -147,9 +139,7 @@ def run(output: Path) -> int:
                     "sw4_full_k": 0.9676287511847108,
                     "sw4_92_subset_k": 0.9676287511847108,
                     "sw10_k": 0.9652763795078986,
-                    "subset_vs_independent_k_difference": (
-                        0.002352371676812237
-                    ),
+                    "subset_vs_independent_k_difference": (0.002352371676812237),
                     "registered_difference_limit": 0.001,
                 },
                 "reason": (
@@ -162,9 +152,7 @@ def run(output: Path) -> int:
         "historical_candidate_state": {
             "candidate_status": downstream["candidate_status"],
             "eligible_for_downstream_arms": downstream["eligible"],
-            "mandatory_classifications": downstream[
-                "mandatory_classifications"
-            ],
+            "mandatory_classifications": downstream["mandatory_classifications"],
         },
         "overall": {
             "verdict": "UNCOMMISSIONED_NO_LAWFUL_TARGET_TASK",

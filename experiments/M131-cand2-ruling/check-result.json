@@ -1,0 +1,115 @@
+{
+  "checks": [
+    {
+      "detail": null,
+      "name": "exact opening verdict",
+      "passed": true
+    },
+    {
+      "detail": [
+        533,
+        2126,
+        6180,
+        11122,
+        16134,
+        17860,
+        21218
+      ],
+      "name": "required headings present and ordered",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "what-I-did-not-establish is final H2",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "flat control fails",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "flat control numeric 16 of 16",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "flat power control passes",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "flat wrong-answer mutation caught",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "M55 B0 fails all ten fields",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "M55 class swap exact",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "M55 power and passability demonstrated",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "synthetic direction robust",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "synthetic failure self-test passes",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "balanced null includes unity",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "capture counts and EXIF histograms match",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "all slide stacks have IBIS on",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "focus coverage is exactly 63 of 64",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "no measured tail peaks",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "task and geometry gates fail",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "capture trees unchanged",
+      "passed": true
+    },
+    {
+      "detail": [],
+      "name": "report contains deciding values",
+      "passed": true
+    }
+  ],
+  "failures": [],
+  "passed": true,
+  "protocol": "M131-final-check-v1"
+}

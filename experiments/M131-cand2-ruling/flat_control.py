@@ -203,12 +203,10 @@ def run(output: Path) -> int:
 
     real_gate_accepts = [lawful_flat_gate(row) for row in null_rows]
     mutant_gate_accepts = [
-        row["status"] == "NUMERIC" and row["d2"] is not None
-        for row in null_rows
+        row["status"] == "NUMERIC" and row["d2"] is not None for row in null_rows
     ]
     mutation_caught = bool(
-        all(not accepted for accepted in real_gate_accepts)
-        and all(mutant_gate_accepts)
+        all(not accepted for accepted in real_gate_accepts) and all(mutant_gate_accepts)
     )
     flat_pass = bool(all(real_gate_accepts))
 
@@ -234,9 +232,7 @@ def run(output: Path) -> int:
             "passed": flat_pass,
             "numeric_rows": len(numeric_null),
             "null_d2": null_summary,
-            "null_accuracy": summary(
-                [float(row["accuracy"]) for row in null_rows]
-            ),
+            "null_accuracy": summary([float(row["accuracy"]) for row in null_rows]),
         },
         "power_control": {
             "registered_target_amplitude": core.SIGNAL_AMPLITUDE,

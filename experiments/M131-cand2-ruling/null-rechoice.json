@@ -1,0 +1,21 @@
+{
+  "disclosure": "This pairing was specified after seeing the frozen-base null shift. It is diagnostic only and changes no acceptance rule.",
+  "geometric_mean_ratio": 1.0450401073901965,
+  "log_ratio_mean": 0.044055264957970346,
+  "log_ratio_standard_error": 0.02577969237440792,
+  "pairing": "stored readings (0,1), (2,3), (4,5), (6,7)",
+  "protocol": "M131-post-result-null-rechoice-v1",
+  "ratio_ci95_from_log": [
+    0.9935479722007398,
+    1.0992009008231967
+  ],
+  "ratios_second_over_first": [
+    1.108888291862882,
+    1.071710764581615,
+    0.9906055829537698,
+    1.0131311573517536
+  ],
+  "reason": "All eight historical-base/null ratios fell below one. Adjacent independent-null pairing checks whether that was denominator selection rather than a same-optics effect.",
+  "source": "synthetic-choice-audit.json",
+  "unity_in_ci95": true
+}

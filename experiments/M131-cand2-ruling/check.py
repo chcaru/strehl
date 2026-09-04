@@ -47,8 +47,7 @@ def check(output: Path) -> int:
     positions = [report.find(heading) for heading in HEADINGS]
     add(
         "required headings present and ordered",
-        all(position >= 0 for position in positions)
-        and positions == sorted(positions),
+        all(position >= 0 for position in positions) and positions == sorted(positions),
         positions,
     )
     add(

@@ -1,0 +1,114 @@
+{
+  "battery": {
+    "B0": {
+      "reason": "Candidate 2 ships no M55 Candidate declaration and no value(a,b,ctx) natural-render pairwise entry point.",
+      "status": "FAIL"
+    },
+    "B1": {
+      "reason": "M55 supplies one pair of half-merges per MTF rung. Candidate 2 requires zero-target covariance plus separate symmetric derivative and held-out target ensembles for each system.",
+      "status": "NOT_INSTANTIABLE"
+    },
+    "B2": {
+      "reason": "There is no Candidate 2 scalar value(a,b) to apply one-sided gain or swap to. Making dense/sparse the target classes is label-swap invariant and changes the estimand.",
+      "status": "NOT_INSTANTIABLE"
+    },
+    "B3": {
+      "reason": "Nuisance leverage needs the same lawful comparative reading under alternate nuisance settings; no natural-output reading exists.",
+      "status": "NOT_INSTANTIABLE"
+    },
+    "B4": {
+      "reason": "The measured no-target plant returned NUMERIC in every repeat (16/16) rather than rejecting the planted wrong answer.",
+      "status": "FAIL"
+    },
+    "B5": {
+      "reason": "Candidate 2 declares no M55 range/status contract, and its comparative ratio denominator is not bounded away from zero on no-target inputs.",
+      "status": "FAIL"
+    },
+    "B6": {
+      "reason": "Each held-out M55 cell provides a natural half-merge pair, not the target-labelled covariance/derivative/test streams Candidate 2 needs.",
+      "status": "NOT_INSTANTIABLE"
+    },
+    "B7": {
+      "reason": "The M55 repetitions sweep cannot call Candidate 2 without inventing a target task and a pairwise adapter; null d2 is strictly positive and makes ratios unstable.",
+      "status": "NOT_INSTANTIABLE"
+    },
+    "B8": {
+      "reason": "Candidate 2 has no M55 declaration of consumed calibration. Its synthetic generator supplies signal and noise constants, so perturbing them would audit that plant, not a natural image candidate.",
+      "status": "NOT_INSTANTIABLE"
+    },
+    "B9": {
+      "reason": "M55's roll-null acts on value(a,b); Candidate 2 has no such reading and no registered spatial roll-null for its labelled observation ensembles.",
+      "status": "NOT_INSTANTIABLE"
+    }
+  },
+  "candidate_2_interface": {
+    "crossfit_signature": "(data: 'ObservationSet', arm: 'str', macro_limit: 'int' = 96) -> 'HotellingResult'",
+    "has_value_method": false,
+    "m55_b0": {
+      "kill": "missing ['name', 'version', 'consumes_calibration', 'uses_ground_truth', 'declared_range', 'no_claim_floor', 'decision_threshold', 'failure_direction', 'nuisances', 'property_tests']",
+      "missing": [
+        "name",
+        "version",
+        "consumes_calibration",
+        "uses_ground_truth",
+        "declared_range",
+        "no_claim_floor",
+        "decision_threshold",
+        "failure_direction",
+        "nuisances",
+        "property_tests"
+      ],
+      "passed": false
+    },
+    "make_observations_signature": "(backgrounds: 'np.ndarray', template_seed: 'int', arm: 'str' = 'base') -> 'ObservationSet'",
+    "module": "experiments/M-CAND2/src/cand2.py"
+  },
+  "class_swap_test": {
+    "absolute_difference": 0.0,
+    "exact_at_float_precision": true,
+    "forward_d2": 0.26719151383825196,
+    "meaning": "If dense and sparse are used as the plus/minus classes, d-prime squared is label-swap invariant and cannot order them.",
+    "reverse_d2": 0.26719151383825196,
+    "template_absolute_difference_max": 0.0
+  },
+  "flat_null_ratio_instability": {
+    "max_over_min_d2": 9.026993149362058,
+    "maximum_ratio": 9.026993149362058,
+    "median_ratio": 1.0000465632935658,
+    "minimum_ratio": 0.11077885885741151,
+    "n_null_readings": 16,
+    "ordered_pair_ratios": 240
+  },
+  "m55_power": {
+    "all_property_tests_passed": true,
+    "calibration_artifact": "experiments/M55-acceptance-spec/out/calibrate.json",
+    "known_bad_killed": {
+      "constant": true,
+      "ring-power-of-mean": true,
+      "sigpow-canonical": true
+    },
+    "pr27_passability_met": true,
+    "pr28_known_bad_power_met": true,
+    "property_tests": [
+      {
+        "exit_code": 0,
+        "passed": true,
+        "path": "experiments/M55-acceptance-spec/src/e14_b6_rollup_test.py",
+        "stderr": "",
+        "stdout": "==============================================================================\nM55b -- b6_rollup property test (no corpus data read)\n==============================================================================\n   PASS  complete, all pass -> PASS\n   PASS  planted: pooled 91.7% >= 90%, subject 'wrapped-text' 75% -> must KILL\n          kill: subject groups below 90%: wrapped-text 75%\n   PASS  24 cells from one stack -> KILL\n          kill: 1 stacks (need 6); 1 distinct subjects (need 3)\n   PASS  cells that do not declare stack -> KILL\n          kill: 24 cells do not declare stack and roi; 0 stacks (need 6); 0 distinct subjects (need 3)\n   PASS  one stack with only 3 ROIs -> KILL\n          kill: stacks with fewer than 4 ROIs: {'bee-2': 3}\n   PASS  one wrong-sign cell -> KILL\n          kill: 1 cells report the WRONG DIRECTION above the decision threshold\n   PASS  6 stack-slots but only 2 subjects -> KILL\n          kill: 5 stacks (need 6); 2 distinct subjects (need 3)\n\n   -> 7/7 property assertions hold\n"
+      },
+      {
+        "exit_code": 0,
+        "passed": true,
+        "path": "experiments/M55-acceptance-spec/src/e18_m76_constant_z_test.py",
+        "stderr": "",
+        "stdout": "==============================================================================\nM76 E18 -- constant-|z| normative-wrapper property test\noriginal frozen source: c37010c317a4526822ce502848bcd574b66d1816\nold constant=ACCEPT  primitive constant=ACCEPT  normative constant=CANNOT-ACCEPT\nnormative varied=ACCEPT  normative planted=REJECT\n  PASS registered constant fixture passed\n  PASS frozen primitive still passes it\n  PASS normative wrapper blocks it\n  PASS distinct-z fixture remains passable\n  PASS ordinary B6 failure still rejects\n  PASS b6_rollup source unchanged\n  PASS b6_rollup bytecode unchanged\n  -> 7/7 assertions hold\n"
+      }
+    ]
+  },
+  "overall": {
+    "reason": "B0 and the no-target specificity/range controls fail. The remaining batteries cannot be instantiated without defining a successor instrument.",
+    "verdict": "REJECT"
+  },
+  "protocol": "M131-M55-applicability-v1"
+}

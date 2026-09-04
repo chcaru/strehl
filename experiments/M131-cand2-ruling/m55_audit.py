@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import inspect
 import json
-import math
 import subprocess
 import sys
 from pathlib import Path
@@ -184,18 +183,12 @@ def run(output: Path) -> int:
     flat_record = json.loads(flat_path.read_text(encoding="utf-8"))
     calibration = json.loads(
         (
-            REPO
-            / "experiments"
-            / "M55-acceptance-spec"
-            / "out"
-            / "calibrate.json"
+            REPO / "experiments" / "M55-acceptance-spec" / "out" / "calibrate.json"
         ).read_text(encoding="utf-8")
     )
     b0 = spec.b0_declaration(core)
     tests = [
-        run_property_test(
-            "experiments/M55-acceptance-spec/src/e14_b6_rollup_test.py"
-        ),
+        run_property_test("experiments/M55-acceptance-spec/src/e14_b6_rollup_test.py"),
         run_property_test(
             "experiments/M55-acceptance-spec/src/e18_m76_constant_z_test.py"
         ),
