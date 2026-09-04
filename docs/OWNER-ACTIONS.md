@@ -249,6 +249,66 @@ built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 > ratio that matters.** Read § *The blocking finding* if you want the full
 > reason for the stop.
 
+### The capture ask is now **two sittings, not one**. Read this before you plan a session.
+
+> **This changed tonight and it changes what you should budget.** The session
+> was described above as one uninterrupted 45–60 minute sitting. It is now
+> **two separate sittings**, and they cannot be merged. Nothing was added
+> carelessly; the second sitting exists because merging them would silently
+> destroy the first.
+
+| sitting | frames | may be read? | purpose |
+| --- | ---: | --- | --- |
+| **1 — rehearsal** | **768** | **yes, and must be** | proves step widths, commissions the detail instrument, binds its physical allowances |
+| **2 — scored session** | **891** | **no, sealed until the registered score run** | the actual measurement M1, M5 and M9 are scored from |
+| **total** | **1,659** | | plus the two frames of Ask 2a |
+
+**Why they cannot be the same sitting.** The detail instrument requires two
+mandatory *physical* control arms — a deliberately blurred capture and a
+genuinely sharper one — and those controls are measured **against the
+converter-on reference block**. That is the same reference the scored value
+depends on. Commissioning reads it, and the governing rule
+(`docs/proposals/2026-09-sota-scorecard.md:345-349`) is unambiguous:
+
+> The holdout unit is **subject plus uninterrupted capture session**, not a
+> directory or step width. Rendering, tuning, or reading an outcome on any
+> member burns every member of that unit.
+
+So reading the controls burns the scored session. The rehearsal must be shot,
+read, and its allowances **frozen and hashed before** the scored session begins.
+
+**Two cheap shortcuts were considered and both are invalid.** I record them
+because they look reasonable and someone will suggest them again:
+
+1. **Selecting the blur arm from frames already in the `sw4`/`sw10` ladders.**
+   Invalid — deciding after the fact which captured frames count as "blurred"
+   is outcome-dependent selection. It converts a control into a result.
+2. **Using the converter-on reference as the improvement arm.** Invalid — it
+   makes the reference both the truth *and* the improved output, which is
+   circular.
+
+**The rehearsal's 768 frames**, block by block, sum verified:
+
+| block | frames |
+| --- | ---: |
+| TC0 `sw4-A/B` and `sw10-A/B` | 164 |
+| TC0 P/S/E witnesses for G0–G3 | 60 |
+| Rehearsal TC0 flats/darks A/B | 128 |
+| Rehearsal converter-on `R1/R2` atlas | 96 |
+| Rehearsal converter-on flats/darks A/B | 128 |
+| `TC0-CTRL-SHARP` near/mid/far, 32 each | 96 |
+| `TC0-CTRL-BLUR` near/mid/far, 32 each | 96 |
+| **total** | **768** |
+
+Induce the blur by **focus offset**, not by changing aperture, exposure or
+adding optics. Focus offset changes one variable and reuses the rehearsal's own
+calibration; any of the alternatives forces another 128 calibration frames and
+makes the rehearsal **896**.
+
+**None of this is shootable yet** — the preflight of § *Ask 2a* still gates
+both sittings, and the working magnification is still unset. This section is
+here so that when it *is* shootable you are not surprised by the size of it.
+
 ### Ask 2a — **two frames. Five minutes. This is the one thing you can usefully shoot right now.**
 
 > **This is new, it is cheap, and it unblocks the most expensive thing on the
