@@ -32,14 +32,14 @@ the hashes and results are in `experiments/M136-m8o-bar/analysis.json`.
 > Each program must emit a native-size 16-bit linear TIFF. No output may be histogram
 > matched, auto-exposed, white-balanced, sharpened, denoised, resized, or tone-mapped
 > after stacking. Numerical metrics run in linear light before any display conversion.
-(`docs/proposals/2026-09-sota-scorecard.md:175-177`)
+(`docs/proposals/2026-09-sota-scorecard.md`, "Each program must emit a native-size 16-bit linear TIFF." clause)
 
 **VERIFIED:** M8's stated construct is invented values, not headroom:
 
 > **What it measures and why.** A merge or restoration stage can ring beyond any
 > observed linear sample. The proposal explicitly requires a per-file hull census of
 > `0.0000%` or coordinates for every exception
-(`docs/proposals/2026-09-sota-scorecard.md:821-823`)
+(`docs/proposals/2026-09-sota-scorecard.md`, "A merge or restoration stage can ring beyond any" clause)
 
 ### Prior art and result versioning
 
@@ -61,7 +61,7 @@ inset:
 > entire independently reconstructed normalized source hull lies above
 > `1+tolerance`. The census is literally detecting an outside-hull value, but
 > the cause is output clamping rather than invented detail.
-(`docs/research/M-FLATNULL.md:3-10`)
+(`docs/research/M-FLATNULL.md`, "Final verdict: the registered noise-rise failure was not observed" clause)
 
 **VERIFIED:** That report also imposed the correct governance boundary:
 
@@ -69,7 +69,7 @@ inset:
 > A rail-aware hull, pre-clamp output census, or frozen rail exclusion would be a
 > new statistic, not a reinterpretation of this one; it requires a new
 > preregistration and full commissioning. This lane made none of those changes.
-(`docs/research/M-FLATNULL.md:178-181`)
+(`docs/research/M-FLATNULL.md`, "Do not use current M8-O as the surviving general comparative detail axis." clause)
 
 **VERIFIED:** This ruling agrees. The recorded v1.7 M8-O result remains a FAIL
 under the instrument that produced it; it must not be retroactively relabelled.
@@ -89,14 +89,14 @@ tolerance, and marks a lower violation when `O < lo - tolerance`:
 >         raise ValueError(
 >             f"{tiff_path}: expected uint16 {expected}, got {image.dtype} {image.shape}"
 >         )
-(`experiments/M8-overshoot/checker.py:550-555`)
+(`experiments/M8-overshoot/checker.py`, "expected uint16 {expected}, got {image.dtype} {image.shape}" clause)
 
 >             encoded = np.asarray(image[y0:y1, :, channel], dtype=np.uint16)
 >             values = encoded.astype(np.float64) / 65535.0
 >             tolerance = tau + U16_QUANT_TOL
 >             lower = bracketed & (values < lo - tolerance)
 >             upper = bracketed & (values > hi + tolerance)
-(`experiments/M8-overshoot/checker.py:577-581`)
+(`experiments/M8-overshoot/checker.py`, "lower = bracketed & (values < lo - tolerance)" clause)
 
 **VERIFIED:** The violation manifest records direction `-1` for a lower
 violation:
@@ -109,7 +109,7 @@ violation:
 >     out["x"] = xx
 >     out["channel"] = channel
 >     out["direction"] = np.where(upper[mask], 1, -1)
-(`experiments/M8-overshoot/checker.py:528-535`)
+(`experiments/M8-overshoot/checker.py`, "out = np.empty(len(xx), dtype=O_VIOLATION_DTYPE)" clause)
 
 **VERIFIED:** The attribution code then defines the field by requiring all
 three predicates: maximum code, lower direction, and a lower hull endpoint
@@ -131,7 +131,7 @@ more than the complete tolerance above one:
 >             )
 >         ),
 >     }
-(`experiments/M8-overshoot/stage_attribution.py:181-196`)
+(`experiments/M8-overshoot/stage_attribution.py`, "rail = (encoded == 0) | (encoded == 65535)" clause)
 
 **VERIFIED:** The frozen aggregate is exactly the one stated in the question:
 
@@ -142,7 +142,7 @@ more than the complete tolerance above one:
 >       "nonrail": 2413,
 >       "zero_rail": 0
 >     },
-(`experiments/M8-overshoot/stage-attribution.json:70-76`)
+(`experiments/M8-overshoot/stage-attribution.json`, "1.3213567167675544" clause)
 
 **VERIFIED:** Therefore `full_rail_below_hull` does mean: the delivered sample
 is the largest representable 16-bit value, yet even the lower edge of the
@@ -160,11 +160,12 @@ violations but only 938,062 in the impossible-below-hull class:
 >       "nonrail": 45585,
 >       "zero_rail": 0
 >     },
-(`experiments/M8-overshoot/stage-attribution.json:111-117`)
+(`experiments/M8-overshoot/stage-attribution.json`, "1.326144138524015" clause)
 
 **VERIFIED:** One Catmull full-rail row is therefore not excused by
 representable-domain projection. Projection alone leaves 45,586 rows, not the
-45,585 nonrail rows (`experiments/M136-m8o-bar/analysis.json:87-92`).
+45,585 nonrail rows
+(`experiments/M136-m8o-bar/analysis.json`, "31148" clause).
 
 ## 2. Achievability and the defect in the current construction
 
@@ -186,7 +187,7 @@ serialized value directly with the unprojected broad source hull:
 >    output `O` to this interval. For a 16-bit serialized audit only, add exactly
 >    `0.5/65535` quantisation tolerance to the largest contributing `tau_R`; no tone,
 >    noise or scene-adaptive tolerance is allowed.
-(`docs/proposals/2026-09-sota-scorecard.md:852-857`)
+(`docs/proposals/2026-09-sota-scorecard.md`, "M8-O, final-output hull." clause)
 
 **VERIFIED:** The implementation likewise linearly scales `lo`, `hi`, and
 `tau`, but does not compose the source interval with the producer's intervening
@@ -201,7 +202,7 @@ round/clamp or final `[0,1]` clamp:
 >         np.minimum(lo_view, np.where(valid, lo_norm, np.float32(np.inf)), out=lo_view)
 >         np.maximum(
 >             hi_view, np.where(valid, hi_norm, np.float32(-np.inf)), out=hi_view
-(`experiments/M8-overshoot/checker.py:409-417`)
+(`experiments/M8-overshoot/checker.py`, "lo_norm = np.asarray(lo * output_scale, dtype=np.float32)" clause)
 
 **VERIFIED:** The source hull is not wrong in its own pre-serialization
 linear domain. The category error is using that unbounded interval as though
@@ -235,7 +236,7 @@ set-theoretic proof:
 >     "empty_intersection_when": "lo - tolerance > 1",
 >     "representable_output_interval": "[0, 1]"
 >   },
-(`experiments/M134-kernel-frontier/phase4-results.json:158-163`)
+(`experiments/M134-kernel-frontier/phase4-results.json`, "empty_intersection_when" clause)
 
 **VERIFIED:** Its protocol, source hashes, tolerance, and verdict are:
 
@@ -247,21 +248,21 @@ set-theoretic proof:
 >   },
 >   "u16_quantisation_tolerance": 7.629510948348211e-06,
 >   "verdict": "UNACHIEVABLE AS WRITTEN under the current normalized u16 output: when lo > 1 + tolerance, every representable value is below the source hull"
-(`experiments/M134-kernel-frontier/phase4-results.json:164-171`)
+(`experiments/M134-kernel-frontier/phase4-results.json`, "UNACHIEVABLE AS WRITTEN under the current normalized u16 output" clause)
 
 **VERIFIED:** I independently hashed `phase4.py`, the frozen stage-attribution
 artifact, and the companion checker; all equal the recorded hashes. I also
 compared every M134 bilinear per-capture denominator, violation count, rail
 classification, and nonrail count with M136's separate reclassification; all
-match (`experiments/M136-m8o-bar/analysis.json:210-265`).
+match (`experiments/M136-m8o-bar/analysis.json`, "m134_corroboration" clause).
 
 **VERIFIED:** The per-capture split is exactly:
 
 | Capture | Unrepresentable/full-rail-below-hull | Nonrail | Fraction of all valid output coordinates |
 |---|---:|---:|---:|
-| `flat-et1s` | `0` | `1,409` | `0` (`experiments/M134-kernel-frontier/phase4-results.json:21-38`) |
-| `flat-et2.5s` | `0` | `671` | `0` (`experiments/M134-kernel-frontier/phase4-results.json:40-57`) |
-| `flat-et6s` | `977,684` | `333` | `0.03954310604795759` (`experiments/M134-kernel-frontier/phase4-results.json:59-76`) |
+| `flat-et1s` | `0` | `1,409` | `0` (`experiments/M134-kernel-frontier/phase4-results.json`, "B348E5BE9D9C7527BFD1ABE812B77B4EA41FA6B92F0A7BCE2B8001E18A506AA8" clause) |
+| `flat-et2.5s` | `0` | `671` | `0` (`experiments/M134-kernel-frontier/phase4-results.json`, "FE150A22D9148FD9D7A7154B21F8095CE584F8EB32269A834887DF857A20FB5E" clause) |
+| `flat-et6s` | `977,684` | `333` | `0.03954310604795759` (`experiments/M134-kernel-frontier/phase4-results.json`, "DB4C1E9411F06B7126A67308A5B2E8C64DA94A5B40B17B2BDDDC1496F0C912E3" clause) |
 
 **VERIFIED:** This strongly corroborates saturation attribution, but the
 mechanism does not depend on a natural-experiment inference: M134 directly
@@ -277,17 +278,17 @@ respectively:
 >     "flat-et1s": {
 >       "cover_scale": 0.9862,
 >       "frames": 60,
-(`experiments/M8-overshoot/results.json:65-67`)
+(`experiments/M8-overshoot/results.json`, "1B559A76D7ADC33262B5EEFB59E56462D70E62B375E665D6E9B56BC328D1B48E" clause)
 
 >     "flat-et2.5s": {
 >       "cover_scale": 0.987,
 >       "frames": 61,
-(`experiments/M8-overshoot/results.json:132-134`)
+(`experiments/M8-overshoot/results.json`, "D7A1A1046BB3F6C14CB41DB825401A6A571FF1C9DD2FA116BED08331C6F52066" clause)
 
 >     "flat-et6s": {
 >       "cover_scale": 0.9859,
 >       "frames": 65,
-(`experiments/M8-overshoot/results.json:199-201`)
+(`experiments/M8-overshoot/results.json`, "7884DD2B809361CE8B0B57FA291B7C1A68DFBEDD71CA8A076F4271CD32AA76BD" clause)
 
 **VERIFIED:** The split is therefore corroborative rather than a controlled
 “only exposure differs” experiment. This qualification does not weaken the
@@ -296,7 +297,7 @@ per-coordinate impossibility proof.
 **VERIFIED — independence qualification:** The companion record truthfully
 reports `forbidden_strehl_imports: []`, `independent: true`, and names
 independent coordinate, support, and tolerance functions
-(`experiments/M134-kernel-frontier/out/independence.json:2-4,20-23`).
+(`experiments/M134-kernel-frontier/out/independence.json`, "forbidden_strehl_imports" clause).
 However, `phase4.py` itself computes this particular representability census
 from the frozen M8 checker's saved `o-lo.npy` and `o-tau.npy` arrays:
 
@@ -317,7 +318,7 @@ from the frozen M8 checker's saved `o-lo.npy` and `o-tau.npy` arrays:
 >             above += int(
 >                 np.count_nonzero(finite & (l > 1.0 + t + U16_QUANT_TOL))
 >             )
-(`experiments/M134-kernel-frontier/phase4.py:57-73`)
+(`experiments/M134-kernel-frontier/phase4.py`, "def count_unrepresentable_hulls(state: Path) -> dict:" clause)
 
 **VERIFIED:** M134 is thus an independent analysis and proof over the same
 frozen evidence, not a wholly independent raw-to-hull reconstruction for the
@@ -337,7 +338,7 @@ presumption against the change.
 > **Known defeat.** Final clamping can erase M8-O evidence; a broad all-frame hull can
 > bracket a per-frame excursion; a producer-supplied contributor mask or hull can omit
 > the disproof; and destructive clipping can force a zero rate.
-(`docs/proposals/2026-09-sota-scorecard.md:877-880`)
+(`docs/proposals/2026-09-sota-scorecard.md`, "Known defeat.** Final clamping can erase M8-O evidence" clause)
 
 **VERIFIED:** A literal “exclude rows when the observed output is at a rail”
 rule also makes membership depend on the producer's output and changes the
@@ -372,7 +373,7 @@ and off-rail red:
 >     "observed_green": 4,
 >     "observed_red": 4,
 >     "passed": true
-(`experiments/M136-m8o-bar/analysis.json:335-339`)
+(`experiments/M136-m8o-bar/analysis.json`, "expected_green" clause)
 
 **VERIFIED — ruling on the specific M134-style proposal:** “Count nonrail and
 rail-pinned overshoots, but exclude unavoidable rail-pinned undershoots” has
@@ -420,7 +421,7 @@ bilinear arm leaves zero:
 >     "projected_hull_violations": 45586,
 >     "projected_plus_internal_quant_violations": 31148,
 >     "violations": 983648
-(`experiments/M136-m8o-bar/analysis.json:87-92`)
+(`experiments/M136-m8o-bar/analysis.json`, "31148" clause)
 
 **VERIFIED — pass license before:** A literal pass would license both
 “no delivered value outside the unprojected source hull” and the accidental
@@ -451,7 +452,7 @@ disclosure, not deletion of inconvenient observations.
 >    `>=65534/65535`; `clip_low` is the mirrored fraction `<=1/65535`.
 > 3. On recoverable-highlight tiles, compute M5’s `rho_best` against the independently
 >    selected unsaturated source; report the median as highlight-detail retention.
-(`docs/proposals/2026-09-sota-scorecard.md:762-768`)
+(`docs/proposals/2026-09-sota-scorecard.md`, "A high-rail pixel is recoverable when at least one common input is" clause)
 
 **VERIFIED:** For a bilinear `full_rail_below_hull` row,
 `lo_O=min_k(lo_k)>1+tolerance`. Therefore every geometrically valid mapped
@@ -497,7 +498,7 @@ The persisted calculation is:
 >     "post_projection_residue_fraction_decimal": "0.000032531818356347471421613228739694976925463011497793",
 >     "post_projection_residue_percent": 0.003253181835634747,
 >     "post_projection_residue_percent_decimal": "0.0032531818356347471421613228739694976925463011497793"
-(`experiments/M136-m8o-bar/analysis.json:348-352`)
+(`experiments/M136-m8o-bar/analysis.json`, "2413/74173536" clause)
 
 **VERIFIED:** The current checker budgets only the mapped `tau_R` plus the
 final half-code. It omits an earlier lossy conversion. After the M8-R trace,
@@ -509,14 +510,14 @@ the producer divides out the site gain, restores black, rounds, and clamps to
 >                         (scratch.dst[lo + px] * inv + black)
 >                             .round()
 >                             .clamp(0.0, u16::MAX as f32) as u16
-(`experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/align_cmd.rs:2143-2147`)
+(`experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/align_cmd.rs`, "Undo the balance, restore the pedestal, then round and" clause)
 
 **VERIFIED:** The merge path later reads that integer back and subtracts black:
 
 >                 for (px, o) in dst.iter_mut().enumerate() {
 >                     *o = (f32::from(frame.data[row + 2 * px]) - black).max(0.0);
 >                 }
-(`experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/merge_cmd.rs:4779-4781`)
+(`experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/merge_cmd.rs`, "f32::from(frame.data[row + 2 * px]) - black" clause)
 
 **VERIFIED:** It then applies output gain/range and performs the final
 serialization:
@@ -526,7 +527,7 @@ serialization:
 >         let v = if srgb { srgb_encode(v) } else { v };
 >         (v * u16::MAX as f32 + 0.5) as u16
 >     };
-(`experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/merge_cmd.rs:7365-7369`)
+(`experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/merge_cmd.rs`, "let encode = |v: f32, gain: f32| -> u16 {" clause)
 
 **VERIFIED:** Away from the intermediate clamp, the omitted round contributes
 at most `0.5 * output_gain[channel] / sensor_range` in normalized output units.
@@ -534,7 +535,7 @@ Across the three bilinear arms this is about `6.045–6.125` output LSB for R,
 `2.207` for G, and `3.356–3.444` for B. The 2,413 post-projection violations
 are R `1,839`, G `0`, B `574`; none exceeds the corresponding omitted bound,
 and all three bilinear arms become zero under projection plus that bound
-(`experiments/M136-m8o-bar/analysis.json:3-46,856-1086`).
+(`experiments/M136-m8o-bar/analysis.json`, "omitted_internal_half_step" clause).
 
 **VERIFIED:** The one-frame bilinear arm is the cleaner diagnosis. It has zero
 M8-R but 52,570 nonrail M8-O rows:
@@ -555,11 +556,11 @@ M8-R but 52,570 nonrail M8-O rows:
 >       "upper_violations": 25284,
 >       "violations": 52570
 >     },
-(`experiments/M8-overshoot/stage-attribution.json:649-664`)
+(`experiments/M8-overshoot/stage-attribution.json`, "9682FF568F221E55D9D04C4FF11ED675DCF29D4EB620D83D8816BFD1D7937E16" clause)
 
 **VERIFIED:** Every one of those 52,570 rows also clears under the known
 intermediate half-step bound
-(`experiments/M136-m8o-bar/analysis.json:1318-1394`). This independently
+(`experiments/M136-m8o-bar/analysis.json`, "999.7215616330504" clause). This independently
 demonstrates that the post-gather residue is compatible with a representation
 round trip even when the resampler itself is clean.
 
@@ -573,9 +574,9 @@ counterfactual, not the shipping Catmull-Rom kernel, so they do not themselves
 decide whether shipping passes a repaired bar. Shipping does not pass
 trivially: projection plus the complete conservative quantization bound still
 leaves 31,148 Catmull-Rom M8-O violations
-(`experiments/M136-m8o-bar/analysis.json:87-92`), and its separate M8-R result
+(`experiments/M136-m8o-bar/analysis.json`, "31148" clause), and its separate M8-R result
 remains `63,191,176/6,131,678,976`
-(`experiments/M8-overshoot/results.json:14-25`). The formal result under the
+(`experiments/M8-overshoot/results.json`, "63191176" clause). The formal result under the
 exact new M8-O definition is nevertheless `UNMEASURED` until that checker is
 commissioned; the 31,148 count is a diagnostic lower than the old count, not a
 promoted score.
@@ -699,6 +700,68 @@ kernel-specific exception. The exact candidate arithmetic remains a measured
 input to `F_k,c`; changing that fixed path requires prospective versioning and
 recommissioning, not an after-the-result tolerance.
 
+### 6.1 Scorecard amendment packet
+
+**VERIFIED — exact current text and unique anchor:** Replace the following
+current M8-O definition, identified by the unique single-line anchor
+`M8-O, final-output hull.`:
+
+```text
+4. **M8-O, final-output hull.** At the same linear coordinate and channel, define
+   `lo_O=min_k(lo_k)` and `hi_O=max_k(hi_k)` over every geometrically valid input
+   frame, never strehl's elected contributor list. Compare the actual final linear
+   output `O` to this interval. For a 16-bit serialized audit only, add exactly
+   `0.5/65535` quantisation tolerance to the largest contributing `tau_R`; no tone,
+   noise or scene-adaptive tolerance is allowed.
+```
+
+(`docs/proposals/2026-09-sota-scorecard.md`, "M8-O, final-output hull." clause)
+
+**ASSUMED — exact replacement:** Substitute the complete normative text in the
+fenced block under section 6 above, beginning with the unique line
+`M8-O — final serialized source-support certificate` and ending with the unique
+line `crop origin, frame-site trace, or arithmetic metadata.` No text outside
+those two inclusive anchors is part of the replacement. Retain M8-R unchanged
+and retain the existing exact-zero M8-O success sentence.
+
+**VERIFIED — plan licence:** The governing plan requires the render manifest to
+carry:
+
+> the acuity summary, the per-axis scorecard verdicts, **and the
+> hull certificate** — the out-of-hull census result (0.0000% or the exceptions, with
+> coordinates) stamped per render, which in the current era is a differentiator worth
+> stating plainly: *this file provably contains no invented values*.
+
+(`docs/proposals/2026-08-sota-path.md`, "hull certificate** — the out-of-hull census result (0.0000% or the exceptions, with" clause)
+
+The plan later narrows the licence: the hull census “can establish invention;
+it cannot name the inventor”
+(`docs/proposals/2026-08-sota-path.md`, "and is stated here in the only form the evidence supports: **it can establish" clause).
+The replacement implements that existing zero-invention certificate in the
+actual serialized codomain; it does not create a new claim.
+
+**VERIFIED — falsifiable conditions:**
+
+1. `DENOMINATOR_UNCHANGED := N == count(all registered eligible capture,x,y,channel coordinates before output-value classification)`; deleting one rail or out-of-domain-support coordinate must make the check fail.
+2. `RAILS_REPORTED := high_at_rail + high_off_rail == count(pre-final lower bound > 1+q) AND low_at_rail + low_off_rail == count(pre-final upper bound < -q)`; deleting or reclassifying one such coordinate must make the check fail.
+3. `IN_RANGE_PLANTS_RED := planted_high_violations == 1 AND planted_low_violations == 1 AND their directions are +1 and -1`; clamping, excluding, or accepting either plant must make commissioning fail.
+4. `M8_R_MANDATORY := combined_pass == (M8_O.V == 0 AND M8_R.V == 0 AND crop_identity.V == 0)`; changing an otherwise-green fixture to `M8_R.V=1` must force `combined_pass=false`.
+
+**VERIFIED — status boundary:** M8 still reads **FAIL** on M8-R at
+`1.030569%`; this ruling neither changes that result nor promotes M8-O to PASS.
+
+**VERIFIED — 2,413-row boundary:** The stated reading is correct in substance,
+but the technical defect is specificity/construct validity rather than
+sensitivity: those rows fit omitted deterministic representation error, so
+they do not establish invention and do not establish that the product invents
+less.
+
+**ASSUMED — shared cause with M135:** Both failures registered an exact bar
+before proving that the statistic identified the intended construct over its
+admissible domain: M135's normalization erased the relevant operator family,
+while M8-O compared a bounded output with unprojected support and made valid
+coordinates impossible to pass.
+
 ## 7. Preregistered clamped-Catmull M8-O measurement
 
 The machine-readable companion is
@@ -716,7 +779,7 @@ matched Scale renders, all nine aggregate files — `o-lo.npy`, `o-hi.npy`, and
 `o-tau.npy` for three captures — are byte-identical between shipping Catmull-Rom
 and clamped Catmull-Rom. The clamped arm simultaneously has zero M8-R
 violations over `6,131,678,976` gathered samples
-(`experiments/M136-m8o-bar/analysis.json:94-208`).
+(`experiments/M136-m8o-bar/analysis.json`, "clamped_artifact_inventory" clause).
 
 **VERIFIED — numerical correction:** The old clamped-Catmull support hull is
 the shipping Catmull hull, not the bilinear hull. Its unchanged old Scale-domain
@@ -727,7 +790,7 @@ unrepresentable population is therefore `938,062`, not bilinear's `977,684`:
 >       "low": 0,
 >       "valid": 74173536
 >     },
-(`experiments/M136-m8o-bar/analysis.json:97-101`)
+(`experiments/M136-m8o-bar/analysis.json`, "aggregate_unrepresentable_hulls" clause)
 
 **VERIFIED — important qualification:** The clamp is not orthogonal to M8-O as
 a whole. It changes the gathered values supplied to the merge, so it may change
@@ -746,7 +809,7 @@ covered rectangle directly:
 > rectangle before luma, variance, the measured gate floor, pyramid construction,
 > local-energy weighting, accumulation, confidence, and collapse. The compact
 > collapsed plane is written directly. There is no writer-time second crop.
-(`docs/research/M130-crop-early.md:10-14`)
+(`docs/research/M130-crop-early.md`, "strehl stack --merge pyramid --cover crop" clause)
 
 **VERIFIED:** Consequently, neither `977,684` nor any other old Scale-domain
 rail count is preregistered as the expected Crop count. The mechanism persists;
@@ -765,7 +828,7 @@ the new population and count must be measured.
 The persisted inventory records `has_m8_o_json=false`,
 `has_m8_o_violations=false`, `retained_trace_blocks=0`, trace protocol `2`,
 no black level, no output-crop origin, and `cover=scale` for every capture
-(`experiments/M136-m8o-bar/analysis.json:94-208`).
+(`experiments/M136-m8o-bar/analysis.json`, "clamped_artifact_inventory" clause).
 
 **VERIFIED:** That absence follows the runner, not merely the filenames. After
 each target render M134 invokes only `finalize-r`:
@@ -774,7 +837,7 @@ each target render M134 invokes only `finalize-r`:
 >     Invoke-Checked "python" @("-B", $Checker, "finalize-r", "--state", $state) (
 >         Join-Path $Out "$name-r.log"
 >     )
-(`experiments/M134-kernel-frontier/run.ps1:290-293`)
+(`experiments/M134-kernel-frontier/run.ps1`, "name-r.log" clause)
 
 **VERIFIED:** The v2 trace serializes sensor range and site gain, but no black
 level:
@@ -782,7 +845,7 @@ level:
 >     w.write_all(&frame.levels.range().to_le_bytes())?;
 >     w.write_all(&site_gain.to_le_bytes())?;
 >     let frame_path = frame.path.to_string_lossy();
-(`experiments/M134-kernel-frontier/m8_trace.rs:119-121`)
+(`experiments/M134-kernel-frontier/m8_trace.rs`, "frame.levels.range().to_le_bytes()" clause)
 
 It deletes each block after the old checker consumes it:
 
@@ -799,16 +862,17 @@ It deletes each block after the old checker consumes it:
 >         .with_context(|| format!("creating unique M8 seen marker {}", marker.display()))?;
 >     fs::remove_file(&block)
 >         .with_context(|| format!("removing consumed M8 block {}", block.display()))?;
-(`experiments/M134-kernel-frontier/m8_trace.rs:142-154`)
+(`experiments/M134-kernel-frontier/m8_trace.rs`, "removing consumed M8 block" clause)
 
 **VERIFIED:** The old aggregate arrays cannot be repaired after the fact. The
 v2 checker first reduces each frame using the linear scale
 `output_gain/site_gain/value_range`:
 
 >     output_scale = np.float32(output_gain / b.site_gain / b.value_range)
-(`experiments/M134-kernel-frontier/checker.py:362`)
+(`experiments/M134-kernel-frontier/checker.py`, "output_scale = np.float32(output_gain / b.site_gain / b.value_range)" clause)
 
-It then takes aggregate minima/maxima (`checker.py:404-418`). The exact
+It then takes aggregate minima/maxima
+(`experiments/M134-kernel-frontier/checker.py`, "np.minimum(lo_view, np.where(valid, lo_norm, np.float32(np.inf)), out=lo_view)" clause). The exact
 successor instead must apply each frame's additive black restore, discrete
 round/clamp, black removal, gain/range normalization, and final saturation
 *before* reducing across frames. Frame identity and the nonlinear operation
@@ -840,7 +904,7 @@ lane must add, under `experiments/M136-m8o-bar/`, `m8_trace_v3.rs`,
 `run-clamped-m8o.ps1`. These files do not exist at preregistration time; their
 interfaces and verdict rule are fixed here, while their hashes must be frozen
 after commissioning and before target output is read
-(`experiments/M136-m8o-bar/absence-audit.txt:20-23`).
+(`experiments/M136-m8o-bar/absence-audit.txt`, "Result: all absent." clause).
 
 Trace v3 must provide, for every expected frame/CFA-site block:
 
@@ -1073,9 +1137,9 @@ claim that the split itself is a one-variable natural experiment.
 `STREHL_HULL` for the stage-attribution run cannot be reconstructed from its
 provenance. The driver clears and records several `STREHL_*` variables but
 neither clears nor records `STREHL_HULL`
-(`experiments/M8-overshoot/stage-attribution.ps1:138-155,201-216`). The frozen
+(`experiments/M8-overshoot/stage-attribution.ps1`, "Remove-Item Env:STREHL_ALIGN,Env:STREHL_FIX_CA,Env:STREHL_COVER,Env:STREHL_RESAMPLER" clause). The frozen
 source says an unset value defaults to `InputRange`
-(`experiments/M8-overshoot/out/source-snapshot/crates/strehl-core/src/pyramid.rs:759-775`),
+(`experiments/M8-overshoot/out/source-snapshot/crates/strehl-core/src/pyramid.rs`, "Err(_) => Hull::InputRange," clause),
 but the run record does not prove it was unset.
 
 **VERIFIED — could not determine:** The frozen M8 artifacts do not retain the
