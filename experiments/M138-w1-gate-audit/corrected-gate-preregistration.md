@@ -293,18 +293,33 @@ checker emits exactly one JSON object to standard output:
   "physical_preregistration_sha256": "...",
   "comparison_rule_sha256": "...",
   "request_sha256": "...",
+  "detail_state_by_capture": {"capture-id": "DETAIL_PASS"},
   "detail_pass_by_capture": {"capture-id": true}
 }
 ```
 
-Commissioning replaces `detail_pass_by_capture` with a `controls` object whose
-keys exactly equal the required control list in
+Commissioning replaces the evaluation state and Boolean maps with a `controls`
+object whose keys exactly equal the required control list in
 `corrected-gate-contract.json`. A nonzero process exit, extra/missing capture,
 missing artifact, hash mismatch, wrong schema, or missing control is
 `INSTRUMENT_INVALID`. The checker-bundle manifest itself is opened, and every
 transitive source listed in it is hash-verified. The bound checker must reject
 an environment that differs from its environment manifest. Cached or
 campaign-supplied `detail_pass` values are forbidden.
+
+Evaluation is explicitly three-state:
+
+- `DETAIL_PASS` requires a matching Boolean `true`;
+- `DETAIL_FAIL` requires a matching Boolean `false`; and
+- `INSTRUMENT_INVALID` requires that capture to be absent from the Boolean
+  map.
+
+The state map must contain every requested capture. The Boolean map must
+contain exactly the internally valid pass/fail captures. Any null, refusal,
+unknown state, missing state, state/Boolean disagreement, or Boolean supplied
+for an internally invalid capture returns `INSTRUMENT_INVALID`. Only a valid
+`DETAIL_FAIL` may participate in the scientific output-quality verdict. The
+adjudicator never coerces an invalid state to `false`.
 
 Physical commissioning must execute and pass:
 
@@ -577,8 +592,10 @@ Define `S_noise=-max_j(log(R_j))`, so larger is better.
 
 `python experiments\M138-w1-gate-audit\adjudicate.py --self-test` executes
 non-campaign null, defect, improvement, missing-artifact, hash-mutation,
-supplied-Boolean, post-clamp, refutation, holdout, and width-irrelevance
-controls.
+supplied-Boolean, M135 `DETAIL_FAIL`, M135 internally invalid, post-clamp,
+refutation, holdout, and width-irrelevance controls. The M135 null-state plant
+must return `INSTRUMENT_INVALID`; the valid `DETAIL_FAIL` plant must remain a
+scientific failure rather than an instrument failure.
 
 ## Cost
 

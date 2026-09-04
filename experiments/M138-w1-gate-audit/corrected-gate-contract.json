@@ -123,6 +123,13 @@
     "provider": "M135",
     "interface_schema": "m135-m138-checker/v1",
     "bundle_manifest_schema": "m135-checker-bundle/v1",
+    "decision_state_field": "detail_state_by_capture",
+    "valid_decision_states": [
+      "DETAIL_PASS",
+      "DETAIL_FAIL"
+    ],
+    "invalid_decision_state": "INSTRUMENT_INVALID",
+    "boolean_emission_rule": "detail_pass_by_capture contains exactly the captures in a valid decision state; an internally invalid capture has no Boolean entry and invalidates the instrument.",
     "checker_entrypoint": null,
     "checker_bundle_manifest": null,
     "environment_manifest": null,

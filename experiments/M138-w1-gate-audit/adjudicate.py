@@ -231,6 +231,11 @@ def validate_contract(contract: dict[str, Any], *, test_mode: bool = False) -> N
         raise EvidenceError("tau endpoints changed")
     if int(contract["threshold_coordinate"]["robust_neighbour_steps"]) != 1:
         raise EvidenceError("robust-neighbour rule changed")
+    detail = contract["detail_instrument"]
+    if detail.get("valid_decision_states") != ["DETAIL_PASS", "DETAIL_FAIL"]:
+        raise EvidenceError("M135 valid decision states changed")
+    if detail.get("invalid_decision_state") != "INSTRUMENT_INVALID":
+        raise EvidenceError("M135 invalid decision state changed")
     if contract["status"] == "FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION":
         if not isinstance(contract["activation"].get("independent_review"), dict):
             raise EvidenceError("frozen contract lacks independent-review binding")
@@ -791,11 +796,42 @@ def evaluate_m135(
             "evaluate", request_path, binding_paths, contract
         )
     output = cache[request_hash]
+    states = output.get(contract["detail_instrument"]["decision_state_field"])
     passes = output.get("detail_pass_by_capture")
-    if not isinstance(passes, dict) or set(passes) != set(expected_captures):
-        raise EvidenceError("M135 checker returned the wrong capture ledger")
-    if any(type(value) is not bool for value in passes.values()):
-        raise EvidenceError("M135 checker returned a non-Boolean decision")
+    if not isinstance(states, dict) or set(states) != set(expected_captures):
+        raise EvidenceError("M135 checker returned the wrong state ledger")
+    if not isinstance(passes, dict):
+        raise EvidenceError("M135 checker omitted its valid-decision Boolean map")
+    valid_states = set(contract["detail_instrument"]["valid_decision_states"])
+    invalid_state = contract["detail_instrument"]["invalid_decision_state"]
+    valid_captures: set[str] = set()
+    invalid_captures: list[str] = []
+    for capture_id in expected_captures:
+        state = states[capture_id]
+        if state == invalid_state:
+            if capture_id in passes:
+                raise EvidenceError(
+                    f"M135 coerced internally invalid {capture_id} to a Boolean"
+                )
+            invalid_captures.append(capture_id)
+            continue
+        if state not in valid_states:
+            raise EvidenceError(
+                f"M135 returned unknown state for {capture_id}: {state}"
+            )
+        valid_captures.add(capture_id)
+        expected_boolean = state == "DETAIL_PASS"
+        if type(passes.get(capture_id)) is not bool:
+            raise EvidenceError(f"M135 omitted valid decision for {capture_id}")
+        if passes[capture_id] is not expected_boolean:
+            raise EvidenceError(f"M135 state/Boolean disagreement for {capture_id}")
+    if set(passes) != valid_captures:
+        raise EvidenceError("M135 Boolean map contains an invalid capture")
+    if invalid_captures:
+        raise EvidenceError(
+            "M135 detail instrument internally invalid for "
+            + ", ".join(sorted(invalid_captures))
+        )
     return all(passes.values())
 
 
@@ -1766,10 +1802,18 @@ if args.m138_commission:
         "artifact_hash_mutation_refuses": controls["hash_mutation"] == "REFUSED",
     }
 else:
-    base["detail_pass_by_capture"] = {
-        row["capture_id"]: sum(row["candidate"]) >= sum(row["legacy"])
-        for row in request["comparisons"]
-    }
+    states = {}
+    passes = {}
+    for row in request["comparisons"]:
+        capture_id = row["capture_id"]
+        if row["candidate"] is None or row["legacy"] is None:
+            states[capture_id] = "INSTRUMENT_INVALID"
+            continue
+        passed = sum(row["candidate"]) >= sum(row["legacy"])
+        states[capture_id] = "DETAIL_PASS" if passed else "DETAIL_FAIL"
+        passes[capture_id] = passed
+    base["detail_state_by_capture"] = states
+    base["detail_pass_by_capture"] = passes
 print(json.dumps(base, sort_keys=True))
 """
 
@@ -2174,6 +2218,56 @@ def run_self_test(contract: dict[str, Any]) -> None:
             == "INSTRUMENT_INVALID"
         )
 
+        null_detail_request = copy.deepcopy(evaluate_request)
+        null_detail_request["comparisons"][0]["candidate"] = None
+        write_json(root / "null-detail-request.json", null_detail_request)
+        null_detail_development = copy.deepcopy(development)
+        null_detail_development["arms"]["0.50"]["m135_request"] = ref_for(
+            root / "null-detail-request.json", root
+        )
+        write_json(root / "null-detail-development.json", null_detail_development)
+        null_detail_result = copy.deepcopy(result)
+        null_detail_result["development"] = ref_for(
+            root / "null-detail-development.json", root
+        )
+        write_json(root / "null-detail-result.json", null_detail_result)
+        null_verdict = adjudicate_result(
+            root / "null-detail-result.json",
+            contract_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert null_verdict["verdict"] == "INSTRUMENT_INVALID", null_verdict
+        assert "internally invalid" in null_verdict["reason"], null_verdict
+
+        failed_detail_request = copy.deepcopy(evaluate_request)
+        failed_detail_request["comparisons"][0]["candidate"] = [0.5, 0.5]
+        write_json(root / "failed-detail-request.json", failed_detail_request)
+        detail_no_point = copy.deepcopy(development)
+        failed_detail_arm = copy.deepcopy(passing_arm)
+        failed_detail_arm["m135_request"] = ref_for(
+            root / "failed-detail-request.json", root
+        )
+        detail_no_point["arms"] = {
+            key: copy.deepcopy(failed_detail_arm) for key in tau_keys(bound)
+        }
+        write_json(root / "detail-no-point.json", detail_no_point)
+        failed_detail_result = copy.deepcopy(result)
+        failed_detail_result["development"] = ref_for(
+            root / "detail-no-point.json", root
+        )
+        failed_detail_result["holdout"] = None
+        write_json(root / "failed-detail-result.json", failed_detail_result)
+        assert (
+            adjudicate_result(
+                root / "failed-detail-result.json",
+                contract_path,
+                verify_sources=False,
+                test_mode=True,
+            )["verdict"]
+            == "PHASE1_REFUTED_NO_GLOBAL_OUTPUT_OPERATING_POINT"
+        )
+
         alternate_pipeline = root / "alternate-postprocess.bin"
         alternate_pipeline.write_bytes(b"different postprocess\n")
         pipeline_mismatch = copy.deepcopy(development)
@@ -2416,6 +2510,7 @@ def run_self_test(contract: dict[str, Any]) -> None:
     print(
         "self-test: raw-evidence GO=GREEN missing-artifact=RED "
         "missing-curve=RED missing-site-power=RED missing-M135-input=RED "
+        "M135-null-state=INSTRUMENT_INVALID M135-valid-fail=REFUTED "
         "pipeline-mismatch=RED hash-mutation=RED supplied-boolean=RED "
         "postclamp-hull=RED M135-improvement-missing=RED M135-unbound=BLOCKED "
         "unsupported-cost=RED underpowered-design=RED improvement=GREEN "
