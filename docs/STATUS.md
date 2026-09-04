@@ -3552,6 +3552,149 @@ buy ($189 or $289, reaches `12 of 12`). It exists because the session has alread
 crashed once and lost every running lane; a committed owner-facing page survives
 that, and a chat summary does not.
 
+### 2.9.31 The bottleneck is not money or time. It is a missing instrument.
+
+Lane M133's third charge was to ask whether the twelve bars are well-formed and
+achievable. The answer reframes the program, and it also caught **an error of
+mine that was already in front of the owner as advice to spend money.**
+
+**M133's verdict: `0 of 12` bars are simultaneously precise, achievable, and
+backed by a commissioned or concretely plannable checker.** Two of those
+failures are structural rather than pedantic:
+
+- **M1 has no bar at all.** Not a weak bar — none. The card reads *"NO
+  ADMISSIBLE BAR — WITHDRAWN"* (`scorecard:392`) and states that *"no detail,
+  matched-information, quality-qualified comparator or SOTA claim is licensed"*
+  until a replacement survives commissioning (`scorecard:559-562`).
+- **M8-O is demonstrably unachievable as written.** See §2.9.32 below.
+
+The other ten are precision defects — undefined denominators, unfrozen
+percentile conventions, no RGB channel-reduction rule — which M133 tags
+**ASSUMED** repairable. I accept that tagging. Ten repairable bars and two
+structural holes is a very different finding from "everything is broken".
+
+#### The error, and it was mine
+
+I had written into `docs/OWNER-ACTIONS.md` that the capture session *"clears
+blockers `(a)` and `(c)` together"* and reaches `4 of 12`, and that buying
+Zerene then reaches `12 of 12`. **Both were wrong.**
+
+`(a)` is defined at `scorecard:415` as *"missing admissible detail
+instrument"*. **That is a statistic, not a capture.** The session supplies the
+instrument's required *inputs* — the dense checker-only reference, the matched
+sw4 and sw10 passes, darks, flats, sentinel (`scorecard:544-551`) — but the
+scorecard requires a replacement to be pre-registered and to survive
+commissioning before it is admitted. No amount of shooting produces it.
+
+I re-derived every subset mechanically from the readiness table rather than
+trusting my own summary of it. The blocker sets parse as `M1 abcd, M2 abd,
+M3 abd, M4 abd, M5 abcd, M6 abcd, M7 bcd, M8 none, M9 abc, M10 bc, M11 abd,
+M12 none`, and the corrected reach is:
+
+| after | clears | reaches | axes |
+|---|---|---|---|
+| crop-early | `b` | `2 of 12` | M8, M12 |
+| \+ capture session | `b+c` | **`3 of 12`** | M8, M10, M12 |
+| \+ Zerene `$189` | `b+c+d` | **`4 of 12`** | M7, M8, M10, M12 |
+| \+ a detail instrument | `a` | `12 of 12` | all |
+
+**So $189 buys exactly one additional axis, M7** — of which the scorecard says
+*"No traceable colour target exists"*, so even that one needs a further
+purchase. Corrected visibly in `7615d801`.
+
+#### `(a)` dominates for a second, independent reason
+
+This is the part I had not seen at all. Decision rule 4:
+
+> Once a replacement M1 is admitted, a comparator mode may define a noise,
+> artifact, speed, or memory envelope only if it passes the input/output
+> transfer audit and retains at least `98%` of the highest replacement-M1
+> information score achieved by any registered mode on that capture. [...]
+> **In v1.7 no mode can yet be quality-qualified.** (`scorecard:94-98`)
+
+Rule 3 requires every comparative quality gate to use the *best qualifying
+comparator envelope*, and rule 2 makes an invalid comparator arm a blocker
+rather than a loss. **Therefore no comparator can be lawfully qualified until
+M1 exists**, and the five comparative axes stay dead with the software bought,
+installed and running.
+
+`(a)` is required by **8 of the 12 axes**, and it is the only blocker that
+cannot be bought, captured, or built. **The program's critical path is a
+measurement problem.** That is a more honest and more useful statement of where
+this stands than any count of axes.
+
+#### What follows
+
+**The purchase is demoted and the capture session is promoted.** Not because
+the session scores more — it scores one axis fewer than I claimed — but because
+it feeds the critical path: it is where the replacement instrument's scored
+inputs come from. The money can wait; nothing decays by delaying it, and the
+comparator cannot be qualified yet anyway.
+
+**M135 is dispatched to design the replacement, and it is not blocked on the
+owner.** The scorecard permits burned and development-only material to
+*commission* a new instrument while forbidding it to provide a scored value
+(`scorecard:552-554`). So design and commissioning can complete now, and only
+the scored reading waits on the session. This is the single most valuable lane
+in the program and it can run today.
+
+It is dispatched with the recorded impossibility result in front of it: **a
+metric exactly invariant to a common linear filter is also blind to blur.**
+Unsharp mask and blur are both linear filters, so no statistic can be exactly
+USM-invariant and still detect blur. Every design seeking sharpening-immunity
+through invariance is dead on arrival, and that is very likely what killed the
+previous attempts — `Q25` rewards unsharp mask at `5.560744x` while being
+tone-invariant to `.999963`. Tone-invariance never bought sharpening
+resistance. The lane is told a rigorous negative result is an accepted outcome.
+
+### 2.9.32 M8-O counts the format's finite range as if it were invention
+
+The bar for M8 is exactly `0.0000%` on two censuses. I verified from the raw
+artifact `experiments/M8-overshoot/stage-attribution.json`, field
+`aggregate.nonnegative_bilinear_m8_o_rail`:
+
+```json
+{"coordinates":980097,"full_rail":977684,"full_rail_below_hull":977684,
+ "nonrail":2413,"zero_rail":0}
+```
+
+Read it with the resampler in mind. This is the **bilinear** arm, which scores
+M8-R at exactly `0 / 6,131,678,976` — so the gather is provably innocent here.
+M8-O nonetheless reports `980,097` violations, and **`977,684` of them, `99.75%`,
+are samples pinned at the maximum representable 16-bit value whose source hull
+lies entirely above that value.** No `u16` can represent them. The shipping
+Catmull-Rom arm has the same shape: `938,062` of `983,648`.
+
+**The census fuses two unlike things.** One is genuine invention — the output
+containing values the source never supported, which is exactly what M8 exists
+to catch, and which under bilinear is only `2,413` coordinates. The other is
+rail truncation, where the output is as close to the hull as the format
+permits. Note the sign: a rail-pinned sample below a hull that begins above the
+rail is an **undershoot**. It invents nothing. It loses headroom.
+
+So the axis with the strongest checker in the program — commissioned in both
+directions before it read — has a bar that charges the encoder's finite range
+against the algorithm's honesty.
+
+**I have not repaired it, and I am deliberately not the one who decides.**
+Weakening a bar because it fails is the most corrosive thing this program could
+do to a SOTA claim, and the fact that the proposal is mine is precisely why it
+needs an independent ruling. **M136 is dispatched adversarially**: to verify the
+field's semantics from the checker source rather than from its name or from my
+reading of it, to prove rather than assert the impossibility, to consider that
+the defect may lie in the hull construction rather than the bar, and to argue
+both sides before ruling.
+
+It is also told to *test rather than confirm* my hypothesis that these rail
+excursions are **M6's** subject matter — M6 being the highlight/shadow rail axis
+with a `<=0.10%` clipping bar. If that holds, the current M8-O bar double-counts
+an M6 failure as an M8 failure, and the repair **relocates a real defect rather
+than dismissing it**. The lane is told the defect must not be allowed to vanish.
+
+There is a genuine residue underneath all this, and it is not explained by the
+rail: a one-frame bilinear null has M8-R zero but M8-O `52,570 / 24,724,512 =
+0.212623%`. That is a real post-gather defect and M136 is asked to diagnose it.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
