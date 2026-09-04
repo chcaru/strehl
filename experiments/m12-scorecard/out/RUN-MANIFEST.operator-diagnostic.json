@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "registration_status": "operator-authorized-diagnostic",
+  "scope": "Native-ARW shipping-path candidate measured at the owner's explicit 2026-09-03T19:14:34-07:00 instruction. Diagnostic, not a registrar-approved formal scorecard reading, because experiments/SCORECARD/RUN-MANIFEST.json is absent.",
+  "scorecard": {
+    "path": "docs\\proposals\\2026-09-sota-scorecard.md",
+    "version": "v1.7",
+    "commit": "2fd2b1312f8d487637091b1ea72eb130d4eeb890",
+    "sha256": "A98852E18CE64CED72360507DB0A7923F063AE095F108B23779B60FDD2092211"
+  },
+  "source": {
+    "commit": "16bc3e3df7ebcfee3a8b19cd0b5c1f0947ad167d",
+    "archive": "git archive",
+    "working_tree_source_used": false
+  },
+  "binary": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-16bc3e3d\\bin\\strehl.exe",
+    "sha256": "A123200AE0FD75D22E9FE534F487BA5F3983D1961E828B39F415B32C3278C82F",
+    "version": "strehl 0.0.0 (16bc3e3df7e)"
+  },
+  "product_arm": {
+    "classification": "current-source native-ARW shipping-path candidate",
+    "flags": [
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "fixed_env": {},
+    "worker_control": "STREHL_PYRAMID_WORKERS",
+    "backend": "pyramid shipping default",
+    "gate": 2.0,
+    "photometric": "not applied on the pyramid backend",
+    "alignment": "shipping default on; solved independently in every invocation",
+    "bit_depth": 16,
+    "output_format": "uncompressed full-sensor linear-sRGB TIFF",
+    "required_log_substrings": [
+      "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)",
+      "noise gate      : 2.00 x",
+      "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+      "alignment       : ON (",
+      "16-bit RGB, linear sRGB",
+      "Full sensor resolution"
+    ],
+    "captures": {
+      "33": {
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "sidecar": null
+      },
+      "105": {
+        "path": "D:\\personal\\macro\\coffee-bean",
+        "sidecar": null
+      },
+      "299": {
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "sidecar": null
+      }
+    },
+    "modulo_capture": {
+      "path": "D:\\personal\\macro\\bee-1-cpl",
+      "sidecars": {
+        "96": null,
+        "97": null,
+        "98": null,
+        "99": null
+      }
+    }
+  }
+}

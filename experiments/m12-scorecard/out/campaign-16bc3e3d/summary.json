@@ -1,0 +1,188 @@
+{
+  "invalid_run_count": 0,
+  "m12_d": {
+    "cells": {
+      "N105-W1": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "0603DF4F235EE09CC3C89F3ACD5C95C42547BE67B4029AC0A37973550401DC53"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N105-W16": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "1B62DA01C524C8319F4A159C8F125F52DE9CD3C193E0A875735D09D264E3509A"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N105-W2": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "1AA0574E86F2707FEC427DDE8724FB988899AA31D77FD1E6773BF689093D47D4"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N105-W4": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "A87E64364466BE846C4E80FA0F9B613DF1241FF37D5BA6DB1020850F70E27987"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N105-W8": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "7F556AEB7A143D856FF5529A39B55FE99B63852A6D4E709414A45002B49D534A"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N299-W1": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "91B0DFC6A2038D12A5327354D6A75501287AE3B25D13510708418547479B2D63"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N299-W16": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "1DB4E2F03DF123ED6545CDA9A24650C1373C15C979A65AAA7884004064C8FBF5"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N299-W2": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "B24709BFC48B199EBA9D23029756FEF9BB1D6806CDB5EE43BE9C45309D677909"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N299-W4": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "965F33601F72942EE5402DDC9678CC6FF70D368F5DF1E00BA1D79BADCF74854F"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N299-W8": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "41D83FC00310BE2A9812D8984FFE0E67526124F4D6D1D1DFD8F1CD2D08361CB7"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N33-W1": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "97A9FB31983D0865A5F621C8582965137BE53520EE3E9B067D8C217006B6355D"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N33-W16": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "C9738BF6406D16AC42C88664302373F97481C36FFEBAE7ACA1204AC20F79C409"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N33-W2": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "15E6AF9F5CD162397082DB4076C5AC198846EA2B114E0CE26E979BDEF655396F"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N33-W4": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "0FD27F6225CFCBBBB8FBBBA286E9B8C85CCB899D6E848FD7B8B980BB40824863"
+        ],
+        "pass": true,
+        "runs": 6
+      },
+      "N33-W8": {
+        "distinct_hashes": 1,
+        "hashes": [
+          "B79A1FFF32F211655EE21D29AB4F341676ED9ABA708A4068FE770C36E1919F91"
+        ],
+        "pass": true,
+        "runs": 6
+      }
+    },
+    "pass": true
+  },
+  "m12_s_byte_property": {
+    "by_n": {
+      "105": {
+        "byte_invariant": false,
+        "distinct_hashes": 5,
+        "hashes": [
+          "0603DF4F235EE09CC3C89F3ACD5C95C42547BE67B4029AC0A37973550401DC53",
+          "1AA0574E86F2707FEC427DDE8724FB988899AA31D77FD1E6773BF689093D47D4",
+          "1B62DA01C524C8319F4A159C8F125F52DE9CD3C193E0A875735D09D264E3509A",
+          "7F556AEB7A143D856FF5529A39B55FE99B63852A6D4E709414A45002B49D534A",
+          "A87E64364466BE846C4E80FA0F9B613DF1241FF37D5BA6DB1020850F70E27987"
+        ]
+      },
+      "299": {
+        "byte_invariant": false,
+        "distinct_hashes": 5,
+        "hashes": [
+          "1DB4E2F03DF123ED6545CDA9A24650C1373C15C979A65AAA7884004064C8FBF5",
+          "41D83FC00310BE2A9812D8984FFE0E67526124F4D6D1D1DFD8F1CD2D08361CB7",
+          "91B0DFC6A2038D12A5327354D6A75501287AE3B25D13510708418547479B2D63",
+          "965F33601F72942EE5402DDC9678CC6FF70D368F5DF1E00BA1D79BADCF74854F",
+          "B24709BFC48B199EBA9D23029756FEF9BB1D6806CDB5EE43BE9C45309D677909"
+        ]
+      },
+      "33": {
+        "byte_invariant": false,
+        "distinct_hashes": 5,
+        "hashes": [
+          "0FD27F6225CFCBBBB8FBBBA286E9B8C85CCB899D6E848FD7B8B980BB40824863",
+          "15E6AF9F5CD162397082DB4076C5AC198846EA2B114E0CE26E979BDEF655396F",
+          "97A9FB31983D0865A5F621C8582965137BE53520EE3E9B067D8C217006B6355D",
+          "B79A1FFF32F211655EE21D29AB4F341676ED9ABA708A4068FE770C36E1919F91",
+          "C9738BF6406D16AC42C88664302373F97481C36FFEBAE7ACA1204AC20F79C409"
+        ]
+      }
+    },
+    "m11_joint_requirement": "must be supplied separately",
+    "pass": false
+  },
+  "memory": {
+    "peak_gib_max": 35.53202438354492,
+    "peak_n299_over_peak_n33": 1.4489937322064963,
+    "peak_private_committed_bytes_by_n_max_over_scored_matrix": {
+      "33": 26330148864,
+      "105": 35365519360,
+      "299": 38152220672
+    },
+    "six_gib_pass": false
+  },
+  "modulo": {
+    "best_wall_seconds_per_frame_by_n": {
+      "96": 0.33403367500007636,
+      "97": 0.3310526103092137,
+      "98": 0.3352728693874325,
+      "99": 0.33684174343414436
+    },
+    "pass": true,
+    "spread": 0.017487048718701974
+  },
+  "schema": 1
+}

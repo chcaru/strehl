@@ -1066,8 +1066,12 @@ def commission_memory(output: Path, work: Path) -> int:
 
 def load_manifest(path: Path) -> dict[str, Any]:
     manifest = json.loads(path.read_text(encoding="utf-8"))
-    if manifest.get("registration_status") != "registered":
-        raise RuntimeError("run manifest is not registrar-approved (`registration_status`)")
+    registration_status = manifest.get("registration_status")
+    if registration_status not in {"registered", "operator-authorized-diagnostic"}:
+        raise RuntimeError(
+            "run manifest must be registrar-approved or explicitly operator-authorized "
+            "as diagnostic (`registration_status`)"
+        )
     expected_hash = manifest["scorecard"]["sha256"].upper()
     if sha256_file(SCORECARD) != expected_hash:
         raise RuntimeError("working scorecard bytes do not match the run manifest")
@@ -1097,14 +1101,28 @@ def matrix(manifest_path: Path, records_path: Path, output_root: Path) -> int:
     flags = list(arm["flags"])
     fixed_env = {str(key): str(value) for key, value in arm.get("fixed_env", {}).items()}
     required = list(arm["required_log_substrings"])
+
+    def optional_path(value: str | None) -> Path | None:
+        return Path(value) if value else None
+
     captures = {
-        33: (Path(arm["captures"]["33"]["path"]), Path(arm["captures"]["33"]["sidecar"])),
-        105: (Path(arm["captures"]["105"]["path"]), Path(arm["captures"]["105"]["sidecar"])),
-        299: (Path(arm["captures"]["299"]["path"]), Path(arm["captures"]["299"]["sidecar"])),
+        33: (
+            Path(arm["captures"]["33"]["path"]),
+            optional_path(arm["captures"]["33"].get("sidecar")),
+        ),
+        105: (
+            Path(arm["captures"]["105"]["path"]),
+            optional_path(arm["captures"]["105"].get("sidecar")),
+        ),
+        299: (
+            Path(arm["captures"]["299"]["path"]),
+            optional_path(arm["captures"]["299"].get("sidecar")),
+        ),
     }
     modulo_capture = Path(arm["modulo_capture"]["path"])
     modulo_sidecars = {
-        count: Path(arm["modulo_capture"]["sidecars"][str(count)]) for count in MODULO_COUNTS
+        count: optional_path(arm["modulo_capture"].get("sidecars", {}).get(str(count)))
+        for count in MODULO_COUNTS
     }
     cache = output_root / "cache"
 
@@ -1113,7 +1131,7 @@ def matrix(manifest_path: Path, records_path: Path, output_root: Path) -> int:
         count: int,
         workers: int,
         stack: Path,
-        sidecar: Path,
+        sidecar: Path | None,
         kind: str,
         repetition: int | None,
         sweep: str,
@@ -1139,6 +1157,7 @@ def matrix(manifest_path: Path, records_path: Path, output_root: Path) -> int:
             sweep=sweep,
         )
         record["manifest_sha256"] = sha256_file(manifest_path)
+        record["registration_status"] = manifest["registration_status"]
         append_jsonl(records_path, record)
         print(
             f"{'VALID' if record['valid'] else 'INVALID'} {tag} "

@@ -1,0 +1,499 @@
+{
+  "classification": "operator-authorized diagnostic; not a registrar-approved formal M12 reading",
+  "commissioning": {
+    "artifact": "projects\\strehl\\experiments\\m12-scorecard\\out\\commission.json",
+    "hash_gate": {
+      "baseline_sha256": "DD39AC6AE2EDD306B8CEBB4862D161C00B67155473C6D38356B2F1F879AC675E",
+      "lsb_after": 6576,
+      "lsb_before": 6577,
+      "lsb_coordinate": [
+        2344,
+        3516,
+        1
+      ],
+      "lsb_sha256": "8FA611A9CC7FAFF9F76E3270C0D322570482D36C106C3C512620E7147BC01780",
+      "one_output_lsb_went_red": true,
+      "plant_pixels_went_red": true,
+      "plant_went_red": true,
+      "planted_sha256": "EEA0FE079BD912A05DEF822CE63B7B8D75948C8DB625D3D501A555C699A52872",
+      "provenance_stayed_green": true,
+      "restore_pixels_returned_green": true,
+      "restore_returned_green": true,
+      "restored_sha256": "DD39AC6AE2EDD306B8CEBB4862D161C00B67155473C6D38356B2F1F879AC675E"
+    },
+    "memory_artifact": "projects\\strehl\\experiments\\m12-scorecard\\out\\memory-commission.json",
+    "source_plant": {
+      "backup_was_under_env_TEMP": "C:\\Users\\chris\\AppData\\Local\\Temp",
+      "change": "significance_scale_default() unset arm 0.0 -> 1.0",
+      "original_source_sha256": "021FF15EE266D71FDC83BEEC4D514D003735063FA6A54E516E5A5ACEDB587C47",
+      "path": "crates/strehl-core/src/pyramid.rs",
+      "planted_source_sha256": "9EE3BCB49970C0046BF32080CC5AA62DB53022AC6B5E19480B8C4F067F3F4503",
+      "restored_last_write_time_was_refreshed": true,
+      "restored_source_sha256": "021FF15EE266D71FDC83BEEC4D514D003735063FA6A54E516E5A5ACEDB587C47",
+      "unique_anchor_occurrences": 1
+    },
+    "status": "COMMISSIONED"
+  },
+  "m12_d": {
+    "cells": {
+      "N105-W1": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "0603DF4F235EE09CC3C89F3ACD5C95C42547BE67B4029AC0A37973550401DC53",
+        "pass": true,
+        "pixel_sha256": "C9EA803BC5FC70F1D028BDDF057AB08E181E4D1C6977EC736823C78F267499A1",
+        "runs": 6
+      },
+      "N105-W16": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "1B62DA01C524C8319F4A159C8F125F52DE9CD3C193E0A875735D09D264E3509A",
+        "pass": true,
+        "pixel_sha256": "018B674A3DC5082EC50F15AFC74C112DDE85971B1D1651C34B66F9941F054481",
+        "runs": 6
+      },
+      "N105-W2": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "1AA0574E86F2707FEC427DDE8724FB988899AA31D77FD1E6773BF689093D47D4",
+        "pass": true,
+        "pixel_sha256": "CDCDB21783F0657A1656BE72452EB40388B1A40F6B7A588890861023413C6D1B",
+        "runs": 6
+      },
+      "N105-W4": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "A87E64364466BE846C4E80FA0F9B613DF1241FF37D5BA6DB1020850F70E27987",
+        "pass": true,
+        "pixel_sha256": "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9",
+        "runs": 6
+      },
+      "N105-W8": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "7F556AEB7A143D856FF5529A39B55FE99B63852A6D4E709414A45002B49D534A",
+        "pass": true,
+        "pixel_sha256": "394879B0A0F9236CA0D874E0036567D840F2AFB53C370D688EAB67AAB32ECB18",
+        "runs": 6
+      },
+      "N299-W1": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "91B0DFC6A2038D12A5327354D6A75501287AE3B25D13510708418547479B2D63",
+        "pass": true,
+        "pixel_sha256": "53BCA67414C3480B944923504662CD0AB811CFDA4E0D1E729E7DDEC681C80A6F",
+        "runs": 6
+      },
+      "N299-W16": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "1DB4E2F03DF123ED6545CDA9A24650C1373C15C979A65AAA7884004064C8FBF5",
+        "pass": true,
+        "pixel_sha256": "EADDF4FB432D50FA4468D790F58B9AC273E1BFE0F222E662D9CEA58037574D77",
+        "runs": 6
+      },
+      "N299-W2": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "B24709BFC48B199EBA9D23029756FEF9BB1D6806CDB5EE43BE9C45309D677909",
+        "pass": true,
+        "pixel_sha256": "4672440180468013F366BDD7E9641AC40F6B418B33DCB39C9C5A24C35FEC8EFD",
+        "runs": 6
+      },
+      "N299-W4": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "965F33601F72942EE5402DDC9678CC6FF70D368F5DF1E00BA1D79BADCF74854F",
+        "pass": true,
+        "pixel_sha256": "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92",
+        "runs": 6
+      },
+      "N299-W8": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "41D83FC00310BE2A9812D8984FFE0E67526124F4D6D1D1DFD8F1CD2D08361CB7",
+        "pass": true,
+        "pixel_sha256": "88CCEF0BF25C9722ED5E6008855962EB18F284A291FF30DF3824F20DAC762EFE",
+        "runs": 6
+      },
+      "N33-W1": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "97A9FB31983D0865A5F621C8582965137BE53520EE3E9B067D8C217006B6355D",
+        "pass": true,
+        "pixel_sha256": "D42D0552A5FB5710BA4AE33C305721F8E98C695B11C89CDFB34859B7982B9F1D",
+        "runs": 6
+      },
+      "N33-W16": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "C9738BF6406D16AC42C88664302373F97481C36FFEBAE7ACA1204AC20F79C409",
+        "pass": true,
+        "pixel_sha256": "A9913288AE46442E553E598347150026AD503E94F5EB5DDD8EA2375E6FE9C88D",
+        "runs": 6
+      },
+      "N33-W2": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "15E6AF9F5CD162397082DB4076C5AC198846EA2B114E0CE26E979BDEF655396F",
+        "pass": true,
+        "pixel_sha256": "78D78FC0A8C284C343EAB7472B34A3990BC3D8E18D21DDCFEF70A39E3BCBBB45",
+        "runs": 6
+      },
+      "N33-W4": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "0FD27F6225CFCBBBB8FBBBA286E9B8C85CCB899D6E848FD7B8B980BB40824863",
+        "pass": true,
+        "pixel_sha256": "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89",
+        "runs": 6
+      },
+      "N33-W8": {
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "B79A1FFF32F211655EE21D29AB4F341676ED9ABA708A4068FE770C36E1919F91",
+        "pass": true,
+        "pixel_sha256": "2E397E4DD5D5BC1ECD0AC652C446D4700DAE872F55FF50C99694B8392CC9EF8F",
+        "runs": 6
+      }
+    },
+    "pass": true
+  },
+  "m12_s": {
+    "by_n": {
+      "105": {
+        "by_worker_output_sha256": {
+          "1": "0603DF4F235EE09CC3C89F3ACD5C95C42547BE67B4029AC0A37973550401DC53",
+          "16": "1B62DA01C524C8319F4A159C8F125F52DE9CD3C193E0A875735D09D264E3509A",
+          "2": "1AA0574E86F2707FEC427DDE8724FB988899AA31D77FD1E6773BF689093D47D4",
+          "4": "A87E64364466BE846C4E80FA0F9B613DF1241FF37D5BA6DB1020850F70E27987",
+          "8": "7F556AEB7A143D856FF5529A39B55FE99B63852A6D4E709414A45002B49D534A"
+        },
+        "by_worker_pixel_sha256": {
+          "1": "C9EA803BC5FC70F1D028BDDF057AB08E181E4D1C6977EC736823C78F267499A1",
+          "16": "018B674A3DC5082EC50F15AFC74C112DDE85971B1D1651C34B66F9941F054481",
+          "2": "CDCDB21783F0657A1656BE72452EB40388B1A40F6B7A588890861023413C6D1B",
+          "4": "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9",
+          "8": "394879B0A0F9236CA0D874E0036567D840F2AFB53C370D688EAB67AAB32ECB18"
+        },
+        "distinct_output_sha256": 5,
+        "distinct_pixel_sha256": 5,
+        "pass": false
+      },
+      "299": {
+        "by_worker_output_sha256": {
+          "1": "91B0DFC6A2038D12A5327354D6A75501287AE3B25D13510708418547479B2D63",
+          "16": "1DB4E2F03DF123ED6545CDA9A24650C1373C15C979A65AAA7884004064C8FBF5",
+          "2": "B24709BFC48B199EBA9D23029756FEF9BB1D6806CDB5EE43BE9C45309D677909",
+          "4": "965F33601F72942EE5402DDC9678CC6FF70D368F5DF1E00BA1D79BADCF74854F",
+          "8": "41D83FC00310BE2A9812D8984FFE0E67526124F4D6D1D1DFD8F1CD2D08361CB7"
+        },
+        "by_worker_pixel_sha256": {
+          "1": "53BCA67414C3480B944923504662CD0AB811CFDA4E0D1E729E7DDEC681C80A6F",
+          "16": "EADDF4FB432D50FA4468D790F58B9AC273E1BFE0F222E662D9CEA58037574D77",
+          "2": "4672440180468013F366BDD7E9641AC40F6B418B33DCB39C9C5A24C35FEC8EFD",
+          "4": "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92",
+          "8": "88CCEF0BF25C9722ED5E6008855962EB18F284A291FF30DF3824F20DAC762EFE"
+        },
+        "distinct_output_sha256": 5,
+        "distinct_pixel_sha256": 5,
+        "pass": false
+      },
+      "33": {
+        "by_worker_output_sha256": {
+          "1": "97A9FB31983D0865A5F621C8582965137BE53520EE3E9B067D8C217006B6355D",
+          "16": "C9738BF6406D16AC42C88664302373F97481C36FFEBAE7ACA1204AC20F79C409",
+          "2": "15E6AF9F5CD162397082DB4076C5AC198846EA2B114E0CE26E979BDEF655396F",
+          "4": "0FD27F6225CFCBBBB8FBBBA286E9B8C85CCB899D6E848FD7B8B980BB40824863",
+          "8": "B79A1FFF32F211655EE21D29AB4F341676ED9ABA708A4068FE770C36E1919F91"
+        },
+        "by_worker_pixel_sha256": {
+          "1": "D42D0552A5FB5710BA4AE33C305721F8E98C695B11C89CDFB34859B7982B9F1D",
+          "16": "A9913288AE46442E553E598347150026AD503E94F5EB5DDD8EA2375E6FE9C88D",
+          "2": "78D78FC0A8C284C343EAB7472B34A3990BC3D8E18D21DDCFEF70A39E3BCBBB45",
+          "4": "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89",
+          "8": "2E397E4DD5D5BC1ECD0AC652C446D4700DAE872F55FF50C99694B8392CC9EF8F"
+        },
+        "distinct_output_sha256": 5,
+        "distinct_pixel_sha256": 5,
+        "pass": false
+      }
+    },
+    "m11_joint_requirement": "not evaluated; byte-invariance already fails at every N",
+    "pass": false
+  },
+  "memory": {
+    "maximum_missed_intervals": 6910,
+    "maximum_missed_run": {
+      "kind": "scored",
+      "limit": 299,
+      "repetition": 3,
+      "sweep": "ascending",
+      "workers": 16
+    },
+    "observed_max_by_n_bytes": {
+      "105": 35365519360,
+      "299": 38152220672,
+      "33": 26330148864
+    },
+    "observed_max_gib": 35.53202438354492,
+    "peak_n299_over_peak_n33_by_worker": {
+      "1": 1.0003379738214648,
+      "16": 1.4489937322064963,
+      "2": 1.0002813174522527,
+      "4": 1.0003605212179978,
+      "8": 1.1347984767904091
+    },
+    "peak_n299_over_peak_n33_max_envelope": 1.4489937322064963,
+    "peak_private_committed_by_n_worker": {
+      "105": {
+        "1": {
+          "bytes": 2411806720,
+          "gib": 2.2461700439453125
+        },
+        "16": {
+          "bytes": 35365519360,
+          "gib": 32.93670654296875
+        },
+        "2": {
+          "bytes": 4805316608,
+          "gib": 4.475299835205078
+        },
+        "4": {
+          "bytes": 9592381440,
+          "gib": 8.933601379394531
+        },
+        "8": {
+          "bytes": 19020271616,
+          "gib": 17.714008331298828
+        }
+      },
+      "299": {
+        "1": {
+          "bytes": 2412552192,
+          "gib": 2.2468643188476562
+        },
+        "16": {
+          "bytes": 38152220672,
+          "gib": 35.53202438354492
+        },
+        "2": {
+          "bytes": 4806172672,
+          "gib": 4.476097106933594
+        },
+        "4": {
+          "bytes": 9592418304,
+          "gib": 8.933635711669922
+        },
+        "8": {
+          "bytes": 19019636736,
+          "gib": 17.713417053222656
+        }
+      },
+      "33": {
+        "1": {
+          "bytes": 2411737088,
+          "gib": 2.246105194091797
+        },
+        "16": {
+          "bytes": 26330148864,
+          "gib": 24.521862030029297
+        },
+        "2": {
+          "bytes": 4804820992,
+          "gib": 4.4748382568359375
+        },
+        "4": {
+          "bytes": 9588961280,
+          "gib": 8.930416107177734
+        },
+        "8": {
+          "bytes": 16760365056,
+          "gib": 15.609306335449219
+        }
+      }
+    },
+    "ratio_bar_pass_on_observed_values": false,
+    "ratio_protocol_caveat": "diagnostic only because the 10 ms cadence was not maintained under load",
+    "requested_sample_interval_ms": 10.0,
+    "sampling_protocol_exactly_achieved": false,
+    "six_gib_bar": {
+      "interpretation": "certain failure: sampled process-tree private commit is already above the bar; missed samples can only hide a higher peak",
+      "pass": false
+    },
+    "worst_gap_run": {
+      "kind": "scored",
+      "limit": 299,
+      "repetition": 5,
+      "sweep": "ascending",
+      "workers": 2
+    },
+    "worst_max_gap_ms": 1048.092800017912
+  },
+  "modulo": {
+    "aggregation": "minimum warm wall time per N across six alternating-order scored repetitions, following M11 exact-computation item 5",
+    "bar": 0.02,
+    "by_n": {
+      "96": {
+        "best_wall_seconds": 32.06723280000733,
+        "best_wall_seconds_per_frame": 0.33403367500007636,
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "2BCB6A5727F3CC868DA109D7AFA9E56E13D43EA365F71D86E10A6C45EEB5C8AB",
+        "pixel_sha256": "030260A2C2EBA02A8D5FF147F6CECD9DF4B2127A3082B67EBCCD12AA5F4FE50E",
+        "runs": 6,
+        "wall_seconds_by_repetition": [
+          42.897494600038044,
+          43.896234200045,
+          32.06723280000733,
+          46.337933800008614,
+          32.50788879999891,
+          43.63766870001564
+        ]
+      },
+      "97": {
+        "best_wall_seconds": 32.112103199993726,
+        "best_wall_seconds_per_frame": 0.3310526103092137,
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "24C826FB0FBF61CEEA06AA8ECA640BF9A597BBA31A5BEEDAD6382DAA3A6E77B7",
+        "pixel_sha256": "AF584C92117CFBA2DA97056D2F6728534196D1B30550280EA005CB439E62942D",
+        "runs": 6,
+        "wall_seconds_by_repetition": [
+          45.06132770003751,
+          34.338586000027135,
+          42.75591669999994,
+          32.98681139998371,
+          42.56540850002784,
+          32.112103199993726
+        ]
+      },
+      "98": {
+        "best_wall_seconds": 32.85674119996838,
+        "best_wall_seconds_per_frame": 0.3352728693874325,
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "16D5C05EEB1BAF6446D38ED935C9140BCA8A9CA40BF895CC66602FBE6DEF385D",
+        "pixel_sha256": "C0F002212B787C3A0500B1F10BB5EB4E88E093995F14F22FD6EF93A6B4A3AF4E",
+        "runs": 6,
+        "wall_seconds_by_repetition": [
+          45.66198179998901,
+          45.693627000029664,
+          32.85674119996838,
+          43.98258040001383,
+          33.66769430000568,
+          43.11674099997617
+        ]
+      },
+      "99": {
+        "best_wall_seconds": 33.34733259998029,
+        "best_wall_seconds_per_frame": 0.33684174343414436,
+        "distinct_output_sha256": 1,
+        "distinct_pixel_sha256": 1,
+        "output_sha256": "6BB2E94BEAE432D41EE9CD7495B9AF1627BAB695F7B078FE86C3B5AB64CB35CE",
+        "pixel_sha256": "8ED3150E61C911227C54037ADE77A91008D6E38BB2E25FAB0C8545E52C7CC93F",
+        "runs": 6,
+        "wall_seconds_by_repetition": [
+          45.20668920001481,
+          35.1673817000119,
+          45.844613900000695,
+          34.330732099944726,
+          44.82297710003331,
+          33.34733259998029
+        ]
+      }
+    },
+    "pass": true,
+    "spread": 0.017487048718701974
+  },
+  "provenance": {
+    "binary": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-16bc3e3d\\bin\\strehl.exe",
+      "sha256": "A123200AE0FD75D22E9FE534F487BA5F3983D1961E828B39F415B32C3278C82F",
+      "version": "strehl 0.0.0 (16bc3e3df7e)"
+    },
+    "binary_hashes_observed": [
+      "A123200AE0FD75D22E9FE534F487BA5F3983D1961E828B39F415B32C3278C82F"
+    ],
+    "build": {
+      "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+      "command": "cargo build --release --jobs 8 -p strehl-cli --manifest-path <archived-source>\\Cargo.toml --target-dir <campaign-target>",
+      "jobs": 8,
+      "strehl_build_id_override": "16bc3e3df7e",
+      "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)"
+    },
+    "completed_utc": "2026-09-04T04:54:09.637669+00:00",
+    "elapsed_seconds": 9379.637669,
+    "invalid_render_count": 0,
+    "manifest_hashes_observed": [
+      "C6C54994159B18FE9DDB05410E3BED452F650ADDF99316809F01B740AFC1B6C5"
+    ],
+    "manifest_sha256": "C6C54994159B18FE9DDB05410E3BED452F650ADDF99316809F01B740AFC1B6C5",
+    "product_arm": {
+      "alignment": "shipping default on; solved independently in every invocation",
+      "backend": "pyramid shipping default",
+      "bit_depth": 16,
+      "captures": {
+        "105": {
+          "path": "D:\\personal\\macro\\coffee-bean",
+          "sidecar": null
+        },
+        "299": {
+          "path": "D:\\personal\\macro\\bee-1-cpl",
+          "sidecar": null
+        },
+        "33": {
+          "path": "D:\\personal\\macro\\bee-1-cpl",
+          "sidecar": null
+        }
+      },
+      "classification": "current-source native-ARW shipping-path candidate",
+      "fixed_env": {},
+      "flags": [
+        "--linear-srgb",
+        "--demosaic"
+      ],
+      "gate": 2.0,
+      "modulo_capture": {
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "sidecars": {
+          "96": null,
+          "97": null,
+          "98": null,
+          "99": null
+        }
+      },
+      "output_format": "uncompressed full-sensor linear-sRGB TIFF",
+      "photometric": "not applied on the pyramid backend",
+      "required_log_substrings": [
+        "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)",
+        "noise gate      : 2.00 x",
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+        "alignment       : ON (",
+        "16-bit RGB, linear sRGB",
+        "Full sensor resolution"
+      ],
+      "worker_control": "STREHL_PYRAMID_WORKERS"
+    },
+    "record_count": 133,
+    "records_sha256": "C64060B2CAC89980765546E585DAF12BE5EBD0623461FA69E2267BDDE6CB6CFA",
+    "registration_status": "operator-authorized-diagnostic",
+    "scorecard": {
+      "commit": "2fd2b1312f8d487637091b1ea72eb130d4eeb890",
+      "path": "docs\\proposals\\2026-09-sota-scorecard.md",
+      "sha256": "A98852E18CE64CED72360507DB0A7923F063AE095F108B23779B60FDD2092211",
+      "version": "v1.7"
+    },
+    "software_tags": [
+      "strehl 0.0.0 (16bc3e3df7e)"
+    ],
+    "source": {
+      "archive": "git archive",
+      "commit": "16bc3e3df7ebcfee3a8b19cd0b5c1f0947ad167d",
+      "working_tree_source_used": false
+    },
+    "started_utc": "2026-09-04T02:17:50+00:00",
+    "summary_sha256": "AC464140B310392A9B84D555E191E9BF6FD5E00557B2CF98AF5F1E39C2AB31A6"
+  },
+  "schema": 1
+}
