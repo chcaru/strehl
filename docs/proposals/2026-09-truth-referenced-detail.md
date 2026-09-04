@@ -2,14 +2,50 @@
 
 Status: Proposal
 
-Decision: **CAPTURE REQUIRED; CONDITIONAL GO for commissioning; NO-GO for any
-score or SOTA claim**
+Decision: **COMPATIBLE WITH M164; NOT AN OWNER-READY CAPTURE ASK. The
+448-frame inverted block survives only inside M164's conditional staged M1
+design: Stage 0M contract gate, 2-frame Stage 0, 896-frame rehearsal and
+704-frame sealed score, totalling 1,602 registered/setup exposures. NO-GO on
+executing any capture from this document, and NO-GO for any score or SOTA
+claim, before M164's gates admit them**
 
 Owner: lane-TRUTH
 
 Scope: M1 detail only. This document designs an instrument and its capture. It
 does not take a claim-bearing reading, revise the scorecard, or open the sealed
 holdout.
+
+**MEASURED.** **Revision 5 / M169 reconciliation:** M164's committed
+corpus exhaustion found that all `10,509` inventoried ARWs are converter-on,
+physical reproduction ratio is recoverable for `0` stacks, and the live
+448-frame design has `0/21` blocks satisfied and receives `0` existing-frame
+credit
+(`docs/research/M164-m1-staged-capture.md:121-194`, commit `ab4dddc5`).
+
+**DERIVED.** M164 retains the 448 named frames as a strict subset of the
+sealed M1 score, not as a competing capture:
+
+```text
+448 inverted block
++ 128 converter-on A/B calibration
++ 64 converter-on held-out map validation
++ 64 TC0 held-out map validation
+= 704 M1-only sealed-score frames.
+```
+
+That sealed score follows a two-frame Stage 0 falsification gate and a
+conditional 896-frame rehearsal, making the M1-only conditional floor
+`1,602` registered/setup exposures. The combined M1/M5/M9 route is `1,917`.
+Neither total is owner-ready until Stage 0M freezes the M165 map contract and
+class counts
+(`docs/research/M164-m1-staged-capture.md:253-357,590-611,711-770`).
+
+**ARGUED.** The programmes are therefore compatible only in this explicit
+subset relation. Revision 4's standalone 448-frame **GO** is withdrawn; its
+block definitions remain below as design provenance because M164 incorporates
+them. This file authorizes no capture. M164's staged gates and stopping rules
+govern, and `docs/research/M164-m1-staged-capture.md:1-4` explicitly says not
+to shoot from that file either.
 
 **MEASURED.** **Revision 1:** D8/M115's primary numbers reproduce, and the
 later transfer audit and current scorecard reject the same-capture product
@@ -39,11 +75,30 @@ maximum reproduction `2.7198 +/- 0.0051` with a widened interval
 `2.7015 / 1.30 = 2.078x` reference/main sampling at the measured maximum.
 Nominal 1.4x would give only `1.929x` at the conservative reference bound.
 
-**ARGUED.** Pin the main sweep's near-focus reset to **1.30x effective
-reproduction with that same converter installed**. The 160-frame counts and
-block structure are unchanged.
+**ARGUED.** **Revision 3 capture decision superseded by Revision 4.** The
+owner has confirmed that the existing main session must remain at maximum
+reproduction with the converter installed. Do not back that session off to
+1.30x.
 
-## 0. Decision first
+**MEASURED.** **Revision 4:** the governing proposal now records the inverted
+design under assessment: score a lower-magnification TC-off stack against the
+maximum-magnification fixed-focus atlas
+(`docs/proposals/2026-08-sota-path.md:2220-2231`).
+
+**DERIVED.** Nominal 1.4x does **not** give an exact 2.0x ratio on the measured
+rig. The conservative ratio is `2.7015 / 1.40 = 1.9296x`, inside this
+proposal's conditional band. Targeting 1.32x and enforcing a hard 1.33x
+maximum gives at least `2.7015 / 1.33 = 2.0312x`.
+
+**ARGUED.** **Superseded standalone decision (Revision 4; retained on the
+record):** the decision was **GO on a 448-frame inverted block**: leave the
+existing maximum-reproduction session untouched; use its optical configuration
+for three 32-frame reference bursts; then remove the converter and acquire
+independently calibrated A/B `sw4` and `sw10` scored passes at 1.32x target,
+never above 1.33x, and marked f/5.6. M164 retains those roles only inside its
+704-frame sealed score (`docs/research/M164-m1-staged-capture.md:590-611`).
+
+## 0. Revision 4 inverted-block design (retained; not executable alone)
 
 **ARGUED.** Yes, a truth-referenced M1 instrument requires additional physical
 data in the incoming session. The current main sweeps, fixed-focus witnesses,
@@ -77,107 +132,186 @@ final clamping as a defeat
 therefore cannot certify that a rise in a separate detail proxy came from
 resolved scene structure.
 
-**ARGUED.** The main capture setting is now part of the truth-reference
-contract: set the **near-focus reset to 1.30x effective reproduction**,
-measured from pixels per known grid period, with the existing 2x Viltrox left
-installed. Do not remove the converter for the main sweep. The reference uses
-the same optical train at its maximum available reproduction, targeted at
-`>=2.70x`. If the measured reference/main ratio is below `2.0x`, the reference
-is conditional or refused under section 0.1 rather than relabelled after the
-fact.
+**ARGUED.** The owner's existing maximum-reproduction session remains
+unchanged and is **not** the M1 scored input. Its same-subject,
+maximum-reproduction optical state supplies the independent fixed-focus
+reference. The added M1 scored inputs use the bare lens at 1.32x target,
+hard-capped at 1.33x, marked f/5.6. Actual magnification is measured from
+pixels per common grid period; lens labels are not accepted as scale.
 
-**ARGUED.** Add **160 frames** after all main sweeps and their fixed-focus
-witnesses:
+**ARGUED.** Revision 4's superseded standalone ask comprised the following
+**448 frames**. M164 retains this table as a subset of its sealed score, not as
+an independently executable owner request:
 
 | Block | Frames | Operator instruction |
 |---|---:|---|
-| `TR-REF-NEAR` | 32 | Same patch, maximum available reproduction (`>=2.70x` target), fixed-focus intersection in the near third |
-| `TR-REF-MID` | 32 | Same patch and framing, fixed-focus intersection in the middle third |
-| `TR-REF-FAR` | 32 | Same patch and framing, fixed-focus intersection in the far third |
-| `TR-FLAT-C` | 32 | Reference-only flat, third diffuser position/orientation |
-| `TR-DARK-C` | 32 | Reference-only dark, matching the fixed reference exposure |
-| **Total added** | **160** | 96 subject frames plus 64 calibration frames |
+| `TR-REF-NEAR` | 32 | Converter on, existing maximum reproduction and framing, fixed-focus intersection in the near third |
+| `TR-REF-MID` | 32 | Converter on, same framing, fixed-focus intersection in the middle third |
+| `TR-REF-FAR` | 32 | Converter on, same framing, fixed-focus intersection in the far third |
+| `TC0-P0` | 6 | Converter off, fixed focus at the recorded 1.32x near-focus reset |
+| `TC0-P1` | 6 | Same reset after moving away and returning by the recorded approach |
+| `TC0-S4-A` | 6 | Fixed-focus sentinel immediately before `TC0-sw4-A` |
+| `TC0-sw4-A` | 55 | Bare lens, automated Focus Bracket, step width 4, pass A |
+| `TC0-E4-A` | 6 | Fixed-focus sentinel at A's untouched final position |
+| `TC0-S4-B` | 6 | Fixed-focus sentinel after the repeated reset |
+| `TC0-sw4-B` | 55 | Identical independent repeat of `TC0-sw4-A` |
+| `TC0-E4-B` | 6 | Fixed-focus sentinel at B's untouched final position |
+| `TC0-S10-A` | 6 | Fixed-focus sentinel immediately before `TC0-sw10-A` |
+| `TC0-sw10-A` | 27 | Bare lens, automated Focus Bracket, step width 10, pass A |
+| `TC0-E10-A` | 6 | Fixed-focus sentinel at A's untouched final position |
+| `TC0-S10-B` | 6 | Fixed-focus sentinel after the repeated reset |
+| `TC0-sw10-B` | 27 | Identical independent repeat of `TC0-sw10-A` |
+| `TC0-E10-B` | 6 | Fixed-focus sentinel at B's untouched final position |
+| `TC0-FLAT-A` | 32 | Bare-lens calibration for the complete TC0 A passes |
+| `TC0-FLAT-B` | 32 | Independent bare-lens B flat; move or rotate the diffuser first |
+| `TC0-DARK-A` | 32 | Bare-lens A dark at the scored exposure |
+| `TC0-DARK-B` | 32 | Independent bare-lens B dark at the scored exposure |
+| **Reference subject** | **96** | Three fixed-focus truth bursts |
+| **Scored focus** | **164** | Two `sw4` plus two `sw10` passes |
+| **Fixed-focus witnesses** | **60** | TC0 reset, start and endpoint eligibility |
+| **TC0 calibration** | **128** | Two independent flat/dark pairs |
+| **Total added** | **448** | |
+
+**ARGUED.** Do not add `TR-FLAT-C` or `TR-DARK-C`. The reference now shares
+the converter-on optical configuration and exposure of the existing A/B
+calibration groups, so its odd and even halves can use those two independent
+master pairs. The new TC0 scored outputs cannot reuse them: converter removal
+changes the flat field, and sharing any master with the truth reference would
+inject common structure. They therefore need all four new TC0 groups above.
+
+**MEASURED.** The live authoritative bench sheet currently contains the
+superseded 160-frame reference block and totals 603 frames
+(`docs/capture-requests/2026-09-319-frame-session.md:162-193`).
+
+**DERIVED.** **Superseded Revision 4 arithmetic (retained for the record; do
+not execute):** replacing that 160-frame block with the 448-frame block would
+have grown the live 603-frame request by 288 to **891**.
+
+**MEASURED.** The 407-frame protocol is explicitly superseded and must not be
+used for the current shoot
+(`docs/capture-requests/2026-09-node-coincidence-gate.md:1-10`).
+
+**ARGUED.** **Superseded Revision 4 implementation note (retained for the
+record; do not execute):** Revision 4 would not have been executable by merely
+appending rows to the live bench sheet. Before that design could have been
+shot, the orchestrator would have had to replace its committed 1.30x-main and
+"converter installed for every frame" instructions, and replace the old
+160-frame table, with this inverted protocol
+(`docs/capture-requests/2026-09-319-frame-session.md:162-193,436-449`).
 
 **MEASURED.** The FE 100 mm F2.8 Macro GM reaches 1.4x natively and a true 2x
 converter gives the nominal 2.8x ceiling. The owner's Viltrox communicates
 `200 mm`, `f/5.6`, and `MaxApertureValue = 5.6`
 (`docs/research/F-camera-lens-optics.md:12-13`;
 `docs/research/SYNTHESIS.md:1705`;
-`docs/capture-requests/2026-09-319-frame-session.md:223-229`).
+`docs/capture-requests/2026-09-319-frame-session.md:435-454`).
 
 **DERIVED.** The current request's f/5.6 is therefore the combined path wide
 open and must not be doubled again as f/11.
 
-**ARGUED.** The subject blocks must be shot as follows:
+**ARGUED.** **Superseded Revision 4 order (retained for the record; do not
+execute):**
 
-1. Finish every main sweep and fixed-focus witness first. Do not touch the
-   target, target tilt, lighting, polarizers, camera roll, or camera yaw.
-2. Only then make the axial camera move needed to reach the rig's maximum
-   available reproduction, targeted at `>=2.70x`, and reframe the **same
-   nonperiodic patch**. Keep at least four surrounding grid or fiducial
-   intersections in the frame. Fill as much of the sensor as possible with
-   the patch rather than with the periodic grid.
-3. Turn focus bracketing off. Set one manual focus position for the near third,
-   approach it from the same focus direction every time, lock it, and take 32
-   lossless-compressed 14-bit RAWs without moving focus. Repeat independently
-   for the middle and far thirds. Each setting needs only a narrow in-focus
-   strip through its named third; gaps between strips are expected and are not
-   scored. These are three fixed-focus bursts, not one bracket and not an
-   interleaved protocol.
-4. Use ISO 100, f/5.6, fixed white balance, EFCS, IBIS off, OSS off, the same
-   warmed flicker-free light and the same crossed-polarizer state as the main
-   blocks. Begin with 1 s. If the axial move changes transmission enough to
-   make that exposure unsuitable, select one replacement shutter time before
-   the first reference burst, use it unchanged for all 96 reference subject
-   frames, and use the same time for `TR-FLAT-C` and `TR-DARK-C`. Do not
-   auto-expose the three focus positions separately.
-5. After the 96 subject frames, shoot 32 reference-only flats with a diffuser
-   position or orientation not used by flat A or B, then 32 warmed darks at the
-   reference exposure. Discard the first two darks operationally in the same
-   way as the main calibration groups, but retain every RAW in the manifest.
-6. Record the reference focus positions, shutter time, lens-reported focus
-   state if available, camera-to-stage move, and four fiducial coordinates.
-   Do not report "2.8x" from the lens name alone: the analysis must measure the
-   actual reference/main subject-sampling ratio from pixels per common grid
-   period. Absolute grid pitch is not needed for that ratio.
+1. After the bench sheet is revised, complete the existing converter-on
+   brackets at the owner's maximum-reproduction setting through the dense
+   `sw1` pass. Do not touch the target, target tilt, lighting, polarizers,
+   camera roll, camera yaw or framing.
+2. With the converter still installed and the existing maximum-reproduction
+   framing untouched, turn focus bracketing off and take `TR-REF-NEAR`,
+   `TR-REF-MID` and `TR-REF-FAR`. Approach each fixed-focus position from the
+   same direction, lock it and take 32 lossless-compressed 14-bit RAWs. These
+   are fixed-focus bursts, not a stack.
+3. Shoot the existing converter-on `flats A/B` and `darks A/B` exactly as
+   already specified. Split every 32-frame reference burst odd/even: calibrate
+   the odd half with the existing A masters and the even half with the
+   existing B masters. The reference exposure must remain the existing
+   converter-on ISO, shutter and f-number. If it changes, those masters do not
+   match and the reference requires two new independent flat/dark pairs.
+4. Only after every converter-on subject and calibration frame is complete,
+   remove the converter. Do not move the target. Reframe the same physical
+   patch by axial camera motion only, preserving roll and yaw. Set the
+   near-focus reset to 1.32x effective reproduction and verify it is no more
+   than 1.33x from the common grid period.
+5. Keep ISO 100, marked f/5.6, 1 s, fixed white balance, EFCS, IBIS off, OSS
+   off, the warmed light and crossed-polarizer state. Run `TC0-P0/P1`, then
+   both TC0 `sw4` and `sw10` A/B pairs with the same reset, interval, direction
+   and G0-G3 eligibility protocol as the existing request.
+6. Finish with `TC0-FLAT-A/B` and `TC0-DARK-A/B`. Move or rotate the diffuser
+   between flat groups. These masters are disjoint from the converter-on
+   masters used by the reference.
+7. Record both measured reproduction ratios, the converter removal, working
+   distance, reference focus positions, reset approach, shutter time,
+   lens-reported state and at least four common fiducials.
 
 **MEASURED.** The main request already requires a coplanar nonperiodic patch
 beside the grid because a periodic target can carry its own answer
-(`docs/capture-requests/2026-09-319-frame-session.md:71-101`). It also requires
+(`docs/capture-requests/2026-09-319-frame-session.md:134-147`). It also requires
 IBIS and OSS off, ISO 100, 1 s, f/5.6, fixed white balance and 14-bit
-lossless-compressed RAW (`docs/capture-requests/2026-09-319-frame-session.md:220-237`).
+lossless-compressed RAW
+(`docs/capture-requests/2026-09-319-frame-session.md:430-455`).
 
 **MEASURED.** The A7C II focus bracket drives a complete ladder rather than
 allowing two exposures to be interleaved at one focus node. The existing
 request therefore added separate fixed-focus witnesses around the independent
 sweeps (`docs/STATUS.md:1946-1973`;
-`docs/capture-requests/2026-09-319-frame-session.md:138-173`). The reference
+`docs/capture-requests/2026-09-319-frame-session.md:38-46`). The reference
 protocol above does not require an impossible interleave.
 
-**ARGUED.** Thirty-two frames per focus position are required because they
-provide two independently calibrated 16-frame reference halves. The halves
-are needed to measure reference noise, shared calibration leakage and transfer
-uncertainty without asking the output being scored to validate its own truth.
-Three focus positions are required because the target is tilted and depth of
-field is smaller at the higher reproduction ratio. A scored site may come from
-one fixed-focus average only; no site may cross a seam and no focus-stacking
+**ARGUED.** Thirty-two frames per reference focus position provide two
+independently calibrated 16-frame halves. Odd/even assignment balances slow
+drift while preserving separate exposures and separate A/B masters. The
+halves measure reference noise, calibration leakage and transfer uncertainty
+without asking the scored output to validate its own truth. Three focus
+positions are required because the target is tilted and depth of field is
+smaller at the higher reproduction ratio. A scored site may come from one
+fixed-focus average only; no site may cross a seam and no focus-stacking
 algorithm may construct the reference.
+
+**MEASURED.** The current scorecard requires two independent `sw4` passes and
+two independent `sw10` passes at identical subject geometry, exposure,
+aperture and focal length; one repeated density is insufficient
+(`docs/proposals/2026-09-sota-scorecard.md:357-366`). A single TC-off sweep
+therefore cannot supply the proposed claim-bearing repeats.
+
+**MEASURED.** Focus-Bracket step size is nonlinear and the measured
+converter-on object step drifts `1.53x` through one sweep; the existing input
+gate requires an interior through-focus peak in both complete repeats
+(`docs/research/M84b-ruler-metrology.md:332-370`;
+`docs/capture-requests/2026-09-319-frame-session.md:538-539`).
+
+**ARGUED.** Step widths 4 and 10 with counts 55 and 27 are retained because
+they are the registered normal and sparse arms, not because their
+converter-off physical step has been measured equal. Every TC0 site must pass
+the same interior-peak and A/B node gates. Failure refuses that arm; frame
+indices, counts and step widths may not be retuned after seeing the holdout.
+
+**MEASURED.** The existing capture contract requires at least 64 independent
+256-pixel sites, approximately a 2048-by-2048 usable nonperiodic region before
+guards (`docs/capture-requests/2026-09-319-frame-session.md:379-390`).
+
+**ARGUED.** Check that requirement in the **bare-lens scored frame**, not only
+in the 2.8x reference. The same physical region must remain inside one
+reference strip after the roughly 2x scale change, with room for registration
+and footprint guards. Failure to retain 64 common guarded sites makes M1
+`UNMEASURED` even if every frame count is correct.
 
 ### 0.1 Reference eligibility and the fallback decision
 
-**ARGUED.** The desired reference/main subject-sampling ratio is at least
+**ARGUED.** The desired reference/scored subject-sampling ratio is at least
 `2.0x`. A ratio at or below `1.25x` is an automatic no-go. A ratio between
 `1.25x` and `2.0x` is only conditionally usable if a later registrar freezes
 and the commissioning battery clears reference-MTF, split-reference SNR and
 resampling-uncertainty bars before holdout rendering.
 
-**DERIVED.** At the measured conservative reference bound, main 1.30x gives
-`2.078x`; main 1.40x gives `1.929x`. The main target is therefore 1.30x, not
-the lens's nominal native maximum.
+**DERIVED.** The proposed nominal `2.8 / 1.4 = 2.0` ratio does not survive the
+rig's measured scale. The reference interval `[2.7015, 2.7381]` gives only
+`1.9296-1.9558x` against an actual 1.40x scored capture. That is not an
+automatic no-go, but it is inside the conditional band rather than above the
+desired bar (`docs/research/M84b-ruler-metrology.md:550-607`).
 
-**ARGUED.** This is a deliberate trade: it reduces the spatial stress on the
-other axes, but it remains above unity reproduction and preserves the only
-independently sampled M1 route available in this session.
+**DERIVED.** At the revised 1.32x target the conservative ratio is `2.0466x`.
+Enforcing a measured 1.33x maximum preserves `2.0312x`. The operator must set
+scale from the common grid; nominal lens maxima cannot establish this gate.
 
 **ARGUED.** Those are proposed capture-eligibility thresholds, not active M1
 score bars. The scorecard registrar must ratify or replace them before the
@@ -195,44 +329,65 @@ nonzero MTF through the sensor's `97.7 cy/mm` Nyquist
 **DERIVED.** The two-stop converter loss is already present in the reported
 f/5.6; applying another factor of two would double-count it.
 
-**DERIVED.** Under the explicit same-pupil approximation, using the same
-converter at 1.30x and 2.7198x gives a reference/main object-space
-diffraction-cutoff ratio of `1.35-1.45x` over the measured
-`p = 1.31-1.94` interval:
+**DERIVED.** The proposed Airy arithmetic is correct only under its stated
+`p = 1` assumption. At marked f/5.6 it gives `12.88 um` object-side for 1.4x
+and `10.20 um` for 2.8x, a `1.263x` advantage:
 
 ```text
-f_c,object = m / (lambda N (1 + m/p)).
+d_Airy,object = 2.44 lambda N (1 + m/p) / m.
 ```
 
-The reference therefore has a predicted diffraction-transfer advantage, not
-a 2.0x optical-resolution advantage. The `2.0x` figure is sampling.
+The formula is recorded at
+`docs/research/F-camera-lens-optics.md:329-355`; the current converter and
+EXIF interpretation are corrected at `docs/research/SYNTHESIS.md:1705`.
 
-**DERIVED.** Holding object-space frequency fixed at the structure represented
-by the top licensed main-image frequency, `0.25 cyc/main px`, the same
-circular-aperture model predicts reference/main diffraction-MTF
-`1.143-1.155x` there and a strict reference advantage at every positive lower
-frequency (`docs/proposals/2026-09-sota-scorecard.md:103-106`). The model and
-its MTF equation are independently recorded at
-`docs/research/M85-output-correctness.md:366-378`. This is still a
-diffraction-only prediction.
+**DERIVED.** `p = 1` is excluded for the converter-on rig and its
+measured bellows factor is `B = 2.412-3.064`
+(`docs/research/M84b-ruler-metrology.md:550-607`).
 
-**ARGUED.** Converter aberrations and the change in pupil behaviour with
-focus remain unmeasured. Keeping the same Viltrox installed in both captures
-removes the bare-lens-versus-converter substitution but does not prove equal
-aberrations. The reference remains a qualified proxy and must pass the frozen
-reference-transfer gate after capture. Failure leaves M1 `UNMEASURED`; it
-does not retroactively make the 160 frames claim-bearing.
+**ARGUED.** The bare-lens pupil magnification remains unmeasured and is only
+bracketed as plausibly `1.0-1.5`
+(`docs/captures-needed.md:2323-2355`).
 
-**ARGUED.** If the main setup is already at the rig's maximum available
-reproduction, this rig cannot create a higher-sampling truth reference. The
-session then needs one of these replacements:
+**DERIVED.** Using the measured converter-on `B` and actual magnification
+interval gives reference object-side Airy diameter `6.62-8.52 um`. At the
+1.32x scored setting, marked f/5.6 and the disclosed bare-pupil bracket give
+`10.70-13.21 um`. The diffraction-only prediction therefore favors the
+reference by `1.26-2.00x`, not exactly `1.26x`.
 
-1. a different optical path that gives at least 2x more subject pixels per
-   millimetre while keeping the same patch and fiducials; or
-2. a traceable, nonperiodic chrome-on-glass or photomask target with a native
-   design map, features spanning the licensed main-sensor band, and at least
-   256 independent guarded cells, captured with the same A/B repeat,
-   fixed-focus and calibration discipline.
+**ARGUED.** That prediction does not prove real optical superiority. The
+Viltrox aberrations and bare-lens pupil remain unmeasured, and the inverted
+design deliberately compares different optical trains. The reference is a
+qualified proxy only. It must pass the frozen object-space transfer gate in
+every licensed band; failure leaves M1 `UNMEASURED`.
+
+**ARGUED.** The resulting detail claim is legitimate but narrow:
+**bare-lens 1.32x, marked f/5.6, on the registered `sw4` and `sw10` inputs**.
+It does not license detail at the owner's converter-on 2.8x operating point.
+The scorecard also forbids splicing that 1.32x M1 result into 2.8x noise,
+flat-power or hull readings: opposed metrics must come from the same output
+bytes and settings (`docs/proposals/2026-09-sota-scorecard.md:108-123`). A
+conjunctive SOTA claim at 1.32x therefore requires the joint axes to be read
+on the TC0 outputs too.
+
+**MEASURED.** The older TC-off gear request compares both systems wide open
+and specifies the bare lens at f/2.8
+(`docs/captures-needed.md:2358-2380`). It separately records that any real
+bare-lens RAW exercises the untested metadata/profile-decline branch
+(`docs/captures-needed.md:2400-2423`).
+
+**ARGUED.** The M1 scored input is deliberately f/5.6 to preserve
+reference-transfer margin. It therefore exercises the metadata branch and
+supplies a matched-f-number optical comparison, but it does not fully answer
+whether bare f/2.8 is the owner's sharper wide-open configuration.
+
+**ARGUED.** **Superseded Revision 4 optional diagnostic (retained for the
+record; do not execute from this file):** if closing that gear question in the
+same session had been required, the design would have appended a non-score
+diagnostic after every claim-bearing block:
+`TC0-F2.8-sw4` at bare-lens maximum reproduction, step width 4, 55 frames,
+plus one matching 32-flat and 32-dark group. That costs 119 additional frames
+and is not an M1 repeat or score input.
 
 **ARGUED.** The existing periodic grid is not that replacement. It is useful
 for geometry and scale, but it is predictable. The current capture request
@@ -241,7 +396,9 @@ withdrew a certified target under the previous relative-only M1 design
 changes the premise: if no oversampled same-subject reference is available,
 known physical truth becomes necessary.
 
-**ARGUED.** If neither replacement can be shot, the honest result is:
+**ARGUED.** If the inverted block cannot be shot, cannot retain at least 64
+guarded nonperiodic sites in the common field, or fails its scale or optical
+eligibility gate, the honest result is:
 **no admissible truth-referenced detail reading can be taken from this
 session**. Preserve the main session for the other axes, but leave M1
 `UNMEASURED`.
@@ -832,37 +989,40 @@ joint certificate is the candidate that remains.
 ### 3.1 Higher-magnification same-subject reference: recommended
 
 **ARGUED.** The reference is a higher-subject-sampling, fixed-focus RAW atlas
-of the exact patch in the scored main sweeps. It is not a rendered JPEG, not a
+of the exact patch in the scored TC0 sweeps. It is not a rendered JPEG, not a
 focus-stack output, not a deconvolution, and not a synthetic target inferred
 from the candidate output.
 
-**ARGUED.** Each 32-frame focus burst is dark/flat corrected with the
-reference-only `C` masters and split 16/16. Frames may receive analytic
-translation correction before a straight linear mean. Near, middle and far
-sites are assigned by a geometry-frozen strip map. Each scored site must lie
-fully inside one strip and one focus burst; seam pixels and feathering are
-excluded. The atlas is therefore a set of fixed-focus averages, not a fourth
-stacker.
+**ARGUED.** Each 32-frame focus burst is split odd/even. The odd half uses the
+existing converter-on A flat/dark masters and the even half uses the existing
+converter-on B masters. The scored TC0 A/B outputs use their own disjoint
+TC0 masters. Frames may receive analytic translation correction before a
+straight linear mean. Near, middle and far sites are assigned by a
+geometry-frozen strip map. Each scored site must lie fully inside one strip
+and one focus burst; seam pixels and feathering are excluded. The atlas is
+therefore a set of fixed-focus averages, not a fourth stacker.
 
 **ARGUED.** "Independent" means:
 
 - the reference has more measured subject samples per millimetre;
-- it is captured in separate exposures after the main blocks;
+- it is captured in separate exposures after the converter-on focus blocks
+  and before converter removal;
 - it is made without the algorithm under test or any comparator merger;
-- its two 16-frame halves and calibration master are disjoint from main A and
-  B;
+- its two 16-frame halves use independent converter-on A/B masters, both
+  disjoint from the scored TC0 A/B masters;
 - its geometry is estimated without looking at a candidate's score; and
 - the algorithm under test never receives the reference.
 
 Using the same subject and lighting is intentional and is not a dependence
-defect. Sharing a flat master, output merger, selected score sites or
-score-driven registration would be.
+defect. Sharing a flat or dark master between the reference and scored TC0
+outputs, sharing an output merger or selecting score-driven sites or
+registration would be.
 
 **ARGUED.** The higher-magnification image is a qualified proxy for optical
 truth, not perfect ground truth. It licenses only modes for which all of these
 later-frozen gates pass:
 
-1. measured reference/main subject-sampling ratio from common fiducials;
+1. measured reference/scored subject-sampling ratio from common fiducials;
 2. split-reference signal-to-noise;
 3. reference focus and transfer sufficiency at the licensed subject
    frequencies;
@@ -1221,19 +1381,38 @@ modes, an independently sampled reference, a native-output geometry contract
 and arms that can kill it. It is therefore worth commissioning. It is not yet
 an admitted M1 instrument.
 
-**ARGUED.** The operational decision is:
+**MEASURED.** M164 retains the 448-frame inverted block only as part of a
+704-frame sealed M1 score and places that score after Stage 0M, the two-frame
+Stage 0 falsification gate and a conditional 896-frame rehearsal. The
+M1-only conditional floor is `1,602` registered/setup exposures; the combined
+M1/M5/M9 route is `1,917`. Existing captures subtract `0` frames, and neither
+total is owner-ready while M165's class counts remain unfrozen
+(`docs/research/M164-m1-staged-capture.md:121-194,253-357,590-611,711-770`).
 
-- **GO:** shoot the 160-frame higher-magnification reference block in the same
-  session, with the main sweeps pinned to 1.30x effective reproduction and the
-  same 2x Viltrox installed throughout, then seal it with the main holdout;
-- **CONDITIONAL GO:** commission `TRD = (J_TR, F_TR)` on development data under
-  the ordered battery, then require a registrar revision and independent
-  implementation audit;
-- **NO-GO:** do not use D8's same-capture split, the dense stack, current grid,
+**ARGUED.** The current operational decision is: follow M164's stage order,
+release conditions and STOP rules. This proposal is not a capture request.
+The following Revision 4 decision remains visible only as a superseded
+standalone record:
+
+- **SUPERSEDED STANDALONE GO:** leave the existing converter-on
+  maximum-reproduction session
+  untouched and add the 448-frame inverted block: 96 converter-on fixed-focus
+  reference frames, two bare-lens `sw4` repeats, two bare-lens `sw10` repeats,
+  60 eligibility witnesses and 128 disjoint TC0 calibration frames;
+- **REVISION 4 SCOPE, RETAINED WITHIN M164:** set the bare-lens scored input to
+  1.32x target, hard maximum
+  1.33x, marked f/5.6. Any M1 result is limited to that optical configuration
+  and cannot be substituted for a 2.8x detail result;
+- **REVISION 4 CONDITIONAL GO, RETAINED AS AN INSTRUMENT PREREQUISITE RATHER
+  THAN CAPTURE PERMISSION:** commission `TRD = (J_TR, F_TR)` on development
+  data under the ordered battery, then require a registrar revision and
+  independent implementation audit;
+- **NO-GO, STILL CONTROLLING:** do not use D8's same-capture split, the dense
+  stack, current grid,
   development-only high-resolution slide, direct MSE/PSNR/SSIM, learned
   perceptual score, FRC, a detail-proxy/M8 frontier or any weighted
   information/fidelity scalar as the M1 truth instrument; D8 may remain an
   offline matched-contrast diagnostic and M8 remains an independent
   one-way artifact gate; and
-- **CURRENT STATUS:** M1 remains `UNMEASURED`, and no detail-qualified SOTA
-  claim is licensed.
+- **CURRENT STATUS, STILL CONTROLLING:** M1 remains `UNMEASURED`, and no
+  detail-qualified SOTA claim is licensed.
