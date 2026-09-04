@@ -1,0 +1,43 @@
+terms: clamped, catmull, m8-o, projected, output, hull
+==============================================================================
+CITE THESE IN THE BRIEF (rule 40):
+
+  BUILD-HULL.md                        score   297  <-- HEADLINE MATCH
+      BUILD-HULL — is the merge non-convex?
+      !! PRIOR REFUSAL: removed content exceeds the noise floor at every octave | BUILD-HULL | **REFUTED** | it is below the noise floor at every octave except one subject's 
+  M136-m8o-bar.md                      score   198  <-- HEADLINE MATCH
+      M136 — M8-O representable-domain ruling
+  V-hull.md                            score   142  <-- HEADLINE MATCH
+      V-hull — independent verification of the four-link merge-backend chain
+  M8-overshoot.md                      score    91  <-- HEADLINE MATCH
+      M8 source-hull census
+  M-FLATNULL.md                        score    80  <-- HEADLINE MATCH
+      M-FLATNULL — real flat-target commissioning of M8-O
+  BUILD-OUTPUT.md                      score    71  <-- HEADLINE MATCH
+      BUILD-OUTPUT — the delivered file as a print master
+      !! PRIOR REFUSAL: The ramp is clamped at 8. **ORCH's premise was verified, not refuted.** Both
+  M95-merge-vs-frame-sharpness.md      score    67  <-- HEADLINE MATCH
+      M95 — Is the merge losing sharpness? Merged output vs. the frame that went in
+  BUILD-CROP.md                        score    63  <-- HEADLINE MATCH
+      BUILD-CROP — an opt-in crop-to-cover output mode
+  M85-output-correctness.md            score    61  <-- HEADLINE MATCH
+      M85 — Output correctness: colour and resolution
+  M95-resolution.md                    score    60  <-- HEADLINE MATCH
+      M95 — The softness is the default output: it bins a 32.9 MP capture to 8.2 MP and the discarded band is 
+
+  also mentions it: ORCH-veiling.md, M133-blocker-audit.md, M95-kernel.md, BUILD-SHARP.md, BUILD-BLEND.md, M8-COMPARATIVE.md
+
+IN THE SOURCE (a test name can be the whole answer):
+  crates\strehl-cli\examples\cover-reference.rs:268  fn crop_source_index(output_index: usize, rect: align_cmd::CropRect, full: PlaneGeometry) -> usize {
+  crates\strehl-cli\examples\m95-lanczos.rs:42  fn catmull_rom_weights(f: f32) -> [f32; 4] {
+  crates\strehl-cli\src\image_out.rs:1949  fn a_constant_plane_is_invariant_including_at_the_clamped_borders() {
+  crates\strehl-cli\src\stack.rs:1573  fn write_outputs(
+  crates\strehl-core\src\align.rs:2664  fn catmull_rom_weights(f: f32) -> [f32; 4] {
+  crates\strehl-core\src\align.rs:2688  pub fn sample_catmull_rom(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
+  crates\strehl-core\src\align.rs:3487  fn catmull_rom_reproduces_the_samples_at_integer_positions() {
+  crates\strehl-core\src\align.rs:3501  fn bilinear_costs_more_high_frequency_than_catmull_rom() {
+  crates\strehl-core\src\color.rs:1494  fn exposure_is_refused_on_the_measurement_output() {
+  crates\strehl-core\src\defect_map.rs:2716  fn an_implausible_gain_is_refused_rather_than_clamped() {
+  crates\strehl-core\src\pyramid.rs:765  pub fn hull_default() -> Hull {
+  crates\strehl-core\src\pyramid.rs:2355  pub fn clamped_fraction(&self, ws: &mut Workspace, tol: f32) -> Vec<f64> {
+==============================================================================

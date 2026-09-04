@@ -253,7 +253,7 @@ set-theoretic proof:
 artifact, and the companion checker; all equal the recorded hashes. I also
 compared every M134 bilinear per-capture denominator, violation count, rail
 classification, and nonrail count with M136's separate reclassification; all
-match (`experiments/M136-m8o-bar/analysis.json:94-150`).
+match (`experiments/M136-m8o-bar/analysis.json:210-265`).
 
 **VERIFIED:** The per-capture split is exactly:
 
@@ -372,7 +372,7 @@ and off-rail red:
 >     "observed_green": 4,
 >     "observed_red": 4,
 >     "passed": true
-(`experiments/M136-m8o-bar/analysis.json:219-223`)
+(`experiments/M136-m8o-bar/analysis.json:335-339`)
 
 **VERIFIED — ruling on the specific M134-style proposal:** “Count nonrail and
 rail-pinned overshoots, but exclude unavoidable rail-pinned undershoots” has
@@ -497,7 +497,7 @@ The persisted calculation is:
 >     "post_projection_residue_fraction_decimal": "0.000032531818356347471421613228739694976925463011497793",
 >     "post_projection_residue_percent": 0.003253181835634747,
 >     "post_projection_residue_percent_decimal": "0.0032531818356347471421613228739694976925463011497793"
-(`experiments/M136-m8o-bar/analysis.json:232-236`)
+(`experiments/M136-m8o-bar/analysis.json:348-352`)
 
 **VERIFIED:** The current checker budgets only the mapped `tau_R` plus the
 final half-code. It omits an earlier lossy conversion. After the M8-R trace,
@@ -534,7 +534,7 @@ Across the three bilinear arms this is about `6.045–6.125` output LSB for R,
 `2.207` for G, and `3.356–3.444` for B. The 2,413 post-projection violations
 are R `1,839`, G `0`, B `574`; none exceeds the corresponding omitted bound,
 and all three bilinear arms become zero under projection plus that bound
-(`experiments/M136-m8o-bar/analysis.json:3-46,440-670`).
+(`experiments/M136-m8o-bar/analysis.json:3-46,856-1086`).
 
 **VERIFIED:** The one-frame bilinear arm is the cleaner diagnosis. It has zero
 M8-R but 52,570 nonrail M8-O rows:
@@ -559,7 +559,7 @@ M8-R but 52,570 nonrail M8-O rows:
 
 **VERIFIED:** Every one of those 52,570 rows also clears under the known
 intermediate half-step bound
-(`experiments/M136-m8o-bar/analysis.json:902-977`). This independently
+(`experiments/M136-m8o-bar/analysis.json:1318-1394`). This independently
 demonstrates that the post-gather residue is compatible with a representation
 round trip even when the resampler itself is clean.
 
@@ -609,6 +609,12 @@ for channel in {R,G,B}, at the output sample centre, for which at least one inpu
 frame is geometrically valid under the frozen placement. The denominator N is
 the number of those coordinates. Coordinates at either rail, and coordinates
 whose source-support interval lies wholly outside [0,1], remain in N.
+For cover=crop, (x,y) names the compact TIFF coordinate and maps to full-plane
+(x+x0,y+y0), where (x0,y0) is the crop origin independently reconstructed from
+the frozen placements. The reconstructed crop rectangle must agree with the
+recorded producer rectangle and TIFF dimensions. Any TIFF coordinate lacking a
+reconstructed valid contributor, or any missing/duplicate expected frame-site
+trace, makes the result UNMEASURED rather than shrinking N.
 
 Source intervals. For each valid frame k, independently reconstruct the exact
 discrete source support used by the registered resampler and let
@@ -628,25 +634,36 @@ images with the recorded arithmetic order and outward rounding:
     L = min_k inf(J_k)
     H = max_k sup(J_k).
 
-For the frozen native-RAW path, before the final-u16 quantizer:
+F_k,c must be applied to each frame interval before the min/max reduction.
+Applying a projection or an empirical internal-quantizer allowance to old
+aggregate lo/hi/tau arrays is not this metric.
 
-    F_k,c(z) =
-      clamp_[0,1](
-        max(clamp_[0,65535](round(z / g_k,c + b_k)) - b_k, 0)
-        * G_c / R_k)
+For a candidate whose audited native-RAW path matches the frozen path, define:
+
+    u_k,c(z) =
+      u16(clamp_[0,65535](round_f32_ties_away_from_zero(z / g_k,c + b_k)))
+
+    P_k,c(z) = max(f32(u_k,c(z)) - b_k, 0) * G_c / R_k
+
+    F_k,c(z) = clamp_[0,1](P_k,c(z))
 
 where g_k,c is the recorded site gain, b_k the recorded black level, G_c the
 recorded final output gain, and R_k the recorded sensor range. A checker that
-lacks any required transform parameter or rounding rule reports UNMEASURED.
+lacks any required transform parameter, scalar type, operation order, rounding
+rule or clamp rule reports UNMEASURED. If the candidate path differs, its exact
+fixed monotone representation path must be declared prospectively and the
+checker recommissioned before any target result is read.
 
 Comparison and tolerance. Read encoded code e as O=e/65535. The only tolerance
-outside the interval construction is q=0.5/65535 for final serialization.
+outside the interval construction is q=0.5/65535=1/131070 for final
+serialization.
 Count one M8-O violation exactly when O < L-q or O > H+q. No temporal-noise,
 scene-adaptive, or empirical tolerance is allowed.
 
 Success. Report violation count V, denominator N, exact fraction V/N, percent,
 maximum signed excess, and every violating coordinate. M8-O passes iff V=0
-(exactly 0.0000%). M8-R and the crop/reference identity arm remain separately
+(exactly 0.0000%, decided from the integer count rather than a rounded
+percentage). M8-R and the crop/reference identity arm remain separately
 mandatory at zero.
 
 Rail disclosure. Also compute the same broad hull before only the final [0,1]
@@ -663,7 +680,10 @@ Controls. In addition to the existing M8 controls, commission the revised
 checker with: an in-range copy null; an in-range convex-bilinear null; planted
 in-range high and low excursions; a wholly-above-one hull at code 65535 and
 off rail; and a wholly-below-zero hull at code 0 and off rail. Required results
-are respectively green, green, red/red, green/red, and green/red.
+are respectively green, green, red/red, green/red, and green/red. Also require
+an exact intermediate-u16 quantizer-boundary green/red pair, a nonzero-origin
+crop-coordinate green/red pair, and fail-closed tests for missing black level,
+crop origin, frame-site trace, or arithmetic metadata.
 ```
 
 **VERIFIED:** This text leaves the denominator at `74,173,536` for the frozen
@@ -671,6 +691,370 @@ three-stack census. It changes classification, not population: the 977,684
 matching high-rail coordinates remain visible in the mandatory rail report,
 while an output even one full code off the required projected rail remains
 red.
+
+**ASSUMED — finality:** With the added crop-coordinate and per-frame-transform
+clauses, this is the final M136 bar text. It is kernel-agnostic: a future arm is
+scored by its frozen output and independently reconstructed support, not by a
+kernel-specific exception. The exact candidate arithmetic remains a measured
+input to `F_k,c`; changing that fixed path requires prospective versioning and
+recommissioning, not an after-the-result tolerance.
+
+## 7. Preregistered clamped-Catmull M8-O measurement
+
+The machine-readable companion is
+`experiments/M136-m8o-bar/clamped-m8o-preregistration.json`. Its status is
+`PREREGISTERED_NOT_EXECUTED`; no number in this section is a clamped M8-O
+result.
+
+### 7.1 The clamp and M8-O are only partly orthogonal
+
+**VERIFIED:** The narrow reasoning is correct. A zero-margin Catmull-Rom clamp
+changes the gathered value but not the exact 4x4 source support, the fixed
+output container, or the set-theoretic fact that an interval wholly above one
+has no intersection with an unsaturated normalized-`u16` value. In the existing
+matched Scale renders, all nine aggregate files — `o-lo.npy`, `o-hi.npy`, and
+`o-tau.npy` for three captures — are byte-identical between shipping Catmull-Rom
+and clamped Catmull-Rom. The clamped arm simultaneously has zero M8-R
+violations over `6,131,678,976` gathered samples
+(`experiments/M136-m8o-bar/analysis.json:94-208`).
+
+**VERIFIED — numerical correction:** The old clamped-Catmull support hull is
+the shipping Catmull hull, not the bilinear hull. Its unchanged old Scale-domain
+unrepresentable population is therefore `938,062`, not bilinear's `977,684`:
+
+>     "aggregate_unrepresentable_hulls": {
+>       "high": 938062,
+>       "low": 0,
+>       "valid": 74173536
+>     },
+(`experiments/M136-m8o-bar/analysis.json:97-101`)
+
+**VERIFIED — important qualification:** The clamp is not orthogonal to M8-O as
+a whole. It changes the gathered values supplied to the merge, so it may change
+the final nonrail, wrong-rail, reconstruction, and quantizer-sensitive residue.
+M8-R zero therefore does not imply M8-O zero. That final residue is the
+measurement being preregistered.
+
+**INHERITED — crop qualification:** The clamp alone leaves the old
+representability mechanism untouched, but the forthcoming run changes from
+the old Scale output domain to M130's compact Crop domain. M130 describes Crop
+as evaluating warps in full-plane coordinates and then writing the compact
+covered rectangle directly:
+
+> `strehl stack --merge pyramid --cover crop` now evaluates each warp in the
+> original full-plane coordinate system, then extracts the common covered
+> rectangle before luma, variance, the measured gate floor, pyramid construction,
+> local-energy weighting, accumulation, confidence, and collapse. The compact
+> collapsed plane is written directly. There is no writer-time second crop.
+(`docs/research/M130-crop-early.md:10-14`)
+
+**VERIFIED:** Consequently, neither `977,684` nor any other old Scale-domain
+rail count is preregistered as the expected Crop count. The mechanism persists;
+the new population and count must be measured.
+
+### 7.2 What exists, and why it cannot decide the new bar
+
+**VERIFIED:** M134 left three clamped TIFFs and three state directories:
+
+| Capture | Existing TIFF/state | M8-R | Existing aggregate hulls |
+|---|---|---:|---|
+| `flat-et1s` | `experiments/M134-kernel-frontier/out/clamped-flat-et1s.{tiff,provenance.json}` and `clamped-flat-et1s-state/` | `0 / 1,977,960,960` | `o-lo.npy`, `o-hi.npy`, `o-tau.npy` |
+| `flat-et2.5s` | corresponding `clamped-flat-et2.5s*` paths | `0 / 2,010,926,976` | same three arrays |
+| `flat-et6s` | corresponding `clamped-flat-et6s*` paths | `0 / 2,142,791,040` | same three arrays |
+
+The persisted inventory records `has_m8_o_json=false`,
+`has_m8_o_violations=false`, `retained_trace_blocks=0`, trace protocol `2`,
+no black level, no output-crop origin, and `cover=scale` for every capture
+(`experiments/M136-m8o-bar/analysis.json:94-208`).
+
+**VERIFIED:** That absence follows the runner, not merely the filenames. After
+each target render M134 invokes only `finalize-r`:
+
+>     Invoke-Checked $Binary $arguments $log
+>     Invoke-Checked "python" @("-B", $Checker, "finalize-r", "--state", $state) (
+>         Join-Path $Out "$name-r.log"
+>     )
+(`experiments/M134-kernel-frontier/run.ps1:290-293`)
+
+**VERIFIED:** The v2 trace serializes sensor range and site gain, but no black
+level:
+
+>     w.write_all(&frame.levels.range().to_le_bytes())?;
+>     w.write_all(&site_gain.to_le_bytes())?;
+>     let frame_path = frame.path.to_string_lossy();
+(`experiments/M134-kernel-frontier/m8_trace.rs:119-121`)
+
+It deletes each block after the old checker consumes it:
+
+>     if !status.success() {
+>         bail!(
+>             "independent M8 checker failed on {}; block retained",
+>             block.display()
+>         );
+>     }
+>     OpenOptions::new()
+>         .write(true)
+>         .create_new(true)
+>         .open(&marker)
+>         .with_context(|| format!("creating unique M8 seen marker {}", marker.display()))?;
+>     fs::remove_file(&block)
+>         .with_context(|| format!("removing consumed M8 block {}", block.display()))?;
+(`experiments/M134-kernel-frontier/m8_trace.rs:142-154`)
+
+**VERIFIED:** The old aggregate arrays cannot be repaired after the fact. The
+v2 checker first reduces each frame using the linear scale
+`output_gain/site_gain/value_range`:
+
+>     output_scale = np.float32(output_gain / b.site_gain / b.value_range)
+(`experiments/M134-kernel-frontier/checker.py:362`)
+
+It then takes aggregate minima/maxima (`checker.py:404-418`). The exact
+successor instead must apply each frame's additive black restore, discrete
+round/clamp, black removal, gain/range normalization, and final saturation
+*before* reducing across frames. Frame identity and the nonlinear operation
+have already been discarded, so no transformation of aggregate
+`o-lo/o-hi/o-tau` can recover the registered statistic.
+
+**VERIFIED — answer on reuse:** The retained files are sufficient to run the
+old, impossible, unprojected M8-O comparison against the old Scale TIFFs. They
+are also sufficient for the conservative half-step diagnostic already reported
+in section 5. They are not sufficient for an exact section-6 score.
+
+**ASSUMED — theoretical but irrelevant alternative:** One could avoid a new
+trace for the *old* TIFFs only by building and commissioning an independent
+RAW decoder that reproduces every source plane, black level, gain, placement,
+rounding operation, and crop mapping. That would reconstruct the missing
+evidence rather than use the existing state. It would still not score the
+post-M130 output the owner has requested.
+
+**INHERITED — governing disposition:** A fresh post-M130 clamped render is
+required because Crop changes the output domain and bytes. The result must use
+the TIFF and trace produced by the same frozen candidate binary; mixing a new
+hull with the old M134 TIFF, or vice versa, is `UNMEASURED`.
+
+### 7.3 Required instrument and evidence contract
+
+**ASSUMED — required implementation:** Before any target run, an implementation
+lane must add, under `experiments/M136-m8o-bar/`, `m8_trace_v3.rs`,
+`checker_m136.py`, `fixture_m136.py`, `verifier_m136.py`, and
+`run-clamped-m8o.ps1`. These files do not exist at preregistration time; their
+interfaces and verdict rule are fixed here, while their hashes must be frozen
+after commissioning and before target output is read
+(`experiments/M136-m8o-bar/absence-audit.txt:20-23`).
+
+Trace v3 must provide, for every expected frame/CFA-site block:
+
+1. protocol version and kernel identity;
+2. frame path, input order and source-file SHA-256;
+3. full reference geometry and compact output geometry;
+4. full-plane Crop origin `(x0,y0)`;
+5. CFA site/channel, placement coefficients and transform centre;
+6. source-plane dimensions and values;
+7. the actual gathered `f32` plane for M8-R;
+8. per-frame black level, sensor range and per-channel site gain;
+9. the final per-channel output gain; and
+10. the scalar types, operation order, rounding mode and clamp semantics of the
+    candidate path.
+
+**ASSUMED — independence boundary:** The producer may supply values and fixed
+representation parameters. It may not supply a source hull, valid-contributor
+mask, crop verdict, or pass flag. The checker independently reconstructs the
+Crop rectangle, sample coordinates, geometric validity, exact 4x4 support,
+`tau_R`, interval transform, hull reduction and verdict. A producer rectangle
+may be recorded only as a cross-check; disagreement is `UNMEASURED`.
+
+**ASSUMED — streaming evidence:** Trace blocks may be deleted only after both
+the primary checker and the independent verifier have consumed them
+successfully and their block hash has been recorded. The two implementations
+must not import Strehl's sampler, hull, contributor, Crop or serialization
+code. This prevents another “independent analysis of shared derived arrays”
+from being mistaken for an independent reconstruction.
+
+Each capture state must retain:
+
+- complete expected/consumed frame-site manifests and block hashes;
+- M8-R totals and every M8-R violation;
+- pre-final-saturation and projected aggregate lower/upper arrays;
+- a valid-contributor-count array;
+- extremising frame identities for aggregate lower and upper bounds;
+- final M8-O totals and every M8-O violation;
+- the mandatory high/low, at-rail/off-rail disclosure; and
+- command, environment, dependency, source, patch, binary, map, TIFF, checker,
+  verifier, fixture and runner hashes.
+
+### 7.4 Executable procedure
+
+The exact decision contract is also frozen in
+`experiments/M136-m8o-bar/clamped-m8o-preregistration.json`.
+
+1. **Wait for and name the candidate.** Set `$Commit` to the exact commit that
+   contains M130 Crop and will be evaluated. Refuse an uncommitted worktree.
+   Create a clean source archive below
+   `experiments\M136-m8o-bar\out\source-snapshot`; never build or edit the shared
+   `crates\` tree. If `clamped-catmull` is not yet production code, apply only
+   the recorded zero-margin M134-equivalent clamp plus trace-v3 instrumentation
+   to that private snapshot. Record every changed file and before/after hash.
+
+   ```powershell
+   Set-Location C:\dev\blog\death-of-software\projects\strehl
+   $Commit = '<full post-M130 commit>'
+   powershell -NoProfile -ExecutionPolicy Bypass -File `
+     .\experiments\M136-m8o-bar\run-clamped-m8o.ps1 `
+     -Mode Prepare -SourceCommit $Commit
+   ```
+
+   `Prepare` must fail unless `git rev-parse "$Commit^{commit}"` succeeds, the
+   private snapshot is clean, `--cover crop` and `clamped-catmull` are present,
+   the clamp is raw Catmull-Rom followed once by an exact zero-margin 4x4
+   source-support clamp, and the trace format satisfies section 7.3.
+
+2. **Repeat the rule-40 search before freezing the instrument.** Compare the
+   new output with
+   `experiments/M136-m8o-bar/prior-art-clamped-m8o.txt`; inspect every new
+   headline match or prior refusal before proceeding.
+
+   ```powershell
+   python .\experiments\ORCH-drift-check\prior_art.py `
+     clamped catmull m8-o projected output hull
+   ```
+
+3. **Commission before any target TIFF is read.**
+
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -File `
+     .\experiments\M136-m8o-bar\run-clamped-m8o.ps1 `
+     -Mode Commission -SourceCommit $Commit
+   ```
+
+   The M8-R fixture must reproduce exactly: ordinary Catmull hard step
+   `28/252` (`14` low, `14` high); zero-margin clamped hard step `0/252`;
+   widened-clamp sabotage `28/252` (`14` low, `14` high); copy and bilinear
+   nulls zero; and the explicit high/low plant exactly two violations, one of
+   each sign.
+
+   The M8-O fixture must produce zero for in-range copy, convex bilinear,
+   exact intermediate-quantizer round trip, correct high rail for support
+   wholly above one, correct low rail for support wholly below zero, and a
+   nonzero-origin Crop identity. It must produce exactly the registered planted
+   coordinates for in-range high, in-range low, above-one at code `65534`,
+   below-zero at code `1`, one-code-beyond-quantizer, and wrong-Crop-origin
+   defects. Trace v2, missing black, missing Crop origin, and missing or
+   duplicate frame-site records must each yield `UNMEASURED`, never a partial
+   denominator. The exact scalar inputs and expected counts for these cases,
+   including the `g=2`, `b=512`, `G=2`, `R=16384`, `z=1001` intermediate
+   quantizer pair, are frozen in the machine-readable preregistration.
+
+   Finally, alter only a copy of a commissioned-null TIFF at one registered
+   high and one registered low coordinate. The final reader must find both
+   coordinates and signs. The instrument author may not certify these controls;
+   the independent verifier must do so.
+
+4. **Freeze the instrument before the target run.** Write
+   `instrument-freeze.json` containing the preregistration hash, source commit,
+   source archive and patch hashes, binary hash, and hashes of the runner,
+   trace hook, primary checker, independent verifier and fixture. Record tool
+   versions. Any later hash change invalidates the freeze and requires complete
+   recommissioning before a result may be read.
+
+5. **Fingerprint each read-only input and placement before rendering.** Use
+   `Get-ChildItem -Force -Recurse -File`; record file count, bytes, paths,
+   timestamps and SHA-256 content hashes. Copy the three registered clamped
+   warp maps into M136 output and verify these source hashes:
+   `C817271C015FB2703CE802AC53B9925E17953574D1D39D10D23597DEDAB5E6F2`,
+   `0035A701259E5AAA6F61910C7F79B2E1A30BBDEF09A827C258C6919E55ED467F`,
+   and `6D855863804B27506003F5ECE4967AA6136A19EDEF33B2CE8E3A567B0FD4D767`.
+   `D:\personal\macro` remains read-only.
+
+6. **Render and consume all three target captures.** The runner must clear
+   inherited `STREHL_*` variables, then set the exact environment in the
+   preregistration. For each of `flat-et1s`, `flat-et2.5s`, and `flat-et6s`,
+   it must execute the equivalent of:
+
+   ```powershell
+   & $Binary stack $Input --out $Tiff --merge pyramid --cover crop `
+     --resampler clamped-catmull --fix-ca off
+   ```
+
+   The same invocation must emit the trace consumed by both checkers. No
+   output path may leave `experiments\M136-m8o-bar\out\`.
+
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -File `
+     .\experiments\M136-m8o-bar\run-clamped-m8o.ps1 `
+     -Mode Census -Capture All -SourceCommit $Commit
+   ```
+
+7. **Finalize both censuses without changing the instrument.** Apply `F_k,c`
+   to each frame interval before reduction, map compact TIFF coordinates
+   through the independently reconstructed Crop origin, compare each final code
+   by section 6, and emit per-capture plus aggregate JSON. Required statistics
+   are:
+
+   - output width, height, full-plane Crop origin, frame count and exact `N`;
+   - M8-R denominator, low/high counts, fraction and maximum signed excess;
+   - M8-O `V`, low/high counts, exact `V/N`, decimal fraction and percent;
+   - maximum positive, minimum negative and maximum-absolute excess in linear
+     units and output-code LSB;
+   - counts per capture and channel;
+   - every violating coordinate with `e`, `O`, `L`, `H`, `q`, sign, excess and
+     the frames establishing `L` and `H`;
+   - high/low unrepresentable support, each split output-at-rail/off-rail; and
+   - zero unbracketed coordinates, zero coverage mismatches and a complete
+     frame-site manifest.
+
+8. **Have the independent verifier adjudicate the frozen outputs.**
+
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -File `
+     .\experiments\M136-m8o-bar\run-clamped-m8o.ps1 `
+     -Mode Verify -SourceCommit $Commit
+   ```
+
+   The verifier must independently recompute support, Crop mapping, transformed
+   intervals and final classifications from the same value traces, not import
+   the primary checker or compare only its saved hull arrays. It must confirm
+   exact per-capture and aggregate counts, every violation row, controls and
+   hashes.
+
+9. **Re-fingerprint inputs, hash every output, then summarize.** Any input
+   mutation, source/hash drift, incomplete trace, checker disagreement or
+   unaccounted output is `UNMEASURED`.
+
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -File `
+     .\experiments\M136-m8o-bar\run-clamped-m8o.ps1 `
+     -Mode Summarize -SourceCommit $Commit
+   ```
+
+### 7.5 Decision rule fixed before the number exists
+
+**ASSUMED — preregistered M8-O rule:** Once and only once every commissioning,
+completeness, independence and provenance gate above passes, the clamped arm
+passes this M8-O experiment iff every capture has `V=0` and aggregate `V=0`.
+Any aggregate `V>=1` is a FAIL. A result of `40` is therefore unambiguously a
+FAIL, not a near-pass.
+
+**ASSUMED — no nonzero floor:** This is a deterministic exhaustive census, not
+a sample estimate. There is no sampling error to price. Source reconstruction
+error remains `tau_R`; the exact intermediate container is inside `F_k,c`; and
+the final serializer has exactly `q=1/131070`. A new nonzero allowance would
+need an independently proved omitted deterministic operation, prospective
+versioning, and full recommissioning before looking at a new target result. The
+observed clamped residue itself can never license such a floor.
+
+**ASSUMED — disposition of nonzero results:** If `V=40`, diagnose all forty.
+If they are producer defects, repair the candidate and rerun it as a new
+candidate. If they prove the frozen checker omitted a deterministic
+representation operation, retain this protocol's result as `UNMEASURED`,
+version the instrument prospectively, and recommission. Do not convert forty
+red coordinates into a tolerance after seeing them.
+
+**ASSUMED — combined M8 gate:** A commissioned M8-O zero is necessary but not
+sufficient. The same candidate must also have M8-R zero and crop/reference
+identity zero. Conversely, failure of commissioning or missing evidence is
+`UNMEASURED`, not a candidate PASS or FAIL. A zero on these three development
+stacks commissions the candidate mechanism; the scorecard's eventual M8 pass
+still requires the same frozen checker on every scored quality capture.
 
 ## Could not determine
 
@@ -706,3 +1090,15 @@ corpus. This report establishes that the old bar is partly impossible, that
 the replacement is well-posed and retains its target sensitivity, and that the
 existing bilinear residue fits known representation error. It does not promote
 M8-O to an official PASS.
+
+**VERIFIED — could not determine:** No post-M130 clamped-Catmull M8-O artifact
+exists in the searched repository. The exact Crop denominator, rail-disclosure
+counts and violation count therefore cannot be predicted from the old Scale
+states. The filename, state-directory and content searches are retained in
+`experiments/M136-m8o-bar/absence-audit.txt`.
+
+**ASSUMED — could not determine:** The exact commit that will contain the
+accepted M130 implementation, and whether `clamped-catmull` will be production
+code or an experiment-only patch at that commit, are not fixed here. The
+protocol treats both as explicit frozen inputs and refuses to mix either with a
+different binary or source snapshot.

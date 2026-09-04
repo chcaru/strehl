@@ -1,0 +1,273 @@
+{
+  "protocol": "M136 clamped-Catmull-Rom representable-domain M8-O v1",
+  "status": "PREREGISTERED_NOT_EXECUTED",
+  "date": "2026-09-04",
+  "result": "UNMEASURED",
+  "scope": {
+    "purpose": "Score a post-M130 clamped-Catmull-Rom arm without changing the M136 bar after observing its result.",
+    "captures": [
+      {
+        "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+        "map": "experiments\\M134-kernel-frontier\\out\\maps\\flat-et1s.clamped.warpmap.txt",
+        "map_sha256": "C817271C015FB2703CE802AC53B9925E17953574D1D39D10D23597DEDAB5E6F2",
+        "name": "flat-et1s"
+      },
+      {
+        "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+        "map": "experiments\\M134-kernel-frontier\\out\\maps\\flat-et2.5s.clamped.warpmap.txt",
+        "map_sha256": "0035A701259E5AAA6F61910C7F79B2E1A30BBDEF09A827C258C6919E55ED467F",
+        "name": "flat-et2.5s"
+      },
+      {
+        "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+        "map": "experiments\\M134-kernel-frontier\\out\\maps\\flat-et6s.clamped.warpmap.txt",
+        "map_sha256": "6D855863804B27506003F5ECE4967AA6136A19EDEF33B2CE8E3A567B0FD4D767",
+        "name": "flat-et6s"
+      }
+    ],
+    "stack_arguments": [
+      "stack",
+      "{input}",
+      "--out",
+      "{output_tiff}",
+      "--merge",
+      "pyramid",
+      "--cover",
+      "crop",
+      "--resampler",
+      "clamped-catmull",
+      "--fix-ca",
+      "off"
+    ],
+    "required_environment": {
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "4",
+      "STREHL_DEFECT": "off",
+      "STREHL_FULLRES_GATHER": "1",
+      "STREHL_M8_CAPTURE": "{capture}",
+      "STREHL_M8_CHECKER": "{absolute_checker_dispatch_path}",
+      "STREHL_M8_TRACE_DIR": "{absolute_state_path}",
+      "STREHL_PYRAMID_WORKERS": "1",
+      "STREHL_WARPMAP": "{absolute_map_path}"
+    }
+  },
+  "preconditions": [
+    "M130 crop-early is committed and the exact source commit is named.",
+    "A clean private snapshot of that commit is created below experiments\\M136-m8o-bar\\out; the shared crates tree is never built or modified by this protocol.",
+    "The private snapshot contains either the production clamped-catmull implementation or only the recorded M134-equivalent clamp patch plus trace-v3 instrumentation.",
+    "The same frozen binary emits the TIFF, M8-R trace, and M8-O trace.",
+    "The trace-v3 checker, fixture, dispatcher, runner, and source patch are hashed before any target TIFF is read.",
+    "An independent verifier, not the instrument author, passes every commissioning control before the target result is read."
+  ],
+  "population": {
+    "coordinate": "(capture,x,y,channel), where x and y index the compact final TIFF and channel is R, G, or B",
+    "full_plane_mapping": "(X,Y)=(x+crop_x,y+crop_y), using a crop rectangle independently reconstructed from the frozen placements",
+    "eligibility": "at least one frozen placed input frame is geometrically valid at the full-plane output sample centre",
+    "denominator": "all eligible coordinates, including both output rails and source-support intervals wholly outside [0,1]",
+    "hard_gate": "the independently reconstructed crop rectangle must match the recorded producer rectangle and TIFF dimensions, and every TIFF coordinate must be eligible; otherwise UNMEASURED"
+  },
+  "interval_definition": {
+    "per_frame_source": "I_k=[lo_k-tau_R,k,hi_k+tau_R,k], with exact discrete support and tau_R defined by M8-R",
+    "intermediate_integer": "u_k,c(z)=u16(clamp_[0,65535](round_f32_ties_away_from_zero(z/g_k,c+b_k)))",
+    "pre_final_saturation": "P_k,c(z)=max(f32(u_k,c(z))-b_k,0)*G_c/R_k",
+    "projected": "F_k,c(z)=clamp_[0,1](P_k,c(z))",
+    "aggregate": "J_k=F_k,c(I_k); L=min_k inf(J_k); H=max_k sup(J_k)",
+    "ordering_rule": "apply the exact per-frame map before reducing across frames; old aggregate o-lo/o-hi/o-tau arrays or an empirical global allowance are not substitutes",
+    "arithmetic_rule": "replay the candidate's recorded scalar types, operation order, rounding rule, and clamp semantics with outward interval rounding; any unknown or changed operation makes the result UNMEASURED"
+  },
+  "comparison": {
+    "decoded_output": "O=e/65535 for the final uint16 code e",
+    "final_quantisation_tolerance_exact": "1/131070",
+    "violation": "O<L-q or O>H+q",
+    "q": "1/131070"
+  },
+  "decision": {
+    "m8_o_pass": "After successful commissioning, PASS iff every capture has V=0 and aggregate V=0.",
+    "m8_o_fail": "After successful commissioning, FAIL iff aggregate V>=1.",
+    "example_40": "V=40 is FAIL.",
+    "nonzero_floor": "None. No empirical or statistical allowance may be introduced after observing the result.",
+    "unmeasured": [
+      "any commissioning control fails",
+      "the post-M130 source commit or candidate binary is not frozen",
+      "trace protocol is older than v3 or omits a required field",
+      "crop origin or TIFF dimensions do not independently reconcile",
+      "any expected frame/site trace is missing or duplicated",
+      "the output path differs from the registered transform and the checker has not been prospectively revised and recommissioned",
+      "input, map, binary, checker, hook, or output provenance does not reconcile"
+    ],
+    "combined_m8_pass": "The candidate clears this M8 experiment only if M8-O V=0, M8-R V=0, and the crop/reference identity arm V=0. A flat-corpus pass does not replace the later score on every scored quality capture."
+  },
+  "trace_v3_required_fields": [
+    "protocol magic and version",
+    "kernel identifier",
+    "frame path, frame order, and source-file SHA-256",
+    "full reference-plane width and height",
+    "compact output width and height",
+    "full-plane crop origin x and y",
+    "CFA site and output channel",
+    "placement coefficients and transform centre",
+    "source plane dimensions and source-plane values",
+    "actual pre-merge gathered values for M8-R",
+    "per-frame black level",
+    "per-frame sensor range",
+    "per-frame per-channel site gain",
+    "final per-channel output gain",
+    "fixed arithmetic types, operation order, rounding mode, and clamp semantics"
+  ],
+  "required_state_outputs": [
+    "meta.json with complete expected and consumed frame/site sets",
+    "m8-r.json and every M8-R violating coordinate",
+    "pre-saturation aggregate lower and upper hull arrays",
+    "projected aggregate lower and upper hull arrays",
+    "per-coordinate valid-contributor count",
+    "m8-o-m136.json",
+    "m8-o-m136-violations.npy with capture,x,y,channel,direction,encoded,L,H,q,signed excess and extremising frame identities",
+    "rail-disclosure.json split high/low and at-rail/off-rail",
+    "provenance.json with commands, environment, versions, source commit, and SHA-256 hashes"
+  ],
+  "commissioning": {
+    "m8_o_numeric_cases": {
+      "convex_bilinear_green": {
+        "encoded": 32768,
+        "expected_violations": 0,
+        "hi": 0.8,
+        "lo": 0.2,
+        "tau": 0.0
+      },
+      "copy_green": {
+        "encoded": 26214,
+        "expected_violations": 0,
+        "hi": 0.4,
+        "lo": 0.4,
+        "tau": 0.0
+      },
+      "in_range_high_red": {
+        "encoded": 58982,
+        "expected_violations": 1,
+        "hi": 0.8,
+        "lo": 0.2,
+        "tau": 0.0
+      },
+      "in_range_low_red": {
+        "encoded": 6554,
+        "expected_violations": 1,
+        "hi": 0.8,
+        "lo": 0.2,
+        "tau": 0.0
+      },
+      "unrepresentable_high_at_rail_green": {
+        "encoded": 65535,
+        "expected_violations": 0,
+        "hi": 1.2,
+        "lo": 1.1,
+        "tau": 0.0
+      },
+      "unrepresentable_high_off_rail_red": {
+        "encoded": 65534,
+        "expected_violations": 1,
+        "hi": 1.2,
+        "lo": 1.1,
+        "tau": 0.0
+      },
+      "unrepresentable_low_at_rail_green": {
+        "encoded": 0,
+        "expected_violations": 0,
+        "hi": -0.1,
+        "lo": -0.2,
+        "tau": 0.0
+      },
+      "unrepresentable_low_off_rail_red": {
+        "encoded": 1,
+        "expected_violations": 1,
+        "hi": -0.1,
+        "lo": -0.2,
+        "tau": 0.0
+      }
+    },
+    "intermediate_quantizer_case": {
+      "G": 2.0,
+      "R": 16384.0,
+      "b": 512.0,
+      "expected_intermediate_u16": 1013,
+      "expected_pre_final": 0.0611572265625,
+      "g": 2.0,
+      "green_encoded": 4008,
+      "hi": 1001.0,
+      "lo": 1001.0,
+      "red_encoded": 4009,
+      "tau": 0.0
+    },
+    "crop_origin_case": {
+      "channels": 1,
+      "compact_height": 2,
+      "compact_width": 3,
+      "expected_wrong_origin_violations": 6,
+      "full_height": 8,
+      "full_width": 8,
+      "normalization": "F(z)=z/1000 before final-u16 serialization",
+      "origin_x": 2,
+      "origin_y": 3,
+      "source_value": "100*y+x",
+      "transform": "integer identity"
+    },
+    "green": [
+      "in-range exact copy",
+      "in-range convex bilinear",
+      "exact intermediate-u16 round trip at a quantizer boundary",
+      "source interval wholly above one with output code 65535",
+      "source interval wholly below zero with output code 0",
+      "nonzero crop-origin identity mapped to the compact TIFF coordinate"
+    ],
+    "red": [
+      "planted in-range high excursion",
+      "planted in-range low excursion",
+      "source interval wholly above one with output code 65534",
+      "source interval wholly below zero with output code 1",
+      "one-code plant outside the exact transformed interval at an intermediate-quantizer boundary",
+      "nonzero crop-origin decoy that uses compact coordinates as full-plane coordinates"
+    ],
+    "fail_closed": [
+      "trace v2 without black level reports UNMEASURED",
+      "missing crop origin reports UNMEASURED",
+      "missing or duplicate frame/site trace reports UNMEASURED",
+      "producer-supplied hull or contributor mask is ignored",
+      "Catmull hard-step is red for M8-R",
+      "clamped hard-step, copy, and convex-bilinear controls are green for M8-R",
+      "widened-clamp sabotage is red for M8-R"
+    ],
+    "target_path_control": "Before reading the target verdict, alter a copy of a commissioned-null TIFF at registered high and low plant coordinates; the final checker must report both coordinates and signs."
+  },
+  "execution_interface": [
+    "powershell -NoProfile -ExecutionPolicy Bypass -File .\\experiments\\M136-m8o-bar\\run-clamped-m8o.ps1 -Mode Prepare -SourceCommit <post-M130-commit>",
+    "powershell -NoProfile -ExecutionPolicy Bypass -File .\\experiments\\M136-m8o-bar\\run-clamped-m8o.ps1 -Mode Commission -SourceCommit <post-M130-commit>",
+    "powershell -NoProfile -ExecutionPolicy Bypass -File .\\experiments\\M136-m8o-bar\\run-clamped-m8o.ps1 -Mode Census -Capture All -SourceCommit <post-M130-commit>",
+    "powershell -NoProfile -ExecutionPolicy Bypass -File .\\experiments\\M136-m8o-bar\\run-clamped-m8o.ps1 -Mode Verify -SourceCommit <post-M130-commit>",
+    "powershell -NoProfile -ExecutionPolicy Bypass -File .\\experiments\\M136-m8o-bar\\run-clamped-m8o.ps1 -Mode Summarize -SourceCommit <post-M130-commit>"
+  ],
+  "implementation_status": {
+    "checker_m136.py": "REQUIRED_NOT_YET_IMPLEMENTED",
+    "fixture_m136.py": "REQUIRED_NOT_YET_IMPLEMENTED",
+    "m8_trace_v3.rs": "REQUIRED_NOT_YET_IMPLEMENTED",
+    "run-clamped-m8o.ps1": "REQUIRED_NOT_YET_IMPLEMENTED",
+    "verifier_m136.py": "REQUIRED_NOT_YET_IMPLEMENTED"
+  },
+  "existing_m134_artifacts": {
+    "can_score_old_unprojected_m8_o": true,
+    "can_score_exact_m136_m8_o": false,
+    "cover": "scale",
+    "old_scale_unrepresentable_hulls": {
+      "high": 938062,
+      "low": 0,
+      "valid": 74173536
+    },
+    "limitations": [
+      "the TIFFs predate M130 and are not the requested candidate outputs",
+      "trace protocol v2 omits black level and compact Crop origin",
+      "consumed per-frame trace blocks were deleted",
+      "aggregate o-lo/o-hi/o-tau arrays cannot replay each frame's nonlinear round/clamp"
+    ]
+  }
+}

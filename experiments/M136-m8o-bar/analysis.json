@@ -91,6 +91,122 @@
     "projected_plus_internal_quant_violations": 31148,
     "violations": 983648
   },
+  "clamped_artifact_inventory": {
+    "aggregate_m8_r_denominator": 6131678976,
+    "aggregate_m8_r_violations": 0,
+    "aggregate_unrepresentable_hulls": {
+      "high": 938062,
+      "low": 0,
+      "valid": 74173536
+    },
+    "captures": {
+      "flat-et1s": {
+        "cover": "scale",
+        "has_m8_o_json": false,
+        "has_m8_o_violations": false,
+        "hull_arrays_byte_identical_to_shipping_catmull": {
+          "o-hi.npy": true,
+          "o-lo.npy": true,
+          "o-tau.npy": true
+        },
+        "m8_r_denominator": 1977960960,
+        "m8_r_violations": 0,
+        "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\maps\\flat-et1s.clamped.warpmap.txt",
+        "map_sha256": "C817271C015FB2703CE802AC53B9925E17953574D1D39D10D23597DEDAB5E6F2",
+        "meta_has_black_level": false,
+        "meta_has_output_crop_origin": false,
+        "output_dimensions": {
+          "channels": 3,
+          "height": 2344,
+          "width": 3516
+        },
+        "provenance": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s.provenance.json",
+        "retained_trace_blocks": 0,
+        "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s-state",
+        "tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s.tiff",
+        "tiff_sha256": "898805317DF53303A72892C6F24C69A391F62D21F40AF9855CA996C6929564A9",
+        "trace_protocol": 2,
+        "unrepresentable_hulls": {
+          "high": 0,
+          "low": 0,
+          "valid": 24724512
+        }
+      },
+      "flat-et2.5s": {
+        "cover": "scale",
+        "has_m8_o_json": false,
+        "has_m8_o_violations": false,
+        "hull_arrays_byte_identical_to_shipping_catmull": {
+          "o-hi.npy": true,
+          "o-lo.npy": true,
+          "o-tau.npy": true
+        },
+        "m8_r_denominator": 2010926976,
+        "m8_r_violations": 0,
+        "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\maps\\flat-et2.5s.clamped.warpmap.txt",
+        "map_sha256": "0035A701259E5AAA6F61910C7F79B2E1A30BBDEF09A827C258C6919E55ED467F",
+        "meta_has_black_level": false,
+        "meta_has_output_crop_origin": false,
+        "output_dimensions": {
+          "channels": 3,
+          "height": 2344,
+          "width": 3516
+        },
+        "provenance": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s.provenance.json",
+        "retained_trace_blocks": 0,
+        "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s-state",
+        "tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s.tiff",
+        "tiff_sha256": "224E896365AF1B6568879801B10CC4ACDEFB04D03E5A2C147ACBF770A11FBD3D",
+        "trace_protocol": 2,
+        "unrepresentable_hulls": {
+          "high": 0,
+          "low": 0,
+          "valid": 24724512
+        }
+      },
+      "flat-et6s": {
+        "cover": "scale",
+        "has_m8_o_json": false,
+        "has_m8_o_violations": false,
+        "hull_arrays_byte_identical_to_shipping_catmull": {
+          "o-hi.npy": true,
+          "o-lo.npy": true,
+          "o-tau.npy": true
+        },
+        "m8_r_denominator": 2142791040,
+        "m8_r_violations": 0,
+        "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\maps\\flat-et6s.clamped.warpmap.txt",
+        "map_sha256": "6D855863804B27506003F5ECE4967AA6136A19EDEF33B2CE8E3A567B0FD4D767",
+        "meta_has_black_level": false,
+        "meta_has_output_crop_origin": false,
+        "output_dimensions": {
+          "channels": 3,
+          "height": 2344,
+          "width": 3516
+        },
+        "provenance": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s.provenance.json",
+        "retained_trace_blocks": 0,
+        "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s-state",
+        "tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s.tiff",
+        "tiff_sha256": "E951FEE938930B65A8ED3FCC6222185E4CD975DD995644EC002A065D674F5435",
+        "trace_protocol": 2,
+        "unrepresentable_hulls": {
+          "high": 938062,
+          "low": 0,
+          "valid": 24724512
+        }
+      }
+    },
+    "exact_m136_blockers": [
+      "no retained per-frame trace blocks",
+      "trace protocol v2 does not record black level",
+      "trace protocol v2 does not record the compact Crop origin",
+      "aggregate o-lo/o-hi/o-tau cannot replay each frame's nonlinear intermediate round/clamp"
+    ],
+    "existing_artifacts_can_run_exact_m136_m8_o": false,
+    "existing_artifacts_can_run_old_unprojected_m8_o": true,
+    "owner_declared_fresh_render_requirement": "wait for the in-flight crop-domain change because it changes output bytes"
+  },
   "m134_corroboration": {
     "bilinear_per_capture": {
       "flat-et1s": {
@@ -192,7 +308,7 @@
         "passed": true
       },
       "unrepresentable_high_off_rail_red": {
-        "encoded": 65000,
+        "encoded": 65534,
         "expected_violation": true,
         "hi": 1.2,
         "lo": 1.1,
@@ -208,7 +324,7 @@
         "passed": true
       },
       "unrepresentable_low_off_rail_red": {
-        "encoded": 500,
+        "encoded": 1,
         "expected_violation": true,
         "hi": -0.1,
         "lo": -0.2,
@@ -249,6 +365,24 @@
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et1s\\meta.json",
       "unchanged": true
     },
+    "bilinear-et1s_o_hi": {
+      "after": "05544E0A2A91980E0DF333B073D0E1BFE86F71612C12FF2380F1C6B671BAE34D",
+      "before": "05544E0A2A91980E0DF333B073D0E1BFE86F71612C12FF2380F1C6B671BAE34D",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et1s\\o-hi.npy",
+      "unchanged": true
+    },
+    "bilinear-et1s_o_lo": {
+      "after": "7580B825FF8093D9F23AC000405936B2DFD0EAAFCACEA3BF5450FE2C7DC13CD5",
+      "before": "7580B825FF8093D9F23AC000405936B2DFD0EAAFCACEA3BF5450FE2C7DC13CD5",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et1s\\o-lo.npy",
+      "unchanged": true
+    },
+    "bilinear-et1s_o_tau": {
+      "after": "2A807A18A1E99D270EB1684DABCFB081AF325D82692699582B68E11D2058A13A",
+      "before": "2A807A18A1E99D270EB1684DABCFB081AF325D82692699582B68E11D2058A13A",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et1s\\o-tau.npy",
+      "unchanged": true
+    },
     "bilinear-et1s_violations": {
       "after": "B348E5BE9D9C7527BFD1ABE812B77B4EA41FA6B92F0A7BCE2B8001E18A506AA8",
       "before": "B348E5BE9D9C7527BFD1ABE812B77B4EA41FA6B92F0A7BCE2B8001E18A506AA8",
@@ -265,6 +399,24 @@
       "after": "DD66829BCE711D9FD8BC1681E2CEE387E705E02AA99491DADF9CF396CF2D71B6",
       "before": "DD66829BCE711D9FD8BC1681E2CEE387E705E02AA99491DADF9CF396CF2D71B6",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et2.5s\\meta.json",
+      "unchanged": true
+    },
+    "bilinear-et2.5s_o_hi": {
+      "after": "B494F1E9B2B6B195DB6BDB2920C0F5F3F9CCCB073FC9725C79913643B78AC05D",
+      "before": "B494F1E9B2B6B195DB6BDB2920C0F5F3F9CCCB073FC9725C79913643B78AC05D",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et2.5s\\o-hi.npy",
+      "unchanged": true
+    },
+    "bilinear-et2.5s_o_lo": {
+      "after": "77D3308C1572F683D4AEB3B92D8EE185657B7BE1B47C6987ABDE6FE86AC4FA3E",
+      "before": "77D3308C1572F683D4AEB3B92D8EE185657B7BE1B47C6987ABDE6FE86AC4FA3E",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et2.5s\\o-lo.npy",
+      "unchanged": true
+    },
+    "bilinear-et2.5s_o_tau": {
+      "after": "BDB8A42FBF1BD08FE04080BDE53806FCF56A92A0612EF54CFD74B98B3841F98E",
+      "before": "BDB8A42FBF1BD08FE04080BDE53806FCF56A92A0612EF54CFD74B98B3841F98E",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et2.5s\\o-tau.npy",
       "unchanged": true
     },
     "bilinear-et2.5s_violations": {
@@ -285,6 +437,24 @@
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et6s\\meta.json",
       "unchanged": true
     },
+    "bilinear-et6s_o_hi": {
+      "after": "13A0FCC270BF7F234123A671297C3D6A4767B4CFC7C8CB342B82E72A8EAEF1BD",
+      "before": "13A0FCC270BF7F234123A671297C3D6A4767B4CFC7C8CB342B82E72A8EAEF1BD",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et6s\\o-hi.npy",
+      "unchanged": true
+    },
+    "bilinear-et6s_o_lo": {
+      "after": "8E65C149DA069B8A7392F53352C96A77DC7269831991952BFC5C9C460C7E73C3",
+      "before": "8E65C149DA069B8A7392F53352C96A77DC7269831991952BFC5C9C460C7E73C3",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et6s\\o-lo.npy",
+      "unchanged": true
+    },
+    "bilinear-et6s_o_tau": {
+      "after": "BF1DA73DEFE3AFED71A4E7A22968ED9124BB21C1032F9634ED1E218AFB91E15E",
+      "before": "BF1DA73DEFE3AFED71A4E7A22968ED9124BB21C1032F9634ED1E218AFB91E15E",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et6s\\o-tau.npy",
+      "unchanged": true
+    },
     "bilinear-et6s_violations": {
       "after": "DB4C1E9411F06B7126A67308A5B2E8C64DA94A5B40B17B2BDDDC1496F0C912E3",
       "before": "DB4C1E9411F06B7126A67308A5B2E8C64DA94A5B40B17B2BDDDC1496F0C912E3",
@@ -301,6 +471,24 @@
       "after": "7534DE796DE369FA882B0173EBED0276CC0EEE9FDD6B4EA0F9178F5D206FEA2D",
       "before": "7534DE796DE369FA882B0173EBED0276CC0EEE9FDD6B4EA0F9178F5D206FEA2D",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et1s-state\\meta.json",
+      "unchanged": true
+    },
+    "catmull-et1s_o_hi": {
+      "after": "BEEC5C7A3E775B5CCB3F7708F78BACE9E0960DB37603153845F623481EBABF85",
+      "before": "BEEC5C7A3E775B5CCB3F7708F78BACE9E0960DB37603153845F623481EBABF85",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et1s-state\\o-hi.npy",
+      "unchanged": true
+    },
+    "catmull-et1s_o_lo": {
+      "after": "5C6F544105FC6E922BF6EE249ADB5073AF4FE85D08BFD191B15F087BC90067E1",
+      "before": "5C6F544105FC6E922BF6EE249ADB5073AF4FE85D08BFD191B15F087BC90067E1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et1s-state\\o-lo.npy",
+      "unchanged": true
+    },
+    "catmull-et1s_o_tau": {
+      "after": "99F232675994E292236DBAA07556B2D11C2D86D8978E730B7025AC6C9D8421B9",
+      "before": "99F232675994E292236DBAA07556B2D11C2D86D8978E730B7025AC6C9D8421B9",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et1s-state\\o-tau.npy",
       "unchanged": true
     },
     "catmull-et1s_violations": {
@@ -321,6 +509,24 @@
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et2.5s-state\\meta.json",
       "unchanged": true
     },
+    "catmull-et2.5s_o_hi": {
+      "after": "8E7BDD33B6F82E5996C8CA96DFD51BB8C3DA77D3F14C93CA89094D0CA5DDECAA",
+      "before": "8E7BDD33B6F82E5996C8CA96DFD51BB8C3DA77D3F14C93CA89094D0CA5DDECAA",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et2.5s-state\\o-hi.npy",
+      "unchanged": true
+    },
+    "catmull-et2.5s_o_lo": {
+      "after": "ADB434761ED87DBA1CB667258E832B7F6E2223163CD6D1ECC0557FAA910A3732",
+      "before": "ADB434761ED87DBA1CB667258E832B7F6E2223163CD6D1ECC0557FAA910A3732",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et2.5s-state\\o-lo.npy",
+      "unchanged": true
+    },
+    "catmull-et2.5s_o_tau": {
+      "after": "36DE27393EA54656A5CE7033BE906D22B612F50B20E433800CCD83A1F0B74814",
+      "before": "36DE27393EA54656A5CE7033BE906D22B612F50B20E433800CCD83A1F0B74814",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et2.5s-state\\o-tau.npy",
+      "unchanged": true
+    },
     "catmull-et2.5s_violations": {
       "after": "4E8FDB296477D8D8B9194FA1675C5844543941683BF709DD928AEFF1E1E89A18",
       "before": "4E8FDB296477D8D8B9194FA1675C5844543941683BF709DD928AEFF1E1E89A18",
@@ -337,6 +543,24 @@
       "after": "846CCB936B68A586032724B55FF4F3C1585FD38044C9DA8C2BC1F184B0E8E4FF",
       "before": "846CCB936B68A586032724B55FF4F3C1585FD38044C9DA8C2BC1F184B0E8E4FF",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et6s-state\\meta.json",
+      "unchanged": true
+    },
+    "catmull-et6s_o_hi": {
+      "after": "60C50EB95161676BA436EE3341E873B537AAD66A540F21147EAA4281A5F68505",
+      "before": "60C50EB95161676BA436EE3341E873B537AAD66A540F21147EAA4281A5F68505",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et6s-state\\o-hi.npy",
+      "unchanged": true
+    },
+    "catmull-et6s_o_lo": {
+      "after": "BA13EA1D4F8F3AE2D0302C62EEBEB2F9FDD80E9325954564C2E223F78B75B8F7",
+      "before": "BA13EA1D4F8F3AE2D0302C62EEBEB2F9FDD80E9325954564C2E223F78B75B8F7",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et6s-state\\o-lo.npy",
+      "unchanged": true
+    },
+    "catmull-et6s_o_tau": {
+      "after": "92D8AE6562D0F2821B68850D541FD2A84E72EE3EA6384D16ADBDA55C9DFAE42F",
+      "before": "92D8AE6562D0F2821B68850D541FD2A84E72EE3EA6384D16ADBDA55C9DFAE42F",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et6s-state\\o-tau.npy",
       "unchanged": true
     },
     "catmull-et6s_violations": {
@@ -357,6 +581,150 @@
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\checker.py",
       "unchanged": true
     },
+    "m134_clamped_flat-et1s_m8-r.json": {
+      "after": "7FBCCC57671D36C017212C53859750E20AB5F34274A19D70883945BF0F1CC3F7",
+      "before": "7FBCCC57671D36C017212C53859750E20AB5F34274A19D70883945BF0F1CC3F7",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s-state\\m8-r.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et1s_map": {
+      "after": "C817271C015FB2703CE802AC53B9925E17953574D1D39D10D23597DEDAB5E6F2",
+      "before": "C817271C015FB2703CE802AC53B9925E17953574D1D39D10D23597DEDAB5E6F2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\maps\\flat-et1s.clamped.warpmap.txt",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et1s_meta.json": {
+      "after": "F41798E0EC9A103A0770270DE1F8DD920C3C23411C55E1209FF5A3A8ADC2B748",
+      "before": "F41798E0EC9A103A0770270DE1F8DD920C3C23411C55E1209FF5A3A8ADC2B748",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s-state\\meta.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et1s_o-hi.npy": {
+      "after": "BEEC5C7A3E775B5CCB3F7708F78BACE9E0960DB37603153845F623481EBABF85",
+      "before": "BEEC5C7A3E775B5CCB3F7708F78BACE9E0960DB37603153845F623481EBABF85",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s-state\\o-hi.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et1s_o-lo.npy": {
+      "after": "5C6F544105FC6E922BF6EE249ADB5073AF4FE85D08BFD191B15F087BC90067E1",
+      "before": "5C6F544105FC6E922BF6EE249ADB5073AF4FE85D08BFD191B15F087BC90067E1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s-state\\o-lo.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et1s_o-tau.npy": {
+      "after": "99F232675994E292236DBAA07556B2D11C2D86D8978E730B7025AC6C9D8421B9",
+      "before": "99F232675994E292236DBAA07556B2D11C2D86D8978E730B7025AC6C9D8421B9",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s-state\\o-tau.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et1s_provenance": {
+      "after": "3E8A3241AE0AB2B904CF3A2E83B6CC5B16106BE479F8A73D7A3504AD70ED9226",
+      "before": "3E8A3241AE0AB2B904CF3A2E83B6CC5B16106BE479F8A73D7A3504AD70ED9226",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s.provenance.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et1s_tiff": {
+      "after": "898805317DF53303A72892C6F24C69A391F62D21F40AF9855CA996C6929564A9",
+      "before": "898805317DF53303A72892C6F24C69A391F62D21F40AF9855CA996C6929564A9",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et1s.tiff",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et2.5s_m8-r.json": {
+      "after": "5BE981BA661CFA424167383FC19F0697DA73EC5A38D1080B59A68318D58FBD59",
+      "before": "5BE981BA661CFA424167383FC19F0697DA73EC5A38D1080B59A68318D58FBD59",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s-state\\m8-r.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et2.5s_map": {
+      "after": "0035A701259E5AAA6F61910C7F79B2E1A30BBDEF09A827C258C6919E55ED467F",
+      "before": "0035A701259E5AAA6F61910C7F79B2E1A30BBDEF09A827C258C6919E55ED467F",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\maps\\flat-et2.5s.clamped.warpmap.txt",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et2.5s_meta.json": {
+      "after": "1476D8EFB1B68529D39C4514A32791EBC5428E43706118DE8B6ED6FEAABA5FB1",
+      "before": "1476D8EFB1B68529D39C4514A32791EBC5428E43706118DE8B6ED6FEAABA5FB1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s-state\\meta.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et2.5s_o-hi.npy": {
+      "after": "8E7BDD33B6F82E5996C8CA96DFD51BB8C3DA77D3F14C93CA89094D0CA5DDECAA",
+      "before": "8E7BDD33B6F82E5996C8CA96DFD51BB8C3DA77D3F14C93CA89094D0CA5DDECAA",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s-state\\o-hi.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et2.5s_o-lo.npy": {
+      "after": "ADB434761ED87DBA1CB667258E832B7F6E2223163CD6D1ECC0557FAA910A3732",
+      "before": "ADB434761ED87DBA1CB667258E832B7F6E2223163CD6D1ECC0557FAA910A3732",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s-state\\o-lo.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et2.5s_o-tau.npy": {
+      "after": "36DE27393EA54656A5CE7033BE906D22B612F50B20E433800CCD83A1F0B74814",
+      "before": "36DE27393EA54656A5CE7033BE906D22B612F50B20E433800CCD83A1F0B74814",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s-state\\o-tau.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et2.5s_provenance": {
+      "after": "16A47A56EBABDE185B0DD075C6ECCC3801F546728F667A0EB7ED564DEAAE903E",
+      "before": "16A47A56EBABDE185B0DD075C6ECCC3801F546728F667A0EB7ED564DEAAE903E",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s.provenance.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et2.5s_tiff": {
+      "after": "224E896365AF1B6568879801B10CC4ACDEFB04D03E5A2C147ACBF770A11FBD3D",
+      "before": "224E896365AF1B6568879801B10CC4ACDEFB04D03E5A2C147ACBF770A11FBD3D",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et2.5s.tiff",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et6s_m8-r.json": {
+      "after": "E4425625BE4FBB93E1D3C19943469F7A23E4F17B656F1A5EE61D34E961723C70",
+      "before": "E4425625BE4FBB93E1D3C19943469F7A23E4F17B656F1A5EE61D34E961723C70",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s-state\\m8-r.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et6s_map": {
+      "after": "6D855863804B27506003F5ECE4967AA6136A19EDEF33B2CE8E3A567B0FD4D767",
+      "before": "6D855863804B27506003F5ECE4967AA6136A19EDEF33B2CE8E3A567B0FD4D767",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\maps\\flat-et6s.clamped.warpmap.txt",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et6s_meta.json": {
+      "after": "BB22BD99F8340DE42836E0C2257B6FE5D84E52DA24ABA220DDAB9828D257883B",
+      "before": "BB22BD99F8340DE42836E0C2257B6FE5D84E52DA24ABA220DDAB9828D257883B",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s-state\\meta.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et6s_o-hi.npy": {
+      "after": "60C50EB95161676BA436EE3341E873B537AAD66A540F21147EAA4281A5F68505",
+      "before": "60C50EB95161676BA436EE3341E873B537AAD66A540F21147EAA4281A5F68505",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s-state\\o-hi.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et6s_o-lo.npy": {
+      "after": "BA13EA1D4F8F3AE2D0302C62EEBEB2F9FDD80E9325954564C2E223F78B75B8F7",
+      "before": "BA13EA1D4F8F3AE2D0302C62EEBEB2F9FDD80E9325954564C2E223F78B75B8F7",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s-state\\o-lo.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et6s_o-tau.npy": {
+      "after": "92D8AE6562D0F2821B68850D541FD2A84E72EE3EA6384D16ADBDA55C9DFAE42F",
+      "before": "92D8AE6562D0F2821B68850D541FD2A84E72EE3EA6384D16ADBDA55C9DFAE42F",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s-state\\o-tau.npy",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et6s_provenance": {
+      "after": "07AD75F6766418CB1764B24D4B74F2468E68FAD3D6A339E571F211CCFB491E1C",
+      "before": "07AD75F6766418CB1764B24D4B74F2468E68FAD3D6A339E571F211CCFB491E1C",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s.provenance.json",
+      "unchanged": true
+    },
+    "m134_clamped_flat-et6s_tiff": {
+      "after": "E951FEE938930B65A8ED3FCC6222185E4CD975DD995644EC002A065D674F5435",
+      "before": "E951FEE938930B65A8ED3FCC6222185E4CD975DD995644EC002A065D674F5435",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\out\\clamped-flat-et6s.tiff",
+      "unchanged": true
+    },
     "m134_independence": {
       "after": "1154B9C6DDD82C1F019985C4EF182ECB35E0DAC95A46559B8669294AF266A8BC",
       "before": "1154B9C6DDD82C1F019985C4EF182ECB35E0DAC95A46559B8669294AF266A8BC",
@@ -375,6 +743,36 @@
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\phase4.py",
       "unchanged": true
     },
+    "m134_runner": {
+      "after": "CFF9D6B6D67C0FD6B72A7DD653C27BAA5E2B92A154B4AE8E08FF18115BE046FA",
+      "before": "CFF9D6B6D67C0FD6B72A7DD653C27BAA5E2B92A154B4AE8E08FF18115BE046FA",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\run.ps1",
+      "unchanged": true
+    },
+    "m134_trace_hook": {
+      "after": "40836C45AA87708768BBE2FA9B1C882B9152234F5BC2E1C808B2BE37080998ED",
+      "before": "40836C45AA87708768BBE2FA9B1C882B9152234F5BC2E1C808B2BE37080998ED",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M134-kernel-frontier\\m8_trace.rs",
+      "unchanged": true
+    },
+    "m136_absence_audit": {
+      "after": "3A65B7693F24D78B6607982F511C98F2F0322D778A3E5F42066AEE557BBD9143",
+      "before": "3A65B7693F24D78B6607982F511C98F2F0322D778A3E5F42066AEE557BBD9143",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\absence-audit.txt",
+      "unchanged": true
+    },
+    "m136_clamped_preregistration": {
+      "after": "B656EFB9D2BFEA4B8CF5DD67BE63A9CD7D6930F6B302C7EF93E9E1DF7529BCEB",
+      "before": "B656EFB9D2BFEA4B8CF5DD67BE63A9CD7D6930F6B302C7EF93E9E1DF7529BCEB",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\clamped-m8o-preregistration.json",
+      "unchanged": true
+    },
+    "m136_clamped_prior_art": {
+      "after": "ECF77F234DD8DBF3681C5317D584B757112C6721FA23A68DD1A0CA87B3D7A7B0",
+      "before": "ECF77F234DD8DBF3681C5317D584B757112C6721FA23A68DD1A0CA87B3D7A7B0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\prior-art-clamped-m8o.txt",
+      "unchanged": true
+    },
     "m8_results": {
       "after": "D310ABB387A7EE7F9F9C4BB5A4484ACE8A864F34E4C90EE026BFA97AC5236241",
       "before": "D310ABB387A7EE7F9F9C4BB5A4484ACE8A864F34E4C90EE026BFA97AC5236241",
@@ -391,6 +789,24 @@
       "after": "AE04F0FE9A97D86A06BDDB55DB8D3CAB62D17AC3A679ADE1A760D934BDF5D0CB",
       "before": "AE04F0FE9A97D86A06BDDB55DB8D3CAB62D17AC3A679ADE1A760D934BDF5D0CB",
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-identity\\meta.json",
+      "unchanged": true
+    },
+    "one-frame-bilinear_o_hi": {
+      "after": "6238741CE8852D16F00D2C4DF1DD9E6BB65E38D07F1428E9E86BBF29012456CD",
+      "before": "6238741CE8852D16F00D2C4DF1DD9E6BB65E38D07F1428E9E86BBF29012456CD",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-identity\\o-hi.npy",
+      "unchanged": true
+    },
+    "one-frame-bilinear_o_lo": {
+      "after": "529D7CF3F0577AF1C3A7A45ACA1A080072B6D82D5A6D998FEB442AEE767B2FAA",
+      "before": "529D7CF3F0577AF1C3A7A45ACA1A080072B6D82D5A6D998FEB442AEE767B2FAA",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-identity\\o-lo.npy",
+      "unchanged": true
+    },
+    "one-frame-bilinear_o_tau": {
+      "after": "BF86ADC860F6300C4EB7AE9789D231FF8592628D30BD38301D70EA03F281D293",
+      "before": "BF86ADC860F6300C4EB7AE9789D231FF8592628D30BD38301D70EA03F281D293",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-identity\\o-tau.npy",
       "unchanged": true
     },
     "one-frame-bilinear_violations": {

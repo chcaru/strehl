@@ -103,9 +103,9 @@ def commission_projected_hull() -> dict:
         "in_range_high_plant_red": (round(0.9 * U16_MAX), 0.2, 0.8, True),
         "in_range_low_plant_red": (round(0.1 * U16_MAX), 0.2, 0.8, True),
         "unrepresentable_high_at_rail_green": (65535, 1.1, 1.2, False),
-        "unrepresentable_high_off_rail_red": (65000, 1.1, 1.2, True),
+        "unrepresentable_high_off_rail_red": (65534, 1.1, 1.2, True),
         "unrepresentable_low_at_rail_green": (0, -0.2, -0.1, False),
-        "unrepresentable_low_off_rail_red": (500, -0.2, -0.1, True),
+        "unrepresentable_low_off_rail_red": (1, -0.2, -0.1, True),
     }
     results = {}
     for name, (encoded, lo, hi, expected) in cases.items():
@@ -263,6 +263,17 @@ def main() -> None:
         "m134_phase4_script": M134 / "phase4.py",
         "m134_checker": M134 / "checker.py",
         "m134_independence": M134 / "out" / "independence.json",
+        "m134_trace_hook": M134 / "m8_trace.rs",
+        "m134_runner": M134 / "run.ps1",
+        "m136_absence_audit": (
+            Path(__file__).resolve().parent / "absence-audit.txt"
+        ),
+        "m136_clamped_preregistration": (
+            Path(__file__).resolve().parent / "clamped-m8o-preregistration.json"
+        ),
+        "m136_clamped_prior_art": (
+            Path(__file__).resolve().parent / "prior-art-clamped-m8o.txt"
+        ),
         "snapshot_align": M8
         / "out"
         / "source-snapshot"
@@ -290,6 +301,24 @@ def main() -> None:
         evidence[f"{state_name}_meta"] = state_path / "meta.json"
         evidence[f"{state_name}_m8_o"] = state_path / "m8-o.json"
         evidence[f"{state_name}_violations"] = state_path / "m8-o-violations.npy"
+        evidence[f"{state_name}_o_lo"] = state_path / "o-lo.npy"
+        evidence[f"{state_name}_o_hi"] = state_path / "o-hi.npy"
+        evidence[f"{state_name}_o_tau"] = state_path / "o-tau.npy"
+    clamped_paths = {}
+    for capture in ("flat-et1s", "flat-et2.5s", "flat-et6s"):
+        state = M134 / "out" / f"clamped-{capture}-state"
+        paths = {
+            "state": state,
+            "tiff": M134 / "out" / f"clamped-{capture}.tiff",
+            "provenance": M134 / "out" / f"clamped-{capture}.provenance.json",
+            "map": M134 / "out" / "maps" / f"{capture}.clamped.warpmap.txt",
+        }
+        clamped_paths[capture] = paths
+        for name in ("meta.json", "m8-r.json", "o-lo.npy", "o-hi.npy", "o-tau.npy"):
+            evidence[f"m134_clamped_{capture}_{name}"] = state / name
+        evidence[f"m134_clamped_{capture}_tiff"] = paths["tiff"]
+        evidence[f"m134_clamped_{capture}_provenance"] = paths["provenance"]
+        evidence[f"m134_clamped_{capture}_map"] = paths["map"]
     before_hashes = {name: sha256(path) for name, path in evidence.items()}
     summaries = {name: summarize_state(path) for name, path in STATES.items()}
     bilinear_names = ("bilinear-et1s", "bilinear-et2.5s", "bilinear-et6s")
@@ -302,7 +331,15 @@ def main() -> None:
         evidence["m134_independence"].read_text(encoding="utf-8")
     )
     m8_results = json.loads(evidence["m8_results"].read_text(encoding="utf-8"))
+    preregistration = json.loads(
+        evidence["m136_clamped_preregistration"].read_text(encoding="utf-8")
+    )
+    clamped_inventory = {}
 
+    assert preregistration["status"] == "PREREGISTERED_NOT_EXECUTED"
+    assert preregistration["result"] == "UNMEASURED"
+    assert preregistration["decision"]["example_40"] == "V=40 is FAIL."
+    assert preregistration["decision"]["nonzero_floor"].startswith("None.")
     assert bilinear_aggregate["violations"] == 980_097
     assert bilinear_aggregate["full_rail_below_hull"] == 977_684
     assert bilinear_aggregate["nonrail"] == 2_413
@@ -354,6 +391,59 @@ def main() -> None:
         assert direct_hulls["high"] == ours["full_rail_below_hull"]
         assert direct_hulls["low"] == 0
         assert direct_hulls["valid"] == ours["denominator"]
+    for capture in ("flat-et1s", "flat-et2.5s", "flat-et6s"):
+        paths = clamped_paths[capture]
+        state = paths["state"]
+        meta = json.loads((state / "meta.json").read_text(encoding="utf-8"))
+        m8_r = json.loads((state / "m8-r.json").read_text(encoding="utf-8"))
+        provenance = json.loads(paths["provenance"].read_text(encoding="utf-8"))
+        shipping_state = M8 / "out" / f"{capture}-state"
+        hull_identity = {
+            name: sha256(state / name) == sha256(shipping_state / name)
+            for name in ("o-lo.npy", "o-hi.npy", "o-tau.npy")
+        }
+        representability = count_unrepresentable_hulls(state)
+        assert all(hull_identity.values())
+        assert representability == count_unrepresentable_hulls(shipping_state)
+        assert m8_r["violations"] == 0
+        assert provenance["output"]["tiff_sha256"] == sha256(paths["tiff"])
+        assert provenance["output"]["m8_r_sha256"] == sha256(state / "m8-r.json")
+        assert provenance["hashes"]["map_sha256"] == sha256(paths["map"])
+        assert not (state / "m8-o.json").exists()
+        assert not (state / "m8-o-violations.npy").exists()
+        assert not any((state / "blocks").iterdir())
+        arguments = provenance["command"]["arguments"]
+        assert arguments[arguments.index("--cover") + 1] == "scale"
+        assert arguments[arguments.index("--resampler") + 1] == "clamped-catmull"
+        clamped_inventory[capture] = {
+            "tiff": str(paths["tiff"]),
+            "state": str(state),
+            "provenance": str(paths["provenance"]),
+            "map": str(paths["map"]),
+            "map_sha256": sha256(paths["map"]),
+            "cover": "scale",
+            "output_dimensions": {
+                "width": int(meta["width"]),
+                "height": int(meta["height"]),
+                "channels": 3,
+            },
+            "m8_r_denominator": int(m8_r["denominator"]),
+            "m8_r_violations": int(m8_r["violations"]),
+            "unrepresentable_hulls": representability,
+            "hull_arrays_byte_identical_to_shipping_catmull": hull_identity,
+            "has_m8_o_json": (state / "m8-o.json").exists(),
+            "has_m8_o_violations": (state / "m8-o-violations.npy").exists(),
+            "retained_trace_blocks": len(list((state / "blocks").iterdir())),
+            "trace_protocol": int(meta["protocol"]),
+            "meta_has_black_level": "black" in meta or "black_level" in meta,
+            "meta_has_output_crop_origin": any(
+                key in meta for key in ("crop", "crop_rect", "output_origin")
+            ),
+            "tiff_sha256": sha256(paths["tiff"]),
+        }
+    assert sum(
+        row["m8_r_denominator"] for row in clamped_inventory.values()
+    ) == 6_131_678_976
 
     after_hashes = {name: sha256(path) for name, path in evidence.items()}
     assert before_hashes == after_hashes
@@ -418,6 +508,33 @@ def main() -> None:
                 }
                 for capture in ("flat-et1s", "flat-et2.5s", "flat-et6s")
             },
+        },
+        "clamped_artifact_inventory": {
+            "captures": clamped_inventory,
+            "aggregate_m8_r_denominator": sum(
+                row["m8_r_denominator"] for row in clamped_inventory.values()
+            ),
+            "aggregate_m8_r_violations": sum(
+                row["m8_r_violations"] for row in clamped_inventory.values()
+            ),
+            "aggregate_unrepresentable_hulls": {
+                key: sum(
+                    row["unrepresentable_hulls"][key]
+                    for row in clamped_inventory.values()
+                )
+                for key in ("valid", "high", "low")
+            },
+            "existing_artifacts_can_run_old_unprojected_m8_o": True,
+            "existing_artifacts_can_run_exact_m136_m8_o": False,
+            "exact_m136_blockers": [
+                "no retained per-frame trace blocks",
+                "trace protocol v2 does not record black level",
+                "trace protocol v2 does not record the compact Crop origin",
+                "aggregate o-lo/o-hi/o-tau cannot replay each frame's nonlinear intermediate round/clamp",
+            ],
+            "owner_declared_fresh_render_requirement": (
+                "wait for the in-flight crop-domain change because it changes output bytes"
+            ),
         },
         "rates": {
             "post_projection_residue_exact": (

@@ -1,0 +1,36 @@
+M136 clamped M8-O absence audit
+Date: 2026-09-04
+
+Repository root:
+C:\dev\blog\death-of-software\projects\strehl
+
+Searches:
+1. glob **/*clamped*m8-o*
+   Result: no files matched.
+2. glob experiments/M134-kernel-frontier/out/**/m8-o*.{json,npy}
+   Result: no files matched.
+3. case-insensitive content search over docs/ and experiments/ for:
+   clamped.{0,80}M8-O | M8-O.{0,80}clamped |
+   clamped.*m8_o | m8_o.*clamped
+   Result:
+   - docs/STATUS.md states that what repaired M8-O charges the clamped kernel is
+     unmeasured.
+   - experiments/M136-m8o-bar/prior-art-clamped-m8o.txt records only the search
+     terms.
+4. exact-path checks below experiments/M136-m8o-bar/ for:
+   m8_trace_v3.rs, checker_m136.py, verifier_m136.py, fixture_m136.py, and
+   run-clamped-m8o.ps1
+   Result: all absent.
+
+Direct state checks:
+- clamped-flat-et1s-state/m8-o.json: absent
+- clamped-flat-et1s-state/m8-o-violations.npy: absent
+- clamped-flat-et2.5s-state/m8-o.json: absent
+- clamped-flat-et2.5s-state/m8-o-violations.npy: absent
+- clamped-flat-et6s-state/m8-o.json: absent
+- clamped-flat-et6s-state/m8-o-violations.npy: absent
+
+Conclusion:
+No clamped-Catmull M8-O result artifact existed in the searched repository at
+preregistration time. This is an absence search, not a claim about unsearched
+external or deleted artifacts.

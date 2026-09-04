@@ -2,8 +2,8 @@
   "protocol": "M136 quote verification v1",
   "normalization": "collapse all whitespace and strip leading Markdown blockquote markers",
   "report": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\docs\\research\\M136-m8o-bar.md",
-  "report_sha256": "6C24D01E3F64C8B8DFB53A073B9CC7E13EA38E1959F26F44881DA42471F483C9",
-  "quote_count": 27,
+  "report_sha256": "160EE8DF98F2864DED97FF47F91E32610070BCEB7481F3E9538A0BB900853EB2",
+  "quote_count": 33,
   "passed": true,
   "checks": [
     {
@@ -238,10 +238,10 @@
       "report_line": 370,
       "source": "experiments/M136-m8o-bar/analysis.json",
       "source_lines": [
-        219,
-        223
+        335,
+        339
       ],
-      "source_sha256": "FC958184625FB80B86B9DE84493BFB55F545B7985EF9735CA7988A7C33494E1D",
+      "source_sha256": "C0371903ECD6C4AD1E78889F6B6E412E427F4B3B74A7E4D5141A01EE7AFE1FC3",
       "quoted_normalized": "\"expected_green\": 4, \"expected_red\": 4, \"observed_green\": 4, \"observed_red\": 4, \"passed\": true",
       "source_normalized": "\"expected_green\": 4, \"expected_red\": 4, \"observed_green\": 4, \"observed_red\": 4, \"passed\": true",
       "passed": true
@@ -253,7 +253,7 @@
         87,
         92
       ],
-      "source_sha256": "FC958184625FB80B86B9DE84493BFB55F545B7985EF9735CA7988A7C33494E1D",
+      "source_sha256": "C0371903ECD6C4AD1E78889F6B6E412E427F4B3B74A7E4D5141A01EE7AFE1FC3",
       "quoted_normalized": "\"denominator\": 74173536, \"full_rail_below_hull\": 938062, \"nonrail\": 45585, \"projected_hull_violations\": 45586, \"projected_plus_internal_quant_violations\": 31148, \"violations\": 983648",
       "source_normalized": "\"denominator\": 74173536, \"full_rail_below_hull\": 938062, \"nonrail\": 45585, \"projected_hull_violations\": 45586, \"projected_plus_internal_quant_violations\": 31148, \"violations\": 983648",
       "passed": true
@@ -274,10 +274,10 @@
       "report_line": 495,
       "source": "experiments/M136-m8o-bar/analysis.json",
       "source_lines": [
-        232,
-        236
+        348,
+        352
       ],
-      "source_sha256": "FC958184625FB80B86B9DE84493BFB55F545B7985EF9735CA7988A7C33494E1D",
+      "source_sha256": "C0371903ECD6C4AD1E78889F6B6E412E427F4B3B74A7E4D5141A01EE7AFE1FC3",
       "quoted_normalized": "\"post_projection_residue_exact\": \"2413/74173536\", \"post_projection_residue_fraction\": 3.2531818356347474e-05, \"post_projection_residue_fraction_decimal\": \"0.000032531818356347471421613228739694976925463011497793\", \"post_projection_residue_percent\": 0.003253181835634747, \"post_projection_residue_percent_decimal\": \"0.0032531818356347471421613228739694976925463011497793\"",
       "source_normalized": "\"post_projection_residue_exact\": \"2413/74173536\", \"post_projection_residue_fraction\": 3.2531818356347474e-05, \"post_projection_residue_fraction_decimal\": \"0.000032531818356347471421613228739694976925463011497793\", \"post_projection_residue_percent\": 0.003253181835634747, \"post_projection_residue_percent_decimal\": \"0.0032531818356347471421613228739694976925463011497793\"",
       "passed": true
@@ -328,6 +328,78 @@
       "source_sha256": "E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792",
       "quoted_normalized": "\"m8_o\": { \"clamping_caveat\": \"Final clamping can erase M8-O evidence; a zero M8-O count is not a pass without the pre-clamp M8-R census.\", \"denominator\": 24724512, \"fraction\": 0.002126230034388545, \"lower_violations\": 27286, \"max_abs_signed_excess_linear\": 9.673507562264066e-05, \"max_abs_signed_excess_u16_lsb\": 6.339533180929756, \"max_upper_signed_excess_linear\": 9.597676976044744e-05, \"min_lower_signed_excess_linear\": -9.673507562264066e-05, \"percent\": 0.2126230034388545, \"quantisation_tolerance\": 7.629510948348211e-06, \"tiff_sha256\": \"9682FF568F221E55D9D04C4FF11ED675DCF29D4EB620D83D8816BFD1D7937E16\", \"unbracketed_samples\": 0, \"upper_violations\": 25284, \"violations\": 52570 },",
       "source_normalized": "\"m8_o\": { \"clamping_caveat\": \"Final clamping can erase M8-O evidence; a zero M8-O count is not a pass without the pre-clamp M8-R census.\", \"denominator\": 24724512, \"fraction\": 0.002126230034388545, \"lower_violations\": 27286, \"max_abs_signed_excess_linear\": 9.673507562264066e-05, \"max_abs_signed_excess_u16_lsb\": 6.339533180929756, \"max_upper_signed_excess_linear\": 9.597676976044744e-05, \"min_lower_signed_excess_linear\": -9.673507562264066e-05, \"percent\": 0.2126230034388545, \"quantisation_tolerance\": 7.629510948348211e-06, \"tiff_sha256\": \"9682FF568F221E55D9D04C4FF11ED675DCF29D4EB620D83D8816BFD1D7937E16\", \"unbracketed_samples\": 0, \"upper_violations\": 25284, \"violations\": 52570 },",
+      "passed": true
+    },
+    {
+      "report_line": 725,
+      "source": "experiments/M136-m8o-bar/analysis.json",
+      "source_lines": [
+        97,
+        101
+      ],
+      "source_sha256": "C0371903ECD6C4AD1E78889F6B6E412E427F4B3B74A7E4D5141A01EE7AFE1FC3",
+      "quoted_normalized": "\"aggregate_unrepresentable_hulls\": { \"high\": 938062, \"low\": 0, \"valid\": 74173536 },",
+      "source_normalized": "\"aggregate_unrepresentable_hulls\": { \"high\": 938062, \"low\": 0, \"valid\": 74173536 },",
+      "passed": true
+    },
+    {
+      "report_line": 744,
+      "source": "docs/research/M130-crop-early.md",
+      "source_lines": [
+        10,
+        14
+      ],
+      "source_sha256": "DC9DA8B5B90C6BA99DEECB5C353E9405FEF28EB6467C31B88E6F8786992D2B5F",
+      "quoted_normalized": "`strehl stack --merge pyramid --cover crop` now evaluates each warp in the original full-plane coordinate system, then extracts the common covered rectangle before luma, variance, the measured gate floor, pyramid construction, local-energy weighting, accumulation, confidence, and collapse. The compact collapsed plane is written directly. There is no writer-time second crop.",
+      "source_normalized": "`strehl stack --merge pyramid --cover crop` now evaluates each warp in the original full-plane coordinate system, then extracts the common covered rectangle before luma, variance, the measured gate floor, pyramid construction, local-energy weighting, accumulation, confidence, and collapse. The compact collapsed plane is written directly. There is no writer-time second crop.",
+      "passed": true
+    },
+    {
+      "report_line": 773,
+      "source": "experiments/M134-kernel-frontier/run.ps1",
+      "source_lines": [
+        290,
+        293
+      ],
+      "source_sha256": "CFF9D6B6D67C0FD6B72A7DD653C27BAA5E2B92A154B4AE8E08FF18115BE046FA",
+      "quoted_normalized": "Invoke-Checked $Binary $arguments $log Invoke-Checked \"python\" @(\"-B\", $Checker, \"finalize-r\", \"--state\", $state) ( Join-Path $Out \"$name-r.log\" )",
+      "source_normalized": "Invoke-Checked $Binary $arguments $log Invoke-Checked \"python\" @(\"-B\", $Checker, \"finalize-r\", \"--state\", $state) ( Join-Path $Out \"$name-r.log\" )",
+      "passed": true
+    },
+    {
+      "report_line": 782,
+      "source": "experiments/M134-kernel-frontier/m8_trace.rs",
+      "source_lines": [
+        119,
+        121
+      ],
+      "source_sha256": "40836C45AA87708768BBE2FA9B1C882B9152234F5BC2E1C808B2BE37080998ED",
+      "quoted_normalized": "w.write_all(&frame.levels.range().to_le_bytes())?; w.write_all(&site_gain.to_le_bytes())?; let frame_path = frame.path.to_string_lossy();",
+      "source_normalized": "w.write_all(&frame.levels.range().to_le_bytes())?; w.write_all(&site_gain.to_le_bytes())?; let frame_path = frame.path.to_string_lossy();",
+      "passed": true
+    },
+    {
+      "report_line": 789,
+      "source": "experiments/M134-kernel-frontier/m8_trace.rs",
+      "source_lines": [
+        142,
+        154
+      ],
+      "source_sha256": "40836C45AA87708768BBE2FA9B1C882B9152234F5BC2E1C808B2BE37080998ED",
+      "quoted_normalized": "if !status.success() { bail!( \"independent M8 checker failed on {}; block retained\", block.display() ); } OpenOptions::new() .write(true) .create_new(true) .open(&marker) .with_context(|| format!(\"creating unique M8 seen marker {}\", marker.display()))?; fs::remove_file(&block) .with_context(|| format!(\"removing consumed M8 block {}\", block.display()))?;",
+      "source_normalized": "if !status.success() { bail!( \"independent M8 checker failed on {}; block retained\", block.display() ); } OpenOptions::new() .write(true) .create_new(true) .open(&marker) .with_context(|| format!(\"creating unique M8 seen marker {}\", marker.display()))?; fs::remove_file(&block) .with_context(|| format!(\"removing consumed M8 block {}\", block.display()))?;",
+      "passed": true
+    },
+    {
+      "report_line": 808,
+      "source": "experiments/M134-kernel-frontier/checker.py",
+      "source_lines": [
+        362,
+        362
+      ],
+      "source_sha256": "53372005C1DE76A5C9897C0A69BDEF723C4A3B2E0CB071E3A7D54F0C4FB5E178",
+      "quoted_normalized": "output_scale = np.float32(output_gain / b.site_gain / b.value_range)",
+      "source_normalized": "output_scale = np.float32(output_gain / b.site_gain / b.value_range)",
       "passed": true
     }
   ]
