@@ -1,6 +1,6 @@
 # strehl — status and gaps
 
-**Updated:** end of the 2026-08-27 build session.
+**Updated:** 2026-09-05, during the SOTA-path program.
 **Scope:** what is measured, what is broken, and what is not yet known. Facts cited
 by number refer to the table in [`research/SYNTHESIS.md`](research/SYNTHESIS.md).
 
@@ -8,13 +8,42 @@ This file exists because the corpus is 2 MB and nobody should have to read it to
 out where the product stands. Every claim here names the measurement behind it or is
 marked as unmeasured.
 
+> ## Read this before section 1: "SOTA" means two different things in this file
+>
+> **The word "SOTA" in section 1 predates the SOTA program and is weaker than the
+> claim this project is now trying to make.** Section 1 was written against
+> whatever comparison was to hand — for speed, that was `enfuse`. It is kept
+> because its measurements are real, but it must not be read as progress against
+> the actual bar.
+>
+> **The actual bar is
+> [`proposals/2026-09-sota-scorecard.md`](proposals/2026-09-sota-scorecard.md)**,
+> which defines SOTA as a preregistered scorecard scored against *named*
+> comparators — **Zerene PMax, Zerene DMap, and Helicon Methods A, B and C** —
+> across twelve axes, conjunctively. `enfuse` is not one of them.
+>
+> **Current position against that bar: 0 of 12 axes passed.** One axis has ever
+> produced a read score, M8, and it **FAILED**. The overall verdict is
+> `UNMEASURED`, and it stays `UNMEASURED` until licensed comparators consume the
+> same bytes as a capture that does not yet exist.
+>
+> Speed is a case worth being precise about, because it is the strongest thing
+> the project has. **`22.58x enfuse` is real and it is not the axis.** The speed
+> axis is **M11**, which asks for `>=2.00x` the *fastest quality-qualified
+> comparator* — and "quality-qualified" means a comparator that first passes the
+> quality bars. M11 is currently blocked, not passed.
+>
+> The honest one-line summary: **the pipeline is fast and its ceiling is high,
+> and neither of those has yet been demonstrated against the comparators the
+> claim requires.**
+
 ---
 
 ## 1. Where the product actually stands
 
 | Property | Status | Evidence |
 | --- | --- | --- |
-| **Speed** | **SOTA.** 22.58× `enfuse`; N=299 in 233 s | measured end to end |
+| **Speed** | **Fast, and not yet the axis.** 22.58× `enfuse`; N=299 in 233 s. `enfuse` is not a named comparator; the speed axis is **M11** against a quality-qualified Zerene/Helicon, and it is blocked | measured end to end |
 | **Corpus coverage** | **33 of 33 subjects rendered** (26 + the 7 new ones); 33 distinct output hashes. Reconciled both ways against the source root: 0 subjects with frames but no master, 0 masters with no source. The 34th directory is `flat-fields` (calibration, no top-level `.ARW`). **`DELIVER-V6\masters\` now holds all 33**; `DELIVER-V6\orch-rendered-7\` holds 7 duplicates verified byte-identical to their `masters\` copies. This layout moved twice during one session while a lane was live — re-measure it, do not trust this row's location claim | `render7.ps1`, `MANIFEST-ORCH7.txt`, fact 1948 |
 | **Visual quality** | **24 of 26 masters clean to the eye at 1:1**; the 7 new ones are rendered and 3 spot-viewed, none instrumented | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
 | **Halo** (shipping masters, 2–120 px) | **0 demonstrated on any subject** — but only 11 of 26 are actually *clean*; 4 blind + 7 unmeasurable remain UNSCORED, which is not the same as clean | facts 1851–1855, 1884 |
