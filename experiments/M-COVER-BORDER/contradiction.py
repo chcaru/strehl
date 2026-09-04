@@ -35,6 +35,24 @@ PROFILE_EDGES = (
     640,
     768,
 )
+CENTRAL_WINDOW_SIZE = 1024
+CENTRAL_DEEP_START = 384
+CENTRAL_EDGES = (
+    0,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    96,
+    128,
+    160,
+    192,
+    256,
+    320,
+    384,
+)
 
 
 def fixed_profile(
@@ -169,6 +187,47 @@ def profile_descriptors(profile: dict[str, Any]) -> dict[str, Any]:
         "signs_from_8_to_deep": signs,
         "sign_changes_from_8_to_deep": changes,
         "peak_abs_effect_before_deep": peak,
+    }
+
+
+def central_window_profile(
+    candidate: np.ndarray,
+    reference: np.ndarray,
+    *,
+    window_size: int = CENTRAL_WINDOW_SIZE,
+    deep_start: int = CENTRAL_DEEP_START,
+    edges: Sequence[int] = CENTRAL_EDGES,
+) -> dict[str, Any]:
+    if candidate.shape != reference.shape or candidate.ndim != 2:
+        raise ValueError("central profile requires equal two-dimensional planes")
+    height, width = candidate.shape
+    if height < window_size or width < window_size:
+        raise ValueError(f"{candidate.shape} is smaller than {window_size}x{window_size}")
+    y0 = (height - window_size) // 2
+    x0 = (width - window_size) // 2
+    candidate_window = candidate[y0 : y0 + window_size, x0 : x0 + window_size]
+    reference_window = reference[y0 : y0 + window_size, x0 : x0 + window_size]
+    candidate_sums, counts = base.per_distance(candidate_window)
+    reference_sums, reference_counts = base.per_distance(reference_window)
+    if not np.array_equal(counts, reference_counts):
+        raise ValueError("central-window distance counts differ")
+    profile = fixed_profile(
+        candidate_sums,
+        reference_sums,
+        counts,
+        deep_start=deep_start,
+        edges=edges,
+    )
+    return {
+        "window_xywh": [x0, y0, window_size, window_size],
+        "minimum_physical_border_clearance_px": min(
+            x0,
+            y0,
+            width - (x0 + window_size),
+            height - (y0 + window_size),
+        ),
+        "profile": profile,
+        "descriptors": profile_descriptors(profile),
     }
 
 
@@ -373,6 +432,33 @@ def command_commission(args: argparse.Namespace) -> int:
     improved_mass = residual_masses(
         improved_sums, control_sums, counts, float(improved["deep_ratio"])
     )
+    central_null = central_window_profile(
+        baseline,
+        control,
+        window_size=512,
+        deep_start=192,
+        edges=(0, 8, 16, 32, 64, 96, 128, 160, 192),
+    )
+    physical_defect_central = central_window_profile(
+        defect_image,
+        control,
+        window_size=512,
+        deep_start=192,
+        edges=(0, 8, 16, 32, 64, 96, 128, 160, 192),
+    )
+    central_plant_image = baseline.copy()
+    y0 = (height - 512) // 2
+    x0 = (width - 512) // 2
+    central_distance = base.border_distance(512, 512)
+    central_view = central_plant_image[y0 : y0 + 512, x0 : x0 + 512]
+    central_view[central_distance < 64] *= 1.02
+    central_plant = central_window_profile(
+        central_plant_image,
+        control,
+        window_size=512,
+        deep_start=192,
+        edges=(0, 8, 16, 32, 64, 96, 128, 160, 192),
+    )
     swapped = fixed_profile(
         control_sums,
         defect_sums,
@@ -441,6 +527,12 @@ def command_commission(args: argparse.Namespace) -> int:
             1.0,
             abs_tol=1e-12,
         ),
+        "central_null_safe": central_null["profile"]["safe_inset_px"] == 8,
+        "physical_defect_central_safe": physical_defect_central["profile"][
+            "safe_inset_px"
+        ]
+        == 8,
+        "central_plant_safe": central_plant["profile"]["safe_inset_px"] == 64,
         "restoration_safe": restored["safe_inset_px"]
         == defect["safe_inset_px"],
         "restoration_rows": restored["rows"] == defect["rows"],
@@ -486,6 +578,15 @@ def command_commission(args: argparse.Namespace) -> int:
                 improved_mass["positive_fraction"],
                 defect_mass["positive_fraction"],
             ),
+            "central_null_safe_inset_px": central_null["profile"][
+                "safe_inset_px"
+            ],
+            "physical_defect_central_safe_inset_px": physical_defect_central[
+                "profile"
+            ]["safe_inset_px"],
+            "central_plant_safe_inset_px": central_plant["profile"][
+                "safe_inset_px"
+            ],
         },
     }
     base.write_json(args.out, payload)
@@ -514,11 +615,28 @@ def command_profile(args: argparse.Namespace) -> int:
     if args.crop_b4:
         paths["crop_b4"] = args.crop_b4
     loaded: dict[str, dict[str, Any]] = {}
+    greens: dict[str, np.ndarray] = {}
     for name, path in paths.items():
-        _, loaded[name] = load_green(path)
+        greens[name], loaded[name] = load_green(path)
 
     scale = mode_profile(loaded["scale_b7"], loaded["scale_b2"])
     crop = mode_profile(loaded["crop_b7"], loaded["crop_b2"])
+    scale_central = central_window_profile(
+        greens["scale_b7"], greens["scale_b2"]
+    )
+    crop_central = central_window_profile(greens["crop_b7"], greens["crop_b2"])
+    for physical, central in ((scale, scale_central), (crop, crop_central)):
+        physical_safe = physical["profile"]["safe_inset_px"]
+        central_safe = central["profile"]["safe_inset_px"]
+        central_peak = central["descriptors"]["peak_abs_effect_before_deep"]
+        if physical_safe == 8:
+            disposition = "PHYSICAL_PROFILE_AT_FLOOR"
+        elif central_safe != 8 or central_peak > THRESHOLD:
+            disposition = "NONSPECIFIC_ARTIFICIAL_BOUNDARY_CONTROL_FIRES"
+        else:
+            disposition = "BOUNDARY_LOCAL_EFFECT_SUPPORTED"
+        physical["central_artificial_boundary_control"] = central
+        physical["boundary_specificity_disposition"] = disposition
     through_ratio = ratio(
         scale["positive_residual_mass_through_256"]["positive_fraction"],
         crop["positive_residual_mass_through_256"]["positive_fraction"],
