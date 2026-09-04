@@ -1,11 +1,11 @@
 {
-  "schema": 2,
-  "status": "DRAFT_PENDING_SECOND_INDEPENDENT_REVIEW",
+  "schema": 3,
+  "status": "DRAFT_PENDING_THIRD_INDEPENDENT_REVIEW",
   "activation": {
     "required_status": "FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION",
     "independent_review": null,
     "frozen_commit": null,
-    "rule": "No corrected-gate candidate output may be generated while status is DRAFT_PENDING_SECOND_INDEPENDENT_REVIEW."
+    "rule": "No corrected-gate candidate output may be generated while status is DRAFT_PENDING_THIRD_INDEPENDENT_REVIEW."
   },
   "numeric_evidence_tags": {
     "preregistered": "VERIFIED-PREREGISTERED",
@@ -14,7 +14,7 @@
     "estimate": "VERIFIED-ESTIMATE"
   },
   "source_baseline": {
-    "git_head_at_repair_start": "63f8fbe95f56cdca3be221b8f8e4d85268ca06ff",
+    "git_head_at_repair_start": "8ddce7b8d9f3b218a55b1cb9b9d3c84424377793",
     "files": {
       "crates/strehl-core/src/merge.rs": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
       "crates/strehl-core/src/pyramid.rs": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47",
@@ -162,6 +162,39 @@
   },
   "noise_instrument": {
     "binding_state": "UNBOUND",
+    "extractor_interface_schema": "m138-temporal-extractor/v1",
+    "extractor_bundle_manifest_schema": "m138-temporal-extractor-bundle/v1",
+    "scored_request_schema": "m138-temporal-extraction-request/v3",
+    "pilot_request_schema": "m138-temporal-pilot-request/v2",
+    "extractor_entrypoint": null,
+    "extractor_bundle_manifest": null,
+    "extractor_environment_manifest": null,
+    "scored_command": [
+      "{python}",
+      "-I",
+      "{extractor}",
+      "--m138-scored",
+      "{request}",
+      "--capture-id",
+      "{capture_id}"
+    ],
+    "pilot_command": [
+      "{python}",
+      "-I",
+      "{extractor}",
+      "--m138-pilot",
+      "{request}",
+      "--capture-id",
+      "{capture_id}"
+    ],
+    "extractor_output_rule": "The hash-bound extractor emits squared-difference sums and sample counts, never site powers. The adjudicator computes every P=0.5*sumsq/count.",
+    "independence_rule": "Every scored repeat pair uses two distinct source-capture identities and hash-distinct source artifacts; each mode uses two path-distinct outputs whose repeat hashes differ. Every pilot uses four unique source-capture identities and four path- and hash-distinct outputs partitioned into disjoint pairs A and B.",
+    "commissioning_transforms": {
+      "null": "IDENTITY",
+      "inflation_defect": "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_PLUS_DELTA_REQUIRED",
+      "averaging_improvement": "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_MINUS_DELTA_REQUIRED",
+      "common_scene_placebo": "ADD_IDENTICAL_SCENE_TERM_TO_BOTH_CANDIDATE_REPEATS"
+    },
     "estimand": "per-capture/per-CFA ratio of arithmetic mean paired-repeat temporal power",
     "natural_null_power_ratio": 1.0,
     "pass_rule": "every simultaneous one-sided upper confidence bound is strictly below 1.0",
@@ -189,7 +222,7 @@
       "G2",
       "B"
     ],
-    "binding_rule": "A candidate-independent four-burst pilot and an externally justified minimum RMS effect must be bound before output generation. Sixty-four sites remain the lowest admissible count but are evaluated rather than presumed sufficient; selected_sites_per_capture must have a Monte Carlo lower confidence bound reaching power_target for both full capture-by-plane conjunctions.",
+    "binding_rule": "The exact extractor, transitive bundle, environment, candidate-independent four-burst pilot, and externally justified minimum RMS effect must be hash-bound before output generation. Sixty-four sites remain the lowest admissible count but are evaluated rather than presumed sufficient; selected_sites_per_capture must have a Monte Carlo lower confidence bound reaching power_target for both full capture-by-plane conjunctions.",
     "evidence_tag": "VERIFIED-PREREGISTERED"
   },
   "hull_instrument": {
@@ -211,12 +244,12 @@
     "evidence_tag": "VERIFIED-PREREGISTERED"
   },
   "evidence_contract": {
-    "result_schema": "m138-result/v2",
+    "result_schema": "m138-result/v3",
     "standardisation_schema": "m138-standardisation-evidence/v2",
-    "commissioning_schema": "m138-commissioning-evidence/v2",
+    "commissioning_schema": "m138-commissioning-evidence/v3",
     "development_schema": "m138-development-evidence/v2",
     "holdout_schema": "m138-holdout-evidence/v2",
-    "noise_schema": "m138-temporal-power-evidence/v2",
+    "noise_schema": "m138-temporal-extraction-request/v3",
     "hull_schema": "m138-preclamp-hull-evidence/v2",
     "artifact_reference_fields": [
       "path",
@@ -229,9 +262,15 @@
       "noise_power_upper95_by_capture",
       "maximum_hull_excess_dn_by_capture",
       "standardisation_pass",
-      "commissioning_pass"
+      "commissioning_pass",
+      "candidate_site_power",
+      "legacy_site_power",
+      "pair_a_site_power",
+      "pair_b_site_power",
+      "passes_superiority",
+      "cost_status"
     ],
-    "rule": "The result manifest contains only hash-bound artifact references. The adjudicator opens them and recomputes every gate decision."
+    "rule": "No submitted scalar, array, or status string may carry a verdict. Every quantity the gate scores must be recomputed by the adjudicator from a hash-bound artifact, and every artifact reference that is required to be independent must be verified distinct."
   },
   "output_gate": {
     "width_role": "DIAGNOSTIC_ONLY",
@@ -259,13 +298,30 @@
     "go": "PHASE1_GO"
   },
   "cost": {
-    "status": "UNSUPPORTED_PENDING_REPRESENTATIVE_BENCHMARK",
-    "calibration_unit_seconds": null,
-    "render_unit_seconds": null,
-    "detail_checker_unit_seconds": null,
-    "exclusive_wall_hours": null,
-    "shared_host_wall_hours": null,
-    "benchmark_rule": "Before scheduling, benchmark one complete calibration cell, one full-resolution disposable non-scored render arm, and one M135/noise/hull scoring arm in alternating order; scale only by the frozen manifest counts and report uncertainty.",
-    "evidence_tag": "VERIFIED"
+    "binding_state": "UNBOUND",
+    "benchmark_schema": "m138-cost-benchmark/v1",
+    "workload_schema": "m138-cost-workload/v1",
+    "runner_bundle_schema": "m138-cost-runner-bundle/v1",
+    "benchmark_artifact": null,
+    "workload_manifest": null,
+    "benchmark_runner": null,
+    "benchmark_runner_bundle": null,
+    "environment_manifest": null,
+    "minimum_warm_repetitions_per_measurement": 2,
+    "required_measurements": [
+      "calibration_cell_seconds",
+      "candidate_render_arm_seconds",
+      "legacy_render_arm_seconds",
+      "scoring_arm_seconds",
+      "contention_multiplier"
+    ],
+    "required_render_orders": [
+      "candidate-first",
+      "legacy-first"
+    ],
+    "reported_exclusive_wall_hours": null,
+    "reported_shared_host_wall_hours": null,
+    "benchmark_rule": "Before scheduling, bind and execute a hash-bound benchmark runner over one complete calibration cell, one full-resolution disposable non-scored legacy/candidate render pair in both orders, and one M135/noise/hull scoring arm. The benchmark artifact must contain finite positive warm timings and a finite contention multiplier; the adjudicator counts hash-bound workload-unit ledgers and recomputes exclusive and shared-host totals.",
+    "evidence_tag": "VERIFIED-PREREGISTERED"
   }
 }

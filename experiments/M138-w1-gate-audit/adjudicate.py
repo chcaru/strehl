@@ -2,8 +2,8 @@
 """Evidence-reading reference adjudicator for the corrected M138 W1 gate.
 
 This program does not render a campaign. It rejects the draft contract, verifies
-sealed artifact hashes, recomputes gate statistics from evidence, and invokes
-the independently bound M135 checker instead of accepting supplied verdicts.
+sealed artifact hashes, executes bound extractors/checkers, recomputes every
+scored quantity, and refuses submitted verdict-bearing values.
 """
 
 from __future__ import annotations
@@ -117,6 +117,9 @@ REQUIRED_DOCUMENT_TEXT = (
     "UNSUPPORTED",
     "missing required artifact",
     "Could not determine",
+    "No submitted scalar, array, or status string may carry a verdict",
+    "four unique source-capture identities",
+    "hash-bound benchmark artifact",
 )
 
 HEX64 = re.compile(r"[0-9a-f]{64}")
@@ -207,10 +210,10 @@ def tau_keys(contract: dict[str, Any]) -> list[str]:
 
 
 def validate_contract(contract: dict[str, Any], *, test_mode: bool = False) -> None:
-    if contract.get("schema") != 2:
+    if contract.get("schema") != 3:
         raise EvidenceError("unsupported contract schema")
     if contract.get("status") not in {
-        "DRAFT_PENDING_SECOND_INDEPENDENT_REVIEW",
+        "DRAFT_PENDING_THIRD_INDEPENDENT_REVIEW",
         "FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION",
     }:
         raise EvidenceError("invalid contract status")
@@ -245,8 +248,30 @@ def validate_contract(contract: dict[str, Any], *, test_mode: bool = False) -> N
             raise EvidenceError("frozen contract lacks temporal-noise binding")
         if contract["capture_ledgers"].get("binding_state") != "BOUND":
             raise EvidenceError("frozen contract lacks capture ledgers")
-        if contract["cost"].get("status") != "BENCHMARKED":
+        if contract["cost"].get("binding_state") != "BOUND":
             raise EvidenceError("frozen contract lacks representative cost benchmark")
+    noise = contract["noise_instrument"]
+    if noise.get("commissioning_transforms") != {
+        "null": "IDENTITY",
+        "inflation_defect": (
+            "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_PLUS_DELTA_REQUIRED"
+        ),
+        "averaging_improvement": (
+            "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_MINUS_DELTA_REQUIRED"
+        ),
+        "common_scene_placebo": ("ADD_IDENTICAL_SCENE_TERM_TO_BOTH_CANDIDATE_REPEATS"),
+    }:
+        raise EvidenceError("temporal commissioning transforms changed")
+    if (
+        contract["evidence_contract"].get("rule")
+        != "No submitted scalar, array, or status string may carry a verdict. "
+        "Every quantity the gate scores must be recomputed by the adjudicator "
+        "from a hash-bound artifact, and every artifact reference that is "
+        "required to be independent must be verified distinct."
+    ):
+        raise EvidenceError("raw-evidence authority rule changed")
+    if "status" in contract["cost"]:
+        raise EvidenceError("cost status strings are forbidden")
     if test_mode:
         return
     standard = contract["standardisation"]
@@ -274,7 +299,6 @@ def validate_contract(contract: dict[str, Any], *, test_mode: bool = False) -> N
         raise EvidenceError("physical-null confidence changed")
     if float(standard["focus_power_checkpoint"]) != 0.5:
         raise EvidenceError("focus-power checkpoint changed")
-    noise = contract["noise_instrument"]
     if float(noise["familywise_confidence"]) != 0.95:
         raise EvidenceError("noise familywise confidence changed")
     if float(noise["power_target"]) != 0.95:
@@ -384,6 +408,42 @@ def verify_ref_list(
         raise EvidenceError(f"{label}: expected non-empty artifact-reference list")
     for index, ref in enumerate(refs):
         checked_ref(ref, base, allowed_root, f"{label}[{index}]")
+
+
+def checked_distinct_refs(
+    refs: Any,
+    base: Path,
+    allowed_root: Path,
+    label: str,
+    *,
+    expected_count: int,
+    distinct_hashes: bool,
+) -> list[Path]:
+    if not isinstance(refs, list) or len(refs) != expected_count:
+        raise EvidenceError(f"{label}: expected {expected_count} artifact references")
+    paths = [
+        checked_ref(ref, base, allowed_root, f"{label}[{index}]")
+        for index, ref in enumerate(refs)
+    ]
+    resolved = [path.resolve() for path in paths]
+    if len(set(resolved)) != len(resolved):
+        raise EvidenceError(f"{label}: duplicate artifact reference")
+    if distinct_hashes:
+        hashes = [sha256(path) for path in paths]
+        if len(set(hashes)) != len(hashes):
+            raise EvidenceError(f"{label}: independently required artifacts are equal")
+    return paths
+
+
+def checked_unique_strings(values: Any, count: int, label: str) -> list[str]:
+    if (
+        not isinstance(values, list)
+        or len(values) != count
+        or any(not isinstance(value, str) or not value for value in values)
+        or len(set(values)) != count
+    ):
+        raise EvidenceError(f"{label}: expected {count} unique identities")
+    return values
 
 
 def reject_supplied_conclusions(
@@ -835,89 +895,289 @@ def evaluate_m135(
     return all(passes.values())
 
 
+def verify_temporal_extractor_binding(
+    contract: dict[str, Any],
+    contract_path: Path,
+) -> dict[str, Path]:
+    binding = contract["noise_instrument"]
+    fields = (
+        "extractor_entrypoint",
+        "extractor_bundle_manifest",
+        "extractor_environment_manifest",
+    )
+    paths = {
+        field: checked_ref(
+            binding.get(field),
+            contract_path.parent,
+            ROOT,
+            f"noise_instrument.{field}",
+        )
+        for field in fields
+    }
+    bundle = load_json(paths["extractor_bundle_manifest"])
+    if bundle.get("schema") != binding["extractor_bundle_manifest_schema"]:
+        raise EvidenceError("temporal extractor bundle manifest has wrong schema")
+    verify_ref_list(
+        bundle.get("files"),
+        paths["extractor_bundle_manifest"].parent,
+        ROOT,
+        "temporal extractor bundle",
+    )
+    if sha256(paths["extractor_entrypoint"]) not in {
+        ref["sha256"] for ref in bundle["files"]
+    }:
+        raise EvidenceError(
+            "temporal extractor entrypoint is absent from its bundle manifest"
+        )
+    return paths
+
+
+def run_temporal_extractor(
+    mode: str,
+    request_path: Path,
+    capture_id: str,
+    extractor_paths: dict[str, Path],
+    contract: dict[str, Any],
+) -> dict[str, Any]:
+    extractor = extractor_paths["extractor_entrypoint"]
+    command = [
+        sys.executable,
+        "-I",
+        str(extractor),
+        "--m138-pilot" if mode == "PILOT" else "--m138-scored",
+        str(request_path),
+        "--capture-id",
+        capture_id,
+    ]
+    completed = subprocess.run(
+        command,
+        cwd=extractor.parent,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=300,
+    )
+    if completed.returncode != 0:
+        raise EvidenceError(
+            f"temporal extractor {mode.lower()} failed with exit "
+            f"{completed.returncode}: {completed.stderr.strip()}"
+        )
+    try:
+        output = json.loads(completed.stdout)
+    except json.JSONDecodeError as error:
+        raise EvidenceError(
+            f"temporal extractor {mode.lower()} did not emit one JSON object"
+        ) from error
+    expected = {
+        "schema": contract["noise_instrument"]["extractor_interface_schema"],
+        "mode": mode,
+        "extractor_sha256": sha256(extractor),
+        "request_sha256": sha256(request_path),
+        "capture_id": capture_id,
+    }
+    for field, value in expected.items():
+        if output.get(field) != value:
+            raise EvidenceError(
+                f"temporal extractor {mode.lower()} returned wrong {field}"
+            )
+    return output
+
+
+def powers_from_extractor_output(
+    output: dict[str, Any],
+    expected_sites: list[str],
+    pair_names: tuple[str, str],
+    contract: dict[str, Any],
+) -> dict[str, dict[str, np.ndarray]]:
+    if output.get("site_ids") != expected_sites:
+        raise EvidenceError(
+            f"{output.get('capture_id')}: temporal extractor site ledger mismatch"
+        )
+    planes = contract["noise_instrument"]["required_cfa_planes"]
+    rows = output.get("planes")
+    if not isinstance(rows, dict) or set(rows) != set(planes):
+        raise EvidenceError(
+            f"{output.get('capture_id')}: temporal extractor planes incomplete"
+        )
+    result: dict[str, dict[str, np.ndarray]] = {}
+    for plane in planes:
+        pairs = rows[plane]
+        if not isinstance(pairs, dict) or set(pairs) != set(pair_names):
+            raise EvidenceError(
+                f"{output.get('capture_id')}/{plane}: extractor pair ledger mismatch"
+            )
+        result[plane] = {}
+        for pair_name in pair_names:
+            row = pairs[pair_name]
+            if not isinstance(row, dict) or set(row) != {
+                "squared_difference_sum",
+                "sample_count",
+            }:
+                raise EvidenceError(
+                    f"{output.get('capture_id')}/{plane}/{pair_name}: "
+                    "extractor sufficient statistics malformed"
+                )
+            sums = np.asarray(row["squared_difference_sum"], dtype=np.float64)
+            counts = np.asarray(row["sample_count"])
+            if (
+                sums.ndim != 1
+                or len(sums) != len(expected_sites)
+                or counts.shape != sums.shape
+                or not np.all(np.isfinite(sums))
+                or np.any(sums <= 0.0)
+                or not np.issubdtype(counts.dtype, np.integer)
+                or np.any(counts <= 0)
+            ):
+                raise EvidenceError(
+                    f"{output.get('capture_id')}/{plane}/{pair_name}: "
+                    "invalid extractor sufficient statistics"
+                )
+            powers = 0.5 * sums / counts.astype(np.float64)
+            if not np.all(np.isfinite(powers)) or np.any(powers <= 0.0):
+                raise EvidenceError(
+                    f"{output.get('capture_id')}/{plane}/{pair_name}: "
+                    "recomputed temporal site power is invalid"
+                )
+            result[plane][pair_name] = powers
+    return result
+
+
 def parse_noise_cells(
     document: dict[str, Any],
-    base: Path,
+    request_path: Path,
     evidence_root: Path,
     expected_noise: dict[str, list[str]],
     contract: dict[str, Any],
+    extractor_paths: dict[str, Path],
 ) -> list[dict[str, Any]]:
     reject_supplied_conclusions(
         document,
         set(contract["evidence_contract"]["forbidden_supplied_conclusions"]),
     )
+    if set(document) != {"schema", "captures"}:
+        raise EvidenceError("temporal-noise request contains unregistered fields")
     if document.get("schema") != contract["evidence_contract"]["noise_schema"]:
         raise EvidenceError("wrong temporal-noise evidence schema")
     captures = document.get("captures")
     if not isinstance(captures, dict) or set(captures) != set(expected_noise):
         raise EvidenceError("temporal-noise capture ledger mismatch")
-    planes = contract["noise_instrument"]["required_cfa_planes"]
     cells: list[dict[str, Any]] = []
+    seen_source_ids: set[str] = set()
+    seen_source_hashes: set[str] = set()
+    seen_output_paths: set[Path] = set()
     for capture_id, expected_sites in expected_noise.items():
         capture = captures[capture_id]
+        if not isinstance(capture, dict) or set(capture) != {
+            "site_ids",
+            "site_manifest",
+            "source_capture_ids",
+            "source_captures",
+            "candidate_outputs",
+            "legacy_outputs",
+        }:
+            raise EvidenceError(f"{capture_id}: temporal request fields are incomplete")
         if capture.get("site_ids") != expected_sites:
             raise EvidenceError(f"{capture_id}: temporal site ledger mismatch")
         checked_ref(
             capture.get("site_manifest"),
-            base,
+            request_path.parent,
             evidence_root,
             f"{capture_id}.site_manifest",
         )
-        checked_ref(
-            capture.get("extractor"),
-            base,
-            evidence_root,
-            f"{capture_id}.extractor",
+        source_ids = checked_unique_strings(
+            capture.get("source_capture_ids"), 2, f"{capture_id}.source_capture_ids"
         )
-        if (
-            not isinstance(capture.get("candidate_outputs"), list)
-            or len(capture["candidate_outputs"]) != 2
-            or not isinstance(capture.get("legacy_outputs"), list)
-            or len(capture["legacy_outputs"]) != 2
-        ):
+        if seen_source_ids.intersection(source_ids):
             raise EvidenceError(
-                f"{capture_id}: temporal evidence requires two outputs per mode"
+                f"{capture_id}: source-capture identity reused across captures"
             )
-        verify_ref_list(
+        seen_source_ids.update(source_ids)
+        source_paths = checked_distinct_refs(
+            capture.get("source_captures"),
+            request_path.parent,
+            evidence_root,
+            f"{capture_id}.source_captures",
+            expected_count=2,
+            distinct_hashes=True,
+        )
+        source_hashes = {sha256(path) for path in source_paths}
+        if seen_source_hashes.intersection(source_hashes):
+            raise EvidenceError(
+                f"{capture_id}: independent source artifact reused across captures"
+            )
+        seen_source_hashes.update(source_hashes)
+        candidate_paths = checked_distinct_refs(
             capture.get("candidate_outputs"),
-            base,
+            request_path.parent,
             evidence_root,
             f"{capture_id}.candidate_outputs",
+            expected_count=2,
+            distinct_hashes=True,
         )
-        verify_ref_list(
+        legacy_paths = checked_distinct_refs(
             capture.get("legacy_outputs"),
-            base,
+            request_path.parent,
             evidence_root,
             f"{capture_id}.legacy_outputs",
+            expected_count=2,
+            distinct_hashes=True,
         )
-        plane_rows = capture.get("planes")
-        if not isinstance(plane_rows, dict) or set(plane_rows) != set(planes):
-            raise EvidenceError(f"{capture_id}: temporal planes incomplete")
-        for plane in planes:
-            row = plane_rows[plane]
-            candidate = np.asarray(row.get("candidate_site_power"), dtype=np.float64)
-            legacy = np.asarray(row.get("legacy_site_power"), dtype=np.float64)
-            if (
-                candidate.ndim != 1
-                or legacy.shape != candidate.shape
-                or len(candidate) != len(expected_sites)
-                or not np.all(np.isfinite(candidate))
-                or not np.all(np.isfinite(legacy))
-                or np.any(candidate <= 0.0)
-                or np.any(legacy <= 0.0)
-            ):
-                raise EvidenceError(
-                    f"{capture_id}/{plane}: invalid temporal site powers"
-                )
+        if len({path.resolve() for path in candidate_paths + legacy_paths}) != 4:
+            raise EvidenceError(
+                f"{capture_id}: candidate/legacy output roles reuse an artifact"
+            )
+        resolved_outputs = {path.resolve() for path in candidate_paths + legacy_paths}
+        if seen_output_paths.intersection(resolved_outputs):
+            raise EvidenceError(f"{capture_id}: output artifact reused across captures")
+        seen_output_paths.update(resolved_outputs)
+        output = run_temporal_extractor(
+            "SCORED",
+            request_path,
+            capture_id,
+            extractor_paths,
+            contract,
+        )
+        powers = powers_from_extractor_output(
+            output,
+            expected_sites,
+            ("candidate", "legacy"),
+            contract,
+        )
+        for plane in contract["noise_instrument"]["required_cfa_planes"]:
             cells.append(
                 {
                     "capture_id": capture_id,
                     "plane": plane,
-                    "candidate": candidate,
-                    "legacy": legacy,
+                    "candidate": powers[plane]["candidate"],
+                    "legacy": powers[plane]["legacy"],
                 }
             )
     return cells
+
+
+def transform_noise_cells(
+    cells: list[dict[str, Any]],
+    transform: str,
+    contract: dict[str, Any],
+) -> list[dict[str, Any]]:
+    delta = float(contract["noise_instrument"]["required_rms_reduction"])
+    if transform in {"IDENTITY", "ADD_IDENTICAL_SCENE_TERM_TO_BOTH_CANDIDATE_REPEATS"}:
+        factor = 1.0
+    elif transform == "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_PLUS_DELTA_REQUIRED":
+        factor = (1.0 + delta) ** 2
+    elif transform == "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_MINUS_DELTA_REQUIRED":
+        factor = (1.0 - delta) ** 2
+    else:
+        raise EvidenceError(f"unknown registered temporal transform: {transform}")
+    return [
+        {
+            "capture_id": cell["capture_id"],
+            "plane": cell["plane"],
+            "candidate": np.asarray(cell["candidate"], dtype=np.float64) * factor,
+            "legacy": np.asarray(cell["legacy"], dtype=np.float64).copy(),
+        }
+        for cell in cells
+    ]
 
 
 def bootstrap_noise(
@@ -967,65 +1227,97 @@ def bootstrap_noise(
 
 def parse_noise_pilot(
     document: dict[str, Any],
-    base: Path,
+    request_path: Path,
     evidence_root: Path,
     contract: dict[str, Any],
+    extractor_paths: dict[str, Path],
 ) -> list[dict[str, Any]]:
     reject_supplied_conclusions(
         document,
         set(contract["evidence_contract"]["forbidden_supplied_conclusions"]),
     )
-    if document.get("schema") != "m138-temporal-power-pilot/v1":
+    if set(document) != {"schema", "captures"}:
+        raise EvidenceError("temporal-noise pilot contains unregistered fields")
+    if document.get("schema") != contract["noise_instrument"]["pilot_request_schema"]:
         raise EvidenceError("wrong temporal-noise pilot schema")
-    checked_ref(document.get("site_manifest"), base, evidence_root, "noise pilot sites")
     captures = document.get("captures")
     if not isinstance(captures, dict) or not captures:
         raise EvidenceError("noise pilot has no captures")
-    planes = contract["noise_instrument"]["required_cfa_planes"]
     cells: list[dict[str, Any]] = []
+    seen_source_ids: set[str] = set()
+    seen_source_paths: set[Path] = set()
+    seen_source_hashes: set[str] = set()
     for capture_id, capture in captures.items():
+        if not isinstance(capture, dict) or set(capture) != {
+            "target_capture_id",
+            "site_ids",
+            "site_manifest",
+            "source_capture_ids",
+            "source_outputs",
+        }:
+            raise EvidenceError(f"{capture_id}: pilot request fields are incomplete")
         target_capture_id = capture.get("target_capture_id")
         if not isinstance(target_capture_id, str) or not target_capture_id:
             raise EvidenceError(f"{capture_id}: pilot target capture is missing")
-        source_outputs = capture.get("source_outputs")
-        if not isinstance(source_outputs, list) or len(source_outputs) != 4:
-            raise EvidenceError(f"{capture_id}: pilot requires four source outputs")
-        verify_ref_list(
-            source_outputs,
-            base,
+        source_ids = checked_unique_strings(
+            capture.get("source_capture_ids"),
+            4,
+            f"{capture_id}.pilot_source_capture_ids",
+        )
+        if seen_source_ids.intersection(source_ids):
+            raise EvidenceError(f"{capture_id}: pilot source-capture identity reused")
+        seen_source_ids.update(source_ids)
+        source_paths = checked_distinct_refs(
+            capture.get("source_outputs"),
+            request_path.parent,
             evidence_root,
             f"{capture_id}.pilot_source_outputs",
+            expected_count=4,
+            distinct_hashes=True,
         )
+        resolved = {path.resolve() for path in source_paths}
+        hashes = {sha256(path) for path in source_paths}
+        if seen_source_paths.intersection(resolved):
+            raise EvidenceError(f"{capture_id}: pilot output artifact reused")
+        if seen_source_hashes.intersection(hashes):
+            raise EvidenceError(f"{capture_id}: pilot output hash reused")
+        seen_source_paths.update(resolved)
+        seen_source_hashes.update(hashes)
         sites = capture.get("site_ids")
         if (
             not isinstance(sites, list)
             or len(sites) < 64
             or len(sites) != len(set(sites))
+            or any(not isinstance(site, str) or not site for site in sites)
         ):
             raise EvidenceError(f"{capture_id}: pilot needs at least 64 unique sites")
-        rows = capture.get("planes")
-        if not isinstance(rows, dict) or set(rows) != set(planes):
-            raise EvidenceError(f"{capture_id}: pilot planes incomplete")
-        for plane in planes:
-            pair_a = np.asarray(rows[plane].get("pair_a_site_power"), dtype=np.float64)
-            pair_b = np.asarray(rows[plane].get("pair_b_site_power"), dtype=np.float64)
-            if (
-                pair_a.ndim != 1
-                or pair_b.shape != pair_a.shape
-                or len(pair_a) != len(sites)
-                or not np.all(np.isfinite(pair_a))
-                or not np.all(np.isfinite(pair_b))
-                or np.any(pair_a <= 0.0)
-                or np.any(pair_b <= 0.0)
-            ):
-                raise EvidenceError(f"{capture_id}/{plane}: invalid pilot powers")
+        checked_ref(
+            capture.get("site_manifest"),
+            request_path.parent,
+            evidence_root,
+            f"{capture_id}.pilot_site_manifest",
+        )
+        output = run_temporal_extractor(
+            "PILOT",
+            request_path,
+            capture_id,
+            extractor_paths,
+            contract,
+        )
+        powers = powers_from_extractor_output(
+            output,
+            sites,
+            ("pair_a", "pair_b"),
+            contract,
+        )
+        for plane in contract["noise_instrument"]["required_cfa_planes"]:
             cells.append(
                 {
                     "capture_id": capture_id,
                     "target_capture_id": target_capture_id,
                     "plane": plane,
-                    "candidate": pair_a,
-                    "legacy": pair_b,
+                    "candidate": powers[plane]["pair_a"],
+                    "legacy": powers[plane]["pair_b"],
                 }
             )
     return cells
@@ -1085,6 +1377,7 @@ def verify_noise_binding(
     cfg = contract["noise_instrument"]
     if cfg.get("binding_state") != "BOUND":
         raise EvidenceError("temporal-noise effect and power binding is absent")
+    extractor_paths = verify_temporal_extractor_binding(contract, contract_path)
     rms = cfg.get("required_rms_reduction")
     sites = cfg.get("selected_sites_per_capture")
     if not isinstance(rms, (int, float)) or not 0.0 < float(rms) < 1.0:
@@ -1120,7 +1413,13 @@ def verify_noise_binding(
         ROOT,
         "noise pilot evidence",
     )
-    cells = parse_noise_pilot(pilot, pilot_path.parent, ROOT, contract)
+    cells = parse_noise_pilot(
+        pilot,
+        pilot_path,
+        ROOT,
+        contract,
+        extractor_paths,
+    )
     pilot_mapping: dict[str, str] = {}
     for cell in cells:
         prior = pilot_mapping.setdefault(cell["capture_id"], cell["target_capture_id"])
@@ -1161,10 +1460,198 @@ def verify_noise_binding(
                 f"selected temporal site count misses {phase} familywise power target"
             )
     return {
+        "extractor_paths": extractor_paths,
         "effect_requirement_sha256": sha256(requirement_path),
         "pilot_sha256": sha256(pilot_path),
         "power_at_64_sites": at_64,
         "power_at_selected_sites": selected_power,
+    }
+
+
+def finite_positive_samples(value: Any, minimum: int, label: str) -> np.ndarray:
+    array = np.asarray(value, dtype=np.float64)
+    if (
+        array.ndim != 1
+        or len(array) < minimum
+        or not np.all(np.isfinite(array))
+        or np.any(array <= 0.0)
+    ):
+        raise EvidenceError(f"{label}: expected finite positive timing samples")
+    return array
+
+
+def verify_cost_binding(
+    contract: dict[str, Any],
+    contract_path: Path,
+) -> dict[str, float]:
+    cfg = contract["cost"]
+    if cfg.get("binding_state") != "BOUND":
+        raise EvidenceError("campaign cost remains unsupported")
+    fields = (
+        "benchmark_artifact",
+        "workload_manifest",
+        "benchmark_runner",
+        "benchmark_runner_bundle",
+        "environment_manifest",
+    )
+    paths = {
+        field: checked_ref(
+            cfg.get(field),
+            contract_path.parent,
+            ROOT,
+            f"cost.{field}",
+        )
+        for field in fields
+    }
+    bundle = load_json(paths["benchmark_runner_bundle"])
+    if bundle.get("schema") != cfg["runner_bundle_schema"]:
+        raise EvidenceError("cost runner bundle has wrong schema")
+    verify_ref_list(
+        bundle.get("files"),
+        paths["benchmark_runner_bundle"].parent,
+        ROOT,
+        "cost runner bundle",
+    )
+    if sha256(paths["benchmark_runner"]) not in {
+        ref["sha256"] for ref in bundle["files"]
+    }:
+        raise EvidenceError("cost benchmark runner is absent from its bundle")
+
+    workload = load_json(paths["workload_manifest"])
+    if set(workload) != {"schema", "units"}:
+        raise EvidenceError("cost workload manifest contains unregistered fields")
+    if workload.get("schema") != cfg["workload_schema"]:
+        raise EvidenceError("cost workload manifest has wrong schema")
+    units = workload.get("units")
+    required_counts = {
+        "calibration_cells",
+        "candidate_render_arms",
+        "legacy_render_arms",
+        "scoring_arms",
+    }
+    if (
+        not isinstance(units, dict)
+        or set(units) != required_counts
+        or any(
+            not isinstance(units[name], list)
+            or not units[name]
+            or len(units[name]) != len(set(units[name]))
+            or any(not isinstance(unit, str) or not unit for unit in units[name])
+            for name in units
+        )
+    ):
+        raise EvidenceError("cost workload unit ledgers are incomplete or invalid")
+    counts = {name: len(units[name]) for name in units}
+
+    benchmark = load_json(paths["benchmark_artifact"])
+    if set(benchmark) != {
+        "schema",
+        "runner_sha256",
+        "runner_bundle_sha256",
+        "environment_sha256",
+        "workload_sha256",
+        "render_orders",
+        "measurements",
+    }:
+        raise EvidenceError("cost benchmark contains unregistered fields")
+    if benchmark.get("schema") != cfg["benchmark_schema"]:
+        raise EvidenceError("cost benchmark artifact has wrong schema")
+    expected_hashes = {
+        "runner_sha256": sha256(paths["benchmark_runner"]),
+        "runner_bundle_sha256": sha256(paths["benchmark_runner_bundle"]),
+        "environment_sha256": sha256(paths["environment_manifest"]),
+        "workload_sha256": sha256(paths["workload_manifest"]),
+    }
+    for field, expected in expected_hashes.items():
+        if benchmark.get(field) != expected:
+            raise EvidenceError(f"cost benchmark returned wrong {field}")
+    orders = benchmark.get("render_orders")
+    if (
+        not isinstance(orders, list)
+        or len(orders) != len(cfg["required_render_orders"])
+        or set(orders) != set(cfg["required_render_orders"])
+    ):
+        raise EvidenceError("cost benchmark lacks both registered render orders")
+    measurements = benchmark.get("measurements")
+    required_measurements = set(cfg["required_measurements"])
+    if not isinstance(measurements, dict) or set(measurements) != required_measurements:
+        raise EvidenceError("cost benchmark measurements are incomplete")
+    minimum = int(cfg["minimum_warm_repetitions_per_measurement"])
+    samples = {
+        name: finite_positive_samples(
+            measurements[name],
+            minimum,
+            f"cost.{name}",
+        )
+        for name in required_measurements
+    }
+    unit = {name: float(np.median(values)) for name, values in samples.items()}
+    exclusive_seconds = (
+        unit["calibration_cell_seconds"] * counts["calibration_cells"]
+        + unit["candidate_render_arm_seconds"] * counts["candidate_render_arms"]
+        + unit["legacy_render_arm_seconds"] * counts["legacy_render_arms"]
+        + unit["scoring_arm_seconds"] * counts["scoring_arms"]
+    )
+    contention = float(np.max(samples["contention_multiplier"]))
+    if contention < 1.0:
+        raise EvidenceError("cost contention multiplier must be at least one")
+    exclusive_hours = exclusive_seconds / 3600.0
+    shared_hours = exclusive_hours * contention
+    reported_exclusive = cfg.get("reported_exclusive_wall_hours")
+    reported_shared = cfg.get("reported_shared_host_wall_hours")
+    if (
+        not isinstance(reported_exclusive, (int, float))
+        or not math.isfinite(float(reported_exclusive))
+        or not math.isclose(
+            float(reported_exclusive), exclusive_hours, rel_tol=1e-12, abs_tol=1e-12
+        )
+    ):
+        raise EvidenceError("reported exclusive cost was not derived from benchmark")
+    if (
+        not isinstance(reported_shared, (int, float))
+        or not math.isfinite(float(reported_shared))
+        or not math.isclose(
+            float(reported_shared), shared_hours, rel_tol=1e-12, abs_tol=1e-12
+        )
+    ):
+        raise EvidenceError("reported shared-host cost was not derived from benchmark")
+    return {
+        "exclusive_wall_hours": exclusive_hours,
+        "shared_host_wall_hours": shared_hours,
+    }
+
+
+def validate_frozen_bindings(
+    contract: dict[str, Any],
+    contract_path: Path,
+) -> dict[str, Any]:
+    if contract["status"] != contract["activation"]["required_status"]:
+        raise EvidenceError("contract is a draft and is not frozen")
+    checked_ref(
+        contract["activation"].get("independent_review"),
+        contract_path.parent,
+        ROOT,
+        "independent review",
+    )
+    if not HEX40.fullmatch(str(contract["activation"].get("frozen_commit", ""))):
+        raise EvidenceError("frozen commit is absent")
+    detail_paths = verify_detail_binding(contract, contract_path)
+    ledgers = contract["capture_ledgers"]
+    selected_sites = contract["noise_instrument"].get("selected_sites_per_capture")
+    if ledgers.get("binding_state") != "BOUND":
+        raise EvidenceError("capture ledgers are unbound")
+    if not valid_ledger(ledgers.get("development"), selected_sites):
+        raise EvidenceError("development ledger is invalid")
+    if not valid_ledger(ledgers.get("holdout"), selected_sites):
+        raise EvidenceError("holdout ledger is invalid")
+    if not ledgers_are_disjoint(ledgers["development"], ledgers["holdout"]):
+        raise EvidenceError("development and holdout ledgers are not disjoint")
+    noise_binding = verify_noise_binding(contract, contract_path, ledgers)
+    cost = verify_cost_binding(contract, contract_path)
+    return {
+        "detail_paths": detail_paths,
+        "noise_binding": noise_binding,
+        "cost": cost,
     }
 
 
@@ -1276,6 +1763,7 @@ def load_arm_evidence(
     ledger: dict[str, Any],
     contract: dict[str, Any],
     binding_paths: dict[str, Path],
+    noise_binding: dict[str, Any],
     caches: dict[str, Any],
     label: str,
 ) -> bool:
@@ -1315,10 +1803,11 @@ def load_arm_evidence(
     if noise_hash not in caches["noise"]:
         cells = parse_noise_cells(
             noise_document,
-            noise_path.parent,
+            noise_path,
             evidence_root,
             ledger["noise"],
             contract,
+            noise_binding["extractor_paths"],
         )
         caches["noise"][noise_hash] = bootstrap_noise(cells, contract, label)
     noise_pass = caches["noise"][noise_hash]["passes_superiority"]
@@ -1340,6 +1829,27 @@ def load_arm_evidence(
     return detail_pass and noise_pass and caches["hull"][hull_hash]
 
 
+def validate_noise_commissioning_summaries(
+    summaries: dict[str, dict[str, Any]],
+) -> None:
+    null = summaries["null"]
+    placebo = summaries["common_scene_placebo"]
+    if not (
+        np.all(null["lower_two_sided"] <= 1.0)
+        and np.all(null["upper_two_sided"] >= 1.0)
+        and np.all(placebo["lower_two_sided"] <= 1.0)
+        and np.all(placebo["upper_two_sided"] >= 1.0)
+    ):
+        raise EvidenceError("temporal-noise null/placebo commissioning failed")
+    if not (
+        summaries["inflation_defect"]["score"] < null["score"]
+        and not summaries["inflation_defect"]["passes_superiority"]
+        and summaries["averaging_improvement"]["score"] > null["score"]
+        and summaries["averaging_improvement"]["passes_superiority"]
+    ):
+        raise EvidenceError("temporal-noise bidirectional commissioning failed")
+
+
 def validate_commissioning(
     document: dict[str, Any],
     base: Path,
@@ -1347,6 +1857,7 @@ def validate_commissioning(
     main_standard_ref: dict[str, str],
     contract: dict[str, Any],
     binding_paths: dict[str, Path],
+    noise_binding: dict[str, Any],
 ) -> None:
     reject_supplied_conclusions(
         document,
@@ -1388,46 +1899,50 @@ def validate_commissioning(
     ):
         raise EvidenceError("standardisation bidirectional commissioning failed")
 
-    noise_refs = document.get("noise_controls")
-    if not isinstance(noise_refs, dict) or set(noise_refs) != {
-        "null",
-        "inflation_defect",
-        "averaging_improvement",
-        "common_scene_placebo",
+    if set(document) != {
+        "schema",
+        "standardisation_controls",
+        "noise_control_ledger",
+        "noise_base",
     }:
-        raise EvidenceError("temporal-noise commissioning controls incomplete")
+        raise EvidenceError("commissioning evidence contains unregistered fields")
     ledger = document.get("noise_control_ledger")
     selected_sites = int(contract["noise_instrument"]["selected_sites_per_capture"])
     if not valid_ledger(ledger, selected_sites):
         raise EvidenceError("noise commissioning ledger invalid")
+    path, evidence = checked_json_ref(
+        document.get("noise_base"),
+        base,
+        evidence_root,
+        "noise commissioning base",
+    )
+    base_cells = parse_noise_cells(
+        evidence,
+        path,
+        evidence_root,
+        ledger["noise"],
+        contract,
+        noise_binding["extractor_paths"],
+    )
+    transforms = contract["noise_instrument"]["commissioning_transforms"]
     summaries: dict[str, dict[str, Any]] = {}
-    for name, ref in noise_refs.items():
-        path, evidence = checked_json_ref(
-            ref, base, evidence_root, f"noise control {name}"
-        )
-        cells = parse_noise_cells(
-            evidence,
-            path.parent,
-            evidence_root,
-            ledger["noise"],
+    transformed: dict[str, list[dict[str, Any]]] = {}
+    for name, transform in transforms.items():
+        transformed[name] = transform_noise_cells(base_cells, transform, contract)
+        summaries[name] = bootstrap_noise(
+            transformed[name],
             contract,
+            f"commission-{name}",
         )
-        summaries[name] = bootstrap_noise(cells, contract, f"commission-{name}")
-    null = summaries["null"]
-    placebo = summaries["common_scene_placebo"]
-    if not (
-        np.all(null["lower_two_sided"] <= 1.0)
-        and np.all(null["upper_two_sided"] >= 1.0)
-        and np.all(placebo["lower_two_sided"] <= 1.0)
-        and np.all(placebo["upper_two_sided"] >= 1.0)
+    validate_noise_commissioning_summaries(summaries)
+    for base_cell, placebo_cell in zip(
+        transformed["null"], transformed["common_scene_placebo"]
     ):
-        raise EvidenceError("temporal-noise null/placebo commissioning failed")
-    if not (
-        summaries["inflation_defect"]["score"] < null["score"]
-        and summaries["averaging_improvement"]["score"] > null["score"]
-        and summaries["averaging_improvement"]["passes_superiority"]
-    ):
-        raise EvidenceError("temporal-noise bidirectional commissioning failed")
+        if not (
+            np.array_equal(base_cell["candidate"], placebo_cell["candidate"])
+            and np.array_equal(base_cell["legacy"], placebo_cell["legacy"])
+        ):
+            raise EvidenceError("common-scene placebo did not cancel exactly")
     commission_m135(binding_paths, contract)
 
 
@@ -1447,8 +1962,12 @@ def adjudicate_result(
             raise EvidenceError("contract is a draft and is not frozen")
         if verify_sources:
             validate_sources(contract)
-        review_ref = contract["activation"].get("independent_review")
-        checked_ref(review_ref, contract_path.parent, ROOT, "independent review")
+        checked_ref(
+            contract["activation"].get("independent_review"),
+            contract_path.parent,
+            ROOT,
+            "independent review",
+        )
         if not HEX40.fullmatch(str(contract["activation"].get("frozen_commit", ""))):
             raise EvidenceError("frozen commit is absent")
         if contract["detail_instrument"].get("binding_state") != "BOUND":
@@ -1456,20 +1975,10 @@ def adjudicate_result(
                 "verdict": verdicts["blocked_detail"],
                 "reason": "physical M135 binding is absent",
             }
-        binding_paths = verify_detail_binding(contract, contract_path)
+        bindings = validate_frozen_bindings(contract, contract_path)
+        binding_paths = bindings["detail_paths"]
+        noise_binding = bindings["noise_binding"]
         ledgers = contract["capture_ledgers"]
-        if ledgers.get("binding_state") != "BOUND":
-            raise EvidenceError("capture ledgers are unbound")
-        selected_sites = contract["noise_instrument"].get("selected_sites_per_capture")
-        if not valid_ledger(ledgers.get("development"), selected_sites):
-            raise EvidenceError("development ledger is invalid")
-        if not valid_ledger(ledgers.get("holdout"), selected_sites):
-            raise EvidenceError("holdout ledger is invalid")
-        if not ledgers_are_disjoint(ledgers["development"], ledgers["holdout"]):
-            raise EvidenceError("development and holdout ledgers are not disjoint")
-        verify_noise_binding(contract, contract_path, ledgers)
-        if contract["cost"].get("status") != "BENCHMARKED":
-            raise EvidenceError("campaign cost remains unsupported")
 
         result = load_json(result_path)
         forbidden = set(contract["evidence_contract"]["forbidden_supplied_conclusions"])
@@ -1514,6 +2023,7 @@ def adjudicate_result(
             result["standardisation"],
             contract,
             binding_paths,
+            noise_binding,
         )
         development_path, development = checked_json_ref(
             result.get("development"),
@@ -1544,6 +2054,7 @@ def adjudicate_result(
                 ledgers["development"],
                 contract,
                 binding_paths,
+                noise_binding,
                 caches,
                 f"development-{key}",
             )
@@ -1583,6 +2094,7 @@ def adjudicate_result(
             ledgers["holdout"],
             contract,
             binding_paths,
+            noise_binding,
             caches,
             f"holdout-{selected}",
         )
@@ -1702,34 +2214,123 @@ def make_standardisation(
 def make_noise_evidence(
     contract: dict[str, Any],
     ledger: dict[str, list[str]],
-    artifact_ref: dict[str, str],
+    root: Path,
+    prefix: str,
     ratio: float,
 ) -> dict[str, Any]:
     planes = contract["noise_instrument"]["required_cfa_planes"]
+    captures: dict[str, Any] = {}
+    for capture_id, sites in ledger.items():
+        base_power = np.asarray(
+            [1.0 + 0.001 * (index % 3) for index in range(len(sites))],
+            dtype=np.float64,
+        )
+        source_paths = []
+        for repeat in ("a", "b"):
+            path = root / f"{prefix}-{capture_id}-source-{repeat}.bin"
+            path.write_bytes(f"{prefix}:{capture_id}:source:{repeat}\n".encode("utf-8"))
+            source_paths.append(path)
+        output_specs = {
+            "candidate-a": np.zeros(len(sites), dtype=np.float64),
+            "candidate-b": np.sqrt(2.0 * ratio * base_power),
+            "legacy-a": np.zeros(len(sites), dtype=np.float64),
+            "legacy-b": np.sqrt(2.0 * base_power),
+        }
+        output_paths: dict[str, Path] = {}
+        for role, values in output_specs.items():
+            path = root / f"{prefix}-{capture_id}-{role}.json"
+            write_json(
+                path,
+                {
+                    "artifact_id": f"{prefix}:{capture_id}:{role}",
+                    "site_ids": sites,
+                    "planes": {plane: values.tolist() for plane in planes},
+                },
+            )
+            output_paths[role] = path
+        site_manifest = root / f"{prefix}-{capture_id}-sites.json"
+        write_json(site_manifest, {"capture_id": capture_id, "site_ids": sites})
+        captures[capture_id] = {
+            "site_ids": sites,
+            "site_manifest": ref_for(site_manifest, root),
+            "source_capture_ids": [
+                f"{prefix}-{capture_id}-repeat-a",
+                f"{prefix}-{capture_id}-repeat-b",
+            ],
+            "source_captures": [ref_for(path, root) for path in source_paths],
+            "candidate_outputs": [
+                ref_for(output_paths["candidate-a"], root),
+                ref_for(output_paths["candidate-b"], root),
+            ],
+            "legacy_outputs": [
+                ref_for(output_paths["legacy-a"], root),
+                ref_for(output_paths["legacy-b"], root),
+            ],
+        }
     return {
         "schema": contract["evidence_contract"]["noise_schema"],
-        "captures": {
-            capture_id: {
-                "site_ids": sites,
-                "site_manifest": artifact_ref,
-                "extractor": artifact_ref,
-                "candidate_outputs": [artifact_ref, artifact_ref],
-                "legacy_outputs": [artifact_ref, artifact_ref],
-                "planes": {
-                    plane: {
-                        "candidate_site_power": [
-                            ratio * (1.0 + 0.001 * (index % 3))
-                            for index in range(len(sites))
-                        ],
-                        "legacy_site_power": [
-                            1.0 + 0.001 * (index % 3) for index in range(len(sites))
-                        ],
-                    }
-                    for plane in planes
+        "captures": captures,
+    }
+
+
+def make_pilot_evidence(
+    contract: dict[str, Any],
+    root: Path,
+    targets: dict[str, str],
+    sites: list[str],
+    *,
+    anticorrelated: bool = False,
+) -> dict[str, Any]:
+    planes = contract["noise_instrument"]["required_cfa_planes"]
+    captures: dict[str, Any] = {}
+    for pilot_id, target_id in targets.items():
+        if anticorrelated:
+            pair_a = np.asarray(
+                [0.5 if index % 2 == 0 else 1.5 for index in range(len(sites))],
+                dtype=np.float64,
+            )
+            pair_b = np.asarray(
+                [1.5 if index % 2 == 0 else 0.5 for index in range(len(sites))],
+                dtype=np.float64,
+            )
+        else:
+            pair_a = np.asarray(
+                [1.0 + 0.001 * (index % 3) for index in range(len(sites))],
+                dtype=np.float64,
+            )
+            pair_b = pair_a.copy()
+        values = (
+            np.zeros(len(sites), dtype=np.float64),
+            np.sqrt(2.0 * pair_a),
+            np.zeros(len(sites), dtype=np.float64),
+            np.sqrt(2.0 * pair_b),
+        )
+        outputs: list[Path] = []
+        for index, row in enumerate(values, start=1):
+            path = root / f"{pilot_id}-burst-{index}.json"
+            write_json(
+                path,
+                {
+                    "artifact_id": f"{pilot_id}:burst:{index}",
+                    "site_ids": sites,
+                    "planes": {plane: row.tolist() for plane in planes},
                 },
-            }
-            for capture_id, sites in ledger.items()
-        },
+            )
+            outputs.append(path)
+        site_manifest = root / f"{pilot_id}-sites.json"
+        write_json(site_manifest, {"capture_id": pilot_id, "site_ids": sites})
+        captures[pilot_id] = {
+            "target_capture_id": target_id,
+            "site_ids": sites,
+            "site_manifest": ref_for(site_manifest, root),
+            "source_capture_ids": [
+                f"{pilot_id}-source-{index}" for index in range(1, 5)
+            ],
+            "source_outputs": [ref_for(path, root) for path in outputs],
+        }
+    return {
+        "schema": contract["noise_instrument"]["pilot_request_schema"],
+        "captures": captures,
     }
 
 
@@ -1806,6 +2407,11 @@ else:
     passes = {}
     for row in request["comparisons"]:
         capture_id = row["capture_id"]
+        if "force_state" in row:
+            states[capture_id] = row["force_state"]
+            if "force_boolean" in row:
+                passes[capture_id] = row["force_boolean"]
+            continue
         if row["candidate"] is None or row["legacy"] is None:
             states[capture_id] = "INSTRUMENT_INVALID"
             continue
@@ -1815,6 +2421,83 @@ else:
     base["detail_state_by_capture"] = states
     base["detail_pass_by_capture"] = passes
 print(json.dumps(base, sort_keys=True))
+"""
+
+
+def fake_temporal_extractor_source() -> str:
+    return r"""import argparse
+import hashlib
+import json
+from pathlib import Path
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def read_ref(request_path, ref):
+    path = (request_path.parent / ref["path"]).resolve()
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def pair_stats(left, right, planes, sites):
+    result = {}
+    for plane in planes:
+        a = left["planes"][plane]
+        b = right["planes"][plane]
+        if left["site_ids"] != sites or right["site_ids"] != sites:
+            raise SystemExit("site ledger mismatch")
+        result[plane] = {
+            "squared_difference_sum": [
+                float((x - y) * (x - y)) for x, y in zip(a, b)
+            ],
+            "sample_count": [1 for _ in sites],
+        }
+    return result
+
+
+parser = argparse.ArgumentParser()
+mode = parser.add_mutually_exclusive_group(required=True)
+mode.add_argument("--m138-scored")
+mode.add_argument("--m138-pilot")
+parser.add_argument("--capture-id", required=True)
+args = parser.parse_args()
+request_path = Path(args.m138_scored or args.m138_pilot)
+request = json.loads(request_path.read_text(encoding="utf-8"))
+capture = request["captures"][args.capture_id]
+sites = capture["site_ids"]
+planes = ["R", "G1", "G2", "B"]
+if args.m138_scored:
+    candidate = [read_ref(request_path, ref) for ref in capture["candidate_outputs"]]
+    legacy = [read_ref(request_path, ref) for ref in capture["legacy_outputs"]]
+    candidate_stats = pair_stats(candidate[0], candidate[1], planes, sites)
+    legacy_stats = pair_stats(legacy[0], legacy[1], planes, sites)
+    rows = {
+        plane: {
+            "candidate": candidate_stats[plane],
+            "legacy": legacy_stats[plane],
+        }
+        for plane in planes
+    }
+    mode_name = "SCORED"
+else:
+    bursts = [read_ref(request_path, ref) for ref in capture["source_outputs"]]
+    pair_a = pair_stats(bursts[0], bursts[1], planes, sites)
+    pair_b = pair_stats(bursts[2], bursts[3], planes, sites)
+    rows = {
+        plane: {"pair_a": pair_a[plane], "pair_b": pair_b[plane]}
+        for plane in planes
+    }
+    mode_name = "PILOT"
+print(json.dumps({
+    "schema": "m138-temporal-extractor/v1",
+    "mode": mode_name,
+    "extractor_sha256": sha(Path(__file__)),
+    "request_sha256": sha(request_path),
+    "capture_id": args.capture_id,
+    "site_ids": sites,
+    "planes": rows,
+}, sort_keys=True))
 """
 
 
@@ -1828,12 +2511,20 @@ def run_self_test(contract: dict[str, Any]) -> None:
         review.write_text("synthetic self-test review\n", encoding="utf-8")
         checker = root / "m135-checker.py"
         checker.write_text(fake_checker_source(), encoding="utf-8")
+        temporal_extractor = root / "temporal-extractor.py"
+        temporal_extractor.write_text(
+            fake_temporal_extractor_source(),
+            encoding="utf-8",
+        )
         for name in (
             "environment.json",
+            "temporal-environment.json",
             "physical-preregistration.md",
             "comparison-rule.json",
             "effect-requirement.json",
             "effect-approval.txt",
+            "cost-environment.json",
+            "cost-runner.py",
         ):
             (root / name).write_text(f"{name}\n", encoding="utf-8")
         write_json(
@@ -1841,6 +2532,15 @@ def run_self_test(contract: dict[str, Any]) -> None:
             {
                 "schema": contract["detail_instrument"]["bundle_manifest_schema"],
                 "files": [ref_for(checker, root)],
+            },
+        )
+        write_json(
+            root / "temporal-extractor-bundle.json",
+            {
+                "schema": contract["noise_instrument"][
+                    "extractor_bundle_manifest_schema"
+                ],
+                "files": [ref_for(temporal_extractor, root)],
             },
         )
 
@@ -1874,6 +2574,13 @@ def run_self_test(contract: dict[str, Any]) -> None:
                 "bootstrap_replicates": 256,
                 "required_rms_reduction": 0.20,
                 "selected_sites_per_capture": 64,
+                "extractor_entrypoint": ref_for(temporal_extractor, root),
+                "extractor_bundle_manifest": ref_for(
+                    root / "temporal-extractor-bundle.json", root
+                ),
+                "extractor_environment_manifest": ref_for(
+                    root / "temporal-environment.json", root
+                ),
             }
         )
         effect_requirement = {
@@ -1904,44 +2611,15 @@ def run_self_test(contract: dict[str, Any]) -> None:
             "binding_rule": contract["capture_ledgers"]["binding_rule"],
             "evidence_tag": "VERIFIED-PREREGISTERED",
         }
-        pilot = {
-            "schema": "m138-temporal-power-pilot/v1",
-            "site_manifest": artifact_ref,
-            "captures": {
-                "pilot-development": {
-                    "target_capture_id": "noise-development",
-                    "source_outputs": [artifact_ref] * 4,
-                    "site_ids": sites,
-                    "planes": {
-                        plane: {
-                            "pair_a_site_power": [
-                                1.0 + 0.001 * (index % 3) for index in range(64)
-                            ],
-                            "pair_b_site_power": [
-                                1.0 + 0.001 * (index % 3) for index in range(64)
-                            ],
-                        }
-                        for plane in noise["required_cfa_planes"]
-                    },
-                },
-                "pilot-holdout": {
-                    "target_capture_id": "noise-holdout",
-                    "source_outputs": [artifact_ref] * 4,
-                    "site_ids": sites,
-                    "planes": {
-                        plane: {
-                            "pair_a_site_power": [
-                                1.0 + 0.001 * (index % 3) for index in range(64)
-                            ],
-                            "pair_b_site_power": [
-                                1.0 + 0.001 * (index % 3) for index in range(64)
-                            ],
-                        }
-                        for plane in noise["required_cfa_planes"]
-                    },
-                },
+        pilot = make_pilot_evidence(
+            bound,
+            root,
+            {
+                "pilot-development": "noise-development",
+                "pilot-holdout": "noise-holdout",
             },
-        }
+            sites,
+        )
         write_json(root / "pilot.json", pilot)
         noise["effect_requirement"] = ref_for(root / "effect-requirement.json", root)
         noise["pilot_evidence"] = ref_for(root / "pilot.json", root)
@@ -1984,18 +2662,59 @@ def run_self_test(contract: dict[str, Any]) -> None:
         binding["commissioning_request"] = ref_for(
             root / "m135-commission-request.json", root
         )
-        bound["cost"] = {
-            "status": "BENCHMARKED",
-            "calibration_unit_seconds": 1.0,
-            "render_unit_seconds": 1.0,
-            "detail_checker_unit_seconds": 1.0,
-            "exclusive_wall_hours": 1.0,
-            "shared_host_wall_hours": 1.0,
-            "benchmark_rule": contract["cost"]["benchmark_rule"],
-            "evidence_tag": "VERIFIED",
+        cost = bound["cost"]
+        workload = {
+            "schema": cost["workload_schema"],
+            "units": {
+                "calibration_cells": [f"calibration-{index}" for index in range(10)],
+                "candidate_render_arms": [f"candidate-{index}" for index in range(101)],
+                "legacy_render_arms": ["legacy-development", "legacy-holdout"],
+                "scoring_arms": [f"score-{index}" for index in range(102)],
+            },
         }
+        write_json(root / "cost-workload.json", workload)
+        write_json(
+            root / "cost-runner-bundle.json",
+            {
+                "schema": cost["runner_bundle_schema"],
+                "files": [ref_for(root / "cost-runner.py", root)],
+            },
+        )
+        benchmark = {
+            "schema": cost["benchmark_schema"],
+            "runner_sha256": sha256(root / "cost-runner.py"),
+            "runner_bundle_sha256": sha256(root / "cost-runner-bundle.json"),
+            "environment_sha256": sha256(root / "cost-environment.json"),
+            "workload_sha256": sha256(root / "cost-workload.json"),
+            "render_orders": ["candidate-first", "legacy-first"],
+            "measurements": {
+                "calibration_cell_seconds": [1.0, 1.0],
+                "candidate_render_arm_seconds": [2.0, 2.0],
+                "legacy_render_arm_seconds": [3.0, 3.0],
+                "scoring_arm_seconds": [0.5, 0.5],
+                "contention_multiplier": [1.25, 1.25],
+            },
+        }
+        write_json(root / "cost-benchmark.json", benchmark)
+        exclusive_hours = (10.0 + 202.0 + 6.0 + 51.0) / 3600.0
+        cost.update(
+            {
+                "binding_state": "BOUND",
+                "benchmark_artifact": ref_for(root / "cost-benchmark.json", root),
+                "workload_manifest": ref_for(root / "cost-workload.json", root),
+                "benchmark_runner": ref_for(root / "cost-runner.py", root),
+                "benchmark_runner_bundle": ref_for(
+                    root / "cost-runner-bundle.json", root
+                ),
+                "environment_manifest": ref_for(root / "cost-environment.json", root),
+                "reported_exclusive_wall_hours": exclusive_hours,
+                "reported_shared_host_wall_hours": exclusive_hours * 1.25,
+            }
+        )
         contract_path = root / "contract.json"
         write_json(contract_path, bound)
+        validate_contract(bound, test_mode=True)
+        validate_frozen_bindings(bound, contract_path)
 
         manifest_sha = "a" * 64
         clean_standard = make_standardisation(
@@ -2015,17 +2734,26 @@ def run_self_test(contract: dict[str, Any]) -> None:
             ("noise-pass", 0.50),
             ("noise-fail", 1.50),
             ("noise-null", 1.00),
-            ("noise-placebo", 1.00),
         ):
             write_json(
                 root / f"{name}-development.json",
                 make_noise_evidence(
-                    bound, development_ledger["noise"], artifact_ref, ratio
+                    bound,
+                    development_ledger["noise"],
+                    root,
+                    name,
+                    ratio,
                 ),
             )
         write_json(
             root / "noise-pass-holdout.json",
-            make_noise_evidence(bound, holdout_ledger["noise"], artifact_ref, 0.50),
+            make_noise_evidence(
+                bound,
+                holdout_ledger["noise"],
+                root,
+                "noise-pass-holdout",
+                0.50,
+            ),
         )
         write_json(
             root / "hull-pass-development.json",
@@ -2067,16 +2795,7 @@ def run_self_test(contract: dict[str, Any]) -> None:
                 "omitted_warp_defect": ref_for(root / "omitted-warp.json", root),
             },
             "noise_control_ledger": development_ledger,
-            "noise_controls": {
-                "null": ref_for(root / "noise-null-development.json", root),
-                "inflation_defect": ref_for(root / "noise-fail-development.json", root),
-                "averaging_improvement": ref_for(
-                    root / "noise-pass-development.json", root
-                ),
-                "common_scene_placebo": ref_for(
-                    root / "noise-placebo-development.json", root
-                ),
-            },
+            "noise_base": ref_for(root / "noise-null-development.json", root),
         }
         write_json(root / "commissioning.json", commissioning)
 
@@ -2130,6 +2849,35 @@ def run_self_test(contract: dict[str, Any]) -> None:
         )
         assert green == {"verdict": "PHASE1_GO", "selected_tau": "0.99"}, green
 
+        try:
+            validate_noise_commissioning_summaries(
+                {
+                    "null": {
+                        "score": 0.0,
+                        "lower_two_sided": np.asarray([0.9]),
+                        "upper_two_sided": np.asarray([1.1]),
+                    },
+                    "common_scene_placebo": {
+                        "lower_two_sided": np.asarray([0.9]),
+                        "upper_two_sided": np.asarray([1.1]),
+                    },
+                    "inflation_defect": {
+                        "score": -0.1,
+                        "passes_superiority": True,
+                    },
+                    "averaging_improvement": {
+                        "score": 0.1,
+                        "passes_superiority": True,
+                    },
+                }
+            )
+        except EvidenceError:
+            pass
+        else:
+            raise AssertionError(
+                "commissioning accepted inflation that passed superiority"
+            )
+
         missing = copy.deepcopy(result)
         missing["development"] = {
             "path": "required-but-missing.json",
@@ -2164,15 +2912,20 @@ def run_self_test(contract: dict[str, Any]) -> None:
         )
 
         missing_power = make_noise_evidence(
-            bound, development_ledger["noise"], artifact_ref, 0.50
+            bound,
+            development_ledger["noise"],
+            root,
+            "missing-temporal-output",
+            0.50,
         )
-        del missing_power["captures"]["noise-development"]["planes"]["R"][
-            "candidate_site_power"
-        ]
-        write_json(root / "missing-site-power.json", missing_power)
+        missing_power["captures"]["noise-development"]["candidate_outputs"][0] = {
+            "path": "missing-temporal-output.bin",
+            "sha256": "0" * 64,
+        }
+        write_json(root / "missing-temporal-output.json", missing_power)
         missing_power_development = copy.deepcopy(development)
         missing_power_development["arms"]["0.50"]["noise_evidence"] = ref_for(
-            root / "missing-site-power.json", root
+            root / "missing-temporal-output.json", root
         )
         write_json(
             root / "missing-site-power-development.json",
@@ -2186,6 +2939,58 @@ def run_self_test(contract: dict[str, Any]) -> None:
         assert (
             adjudicate_result(
                 root / "missing-site-power-result.json",
+                contract_path,
+                verify_sources=False,
+                test_mode=True,
+            )["verdict"]
+            == "INSTRUMENT_INVALID"
+        )
+
+        duplicate_output = load_json(root / "noise-pass-development.json")
+        duplicate_output["captures"]["noise-development"]["candidate_outputs"][1] = (
+            duplicate_output["captures"]["noise-development"]["candidate_outputs"][0]
+        )
+        write_json(root / "duplicate-output.json", duplicate_output)
+        duplicate_development = copy.deepcopy(development)
+        duplicate_development["arms"]["0.50"]["noise_evidence"] = ref_for(
+            root / "duplicate-output.json", root
+        )
+        write_json(root / "duplicate-output-development.json", duplicate_development)
+        duplicate_result = copy.deepcopy(result)
+        duplicate_result["development"] = ref_for(
+            root / "duplicate-output-development.json", root
+        )
+        write_json(root / "duplicate-output-result.json", duplicate_result)
+        duplicate_verdict = adjudicate_result(
+            root / "duplicate-output-result.json",
+            contract_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert duplicate_verdict["verdict"] == "INSTRUMENT_INVALID", duplicate_verdict
+        assert "duplicate artifact reference" in duplicate_verdict["reason"]
+
+        supplied_power = load_json(root / "noise-pass-development.json")
+        supplied_power["captures"]["noise-development"]["candidate_site_power"] = [
+            0.01
+        ] * 64
+        write_json(root / "supplied-power.json", supplied_power)
+        supplied_power_development = copy.deepcopy(development)
+        supplied_power_development["arms"]["0.50"]["noise_evidence"] = ref_for(
+            root / "supplied-power.json", root
+        )
+        write_json(
+            root / "supplied-power-development.json",
+            supplied_power_development,
+        )
+        supplied_power_result = copy.deepcopy(result)
+        supplied_power_result["development"] = ref_for(
+            root / "supplied-power-development.json", root
+        )
+        write_json(root / "supplied-power-result.json", supplied_power_result)
+        assert (
+            adjudicate_result(
+                root / "supplied-power-result.json",
                 contract_path,
                 verify_sources=False,
                 test_mode=True,
@@ -2239,6 +3044,72 @@ def run_self_test(contract: dict[str, Any]) -> None:
         )
         assert null_verdict["verdict"] == "INSTRUMENT_INVALID", null_verdict
         assert "internally invalid" in null_verdict["reason"], null_verdict
+
+        invalid_with_false_request = copy.deepcopy(evaluate_request)
+        invalid_with_false_request["comparisons"][0].update(
+            {
+                "force_state": "INSTRUMENT_INVALID",
+                "force_boolean": False,
+            }
+        )
+        write_json(
+            root / "invalid-with-false-request.json",
+            invalid_with_false_request,
+        )
+        invalid_with_false_development = copy.deepcopy(development)
+        invalid_with_false_development["arms"]["0.50"]["m135_request"] = ref_for(
+            root / "invalid-with-false-request.json", root
+        )
+        write_json(
+            root / "invalid-with-false-development.json",
+            invalid_with_false_development,
+        )
+        invalid_with_false_result = copy.deepcopy(result)
+        invalid_with_false_result["development"] = ref_for(
+            root / "invalid-with-false-development.json", root
+        )
+        write_json(
+            root / "invalid-with-false-result.json",
+            invalid_with_false_result,
+        )
+        invalid_with_false = adjudicate_result(
+            root / "invalid-with-false-result.json",
+            contract_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert invalid_with_false["verdict"] == "INSTRUMENT_INVALID"
+        assert "coerced internally invalid" in invalid_with_false["reason"]
+
+        null_with_false_request = copy.deepcopy(evaluate_request)
+        null_with_false_request["comparisons"][0].update(
+            {
+                "force_state": None,
+                "force_boolean": False,
+            }
+        )
+        write_json(root / "null-with-false-request.json", null_with_false_request)
+        null_with_false_development = copy.deepcopy(development)
+        null_with_false_development["arms"]["0.50"]["m135_request"] = ref_for(
+            root / "null-with-false-request.json", root
+        )
+        write_json(
+            root / "null-with-false-development.json",
+            null_with_false_development,
+        )
+        null_with_false_result = copy.deepcopy(result)
+        null_with_false_result["development"] = ref_for(
+            root / "null-with-false-development.json", root
+        )
+        write_json(root / "null-with-false-result.json", null_with_false_result)
+        null_with_false = adjudicate_result(
+            root / "null-with-false-result.json",
+            contract_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert null_with_false["verdict"] == "INSTRUMENT_INVALID"
+        assert "returned unknown state" in null_with_false["reason"]
 
         failed_detail_request = copy.deepcopy(evaluate_request)
         failed_detail_request["comparisons"][0]["candidate"] = [0.5, 0.5]
@@ -2443,6 +3314,15 @@ def run_self_test(contract: dict[str, Any]) -> None:
             )["verdict"]
             == "BLOCKED_DETAIL_INSTRUMENT"
         )
+        try:
+            validate_frozen_bindings(
+                unbound_detail_contract,
+                unbound_detail_contract_path,
+            )
+        except EvidenceError:
+            pass
+        else:
+            raise AssertionError("frozen check accepted unbound M135")
 
         unsupported_cost_contract = copy.deepcopy(bound)
         unsupported_cost_contract["cost"] = copy.deepcopy(contract["cost"])
@@ -2463,18 +3343,103 @@ def run_self_test(contract: dict[str, Any]) -> None:
             == "INSTRUMENT_INVALID"
         )
 
+        null_cost_benchmark = copy.deepcopy(benchmark)
+        null_cost_benchmark["measurements"]["scoring_arm_seconds"] = [None, None]
+        write_json(root / "null-cost-benchmark.json", null_cost_benchmark)
+        null_cost_contract = copy.deepcopy(bound)
+        null_cost_contract["cost"]["benchmark_artifact"] = ref_for(
+            root / "null-cost-benchmark.json", root
+        )
+        null_cost_contract_path = root / "null-cost-contract.json"
+        write_json(null_cost_contract_path, null_cost_contract)
+        null_cost_result = copy.deepcopy(result)
+        null_cost_result["contract_sha256"] = sha256(null_cost_contract_path)
+        write_json(root / "null-cost-result.json", null_cost_result)
+        null_cost_verdict = adjudicate_result(
+            root / "null-cost-result.json",
+            null_cost_contract_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert null_cost_verdict["verdict"] == "INSTRUMENT_INVALID"
+        assert "finite positive timing samples" in null_cost_verdict["reason"]
+
+        duplicate_pilot = copy.deepcopy(pilot)
+        first_pilot = duplicate_pilot["captures"]["pilot-development"]
+        first_pilot["source_outputs"][1] = first_pilot["source_outputs"][0]
+        write_json(root / "duplicate-pilot.json", duplicate_pilot)
+        duplicate_pilot_contract = copy.deepcopy(bound)
+        duplicate_pilot_contract["noise_instrument"]["pilot_evidence"] = ref_for(
+            root / "duplicate-pilot.json", root
+        )
+        duplicate_pilot_contract_path = root / "duplicate-pilot-contract.json"
+        write_json(duplicate_pilot_contract_path, duplicate_pilot_contract)
+        duplicate_pilot_result = copy.deepcopy(result)
+        duplicate_pilot_result["contract_sha256"] = sha256(
+            duplicate_pilot_contract_path
+        )
+        write_json(root / "duplicate-pilot-result.json", duplicate_pilot_result)
+        duplicate_pilot_verdict = adjudicate_result(
+            root / "duplicate-pilot-result.json",
+            duplicate_pilot_contract_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert duplicate_pilot_verdict["verdict"] == "INSTRUMENT_INVALID"
+        assert "duplicate artifact reference" in duplicate_pilot_verdict["reason"]
+
+        malformed_review_contract = copy.deepcopy(bound)
+        malformed_review_contract["activation"]["independent_review"] = {
+            "path": "independent-review.txt",
+            "sha256": "0" * 64,
+        }
+        malformed_review_path = root / "malformed-review-contract.json"
+        write_json(malformed_review_path, malformed_review_contract)
+        try:
+            validate_frozen_bindings(malformed_review_contract, malformed_review_path)
+        except EvidenceError:
+            pass
+        else:
+            raise AssertionError("frozen check accepted malformed review binding")
+
+        null_ledger_contract = copy.deepcopy(bound)
+        null_ledger_contract["capture_ledgers"]["development"] = None
+        null_ledger_path = root / "null-ledger-contract.json"
+        write_json(null_ledger_path, null_ledger_contract)
+        try:
+            validate_frozen_bindings(null_ledger_contract, null_ledger_path)
+        except EvidenceError:
+            pass
+        else:
+            raise AssertionError("frozen check accepted null capture ledger")
+
+        unbound_extractor_contract = copy.deepcopy(bound)
+        unbound_extractor_contract["noise_instrument"]["extractor_entrypoint"] = None
+        unbound_extractor_path = root / "unbound-extractor-contract.json"
+        write_json(unbound_extractor_path, unbound_extractor_contract)
+        try:
+            validate_frozen_bindings(
+                unbound_extractor_contract,
+                unbound_extractor_path,
+            )
+        except EvidenceError:
+            pass
+        else:
+            raise AssertionError("frozen check accepted unbound temporal extractor")
+
         weak_effect_requirement = copy.deepcopy(effect_requirement)
         weak_effect_requirement["required_rms_reduction"] = 1e-6
         write_json(root / "weak-effect-requirement.json", weak_effect_requirement)
-        low_power_pilot = copy.deepcopy(pilot)
-        for capture in low_power_pilot["captures"].values():
-            for plane in capture["planes"].values():
-                plane["pair_a_site_power"] = [
-                    0.5 if index % 2 == 0 else 1.5 for index in range(64)
-                ]
-                plane["pair_b_site_power"] = [
-                    1.5 if index % 2 == 0 else 0.5 for index in range(64)
-                ]
+        low_power_pilot = make_pilot_evidence(
+            bound,
+            root,
+            {
+                "low-power-pilot-development": "noise-development",
+                "low-power-pilot-holdout": "noise-holdout",
+            },
+            sites,
+            anticorrelated=True,
+        )
         write_json(root / "low-power-pilot.json", low_power_pilot)
         low_power_contract = copy.deepcopy(bound)
         low_power_contract["noise_instrument"]["required_rms_reduction"] = 1e-6
@@ -2509,11 +3474,15 @@ def run_self_test(contract: dict[str, Any]) -> None:
 
     print(
         "self-test: raw-evidence GO=GREEN missing-artifact=RED "
-        "missing-curve=RED missing-site-power=RED missing-M135-input=RED "
-        "M135-null-state=INSTRUMENT_INVALID M135-valid-fail=REFUTED "
+        "missing-curve=RED missing-temporal-output=RED duplicate-output=RED "
+        "supplied-power=RED missing-M135-input=RED "
+        "M135-null-state=INSTRUMENT_INVALID "
+        "M135-invalid-plus-boolean=INSTRUMENT_INVALID "
+        "M135-unknown-plus-boolean=INSTRUMENT_INVALID M135-valid-fail=REFUTED "
         "pipeline-mismatch=RED hash-mutation=RED supplied-boolean=RED "
         "postclamp-hull=RED M135-improvement-missing=RED M135-unbound=BLOCKED "
-        "unsupported-cost=RED underpowered-design=RED improvement=GREEN "
+        "unsupported-cost=RED null-cost=RED duplicate-pilot=RED "
+        "malformed-frozen-bindings=RED underpowered-design=RED improvement=GREEN "
         "development-refutation=RED holdout-refutation=RED width-irrelevance=GREEN"
     )
 
@@ -2527,14 +3496,28 @@ def main() -> int:
     args = parser.parse_args()
     if not (args.check or args.self_test or args.result):
         parser.error("choose --check, --self-test, or --result")
-    contract = load_json(args.contract)
-    validate_contract(contract)
-    if args.check:
-        validate_sources(contract)
-        validate_document()
-        print("draft specification check: PASS (not frozen)")
-    if args.self_test:
-        run_self_test(contract)
+    try:
+        contract = load_json(args.contract)
+        validate_contract(contract)
+        if args.check:
+            validate_sources(contract)
+            validate_document()
+            if contract["status"] == contract["activation"]["required_status"]:
+                validate_frozen_bindings(contract, args.contract)
+                print("frozen specification and bindings check: PASS")
+            else:
+                print("draft specification check: PASS (not frozen)")
+        if args.self_test:
+            run_self_test(contract)
+    except EvidenceError as error:
+        print(
+            json.dumps(
+                {"verdict": "INSTRUMENT_INVALID", "reason": str(error)},
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return 2
     if args.result:
         verdict = adjudicate_result(args.result, args.contract)
         print(json.dumps(verdict, indent=2, sort_keys=True))
