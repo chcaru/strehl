@@ -2341,7 +2341,7 @@ result is a publishable stopping point all stand.
 
 ---
 
-## 13. Amendment 3 — Phase 1's refutation is withdrawn, and section 9 cannot run as written (orchestrator, 2026-09-05)
+## 13. Amendment 3 — Phase 1's refutation is withdrawn, and section 9 cannot run as written (orchestrator, 2026-09-04)
 
 *Appended by the execution orchestrator. No text above this line has been
 altered. Evidence is in `docs/STATUS.md` sections 2.9.37--2.9.40,
@@ -2552,7 +2552,7 @@ lowers no quality bar — it removes two steps that could not honestly be execut
 and it removes them from the instruction rather than merely noting them in an
 appendix.
 
-## 15. Amendment 5 — the two ungated items are deferred on the record, and Phase 3's label is false (orchestrator, 2026-09-05)
+## 15. Amendment 5 — the two ungated items are deferred on the record, and Phase 3's label is false (orchestrator, 2026-09-04)
 
 An independent audit (`docs/research/M133-blocker-audit.md`) established that two
 plan items have never produced a tracked gate result, and that section 9
@@ -2654,7 +2654,7 @@ because a gap invites a check and a label suppresses one.
   either may be reopened the moment its precondition is met.
 
 
-## 16. Amendment 6 — the §13.5 blocker survives independent attack, but its wording is too broad and its escape route is not uniquely M1 (orchestrator, 2026-09-06)
+## 16. Amendment 6 — the §13.5 blocker survives independent attack, but its wording is too broad and its escape route is not uniquely M1 (orchestrator, 2026-09-04)
 
 §13.5 named the detail instrument as the program's critical path, and said the
 blocker *"cannot be bought, cannot be shot around with a better capture, and
@@ -2699,8 +2699,10 @@ dropped when the finding is quoted.
 ### 16.2 Amendment 1's central sentence is qualified, not withdrawn
 
 The finding at line 2196 — *"no single-image high-frequency statistic separates
-resolved detail from sharpening"* — is **too broad as written.** It holds for all
-admissible scenes *without an external model, prior or reference*. It does not
+resolved detail from sharpening"* — is **too broad as written.** No single-image
+high-frequency statistic can guarantee that separation uniformly over an
+unrestricted admissible scene/renderer class *without an external model, prior
+or reference*. It does not
 hold as a universal statement about every no-reference metric: a restricted
 sharpening family, or an explicit and validated natural-image prior, can be
 discriminated statistically, with the result inheriting those assumptions and
@@ -2721,8 +2723,8 @@ narrower:
 §13.5 ranked capture as an *alternative* that the blocker defeats. This result
 inverts that framing. The blocker is not defeated by capture, and it is not
 defeated without it either: the sound instrument requires identifying
-information from outside the rendered outputs, and **capture is the currently
-usable form of that information.** Capture is therefore a *precondition of the
+information from outside the rendered outputs, and **fresh capture is the
+currently specified way to obtain that information.** Capture is therefore a *precondition of the
 instrument*, not a way around it.
 
 §13.5's ranking of the detail instrument as the critical path is **unchanged and
@@ -2746,8 +2748,10 @@ usable form: adequate signal power, cross-fit independence, fixed-pattern
 calibration, eligible common-render outputs and a commissioned admission rule
 are all missing, and M135 independently records that the archive holds no
 same-site reference/output pair with disjoint calibration. **M1 remains the only
-route with a path to an admissible result, and Ask 2a remains the highest-value
-owner action.** What is withdrawn is the claim that it is mathematically
+currently specified and physically actionable route with an evidenced path to an
+admissible result — no archive-only same-resolution route is usable — and Ask 2a
+remains the highest-value owner action.** It is not the only mathematically
+possible architecture. What is withdrawn is the claim that it is mathematically
 mandatory — a claim this program did not need and could not support.
 
 ### 16.5 A verifier that passes with randomness disabled
