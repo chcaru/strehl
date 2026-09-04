@@ -245,19 +245,35 @@ MUTATIONS = (
         "commission-blur-status",
         "guard_commission_blur_status",
         (
-            "def blur_control_passes(status: Any, q95: float, bar: float) -> bool:\n"
-            "    return bool(status == \"DETAIL_FAIL\" and q95 < bar)\n"
+            "def blur_control_passes(\n"
+            "    status: Any, q95: float, config: dict[str, Any]\n"
+            ") -> bool:\n"
+            "    return bool(\n"
+            "        status == \"DETAIL_FAIL\"\n"
+            "        and q95 < commissioning_blur_information_bar(config)\n"
+            "    )\n"
         ),
         (
-            "def blur_control_passes(status: Any, q95: float, bar: float) -> bool:\n"
-            "    return bool(True and q95 < bar)\n"
+            "def blur_control_passes(\n"
+            "    status: Any, q95: float, config: dict[str, Any]\n"
+            ") -> bool:\n"
+            "    return bool(\n"
+            "        True\n"
+            "        and q95 < commissioning_blur_information_bar(config)\n"
+            "    )\n"
         ),
     ),
     Mutation(
         "commission-blur-q95",
         "guard_commission_blur_q95",
-        "    return bool(status == \"DETAIL_FAIL\" and q95 < bar)\n",
-        "    return bool(status == \"DETAIL_FAIL\" and True)\n",
+        "        and q95 < commissioning_blur_information_bar(config)\n",
+        "        and True\n",
+    ),
+    Mutation(
+        "commission-blur-config-path",
+        "guard_commission_blur_uses_config",
+        "        and q95 < commissioning_blur_information_bar(config)\n",
+        "        and q95 < 0.90\n",
     ),
     Mutation(
         "commission-blur-contract-threshold",
@@ -273,19 +289,35 @@ MUTATIONS = (
         "commission-improvement-status",
         "guard_commission_improvement_status",
         (
-            "def improvement_control_passes(status: Any, q05: float, bar: float) -> bool:\n"
-            "    return bool(status == \"DETAIL_PASS\" and q05 > bar)\n"
+            "def improvement_control_passes(\n"
+            "    status: Any, q05: float, config: dict[str, Any]\n"
+            ") -> bool:\n"
+            "    return bool(\n"
+            "        status == \"DETAIL_PASS\"\n"
+            "        and q05 > commissioning_improvement_information_bar(config)\n"
+            "    )\n"
         ),
         (
-            "def improvement_control_passes(status: Any, q05: float, bar: float) -> bool:\n"
-            "    return bool(True and q05 > bar)\n"
+            "def improvement_control_passes(\n"
+            "    status: Any, q05: float, config: dict[str, Any]\n"
+            ") -> bool:\n"
+            "    return bool(\n"
+            "        True\n"
+            "        and q05 > commissioning_improvement_information_bar(config)\n"
+            "    )\n"
         ),
     ),
     Mutation(
         "commission-improvement-q05",
         "guard_commission_improvement_q05",
-        "    return bool(status == \"DETAIL_PASS\" and q05 > bar)\n",
-        "    return bool(status == \"DETAIL_PASS\" and True)\n",
+        "        and q05 > commissioning_improvement_information_bar(config)\n",
+        "        and True\n",
+    ),
+    Mutation(
+        "commission-improvement-config-path",
+        "guard_commission_improvement_uses_config",
+        "        and q05 > commissioning_improvement_information_bar(config)\n",
+        "        and q05 > 1.10\n",
     ),
     Mutation(
         "commission-improvement-contract-threshold",

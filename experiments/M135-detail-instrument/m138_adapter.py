@@ -42,6 +42,7 @@ BUNDLE_SOURCE_NAMES = (
     "M138-ADAPTER-AMENDMENT-6.md",
     "M138-ADAPTER-AMENDMENT-7.md",
     "M138-ADAPTER-AMENDMENT-8.md",
+    "M138-ADAPTER-AMENDMENT-9.md",
     "comparison-binding.json",
     "comparison-contract.json",
     "comparison_checker.py",
@@ -751,14 +752,6 @@ def physical_null_control_passes(
     )
 
 
-def blur_control_passes(status: Any, q95: float, bar: float) -> bool:
-    return bool(status == "DETAIL_FAIL" and q95 < bar)
-
-
-def improvement_control_passes(status: Any, q05: float, bar: float) -> bool:
-    return bool(status == "DETAIL_PASS" and q05 > bar)
-
-
 def commissioning_blur_information_bar(config: dict[str, Any]) -> float:
     return float(
         config["pre_noise_blur_information_ratio_q95_strictly_below"]
@@ -772,6 +765,24 @@ def commissioning_improvement_information_bar(
         config[
             "pre_noise_optical_improvement_information_ratio_q05_strictly_above"
         ]
+    )
+
+
+def blur_control_passes(
+    status: Any, q95: float, config: dict[str, Any]
+) -> bool:
+    return bool(
+        status == "DETAIL_FAIL"
+        and q95 < commissioning_blur_information_bar(config)
+    )
+
+
+def improvement_control_passes(
+    status: Any, q05: float, config: dict[str, Any]
+) -> bool:
+    return bool(
+        status == "DETAIL_PASS"
+        and q05 > commissioning_improvement_information_bar(config)
     )
 
 
@@ -953,13 +964,13 @@ def process_commission(
         "pre_noise_blur_lowers_information": blur_control_passes(
             blur_decision.get("status"),
             blur_q95,
-            commissioning_blur_information_bar(commission_cfg),
+            commission_cfg,
         ),
         "pre_noise_optical_improvement_raises_information": (
             improvement_control_passes(
                 improvement_decision.get("status"),
                 improvement_q05,
-                commissioning_improvement_information_bar(commission_cfg),
+                commission_cfg,
             )
         ),
         "missing_flat_control_refuses": missing_flat_control_passes(
@@ -1081,27 +1092,45 @@ def mutation_probe_checks() -> dict[str, bool]:
             "DETAIL_PASS", 1.0, 1.06, 0.95, 1.05
         )
     )
-    checks["guard_commission_blur_status"] = not blur_control_passes(
-        "DETAIL_PASS", 0.80, 0.90
-    )
-    checks["guard_commission_blur_q95"] = not blur_control_passes(
-        "DETAIL_FAIL", 0.90, 0.90
-    )
-    checks["guard_commission_improvement_status"] = (
-        not improvement_control_passes("DETAIL_FAIL", 1.20, 1.10)
-    )
-    checks["guard_commission_improvement_q05"] = (
-        not improvement_control_passes("DETAIL_PASS", 1.10, 1.10)
-    )
     threshold_config = {
         "pre_noise_blur_information_ratio_q95_strictly_below": 0.90,
         "pre_noise_optical_improvement_information_ratio_q05_strictly_above": 1.10,
     }
+    checks["guard_commission_blur_status"] = not blur_control_passes(
+        "DETAIL_PASS", 0.80, threshold_config
+    )
+    checks["guard_commission_blur_q95"] = not blur_control_passes(
+        "DETAIL_FAIL", 0.90, threshold_config
+    )
+    checks["guard_commission_improvement_status"] = (
+        not improvement_control_passes(
+            "DETAIL_FAIL", 1.20, threshold_config
+        )
+    )
+    checks["guard_commission_improvement_q05"] = (
+        not improvement_control_passes(
+            "DETAIL_PASS", 1.10, threshold_config
+        )
+    )
     checks["guard_commission_blur_contract_threshold"] = (
         commissioning_blur_information_bar(threshold_config) == 0.90
     )
     checks["guard_commission_improvement_contract_threshold"] = (
         commissioning_improvement_information_bar(threshold_config) == 1.10
+    )
+    alternate_threshold_config = {
+        "pre_noise_blur_information_ratio_q95_strictly_below": 0.70,
+        "pre_noise_optical_improvement_information_ratio_q05_strictly_above": 1.30,
+    }
+    checks["guard_commission_blur_uses_config"] = (
+        not blur_control_passes(
+            "DETAIL_FAIL", 0.80, alternate_threshold_config
+        )
+    )
+    checks["guard_commission_improvement_uses_config"] = (
+        not improvement_control_passes(
+            "DETAIL_PASS", 1.20, alternate_threshold_config
+        )
     )
     checks["guard_commission_missing_status"] = (
         not missing_flat_control_passes(
@@ -1594,7 +1623,7 @@ def run_self_test(runtime_state: Runtime) -> dict[str, Any]:
         tampered_runtime = copy_self_test_runtime(
             scratch, bound, name="bundle-tamper-runtime"
         )
-        tampered_member = tampered_runtime / "M138-ADAPTER-AMENDMENT-8.md"
+        tampered_member = tampered_runtime / "M138-ADAPTER-AMENDMENT-9.md"
         tampered_member.write_bytes(
             tampered_member.read_bytes() + b"\nM138 bundle mutation probe\n"
         )
