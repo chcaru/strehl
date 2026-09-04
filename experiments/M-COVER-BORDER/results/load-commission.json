@@ -1,0 +1,18 @@
+{
+  "checks": {
+    "external_subtraction": true,
+    "external_zero": true,
+    "pause_green": true,
+    "pause_red": true,
+    "pid_specific_resume": true,
+    "pid_specific_suspend": true,
+    "preload_green": true,
+    "preload_red": true
+  },
+  "passed": true,
+  "readings": {
+    "commission_child_pid": 30248,
+    "external_subtraction_percent": 10.0
+  },
+  "schema": "M-COVER-BORDER-LOAD-GOVERNOR-COMMISSION-1"
+}

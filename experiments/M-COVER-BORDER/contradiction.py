@@ -124,11 +124,14 @@ def fixed_profile(
         ):
             safe = candidate
             break
+    censored = safe == deep_start
     return {
         "threshold": threshold,
         "deep_start_px": deep_start,
         "deep_ratio": deep_ratio,
         "safe_inset_px": safe,
+        "censored_at_deep_start": censored,
+        "admitted_safe_inset_px": None if censored else safe,
         "rows": rows,
     }
 
@@ -229,6 +232,29 @@ def central_window_profile(
         "profile": profile,
         "descriptors": profile_descriptors(profile),
     }
+
+
+def boundary_specificity(
+    physical: dict[str, Any],
+    central: dict[str, Any],
+) -> str:
+    physical_profile = physical["profile"]
+    central_profile = central["profile"]
+    physical_safe = physical_profile["safe_inset_px"]
+    if physical_safe == 8:
+        return "SPECIFIC_AT_FLOOR"
+    if physical_safe is None or physical_profile["censored_at_deep_start"]:
+        return "UNRESOLVED_PHYSICAL_NEVER_SAFE_BEFORE_DEEP"
+    if int(central["minimum_physical_border_clearance_px"]) <= int(physical_safe):
+        return "UNRESOLVED_CONTROL_INSIDE_NOMINAL_REACH"
+    central_peak = central["descriptors"]["peak_abs_effect_before_deep"]
+    if (
+        central_profile["safe_inset_px"] != 8
+        or central_profile["censored_at_deep_start"]
+        or central_peak > THRESHOLD
+    ):
+        return "NONSPECIFIC_SCENE_TAIL"
+    return "BOUNDARY_LOCAL_SUPPORTED"
 
 
 def load_green(path: Path) -> tuple[np.ndarray, dict[str, Any]]:
@@ -499,6 +525,15 @@ def command_commission(args: argparse.Namespace) -> int:
         edges=custom_edges,
         normalise=False,
     )
+    censored_image = baseline.copy()
+    censored_image[distance < 256] *= 1.02
+    censored = fixed_profile(
+        sums(censored_image),
+        control_sums,
+        counts,
+        deep_start=256,
+        edges=custom_edges,
+    )
 
     valid_guard = {
         "binary_sha": "A",
@@ -545,6 +580,9 @@ def command_commission(args: argparse.Namespace) -> int:
             0.02,
             abs_tol=1e-12,
         ),
+        "deep_start_censored": censored["safe_inset_px"] == 256
+        and censored["censored_at_deep_start"]
+        and censored["admitted_safe_inset_px"] is None,
         "unit_768": 768 / 2 == 384,
         "unit_1280": 1280 / 2 == 640,
         "unit_640": 640 / 2 == 320,
@@ -563,6 +601,54 @@ def command_commission(args: argparse.Namespace) -> int:
         "dtype_guard_red": commissioned_metadata_failure(
             [4, 4, 3], [4, 4, 3], "float32"
         ),
+        "specificity_floor": boundary_specificity(
+            {"profile": {"safe_inset_px": 8, "censored_at_deep_start": False}},
+            {
+                "profile": {
+                    "safe_inset_px": 8,
+                    "censored_at_deep_start": False,
+                },
+                "descriptors": {"peak_abs_effect_before_deep": 0.0},
+                "minimum_physical_border_clearance_px": 100,
+            },
+        )
+        == "SPECIFIC_AT_FLOOR",
+        "specificity_boundary": boundary_specificity(
+            {"profile": {"safe_inset_px": 64, "censored_at_deep_start": False}},
+            {
+                "profile": {
+                    "safe_inset_px": 8,
+                    "censored_at_deep_start": False,
+                },
+                "descriptors": {"peak_abs_effect_before_deep": 0.0},
+                "minimum_physical_border_clearance_px": 100,
+            },
+        )
+        == "BOUNDARY_LOCAL_SUPPORTED",
+        "specificity_scene": boundary_specificity(
+            {"profile": {"safe_inset_px": 64, "censored_at_deep_start": False}},
+            {
+                "profile": {
+                    "safe_inset_px": 32,
+                    "censored_at_deep_start": False,
+                },
+                "descriptors": {"peak_abs_effect_before_deep": 0.01},
+                "minimum_physical_border_clearance_px": 100,
+            },
+        )
+        == "NONSPECIFIC_SCENE_TAIL",
+        "specificity_inside_reach": boundary_specificity(
+            {"profile": {"safe_inset_px": 64, "censored_at_deep_start": False}},
+            {
+                "profile": {
+                    "safe_inset_px": 8,
+                    "censored_at_deep_start": False,
+                },
+                "descriptors": {"peak_abs_effect_before_deep": 0.0},
+                "minimum_physical_border_clearance_px": 32,
+            },
+        )
+        == "UNRESOLVED_CONTROL_INSIDE_NOMINAL_REACH",
     }
     payload = {
         "schema": "M-COVER-BORDER-CONTRADICTION-COMMISSION-1",
@@ -586,6 +672,10 @@ def command_commission(args: argparse.Namespace) -> int:
             ]["safe_inset_px"],
             "central_plant_safe_inset_px": central_plant["profile"][
                 "safe_inset_px"
+            ],
+            "censored_safe_inset_px": censored["safe_inset_px"],
+            "censored_admitted_safe_inset_px": censored[
+                "admitted_safe_inset_px"
             ],
         },
     }
@@ -626,17 +716,10 @@ def command_profile(args: argparse.Namespace) -> int:
     )
     crop_central = central_window_profile(greens["crop_b7"], greens["crop_b2"])
     for physical, central in ((scale, scale_central), (crop, crop_central)):
-        physical_safe = physical["profile"]["safe_inset_px"]
-        central_safe = central["profile"]["safe_inset_px"]
-        central_peak = central["descriptors"]["peak_abs_effect_before_deep"]
-        if physical_safe == 8:
-            disposition = "PHYSICAL_PROFILE_AT_FLOOR"
-        elif central_safe != 8 or central_peak > THRESHOLD:
-            disposition = "NONSPECIFIC_ARTIFICIAL_BOUNDARY_CONTROL_FIRES"
-        else:
-            disposition = "BOUNDARY_LOCAL_EFFECT_SUPPORTED"
         physical["central_artificial_boundary_control"] = central
-        physical["boundary_specificity_disposition"] = disposition
+        physical["boundary_specificity_disposition"] = boundary_specificity(
+            physical, central
+        )
     through_ratio = ratio(
         scale["positive_residual_mass_through_256"]["positive_fraction"],
         crop["positive_residual_mass_through_256"]["positive_fraction"],
