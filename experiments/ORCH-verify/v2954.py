@@ -18,7 +18,8 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().pare
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
-            "2.9.66", "2.9.67", "2.9.68", "2.9.69", "2.9.70", "2.9.71"]
+            "2.9.66", "2.9.67", "2.9.68", "2.9.69", "2.9.70", "2.9.71",
+            "2.9.72"]
 
 
 def collapse(s):
@@ -211,6 +212,28 @@ CLAIMS = [
     ("m151 eligible at population", "it reads `275`",
      R + "M151-m5-checker.md", None, "275"),
     ("m151 wilson lcb", "0.990258", R + "M151-m5-checker.md"),
+    # --- 2.9.72: the scorecard outran the plan ---
+    # The plan is the authority; these needles pin MY summary of it against the
+    # plan's own words, so a drifting paraphrase in STATUS fails loudly.
+    ("m169 lead verdict", "SCORECARD EXCEEDS PLAN",
+     R + "M169-comparator-requirement-audit.md"),
+    ("plan noise quotable now", "Nothing — quotable now",
+     "docs/proposals/2026-08-sota-path.md"),
+    ("plan speed hold the line",
+     "Hold the line (D5; D9 buys back the worker-cap tax first)",
+     "docs/proposals/2026-08-sota-path.md"),
+    ("plan detail names licence", "Only fine detail names",
+     "docs/proposals/2026-08-sota-path.md", None, "a licensed comparator"),
+    ("plan free arm clears nothing",
+     "is a useful foreign arm and repairs a real provenance defect",
+     "docs/proposals/2026-08-sota-path.md"),
+    ("m164 manifest refusals", "with `17` persistent refusals",
+     R + "M164-dominance-manifest.md", None, "17 persistent refusal records"),
+    ("m166 disjoint arithmetic", "891 - 96 + 128 + 164 + 128 = 1,215",
+     R + "M166-rehearsal-cost.md", None, "891 - 96 + 128 + 164 + 128"),
+    ("m166 not interchangeable",
+     "Equal budgets do not make the files interchangeable",
+     R + "M166-rehearsal-cost.md"),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")

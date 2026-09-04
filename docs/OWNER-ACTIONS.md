@@ -52,11 +52,30 @@ Maintained by the orchestrator. Last updated after lane M175.
 > `1,215`, not `1,147`."* **The `1,147` figure is superseded; ignore
 > it wherever you still see it.**
 >
+> **One thing to know before you shoot that block, because the mistake is
+> unrecoverable.** Those `164` witness frames are a *second, separate* set of
+> `55 + 55 + 27 + 27` — the scored session already contains a `164`-frame block
+> with exactly the same budget. They are not the same frames and cannot be shared:
+> M166 requires that *"No `TC0-DOM-*` RAW may appear in a candidate or comparator
+> manifest. Equal budgets do not make the files interchangeable."* Using one set
+> for both would make the witness identical to what the candidate consumed, which
+> voids the whole comparison — and it would not announce itself until the score
+> run, long after the sitting was over. **I will label them distinctly on the
+> bench sheet so this cannot happen by accident.**
+>
 > **The rehearsal is `1,092` registered frames, and it is not yet releasable.**
 > That is a real evening, only `123` frames short of the scored session itself.
 > It is currently **STOP at zero frames** until the production dominance
-> manifest is frozen — that freeze is software work on my side, not something
-> you do. **This does not affect Ask 2a below: M166 is explicit that _"The
+> manifest is frozen. **That freeze was attempted, and it failed honestly.**
+> Lane M164 built the manifest, its launcher and a fail-closed reader, then
+> refused to mark the record `FROZEN` (commit `146d6048`) — run against it, the
+> reader exits `2` with 17 explicit refusals instead of yielding a usable gate.
+> **I earlier called that freeze "software work on my side"; that was
+> incomplete.** Its missing inputs span several producers, and one named gap is
+> that M147 has no accepted real scale and field result — **that is Ask 2a, so
+> your two frames may sit on the critical path of the very gate that is blocking
+> the rehearsal.** I have asked M164 to confirm that precisely, and will tell you
+> either way. **This does not affect Ask 2a below: M166 is explicit that _"The
 > two-frame M147 preflight may still be completed; it establishes scale and
 > field only."_ Shoot the two frames. Do not start the rehearsal.**
 >
@@ -171,16 +190,19 @@ summary of one:
 | after | clears | reaches | which axes |
 | --- | --- | --- | --- |
 | `crop-early` — **DONE, free** | `b` | **`2 of 12`** | M8, M12 |
-| \+ capture **sessions** (`$0`, **two sittings, 1,659 frames** — see note) | `b+c` | **`3 of 12`** | M8, M10, M12 |
+| \+ capture **sessions** (`$0`, **two sittings, 2,307 frames** — see note) | `b+c` | **`3 of 12`** | M8, M10, M12 |
 | \+ **Zerene `$189`** + a colour target | `b+c+d` | **`4 of 12`** | M7, M8, M10, M12 |
 | \+ a working detail instrument | `a` | **`12 of 12`** | all |
 
 > **Note on that middle row, because it used to say "45-60 min" and that was
 > wrong.** The `45-60 min` figure described the old **603**-frame single-sitting
 > design. That design no longer exists. The ask is now **two** sittings —
-> a **768**-frame non-holdout rehearsal and an **891**-frame scored session,
-> **1,659** frames in total — for the reasons set out under *"The capture ask is
-> now two sittings, not one"* below.
+> a **1,092**-frame non-holdout rehearsal and a **1,215**-frame scored session,
+> **2,307** frames in total — for the reasons set out under *"The capture ask is
+> now two sittings, not one"* below. **The `768` / `891` / `1,659` figures this
+> row carried until now are superseded** by lane M166's re-derivation (commits
+> `a195bc63`, `ff99afc8`); the causes are in the banner at the top of this
+> document. Ignore `1,659` wherever you still see it.
 >
 > **The duration is under revision and the old number was optimistic.** Lane
 > M150's re-derivation puts the *shutter-time floor alone* for the scored
@@ -412,6 +434,19 @@ No action needed on any of these. They cost nothing and need none of your time.
 
 **It costs nothing, and it protects the $189 whenever you do spend it.**
 
+> **⚠ The "8 of 12" figure below is under audit and may be substantially too
+> high.** Lane M169 (commit `7ae6dac3`) re-derived your plan's comparator
+> requirement from source and found that the scorecard — my document, not yours —
+> requires *all three* comparator arms for *every* comparative axis, while your
+> plan assigns them **by claim**: PMax and DMap to detail, DMap to depth, the fork
+> to the speed quote. Your own axis table records noise as *"Nothing — quotable
+> now"* and speed/memory as *"Hold the line"* — **neither names a licence.** If
+> that is right, a purchase clears fewer axes than this section claims, and some
+> axes were never blocked by it at all. I have flagged the rule rather than
+> quietly relaxing it, and I am not scoring anything under the looser reading
+> until you rule on it. **The email below costs nothing and is worth sending
+> regardless; hold the $189 until I give you the corrected number.**
+
 Blocker `(d)` — the Zerene/Helicon comparison — gates **8 of the 12 axes**. The
 entire point of it is to *publish* a comparison. Lane M132 read both vendors'
 current licence terms with a browser user-agent and audited them for
@@ -619,6 +654,18 @@ darks. Freezing those counts is work I have assigned, and **no calibration
 capture is executable until it lands.** You will get a final number, once, when
 it is real.
 
+> **⚠ Read this before you use any number in this section.** The `896`, `704`,
+> `1,602` and `1,917` figures above come from lane M164's staged-capture design
+> and **predate lane M166's re-derivation** (commits `a195bc63`, `ff99afc8`),
+> which puts the rehearsal at **`1,092`** and the scored session at **`1,215`**,
+> **`2,307`** together. I have not silently overwritten M164's staging here,
+> because the two are structured differently — M164 stages a `704`-frame sealed
+> M1 score, M166 sizes the full M1/M5/M9 session — and picking a winner by
+> arithmetic alone is how a wrong number reaches you. **The reconciliation is
+> assigned.** Until it lands, treat `1,092` / `1,215` / `2,307` as the current
+> ask and this section's staging *shape* — the off-ramps, Stage 0 as a kill test
+> — as the current intent. **Do not add any two of these totals together.**
+
 
 
 > **This changed tonight and it changes what you should budget.** The session
@@ -629,9 +676,16 @@ it is real.
 
 | sitting | frames | may be read? | purpose |
 | --- | ---: | --- | --- |
-| **1 — rehearsal** | **768** | **yes, and must be** | proves step widths, commissions the detail instrument, binds its physical allowances |
-| **2 — scored session** | **891** | **no, sealed until the registered score run** | the actual measurement M1, M5 and M9 are scored from |
-| **total** | **1,659** | | plus the two frames of Ask 2a |
+| **1 — rehearsal** | **1,092** | **yes, and must be** | proves step widths, commissions the detail instrument, binds its physical allowances |
+| **2 — scored session** | **1,215** | **no, sealed until the registered score run** | the actual measurement M1, M5 and M9 are scored from |
+| **total** | **2,307** | | plus the two frames of Ask 2a |
+
+> **Superseded, 2026-09-07.** This table read `768` / `891` / `1,659` until lane
+> M166 re-derived both sittings (commits `a195bc63`, `ff99afc8`). The rehearsal's
+> current composition is `676` dominance kernel + `224` exact candidate execution
+> + `192` physical controls = **`1,092`**. The `768`-frame breakdown further down
+> this section is the superseded composition and its rows no longer sum to the
+> ask; it is retained only so the change is visible.
 
 **Why they cannot be the same sitting.** The detail instrument requires two
 mandatory *physical* control arms — a deliberately blurred capture and a

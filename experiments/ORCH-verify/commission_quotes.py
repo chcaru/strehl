@@ -93,6 +93,28 @@ MUTATIONS = [
     ("m151 eligible at population", "docs/STATUS.md",
      "it reads `275`", "it reads `276`"),
     ("m151 wilson lcb", "docs/STATUS.md", "**`0.990258`**", "**`0.990259`**"),
+    # 2.9.72. Five of these claims are non-numeric, so v2954's own last-digit
+    # control cannot reach them and reports them as skipped. They are proven to
+    # fire here instead. Anchors carry their raw line breaks: the verifier
+    # collapses whitespace but this harness edits the file as written.
+    ("m169 lead verdict", "docs/STATUS.md",
+     "SCORECARD EXCEEDS PLAN", "SCORECARD MATCHES PLAN"),
+    ("plan noise quotable now", "docs/STATUS.md",
+     "Nothing — quotable now", "Nothing — quotable soon"),
+    ("plan speed hold the line", "docs/STATUS.md",
+     "Hold the\nline (D5; D9 buys back the worker-cap tax first)",
+     "Hold the\nline (D6; D9 buys back the worker-cap tax first)"),
+    ("plan detail names licence", "docs/STATUS.md",
+     "Only fine detail\nnames", "Only fine detail\ncites"),
+    ("plan free arm clears nothing", "docs/STATUS.md",
+     "useful foreign arm", "useful foreign limb"),
+    ("m164 manifest refusals", "docs/STATUS.md",
+     "with `17` persistent refusals", "with `18` persistent refusals"),
+    ("m166 disjoint arithmetic", "docs/STATUS.md",
+     "891 - 96 + 128 + 164 + 128 = 1,215",
+     "891 - 96 + 128 + 164 + 128 = 1,216"),
+    ("m166 not interchangeable", "docs/STATUS.md",
+     "files interchangeable", "files identical"),
 ]
 
 

@@ -492,6 +492,32 @@ axes remain `UNMEASURED`; the run-level verdict follows §8. Until the fork is r
 from its pinned best-known retained source revision, its executable hash is frozen
 before rendering, and it consumes the exact common-input TIFF bytes, the fork arm is
 explicitly `UNMEASURED` under blocker `(d)`.
+
+> **SCORECARD ADDITION — UNRATIFIED. The universal conjunction in the preceding
+> paragraph is authored here and is not traceable to the owner's plan.** An
+> independent audit (lane M169, commit `7ae6dac3`,
+> `docs/research/M169-comparator-requirement-audit.md`) re-derived the plan's
+> comparator requirement from source. The plan pins the same three *names*, but
+> assigns them **by claim** rather than as an atomic portfolio: PMax and DMap to
+> the detail clause, DMap separately as *"A5's true comparator"*, and the fork
+> beside the honest speed quote (`2026-08-sota-path.md:1535-1539`). The plan's own
+> axis table (`:172-181`) gives each axis a claim-specific blocker — noise reads
+> *"Nothing — quotable now"* (`:174`) and speed/memory reads *"Hold the line (D5;
+> D9 buys back the worker-cap tax first)"* (`:181`) — while only fine detail names
+> *"a licensed comparator"* (`:178`). **No plan sentence makes failure of one arm
+> fatal to an axis that does not name it.** This is the second unratified addition
+> found in this document; rule 3's conjunction and rule 4's `98%` M1 gate were
+> authored here by different routes.
+>
+> **This annotation flags the clause. It does not suspend it.** The clause remains
+> in force, and no axis has been or will be scored under a relaxed reading before
+> the owner rules. The orchestrator declines to loosen a gate that is presently
+> constraining its own scoreboard: a pre-registered scorecard edited whenever it is
+> inconvenient is worth nothing, and the ratification belongs to the plan's author.
+> The decision is recorded in `docs/OWNER-ACTIONS.md`. Note that under the plan
+> `(d)` remains a genuine owner purchase regardless of how this is ratified: *"An
+> open-source stacker is a useful foreign arm and repairs a real provenance defect,
+> but it clears **no** blocker."* (`2026-08-sota-path.md:2302-2309`).
 Helicon, when obtainable, must pass the same transfer rule; when it is unobtainable,
 record that absence and continue. If an obtainable Helicon arm is invalid, record and
 exclude it rather than changing the required-comparator verdict. No expert hand

@@ -20,14 +20,45 @@
 > exact-configuration rehearsal in front of it. Both are **STOP at zero frames**
 > until the hash-bound production dominance manifest exists.
 >
-> **⚠ Do not double-count `96` or `164`.** Those two numerals appear *twice* in
-> this program with different meanings, because the same `55/55/27/27`
-> focus-stack budgets recur. In the body table below, `96` is the **converter-on
-> reference subject** and `164` is the **TC0 scored focus** block — both already
-> inside the base `891`. M166's corrections are *additions on top of* `891`: a
-> `+32` fourth reference strip, a `+164` physical `S_1/S_2` witness that replaces
-> a previously proposed `+96` converter-off witness, and `+128` held-out
-> calibration. The base blocks and the additions are different frames.
+> **⚠ Do not double-count `96`, `164` or `128`.** All three numerals name more
+> than one block, because the same `55/55/27/27` focus-stack and `32`-frame
+> calibration budgets recur throughout. `96` and `164` each name two blocks.
+> **There are four distinct `128`-frame blocks**: converter-on calibration
+> (`flats A/B` + `darks A/B`, inside the `383`), TC0 calibration, the new
+> four-strip reference, and the new held-out V calibration.
+> In the body table below, `96` is the **converter-on reference subject**, `164`
+> is the **TC0 scored focus** block, and `128` is the **TC0 calibration** block —
+> all three already inside the base `891`. M166's corrections are *additions on
+> top of* that base. The base blocks and the additions are different frames.
+>
+> **The authoritative arithmetic is M166's, not mine** (commit `fd1f46cf`):
+>
+> > **COUNTING CHECK — the corrected total double-counts nothing.** The
+> > corrected `1,215`-frame plan is
+> > `891 - 96 + 128 + 164 + 128`: replace the base `96`-frame three-strip
+> > reference with the `128`-frame four-strip reference (`+32` net); add a new
+> > candidate-excluded `TC0-DOM-sw4-A/B` plus `TC0-DOM-sw10-A/B` witness
+> > (`+164`); and add the four new held-out V groups (`+128`). The DOM RAWs are
+> > different files from the base `TC0-sw4/sw10` candidate inputs, and the V
+> > RAWs are different files from every base A/B calibration group.
+>
+> Lane M166 confirmed this disjointness on request (commit `fd1f46cf`), rather
+> than it resting on the orchestrator's arithmetic: *"The corrected `1,215`-frame
+> plan double-counts nothing: `+32` is the net replacement of the base `96`-frame
+> reference by `128` frames, `+164` is a new candidate-excluded `TC0-DOM-*`
+> witness, and `+128` is new held-out V calibration; none of the new DOM or V RAWs
+> is already inside the base `891`."*
+>
+> **⚠ The two `164` blocks are different roles, and must be different files.** The
+> base `164` is candidate **input** (`TC0-sw4-A/B` + `TC0-sw10-A/B`). The added
+> `164` is a candidate-**excluded** physical witness (`TC0-DOM-sw4-A/B` +
+> `TC0-DOM-sw10-A/B`). Both are `55 + 55 + 27 + 27`, and that identical budget is
+> precisely why they are easy to conflate. In M166's words: *"No `TC0-DOM-*` RAW
+> may appear in a candidate or comparator manifest. Equal budgets do not make the
+> files interchangeable."* Shooting one set and using it for both would void the
+> dominance test by making the witness the same frames the candidate consumed —
+> and because the scored session is a sealed holdout sitting, that would not
+> surface until the score run, by which time the sitting is spent.
 >
 > **Why.** The design requires the truth reference to oversample the TC0 state by
 > `2.0x`. **Only conditionally, if M147 sets `M_work = 1.33x`,** the conservative

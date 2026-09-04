@@ -7074,6 +7074,109 @@ than quietly pass on something adjacent.
 
 ---
 
+### 2.9.72 The board was not only blocked by a purchase; it was partly blocked by a rule I wrote
+
+Lane M169 was sent to audit whether the comparator requirement is *correctly
+constituted* before I asked the owner to spend money on satisfying it. It came
+back with `SCORECARD EXCEEDS PLAN: it made PMax, DMap, and the fork an
+axis-blind all-or-nothing gate` (commit `7ae6dac3`).
+
+**I verified its three load-bearing quotes at source myself before accepting
+any of it**, because this finding changes what goes in front of the owner and
+because the finding happens to be convenient for me. All three are verbatim:
+
+- `2026-08-sota-path.md:164-167` — *"SOTA = a pre-registered scorecard, versus
+  named comparators, on axes with commissioned instruments."*
+- `:1535-1539` — *"Comparators pinned and priced: licensed Zerene (PMax **and**
+  DMap — DMap has never rendered here and is A5's true comparator), the fork
+  rebuilt at its best-known build (2.4× is the honest speed quote against it),
+  Helicon if obtainable."*
+- `:2302-2309` — *"An open-source stacker is a useful foreign arm and repairs a
+  real provenance defect, but it clears **no** blocker."*
+
+The plan names the same three arms the scorecard names. It does **not** make
+them an atomic portfolio. It assigns them by claim: PMax and DMap to detail,
+DMap separately as A5's depth comparator, the fork beside the speed quote.
+
+**The corroboration M169 did not cite is the plan's own axis table** at
+`:172-181`, whose "What blocks a claim" column is claim-specific throughout.
+Noise reads *"Nothing — quotable now"* (`:174`). Speed/memory reads *"Hold the
+line (D5; D9 buys back the worker-cap tax first)"* (`:181`). Only fine detail
+names *"a licensed comparator"* (`:178`). The scorecard nonetheless propagates a
+single missing arm across every dependent comparative axis
+(`2026-09-sota-scorecard.md:488-494`).
+
+This is the **second** unratified addition in that document. Rule 4's `98%` M1
+gate was already self-labelled `SCORECARD ADDITION — UNRATIFIED` at `:216-228`.
+Two inventions found by two unrelated routes is a pattern, not a pair, and I
+have asked M169 to sweep the rest of the document so the owner gets one
+ratification decision instead of a drip.
+
+**I flagged the clause; I did not cash it.** The annotation applies the
+scorecard's own existing convention to its own second invention and explicitly
+does not suspend the rule. No axis has been or will be scored under the looser
+reading before the owner rules. Loosening a gate that is currently constraining
+my own scoreboard is the single most self-serving action available to me, and a
+pre-registered scorecard that gets edited whenever it is inconvenient is worth
+nothing — which is the entire reason it was pre-registered. The ratification
+belongs to the plan's author. Note that `(d)` remains a genuine owner purchase
+under either ruling: the plan says so directly at `:2302-2309`, and M169 found
+no free stacker that qualifies. What changes is not whether the licence is
+needed but **how much of the board it was ever entitled to block.**
+
+**M164 refused to freeze the gate, and that was the right answer.** Sent to
+build the production dominance manifest that blocks the `1,092`-frame rehearsal
+at zero frames, it returned `MANIFEST BLOCKED` (commit `146d6048`). It had every
+opportunity to serialise a plausible `FROZEN` record on commissioning-only
+`0.08` placeholders and let an evening proceed on it. Instead the reader exits
+`2` on that record with `17` persistent refusals across nine distinct codes, and
+every missing input names its producer. One of those inputs is that M147 has no
+accepted real scale and field result — **which is Ask 2a, the owner's two
+frames.** I had told him that freeze was "software work on my side, not
+something you do." That was incomplete, it is corrected in place, and I have
+asked M164 to confirm whether his two frames genuinely sit on the critical path
+of the gate blocking the rehearsal.
+
+**M166 confirmed the corrected session total is not double-counted**
+(commit `fd1f46cf`), which I had reasoned rather than verified and therefore
+asked it to check: `891 - 96 + 128 + 164 + 128 = 1,215`. The `+32` is not
+thirty-two new frames; it is the net of replacing the base `96`-frame
+three-strip reference with a `128`-frame four-strip one. Same total, different
+shooting instruction.
+
+**Its expansion then caught a hazard my own warning had missed.** I had warned
+the owner not to double-count `96` or `164`, each of which names two blocks
+because the `55/55/27/27` focus budgets recur. Checking M166's arithmetic showed
+that **`128` names four distinct blocks**: converter-on calibration
+(`flats A/B` + `darks A/B`, inside the `383`), TC0 calibration, the new
+four-strip reference, and the new held-out V calibration. The two `164` blocks
+are worse than a counting hazard — they are different *roles*. The base is
+candidate input; the addition is a candidate-**excluded** witness. In M166's
+words: *"No `TC0-DOM-*` RAW may appear in a candidate or comparator manifest.
+Equal budgets do not make the files interchangeable."* Shooting one set and
+using it for both would make the witness identical to what the candidate
+consumed, voiding the dominance test, and on a sealed holdout sitting that would
+not surface until the score run.
+
+**A defect of my own, found while fixing theirs.** `OWNER-ACTIONS.md` was
+carrying **three generations of capture totals at once**: `768`/`891`/`1,659`,
+M164's staged `896`/`704`/`1,602` with a `1,917` variant, and M166's current
+`1,092`/`1,215`/`2,307`. The stale pair was live in two separate tables the
+owner budgets from. The superseded figures are now marked, the current ones are
+in, and the M164-versus-M166 conflict is **flagged rather than resolved by
+arithmetic**, because those two designs are structured differently — M164 stages
+a `704`-frame sealed M1 score, M166 sizes the full M1/M5/M9 session — and
+picking a winner by adding numbers is precisely how a wrong one reaches an
+owner. The reconciliation is assigned.
+
+**The scoreboard is unchanged at `0 of 12`.** Nothing here scores an axis, and
+nothing here is permitted to until the owner rules on the two unratified
+additions. What changed tonight is the diagnosis: I have been telling him the
+board is frozen behind a `$189` purchase, and a material part of it may be
+frozen behind a rule I wrote and never checked against his plan.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
