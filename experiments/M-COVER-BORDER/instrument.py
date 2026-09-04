@@ -157,6 +157,26 @@ def profile_peak(profile: dict[str, Any], stop: int | None = None) -> float:
     return max((abs(float(row["normalised_effect"])) for row in rows), default=0.0)
 
 
+def radial_level_masses(profile: dict[str, Any]) -> dict[str, float]:
+    deep_ratio = float(profile["deep_ratio"])
+    denominator = sum(
+        float(row["reference_mean"]) * int(row["samples"]) for row in profile["rows"]
+    )
+    residuals = [
+        (
+            float(row["candidate_mean"]) / deep_ratio - float(row["reference_mean"])
+        )
+        * int(row["samples"])
+        for row in profile["rows"]
+    ]
+    return {
+        "signed_fraction": sum(residuals) / denominator,
+        "absolute_fraction": sum(abs(value) for value in residuals) / denominator,
+        "positive_fraction": sum(max(value, 0.0) for value in residuals) / denominator,
+        "negative_fraction": sum(max(-value, 0.0) for value in residuals) / denominator,
+    }
+
+
 def commission_detector() -> dict[str, Any]:
     height = width = 1024
     yy, xx = np.mgrid[:height, :width]
@@ -176,6 +196,10 @@ def commission_detector() -> dict[str, Any]:
     restored = detector_profile(defect_image.copy(), base)
     defect_peak = profile_peak(defect, 64)
     improvement_peak = profile_peak(improved, 64)
+    null_mass = radial_level_masses(null)
+    defect_mass = radial_level_masses(defect)
+    improved_mass = radial_level_masses(improved)
+    restored_mass = radial_level_masses(restored)
     checks = {
         "null_peak": profile_peak(null) <= 1e-12,
         "null_safe": null["safe_inset_px"] == 8,
@@ -186,6 +210,14 @@ def commission_detector() -> dict[str, Any]:
         "improvement_reduction": improvement_peak <= 0.05 * defect_peak,
         "restoration_peak": abs(profile_peak(restored, 64) - defect_peak) <= 1e-12,
         "restoration_safe": restored["safe_inset_px"] == defect["safe_inset_px"],
+        "null_mass": null_mass["absolute_fraction"] <= 1e-12,
+        "defect_mass_fires": defect_mass["positive_fraction"] > 0.0,
+        "improvement_mass": improved_mass["positive_fraction"]
+        <= 0.05 * defect_mass["positive_fraction"],
+        "restoration_mass": abs(
+            restored_mass["positive_fraction"] - defect_mass["positive_fraction"]
+        )
+        <= 1e-12,
     }
     return {
         "checks": checks,
@@ -200,6 +232,10 @@ def commission_detector() -> dict[str, Any]:
             "improvement_fraction_of_defect": improvement_peak / defect_peak,
             "restored_peak": profile_peak(restored, 64),
             "restored_safe_inset_px": restored["safe_inset_px"],
+            "null_radial_mass": null_mass,
+            "defect_radial_mass": defect_mass,
+            "improved_radial_mass": improved_mass,
+            "restored_radial_mass": restored_mass,
         },
     }
 
@@ -633,6 +669,12 @@ def command_profile(args: argparse.Namespace) -> int:
     )
     mass_ratio = scale_mass / crop_mass if crop_mass > 0.0 else math.inf
     peak_ratio = scale_peak / crop_peak if crop_peak > 0.0 else math.inf
+    crop_full_mass = radial_level_masses(crop_profiles["7"])
+    scale_full_mass = radial_level_masses(scale_profile)
+    full_mass_ratios = {
+        key: scale_full_mass[key] / crop_full_mass[key] if crop_full_mass[key] != 0.0 else None
+        for key in crop_full_mass
+    }
     h2_checks = {
         "reach_monotone": reaches == sorted(reaches),
         "slope": 0.75 <= fit["slope"] <= 1.25,
@@ -660,6 +702,7 @@ def command_profile(args: argparse.Namespace) -> int:
             "h2_passed": all(h2_checks.values()),
             "b7_peak_abs_effect_through_256": crop_peak,
             "b7_positive_radial_level_mass_through_256": crop_mass,
+            "b7_radial_level_mass_full_plane": crop_full_mass,
         },
         "scale": {
             "calibration": scale_calibration,
@@ -667,10 +710,12 @@ def command_profile(args: argparse.Namespace) -> int:
             "profile_b7_vs_b2": scale_profile,
             "peak_abs_effect_through_256": scale_peak,
             "positive_radial_level_mass_through_256": scale_mass,
+            "radial_level_mass_full_plane": scale_full_mass,
         },
         "scale_vs_crop": {
             "peak_ratio": peak_ratio,
             "positive_mass_ratio": mass_ratio,
+            "full_plane_radial_mass_ratios": full_mass_ratios,
             "h5_checks": h5_checks,
             "h5_measurement_passed": all(h5_checks.values()),
         },
