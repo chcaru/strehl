@@ -257,6 +257,64 @@ optional, and no amount of cleverness on existing stacks substitutes for it.
 Full protocol: `docs/capture-requests/2026-09-319-frame-session.md`.
 Needs one dry-run rehearsal at 1.30x first — see blockers 1 and 2 in that file.
 
+### Before you shoot — three things that changed tonight
+
+**1. Stabilisation. Every frame you already own has it ON, and the protocol
+requires it OFF.**
+
+VERIFIED tonight against your library: all **68** stack directories and all
+**10,509** ARWs report `image_stabilization: On`, across all **154** setting
+segments, with no exceptions
+(`experiments/M141-capture-inventory/capture-manifest.json`). The protocol
+requires body SteadyShot and lens OSS **off**
+(`docs/capture-requests/2026-09-319-frame-session.md:497-500`).
+
+I want to be precise about what this does and does not prove. Metadata alone
+cannot tell me whether the switches were physically on, or whether this body
+simply always writes `On` for this tag. **What it does establish is that no
+frame you own demonstrates the required state** — so this is unresolved either
+way. Please physically confirm both switches before the session. It costs thirty
+seconds and it is the difference between a usable session and shooting it twice.
+
+**2. Do not rehearse the magnification yet — the target is moving as I write.**
+
+The line above says 1.30x. That instruction is under active revision tonight:
+one lane is proposing an inverted design that leaves your existing
+maximum-reproduction session untouched and instead shoots **bare lens, converter
+removed**, at a **1.32x** target with a hard 1.33x ceiling. Converter on versus
+converter off is not a detail you can adjust for afterwards.
+
+**Wait for me to confirm the magnification and the converter state before you
+rehearse or shoot.** I expect to settle it shortly. Rehearsing to 1.30x with the
+converter fitted may be rehearsing the wrong session entirely.
+
+**3. The new calibration slide set: genuinely useful, but it does not reduce
+this ask.**
+
+You asked whether `high-res-calibration-slide-cpl` helps. Ruling: **BURNED —
+deliberately spent development, not holdout.** It is one **657-frame** session
+already designated and spent as development
+(`docs/proposals/2026-09-sota-scorecard.md:363-379`; `docs/STATUS.md:2535-2547`),
+and the program record states verbatim that it was *"burned deliberately and
+knowingly"* and *"must not be used for any scored result"*.
+
+That is not a loss and it is not a mistake you made — it was spent on purpose,
+before you sent it, and it is doing real work: it can **commission** instruments,
+which is exactly what the critical-path detail instrument needs. It simply
+cannot supply a **scored** value. Those are different jobs.
+
+**Coverage as of tonight: zero, under both live designs.** Of the committed
+603-frame design's **24** blocks, **0** are satisfied by existing material. Of
+the proposed 448-frame design's **21** blocks, **0** are satisfied
+(`docs/research/M141-capture-inventory.md`;
+`experiments/M141-capture-inventory/capture-design-coverage.json`). Nothing on
+disk substitutes for this session, and I checked properly rather than assuming.
+
+One further protective note: **35 of your 68 stack directories have no row in
+the scorecard's evidence table at all.** They are recorded as
+`INDETERMINATE — DO NOT ASSUME CLEAN` rather than quietly promoted to holdout.
+Sixteen rows remain registered clean holdout and I am protecting them.
+
 **Why this comes before the purchase.** Lane M131 ruled that Candidate 2 — the
 one route that might have cleared `(a)` from stacks already on disk, at no cost
 to you — **does not work**. Its synthetic result is genuine and survives audit,
