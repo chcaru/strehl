@@ -11,6 +11,15 @@ Scope: M1 detail only. This document designs an instrument and its capture. It
 does not take a claim-bearing reading, revise the scorecard, or open the sealed
 holdout.
 
+**MEASURED.** **Revision 1:** D8/M115's primary numbers reproduce, and the
+later transfer audit and current scorecard reject the same-capture product
+form (`docs/research/M-PHASE0-SPLIT.md:73-103,252-280`;
+`docs/proposals/2026-09-sota-scorecard.md:1119-1124`).
+
+**ARGUED.** D8 is adjudicated as the incumbent, but its blur response and
+sharpening invariance belong to different statistics. The capture decision is
+unchanged (`docs/proposals/2026-08-sota-path.md:1694-1746`).
+
 ## 0. Decision first
 
 **ARGUED.** Yes, a truth-referenced M1 instrument requires additional physical
@@ -20,6 +29,23 @@ nonperiodic subject. Without one, every available candidate must infer detail
 from a degraded output, another realization of the same degradation, or a
 merge made by the system under test. Those are exactly the families that have
 failed or remain uncommissioned.
+
+**MEASURED.** M115 really measured
+`0.9938-0.9974` planted-blur recovery, at most `0.54%` movement under
+information-free output filters, an `8.2514x` naive-gradient response, and an
+exact power identity (`docs/research/M115-deconv-headroom.md:82-107,129-137`).
+The first result is the response of absolute `P_sig`; the second is the
+invariance of normalized `R_SNR`. They are not one statistic with both
+properties. The current scorecard explicitly drops the same-capture split
+channel, and the later transfer audit reproduced the numbers before killing
+the product form
+(`docs/proposals/2026-09-sota-scorecard.md:1119-1124`;
+`docs/research/M-PHASE0-SPLIT.md:1-16,73-103,252-280`).
+
+**ARGUED.** D8 therefore does not remove the external-reference requirement.
+Its confirmed numbers do not supply one statistic that is both
+sharpening-safe and blur-sensitive, and its same-capture product status is
+already closed.
 
 **ARGUED.** Add **160 frames** after all main sweeps and their fixed-focus
 witnesses:
@@ -135,8 +161,8 @@ session**. Preserve the main session for the other axes, but leave M1
 statistic nor a numeric bar and blocks several quality claims
 (`docs/proposals/2026-09-sota-scorecard.md:473-505,544-577`).
 
-**MEASURED.** Six tested detail statistics do not supply the missing
-instrument:
+**MEASURED.** The six candidates in the original brief, plus the already
+prescribed D8 incumbent, do not supply the missing instrument:
 
 | Candidate | Deciding observation | Result |
 |---|---|---|
@@ -146,6 +172,7 @@ instrument:
 | candidate 1 | USM/base `1.095732x`, UCB95 `1.129895` | Bounded finite reader rewards accessibility |
 | FRC | exact common-filter cancellation | Immune to USM and blind to blur |
 | candidate 2 | not run after the ordered FRC stop | Uncommissioned, not empirically dead |
+| D8 / M115 split stack | `P_sig` recovers blur; `R_SNR` resists output filters | The response and invariance are in different channels; same-capture product form later killed |
 
 **MEASURED.** The slanted-edge values and sign reversals are recorded in
 `docs/research/M-PHASE0-SLANTEDGE.md:202-212,251-278`. Candidate 1's finite
@@ -170,6 +197,199 @@ free pass. A truth-referenced `0.30-0.40` wedge preferred Hamilton-Adams by
 maze artifacts (`docs/research/BUILD-SHARP.md:3945-3955`). M57 likewise found
 that a ground-truth oracle FSC at one frequency remained blind to a common
 linear filter (`docs/research/M57-detail-metric-from-first-principles.md:98-125`).
+
+### 1.1 D8 incumbent audit
+
+**MEASURED.** The governing proposal describes D8 as two interleaved,
+disjoint half-stack renders, each re-deriving its own data-dependent weights,
+and cites M115 as its commissioned basis
+(`docs/proposals/2026-08-sota-path.md:1694-1746`). The primary M115 source
+supports the quoted numbers:
+
+| D8 statement | Primary M115 result | Adjudication |
+|---|---|---|
+| Planted blur recovered at `0.9938-0.9974` | `P_sig` fell monotonically under sigma `0.5-2.0`; eight log-attenuation recovery ratios were in that range | **CONFIRMED**, for absolute `P_sig` (`docs/research/M115-deconv-headroom.md:82-95`) |
+| Gain/filter invariance to `0.54%` | Normalized `R_SNR` ratios were `1.0000`, `0.9986`, `0.9980`, `0.9946` | **CONFIRMED**, for `R_SNR` (`docs/research/M115-deconv-headroom.md:96-107`) |
+| Naive metric moved `8.25x` | The inverse-taper arm moved naive gradient energy `8.2514x` | **CONFIRMED** (`docs/research/M115-deconv-headroom.md:96-107`) |
+| `(P(A)+P(B))/2 = P_sig + P_noise` | Reported as `1.0000` on every arm and both stacks | **CONFIRMED**, but algebraic bookkeeping rather than an independent validity control (`docs/research/M115-deconv-headroom.md:129-137`; `docs/research/M-PHASE0-SPLIT.md:83-91`) |
+
+**MEASURED.** The blur and filter arms are also different interventions. C2
+Fourier-blurs every already captured frame in the cube, including its recorded
+sensor noise, before the split render. C3 applies the same frequency gain to
+both completed half outputs
+(`experiments/M115-deconv-headroom/src/s03_instrument.py:163-190,208-242`;
+`experiments/M115-deconv-headroom/src/m115lib.py:477-493`).
+
+**DERIVED.** C2 is therefore a calibration of the absolute cross-power channel
+under a common post-acquisition blur. It is not a genuine
+optical-improvement arm in which the optics change before new photon/read
+noise is drawn.
+
+**MEASURED.** For half outputs `A` and `B`, M115 defines
+(`docs/research/M115-deconv-headroom.md:47-60`;
+`experiments/M115-deconv-headroom/src/m115lib.py:440-457`):
+
+```text
+P_sig   = Re <A conj(B)>
+P_noise = P(A - B) / 2
+SNR     = P_sig / P_noise.
+```
+
+**DERIVED.** At one Fourier mode `k`, under a common linear filter `H`,
+
+```text
+P_sig^H(k)   = |H(k)|^2 P_sig(k)
+P_noise^H(k) = |H(k)|^2 P_noise(k)
+SNR^H(k)     = SNR(k).
+```
+
+**DERIVED.** The suspected mechanism is correct: the normalization protects
+`R_SNR` from post-sharpening because signal and noise scale together at each
+frequency. For M115's finite radial bin `b`, however,
+
+```text
+P_sig^H(b)   = sum_k in b w_k |H(k)|^2 P_sig(k)
+P_noise^H(b) = sum_k in b w_k |H(k)|^2 P_noise(k).
+```
+
+**DERIVED.** The ratio is exactly invariant for a flat gain and approximately
+invariant when `H` and the per-mode SNR vary little inside the bin. Otherwise
+it can move because the filter reweights modes and because the Hann window
+and finite binning are not an exact per-mode quotient. M115's `0.54%` is that
+measured finite implementation, not an exact theorem for every aggregate
+(`experiments/M115-deconv-headroom/src/m115lib.py:151-200`;
+`experiments/M115-deconv-headroom/src/s03_instrument.py:208-242`). This
+qualification does not rescue the detail claim: `R_SNR` has no guaranteed
+ordering under common blur. Its residual can have either sign according to
+the pre-existing SNR spectrum, rather than reporting the absolute transfer
+loss. Conversely, unnormalized `P_sig` recovers that transfer but scales up
+under the same USM or gain. Reading C2 and C3 together does not create a
+scalar that owns both properties; it exposes the boundary between the two
+channels.
+
+**DERIVED.** The power identity has no additional discriminatory content:
+
+```text
+P(A - B) / 2
+  = (P(A) + P(B)) / 2 - Re <A conj(B)>,
+```
+
+**DERIVED.** Substituting the definitions therefore yields equality
+identically. It can catch an implementation arithmetic error, but it cannot
+detect a wrong latent, common-mode structure, a gameable tuner or a false
+interpretation.
+
+**ARGUED.** A non-compensating pair `(R_SNR, P_sig)` would be stronger than
+D8's scalar tuning objective: `R_SNR` could be the sole promotion gate while
+`P_sig` could only veto or demote, never create a win. Post-USM `P_sig` alone
+would then earn nothing, while post-blur loss of `P_sig` could make an arm
+worse. It would still not be an admissible M1 instrument. Any deterministic
+structure common to both halves but absent from the scene - fixed pattern,
+registration residue or algorithmic hallucination - enters `P_sig` as if it
+were truth and can also raise `R_SNR`. Without an independent reference, the
+pair cannot tell repeatable scene structure from a repeatable mistake.
+
+### 1.2 Independence, confounds and the density floor
+
+**ARGUED.** Alternate **frames** are separate exposures. Their photon and read
+noise are temporally independent, and they must not be conflated with a
+same-frame pixel or CFA split. This document calls D8's construction a
+**same-capture interleaved frame split**. Its rejection is not based on shared
+shot/read noise
+(`experiments/M115-deconv-headroom/src/m115lib.py:407-438`).
+
+**MEASURED.** M115 itself states the remaining direction of failure:
+`P_sig` is fooled upward by anything common to both halves that is not scene,
+especially fixed-pattern non-uniformity; unequal half latents bias it downward
+(`experiments/M115-deconv-headroom/src/m115lib.py:440-453`). Its flat null
+failed the registered `0.25` bar on two arms. The reported fixed-pattern floor
+was `0.073%` and `0.050%` after scaling from the flat corpus to two detail
+ROIs, not a universal absence proof
+(`docs/research/M115-deconv-headroom.md:109-137`).
+
+**MEASURED.** Quantization is another common-mode path. M115 measured
+cross-half rounding-error correlation `r=+0.5109`; matched 8-bit narrowing
+raised `P_noise` `3.937x` while independent dither of identical power raised it
+`63.311x`, a `16x` under-report
+(`docs/research/M115-deconv-headroom.md:318-337`). No D8-derived measurement
+may see quantized intermediates.
+
+**MEASURED.** The later D8 audit loaded M115's historical source blobs and
+reproduced blur recovery `0.9938215871-0.9973982082`, maximum filter movement
+`0.537785%`, and identity
+`0.999999999987-1.000000000000`. It still returned the historical split-null
+failure, a common-mode adversary at FRC `0.972099`, no plant that transferred
+to a data-dependent tuner, and a final `KILL - STOP/REMOVE RUST`
+(`docs/research/M-PHASE0-SPLIT.md:73-103,252-280`). The current scorecard
+therefore uses repeated exposures only and requires an independent repeated
+bracket, sensor-pattern subtraction, a non-degenerate partition and a
+transferring tuner plant before D8 can reopen
+(`docs/proposals/2026-09-sota-scorecard.md:1119-1124`).
+
+**ARGUED.** The density floor is not a universal frame count. M27 measured one
+105-frame `coffee-bean` bracket: its 53-frame decimation had `0.01%`
+under-resolved pixels, while 27 frames had `37.46%` and 14 had `69.06%`.
+M27 explicitly says this was one unaligned subject and that no genuinely
+under-sampled real stack was tested
+(`docs/research/M27-coverage-gap-measured.md:78-129,156-176`). Applied only as
+a warning, not as a transferred bar:
+
+| Incoming block | Odd/even halves | Effective step width | D8 status |
+|---|---:|---:|---|
+| `sw1`, 91 frames | 46 / 45 | 2 | **CONDITIONAL DIAGNOSTIC** only after an input-only density gate; current capture contract says never feed this reference block to a stacker |
+| `sw4`, 55 frames | 28 / 27 | 8 | **NO-GO for odd/even under the current scorecard**; density is also unproven, so use the full `sw4-A` and `sw4-B` repeated brackets if testing the gold form |
+| `sw10`, 27 frames | 14 / 13 | 20 | **NO-GO for odd/even under the current scorecard**; retain the full A/B pair only as the registered sparse-step stress |
+
+**MEASURED.** Those counts follow the current request's `91/55/27` ladder,
+which marks `sw1` as checker-only and says never to feed it to a stacker; `sw4`
+and `sw10` each have full A/B repeats
+(`docs/capture-requests/2026-09-319-frame-session.md:116-136`).
+
+**ARGUED.** A repeated bracket is the stronger D8 form because it avoids
+halving the z-density and independently re-runs the camera exposures. It does
+not by itself create optical truth. Repeated exposures on one sensor still
+share stable sensor structure, and a repeat-pair SNR remains invariant to a
+flat common gain; per-mode normalization cancels common blur, while finite
+band aggregation only reweights the existing SNR spectrum. The
+independent-repeat follow-on reached the same limit: even after its geometry
+controls, repeated exposures could not prove that stable sensor structure did
+not inflate scene-pair FRC
+(`docs/research/M-PHASE0-SPLIT2.md:145-158`).
+
+### 1.3 D8 reopening arms
+
+**ARGUED.** D8 is the incumbent to beat, but it is currently a killed offline
+instrument. Any reopening dies unless all of these pre-results conditions are
+met:
+
+| Arm | Required result | Death |
+|---|---|---|
+| Historical reproduction | Reproduce M115 C2, C3 and arithmetic identity from frozen source | Any mismatch; identity success alone has no validity weight |
+| Information-free USM | The complete non-compensating verdict cannot improve under the registered unclipped USM | `P_sig` or finite-bin SNR creates a win |
+| Common blur | The complete verdict ranks the blurred output below its unblurred source | Normalized SNR turns blindness into a tie or `P_sig` is allowed to compensate |
+| Genuine optical improvement | A separately captured optical improvement made before fresh photon/read noise scores better | C2's post-acquisition cube blur is substituted, the sign is wrong, or the verdict refuses |
+| Nonlinear tone | Gamma-3 and the registered logistic transform do not raise the verdict | Either transform creates a win |
+| Clipping | Registered clipping does not raise the verdict, and rail-hit counts are reported | Clipping creates a win or the rail-hit arm is impotent |
+| Independent realisations | Full repeated brackets, separately calibrated, pass node and geometry gates | Odd/even is used below its density floor or failed A/B geometry is pooled |
+| Common-mode adversary | Fixed pattern and deterministic A/B structure absent from an independent reference do not raise the result | Common structure scores as detail |
+| Quantization | Every statistic consumes linear floating intermediates and a potent narrowing arm is refused | Difference noise under-reports the narrowing |
+| Partition | A non-degenerate balanced alternate partition agrees with the registered one | A label swap is counted as a sensitivity test |
+| Tuner transfer | Tuning occurs on data disjoint from the pair that grades it, and a plant changes the actual data-dependent optimum | Self-tuning leakage or a fixed common-filter surrogate passes |
+| Density | Each half independently passes a frozen input-only coverage gate | Halving produces under-resolved focus peaks |
+
+**MEASURED.** These extend rather than replace D8's original port criterion
+that the Rust implementation reproduce M115's checks or die
+(`docs/proposals/2026-08-sota-path.md:1741-1746`). The later audit established
+that reproduction is necessary but not sufficient
+(`docs/STATUS.md:156-198`).
+
+**ARGUED.** `TRD=(J_TR,F_TR)` is designed to beat D8 at the exact missing
+boundary. Its information component retains structural post-filter
+protection, while its transfer and common-residual components are referenced
+to a separately sampled physical image that neither half-stack nor the
+algorithm produced. D8 can remain an offline diagnostic or a future M2-style
+matched-contrast efficiency channel. It cannot replace independent truth for
+M1.
 
 ## 2. What truth-referencing does and does not solve
 
@@ -759,6 +979,7 @@ M95, BUILD-DEMOSAIC and BUILD-SHARP. Their disposition is not "superseded":
 | M39 / M80 | Noise corrections need flat/no-target controls and must not clamp noise into detail | M39 measured a flat credited with `+35.5%` detail; M80 repaired a selector invariant by returning `NO TARGET`, not by forcing a number (`docs/research/M39-verify-detail-metric.md:1-35`; `docs/research/M80-invariant-repair.md:1-20`) |
 | M95 / BUILD-DEMOSAIC | Known truth can separate scene-correlated transfer from fabricated output and can reveal defects invisible to power statistics | Both are synthetic or demosaic-specific truth instruments, not a same-subject focus-stack score (`docs/research/M95-demosaic.md:1-75`; `docs/research/BUILD-DEMOSAIC.md:1-75`) |
 | BUILD-SHARP | Correct-band truth reference is necessary but can still select an artifact-bearing method | Its wedge is the direct warning against a fidelity-only promotion rule (`docs/research/BUILD-SHARP.md:3945-3955`) |
+| D8 / M115 / M-PHASE0-SPLIT | Split cross-power separates temporally independent noise, and matched-contrast SNR is resistant to common output filters | `P_sig` and `R_SNR` own different properties; common-mode structure and tuner transfer killed the product form (`docs/research/M115-deconv-headroom.md:47-137`; `docs/research/M-PHASE0-SPLIT.md:1-103,252-280`) |
 
 **ARGUED.** This proposal claims no novelty for canonical correlation, task
 information, NEQ, split-reference transfer, truth/residual decomposition or
@@ -816,8 +1037,9 @@ an admitted M1 instrument.
 - **CONDITIONAL GO:** commission `TRD = (J_TR, F_TR)` on development data under
   the ordered battery, then require a registrar revision and independent
   implementation audit;
-- **NO-GO:** do not use the dense stack, current grid, development-only
-  high-resolution slide, direct MSE/PSNR/SSIM, learned perceptual score, FRC or
-  any weighted information/fidelity scalar as the M1 truth instrument; and
+- **NO-GO:** do not use D8's same-capture split, the dense stack, current grid,
+  development-only high-resolution slide, direct MSE/PSNR/SSIM, learned
+  perceptual score, FRC or any weighted information/fidelity scalar as the M1
+  truth instrument; D8 may remain an offline matched-contrast diagnostic; and
 - **CURRENT STATUS:** M1 remains `UNMEASURED`, and no detail-qualified SOTA
   claim is licensed.
