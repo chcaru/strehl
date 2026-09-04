@@ -1,0 +1,450 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\docs\\proposals\\2026-09-sota-scorecard.md",
+  "section_start_line": 412,
+  "section_end_line": 440,
+  "rows": [
+    {
+      "axis": "M1",
+      "line": 423,
+      "raw_line": "| M1 | **(a)(b)(c)(d)** | No active detail statistic or bar exists; scored matched repeats and comparator arms are also absent. |",
+      "class_cell": "**(a)(b)(c)(d)**",
+      "description": "No active detail statistic or bar exists; scored matched repeats and comparator arms are also absent.",
+      "codes": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "blockers": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    {
+      "axis": "M2",
+      "line": 424,
+      "raw_line": "| M2 | **(a)(b)(d)** | Residual noise can be computed diagnostically, but the registered matched-information verdict cannot. |",
+      "class_cell": "**(a)(b)(d)**",
+      "description": "Residual noise can be computed diagnostically, but the registered matched-information verdict cannot.",
+      "codes": [
+        "a",
+        "b",
+        "d"
+      ],
+      "blockers": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    {
+      "axis": "M3",
+      "line": 425,
+      "raw_line": "| M3 | **(a)(b)(d)** | Artifact counts without a licensed detail/matched-presentation arm cannot support the competitive claim. |",
+      "class_cell": "**(a)(b)(d)**",
+      "description": "Artifact counts without a licensed detail/matched-presentation arm cannot support the competitive claim.",
+      "codes": [
+        "a",
+        "b",
+        "d"
+      ],
+      "blockers": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    {
+      "axis": "M4",
+      "line": 426,
+      "raw_line": "| M4 | **(a)(b)(d)** | Flatness is computable diagnostically, but its detail-preserving comparator verdict is blocked. |",
+      "class_cell": "**(a)(b)(d)**",
+      "description": "Flatness is computable diagnostically, but its detail-preserving comparator verdict is blocked.",
+      "codes": [
+        "a",
+        "b",
+        "d"
+      ],
+      "blockers": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    {
+      "axis": "M5",
+      "line": 427,
+      "raw_line": "| M5 | **(a)(b)(c)(d)** | No scored dense/sparse repeat unit exists, and failure coverage needs a licensed detail test. |",
+      "class_cell": "**(a)(b)(c)(d)**",
+      "description": "No scored dense/sparse repeat unit exists, and failure coverage needs a licensed detail test.",
+      "codes": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "blockers": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    {
+      "axis": "M6",
+      "line": 428,
+      "raw_line": "| M6 | **(a)(b)(c)(d)** | The rail census is executable, but the registered capture set has fewer than 10,000 recoverable samples and the full axis includes detail retention and comparators. |",
+      "class_cell": "**(a)(b)(c)(d)**",
+      "description": "The rail census is executable, but the registered capture set has fewer than 10,000 recoverable samples and the full axis includes detail retention and comparators.",
+      "codes": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "blockers": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    {
+      "axis": "M7",
+      "line": 429,
+      "raw_line": "| M7 | **(b)(c)(d)** | No traceable colour target exists. |",
+      "class_cell": "**(b)(c)(d)**",
+      "description": "No traceable colour target exists.",
+      "codes": [
+        "b",
+        "c",
+        "d"
+      ],
+      "blockers": [
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    {
+      "axis": "M8",
+      "line": 430,
+      "raw_line": "| M8 | **(e)** | The v1.4 source-hull invariant needs neither detail nor a comparator and may use the development-only flat slide. Its checker still must be commissioned before a result is admitted. |",
+      "class_cell": "**(e)**",
+      "description": "The v1.4 source-hull invariant needs neither detail nor a comparator and may use the development-only flat slide. Its checker still must be commissioned before a result is admitted.",
+      "codes": [
+        "e"
+      ],
+      "blockers": []
+    },
+    {
+      "axis": "M9",
+      "line": 431,
+      "raw_line": "| M9 | **(a)(b)(c)** | Repeat calibration captures are absent and the shipping product emits no admissible acuity/variance certificate. |",
+      "class_cell": "**(a)(b)(c)**",
+      "description": "Repeat calibration captures are absent and the shipping product emits no admissible acuity/variance certificate.",
+      "codes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "blockers": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    {
+      "axis": "M10",
+      "line": 432,
+      "raw_line": "| M10 | **(b)(c)** | No scored geometric-truth capture or compatible depth product exists. The tilted slide is development-only. |",
+      "class_cell": "**(b)(c)**",
+      "description": "No scored geometric-truth capture or compatible depth product exists. The tilted slide is development-only.",
+      "codes": [
+        "b",
+        "c"
+      ],
+      "blockers": [
+        "b",
+        "c"
+      ]
+    },
+    {
+      "axis": "M11",
+      "line": 433,
+      "raw_line": "| M11 | **(a)(b)(d)** | A quiet host is additionally required; native-decode timing alone is a diagnostic, not the registered competitive verdict. |",
+      "class_cell": "**(a)(b)(d)**",
+      "description": "A quiet host is additionally required; native-decode timing alone is a diagnostic, not the registered competitive verdict.",
+      "codes": [
+        "a",
+        "b",
+        "d"
+      ],
+      "blockers": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    {
+      "axis": "M12",
+      "line": 434,
+      "raw_line": "| M12 | **(e), scheduled; formal value UNMEASURED** | Hashes and process-tree RSS need no detail, comparator or holdout. Existing out-of-protocol evidence diagnoses fixed-worker determinism as holding and cross-worker scaling invariance as failing, but the registered N/worker matrix still requires the reserved quiet host. |",
+      "class_cell": "**(e), scheduled; formal value UNMEASURED**",
+      "description": "Hashes and process-tree RSS need no detail, comparator or holdout. Existing out-of-protocol evidence diagnoses fixed-worker determinism as holding and cross-worker scaling invariance as failing, but the registered N/worker matrix still requires the reserved quiet host.",
+      "codes": [
+        "e"
+      ],
+      "blockers": []
+    }
+  ],
+  "per_code": {
+    "a": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M9",
+      "M11"
+    ],
+    "b": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "M9",
+      "M10",
+      "M11"
+    ],
+    "c": [
+      "M1",
+      "M5",
+      "M6",
+      "M7",
+      "M9",
+      "M10"
+    ],
+    "d": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "M11"
+    ],
+    "e": [
+      "M8",
+      "M12"
+    ]
+  },
+  "combinations": [
+    {
+      "cleared": [],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "b"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "c"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "d"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "b"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "c"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "d"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "b",
+        "c"
+      ],
+      "count": 3,
+      "axes": [
+        "M8",
+        "M10",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "b",
+        "d"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "c",
+        "d"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "b",
+        "c"
+      ],
+      "count": 4,
+      "axes": [
+        "M8",
+        "M9",
+        "M10",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "b",
+        "d"
+      ],
+      "count": 6,
+      "axes": [
+        "M2",
+        "M3",
+        "M4",
+        "M8",
+        "M11",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "c",
+        "d"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "b",
+        "c",
+        "d"
+      ],
+      "count": 4,
+      "axes": [
+        "M7",
+        "M8",
+        "M10",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "count": 12,
+      "axes": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M8",
+        "M9",
+        "M10",
+        "M11",
+        "M12"
+      ]
+    }
+  ],
+  "consistency": {
+    "row_count": 12,
+    "rows_with_e_and_blocker": [],
+    "rows_with_no_codes": []
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "status_section_start_line": 2920,
+  "status_section_end_line": 3009,
+  "code_comparisons": [
+    {
+      "line": 2931,
+      "raw_line": "| **(b)** geometry | **10** | M1 M2 M3 M4 M5 M6 M7 M9 M10 M11 |",
+      "code": "b",
+      "claimed_count": 10,
+      "derived_count": 10,
+      "claimed_axes": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M9",
+        "M10",
+        "M11"
+      ],
+      "derived_axes": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M9",
+        "M10",
+        "M11"
+      ],
+      "matches": true
+    },
+    {
+      "line": 2932,
+      "raw_line": "| **(a)** detail instrument | 8 | M1 M2 M3 M4 M5 M6 M9 M11 |",
+      "code": "a",
+      "claimed_count": 8,
+      "derived_count": 8,
+      "claimed_axes": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M9",
+        "M11"
+      ],
+      "derived_axes": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M9",
+        "M11"
+      ],
+      "matches": true
+    },
+    {
+      "line": 2933,
+      "raw_line": "| **(d)** comparator | 8 | M1 M2 M3 M4 M5 M6 M7 M11 |",
+      "code": "d",
+      "claimed_count": 8,
+      "derived_count": 8,
+      "claimed_axes": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M11"
+      ],
+      "derived_axes": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M11"
+      ],
+      "matches": true
+    },
+    {
+      "line": 2934,
+      "raw_line": "| **(c)** capture | 6 | M1 M5 M6 M7 M9 M10 |",
+      "code": "c",
+      "claimed_count": 6,
+      "derived_count": 6,
+      "claimed_axes": [
+        "M1",
+        "M5",
+        "M6",
+        "M7",
+        "M9",
+        "M10"
+      ],
+      "derived_axes": [
+        "M1",
+        "M5",
+        "M6",
+        "M7",
+        "M9",
+        "M10"
+      ],
+      "matches": true
+    },
+    {
+      "line": 2935,
+      "raw_line": "| **(e)** measurable now | 2 | M8, M12 |",
+      "code": "e",
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_axes": [
+        "M8",
+        "M12"
+      ],
+      "derived_axes": [
+        "M8",
+        "M12"
+      ],
+      "matches": true
+    }
+  ],
+  "combination_comparisons": [
+    {
+      "line": 2944,
+      "raw_line": "| nothing -- today | **2 of 12** (M8, M12) |",
+      "cleared": [],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [
+        "M8",
+        "M12"
+      ],
+      "derived_named_axes": [
+        "M8",
+        "M12"
+      ],
+      "matches": true
+    },
+    {
+      "line": 2945,
+      "raw_line": "| any **one** of a, b, d | **2** |",
+      "cleared": [
+        "a"
+      ],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    },
+    {
+      "line": 2945,
+      "raw_line": "| any **one** of a, b, d | **2** |",
+      "cleared": [
+        "b"
+      ],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    },
+    {
+      "line": 2945,
+      "raw_line": "| any **one** of a, b, d | **2** |",
+      "cleared": [
+        "d"
+      ],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    },
+    {
+      "line": 2946,
+      "raw_line": "| any **two** except `b+c` | **2** |",
+      "cleared": [
+        "a",
+        "b"
+      ],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    },
+    {
+      "line": 2946,
+      "raw_line": "| any **two** except `b+c` | **2** |",
+      "cleared": [
+        "a",
+        "c"
+      ],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    },
+    {
+      "line": 2946,
+      "raw_line": "| any **two** except `b+c` | **2** |",
+      "cleared": [
+        "a",
+        "d"
+      ],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    },
+    {
+      "line": 2946,
+      "raw_line": "| any **two** except `b+c` | **2** |",
+      "cleared": [
+        "b",
+        "d"
+      ],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    },
+    {
+      "line": 2946,
+      "raw_line": "| any **two** except `b+c` | **2** |",
+      "cleared": [
+        "c",
+        "d"
+      ],
+      "claimed_count": 2,
+      "derived_count": 2,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    },
+    {
+      "line": 2947,
+      "raw_line": "| `b+c` | **3** (adds M10) |",
+      "cleared": [
+        "b",
+        "c"
+      ],
+      "claimed_count": 3,
+      "derived_count": 3,
+      "claimed_named_axes": [
+        "M10"
+      ],
+      "derived_named_axes": [
+        "M10"
+      ],
+      "matches": true
+    },
+    {
+      "line": 2948,
+      "raw_line": "| **`a+b+d`** | **6** (adds M2 M3 M4 M11) |",
+      "cleared": [
+        "a",
+        "b",
+        "d"
+      ],
+      "claimed_count": 6,
+      "derived_count": 6,
+      "claimed_named_axes": [
+        "M2",
+        "M3",
+        "M4",
+        "M11"
+      ],
+      "derived_named_axes": [
+        "M2",
+        "M3",
+        "M4",
+        "M11"
+      ],
+      "matches": true
+    },
+    {
+      "line": 2949,
+      "raw_line": "| **`a+b+c+d`** | **12** |",
+      "cleared": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "claimed_count": 12,
+      "derived_count": 12,
+      "claimed_named_axes": [],
+      "derived_named_axes": [],
+      "matches": true
+    }
+  ],
+  "omitted_subsets": [
+    {
+      "cleared": [
+        "c"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "b",
+        "c"
+      ],
+      "count": 4,
+      "axes": [
+        "M8",
+        "M9",
+        "M10",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "a",
+        "c",
+        "d"
+      ],
+      "count": 2,
+      "axes": [
+        "M8",
+        "M12"
+      ]
+    },
+    {
+      "cleared": [
+        "b",
+        "c",
+        "d"
+      ],
+      "count": 4,
+      "axes": [
+        "M7",
+        "M8",
+        "M10",
+        "M12"
+      ]
+    }
+  ],
+  "all_stated_cells_match": true
+}
