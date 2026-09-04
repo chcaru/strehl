@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "status": "DOCUMENT_AND_SPECIFICATION_AUDIT_ONLY",
+  "pixel_files_opened": 0,
+  "source_snapshot": {
+    "plan": {
+      "path": "docs/proposals/2026-08-sota-path.md",
+      "sha256": "72f8257918e929acb3f50c4606a4a7a73a44594492f040b4fcf196072e6a0b94"
+    },
+    "scorecard": {
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "sha256": "cf91ec9afcaa4487a7ad1718a6c1ff9b6d2843b5869861606aaad46ec99331f1"
+    },
+    "m157_prior_audit": {
+      "path": "docs/research/M157-comparator-viability.md",
+      "sha256": "14660adc46e1d253e7e9646245708e789cd1cb4e1ba96312b424db1742e08c7e"
+    },
+    "m161_m3_ratification": {
+      "path": "docs/research/M161-m3-ratification.md",
+      "sha256": "3da41f80a05a9d1f91b35f03aa72ef1dece1d7252d21da8cc0ce5313d725b58e"
+    },
+    "m164_gx_ruling": {
+      "path": "docs/research/M164-gx-sota-claim.md",
+      "sha256": "59d56ffeae5156d9afd046e864efacc8dba45ef455487bd5317000f2bca0fde8"
+    },
+    "m169_m3_commissioning": {
+      "path": "docs/research/M169-m3-veil.md",
+      "sha256": "d83eab7a42670eef54554e0638eb3cc27df48445cd34fb93f4f51e01d3869cb1"
+    }
+  },
+  "ruling": {
+    "lead": "SCORECARD EXCEEDS PLAN: it converted an axis-scoped named comparator portfolio into an all-three, axis-blind prerequisite.",
+    "named_portfolio_traceable_to_plan": true,
+    "universal_all_three_conjunction_traceable_to_plan": false,
+    "m3_comparator_envelope_traceable_to_plan": false,
+    "m3_plan_bar_is_absolute": true,
+    "current_whole_product_sota_definition_is_comparative": true,
+    "free_comparator_currently_admitted": []
+  },
+  "plan_anchors": [
+    "SOTA = a pre-registered scorecard, versus named comparators, on axes with commissioned instruments.",
+    "Comparators pinned and priced: licensed Zerene (PMax *and* DMap",
+    "DMap has never rendered here and is A5's true comparator",
+    "the fork rebuilt at its best-known build",
+    "Helicon if obtainable",
+    "no occlusion veil above [bar] (halo instrument at full reach)",
+    "An open-source stacker is a useful foreign arm and repairs a real provenance defect, but it clears **no** blocker."
+  ],
+  "scorecard_anchors": [
+    "The required set is exactly licensed Zerene Stacker PMax, licensed Zerene Stacker DMap, and a fresh fork rebuild",
+    "If any required arm — Zerene PMax, Zerene DMap, or the fresh commit-pinned best-known-source fork rebuild — cannot produce a linear output that passes §1.3",
+    "the named-comparator requirement is unmet and the dependent comparative axes remain `UNMEASURED`",
+    "SCORECARD ADDITION — UNRATIFIED. This rule is authored here and is not traceable to the owner's plan.",
+    "p99(a_e) no worse than the M1-qualified comparator envelope in every scope"
+  ],
+  "technical_minimum": [
+    "exact_hashed_common_input_tiff_bytes",
+    "native_size_16_bit_linear_tiff_output",
+    "section_1_3_33_step_ramp_pass",
+    "zero_development_instructions_in_files_and_sidecars",
+    "no_output_tone_sharpen_denoise_white_balance_or_resize",
+    "native_scale_and_at_least_99_percent_common_overlap",
+    "frequency_metrics_never_resample_output",
+    "input_only_geometry_evidence_with_registered_residual_limits",
+    "at_least_80_percent_and_metric_minimum_sites_survive_identically",
+    "differential_site_attrition_at_most_2_percentage_points",
+    "frozen_version_binary_hash_settings_and_output_hashes",
+    "fixed_settings_without_per_subject_tuning"
+  ],
+  "policy_only_or_axis_specific": [
+    "licensed_product_identity",
+    "pmax_product_name",
+    "dmap_product_name",
+    "fresh_fork_identity",
+    "m1_98_percent_information_qualification",
+    "dmap_as_a5_depth_method_comparator"
+  ],
+  "candidates": [
+    {
+      "name": "Enfuse / Hugin",
+      "status": "TECHNICALLY_PLAUSIBLE_UNADMITTED",
+      "common_input": "YES_ENFUSE_DIRECT",
+      "linear_output": "DOCUMENTED_CONFIG_PATH_WITNESS_NOT_RUN",
+      "reason": "The documented CLI accepts supplied TIFFs, supports focus-stack fusion, 16-bit output and identity-space blending. Defaults are not admissible, and no frozen binary/settings package has passed the scorecard ramp and geometry witnesses.",
+      "evidence": [
+        "https://hugin.sourceforge.io/docs/manual/Enfuse.html",
+        "https://manpages.debian.org/testing/enfuse/enfuse.1.en.html",
+        "docs/research/M157-comparator-viability.md:371-399"
+      ]
+    },
+    {
+      "name": "PetteriAimonen/focus-stack",
+      "revision": "0cd289e224fe24aead5b146faeaa46950775f346",
+      "status": "DISQUALIFIED_AS_IS",
+      "common_input": "YES_WITH_NO_ALIGN",
+      "linear_output": "NO_8_BIT_INTERNAL_OUTPUT_PATH",
+      "reason": "The pinned upstream loader omits IMREAD_ANYDEPTH and the inverse wavelet path converts to CV_8U. It cannot emit the required 16-bit linear result as-is.",
+      "evidence": [
+        "https://github.com/PetteriAimonen/focus-stack/blob/0cd289e224fe24aead5b146faeaa46950775f346/src/task_loadimg.cc",
+        "https://github.com/PetteriAimonen/focus-stack/blob/0cd289e224fe24aead5b146faeaa46950775f346/src/task_wavelet.cc",
+        "https://github.com/PetteriAimonen/focus-stack/blob/0cd289e224fe24aead5b146faeaa46950775f346/README.md"
+      ]
+    },
+    {
+      "name": "ImageJ/Fiji Extended Depth of Field",
+      "revision": "742a6e2c12bf33bdb0daf2aac30946744e8a1cd5",
+      "status": "NOT_QUALIFIED",
+      "common_input": "YES_STACK_INPUT_ALIGNMENT_EXTERNAL",
+      "linear_output": "NO_DOCUMENTED_16_BIT_RGB_ICC_SAFE_PATH",
+      "reason": "The official plugin is macro-callable and accepts an image stack, but its documentation does not establish a native-size 16-bit linear RGB TIFF plus profile path. Absence of that specification and of a §1.3 witness is fatal to admission.",
+      "evidence": [
+        "https://bigwww.epfl.ch/demo/edf/",
+        "https://imagej.net/learn/headless",
+        "docs/research/M157-comparator-viability.md:439-465"
+      ]
+    },
+    {
+      "name": "ShineStacker",
+      "revision": "85ae8793f380836313414bd066ea64b749159b91",
+      "status": "TECHNICALLY_PLAUSIBLE_UNADMITTED",
+      "common_input": "YES_ALIGNMENT_IS_SEPARATE_ACTION",
+      "linear_output": "UNPROVED",
+      "reason": "Its public documentation promises batch processing and 16-bit TIFF input/output, but does not define linear-transfer or ICC identity; it also lists metadata limitations for 16-bit TIFF. A ramp/profile witness is required.",
+      "evidence": [
+        "https://github.com/lucalista/shinestacker/blob/85ae8793f380836313414bd066ea64b749159b91/docs/main.md",
+        "docs/research/M157-comparator-viability.md:517-531"
+      ]
+    },
+    {
+      "name": "OpenCV-based stackers as a class",
+      "status": "NOT_A_QUALIFYING_CLASS",
+      "common_input": "IMPLEMENTATION_DEPENDENT",
+      "linear_output": "IMPLEMENTATION_DEPENDENT",
+      "reason": "OpenCV is an image-processing library, not a comparator. Each concrete stacker must prove unchanged-depth loading, linear arithmetic/output, metadata semantics, native geometry and §1.3 conformance; library choice supplies none of those by itself.",
+      "evidence": [
+        "https://docs.opencv.org/4.x/d8/d6a/group__imgcodecs__flags.html",
+        "https://docs.opencv.org/4.x/d4/da8/group__imgcodecs.html"
+      ]
+    },
+    {
+      "name": "Stackaroni",
+      "revision": "e696e8ef3bb75d87e05f8d071807c6b017b5cb10",
+      "status": "DISQUALIFIED_AS_DOCUMENTED",
+      "common_input": "TIFF_YES_ALIGNMENT_BYPASS_NOT_DOCUMENTED",
+      "linear_output": "NO_SRGB_REENCODED_OUTPUT",
+      "reason": "Its own README says samples are converted to linear on decode and re-encoded to sRGB on write. The scorecard requires a linear TIFF output, so the documented output contract fails.",
+      "evidence": [
+        "https://github.com/nschroeter/stackaroni/blob/e696e8ef3bb75d87e05f8d071807c6b017b5cb10/README.md"
+      ]
+    },
+    {
+      "name": "z-stackr",
+      "revision": "2cadffa5c1e98817dde46f946eea6888733435bd",
+      "status": "DISQUALIFIED_AS_DOCUMENTED",
+      "common_input": "YES_ALIGNMENT_NONE_AVAILABLE",
+      "linear_output": "NO_GAMMA_ENCODED_PIPELINE",
+      "reason": "Its README says the classical pipeline deliberately stores and blends gamma-encoded sRGB values end to end and enables per-frame brightness/gamma correction by default. That is not the scorecard's linear common-input/output path.",
+      "evidence": [
+        "https://github.com/suitable-name/z-stackr/blob/2cadffa5c1e98817dde46f946eea6888733435bd/README.md"
+      ]
+    },
+    {
+      "name": "PICOLAY",
+      "status": "DISQUALIFIED_AS_DOCUMENTED",
+      "common_input": "GUI_BATCH_ONLY",
+      "linear_output": "NO_24_BIT_INTERNAL_AND_NO_TIFF_SAVE",
+      "reason": "The official manual says TIFFs are changed to 24-bit bitmaps internally and PICOLAY cannot save TIFF files.",
+      "evidence": [
+        "https://www.picolay.de/picolay_helpfiles/Manual_PICOLAY_EN.pdf",
+        "docs/research/M157-comparator-viability.md:421-437"
+      ]
+    },
+    {
+      "name": "CombineZP",
+      "revision": "fbc64d84ebf6ea65318ccae33100d6e91c348462",
+      "status": "DISQUALIFIED_AS_IS",
+      "common_input": "YES_STACK_ONLY_MACRO_POSSIBLE",
+      "linear_output": "NO_8_BIT_PER_CHANNEL_EXPORT",
+      "reason": "The existing repository audit found only 24/32-bit RGB storage/export paths, not 16-bit-per-channel linear RGB.",
+      "evidence": [
+        "docs/research/M157-comparator-viability.md:401-419"
+      ]
+    },
+    {
+      "name": "ChimpStackr",
+      "revision": "14cb77898cccc4756f4785286bf69325768dc4ae",
+      "status": "NOT_QUALIFIED",
+      "common_input": "DOCUMENTED_STACK_ONLY_CLI",
+      "linear_output": "CLAIMED_16_BIT_NOT_SECTION_1_3_PROVED",
+      "reason": "Public claims of a 16-bit pipeline do not establish linear transfer, profile identity or the scorecard ramp. The repository's licence discipline precludes a fresh source audit in this lane, so admission evidence is absent.",
+      "evidence": [
+        "docs/research/M157-comparator-viability.md:533-551"
+      ]
+    }
+  ],
+  "axis_ledger": {
+    "literal_blocker_d": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7"
+    ],
+    "direct_semantic_comparator_dependency": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "M11"
+    ],
+    "m9": "CURRENT_ROUTE_TRANSITIVE_THROUGH_M1_TRUTH_NOT_INTRINSIC_COMPARATOR_DEPENDENCY",
+    "free_arm_axes_unblocked_under_current_plan": [],
+    "technical_limb_axes_if_owner_authorizes_substitution": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "M11"
+    ]
+  },
+  "enfuse_admission_work": [
+    "owner_amends_plan_and_scorecard_if_substitution_is_intended",
+    "pin_release_source_or_package_and_binary_hash",
+    "freeze_identity_space_focus_stack_settings_before_outputs",
+    "prove_exact_common_input_byte_acceptance",
+    "run_section_1_3_ramp_per_channel",
+    "verify_native_size_at_least_99_percent_overlap_and_geometry_limits",
+    "verify_zero_development_instructions_in_files_and_sidecars",
+    "verify_frequency_metrics_never_resample_output",
+    "verify_at_least_80_percent_and_metric_minimum_sites_survive_identically",
+    "verify_differential_site_attrition_at_most_2_percentage_points",
+    "verify_linear_profile_semantics_and_no_post_processing",
+    "freeze_output_hashes_and settings",
+    "qualify_against_any_axis_specific_information_guard",
+    "render_all_registered common_input captures only after admission"
+  ]
+}
