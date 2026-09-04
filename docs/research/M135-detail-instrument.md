@@ -649,6 +649,68 @@ measures presentation transfer.
 3. non-compensating transfer/artifact vetoes beside the invariant information
    coordinate.
 
+### 3.3 Shared-base-optic reference ruling
+
+**DERIVED — ADMISSIBLE WITH CONDITIONS.** “Independent reference” does not
+require a different prime lens. Let the base lens contribute a common
+pre-sensor transfer `G`:
+
+```text
+R = A G S + eta
+Y = H G S + epsilon.
+```
+
+With independently exposed and calibrated paths,
+`cov(epsilon, eta) = 0`, so:
+
+```text
+cov(Y, R) = H G P_S G* A*.
+```
+
+The shared optic cannot create reference/output covariance when no
+scene-linked term is present. It is also not the common **post-noise** filter
+from §3.1: `G` acts before the fresh `epsilon` and `eta` draws. The
+invariance/blindness proof is therefore not reintroduced merely because the
+prime lens is shared.
+
+The price is a narrower estimand. `J_TR` now measures information about
+`G S`, not unconstrained object truth. A shared optical zero is invisible; a
+shared lens-specific ghost, halo or aberration can be treated as truth if it
+repeats in both paths. Sharing the prime therefore cannot support an absolute
+claim beyond its passband. It can support the comparative statement that one
+renderer recovers more information present through the frozen shared-lens
+path, provided the following predicates all pass:
+
+1. reference and scored arms are separate physical exposures with fresh
+   downstream noise;
+2. converter-on reference, converter-off output, A and B use the disjoint
+   flat/dark lineages registered in §6;
+3. the scale change puts common sites on different sensor footprints and
+   blank-residual correlation is `<=0.05`;
+4. both reference halves pass repeatability and tone/rail eligibility;
+5. converter-on object-space transfer is demonstrably stronger in every
+   registered cell;
+6. `LCB95(M_reference / M_scored) >= 2.0`;
+7. no crop, digital zoom, resample or source-derived oracle creates the
+   reference; and
+8. the reported claim says explicitly that the shared prime's zeros and
+   common aberrations are outside the identified truth.
+
+**DERIVED.** Nominal `2.8 / 1.4 = 2.0` has no uncertainty margin and does not
+clear predicate 6 on the measured rig. The measured conservative
+converter-on value is `2.7015`, so a nominal `1.40x` scored state gives only
+`1.9296x`. The existing `1.32x` target with a hard `1.33x` maximum gives a
+conservative point ratio of `2.0312x`; it is admissible only if the
+pre-registered interval calculation still leaves its one-sided 95% lower
+bound at or above `2.0`.
+
+**RULING.** A second macro optic is not required before trying the existing
+Sony 100 mm plus Viltrox inversion. The shared-optic correlation narrows what
+`J_TR` means; it does not itself fake `J_TR`. Correlated calibration, sensor
+pattern or a shared optical artifact would add common structure and can inflate
+the statistic, which is why the lineage, footprint, blank, transfer and
+claim-scope predicates above are hard refusals rather than caveats.
+
 ## 4. Candidate architecture A — per-cell truth-referenced information
 
 ### 4.1 Inputs and population
@@ -1017,6 +1079,14 @@ the outcome is `UNDERPOWERED`, not a relaxed bar.
 
 ### 6.4 Owner-facing acquisition specification
 
+> **IMMEDIATE PROCUREMENT SUPERSEDED.** The custom-code specification below
+> remains the strongest route to a target-independent anti-prediction claim,
+> but it is not the next owner action. Section 6.6 supersedes it for the first
+> physical binding attempt: use the confirmed camera, prime and Viltrox in the
+> inverted configuration, spend `$0` on optics or target fabrication, and let
+> the rehearsal's sampling, transfer, lineage and target-eligibility gates
+> decide whether fabrication is needed.
+
 > **OWNER-ACTION DRAFT — do not shoot from this section by itself.** The
 > orchestrator owns the executable capture request. This section states what
 > M135 needs that request to contain. `M_work`, the physical control offset,
@@ -1285,11 +1355,166 @@ missing lineage.
 | 4 | new reference optic or body | at least several hundred dollars, plausibly much more | unnecessary unless the existing converter-on path fails sampling or transfer |
 
 **Bottom line.** A new camera or lens is not presently required. A new
-capture is required. Full M1 also requires a one-time coded physical artifact;
-that artifact can be inexpensive film if it passes the same optical gates, so
-glass should not be ordered first. If no such artifact is fabricated, the
-honest fallback is the narrow natural-target statement above, not an admitted
-scorecard M1 value.
+capture is required. Do not buy or fabricate anything before the `$0`
+shared-optic rehearsal in §6.6. A concealed coded artifact remains the
+strongest route to the target-independent claim described in §4.6, but it is a
+fallback if the one-use stochastic patch cannot pass the physical
+predictability, population or transfer gates. Without that stronger
+provenance, the first lawful result remains explicitly target-conditional.
+
+### 6.6 Owner-facing `$0` shared-optic capture specification
+
+> **OWNER ACTION — CAPTURE REQUEST DRAFT.** This is the cheapest surviving
+> route. It needs no new lens, teleconverter, body or fabricated calibration
+> target. The orchestrator's bench sheet remains authoritative and must
+> incorporate these requirements before shooting.
+
+#### Physical subject
+
+Use one rigid, stationary plane carrying both:
+
+1. the existing grid or slide marks needed to measure magnification,
+   registration and field position; and
+2. a coplanar, one-use, nonperiodic stochastic patch large enough to leave at
+   least `2048 x 2048` scored native pixels before guards.
+
+The patch may be existing matte fibrous paper, ground-glass texture, random
+speckle or another physically stochastic microtexture already on hand. It must
+not be a public checker, ruler, Siemens star, repeated textile or semantic
+image. Its exact specimen and orientation must be chosen after renderer
+binaries and settings are frozen. Site locations are generated from a frozen
+seed and input-only geometry; the photographer does not hand-pick sharp
+features.
+
+**Equipment assumption:** the repository confirms the camera, lens and
+converter, but it does not confirm that the owner already has a suitable
+stochastic patch. `$0` is therefore conditional on finding one among ordinary
+materials already on hand; otherwise the next-cheapest action is to buy a
+commercial random-speckle sheet, not a second optic.
+
+This is not equivalent to the engineered panel in §6.4. It can support the
+narrow statement:
+
+> On this frozen renderer and this one-use stochastic target population,
+> higher-sampling reference agreement improved without a transfer,
+> flat-null or unexplained-structure regression.
+
+It supports the broader anti-prediction claim only if the registered physical
+target-eligibility test shows 64 nonduplicated guarded sites, adequate
+reference power in all 16 cells and no reusable/repeated pattern. Failure
+means `TARGET_INELIGIBLE`; it is a reason to fabricate the §6.4 panel, not to
+select friendlier sites.
+
+#### Existing optical path
+
+**Repository-confirmed equipment:** Sony A7C II, Sony FE 100 mm F2.8 Macro GM
+and communicating 2x Viltrox teleconverter.
+
+1. Capture `R1/R2` with the converter installed at the measured
+   maximum-reproduction state.
+2. Remove the converter without moving the subject. Reframe by axial camera
+   motion only.
+3. Capture the scored A/B brackets at a `1.32x` target and never above
+   `1.33x`.
+4. Measure both reproduction ratios from common target periods. Proceed only
+   if the frozen interval gives
+   `LCB95(M_reference / M_scored) >= 2.0`.
+
+Do not use nominal lens labels as the ratio. `2.8 / 1.4 = 2.0` is not an
+operational margin; on the measured rig the conservative `2.7015 / 1.40`
+ratio is only `1.9296`.
+
+#### Shot list
+
+The surviving inverted block is:
+
+| role | frames |
+|---|---:|
+| converter-on fixed-focus reference, near/mid/far | `3 x 32 = 96` |
+| converter-off `sw4-A/B` | `2 x 55 = 110` |
+| converter-off `sw10-A/B` | `2 x 27 = 54` |
+| converter-off reset/start/end fixed-focus witnesses | `60` |
+| converter-off flat A/B and dark A/B | `4 x 32 = 128` |
+| **added inverted block** | **`448`** |
+
+The current wider request totals `891` frames after replacing its superseded
+reference block. Do not improvise frame counts from this summary; the
+orchestrator-owned capture request defines the complete order and all
+converter-on calibration already present in that session.
+
+Reference bursts are fixed-focus exposures, not a stack. Near, middle and far
+positions cover the tilted subject without allowing a stacking algorithm to
+construct its own truth. Odd and even reference halves use different
+converter-on A/B masters. Converter-off A and B each use their own new
+flat/dark masters. No master crosses optical state, repeat or sitting.
+
+#### Hard acquisition predicates
+
+The same-prime path is usable only if all hold:
+
+- fresh physical exposures in every output and reference stream;
+- IBIS and OSS off, camera-linear 14-bit RAW, fixed ISO/exposure/white balance;
+- no shared flat or dark master between reference/output or A/B lineages;
+- a different sensor footprint after the physical scale change;
+- blank-residual cross-correlation `<=0.05`;
+- reference-repeat coherence and tone/rail eligibility;
+- stronger reference transfer in every registered cell;
+- at least 64 common guarded stochastic sites;
+- `LCB95(M_reference / M_scored) >= 2.0`; and
+- no crop, digital zoom, upsample, source oracle or output-derived site
+  selection.
+
+Any failed predicate returns an explicit non-numeric state. It is not repaired
+after inspection.
+
+#### Cost, lead time and owner prohibitions
+
+Incremental optical cost is **`$0`**, high confidence, because all named
+camera equipment is repository-confirmed. Target cost is **`$0` if a suitable
+ordinary stochastic material is already on hand**, medium-low confidence
+because ownership is not recorded. Lead time is one non-holdout rehearsal
+plus analysis, then a separate uninterrupted scored sitting; the repository
+does not support an honest duration estimate.
+
+Do not:
+
+1. buy a second optic or commission a target before the `$0` rehearsal fails;
+2. move the subject between converter-on reference and converter-off scored
+   arms;
+3. inspect any rendered or metric outcome once the scored sitting begins;
+4. reuse rehearsal subjects, flats, darks, references or selected sites in the
+   score;
+5. let `sw4` serve as both improvement and truth; or
+6. report information beyond the shared prime's passband as object truth.
+
+### 6.7 Authorized slide session: what it can and cannot commission
+
+**VERIFIED FROM REPOSITORY INVENTORY, NOT YET FROM `D:\`.** The authorized
+development session contains one `tilted-sw4` ladder, one `tilted-sw10`
+ladder, one three-exposure flat ladder and one different-geometry all-axis
+ladder. The repository records coarse `FocusPosition2` ranges `[57,59]` for
+both tilted stacks, but M135 has not yet independently read the files.
+
+**DERIVED.** Real photons and fresh downstream noise make `sw4` versus `sw10`
+a valid **pre-sensor intervention arm** if their ranges are in fact matched.
+They do not make it a self-contained `J_TR` arm. The session has no registered
+higher-sampling fixed-focus `R1/R2`, no two A/B repeats per step width and no
+four disjoint calibration lineages. Using `sw4` as its own reference would
+mechanically favor the alleged improvement.
+
+The physical run was preregistered before any M135 access in
+`experiments/M135-slide-physical-commissioning/PREREGISTRATION.md` at commit
+`0d672863`. Its lawful outcomes are separate:
+
+- metadata and image-derived focus ranges match or do not;
+- `REAL_OPTICAL_ARM_PRESENT` or absent;
+- full `J_TR` is identifiable or `REFERENCE_ROLE_ABSENT`; and
+- the flat source diagnostic is quiet or not quiet.
+
+Until the host lock is released and that run completes, no slide outcome is
+claimed. If the inventory is as documented, the expected honest result for
+the full ratio is `REFERENCE_ROLE_ABSENT`, not an invented
+`J_TR(sw4)/J_TR(sw10)` value.
 
 ## 7. Frozen challenge battery and outcome
 
@@ -1607,15 +1832,36 @@ produced an unsafe result
 
 **VERIFIED.** The checked-in physical binding remains `UNBOUND`; therefore
 M135 currently emits no claim-bearing `detail_pass` for M138. Phase 1 remains
-`BLOCKED_DETAIL_INSTRUMENT` until physical M135 commissioning passes and M138
-binds the contract, checker, payload generator, capture ledger, physical
-preregistration, and commissioning hashes. This is the intended fail-closed
-outcome, not a detail failure.
+machine-readable `BLOCKED_DETAIL_INSTRUMENT` until physical M135 commissioning
+passes and M138 binds the contract, checker, payload generator, capture
+ledger, physical preregistration, and commissioning hashes. This is the
+intended fail-closed outcome, not a detail failure.
+
+**DERIVED.** The more precise program state is now
+`BLOCKED_ON_PHYSICAL_COMMISSIONING_AND_FRESH_INVERTED_CAPTURE`. The statistic
+and adapter exist, and §3.3 removes a second-optic purchase as a structural
+prerequisite. What remains is the physical reference/output lineage, a
+successful `$0` rehearsal, and a fresh uninterrupted capture. M138's existing
+enum need not change to record that sharper diagnosis.
 
 ## 9. Could not determine
 
 - **ASSUMED.** Whether the planned reference optic has stronger object-space
   transfer in every licensed cell.
+- **ASSUMED.** Whether the one-use stochastic patch in §6.6 passes the
+  nonduplication, 64-site and all-cell reference-power gates. The shared-optic
+  ruling does not answer target eligibility.
+- **VERIFIED.** Nominal `2.8 / 1.4 = 2.0` is not an admissible uncertainty
+  margin on the measured rig. The conservative measured ratio at `1.40x` is
+  `1.9296`; the `1.32x` target and `1.33x` hard maximum remain conditional on
+  an actual `LCB95 >= 2.0`.
+- **ASSUMED.** Whether direct inspection of the authorized slide confirms the
+  repository's equal coarse encoder range and whether its image-derived
+  coverage passes the frozen equivalence screen. M139's host-quiet lock
+  currently forbids that run.
+- **DERIVED.** If the authorized slide inventory is exactly the four recorded
+  stacks, it cannot identify a full `J_TR(sw4)/J_TR(sw10)` contrast because
+  the independent fixed-focus `R1/R2` and disjoint A/B roles are absent.
 - **ASSUMED.** Whether 64 physical sites can resolve the proposed 2% M1
   superiority margin under real registration and photon noise.
 - **ASSUMED.** Whether a scale/position change plus independent flats/darks
@@ -1695,13 +1941,18 @@ flat/detail information ratio of `0.002320`; structured and common-artifact
 flats were refused **VERIFIED**.
 
 **ASSUMED.** Physical feasibility is conditional, not established. The
-reference and matched-flat lineages are parts of the instrument, and existing
-development captures do not contain those roles. M1 should remain
-`UNMEASURED` until the physical lineage and extraction rehearsal pass without
-changing the frozen bars.
+reference and matched-flat lineages are parts of the instrument. A
+shared-base-optic, magnification-differentiated reference is admissible under
+the hard predicates in §3.3, so a second optic is not the blocker. The
+authorized slide can test range, a real pre-sensor intervention and a flat
+diagnostic, but does not contain the complete `R1/R2` and A/B lineage. M1
+should remain `UNMEASURED` until the `$0` inverted physical rehearsal and
+fresh capture pass without changing the frozen bars.
 
 **VERIFIED.** M138 has a repaired, locally commissioned interface to bind later,
 but not an independently re-accepted interface and not a result. The checked-in
 rule is hashable, per-capture, and fail-closed, while its physical binding is
 explicitly `UNBOUND`. The correct current Phase-1 state is therefore
-`BLOCKED_DETAIL_INSTRUMENT`, not `DETAIL_FAIL` and not `DETAIL_PASS`.
+machine-readable `BLOCKED_DETAIL_INSTRUMENT`, more precisely
+`BLOCKED_ON_PHYSICAL_COMMISSIONING_AND_FRESH_INVERTED_CAPTURE`, not
+`DETAIL_FAIL` and not `DETAIL_PASS`.
