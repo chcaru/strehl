@@ -2846,6 +2846,77 @@ that beating it is what makes the result **interesting** (market relevance). I
 will put the honest version to the owner, not the one that most easily justifies
 a purchase.
 
+### 2.9.25 Six days without a quality change, and the reason is structural
+
+I audited program throughput rather than another lane's result. The finding is
+about the program, and it is the honest answer to "how far toward SOTA."
+
+**No commit has improved the stacker's output quality since 2026-08-28.** The
+last one was `40307289`, "wire the soft admission kernel into the pyramid
+backend." Every commit touching Rust source in the six days since is
+instrumentation, diagnostics, a performance change, an audit, or a withdrawal:
+`Measure Catmull-Rom source-hull violations`, `add registered M8 audit tools`,
+`withdraw queue after negative throughput gate`, `Withdraw split-stack Rust
+prototype after closure audit`. Two of the twenty are literally withdrawals.
+
+Over the same seven days, measured in the fixed window
+`2026-08-27 21:45` to `2026-09-03 21:45` so the count is reproducible:
+**283 commits to `docs/`, 425 to `experiments/`, 18 to `crates/`.** I do not
+offer 708:18 as a waste ratio -- preregistrations are required by this
+program's own discipline and harnesses are genuine build work. The
+load-bearing fact is not the ratio, it is the **absence**: six days, no quality
+change.
+
+**The cause is a sentence I wrote in §11 of the SOTA proposal and then did not
+act on:** *"strehl can currently prove harm and cannot prove benefit."* That is
+not a remark about instrument coverage. It is a description of what the program
+will do next, and it predicts exactly what happened:
+
+| with only harm-proving instruments | consequence |
+|---|---|
+| a build must beat a baseline on an admitted instrument | none exists for detail |
+| so no build can be shown to help | builds are withdrawn |
+| a measurement always yields a number and a document | measurements always land |
+| lanes optimise for what can land | the program becomes a measurement program |
+
+**Rigour did not cause this and relaxing rigour will not fix it.** The
+discipline has been repaying itself: it caught a comparator that was our own
+fork (§2.9.24), a floor reported as a measurement (§2.9.22), and a capture the
+owner's body cannot physically shoot (§2.9.23). Each would have been fatal in
+print. The defect is not that the program measures carefully; it is that it
+has nothing that can return "better."
+
+**Everything now converges on one physical capture.** lane-TRUTH has ruled
+`GO` on the only proposed instrument whose truth is physical rather than
+inferred from a degraded output: a higher-magnification, independently sampled
+reference of the same subject, at a measured `2.078x` reference/main sampling
+ratio. Its §10 requires a **160-frame reference block in the same session**,
+the main sweeps **pinned to 1.30x effective reproduction**, and the **2x
+Viltrox installed throughout**.
+
+**None of that is in the capture request, and I caused that.** I searched
+`docs/capture-requests/2026-09-319-frame-session.md` for `160`, `Viltrox`,
+`1.30x`, `reference block` and `higher-mag`: **zero matches.** The document is
+`REQUESTED -- awaiting owner` at 443 frames. Had the owner shot it as written
+he would have produced 443 frames, no truth reference, `M1` still `UNMEASURED`,
+and a full reshoot -- and the "installed throughout" clause means this is not
+an extra block appended at the end, it changes how the **existing** sweeps must
+be shot. This gap exists because I fragmented ownership of that file across
+lanes and froze it without asking what else needed to be in it.
+
+**Action taken.** The file is locked to me; both lanes are off it. lane-TRUTH is
+writing a standalone, imperative shooting specification and owes me the minimum
+subset that still yields a commissionable instrument, because bench time is
+finite. lane-FRC is checking whether a teleconverter at 1.30x breaks its frozen
+G0--G3 gates or its `sw4`/`sw10` step widths, with `UNKNOWN` permitted. I
+integrate and verify before anything reaches the owner.
+
+**The standing consequence for how I run this program:** I authorise no further
+measurement lane that does not either unblock the capture or commission the
+truth instrument. The program has enough measurements. It has no way to say
+"better," and until it does, every additional measurement is a more precise
+description of a stacker nobody can show is improving.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
