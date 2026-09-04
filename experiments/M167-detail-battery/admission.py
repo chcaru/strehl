@@ -36,6 +36,7 @@ PREREG_PATH = HERE / "ADMISSION-PREREGISTRATION.md"
 RUNNER_PATH = HERE / "admission.py"
 WORKER_PATH = HERE / "admission_worker.py"
 CANDIDATE_PATH = HERE / "cheating_canary.py"
+COMMISSION_PATH = HERE / "commission.py"
 FREEZE_PATH = HERE / "admission-freeze.json"
 SEALED_PATH = HERE / "admission-sealed.json"
 RESULT_PATH = HERE / "admission-results.json"
@@ -101,44 +102,128 @@ def git(*arguments: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def git_bytes(*arguments: str) -> subprocess.CompletedProcess[bytes]:
+    return subprocess.run(
+        ["git", *arguments],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+
 def verify_freeze() -> dict[str, object]:
     manifest = json.loads(FREEZE_PATH.read_text(encoding="utf-8"))
     files = manifest.get("files")
     if not isinstance(files, dict):
         raise RuntimeError("freeze manifest has no file map")
+    required_files = {
+        PREREG_PATH.name,
+        RUNNER_PATH.name,
+        WORKER_PATH.name,
+        CANDIDATE_PATH.name,
+        COMMISSION_PATH.name,
+    }
+    artifact_commit = str(manifest.get("artifact_commit", ""))
+    preregistration_commit = str(
+        manifest.get("preregistration_commit", "")
+    )
     actual = {
         name: sha256_file(HERE / name)
         for name in files
     }
     hash_match = actual == files
     paths = [str((HERE / name).relative_to(ROOT)) for name in files]
-    unstaged = git("diff", "--quiet", "HEAD", "--", *paths)
-    staged = git("diff", "--cached", "--quiet", "HEAD", "--", *paths)
-    head = git("rev-parse", "HEAD")
+    committed_hashes = {}
+    committed_reads_ok = True
+    for name, relative_path in zip(files, paths):
+        process = git_bytes(
+            "show", f"{artifact_commit}:{relative_path.replace(os.sep, '/')}"
+        )
+        if process.returncode != 0:
+            committed_reads_ok = False
+            committed_hashes[name] = None
+        else:
+            committed_hashes[name] = sha256_bytes(process.stdout)
+    artifact_paths_unstaged = git(
+        "diff", "--quiet", "HEAD", "--", *paths
+    )
+    artifact_paths_staged = git(
+        "diff", "--cached", "--quiet", "HEAD", "--", *paths
+    )
+    manifest_relative = str(FREEZE_PATH.relative_to(ROOT))
+    manifest_unstaged = git(
+        "diff", "--quiet", "HEAD", "--", manifest_relative
+    )
+    manifest_staged = git(
+        "diff", "--cached", "--quiet", "HEAD", "--", manifest_relative
+    )
     ancestor = git(
         "merge-base",
         "--is-ancestor",
-        str(manifest.get("artifact_commit", "")),
+        artifact_commit,
         "HEAD",
+    )
+    preregistration_ancestor = git(
+        "merge-base",
+        "--is-ancestor",
+        preregistration_commit,
+        artifact_commit,
+    )
+    committed_drift = git(
+        "diff",
+        "--quiet",
+        artifact_commit,
+        "HEAD",
+        "--",
+        *paths,
+    )
+    latest_change = git(
+        "log",
+        "-1",
+        "--format=%H",
+        "HEAD",
+        "--",
+        *paths,
     )
     checks = {
         "manifest_schema": manifest.get("schema") == 1,
+        "manifest_file_set_exact": set(files) == required_files,
         "preregistration_commit_pinned": (
             manifest.get("preregistration_commit")
-            == "20ef67e8"
+            == "20ef67e822c4bd08dd5792989694c8982b9e0308"
+        ),
+        "preregistration_precedes_artifacts": (
+            preregistration_ancestor.returncode == 0
         ),
         "artifact_hashes_match": hash_match,
-        "artifact_paths_unstaged_clean": unstaged.returncode == 0,
-        "artifact_paths_staged_clean": staged.returncode == 0,
+        "artifact_commit_objects_readable": committed_reads_ok,
+        "manifest_hashes_match_artifact_commit": (
+            committed_hashes == files
+        ),
+        "no_committed_artifact_drift": committed_drift.returncode == 0,
+        "artifact_commit_is_last_pinned_change": (
+            latest_change.returncode == 0
+            and latest_change.stdout.strip() == artifact_commit
+        ),
+        "artifact_paths_unstaged_clean": (
+            artifact_paths_unstaged.returncode == 0
+        ),
+        "artifact_paths_staged_clean": (
+            artifact_paths_staged.returncode == 0
+        ),
+        "freeze_manifest_unstaged_clean": (
+            manifest_unstaged.returncode == 0
+        ),
+        "freeze_manifest_staged_clean": manifest_staged.returncode == 0,
         "artifact_commit_is_ancestor": ancestor.returncode == 0,
-        "head_readable": head.returncode == 0,
     }
     return {
         "passed": all(checks.values()),
         "checks": checks,
         "manifest": manifest,
         "actual_hashes": actual,
-        "execution_head": head.stdout.strip(),
+        "artifact_commit_hashes": committed_hashes,
     }
 
 
@@ -148,6 +233,7 @@ def audit_candidate_source() -> dict[str, object]:
     imports = []
     strings = []
     called_names = []
+    mutable_state_hits = []
     score_signature = None
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -159,6 +245,13 @@ def audit_candidate_source() -> dict[str, object]:
             strings.extend(term for term in ARM_TERMS if term in lowered)
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             called_names.append(node.func.id)
+        elif isinstance(node, ast.Global):
+            mutable_state_hits.extend(node.names)
+        elif isinstance(node, ast.Nonlocal):
+            mutable_state_hits.extend(node.names)
+        elif isinstance(node, ast.AugAssign):
+            if isinstance(node.target, ast.Name):
+                mutable_state_hits.append(node.target.id)
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             if node.name == "score":
                 score_signature = {
@@ -203,6 +296,7 @@ def audit_candidate_source() -> dict[str, object]:
         "score_accepts_only_observation": exact_signature,
         "no_arm_vocabulary": not strings,
         "no_dynamic_or_reflective_calls": not dangerous_calls,
+        "no_mutable_global_state": not mutable_state_hits,
     }
     return {
         "passed": all(checks.values()),
@@ -212,6 +306,7 @@ def audit_candidate_source() -> dict[str, object]:
         "score_signature": score_signature,
         "arm_vocabulary_hits": sorted(set(strings)),
         "dangerous_calls": dangerous_calls,
+        "mutable_state_hits": sorted(set(mutable_state_hits)),
     }
 
 
