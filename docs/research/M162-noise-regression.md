@@ -197,21 +197,24 @@ surviving current corpus.
 
 #### README obligation and publication state
 
-The compiled default never moved to `4.5`. The alternative branch was later
-performed in artifacts: DELIVER-V6 used the no-override/default-`2.0`
-invocation (`docs/research/DELIVER-V6.md:57-69`), rendered all original 26
-subjects, and records that all 26 were inspected at 1:1 with subject-by-subject
-findings (`:3-12`, `:245-381`). The run was then extended to 33 subjects.
-Therefore the README's technical “rerender at `2.0` and re-survey” obligation
-was discharged by DELIVER-V6.
+The compiled default never moved to `4.5`. DELIVER-V6 supplies relevant
+default-`2.0` evidence: it used the no-override invocation
+(`docs/research/DELIVER-V6.md:57-69`), rendered all original 26 subjects, and
+records that all 26 were inspected at 1:1 (`:3-12`, `:245-381`). But it is a
+separate delivery corpus, not the gallery named by the README obligation.
 
-The README was not updated to say so. It still calls the corpus-wide sweep
-open, says dropping `4.5` produces an uncertified render, and bases every
-reference-gallery quality claim on `4.5` (`README.md:666-677`). It explicitly
-discloses that `4.5` is not the compiled default (`:198-206`, `:666-677`), so
-it does not silently present those pixels as bare-command/default output.
-Publication-facing quality evidence nevertheless remains scoped to the
-non-default configuration, and the notice about default output is stale.
+The current gallery generator still hard-codes
+`C:\dev\strehl-out\SHIP-V1` (`experiments/ORCH-drift-check/build_gallery.py:27`)
+and enumerates its masters at `:475`. The README still says every gallery
+image and quality claim came from gate `4.5` and calls default output
+uncertified (`README.md:666-677`). No source or history record shows that
+gallery was replaced by default-`2.0` masters and its 51-site survey rerun.
+The exact README obligation is therefore **OPEN**.
+
+The README explicitly discloses that `4.5` is not the compiled default
+(`README.md:198-206`, `:666-677`), so it does not silently present those pixels
+as bare-command/default output. Publication-facing quality evidence
+nevertheless remains scoped to the non-default configuration.
 
 ## 4. What existing evidence says, and does not say
 
@@ -363,8 +366,9 @@ Answerable without compute:
 - DELIVER-V6 ran at the compiled pyramid default `2.0`, with no override;
 - the relevant source record is an unresolved conflict, not a settled choice
   that `2.0` is correct;
-- DELIVER-V6 technically discharged the README's default-`2.0` rerender and
-  re-survey branch, but the README still says that work is open;
+- DELIVER-V6 provides a separate default-`2.0` corpus and inspection, but the
+  README gallery still points at SHIP-V1 and its rerender/re-survey obligation
+  remains open;
 - SHIP-V3, SHIP-V4, ORCH-FAITHFUL, and DELIVER-V6 were all produced at that
   default, while DELIVER-V5 derivatives inherit SHIP-V4's merge.
 
