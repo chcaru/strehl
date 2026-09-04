@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import sys
 from pathlib import Path
@@ -23,7 +24,13 @@ def main() -> int:
     if len(sys.argv) != 2:
         raise SystemExit("worker requires exactly one constant candidate path")
     candidate = load_candidate(Path(sys.argv[1]))
-    image = np.load(sys.stdin.buffer, allow_pickle=False)
+    # NumPy may use a single ``fromfile`` read for BufferedReader objects.
+    # Windows anonymous pipes may legally return a short read, so materialize
+    # the complete packet before handing it to NumPy.
+    image = np.load(
+        io.BytesIO(sys.stdin.buffer.read()),
+        allow_pickle=False,
+    )
     record = candidate.score(image)
     if not isinstance(record, dict):
         raise TypeError("candidate result is not an object")
