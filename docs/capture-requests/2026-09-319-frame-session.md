@@ -12,6 +12,23 @@
 > and 2 has not been completed. Clearing any subset of those open items does
 > **not** make this document shootable.
 >
+> **Superseded totals, 2026-09-07 (lane M166, commit `a195bc63`).** The
+> `T_session` arithmetic in the body is stale. M164's frozen witness contract
+> ruled that a fixed-focus burst is inadmissible as the dominance witness when
+> the renderer receives a focus stack, and M166 re-derived the session on that
+> basis: **`891 + 32 + 164 + 128 = 1,215` registered frames**, plus a `1,092`-frame
+> exact-configuration rehearsal in front of it. Both are **STOP at zero frames**
+> until the hash-bound production dominance manifest exists.
+>
+> **⚠ Do not double-count `96` or `164`.** Those two numerals appear *twice* in
+> this program with different meanings, because the same `55/55/27/27`
+> focus-stack budgets recur. In the body table below, `96` is the **converter-on
+> reference subject** and `164` is the **TC0 scored focus** block — both already
+> inside the base `891`. M166's corrections are *additions on top of* `891`: a
+> `+32` fourth reference strip, a `+164` physical `S_1/S_2` witness that replaces
+> a previously proposed `+96` converter-off witness, and `+128` held-out
+> calibration. The base blocks and the additions are different frames.
+>
 > **Why.** The design requires the truth reference to oversample the TC0 state by
 > `2.0x`. **Only conditionally, if M147 sets `M_work = 1.33x`,** the conservative
 > geometry is `2.7015 / 1.33 = 2.0312x`, leaving a margin of `0.0312x`, or

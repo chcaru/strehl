@@ -18,7 +18,7 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().pare
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
-            "2.9.66", "2.9.67", "2.9.68", "2.9.69", "2.9.70"]
+            "2.9.66", "2.9.67", "2.9.68", "2.9.69", "2.9.70", "2.9.71"]
 
 
 def collapse(s):
@@ -202,6 +202,15 @@ CLAIMS = [
      R + "M166-reference-dominance-rehearsal.md", None, "1,215"),
     ("m166 rehearsal frames", "The rehearsal is `1,092` registered frames",
      R + "M166-reference-dominance-rehearsal.md", None, "1,092"),
+    # --- M151: the cap that masqueraded as a population ---
+    # STATUS-side needles are phrases: a bare "275" or "1,944" recurs in the
+    # same table and in the re-derivation, so a single-site mutation of a bare
+    # numeral cannot falsify the claim.
+    ("m151 tile population", "54 * 36 = 1,944",
+     R + "M151-m5-checker.md", None, "1,944"),
+    ("m151 eligible at population", "it reads `275`",
+     R + "M151-m5-checker.md", None, "275"),
+    ("m151 wilson lcb", "0.990258", R + "M151-m5-checker.md"),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")

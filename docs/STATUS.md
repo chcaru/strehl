@@ -6990,7 +6990,8 @@ in place rather than quietly overwritten, because he has already read it once.
 The verifier's re-derivation was rebuilt on the corrected components, and a
 control now asserts the retraction is present — mutating "superseded" to
 "confirmed" turns the run red. Four stale mutation anchors surfaced during that
-rebuild and were repinned; `commission_quotes.py` is **`29 of 29`**.
+rebuild and were repinned; `commission_quotes.py` was **`29 of 29`** at that
+point.
 
 **A check that guarded nothing, found by trying to commission it.** I added a
 claim pinning M164's `12/12` self-check into this section. The verifier passed
@@ -7008,6 +7009,68 @@ a sentence fragment, an explicit contrast — with the bare numeral carried in t
 claim's source-literal slot so the source side still matches. All four now fire
 under mutation. **The lesson is the one this program keeps relearning: a check
 is worth exactly what its commissioning proves, and green is not evidence.**
+
+---
+
+### 2.9.71 A rate is uninterpretable until you say what its denominator is
+
+M151 inverted its own headline verdict, and the mechanism generalises to every
+lane in this program.
+
+Its first ruling was **capture NO** for M5, on measured coverage of `0/64`,
+`0/64` and `13/64`. That was days from becoming a finding that M5 is unreachable
+at this geometry — which would have driven either an amendment to the
+eligibility clause or an expensive new capture request to the owner.
+
+**The `64` was a cap M151 had imposed on itself to bound commissioning cost. It
+was never the population.** Run against the actual tile census the same geometry,
+unchanged in every optical respect, produces:
+
+| development arm | point-qualified / `1,944` | bootstrap-eligible / `1,944` |
+| --- | ---: | ---: |
+| burned grid, exact sw4/55 | `0` | `0` |
+| burned grid, exact sw10/27 | `0` | `0` |
+| tilted sw10, full 92 | `69` | `53` |
+| tilted sw10, best exact 27-frame window (nodes 9-35) | **`328`** | **`275`** |
+
+**I re-derived the census before recording it.** The tile population is
+`floor(7028 / 128) * floor(4688 / 128) = 54 * 36 = 1,944`, leaving `116` pixels
+unused at the right and `80` at the bottom. The exact-27 tilted arm carries an
+all-success Wilson `LCB95` of **`0.990258`**. M5 needs `133`. At the cap it read
+`13`; at the population it reads `275`. **Same measurement, opposite
+conclusions.**
+
+**The rule I am adopting program-wide:** any lane reporting a proportion must
+state whether the denominator is a **population**, a **fixed subsample**, or a
+**cap**. A bare ratio is not a result. `13/64` and `275/1,944` describe the same
+optics and license opposite decisions, and nothing in the notation distinguishes
+them.
+
+M151 has recorded a *Denominator provenance* subsection in its own lane report
+classifying every proportion it has ever published, and flagging the original
+`0/64`, `0/64` and `13/64` as under-specified (commit `d4f574c6`). I asked for
+that deliberately: the correction belongs in the lane's own record, not only in
+mine, because that is where the next reader of those figures will look.
+
+**What it bought.** M5 now has an eligibility gate that runs as a **rehearsal
+exit condition at zero extra frames** — pass-averaged `sw4` `>=133`,
+pass-averaged `sw10` `>=133`, and a physical-coordinate intersection `>=133`,
+with A/B averaging before election and bootstrap. It is free precisely because
+it rides on frames already being shot. Two caveats travel with it and must not
+be dropped: A/B halves and step widths are **not** independent populations, and
+this converter-off gate is a feasibility check rather than the converter-on M5
+score, which still answers to the `500`-overall / `50`-per-capture floor.
+
+**This does not move M5.** M5 carries blocker `(d)` like the other six. What
+changed is that a route we were about to declare closed is open, and it costs
+the owner nothing extra to test.
+
+Three claims from this section are pinned and each was proven to fire under a
+planted mutation; `commission_quotes.py` now stands at **`32 of 32`**. Two of
+the three needles were wrong on first attempt — both carried backticks the
+source does not have — and the verifier caught both as `NOT IN`. That is the
+behaviour I want from it: a needle that cannot match should fail loudly rather
+than quietly pass on something adjacent.
 
 ---
 

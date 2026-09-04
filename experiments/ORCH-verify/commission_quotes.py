@@ -88,6 +88,11 @@ MUTATIONS = [
     ("m166 rehearsal frames", "docs/STATUS.md",
      "The rehearsal is `1,092` registered frames",
      "The rehearsal is `1,093` registered frames"),
+    ("m151 tile population", "docs/STATUS.md",
+     "54 * 36 = 1,944", "54 * 36 = 1,945"),
+    ("m151 eligible at population", "docs/STATUS.md",
+     "it reads `275`", "it reads `276`"),
+    ("m151 wilson lcb", "docs/STATUS.md", "**`0.990258`**", "**`0.990259`**"),
 ]
 
 
