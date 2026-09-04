@@ -1,0 +1,51 @@
+{
+  "commissioning_only": true,
+  "complete_invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+    "--consumer-id",
+    "fork-fixture",
+    "--input",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.tiff",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\fork-fixture\\input-a.json",
+    "--attestation",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\fork-fixture\\input-a.json"
+  ],
+  "consumer_id": "fork-fixture",
+  "exit_code": 0,
+  "input_file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+  "input_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.tiff",
+  "input_pixel_payload_sha256": "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+  "outputs": [
+    {
+      "bytes": 276,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\fork-fixture\\input-a.json",
+      "sha256": "b345e20272fe98253d49636dab279b23c4e335e37a98b6fcf41499aeb4ad6954"
+    }
+  ],
+  "pixel_payload_hash": {
+    "algorithm": "sha256-concatenated-ranges-in-listed-order",
+    "ranges": [
+      {
+        "end_exclusive": 1522,
+        "start": 1312
+      }
+    ]
+  },
+  "read_contract": {
+    "artifact_read_count": 1,
+    "hash_and_parse_same_memory": true
+  },
+  "schema": "m165-consumer-input-attestation-v1",
+  "status": "PASS",
+  "whole_file_hash": {
+    "algorithm": "sha256",
+    "ranges": [
+      {
+        "end_exclusive": 1522,
+        "start": 0
+      }
+    ]
+  }
+}

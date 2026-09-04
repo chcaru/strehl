@@ -1,0 +1,74 @@
+{
+  "campaign_manifest_sha256": "0c12e621a5e5afb670c7e480784808e5f1a055cb46af7ca5087b55ffeca9222f",
+  "complete_invocation": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+    "--tiff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.tiff",
+    "--report",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-a.json",
+    "--file-sha256",
+    "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+    "--pixel-sha256",
+    "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+    "--icc-sha256",
+    "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+    "--source-sha256",
+    "370b7ace9d3c818791ad953116b93c745fe4aa337f7c48a51f21dc6c92f0620f",
+    "--converter-sha256",
+    "4e959ff11d124b3f97718137a88a683617d4bbcb68a157d54483bf63c47dafa0",
+    "--settings-sha256",
+    "d132ca46b70058689a1d6804a346dcb45c46cce9d65aa8e4b5addadfe2bf87bb",
+    "--pattern-map-sha256",
+    "a0a1f60b436df7a0006945b2f88a0522174a36986b8a71022fb2510f10e94746",
+    "--pattern-manifest-sha256",
+    "1b6acf08187d54af4ea1a101aa457983c3e753a87167d7ac0b8f1d540e5c0101",
+    "--exercise-core-merge"
+  ],
+  "consumer_attestation": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-a.json",
+    "schema": "m165-strehl-common-input-identity-v1",
+    "sha256": "49143d7b790de4d79af08958343dd671af09aee857507ad94bb8a1add1d8bed9"
+  },
+  "consumer_executable_bundle_sha256": "96652b08249a0022caa7a5b210e9a7de3254f1569fc8af705df0ea09c641e302",
+  "consumer_executable_sha256": "abbcdcedd58400c45db49284654a0f6815b3c0ffadc0d64282cadb388fc9fa42",
+  "consumer_gate_bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+  "consumer_id": "strehl",
+  "consumer_registry_sha256": "61b5e86fcfbb4394c26cdd76d9e831370d9e57c2519aabb82e4475a836694ec6",
+  "consumer_settings_sha256": "55e47611d959e77807df540a5913b75dd09cc39c46e0fb64e199726817261b03",
+  "exit_code": 0,
+  "input_file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+  "input_id": "input-a",
+  "input_manifest_sha256": "ddb6be61d50385bc224a2fe97f49b23835f89d52f2752555fafae8d7ed8028bf",
+  "input_pixel_payload_sha256": "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+  "outputs": [
+    {
+      "bytes": 1433,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-a.json",
+      "sha256": "49143d7b790de4d79af08958343dd671af09aee857507ad94bb8a1add1d8bed9"
+    }
+  ],
+  "pixel_payload_hash": {
+    "algorithm": "sha256-concatenated-ranges-in-listed-order",
+    "ranges": [
+      {
+        "end_exclusive": 1522,
+        "start": 1312
+      }
+    ]
+  },
+  "read_contract": {
+    "artifact_read_count": 1,
+    "hash_and_parse_same_memory": true
+  },
+  "schema": "m165-common-input-consumer-boundary-receipt-v1",
+  "status": "PASS",
+  "whole_file_hash": {
+    "algorithm": "sha256",
+    "ranges": [
+      {
+        "end_exclusive": 1522,
+        "start": 0
+      }
+    ]
+  }
+}

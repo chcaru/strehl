@@ -1,0 +1,12 @@
+[
+  "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+  "--consumer-id",
+  "zerene-pmax-fixture",
+  "--input",
+  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.tiff",
+  "--output",
+  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-pmax-fixture\\input-a.json",
+  "--attestation",
+  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-pmax-fixture\\input-a.json"
+]

@@ -1,0 +1,20 @@
+{
+  "campaign_id": "m165-consumer-gate-commission",
+  "consumer_gate_bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+  "consumer_registry_sha256": "61b5e86fcfbb4394c26cdd76d9e831370d9e57c2519aabb82e4475a836694ec6",
+  "inputs": [
+    {
+      "input_id": "input-a",
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.manifest.json",
+      "manifest_sha256": "ddb6be61d50385bc224a2fe97f49b23835f89d52f2752555fafae8d7ed8028bf"
+    },
+    {
+      "input_id": "input-b",
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-b.manifest.json",
+      "manifest_sha256": "8ce06c6e899f37bd9d6b72d94aabc6d2cf4275debed7d6cfe40c0f8e4b6ac5a8"
+    }
+  ],
+  "schema": "m165-common-input-campaign-v1",
+  "status": "FROZEN",
+  "track": "common-merge"
+}

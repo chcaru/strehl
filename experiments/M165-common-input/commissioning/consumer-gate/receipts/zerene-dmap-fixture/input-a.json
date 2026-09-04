@@ -1,0 +1,67 @@
+{
+  "campaign_manifest_sha256": "0c12e621a5e5afb670c7e480784808e5f1a055cb46af7ca5087b55ffeca9222f",
+  "complete_invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+    "--consumer-id",
+    "zerene-dmap-fixture",
+    "--input",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.tiff",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-dmap-fixture\\input-a.json",
+    "--attestation",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-a.json"
+  ],
+  "consumer_attestation": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-a.json",
+    "schema": "m165-consumer-input-attestation-v1",
+    "sha256": "55ce1dd25be75f58d737fe9324a11adaee7dad1f1c90ea9de529d3aeb1aeb9b2"
+  },
+  "consumer_executable_bundle_sha256": "66fc7eeed0f28a8826d0ce1e898c3d99b70f456e3ed2ef262a292a30b3b42505",
+  "consumer_executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+  "consumer_gate_bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+  "consumer_id": "zerene-dmap-fixture",
+  "consumer_registry_sha256": "61b5e86fcfbb4394c26cdd76d9e831370d9e57c2519aabb82e4475a836694ec6",
+  "consumer_settings_sha256": "f2262d3e55754206f5bc0435a2b7ee8385eed81cc18316bb2c88d8f32dc0ec87",
+  "exit_code": 0,
+  "input_file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+  "input_id": "input-a",
+  "input_manifest_sha256": "ddb6be61d50385bc224a2fe97f49b23835f89d52f2752555fafae8d7ed8028bf",
+  "input_pixel_payload_sha256": "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+  "outputs": [
+    {
+      "bytes": 283,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-dmap-fixture\\input-a.json",
+      "sha256": "0ae30a2faf3a6279f69d143386e9c9560ee20a3b72bd8ae92363670daa8e59d6"
+    },
+    {
+      "bytes": 2036,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-a.json",
+      "sha256": "55ce1dd25be75f58d737fe9324a11adaee7dad1f1c90ea9de529d3aeb1aeb9b2"
+    }
+  ],
+  "pixel_payload_hash": {
+    "algorithm": "sha256-concatenated-ranges-in-listed-order",
+    "ranges": [
+      {
+        "end_exclusive": 1522,
+        "start": 1312
+      }
+    ]
+  },
+  "read_contract": {
+    "artifact_read_count": 1,
+    "hash_and_parse_same_memory": true
+  },
+  "schema": "m165-common-input-consumer-boundary-receipt-v1",
+  "status": "PASS",
+  "whole_file_hash": {
+    "algorithm": "sha256",
+    "ranges": [
+      {
+        "end_exclusive": 1522,
+        "start": 0
+      }
+    ]
+  }
+}

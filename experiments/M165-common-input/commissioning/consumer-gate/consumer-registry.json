@@ -1,0 +1,272 @@
+{
+  "consumers": [
+    {
+      "attestation_schemas": [
+        "m165-strehl-common-input-identity-v1"
+      ],
+      "build_manifest_path": null,
+      "build_manifest_sha256": null,
+      "consumer_id": "strehl",
+      "executable_bundle": [
+        {
+          "bytes": 800768,
+          "label": "strehl-common-input",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+          "sha256": "abbcdcedd58400c45db49284654a0f6815b3c0ffadc0d64282cadb388fc9fa42"
+        }
+      ],
+      "executable_bundle_sha256": "96652b08249a0022caa7a5b210e9a7de3254f1569fc8af705df0ea09c641e302",
+      "executable_bytes": 800768,
+      "executable_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+      "executable_sha256": "abbcdcedd58400c45db49284654a0f6815b3c0ffadc0d64282cadb388fc9fa42",
+      "implementation_kind": "script-runtime-bundle",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+        "--tiff",
+        "{input_tiff}",
+        "--report",
+        "{attestation_path}",
+        "--file-sha256",
+        "{file_sha256}",
+        "--pixel-sha256",
+        "{pixel_payload_sha256}",
+        "--icc-sha256",
+        "{icc_sha256}",
+        "--source-sha256",
+        "{source_sha256}",
+        "--converter-sha256",
+        "{converter_sha256}",
+        "--settings-sha256",
+        "{settings_sha256}",
+        "--pattern-map-sha256",
+        "{pattern_map_sha256}",
+        "--pattern-manifest-sha256",
+        "{pattern_manifest_sha256}",
+        "--exercise-core-merge"
+      ],
+      "required": true,
+      "role": "candidate",
+      "settings": {
+        "core_merge": true,
+        "mode": "common-input-identity"
+      },
+      "settings_sha256": "55e47611d959e77807df540a5913b75dd09cc39c46e0fb64e199726817261b03",
+      "source_revision": null,
+      "status": "FROZEN",
+      "version": "commission-v1"
+    },
+    {
+      "attestation_schemas": [
+        "m165-consumer-input-attestation-v1"
+      ],
+      "build_manifest_path": null,
+      "build_manifest_sha256": null,
+      "consumer_id": "zerene-pmax-fixture",
+      "executable_bundle": [
+        {
+          "bytes": 104952,
+          "label": "python-executable",
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+        },
+        {
+          "bytes": 2853,
+          "label": "consumer-fixture-script",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+          "sha256": "34834f840731e96e0d764fb08889a68f4c0057ef1ec07d1019fa859fff91871b"
+        },
+        {
+          "bytes": 63236,
+          "label": "consumer-gate-script",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_gate.py",
+          "sha256": "5ce6a625aa834e182d4823d902a377ef0ba4afa9d1012ddab06b3bbc23c1219e"
+        }
+      ],
+      "executable_bundle_sha256": "66fc7eeed0f28a8826d0ce1e898c3d99b70f456e3ed2ef262a292a30b3b42505",
+      "executable_bytes": 104952,
+      "executable_path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "implementation_kind": "script-runtime-bundle",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+        "--consumer-id",
+        "{consumer_id}",
+        "--input",
+        "{input_tiff}",
+        "--output",
+        "{output_path}",
+        "--attestation",
+        "{attestation_path}"
+      ],
+      "required": true,
+      "role": "comparator",
+      "settings": {
+        "commissioning_only": true,
+        "mode": "PMax"
+      },
+      "settings_sha256": "59698606711447b7c87eb8e27fd5b6094018af74b6b5f619e538813ebd768bfd",
+      "source_revision": null,
+      "status": "FROZEN",
+      "version": "commission-v1"
+    },
+    {
+      "attestation_schemas": [
+        "m165-consumer-input-attestation-v1"
+      ],
+      "build_manifest_path": null,
+      "build_manifest_sha256": null,
+      "consumer_id": "zerene-dmap-fixture",
+      "executable_bundle": [
+        {
+          "bytes": 104952,
+          "label": "python-executable",
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+        },
+        {
+          "bytes": 2853,
+          "label": "consumer-fixture-script",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+          "sha256": "34834f840731e96e0d764fb08889a68f4c0057ef1ec07d1019fa859fff91871b"
+        },
+        {
+          "bytes": 63236,
+          "label": "consumer-gate-script",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_gate.py",
+          "sha256": "5ce6a625aa834e182d4823d902a377ef0ba4afa9d1012ddab06b3bbc23c1219e"
+        }
+      ],
+      "executable_bundle_sha256": "66fc7eeed0f28a8826d0ce1e898c3d99b70f456e3ed2ef262a292a30b3b42505",
+      "executable_bytes": 104952,
+      "executable_path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "implementation_kind": "script-runtime-bundle",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+        "--consumer-id",
+        "{consumer_id}",
+        "--input",
+        "{input_tiff}",
+        "--output",
+        "{output_path}",
+        "--attestation",
+        "{attestation_path}"
+      ],
+      "required": true,
+      "role": "comparator",
+      "settings": {
+        "commissioning_only": true,
+        "mode": "DMap"
+      },
+      "settings_sha256": "f2262d3e55754206f5bc0435a2b7ee8385eed81cc18316bb2c88d8f32dc0ec87",
+      "source_revision": null,
+      "status": "FROZEN",
+      "version": "commission-v1"
+    },
+    {
+      "attestation_schemas": [
+        "m165-consumer-input-attestation-v1"
+      ],
+      "build_manifest_path": null,
+      "build_manifest_sha256": null,
+      "consumer_id": "fork-fixture",
+      "executable_bundle": [
+        {
+          "bytes": 104952,
+          "label": "python-executable",
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+        },
+        {
+          "bytes": 2853,
+          "label": "consumer-fixture-script",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+          "sha256": "34834f840731e96e0d764fb08889a68f4c0057ef1ec07d1019fa859fff91871b"
+        },
+        {
+          "bytes": 63236,
+          "label": "consumer-gate-script",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_gate.py",
+          "sha256": "5ce6a625aa834e182d4823d902a377ef0ba4afa9d1012ddab06b3bbc23c1219e"
+        }
+      ],
+      "executable_bundle_sha256": "66fc7eeed0f28a8826d0ce1e898c3d99b70f456e3ed2ef262a292a30b3b42505",
+      "executable_bytes": 104952,
+      "executable_path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "implementation_kind": "script-runtime-bundle",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+        "--consumer-id",
+        "{consumer_id}",
+        "--input",
+        "{input_tiff}",
+        "--output",
+        "{output_path}",
+        "--attestation",
+        "{attestation_path}"
+      ],
+      "required": true,
+      "role": "comparator",
+      "settings": {
+        "commissioning_only": true,
+        "mode": "best-known-source"
+      },
+      "settings_sha256": "d4ae149b741151a7dc4854a3e2029b356b3b1bb6b93967d47301d31b25137de3",
+      "source_revision": null,
+      "status": "FROZEN",
+      "version": "commission-v1"
+    },
+    {
+      "attestation_schemas": [],
+      "blocker": "Optional Helicon is deliberately absent in this commissioning fixture; optional absence must be counted without failing required inputs.",
+      "consumer_id": "helicon-optional-fixture",
+      "executable_bundle": [],
+      "executable_bundle_sha256": null,
+      "executable_bytes": null,
+      "executable_path": null,
+      "executable_sha256": null,
+      "implementation_kind": "installed-binary",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [],
+      "required": false,
+      "role": "optional-comparator",
+      "settings": {},
+      "settings_sha256": null,
+      "status": "BLOCKED_NOT_INSTALLED",
+      "version": null
+    }
+  ],
+  "registry_id": "m165-consumer-gate-commission",
+  "schema": "m165-common-input-consumer-registry-v1",
+  "status": "FROZEN",
+  "track": "common-merge",
+  "version": "1"
+}

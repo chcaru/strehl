@@ -1,0 +1,28 @@
+{
+  "artifacts": {
+    "consumer_gate_script": {
+      "bytes": 63236,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_gate.py",
+      "sha256": "5ce6a625aa834e182d4823d902a377ef0ba4afa9d1012ddab06b3bbc23c1219e"
+    },
+    "python_executable": {
+      "bytes": 104952,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+    }
+  },
+  "bundle_members": {
+    "consumer_gate_script_sha256": "5ce6a625aa834e182d4823d902a377ef0ba4afa9d1012ddab06b3bbc23c1219e",
+    "python_executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "schemas": {
+      "campaign": "m165-common-input-campaign-v1",
+      "gate": "m165-common-input-consumer-gate-v1",
+      "receipt": "m165-common-input-consumer-boundary-receipt-v1",
+      "registry": "m165-common-input-consumer-registry-v1"
+    }
+  },
+  "consumer_gate_bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+  "schema": "m165-common-input-consumer-gate-freeze-v1",
+  "status": "FROZEN"
+}

@@ -1,0 +1,51 @@
+{
+  "commissioning_only": true,
+  "complete_invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py",
+    "--consumer-id",
+    "zerene-dmap-fixture",
+    "--input",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-b.tiff",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-dmap-fixture\\input-b.json",
+    "--attestation",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-b.json"
+  ],
+  "consumer_id": "zerene-dmap-fixture",
+  "exit_code": 0,
+  "input_file_sha256": "64101a62a97e70774354d35bba84ade56056f0b7c5460ce20a55f1e13d5b3774",
+  "input_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-b.tiff",
+  "input_pixel_payload_sha256": "d5efeea996096a824c18a59ca63af451090d92dbbf340a4cc4f2bfb0bbb06cba",
+  "outputs": [
+    {
+      "bytes": 283,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-dmap-fixture\\input-b.json",
+      "sha256": "2fededa0cdd7cfd311e04775e1dde269a7e194342f7530fe1cee133324471ade"
+    }
+  ],
+  "pixel_payload_hash": {
+    "algorithm": "sha256-concatenated-ranges-in-listed-order",
+    "ranges": [
+      {
+        "end_exclusive": 1636,
+        "start": 1312
+      }
+    ]
+  },
+  "read_contract": {
+    "artifact_read_count": 1,
+    "hash_and_parse_same_memory": true
+  },
+  "schema": "m165-consumer-input-attestation-v1",
+  "status": "PASS",
+  "whole_file_hash": {
+    "algorithm": "sha256",
+    "ranges": [
+      {
+        "end_exclusive": 1636,
+        "start": 0
+      }
+    ]
+  }
+}

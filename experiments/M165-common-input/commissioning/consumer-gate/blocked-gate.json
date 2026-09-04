@@ -1,0 +1,192 @@
+{
+  "artifact_read_audit": {
+    "all_artifacts_read_at_most_once": true,
+    "maximum_reads_per_artifact": 1,
+    "read_counts": {
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-campaign.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-inputs\\input-a.manifest.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-inputs\\input-b.manifest.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-registry.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.tiff": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-b.tiff": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer-gate-freeze-v1.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_gate.py": 1
+    },
+    "unique_artifacts_read": 9
+  },
+  "campaign": {
+    "campaign_id": "m165-consumer-gate-blocked-probe",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-campaign.json",
+    "sha256": "a9e99f9e4424d622f77e01203bd922aa127d14e0a5fbdf6d1f90f7e6d79996b1"
+  },
+  "consumer_registry": {
+    "consumer_count": 5,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-registry.json",
+    "required_consumer_count": 4,
+    "sha256": "1ee411f14ee903a85703b090ab44568f9bc8581b33241d89d3c58e27b5d50553",
+    "status": "BLOCKED"
+  },
+  "gate_freeze": {
+    "bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer-gate-freeze-v1.json",
+    "sha256": "339026c99c444abf2f30a676b1eaba18cc41e459a27947ce448d66e5d8950175"
+  },
+  "hash_contract": {
+    "algorithm": "SHA-256",
+    "pixel_payload_bytes": "concatenation of TIFF strip byte ranges in scan order",
+    "same_memory_rule": "each artifact is read once; hashes and parsing consume that same cached byte string",
+    "whole_file_bytes": "[0,file_size)"
+  },
+  "inputs": [
+    {
+      "input_id": "input-a",
+      "outcome": "BLOCKED",
+      "required_pair_outcomes": {
+        "BLOCKED": 4
+      }
+    },
+    {
+      "input_id": "input-b",
+      "outcome": "BLOCKED",
+      "required_pair_outcomes": {
+        "BLOCKED": 4
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "consumer_id": "strehl",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-a",
+      "outcome": "BLOCKED",
+      "reason": "Commissioning probe: required consumer deliberately unavailable.",
+      "required": true
+    },
+    {
+      "consumer_id": "zerene-pmax-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-a",
+      "outcome": "BLOCKED",
+      "reason": "Commissioning probe: required consumer deliberately unavailable.",
+      "required": true
+    },
+    {
+      "consumer_id": "zerene-dmap-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-a",
+      "outcome": "BLOCKED",
+      "reason": "Commissioning probe: required consumer deliberately unavailable.",
+      "required": true
+    },
+    {
+      "consumer_id": "fork-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-a",
+      "outcome": "BLOCKED",
+      "reason": "Commissioning probe: required consumer deliberately unavailable.",
+      "required": true
+    },
+    {
+      "consumer_id": "helicon-optional-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-a",
+      "outcome": "OPTIONAL_ABSENT",
+      "reason": "Optional Helicon is deliberately absent in this commissioning fixture; optional absence must be counted without failing required inputs.",
+      "required": false
+    },
+    {
+      "consumer_id": "strehl",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-b",
+      "outcome": "BLOCKED",
+      "reason": "Commissioning probe: required consumer deliberately unavailable.",
+      "required": true
+    },
+    {
+      "consumer_id": "zerene-pmax-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-b",
+      "outcome": "BLOCKED",
+      "reason": "Commissioning probe: required consumer deliberately unavailable.",
+      "required": true
+    },
+    {
+      "consumer_id": "zerene-dmap-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-b",
+      "outcome": "BLOCKED",
+      "reason": "Commissioning probe: required consumer deliberately unavailable.",
+      "required": true
+    },
+    {
+      "consumer_id": "fork-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-b",
+      "outcome": "BLOCKED",
+      "reason": "Commissioning probe: required consumer deliberately unavailable.",
+      "required": true
+    },
+    {
+      "consumer_id": "helicon-optional-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-b",
+      "outcome": "OPTIONAL_ABSENT",
+      "reason": "Optional Helicon is deliberately absent in this commissioning fixture; optional absence must be counted without failing required inputs.",
+      "required": false
+    }
+  ],
+  "schema": "m165-common-input-consumer-gate-v1",
+  "status": "FAIL",
+  "summary": {
+    "all_consumer_input_pairs": {
+      "counted_sum": 10,
+      "counts": {
+        "BLOCKED": 8,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 2,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 10
+    },
+    "all_partitions_balanced": true,
+    "inputs": {
+      "counted_sum": 2,
+      "counts": {
+        "BLOCKED": 2,
+        "FAIL": 0,
+        "MISSING": 0,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 2
+    },
+    "optional_consumer_input_pairs": {
+      "counted_sum": 2,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 2,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 2
+    },
+    "required_consumer_input_pairs": {
+      "counted_sum": 8,
+      "counts": {
+        "BLOCKED": 8,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 0,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 8
+    }
+  },
+  "track": "common-merge"
+}

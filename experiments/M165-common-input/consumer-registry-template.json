@@ -15,6 +15,15 @@
       "executable_path": "REQUIRED",
       "executable_bytes": 0,
       "executable_sha256": "REQUIRED-FIRST-CLASS-BINARY-HASH",
+      "executable_bundle": [
+        {
+          "label": "REQUIRED-UNIQUE-ID",
+          "path": "REQUIRED",
+          "bytes": 0,
+          "sha256": "REQUIRED-SHA256"
+        }
+      ],
+      "executable_bundle_sha256": "REQUIRED-CANONICAL-JSON-HASH",
       "source_revision": null,
       "build_manifest_path": null,
       "build_manifest_sha256": null,
@@ -29,6 +38,9 @@
         "file_sha256_from": "input_manifest.output.file_sha256",
         "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
       },
+      "attestation_schemas": [
+        "m165-consumer-input-attestation-v1"
+      ],
       "blocker": "Remove this field and set status FROZEN only after every required artifact is present and verified."
     }
   ]

@@ -1,0 +1,342 @@
+{
+  "artifact_read_audit": {
+    "all_artifacts_read_at_most_once": true,
+    "maximum_reads_per_artifact": 1,
+    "read_counts": {
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\fork-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\fork-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-pmax-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-pmax-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\campaign.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\consumer-registry.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.manifest.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.tiff": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-b.manifest.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-b.tiff": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\fork-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\fork-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-dmap-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-dmap-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-pmax-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-pmax-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\fork-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\fork-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\strehl\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\strehl\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-dmap-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-dmap-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-pmax-fixture\\input-a.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-pmax-fixture\\input-b.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer-gate-freeze-v1.json": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_fixture.py": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer_gate.py": 1,
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe": 1
+    },
+    "unique_artifacts_read": 33
+  },
+  "campaign": {
+    "campaign_id": "m165-consumer-gate-commission",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\campaign.json",
+    "sha256": "0c12e621a5e5afb670c7e480784808e5f1a055cb46af7ca5087b55ffeca9222f"
+  },
+  "consumer_registry": {
+    "consumer_count": 5,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\consumer-registry.json",
+    "required_consumer_count": 4,
+    "sha256": "61b5e86fcfbb4394c26cdd76d9e831370d9e57c2519aabb82e4475a836694ec6",
+    "status": "FROZEN"
+  },
+  "gate_freeze": {
+    "bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer-gate-freeze-v1.json",
+    "sha256": "339026c99c444abf2f30a676b1eaba18cc41e459a27947ce448d66e5d8950175"
+  },
+  "hash_contract": {
+    "algorithm": "SHA-256",
+    "pixel_payload_bytes": "concatenation of TIFF strip byte ranges in scan order",
+    "same_memory_rule": "each artifact is read once; hashes and parsing consume that same cached byte string",
+    "whole_file_bytes": "[0,file_size)"
+  },
+  "inputs": [
+    {
+      "input_id": "input-a",
+      "outcome": "PASS",
+      "required_pair_outcomes": {
+        "PASS": 4
+      }
+    },
+    {
+      "input_id": "input-b",
+      "outcome": "PASS",
+      "required_pair_outcomes": {
+        "PASS": 4
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "consumer_id": "strehl",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-a.json",
+        "attestation_schema": "m165-strehl-common-input-identity-v1",
+        "file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+        "outputs": [
+          {
+            "bytes": 1433,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-a.json",
+            "sha256": "49143d7b790de4d79af08958343dd671af09aee857507ad94bb8a1add1d8bed9"
+          }
+        ],
+        "pixel_payload_sha256": "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\strehl\\input-a.json"
+      },
+      "input_id": "input-a",
+      "outcome": "PASS",
+      "required": true
+    },
+    {
+      "consumer_id": "zerene-pmax-fixture",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-pmax-fixture\\input-a.json",
+        "attestation_schema": "m165-consumer-input-attestation-v1",
+        "file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+        "outputs": [
+          {
+            "bytes": 283,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-pmax-fixture\\input-a.json",
+            "sha256": "3c91095e82705216e2f404cf62dac865b58baf1480ba3ee5dc680fd13684f2ab"
+          },
+          {
+            "bytes": 2036,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-pmax-fixture\\input-a.json",
+            "sha256": "a31747062944c8e0a195ad888c69d0fef83cafc6903a97f44e03f35796ae498e"
+          }
+        ],
+        "pixel_payload_sha256": "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-pmax-fixture\\input-a.json"
+      },
+      "input_id": "input-a",
+      "outcome": "PASS",
+      "required": true
+    },
+    {
+      "consumer_id": "zerene-dmap-fixture",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-a.json",
+        "attestation_schema": "m165-consumer-input-attestation-v1",
+        "file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+        "outputs": [
+          {
+            "bytes": 283,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-dmap-fixture\\input-a.json",
+            "sha256": "0ae30a2faf3a6279f69d143386e9c9560ee20a3b72bd8ae92363670daa8e59d6"
+          },
+          {
+            "bytes": 2036,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-a.json",
+            "sha256": "55ce1dd25be75f58d737fe9324a11adaee7dad1f1c90ea9de529d3aeb1aeb9b2"
+          }
+        ],
+        "pixel_payload_sha256": "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-dmap-fixture\\input-a.json"
+      },
+      "input_id": "input-a",
+      "outcome": "PASS",
+      "required": true
+    },
+    {
+      "consumer_id": "fork-fixture",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\fork-fixture\\input-a.json",
+        "attestation_schema": "m165-consumer-input-attestation-v1",
+        "file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+        "outputs": [
+          {
+            "bytes": 276,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\fork-fixture\\input-a.json",
+            "sha256": "b345e20272fe98253d49636dab279b23c4e335e37a98b6fcf41499aeb4ad6954"
+          },
+          {
+            "bytes": 2001,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\fork-fixture\\input-a.json",
+            "sha256": "1cf354972409d4a3051e68888cba2da8c472107244f18fe86a72ec80f2d295a5"
+          }
+        ],
+        "pixel_payload_sha256": "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\fork-fixture\\input-a.json"
+      },
+      "input_id": "input-a",
+      "outcome": "PASS",
+      "required": true
+    },
+    {
+      "consumer_id": "helicon-optional-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-a",
+      "outcome": "OPTIONAL_ABSENT",
+      "reason": "Optional Helicon is deliberately absent in this commissioning fixture; optional absence must be counted without failing required inputs.",
+      "required": false
+    },
+    {
+      "consumer_id": "strehl",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-b.json",
+        "attestation_schema": "m165-strehl-common-input-identity-v1",
+        "file_sha256": "64101a62a97e70774354d35bba84ade56056f0b7c5460ce20a55f1e13d5b3774",
+        "outputs": [
+          {
+            "bytes": 1433,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\strehl\\input-b.json",
+            "sha256": "e70a4aaabf130ff9bbb731c1baebe24547c73527151792385ee7bf968b3e1c3a"
+          }
+        ],
+        "pixel_payload_sha256": "d5efeea996096a824c18a59ca63af451090d92dbbf340a4cc4f2bfb0bbb06cba",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\strehl\\input-b.json"
+      },
+      "input_id": "input-b",
+      "outcome": "PASS",
+      "required": true
+    },
+    {
+      "consumer_id": "zerene-pmax-fixture",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-pmax-fixture\\input-b.json",
+        "attestation_schema": "m165-consumer-input-attestation-v1",
+        "file_sha256": "64101a62a97e70774354d35bba84ade56056f0b7c5460ce20a55f1e13d5b3774",
+        "outputs": [
+          {
+            "bytes": 283,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-pmax-fixture\\input-b.json",
+            "sha256": "f19bb492cadcc0a7f0ec0184af9db7c6564b8b0ccd8039b66467da74fd8489a7"
+          },
+          {
+            "bytes": 2036,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-pmax-fixture\\input-b.json",
+            "sha256": "42e7d0973507bab876df7ed7970f264a0661b5a28d791086944a617f58cb5678"
+          }
+        ],
+        "pixel_payload_sha256": "d5efeea996096a824c18a59ca63af451090d92dbbf340a4cc4f2bfb0bbb06cba",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-pmax-fixture\\input-b.json"
+      },
+      "input_id": "input-b",
+      "outcome": "PASS",
+      "required": true
+    },
+    {
+      "consumer_id": "zerene-dmap-fixture",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-b.json",
+        "attestation_schema": "m165-consumer-input-attestation-v1",
+        "file_sha256": "64101a62a97e70774354d35bba84ade56056f0b7c5460ce20a55f1e13d5b3774",
+        "outputs": [
+          {
+            "bytes": 283,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\zerene-dmap-fixture\\input-b.json",
+            "sha256": "2fededa0cdd7cfd311e04775e1dde269a7e194342f7530fe1cee133324471ade"
+          },
+          {
+            "bytes": 2036,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\zerene-dmap-fixture\\input-b.json",
+            "sha256": "ea16791be4848e762b4b823c0625a25ab15296c3d6db61c01f697d969a283acd"
+          }
+        ],
+        "pixel_payload_sha256": "d5efeea996096a824c18a59ca63af451090d92dbbf340a4cc4f2bfb0bbb06cba",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-dmap-fixture\\input-b.json"
+      },
+      "input_id": "input-b",
+      "outcome": "PASS",
+      "required": true
+    },
+    {
+      "consumer_id": "fork-fixture",
+      "evidence": {
+        "attestation_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\fork-fixture\\input-b.json",
+        "attestation_schema": "m165-consumer-input-attestation-v1",
+        "file_sha256": "64101a62a97e70774354d35bba84ade56056f0b7c5460ce20a55f1e13d5b3774",
+        "outputs": [
+          {
+            "bytes": 276,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\outputs\\fork-fixture\\input-b.json",
+            "sha256": "d6e2f280a436369b14407c113bcfd469e7341d120bbdfc836af442e0582a849b"
+          },
+          {
+            "bytes": 2001,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\attestations\\fork-fixture\\input-b.json",
+            "sha256": "7b38b25e885e9ddb62066d60548932619449cca9a665d221393878c433a1034d"
+          }
+        ],
+        "pixel_payload_sha256": "d5efeea996096a824c18a59ca63af451090d92dbbf340a4cc4f2bfb0bbb06cba",
+        "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\fork-fixture\\input-b.json"
+      },
+      "input_id": "input-b",
+      "outcome": "PASS",
+      "required": true
+    },
+    {
+      "consumer_id": "helicon-optional-fixture",
+      "failure_class": "CONSUMER_NOT_FROZEN",
+      "input_id": "input-b",
+      "outcome": "OPTIONAL_ABSENT",
+      "reason": "Optional Helicon is deliberately absent in this commissioning fixture; optional absence must be counted without failing required inputs.",
+      "required": false
+    }
+  ],
+  "schema": "m165-common-input-consumer-gate-v1",
+  "status": "PASS",
+  "summary": {
+    "all_consumer_input_pairs": {
+      "counted_sum": 10,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 2,
+        "PASS": 8
+      },
+      "partition_balanced": true,
+      "total_examined": 10
+    },
+    "all_partitions_balanced": true,
+    "inputs": {
+      "counted_sum": 2,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "PASS": 2
+      },
+      "partition_balanced": true,
+      "total_examined": 2
+    },
+    "optional_consumer_input_pairs": {
+      "counted_sum": 2,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 2,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 2
+    },
+    "required_consumer_input_pairs": {
+      "counted_sum": 8,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 0,
+        "PASS": 8
+      },
+      "partition_balanced": true,
+      "total_examined": 8
+    }
+  },
+  "track": "common-merge"
+}

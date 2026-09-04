@@ -1,0 +1,51 @@
+{
+  "schema": "m165-common-input-consumer-boundary-receipt-v1",
+  "status": "UNMEASURED",
+  "consumer_gate_bundle_sha256": "REQUIRED-SHA256",
+  "campaign_manifest_sha256": "REQUIRED-SHA256",
+  "consumer_registry_sha256": "REQUIRED-SHA256",
+  "consumer_id": "REQUIRED",
+  "consumer_executable_sha256": "REQUIRED-SHA256",
+  "consumer_executable_bundle_sha256": "REQUIRED-SHA256",
+  "consumer_settings_sha256": "REQUIRED-SHA256",
+  "input_id": "REQUIRED",
+  "input_manifest_sha256": "REQUIRED-SHA256",
+  "input_file_sha256": "REQUIRED-SHA256",
+  "input_pixel_payload_sha256": "REQUIRED-SHA256",
+  "whole_file_hash": {
+    "algorithm": "sha256",
+    "ranges": [
+      {
+        "start": 0,
+        "end_exclusive": 0
+      }
+    ]
+  },
+  "pixel_payload_hash": {
+    "algorithm": "sha256-concatenated-ranges-in-listed-order",
+    "ranges": [
+      {
+        "start": 0,
+        "end_exclusive": 0
+      }
+    ]
+  },
+  "read_contract": {
+    "artifact_read_count": 1,
+    "hash_and_parse_same_memory": true
+  },
+  "consumer_attestation": {
+    "path": "REQUIRED",
+    "sha256": "REQUIRED-SHA256",
+    "schema": "REQUIRED-REGISTERED-SCHEMA"
+  },
+  "complete_invocation": [],
+  "exit_code": null,
+  "outputs": [
+    {
+      "path": "REQUIRED",
+      "bytes": 0,
+      "sha256": "REQUIRED-SHA256"
+    }
+  ]
+}

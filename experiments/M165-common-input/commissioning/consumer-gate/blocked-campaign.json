@@ -1,0 +1,20 @@
+{
+  "campaign_id": "m165-consumer-gate-blocked-probe",
+  "consumer_gate_bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+  "consumer_registry_sha256": "1ee411f14ee903a85703b090ab44568f9bc8581b33241d89d3c58e27b5d50553",
+  "inputs": [
+    {
+      "input_id": "input-a",
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-inputs\\input-a.manifest.json",
+      "manifest_sha256": "e8d3a2c4d23a007ae165caddf5eb55720c421ac85f7d8a8d7c43331a1e6543c4"
+    },
+    {
+      "input_id": "input-b",
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-inputs\\input-b.manifest.json",
+      "manifest_sha256": "e40eb5a62f8f22691208070bd78dd7482dfbb28239bdb7809803793baac45e67"
+    }
+  ],
+  "schema": "m165-common-input-campaign-v1",
+  "status": "FROZEN",
+  "track": "common-merge"
+}

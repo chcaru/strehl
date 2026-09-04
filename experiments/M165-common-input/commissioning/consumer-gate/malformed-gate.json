@@ -1,0 +1,56 @@
+{
+  "failure_class": "JSON_INVALID",
+  "reason": "consumer campaign C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\malformed-campaign.json.invalid is not valid UTF-8 JSON: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+  "schema": "m165-common-input-consumer-gate-v1",
+  "status": "FAIL",
+  "summary": {
+    "all_consumer_input_pairs": {
+      "counted_sum": 0,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 0,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 0
+    },
+    "all_partitions_balanced": true,
+    "inputs": {
+      "counted_sum": 0,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 0
+    },
+    "optional_consumer_input_pairs": {
+      "counted_sum": 0,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 0,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 0
+    },
+    "required_consumer_input_pairs": {
+      "counted_sum": 0,
+      "counts": {
+        "BLOCKED": 0,
+        "FAIL": 0,
+        "MISSING": 0,
+        "OPTIONAL_ABSENT": 0,
+        "PASS": 0
+      },
+      "partition_balanced": true,
+      "total_examined": 0
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "m165-common-input-campaign-v1",
+  "status": "UNFROZEN",
+  "track": "common-merge",
+  "campaign_id": "REQUIRED",
+  "consumer_gate_bundle_sha256": "REQUIRED-SHA256",
+  "consumer_registry_sha256": "REQUIRED-SHA256",
+  "inputs": [
+    {
+      "input_id": "REQUIRED-UNIQUE-ID",
+      "manifest_path": "REQUIRED",
+      "manifest_sha256": "REQUIRED-SHA256"
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 {
   "schema": "m165-common-input-consumer-receipt-v1",
-  "status": "UNMEASURED",
+  "status": "SUPERSEDED_UNENFORCED",
+  "superseded_by": "consumer-boundary-receipt-template.json",
+  "reason": "This pre-Stage-0C placeholder did not prove one-read hash/parse identity, executable-bundle identity, attestation, or exhaustive campaign accounting and is not accepted by consumer_gate.py.",
   "consumer_registry_sha256": null,
   "consumer_id": null,
   "consumer_executable_sha256": null,

@@ -1,0 +1,6 @@
+{
+  "consumer_id": "zerene-dmap-fixture",
+  "input_file_sha256": "64101a62a97e70774354d35bba84ade56056f0b7c5460ce20a55f1e13d5b3774",
+  "input_pixel_payload_sha256": "d5efeea996096a824c18a59ca63af451090d92dbbf340a4cc4f2bfb0bbb06cba",
+  "schema": "m165-synthetic-consumer-output-v1"
+}

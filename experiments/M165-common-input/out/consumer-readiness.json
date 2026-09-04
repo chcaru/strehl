@@ -1,0 +1,238 @@
+{
+  "audit_utc": "2026-09-04T18:47:37.186249+00:00",
+  "governing_scorecard": {
+    "bytes": 152922,
+    "exists": true,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\docs\\proposals\\2026-09-sota-scorecard.md",
+    "sha256": "2b6b69a6d584e33a58d9a0a271bcaf48af90fdc26d4eae2c94f4ccf125873b93"
+  },
+  "measurement_class": "deterministic correctness; no wall-clock result",
+  "optional_consumers": [
+    {
+      "blocker": "No local installation was found. The live scorecard makes Helicon optional when unobtainable, so this absence is counted but not fatal.",
+      "candidate_paths": [
+        {
+          "bytes": null,
+          "exists": false,
+          "path": "C:\\Program Files\\Helicon Software\\Helicon Focus 8\\HeliconFocus.exe",
+          "sha256": null
+        },
+        {
+          "bytes": null,
+          "exists": false,
+          "path": "C:\\Program Files\\Helicon Focus\\HeliconFocus.exe",
+          "sha256": null
+        },
+        {
+          "bytes": null,
+          "exists": false,
+          "path": "C:\\Program Files\\HeliconFocus\\HeliconFocus.exe",
+          "sha256": null
+        },
+        {
+          "bytes": null,
+          "exists": false,
+          "path": "C:\\Program Files (x86)\\Helicon Software\\Helicon Focus 8\\HeliconFocus.exe",
+          "sha256": null
+        }
+      ],
+      "consumer_id": "helicon-focus",
+      "evidence_class": "VERIFIED_BY_RUNNING_TARGETED_PATH_PROBE",
+      "evidence_pass": true,
+      "outcome": "OPTIONAL_ABSENT",
+      "required": false
+    }
+  ],
+  "owner_asks": [
+    {
+      "ask": "After written permission to publish the black-box comparison, purchase Zerene Prosumer ($189 plus tax) if the work remains eligible personal/unfunded use; otherwise Professional ($289 plus tax).",
+      "basis": "inferred by reading docs/research/M132-blocker-d-routes.md"
+    },
+    {
+      "ask": "Assign a rebuild of focus-stack commit 4bc7f95e448cf20ee2bdd758403ec43e2612a1c6 and freeze the resulting runtime bundle before any comparative render.",
+      "basis": "inferred by reading docs/research/M162-noise-regression.md"
+    },
+    {
+      "ask": "Acquire M164 Stages 1 and 2 converter-on calibration/reference frames, then the corresponding TC0 blocks, without violating the frozen M165 class and held-out-V contract.",
+      "basis": "inferred by reading docs/research/M164-m1-staged-capture.md"
+    }
+  ],
+  "pattern_map": {
+    "audit": {
+      "bytes": 960,
+      "exists": true,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\out\\pattern-map-audit.json",
+      "sha256": "6e5548f0f0674ecd092225a95ea918a511d7f1e6e473653a455f2ab65fd12023"
+    },
+    "blocker": "No eligible frozen deterministic-pattern map estimated from independent matching dark and flat captures exists.",
+    "evidence_class": "INFERRED_BY_READING_PRIOR_AUDIT",
+    "status": "ABSENT"
+  },
+  "required_consumer_partition": {
+    "BLOCKED_LICENSE_EXPIRED": 2,
+    "BLOCKED_NO_REPRODUCIBLE_BINARY": 1,
+    "READY_FOR_SYNTHETIC_IDENTITY_ONLY": 1,
+    "counted_sum": 4,
+    "partition_balanced": true,
+    "total_examined": 4
+  },
+  "required_consumers": [
+    {
+      "artifacts": {
+        "identity_report": {
+          "bytes": 1370,
+          "exists": true,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\out\\commission\\identity-baseline.json",
+          "sha256": "1f05b81dc05e6b4ee1a61dff1f6eca25336c24c7a609587057fde0fd40997946"
+        },
+        "source": {
+          "bytes": 7369,
+          "exists": true,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\bin\\strehl-common-input.rs",
+          "sha256": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f"
+        },
+        "verifier": {
+          "bytes": 800768,
+          "exists": true,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\debug\\strehl-common-input.exe",
+          "sha256": "abbcdcedd58400c45db49284654a0f6815b3c0ffadc0d64282cadb388fc9fa42"
+        }
+      },
+      "blocker": "No eligible real pattern map or rendered real common-input campaign exists, so campaign identity cannot yet be exercised.",
+      "consumer_id": "strehl",
+      "evidence_class": "VERIFIED_BY_RUNNING",
+      "evidence_pass": true,
+      "outcome": "READY_FOR_SYNTHETIC_IDENTITY_ONLY",
+      "required": true
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 111143,
+          "exists": true,
+          "path": "C:\\Program Files\\ZereneStacker\\zerenstk.exe",
+          "sha256": "aeb428ca38df27b61b1031ec34064382dd9ea3ff929a17505e180000d75b1efd"
+        },
+        {
+          "bytes": 1079124,
+          "exists": true,
+          "path": "C:\\Program Files\\ZereneStacker\\ZereneStacker.jar",
+          "sha256": "e138ce88bedf2cfab7ef78aa2398a57ca4944ec09571c285a0a11c10bcb4e549"
+        },
+        {
+          "bytes": 39424,
+          "exists": true,
+          "path": "C:\\Program Files\\ZereneStacker\\jre\\bin\\java.exe",
+          "sha256": "529a97e525e609e3ebeaeaed7c37d1158d17359717b786d9c569ebcabad835c9"
+        },
+        {
+          "bytes": 456,
+          "exists": true,
+          "path": "C:\\Program Files\\ZereneStacker\\zerenstk.ini",
+          "sha256": "0d48614760d74559479d2bdd8db2e811cd85e0896ec34ed7129d8d0f37a68be6"
+        },
+        {
+          "bytes": 500,
+          "exists": true,
+          "path": "C:\\Users\\chris\\AppData\\Roaming\\ZereneStacker\\zerenstk.launchcmd",
+          "sha256": "77cc2104e935e27efd7215a022cbf048cf289a410afd84c4f0bd5b29dd75e0c6"
+        }
+      ],
+      "blocker": "The installed trial expired 2026-06-06. Obtain a licensed current shipping Zerene build and freeze its complete runtime bundle, PMax settings, invocation, and consumer receipt adapter.",
+      "consumer_id": "zerene-pmax",
+      "evidence_class": "VERIFIED_BY_RUNNING",
+      "evidence_pass": true,
+      "installed_version": "1.04T2026-05-04-0750",
+      "license_evidence": {
+        "category_line": {
+          "line_number": 75,
+          "text": "0.450: License category = TRIAL"
+        },
+        "exists": true,
+        "expired_at_audit": true,
+        "expiry_line": {
+          "line_number": 71,
+          "text": "license identifier redacted; expires on Jun 06 20:13:34 2026"
+        },
+        "expiry_local": "2026-06-06T20:13:34",
+        "path": "C:\\Users\\chris\\AppData\\Roaming\\ZereneStacker\\LastNormalLog.txt",
+        "sha256": "fe375961e0d76a18b64f19c14d06fe633d9246ecdf50e77704afccf302f9492c"
+      },
+      "outcome": "BLOCKED_LICENSE_EXPIRED",
+      "required": true
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 111143,
+          "exists": true,
+          "path": "C:\\Program Files\\ZereneStacker\\zerenstk.exe",
+          "sha256": "aeb428ca38df27b61b1031ec34064382dd9ea3ff929a17505e180000d75b1efd"
+        },
+        {
+          "bytes": 1079124,
+          "exists": true,
+          "path": "C:\\Program Files\\ZereneStacker\\ZereneStacker.jar",
+          "sha256": "e138ce88bedf2cfab7ef78aa2398a57ca4944ec09571c285a0a11c10bcb4e549"
+        },
+        {
+          "bytes": 39424,
+          "exists": true,
+          "path": "C:\\Program Files\\ZereneStacker\\jre\\bin\\java.exe",
+          "sha256": "529a97e525e609e3ebeaeaed7c37d1158d17359717b786d9c569ebcabad835c9"
+        },
+        {
+          "bytes": 456,
+          "exists": true,
+          "path": "C:\\Program Files\\ZereneStacker\\zerenstk.ini",
+          "sha256": "0d48614760d74559479d2bdd8db2e811cd85e0896ec34ed7129d8d0f37a68be6"
+        },
+        {
+          "bytes": 500,
+          "exists": true,
+          "path": "C:\\Users\\chris\\AppData\\Roaming\\ZereneStacker\\zerenstk.launchcmd",
+          "sha256": "77cc2104e935e27efd7215a022cbf048cf289a410afd84c4f0bd5b29dd75e0c6"
+        }
+      ],
+      "blocker": "The installed trial expired 2026-06-06. Obtain a licensed current shipping Zerene build and freeze its complete runtime bundle, DMap settings, invocation, and consumer receipt adapter.",
+      "consumer_id": "zerene-dmap",
+      "evidence_class": "VERIFIED_BY_RUNNING",
+      "evidence_pass": true,
+      "installed_version": "1.04T2026-05-04-0750",
+      "license_evidence": {
+        "category_line": {
+          "line_number": 75,
+          "text": "0.450: License category = TRIAL"
+        },
+        "exists": true,
+        "expired_at_audit": true,
+        "expiry_line": {
+          "line_number": 71,
+          "text": "license identifier redacted; expires on Jun 06 20:13:34 2026"
+        },
+        "expiry_local": "2026-06-06T20:13:34",
+        "path": "C:\\Users\\chris\\AppData\\Roaming\\ZereneStacker\\LastNormalLog.txt",
+        "sha256": "fe375961e0d76a18b64f19c14d06fe633d9246ecdf50e77704afccf302f9492c"
+      },
+      "outcome": "BLOCKED_LICENSE_EXPIRED",
+      "required": true
+    },
+    {
+      "blocker": "Build the pinned retained source, freeze source tree, toolchain, dependency lock, compiler flags, settings, invocation, and final executable SHA-256, then run it on the common TIFFs.",
+      "blocker_evidence": {
+        "bytes": 1546,
+        "exists": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer-registry-fork-blocked.json",
+        "sha256": "7680ac5ca2bc4e4110b74624c9891c15890eb798da7deea1a12817e9f8979f4e"
+      },
+      "consumer_id": "focus-stack-fork",
+      "evidence_class": "INFERRED_BY_READING",
+      "evidence_pass": true,
+      "outcome": "BLOCKED_NO_REPRODUCIBLE_BINARY",
+      "required": true,
+      "source_revision": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6"
+    }
+  ],
+  "schema": "m165-common-input-consumer-readiness-v1",
+  "status": "BLOCKED"
+}

@@ -1,8 +1,9 @@
-# M165 — common linear input, pattern-map gate, and Strehl byte identity
+# M165 — common linear input, pattern-map gate, consumer receipts, and Strehl byte identity
 
 ## Verdict
 
-**Stage 0M is closed in software. The competitive package is still
+**Stage 0M is closed in software. The new Stage 0C consumer-boundary gate is
+commissioned in software. The real competitive package is still
 `UNMEASURED`.**
 
 M165 now provides:
@@ -14,8 +15,9 @@ M165 now provides:
 - enforceable two-class-per-sitting cardinality;
 - external physical-body, temperature, focus-schedule, and flat-field-state
   provenance; and
-- fail-closed synthetic commissioning for the estimator and every new refusal
-  boundary.
+- a frozen, fail-closed consumer-boundary gate that independently hashes and
+  parses one in-memory read of every TIFF, validates consumer-side receipts,
+  and partitions every input and consumer/input pair into counted outcomes.
 
 No eligible real calibration capture exists. Therefore no real pattern map, no
 campaign common-merge TIFF, and no campaign Strehl byte-identity result exists.
@@ -32,6 +34,77 @@ registered-frame M1-only total (`1,603` including its known histogram release)
 and `1,917` combined M1/M5/M9 total are no longer conditional on M165 class
 counts. They are **not globally owner-final** because M164 records other open
 release conditions and an unresolved possible live-ratio shutter release.
+
+## Next gate — Stage 0C consumer-boundary admission
+
+**INFERRED BY READING.** Stage 0M froze and commissioned the zero-frame map,
+manifest, refusal, and identity machinery. It did not qualify a consumer
+campaign. The immediate next gate is **Stage 0C**, a new M165 term that does not
+rename or remove Stage 0M: freeze every required consumer runtime bundle and
+setting, then require one independently generated receipt for every
+consumer/input pair on development common TIFFs. This must precede a real
+subject. M164 §2 release condition 6 requires comparator binaries, licences,
+settings, and common-input execution to be frozen on development data before
+target selection, while its Stages 1 and 2 must first produce and validate the
+matching converter-on calibration. A real-subject end-to-end campaign is the
+gate after those prerequisites, not a substitute for them.
+
+The assignment's proposed roster needed correction against the live scorecard.
+The required common-merge consumers are:
+
+1. strehl;
+2. licensed Zerene PMax;
+3. licensed Zerene DMap; and
+4. a fresh rebuild of the retained fork source, commit-pinned and
+   executable-hash frozen.
+
+Helicon is additional **when obtainable**. Its absence is counted and reported
+but is not fatal. Omitting the required fork while treating Helicon as required
+would enforce the wrong contract.
+
+**VERIFIED BY RUNNING.** `consumer_gate.py` now enforces Stage 0C. For each
+input it:
+
+- reads the converter manifest and TIFF into memory once;
+- hashes the whole TIFF with SHA-256 over `[0,file_size)`;
+- parses those same TIFF bytes and hashes the concatenation of every strip byte
+  range in scan order as the pixel payload;
+- checks dimensions, ICC, converter/source/map provenance, and both converter
+  hashes;
+- checks that an independently produced consumer attestation belongs to the
+  named consumer, input path, invocation, and outputs, then checks its hashes
+  against those bytes;
+- binds the complete consumer executable bundle, settings, invocation, output,
+  campaign, and registry; and
+- reports exhaustive `PASS`, `FAIL`, `MISSING`, `BLOCKED`, and
+  `OPTIONAL_ABSENT` counts whose sums must equal their denominators.
+
+The gate bundle SHA-256 is
+`62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f`;
+the gate source SHA-256 is
+`5ce6a625aa834e182d4823d902a377ef0ba4afa9d1012ddab06b3bbc23c1219e`.
+The committed freeze file SHA-256 is
+`339026c99c444abf2f30a676b1eaba18cc41e459a27947ce448d66e5d8950175`.
+
+This gate does not turn an externally supplied receipt into proof by assertion.
+It reopens neither a path for hashing nor parsing: one cache owns every artifact
+read. The receipt producer independently performs the same one-read hash and
+parse, and the consumer attestation supplies the third comparison. Strehl's
+attestation is its Rust identity report. A future opaque-product adapter must
+emit the standard attestation from a locked handoff; no such Zerene or Helicon
+attestation is claimed here.
+
+The operational sequence is:
+
+```text
+python consumer_gate.py freeze --out consumer-gate-freeze-v1.json
+python consumer_gate.py record --campaign CAMPAIGN --registry REGISTRY \
+  --freeze FREEZE --consumer-id ID --input-id INPUT \
+  --attestation ATTESTATION --invocation-json INVOCATION \
+  --output OUTPUT --out RECEIPT
+python consumer_gate.py verify --campaign CAMPAIGN --registry REGISTRY \
+  --freeze FREEZE --receipts RECEIPTS_DIRECTORY --out VERDICT
+```
 
 ## Governing contract re-read
 
@@ -106,6 +179,16 @@ The live source was re-read rather than relying on the assignment summary:
 | `commissioning/pattern-map-estimator/commission.json` | Stage 0M algorithm and schema/refusal commissioning evidence. |
 | `out/pattern-map-determinism.json` | Byte-stable repeat of the commissioning report and both generated NPZ maps. |
 | `out/stage0m-class-derivation.json` | Machine-readable class/tolerance arithmetic and M164 count consequence. |
+| `consumer_gate.py` | Stage 0C one-read TIFF/hash/parser, receipt recorder, exhaustive campaign verifier, and fail-closed CLI. |
+| `consumer-gate-freeze-v1.json` | Frozen Stage 0C script, Python runtime, schemas, and bundle hash. |
+| `consumer-campaign-template.json` | Frozen input-set and registry binding. |
+| `consumer-boundary-receipt-template.json` | Per-consumer/per-input independent hash, byte-range, attestation, invocation, and output contract. |
+| `consumer-receipt-template.json` | Explicitly marked `SUPERSEDED_UNENFORCED`; the old placeholder is not accepted by Stage 0C. |
+| `consumer-registry-template.json` | Extended in place with complete runtime bundles and registered attestation schemas; still comparator-agnostic. |
+| `consumer_fixture.py` | Commissioning-only independently reading consumer; never a comparator result. |
+| `commission_consumer_gate.py` | Reproducible Stage 0C clean, mutation, restoration, missing-receipt, and malformed-input battery. |
+| `commissioning/consumer-gate/commission.json` | Stage 0C commissioning report. |
+| `audit_consumer_readiness.py` / `out/consumer-readiness.json` | Current machine consumer partition and precise blockers. |
 
 ## Stage 0M closure
 
@@ -362,6 +445,109 @@ Identity sensitivity remains commissioned:
 admit a map. It does not change the byte-identity boundary or its result.
 Campaign identity remains **NOT YET TESTABLE** until real maps and TIFFs exist.
 
+## Stage 0C commissioning and present readiness
+
+### Commissioning
+
+**VERIFIED BY RUNNING — machinery only, not comparator evidence.** The
+commissioning campaign used two generated common TIFFs:
+
+| Input | Dimensions | Whole-file SHA-256 | Pixel-payload SHA-256 |
+|---|---:|---|---|
+| `input-a` | `7 x 5` | `c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456` | `4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084` |
+| `input-b` | `9 x 6` | `64101a62a97e70774354d35bba84ade56056f0b7c5460ce20a55f1e13d5b3774` | `d5efeea996096a824c18a59ca63af451090d92dbbf340a4cc4f2bfb0bbb06cba` |
+
+The actual Strehl verifier consumed both inputs and exercised the generic merge
+core. Its commissioning executable SHA-256 was
+`abbcdcedd58400c45db49284654a0f6815b3c0ffadc0d64282cadb388fc9fa42`;
+its source SHA-256 was
+`0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f`.
+The other three required-consumer slots were explicitly named `*-fixture` and
+used the commissioning-only independent reader. They commission the receipt
+gate and make no claim about Zerene or the fork.
+
+The clean matrix contained two inputs, four required consumers, and one
+unavailable optional consumer:
+
+- required pairs: `8 PASS + 0 FAIL + 0 MISSING + 0 BLOCKED = 8`;
+- optional pairs: `0 PASS + 0 FAIL + 0 MISSING + 0 BLOCKED +
+  2 OPTIONAL_ABSENT = 2`;
+- all pairs: `8 + 2 = 10`; and
+- inputs: `2 PASS = 2`.
+
+Every partition reported `partition_balanced=true`, and the read audit reported
+`maximum_reads_per_artifact=1`.
+
+The planted degradation replaced exactly one unique full line in the
+PMax-fixture receipt:
+
+```text
+"input_file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+->
+"input_file_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+```
+
+The mutation helper first proved that an absent anchor hard-errors. The actual
+mutation then made the gate `FAIL`, partitioning the required matrix as
+`7 PASS + 1 FAIL = 8` and the inputs as `1 PASS + 1 FAIL = 2`. Restoring the
+exact original receipt bytes returned `8 PASS = 8` and `2 PASS = 2`. Removing
+one receipt separately produced `7 PASS + 1 MISSING = 8`, and malformed
+campaign JSON exited `1` with a persisted `FAIL / JSON_INVALID` report.
+A cross-consumer substitution that pointed the DMap receipt at the PMax
+attestation failed as `ATTESTATION_CONSUMER_MISMATCH`, with
+`7 PASS + 1 FAIL = 8` required pairs.
+A separate registry with every required consumer deliberately blocked produced
+`8 BLOCKED = 8` required pairs and `2 BLOCKED = 2` inputs.
+
+The Stage 0C commission report SHA-256 is
+`576d4e198131371be579abda2752d86cbfa0677c42bec845d6f35a4345b426c4`.
+
+### Real consumer readiness
+
+**VERIFIED BY RUNNING.** The machine audit partitions all four required modes:
+
+| Required consumer | Outcome | Direct evidence |
+|---|---|---|
+| strehl | `READY_FOR_SYNTHETIC_IDENTITY_ONLY` | Current adapter binary, source, and existing identity report were present and hashed. |
+| Zerene PMax | `BLOCKED_LICENSE_EXPIRED` | Installed build `1.04T2026-05-04-0750`; retained log says trial expiry `2026-06-06`, which precedes this audit. |
+| Zerene DMap | `BLOCKED_LICENSE_EXPIRED` | Same installed runtime and expired licence; it is a separately required mode. |
+| retained-source fork | `BLOCKED_NO_REPRODUCIBLE_BINARY` | See the reading-derived ruling below. |
+
+The partition is
+`1 READY_FOR_SYNTHETIC_IDENTITY_ONLY + 2 BLOCKED_LICENSE_EXPIRED +
+1 BLOCKED_NO_REPRODUCIBLE_BINARY = 4`. The installed Zerene launcher SHA-256 is
+`aeb428ca38df27b61b1031ec34064382dd9ea3ff929a17505e180000d75b1efd`;
+the application JAR SHA-256 is
+`e138ce88bedf2cfab7ef78aa2398a57ca4944ec09571c285a0a11c10bcb4e549`.
+Those hashes identify the blocked installation; they do not make it licensed
+or frozen for scoring.
+
+The persisted readiness report SHA-256 is
+`843481fb3097ff431967aa6f7cd90c17ccfebecac9f8d1b1f2dee286f6f74de8`.
+
+**INFERRED BY READING.** M162 establishes that the fork has no admissible
+producer binary. The exact unblock is a fresh build of retained commit
+`4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`, with source tree, toolchain,
+dependency lock, compiler flags, settings, invocation, and final executable
+SHA-256 frozen before rendering.
+
+**VERIFIED BY RUNNING, TARGETED PATH PROBE.** No Helicon executable was found
+at the four documented Windows installation paths. **INFERRED BY READING.**
+M132's broader machine audit also found none. Under the live scorecard Helicon
+is optional when unobtainable, so this is `OPTIONAL_ABSENT`, not a required-arm
+blocker.
+
+**INFERRED BY READING.** The precise owner ask for Zerene is: after written
+permission to publish the black-box comparison, buy Prosumer for `$189` plus
+tax if this remains eligible personal/unfunded use; otherwise buy Professional
+for `$289` plus tax. Do not buy Helicon to clear Stage 0C. Separately assign the
+fork rebuild above.
+
+**REAL STAGE 0C VERDICT: BLOCKED.** The receipt machinery is commissioned, but
+there is no eligible pattern map, no real common-input campaign, no licensed
+Zerene output, and no rebuilt fork. Consequently there are no real
+consumer-side file or payload hashes to quote.
+
 ## Capture requirement and totals
 
 For each optical state in each sitting, acquire exactly:
@@ -395,11 +581,30 @@ class or its near/far V block rejects focus portability, the result is STOP /
 - Missing-map render: exit `1`, `PATTERN_MAP_REQUIRED`, no TIFF created.
 - Blocked fork registry: exit `1`, `CONSUMER_REGISTRY_NOT_FROZEN`.
 - Independent .NET/Python/Rust hash audit: **PASS**.
+- Stage 0C consumer-boundary commissioning: **PASS**.
+- Stage 0C clean partition: `2/2` inputs and `8/8` required
+  consumer/input pairs passed; `2/2` optional pairs were counted
+  `OPTIONAL_ABSENT`.
+- Stage 0C unique-line hash mutation: **FAIL as required**, exactly one
+  required pair and one input failed.
+- Stage 0C receipt restoration: **PASS**.
+- Stage 0C missing receipt: **FAIL as required**, exactly one required pair and
+  one input were counted `MISSING`.
+- Stage 0C cross-consumer attestation substitution: **FAIL as required** with
+  `ATTESTATION_CONSUMER_MISMATCH`.
+- Stage 0C blocked-registry probe: **FAIL as required**, `8/8` required pairs
+  and `2/2` inputs were counted `BLOCKED`.
+- Stage 0C malformed campaign: exit `1`, persisted `FAIL / JSON_INVALID`.
+- Stage 0C receipt-record CLI reproduced the library-generated receipt byte for
+  byte.
+- Current consumer-readiness audit: exit `1`, persisted `BLOCKED`, required
+  consumer partition balanced `4/4`.
 
 **Blocked on compute: NO.** No bulk decode was launched. The only real RAW work
-was the previously authorized one-frame burned-development probe. Fitting real
-full-resolution maps and rendering a campaign will require both new
-calibration captures and a released quiet compute window.
+remains the one-frame burned-development probe. Under the standing host policy,
+deterministic fitting/rendering may proceed under load when inputs exist;
+absolute timing remains quarantined. The present blockers are missing physical
+inputs, licence, and fork build, not host scheduling.
 
 ## Residual doubt
 
@@ -418,3 +623,10 @@ calibration captures and a released quiet compute window.
    work.
 6. The fork still lacks a rebuilt, hashed executable and therefore remains a
    blocked common-merge consumer.
+7. The Stage 0C standard attestation is commissioned with controlled fixtures,
+   but no opaque-product locked-handoff adapter has yet emitted a real Zerene
+   or Helicon receipt. The gate refuses their absence; it does not infer
+   consumption from an output file.
+8. Stage 0C proves exact-byte admission, not that a closed-source consumer uses
+   every admitted sample internally. That stronger semantic claim would
+   require vendor instrumentation unavailable here.

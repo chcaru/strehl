@@ -1,0 +1,436 @@
+{
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\baseline-gate.json",
+    "sha256": "687e64fd3a9cc6154adf4a6d45b58ae912f8d08ba4e85f81a43c3b7854b36beb",
+    "summary": {
+      "all_consumer_input_pairs": {
+        "counted_sum": 10,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 8
+        },
+        "partition_balanced": true,
+        "total_examined": 10
+      },
+      "all_partitions_balanced": true,
+      "inputs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "PASS": 2
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "optional_consumer_input_pairs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "required_consumer_input_pairs": {
+        "counted_sum": 8,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 0,
+          "PASS": 8
+        },
+        "partition_balanced": true,
+        "total_examined": 8
+      }
+    }
+  },
+  "campaign": {
+    "inputs": 2,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\campaign.json",
+    "sha256": "0c12e621a5e5afb670c7e480784808e5f1a055cb46af7ca5087b55ffeca9222f"
+  },
+  "checks": {
+    "all_artifacts_read_at_most_once": true,
+    "baseline_partitions_eight_required_pairs": true,
+    "baseline_partitions_two_inputs": true,
+    "baseline_passes": true,
+    "cross_consumer_attestation_rejected": true,
+    "malformed_input_persists_fail": true,
+    "missing_mutation_anchor_hard_errors": true,
+    "missing_receipt_is_counted": true,
+    "optional_absence_counted_not_skipped": true,
+    "record_cli_matches_library_byte_for_byte": true,
+    "repair_goes_green": true,
+    "required_blockers_are_counted": true,
+    "unique_full_line_hash_mutation_goes_red": true
+  },
+  "cross_consumer_attestation_probe": {
+    "failure_class": "ATTESTATION_CONSUMER_MISMATCH",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\cross-consumer-gate.json",
+    "sha256": "6121e1f6276cf67105b1fc1488f89708f30ab82542e85d784f81b87ecd6a30da",
+    "summary": {
+      "all_consumer_input_pairs": {
+        "counted_sum": 10,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 1,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 7
+        },
+        "partition_balanced": true,
+        "total_examined": 10
+      },
+      "all_partitions_balanced": true,
+      "inputs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 1,
+          "MISSING": 0,
+          "PASS": 1
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "optional_consumer_input_pairs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "required_consumer_input_pairs": {
+        "counted_sum": 8,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 1,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 0,
+          "PASS": 7
+        },
+        "partition_balanced": true,
+        "total_examined": 8
+      }
+    }
+  },
+  "gate_freeze": {
+    "bundle_sha256": "62127f6218a2f0b9fc3482a8b44138c237935ef763d0129ff7dfc87d0898d98f",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\consumer-gate-freeze-v1.json",
+    "sha256": "339026c99c444abf2f30a676b1eaba18cc41e459a27947ce448d66e5d8950175"
+  },
+  "hash_contract": {
+    "algorithm": "SHA-256",
+    "pixel_payload_bytes": "concatenation of TIFF strip byte ranges in scan order",
+    "same_memory_rule": "each artifact is read once; hashes and parsing consume that same cached byte string",
+    "whole_file_bytes": "[0,file_size)"
+  },
+  "malformed_input_probe": {
+    "exit_code": 1,
+    "failure_class": "JSON_INVALID",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\malformed-gate.json",
+    "sha256": "9bea28773e3386d5f7d450b9ce777508bc8c44847b01c00dff0bfed423c548f8"
+  },
+  "missing_receipt_probe": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\missing-gate.json",
+    "sha256": "65f185f6206a13aab0764d9e0c631fcd6ba573b0e41b7f5f081bf2875604754a",
+    "summary": {
+      "all_consumer_input_pairs": {
+        "counted_sum": 10,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 1,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 7
+        },
+        "partition_balanced": true,
+        "total_examined": 10
+      },
+      "all_partitions_balanced": true,
+      "inputs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 1,
+          "PASS": 1
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "optional_consumer_input_pairs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "required_consumer_input_pairs": {
+        "counted_sum": 8,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 1,
+          "OPTIONAL_ABSENT": 0,
+          "PASS": 7
+        },
+        "partition_balanced": true,
+        "total_examined": 8
+      }
+    }
+  },
+  "planted_degradation": {
+    "mutation": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-pmax-fixture\\input-a.json",
+      "unique_full_line_after": "  \"input_file_sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\",",
+      "unique_full_line_before": "  \"input_file_sha256\": \"c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456\","
+    },
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\mutated-gate.json",
+    "sha256": "e3be5e5e8cbf404f0454850e5d1d2797b3a487f99d98ab450d5348bccfc9bbc2",
+    "summary": {
+      "all_consumer_input_pairs": {
+        "counted_sum": 10,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 1,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 7
+        },
+        "partition_balanced": true,
+        "total_examined": 10
+      },
+      "all_partitions_balanced": true,
+      "inputs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 1,
+          "MISSING": 0,
+          "PASS": 1
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "optional_consumer_input_pairs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "required_consumer_input_pairs": {
+        "counted_sum": 8,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 1,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 0,
+          "PASS": 7
+        },
+        "partition_balanced": true,
+        "total_examined": 8
+      }
+    }
+  },
+  "planted_improvement": {
+    "action": "restore the exact original receipt bytes",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\repaired-gate.json",
+    "sha256": "687e64fd3a9cc6154adf4a6d45b58ae912f8d08ba4e85f81a43c3b7854b36beb",
+    "summary": {
+      "all_consumer_input_pairs": {
+        "counted_sum": 10,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 8
+        },
+        "partition_balanced": true,
+        "total_examined": 10
+      },
+      "all_partitions_balanced": true,
+      "inputs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "PASS": 2
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "optional_consumer_input_pairs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "required_consumer_input_pairs": {
+        "counted_sum": 8,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 0,
+          "PASS": 8
+        },
+        "partition_balanced": true,
+        "total_examined": 8
+      }
+    }
+  },
+  "record_cli_probe": {
+    "byte_identical": true,
+    "exit_code": 0,
+    "library_receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\receipts\\zerene-pmax-fixture\\input-a.json",
+    "library_receipt_sha256": "0e64dca36a5812e1565788f196c11127105ae1f492282c6b0b95551496792500",
+    "receipt_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\record-cli-receipt.json",
+    "receipt_sha256": "0e64dca36a5812e1565788f196c11127105ae1f492282c6b0b95551496792500"
+  },
+  "registry": {
+    "optional_consumers": 1,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\consumer-registry.json",
+    "required_consumers": 4,
+    "sha256": "61b5e86fcfbb4394c26cdd76d9e831370d9e57c2519aabb82e4475a836694ec6"
+  },
+  "required_blocker_probe": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\blocked-gate.json",
+    "sha256": "8ad6474b353213b056146b0d84e21f7ef28dc2c24da1d223d5b7c02ad6f75ce9",
+    "summary": {
+      "all_consumer_input_pairs": {
+        "counted_sum": 10,
+        "counts": {
+          "BLOCKED": 8,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 10
+      },
+      "all_partitions_balanced": true,
+      "inputs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 2,
+          "FAIL": 0,
+          "MISSING": 0,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "optional_consumer_input_pairs": {
+        "counted_sum": 2,
+        "counts": {
+          "BLOCKED": 0,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 2,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 2
+      },
+      "required_consumer_input_pairs": {
+        "counted_sum": 8,
+        "counts": {
+          "BLOCKED": 8,
+          "FAIL": 0,
+          "MISSING": 0,
+          "OPTIONAL_ABSENT": 0,
+          "PASS": 0
+        },
+        "partition_balanced": true,
+        "total_examined": 8
+      }
+    }
+  },
+  "runs": [
+    {
+      "attestation_sha256": "49143d7b790de4d79af08958343dd671af09aee857507ad94bb8a1add1d8bed9",
+      "consumer_id": "strehl",
+      "exit_code": 0,
+      "input_id": "input-a"
+    },
+    {
+      "attestation_sha256": "a31747062944c8e0a195ad888c69d0fef83cafc6903a97f44e03f35796ae498e",
+      "consumer_id": "zerene-pmax-fixture",
+      "exit_code": 0,
+      "input_id": "input-a"
+    },
+    {
+      "attestation_sha256": "55ce1dd25be75f58d737fe9324a11adaee7dad1f1c90ea9de529d3aeb1aeb9b2",
+      "consumer_id": "zerene-dmap-fixture",
+      "exit_code": 0,
+      "input_id": "input-a"
+    },
+    {
+      "attestation_sha256": "1cf354972409d4a3051e68888cba2da8c472107244f18fe86a72ec80f2d295a5",
+      "consumer_id": "fork-fixture",
+      "exit_code": 0,
+      "input_id": "input-a"
+    },
+    {
+      "attestation_sha256": "e70a4aaabf130ff9bbb731c1baebe24547c73527151792385ee7bf968b3e1c3a",
+      "consumer_id": "strehl",
+      "exit_code": 0,
+      "input_id": "input-b"
+    },
+    {
+      "attestation_sha256": "42e7d0973507bab876df7ed7970f264a0661b5a28d791086944a617f58cb5678",
+      "consumer_id": "zerene-pmax-fixture",
+      "exit_code": 0,
+      "input_id": "input-b"
+    },
+    {
+      "attestation_sha256": "ea16791be4848e762b4b823c0625a25ab15296c3d6db61c01f697d969a283acd",
+      "consumer_id": "zerene-dmap-fixture",
+      "exit_code": 0,
+      "input_id": "input-b"
+    },
+    {
+      "attestation_sha256": "7b38b25e885e9ddb62066d60548932619449cca9a665d221393878c433a1034d",
+      "consumer_id": "fork-fixture",
+      "exit_code": 0,
+      "input_id": "input-b"
+    }
+  ],
+  "schema": "m165-common-input-consumer-gate-commission-v1",
+  "status": "PASS"
+}

@@ -1,0 +1,27 @@
+{
+  "consumer_registry": {
+    "sha256": "1ee411f14ee903a85703b090ab44568f9bc8581b33241d89d3c58e27b5d50553"
+  },
+  "converter": {
+    "executable_sha256": "4e959ff11d124b3f97718137a88a683617d4bbcb68a157d54483bf63c47dafa0",
+    "settings_sha256": "d132ca46b70058689a1d6804a346dcb45c46cce9d65aa8e4b5addadfe2bf87bb"
+  },
+  "output": {
+    "file_sha256": "c7683da77256d3fdc7acd1d1a8b38cb3b9fcc9ce948bc51d1347289e94e08456",
+    "height": 5,
+    "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\commissioning\\consumer-gate\\inputs\\input-a.tiff",
+    "pixel_payload_sha256": "4b9edeedbf0820c6d51313d37c5239cba7aca948e234d23c6820b3c5a0325084",
+    "width": 7
+  },
+  "pattern_map": {
+    "manifest_sha256": "1b6acf08187d54af4ea1a101aa457983c3e753a87167d7ac0b8f1d540e5c0101",
+    "sha256": "a0a1f60b436df7a0006945b2f88a0522174a36986b8a71022fb2510f10e94746"
+  },
+  "schema": "m165-common-input-manifest-v3",
+  "source": {
+    "sha256": "370b7ace9d3c818791ad953116b93c745fe4aa337f7c48a51f21dc6c92f0620f"
+  },
+  "status": "RENDERED",
+  "track": "common-merge"
+}
