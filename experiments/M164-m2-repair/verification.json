@@ -1,0 +1,16 @@
+{
+  "schema": "m164-m2-repair-verification-v1",
+  "status": "PASS",
+  "checks": [
+    "schema, seed, trial count and site count are frozen",
+    "preregistration, amendment and implementation hashes match",
+    "all arm summaries rederive from 256 stored trial ratios",
+    "Q_EIN equals output-noise ratio divided by transfer ratio",
+    "all 12 preregistered gates rederive and pass",
+    "omitted-transfer and reversed-direction mutations are live",
+    "same-resolution cross-fit rejects every genuinely improved trial",
+    "report carries the diagnosis, limitation and current verdict"
+  ],
+  "commission_sha256": "418D2D852DC15B072CB65DD6BAAECAA9B4CBF82843BA825F00B0440ACC733C43",
+  "report_sha256": "7441B224CD27DBFE37A3203AD54D7EAA5FE8E0B164C5DE90F594DEC20CFD486C"
+}
