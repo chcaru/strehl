@@ -302,8 +302,11 @@ def arm_single_site_defect(_: Path) -> dict[str, Any]:
         )
         scored_sample["center_y_green_px"] = float(mapped[0])
         scored_sample["center_x_green_px"] = float(mapped[1])
-    reference["local_period_samples"][0]["period_green_px"] = (
-        scored["local_period_samples"][0]["period_green_px"] * 1.99
+    # Index 7 is (512, 512), inside a block with many retained sites.  The
+    # block median stays nominal; only the pre-aggregation site envelope can
+    # expose this defect.
+    reference["local_period_samples"][7]["period_green_px"] = (
+        scored["local_period_samples"][7]["period_green_px"] * 1.99
     )
     result = run_measurements(reference, scored)
     result.update(
@@ -319,10 +322,15 @@ def arm_single_site_defect(_: Path) -> dict[str, Any]:
         "local_spatial_ratio_envelope",
         [math.inf],
     )[0]
+    block_minimum = result.get("decision", {}).get("interval", {}).get(
+        "local_block_ratio_envelope",
+        [-math.inf],
+    )[0]
     result["pass"] = (
         result["measurement_status"] == "OK"
         and result["decision"]["verdict"] == "FAIL"
         and math.isclose(float(local_minimum), 1.99, abs_tol=1e-12)
+        and float(block_minimum) > 2.0
     )
     return result
 

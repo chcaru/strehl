@@ -107,13 +107,17 @@ class DecisionTests(unittest.TestCase):
             scored_sample["center_x_green_px"] = float(mapped[1])
         # One quality-retained site is unsafe while its block's other sites
         # remain nominal.  The point may remain nominal; the lower envelope may not.
-        reference["local_period_samples"][0]["period_green_px"] = (
-            scored["local_period_samples"][0]["period_green_px"] * 1.99
+        reference["local_period_samples"][7]["period_green_px"] = (
+            scored["local_period_samples"][7]["period_green_px"] * 1.99
         )
         result = preflight.evaluate_measurements(reference, scored)
         self.assertEqual(result["verdict"], "FAIL")
         self.assertLess(
             result["interval"]["local_spatial_ratio_envelope"][0],
+            2.0,
+        )
+        self.assertGreater(
+            result["interval"]["local_block_ratio_envelope"][0],
             2.0,
         )
 

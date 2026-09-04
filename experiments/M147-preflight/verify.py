@@ -132,6 +132,97 @@ def autocorrelation_period(image: np.ndarray) -> dict[str, Any]:
     }
 
 
+def independently_accept_noncoverage(
+    name: str,
+    arm: dict[str, Any],
+    rules: dict[str, Any],
+) -> bool:
+    status = arm.get("measurement_status")
+    decision = arm.get("decision", {})
+    if name in {"alias", "alias-weak", "alias-third", "alias-third-weak"}:
+        return (
+            status == "REFUSED"
+            and arm.get("reason_code") == "AMBIGUOUS_HARMONIC"
+        )
+    if name == "anisotropic":
+        return (
+            status == "REFUSED"
+            and arm.get("reason_code") == "ANISOTROPIC_SCALE_CHANGE"
+        )
+    if name == "perspective":
+        return status == "REFUSED" or decision.get("verdict") == "FAIL"
+    if name == "blur-mild":
+        recovered = decision.get("sampling_ratio")
+        return (
+            status == "OK"
+            and recovered is not None
+            and abs(float(recovered) / float(arm["truth_ratio"]) - 1.0)
+            <= float(rules["mild_nuisance_maximum_relative_error"])
+        )
+    if name in {"blur-severe", "partial-grid"}:
+        return status == "REFUSED"
+    if name == "no-grid":
+        return (
+            status == "REFUSED"
+            and arm.get("reason_code") == "NO_COHERENT_GRID"
+        )
+    if name == "real-null":
+        recovered = decision.get("sampling_ratio")
+        interval = decision.get("interval")
+        return (
+            status == "OK"
+            and recovered is not None
+            and interval is not None
+            and abs(float(recovered) - 1.0)
+            <= float(rules["null_maximum_relative_error"])
+            and float(interval["lower"]) <= 1.0 <= float(interval["upper"])
+            and decision.get("verdict") == "FAIL"
+        )
+    if name in {"single-site-defect", "rotation-mapping"}:
+        interval = decision.get("interval")
+        accepted = (
+            status == "OK"
+            and interval is not None
+            and decision.get("verdict") == "FAIL"
+            and math.isclose(
+                float(interval["local_spatial_ratio_envelope"][0]),
+                1.99,
+                abs_tol=1e-12,
+            )
+        )
+        if name == "single-site-defect" and interval is not None:
+            accepted = (
+                accepted
+                and float(interval["local_block_ratio_envelope"][0]) > 2.0
+            )
+        return accepted
+    if name.startswith("scale-"):
+        recovered = decision.get("sampling_ratio")
+        if status != "OK" or recovered is None:
+            return False
+        truth = float(arm["truth_ratio"])
+        accurate = (
+            abs(float(recovered) / truth - 1.0)
+            <= float(rules["uniform_scale_maximum_relative_error"])
+        )
+        unsafe_false_pass = (
+            truth <= float(rules["never_pass_truth_at_or_below"])
+            and decision.get("verdict") == "PASS"
+        )
+        return accurate and not unsafe_false_pass
+    return False
+
+
+def independently_accept_coverage(arm: dict[str, Any]) -> bool:
+    if arm.get("measurement_status") != "OK":
+        return False
+    interval = arm.get("decision", {}).get("interval")
+    if interval is None:
+        return False
+    truth = float(arm["truth_ratio"])
+    return float(interval["lower"]) <= truth <= float(interval["upper"])
+
+
 def main() -> None:
     null = json.loads(NULL_ARTIFACT.read_text(encoding="utf-8"))
     commission = json.loads(COMMISSION_ARTIFACT.read_text(encoding="utf-8"))
@@ -199,13 +290,29 @@ def main() -> None:
         and set(commission["required_noncov_arms"]) == REQUIRED_NONCOVERAGE_ARMS
         and set(commission["expected_coverage_arms"]) == EXPECTED_COVERAGE_ARMS
     )
-    recomputed_all_pass = all(arm.get("pass") is True for arm in arms.values())
+    independent_arm_pass = {
+        name: (
+            independently_accept_coverage(arm)
+            if name in EXPECTED_COVERAGE_ARMS
+            else independently_accept_noncoverage(name, arm, commission["rules"])
+        )
+        for name, arm in arms.items()
+    }
+    checks["stored_arm_pass_flags_match_independent_rules"] = all(
+        arm.get("pass") == independent_arm_pass[name]
+        and (
+            name not in EXPECTED_COVERAGE_ARMS
+            or arm.get("covered") == independent_arm_pass[name]
+        )
+        for name, arm in arms.items()
+    )
+    recomputed_all_pass = all(independent_arm_pass.values())
     checks["all_recorded_commission_arms_pass"] = (
         recomputed_all_pass
         and commission["all_recorded_arms_pass"] is True
     )
     covered_trials = sum(
-        arms.get(name, {}).get("covered") is True
+        independently_accept_coverage(arms.get(name, {}))
         for name in EXPECTED_COVERAGE_ARMS
     )
     checks["coverage_is_20_of_20"] = (
@@ -215,7 +322,10 @@ def main() -> None:
     )
     recomputed_synthetic_pass = (
         noncoverage_names == REQUIRED_NONCOVERAGE_ARMS
-        and all(arms[name].get("pass") is True for name in REQUIRED_NONCOVERAGE_ARMS)
+        and all(
+            independently_accept_noncoverage(name, arms[name], commission["rules"])
+            for name in REQUIRED_NONCOVERAGE_ARMS
+        )
         and 18 <= covered_trials <= 20
     )
     checks["synthetic_commission_passes"] = (
