@@ -1153,31 +1153,51 @@ def run_real(output: Path, stage_dir: Path) -> dict[str, Any]:
                 materialized[spec] = materialize(spec, stage_dir)
 
     pair_results = []
+    pair_failures = 0
     for pair in PAIRS:
         strehl_path, strehl_provenance = materialized[pair.strehl]
         comparator_path, comparator_provenance = materialized[pair.comparator]
-        pair_results.append(
-            evaluate_pair(
-                pair,
-                strehl_path,
-                comparator_path,
-                {
-                    "strehl": strehl_provenance,
-                    "comparator": comparator_provenance,
-                },
+        try:
+            pair_results.append(
+                evaluate_pair(
+                    pair,
+                    strehl_path,
+                    comparator_path,
+                    {
+                        "strehl": strehl_provenance,
+                        "comparator": comparator_provenance,
+                    },
+                )
             )
-        )
+        except BaseException as error:
+            pair_failures += 1
+            pair_results.append(
+                {
+                    "pair": pair.key,
+                    "label": pair.label,
+                    "holdout_status": "BURNED-OK",
+                    "status": "PAIR_INVALID",
+                    "error_type": type(error).__name__,
+                    "error": str(error),
+                    "traceback": traceback.format_exc(),
+                }
+            )
 
-    verdicts = [result["verdict"] for result in pair_results]
-    if "INADMISSIBLE_COMMON_TRANSFER" in verdicts:
+    verdicts = [
+        result["verdict"] for result in pair_results if "verdict" in result
+    ]
+    if pair_failures:
+        historical = "PARTIAL"
+    elif "INADMISSIBLE_COMMON_TRANSFER" in verdicts:
         historical = "NO"
-    elif all(verdict == "NOT_VETOED" for verdict in verdicts):
+    elif verdicts and all(verdict == "NOT_VETOED" for verdict in verdicts):
         historical = "YES_WITHIN_M164_SCOPE"
     else:
         historical = "PARTIAL"
     return {
-        "status": "PASS",
+        "status": "FAIL" if pair_failures else "PASS",
         "completed_at": utc_now(),
+        "pair_failures": pair_failures,
         "scientific_result": {
             "historical_comparisons_admissible": historical,
             "interpretation": (
@@ -1263,16 +1283,25 @@ def main(argv: list[str] | None = None) -> int:
     try:
         result = {**running, **run_real(output, stage_dir)}
         atomic_json(output, result)
-        print(f"M164 real-pair run: PASS; verdict written to {output}")
+        print(
+            f"M164 real-pair run: {result['status']}; "
+            f"verdict written to {output}"
+        )
         for pair in result["pairs"]:
-            print(
-                f"{pair['pair']}: {pair['verdict']} "
-                f"forward={pair['robust_fire_sites_comparator_from_strehl']}/"
-                f"{pair['eligible_sites']} reverse="
-                f"{pair['robust_fire_sites_strehl_from_comparator']}/"
-                f"{pair['eligible_sites']}"
-            )
-        return 0
+            if pair.get("status") == "PAIR_INVALID":
+                print(
+                    f"{pair['pair']}: PAIR_INVALID: {pair['error']}",
+                    file=sys.stderr,
+                )
+            else:
+                print(
+                    f"{pair['pair']}: {pair['verdict']} "
+                    f"forward={pair['robust_fire_sites_comparator_from_strehl']}/"
+                    f"{pair['eligible_sites']} reverse="
+                    f"{pair['robust_fire_sites_strehl_from_comparator']}/"
+                    f"{pair['eligible_sites']}"
+                )
+        return 0 if result["status"] == "PASS" else 2
     except BaseException as error:
         failure = {
             **running,
