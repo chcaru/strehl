@@ -577,6 +577,78 @@ result — and why the certificate's *actual* uncertainty is the whole question.
 
 ## Ask 3 — buy Zerene. **Not $189. The real figure is $925.** *Not yet. Wait.*
 
+> **CORRECTION — the third time I have had to correct this ask, and this one
+> changes what it is for. Read it before the pricing table below.** Three
+> defects, each verified against a primary source, plus one dependency I had
+> never traced end to end. *Bold inside the quotations below is mine.*
+>
+> **D1 — "a licence bought now starts ageing" is false for Zerene.** That is
+> reason 2 below, and it does not survive contact with the licence text.
+> `C:\Program Files\ZereneStacker\License.txt` states a duration in exactly
+> one place: clause 1, the free trial. The purchased-licence clauses — `2a`
+> Professional, `2b` Prosumer, `2c` Personal, `2d` Student — each restrict
+> *how many machines* a licence may run on and *what the images may be used
+> for*, and **not one of them states a duration, a renewal, or a subscription
+> term.** What we lost in June was a trial clock. Buying is the thing that
+> ends that class of loss, not a repetition of it.
+>
+> **D2 — this ask bundles two unrelated purchases, then lets the wrong one
+> decide both.** The table below totals a comparator licence together with an
+> M7 colour target and an illuminant meter. But **Zerene unlocks no part of
+> M7**, and the colour target unlocks no part of the comparator. Reason 3 —
+> the one I called *"sufficient"* — is entirely about whether a `$660`
+> ColorGauge can support M7's median `ΔE00 ≤ 1.0`. That argument is sound and
+> it still governs the `$660` and the `$76`. **It has no bearing at all on the
+> comparator licence.** I should not have priced two independent decisions as
+> one, because doing so let an unresolved colour-metrology question hold up
+> something colour has nothing to do with.
+>
+> **D3 — the table names the wrong Zerene edition.** It lists Prosumer at
+> `$189`. Clause `2b` forbids Prosumer use "in connection with any other
+> activity that produces income or other tangible reward greater than the cost
+> of a Professional Edition license", and forbids supporting "funded research
+> and documentation of scientific collections". Clause `2a` says Professional
+> alone carries "no restrictions on the use of images produced". **A published
+> competitive benchmark whose entire purpose is a public comparison against
+> Zerene belongs on Professional.** `docs/STATUS.md:2641` had already reached
+> that conclusion independently. The `$189` row, and therefore the `$925`
+> total, understates the real figure.
+>
+> **AND THE COST OF WAITING IS NO LONGER ZERO.** Below I wrote *"nothing is
+> lost by the delay."* That was true of a program with other axes in flight.
+> It is not true now:
+>
+> - M140 ruled **M12** the one axis "scoreable now".
+> - The scorecard's **M12-S** bar requires "exactly one distinct hash across
+>   all five worker counts at every N, **and the 16-worker output must
+>   simultaneously pass M11**."
+> - **M11** requires warm common-input throughput `≥ 2.00x` **the best
+>   comparator**.
+> - That comparator must be licensed and able to save output. Ours is an
+>   expired trial which, by this page's own note below, "cannot save output at
+>   all."
+>
+> **So M12-S sits behind this purchase, and M12 as a whole sits behind
+> M12-S.** The honest position is not "zero of twelve axes scored" — it is
+> **zero of twelve axes currently completable**. The only thing finishable
+> today without your shutter or your wallet is the **M12-D sub-bar**, and a
+> sub-bar is not an axis.
+>
+> **But do not reach for your card yet, because money may not be the binding
+> constraint.** The scorecard requires the newest *generally available stable*
+> release of **both** named comparators, and rules that "if **either** product
+> cannot produce a linear output that passes §1.3, the named-comparator
+> requirement is unmet and the SOTA verdict remains `UNMEASURED`." Helicon is
+> not installed here at all — I checked four install locations and searched
+> both Program Files trees by name — and the section below says the export we
+> need exists only in a **beta**, while the scorecard demands a **stable**
+> release. If that is still true, the comparator bars are unreachable **at any
+> price**, and what you owe this program is a *rule decision, not a payment*.
+> Lane M157 is verifying Helicon's current stable capability now. **I will not
+> give you a buy-or-wait verdict until it reports**, and I would rather leave
+> this ask visibly unresolved than send you to a checkout that buys nothing.
+>
+
 **Correcting myself again, and this one is worth reading.** I previously wrote
 that `$189` gets you from `3 of 12` to `4 of 12`. That was wrong, and it was
 wrong in your favour to know: **the single axis the $189 buys is M7, colour
