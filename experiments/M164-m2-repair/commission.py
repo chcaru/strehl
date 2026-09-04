@@ -21,6 +21,7 @@ from scipy.ndimage import gaussian_filter, uniform_filter
 HERE = Path(__file__).resolve().parent
 OUTPUT = HERE / "commission.json"
 PREREGISTRATION = HERE / "PREREGISTRATION.md"
+AMENDMENT_1 = HERE / "AMENDMENT-1.md"
 
 SEED = 164_200
 TRIALS = 256
@@ -161,6 +162,9 @@ def trial(seed: int) -> dict[str, dict[str, float]]:
         "pre_noise_blur": output_pair(
             rng, signal, optical_transfer(1.05), OUTPUT_NOISE_SD
         ),
+        "blur_plus_denoise": output_pair(
+            rng, signal, optical_transfer(1.05), 0.15
+        ),
         "optical_improvement": output_pair(
             rng, signal, optical_transfer(0.30), OUTPUT_NOISE_SD
         ),
@@ -245,6 +249,79 @@ def m159_mechanism_probe() -> dict[str, float | str]:
     }
 
 
+def radial_bandpass(image: np.ndarray) -> np.ndarray:
+    fy = np.fft.fftfreq(image.shape[0])[:, np.newaxis]
+    fx = np.fft.rfftfreq(image.shape[1])[np.newaxis, :]
+    radius = np.sqrt(fx**2 + fy**2)
+    mask = (radius >= 0.15) & (radius <= 0.35)
+    spectrum = np.fft.rfft2(image)
+    return np.fft.irfft2(spectrum * mask, s=image.shape)
+
+
+def robust_band_residual(first: np.ndarray, second: np.ndarray) -> float:
+    residual = radial_bandpass(first - second)
+    median = float(np.median(residual))
+    return 1.4826 * float(np.median(np.abs(residual - median)))
+
+
+def band_truth_error(image: np.ndarray, truth: np.ndarray) -> float:
+    residual = radial_bandpass(image - truth)
+    return float(np.sqrt(np.mean(residual**2)))
+
+
+def same_resolution_crossfit_probe() -> dict[str, Any]:
+    ratios = {
+        "blur_crossfit": [],
+        "optical_improvement_crossfit": [],
+        "denoising_improvement_crossfit": [],
+        "blur_truth_error": [],
+        "optical_improvement_truth_error": [],
+    }
+    for index in range(64):
+        rng = np.random.default_rng(SEED + 10_000_000 + index)
+        white = rng.standard_normal((128, 128))
+        truth = 0.42 + 0.035 * (
+            gaussian_filter(white, 0.25) / np.std(white)
+        )
+        captured = gaussian_filter(truth, BASE_SIGMA)
+        blurred_signal = gaussian_filter(truth, 1.05)
+        improved_signal = gaussian_filter(truth, 0.30)
+        noise_sd = 0.004 / math.sqrt(16.0)
+        reference = captured + rng.normal(0.0, noise_sd, truth.shape)
+        baseline = captured + rng.normal(0.0, noise_sd, truth.shape)
+        blurred = blurred_signal + rng.normal(0.0, noise_sd, truth.shape)
+        improved = improved_signal + rng.normal(0.0, noise_sd, truth.shape)
+        denoised = captured + rng.normal(0.0, 0.5 * noise_sd, truth.shape)
+
+        base_crossfit = robust_band_residual(baseline, reference)
+        base_truth = band_truth_error(baseline, truth)
+        ratios["blur_crossfit"].append(
+            robust_band_residual(blurred, reference) / base_crossfit
+        )
+        ratios["optical_improvement_crossfit"].append(
+            robust_band_residual(improved, reference) / base_crossfit
+        )
+        ratios["denoising_improvement_crossfit"].append(
+            robust_band_residual(denoised, reference) / base_crossfit
+        )
+        ratios["blur_truth_error"].append(
+            band_truth_error(blurred, truth) / base_truth
+        )
+        ratios["optical_improvement_truth_error"].append(
+            band_truth_error(improved, truth) / base_truth
+        )
+
+    return {
+        "construction": (
+            "same-resolution held-out reference carries baseline sigma=0.65 "
+            "capture transfer; radial BP is 0.15-0.35 cyc/px"
+        ),
+        "trials": 64,
+        "summaries": {name: summary(values) for name, values in ratios.items()},
+        "raw_ratios": ratios,
+    }
+
+
 def main() -> None:
     rows = [trial(SEED + index) for index in range(TRIALS)]
     arm_names = tuple(rows[0])
@@ -261,6 +338,7 @@ def main() -> None:
         for arm in arm_names
     }
     mechanism = m159_mechanism_probe()
+    crossfit = same_resolution_crossfit_probe()
 
     gates = {
         "G0_identity": summaries["identity"]["q_ein"]["max_abs_from_one"]
@@ -309,6 +387,20 @@ def main() -> None:
             <= mechanism["median_local_mean_blurred_over_unblurred"]
             <= 1.01
         ),
+        "G10_blur_plus_denoise_requires_m1": (
+            summaries["blur_plus_denoise"]["q_ein"]["q95"] < 0.80
+            and summaries["blur_plus_denoise"]["transfer_ratio"]["q95"] < 0.70
+        ),
+        "G11_same_resolution_crossfit_fails_improvement": (
+            crossfit["summaries"]["blur_crossfit"]["q05"] > 1.10
+            and crossfit["summaries"]["optical_improvement_crossfit"]["q05"]
+            > 1.10
+            and crossfit["summaries"]["optical_improvement_truth_error"]["q95"]
+            < 0.90
+            and crossfit["summaries"]["blur_truth_error"]["q05"] > 1.10
+            and crossfit["summaries"]["denoising_improvement_crossfit"]["q95"]
+            < 0.90
+        ),
     }
 
     result: dict[str, Any] = {
@@ -345,10 +437,12 @@ def main() -> None:
         },
         "summaries": summaries,
         "m159_mechanism_probe": mechanism,
+        "same_resolution_crossfit_probe": crossfit,
         "raw_trial_ratios": raw,
         "gates": gates,
         "source_hashes": {
             "preregistration_sha256": sha256(PREREGISTRATION),
+            "amendment_1_sha256": sha256(AMENDMENT_1),
             "commission_py_sha256": sha256(Path(__file__)),
         },
     }
