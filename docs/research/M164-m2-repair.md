@@ -1,11 +1,12 @@
 # M164 — repairing M2's blur-rewarding statistic
 
 Status: **NO OUTPUT-ONLY REPAIR; EXTERNAL-REFERENCE CANDIDATE HAS
-AUTHOR-GENERATED DEVELOPMENT EVIDENCE; INDEPENDENT M167 ACCEPTANCE PENDING;
-M2 REMAINS `UNMEASURED`**
+AUTHOR-GENERATED DEVELOPMENT EVIDENCE; M167 DETAIL BATTERY COMMISSIONED BUT
+HAS NOT EVALUATED THIS CANDIDATE; M2 REMAINS `UNMEASURED`**
 
 No holdout was opened. No real image was scored. The commissioning used
-synthetic arrays, one process, and one thread; it completed in `3.370 s`.
+synthetic arrays, one process, and one thread. Its elapsed time is operational
+only and is not evidence.
 
 ## 0. Ruling
 
@@ -267,6 +268,31 @@ falls to `0.067483x`. It therefore fails the mandatory improvement arm.
 Replacing `R_box9` with same-resolution output/reference disagreement merely
 exchanges a loose-direction failure for a conservative-direction failure.
 
+### 5.5 M167 interface status
+
+**VERIFIED FROM M167'S SERIALIZED RESULT.** M167's battery is now
+`COMMISSIONED`, but it has not evaluated this candidate. Its measured candidate
+set is the constructed oracle, D8, M137 band power, and the historical M2
+`R_box9`; `Q_EIN` is absent. The frozen M167 input modes expose one completed
+image, a completed repeat pair, or a future reference-bearing mode. `Q_EIN`
+requires that last mode because it consumes independent truth-reference and
+featureless-sentinel coefficients plus their admission lineage.
+
+There is also a semantic boundary that must not be hidden by an adapter.
+M167's `P4` is a resolution-instrument predicate: post-render blur must make
+the candidate's scalar score strictly worse. `Q_EIN` is deliberately a noise
+coordinate and is exactly invariant to the same common postfilter. Submitted
+alone as a resolution score, it must fail `P4`; returning M1's refusal would
+also fail the frozen predicate. Adding transfer to `Q_EIN` as a compensating
+scalar would violate the scorecard's rule that the M1/M2 tuple has no aggregate
+axis verdict.
+
+The required independent test is therefore of the non-compensating pair:
+M1 decides detail/transfer admission, then `Q_EIN` compares noise only among
+admitted outputs. M167 can judge the first component; an independently frozen
+reference-bearing M2 adapter/battery must judge the second. M164 did not alter
+M167 or reconstruct its private latent truth to manufacture an apparent pass.
+
 ## 6. M1 dependency and current verdict
 
 M2's noise coordinate and M1's admission test have different jobs:
@@ -316,6 +342,10 @@ physical M1 gate, M165 maps and real-renderer controls pass.
    admitted M1 result, M165 pattern map, external 33-step tone witness,
    independent repeats, complete-band declaration, nonperiodic target
    lineage, and an explicit M164 verdict. Its existence is not acceptance.
+7. M167's commissioned result currently covers historical `R_box9`, not this
+   reference-bearing candidate. Its strict blur predicate and `Q_EIN`'s
+   intended common-filter invariance cannot be made equivalent without
+   collapsing M1 and M2 into a forbidden compensating score.
 
 ## 8. Reproduction
 
