@@ -1,0 +1,94 @@
+{
+  "candidate_outputs_opened": 0,
+  "capture_pixels_opened": 0,
+  "checks": {
+    "definition_hash_matches": true,
+    "degradation_is_red": true,
+    "improvement_fails_only_median_h_e": true,
+    "improvement_median_h_e_exact": true,
+    "improvement_moves_down": true
+  },
+  "comparator_outputs_opened": 0,
+  "degradation": {
+    "affected_edge_count": 500,
+    "affected_edge_rate": 1.0,
+    "affected_edge_wilson_ucb95": 1.0,
+    "checks": {
+      "affected_rate": false,
+      "affected_wilson": false,
+      "edge_width": true,
+      "headline_maximum": false,
+      "median_h_e": false,
+      "median_v_e": false,
+      "p99_h_e": false,
+      "p99_v_e": false,
+      "rho_edge": false
+    },
+    "detection_rate": 1.0,
+    "maximum_max_h_v": 0.12480476535717543,
+    "median_edge_width_ratio": 0.9999368748288627,
+    "median_h_e": 0.12033896557593107,
+    "median_rho_edge": 0.6392664163694882,
+    "median_v_e": 0.06293250081178207,
+    "median_v_e_pooled_diagnostic": 0.060065356613742085,
+    "name": "planted_6pct_rim_and_veil",
+    "noise_sigma_fraction_of_step": 0.002,
+    "p99_h_e": 0.12377518099793312,
+    "p99_v_e": 0.06340432509776803,
+    "per_capture_counts": {
+      "m3-chia": 125,
+      "m3-duck-tape": 125,
+      "m3-flower-fern": 125,
+      "m3-razor-control": 125
+    },
+    "planted_amplitude_fraction_of_step": 0.06,
+    "site_count": 500,
+    "verdict": "FAIL",
+    "warp_residual_bound_native_px": 0.0
+  },
+  "improvement": {
+    "affected_edge_count": 0,
+    "affected_edge_rate": 0.0,
+    "affected_edge_wilson_ucb95": 0.005381964629841941,
+    "checks": {
+      "affected_rate": true,
+      "affected_wilson": true,
+      "edge_width": true,
+      "headline_maximum": true,
+      "median_h_e": false,
+      "median_v_e": true,
+      "p99_h_e": true,
+      "p99_v_e": true,
+      "rho_edge": true
+    },
+    "detection_rate": 0.0,
+    "maximum_max_h_v": 0.014729783758402937,
+    "median_edge_width_ratio": 0.9999368748288627,
+    "median_h_e": 0.010413357351919823,
+    "median_rho_edge": 0.9779626279054068,
+    "median_v_e": 0.005338683767680065,
+    "median_v_e_pooled_diagnostic": 0.0051491767293755835,
+    "name": "planted_improvement_0_5pct_rim_and_veil",
+    "noise_sigma_fraction_of_step": 0.002,
+    "p99_h_e": 0.013717163574523992,
+    "p99_v_e": 0.005760859102140135,
+    "per_capture_counts": {
+      "m3-chia": 125,
+      "m3-duck-tape": 125,
+      "m3-flower-fern": 125,
+      "m3-razor-control": 125
+    },
+    "planted_amplitude_fraction_of_step": 0.005,
+    "site_count": 500,
+    "verdict": "FAIL",
+    "warp_residual_bound_native_px": 0.0
+  },
+  "schema": "m169-m3-m161-source-reproduction-v1",
+  "source_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M161-m3-ratification",
+  "source_hashes": {
+    "commission_m3_v2.py": "342ea2d9064130117f9173ff2311a47465760519251f2c473f3a8ea8d34952da",
+    "m3-checker-definition-v2.json": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+    "m3_checker_v2.py": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda"
+  },
+  "verdict": "REPRODUCED"
+}

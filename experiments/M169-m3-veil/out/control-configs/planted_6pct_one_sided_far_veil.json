@@ -1,0 +1,8 @@
+{
+  "schema": "m169-m3-veil-control-v1",
+  "name": "planted_6pct_one_sided_far_veil",
+  "profile_mutation": "one_sided_veil",
+  "patch_mutation": "identity",
+  "amplitude_fraction_of_step": 0.06,
+  "noise_sigma_fraction_of_step": 0.0
+}

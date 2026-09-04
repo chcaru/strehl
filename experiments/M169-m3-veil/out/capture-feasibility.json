@@ -1,0 +1,106 @@
+{
+  "blockers": [],
+  "captures": [
+    {
+      "capture_id": "m3-duck-tape",
+      "checks": {
+        "all_selected_source_files_exist": true,
+        "arw_count_matches_census": true,
+        "capture_contiguous": true,
+        "directory_exists": true,
+        "eligible_site_floor_met": true,
+        "required_reach_is_400_native_px": true
+      },
+      "eligible_site_count": 221,
+      "inventory_frame_count": 197,
+      "missing_selected_source_files": [],
+      "on_disk_arw_count": 197,
+      "path": "D:\\personal\\macro\\duck-tape-side-layers-cpl",
+      "required_reach_native_px": 400,
+      "selected_site_count": 133,
+      "verdict": "PASS"
+    },
+    {
+      "capture_id": "m3-chia",
+      "checks": {
+        "all_selected_source_files_exist": true,
+        "arw_count_matches_census": true,
+        "capture_contiguous": true,
+        "directory_exists": true,
+        "eligible_site_floor_met": true,
+        "required_reach_is_400_native_px": true
+      },
+      "eligible_site_count": 399,
+      "inventory_frame_count": 130,
+      "missing_selected_source_files": [],
+      "on_disk_arw_count": 130,
+      "path": "D:\\personal\\macro\\chia-seeds-cpl",
+      "required_reach_native_px": 400,
+      "selected_site_count": 133,
+      "verdict": "PASS"
+    },
+    {
+      "capture_id": "m3-flower-fern",
+      "checks": {
+        "all_selected_source_files_exist": true,
+        "arw_count_matches_census": true,
+        "capture_contiguous": true,
+        "directory_exists": true,
+        "eligible_site_floor_met": true,
+        "required_reach_is_400_native_px": true
+      },
+      "eligible_site_count": 511,
+      "inventory_frame_count": 299,
+      "missing_selected_source_files": [],
+      "on_disk_arw_count": 299,
+      "path": "D:\\personal\\macro\\flower-bud-with-background-fern-cpl",
+      "required_reach_native_px": 400,
+      "selected_site_count": 132,
+      "verdict": "PASS"
+    },
+    {
+      "capture_id": "m3-razor-control",
+      "checks": {
+        "all_selected_source_files_exist": true,
+        "arw_count_matches_census": true,
+        "capture_contiguous": true,
+        "directory_exists": true,
+        "eligible_site_floor_met": true,
+        "required_reach_is_400_native_px": true
+      },
+      "eligible_site_count": 102,
+      "inventory_frame_count": 67,
+      "missing_selected_source_files": [],
+      "on_disk_arw_count": 67,
+      "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+      "required_reach_native_px": 400,
+      "selected_site_count": 102,
+      "verdict": "PASS"
+    }
+  ],
+  "census_manifest": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M152-site-census\\out\\census-manifest.json",
+  "census_manifest_sha256": "35d5058afc1f310923ba2a3e5bf0cd3b91b3eb2df0e8d4868c22099de7bcd38d",
+  "checker_definition_sha256": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+  "checks": {
+    "all_required_captures_present": true,
+    "all_selected_sites_have_400_native_px_reach": true,
+    "census_sha256_matches_frozen_definition": true,
+    "census_verdict_sufficient": true,
+    "definition_sha256_matches_m161": true,
+    "selected_capture_counts_match_frozen_population": true,
+    "selected_site_count_is_500": true
+  },
+  "eligible_edges_overall": 1233,
+  "method": "metadata/path/hash checks only; directory entries were statted and no ARW content was opened",
+  "pixel_files_opened": 0,
+  "required_veil_reach_native_px": 400,
+  "schema": "m169-m3-capture-feasibility-v1",
+  "selected_site_count": 500,
+  "selected_site_counts": {
+    "m3-chia": 133,
+    "m3-duck-tape": 133,
+    "m3-flower-fern": 132,
+    "m3-razor-control": 102
+  },
+  "verdict": "PASS"
+}

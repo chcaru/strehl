@@ -1,0 +1,93 @@
+{
+  "bar": {
+    "changed": false,
+    "maximum": 0.05,
+    "statistic": "maximum over frozen sites of max(h_e,v_e)"
+  },
+  "blockers": [
+    {
+      "code": "NOT_ADMITTED_COMMISSIONING_FAILED",
+      "evidence": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\out\\commission-v2.json",
+      "failed_assertions": [
+        "improved_arm_passes"
+      ]
+    },
+    {
+      "code": "COMMON_INPUT_MANIFEST_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\INPUT-MANIFEST.json",
+      "product": "common-input"
+    },
+    {
+      "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\strehl\\manifest.json",
+      "product": "strehl"
+    },
+    {
+      "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\fork\\manifest.json",
+      "product": "fork"
+    },
+    {
+      "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-pmax\\manifest.json",
+      "product": "zerene-pmax"
+    },
+    {
+      "code": "REQUIRED_PRODUCT_PACKAGE_ABSENT",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-dmap\\manifest.json",
+      "product": "zerene-dmap"
+    },
+    {
+      "code": "M1_QUALIFIED_COMPARATOR_ENVELOPE_ABSENT",
+      "evidence": "docs/proposals/2026-09-sota-scorecard.md:970-974,1070-1078"
+    }
+  ],
+  "capture_feasibility": "PASS",
+  "confidence_interval": "NO CI",
+  "denominator": 500,
+  "host_policy": {
+    "absolute_timing": "QUARANTINED_AND_NOT_REPORTED",
+    "effect": "not a blocker; deterministic correctness work proceeded",
+    "exclusive_host_lock": false
+  },
+  "pixel_files_opened_by_m169": 0,
+  "recommissioning": {
+    "failed_assertions": [
+      "improved_arm_passes"
+    ],
+    "full_m161_v2": "NOT_ADMITTED_COMMISSIONING_FAILED",
+    "line_anchored_required_controls": "PASS"
+  },
+  "required_packages": {
+    "common-input": {
+      "exists": false,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\INPUT-MANIFEST.json"
+    },
+    "fork": {
+      "exists": false,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\fork\\manifest.json"
+    },
+    "strehl": {
+      "exists": false,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\strehl\\manifest.json"
+    },
+    "zerene-dmap": {
+      "exists": false,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-dmap\\manifest.json"
+    },
+    "zerene-pmax": {
+      "exists": false,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M169-m3-veil\\packages\\zerene-pmax\\manifest.json"
+    }
+  },
+  "schema": "m169-m3-measurement-verdict-v1",
+  "score": null,
+  "score_attempted": false,
+  "subjects": {
+    "m3-chia": 133,
+    "m3-duck-tape": 133,
+    "m3-flower-fern": 132,
+    "m3-razor-control": 102
+  },
+  "verdict": "NOT_ADMITTED_COMMISSIONING_FAILED"
+}

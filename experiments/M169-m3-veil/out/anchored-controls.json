@@ -1,0 +1,173 @@
+{
+  "arms": {
+    "flat_residual_null": {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": true,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "maximum_max_h_v": 0.0,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.0,
+      "median_rho_edge": 1.0,
+      "median_v_e": 0.0,
+      "median_v_e_pooled_diagnostic": 0.0,
+      "name": "flat_residual_null",
+      "noise_sigma_fraction_of_step": 0.0,
+      "p99_h_e": 0.0,
+      "p99_v_e": 0.0,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.0,
+      "site_count": 500,
+      "verdict": "PASS",
+      "warp_residual_bound_native_px": 0.0
+    },
+    "planted_defect": {
+      "affected_edge_count": 500,
+      "affected_edge_rate": 1.0,
+      "affected_edge_wilson_ucb95": 1.0,
+      "checks": {
+        "affected_rate": false,
+        "affected_wilson": false,
+        "edge_width": true,
+        "headline_maximum": false,
+        "median_h_e": true,
+        "median_v_e": false,
+        "p99_h_e": true,
+        "p99_v_e": false,
+        "rho_edge": true
+      },
+      "detection_rate": 1.0,
+      "maximum_max_h_v": 0.05448648648648661,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.0,
+      "median_rho_edge": 1.0,
+      "median_v_e": 0.05448648648648648,
+      "median_v_e_pooled_diagnostic": 0.02724324324324324,
+      "name": "planted_6pct_one_sided_far_veil",
+      "noise_sigma_fraction_of_step": 0.0,
+      "p99_h_e": 0.0,
+      "p99_v_e": 0.054486486486486574,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.06,
+      "site_count": 500,
+      "verdict": "FAIL",
+      "warp_residual_bound_native_px": 0.0
+    },
+    "planted_improvement": {
+      "affected_edge_count": 0,
+      "affected_edge_rate": 0.0,
+      "affected_edge_wilson_ucb95": 0.005381964629841941,
+      "checks": {
+        "affected_rate": true,
+        "affected_wilson": true,
+        "edge_width": true,
+        "headline_maximum": true,
+        "median_h_e": true,
+        "median_v_e": true,
+        "p99_h_e": true,
+        "p99_v_e": true,
+        "rho_edge": true
+      },
+      "detection_rate": 0.0,
+      "maximum_max_h_v": 0.004540540540540666,
+      "median_edge_width_ratio": 1.0,
+      "median_h_e": 0.0,
+      "median_rho_edge": 1.0,
+      "median_v_e": 0.004540540540540539,
+      "median_v_e_pooled_diagnostic": 0.0022702702702702693,
+      "name": "planted_improvement_0_5pct_one_sided_far_veil",
+      "noise_sigma_fraction_of_step": 0.0,
+      "p99_h_e": 0.0,
+      "p99_v_e": 0.004540540540540645,
+      "per_capture_counts": {
+        "m3-chia": 125,
+        "m3-duck-tape": 125,
+        "m3-flower-fern": 125,
+        "m3-razor-control": 125
+      },
+      "planted_amplitude_fraction_of_step": 0.005,
+      "site_count": 500,
+      "verdict": "PASS",
+      "warp_residual_bound_native_px": 0.0
+    }
+  },
+  "checker_definition_sha256": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+  "checker_source_sha256": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda",
+  "checks": {
+    "flat_residual_null_has_zero_affected_sites": true,
+    "flat_residual_null_passes": true,
+    "improvement_has_zero_affected_sites": true,
+    "improvement_is_green": true,
+    "improvement_reduces_maximum": true,
+    "improvement_reduces_median_v_e": true,
+    "literal_flat_no_edge_fails_closed": true,
+    "missing_anchor_hard_errors": true,
+    "planted_defect_breaks_literal_maximum": true,
+    "planted_defect_detected_at_every_site": true,
+    "planted_defect_is_red": true
+  },
+  "flat_null_interpretation": "eligible edge whose output-minus-reference residual is identically flat zero; a literal no-edge field is outside M3 and fails closed as nonpositive_source_step",
+  "literal_flat_no_edge_domain_guard": {
+    "affected": true,
+    "nonfinite_metrics_omitted_from_json": true,
+    "reason": "nonpositive_source_step",
+    "site_id": "LITERAL-FLAT-DOMAIN-GUARD",
+    "status": "INVALID_OUTPUT_CHARGED"
+  },
+  "missing_anchor_probe": "HARD_ERROR_CONFIRMED",
+  "mutation_audit": {
+    "defect": [
+      {
+        "anchor_sha256": "bca0f213a1d842e5eec7aae71127f646fbfb63b3407f2d61f4594c2b60e597ca",
+        "replacement_sha256": "432851b495069d73eb948fd6fc65c7c2fd54612323659046b7db2cb9e2ffa976"
+      },
+      {
+        "anchor_sha256": "6ef552a5e8d27514d093aad6c3b5f90011c18d4b465d91b8610b36d4a276e1c8",
+        "replacement_sha256": "c2e8285f4d1ae003cdf816629080cf918aa8630c9a47ed88a6c2458fa851dfec"
+      },
+      {
+        "anchor_sha256": "cf30f60089d67fb8357629ed0eba4b1131c9bbde50498ddd39a0b41cc1bcca12",
+        "replacement_sha256": "7e12e8f3897e7890aa49f3559f40cd30e46ffe69b35c9c215e3debbe917c34d3"
+      }
+    ],
+    "improvement": [
+      {
+        "anchor_sha256": "bca0f213a1d842e5eec7aae71127f646fbfb63b3407f2d61f4594c2b60e597ca",
+        "replacement_sha256": "da340d52d8dd76eb8c6fbaf5f20354eef68433ada0c55b9e991bef26a39eda39"
+      },
+      {
+        "anchor_sha256": "6ef552a5e8d27514d093aad6c3b5f90011c18d4b465d91b8610b36d4a276e1c8",
+        "replacement_sha256": "c2e8285f4d1ae003cdf816629080cf918aa8630c9a47ed88a6c2458fa851dfec"
+      },
+      {
+        "anchor_sha256": "cf30f60089d67fb8357629ed0eba4b1131c9bbde50498ddd39a0b41cc1bcca12",
+        "replacement_sha256": "c4e0c43d6b2cd21a3fce523c6810b86d7003adf621d7a6a694b3c4d1bb36611c"
+      }
+    ]
+  },
+  "mutation_method": "in-memory replacement of exact unique full lines; zero or multiple matches hard-error before any control runs",
+  "schema": "m169-m3-anchored-controls-v1",
+  "template_sha256": "d32f6f82f31f6ebcfed8c32801db0476d41bc27b7d76d18a1e63362f6f9e08a7",
+  "verdict": "PASS"
+}

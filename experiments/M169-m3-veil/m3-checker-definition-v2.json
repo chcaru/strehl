@@ -1,0 +1,126 @@
+{
+  "schema": "m161-m3-checker-definition-v2",
+  "supersedes_for_future_scores": "experiments/M152-site-census/m3-checker-definition.json",
+  "historical_v1_remains_unchanged": true,
+  "site_population": {
+    "manifest": "../M152-site-census/out/census-manifest.json",
+    "manifest_sha256": "35d5058afc1f310923ba2a3e5bf0cd3b91b3eb2df0e8d4868c22099de7bcd38d",
+    "minimum_edges_overall": 500,
+    "minimum_edges_per_capture": 50,
+    "required_capture_ids": [
+      "m3-duck-tape",
+      "m3-chia",
+      "m3-flower-fern",
+      "m3-razor-control"
+    ],
+    "missing_or_nonfinite_output_site": "positive_infinity"
+  },
+  "bar_ratification": {
+    "owner_placeholder": "no occlusion veil above [bar]",
+    "headline_bar_fraction_of_local_source_step": 0.05,
+    "headline_gate": "maximum over scored sites of max(h_e,v_e) <= 0.05",
+    "typical_site_gate": "median h_e <= 0.01 and median v_e <= 0.01",
+    "status": "RATIFIED_BY_M161_FOR_EXECUTION",
+    "reason": "The plan fixes the construct but not the number. Five percent is the largest round threshold below the 5.33 percent lower 95 percent bound of the confirmed 6.34 percent merge-created rim, while the matched no-merge upper 95 percent bound is 0.33 percent. It therefore rejects the known defect with a 15-fold margin over the measured null without selecting on any current M3 candidate output."
+  },
+  "normalization": {
+    "orientation": "input-manifest normal is dark-to-bright",
+    "narrow_source_plateaus_native_px": [
+      [
+        -64,
+        -48
+      ],
+      [
+        48,
+        64
+      ]
+    ],
+    "broad_source_plateaus_native_px": [
+      [
+        -400,
+        -320
+      ],
+      [
+        320,
+        400
+      ]
+    ],
+    "narrow_step": "right narrow-plateau median minus left narrow-plateau median in the independently selected input normalization profile",
+    "broad_step": "right broad-plateau median minus left broad-plateau median in the independently selected input normalization profile",
+    "minimum_step_sigma": 10.0
+  },
+  "halo": {
+    "support_abs_native_px": [
+      2,
+      32
+    ],
+    "support_native_px": "2 <= abs(s) <= 32",
+    "formula": "max(max(output-source_upper, source_lower-output, 0))/narrow_source_step"
+  },
+  "veil": {
+    "support_abs_native_px": [
+      16,
+      200
+    ],
+    "support_native_px": "16 <= abs(s) <= 200",
+    "reduction": "maximum of the two signed-side arithmetic means",
+    "formula": "max(mean_neg(abs(output-far_reference)),mean_pos(abs(output-far_reference)))/broad_source_step",
+    "pooled_mean_role": "diagnostic only; it is the retired M152 reduction"
+  },
+  "edge_width": {
+    "support_native_px": [
+      -32,
+      32
+    ],
+    "definition": "linearly interpolated first dark-to-bright 10 and 90 percent crossings",
+    "ratio": "output 10-90 width divided by independently selected sharp-source width",
+    "normalization": "narrow source plateaus",
+    "invalid": "positive_infinity"
+  },
+  "rho_edge": {
+    "patch_size_native_px": 128,
+    "band_cycles_per_native_px": [
+      0.15,
+      0.25
+    ],
+    "window": "separable Hann normalized to mean-square one",
+    "definition": "magnitude of summed complex cross-spectrum divided by the geometric mean of summed powers",
+    "role": "phase-consistency diagnostic only; the edge-width ratio is the non-compensating blur guard",
+    "invalid": 0.0
+  },
+  "warp": {
+    "source": "input-derived external landmark fit; no output-derived registration",
+    "maximum_scale_disagreement_percent": 0.1,
+    "maximum_rotation_disagreement_degrees": 0.02,
+    "maximum_nontranslation_residual_rms_output_px": 0.1,
+    "failed_capture_or_arm": "UNMEASURED_WARP_INADEQUATE",
+    "commissioning": {
+      "null": "identity landmarks with independent coordinate noise must pass and return a nonzero residual",
+      "degradation": "a planted similarity outside at least one geometry limit must fail",
+      "improvement": "an independently fitted inverse on disjoint landmarks must restore the planted arm to all three limits"
+    }
+  },
+  "site_failure": {
+    "rule": "max(h_e,v_e) > 0.05",
+    "threshold_max_h_v": 0.05,
+    "strict": true
+  },
+  "aggregation": {
+    "percentile": "nearest-rank empirical quantile, one-based rank ceil(q*N), no interpolation",
+    "capture_weighting": "the frozen site manifest is pooled without post-output deletion",
+    "paired_p99": "a_e=max(h_e,v_e); choose the comparator having the lowest nearest-rank pooled p99(a_e), then compare strehl p99(a_e) with that comparator p99(a_e) on the identical sites",
+    "wilson": "one-sided 95 percent upper confidence bound with z=1.6448536269514722"
+  },
+  "bars": {
+    "median_h_e_max": 0.01,
+    "median_v_e_max": 0.01,
+    "p99_h_e_max": 0.05,
+    "p99_v_e_max": 0.05,
+    "maximum_max_h_v": 0.05,
+    "affected_point_rate_max": 0.01,
+    "affected_wilson_ucb95_max": 0.02,
+    "median_edge_width_ratio_min": 0.95,
+    "median_edge_width_ratio_max": 1.05,
+    "median_rho_edge_min": 0.9
+  }
+}

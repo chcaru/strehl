@@ -1,0 +1,8 @@
+{
+  "schema": "m169-m3-veil-control-v1",
+  "name": "flat_residual_null",
+  "profile_mutation": "identity",
+  "patch_mutation": "identity",
+  "amplitude_fraction_of_step": 0.0,
+  "noise_sigma_fraction_of_step": 0.0
+}
