@@ -67,6 +67,37 @@ ARM_TERMS = (
     "flat",
     "usm",
 )
+DANGEROUS_NAMES = {
+    "__import__",
+    "breakpoint",
+    "compile",
+    "eval",
+    "exec",
+    "getattr",
+    "globals",
+    "locals",
+    "open",
+    "setattr",
+    "vars",
+}
+DANGEROUS_ATTRIBUTES = {
+    "DataSource",
+    "ctypeslib",
+    "dump",
+    "dumps",
+    "fromfile",
+    "genfromtxt",
+    "load",
+    "load_library",
+    "loadtxt",
+    "memmap",
+    "open_memmap",
+    "save",
+    "savetxt",
+    "savez",
+    "savez_compressed",
+    "tofile",
+}
 
 
 def canonical_bytes(value: object) -> bytes:
@@ -290,6 +321,9 @@ def audit_candidate_source() -> dict[str, object]:
     imports = []
     strings = []
     called_names = []
+    sensitive_name_uses = []
+    dangerous_attributes = []
+    dangerous_imports = []
     mutable_state_hits = []
     score_signature = None
     for node in ast.walk(tree):
@@ -297,11 +331,23 @@ def audit_candidate_source() -> dict[str, object]:
             imports.extend(alias.name.split(".", 1)[0] for alias in node.names)
         elif isinstance(node, ast.ImportFrom):
             imports.append((node.module or "").split(".", 1)[0])
+            dangerous_imports.extend(
+                alias.name
+                for alias in node.names
+                if alias.name in DANGEROUS_ATTRIBUTES
+            )
         elif isinstance(node, ast.Constant) and isinstance(node.value, str):
             lowered = node.value.lower()
             strings.extend(term for term in ARM_TERMS if term in lowered)
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             called_names.append(node.func.id)
+        elif isinstance(node, ast.Name) and node.id in DANGEROUS_NAMES:
+            sensitive_name_uses.append(node.id)
+        elif isinstance(node, ast.Attribute) and (
+            node.attr in DANGEROUS_ATTRIBUTES
+            or node.attr.startswith("__")
+        ):
+            dangerous_attributes.append(node.attr)
         elif isinstance(node, ast.Global):
             mutable_state_hits.extend(node.names)
         elif isinstance(node, ast.Nonlocal):
@@ -374,22 +420,7 @@ def audit_candidate_source() -> dict[str, object]:
     import_violations = sorted(
         {name for name in imports if name not in allowed_imports}
     )
-    dangerous_calls = sorted(
-        set(called_names)
-        & {
-            "__import__",
-            "breakpoint",
-            "compile",
-            "eval",
-            "exec",
-            "getattr",
-            "globals",
-            "locals",
-            "open",
-            "setattr",
-            "vars",
-        }
-    )
+    dangerous_calls = sorted(set(called_names) & DANGEROUS_NAMES)
     exact_signature = score_signature == {
         "positional_only": [],
         "positional": ["image"],
@@ -403,7 +434,12 @@ def audit_candidate_source() -> dict[str, object]:
         "only_declared_imports": not import_violations,
         "score_accepts_only_observation": exact_signature,
         "no_arm_vocabulary": not strings,
-        "no_dynamic_or_reflective_calls": not dangerous_calls,
+        "no_dynamic_or_reflective_calls": (
+            not dangerous_calls
+            and not sensitive_name_uses
+            and not dangerous_attributes
+            and not dangerous_imports
+        ),
         "no_mutable_global_state": (
             not mutable_state_hits and not mutable_module_declarations
         ),
@@ -416,6 +452,9 @@ def audit_candidate_source() -> dict[str, object]:
         "score_signature": score_signature,
         "arm_vocabulary_hits": sorted(set(strings)),
         "dangerous_calls": dangerous_calls,
+        "sensitive_name_uses": sorted(set(sensitive_name_uses)),
+        "dangerous_attributes": sorted(set(dangerous_attributes)),
+        "dangerous_imports": sorted(set(dangerous_imports)),
         "mutable_state_hits": sorted(set(mutable_state_hits)),
         "mutable_module_declarations": sorted(
             set(mutable_module_declarations)
@@ -858,6 +897,153 @@ def unblind(
     return verdicts, mappings
 
 
+def validate_sealed_transcript(
+    sealed_bytes: bytes,
+    instances: list[dict[str, object]],
+) -> dict[str, object]:
+    checks = {
+        "json_object": False,
+        "top_level_fields_exact": False,
+        "fixed_metadata_exact": False,
+        "instance_count_exact": False,
+        "instance_fields_exact": False,
+        "instance_commitments_exact": False,
+        "packet_count_exact": False,
+        "packet_fields_exact": False,
+        "packet_tokens_unique": False,
+        "packet_tokens_exact": False,
+        "packet_hashes_exact": False,
+    }
+    errors = []
+    try:
+        sealed = json.loads(sealed_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        errors.append(f"{type(error).__name__}: {error}")
+        return {"passed": False, "checks": checks, "errors": errors}
+
+    checks["json_object"] = isinstance(sealed, dict)
+    if not checks["json_object"]:
+        errors.append("sealed transcript is not a JSON object")
+        return {"passed": False, "checks": checks, "errors": errors}
+
+    expected_top_fields = {
+        "schema",
+        "candidate_artifact_sha256",
+        "candidate_kind",
+        "input_mode",
+        "instances",
+    }
+    checks["top_level_fields_exact"] = set(sealed) == expected_top_fields
+    checks["fixed_metadata_exact"] = (
+        sealed.get("schema") == 1
+        and sealed.get("candidate_artifact_sha256")
+        == sha256_file(CANDIDATE_PATH)
+        and sealed.get("candidate_kind")
+        == "INELIGIBLE_CHEATING_CANARY"
+        and sealed.get("input_mode") == "single_image"
+    )
+
+    sealed_instances = sealed.get("instances")
+    checks["instance_count_exact"] = (
+        isinstance(sealed_instances, list)
+        and len(sealed_instances) == len(instances) == INSTANCE_COUNT
+    )
+    if not isinstance(sealed_instances, list):
+        errors.append("sealed instances is not a list")
+        return {"passed": False, "checks": checks, "errors": errors}
+
+    expected_packet_fields = {
+        "token",
+        "packet_sha256",
+        "result",
+        "returncode",
+        "parse_status",
+        "stderr",
+    }
+    actual_tokens = []
+    expected_tokens = []
+    token_hashes = {}
+    expected_token_hashes = {}
+    instance_fields_exact = True
+    instance_commitments_exact = (
+        len(sealed_instances) == len(instances)
+    )
+    packet_count_exact = len(sealed_instances) == len(instances)
+    packet_fields_exact = True
+
+    for index, sealed_instance in enumerate(sealed_instances):
+        if not isinstance(sealed_instance, dict):
+            instance_fields_exact = False
+            instance_commitments_exact = False
+            packet_count_exact = False
+            packet_fields_exact = False
+            continue
+        instance_fields_exact &= (
+            set(sealed_instance) == {"instance_commitment", "packets"}
+        )
+        packets = sealed_instance.get("packets")
+        if index >= len(instances):
+            instance_commitments_exact = False
+            packet_count_exact = False
+            expected_packets = []
+        else:
+            expected_instance = instances[index]
+            instance_commitments_exact &= (
+                sealed_instance.get("instance_commitment")
+                == expected_instance["commitment"]
+            )
+            expected_packets = expected_instance["packets"]
+            expected_tokens.extend(
+                str(packet["token"]) for packet in expected_packets
+            )
+            expected_token_hashes.update(
+                {
+                    str(packet["token"]): str(packet["packet_sha256"])
+                    for packet in expected_packets
+                }
+            )
+        if not isinstance(packets, list):
+            packet_count_exact = False
+            packet_fields_exact = False
+            continue
+        packet_count_exact &= len(packets) == len(expected_packets)
+        for packet in packets:
+            if not isinstance(packet, dict):
+                packet_fields_exact = False
+                continue
+            packet_fields_exact &= set(packet) == expected_packet_fields
+            token = packet.get("token")
+            packet_hash = packet.get("packet_sha256")
+            if isinstance(token, str):
+                actual_tokens.append(token)
+                token_hashes[token] = packet_hash
+
+    checks["instance_fields_exact"] = bool(instance_fields_exact)
+    checks["instance_commitments_exact"] = bool(
+        instance_commitments_exact
+    )
+    checks["packet_count_exact"] = bool(packet_count_exact)
+    checks["packet_fields_exact"] = bool(packet_fields_exact)
+    checks["packet_tokens_unique"] = (
+        len(actual_tokens) == len(set(actual_tokens))
+    )
+    checks["packet_tokens_exact"] = (
+        len(actual_tokens) == len(expected_tokens)
+        and set(actual_tokens) == set(expected_tokens)
+    )
+    checks["packet_hashes_exact"] = (
+        checks["packet_tokens_exact"]
+        and token_hashes == expected_token_hashes
+    )
+    if not all(checks.values()):
+        errors.append("sealed transcript does not exactly match challenge")
+    return {
+        "passed": all(checks.values()),
+        "checks": checks,
+        "errors": errors,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -904,19 +1090,37 @@ def main() -> int:
     sealed_sha256 = sha256_bytes(readback)
     seal_readback_exact = readback == sealed_bytes
 
-    blinded_verdicts, mappings = unblind(readback, instances)
-    expected_blinded_pattern = all(
-        item["P1_to_P6"]["gates"]
-        == {
-            "P1": False,
-            "P2": False,
-            "P3": False,
-            "P4": False,
-            "P5": False,
-            "P6": True,
-        }
-        and item["P7"] is True
-        for item in blinded_verdicts
+    sealed_validation = validate_sealed_transcript(readback, instances)
+    unblind_error = None
+    if sealed_validation["passed"]:
+        try:
+            blinded_verdicts, mappings = unblind(readback, instances)
+        except (
+            KeyError,
+            TypeError,
+            ValueError,
+            RuntimeError,
+        ) as error:
+            blinded_verdicts, mappings = [], []
+            unblind_error = f"{type(error).__name__}: {error}"
+    else:
+        blinded_verdicts, mappings = [], []
+        unblind_error = "; ".join(sealed_validation["errors"])
+    expected_blinded_pattern = (
+        len(blinded_verdicts) == INSTANCE_COUNT
+        and all(
+            item["P1_to_P6"]["gates"]
+            == {
+                "P1": False,
+                "P2": False,
+                "P3": False,
+                "P4": False,
+                "P5": False,
+                "P6": True,
+            }
+            and item["P7"] is True
+            for item in blinded_verdicts
+        )
     )
     legacy_all_green = all(legacy_verdict["gates"].values())
     packet_blinding = (
@@ -927,21 +1131,28 @@ def main() -> int:
         and channel_audit["environment_variants"] == 1
         and len(channel_audit["cwd_shapes"]) == 1
     )
-    canary_rejected = all(
-        item["P1_to_P6"]["verdict"]
-        == "REJECTED_BY_SYNTHETIC_BATTERY"
-        for item in blinded_verdicts
+    canary_rejected = (
+        len(blinded_verdicts) == INSTANCE_COUNT
+        and all(
+            item["P1_to_P6"]["verdict"]
+            == "REJECTED_BY_SYNTHETIC_BATTERY"
+            for item in blinded_verdicts
+        )
     )
     sealed_packets = [
         packet
         for instance in transcript["instances"]
         for packet in instance["packets"]
     ]
-    all_children_succeeded = all(
-        packet["returncode"] == 0
-        and packet["parse_status"] == "OK"
-        and packet["stderr"] == ""
-        for packet in sealed_packets
+    all_children_succeeded = (
+        len(sealed_packets)
+        == INSTANCE_COUNT * (12 + len(DUPLICATE_SEMANTICS))
+        and all(
+            packet["returncode"] == 0
+            and packet["parse_status"] == "OK"
+            and packet["stderr"] == ""
+            for packet in sealed_packets
+        )
     )
 
     def fallback_exact(item: dict[str, object]) -> bool:
@@ -986,8 +1197,9 @@ def main() -> int:
             == canonical_bytes(expected_wrong_shape)
         )
 
-    blinded_fallback_exact = all(
-        fallback_exact(item) for item in blinded_verdicts
+    blinded_fallback_exact = (
+        len(blinded_verdicts) == INSTANCE_COUNT
+        and all(fallback_exact(item) for item in blinded_verdicts)
     )
     commissioning_checks = {
         "freeze_passed_before_nonce": freeze["passed"],
@@ -995,7 +1207,11 @@ def main() -> int:
         "source_audit_detects_cheat": not source_audit["passed"],
         "blinded_channels_withhold_identity": packet_blinding,
         "all_blinded_children_succeeded": all_children_succeeded,
-        "sealed_transcript_readback_exact": seal_readback_exact,
+        "sealed_transcript_readback_exact": (
+            seal_readback_exact
+            and sealed_validation["passed"]
+            and unblind_error is None
+        ),
         "blinded_canary_fallback_exact": blinded_fallback_exact,
         "blinded_gate_pattern_matches_preregistration": (
             expected_blinded_pattern
@@ -1010,12 +1226,19 @@ def main() -> int:
             channel_audit["calls"]
             == INSTANCE_COUNT * (12 + len(DUPLICATE_SEMANTICS))
         ),
-        "A5_seal_before_unblind": seal_readback_exact,
+        "A5_seal_before_unblind": (
+            seal_readback_exact
+            and sealed_validation["passed"]
+            and unblind_error is None
+        ),
         "A6_capability_sandbox": False,
     }
-    p_gates = all(
-        all(item["P1_to_P6"]["gates"].values()) and item["P7"]
-        for item in blinded_verdicts
+    p_gates = (
+        len(blinded_verdicts) == INSTANCE_COUNT
+        and all(
+            all(item["P1_to_P6"]["gates"].values()) and item["P7"]
+            for item in blinded_verdicts
+        )
     )
     admitted = p_gates and all(admission_gates.values())
     commissioned = all(commissioning_checks.values())
@@ -1050,6 +1273,8 @@ def main() -> int:
             "sha256": sealed_sha256,
             "bytes": len(readback),
             "contains_semantic_mapping": False,
+            "validation": sealed_validation,
+            "unblind_error": unblind_error,
         },
         "channel_audit": channel_audit,
         "legacy_labeled_control": {
