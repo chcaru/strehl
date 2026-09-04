@@ -1,7 +1,7 @@
 {
   "all_eight_input_files_byte_identical": true,
   "executable_sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac",
-  "freeze_digest_sha256": "9c57ad8d24b58401a42d29f779176a815293b2b3a7237632e37b526eb5404cd8",
+  "freeze_digest_sha256": "f592379b1b3cfd265523341199e4b811eb816abc488f5eedd5600738ecbceec5",
   "frozen_files": [
     {
       "bytes": 29124,
@@ -19,14 +19,39 @@
       "sha256": "74ccefec8ac0be97779fd96277fe2c61a5192c1fbecf3b77a8657ab435d99df7"
     },
     {
-      "bytes": 14184,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\prepare_tone_sentinel.py",
-      "sha256": "44718f0bfc5e2b1fc37d901a7ebbaa883158b10909f3f4b8cba21664494199ef"
+      "bytes": 9,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\.gitattributes",
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
     },
     {
-      "bytes": 16462,
+      "bytes": 76,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\.gitignore",
+      "sha256": "df7941cb4b014ec747edb67a5cc9f72fb1eb66bc60d70d1428fa3d966d0c4a4d"
+    },
+    {
+      "bytes": 7645,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\inspect_fork.py",
+      "sha256": "4b35b5b1ba812dd8cded104189870857272c7f4f95d13d3e57196891c0da2edf"
+    },
+    {
+      "bytes": 5840,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\freeze_fork_source.py",
+      "sha256": "cd1b53d4e941c287eb0669e899dbb936f59381dfb130e5aec9543f1fba5d7f20"
+    },
+    {
+      "bytes": 18181,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\build_fork.py",
+      "sha256": "0840663c7b57578479ec958e9fbb05a5f9a40dd8a1bd886bae7af50c45bc526d"
+    },
+    {
+      "bytes": 14357,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\prepare_tone_sentinel.py",
+      "sha256": "bb689e8ffe8c1d0c834505a9c63ea278bcb1199f9ad0c21fb6d968536320af72"
+    },
+    {
+      "bytes": 17264,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\render_tone_sentinel.py",
-      "sha256": "3bd73c53751b6780f0294baad694205a7e5ee48159d3414126d2d4ae5da03e2e"
+      "sha256": "faaec13202ea8be9f538e157b53f206d9efc0969f111f1b65f14dbf119d0e78d"
     },
     {
       "bytes": 7716,
@@ -54,7 +79,7 @@
       "sha256": "8a8ffa407be62cfaf01928b198e610ef59713beac9d99f63ac3398fcbbcd3c9c"
     }
   ],
-  "frozen_utc": "2026-09-04T20:22:30.628345+00:00",
+  "frozen_utc": "2026-09-04T20:25:10.505676+00:00",
   "input_file_sha256": "f0a15dc2aaac848d04850cd2e2885b17c7a3221b35003f4c94b5a986075d2cd2",
   "input_pixel_payload_sha256": "8ca31044d4acaf1e92e95a008fe55c7e0fbb5af0a0efd856d32c1332d55938ab",
   "render_output_absent_at_freeze": true,

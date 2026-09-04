@@ -74,7 +74,7 @@ def git(repo: Path, *args: str) -> bytes:
 
 def committed_freeze(
     repo_root: Path, frozen_paths: list[Path]
-) -> tuple[str, list[dict[str, Any]]]:
+) -> tuple[str, list[str], list[dict[str, Any]]]:
     records = []
     commits = set()
     for path in frozen_paths:
@@ -98,11 +98,27 @@ def committed_freeze(
                 "sha256": sha256(current),
             }
         )
-    if len(commits) != 1:
-        raise RenderFailure(
-            f"pre-render files were not frozen in one commit: {sorted(commits)}"
+    guard_commit = git(repo_root, "rev-parse", "HEAD").decode("ascii").strip()
+    for commit in commits:
+        completed = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repo_root),
+                "merge-base",
+                "--is-ancestor",
+                commit,
+                guard_commit,
+            ],
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
-    return next(iter(commits)), records
+        if completed.returncode != 0:
+            raise RenderFailure(
+                f"freeze commit {commit} is not an ancestor of guard {guard_commit}"
+            )
+    return guard_commit, sorted(commits), records
 
 
 def normalise_bits(value: Any) -> list[int]:
@@ -256,6 +272,7 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
     truth_path = root / "TONE-TRUTH.json"
     frozen_paths = [
         root / ".gitignore",
+        root / ".gitattributes",
         root / "inspect_fork.py",
         root / "freeze_fork_source.py",
         root / "build_fork.py",
@@ -271,7 +288,9 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
         truth_path,
         pre_freeze_path,
     ]
-    pre_render_commit, commit_records = committed_freeze(repo_root, frozen_paths)
+    pre_render_guard_commit, pre_render_commits, commit_records = committed_freeze(
+        repo_root, frozen_paths
+    )
 
     pre_freeze = load_json(pre_freeze_path, "pre-render freeze")
     build_freeze = load_json(build_freeze_path, "build freeze")
@@ -313,7 +332,8 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
         "schema": "m175-fork-render-start-v1",
         "status": "STARTING",
         "render_started_utc": render_started_utc,
-        "pre_render_commit": pre_render_commit,
+        "pre_render_guard_commit": pre_render_guard_commit,
+        "pre_render_commits": pre_render_commits,
         "pre_render_freeze": file_record(pre_freeze_path),
         "executable": executable_record,
         "input_file_sha256": current_input_records[0]["sha256"],
@@ -342,7 +362,8 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
             "stdout": completed.stdout,
             "stderr": completed.stderr,
             "render_start": start_file_record,
-            "pre_render_commit": pre_render_commit,
+            "pre_render_guard_commit": pre_render_guard_commit,
+            "pre_render_commits": pre_render_commits,
         }
 
     array, output_metadata = inspect_output(output)
@@ -350,7 +371,8 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
     frozen_utc = datetime.fromisoformat(pre_freeze["frozen_utc"])
     render_started = datetime.fromisoformat(render_started_utc)
     ordering = {
-        "pre_render_commit": pre_render_commit,
+        "pre_render_guard_commit": pre_render_guard_commit,
+        "pre_render_commits": pre_render_commits,
         "all_pre_render_files_identical_to_commit": True,
         "committed_files": commit_records,
         "pre_render_freeze_utc": frozen_utc.isoformat(),

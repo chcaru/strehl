@@ -1,0 +1,6 @@
+{
+  "failure_class": "RenderFailure",
+  "reason": "working copy differs from committed freeze: experiments/M175-fork-arm/.gitignore",
+  "schema": "m175-fork-tone-sentinel-result-v1",
+  "status": "BLOCKED"
+}
