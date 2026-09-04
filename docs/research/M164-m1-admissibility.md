@@ -1,6 +1,6 @@
 # M164 follow-up — what the transfer veto does and does not unlock for M1
 
-Status: **DESIGN RULING; REAL-PAIR JOB PREPARED BUT NOT RUN**
+Status: **DESIGN RULING; REAL-PAIR AUDIT COMPLETE — ALL THREE NOT VETOED**
 
 > **COUNT CORRECTION / STAGED FOLLOW-UP.** Section 3.2 below correctly
 > decomposes the then-current `891`-frame combined M1/M5/M9 session, but it
@@ -316,11 +316,9 @@ This route does not relax M1. It makes explicit that “more recoverable scene
 information” is the positive claim, while output transfer, unexplained
 structure and common postfiltering are non-compensating vetoes.
 
-## 6. Prepared historical real-pair job
+## 6. Historical real-pair audit
 
-**NOT RUN.** The quiet-host release has not been given.
-
-The prepared runner is
+**MEASURED.** The runner is
 `experiments/M164-transfer-veto/realpair.py`. It is closed over exactly:
 
 - `cb`: DELIVER-V6 versus the focus-stack fork — `BURNED-OK`;
@@ -332,8 +330,8 @@ unadjudicable.
 
 The runner:
 
-- forces one thread and is expected to take the previously reported
-  `5–10 minutes`;
+- forces one numerical thread; elapsed time is not evidence and remains
+  quarantined under the shared-host policy;
 - writes `RUNNING` before input work and atomically replaces it with `PASS`
   or `FAIL`;
 - exits nonzero on a missing file, byte/hash/ICC mismatch, unexpected TIFF
@@ -348,7 +346,7 @@ The runner:
   translation, and maps only the strehl arm into each comparator-native
   512-pixel site;
 - repeats each direction under bilinear and cubic geometry adapters;
-- requires at least eight of twelve fixed sites; and
+- requires at least eight of 40 fixed, non-overlapping sites; and
 - calls a pair inadmissible only if every eligible site fires in one
   direction under both adapters. Mixed sites are reported as
   `MIXED_SITE_EVIDENCE`, not rounded into a veto.
@@ -361,15 +359,70 @@ blur, USM and resampling controls after preprocessing. Adapter-to-adapter
 fires are recorded as sensitivity diagnostics and cannot by themselves veto
 the real pair.
 
-**VERIFIED WITHOUT REAL-PAIR PIXELS.** The synthetic runner self-test passes.
-It checks the exact three-pair whitelist, the pinned M164 source hash, identity,
-movable-null, blur, sharpening, resampling and registration-sign paths. This
-does not predict any real-pair result.
+### 6.1 Result
 
-Prepared single command:
+**MEASURED: `PASS`; historical admissibility
+`YES_WITHIN_M164_SCOPE`.** Every eligible site in all three pairs returned
+`NOT_VETOED` in both directions under both geometry adapters:
+
+| pair | eligible | exclusions | comparator from Strehl | Strehl from comparator | verdict |
+|---|---:|---|---:|---:|---|
+| `cb` | `21/40` | 16 comparator-rail; 3 registration-not-improved | `0/21` robust fires | `0/21` robust fires | `NOT_VETOED` |
+| `113` | `30/40` | 5 Strehl-rail; 4 registration-null; 1 registration-not-improved | `0/30` | `0/30` | `NOT_VETOED` |
+| `113-sharp` | `21/40` | 10 registration-null; 5 Strehl-rail; 4 registration-not-improved | `0/21` | `0/21` | `NOT_VETOED` |
+
+Median diagnostics below are
+`residual_over_difference / residual_rms_lsb / tile_q90 /
+fold_disagreement`:
+
+| pair | adapter | comparator from Strehl | Strehl from comparator |
+|---|---|---|---|
+| `cb` | bilinear | `0.493594 / 1309.570 / 0.734627 / 0.054519` | `0.343846 / 902.737 / 0.508951 / 0.046134` |
+| `cb` | cubic | `0.488351 / 1309.013 / 0.735420 / 0.053344` | `0.374973 / 964.807 / 0.552799 / 0.049706` |
+| `113` | bilinear | `0.379501 / 7509.787 / 0.614246 / 0.105804` | `0.108782 / 2203.665 / 0.213955 / 0.018323` |
+| `113` | cubic | `0.380755 / 7527.636 / 0.621200 / 0.105311` | `0.110375 / 2226.438 / 0.215902 / 0.018498` |
+| `113-sharp` | bilinear | `0.174671 / 2110.452 / 0.349543 / 0.100163` | `0.327206 / 3644.080 / 0.510231 / 0.298178` |
+| `113-sharp` | cubic | `0.174432 / 2112.532 / 0.349574 / 0.095225` | `0.330811 / 3661.213 / 0.512926 / 0.299091` |
+
+The complete min/median/max diagnostics and all 40 fixed-site records per pair
+are in `out/realpair-verdict.json`, SHA-256
+`17AA0684DAA6C856BF16F7570012AE52283D9F5AEA2F249482003264C48680DF`.
+
+All three per-pair preprocessing controls passed. Identity remained at
+`0 LSB`; the movable null moved by `2.601155 LSB` without firing; planted
+blur, USM and resampling all fired. Their respective difference ranges across
+the three control sites were `24.137077–56.243326`,
+`3.714125–10.800784`, and `28.262610–66.004228 LSB`. Bilinear-versus-cubic
+adapter differences did not fire.
+
+This is a **gate result, not a quality result**. M164 found no common transfer
+from either member to the other within its frozen families, so it does not
+refuse these three historical comparisons. It does not rank the renders, prove
+that no unmodelled transfer exists, restore M1, or make M2 or M9 measurable.
+
+### 6.2 Reproduction and run history
+
+Single command:
 
 ```powershell
-$env:OPENBLAS_NUM_THREADS='1'; $env:OMP_NUM_THREADS='1'; $env:MKL_NUM_THREADS='1'; $env:PYTHONDONTWRITEBYTECODE='1'; & 'C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe' -B 'C:\dev\blog\death-of-software\projects\strehl\experiments\M164-transfer-veto\realpair.py' --output 'C:\dev\blog\death-of-software\projects\strehl\experiments\M164-transfer-veto\out\realpair-verdict.json' --stage-dir 'C:\dev\blog\death-of-software\projects\strehl\experiments\M164-transfer-veto\out\realpair-stage'
+$env:OPENBLAS_NUM_THREADS='1'; $env:OMP_NUM_THREADS='1'; $env:MKL_NUM_THREADS='1'; $env:VECLIB_MAXIMUM_THREADS='1'; $env:PYTHONDONTWRITEBYTECODE='1'; & 'C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe' -B 'C:\dev\blog\death-of-software\projects\strehl\experiments\M164-transfer-veto\realpair.py' --output 'C:\dev\blog\death-of-software\projects\strehl\experiments\M164-transfer-veto\out\realpair-verdict.json' --stage-dir 'C:\dev\blog\death-of-software\projects\strehl\experiments\M164-transfer-veto\out\realpair-stage'
 ```
 
-No real pair, quality metric or holdout was opened by this follow-up.
+The synthetic self-test still passes and checks the exact three-pair
+whitelist, pinned M164 source hash, identity, movable-null, blur, sharpening,
+resampling and registration-sign paths.
+
+The audit retained every failed precursor rather than overwriting it:
+
+- run 1 exposed inadequate `cb` coverage on the original 12-site lattice;
+- run 2 evaluated all three pairs and showed that the 12-site lattice was
+  inadequate for each;
+- run 3 exposed a result-printer overwrite defect;
+- run 4 produced two valid pair results and exposed that an already
+  rail-disqualified constant `cb` crop was incorrectly sent into registration;
+  and
+- run 5, after the frozen control-flow repair and with all scientific gates
+  unchanged, produced the final result above.
+
+The amendments and failure artifacts are retained beside the runner. No
+`119MSDCF` pair was opened or evaluated.
