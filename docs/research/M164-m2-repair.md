@@ -128,9 +128,12 @@ general comparator clause has not commissioned any such route.
 ## 4. Proposed external-reference statistic
 
 The current proposed repair reuses M1's physical roles rather than inventing
-another target. M1 is the only route currently scheduled and capturable in
-this program, not a unique algebraic requirement. At each registered
-frequency/orientation cell `k`, let:
+another target. M1 remains the only usable route currently available because
+adequate signal power, cross-fit independence, fixed-pattern calibration,
+eligible common-render outputs and a commissioned alternative admission rule
+are absent; M135 also records no archived same-site reference/output pair with
+disjoint calibration. This is a scheduling fact, not a unique algebraic
+requirement. At each registered frequency/orientation cell `k`, let:
 
 - `R1`, `R2` be independent calibrated truth-reference observations;
 - `Y1`, `Y2` be the coded-site coefficients from independent renders of
@@ -257,9 +260,10 @@ All `256/256` trials preferred its noise coordinate even though every trial
 lost transfer. This is not a defect in the arithmetic: the arm buys enough
 noise reduction to improve equivalent-input noise while discarding detail.
 A separately commissioned information/transfer condition must decide whether
-that trade is admissible. M1 is the program's current proposed implementation,
-not the only mathematical possibility. `Q_EIN` must never be used as a quality
-score.
+that trade is admissible. M1 is the program's current proposed implementation
+and the only presently usable route for the missing-evidence reasons in
+Section 4, not the only mathematical possibility. `Q_EIN` must never be used
+as a quality score.
 
 ### 5.4 Why unnormalised same-resolution `O-R` is not the repair
 
@@ -376,10 +380,26 @@ python -B experiments\M164-m2-repair\verify.py
 ```
 
 `verify.py` first reruns `commission.py` into a lane-local scratch artifact and
-requires byte identity with committed `commission.json`. It then rederives the
-summaries, gates, hashes and report anchors. A regeneration failure exits
-nonzero before any `PASS` line; the scratch artifact is removed in either
-case. This remains author-owned development verification, not M167 acceptance.
+rederives all numerical checks from that fresh result, not from the committed
+trial ratios. It separately checks byte identity with committed
+`commission.json` and report anchors. It also constructs the finite two-world
+witness `A=[0,0,1,0,0]`, `B=G@A`: the identical observation pair has SSE
+`(0,0.375)` under degradation truth and `(0.375,0)` under improvement truth.
+The output reports `REDERIVATION`, `ARTIFACT-CONSISTENCY` and `TOTAL` counts
+separately, including failures and skips. A regeneration failure cannot print
+`PASS`, and the scratch artifact is removed in every case. This remains
+author-owned development verification, not M167 acceptance.
+
+The verifier's live negative control is:
+
+```powershell
+python -B experiments\M164-m2-repair\verify.py --plant-defect theorem-label-collapse
+```
+
+It deliberately gives both latent worlds the degradation label. The theorem
+check must report `RED`, the category and total counts must still reconcile,
+and the process must exit `1`. Its exact commissioned output is retained in
+`verifier-red.txt`.
 
 Artifacts:
 
@@ -390,7 +410,8 @@ Artifacts:
 - `experiments/M164-m2-repair/instrument.py`;
 - `experiments/M164-m2-repair/commission.json`;
 - `experiments/M164-m2-repair/verify.py`;
-- `experiments/M164-m2-repair/verification.json`.
+- `experiments/M164-m2-repair/verification.json`; and
+- `experiments/M164-m2-repair/verifier-red.txt`.
 
 ## 9. Sources
 

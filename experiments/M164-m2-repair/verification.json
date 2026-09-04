@@ -1,23 +1,168 @@
 {
-  "schema": "m164-m2-repair-verification-v2",
+  "schema": "m164-m2-repair-verification-v3",
   "status": "PASS",
-  "verification_mode": "fresh regeneration plus artifact consistency",
-  "checks": [
-    "commission.py regenerates commission.json byte-for-byte",
-    "schema, seed, trial count and site count are frozen",
-    "preregistration, amendment and implementation hashes match",
-    "all arm summaries rederive from 256 stored trial ratios",
-    "Q_EIN equals output-noise ratio divided by transfer ratio",
-    "all 12 preregistered gates rederive and pass",
-    "omitted-transfer and reversed-direction mutations are live",
-    "same-resolution cross-fit rejects every genuinely improved trial",
-    "report carries the diagnosis, limitation and current verdict"
-  ],
+  "verification_mode": "fresh regeneration and theorem re-derivation, separately reported from artifact consistency",
+  "categories": {
+    "rederivation": {
+      "status": "PASS",
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "total": 9,
+      "checks": [
+        {
+          "category": "rederivation",
+          "name": "fresh commission regeneration",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "rederivation",
+          "name": "registered schema and population",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "rederivation",
+          "name": "source hashes",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "rederivation",
+          "name": "summaries from regenerated trial ratios",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "rederivation",
+          "name": "Q_EIN algebraic identity",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "rederivation",
+          "name": "all 12 registered gates",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "rederivation",
+          "name": "registered mutations are live",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "rederivation",
+          "name": "same-resolution cross-fit conflict",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "rederivation",
+          "name": "two-world witness has identical observations and opposite rankings",
+          "status": "PASS",
+          "detail": null
+        }
+      ]
+    },
+    "artifact_consistency": {
+      "status": "PASS",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "total": 2,
+      "checks": [
+        {
+          "category": "artifact_consistency",
+          "name": "regenerated artifact equals committed commission.json",
+          "status": "PASS",
+          "detail": null
+        },
+        {
+          "category": "artifact_consistency",
+          "name": "report anchors",
+          "status": "PASS",
+          "detail": null
+        }
+      ]
+    }
+  },
+  "summary": {
+    "status": "PASS",
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "total": 11
+  },
   "commission_sha256": "418D2D852DC15B072CB65DD6BAAECAA9B4CBF82843BA825F00B0440ACC733C43",
+  "verify_py_sha256": "D5471A096C5D98E8ED7BF2E5465A12550305DD77E8BB334100F37AD100312301",
   "regeneration": {
-    "byte_identical": true,
     "regenerated_sha256": "418D2D852DC15B072CB65DD6BAAECAA9B4CBF82843BA825F00B0440ACC733C43",
     "commission_stdout": "PASS: 12/12 gates; null=1.000535; noise=1.499654; denoise=0.499663; post-blur=1.000000000000"
   },
-  "report_sha256": "DC201F1F0E5FCF7D83ECA3A26AD453C7D0CE6BF3CC8864F5B15EFB8CE5CD897D"
+  "two_world_witness": {
+    "A": [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    "G": [
+      [
+        0.75,
+        0.25,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.25,
+        0.5,
+        0.25,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.25,
+        0.5,
+        0.25,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.25,
+        0.5,
+        0.25
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.25,
+        0.75
+      ]
+    ],
+    "B": [
+      0.0,
+      0.25,
+      0.5,
+      0.25,
+      0.0
+    ],
+    "observations_identical": true,
+    "degradation_truth_sse": {
+      "A": 0.0,
+      "B": 0.375
+    },
+    "improvement_truth_sse": {
+      "A": 0.375,
+      "B": 0.0
+    },
+    "opposite_rankings": true
+  },
+  "report_sha256": "02E4A92462314EDDFED210D6413810B4E60F9271CF85B7EC9058229F90C46DB0"
 }

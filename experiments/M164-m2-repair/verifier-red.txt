@@ -1,0 +1,6 @@
+VERIFY MODE: fresh regeneration + theorem re-derivation
+PLANTED DEFECT: theorem-label-collapse
+REDERIVATION: RED 8/9 passed; 1 failed; 0 skipped
+  FAIL two-world witness has identical observations and opposite rankings: AssertionError: opposite rankings absent: degradation=(0.000000,0.375000), improvement=(0.000000,0.375000)
+ARTIFACT-CONSISTENCY: PASS 2/2 passed; 0 failed; 0 skipped
+TOTAL: RED 10/11 passed; 1 failed; 0 skipped
