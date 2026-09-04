@@ -257,6 +257,54 @@ which is better news than it sounds. See the M137 row.
 
 ---
 
+### Added 2026-09-06, second update — four lanes converged on one fact
+
+**M1 is the keystone, and almost nothing else can move until it does.**
+
+Four independent lanes arrived at the same place tonight from different
+directions. M2's comparator clause, M3's *"no worse than best comparator"* and
+M11's *"twice the fastest qualifying comparator"* all inherit comparator
+qualification — and qualification routes through M1. **Four axes are therefore
+unadjudicable by any amount of measurement until M1 has an admissible bar.**
+This is not a measurement backlog. No amount of compute clears it.
+
+**A stronger version of the same finding arrived hours later.** A lane was asked
+to repair M2, whose statistic currently *improves* when the image is blurred. It
+came back with something better than a repair: a proof that no repair of that
+kind exists. Given two rendered images where one is a smoothed version of the
+other, the identical bytes are equally consistent with two opposite stories —
+that the smoother one lost real detail, or that the smoother one is faithful and
+the difference was noise correctly removed. **No statistic computed from only
+those two images can reward one and reject the other.** It needs an observation
+from outside them.
+
+That sounds like bad news and is not, because it points at exactly the escape
+route your own plan already contained: score the lower magnification and use the
+higher one as the truth. **The reference has to come from the capture.** I have
+an independent lane attacking that proof now, and I will not write it into the
+plan until that lane reports.
+
+**What this means for you, concretely.** It raises the value of the two frames
+in Ask 2a and lowers the value of everything else on this page. Those two frames
+are the falsification gate for a `1,602`-frame session — if the optics cannot
+reach the required ratio, the whole session is cancelled before it is shot, and
+if they can, the keystone starts moving. **It is still five minutes and it is
+still the best thing you can do for this program.**
+
+### Also added 2026-09-06 — a machine problem you should know about
+
+This host measured a mean of **`93.2%`** CPU across three samples tonight, with
+the agent processes themselves the top consumer. **Absolute timing cannot be
+validly measured while the program is running.** Any wall-clock number taken
+under that load carries an uncontrolled covariate, so a standing quarantine now
+applies to every timing figure until it is reproduced on a quiet machine.
+
+This is not costing you anything today, because the plan already ranks speed
+work strictly behind the resolution claim. But it does mean the speed axes will
+eventually need the machine to itself — and the repaired M11 specification also
+calls for genuine reboots between runs. **When that comes due it will be an ask
+on your time, not your wallet.** It is not due yet.
+
 ## What is being done without you
 
 No action needed on any of these. They cost nothing and need none of your time.

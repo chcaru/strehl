@@ -86,6 +86,24 @@ for label, ok in checks:
     else:
         red += 1
 
+# ---- cross-document consistency ----
+# The host-load figure is cited in BOTH docs/STATUS.md and this owner file, but
+# only STATUS is guarded by v2954.py. Without this check, editing the evidence
+# JSON would be caught in one document and silently diverge in the other.
+print()
+import json
+hostjson = ROOT / "experiments" / "ORCH-verify" / "host-load-2026-09-06.json"
+owner_all = OWNER.read_text(encoding="utf-8", errors="replace")
+hl = json.loads(hostjson.read_text(encoding="utf-8"))
+mean_pct = hl["mean_pct"]
+host_ok = ("**`%s%%`**" % mean_pct) in owner_all
+print(("GREEN " if host_ok else "RED   ")
+      + "xdoc   owner cites host mean %s%% from evidence JSON" % mean_pct)
+if host_ok:
+    green += 1
+else:
+    red += 1
+
 # ---- control: a wrong total must not re-derive ----
 ctl = (2 + sum(stages) + 704) != 1603
 print(("CTLPASS" if ctl else "CTLFAIL") + " decoy total 1,603 does not re-derive")
