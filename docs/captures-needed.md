@@ -19,7 +19,7 @@ replaced.*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
-| **0** | **§35** — the **407-frame session** (**amended, was 319**): your grid **plus a coplanar patch of fine matte paper / fabric fibres**, **IBIS and OSS OFF**, two independent `sw4` passes, two independent `sw10` passes, a dense `sw1` reference, **24 locked-focus witness frames**, and **doubled calibration — 32 flats + 32 darks per pass** | ~1 sitting | **Supersedes §30 as the capture that unblocks the SOTA claim.** It is the only thing standing between here and a *measured* detail axis: M1, M5 and M9 all unblock together. **No purchase needed** — certification turned out not to be load-bearing. **Confirmed 2026-09: you are shooting this.** |
+| **0** | **§35** — the **407-frame session** (**amended, was 319**): your grid **plus a coplanar patch of fine matte paper / fabric fibres**, **IBIS and OSS OFF**, frame-indexed same-focus `sw4`/`sw10` A/B repeats from a replayable command ladder or demonstrably identical bracket commands, a dense `sw1` reference, **24 locked-focus witness frames**, and **doubled calibration — 32 flats A + 32 flats B + 32 darks A + 32 darks B** | ~1 sitting | **Supersedes §30 as the capture that unblocks the SOTA claim.** It is the only thing standing between here and a *measured* detail axis: M1, M5 and M9 all unblock together. **Do not shoot the A/B blocks until the focus method is recorded and the pixel-domain gate is pre-frozen. Exact command identity and that gate must both pass, or the pair is not claim-bearing; witnesses alone do not certify the ladder.** |
 | **1** | **§24** — flat, **achromatic** (grey/black/white, *no colour in the target*), **corner-to-corner** detail, square-on and never moved, shot **normal + red + green + blue** (gels or coloured light) | ~10 min | **Design changed again overnight, and it is now a controlled experiment.** The spectral hypothesis I built this on was tested against eight of your existing stacks and **the correlation came out backwards** (rho −0.69, n=8). What survived is bigger: the correction really does vary by subject, **27.3%** against a 19.5 ppm noise floor, cause unknown. Four rival explanations died on your existing data; aperture and the teleconverter died on your EXIF (**every `-cpl` stack is f/5.6 + 2× TC — there is no aperture variation among the CPL stacks**, so no teleconverter set is needed). A **flat** target makes the stacker a measured 4.8 ppm no-op, so what this sees is optics. See below. |
 | **2** | **§26** — a **bright** subject against a **deeply defocused dark** background, exposed **1–2 stops down** so nothing clips, 100–300 frames | ~1 afternoon | **The halo.** As of last night the rim around every edge in your renders has a measured fingerprint — it is exactly as wide as the software's frame-choosing window — but **two explanations survive that predict the same thing on every stack you already own.** They differ only on bright-object-on-dark-ground edges, and your corpus contains **5** usable ones. This is the capture that separates them, and the halo is the largest visible defect in your pictures. |
 | **3** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
@@ -3940,7 +3940,9 @@ paper / fabric fibres as the nonperiodic patch.**
 > session unusable *after* it was shot: two sweeps from one reset do not
 > guarantee matched focus nodes; frame count is not site count; a shared
 > calibration master correlates the two passes; and settling was never specified
-> apart from shooting cadence. **The bench sheet below is the authoritative
+> apart from shooting cadence. A later cross-consumer audit tightened the first
+> fix: witness registration does not prove frame-for-frame focus equality.
+> **The bench sheet below is the authoritative
 > version and this section is a summary of it.** Where they disagree, the bench
 > sheet wins.
 
@@ -4018,12 +4020,15 @@ must sit *in the same plane* as the grid, not behind it.
 The A/B pairs are the whole point: two independent passes over identical
 geometry and exposure are what make a repeat-pair instrument possible at all.
 
-**The witness frames are what make that pairing defensible.** He shoots with
-in-camera focus bracketing, so the camera drives the focus ladder and A and B
-cannot be interleaved at each node. Six locked-focus frames before each pass let
-us verify afterwards that the two ladders actually coincided. An earlier session
-died on exactly this, at a registration residual of `0.107703` against a `0.10`
-native-pixel bar.
+**Frame `i` of A must be the same commanded focus as frame `i` of B.** Witness
+bursts are necessary geometry/focus-profile sentinels, but they do not observe
+every bracket command and cannot prove this by themselves. Before shooting,
+either use indexed lens-focus control that replays one recorded list of absolute
+commands for A and B, or establish that whole-pass camera bracketing restores an
+exact starting command and repeats the identical command sequence. An
+approximate visual near-focus reset is not sufficient. The command manifest and
+a separately frozen pixel-domain
+through-focus-curve gate must both pass; no result-time frame re-indexing.
 
 **Settings.** A7C II, FE 100mm Macro GM + 2x TC at 200 mm. M mode, **ISO 100,
 1 s, f/5.6**, identical for every frame in every block including both passes.
@@ -4037,9 +4042,11 @@ before the first frame. Source polariser plus crossed CPL. Matte-white backing.
 Tilt the target roughly **1 degree** so the sweep has something to resolve
 through.
 
-**Sweep.** Focus bracket, direction `0 -> +`, 1 s interval. **Return to an
-identical near-focus reset before each pass** -- A and B must start from the
-same place or they are not repeats.
+**Sweep.** Preserve direction `0 -> +` and the registered sw4/sw10 ladders.
+Use either an indexed absolute lens-focus command list replayed exactly for A
+and B, or whole-pass bracketing with an exactly repeatable recorded start
+command and identical bracket state. If neither is available, do not shoot the
+A/B blocks as claim-bearing repeat data.
 
 ### This session is the HOLDOUT, and that imposes a rule
 
@@ -4063,13 +4070,14 @@ No existing capture contains two independent passes over identical geometry and
 exposure. No existing capture pairs a regular depth structure with a coplanar
 nonperiodic patch in the same plane.
 
-### One check on arrival, which costs none of the holdout
+### Input-only checks on arrival
 
-Run an **input-only** spectral eligibility check: confirm the fibre patch
-actually carries power out to `0.25 cyc/native px`. Input-only means it reads
-the RAW frames and never a render, so it spends none of the holdout. If the
-patch turns out too smooth, the rest of the session is still good and only
-those blocks would need reshooting.
+Before any render, require exact A/B command-manifest equality, the frozen
+pixel-domain focus-ladder gate, the separate witness geometry gate, at least 64
+eligible sites, and per-site fibre-patch cross-power through
+`0.25 cyc/native px`. These checks read RAW inputs only and do not spend the
+holdout. A focus-command or ladder-equivalence failure invalidates that repeat
+pair even if witness registration passes.
 
 ### What it unblocks
 

@@ -1,9 +1,9 @@
-# Capture request: the 383-frame session that unblocks M1, M5 and M9
+# Capture request: the 407-frame session that unblocks M1, M5 and M9
 
 Status: REQUESTED — awaiting owner
 Owner of this file: orchestrator
 Raised: 2026-09
-Amended: 2026-09 (supersedes the 319-frame version)
+Amended: 2026-09 (supersedes the 319-frame and witness-only versions)
 
 ---
 
@@ -11,28 +11,30 @@ Amended: 2026-09 (supersedes the 319-frame version)
 
 **This request was reviewed and found insufficient as written.** The mechanical
 core was right and is unchanged: **stabilisation off, fixed exposure, coplanar
-nonperiodic patch, paired A/B passes.** Four things were missing, and each one
-could have made the session unusable *after* it was shot.
+nonperiodic patch, paired A/B passes.** Four things were missing, and the first
+fix was later tightened when a second consumer required frame-for-frame
+same-focus repeats.
 
 | # | Change | Why |
 | --- | --- | --- |
-| 1 | **Witness frames added** before each pass | Two separate sweeps are not guaranteed to land on the same focus nodes |
+| 1 | **Frame-indexed focus equality required; witnesses retained as a geometry sentinel** | Witnesses alone cannot prove that `A[i]` and `B[i]` share a focus command |
 | 2 | **Patch must be physically large enough** for 64 sites | Frame count is not site count |
 | 3 | **Flats and darks doubled**, one independent set per pass | One calibration master applied to both passes correlates them |
 | 4 | **Explicit settling delay** after each focus move | "1 s interval" is not a settling specification |
 
 **Frame budget: 383 image frames + 24 witness frames = 407 total.** The
 319 — 383 step is the calibration doubling and is already approved. The 24
-witness frames are the new item; they are short, shot at locked focus, and they
-are what makes the A/B pairing defensible on this camera.
+witness frames are short and still useful, but they do **not** by themselves
+make the A/B pairing defensible.
 
-**Nothing already agreed is withdrawn.** If you have already started, stop and
-read *Focus nodes and witness frames* — it is the one change that cannot be
-fixed afterwards.
+**The frame budget is unchanged; the focus-control procedure is not.** If you
+have already started, stop and read *Focus nodes and witness frames*. A
+different focus ladder cannot be repaired afterwards.
 
-**Two things to do before the first frame:** read *Focus nodes and witness
-frames*, and take the single test exposure described in *Before you shoot*. The
-exposure is fixed for all 407 frames, so getting it wrong spoils the session.
+**Before the first frame:** choose one valid focus-control method from *Focus
+nodes and witness frames*, record its command state, and take the single test
+exposure described in *Before you shoot*. The exposure is fixed for all 407
+frames, so getting it wrong spoils the session.
 
 ## Why this exists
 
@@ -135,7 +137,7 @@ the USAF bars are sparse and repeated, so both risk carrying their own answer.
 The A/B pairs are the point: two independent passes over identical geometry and
 exposure are what make a repeat-pair instrument possible at all.
 
-## Focus nodes and witness frames — the change that cannot be fixed later
+## Focus nodes and witness frames — frame `i` must match frame `i`
 
 **The problem.** `sw4-A` and `sw4-B` are two complete focus sweeps. Starting both
 from an "identical near-focus reset" does **not** guarantee they land on the same
@@ -144,33 +146,58 @@ slightly. If they do, A and B are resolving **different material**, and that
 mismatch would look exactly like independent noise to every instrument we would
 build on this session. It bites hardest on `sw10`, where the steps are widest.
 
-**The clean fix is unavailable on this body.** The right answer is to shoot A and
-B back-to-back at *each* focus position before advancing. In-camera focus
-bracketing on the A7C II drives the ladder itself, so that is not possible here.
+The capture has two consumers. Repeat-pair FRC needs matched effective focus
+support. `V-HEADTOHEAD3` needs the stronger form: frame `i` of A and frame `i`
+of B must be independent exposures at the **same commanded focus position**.
+The stronger requirement governs this shared capture.
 
-**So we prove the ladders coincide instead, using witness frames.**
+**Witness frames do not prove that.** They can expose displacement, vibration,
+reset-focus change and focus breathing at the start, but they do not observe
+every command in the bracket. `FocusPosition2`/`FocusDistance2` are too coarse
+to certify a fine ladder.
+
+**Choose one valid focus-control method before shooting:**
+
+1. **Preferred: indexed lens-focus control.** Use a controller that can issue
+   and record one ordered list of **absolute** lens-focus commands. Run that
+   list for A, restore the same approach state, then replay the identical list
+   for B. The existing block order, frame budget and registered sw4/sw10
+   ladders do not change. Do not substitute a camera rail: translating the
+   camera is a different optical/geometry experiment.
+2. **Whole-pass camera bracketing, only if demonstrably repeatable.** The camera
+   must restore an exact starting focus command—not an approximate visual
+   reset—and use identical start command, step width, frame count, direction,
+   lens state and frame index in A and B. Record that command state. No
+   result-time re-indexing is allowed.
+
+If neither method is available, **do not shoot the A/B sweeps as a claim-bearing
+repeat capture**. More witnesses do not repair an unobserved focus command.
 
 **What to shoot:** immediately before each of the four sweep passes, with the
 camera at the near-focus reset position and **focus locked** (no bracketing, do
 not touch focus), take **6 frames**. Same exposure, same everything, rig
 untouched. That is 24 frames total.
 
-**Why it works:** if the reset lands in the same place before pass A and before
-pass B, the two witness bursts will register to each other almost exactly. If the
-reset drifts, the witnesses show it *directly*, and they show it before we have
-drawn any conclusion from the session.
+**What the witnesses establish:** their within-burst floor and between-burst
+geometry are a necessary stability check. Their spatial focus profiles also
+feed the separate focus-ladder equality gate. They remain necessary, but neither
+their registration nor a matching reset image proves that all later nodes match.
 
 **Do this too, and it costs nothing:**
 
 - **Approach every reset from the same direction.** Always arrive at the reset
   position travelling the same way, so mechanical backlash lands the same way.
 - **Do not touch the rig between a witness burst and the pass that follows it.**
-  The witness only certifies the pass if nothing changed in between.
+  The witness geometry reading applies to that pass only if nothing changed in
+  between.
 
-**If the ladders turn out not to coincide,** the A/B pairing for that step width
-is unusable, but the session is not wasted: the passes remain valid as ordinary
-stacks and `sw1` remains a valid dense reference. The witnesses are cheap
-insurance against discovering that after the fact.
+**Input contract, frozen before any new RAW is read:** the command manifests
+must match exactly, and a separately commissioned pixel-domain gate must compare
+the A/B per-site through-focus response curves and reject systematic
+frame-index/peak-position offsets. The witness geometry gate is necessary and
+not sufficient. Failure of either focus or geometry invalidates that A/B pair,
+although the passes remain ordinary stacks and `sw1` remains a valid dense
+reference.
 
 ## The patch must be physically large enough
 
@@ -242,10 +269,10 @@ the first frame so output has stabilised. Source polariser plus crossed CPL on
 the lens. Matte-white backing behind the target. Tilt the target roughly 1° so
 the focus sweep has something to resolve through.
 
-**Sweep:** focus bracket, direction `0 → +`. **Return to an identical
-near-focus reset before each pass** — the A and B passes must start from the
-same place or they are not repeats, and **approach that reset from the same
-direction every time**.
+**Sweep:** focus bracket, direction `0 → +`. Use the focus-control method chosen
+above. A and B must replay the same absolute command list or the same exact
+recorded start and bracket state; an approximate visual near-focus reset is not
+enough. **Approach every restored start from the same direction.**
 
 **Settling:** the `1 s` shooting interval is an exposure cadence, **not a
 settling specification**. Allow the rig to come to rest after each focus move
@@ -269,9 +296,10 @@ light levels, plus 32 flats and 32 darks, IBIS off — would reopen fixed-focus
 repeat-FRC geometry and null commissioning. **It would not license focus-stack
 M1, M5, M9, or the leading candidate instrument.**
 
-Since certification turned out not to be needed, the full 407-frame session is
-executable now with equipment already on hand, so the interim shoot buys a
-fraction of the value for most of the effort. **Shoot the full session.**
+Since certification turned out not to be needed, the full 407-frame session
+buys much more than the interim shoot. **Shoot the full session only after a
+valid replayable focus-control method is selected and the input gate is
+frozen.**
 
 ## Before you shoot: one test exposure
 
@@ -288,21 +316,25 @@ While you are there, confirm the nonperiodic patch fills enough of the frame
 All of these are **input-only**: they read RAW frames and never a render, so they
 spend none of the holdout.
 
-1. **Node coincidence.** Register witness burst 1 against witness burst 2, and 3
-   against 4. This is the gate that decides whether the A/B pairing is usable.
+1. **Frame-indexed focus equality.** Confirm the recorded bracket state and
+   start command match exactly for A and B. Apply the separately frozen
+   pixel-domain ladder-equivalence gate to the per-site through-focus curves.
+   Any systematic frame-index/peak-position offset invalidates that pair.
+2. **Witness geometry.** Register witness burst 1 against witness burst 2, and 3
+   against 4. This is necessary but does not certify focus-node equality.
    **The threshold is already frozen**, before this session was shot, in
    [`2026-09-node-coincidence-gate.md`](2026-09-node-coincidence-gate.md) — read
    it before taking any reading, and do not restate its bars from memory.
    Precedent: an
    earlier session died at a registration residual of `0.107703` against a `0.10`
    native-pixel bar, so this is a real failure mode, not a formality.
-2. **Spectral eligibility, per site.** Confirm the patch carries power out to
+3. **Spectral eligibility, per site.** Confirm the patch carries power out to
    `0.25 cyc/native px` — measured **per site**, not as a frame average, and
    measured as **cross-power attributable to the subject** rather than raw
    single-frame power, which sensor pattern and noise can satisfy on their own.
-3. **Site count.** Confirm at least **64 guarded, non-overlapping eligible
+4. **Site count.** Confirm at least **64 guarded, non-overlapping eligible
    sites** survive. Freeze the site manifest before any render exists.
-4. **Clipping and focus.** Reject clipped sites, and verify each retained site
+5. **Clipping and focus.** Reject clipped sites, and verify each retained site
    has a through-focus peak **interior** to both the A and B sweeps.
 
 If the patch is too smooth, or too few sites survive, the session is still fine

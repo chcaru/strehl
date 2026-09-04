@@ -18,25 +18,32 @@ current bench sheet is **407 frames**, not 319: it now includes 64-site framing,
 frames (`docs/capture-requests/2026-09-319-frame-session.md:1-38,110-216`).
 Do not shoot the superseded 319-frame sheet.
 
-The current 407-frame acquisition supplies the necessary pixels. One pre-shot
-analysis defect remains: its frozen witness gate explicitly cannot detect a
-focus-ladder offset that leaves the rig undisplaced, although the bench sheet
-describes the witnesses as proving node coincidence
-(`docs/capture-requests/2026-09-node-coincidence-gate.md:37-54`). Add a frozen,
-input-only focus-support/ladder-phase predicate before the holdout is read. No
-additional frames or per-node interleaving are required.
+The 407-frame budget supplies enough pixels, but the witness-only acquisition
+protocol was **not sufficient for both consumers**. Its frozen witness gate
+explicitly cannot detect a focus-ladder offset that leaves the rig undisplaced.
+The bench sheet has now been amended to require an exact frame-indexed focus
+command contract plus a separately frozen pixel-domain equality gate
+(`docs/capture-requests/2026-09-319-frame-session.md:140-200`;
+`docs/capture-requests/2026-09-node-coincidence-gate.md:38-59`).
+`V-HEADTOHEAD3` independently requires same-focus repeats
+(`docs/research/V-HEADTOHEAD3.md:194-201`); the capture addendum makes the
+stronger `A[i]`/`B[i]` frame-index contract binding. The amended contract is
+sufficient only after an allowed focus method is selected and its input-only
+gate is frozen before the holdout is read. No additional frames are required
+**if the camera can demonstrably repeat that ladder**; otherwise the acquisition
+method, not the frame count, must change.
 
 Claims below are labelled **MEASURED**, **DERIVED**, **EXPLORATORY**, or
 **ARGUED**. No RAW was opened. The only new computation was a lightweight
 synthetic probe using SPLIT2's committed FRC implementation.
 
-## 1. Deadline adjudication: shoot 407 frames, freeze one missing input gate
+## 1. Deadline adjudication: retain 407 frames, require frame-indexed focus equality
 
 The amended request gets the acquisition design right: body SteadyShot and lens
 OSS are off; exposure is fixed; the irregular patch is coplanar with the grid;
 `sw4` and `sw10` each have two complete same-direction passes; the patch must
 support 64 sites; calibration is split A/B; and settling is explicit
-(`docs/capture-requests/2026-09-319-frame-session.md:110-216,218-255`).
+(`docs/capture-requests/2026-09-319-frame-session.md:110-134,140-282`).
 
 ### 1.1 The A/B passes are independent in the FRC sense
 
@@ -45,12 +52,21 @@ to within 1%; ten-frame means on real ISO-100 darks reached sqrt(N) on all four
 planes (`docs/research/M62-sqrt-n.md:483-509`). Separate A and B sweeps therefore
 supply independent photon/read-noise realizations.
 
-Whole sweeps do not have to alternate at every focus node to satisfy FRC.
-Independence means that A and B are separately acquired inputs to separately
-run render pipelines while the latent subject and intended focus support remain
-fixed. The existing repeated-exposure capture passed its focus-stability proxy;
-SPLIT2 stopped on spatially varying registration, not on evidence of a focus
-change (`docs/research/M-PHASE0-SPLIT2.md:39-87`).
+For FRC on final renders, independence means separately acquired photon/read
+noise while the latent subject and effective focus support remain fixed; it
+does not algebraically require alternating exposures at every node. The
+existing repeated-exposure capture passed its focus-stability proxy, and
+SPLIT2 stopped on spatially varying registration rather than evidence of a
+focus change (`docs/research/M-PHASE0-SPLIT2.md:39-87`).
+
+The shared capture now has a second consumer with a stronger requirement.
+`V-HEADTOHEAD3` cannot distinguish recovered scene detail from amplified
+noise/ringing using TIFFs and ARWs derived from the same noise realization. It
+requires independent **same-focus** repeats
+(`docs/research/V-HEADTOHEAD3.md:194-201`). The capture addendum requires frame
+`i` of A and frame `i` of B to represent the same commanded focus position.
+Because one capture must serve both instruments, that stronger frame-indexed
+contract governs the shoot.
 
 The approximately 1 EV difference in SPLIT2 is also easy to misstate. Its
 protocol **never paired the two light levels**: A and B were formed within each
@@ -60,22 +76,40 @@ robustness replication. It failed geometry on its own
 `experiments/M-PHASE0-SPLIT2/AMENDMENT-1.md:46-75`). The incoming fixed
 exposure is still correct, but it is not repairing a within-pair 1 EV mismatch.
 
-The 24 witness frames are useful for displacement and stability, but the current
-frozen gate says plainly that they do **not** certify a focus-ladder offset that
-does not move the rig (`docs/capture-requests/2026-09-node-coincidence-gate.md:17-54`).
-That limitation matters because the bench sheet currently calls them proof that
-the two ladders coincide.
+The 24 witness frames are useful for displacement and stability, but the
+current frozen gate says plainly that they do **not** certify a focus-ladder
+offset that does not move the rig
+(`docs/capture-requests/2026-09-node-coincidence-gate.md:19-59`). A geometric
+pass is therefore necessary and insufficient.
 
-**Required pre-shot analysis amendment:** freeze an input-only focus-support
-gate on development data. At minimum it must compare A/B per-site through-focus
-response curves and reject a systematic frame-index/peak-position offset; the
-witness bursts can additionally compare the spatial focus profile on the
-tilted target. The existing scalar high/mid spectral proxy is already
-commissioned to reject a sigma-1 focus blur, but no cross-pass ladder-phase bar
-is currently registered (`experiments/M-PHASE0-SPLIT2/frc.py:418-459`;
-`docs/research/M-PHASE0-SPLIT2.md:39-57`). Freeze that bar before any new RAW is
-read. The current frames contain the needed observations, so this changes the
-gate, not the shoot.
+**Binding pre-shot contract, now incorporated into the capture request:**
+
+1. Declare that A and B use the identical camera bracketing state—start command,
+   step width, frame count, direction, lens state, and frame index—with no
+   re-indexing after results are seen.
+2. Restore the start with a reproducible camera command or external indexed
+   reference, not only an approximate visual “near-focus reset.” Approach from
+   the same direction remains necessary for motor hysteresis.
+3. Freeze an input-only equality gate on development data. It must compare the
+   witness bursts' spatial focus profiles and the A/B per-site through-focus
+   response curves, rejecting any systematic frame-index or peak-position
+   offset. The existing scalar high/mid proxy is implemented and its exact
+   sigma-1 RED plant was preregistered and rejected
+   (`experiments/M-PHASE0-SPLIT2/frc.py:418-459`;
+   `experiments/M-PHASE0-SPLIT2/PREREGISTRATION.md:43-49`;
+   `experiments/M-PHASE0-SPLIT2/out/commission.json:1032,1052-1053`), but no
+   cross-pass ladder-phase bar is registered.
+4. Treat `FocusPosition2`/`FocusDistance2` only as a classifier or corroboration:
+   the encoder is too coarse to certify a fine bracket
+   (`docs/research/BUILD-CHROMA.md:160-165`).
+
+If the camera cannot expose a repeatable start command **or** the pixel-domain
+gate cannot demonstrate that ladder offset lies within its frozen equivalence
+bar, the current whole-pass method does not serve both consumers. The clean
+fallback is an externally indexed **lens-focus** controller that records one
+absolute command list and replays it exactly for A and B. A camera rail is not
+interchangeable because it changes capture geometry. Adding more witness frames
+would not cure the missing focus command.
 
 ### 1.2 Frame count and site count
 
@@ -88,7 +122,7 @@ unchanged bar as sample size grows
 The current request now requires at least 64 guarded, non-overlapping eligible
 sites, approximately an 8 by 8 lattice at a 256-pixel tile, with per-site
 subject cross-power and an interior focus peak
-(`docs/capture-requests/2026-09-319-frame-session.md:174-191,299-310`). That is
+(`docs/capture-requests/2026-09-319-frame-session.md:202-218,330-337`). That is
 the right capture-side requirement. The site manifest still must be frozen
 input-only before a render exists.
 
@@ -103,7 +137,7 @@ Turning both stabilization systems off is the direct capture-side correction.
 
 The new witness gate freezes an integer-alignment rule, a within-burst floor
 `<=0.033`, and a per-pair between-burst bar `<0.10` native-pixel local RMS
-(`docs/capture-requests/2026-09-node-coincidence-gate.md:78-125`). M88b measured
+(`docs/capture-requests/2026-09-node-coincidence-gate.md:81-126`). M88b measured
 exact removal of a 3-pixel integer shift, while one 0.37-pixel resample left
 `2.3987 um` of bias (`docs/research/M88b-merge-sharpness.md:74-84`).
 
@@ -116,7 +150,7 @@ contract; witnesses cannot license a locally warped render pair.
 The current request now carries 32 flats and 32 darks **for each arm**, moves
 the diffuser between flat groups, matches dark exposure and temperature, and
 discards the first two darks in each group
-(`docs/capture-requests/2026-09-319-frame-session.md:126-133,193-216`). This
+(`docs/capture-requests/2026-09-319-frame-session.md:126-133,220-244`). This
 directly fixes the shared-master defect.
 
 The repository's “16 frames is sufficient” statement concerns precision of a
@@ -138,18 +172,20 @@ themselves prove the residual is zero.
 
 The stable, fine, irregular coplanar patch and roughly 1-degree tilt provide the
 right nonperiodic spatial-frequency and through-focus content
-(`docs/capture-requests/2026-09-319-frame-session.md:82-108,236-255`). The
+(`docs/capture-requests/2026-09-319-frame-session.md:82-108,252-270`). The
 arrival check must use cross-power attributable to the subject, not
 single-frame power that noise or FPN can satisfy, and must reject clipped,
 photon-starved, or endpoint-focused sites. The fixed ISO 100, 1 s, f/5.6
-exposure and identical reset do not break pairing.
+exposure and selected replayable focus protocol do not break pairing.
 
-**Deadline answer:** the superseded 319-frame sheet should not be shot. The
-current **407-frame acquisition is physically sufficient and needs no more
-frames**. Before capture data are read, amend the frozen input contract with a
-focus-support/ladder-phase predicate; the existing witness gate proves
-displacement/registration only and must not be described as proving identical
-focus nodes.
+**Deadline answer:** the superseded 319-frame sheet should not be shot. Keep
+the current **407-frame budget** and use the amended protocol, but do not begin
+the A/B blocks until one allowed focus-control method is selected and recorded
+and the pixel-domain equivalence bar is frozen. If exact ladder repetition
+cannot be demonstrated on the A7C II, switch to externally indexed lens
+focusing that preserves and replays the registered ladder; the existing
+witnesses alone do not make the A/B passes usable for FRC or
+`V-HEADTOHEAD3`.
 
 ## 2. Source claims verified
 
@@ -171,6 +207,9 @@ focus nodes.
    to `1.5968e-15` relative error, passes the independent-noise null, and
    deliberately fails the shared-pattern adversary
    (`docs/research/M-PHASE0-SPLIT2.md:89-123`).
+7. `V-HEADTOHEAD3` independently stops at the need for same-focus repeats:
+   correlation to retained ARWs would otherwise validate amplified sensor noise
+   along with recovered scene detail (`docs/research/V-HEADTOHEAD3.md:194-201`).
 
 The G-edof recommendation is historically real but too broad. The decision
 record later corrected it: FRC rejects **independent** noise amplification, not
@@ -411,9 +450,11 @@ registration, and stable sensor structure as the three blockers
 
 Unblocking the eventual score requires the incoming stabilization-off matched
 sweeps; input-only site selection and integer-crop registration that pass the
-frozen geometry gate; and disjoint A/B calibration whose held-out ring
-correlation passes a frozen null. The current 407-frame session supplies those
-inputs, but it is sealed holdout. Commissioning, power selection, and all
+frozen geometry gate; frame-indexed same-focus equality; and disjoint A/B
+calibration whose held-out ring correlation passes a frozen null. The amended
+407-frame protocol requires the focus condition, but the resulting capture is
+ineligible unless the recorded command manifests and frozen pixel-domain gate
+both pass. It remains sealed holdout. Commissioning, power selection, and all
 numerical bars must be finished on synthetic and existing development data
 before any holdout render.
 
@@ -573,8 +614,10 @@ reading any arm outcome.
    holdout's disjoint per-arm flat/dark groups. Report every ring through
    `0.25 cyc/native px`; no pooled crossing may hide one common-mode red band.
 10. **Geometry.** Integer shifts must recover exactly. Fractional translation,
-    scale, rotation, local warp, crop mismatch, and focus-support mismatch must
-    refuse before FRC. No spatial resampling.
+    scale, rotation, local warp, and crop mismatch must refuse before FRC. Pass
+    A frame `i` and pass B frame `i` must also satisfy the frozen same-command
+    and pixel-domain focus-ladder equivalence gate; no result-time re-indexing.
+    No spatial resampling.
 11. **Noise, exposure, and content.** Added independent shot/read noise must
     lower FRC monotonically; scalar gain is a null; illumination drift,
     clipping, saturation, flat/no-target sites, and periodic-answer-only sites

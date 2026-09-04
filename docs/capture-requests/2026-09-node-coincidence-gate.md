@@ -1,10 +1,12 @@
-# Frozen gate: do the two passes of a repeat pair actually pair?
+# Frozen gate: witness geometry for a candidate repeat pair
 
 **Status: FROZEN before the data exists. Written 2026-09, before the 407-frame
 session was shot.**
 
-This document fixes, in advance, the rule that decides whether pass A and pass B
-of a given step width may be treated as a repeat pair. It exists because the
+This document fixes, in advance, the witness-geometry prerequisite for pass A
+and pass B of a given step width. Passing it does **not** by itself make them a
+repeat pair: exact command-manifest identity and the separately pre-frozen
+pixel-domain ladder-equivalence gate must also pass. It exists because the
 alternative — looking at the frames and then deciding what counts as coincident
 — is not a measurement.
 
@@ -28,23 +30,22 @@ that the sweep frames themselves cannot answer:
 
 Focus is **locked** during a witness burst, so any frame-to-frame difference
 inside one burst is vibration, air, thermal drift and sensor noise — not focus.
-Any difference *between* two bursts is rig or subject displacement, again not
-focus. That separation is the entire design: it isolates displacement from
-focus by holding focus constant, rather than by assuming it.
+Between bursts, the operator has reset focus, so a difference can come from rig
+or subject displacement **or from reset focus/magnification error**. This gate
+measures the geometric consequence; it cannot assign the cause or prove that
+the complete commanded ladders match.
 
 ## 2. Why this gate is needed at all, and what it is not
 
-The requirement on a repeat pair is weaker than "the two passes visited
-identical focus positions". `docs/research/M-FRC-VIABILITY.md` §1.1 settles
-this:
+For final-render FRC alone, the requirement is weaker than "the two passes
+visited identical focus positions": separately acquired noise and matched
+effective focus support are sufficient. The same capture now also serves
+`V-HEADTOHEAD3`, which requires frame `i` of A and B to be independent
+same-focus repeats. `docs/research/M-FRC-VIABILITY.md` §1.1 therefore rules that
+the stronger frame-indexed contract governs the shared capture.
 
-> Whole sweeps do not have to alternate at every focus node [...] Independence
-> means that A and B are separately acquired inputs to separately run render
-> pipelines while the latent subject and intended focus support remain fixed.
-
-So the gate does **not** try to certify per-node focus equality, which in-camera
-focus bracketing on the A7C II makes unobservable anyway. It certifies the two
-conditions that are observable and that a repeat pair genuinely requires:
+This gate does **not** certify per-node focus equality. It certifies two
+observable geometric conditions:
 
 1. the latent subject did not move between the passes, and
 2. the two passes register to each other within the bar the program already
@@ -53,7 +54,10 @@ conditions that are observable and that a repeat pair genuinely requires:
 **This gate cannot detect a focus-ladder offset that leaves the rig
 undisplaced.** That limitation is stated here so it cannot later be presented as
 a guarantee this document made. What it detects is displacement, which is the
-failure that has actually occurred in this corpus.
+failure that has actually occurred in this corpus. Passing this gate is
+necessary but not sufficient for either consumer; the separate input-only
+focus-command/ladder-equivalence gate required by `M-FRC-VIABILITY` must also
+pass.
 
 ## 3. Provenance of the bar
 
@@ -129,16 +133,16 @@ the other.
 
 | Outcome | Consequence |
 |---|---|
-| G0 fails | No pair is valid. The session certifies no repeat-pair instrument. Sweeps remain usable for anything not requiring pairing. |
-| G0 passes, both G1 pass | Both pairs are valid repeat pairs. |
-| G0 passes, one G1 fails | That pair is not a repeat pair. The other stands. |
-| G0 passes, both G1 fail | No valid pair; the rig does not return to position, which is a rig finding worth recording in its own right. |
+| G0 fails | No pair passes the witness-geometry gate. Sweeps remain usable for anything not requiring pairing. |
+| G0 passes, both G1 pass | Both pairs pass witness geometry and remain eligible only if the separate focus-command and ladder-equivalence gates also pass. |
+| G0 passes, one G1 fails | That pair is ineligible. The other passes witness geometry but remains conditional on both focus gates. |
+| G0 passes, both G1 fail | No pair passes witness geometry; the rig does not return to position, which is a rig finding worth recording in its own right. |
 
-**In every failure case the sweep frames themselves remain fully usable** for
-any instrument that does not require A/B pairing — including the split-half
-family, which splits odd/even *within* a single dense bracket and therefore
-never depends on this gate. The `sw1` block at 91 frames is unaffected by any
-outcome here. A failed gate costs the pairing, not the session.
+**In every witness-gate failure case the sweep frames themselves remain fully
+usable** for any instrument that does not require A/B pairing — including the
+split-half family, which splits odd/even *within* a single dense bracket and
+therefore never depends on this gate. The `sw1` block at 91 frames is unaffected
+by any outcome here. A failed gate costs the pairing, not the session.
 
 ## 6. Prohibited responses to a failure
 
