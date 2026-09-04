@@ -261,11 +261,20 @@ fit at all**, and the Calibrite Nano would need `62.64°` of tilt and
 `35.52 mm` of depth travel to be usable. So the axis is not impossible — it
 just needs the right, and more expensive, target.
 
-**Three reasons to wait, none of which is about the money:**
+**Three reasons to wait. I am withdrawing the first one, and the other two carry
+the decision on their own:**
 
-1. **The scoring rules will not let us use it yet.** No comparator can be
-   quality-qualified until a replacement M1 is admitted, so five of the axes
-   Zerene is meant to unlock stay blocked with it sitting installed.
+1. **~~The scoring rules will not let us use it yet.~~ Withdrawn — that rule was
+   mine, not yours.** I previously argued that no comparator can be
+   quality-qualified until a replacement detail instrument is admitted, so five
+   of the axes Zerene unlocks would stay blocked with it sitting installed. An
+   independent audit checked that rule against your actual plan and found **it
+   appears nowhere in it** — I wrote it into the scorecard myself, along with
+   the `98%` threshold it depends on. It may still be a *good* rule and I may
+   ask you to ratify it, but **it is not a fact about the world and it should
+   not be counted as a reason to delay your own purchase.** I am flagging it
+   because it was load-bearing: it also shapes which axes get marked blocked,
+   and therefore the order I have been recommending you spend in.
 2. **A licence bought now starts ageing against a program whose gating work is
    measured in research, not weeks.** We already lost one trial that way.
 3. **We cannot yet prove the `$660` target would even clear the bar.** M7 demands
@@ -275,6 +284,10 @@ just needs the right, and more expensive, target.
    not signify or guarantee fitness for purpose"*. Worse, our own scorecard
    **specifies no uncertainty budget for reference values at all**, which is a
    gap on our side that I need to close before recommending you spend anything.
+
+**Reason 3 alone is sufficient**, and it is the one that actually protects your
+money: the `$189` unlocks exactly one axis, that axis is M7, and M7 cannot be
+scored without a `$660` target we have not yet confirmed is good enough.
 
 **So there is a new `$0` step ahead of this ask:** request ISA's sample
 certificate and its numerical uncertainty, which they supply at no charge, and
