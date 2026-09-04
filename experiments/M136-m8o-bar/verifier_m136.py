@@ -53,11 +53,65 @@ INTERPRETATION_CANONICAL_SHA256 = (
 )
 MANIFEST_SCHEMA = "m136-verifier-input-v1"
 SOURCE_MANIFEST_SCHEMA = "m136-source-snapshot-v1"
+M130_SOURCE_COMMIT = "248178b921f98ec1f13ea4c07d30fa68ace787a0"
+M130_SOURCE_TREE = {
+    "files": 9292,
+    "bytes": 325020512,
+    "manifest_sha256": "0F0EFD13D5EC0BB8825EBFEE40F7DCD93D7C99B804582A142F59685288CBF625",
+}
+APPROVED_CANDIDATE_SOURCE_TREE = {
+    "files": 9293,
+    "bytes": 325053057,
+    "manifest_sha256": "CE83FD38466856BF0C526AF9137AEEE8C7670E3D886A13A8D896155D32E92E12",
+}
+BUILD_OUTPUT_DIRECTORIES = {"target-m136", "target-m136-tests"}
+SOURCE_MANIFEST_FIELDS = {
+    "schema",
+    "schema_version",
+    "source_commit",
+    "source_root",
+    "file_count",
+    "total_bytes",
+    "tree_sha256",
+    "files",
+}
+SOURCE_PATCH_FIELDS = {
+    "schema",
+    "schema_version",
+    "protocol",
+    "source_commit",
+    "source_root",
+    "repository",
+    "source",
+    "destination",
+    "manifest_algorithm",
+    "source_tree",
+    "patched_tree",
+    "frozen_before_sha256",
+    "after_sha256",
+    "changed_files",
+    "changed_paths",
+    "trace_hook",
+    "patch_script",
+    "candidate_divergences",
+    "trace_scope",
+}
+APPROVED_SOURCE_PATCH_PATHS = {
+    "crates/strehl-core/src/align.rs",
+    "crates/strehl-core/src/restore.rs",
+    "crates/strehl-core/src/warpmap.rs",
+    "crates/strehl-cli/src/align_cmd.rs",
+    "crates/strehl-cli/src/image_out.rs",
+    "crates/strehl-cli/src/m8_trace_v3.rs",
+    "crates/strehl-cli/src/main.rs",
+    "crates/strehl-cli/src/merge_cmd.rs",
+}
 VERIFIER_PROTOCOL = "M136 independent verifier v1"
 TRACE_MAGIC = b"M8SITE03"
 TRACE_VERSION = 3
 ARITHMETIC_CONTRACT = 1
-TRACE_HEADER = struct.Struct("<8s15I6d4f32sI")
+COMMISSION_FREEZE_SHA256 = "00" * 32
+TRACE_HEADER = struct.Struct("<8s15I6d4f32s32sI")
 TRACE_NAME = re.compile(
     r"^m8-trace-v3-p1-f(?P<frame>\d{8})-"
     r"(?P<path_hash>[0-9a-f]{64})-s(?P<sx>[01])(?P<sy>[01])-"
@@ -79,7 +133,75 @@ FIXTURE_REPRESENTATION = (
 )
 CHECKER_PROTOCOL = "M136 independent checker"
 CHECKER_VERSION = 1
+BUILD_ENVIRONMENT_KEYS = {
+    "CARGO_BUILD_JOBS",
+    "CARGO_INCREMENTAL",
+    "RUSTC",
+    "RUSTFLAGS",
+    "SOURCE_DATE_EPOCH",
+    "STREHL_BUILD_ID",
+}
+BUILD_RECEIPT_FIELDS = {
+    "schema",
+    "schema_version",
+    "protocol",
+    "source_commit",
+    "source_root",
+    "source_manifest",
+    "source_patch",
+    "candidate_binary",
+    "cargo",
+    "rustc",
+    "build_log",
+    "environment",
+    "command",
+    "started_utc",
+    "completed_utc",
+    "exit_code",
+    "cargo_version",
+    "rustc_version",
+}
 REQUIRED_INSTRUMENTS = {"checker", "fixture", "hook", "runner"}
+VERIFIER_MANIFEST_FIELDS = {
+    "schema",
+    "protocol",
+    "created_utc",
+    "preregistration",
+    "commission_report",
+    "source_root",
+    "source_commit",
+    "source_manifest",
+    "source_patch",
+    "build_receipt",
+    "binary",
+    "instruments",
+    "checker_fixture_manifest",
+    "checker_commission_artifacts",
+    "instrument_freeze",
+    "captures",
+}
+CAPTURE_MANIFEST_FIELDS = {
+    "name",
+    "input_dir",
+    "input_fingerprint_before",
+    "input_fingerprint_after",
+    "warpmap",
+    "trace_state",
+    "checker_state",
+    "output_tiff",
+    "render_provenance",
+    "checker_artifacts",
+}
+
+
+def measurement_description(instrument_freeze_sha256: str) -> str:
+    return (
+        "Linear camera-native RGB. This is the measurement output. "
+        "M136 instrument freeze sha256: "
+        f"{instrument_freeze_sha256.upper()}."
+    )
+
+
 INSTRUMENT_NAMES = {
     "checker": "checker_m136.py",
     "fixture": "fixture_m136.py",
@@ -199,6 +321,7 @@ class TraceBlock:
     sensor_range: np.float32
     site_gain: np.float32
     output_gain: np.float32
+    instrument_freeze_sha256: str
     frame_source_sha256: str
     frame_path: Path
     source_offset: int
@@ -244,6 +367,10 @@ def sha256_canonical_text(path: Path) -> str:
     return sha256_bytes(text.encode("utf-8"))
 
 
+def m136_build_id(source_commit: str, source_manifest_sha256: str) -> str:
+    return f"m136-{source_commit[:12]}-{source_manifest_sha256[:12].lower()}"
+
+
 def json_dump(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     staging = path.with_name(path.name + ".new")
@@ -282,6 +409,16 @@ def require_under(path: Path, root: Path, label: str) -> None:
         raise Unmeasured(f"{label} is outside the required output volume") from error
     if os.path.normcase(common) != os.path.normcase(str(root)):
         raise Unmeasured(f"{label} must remain below {root}")
+
+
+def path_is_within(path: Path, root: Path) -> bool:
+    try:
+        common = os.path.commonpath(
+            [os.path.normcase(str(root)), os.path.normcase(str(path))]
+        )
+    except ValueError:
+        return False
+    return os.path.normcase(common) == os.path.normcase(str(root))
 
 
 def frozen_file(raw: Mapping[str, Any], label: str) -> FrozenFile:
@@ -356,6 +493,7 @@ def parse_trace(path: Path, source_hash_cache: dict[Path, str]) -> TraceBlock:
             sensor_range,
             site_gain,
             output_gain,
+            instrument_freeze_sha,
             source_sha,
             path_bytes,
         ) = TRACE_HEADER.unpack(raw)
@@ -463,6 +601,7 @@ def parse_trace(path: Path, source_hash_cache: dict[Path, str]) -> TraceBlock:
         sensor_range=np.float32(sensor_range),
         site_gain=np.float32(site_gain),
         output_gain=np.float32(output_gain),
+        instrument_freeze_sha256=instrument_freeze_sha.hex().upper(),
         frame_source_sha256=source_sha.hex().upper(),
         frame_path=frame_path,
         source_offset=source_offset,
@@ -788,6 +927,7 @@ def block_geometry_key(block: TraceBlock) -> tuple[Any, ...]:
         block.cx,
         block.cy,
         block.arithmetic_contract,
+        block.instrument_freeze_sha256,
     )
 
 
@@ -912,7 +1052,12 @@ def validate_block_set(
     return grouped
 
 
-def load_tiff(path: Path, expected_height: int, expected_width: int) -> np.ndarray:
+def load_tiff(
+    path: Path,
+    expected_height: int,
+    expected_width: int,
+    expected_instrument_freeze_sha256: str | None = None,
+) -> np.ndarray:
     with tifffile.TiffFile(path) as tif:
         if len(tif.pages) != 1:
             raise Unmeasured(f"{path}: expected one TIFF page, found {len(tif.pages)}")
@@ -931,6 +1076,15 @@ def load_tiff(path: Path, expected_height: int, expected_width: int) -> np.ndarr
             raise Unmeasured(
                 f"{path}: TIFF does not identify the linear camera-native measurement path"
             )
+        if expected_instrument_freeze_sha256 is not None:
+            freeze_marker = (
+                "M136 instrument freeze sha256: "
+                f"{expected_instrument_freeze_sha256.upper()}."
+            )
+            if description.count(freeze_marker) != 1:
+                raise Unmeasured(
+                    f"{path}: TIFF is not bound to the frozen M136 instrument"
+                )
         image = page.asarray()
     if image.dtype != np.uint16:
         raise Unmeasured(f"{path}: output TIFF dtype is {image.dtype}, expected uint16")
@@ -1299,6 +1453,7 @@ def parse_checker_command(
     checker_state: Path,
     preregistration: FrozenFile,
     checker_commission: FrozenFile,
+    instrument_freeze: FrozenFile,
     source_commit: str,
     candidate_binary: FrozenFile,
 ) -> dict[str, str]:
@@ -1327,6 +1482,7 @@ def parse_checker_command(
         "--output": checker_state,
         "--preregistration": preregistration.path,
         "--commissioning-report": checker_commission.path,
+        "--instrument-freeze": instrument_freeze.path,
         "--candidate-binary": candidate_binary.path,
     }
     for flag, path in expected_paths.items():
@@ -1520,6 +1676,7 @@ def compare_checker_artifacts(
         "capture": result["capture"],
         "green_rule": GREEN_RULE,
         "green_rule_status": GREEN_RULE_STATUS,
+        "instrument_freeze_sha256": context["instrument_freeze"].sha256,
         "arithmetic_contract": ARITHMETIC_CONTRACT,
         "crop": {
             **result["crop"],
@@ -1683,12 +1840,19 @@ def compare_checker_artifacts(
         context["output_tiff"],
         "provenance.output_tiff",
     )
+    require_frozen_reference(
+        provenance.get("instrument_freeze"),
+        context["instrument_freeze"],
+        "provenance.instrument_freeze",
+    )
     if (
         provenance.get("protocol") != CHECKER_PROTOCOL
         or provenance.get("capture") != result["capture"]
         or provenance.get("source_commit") != context["source_commit"]
         or provenance.get("green_rule") != GREEN_RULE
         or provenance.get("green_rule_status") != GREEN_RULE_STATUS
+        or provenance.get("instrument_freeze_sha256")
+        != context["instrument_freeze"].sha256
     ):
         raise Disagreement("checker provenance governing identity mismatch")
     if provenance.get("trace_sha256") != result["evidence"]["trace_sha256"]:
@@ -1717,6 +1881,7 @@ def compare_checker_artifacts(
         checker_state=context["checker_state"],
         preregistration=context["preregistration"],
         checker_commission=context["checker_commission"],
+        instrument_freeze=context["instrument_freeze"],
         source_commit=context["source_commit"],
         candidate_binary=context["candidate_binary"],
     )
@@ -1791,6 +1956,7 @@ def verify_capture(
     chunk_rows: int,
     checker_artifacts: Mapping[str, FrozenFile] | None,
     checker_context: Mapping[str, Any] | None = None,
+    expected_freeze_sha256: str | None = None,
 ) -> dict[str, Any]:
     warpmap = parse_warpmap(warpmap_file.path)
     if warpmap.resampler != "clamped-catmull":
@@ -1854,8 +2020,19 @@ def verify_capture(
         )
     if any(block.kernel != 2 for block in blocks):
         raise Unmeasured(f"{capture}: target contains a non-clamped-Catmull trace")
+    if expected_freeze_sha256 is not None and any(
+        block.instrument_freeze_sha256 != expected_freeze_sha256 for block in blocks
+    ):
+        raise Unmeasured(
+            f"{capture}: trace blocks are not bound to the frozen instrument"
+        )
 
-    image = load_tiff(output_file.path, compact_height, compact_width)
+    image = load_tiff(
+        output_file.path,
+        compact_height,
+        compact_width,
+        expected_freeze_sha256,
+    )
     artifact_dir.mkdir(parents=True, exist_ok=True)
     shape = (3, compact_height, compact_width)
     pre_lower = create_array(artifact_dir / "pre-lower.npy", "<f4", shape, np.inf)
@@ -2317,6 +2494,24 @@ def validate_commission_report(
         raise Unmeasured("a numeric commissioning case did not match its expectation")
     if report.get("interval_containment", {}).get("misses") != 0:
         raise Unmeasured("outward interval commissioning found a containment miss")
+    source_inventory = report.get("source_inventory_case", {})
+    if (
+        source_inventory.get("status") != "PASS"
+        or "crates/app/src/target/mod.rs"
+        not in source_inventory.get("required_present", [])
+        or "outside-path-dependency/src/lib.rs"
+        not in source_inventory.get("required_present", [])
+        or "target-m136/release/strehl.exe"
+        not in source_inventory.get("top_level_target_excluded", [])
+        or "target-m136-tests/debug/probe.exe"
+        not in source_inventory.get("top_level_target_excluded", [])
+        or any(
+            path.startswith("target-m136")
+            for path in source_inventory.get("observed", [])
+        )
+        or source_inventory.get("build_id") != "m136-248178b921f9-aaaaaaaaaaaa"
+    ):
+        raise Unmeasured("source-inventory commissioning is incomplete or wrong")
     quantizer = report.get("quantizer_case", {})
     if (
         quantizer.get("intermediate_u16") != 1013
@@ -2373,12 +2568,111 @@ def validate_commission_report(
     ):
         raise Unmeasured("M8-R null commissioning is incomplete or wrong")
     inverse_gain = report.get("inverse_gain_order_case", {})
+    production_inverse_gain = inverse_gain.get("production_path", {})
     if (
         inverse_gain.get("actual_intermediate_u16") != 1
         or inverse_gain.get("direct_division_intermediate_u16") != 2
         or inverse_gain.get("distinguishes_operation_order") is not True
+        or production_inverse_gain.get("intermediate_interval_u16") != [17268, 17269]
+        or production_inverse_gain.get("direct_division_interval_u16") != [17269, 17269]
+        or production_inverse_gain.get("distinguishes_operation_order") is not True
     ):
         raise Unmeasured("inverse-gain operation-order commissioning is incomplete")
+    production_controls = report.get("production_path_controls", {})
+    production_m8r = production_controls.get("m8_r", {})
+    production_m8r_defect = production_m8r.get("defect", {})
+    production_m8r_improvement = production_m8r.get("improvement", {})
+    if (
+        production_m8r_defect.get("m8_r")
+        != {
+            "denominator": 784,
+            "lower_violations": 1,
+            "upper_violations": 1,
+            "violations": 2,
+        }
+        or production_m8r_defect.get("m8_o_violations") != 0
+        or production_m8r_defect.get("violation_directions") != [-1, 1]
+        or production_m8r_improvement.get("m8_r")
+        != {
+            "denominator": 784,
+            "lower_violations": 0,
+            "upper_violations": 0,
+            "violations": 0,
+        }
+        or production_m8r_improvement.get("m8_o_violations") != 0
+        or production_m8r_defect.get("recipe_sha256")
+        == production_m8r_improvement.get("recipe_sha256")
+        or production_controls.get("inverse_gain") != production_inverse_gain
+        or set(production_m8r.get("improvement_landed", {})) != {"lower", "upper"}
+        or any(
+            plant.get("occurrences") != 1
+            or plant.get("sha256_before") == plant.get("sha256_after")
+            for plant in production_m8r.get("improvement_landed", {}).values()
+        )
+    ):
+        raise Unmeasured("production-path commissioning is incomplete or wrong")
+    production_green = production_controls.get("green_pairing", {})
+    production_green_defect = production_green.get("defect", {})
+    production_green_improvement = production_green.get("improvement", {})
+    green_improvement_landed = production_green.get("improvement_landed", {})
+    if (
+        production_green_defect.get("m8_r_violations") != 0
+        or production_green_defect.get("m8_o")
+        != {
+            "denominator": 243,
+            "lower_violations": 81,
+            "upper_violations": 0,
+            "violations": 81,
+        }
+        or production_green_defect.get("violation_channels") != ["G"]
+        or production_green_defect.get("violation_directions") != [-1]
+        or production_green_improvement.get("m8_r_violations") != 0
+        or production_green_improvement.get("m8_o")
+        != {
+            "denominator": 243,
+            "lower_violations": 0,
+            "upper_violations": 0,
+            "violations": 0,
+        }
+        or production_green_defect.get("recipe_sha256")
+        == production_green_improvement.get("recipe_sha256")
+        or green_improvement_landed.get("occurrences") != 1
+        or green_improvement_landed.get("sha256_before")
+        == green_improvement_landed.get("sha256_after")
+    ):
+        raise Unmeasured("production-path green commissioning is incomplete or wrong")
+    production_reciprocal = production_controls.get("reciprocal_order", {})
+    production_reciprocal_defect = production_reciprocal.get("defect", {})
+    production_reciprocal_improvement = production_reciprocal.get("improvement", {})
+    reciprocal_improvement_landed = production_reciprocal.get("improvement_landed", {})
+    if (
+        production_reciprocal_defect.get("m8_r_violations") != 0
+        or production_reciprocal_defect.get("m8_o")
+        != {
+            "denominator": 243,
+            "lower_violations": 81,
+            "upper_violations": 0,
+            "violations": 81,
+        }
+        or production_reciprocal_defect.get("violation_channels") != ["R"]
+        or production_reciprocal_defect.get("violation_directions") != [-1]
+        or production_reciprocal_improvement.get("m8_r_violations") != 0
+        or production_reciprocal_improvement.get("m8_o")
+        != {
+            "denominator": 243,
+            "lower_violations": 0,
+            "upper_violations": 0,
+            "violations": 0,
+        }
+        or production_reciprocal_defect.get("recipe_sha256")
+        == production_reciprocal_improvement.get("recipe_sha256")
+        or reciprocal_improvement_landed.get("occurrences") != 1
+        or reciprocal_improvement_landed.get("sha256_before")
+        == reciprocal_improvement_landed.get("sha256_after")
+    ):
+        raise Unmeasured(
+            "production-path reciprocal-order commissioning is incomplete or wrong"
+        )
     pairing = report.get("green_pairing_case", {})
     if (
         pairing.get("same_frame_violation") is not True
@@ -2386,11 +2680,25 @@ def validate_commission_report(
     ):
         raise Unmeasured("green-pairing commissioning does not distinguish the rules")
     fail_closed = report.get("fail_closed", {})
+    tiff_binding = fail_closed.get("wrong_tiff_freeze_binding", {})
     if (
         not fail_closed.get("missing_frame_site")
         or not fail_closed.get("duplicate_frame_site")
-        or not fail_closed.get("trace_v2")
+        or fail_closed.get("trace_v2_rejected") is not True
+        or fail_closed.get("trace_v2_reason") != "requires trace-v3"
         or not fail_closed.get("wrong_crop_origin")
+        or not fail_closed.get("wrong_freeze_binding")
+        or tiff_binding.get("rejected") is not True
+        or tiff_binding.get("reason")
+        != "TIFF is not bound to the frozen M136 instrument"
+        or tiff_binding.get("defect_tiff_sha256")
+        == tiff_binding.get("improved_tiff_sha256")
+        or any(
+            tiff_binding.get(name, {}).get("occurrences") != 1
+            or tiff_binding.get(name, {}).get("sha256_before")
+            == tiff_binding.get(name, {}).get("sha256_after")
+            for name in ("defect_landed", "improvement_landed")
+        )
         or fail_closed.get("producer_supplied_hull_ignored") is not True
     ):
         raise Unmeasured("fail-closed commissioning evidence is incomplete")
@@ -2857,28 +3165,25 @@ def fresh_checker_fixture(
 
 
 def build_relevant_source_files(source_root: Path) -> set[str]:
-    required_roots = (
-        source_root / "Cargo.toml",
-        source_root / "Cargo.lock",
-        source_root / "rust-toolchain.toml",
-    )
-    paths = {path for path in required_roots if path.is_file()}
-    for directory in (source_root / ".cargo", source_root / "crates"):
-        if directory.is_dir():
-            paths.update(path for path in directory.rglob("*") if path.is_file())
-    hook = source_root / "experiments" / "M136-m8o-bar" / "m8_trace_v3.rs"
-    if hook.is_file():
-        paths.add(hook)
     if (
         not (source_root / "Cargo.toml").is_file()
         or not (source_root / "crates").is_dir()
     ):
         raise Unmeasured(f"{source_root}: source snapshot lacks Cargo.toml or crates/")
-    return {
-        path.relative_to(source_root).as_posix()
-        for path in paths
-        if "target" not in path.relative_to(source_root).parts
-    }
+    paths: set[str] = set()
+    for top_level in source_root.iterdir():
+        if top_level.name.lower() in BUILD_OUTPUT_DIRECTORIES:
+            continue
+        candidates = [top_level]
+        if top_level.is_dir() and not top_level.is_symlink():
+            candidates.extend(top_level.rglob("*"))
+        for path in candidates:
+            relative = path.relative_to(source_root)
+            if path.is_symlink():
+                raise Unmeasured(f"source snapshot contains a symlink: {relative}")
+            if path.is_file():
+                paths.add(relative.as_posix())
+    return paths
 
 
 def git_blob_sha1(payload: bytes) -> str:
@@ -2895,13 +3200,6 @@ def committed_source_blobs(repository: Path, commit: str) -> dict[str, str]:
         "-r",
         "-z",
         commit,
-        "--",
-        "Cargo.toml",
-        "Cargo.lock",
-        "rust-toolchain.toml",
-        ".cargo",
-        "crates",
-        "experiments/M136-m8o-bar/m8_trace_v3.rs",
     ]
     completed = subprocess.run(
         command,
@@ -2949,6 +3247,8 @@ def verify_source_patch(
     source_root: Path,
     source_commit: str,
     source_hashes: Mapping[str, str],
+    source_tree_summary: Mapping[str, Any],
+    hook: FrozenFile,
 ) -> dict[str, Any]:
     repository = Path(__file__).resolve().parents[2]
     try:
@@ -3009,8 +3309,12 @@ def verify_source_patch(
         not isinstance(document, Mapping)
         or document.get("schema") != "m136-source-patch-v1"
         or document.get("schema_version") != 1
+        or document.get("protocol") != PROTOCOL
+        or set(document) != SOURCE_PATCH_FIELDS
         or document.get("source_commit", "").lower() != source_commit.lower()
         or Path(str(document.get("source_root", ""))).resolve(strict=True)
+        != source_root
+        or Path(str(document.get("destination", ""))).resolve(strict=True)
         != source_root
         or Path(str(document.get("repository", ""))).resolve(strict=True) != repository
     ):
@@ -3030,12 +3334,242 @@ def verify_source_patch(
         raise Disagreement(
             "source patch manifest does not match immutable git evidence"
         )
+    if set(changed) != APPROVED_SOURCE_PATCH_PATHS:
+        missing = sorted(APPROVED_SOURCE_PATCH_PATHS - set(changed))
+        extra = sorted(set(changed) - APPROVED_SOURCE_PATCH_PATHS)
+        raise Disagreement(
+            f"source patch differs from the preregistered candidate arm: "
+            f"missing={missing}, extra={extra}"
+        )
+    expected_changed_paths = sorted(changed)
+    expected_after = {
+        relative: row["snapshot_sha256"] for relative, row in sorted(changed.items())
+    }
+    expected_before = {
+        relative: row["base_sha256"]
+        for relative, row in sorted(changed.items())
+        if row["base_sha256"] is not None
+    }
+    expected_patched_tree = {
+        "files": source_tree_summary["files"],
+        "bytes": source_tree_summary["bytes"],
+        "manifest_sha256": source_tree_summary["tree_sha256"],
+    }
+    if (
+        document.get("changed_paths") != expected_changed_paths
+        or document.get("after_sha256") != expected_after
+        or document.get("frozen_before_sha256") != expected_before
+        or document.get("source_tree") != M130_SOURCE_TREE
+        or document.get("patched_tree") != expected_patched_tree
+        or document.get("manifest_algorithm")
+        != "SHA-256 over sorted UTF-8 JSON lines [relative_posix_path,bytes,file_sha256]"
+    ):
+        raise Disagreement("source patch summary does not match the frozen source tree")
+    trace_hook = document.get("trace_hook")
+    if (
+        not isinstance(trace_hook, Mapping)
+        or Path(str(trace_hook.get("source", ""))).resolve(strict=True) != hook.path
+        or str(trace_hook.get("sha256", "")).upper() != hook.sha256
+    ):
+        raise Disagreement("source patch trace hook differs from the frozen instrument")
     return {
         "path": str(file.path),
         "sha256": file.sha256,
         "repository": str(repository),
         "source_commit": source_commit,
         "changed_files": list(changed.values()),
+        "patched_tree": expected_patched_tree,
+    }
+
+
+def verify_reproducible_build(
+    receipt_file: FrozenFile,
+    *,
+    source_root: Path,
+    source_commit: str,
+    source_manifest: FrozenFile,
+    source_patch: FrozenFile,
+    candidate_binary: FrozenFile,
+    rebuild_target: Path,
+) -> dict[str, Any]:
+    try:
+        receipt = json.loads(receipt_file.path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise Unmeasured(f"invalid build receipt {receipt_file.path}") from error
+    if (
+        not isinstance(receipt, Mapping)
+        or receipt.get("schema") != "m136-build-receipt-v1"
+        or receipt.get("schema_version") != 1
+        or receipt.get("protocol") != PROTOCOL
+        or set(receipt) != BUILD_RECEIPT_FIELDS
+        or receipt.get("source_commit", "").lower() != source_commit.lower()
+        or receipt.get("exit_code") != 0
+    ):
+        raise Unmeasured("candidate build receipt identity is invalid")
+    try:
+        receipt_source_root = Path(str(receipt.get("source_root", ""))).resolve(
+            strict=True
+        )
+    except Exception as error:
+        raise Unmeasured("candidate build receipt source root is absent") from error
+    if receipt_source_root != source_root:
+        raise Disagreement("candidate build receipt names another source root")
+    require_frozen_reference(
+        receipt.get("source_manifest"),
+        source_manifest,
+        "candidate build source manifest",
+    )
+    require_frozen_reference(
+        receipt.get("source_patch"), source_patch, "candidate build source patch"
+    )
+    require_frozen_reference(
+        receipt.get("candidate_binary"),
+        candidate_binary,
+        "candidate build binary",
+    )
+    cargo = frozen_file(receipt.get("cargo", {}), "candidate build cargo")
+    rustc = frozen_file(receipt.get("rustc", {}), "candidate build rustc")
+    build_log = frozen_file(receipt.get("build_log", {}), "candidate build log")
+    if build_log.path.stat().st_size == 0:
+        raise Unmeasured("candidate build log is empty")
+    environment = receipt.get("environment")
+    repository = Path(__file__).resolve().parents[2]
+    try:
+        commit_epoch_result = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repository),
+                "show",
+                "-s",
+                "--format=%ct",
+                source_commit,
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except OSError as error:
+        raise Unmeasured("git is unavailable for build-receipt verification") from error
+    commit_epoch = commit_epoch_result.stdout.strip()
+    expected_build_id = m136_build_id(source_commit, source_manifest.sha256)
+    if (
+        not isinstance(environment, Mapping)
+        or set(environment) != BUILD_ENVIRONMENT_KEYS
+        or environment.get("CARGO_BUILD_JOBS") != "4"
+        or environment.get("CARGO_INCREMENTAL") != "0"
+        or environment.get("RUSTC") != str(rustc.path)
+        or environment.get("RUSTFLAGS") != ""
+        or environment.get("STREHL_BUILD_ID") != expected_build_id
+        or not all(isinstance(value, str) for value in environment.values())
+        or commit_epoch_result.returncode != 0
+        or re.fullmatch(r"\d+", commit_epoch) is None
+        or environment.get("SOURCE_DATE_EPOCH") != commit_epoch
+    ):
+        raise Unmeasured("candidate build environment is incomplete or unexpected")
+    original_target = candidate_binary.path.parent.parent
+    expected_command = [
+        str(cargo.path),
+        "build",
+        "--release",
+        "--locked",
+        "--offline",
+        "-p",
+        "strehl-cli",
+        "-j",
+        "4",
+        "--manifest-path",
+        str(source_root / "Cargo.toml"),
+        "--target-dir",
+        str(original_target),
+    ]
+    if receipt.get("command") != expected_command:
+        raise Disagreement("candidate build command is not the frozen command")
+    for field in ("started_utc", "completed_utc"):
+        if not isinstance(receipt.get(field), str) or not receipt[field]:
+            raise Unmeasured(f"candidate build receipt omits {field}")
+    version_commands = {
+        "cargo_version": [str(cargo.path), "--version", "--verbose"],
+        "rustc_version": [str(rustc.path), "-vV"],
+    }
+    for field, command in version_commands.items():
+        completed = subprocess.run(
+            command,
+            cwd=source_root,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        observed = completed.stdout.strip()
+        if completed.returncode != 0 or receipt.get(field) != observed:
+            raise Unmeasured(f"candidate build {field} does not reproduce")
+    if rebuild_target.exists():
+        raise Unmeasured(f"independent rebuild target already exists: {rebuild_target}")
+    rebuild_target.parent.mkdir(parents=True, exist_ok=True)
+    rebuild_command = [
+        str(cargo.path),
+        *expected_command[1:-1],
+        str(rebuild_target),
+    ]
+    environment_for_build = os.environ.copy()
+    for key in list(environment_for_build):
+        upper = key.upper()
+        if (
+            upper.startswith("CARGO")
+            or upper.startswith("RUST")
+            or upper.startswith("STREHL_")
+        ):
+            environment_for_build.pop(key)
+    environment_for_build.update(
+        {str(key): str(value) for key, value in environment.items()}
+    )
+    completed = subprocess.run(
+        rebuild_command,
+        cwd=source_root,
+        env=environment_for_build,
+        check=False,
+        capture_output=True,
+        timeout=3600,
+    )
+    rebuild_log = rebuild_target.with_name(rebuild_target.name + "-build.log")
+    rebuild_log.write_bytes(completed.stdout + completed.stderr)
+    if completed.returncode != 0:
+        raise Unmeasured(
+            f"independent candidate rebuild failed with exit {completed.returncode}"
+        )
+    rebuilt_binary = rebuild_target / "release" / candidate_binary.path.name
+    if not rebuilt_binary.is_file():
+        raise Unmeasured(f"independent rebuild omitted binary: {rebuilt_binary}")
+    rebuilt_hash = sha256_file(rebuilt_binary)
+    if rebuilt_hash != candidate_binary.sha256:
+        raise Disagreement(
+            "candidate binary is not reproducible from the frozen source snapshot"
+        )
+    assert_still_frozen(cargo, "cargo executable")
+    assert_still_frozen(rustc, "rustc executable")
+    assert_still_frozen(build_log, "candidate build log")
+    return {
+        "receipt": {"path": str(receipt_file.path), "sha256": receipt_file.sha256},
+        "cargo": {"path": str(cargo.path), "sha256": cargo.sha256},
+        "rustc": {"path": str(rustc.path), "sha256": rustc.sha256},
+        "original_build_log": {
+            "path": str(build_log.path),
+            "sha256": build_log.sha256,
+        },
+        "environment": dict(environment),
+        "source_commit_epoch": commit_epoch,
+        "rebuild_command": rebuild_command,
+        "rebuild_log": {
+            "path": str(rebuild_log.resolve()),
+            "sha256": sha256_file(rebuild_log),
+        },
+        "rebuilt_binary": {
+            "path": str(rebuilt_binary.resolve()),
+            "sha256": rebuilt_hash,
+        },
+        "matches_candidate": True,
     }
 
 
@@ -3047,6 +3581,7 @@ def verify_instrument_freeze(
     source_root: Path,
     source_manifest: FrozenFile,
     source_patch: FrozenFile,
+    build_receipt: FrozenFile,
     binary: FrozenFile,
     instruments: Mapping[str, FrozenFile],
     verifier: FrozenFile,
@@ -3086,6 +3621,11 @@ def verify_instrument_freeze(
     )
     require_frozen_reference(
         snapshot.get("patch"), source_patch, "instrument freeze source patch"
+    )
+    require_frozen_reference(
+        document.get("build_receipt"),
+        build_receipt,
+        "instrument freeze build receipt",
     )
     require_frozen_reference(
         document.get("candidate_binary"), binary, "instrument freeze binary"
@@ -3149,6 +3689,7 @@ def verify_source_manifest(
     if (
         document.get("schema") != SOURCE_MANIFEST_SCHEMA
         or document.get("schema_version") != 1
+        or set(document) != SOURCE_MANIFEST_FIELDS
     ):
         raise Unmeasured(f"source manifest schema must be {SOURCE_MANIFEST_SCHEMA!r}")
     if str(document.get("source_commit", "")).lower() != expected_commit.lower():
@@ -3184,7 +3725,9 @@ def verify_source_manifest(
             f"source manifest inventory mismatch: missing={missing[:8]}, extra={extra[:8]}"
         )
     observed: dict[str, str] = {}
-    for relative, raw in declared.items():
+    total_bytes = 0
+    tree_digest = hashlib.sha256()
+    for relative, raw in sorted(declared.items()):
         path = (source_root / Path(relative)).resolve()
         try:
             common = os.path.commonpath(
@@ -3214,23 +3757,48 @@ def verify_source_manifest(
         if actual_hash != expected_hash:
             raise Unmeasured(f"source snapshot hash changed: {relative}")
         observed[relative] = actual_hash
-    hook_matches = [
-        relative
-        for relative, digest in observed.items()
-        if Path(relative).name == "m8_trace_v3.rs" and digest == hook_hash
-    ]
-    if not hook_matches:
+        total_bytes += expected_bytes
+        tree_digest.update(
+            (
+                json.dumps(
+                    [relative, expected_bytes, actual_hash],
+                    separators=(",", ":"),
+                    ensure_ascii=False,
+                )
+                + "\n"
+            ).encode("utf-8")
+        )
+    observed_tree_hash = tree_digest.hexdigest().upper()
+    if (
+        document.get("file_count") != len(observed)
+        or document.get("total_bytes") != total_bytes
+        or str(document.get("tree_sha256", "")).upper() != observed_tree_hash
+    ):
+        raise Unmeasured("source snapshot manifest totals or tree digest are wrong")
+    observed_tree = {
+        "files": len(observed),
+        "bytes": total_bytes,
+        "manifest_sha256": observed_tree_hash,
+    }
+    if observed_tree != APPROVED_CANDIDATE_SOURCE_TREE:
+        raise Disagreement(
+            "source snapshot is not the prospectively approved candidate tree"
+        )
+    compiled_hook_path = "crates/strehl-cli/src/m8_trace_v3.rs"
+    if observed.get(compiled_hook_path) != hook_hash:
         raise Unmeasured(
-            "source snapshot must contain an m8_trace_v3.rs "
-            "matching the registered hook"
+            "compiled source snapshot hook does not match the registered "
+            "experiments/M136-m8o-bar/m8_trace_v3.rs"
         )
     return {
         "path": str(file.path),
         "sha256": file.sha256,
         "source_commit": expected_commit,
         "files": len(observed),
+        "bytes": total_bytes,
+        "tree_sha256": observed_tree_hash,
         "file_sha256": observed,
-        "matching_hook_paths": hook_matches,
+        "compiled_hook_path": compiled_hook_path,
     }
 
 
@@ -3431,7 +3999,21 @@ def validate_render_provenance(
 def verify_manifest(
     manifest_path: Path, report_path: Path, chunk_rows: int
 ) -> tuple[int, dict[str, Any]]:
-    output_root = Path(__file__).with_name("out").resolve()
+    repository = Path(__file__).resolve().parents[2]
+    allowed_output_roots = (
+        Path(__file__).with_name("out").resolve(),
+        (repository / "experiments" / "M142-m8o-execute" / "out").resolve(),
+    )
+    matching_roots = [
+        root
+        for root in allowed_output_roots
+        if path_is_within(manifest_path, root) and path_is_within(report_path, root)
+    ]
+    if len(matching_roots) != 1:
+        raise Unmeasured(
+            "verifier manifest and report must share an approved M136/M142 output root"
+        )
+    output_root = matching_roots[0]
     require_under(manifest_path, output_root, "verifier manifest")
     require_under(report_path, output_root, "verifier report")
     manifest_file_hash = sha256_file(manifest_path)
@@ -3443,8 +4025,13 @@ def verify_manifest(
         not isinstance(manifest, Mapping)
         or manifest.get("schema") != MANIFEST_SCHEMA
         or manifest.get("protocol") != VERIFIER_PROTOCOL
+        or set(manifest) != VERIFIER_MANIFEST_FIELDS
     ):
-        raise Unmeasured(f"manifest schema must be {MANIFEST_SCHEMA!r}")
+        raise Unmeasured(
+            f"manifest must use schema {MANIFEST_SCHEMA!r} and exact frozen fields"
+        )
+    if not isinstance(manifest.get("created_utc"), str) or not manifest["created_utc"]:
+        raise Unmeasured("verifier manifest omits its creation timestamp")
 
     prereg_file = require_absolute_existing_file(
         str(manifest.get("preregistration", "")), "preregistration"
@@ -3505,7 +4092,7 @@ def verify_manifest(
     recheck_path = report_path.with_name(report_path.stem + "-commission-recheck.json")
     if recheck_path.exists():
         raise Unmeasured(f"commission recheck output already exists: {recheck_path}")
-    recheck_work = verifier_path.with_name("w")
+    recheck_work = output_root / "v"
     recheck = commission(prereg_file, recheck_path, recheck_work)
     frozen_commission = json.loads(commission_file.path.read_text(encoding="utf-8"))
     if recheck != frozen_commission:
@@ -3527,8 +4114,11 @@ def verify_manifest(
         str(manifest.get("source_root", "")), "source_root"
     )
     expected_commit = str(manifest.get("source_commit", ""))
-    if not re.fullmatch(r"[0-9a-f]{40}", expected_commit):
-        raise Unmeasured("source_commit is not a lowercase full 40-digit commit")
+    if expected_commit != M130_SOURCE_COMMIT:
+        raise Unmeasured(
+            "source_commit is not the preregistered post-M130 commit "
+            f"{M130_SOURCE_COMMIT}"
+        )
     binary = frozen_file(manifest.get("binary", {}), "candidate binary")
     instruments = parse_instruments(manifest.get("instruments"))
     fixture_manifest = frozen_file(
@@ -3601,6 +4191,8 @@ def verify_manifest(
         source_root,
         expected_commit,
         source_evidence["file_sha256"],
+        source_evidence,
+        instruments["hook"],
     )
     try:
         binary_common = os.path.commonpath(
@@ -3612,6 +4204,18 @@ def verify_manifest(
         ) from error
     if os.path.normcase(binary_common) != os.path.normcase(str(source_root)):
         raise Unmeasured("candidate binary is outside the source snapshot")
+    binary_relative = binary.path.relative_to(source_root)
+    if (
+        len(binary_relative.parts) != 3
+        or binary_relative.parts[0].lower() != "target-m136"
+        or binary_relative.parts[1].lower() != "release"
+    ):
+        raise Unmeasured(
+            "candidate binary must be source_root\\target-m136\\release\\<binary>"
+        )
+    build_receipt = frozen_file(
+        manifest.get("build_receipt", {}), "candidate build receipt"
+    )
     instrument_freeze_file = frozen_file(
         manifest.get("instrument_freeze", {}), "instrument freeze"
     )
@@ -3622,6 +4226,7 @@ def verify_manifest(
         source_root=source_root,
         source_manifest=source_manifest,
         source_patch=source_patch,
+        build_receipt=build_receipt,
         binary=binary,
         instruments=instruments,
         verifier=FrozenFile(verifier_path, verifier_hash),
@@ -3630,10 +4235,31 @@ def verify_manifest(
         checker_commission_report=checker_commission_report,
         checker_commission_evidence=checker_commission_violation_evidence,
     )
+    rebuild_target = report_path.with_name(report_path.stem + "-rebuild")
+    build_evidence = verify_reproducible_build(
+        build_receipt,
+        source_root=source_root,
+        source_commit=expected_commit,
+        source_manifest=source_manifest,
+        source_patch=source_patch,
+        candidate_binary=binary,
+        rebuild_target=rebuild_target,
+    )
+    if not (
+        source_manifest.path.stat().st_mtime_ns <= build_receipt.path.stat().st_mtime_ns
+        and source_patch.path.stat().st_mtime_ns
+        <= build_receipt.path.stat().st_mtime_ns
+        and binary.path.stat().st_mtime_ns
+        <= build_receipt.path.stat().st_mtime_ns
+        <= instrument_freeze_file.path.stat().st_mtime_ns
+    ):
+        raise Unmeasured("source/build/freeze timestamps are out of order")
     for label, path in (
         ("source root", source_root),
         ("source manifest", source_manifest.path),
         ("source patch", source_patch.path),
+        ("build receipt", build_receipt.path),
+        ("original build log", Path(build_evidence["original_build_log"]["path"])),
         ("candidate binary", binary.path),
         ("checker fixture", fixture_manifest.path),
         ("checker commission report", checker_commission_report.path),
@@ -3666,8 +4292,8 @@ def verify_manifest(
         raise Unmeasured(f"verifier output directory already exists: {artifact_root}")
     artifact_root.mkdir(parents=True)
     for item in raw_captures:
-        if not isinstance(item, Mapping):
-            raise Unmeasured("capture entry must be an object")
+        if not isinstance(item, Mapping) or set(item) != CAPTURE_MANIFEST_FIELDS:
+            raise Unmeasured("capture entry must contain the exact frozen fields")
         name = str(item["name"])
         registered = prereg_captures[name]
         input_dir = require_absolute_existing_dir(
@@ -3759,6 +4385,7 @@ def verify_manifest(
         substitutions = {
             "STREHL_M8_CAPTURE": name,
             "STREHL_M8_CHECKER": str(instruments["checker"].path),
+            "STREHL_M8_FREEZE_SHA256": instrument_freeze_file.sha256,
             "STREHL_M8_TRACE_DIR": str(trace_state),
             "STREHL_WARPMAP": str(warpmap_file.path),
         }
@@ -3813,6 +4440,7 @@ def verify_manifest(
             "preregistration": FrozenFile(prereg_file, prereg_hash),
             "checker_commission": checker_commission_report,
             "fixture_manifest": fixture_manifest,
+            "instrument_freeze": instrument_freeze_file,
             "warpmap": warpmap_file,
             "output_tiff": output_file,
             "source_commit": expected_commit,
@@ -3831,6 +4459,7 @@ def verify_manifest(
             chunk_rows,
             checker_artifacts,
             checker_context,
+            instrument_freeze_file.sha256,
         )
         post_verification_fingerprint = validate_input_fingerprint(
             input_fingerprint_before,
@@ -3944,6 +4573,7 @@ def verify_manifest(
         ("verifier commissioning", commission_file),
         ("source manifest", source_manifest),
         ("source patch", source_patch),
+        ("build receipt", build_receipt),
         ("candidate binary", binary),
         ("checker fixture manifest", fixture_manifest),
         ("checker commissioning report", checker_commission_report),
@@ -3953,6 +4583,27 @@ def verify_manifest(
         ),
         ("instrument freeze", instrument_freeze_file),
         *tuple((f"instrument {name}", file) for name, file in instruments.items()),
+        (
+            "cargo executable",
+            FrozenFile(
+                Path(build_evidence["cargo"]["path"]),
+                build_evidence["cargo"]["sha256"],
+            ),
+        ),
+        (
+            "rustc executable",
+            FrozenFile(
+                Path(build_evidence["rustc"]["path"]),
+                build_evidence["rustc"]["sha256"],
+            ),
+        ),
+        (
+            "candidate build log",
+            FrozenFile(
+                Path(build_evidence["original_build_log"]["path"]),
+                build_evidence["original_build_log"]["sha256"],
+            ),
+        ),
     ):
         assert_still_frozen(file, label)
     source_evidence_after = verify_source_manifest(
@@ -4004,6 +4655,7 @@ def verify_manifest(
         "source_commit": expected_commit,
         "source_snapshot": source_evidence,
         "source_patch": source_patch_evidence,
+        "reproducible_build": build_evidence,
         "instrument_freeze": instrument_freeze_evidence,
         "binary": {"path": str(binary.path), "sha256": binary.sha256},
         "instruments": {
@@ -4075,22 +4727,26 @@ def bits_f64(value: float) -> str:
     return struct.pack(">d", value).hex()
 
 
-def write_synthetic_warpmap(path: Path) -> None:
+def write_synthetic_warpmap(path: Path, frames: int = 1) -> None:
     one = bits_f64(1.0)
     zero = bits_f64(0.0)
+    placements = [
+        f"{frame_order} placed {one} {zero} {zero} {zero}"
+        for frame_order in range(frames)
+    ]
     path.write_text(
         "\n".join(
             [
                 "strehl-warpmap 1",
                 "stack-name verifier-synthetic",
                 "stack-digest 0000000000000000",
-                "frames 1",
+                f"frames {frames}",
                 "plane 16x16",
                 "reference 0",
                 "strategy verifier",
                 "resampler clamped-catmull",
-                f"0 placed {one} {zero} {zero} {zero}",
-                "end 1",
+                *placements,
+                f"end {frames}",
                 "",
             ]
         ),
@@ -4125,25 +4781,40 @@ def write_synthetic_trace(
     site_y: int,
     crop: tuple[int, int, int, int],
     crop_override: tuple[int, int, int, int] | None = None,
+    gathered_plants: Mapping[tuple[int, int], np.float32] | None = None,
+    frame_order: int = 0,
+    source_value_override: float | None = None,
+    black_level: float = 0.0,
+    sensor_range: float = 1000.0,
+    site_gain: float = 1.0,
+    output_gain: float = 1.0,
 ) -> Path:
     source_width = source_height = 32
     full_width = full_height = 16
     crop_x, crop_y, compact_width, compact_height = crop_override or crop
     channel = SITE_CHANNEL[(site_x, site_y)]
-    source_value = np.float32(0.0 if channel == 2 else 2000.0)
+    source_value = np.float32(
+        source_value_override
+        if source_value_override is not None
+        else (0.0 if channel == 2 else 2000.0)
+    )
     source = np.full((source_height, source_width), source_value, dtype="<f4")
     valid = synthetic_validity(
         full_width, full_height, site_x, site_y, source_width, source_height
     )
     gathered = np.full((full_height, full_width), np.float32(np.nan), dtype="<f4")
     gathered[valid] = source_value
+    for (y, x), value in (gathered_plants or {}).items():
+        if not valid[y, x]:
+            raise RuntimeError("M8-R commissioning plant targets an ineligible sample")
+        gathered[y, x] = np.float32(value)
     frame_bytes = str(frame_path.resolve()).encode("utf-8")
     source_sha = bytes.fromhex(sha256_file(frame_path))
     header = TRACE_HEADER.pack(
         TRACE_MAGIC,
         TRACE_VERSION,
         2,
-        0,
+        frame_order,
         source_width,
         source_height,
         full_width,
@@ -4162,10 +4833,11 @@ def write_synthetic_trace(
         0.0,
         8.0,
         8.0,
-        0.0,
-        1000.0,
-        1.0,
-        1.0,
+        black_level,
+        sensor_range,
+        site_gain,
+        output_gain,
+        bytes.fromhex(COMMISSION_FREEZE_SHA256),
         source_sha,
         len(frame_bytes),
     )
@@ -4173,7 +4845,8 @@ def write_synthetic_trace(
     path_hash = hashlib.sha256(frame_bytes).hexdigest()
     content_hash = hashlib.sha256(payload).hexdigest()
     filename = (
-        f"m8-trace-v3-p1-f00000000-{path_hash}-s{site_x}{site_y}-{content_hash}.m8site"
+        f"m8-trace-v3-p1-f{frame_order:08d}-{path_hash}"
+        f"-s{site_x}{site_y}-{content_hash}.m8site"
     )
     path = block_dir / filename
     path.write_bytes(payload)
@@ -4185,6 +4858,7 @@ def write_synthetic_evidence(
     encoded_r: int,
     encoded_b: int = 0,
     crop_override: tuple[int, int, int, int] | None = None,
+    m8r_values: tuple[float, float] | None = None,
 ) -> tuple[Path, Path, Path, Path]:
     input_dir = root / "i"
     state = root / "s"
@@ -4199,7 +4873,20 @@ def write_synthetic_evidence(
     crop_x, crop_y, width, height, _ = reconstruct_crop(parsed)
     crop = (crop_x, crop_y, width, height)
     for site in SITE_CHANNEL:
-        write_synthetic_trace(blocks, frame, *site, crop, crop_override)
+        plants = None
+        if m8r_values is not None and site == (0, 0):
+            plants = {
+                (1, 1): np.float32(m8r_values[0]),
+                (1, 2): np.float32(m8r_values[1]),
+            }
+        write_synthetic_trace(
+            blocks,
+            frame,
+            *site,
+            crop,
+            crop_override,
+            plants,
+        )
     image = np.full((height, width, 3), U16_MAX, dtype=np.uint16)
     image[3, 2, 0] = encoded_r
     image[:, :, 2] = 0
@@ -4209,7 +4896,100 @@ def write_synthetic_evidence(
         output,
         image,
         photometric="rgb",
-        description="Linear camera-native RGB. This is the measurement output.",
+        description=measurement_description(COMMISSION_FREEZE_SHA256),
+    )
+    return input_dir, state, warpmap, output
+
+
+def write_green_pairing_evidence(
+    root: Path, encoded_green: int
+) -> tuple[Path, Path, Path, Path]:
+    input_dir = root / "i"
+    state = root / "s"
+    blocks = state / "blocks"
+    input_dir.mkdir(parents=True, exist_ok=True)
+    blocks.mkdir(parents=True, exist_ok=True)
+    warpmap = root / "m.txt"
+    write_synthetic_warpmap(warpmap, frames=2)
+    crop = reconstruct_crop(parse_warpmap(warpmap))[:4]
+    green_values = {
+        0: {(1, 0): 100.0, (0, 1): 900.0},
+        1: {(1, 0): 900.0, (0, 1): 100.0},
+    }
+    for frame_order in range(2):
+        frame = input_dir / f"frame{frame_order:03d}.ARW"
+        frame.write_bytes(f"M136 green pairing frame {frame_order}\n".encode("ascii"))
+        for site, channel in SITE_CHANNEL.items():
+            if channel == 0:
+                source_value = 2000.0
+            elif channel == 2:
+                source_value = 0.0
+            else:
+                source_value = green_values[frame_order][site]
+            write_synthetic_trace(
+                blocks,
+                frame,
+                *site,
+                crop,
+                frame_order=frame_order,
+                source_value_override=source_value,
+            )
+    _, _, width, height = crop
+    image = np.empty((height, width, 3), dtype=np.uint16)
+    image[:, :, 0] = U16_MAX
+    image[:, :, 1] = encoded_green
+    image[:, :, 2] = 0
+    output = root / "o.tif"
+    tifffile.imwrite(
+        output,
+        image,
+        photometric="rgb",
+        description=measurement_description(COMMISSION_FREEZE_SHA256),
+    )
+    return input_dir, state, warpmap, output
+
+
+def write_reciprocal_order_evidence(
+    root: Path, encoded_red: int
+) -> tuple[Path, Path, Path, Path]:
+    input_dir = root / "i"
+    state = root / "s"
+    blocks = state / "blocks"
+    input_dir.mkdir(parents=True, exist_ok=True)
+    blocks.mkdir(parents=True, exist_ok=True)
+    frame = input_dir / "frame000.ARW"
+    frame.write_bytes(b"M136 reciprocal-order synthetic source\n")
+    warpmap = root / "m.txt"
+    write_synthetic_warpmap(warpmap)
+    crop = reconstruct_crop(parse_warpmap(warpmap))[:4]
+    special_source = np.array([0x471BCAC5], dtype=np.uint32).view(np.float32)[0]
+    special_gain = np.array([0x3F3B4F55], dtype=np.uint32).view(np.float32)[0]
+    black = np.array([0x0368236A], dtype=np.uint32).view(np.float32)[0]
+    for site, channel in SITE_CHANNEL.items():
+        source_value = (
+            float(special_source) if channel == 0 else (0.0 if channel == 2 else 2000.0)
+        )
+        write_synthetic_trace(
+            blocks,
+            frame,
+            *site,
+            crop,
+            source_value_override=source_value,
+            black_level=float(black),
+            sensor_range=float(U16_MAX),
+            site_gain=float(special_gain) if channel == 0 else 1.0,
+        )
+    _, _, width, height = crop
+    image = np.empty((height, width, 3), dtype=np.uint16)
+    image[:, :, 0] = encoded_red
+    image[:, :, 1] = 2000
+    image[:, :, 2] = 0
+    output = root / "o.tif"
+    tifffile.imwrite(
+        output,
+        image,
+        photometric="rgb",
+        description=measurement_description(COMMISSION_FREEZE_SHA256),
     )
     return input_dir, state, warpmap, output
 
@@ -4602,6 +5382,37 @@ def inverse_gain_order_control() -> dict[str, Any]:
         raise RuntimeError(
             "inverse-gain operation-order control did not separate multiply from divide"
         )
+    production_gain = np.array([0x3F167791], dtype=np.uint32).view(np.float32)[0]
+    production_source = np.array([0x461BB3F3], dtype=np.uint32).view(np.float32)[0]
+    production_black = np.array([0x439D30BE], dtype=np.uint32).view(np.float32)[0]
+    _, _, production_lo, production_hi = intermediate_interval(
+        np.array([[production_source]], dtype=np.float32),
+        np.array([[production_source]], dtype=np.float32),
+        production_gain,
+        production_black,
+    )
+    direct_lo = f32_down(
+        np.array([[production_source]], dtype=np.float32).astype(np.float64)
+        / float(production_gain)
+    )
+    direct_hi = f32_up(
+        np.array([[production_source]], dtype=np.float32).astype(np.float64)
+        / float(production_gain)
+    )
+    direct_lo = f32_down(direct_lo.astype(np.float64) + float(production_black))
+    direct_hi = f32_up(direct_hi.astype(np.float64) + float(production_black))
+    direct_u_lo = np.clip(round_ties_away(direct_lo), 0, U16_MAX).astype(np.uint16)
+    direct_u_hi = np.clip(round_ties_away(direct_hi), 0, U16_MAX).astype(np.uint16)
+    production_interval = [
+        int(production_lo[0, 0]),
+        int(production_hi[0, 0]),
+    ]
+    direct_interval = [int(direct_u_lo[0, 0]), int(direct_u_hi[0, 0])]
+    if production_interval != [17268, 17269] or direct_interval != [17269, 17269]:
+        raise RuntimeError(
+            "production reciprocal-order discriminator no longer reaches the "
+            "expected intermediate_interval branch"
+        )
     return {
         "source_f32_bits": f"0x{int(source_value.view(np.uint32)):08x}",
         "site_gain_f32": float(site_gain),
@@ -4611,6 +5422,14 @@ def inverse_gain_order_control() -> dict[str, Any]:
         "actual_intermediate_u16": actual_code,
         "direct_division_intermediate_u16": direct_code,
         "distinguishes_operation_order": True,
+        "production_path": {
+            "source_f32_bits": "0x461bb3f3",
+            "site_gain_f32_bits": "0x3f167791",
+            "black_f32_bits": "0x439d30be",
+            "intermediate_interval_u16": production_interval,
+            "direct_division_interval_u16": direct_interval,
+            "distinguishes_operation_order": True,
+        },
     }
 
 
@@ -4674,6 +5493,48 @@ def interval_containment_control() -> dict[str, Any]:
     }
 
 
+def source_inventory_control(work_dir: Path) -> dict[str, Any]:
+    root = work_dir / "source-inventory"
+    (root / "crates" / "app" / "src" / "target").mkdir(parents=True)
+    (root / "outside-path-dependency" / "src").mkdir(parents=True)
+    (root / "target-m136" / "release").mkdir(parents=True)
+    (root / "target-m136-tests" / "debug").mkdir(parents=True)
+    (root / "Cargo.toml").write_text("[workspace]\n", encoding="utf-8")
+    (root / "crates" / "app" / "src" / "target" / "mod.rs").write_text(
+        "pub const COMPILED: bool = true;\n", encoding="utf-8"
+    )
+    (root / "outside-path-dependency" / "src" / "lib.rs").write_text(
+        "pub fn dependency() {}\n", encoding="utf-8"
+    )
+    (root / "target-m136" / "release" / "strehl.exe").write_bytes(
+        b"synthetic build output\n"
+    )
+    (root / "target-m136-tests" / "debug" / "probe.exe").write_bytes(
+        b"synthetic test output\n"
+    )
+    observed = build_relevant_source_files(root)
+    required = {
+        "Cargo.toml",
+        "crates/app/src/target/mod.rs",
+        "outside-path-dependency/src/lib.rs",
+    }
+    excluded = {
+        "target-m136/release/strehl.exe",
+        "target-m136-tests/debug/probe.exe",
+    }
+    if not required.issubset(observed) or not excluded.isdisjoint(observed):
+        raise RuntimeError(
+            "source inventory is not closed over non-target source files"
+        )
+    return {
+        "required_present": sorted(required),
+        "top_level_target_excluded": sorted(excluded),
+        "observed": sorted(observed),
+        "build_id": m136_build_id(M130_SOURCE_COMMIT, "A" * 64),
+        "status": "PASS",
+    }
+
+
 def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str, Any]:
     if report_path.exists():
         raise RuntimeError(f"refusing to overwrite commissioning report: {report_path}")
@@ -4721,6 +5582,7 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         "interval_containment": interval_containment_control(),
     }
     try:
+        report["source_inventory_case"] = source_inventory_control(work_dir)
         recipe = work_dir / "recipe.json"
         recipe.write_text(
             "{\n"
@@ -4741,7 +5603,7 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
                 output,
                 image,
                 photometric="rgb",
-                description="Linear camera-native RGB. This is the measurement output.",
+                description=measurement_description(COMMISSION_FREEZE_SHA256),
             )
             artifact_dir = work_dir / f"verified-{name}"
             result = verify_capture(
@@ -4753,6 +5615,8 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
                 artifact_dir,
                 4,
                 None,
+                None,
+                "00" * 32,
             )
             rows = np.load(artifact_dir / "m8-o-violations.npy", allow_pickle=False)
             return {
@@ -4819,6 +5683,250 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
             raise RuntimeError("degradation plant did not change the TIFF hash")
         if defect["output_sha256"] == improvement["output_sha256"]:
             raise RuntimeError("improvement plant did not change the TIFF hash")
+
+        m8r_recipe = work_dir / "m8r-recipe.json"
+        m8r_recipe.write_text(
+            '{\n  "low_gather": 1999.0,\n  "high_gather": 2001.0\n}\n',
+            encoding="utf-8",
+        )
+
+        def run_m8r_production_path(name: str) -> dict[str, Any]:
+            values = json.loads(m8r_recipe.read_text(encoding="utf-8"))
+            root = work_dir / f"r{name[0]}"
+            m8r_input, m8r_state, m8r_map, m8r_output = write_synthetic_evidence(
+                root,
+                U16_MAX,
+                0,
+                m8r_values=(
+                    float(values["low_gather"]),
+                    float(values["high_gather"]),
+                ),
+            )
+            result = verify_capture(
+                f"commission-m8r-{name}",
+                m8r_input.resolve(),
+                FrozenFile(m8r_map.resolve(), sha256_file(m8r_map)),
+                m8r_state.resolve(),
+                FrozenFile(m8r_output.resolve(), sha256_file(m8r_output)),
+                work_dir / f"vr{name[0]}",
+                4,
+                None,
+                None,
+                "00" * 32,
+            )
+            rows = np.load(
+                work_dir / f"vr{name[0]}" / "m8-r-violations.npy",
+                allow_pickle=False,
+            )
+            return {
+                "m8_r": {
+                    key: result["m8_r"][key]
+                    for key in (
+                        "denominator",
+                        "lower_violations",
+                        "upper_violations",
+                        "violations",
+                    )
+                },
+                "m8_o_violations": result["m8_o"]["violations"],
+                "violation_directions": sorted(
+                    int(value) for value in rows["direction"]
+                ),
+                "recipe_sha256": sha256_file(m8r_recipe),
+            }
+
+        m8r_defect = run_m8r_production_path("defect")
+        if (
+            m8r_defect["m8_r"]["lower_violations"] != 1
+            or m8r_defect["m8_r"]["upper_violations"] != 1
+            or m8r_defect["m8_r"]["violations"] != 2
+            or m8r_defect["m8_o_violations"] != 0
+            or m8r_defect["violation_directions"] != [-1, 1]
+        ):
+            raise RuntimeError(
+                f"production-path M8-R defect was not charged exactly: {m8r_defect}"
+            )
+        m8r_low_improvement = replace_unique_line(
+            m8r_recipe, '  "low_gather": 1999.0,', '  "low_gather": 2000.0,'
+        )
+        m8r_high_improvement = replace_unique_line(
+            m8r_recipe, '  "high_gather": 2001.0', '  "high_gather": 2000.0'
+        )
+        m8r_improvement = run_m8r_production_path("improvement")
+        if (
+            m8r_improvement["m8_r"]["violations"] != 0
+            or m8r_improvement["m8_o_violations"] != 0
+        ):
+            raise RuntimeError("production-path M8-R improvement was misreported")
+        if m8r_defect["recipe_sha256"] == m8r_improvement["recipe_sha256"]:
+            raise RuntimeError("production-path M8-R improvement did not land")
+
+        green_recipe = work_dir / "green-recipe.json"
+        green_recipe.write_text(
+            '{\n  "encoded_green": 26214\n}\n',
+            encoding="utf-8",
+        )
+
+        def run_green_production_path(name: str) -> dict[str, Any]:
+            encoded_green = int(
+                json.loads(green_recipe.read_text(encoding="utf-8"))["encoded_green"]
+            )
+            root = work_dir / f"g{name[0]}"
+            green_input, green_state, green_map, green_output = (
+                write_green_pairing_evidence(root, encoded_green)
+            )
+            result = verify_capture(
+                f"commission-green-{name}",
+                green_input.resolve(),
+                FrozenFile(green_map.resolve(), sha256_file(green_map)),
+                green_state.resolve(),
+                FrozenFile(green_output.resolve(), sha256_file(green_output)),
+                work_dir / f"vg{name[0]}",
+                4,
+                None,
+                None,
+                "00" * 32,
+            )
+            rows = np.load(
+                work_dir / f"vg{name[0]}" / "m8-o-violations.npy",
+                allow_pickle=False,
+            )
+            return {
+                "encoded_green": encoded_green,
+                "m8_r_violations": result["m8_r"]["violations"],
+                "m8_o": {
+                    key: result["m8_o"][key]
+                    for key in (
+                        "denominator",
+                        "lower_violations",
+                        "upper_violations",
+                        "violations",
+                    )
+                },
+                "violation_channels": sorted({str(value) for value in rows["channel"]}),
+                "violation_directions": sorted(
+                    {int(value) for value in rows["direction"]}
+                ),
+                "recipe_sha256": sha256_file(green_recipe),
+            }
+
+        green_defect = run_green_production_path("defect")
+        if (
+            green_defect["m8_r_violations"] != 0
+            or green_defect["m8_o"]["denominator"] != 243
+            or green_defect["m8_o"]["lower_violations"] != 81
+            or green_defect["m8_o"]["upper_violations"] != 0
+            or green_defect["m8_o"]["violations"] != 81
+            or green_defect["violation_channels"] != ["G"]
+            or green_defect["violation_directions"] != [-1]
+        ):
+            raise RuntimeError(
+                "same-frame green production-path defect was not charged exactly: "
+                f"{green_defect}"
+            )
+        green_improvement_plant = replace_unique_line(
+            green_recipe,
+            '  "encoded_green": 26214',
+            '  "encoded_green": 32768',
+        )
+        green_improvement = run_green_production_path("improvement")
+        if green_improvement["m8_r_violations"] != 0 or green_improvement["m8_o"] != {
+            "denominator": 243,
+            "lower_violations": 0,
+            "upper_violations": 0,
+            "violations": 0,
+        }:
+            raise RuntimeError(
+                "same-frame green production-path improvement was misreported"
+            )
+        if green_defect["recipe_sha256"] == green_improvement["recipe_sha256"]:
+            raise RuntimeError("same-frame green improvement did not land")
+
+        reciprocal_recipe = work_dir / "reciprocal-recipe.json"
+        reciprocal_recipe.write_text(
+            '{\n  "encoded_red": 54508\n}\n',
+            encoding="utf-8",
+        )
+
+        def run_reciprocal_production_path(name: str) -> dict[str, Any]:
+            encoded_red = int(
+                json.loads(reciprocal_recipe.read_text(encoding="utf-8"))["encoded_red"]
+            )
+            root = work_dir / f"x{name[0]}"
+            reciprocal_input, reciprocal_state, reciprocal_map, reciprocal_output = (
+                write_reciprocal_order_evidence(root, encoded_red)
+            )
+            result = verify_capture(
+                f"commission-reciprocal-{name}",
+                reciprocal_input.resolve(),
+                FrozenFile(reciprocal_map.resolve(), sha256_file(reciprocal_map)),
+                reciprocal_state.resolve(),
+                FrozenFile(reciprocal_output.resolve(), sha256_file(reciprocal_output)),
+                work_dir / f"vx{name[0]}",
+                4,
+                None,
+                None,
+                "00" * 32,
+            )
+            rows = np.load(
+                work_dir / f"vx{name[0]}" / "m8-o-violations.npy",
+                allow_pickle=False,
+            )
+            return {
+                "encoded_red": encoded_red,
+                "m8_r_violations": result["m8_r"]["violations"],
+                "m8_o": {
+                    key: result["m8_o"][key]
+                    for key in (
+                        "denominator",
+                        "lower_violations",
+                        "upper_violations",
+                        "violations",
+                    )
+                },
+                "violation_channels": sorted({str(value) for value in rows["channel"]}),
+                "violation_directions": sorted(
+                    {int(value) for value in rows["direction"]}
+                ),
+                "recipe_sha256": sha256_file(reciprocal_recipe),
+            }
+
+        reciprocal_defect = run_reciprocal_production_path("defect")
+        if (
+            reciprocal_defect["m8_r_violations"] != 0
+            or reciprocal_defect["m8_o"]["denominator"] != 243
+            or reciprocal_defect["m8_o"]["lower_violations"] != 81
+            or reciprocal_defect["m8_o"]["upper_violations"] != 0
+            or reciprocal_defect["m8_o"]["violations"] != 81
+            or reciprocal_defect["violation_channels"] != ["R"]
+            or reciprocal_defect["violation_directions"] != [-1]
+        ):
+            raise RuntimeError(
+                "reciprocal-multiply production-path defect was not charged exactly: "
+                f"{reciprocal_defect}"
+            )
+        reciprocal_improvement_plant = replace_unique_line(
+            reciprocal_recipe,
+            '  "encoded_red": 54508',
+            '  "encoded_red": 54509',
+        )
+        reciprocal_improvement = run_reciprocal_production_path("improvement")
+        if reciprocal_improvement["m8_r_violations"] != 0 or reciprocal_improvement[
+            "m8_o"
+        ] != {
+            "denominator": 243,
+            "lower_violations": 0,
+            "upper_violations": 0,
+            "violations": 0,
+        }:
+            raise RuntimeError(
+                "reciprocal-multiply production-path improvement was misreported"
+            )
+        if (
+            reciprocal_defect["recipe_sha256"]
+            == reciprocal_improvement["recipe_sha256"]
+        ):
+            raise RuntimeError("reciprocal-multiply improvement did not land")
 
         held = next((state / "blocks").glob("*.m8site"))
         absent = work_dir / "held.m8site"
@@ -4944,6 +6052,99 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         if "trace crop" not in crop_message:
             raise RuntimeError("wrong crop origin did not report UNMEASURED")
 
+        freeze_message = ""
+        try:
+            verify_capture(
+                "commission-freeze",
+                input_dir.resolve(),
+                FrozenFile(warpmap.resolve(), sha256_file(warpmap)),
+                state.resolve(),
+                FrozenFile(output.resolve(), sha256_file(output)),
+                work_dir / "verified-wrong-freeze",
+                4,
+                None,
+                None,
+                "11" * 32,
+            )
+        except Unmeasured as error:
+            freeze_message = str(error)
+        if "not bound to the frozen instrument" not in freeze_message:
+            raise RuntimeError("wrong freeze binding did not report UNMEASURED")
+
+        tiff_binding_recipe = work_dir / "tiff-binding-recipe.json"
+        tiff_binding_recipe.write_text(
+            f'{{\n  "freeze_sha256": "{COMMISSION_FREEZE_SHA256}"\n}}\n',
+            encoding="utf-8",
+        )
+        wrong_tiff_binding_plant = replace_unique_line(
+            tiff_binding_recipe,
+            f'  "freeze_sha256": "{COMMISSION_FREEZE_SHA256}"',
+            f'  "freeze_sha256": "{"11" * 32}"',
+        )
+        image = tifffile.imread(output)
+        tifffile.imwrite(
+            output,
+            image,
+            photometric="rgb",
+            description=measurement_description(
+                json.loads(tiff_binding_recipe.read_text(encoding="utf-8"))[
+                    "freeze_sha256"
+                ]
+            ),
+        )
+        wrong_tiff_hash = sha256_file(output)
+        tiff_binding_message = ""
+        try:
+            verify_capture(
+                "commission-tiff-binding",
+                input_dir.resolve(),
+                FrozenFile(warpmap.resolve(), sha256_file(warpmap)),
+                state.resolve(),
+                FrozenFile(output.resolve(), wrong_tiff_hash),
+                work_dir / "verified-wrong-tiff-binding",
+                4,
+                None,
+                None,
+                COMMISSION_FREEZE_SHA256,
+            )
+        except Unmeasured as error:
+            tiff_binding_message = str(error)
+        if (
+            "TIFF is not bound to the frozen M136 instrument"
+            not in tiff_binding_message
+        ):
+            raise RuntimeError("wrong TIFF freeze binding did not report UNMEASURED")
+        restored_tiff_binding_plant = replace_unique_line(
+            tiff_binding_recipe,
+            f'  "freeze_sha256": "{"11" * 32}"',
+            f'  "freeze_sha256": "{COMMISSION_FREEZE_SHA256}"',
+        )
+        tifffile.imwrite(
+            output,
+            image,
+            photometric="rgb",
+            description=measurement_description(COMMISSION_FREEZE_SHA256),
+        )
+        restored_tiff_hash = sha256_file(output)
+        restored_tiff_binding = verify_capture(
+            "commission-tiff-binding-restored",
+            input_dir.resolve(),
+            FrozenFile(warpmap.resolve(), sha256_file(warpmap)),
+            state.resolve(),
+            FrozenFile(output.resolve(), restored_tiff_hash),
+            work_dir / "verified-restored-tiff-binding",
+            4,
+            None,
+            None,
+            COMMISSION_FREEZE_SHA256,
+        )
+        if (
+            restored_tiff_binding["m8_r"]["violations"] != 0
+            or restored_tiff_binding["m8_o"]["violations"] != 0
+            or wrong_tiff_hash == restored_tiff_hash
+        ):
+            raise RuntimeError("restored TIFF freeze binding was misreported")
+
         report.update(
             {
                 "baseline_green": baseline,
@@ -4961,11 +6162,44 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
                     },
                     "result": improvement,
                 },
+                "production_path_controls": {
+                    "m8_r": {
+                        "defect": m8r_defect,
+                        "improvement": m8r_improvement,
+                        "improvement_landed": {
+                            "lower": m8r_low_improvement,
+                            "upper": m8r_high_improvement,
+                        },
+                    },
+                    "green_pairing": {
+                        "defect": green_defect,
+                        "improvement": green_improvement,
+                        "improvement_landed": green_improvement_plant,
+                    },
+                    "reciprocal_order": {
+                        "defect": reciprocal_defect,
+                        "improvement": reciprocal_improvement,
+                        "improvement_landed": reciprocal_improvement_plant,
+                    },
+                    "inverse_gain": report["inverse_gain_order_case"][
+                        "production_path"
+                    ],
+                },
                 "fail_closed": {
                     "missing_frame_site": missing_message,
                     "duplicate_frame_site": duplicate_message,
-                    "trace_v2": version_message,
+                    "trace_v2_rejected": True,
+                    "trace_v2_reason": "requires trace-v3",
                     "wrong_crop_origin": crop_message,
+                    "wrong_freeze_binding": freeze_message,
+                    "wrong_tiff_freeze_binding": {
+                        "rejected": True,
+                        "reason": "TIFF is not bound to the frozen M136 instrument",
+                        "defect_landed": wrong_tiff_binding_plant,
+                        "improvement_landed": restored_tiff_binding_plant,
+                        "defect_tiff_sha256": wrong_tiff_hash,
+                        "improved_tiff_sha256": restored_tiff_hash,
+                    },
                     "producer_supplied_hull_ignored": ignored_hull["status"] == "PASS",
                 },
                 "status": "PASS",
@@ -5047,7 +6281,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             json_dump(report_output, failure)
         print(json.dumps(failure, sort_keys=True), file=sys.stderr)
         return 3
-    except (Unmeasured, OSError, ValueError, KeyError, RuntimeError) as error:
+    except (
+        Unmeasured,
+        OSError,
+        ValueError,
+        KeyError,
+        RuntimeError,
+        subprocess.SubprocessError,
+    ) as error:
         failure = {
             "protocol": VERIFIER_PROTOCOL,
             "status": "UNMEASURED",

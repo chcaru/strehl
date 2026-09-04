@@ -2,7 +2,7 @@
   "baseline_green": {
     "m8_o_violations": 0,
     "m8_r_violations": 0,
-    "output_sha256": "3D769CB6CF1E9AED101B970E3935BD954CFF188DDF33493C47CEE37827A96F5F",
+    "output_sha256": "BFB5CC6ED6BA463DCF497ECECEB24E7832BC64C98893562C9A511D7B4CA25EE7",
     "status": "PASS",
     "violations": []
   },
@@ -44,7 +44,7 @@
     "result": {
       "m8_o_violations": 2,
       "m8_r_violations": 0,
-      "output_sha256": "68B70ADC45CA1332D3E64B229A5FAB22EB0A7F6F439D2B4944ABBE815A302D30",
+      "output_sha256": "10A1D164829B95D1A886E3094AF006BF93841F267CFA55C85BC2773AD002F95A",
       "status": "FAIL",
       "violations": [
         {
@@ -68,8 +68,30 @@
     "duplicate_frame_site": "duplicate trace-v3 frame/site (0, (0, 0))",
     "missing_frame_site": "incomplete trace set: missing=[(0, (0, 0))], extra=[]",
     "producer_supplied_hull_ignored": true,
-    "trace_v2": "m8-trace-v3-p1-f00000000-6bd692026572af92d2f847a5a78e0353d19f9afeab3960a73934ab9854613004-s00-aafa794a32a78cdc54bc02ce5b030ff3ace038494d7ad1ee4b2516d64e2bc904.m8site: requires trace-v3 b'M8SITE03', got magic=b'M8SITE03', version=2",
-    "wrong_crop_origin": "commission-crop: trace crop (0, 0, 9, 9) != independently reconstructed (4, 4, 9, 9)"
+    "trace_v2_reason": "requires trace-v3",
+    "trace_v2_rejected": true,
+    "wrong_crop_origin": "commission-crop: trace crop (0, 0, 9, 9) != independently reconstructed (4, 4, 9, 9)",
+    "wrong_freeze_binding": "commission-freeze: trace blocks are not bound to the frozen instrument",
+    "wrong_tiff_freeze_binding": {
+      "defect_landed": {
+        "new_line": "  \"freeze_sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\"",
+        "occurrences": 1,
+        "old_line": "  \"freeze_sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\"",
+        "sha256_after": "22963D976BCB7DF9AE880CA03DDA7994B98EB3CA995B106A378BC58F06E8B1AA",
+        "sha256_before": "309727F310D3E081C5A9A10827F19D2E0ED6C8B4EED4DD8A415DCF76217137A5"
+      },
+      "defect_tiff_sha256": "46E4FAF433E67942833891C54FC8B91AFF7D3B58C372689B6616460FF900075B",
+      "improved_tiff_sha256": "BFB5CC6ED6BA463DCF497ECECEB24E7832BC64C98893562C9A511D7B4CA25EE7",
+      "improvement_landed": {
+        "new_line": "  \"freeze_sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\"",
+        "occurrences": 1,
+        "old_line": "  \"freeze_sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\"",
+        "sha256_after": "309727F310D3E081C5A9A10827F19D2E0ED6C8B4EED4DD8A415DCF76217137A5",
+        "sha256_before": "22963D976BCB7DF9AE880CA03DDA7994B98EB3CA995B106A378BC58F06E8B1AA"
+      },
+      "reason": "TIFF is not bound to the frozen M136 instrument",
+      "rejected": true
+    }
   },
   "green_pairing_case": {
     "encoded_output": 0,
@@ -104,7 +126,7 @@
     "result": {
       "m8_o_violations": 0,
       "m8_r_violations": 0,
-      "output_sha256": "3D769CB6CF1E9AED101B970E3935BD954CFF188DDF33493C47CEE37827A96F5F",
+      "output_sha256": "BFB5CC6ED6BA463DCF497ECECEB24E7832BC64C98893562C9A511D7B4CA25EE7",
       "status": "PASS",
       "violations": []
     }
@@ -144,6 +166,20 @@
     "direct_division_f32": 1.5,
     "direct_division_intermediate_u16": 2,
     "distinguishes_operation_order": true,
+    "production_path": {
+      "black_f32_bits": "0x439d30be",
+      "direct_division_interval_u16": [
+        17269,
+        17269
+      ],
+      "distinguishes_operation_order": true,
+      "intermediate_interval_u16": [
+        17268,
+        17269
+      ],
+      "site_gain_f32_bits": "0x3f167791",
+      "source_f32_bits": "0x461bb3f3"
+    },
     "site_gain_f32": 1.100000023841858,
     "source_f32_bits": "0x3fd33333"
   },
@@ -283,6 +319,143 @@
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\clamped-m8o-preregistration.json",
     "sha256": "B656EFB9D2BFEA4B8CF5DD67BE63A9CD7D6930F6B302C7EF93E9E1DF7529BCEB"
   },
+  "production_path_controls": {
+    "green_pairing": {
+      "defect": {
+        "encoded_green": 26214,
+        "m8_o": {
+          "denominator": 243,
+          "lower_violations": 81,
+          "upper_violations": 0,
+          "violations": 81
+        },
+        "m8_r_violations": 0,
+        "recipe_sha256": "3D2E9F2334D09060ACD6C35EF24A01F11B7117606A7BC12EFF4522A9A95982E7",
+        "violation_channels": [
+          "G"
+        ],
+        "violation_directions": [
+          -1
+        ]
+      },
+      "improvement": {
+        "encoded_green": 32768,
+        "m8_o": {
+          "denominator": 243,
+          "lower_violations": 0,
+          "upper_violations": 0,
+          "violations": 0
+        },
+        "m8_r_violations": 0,
+        "recipe_sha256": "FA3D17171BFCDDEEEA382300AEDBDAA2D7E1119A36605FDC82198E4C724C3047",
+        "violation_channels": [],
+        "violation_directions": []
+      },
+      "improvement_landed": {
+        "new_line": "  \"encoded_green\": 32768",
+        "occurrences": 1,
+        "old_line": "  \"encoded_green\": 26214",
+        "sha256_after": "FA3D17171BFCDDEEEA382300AEDBDAA2D7E1119A36605FDC82198E4C724C3047",
+        "sha256_before": "3D2E9F2334D09060ACD6C35EF24A01F11B7117606A7BC12EFF4522A9A95982E7"
+      }
+    },
+    "inverse_gain": {
+      "black_f32_bits": "0x439d30be",
+      "direct_division_interval_u16": [
+        17269,
+        17269
+      ],
+      "distinguishes_operation_order": true,
+      "intermediate_interval_u16": [
+        17268,
+        17269
+      ],
+      "site_gain_f32_bits": "0x3f167791",
+      "source_f32_bits": "0x461bb3f3"
+    },
+    "m8_r": {
+      "defect": {
+        "m8_o_violations": 0,
+        "m8_r": {
+          "denominator": 784,
+          "lower_violations": 1,
+          "upper_violations": 1,
+          "violations": 2
+        },
+        "recipe_sha256": "638855AB7885FDECFB37C2121C79E10C846EC79636E838E988E5AC8F89F9FA1E",
+        "violation_directions": [
+          -1,
+          1
+        ]
+      },
+      "improvement": {
+        "m8_o_violations": 0,
+        "m8_r": {
+          "denominator": 784,
+          "lower_violations": 0,
+          "upper_violations": 0,
+          "violations": 0
+        },
+        "recipe_sha256": "7705F650BCAF8ECC2371C2DD21422676F4646990F201D921F057735131A67AD6",
+        "violation_directions": []
+      },
+      "improvement_landed": {
+        "lower": {
+          "new_line": "  \"low_gather\": 2000.0,",
+          "occurrences": 1,
+          "old_line": "  \"low_gather\": 1999.0,",
+          "sha256_after": "F5828846994B6A260765E3DA1F9A49FD5D8DC7C508E6060EC1FA16275EB82760",
+          "sha256_before": "638855AB7885FDECFB37C2121C79E10C846EC79636E838E988E5AC8F89F9FA1E"
+        },
+        "upper": {
+          "new_line": "  \"high_gather\": 2000.0",
+          "occurrences": 1,
+          "old_line": "  \"high_gather\": 2001.0",
+          "sha256_after": "7705F650BCAF8ECC2371C2DD21422676F4646990F201D921F057735131A67AD6",
+          "sha256_before": "F5828846994B6A260765E3DA1F9A49FD5D8DC7C508E6060EC1FA16275EB82760"
+        }
+      }
+    },
+    "reciprocal_order": {
+      "defect": {
+        "encoded_red": 54508,
+        "m8_o": {
+          "denominator": 243,
+          "lower_violations": 81,
+          "upper_violations": 0,
+          "violations": 81
+        },
+        "m8_r_violations": 0,
+        "recipe_sha256": "4B7F7D6350F1465D2C34FBF656B9993EFA26A5CB58F4436E2625841E62AC4D12",
+        "violation_channels": [
+          "R"
+        ],
+        "violation_directions": [
+          -1
+        ]
+      },
+      "improvement": {
+        "encoded_red": 54509,
+        "m8_o": {
+          "denominator": 243,
+          "lower_violations": 0,
+          "upper_violations": 0,
+          "violations": 0
+        },
+        "m8_r_violations": 0,
+        "recipe_sha256": "DA6A172B62A50C3F81670561318101448EAF8947ACDDFA7C4B3B4B5D35352854",
+        "violation_channels": [],
+        "violation_directions": []
+      },
+      "improvement_landed": {
+        "new_line": "  \"encoded_red\": 54509",
+        "occurrences": 1,
+        "old_line": "  \"encoded_red\": 54508",
+        "sha256_after": "DA6A172B62A50C3F81670561318101448EAF8947ACDDFA7C4B3B4B5D35352854",
+        "sha256_before": "4B7F7D6350F1465D2C34FBF656B9993EFA26A5CB58F4436E2625841E62AC4D12"
+      }
+    }
+  },
   "prospective_interpretation": {
     "canonical_sha256": "DBCCCF505D91FB86385D44BE3293A280A54ACE4C0C416945F23CFDFE355A203C",
     "commit": "746cc38a",
@@ -299,10 +472,28 @@
     ],
     "red_violation": true
   },
+  "source_inventory_case": {
+    "build_id": "m136-248178b921f9-aaaaaaaaaaaa",
+    "observed": [
+      "Cargo.toml",
+      "crates/app/src/target/mod.rs",
+      "outside-path-dependency/src/lib.rs"
+    ],
+    "required_present": [
+      "Cargo.toml",
+      "crates/app/src/target/mod.rs",
+      "outside-path-dependency/src/lib.rs"
+    ],
+    "status": "PASS",
+    "top_level_target_excluded": [
+      "target-m136-tests/debug/probe.exe",
+      "target-m136/release/strehl.exe"
+    ]
+  },
   "status": "PASS",
   "verifier": {
-    "canonical_sha256": "EF15C9659B08AD1E05C5FBF56BE7C5C9CCC26D158A90EFE63A3ED6096330D691",
+    "canonical_sha256": "DFAB774C51870E845690CC50263114B139C731E08A4A864A78C84407CFC72FE2",
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier_m136.py",
-    "sha256": "F2EA3AC4DACB5DB200F9240F8D3F86A89E0BDC5A41E124C1C5576E23A4A1E9CE"
+    "sha256": "CAC0E96943DAB44CA1E5FC3B6A2FD8315868290509EE2632861B48157A012401"
   }
 }
