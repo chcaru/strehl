@@ -42,6 +42,18 @@ MUTATIONS = [
     ("preflight design ratio",
      "`2.7015 / 1.33 = 2.0312x` with a margin",
      "`2.7015 / 1.33 = 2.0313x` with a margin"),
+    ("aperture usm score gain",
+     "detail score by `1.409469446x` while leaving the aperture ordering intact.",
+     "detail score by `1.409469447x` while leaving the aperture ordering intact."),
+    ("aperture airy calibration error",
+     "relative calibration error between the two worlds is `1.11e-15`, machine epsilon.",
+     "relative calibration error between the two worlds is `1.11e-16`, machine epsilon."),
+    ("m3 improvement arm median",
+     "`h50=0.0104133574, v50=0.0053386838` against an unchanged `0.01` median gate,",
+     "`h50=0.0104133575, v50=0.0053386838` against an unchanged `0.01` median gate,"),
+    ("m3 census eligible sites",
+     "ARWs, 1,233 census-eligible sites, and a frozen 500-site population across four",
+     "ARWs, 1,234 census-eligible sites, and a frozen 500-site population across four"),
 ]
 
 

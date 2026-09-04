@@ -6459,6 +6459,106 @@ five-minute action blocking everything is not orchestrating.
 
 ---
 
+### 2.9.60 The aperture route is dead as a reference, and the atlas is the only route left
+
+**I proposed the aperture ladder. M164 killed it, and it was right to.** Because I
+authored the proposal, I did not adopt it on my own reasoning -- I sent it to the
+lane that owns the identifiability theorem and asked it to attack. Verdict at
+`docs/research/M164-aperture-identifiability.md:3`: **`OBJECTION CORRECT; APERTURE
+ORDER IS A SCREEN, NOT A TRUTH`** reference. Commit `77fbc946`.
+
+The witness is one line and it is decisive:
+
+> `Y_i = K H_i X = H_i (K X)`
+
+Sharpening `K` and the per-aperture diffraction transfer `H_i` are both linear and
+shift-invariant, so they **commute**. The identical observed pixels are therefore
+consistent with two worlds requiring opposite verdicts: scene `X` sharpened, and a
+genuinely sharper scene `KX` never sharpened. Common sharpening raised the tested
+detail score by `1.409469446x` while leaving the aperture ordering intact.
+
+**The stronger fallbacks died with it.** I had proposed that the *quantitative*
+Airy magnitude, not merely the rank, might discharge the hedge. It does not: the
+relative calibration error between the two worlds is `1.11e-15`, machine epsilon.
+The "sharpening cannot restore what diffraction removed, so a true statistic should
+saturate" idea survives only as a sabotage test, not as certification.
+
+The lane also honoured the holdout: `PASS: 9/9 checks; verdict=OBJECTION_CORRECT;
+max_world_error=0.000e+00; captures_opened=0`.
+
+**What survives.** The ladder remains a **screen** -- a necessary condition that
+kills a candidate cheaply without spending a holdout. It can never certify one.
+The program must stop describing it as an external reference.
+
+**What I did about it.** M171 was building on the dead premise and is redirected to
+implement the seven admission gates of `2026-09-truth-referenced-detail.md` §3.1 --
+the part of the critical path that can be finished without the owner. M166, whose
+adversarial mandate on the aperture premise is now discharged, is redirected to
+attack the §3.1 atlas design itself **before** the owner shoots it, since the rig
+cannot be reassembled identically after the session.
+
+**Two independent lines now converge on the same instrument.** M164's answer to
+"what class of outside observation *would* discharge the hedge" -- a calibrated
+nonperiodic reference with a known input, independent repeats, dark/flat
+calibration, frozen tone and geometry -- is a near-exact description of the §3.1
+atlas arrived at from a different direction. That is the strongest corroboration
+this program has produced, and it raises the value of Ask 2a rather than lowering it.
+
+### 2.9.61 M3 is capture-unblocked, and it is the best candidate for a first passing axis
+
+M169 reports the occlusion-veil axis needs **no new photography**: 693 existing
+ARWs, 1,233 census-eligible sites, and a frozen 500-site population across four
+subjects, all meeting the 400-native-pixel reach requirement. Commit `0061152a`.
+**Every other live axis is behind a capture the owner has not taken. This one is not.**
+
+**It still did not score, and that is the right outcome.** M161's frozen
+commissioning battery fails its own registered *improvement* assertion, so M169
+returned `NOT_ADMITTED_COMMISSIONING_FAILED`, `NO SCORE`, `NO CI`, and **refused to
+touch a threshold**. The arm `planted_improvement_0_5pct_rim_and_veil` produced
+`h50=0.0104133574, v50=0.0053386838` against an unchanged `0.01` median gate,
+reproduced exactly from untouched hash-verified M161 sources. Its headline
+`max=0.014730` is comfortably inside the ratified `0.05` bar; only the subsidiary
+median gate bites.
+
+**This is the planted-improvement discipline earning its keep.** A battery
+commissioned only against degradations passes trivially; the failure mode that has
+actually bitten this program is a defect that makes the number go *up*. M169 ran the
+control that catches it and honoured the result against its own interest in
+producing a headline number.
+
+**Adjudication is with M174, and I withheld my own reading from it deliberately.**
+While verifying M169's figures at source I found the discriminator myself -- the
+clean noise null passes at `h50=0.002943`, roughly `3.4x` below the gate, and the
+flat null is exactly `0.000000`. That pattern points at a mis-registered assertion
+rather than an instrument floor. **I did not put that in M174's brief.** Telling an
+independent adjudicator the answer destroys the independence I convened it for; the
+brief carries the discriminating *method* and both candidate explanations, not the
+conclusion. M174 is also required to show that any re-registration is derivable
+without reference to the observed outcome, because ruling "the assertion was wrong"
+after it failed is the exact shape of moving a goalpost.
+
+### 2.9.62 Amendment 6 is now sourced, and four of my own wording defects are repaired
+
+M168's identifiability verdict existed only in a transcript while Amendment 6 quoted
+it as authority. It is now a committed, independently re-executable document --
+`docs/research/M168-m2-identifiability.md` plus three runnable witnesses, commit
+`0388ff52`. **All six figures I had quoted into the plan were confirmed correct**,
+including the `418D2D85...` SHA I nearly filed a false accusation against earlier
+this session.
+
+It also audited my Amendment 6 prose and found four defects, all applied at
+`d839c402`: §16.2 could be read as claiming every individual scene is ambiguous;
+§16.4 reintroduced the uniqueness claim the amendment exists to withdraw; §16.3 said
+capture was "currently usable" when the required capture does not exist; and the
+heading was future-dated. **The date defect was systemic and worse than reported** --
+Amendments 3, 5 and 6 were headed `2026-09-05`, `2026-09-05` and `2026-09-06` while
+all three introducing commits are `2026-09-04`. All three corrected.
+
+**The pattern worth keeping:** every one of these defects was in text I wrote, found
+by a lane I asked to check me, on a document I own. None was found by me.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking

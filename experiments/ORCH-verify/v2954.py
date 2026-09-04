@@ -16,7 +16,8 @@ from pathlib import Path
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
-SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59"]
+SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
+            "2.9.60", "2.9.61", "2.9.62"]
 
 
 def collapse(s):
@@ -147,6 +148,10 @@ CLAIMS = [
      "experiments/M134-kernel-frontier/M137-clamped-detail.md"),
     # --- M147 preflight: the terminal blocker ---
     ("preflight design ratio", "2.0312", R + "M147-preflight.md"),
+    ("aperture usm score gain", "1.409469446", R + "M164-aperture-identifiability.md"),
+    ("aperture airy calibration error", "1.11e-15", R + "M164-aperture-identifiability.md"),
+    ("m3 improvement arm median", "0.0104133574", R + "M169-m3-veil.md"),
+    ("m3 census eligible sites", "1,233", R + "M169-m3-veil.md"),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
