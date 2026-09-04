@@ -24,12 +24,51 @@ development captures or a bench dry run.
 
 | # | Blocker | Why it can ruin the session | What settles it |
 | --- | --- | --- | --- |
-| 1 | **`sw4` / `sw10` step widths are unverified at 1.30×** | The widths were frozen without a documented reproduction ratio. Sony's step width is *relative* and depends on aperture and initial focus, so depth-of-field per step changes with magnification. If they are wrong, the ladders have gaps and the sweeps do not sample what the gates assume. | A non-holdout rehearsal at **1.30×, f/5.6, the exact converter**, proving 55 frames at width 4 and 27 at width 10 give **gap-free coverage with interior peaks at 64 eligible sites**. Do not derive replacement widths from holdout data. |
+| 1 | **`sw4` / `sw10` step widths are unverified at 1.30×** | The widths were frozen without a documented reproduction ratio. Sony's step width is *relative* and depends on aperture and initial focus, so depth-of-field per step changes with magnification. If they are wrong, the ladders have gaps and the sweeps do not sample what the gates assume. | A non-holdout rehearsal at **1.30×, f/5.6, the exact converter**, proving 55 frames at width 4 and 27 at width 10 give **gap-free coverage with interior peaks at 64 eligible sites**. **Verify this from image data, not from EXIF — see the note below.** Do not derive replacement widths from holdout data. |
 | 2 | **G2 and G3 were never commissioned at 1.30×** | G2 is a fixed-focus spectral repeat and G3 a ladder-node match. Their thresholds (`< 0.10` log-ratio, unique zero-lag maximum, `< 0.10` geometry) were frozen at a different configuration and there is no justified magnification-adjusted threshold. | An exact-configuration development dry run. G0 (`≤ 0.033`) and G1 (`< 0.10` native pixel) are unaffected and remain valid. |
-| 3 | **Converter identity is unresolved** | Every measured Focus-Bracket result in this repository was obtained with the **Sony SEL20TC**. This request specifies a **2× Viltrox**. Focus Bracket behaviour with the Viltrox is **UNKNOWN** — mode availability, 55/27-shot completion, aperture and exposure reporting, and endpoint repeatability are all unverified on that hardware. | Either confirm the owner will shoot the **Sony SEL20TC**, in which case this blocker closes immediately, or bench-rehearse the Viltrox before committing the session to it. **This is a question for the owner, not a measurement.** |
+| 3 | ~~Converter identity is unresolved~~ **CLOSED 2026-09-04 — it is a 2× Viltrox, and every existing focus-bracket capture was shot on it** | The concern was that repository Focus-Bracket evidence might have been obtained on different hardware from the session, leaving mode availability, 55/27-shot completion and endpoint repeatability unverified on the converter actually used. | **Settled by the owner directly:** the rig is a **Sony A7C II + Sony FE 100mm F2.8 GM + 2× Viltrox teleconverter**, and **all stacks in the corpus are focus bracketed.** So the Viltrox is not a new variable — it is the converter every existing capture was taken through, including the 182-, 92- and 197-frame bracket ladders on the 2026-09-02 calibration slide, which completed at 200 mm f/5.6. Focus Bracket is therefore demonstrated on this exact hardware. |
 
 **Blockers 1 and 2 are the same rehearsal** — one dry run at the exact
-configuration settles both. Blocker 3 is one question to the owner.
+configuration settles both. **Blocker 3 is closed.**
+
+### Do not try to identify the teleconverter from EXIF
+
+**EXIF cannot distinguish this converter and an earlier revision of this
+document was wrong because it tried.** Every one of the **68** distinct stack
+directories under `D:\personal\macro` reports, in `LensModel` and in the Sony
+maker note `LensType3` alike:
+
+`Sony FE 100mm F2.8 Macro GM OSS + 2X Teleconverter`
+
+The physical converter is a **Viltrox**. It reports over the electronic
+protocol as a Sony 2× so the body meters and records correctly, and the maker
+note is written from that protocol rather than from the physical part. A
+verifier that compares EXIF strings will confirm this string on every frame and
+still be reading the wrong hardware. **Converter identity is owner testimony,
+not metadata.**
+
+### Why coverage must be verified from image data, not EXIF
+
+`FocusPosition2` is far too coarsely quantised to verify per-node coverage.
+Measured on the 2026-09-02 calibration slide:
+
+| stack | frames | `FocusPosition2` histogram | frames per encoder unit |
+| --- | ---: | --- | ---: |
+| `tilted-sw4-cpl` | 182 | `57`×76, `58`×80, `59`×26 | ~78 |
+| `tilted-sw10-cpl` | 92 | `57`×38, `58`×40, `59`×14 | ~40 |
+| `very-tilted-all-axis-sw10-cpl` | 197 | `56`×10, `57`×40, `58`×40, `59`×41, `60`×40, `61`×26 | ~40 |
+
+One encoder unit spans roughly **40 frames at step width 10** and **78 at step
+width 4**. A ladder of 55 or 27 frames therefore lives almost entirely inside a
+*single* encoder value, so EXIF cannot show whether the ladder covered the depth
+range without gaps. **Gap-free coverage and the 64 interior peaks must be
+demonstrated from the rendered focus response per site.**
+
+The same table yields a useful free measurement: across the two `tilted` stacks
+the per-bucket frame ratios are `76/38 = 2.000` and `80/40 = 2.000`, so **step
+width 10 advances focus almost exactly twice as far as step width 4** at that
+configuration. The truncated final bucket, `26/14 = 1.857`, shows the two
+sweeps stopped at slightly different points inside encoder value `59`.
 
 ## STANDING EQUIPMENT CONSTRAINT — OWNER-SUPPLIED — DO NOT REOPEN
 
@@ -460,7 +499,9 @@ one master and apply it to both.
 - **Body SteadyShot: OFF**
 - **Lens OSS: OFF**
 
-**Body and lens:** A7C II, FE 100mm Macro GM with 2× teleconverter at 200 mm.
+**Body and lens:** Sony A7C II, Sony FE 100mm F2.8 GM with a **2× Viltrox
+teleconverter**, at 200 mm. This is the rig every existing capture in the
+corpus was shot on, and all of those stacks were focus bracketed.
 **Keep the teleconverter installed for every frame in the session**, including
 the reference block.
 
