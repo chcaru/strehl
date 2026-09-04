@@ -1,0 +1,620 @@
+{
+  "candidate_outputs_opened": 0,
+  "capture_pixels_opened": 0,
+  "check_partition": {
+    "error": 0,
+    "fail": 0,
+    "pass": 23,
+    "total": 23
+  },
+  "checks": [
+    {
+      "evidence": {
+        "actual": "342ea2d9064130117f9173ff2311a47465760519251f2c473f3a8ea8d34952da",
+        "expected": "342ea2d9064130117f9173ff2311a47465760519251f2c473f3a8ea8d34952da"
+      },
+      "name": "m161_hash_commission_m3_v2.py",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "actual": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda",
+        "expected": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda"
+      },
+      "name": "m161_hash_m3_checker_v2.py",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "actual": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+        "expected": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca"
+      },
+      "name": "m161_hash_m3-checker-definition-v2.json",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "commit": "47d67a9f",
+        "git_diff_exit": 0
+      },
+      "name": "m161_worktree_matches_ratification_commit",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "m161": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda",
+        "m169": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda"
+      },
+      "name": "m169_checker_matches_m161",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "m161": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+        "m169": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca"
+      },
+      "name": "m169_definition_matches_m161",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "actual": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+        "expected": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca"
+      },
+      "name": "loaded_definition_hash_matches",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "maximum_max_h_v": 0.0,
+        "median_edge_width_ratio": 0.0,
+        "median_h_e": 0.0,
+        "median_rho_edge": 0.0,
+        "median_v_e": 0.0,
+        "p99_h_e": 0.0,
+        "p99_v_e": 0.0
+      },
+      "name": "m169_clean_numbers_reproduce",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "maximum_max_h_v": 0.0,
+        "median_edge_width_ratio": 0.0,
+        "median_h_e": 0.0,
+        "median_rho_edge": 0.0,
+        "median_v_e": 0.0,
+        "p99_h_e": 0.0,
+        "p99_v_e": 0.0
+      },
+      "name": "m169_improved_numbers_reproduce",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "failed_gates": [],
+        "median_h_e": 0.0029430516302103543
+      },
+      "name": "clean_null_passes_all_gates",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "failed_gates": [
+          "median_h_e"
+        ],
+        "median_h_e": 0.010413357351919823
+      },
+      "name": "improved_arm_fails_only_median_h_e",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "expected": 500,
+        "sites": 500,
+        "steps": 500
+      },
+      "name": "frozen_population_captured_completely",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "fail": 3,
+        "pass": 10,
+        "total": 13
+      },
+      "name": "response_curve_partition_is_complete",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "curve_h": 0.0029430516302103543,
+        "curve_v": 0.002320178352496525,
+        "full_h": 0.0029430516302103543,
+        "full_v": 0.002320178352496525
+      },
+      "name": "profile_curve_matches_full_clean_run",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "curve_h": 0.010413357351919823,
+        "curve_v": 0.005338683767680065,
+        "full_h": 0.010413357351919823,
+        "full_v": 0.005338683767680065
+      },
+      "name": "profile_curve_matches_full_improved_run",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "clean": {
+          "gate": "PASS",
+          "median_h_e": 0.0029430516302103543
+        },
+        "combined": {
+          "gate": "FAIL",
+          "median_h_e": 0.010413357351919823
+        },
+        "rim": {
+          "gate": "PASS",
+          "median_h_e": 0.006586935284439988
+        },
+        "veil": {
+          "gate": "PASS",
+          "median_h_e": 0.006758747128664467
+        }
+      },
+      "name": "individual_half_percent_components_pass_but_combination_fails",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "maximum_absolute_combined_delta_in_h_support": 0.01,
+        "median_h_e_gate": 0.01,
+        "noiseless_v_e_negative_side": 0.004756756756756756,
+        "noiseless_v_e_positive_side": 0.005243243243243242,
+        "positive_overlap_offsets": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "rim_component_fraction": 0.005,
+        "veil_component_fraction": 0.005
+      },
+      "name": "design_places_combined_plant_at_median_h_gate",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "actual": "cd997c28a6e0532c48858350f0f3c0c0434285ede91413ce43952a6880b36ad6",
+        "expected": "cd997c28a6e0532c48858350f0f3c0c0434285ede91413ce43952a6880b36ad6"
+      },
+      "name": "m152_artifact_hash_matches_report",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "artifact_sha256": "cd997c28a6e0532c48858350f0f3c0c0434285ede91413ce43952a6880b36ad6",
+        "assertion_names": [
+          "blur_guard_rejects_threefold_blur",
+          "improvement_reduces_h_by_at_least_5pp",
+          "improvement_reduces_v_by_at_least_5pp",
+          "one_sided_far_veil_detected_at_least_95pct",
+          "opposite_sign_rim_detected_at_least_95pct",
+          "positive_rim_detected_at_least_95pct",
+          "proposed_side_max_would_detect_one_sided_far_veil",
+          "raw_null_false_positive_at_most_1pct",
+          "synthetic_null_passes",
+          "veil_detected_at_least_95pct"
+        ],
+        "median_gate_margin": 0.00011505159186250835,
+        "median_h_e": 0.009884948408137492,
+        "p99_h_e": 0.009998092697349402,
+        "p99_to_median_gate_margin": 1.9073026505979362e-06
+      },
+      "name": "m152_registered_movement_not_whole_arm_pass",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "anchor": "        \"improved arm passes\"",
+        "count": 1
+      },
+      "name": "m161_pass_expectation_is_unique_full_line",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "anchor": "  \"registered_expectation\": \"FAIL_MEDIAN_H_E\","
+      },
+      "name": "corrected_oracle_accepts",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "planted_line": "  \"registered_expectation\": \"PASS_ALL_GATES\","
+      },
+      "name": "planted_pass_assertion_defect_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "evidence": {
+        "expected": "RuntimeError"
+      },
+      "name": "missing_anchor_hard_errors",
+      "outcome": "PASS"
+    }
+  ],
+  "clean_null": {
+    "affected_edge_count": 0,
+    "affected_edge_rate": 0.0,
+    "affected_edge_wilson_ucb95": 0.005381964629841941,
+    "checks": {
+      "affected_rate": true,
+      "affected_wilson": true,
+      "edge_width": true,
+      "headline_maximum": true,
+      "median_h_e": true,
+      "median_v_e": true,
+      "p99_h_e": true,
+      "p99_v_e": true,
+      "rho_edge": true
+    },
+    "detection_rate": 0.0,
+    "maximum_max_h_v": 0.006863374246262382,
+    "median_edge_width_ratio": 0.9999368748288627,
+    "median_h_e": 0.0029430516302103543,
+    "median_rho_edge": 0.9822833562747562,
+    "median_v_e": 0.002320178352496525,
+    "median_v_e_pooled_diagnostic": 0.0022506893712354345,
+    "name": "clean_noise_null",
+    "noise_sigma_fraction_of_step": 0.002,
+    "p99_h_e": 0.0058445510510100555,
+    "p99_v_e": 0.00259163990973747,
+    "per_capture_counts": {
+      "m3-chia": 125,
+      "m3-duck-tape": 125,
+      "m3-flower-fern": 125,
+      "m3-razor-control": 125
+    },
+    "planted_amplitude_fraction_of_step": 0.0,
+    "site_count": 500,
+    "verdict": "PASS",
+    "warp_residual_bound_native_px": 0.0
+  },
+  "comparator_outputs_opened": 0,
+  "component_responses_at_0_5pct": {
+    "clean": {
+      "component_amplitude_fraction_of_step": 0.005,
+      "component_amplitude_percent": 0.5,
+      "maximum_max_h_v": 0.006863374246262382,
+      "median_h_e": 0.0029430516302103543,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.002320178352496525,
+      "p99_h_e": 0.0058445510510100555,
+      "p99_v_e": 0.00259163990973747,
+      "plant": "clean"
+    },
+    "combined": {
+      "component_amplitude_fraction_of_step": 0.005,
+      "component_amplitude_percent": 0.5,
+      "maximum_max_h_v": 0.01472978375840315,
+      "median_h_e": 0.010413357351919823,
+      "median_h_e_gate": "FAIL",
+      "median_v_e": 0.005338683767680065,
+      "p99_h_e": 0.013717163574524247,
+      "p99_v_e": 0.005760859102140135,
+      "plant": "combined"
+    },
+    "rim": {
+      "component_amplitude_fraction_of_step": 0.005,
+      "component_amplitude_percent": 0.5,
+      "maximum_max_h_v": 0.010746321047219926,
+      "median_h_e": 0.006586935284439988,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.0024628632253494913,
+      "p99_h_e": 0.009763043551997268,
+      "p99_v_e": 0.0027197590163034976,
+      "plant": "rim"
+    },
+    "veil": {
+      "component_amplitude_fraction_of_step": 0.005,
+      "component_amplitude_percent": 0.5,
+      "maximum_max_h_v": 0.011870375097850471,
+      "median_h_e": 0.006758747128664467,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.0052049877795665184,
+      "p99_h_e": 0.01023151224804376,
+      "p99_v_e": 0.0055740290569096015,
+      "plant": "veil"
+    }
+  },
+  "deterministic_design": {
+    "maximum_absolute_combined_delta_in_h_support": 0.01,
+    "median_h_e_gate": 0.01,
+    "noiseless_v_e_negative_side": 0.004756756756756756,
+    "noiseless_v_e_positive_side": 0.005243243243243242,
+    "positive_overlap_offsets": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "rim_component_fraction": 0.005,
+    "veil_component_fraction": 0.005
+  },
+  "improvement": {
+    "affected_edge_count": 0,
+    "affected_edge_rate": 0.0,
+    "affected_edge_wilson_ucb95": 0.005381964629841941,
+    "checks": {
+      "affected_rate": true,
+      "affected_wilson": true,
+      "edge_width": true,
+      "headline_maximum": true,
+      "median_h_e": false,
+      "median_v_e": true,
+      "p99_h_e": true,
+      "p99_v_e": true,
+      "rho_edge": true
+    },
+    "detection_rate": 0.0,
+    "maximum_max_h_v": 0.014729783758402937,
+    "median_edge_width_ratio": 0.9999368748288627,
+    "median_h_e": 0.010413357351919823,
+    "median_rho_edge": 0.9779626279054068,
+    "median_v_e": 0.005338683767680065,
+    "median_v_e_pooled_diagnostic": 0.0051491767293755835,
+    "name": "planted_improvement_0_5pct_rim_and_veil",
+    "noise_sigma_fraction_of_step": 0.002,
+    "p99_h_e": 0.013717163574523992,
+    "p99_v_e": 0.005760859102140135,
+    "per_capture_counts": {
+      "m3-chia": 125,
+      "m3-duck-tape": 125,
+      "m3-flower-fern": 125,
+      "m3-razor-control": 125
+    },
+    "planted_amplitude_fraction_of_step": 0.005,
+    "site_count": 500,
+    "verdict": "FAIL",
+    "warp_residual_bound_native_px": 0.0
+  },
+  "m152_lineage": {
+    "artifact_sha256": "cd997c28a6e0532c48858350f0f3c0c0434285ede91413ce43952a6880b36ad6",
+    "assertion_names": [
+      "blur_guard_rejects_threefold_blur",
+      "improvement_reduces_h_by_at_least_5pp",
+      "improvement_reduces_v_by_at_least_5pp",
+      "one_sided_far_veil_detected_at_least_95pct",
+      "opposite_sign_rim_detected_at_least_95pct",
+      "positive_rim_detected_at_least_95pct",
+      "proposed_side_max_would_detect_one_sided_far_veil",
+      "raw_null_false_positive_at_most_1pct",
+      "synthetic_null_passes",
+      "veil_detected_at_least_95pct"
+    ],
+    "median_gate_margin": 0.00011505159186250835,
+    "median_h_e": 0.009884948408137492,
+    "p99_h_e": 0.009998092697349402,
+    "p99_to_median_gate_margin": 1.9073026505979362e-06
+  },
+  "median_h_e_crossing": {
+    "combined_noiseless_peak_percent_approx": 0.9556095922405975,
+    "component_amplitude_percent_approx": 0.47780479612029875,
+    "largest_passing_component_amplitude_fraction": 0.004778047961202967,
+    "median_h_e_at_largest_pass": 0.009999999999999905,
+    "median_h_e_at_smallest_fail": 0.010000000000000096,
+    "smallest_failing_component_amplitude_fraction": 0.0047780479612029875
+  },
+  "protected_holdout_opened": 0,
+  "rationale": {
+    "clean_null_headroom_ratio_to_gate": 3.397833696612808,
+    "clean_null_median_h_e": 0.0029430516302103543,
+    "correct_registration": {
+      "arm_role": "planted boundary improvement that remains red",
+      "required_expectation": "FAIL_MEDIAN_H_E",
+      "retain_existing_movement_assertions": [
+        "improvement_reduces_h_by_at_least_5pp",
+        "improvement_reduces_v_by_at_least_5pp"
+      ],
+      "unchanged": [
+        "0.005 rim plant",
+        "0.005 veil plant",
+        "0.01 median h_e gate",
+        "0.01 median v_e gate",
+        "0.05 headline maximum gate",
+        "all other M3 gates",
+        "checker source",
+        "seed",
+        "population"
+      ]
+    },
+    "improvement_excess_over_gate": 0.00041335735191982276,
+    "improvement_median_h_e": 0.010413357351919823,
+    "pre_registration_derivation": [
+      "The frozen rim contributes +0.005 on offsets +12..+24.",
+      "The frozen two-sided veil contributes +0.005 on offsets +16..+200.",
+      "Their overlap at +16..+24 is nine samples inside h_e support and sums to +0.010 before noise.",
+      "The frozen median h_e gate is 0.010, so this is a boundary challenge, not a green cleanliness arm.",
+      "M152 had already measured the same nominal arm at median 0.0098849484 and p99 0.0099980927 with no noisy source/output null, and asserted only downward movement.",
+      "M161 retained the amplitude, added independent sigma=0.002 source/output noise, then added the inconsistent whole-arm PASS assertion."
+    ],
+    "verdict": "B_ASSERTION_DEFECT"
+  },
+  "response_curve": [
+    {
+      "component_amplitude_fraction_of_step": 0.0,
+      "component_amplitude_percent": 0.0,
+      "maximum_max_h_v": 0.006863374246262382,
+      "median_h_e": 0.0029430516302103543,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.002320178352496525,
+      "p99_h_e": 0.0058445510510100555,
+      "p99_v_e": 0.00259163990973747,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.0005,
+      "component_amplitude_percent": 0.05,
+      "maximum_max_h_v": 0.00736407433142118,
+      "median_h_e": 0.003041248092751549,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.0023639754949938228,
+      "p99_h_e": 0.00595005421325751,
+      "p99_v_e": 0.0026148828316045923,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.001,
+      "component_amplitude_percent": 0.1,
+      "maximum_max_h_v": 0.007864774416580005,
+      "median_h_e": 0.0034118119238617036,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.002475393020657212,
+      "p99_h_e": 0.006525749893168856,
+      "p99_v_e": 0.0027273981391208037,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.0015,
+      "component_amplitude_percent": 0.15,
+      "maximum_max_h_v": 0.008365474501738804,
+      "median_h_e": 0.004062507904804937,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.0026638391323776643,
+      "p99_h_e": 0.007257460560207809,
+      "p99_v_e": 0.0029498086454550856,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.002,
+      "component_amplitude_percent": 0.2,
+      "maximum_max_h_v": 0.008866174586897629,
+      "median_h_e": 0.004775801765219822,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.002910812050106189,
+      "p99_h_e": 0.008196032722540457,
+      "p99_v_e": 0.0032089549317631874,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.0025,
+      "component_amplitude_percent": 0.25,
+      "maximum_max_h_v": 0.009726375503913375,
+      "median_h_e": 0.005648873327640439,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.0032225916705620077,
+      "p99_h_e": 0.0089995203959837,
+      "p99_v_e": 0.0035517340611611035,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.003,
+      "component_amplitude_percent": 0.3,
+      "maximum_max_h_v": 0.010727057154811374,
+      "median_h_e": 0.006526127291240435,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.003577053014443831,
+      "p99_h_e": 0.009867574757215253,
+      "p99_v_e": 0.003963199971712238,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.0035,
+      "component_amplitude_percent": 0.35000000000000003,
+      "maximum_max_h_v": 0.01172773880570937,
+      "median_h_e": 0.007461084478651217,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.003973421533802793,
+      "p99_h_e": 0.010716505757368915,
+      "p99_v_e": 0.004376837066725365,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.004,
+      "component_amplitude_percent": 0.4,
+      "maximum_max_h_v": 0.012728420456607369,
+      "median_h_e": 0.008449086050734784,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.0044001866745407275,
+      "p99_h_e": 0.011716725029753941,
+      "p99_v_e": 0.004817107638704981,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.0045000000000000005,
+      "component_amplitude_percent": 0.45000000000000007,
+      "maximum_max_h_v": 0.013729102107505152,
+      "median_h_e": 0.00944392736351159,
+      "median_h_e_gate": "PASS",
+      "median_v_e": 0.004863108659574785,
+      "p99_h_e": 0.012716944302138967,
+      "p99_v_e": 0.005285054605660368,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.005,
+      "component_amplitude_percent": 0.5,
+      "maximum_max_h_v": 0.01472978375840315,
+      "median_h_e": 0.010413357351919823,
+      "median_h_e_gate": "FAIL",
+      "median_v_e": 0.005338683767680065,
+      "p99_h_e": 0.013717163574524247,
+      "p99_v_e": 0.005760859102140135,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.0055,
+      "component_amplitude_percent": 0.5499999999999999,
+      "maximum_max_h_v": 0.015730465409301148,
+      "median_h_e": 0.011399664353518975,
+      "median_h_e_gate": "FAIL",
+      "median_v_e": 0.005827783943185989,
+      "p99_h_e": 0.014717382846909273,
+      "p99_v_e": 0.006268582313091468,
+      "plant": "combined"
+    },
+    {
+      "component_amplitude_fraction_of_step": 0.006,
+      "component_amplitude_percent": 0.6,
+      "maximum_max_h_v": 0.01673114706019893,
+      "median_h_e": 0.012398952010762652,
+      "median_h_e_gate": "FAIL",
+      "median_v_e": 0.00633207696562467,
+      "p99_h_e": 0.015717602119294297,
+      "p99_v_e": 0.006782295465517073,
+      "plant": "combined"
+    }
+  ],
+  "response_curve_partition": {
+    "fail": 3,
+    "pass": 10,
+    "total": 13
+  },
+  "schema": "m174-m3-improvement-assertion-adjudication-v1",
+  "source_hashes": {
+    "adjudicator": "125fbadf33fd4515b8090afff5fa06b6c63a10a5227842fe23ca3c52f3d0f55f",
+    "m152_commission_artifact": "cd997c28a6e0532c48858350f0f3c0c0434285ede91413ce43952a6880b36ad6",
+    "m161": {
+      "commission_m3_v2.py": "342ea2d9064130117f9173ff2311a47465760519251f2c473f3a8ea8d34952da",
+      "m3-checker-definition-v2.json": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+      "m3_checker_v2.py": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda"
+    },
+    "m169_commission_artifact": "ff53289da905b7e1b65763dbee8c9e8b24beb179d6f76461675d9599c9b49be4",
+    "oracle_template": "ef520caca745f5c461aa9360d76b9826751dbe4f562fcbcf181f5f79af2c65ba"
+  },
+  "verdict": "B_ASSERTION_DEFECT"
+}

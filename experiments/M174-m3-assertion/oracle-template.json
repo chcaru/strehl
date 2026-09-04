@@ -1,0 +1,6 @@
+{
+  "schema": "m174-m3-improvement-oracle-v1",
+  "component_amplitude_fraction_of_step": 0.005,
+  "registered_expectation": "FAIL_MEDIAN_H_E",
+  "reason": "The rim and veil overlap additively inside h_e support, placing the noiseless plant at the 0.01 median gate before the registered nonzero noise is applied."
+}
