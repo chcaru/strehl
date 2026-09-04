@@ -2461,3 +2461,93 @@ The phase gates, comparator pinning, banked-purge discipline, and the rule that
 a negative result is a publishable stopping point all stand. **Nothing here
 converts a withdrawn refutation into a validated design** — Phase 1 returns to
 the queue as untested work, not as a result.
+
+---
+
+## 14. Amendment 4 — the sequencing text repaired, and Phase 1's gate rebuilt
+
+*Author: orchestrator. Like amendments 1–3, this is written by the party whose
+work the scorecard grades. §14.3 exists because of that.*
+
+### 14.1 A2 leaves Phase 1 and D8 leaves Phase 2 — in the text, not only in the finding
+
+Amendment 3 recorded both instruments as defective. It did not amend the
+sequencing, so the plan still *scheduled* them:
+
+- `:2074` — **"Phase 1 — one merge (A1, A2, A4, B3, B4, B6), behind the freeze."**
+- `:2086` — **"Phase 2 — … D8 self-tuning, D2 acuity map, D3 planner v1."**
+
+A finding recorded in an appendix does not repeal an instruction in the body.
+A lane reading the sequencing would have built A2 — whose base-band treatment is
+`STOP_DO_NOT_BUILD` at `0/7` gates passed
+(`docs/research/M-PHASE0-VEIL2.md:180-187,245-260`) — as ordinary scheduled work,
+and would have been correct to think the plan told it to.
+
+**Effective now:**
+
+| Step | Was | Is |
+|---|---|---|
+| Phase 1 bundle | `A1, A2, A4, B3, B4, B6` | **`A1, A4, B3, B4, B6`** |
+| Phase 2 | includes **D8 self-tuning** | **D8 self-tuning removed** |
+| Phase 0 `V-VEIL2` | *"so A2 has its acceptance instrument before its build"* (`:2067-2068`) | **suspended with A2** — it commissions an acceptance instrument for a step no longer scheduled |
+
+**These removals are suspensions, not deletions.** Both steps return if M135
+delivers a detail instrument that survives a flat-ROI null *and* a planted
+improvement. Neither is refuted; both are unbuildable until an instrument exists.
+D8's underlying claim — that a stack contains its own ground truth (`:1694`) —
+is untouched. What failed was its per-tile FRC realisation.
+
+### 14.2 Phase 1's gate has been rebuilt, and is not yet frozen
+
+`NO_COMMON_K` was withdrawn in §13.1 as unsatisfiable by construction. Its
+replacement is preregistered at
+`experiments/M138-w1-gate-audit/corrected-gate-preregistration.md` (commit
+`7fb925bf`), with its contract and adjudicator alongside.
+
+It repairs the specific disease. Width matching is demoted from gate to
+diagnostic; every arm is rendered rather than excused by width; and the verdict
+table is **fail-closed**, routing both `INSTRUMENT_INVALID` and
+`BLOCKED_DETAIL_INSTRUMENT` to *"No Phase-1 inference"* under the governing
+sentence **"A failure of calibration cannot be reported as a merge failure."**
+That sentence is the previous defect written as a prohibition: last time, an
+empty calibration gate was reported as a scientific refutation. Its refutation
+verdicts are also scoped to the registered threshold family rather than claimed
+as a theorem about every threshold.
+
+**It is under independent review (M143) and must not be run until frozen.** The
+open question is provenance: the pass rule turns on an `<=0.90` temporal-power
+ceiling and a `<=1 DN` hull excess, both tagged `[INHERITED]` from the same
+Phase-1 body of work whose gate was just withdrawn. *Unchanged* is an argument
+that the gate was not weakened; it is not an argument that the number was ever
+right. If either constant was ever tuned against the `NO_COMMON_K` survivor set,
+it is contaminated, and a preregistration resting on it is the old result in new
+clothes.
+
+**W1 now depends on M135**, which must supply a bindable, hashable checker
+returning `detail_pass` per capture. Phase 1 is therefore gated on the same lane
+as the detail axis, and §13.5's ranking of the detail instrument as the critical
+path is strengthened again.
+
+### 14.3 The rule-4 scenarios are recorded in the scorecard, not here
+
+Scorecard decision rule 4 — which I wrote — propagates blocker `(a)` to four
+axes that do not require it intrinsically. Mechanically re-derived
+(`experiments/M140-readiness/readiness.json`): `b+d` yields **2** measurable
+axes with the rule and **6** without; `b+c+d` yields **4** versus **8**.
+Intrinsic to `M1, M5, M6, M9`; propagated to `M2, M3, M4, M11`.
+
+Those scenarios live in `docs/proposals/2026-09-sota-scorecard.md` and
+`docs/OWNER-ACTIONS.md`. This pointer exists so this plan is not read in
+isolation and its Amendment 2 table is not mistaken for the whole picture.
+**Amendment 2's table itself reproduces exactly** and is not amended. The
+decision to keep, narrow, or drop rule 4 is the owner's and is open; I declined
+to take it, because the stricter rule strengthens the eventual claim while
+costing him the axes, and I am the interested party.
+
+### 14.4 What this amendment does not change
+
+The scorecard still reads `0 of 12`. Workstreams A, B and C stand, less the two
+suspended steps. Amendments 1–3 stand. Removing A2 and D8 from the schedule
+lowers no quality bar — it removes two steps that could not honestly be executed,
+and it removes them from the instruction rather than merely noting them in an
+appendix.
