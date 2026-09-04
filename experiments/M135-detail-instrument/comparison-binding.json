@@ -1,0 +1,10 @@
+{
+  "schema": "m135-detail-binding-v1",
+  "state": "UNBOUND",
+  "physical_commissioning_status": null,
+  "physical_preregistration_sha256": null,
+  "physical_commissioning_sha256": null,
+  "payload_generator_sha256": null,
+  "instrument_normalized_sha256": null,
+  "applicable_captures": {}
+}
