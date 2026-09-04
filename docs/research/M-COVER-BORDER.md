@@ -53,6 +53,62 @@ the preregistered 8 px candidate before another Crop score. Commit `38b23a4c`
 commissioned the residual-mass statistic, including an improvement plant,
 before `results/profile-final.json` was generated.
 
+## Recovered prior-corpus review
+
+The orchestrator identified a deleted V-HEADTOHEAD3 cover corpus only after
+this experiment, report and evidence had already been committed as
+`f83de900a2751e2483f2f2f1afa8dc10d9c7d643`. I reviewed it read-only from
+`d1ad7458^`; no file was restored and none of its reported numbers was imported
+as evidence.
+
+The named preregistrations, both corrections and all three result JSONs were
+read. The Python files were statically inventoried, and the border-relevant
+render, statistic, commissioning and measurement routines in
+`cover-border.py` were read in full. `cover-check.py`, `cover_core.py` and
+`cover-commission.py` are principally the V-HEADTOHEAD3 geometry, site-mapping,
+ordinal spectral-power and bootstrap apparatus rather than a border-mechanism
+instrument.
+
+The reusable part of `cover-border.py` is a sound convergent design:
+
+- `border_rows` computes the same b7/b2, deep-normalized,
+  distance-to-emitted-border annular effect and tail safe inset;
+- its commission includes a null, a `+2%` defect, a `+0.05%` improvement,
+  an external annulus oracle and four degradation mutants;
+- its render path clears inherited `STREHL_*`, pins provenance and fails closed
+  on hashes, geometry and frame counts.
+
+It is not equivalent to the completed mechanism instrument:
+
+| Capability | Deleted V-HEADTOHEAD3 harness | M-COVER-BORDER |
+| --- | --- | --- |
+| b7/b2 annular profile | yes | yes |
+| commissioned defect/null/improvement | yes | yes |
+| restoration plant | no | yes |
+| b2/b4/b7 causal depth ladder | no | yes |
+| exact contributor/slack audit | no | yes |
+| frozen source/literal audit | no | yes |
+| synthetic zero-boundary/continuous-extension commission | no | yes |
+| conserved positive-error test for Scale | no | yes |
+
+In particular, the deleted code contains no positive residual-mass or
+conserved-error calculation, so it does not test hypothesis 5. Its sRGB profile
+was explicitly withdrawn for output-space specificity failure. Its corrected
+camera-linear result reports `specific=false` and
+`PROFILE_NOT_SPECIFIC_ON_113`; the sensitivity result keeps
+`black_fill_reach="UNRESOLVED"` and stops for insufficient central sites.
+Those are dispositions of the old files, not independently accepted numeric
+results here.
+
+**Decision:** keep the M-COVER-BORDER harness. It had already been
+preregistered, commissioned and reproduced; it uses the already-burned 109
+unit, obeys the current six-thread cap, and adds every discriminator needed for
+the mechanism and conserved-error question. Replacing it with a hard-coded
+113/eight-thread harness would lose causal tests and create new provenance
+without benefit. The prior corpus is cited here as a convergent instrument
+design and an independent warning about narrow-annulus specificity, not as a
+source of results. The frozen preregistration was not edited retroactively.
+
 ## Prior result used, not re-derived
 
 The prior lane established:
@@ -500,3 +556,7 @@ The instrument verifies all five TIFF hashes before profiling. Python used
 6. The results have not received an independent implementation or analysis
    replication. Exact b2/b7 rerender hashes and instrument restoration checks
    establish reproducibility within this lane, not independent verification.
+   The recovered V-HEADTOHEAD3 corpus independently converges on the annular
+   profile design, but its 113 result is nonspecific and it contains neither
+   the causal band ladder nor the conserved-error test, so it is not a
+   replication of this diagnosis.
