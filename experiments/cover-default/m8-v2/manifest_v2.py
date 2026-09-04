@@ -2013,7 +2013,8 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
         require(
             set(command)
             == {"file", "arguments", "exit_code", "command", "log"}
-            and command.get("exit_code") == 0
+            and type(command.get("exit_code")) is int
+            and command["exit_code"] == 0
             and isinstance(command.get("file"), str)
             and isinstance(command.get("arguments"), list),
             f"command {index}: malformed execution record",
@@ -2026,6 +2027,7 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
         log_path = Path(log_record["path"]).resolve()
         require(
             command_path == Path(str(log_path) + ".command.json")
+            and log_path.suffix == ".log"
             and log_path.is_relative_to((arm_root / "logs").resolve()),
             f"command {index}: command/log paths are not the arm log pair",
         )
@@ -2039,7 +2041,8 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
         require(
             isinstance(command_payload, dict)
             and command_payload.get("schema") == "strehl-m8-v2-command"
-            and command_payload.get("version") == VERSION
+            and type(command_payload.get("version")) is int
+            and command_payload["version"] == VERSION
             and command_payload.get("file") == command["file"]
             and command_payload.get("arguments") == command["arguments"]
             and Path(command_payload.get("working_directory", "")).resolve()

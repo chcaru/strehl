@@ -1571,7 +1571,9 @@ switch ($Phase) {
         if ($receipt.evidence_commit -ne $EvidenceCommit) {
             throw "Arm receipt evidence commit differs from -EvidenceCommit"
         }
-        $checkerLog = Join-Path (Split-Path -Parent $ArmReceipt) "logs\verify-phase-checker.log"
+        $verificationRoot = Join-Path $root "verification-logs"
+        [void][IO.Directory]::CreateDirectory($verificationRoot)
+        $checkerLog = Join-Path $verificationRoot "$($receipt.arm)-checker.log"
         if (Test-Path -LiteralPath $checkerLog) {
             throw "VERIFY is one-shot and will not overwrite its prior log: $checkerLog"
         }

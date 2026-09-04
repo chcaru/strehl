@@ -315,6 +315,11 @@ repo working directory, zero exit codes, and one exact file/argument/environment
 match for each of the three planned render roles. Arbitrary hash-valid files
 cannot stand in for command or log provenance.
 
+The later `VERIFY` phase writes its own diagnostic command/log pair below the
+private root's separate `verification-logs\` directory, never into the sealed
+arm tree. Verification therefore observes rather than mutates the exhaustive
+arm file set.
+
 Do not pass `-ContinueAfterFlat1s` until both flat-1s receipts have been
 independently verified and the operator has read the Crop stopping result.
 Later cases require that explicit switch. They are refused unconditionally if
