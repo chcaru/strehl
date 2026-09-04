@@ -6,6 +6,7 @@ import ctypes.wintypes as wt
 import hashlib
 import json
 import os
+import platform
 import re
 import shutil
 import statistics
@@ -15,6 +16,7 @@ import tarfile
 import time
 import uuid
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -30,6 +32,10 @@ REGISTERED_COUNTS = (33, 105, 299)
 WORKERS = (1, 2, 4, 8, 16)
 MODULO_COUNTS = (96, 97, 98, 99)
 SAMPLE_INTERVAL_S = 0.010
+DEFAULT_PRELOAD_SAMPLE_S = 5.0
+DEFAULT_PRELOAD_BUSY_MAX = 0.15
+DEFAULT_EXTERNAL_BUSY_MAX = 0.10
+DEFAULT_QUIET_RETRY_S = 30.0
 
 kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
 
@@ -77,6 +83,20 @@ class PROCESS_MEMORY_COUNTERS_EX(ctypes.Structure):
     ]
 
 
+class MEMORYSTATUSEX(ctypes.Structure):
+    _fields_ = [
+        ("dwLength", wt.DWORD),
+        ("dwMemoryLoad", wt.DWORD),
+        ("ullTotalPhys", ctypes.c_ulonglong),
+        ("ullAvailPhys", ctypes.c_ulonglong),
+        ("ullTotalPageFile", ctypes.c_ulonglong),
+        ("ullAvailPageFile", ctypes.c_ulonglong),
+        ("ullTotalVirtual", ctypes.c_ulonglong),
+        ("ullAvailVirtual", ctypes.c_ulonglong),
+        ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
+    ]
+
+
 kernel32.CreateToolhelp32Snapshot.argtypes = [wt.DWORD, wt.DWORD]
 kernel32.CreateToolhelp32Snapshot.restype = wt.HANDLE
 kernel32.Process32FirstW.argtypes = [wt.HANDLE, ctypes.POINTER(PROCESSENTRY32W)]
@@ -101,6 +121,18 @@ kernel32.K32GetProcessMemoryInfo.argtypes = [
     wt.DWORD,
 ]
 kernel32.K32GetProcessMemoryInfo.restype = wt.BOOL
+kernel32.GetSystemTimes.argtypes = [
+    ctypes.POINTER(FILETIME),
+    ctypes.POINTER(FILETIME),
+    ctypes.POINTER(FILETIME),
+]
+kernel32.GetSystemTimes.restype = wt.BOOL
+kernel32.GlobalMemoryStatusEx.argtypes = [ctypes.POINTER(MEMORYSTATUSEX)]
+kernel32.GlobalMemoryStatusEx.restype = wt.BOOL
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -122,6 +154,10 @@ def write_json(path: Path, value: Any) -> None:
         output.write("\n")
 
 
+def read_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def append_jsonl(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8", newline="\n") as output:
@@ -135,6 +171,7 @@ def run_text(
     cwd: Path | None = None,
     env: dict[str, str] | None = None,
     log: Path | None = None,
+    measured_commit: str | None = None,
 ) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(
         command,
@@ -148,6 +185,8 @@ def run_text(
     if log is not None:
         log.parent.mkdir(parents=True, exist_ok=True)
         with log.open("w", encoding="utf-8", newline="\n") as output:
+            if measured_commit is not None:
+                output.write(f"measured_commit={measured_commit}\n")
             output.write("$ " + subprocess.list2cmdline(command) + "\n\n")
             output.write(result.stdout)
     if result.returncode:
@@ -174,6 +213,17 @@ def git_text(*arguments: str) -> str:
         errors="replace",
         stdout=subprocess.PIPE,
     ).stdout.strip()
+
+
+def resolve_commit(revision: str) -> str:
+    return git_text("rev-parse", f"{revision}^{{commit}}")
+
+
+def ensure_commit_exists(revision: str) -> str:
+    commit = resolve_commit(revision)
+    if len(commit) != 40:
+        raise RuntimeError(f"expected a full commit SHA, got {commit!r}")
+    return commit
 
 
 def scorecard_version(data: bytes) -> str | None:
@@ -223,10 +273,13 @@ def section_lines(data: bytes, heading: str) -> list[int]:
     return [start, end]
 
 
-def preflight(output: Path) -> int:
+def preflight(output: Path, measured_revision: str) -> int:
+    measured_commit = ensure_commit_exists(measured_revision)
     registered_rel = "docs/proposals/2026-09-sota-scorecard.md"
-    current_commit = git_text("log", "-1", "--format=%H", "--", registered_rel)
-    registered = git_bytes(current_commit, registered_rel)
+    current_commit = git_text(
+        "log", "-1", "--format=%H", measured_commit, "--", registered_rel
+    )
+    registered = git_bytes(measured_commit, registered_rel)
     supplied = git_bytes(SUPPLIED_SCORECARD_COMMIT, registered_rel)
     working = SCORECARD.read_bytes()
     scorecard_status = git_text("status", "--short", "--", registered_rel)
@@ -304,9 +357,28 @@ def preflight(output: Path) -> int:
 
     result = {
         "schema": 1,
-        "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "evidence_tag": "VERIFIED",
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "crop_early_commit": {
+            "commit": resolve_commit("248178b9"),
+            "is_ancestor_of_measured_commit": subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(ROOT),
+                    "merge-base",
+                    "--is-ancestor",
+                    "248178b9",
+                    measured_commit,
+                ],
+                check=False,
+            ).returncode
+            == 0,
+        },
         "registered_scorecard": {
-            "commit": current_commit,
+            "last_path_commit_at_measured_revision": current_commit,
+            "measured_tree_commit": measured_commit,
             "version": scorecard_version(registered),
             "sha256": sha256_bytes(registered),
             "m12_lines": section_lines(
@@ -324,6 +396,10 @@ def preflight(output: Path) -> int:
             "sha256": sha256_bytes(working),
             "git_status": scorecard_status,
             "matches_registered_bytes": working == registered,
+            "matches_registered_text": (
+                working.decode("utf-8").splitlines()
+                == registered.decode("utf-8").splitlines()
+            ),
         },
         "captures": {
             "bee-1-cpl": bee,
@@ -356,7 +432,8 @@ def preflight(output: Path) -> int:
     write_json(output, result)
     print(json.dumps(result, indent=2))
     captures_ok = (
-        bee["arw_count"] == 299
+        result["crop_early_commit"]["is_ancestor_of_measured_commit"]
+        and bee["arw_count"] == 299
         and not bee["missing_expected"]
         and coffee["arw_count"] == 105
         and not coffee["missing_expected"]
@@ -365,21 +442,28 @@ def preflight(output: Path) -> int:
     return 0 if captures_ok else 1
 
 
-def process_snapshot() -> dict[int, int]:
+def process_table() -> dict[int, dict[str, Any]]:
     handle = kernel32.CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
     if handle == INVALID_HANDLE_VALUE:
         raise ctypes.WinError(ctypes.get_last_error())
-    rows: dict[int, int] = {}
+    rows: dict[int, dict[str, Any]] = {}
     try:
         entry = PROCESSENTRY32W()
         entry.dwSize = ctypes.sizeof(entry)
         ok = kernel32.Process32FirstW(handle, ctypes.byref(entry))
         while ok:
-            rows[int(entry.th32ProcessID)] = int(entry.th32ParentProcessID)
+            rows[int(entry.th32ProcessID)] = {
+                "parent_pid": int(entry.th32ParentProcessID),
+                "name": str(entry.szExeFile),
+            }
             ok = kernel32.Process32NextW(handle, ctypes.byref(entry))
     finally:
         kernel32.CloseHandle(handle)
     return rows
+
+
+def process_snapshot() -> dict[int, int]:
+    return {pid: int(row["parent_pid"]) for pid, row in process_table().items()}
 
 
 def descendants(root_pid: int, parents: dict[int, int]) -> set[int]:
@@ -427,6 +511,126 @@ def process_counters(pid: int) -> dict[str, int] | None:
         }
     finally:
         kernel32.CloseHandle(handle)
+
+
+def system_times() -> dict[str, int]:
+    idle, kernel, user = FILETIME(), FILETIME(), FILETIME()
+    if not kernel32.GetSystemTimes(
+        ctypes.byref(idle), ctypes.byref(kernel), ctypes.byref(user)
+    ):
+        raise ctypes.WinError(ctypes.get_last_error())
+    total = kernel.value() + user.value()
+    busy = total - idle.value()
+    return {
+        "idle_100ns": idle.value(),
+        "kernel_100ns": kernel.value(),
+        "user_100ns": user.value(),
+        "total_100ns": total,
+        "busy_100ns": busy,
+    }
+
+
+def memory_status() -> dict[str, int]:
+    status = MEMORYSTATUSEX()
+    status.dwLength = ctypes.sizeof(status)
+    if not kernel32.GlobalMemoryStatusEx(ctypes.byref(status)):
+        raise ctypes.WinError(ctypes.get_last_error())
+    return {
+        "memory_load_percent": int(status.dwMemoryLoad),
+        "total_physical_bytes": int(status.ullTotalPhys),
+        "available_physical_bytes": int(status.ullAvailPhys),
+        "total_page_file_bytes": int(status.ullTotalPageFile),
+        "available_page_file_bytes": int(status.ullAvailPageFile),
+        "total_virtual_bytes": int(status.ullTotalVirtual),
+        "available_virtual_bytes": int(status.ullAvailVirtual),
+    }
+
+
+def sample_host_load(duration_s: float) -> dict[str, Any]:
+    started_utc = utc_now()
+    started = time.perf_counter()
+    system_start = system_times()
+    table_start = process_table()
+    process_start = {
+        pid: counters
+        for pid in table_start
+        if (counters := process_counters(pid)) is not None
+    }
+    memory_start = memory_status()
+    time.sleep(duration_s)
+    system_end = system_times()
+    table_end = process_table()
+    process_end = {
+        pid: counters
+        for pid in table_end
+        if (counters := process_counters(pid)) is not None
+    }
+    elapsed = time.perf_counter() - started
+    total_delta = system_end["total_100ns"] - system_start["total_100ns"]
+    busy_delta = system_end["busy_100ns"] - system_start["busy_100ns"]
+    logical_processors = os.cpu_count() or 1
+    capacity_seconds = elapsed * logical_processors
+    process_rows = []
+    for pid, end in process_end.items():
+        start = process_start.get(pid)
+        if start is not None and start["created"] != end["created"]:
+            start = None
+        cpu_delta = end["cpu_100ns"] - (start["cpu_100ns"] if start else 0)
+        if cpu_delta <= 0:
+            continue
+        process_rows.append(
+            {
+                "pid": pid,
+                "parent_pid": table_end[pid]["parent_pid"],
+                "name": table_end[pid]["name"],
+                "cpu_seconds": cpu_delta / 10_000_000.0,
+                "capacity_fraction": (cpu_delta / 10_000_000.0) / capacity_seconds,
+            }
+        )
+    process_rows.sort(key=lambda row: row["cpu_seconds"], reverse=True)
+    busy_seconds = busy_delta / 10_000_000.0
+    return {
+        "started_utc": started_utc,
+        "completed_utc": utc_now(),
+        "requested_seconds": duration_s,
+        "elapsed_seconds": elapsed,
+        "logical_processors": logical_processors,
+        "whole_host_busy_cpu_seconds": busy_seconds,
+        "whole_host_busy_fraction": (
+            busy_delta / total_delta if total_delta > 0 else None
+        ),
+        "whole_host_busy_fraction_of_wall_capacity": (
+            busy_seconds / capacity_seconds if capacity_seconds > 0 else None
+        ),
+        "memory_start": memory_start,
+        "memory_end": memory_status(),
+        "top_process_cpu": process_rows[:20],
+    }
+
+
+def wait_for_quiet(
+    *,
+    sample_seconds: float,
+    busy_max: float,
+    retry_seconds: float,
+) -> dict[str, Any]:
+    attempts = []
+    wait_started = time.perf_counter()
+    while True:
+        sample = sample_host_load(sample_seconds)
+        busy = sample["whole_host_busy_fraction"]
+        accepted = busy is not None and busy <= busy_max
+        attempts.append({"accepted": accepted, **sample})
+        if accepted:
+            return {
+                "threshold": busy_max,
+                "sample_seconds": sample_seconds,
+                "retry_seconds": retry_seconds,
+                "wait_seconds": time.perf_counter() - wait_started,
+                "rejected_sample_count": len(attempts) - 1,
+                "attempts": attempts,
+            }
+        time.sleep(retry_seconds)
 
 
 def tree_bytes(path: Path) -> int:
@@ -522,9 +726,13 @@ def monitor_command(
     stdout_path: Path,
     stderr_path: Path,
     temp: Path,
+    measured_commit: str,
+    external_busy_max: float = DEFAULT_EXTERNAL_BUSY_MAX,
 ) -> dict[str, Any]:
-    started_utc = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    started_utc = utc_now()
     start = time.perf_counter()
+    system_start = system_times()
+    memory_start = memory_status()
     known: dict[int, dict[str, Any]] = {}
     peak_private = 0
     peak_working_set = 0
@@ -540,6 +748,10 @@ def monitor_command(
     with stdout_path.open("w", encoding="utf-8", newline="\n") as stdout, stderr_path.open(
         "w", encoding="utf-8", newline="\n"
     ) as stderr:
+        stdout.write(f"measured_commit={measured_commit}\n")
+        stdout.flush()
+        stderr.write(f"measured_commit={measured_commit}\n")
+        stderr.flush()
         process = subprocess.Popen(
             argv,
             env=env,
@@ -561,7 +773,10 @@ def monitor_command(
                 gaps.append(sampled_at - last_sample)
             last_sample = sampled_at
 
-            parents = process_snapshot()
+            table = process_table()
+            parents = {
+                pid: int(details["parent_pid"]) for pid, details in table.items()
+            }
             live_tree = descendants(process.pid, parents) if process.pid in parents else set()
             candidate_pids = live_tree | (set(known) & set(parents))
             rows: list[tuple[int, dict[str, int]]] = []
@@ -576,13 +791,18 @@ def monitor_command(
                     known[pid] = {
                         "created": counters["created"],
                         "parent_pid": parents.get(pid),
+                        "name": table.get(pid, {}).get("name"),
                         "first_seen_s": sampled_at - start,
                         "last_seen_s": sampled_at - start,
                         "samples": 1,
+                        "max_cpu_100ns": counters["cpu_100ns"],
                     }
                 else:
                     prior["last_seen_s"] = sampled_at - start
                     prior["samples"] += 1
+                    prior["max_cpu_100ns"] = max(
+                        prior["max_cpu_100ns"], counters["cpu_100ns"]
+                    )
                 rows.append((pid, counters))
 
             peak_private = max(peak_private, sum(row["private"] for _, row in rows))
@@ -613,8 +833,28 @@ def monitor_command(
         returncode = process.wait()
 
     wall = time.perf_counter() - start
+    system_end = system_times()
+    memory_end = memory_status()
+    system_total_cpu_seconds = (
+        system_end["total_100ns"] - system_start["total_100ns"]
+    ) / 10_000_000.0
+    system_busy_cpu_seconds = (
+        system_end["busy_100ns"] - system_start["busy_100ns"]
+    ) / 10_000_000.0
+    process_tree_cpu_seconds = sum(
+        details["max_cpu_100ns"] for details in known.values()
+    ) / 10_000_000.0
+    external_busy_cpu_seconds = max(
+        0.0, system_busy_cpu_seconds - process_tree_cpu_seconds
+    )
+    logical_processors = os.cpu_count() or 1
+    capacity_seconds = wall * logical_processors
+    external_busy_fraction = (
+        external_busy_cpu_seconds / capacity_seconds if capacity_seconds else None
+    )
     return {
         "started_utc": started_utc,
+        "completed_utc": utc_now(),
         "returncode": returncode,
         "wall_seconds": wall,
         "stdout_log": str(stdout_path.resolve()),
@@ -634,6 +874,21 @@ def monitor_command(
             "process_lifetimes": [
                 {"pid": pid, **details} for pid, details in sorted(known.items())
             ],
+        },
+        "host_load_during_run": {
+            "logical_processors": logical_processors,
+            "system_total_cpu_seconds": system_total_cpu_seconds,
+            "system_busy_cpu_seconds": system_busy_cpu_seconds,
+            "process_tree_cpu_seconds": process_tree_cpu_seconds,
+            "external_busy_cpu_seconds": external_busy_cpu_seconds,
+            "external_busy_fraction_of_wall_capacity": external_busy_fraction,
+            "external_busy_max": external_busy_max,
+            "pass": (
+                external_busy_fraction is not None
+                and external_busy_fraction <= external_busy_max
+            ),
+            "memory_start": memory_start,
+            "memory_end": memory_end,
         },
     }
 
@@ -655,6 +910,8 @@ def run_once(
     kind: str,
     repetition: int | None,
     sweep: str | None,
+    measured_commit: str,
+    external_busy_max: float = DEFAULT_EXTERNAL_BUSY_MAX,
 ) -> dict[str, Any]:
     if destination.exists():
         raise RuntimeError(f"refusing to overwrite {destination}")
@@ -687,10 +944,13 @@ def run_once(
         stdout_path=stdout_path,
         stderr_path=stderr_path,
         temp=temp,
+        measured_commit=measured_commit,
+        external_busy_max=external_busy_max,
     )
     stderr_text = stderr_path.read_text(encoding="utf-8", errors="replace")
     record: dict[str, Any] = {
         "schema": 1,
+        "measured_commit": measured_commit,
         "kind": kind,
         **observed,
         "argv": argv,
@@ -729,6 +989,7 @@ def build_release(
     target: Path,
     log: Path,
     build_id: str,
+    measured_commit: str,
     jobs: int = 8,
 ) -> tuple[Path, str]:
     env = os.environ.copy()
@@ -749,14 +1010,28 @@ def build_release(
         "--target-dir",
         str(target),
     ]
-    result = run_text(command, cwd=source, env=env, log=log)
+    result = run_text(
+        command,
+        cwd=source,
+        env=env,
+        log=log,
+        measured_commit=measured_commit,
+    )
     exe = target / "release" / "strehl.exe"
     if not exe.exists():
         raise RuntimeError(f"build completed but {exe} is missing")
     return exe, result.stdout
 
 
-def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) -> int:
+def commission(
+    output: Path,
+    work: Path,
+    stack: Path,
+    limit: int,
+    workers: int,
+    measured_revision: str,
+) -> int:
+    measured_commit = ensure_commit_exists(measured_revision)
     output = output.resolve()
     work = work.resolve()
     stack = stack.resolve()
@@ -780,16 +1055,20 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
         "crates/strehl-core",
         "crates/strehl-raw",
     )
-    if crate_status:
-        raise RuntimeError(
-            "commissioning archive would omit live crate edits; refusing:\n" + crate_status
-        )
-    head = git_text("rev-parse", "HEAD")
-    build_id = head[:12]
+    build_id = measured_commit[:12]
     archive = work / "source.tar"
     run_text(
-        ["git", "-C", str(ROOT), "archive", "--format=tar", f"--output={archive}", head],
+        [
+            "git",
+            "-C",
+            str(ROOT),
+            "archive",
+            "--format=tar",
+            f"--output={archive}",
+            measured_commit,
+        ],
         log=output.parent / "commission-archive.log",
+        measured_commit=measured_commit,
     )
     with tarfile.open(archive, "r") as bundle:
         bundle.extractall(source, filter="data")
@@ -800,6 +1079,7 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
         target,
         output.parent / "commission-build-initial.log",
         build_id,
+        measured_commit,
     )
     if "Compiling strehl-cli" not in initial_build:
         raise RuntimeError("initial build log lacks `Compiling strehl-cli`")
@@ -833,6 +1113,7 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
             kind=f"commission-{name}",
             repetition=None,
             sweep=None,
+            measured_commit=measured_commit,
         )
         if not record["valid"]:
             raise RuntimeError(f"{name} render invalid: {record['invalid_reasons']}")
@@ -841,8 +1122,9 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
     baseline = render("baseline", initial_exe)
     source_file = source / "crates" / "strehl-core" / "src" / "pyramid.rs"
     original_hash = sha256_file(source_file)
-    temp_root = Path(os.environ["TEMP"])
-    backup = temp_root / f"m12-pyramid-{uuid.uuid4().hex}.rs"
+    backup_root = work / "source-backup"
+    backup_root.mkdir(parents=True, exist_ok=True)
+    backup = backup_root / f"m12-pyramid-{uuid.uuid4().hex}.rs"
     shutil.copy2(source_file, backup)
     anchor = (
         "    *CACHED.get_or_init(|| match std::env::var(SIGNIFICANCE_ENV) {\n"
@@ -878,6 +1160,7 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
             target,
             output.parent / "commission-build-planted.log",
             build_id,
+            measured_commit,
         )
         if "Compiling strehl-core" not in plant_build:
             raise RuntimeError("planted build log lacks `Compiling strehl-core`")
@@ -892,12 +1175,15 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
             shutil.copy2(backup, source_file)
             os.utime(source_file, None)
             if sha256_file(source_file) != original_hash:
-                raise RuntimeError("TEMP restore did not reproduce the original source bytes")
+                raise RuntimeError(
+                    "project-work restore did not reproduce the original source bytes"
+                )
             restored_exe, restore_build = build_release(
                 source,
                 target,
                 output.parent / "commission-build-restored.log",
                 build_id,
+                measured_commit,
             )
             if "Compiling strehl-core" not in restore_build:
                 raise RuntimeError("restored build log lacks `Compiling strehl-core`")
@@ -933,6 +1219,8 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
     lsb_red = baseline["output_sha256"] != lsb_hash
     result = {
         "schema": 1,
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
         "status": (
             "COMMISSIONED"
             if red and pixel_red and green and pixel_green and provenance_green and lsb_red
@@ -942,8 +1230,10 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
             "Diagnostic N-limited, alignment-off native-RAW pyramid arm used only to "
             "commission byte detection; it is not an M12 score reading."
         ),
-        "source_commit": head,
+        "source_commit": measured_commit,
         "forced_build_id": build_id,
+        "working_tree_crate_status_ignored_because_source_was_archived": crate_status,
+        "harness_sha256": sha256_file(Path(__file__)),
         "stack": str(stack.resolve()),
         "limit": limit,
         "workers": workers,
@@ -955,7 +1245,7 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
             "original_source_sha256": original_hash,
             "planted_source_sha256": plant_hash,
             "restored_source_sha256": sha256_file(source_file),
-            "backup_was_under_env_TEMP": str(temp_root),
+            "backup_was_under_project_work": str(backup_root),
             "restored_last_write_time_was_refreshed": True,
         },
         "baseline": baseline,
@@ -988,7 +1278,8 @@ def commission(output: Path, work: Path, stack: Path, limit: int, workers: int) 
     return 0 if result["status"] == "COMMISSIONED" else 1
 
 
-def commission_memory(output: Path, work: Path) -> int:
+def commission_memory(output: Path, work: Path, measured_revision: str) -> int:
+    measured_commit = ensure_commit_exists(measured_revision)
     output = output.resolve()
     work = work.resolve()
     control = work / "memory-control"
@@ -999,6 +1290,7 @@ def commission_memory(output: Path, work: Path) -> int:
     parent = control / "parent.py"
     with child.open("w", encoding="utf-8", newline="\n") as target:
         target.write(
+            f"# measured_commit={measured_commit}\n"
             "import sys, time\n"
             "size = int(sys.argv[1])\n"
             "hold = bytearray(size)\n"
@@ -1009,6 +1301,7 @@ def commission_memory(output: Path, work: Path) -> int:
         )
     with parent.open("w", encoding="utf-8", newline="\n") as target:
         target.write(
+            f"# measured_commit={measured_commit}\n"
             "import subprocess, sys\n"
             "raise SystemExit(subprocess.call([sys.executable, sys.argv[1], sys.argv[2]]))\n"
         )
@@ -1026,6 +1319,7 @@ def commission_memory(output: Path, work: Path) -> int:
             stdout_path=control / f"{name}.stdout.log",
             stderr_path=control / f"{name}.stderr.log",
             temp=temp,
+            measured_commit=measured_commit,
         )
         observed["argv"] = argv
         observed["requested_allocation_bytes"] = size
@@ -1047,6 +1341,9 @@ def commission_memory(output: Path, work: Path) -> int:
     )
     result = {
         "schema": 1,
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "harness_sha256": sha256_file(Path(__file__)),
         "status": "COMMISSIONED" if null_green and plant_red else "FAILED",
         "null": null,
         "plant": planted,
@@ -1064,8 +1361,549 @@ def commission_memory(output: Path, work: Path) -> int:
     return 0 if result["status"] == "COMMISSIONED" else 1
 
 
+def line_slice(data: bytes, start: int, end: int) -> dict[str, Any]:
+    lines = data.decode("utf-8").splitlines()
+    return {
+        "start": start,
+        "end": end,
+        "text": "\n".join(lines[start - 1 : end]),
+    }
+
+
+def git_file_provenance(measured_commit: str, relative: str) -> dict[str, Any]:
+    data = git_bytes(measured_commit, relative)
+    last_path_commit = git_text(
+        "log", "-1", "--format=%H", measured_commit, "--", relative
+    )
+    return {
+        "path": relative.replace("/", "\\"),
+        "measured_tree_commit": measured_commit,
+        "last_path_commit": last_path_commit,
+        "sha256": sha256_bytes(data),
+        "bytes": len(data),
+    }
+
+
+def exiftool_records(executable: Path, capture: Path) -> list[dict[str, Any]]:
+    command = [
+        str(executable),
+        "-json",
+        "-n",
+        "-ext",
+        "ARW",
+        str(capture),
+    ]
+    result = subprocess.run(
+        command,
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    rows = json.loads(result.stdout.decode("utf-8", errors="strict"))
+    volatile = {"FileAccessDate", "FileInodeChangeDate", "FilePermissions"}
+    cleaned = [
+        {key: value for key, value in row.items() if key not in volatile}
+        for row in rows
+    ]
+    return sorted(cleaned, key=lambda row: str(row.get("SourceFile", "")).casefold())
+
+
+def input_manifest(
+    *,
+    output: Path,
+    exif_output: Path,
+    measured_revision: str,
+) -> int:
+    measured_commit = ensure_commit_exists(measured_revision)
+    output = output.resolve()
+    exif_output = exif_output.resolve()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    exif_output.parent.mkdir(parents=True, exist_ok=True)
+    captures = [
+        {
+            "id": "bee-1-cpl",
+            "path": Path(r"D:\personal\macro\bee-1-cpl"),
+            "expected_first": 1,
+            "expected_last": 299,
+            "roles": ["N33", "N299", "modulo-N96-N99"],
+        },
+        {
+            "id": "coffee-bean",
+            "path": Path(r"D:\personal\macro\coffee-bean"),
+            "expected_first": 16,
+            "expected_last": 120,
+            "roles": ["N105"],
+        },
+    ]
+    exif_command = shutil.which("exiftool")
+    if exif_command is None:
+        raise RuntimeError("ExifTool is required by the registered input manifest")
+    exif_exe = Path(exif_command).resolve()
+    exif_version = run_text(
+        [str(exif_exe), "-ver"], measured_commit=measured_commit
+    ).stdout.strip()
+
+    exif_by_capture = {}
+    capture_rows = []
+    for capture in captures:
+        path = capture["path"]
+        files = sorted(path.glob("*.ARW"), key=lambda item: item.name.casefold())
+        expected = {
+            f"DSC{number:05d}.ARW"
+            for number in range(capture["expected_first"], capture["expected_last"] + 1)
+        }
+        actual = {item.name.upper() for item in files}
+        if expected != actual:
+            raise RuntimeError(
+                f"{path} inventory mismatch: missing={sorted(expected - actual)}, "
+                f"unexpected={sorted(actual - expected)}"
+            )
+        rows = []
+        for index, item in enumerate(files, 1):
+            stat = item.stat()
+            rows.append(
+                {
+                    "name": item.name,
+                    "path": str(item.resolve()),
+                    "bytes": stat.st_size,
+                    "last_write_utc": datetime.fromtimestamp(
+                        stat.st_mtime, timezone.utc
+                    ).isoformat(),
+                    "sha256": sha256_file(item),
+                }
+            )
+            if index % 25 == 0 or index == len(files):
+                print(
+                    f"hashed {capture['id']} {index}/{len(files)}",
+                    flush=True,
+                )
+        canonical = "\n".join(
+            f"{row['name']}\t{row['bytes']}\t{row['last_write_utc']}\t{row['sha256']}"
+            for row in rows
+        ).encode("utf-8")
+        capture_rows.append(
+            {
+                "evidence_tag": "VERIFIED",
+                "id": capture["id"],
+                "path": str(path),
+                "roles": capture["roles"],
+                "file_count": len(rows),
+                "bytes": sum(row["bytes"] for row in rows),
+                "metadata_and_content_manifest_sha256": sha256_bytes(canonical),
+                "files": rows,
+            }
+        )
+        exif_by_capture[capture["id"]] = exiftool_records(exif_exe, path)
+
+    exif_artifact = {
+        "schema": 1,
+        "evidence_tag": "VERIFIED",
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "tool": {
+            "path": str(exif_exe),
+            "version": exif_version,
+            "sha256": sha256_file(exif_exe),
+        },
+        "excluded_volatile_filesystem_fields": [
+            "FileAccessDate",
+            "FileInodeChangeDate",
+            "FilePermissions",
+        ],
+        "captures": exif_by_capture,
+    }
+    write_json(exif_output, exif_artifact)
+    result = {
+        "schema": 1,
+        "evidence_tag": "VERIFIED",
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "captures": capture_rows,
+        "exif_dump": {
+            "path": str(exif_output),
+            "sha256": sha256_file(exif_output),
+            "tool": exif_artifact["tool"],
+        },
+        "decoder": {
+            "kind": "integrated Rust RAW decoder",
+            "binary_is_frozen_in_run_manifest": True,
+            "cargo_lock": git_file_provenance(measured_commit, "Cargo.lock"),
+        },
+    }
+    write_json(output, result)
+    print(
+        json.dumps(
+            {
+                "measured_commit": measured_commit,
+                "captures": [
+                    {
+                        "id": row["id"],
+                        "file_count": row["file_count"],
+                        "bytes": row["bytes"],
+                        "manifest_sha256": row[
+                            "metadata_and_content_manifest_sha256"
+                        ],
+                    }
+                    for row in capture_rows
+                ],
+                "exif_sha256": result["exif_dump"]["sha256"],
+            },
+            indent=2,
+        )
+    )
+    return 0
+
+
+def registration_artifact(output: Path, measured_revision: str) -> int:
+    measured_commit = ensure_commit_exists(measured_revision)
+    scorecard_rel = "docs/proposals/2026-09-sota-scorecard.md"
+    scorecard = git_bytes(measured_commit, scorecard_rel)
+    phase0_rel = "docs/research/M-PHASE0-PIPE.md"
+    phase0 = git_bytes(measured_commit, phase0_rel)
+    m12_start, m12_end = section_lines(
+        scorecard, "### M12 — memory, determinism, and scaling invariance"
+    )
+    result = {
+        "schema": 1,
+        "evidence_tag": "INHERITED",
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "governing_registration": {
+            **git_file_provenance(measured_commit, scorecard_rel),
+            "version": scorecard_version(scorecard),
+            "m12_section": line_slice(scorecard, m12_start, m12_end),
+            "joint_constraint": line_slice(scorecard, 122, 122),
+            "scoreboard_bar": line_slice(scorecard, 403, 405),
+            "readiness": line_slice(scorecard, 433, 437),
+        },
+        "registered_design": {
+            "native_frame_counts": list(REGISTERED_COUNTS),
+            "worker_counts": list(WORKERS),
+            "warmups_per_cell": 1,
+            "scored_repetitions_per_cell": 6,
+            "order": "alternating ascending/descending worker order",
+            "modulo_frame_counts": list(MODULO_COUNTS),
+            "modulo_workers": 16,
+            "modulo_warmups_per_n": 1,
+            "modulo_scored_repetitions_per_n": 6,
+            "highest_precision_deliverable": "uncompressed 16-bit RGB TIFF",
+            "memory_sample_interval_ms": SAMPLE_INTERVAL_S * 1000.0,
+        },
+        "bars": {
+            "peak_process_tree_private_committed_bytes_max": 6 * (1 << 30),
+            "peak_n299_over_peak_n33_max": 1.10,
+            "fixed_worker_distinct_hashes_max": 1,
+            "cross_worker_distinct_hashes_max": 1,
+            "modulo_per_frame_spread_max": 0.02,
+            "m12_s_joint_requirement": (
+                "the 16-worker output must simultaneously pass M11"
+            ),
+        },
+        "scored_vs_diagnostic": {
+            "scored": (
+                "The registered N=33/105/299 native-product matrix at "
+                "workers 1/2/4/8/16, six accepted repetitions per cell, plus "
+                "the registered N=96/97/98/99 modulo arm."
+            ),
+            "diagnostic_only": (
+                "The older unaligned N=20 sweep at workers 1/4/8 and all "
+                "commissioning/smoke outputs."
+            ),
+        },
+        "host_load_gate": {
+            "evidence_tag": "INHERITED",
+            **git_file_provenance(measured_commit, phase0_rel),
+            "source_lines": line_slice(phase0, 245, 257),
+            "preload_sample_seconds": DEFAULT_PRELOAD_SAMPLE_S,
+            "preload_busy_max": DEFAULT_PRELOAD_BUSY_MAX,
+            "during_run_external_busy_max": DEFAULT_EXTERNAL_BUSY_MAX,
+            "retry_seconds": DEFAULT_QUIET_RETRY_S,
+            "application": (
+                "Every formal warm-up and scored invocation waits for the "
+                "preload gate; any invocation crossing the during-run gate is "
+                "preserved as rejected and repeated in the same position."
+            ),
+        },
+        "pre_registered_adjudication": {
+            "memory_peak": (
+                "Use the maximum observed process-tree private committed bytes "
+                "over all accepted scored matrix runs."
+            ),
+            "memory_ratio": (
+                "For each worker count, divide the maximum accepted N=299 peak "
+                "by the maximum accepted N=33 peak; the maximum worker-specific "
+                "ratio is the score."
+            ),
+            "memory_sampling": (
+                "A sampled peak above 6 GiB is a valid one-sided FAIL even if "
+                "sampling gaps occurred, because missed samples can hide a "
+                "higher peak but cannot manufacture the observed allocation. "
+                "A PASS would require every run's maximum sample gap <=100 ms "
+                "and >=90% scheduled-sample coverage."
+            ),
+            "determinism": (
+                "Hash both the complete TIFF and its uint16 pixel payload. Any "
+                "disagreement in either hash fails the byte property."
+            ),
+            "modulo": (
+                "Use the minimum accepted warm wall time per N across the six "
+                "alternating-order scored repetitions, divide by N, then "
+                "compute (max-min)/min."
+            ),
+            "overall": (
+                "Any valid hard-gate failure makes M12 FAIL. PASS requires every "
+                "M12 bar plus the M11 joint requirement. If no bar fails and a "
+                "required validity/joint term is unavailable, M12 remains UNMEASURED."
+            ),
+        },
+    }
+    output = output.resolve()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    write_json(output, result)
+    print(json.dumps(result["registered_design"], indent=2))
+    return 0
+
+
+def build_measured(
+    *,
+    output: Path,
+    work: Path,
+    measured_revision: str,
+    jobs: int,
+) -> int:
+    measured_commit = ensure_commit_exists(measured_revision)
+    output = output.resolve()
+    work = work.resolve()
+    source = work / "source"
+    target = work / "target"
+    binary_dir = work / "bin"
+    for path in (source, target, binary_dir):
+        if path.exists():
+            shutil.rmtree(path)
+        path.mkdir(parents=True)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    archive = work / "source.tar"
+    run_text(
+        [
+            "git",
+            "-C",
+            str(ROOT),
+            "archive",
+            "--format=tar",
+            f"--output={archive}",
+            measured_commit,
+        ],
+        log=output.parent / "build-archive.log",
+        measured_commit=measured_commit,
+    )
+    archive_sha256 = sha256_file(archive)
+    with tarfile.open(archive, "r") as bundle:
+        bundle.extractall(source, filter="data")
+    archive.unlink()
+    built, build_stdout = build_release(
+        source,
+        target,
+        output.parent / "build-release.log",
+        measured_commit[:12],
+        measured_commit,
+        jobs=jobs,
+    )
+    if "Compiling strehl-cli" not in build_stdout:
+        raise RuntimeError("fresh release build did not report `Compiling strehl-cli`")
+    binary = binary_dir / "strehl.exe"
+    shutil.copy2(built, binary)
+    version = run_text(
+        [str(binary), "--version"], measured_commit=measured_commit
+    ).stdout.strip()
+    result = {
+        "schema": 1,
+        "evidence_tag": "VERIFIED",
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "source": {
+            "archive": "git archive",
+            "archive_sha256": archive_sha256,
+            "commit": measured_commit,
+            "tree": git_text("rev-parse", f"{measured_commit}^{{tree}}"),
+            "working_tree_source_used": False,
+        },
+        "build": {
+            "command": (
+                f"cargo build --release --jobs {jobs} -p strehl-cli "
+                "--manifest-path <archived-source>\\Cargo.toml "
+                "--target-dir <campaign-target>"
+            ),
+            "jobs": jobs,
+            "cargo": run_text(
+                ["cargo", "--version"], measured_commit=measured_commit
+            ).stdout.strip(),
+            "rustc": run_text(
+                ["rustc", "--version"], measured_commit=measured_commit
+            ).stdout.strip(),
+            "compiled_strehl_cli_observed": True,
+        },
+        "binary": {
+            "path": str(binary.resolve()),
+            "bytes": binary.stat().st_size,
+            "sha256": sha256_file(binary),
+            "version": version,
+        },
+    }
+    write_json(output, result)
+    print(json.dumps(result, indent=2))
+    return 0
+
+
+def write_run_manifest(
+    *,
+    output: Path,
+    measured_revision: str,
+    registration_path: Path,
+    input_path: Path,
+    build_path: Path,
+    preflight_path: Path,
+) -> int:
+    measured_commit = ensure_commit_exists(measured_revision)
+    registration_path = registration_path.resolve()
+    input_path = input_path.resolve()
+    build_path = build_path.resolve()
+    preflight_path = preflight_path.resolve()
+    registration = read_json(registration_path)
+    inputs = read_json(input_path)
+    build = read_json(build_path)
+    preflight_record = read_json(preflight_path)
+    for label, artifact in (
+        ("registration", registration),
+        ("input", inputs),
+        ("build", build),
+        ("preflight", preflight_record),
+    ):
+        if artifact.get("measured_commit") != measured_commit:
+            raise RuntimeError(f"{label} artifact measured a different commit")
+    scorecard_rel = str(SCORECARD.relative_to(ROOT)).replace("\\", "/")
+    scorecard = git_bytes(measured_commit, scorecard_rel)
+    result = {
+        "schema": 1,
+        "evidence_tag": "VERIFIED",
+        "registration_status": "registered",
+        "scope": (
+            "Formal M12 native-ARW scorecard campaign authorized as M139. "
+            "Commissioning and smoke outputs remain diagnostic."
+        ),
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "scorecard": {
+            "path": str(SCORECARD.relative_to(ROOT)),
+            "version": scorecard_version(scorecard),
+            "last_path_commit": git_text(
+                "log",
+                "-1",
+                "--format=%H",
+                measured_commit,
+                "--",
+                scorecard_rel,
+            ),
+            "sha256": sha256_bytes(scorecard),
+        },
+        "registration": {
+            "path": str(registration_path),
+            "sha256": sha256_file(registration_path),
+        },
+        "input_manifest": {
+            "path": str(input_path),
+            "sha256": sha256_file(input_path),
+            "capture_manifest_sha256": {
+                row["id"]: row["metadata_and_content_manifest_sha256"]
+                for row in inputs["captures"]
+            },
+        },
+        "preflight": {
+            "path": str(preflight_path),
+            "sha256": sha256_file(preflight_path),
+        },
+        "harness": {
+            "path": str(Path(__file__).resolve()),
+            "sha256": sha256_file(Path(__file__)),
+        },
+        "read_only_snapshot": {
+            "tool_path": str((LANE / "m139-tree-snapshot.ps1").resolve()),
+            "tool_sha256": sha256_file(LANE / "m139-tree-snapshot.ps1"),
+            "before_path": str((output.resolve().parent / "read-only-before.json")),
+            "before_sha256": sha256_file(
+                output.resolve().parent / "read-only-before.json"
+            ),
+        },
+        "binary": build["binary"],
+        "build": {
+            "artifact_path": str(build_path),
+            "artifact_sha256": sha256_file(build_path),
+            **build["build"],
+            "source": build["source"],
+        },
+        "product_arm": {
+            "classification": "registered native-ARW shipping product arm",
+            "flags": ["--linear-srgb", "--demosaic"],
+            "fixed_env": {},
+            "worker_control": "STREHL_PYRAMID_WORKERS",
+            "backend": "pyramid shipping default",
+            "gate": 2.0,
+            "photometric": "not applied on the pyramid backend",
+            "alignment": (
+                "shipping default on; one warm-up populates an N-isolated "
+                "STREHL_CACHE_DIR and scored runs load that same validated sidecar"
+            ),
+            "cache_policy": "separate project-local cache directory for every N",
+            "cover": {
+                "value": "scale",
+                "source": "shipping default",
+                "source_citation": {
+                    "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+                    "line": 1003,
+                    "text": (
+                        "pub const DEFAULT_COVER_MODE: CoverMode = CoverMode::Scale;"
+                    ),
+                },
+            },
+            "bit_depth": 16,
+            "output_format": "uncompressed full-sensor linear-sRGB TIFF",
+            "required_log_substrings": [
+                "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)",
+                "noise gate      : 2.00 x",
+                "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+                "alignment       : ON (",
+                "16-bit RGB, linear sRGB",
+                "Full sensor resolution",
+            ],
+            "captures": {
+                "33": {"path": r"D:\personal\macro\bee-1-cpl", "sidecar": None},
+                "105": {"path": r"D:\personal\macro\coffee-bean", "sidecar": None},
+                "299": {"path": r"D:\personal\macro\bee-1-cpl", "sidecar": None},
+            },
+            "modulo_capture": {
+                "path": r"D:\personal\macro\bee-1-cpl",
+                "sidecars": {str(count): None for count in MODULO_COUNTS},
+            },
+            "smoke": {
+                "path": r"D:\personal\macro\coffee-bean",
+                "limit": 3,
+                "workers": 1,
+                "repetitions": 2,
+            },
+        },
+        "host_load_gate": registration["host_load_gate"],
+        "adjudication": registration["pre_registered_adjudication"],
+    }
+    if measured_commit[:12] not in str(result["binary"]["version"]):
+        raise RuntimeError("binary version does not carry the measured commit")
+    output = output.resolve()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    write_json(output, result)
+    print(json.dumps(result, indent=2))
+    return 0
+
+
 def load_manifest(path: Path) -> dict[str, Any]:
-    manifest = json.loads(path.read_text(encoding="utf-8"))
+    manifest = read_json(path)
     registration_status = manifest.get("registration_status")
     if registration_status not in {"registered", "operator-authorized-diagnostic"}:
         raise RuntimeError(
@@ -1073,34 +1911,153 @@ def load_manifest(path: Path) -> dict[str, Any]:
             "as diagnostic (`registration_status`)"
         )
     expected_hash = manifest["scorecard"]["sha256"].upper()
-    if sha256_file(SCORECARD) != expected_hash:
-        raise RuntimeError("working scorecard bytes do not match the run manifest")
-    status = git_text(
-        "status",
-        "--short",
-        "--",
-        str(SCORECARD.relative_to(ROOT)).replace("\\", "/"),
-    )
-    if status:
-        raise RuntimeError("scorecard has uncommitted changes; refusing a formal run")
+    measured_commit = ensure_commit_exists(manifest["measured_commit"])
+    if measured_commit != manifest["measured_commit"]:
+        raise RuntimeError("manifest does not contain a full canonical measured commit")
+    scorecard_rel = str(SCORECARD.relative_to(ROOT)).replace("\\", "/")
+    if sha256_bytes(git_bytes(measured_commit, scorecard_rel)) != expected_hash:
+        raise RuntimeError(
+            "scorecard blob at the measured commit does not match the run manifest"
+        )
+    for label in ("registration", "input_manifest", "preflight"):
+        artifact = manifest[label]
+        artifact_path = Path(artifact["path"])
+        if sha256_file(artifact_path) != artifact["sha256"].upper():
+            raise RuntimeError(f"{label} artifact hash does not match the run manifest")
+    harness = manifest.get("harness")
+    if harness and sha256_file(Path(harness["path"])) != harness["sha256"].upper():
+        raise RuntimeError("harness hash does not match the run manifest")
+    read_only = manifest.get("read_only_snapshot")
+    if read_only:
+        if (
+            sha256_file(Path(read_only["tool_path"]))
+            != read_only["tool_sha256"].upper()
+        ):
+            raise RuntimeError("read-only snapshot tool hash does not match")
+        if (
+            sha256_file(Path(read_only["before_path"]))
+            != read_only["before_sha256"].upper()
+        ):
+            raise RuntimeError("read-only before snapshot hash does not match")
+    build = manifest.get("build")
+    if build:
+        build_path = Path(build["artifact_path"])
+        if sha256_file(build_path) != build["artifact_sha256"].upper():
+            raise RuntimeError("build artifact hash does not match the run manifest")
     binary = Path(manifest["binary"]["path"])
     if sha256_file(binary) != manifest["binary"]["sha256"].upper():
         raise RuntimeError("binary hash does not match the run manifest")
     return manifest
 
 
+def smoke(manifest_path: Path, output: Path, work: Path) -> int:
+    manifest_path = manifest_path.resolve()
+    output = output.resolve()
+    work = work.resolve()
+    if work.exists():
+        shutil.rmtree(work)
+    work.mkdir(parents=True)
+    manifest = load_manifest(manifest_path)
+    measured_commit = manifest["measured_commit"]
+    arm = manifest["product_arm"]
+    config = arm["smoke"]
+    binary = Path(manifest["binary"]["path"])
+    flags = list(arm["flags"])
+    required = list(arm["required_log_substrings"])
+    records = []
+    total = 1 + int(config["repetitions"])
+    for index in range(total):
+        kind = "smoke-warmup" if index == 0 else "smoke-repeat"
+        record = run_once(
+            exe=binary,
+            stack=Path(config["path"]),
+            limit=int(config["limit"]),
+            workers=int(config["workers"]),
+            destination=work / f"{kind}-{index}.tiff",
+            cache=work / "cache",
+            temp=work / f"{kind}-{index}-temp",
+            flags=flags,
+            sidecar=None,
+            align_off=False,
+            fixed_env={
+                str(key): str(value)
+                for key, value in arm.get("fixed_env", {}).items()
+            },
+            required_log_substrings=required,
+            kind=kind,
+            repetition=index if index else None,
+            sweep="smoke",
+            measured_commit=measured_commit,
+            external_busy_max=float(
+                manifest["host_load_gate"]["during_run_external_busy_max"]
+            ),
+        )
+        records.append(record)
+        if not record["valid"]:
+            raise RuntimeError(f"smoke run {index} invalid: {record['invalid_reasons']}")
+    repeats = [row for row in records if row["kind"] == "smoke-repeat"]
+    output_hashes = sorted({row["output_sha256"] for row in repeats})
+    pixel_hashes = sorted({row["pixel_sha256"] for row in repeats})
+    result = {
+        "schema": 1,
+        "evidence_tag": "VERIFIED",
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "scope": "Diagnostic end-to-end smoke; not a scored M12 cell.",
+        "manifest_sha256": sha256_file(manifest_path),
+        "records": records,
+        "verdict": {
+            "all_runs_valid": all(row["valid"] for row in records),
+            "repeat_count": len(repeats),
+            "repeat_output_hashes": output_hashes,
+            "repeat_pixel_hashes": pixel_hashes,
+            "repeat_byte_identical": (
+                len(repeats) == int(config["repetitions"])
+                and len(output_hashes) == 1
+                and len(pixel_hashes) == 1
+            ),
+        },
+    }
+    result["status"] = (
+        "PASS"
+        if result["verdict"]["all_runs_valid"]
+        and result["verdict"]["repeat_byte_identical"]
+        else "FAIL"
+    )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    write_json(output, result)
+    print(json.dumps(result["verdict"], indent=2))
+    return 0 if result["status"] == "PASS" else 1
+
+
 def matrix(manifest_path: Path, records_path: Path, output_root: Path) -> int:
     manifest_path = manifest_path.resolve()
     records_path = records_path.resolve()
     output_root = output_root.resolve()
-    if records_path.exists():
-        raise RuntimeError(f"refusing to append a second campaign to {records_path}")
     manifest = load_manifest(manifest_path)
+    measured_commit = manifest["measured_commit"]
     binary = Path(manifest["binary"]["path"])
     arm = manifest["product_arm"]
     flags = list(arm["flags"])
     fixed_env = {str(key): str(value) for key, value in arm.get("fixed_env", {}).items()}
     required = list(arm["required_log_substrings"])
+    load_gate = manifest["host_load_gate"]
+    preload_sample_seconds = float(load_gate["preload_sample_seconds"])
+    preload_busy_max = float(load_gate["preload_busy_max"])
+    external_busy_max = float(load_gate["during_run_external_busy_max"])
+    retry_seconds = float(load_gate["retry_seconds"])
+    output_root.mkdir(parents=True, exist_ok=True)
+    existing = (
+        [
+            json.loads(line)
+            for line in records_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        if records_path.exists()
+        else []
+    )
+    if any(row.get("measured_commit") != measured_commit for row in existing):
+        raise RuntimeError("existing campaign records contain another measured commit")
 
     def optional_path(value: str | None) -> Path | None:
         return Path(value) if value else None
@@ -1124,7 +2081,50 @@ def matrix(manifest_path: Path, records_path: Path, output_root: Path) -> int:
         count: optional_path(arm["modulo_capture"].get("sidecars", {}).get(str(count)))
         for count in MODULO_COUNTS
     }
-    cache = output_root / "cache"
+
+    def position_key(
+        kind: str, count: int, workers: int, repetition: int | None
+    ) -> str:
+        return f"{kind}:N{count}:W{workers}:R{repetition or 0}"
+
+    accepted_positions = {
+        row["position_key"]
+        for row in existing
+        if row.get("accepted_for_protocol") is True and row.get("position_key")
+    }
+    attempts_by_position: dict[str, int] = defaultdict(int)
+    for row in existing:
+        if row.get("position_key"):
+            attempts_by_position[row["position_key"]] = max(
+                attempts_by_position[row["position_key"]],
+                int(row.get("attempt", 1)),
+            )
+
+    host_start_path = output_root / "host-start.json"
+    if not host_start_path.exists():
+        campaign_gate = wait_for_quiet(
+            sample_seconds=preload_sample_seconds,
+            busy_max=preload_busy_max,
+            retry_seconds=retry_seconds,
+        )
+        write_json(
+            host_start_path,
+            {
+                "schema": 1,
+                "evidence_tag": "VERIFIED",
+                "measured_commit": measured_commit,
+                "generated_utc": utc_now(),
+                "phase": "campaign-start",
+                "gate": campaign_gate,
+                "host": {
+                    "node": platform.node(),
+                    "platform": platform.platform(),
+                    "logical_processors": os.cpu_count(),
+                    "memory": memory_status(),
+                    "workspace_drive": shutil.disk_usage(ROOT.anchor)._asdict(),
+                },
+            },
+        )
 
     def execute(
         *,
@@ -1136,38 +2136,75 @@ def matrix(manifest_path: Path, records_path: Path, output_root: Path) -> int:
         repetition: int | None,
         sweep: str,
     ) -> None:
-        tag = f"{kind}-n{count}-w{workers}-{sweep}"
-        if repetition is not None:
-            tag += f"-r{repetition}"
-        record = run_once(
-            exe=binary,
-            stack=stack,
-            limit=count,
-            workers=workers,
-            destination=output_root / "runs" / f"{tag}.tiff",
-            cache=cache,
-            temp=output_root / "runs" / f"{tag}-temp",
-            flags=flags,
-            sidecar=sidecar,
-            align_off=False,
-            fixed_env=fixed_env,
-            required_log_substrings=required,
-            kind=kind,
-            repetition=repetition,
-            sweep=sweep,
-        )
-        record["manifest_sha256"] = sha256_file(manifest_path)
-        record["registration_status"] = manifest["registration_status"]
-        append_jsonl(records_path, record)
-        print(
-            f"{'VALID' if record['valid'] else 'INVALID'} {tag} "
-            f"wall={record['wall_seconds']:.3f}s "
-            f"peak={record['memory']['peak_process_tree_private_committed_bytes'] / (1 << 30):.3f}GiB "
-            f"hash={record.get('output_sha256', '-')[:16]}",
-            flush=True,
-        )
-        if not record["valid"]:
-            raise RuntimeError(f"{tag} invalid: {record['invalid_reasons']}")
+        key = position_key(kind, count, workers, repetition)
+        if key in accepted_positions:
+            print(f"SKIP accepted {key}", flush=True)
+            return
+        while True:
+            attempts_by_position[key] += 1
+            attempt = attempts_by_position[key]
+            preload = wait_for_quiet(
+                sample_seconds=preload_sample_seconds,
+                busy_max=preload_busy_max,
+                retry_seconds=retry_seconds,
+            )
+            tag = f"{kind}-n{count}-w{workers}-{sweep}"
+            if repetition is not None:
+                tag += f"-r{repetition}"
+            tag += f"-a{attempt}"
+            record = run_once(
+                exe=binary,
+                stack=stack,
+                limit=count,
+                workers=workers,
+                destination=output_root / "runs" / f"{tag}.tiff",
+                cache=output_root / "cache" / f"n{count}",
+                temp=output_root / "runs" / f"{tag}-temp",
+                flags=flags,
+                sidecar=sidecar,
+                align_off=False,
+                fixed_env=fixed_env,
+                required_log_substrings=required,
+                kind=kind,
+                repetition=repetition,
+                sweep=sweep,
+                measured_commit=measured_commit,
+                external_busy_max=external_busy_max,
+            )
+            load_valid = (
+                preload["attempts"][-1]["accepted"]
+                and record["host_load_during_run"]["pass"]
+            )
+            record.update(
+                {
+                    "evidence_tag": "VERIFIED",
+                    "position_key": key,
+                    "attempt": attempt,
+                    "preload_gate": preload,
+                    "load_gate_valid": load_valid,
+                    "accepted_for_protocol": record["valid"] and load_valid,
+                    "manifest_path": str(manifest_path),
+                    "manifest_sha256": sha256_file(manifest_path),
+                    "input_manifest_sha256": manifest["input_manifest"]["sha256"],
+                    "harness_sha256": manifest["harness"]["sha256"],
+                    "registration_status": manifest["registration_status"],
+                }
+            )
+            append_jsonl(records_path, record)
+            print(
+                f"{'ACCEPT' if record['accepted_for_protocol'] else 'REJECT'} {tag} "
+                f"wall={record['wall_seconds']:.3f}s "
+                f"external={record['host_load_during_run']['external_busy_fraction_of_wall_capacity']:.4f} "
+                f"peak={record['memory']['peak_process_tree_private_committed_bytes'] / (1 << 30):.3f}GiB "
+                f"hash={record.get('output_sha256', '-')[:16]}",
+                flush=True,
+            )
+            if not record["valid"]:
+                raise RuntimeError(f"{tag} invalid: {record['invalid_reasons']}")
+            if load_valid:
+                accepted_positions.add(key)
+                return
+            time.sleep(retry_seconds)
 
     for count in REGISTERED_COUNTS:
         stack, sidecar = captures[count]
@@ -1218,19 +2255,52 @@ def matrix(manifest_path: Path, records_path: Path, output_root: Path) -> int:
                 repetition=repetition,
                 sweep=sweep,
             )
+    end_sample = sample_host_load(preload_sample_seconds)
+    write_json(
+        output_root / "host-end.json",
+        {
+            "schema": 1,
+            "evidence_tag": "VERIFIED",
+            "measured_commit": measured_commit,
+            "generated_utc": utc_now(),
+            "phase": "campaign-end",
+            "sample": end_sample,
+            "record_count": sum(
+                1
+                for line in records_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ),
+            "records_sha256": sha256_file(records_path),
+        },
+    )
     return 0
 
 
-def summarize(records_path: Path, output: Path) -> int:
+def summarize(records_path: Path, output: Path, manifest_path: Path) -> int:
     records_path = records_path.resolve()
     output = output.resolve()
+    manifest_path = manifest_path.resolve()
+    manifest = load_manifest(manifest_path)
+    measured_commit = manifest["measured_commit"]
     records = [
         json.loads(line)
         for line in records_path.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
+    if any(row.get("measured_commit") != measured_commit for row in records):
+        raise RuntimeError("campaign records do not all match the manifest commit")
     invalid = [row for row in records if not row.get("valid")]
-    scored = [row for row in records if row.get("kind") == "scored" and row.get("valid")]
+    rejected = [
+        row
+        for row in records
+        if row.get("valid") and row.get("accepted_for_protocol") is False
+    ]
+    accepted = [
+        row
+        for row in records
+        if row.get("valid") and row.get("accepted_for_protocol") is True
+    ]
+    scored = [row for row in accepted if row.get("kind") == "scored"]
     cells: dict[tuple[int, int], list[dict[str, Any]]] = defaultdict(list)
     for row in scored:
         cells[(int(row["limit"]), int(row["workers"]))].append(row)
@@ -1238,45 +2308,133 @@ def summarize(records_path: Path, output: Path) -> int:
     for count in REGISTERED_COUNTS:
         for workers in WORKERS:
             rows = cells[(count, workers)]
-            hashes = sorted({row["output_sha256"] for row in rows})
+            output_hashes = sorted({row["output_sha256"] for row in rows})
+            pixel_hashes = sorted({row["pixel_sha256"] for row in rows})
             determinism[f"N{count}-W{workers}"] = {
                 "runs": len(rows),
-                "distinct_hashes": len(hashes),
-                "hashes": hashes,
-                "pass": len(rows) == 6 and len(hashes) == 1,
+                "distinct_output_sha256": len(output_hashes),
+                "output_sha256": output_hashes,
+                "distinct_pixel_sha256": len(pixel_hashes),
+                "pixel_sha256": pixel_hashes,
+                "peak_private_committed_bytes": [
+                    row["memory"]["peak_process_tree_private_committed_bytes"]
+                    for row in rows
+                ],
+                "wall_seconds": [row["wall_seconds"] for row in rows],
+                "pass": (
+                    len(rows) == 6
+                    and len(output_hashes) == 1
+                    and len(pixel_hashes) == 1
+                ),
             }
     scaling = {}
     for count in REGISTERED_COUNTS:
-        hashes = {
+        output_hashes = {
             row["output_sha256"]
             for workers in WORKERS
             for row in cells[(count, workers)]
         }
-        scaling[str(count)] = {
-            "distinct_hashes": len(hashes),
-            "hashes": sorted(hashes),
-            "byte_invariant": len(hashes) == 1,
+        pixel_hashes = {
+            row["pixel_sha256"]
+            for workers in WORKERS
+            for row in cells[(count, workers)]
         }
-    peak_by_n = {
-        count: max(
-            (
-                row["memory"]["peak_process_tree_private_committed_bytes"]
-                for row in scored
-                if int(row["limit"]) == count
-            ),
-            default=0,
-        )
+        scaling[str(count)] = {
+            "distinct_output_sha256": len(output_hashes),
+            "output_sha256": sorted(output_hashes),
+            "distinct_pixel_sha256": len(pixel_hashes),
+            "pixel_sha256": sorted(pixel_hashes),
+            "byte_invariant": len(output_hashes) == 1 and len(pixel_hashes) == 1,
+        }
+    peak_by_n_worker = {
+        count: {
+            workers: max(
+                (
+                    row["memory"]["peak_process_tree_private_committed_bytes"]
+                    for row in cells[(count, workers)]
+                ),
+                default=0,
+            )
+            for workers in WORKERS
+        }
         for count in REGISTERED_COUNTS
     }
+    peak_by_n = {
+        count: max(peak_by_n_worker[count].values(), default=0)
+        for count in REGISTERED_COUNTS
+    }
+    ratio_by_worker = {
+        workers: (
+            peak_by_n_worker[299][workers] / peak_by_n_worker[33][workers]
+            if peak_by_n_worker[33][workers]
+            else None
+        )
+        for workers in WORKERS
+    }
+    sample_quality_rows = []
+    for row in scored:
+        memory = row["memory"]
+        scheduled = memory["sample_count"] + memory["missed_intervals"]
+        coverage = memory["sample_count"] / scheduled if scheduled else 0.0
+        sample_quality_rows.append(
+            {
+                "position_key": row["position_key"],
+                "coverage": coverage,
+                "max_gap_ms": memory["max_gap_ms"],
+                "pass": coverage >= 0.90 and memory["max_gap_ms"] <= 100.0,
+            }
+        )
+    sample_quality_pass = (
+        len(sample_quality_rows) == 6 * len(REGISTERED_COUNTS) * len(WORKERS)
+        and all(row["pass"] for row in sample_quality_rows)
+    )
+    absolute_peak = max(peak_by_n.values(), default=0)
+    absolute_memory_verdict = (
+        "FAIL"
+        if absolute_peak > 6 * (1 << 30)
+        else "PASS"
+        if sample_quality_pass and absolute_peak > 0
+        else "UNMEASURED"
+    )
+    ratio_values = [value for value in ratio_by_worker.values() if value is not None]
+    ratio_max = max(ratio_values) if len(ratio_values) == len(WORKERS) else None
+    ratio_verdict = (
+        "PASS"
+        if sample_quality_pass and ratio_max is not None and ratio_max <= 1.10
+        else "FAIL"
+        if sample_quality_pass and ratio_max is not None
+        else "UNMEASURED"
+    )
     modulo = [
         row
-        for row in records
-        if row.get("kind") == "modulo-scored" and row.get("valid")
+        for row in accepted
+        if row.get("kind") == "modulo-scored"
     ]
     best_per_frame = {}
+    modulo_by_n = {}
     for count in MODULO_COUNTS:
         walls = [float(row["wall_seconds"]) for row in modulo if int(row["limit"]) == count]
         best_per_frame[count] = min(walls) / count if walls else None
+        modulo_by_n[count] = {
+            "runs": len(walls),
+            "wall_seconds": walls,
+            "best_wall_seconds": min(walls) if walls else None,
+            "best_wall_seconds_per_frame": best_per_frame[count],
+            "output_sha256": sorted(
+                {
+                    row["output_sha256"]
+                    for row in modulo
+                    if int(row["limit"]) == count
+                }
+            ),
+            "pixel_sha256": sorted(
+                {
+                    row["pixel_sha256"]
+                    for row in modulo
+                    if int(row["limit"]) == count
+                }
+            ),
+        }
     valid_modulo_values = [value for value in best_per_frame.values() if value is not None]
     modulo_spread = (
         (max(valid_modulo_values) - min(valid_modulo_values)) / min(valid_modulo_values)
@@ -1288,27 +2446,113 @@ def summarize(records_path: Path, output: Path) -> int:
         and all(row.get("load_gate_valid") is True for row in modulo)
     )
     observed_modulo_pass = modulo_spread is not None and modulo_spread <= 0.02
+    modulo_verdict = (
+        "PASS"
+        if observed_modulo_pass and modulo_load_verified
+        else "FAIL"
+        if modulo_load_verified and modulo_spread is not None
+        else "UNMEASURED"
+    )
+    matrix_complete = all(
+        len(cells[(count, workers)]) == 6
+        for count in REGISTERED_COUNTS
+        for workers in WORKERS
+    )
+    m12_d_pass = matrix_complete and all(
+        row["pass"] for row in determinism.values()
+    )
+    m12_s_pass = matrix_complete and all(
+        row["byte_invariant"] for row in scaling.values()
+    )
+    m12_d_verdict = "PASS" if m12_d_pass else "FAIL" if matrix_complete else "UNMEASURED"
+    m12_s_byte_verdict = (
+        "PASS" if m12_s_pass else "FAIL" if matrix_complete else "UNMEASURED"
+    )
+    hard_failures = []
+    if absolute_memory_verdict == "FAIL":
+        hard_failures.append("absolute-memory")
+    if ratio_verdict == "FAIL":
+        hard_failures.append("memory-scaling")
+    if m12_d_verdict == "FAIL":
+        hard_failures.append("fixed-worker-determinism")
+    if m12_s_byte_verdict == "FAIL":
+        hard_failures.append("cross-worker-scaling-invariance")
+    if modulo_verdict == "FAIL":
+        hard_failures.append("n-mod-4-spread")
+    m11_joint_verdict = "UNMEASURED"
+    if hard_failures:
+        overall_verdict = "FAIL"
+    elif all(
+        verdict == "PASS"
+        for verdict in (
+            absolute_memory_verdict,
+            ratio_verdict,
+            m12_d_verdict,
+            m12_s_byte_verdict,
+            modulo_verdict,
+        )
+    ) and m11_joint_verdict == "PASS":
+        overall_verdict = "PASS"
+    else:
+        overall_verdict = "UNMEASURED"
     result = {
         "schema": 1,
+        "evidence_tag": "VERIFIED",
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "records": {
+            "path": str(records_path),
+            "sha256": sha256_file(records_path),
+            "total": len(records),
+            "accepted": len(accepted),
+            "rejected_for_host_load": len(rejected),
+        },
+        "manifest": {
+            "path": str(manifest_path),
+            "sha256": sha256_file(manifest_path),
+        },
         "invalid_run_count": len(invalid),
         "m12_d": {
             "cells": determinism,
-            "pass": all(row["pass"] for row in determinism.values()),
+            "pass": m12_d_pass,
+            "verdict": m12_d_verdict,
         },
         "m12_s_byte_property": {
             "by_n": scaling,
-            "pass": all(row["byte_invariant"] for row in scaling.values()),
-            "m11_joint_requirement": "must be supplied separately",
+            "pass": m12_s_pass,
+            "verdict": m12_s_byte_verdict,
+            "m11_joint_requirement": m11_joint_verdict,
         },
         "memory": {
+            "peak_private_committed_bytes_by_n_worker": peak_by_n_worker,
             "peak_private_committed_bytes_by_n_max_over_scored_matrix": peak_by_n,
-            "peak_gib_max": max(peak_by_n.values(), default=0) / (1 << 30),
-            "six_gib_pass": max(peak_by_n.values(), default=0) <= 6 * (1 << 30),
-            "peak_n299_over_peak_n33": (
-                peak_by_n[299] / peak_by_n[33] if peak_by_n[33] else None
-            ),
+            "peak_gib_max": absolute_peak / (1 << 30),
+            "six_gib_pass": absolute_memory_verdict == "PASS",
+            "six_gib_verdict": absolute_memory_verdict,
+            "peak_n299_over_peak_n33_by_worker": ratio_by_worker,
+            "peak_n299_over_peak_n33_max": ratio_max,
+            "ratio_pass": ratio_verdict == "PASS",
+            "ratio_verdict": ratio_verdict,
+            "sampling_quality": {
+                "pre_registered_pass_rule": (
+                    "every scored run coverage >=0.90 and max gap <=100 ms"
+                ),
+                "pass": sample_quality_pass,
+                "minimum_coverage": min(
+                    (row["coverage"] for row in sample_quality_rows), default=None
+                ),
+                "maximum_gap_ms": max(
+                    (row["max_gap_ms"] for row in sample_quality_rows), default=None
+                ),
+                "failed_positions": [
+                    row["position_key"]
+                    for row in sample_quality_rows
+                    if not row["pass"]
+                ],
+            },
         },
         "modulo": {
+            "by_n": modulo_by_n,
             "best_wall_seconds_per_frame_by_n": best_per_frame,
             "spread": modulo_spread,
             "observed_pass_without_load_gate": observed_modulo_pass,
@@ -1319,12 +2563,39 @@ def summarize(records_path: Path, output: Path) -> int:
                 if row.get("kind") in {"modulo-scored", "modulo-rejected"}
             ),
             "pass": observed_modulo_pass and modulo_load_verified,
-            "scorecard_verdict": (
-                "PASS"
-                if observed_modulo_pass and modulo_load_verified
-                else "FAIL"
-                if modulo_load_verified
-                else "UNMEASURED"
+            "scorecard_verdict": modulo_verdict,
+        },
+        "host_load": {
+            "accepted_runs_all_passed": all(
+                row.get("load_gate_valid") is True for row in accepted
+            ),
+            "rejected_run_count": len(rejected),
+            "total_preload_rejected_samples": sum(
+                row.get("preload_gate", {}).get("rejected_sample_count", 0)
+                for row in records
+            ),
+            "total_wait_seconds": sum(
+                row.get("preload_gate", {}).get("wait_seconds", 0.0)
+                for row in records
+            ),
+            "maximum_accepted_external_busy_fraction": max(
+                (
+                    row["host_load_during_run"][
+                        "external_busy_fraction_of_wall_capacity"
+                    ]
+                    for row in accepted
+                ),
+                default=None,
+            ),
+        },
+        "formal_m12": {
+            "verdict": overall_verdict,
+            "hard_failures": hard_failures,
+            "m11_joint_verdict": m11_joint_verdict,
+            "reason_if_unmeasured": (
+                "M11 joint requirement is not supplied"
+                if overall_verdict == "UNMEASURED"
+                else None
             ),
         },
     }
@@ -1332,11 +2603,153 @@ def summarize(records_path: Path, output: Path) -> int:
     print(json.dumps(result, indent=2))
     complete = (
         not invalid
-        and result["m12_d"]["pass"]
-        and all(len(cells[(count, workers)]) == 6 for count in REGISTERED_COUNTS for workers in WORKERS)
+        and matrix_complete
         and len(modulo) == 6 * len(MODULO_COUNTS)
+        and all(row.get("load_gate_valid") is True for row in accepted)
     )
     return 0 if complete else 1
+
+
+def audit_campaign(campaign_root: Path, output: Path) -> int:
+    campaign_root = campaign_root.resolve()
+    output = output.resolve()
+    names = {
+        "registration": "registration.json",
+        "input_manifest": "input-manifest.json",
+        "input_exif": "input-exif.json",
+        "preflight": "preflight.json",
+        "build": "build.json",
+        "run_manifest": "RUN-MANIFEST.json",
+        "determinism_commission": "determinism-commission.json",
+        "memory_commission": "memory-commission.json",
+        "smoke": "smoke.json",
+        "records": "records.jsonl",
+        "summary": "summary.json",
+        "host_start": "host-start.json",
+        "host_end": "host-end.json",
+        "read_only_before": "read-only-before.json",
+        "read_only_after": "read-only-after.json",
+    }
+    paths = {key: campaign_root / name for key, name in names.items()}
+    missing = [str(path) for path in paths.values() if not path.exists()]
+    if missing:
+        raise RuntimeError("missing campaign artifacts:\n" + "\n".join(missing))
+    manifest = read_json(paths["run_manifest"])
+    measured_commit = manifest["measured_commit"]
+    summary = read_json(paths["summary"])
+    determinism_commission = read_json(paths["determinism_commission"])
+    memory_commission = read_json(paths["memory_commission"])
+    smoke_record = read_json(paths["smoke"])
+    before = read_json(paths["read_only_before"])
+    after = read_json(paths["read_only_after"])
+    json_artifacts = {
+        key: read_json(path)
+        for key, path in paths.items()
+        if path.suffix.lower() == ".json"
+    }
+    mismatched_commits = {
+        key: artifact.get("measured_commit")
+        for key, artifact in json_artifacts.items()
+        if artifact.get("measured_commit") != measured_commit
+    }
+    before_roots = {row["path"]: row for row in before["roots"]}
+    after_roots = {row["path"]: row for row in after["roots"]}
+    tree_comparison = {}
+    for root in sorted(set(before_roots) | set(after_roots)):
+        left = before_roots.get(root)
+        right = after_roots.get(root)
+        tree_comparison[root] = {
+            "before": left,
+            "after": right,
+            "unchanged": left == right,
+        }
+    records = [
+        json.loads(line)
+        for line in paths["records"].read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    result = {
+        "schema": 1,
+        "evidence_tag": "VERIFIED",
+        "measured_commit": measured_commit,
+        "generated_utc": utc_now(),
+        "formal_m12": summary["formal_m12"],
+        "commissioning": {
+            "determinism": {
+                "status": determinism_commission["status"],
+                "hash_gate": determinism_commission["hash_gate"],
+            },
+            "memory": {
+                "status": memory_commission["status"],
+                "verdict": memory_commission["verdict"],
+            },
+            "smoke": {
+                "status": smoke_record["status"],
+                "verdict": smoke_record["verdict"],
+            },
+        },
+        "read_only_inputs": {
+            "comparison": tree_comparison,
+            "unchanged": bool(tree_comparison)
+            and all(row["unchanged"] for row in tree_comparison.values()),
+        },
+        "host_conditions": {
+            "start": read_json(paths["host_start"]),
+            "end": read_json(paths["host_end"]),
+            "campaign": summary["host_load"],
+        },
+        "integrity": {
+            "mismatched_measured_commits": mismatched_commits,
+            "record_count": len(records),
+            "record_measured_commits": sorted(
+                {row.get("measured_commit") for row in records}
+            ),
+            "artifacts": {
+                key: {
+                    "path": str(path),
+                    "bytes": path.stat().st_size,
+                    "sha256": sha256_file(path),
+                }
+                for key, path in paths.items()
+            },
+        },
+        "could_not_determine": [
+            {
+                "item": "M11 joint requirement",
+                "reason": (
+                    "M11 remains UNMEASURED; M12 can nevertheless close FAIL if "
+                    "an independent M12 hard bar fails."
+                ),
+            },
+            {
+                "item": "comparative common-TIFF memory",
+                "reason": (
+                    "No registered common-TIFF product/comparator arm exists; "
+                    "the M12 absolute bars apply to the native product arm."
+                ),
+            },
+            {
+                "item": "true unsampled instantaneous memory peak",
+                "reason": (
+                    "A sampled monitor reports an observed lower bound. Any "
+                    "sampling gaps can hide a higher peak but cannot manufacture "
+                    "an observed above-bar allocation."
+                ),
+            },
+        ],
+    }
+    result["integrity"]["pass"] = (
+        not mismatched_commits
+        and result["read_only_inputs"]["unchanged"]
+        and result["commissioning"]["determinism"]["status"] == "COMMISSIONED"
+        and result["commissioning"]["memory"]["status"] == "COMMISSIONED"
+        and result["commissioning"]["smoke"]["status"] == "PASS"
+        and result["integrity"]["record_measured_commits"] == [measured_commit]
+    )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    write_json(output, result)
+    print(json.dumps(result, indent=2))
+    return 0 if result["integrity"]["pass"] else 1
 
 
 def parser() -> argparse.ArgumentParser:
@@ -1345,6 +2758,30 @@ def parser() -> argparse.ArgumentParser:
 
     pre = commands.add_parser("preflight")
     pre.add_argument("--output", type=Path, required=True)
+    pre.add_argument("--measured-commit", required=True)
+
+    registration = commands.add_parser("registration")
+    registration.add_argument("--output", type=Path, required=True)
+    registration.add_argument("--measured-commit", required=True)
+
+    inputs = commands.add_parser("input-manifest")
+    inputs.add_argument("--output", type=Path, required=True)
+    inputs.add_argument("--exif-output", type=Path, required=True)
+    inputs.add_argument("--measured-commit", required=True)
+
+    build = commands.add_parser("build")
+    build.add_argument("--output", type=Path, required=True)
+    build.add_argument("--work", type=Path, required=True)
+    build.add_argument("--measured-commit", required=True)
+    build.add_argument("--jobs", type=int, default=4)
+
+    manifest = commands.add_parser("manifest")
+    manifest.add_argument("--output", type=Path, required=True)
+    manifest.add_argument("--measured-commit", required=True)
+    manifest.add_argument("--registration", type=Path, required=True)
+    manifest.add_argument("--input-manifest", type=Path, required=True)
+    manifest.add_argument("--build", type=Path, required=True)
+    manifest.add_argument("--preflight", type=Path, required=True)
 
     com = commands.add_parser("commission")
     com.add_argument("--output", type=Path, required=True)
@@ -1352,10 +2789,17 @@ def parser() -> argparse.ArgumentParser:
     com.add_argument("--stack", type=Path, default=Path(r"D:\personal\macro\coffee-bean"))
     com.add_argument("--limit", type=int, default=3)
     com.add_argument("--workers", type=int, default=1)
+    com.add_argument("--measured-commit", required=True)
 
     memory = commands.add_parser("commission-memory")
     memory.add_argument("--output", type=Path, required=True)
     memory.add_argument("--work", type=Path, required=True)
+    memory.add_argument("--measured-commit", required=True)
+
+    smoke_command = commands.add_parser("smoke")
+    smoke_command.add_argument("--manifest", type=Path, required=True)
+    smoke_command.add_argument("--output", type=Path, required=True)
+    smoke_command.add_argument("--work", type=Path, required=True)
 
     run = commands.add_parser("matrix")
     run.add_argument("--manifest", type=Path, required=True)
@@ -1365,21 +2809,61 @@ def parser() -> argparse.ArgumentParser:
     summary = commands.add_parser("summarize")
     summary.add_argument("--records", type=Path, required=True)
     summary.add_argument("--output", type=Path, required=True)
+    summary.add_argument("--manifest", type=Path, required=True)
+
+    audit = commands.add_parser("audit")
+    audit.add_argument("--campaign-root", type=Path, required=True)
+    audit.add_argument("--output", type=Path, required=True)
     return root
 
 
 def main() -> int:
     args = parser().parse_args()
     if args.command == "preflight":
-        return preflight(args.output)
+        return preflight(args.output, args.measured_commit)
+    if args.command == "registration":
+        return registration_artifact(args.output, args.measured_commit)
+    if args.command == "input-manifest":
+        return input_manifest(
+            output=args.output,
+            exif_output=args.exif_output,
+            measured_revision=args.measured_commit,
+        )
+    if args.command == "build":
+        return build_measured(
+            output=args.output,
+            work=args.work,
+            measured_revision=args.measured_commit,
+            jobs=args.jobs,
+        )
+    if args.command == "manifest":
+        return write_run_manifest(
+            output=args.output,
+            measured_revision=args.measured_commit,
+            registration_path=args.registration,
+            input_path=args.input_manifest,
+            build_path=args.build,
+            preflight_path=args.preflight,
+        )
     if args.command == "commission":
-        return commission(args.output, args.work, args.stack, args.limit, args.workers)
+        return commission(
+            args.output,
+            args.work,
+            args.stack,
+            args.limit,
+            args.workers,
+            args.measured_commit,
+        )
     if args.command == "commission-memory":
-        return commission_memory(args.output, args.work)
+        return commission_memory(args.output, args.work, args.measured_commit)
+    if args.command == "smoke":
+        return smoke(args.manifest, args.output, args.work)
     if args.command == "matrix":
         return matrix(args.manifest, args.records, args.output_root)
     if args.command == "summarize":
-        return summarize(args.records, args.output)
+        return summarize(args.records, args.output, args.manifest)
+    if args.command == "audit":
+        return audit_campaign(args.campaign_root, args.output)
     raise AssertionError(args.command)
 
 

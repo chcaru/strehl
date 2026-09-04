@@ -1,0 +1,150 @@
+{
+  "adjudication": {
+    "determinism": "Hash both the complete TIFF and its uint16 pixel payload. Any disagreement in either hash fails the byte property.",
+    "memory_peak": "Use the maximum observed process-tree private committed bytes over all accepted scored matrix runs.",
+    "memory_ratio": "For each worker count, divide the maximum accepted N=299 peak by the maximum accepted N=33 peak; the maximum worker-specific ratio is the score.",
+    "memory_sampling": "A sampled peak above 6 GiB is a valid one-sided FAIL even if sampling gaps occurred, because missed samples can hide a higher peak but cannot manufacture the observed allocation. A PASS would require every run's maximum sample gap <=100 ms and >=90% scheduled-sample coverage.",
+    "modulo": "Use the minimum accepted warm wall time per N across the six alternating-order scored repetitions, divide by N, then compute (max-min)/min.",
+    "overall": "Any valid hard-gate failure makes M12 FAIL. PASS requires every M12 bar plus the M11 joint requirement. If no bar fails and a required validity/joint term is unavailable, M12 remains UNMEASURED."
+  },
+  "binary": {
+    "bytes": 9864704,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\bin\\strehl.exe",
+    "sha256": "DD5C98C2FF091DFFBF08A580E41C5C5F2C2F6E6996BB831CFC499ED833996A24",
+    "version": "strehl 0.0.0 (8009447e059f)"
+  },
+  "build": {
+    "artifact_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\build.json",
+    "artifact_sha256": "C5C0F075A8EA9B524133DEE91E298E1229B31D2010ED5F075C1B2F37A51D8155",
+    "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "command": "cargo build --release --jobs 4 -p strehl-cli --manifest-path <archived-source>\\Cargo.toml --target-dir <campaign-target>",
+    "compiled_strehl_cli_observed": true,
+    "jobs": 4,
+    "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+    "source": {
+      "archive": "git archive",
+      "archive_sha256": "14C266CC386193CE91EA2F5855EFBB880E7A9BCF58FD9CC30C0F017BE8C088A2",
+      "commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+      "tree": "01ecf714bd4fe034f1b4170b5d737b89ee8afcc1",
+      "working_tree_source_used": false
+    }
+  },
+  "evidence_tag": "VERIFIED",
+  "generated_utc": "2026-09-04T10:06:24.484652+00:00",
+  "harness": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "75A342629B47F2E8BAF023B45B2D96D43E398C281078AD02512FEFE500CF1ABE"
+  },
+  "host_load_gate": {
+    "application": "Every formal warm-up and scored invocation waits for the preload gate; any invocation crossing the during-run gate is preserved as rejected and repeated in the same position.",
+    "bytes": 14320,
+    "during_run_external_busy_max": 0.1,
+    "evidence_tag": "INHERITED",
+    "last_path_commit": "04976c0ee59542ddc95c6b19a9debbfa88e14ccd",
+    "measured_tree_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+    "path": "docs\\research\\M-PHASE0-PIPE.md",
+    "preload_busy_max": 0.15,
+    "preload_sample_seconds": 5.0,
+    "retry_seconds": 30.0,
+    "sha256": "5C5ECD6D13C940E0F3FC2AD40992CD97FAE5C130743440D75489068A9E65B5C6",
+    "source_lines": {
+      "end": 257,
+      "start": 245,
+      "text": "### 7.3 Timing gate to inherit\n\n1. Sample whole-host busy time for five seconds before each arm; start only at\n   `<=15%`.\n2. During the arm, subtract **whole-process-tree** CPU from system busy CPU and\n   require external busy `<=10%` of wall time times 32 logical processors.\n   Anything above that is invalid and must not enter a minimum, median, or\n   ratio.\n3. Alternate arm/sweep order. Retry a rejected paired position as a pair;\n   never splice a favourable loaded half into a clean comparison.\n4. Record executable and input provenance, QPC wall time, process-tree CPU,\n   system/external busy, peak memory, bytes read/written, stage banners, full\n   output hash, and a nonzero decoded-output witness."
+    }
+  },
+  "input_manifest": {
+    "capture_manifest_sha256": {
+      "bee-1-cpl": "E489BED321811F27C590B6F13312715E13DEFA52BC28D41DF338120009FDF58F",
+      "coffee-bean": "416068118897A1B07C9794F1B8E00CB022A78573BFB7741D1EFFA3734F0A8B38"
+    },
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\input-manifest.json",
+    "sha256": "42532FB4BD17D626E7328636F7EB50F7FEF1F5E1AE25663D5042BD825A626F99"
+  },
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "preflight": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\preflight.json",
+    "sha256": "31E16D38DA95C92ED03F8975D17912DF326E8CF2CCD1DF4B0529BB0945CE84B3"
+  },
+  "product_arm": {
+    "alignment": "shipping default on; one warm-up populates an N-isolated STREHL_CACHE_DIR and scored runs load that same validated sidecar",
+    "backend": "pyramid shipping default",
+    "bit_depth": 16,
+    "cache_policy": "separate project-local cache directory for every N",
+    "captures": {
+      "105": {
+        "path": "D:\\personal\\macro\\coffee-bean",
+        "sidecar": null
+      },
+      "299": {
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "sidecar": null
+      },
+      "33": {
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "sidecar": null
+      }
+    },
+    "classification": "registered native-ARW shipping product arm",
+    "cover": {
+      "source": "shipping default",
+      "source_citation": {
+        "line": 1003,
+        "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+        "text": "pub const DEFAULT_COVER_MODE: CoverMode = CoverMode::Scale;"
+      },
+      "value": "scale"
+    },
+    "fixed_env": {},
+    "flags": [
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "gate": 2.0,
+    "modulo_capture": {
+      "path": "D:\\personal\\macro\\bee-1-cpl",
+      "sidecars": {
+        "96": null,
+        "97": null,
+        "98": null,
+        "99": null
+      }
+    },
+    "output_format": "uncompressed full-sensor linear-sRGB TIFF",
+    "photometric": "not applied on the pyramid backend",
+    "required_log_substrings": [
+      "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)",
+      "noise gate      : 2.00 x",
+      "not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus",
+      "alignment       : ON (",
+      "16-bit RGB, linear sRGB",
+      "Full sensor resolution"
+    ],
+    "smoke": {
+      "limit": 3,
+      "path": "D:\\personal\\macro\\coffee-bean",
+      "repetitions": 2,
+      "workers": 1
+    },
+    "worker_control": "STREHL_PYRAMID_WORKERS"
+  },
+  "read_only_snapshot": {
+    "before_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-before.json",
+    "before_sha256": "6F8396AE2A54B9C515EACEE5DC3A2C6757244ADE8EE8CCA51F922FDC76838E88",
+    "tool_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m139-tree-snapshot.ps1",
+    "tool_sha256": "0C24BC67FA68A7507A82B023C8F523085B05D3071682CA70A80611A131D5E8F7"
+  },
+  "registration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\registration.json",
+    "sha256": "E8494F150F6DDA7AC23C424E789654ED70FEE13D4217B73199A978C26173E8D0"
+  },
+  "registration_status": "registered",
+  "schema": 1,
+  "scope": "Formal M12 native-ARW scorecard campaign authorized as M139. Commissioning and smoke outputs remain diagnostic.",
+  "scorecard": {
+    "last_path_commit": "a0413b73a5b32aa4cec86f65047b880287f84276",
+    "path": "docs\\proposals\\2026-09-sota-scorecard.md",
+    "sha256": "ADB31AAFD415F042D3C539A11351F70C6C834181C1FDB24C76FE03CFE9B07DB6",
+    "version": "v1.7"
+  }
+}

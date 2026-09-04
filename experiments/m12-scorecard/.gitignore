@@ -2,6 +2,7 @@ work/
 out/runs/
 out/campaign-*/cache/
 out/campaign-*/runs/
+out/campaign-*/*.log
 out/*.log
 out/*.tif
 out/*.tiff

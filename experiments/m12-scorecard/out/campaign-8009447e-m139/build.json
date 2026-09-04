@@ -1,0 +1,26 @@
+{
+  "binary": {
+    "bytes": 9864704,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\campaign-8009447e-m139\\bin\\strehl.exe",
+    "sha256": "DD5C98C2FF091DFFBF08A580E41C5C5F2C2F6E6996BB831CFC499ED833996A24",
+    "version": "strehl 0.0.0 (8009447e059f)"
+  },
+  "build": {
+    "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "command": "cargo build --release --jobs 4 -p strehl-cli --manifest-path <archived-source>\\Cargo.toml --target-dir <campaign-target>",
+    "compiled_strehl_cli_observed": true,
+    "jobs": 4,
+    "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)"
+  },
+  "evidence_tag": "VERIFIED",
+  "generated_utc": "2026-09-04T10:04:44.942070+00:00",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "schema": 1,
+  "source": {
+    "archive": "git archive",
+    "archive_sha256": "14C266CC386193CE91EA2F5855EFBB880E7A9BCF58FD9CC30C0F017BE8C088A2",
+    "commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+    "tree": "01ecf714bd4fe034f1b4170b5d737b89ee8afcc1",
+    "working_tree_source_used": false
+  }
+}

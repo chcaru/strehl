@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "evidence_tag": "VERIFIED",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "generated_utc": "2026-09-04T10:02:47.5164007Z",
+  "phase": "before",
+  "enumeration": "Get-ChildItem -LiteralPath <root> -Force -Recurse",
+  "roots": [
+    {
+      "path": "D:\\personal\\macro",
+      "item_count": 10806,
+      "file_count": 10724,
+      "directory_count": 82,
+      "bytes": 487169829957,
+      "metadata_sha256": "46CD6FE5C018AE4ACEC946170EEEC760DBF5B0C8954CA561368F92B9184A5C42"
+    },
+    {
+      "path": "D:\\edited\\macro",
+      "item_count": 392,
+      "file_count": 387,
+      "directory_count": 5,
+      "bytes": 141333902406,
+      "metadata_sha256": "40003B9F15D0AE552AD2947E22C29122664E0BDCD7E690D53FE02341DCA12FD1"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "bars": {
+    "cross_worker_distinct_hashes_max": 1,
+    "fixed_worker_distinct_hashes_max": 1,
+    "m12_s_joint_requirement": "the 16-worker output must simultaneously pass M11",
+    "modulo_per_frame_spread_max": 0.02,
+    "peak_n299_over_peak_n33_max": 1.1,
+    "peak_process_tree_private_committed_bytes_max": 6442450944
+  },
+  "evidence_tag": "INHERITED",
+  "generated_utc": "2026-09-04T10:05:37.260603+00:00",
+  "governing_registration": {
+    "bytes": 84635,
+    "joint_constraint": {
+      "end": 122,
+      "start": 122,
+      "text": "| M11 runtime + M12 determinism/scaling invariance/memory | Serial execution can make fixed-worker runs deterministic by abandoning the speed claim. | The primary CPU result is the 16-worker output; it must meet M11, reproduce at fixed width, and be byte-identical to 1/2/4/8-worker outputs while meeting M12. |"
+    },
+    "last_path_commit": "a0413b73a5b32aa4cec86f65047b880287f84276",
+    "m12_section": {
+      "end": 1103,
+      "start": 1038,
+      "text": "### M12 \u2014 memory, determinism, and scaling invariance\n\n**What it measures and why.** Deep stacks must remain bounded and reproducible.\nWorker-count dependence or hidden spill can make a fast-looking configuration\nnon-product behaviour.\n\n**Input.** The same N=33/105/299 and worker-count matrix as M11.\n\n**Exact computation.**\n\n1. Run the comparative common-TIFF arm and native-ARW product arm separately. The\n   absolute 6-GiB, scaling, determinism, and N-mod-4 bars apply to the native product\n   arm; comparative memory is reported but is not a substitute.\n2. Sample process-tree private committed bytes and working set every 10 ms; report\n   peak committed bytes.\n3. After one warm-up, hash the highest-precision delivered bytes from each of the six\n   scored repetitions at worker counts 1/2/4/8/16 for each registered N. Do not hash\n   a later 8-bit proxy.\n4. **M12-D, fixed-worker determinism:** for each `(N, worker_count)`, count distinct\n   hashes across its six repetitions.\n5. **M12-S, cross-worker scaling invariance:** for each N, count distinct hashes\n   across the canonical outputs at worker counts 1/2/4/8/16.\n6. Compute warm-memory ratio `peak_N299/peak_N33`.\n7. For N=96\u201399, divide warm wall time by N and compute\n   `(max-min)/min`.\n\n**Success.** The proposal bars are warm peak `<=6 GiB` and byte invariance. The\n**SCORECARD ADDITIONS** that make \u201cflat\u201d numeric are\n`peak_N299/peak_N33<=1.10` and N-mod-4 per-frame spread `<=2%`. M12-D requires\nexactly one distinct hash in every fixed-worker six-run cell. M12-S requires exactly\none distinct hash across all five worker counts at every N, and the 16-worker output\nmust simultaneously pass M11. A product may pass M12-D while failing M12-S; the two\nverdicts must never be conflated.\n\n**Existing-evidence ruling.** The repository contains strong mechanism evidence but\nnot a scorecard reading. `byte-freeze.rs` says changing\n`STREHL_PYRAMID_WORKERS` changes reduction order and moves 1 DN on about 0.2% of\npixels; `merge_cmd.rs` records 2 versus 7 workers differing on 0.2573% of a 205-frame\nstack, maximum 1 DN (`byte-freeze.rs` lines 512\u2013515; `merge_cmd.rs` lines\n5322\u20135329). Both are outside the registered N/worker matrix. The reported\n18-run sweep has six stable repetitions at each of 1/4/8 workers and three different\ncross-worker hashes; its `C6765BFA...` arm matches the registered N=20\n`coffee-bean-20-gate2-pyramid` byte-freeze, not N=33/105/299. That row freezes\n`env_align=0`, `alignment_mode=off`, an empty scratch cache, and a pyramid path whose\nown banner says photometric gain, clip census, outlier rejection, halo correction and\nthrough-focus statistics were not applied. It also lacks workers 2 and 16 and a\nscorecard command/output manifest proving the hashed artifact is the registered\nhighest-precision native product deliverable. Therefore it is\n**diagnostic M12-D PASS / diagnostic M12-S FAIL**, while both formal sub-bars and M12\noverall remain **UNMEASURED**.\n\n**Known defeat.** Disk spill lowers RAM, monitoring only the parent misses workers,\nand nondeterminism can disappear if outputs are rounded before hashing.\n\n**Control.** Record process-tree memory, temp-file bytes, page faults, and child\nlifetime. Allocate a planted 7-GiB child buffer and require the monitor to exceed the\nbar; write one random output LSB and require the hash gate to fail. Hash the highest\nprecision common deliverable, not a later 8-bit proxy.\n\n**Remaining registered run.** Reserve one uninterrupted **120-minute quiet-host\nwindow**. Run native ARWs at N=33/105/299 with workers 1/2/4/8/16, one warm-up then\nsix alternating-order scored repetitions per cell, hashing every deliverable and\nsampling the whole process tree every 10 ms. Run N=96/97/98/99 at 16 workers with the\nsame warm-up/six-sweep timing protocol for the modulo bar. This single run supplies\nM12-D, M12-S, peak memory, `peak_N299/peak_N33`, and N-mod-4 spread; do not spend a\nseparate host window rediscovering the already-understood reduction-order mechanism."
+    },
+    "measured_tree_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+    "path": "docs\\proposals\\2026-09-sota-scorecard.md",
+    "readiness": {
+      "end": 437,
+      "start": 433,
+      "text": "| M11 | **(a)(b)(d)** | A quiet host is additionally required; native-decode timing alone is a diagnostic, not the registered competitive verdict. |\n| M12 | **(e), scheduled; formal value UNMEASURED** | Hashes and process-tree RSS need no detail, comparator or holdout. Existing out-of-protocol evidence diagnoses fixed-worker determinism as holding and cross-worker scaling invariance as failing, but the registered N/worker matrix still requires the reserved quiet host. |\n\nThus M8 is the only complete quality axis ready now. M12 is scientifically\nunblocked, but its complete registered run is deliberately deferred to a quiet host."
+    },
+    "scoreboard_bar": {
+      "end": 405,
+      "start": 403,
+      "text": "| M12 | Memory, determinism, and scaling invariance | Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; every fixed-worker repeat is byte-identical and the outputs at 1/2/4/8/16 workers are mutually byte-identical while 16 workers passes M11; N-mod-4 per-frame spread `<=2%`. |\n\nM8, the M11 comparator/CPU/hybrid/cold/live targets, the M12 6-GiB bar, and byte"
+    },
+    "sha256": "ADB31AAFD415F042D3C539A11351F70C6C834181C1FDB24C76FE03CFE9B07DB6",
+    "version": "v1.7"
+  },
+  "host_load_gate": {
+    "application": "Every formal warm-up and scored invocation waits for the preload gate; any invocation crossing the during-run gate is preserved as rejected and repeated in the same position.",
+    "bytes": 14320,
+    "during_run_external_busy_max": 0.1,
+    "evidence_tag": "INHERITED",
+    "last_path_commit": "04976c0ee59542ddc95c6b19a9debbfa88e14ccd",
+    "measured_tree_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+    "path": "docs\\research\\M-PHASE0-PIPE.md",
+    "preload_busy_max": 0.15,
+    "preload_sample_seconds": 5.0,
+    "retry_seconds": 30.0,
+    "sha256": "5C5ECD6D13C940E0F3FC2AD40992CD97FAE5C130743440D75489068A9E65B5C6",
+    "source_lines": {
+      "end": 257,
+      "start": 245,
+      "text": "### 7.3 Timing gate to inherit\n\n1. Sample whole-host busy time for five seconds before each arm; start only at\n   `<=15%`.\n2. During the arm, subtract **whole-process-tree** CPU from system busy CPU and\n   require external busy `<=10%` of wall time times 32 logical processors.\n   Anything above that is invalid and must not enter a minimum, median, or\n   ratio.\n3. Alternate arm/sweep order. Retry a rejected paired position as a pair;\n   never splice a favourable loaded half into a clean comparison.\n4. Record executable and input provenance, QPC wall time, process-tree CPU,\n   system/external busy, peak memory, bytes read/written, stage banners, full\n   output hash, and a nonzero decoded-output witness."
+    }
+  },
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "pre_registered_adjudication": {
+    "determinism": "Hash both the complete TIFF and its uint16 pixel payload. Any disagreement in either hash fails the byte property.",
+    "memory_peak": "Use the maximum observed process-tree private committed bytes over all accepted scored matrix runs.",
+    "memory_ratio": "For each worker count, divide the maximum accepted N=299 peak by the maximum accepted N=33 peak; the maximum worker-specific ratio is the score.",
+    "memory_sampling": "A sampled peak above 6 GiB is a valid one-sided FAIL even if sampling gaps occurred, because missed samples can hide a higher peak but cannot manufacture the observed allocation. A PASS would require every run's maximum sample gap <=100 ms and >=90% scheduled-sample coverage.",
+    "modulo": "Use the minimum accepted warm wall time per N across the six alternating-order scored repetitions, divide by N, then compute (max-min)/min.",
+    "overall": "Any valid hard-gate failure makes M12 FAIL. PASS requires every M12 bar plus the M11 joint requirement. If no bar fails and a required validity/joint term is unavailable, M12 remains UNMEASURED."
+  },
+  "registered_design": {
+    "highest_precision_deliverable": "uncompressed 16-bit RGB TIFF",
+    "memory_sample_interval_ms": 10.0,
+    "modulo_frame_counts": [
+      96,
+      97,
+      98,
+      99
+    ],
+    "modulo_scored_repetitions_per_n": 6,
+    "modulo_warmups_per_n": 1,
+    "modulo_workers": 16,
+    "native_frame_counts": [
+      33,
+      105,
+      299
+    ],
+    "order": "alternating ascending/descending worker order",
+    "scored_repetitions_per_cell": 6,
+    "warmups_per_cell": 1,
+    "worker_counts": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ]
+  },
+  "schema": 1,
+  "scored_vs_diagnostic": {
+    "diagnostic_only": "The older unaligned N=20 sweep at workers 1/4/8 and all commissioning/smoke outputs.",
+    "scored": "The registered N=33/105/299 native-product matrix at workers 1/2/4/8/16, six accepted repetitions per cell, plus the registered N=96/97/98/99 modulo arm."
+  }
+}
