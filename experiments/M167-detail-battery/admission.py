@@ -396,9 +396,9 @@ def audit_candidate_source() -> dict[str, object]:
     score_signature = None
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
-            imports.extend(alias.name.split(".", 1)[0] for alias in node.names)
+            imports.extend(alias.name for alias in node.names)
         elif isinstance(node, ast.ImportFrom):
-            imports.append((node.module or "").split(".", 1)[0])
+            imports.append(node.module or "")
             dangerous_imports.extend(
                 alias.name
                 for alias in node.names
@@ -975,6 +975,7 @@ def validate_sealed_transcript(
 ) -> dict[str, object]:
     checks = {
         "json_object": False,
+        "canonical_encoding": False,
         "top_level_fields_exact": False,
         "fixed_metadata_exact": False,
         "instance_count_exact": False,
@@ -999,6 +1000,7 @@ def validate_sealed_transcript(
     if not checks["json_object"]:
         errors.append("sealed transcript is not a JSON object")
         return {"passed": False, "checks": checks, "errors": errors}
+    checks["canonical_encoding"] = canonical_bytes(sealed) == sealed_bytes
 
     expected_top_fields = {
         "schema",
