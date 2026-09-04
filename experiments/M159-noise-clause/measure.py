@@ -1,7 +1,9 @@
-"""Commission and run the owner's existing flat-ROI noise instrument.
+"""Commission and run the owner's existing flat-ROI residual instrument.
 
 This script is deliberately read-only with respect to every image input.  Its
-only output is results.json beside this file.
+only output is results.json beside this file.  The statistic is sensitive to
+noise but also rewards blur, so its values are not a stand-alone physical-noise
+or detail-preserving quality claim.
 """
 
 from __future__ import annotations
@@ -885,8 +887,9 @@ def commission(seed: int = 159) -> dict[str, Any]:
             ),
             "blurred_over_unblurred": blur_ratio,
             "interpretation": (
-                "the instrument rewards blur, so it licenses noise only on "
-                "predeclared flat/defocused ground and cannot license detail"
+                "the instrument rewards blur, so it reports output residual only; "
+                "a noise claim additionally needs a certified featureless/temporal "
+                "substrate and an independently pinned transfer condition"
             ),
         },
         "tone_inversion_round_trip": {

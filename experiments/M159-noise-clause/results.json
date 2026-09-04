@@ -35,7 +35,7 @@
     "specificity_challenge": {
       "blurred_over_unblurred": 0.5712148772282098,
       "construction": "Gaussian-blur a noisy field carrying a real 6-pixel-period texture; this destroys structure as well as noise",
-      "interpretation": "the instrument rewards blur, so it licenses noise only on predeclared flat/defocused ground and cannot license detail"
+      "interpretation": "the instrument rewards blur, so it reports output residual only; a noise claim additionally needs a certified featureless/temporal substrate and an independently pinned transfer condition"
     },
     "synthetic_field": "same smooth latent flat field in every arm; independent Gaussian capture noise sigma=0.004",
     "tone_inversion_round_trip": {

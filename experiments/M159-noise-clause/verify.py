@@ -1,4 +1,4 @@
-"""Verify M159's quotations, provenance, arithmetic, and commissioning."""
+"""Verify M159's corrected interpretation, provenance, and frozen arithmetic."""
 
 from __future__ import annotations
 
@@ -54,32 +54,28 @@ def close(actual: float, expected: float, tolerance: float, label: str) -> None:
 def main() -> None:
     checks: list[str] = []
 
-    plan_path = REPO / "docs" / "proposals" / "2026-08-sota-path.md"
-    plan_raw = text(plan_path)
-    plan = collapse_markdown(plan_raw)
-    sentence = (
-        "On [subjects], strehl resolves detail at or beyond the best shipping "
-        "comparator (D1: FRC + slant-edge, licensed Zerene PMax *and* DMap), at "
-        "strictly lower noise (existing flat-ROI instrument), with zero invented "
-        "structure (hull census, stamped per file), no occlusion veil above [bar] "
-        "(halo instrument at full reach), while emitting per-pixel certified acuity, "
-        "n_eff, and depth in physical units that no comparator emits at all "
-        "(D2/D8/A5/C5), in [X] s per frame on CPU (existing harness)."
+    m135 = collapse_markdown(
+        text(REPO / "docs" / "research" / "M135-detail-instrument.md")
     )
-    unique(plan, sentence, "six-clause sentence")
     unique(
-        sentence,
-        "at strictly lower noise (existing flat-ROI instrument)",
-        "noise clause",
+        m135,
+        "Therefore a statistic exactly invariant to a family of common post-noise "
+        "linear operators cannot distinguish any member of that family from identity.",
+        "M135 common-postfilter theorem",
     )
-    axis_row = (
-        "| Noise, flat/defocused ground | **Ahead, measured.** 4.5× vs the fork "
-        "(≥2.4× worst-case grade-corrected); 0.746× vs one unstacked frame at gate "
-        "4.5; 9.9× flat-field rms on the deepest stack with the compound eye "
-        "indistinguishable (README) | Nothing — quotable now |"
+    unique(
+        m135,
+        "The best available route is `J_TR` plus veto-only `T_TR` and `U_TR`, "
+        "measured against an independently captured, higher-sampling, unpredictable "
+        "reference.",
+        "M135 replacement architecture",
     )
-    unique(plan_raw, axis_row, "noise axis row")
-    checks.append("primary-source plan quotations are exact and unique")
+    unique(
+        m135,
+        "**No scored M1 number is available without a new capture.**",
+        "M135 missing scored capture",
+    )
+    checks.append("M135's impossibility result and physical blocker are pinned")
 
     hplook = text(REPO / "experiments" / "V-HEADTOHEAD" / "hplook.py")
     unique(
@@ -99,21 +95,6 @@ def main() -> None:
         "comparator-only flat ranking",
     )
     checks.append("historical instrument anchors are exact and unique")
-
-    scorecard = text(
-        REPO / "docs" / "proposals" / "2026-09-sota-scorecard.md"
-    )
-    unique(
-        scorecard,
-        "> **SCORECARD ADDITION — UNRATIFIED. This rule is authored here and is not",
-        "rule-4 provenance label",
-    )
-    unique(
-        scorecard,
-        "`eta <=1.10` and `UCB95(sigma_strehl / min(sigma_comparator)) <=0.950`.",
-        "M2 scorecard-only bar",
-    )
-    checks.append("scorecard-only rule and bar are pinned")
 
     blob = subprocess.run(
         [
@@ -165,7 +146,21 @@ def main() -> None:
         1e-4,
         "tone inversion high-pass round trip",
     )
-    checks.append("null, degradation, improvement, and tone-inverse controls pass")
+    close(
+        commissioning["specificity_challenge"]["blurred_over_unblurred"],
+        0.5712148772282098,
+        1e-12,
+        "blur specificity challenge",
+    )
+    if commissioning["specificity_challenge"]["blurred_over_unblurred"] >= 1.0:
+        raise AssertionError("blur challenge no longer demonstrates the confound")
+    if "reports output residual only" not in commissioning["specificity_challenge"][
+        "interpretation"
+    ]:
+        raise AssertionError("specificity interpretation no longer limits claim scope")
+    checks.append(
+        "null, degradation, improvement, tone, and blur-specificity controls are pinned"
+    )
 
     expected = {
         "coffee-bean": (12, 1.5152084100548955, 1.3350617226799324, 1.5908793672469541),
@@ -214,27 +209,36 @@ def main() -> None:
 
     report = text(REPORT)
     report_normalized = collapse_markdown(report)
-    unique(report, "**VERDICT: SCOREABLE TODAY.**", "report verdict")
-    unique(report_normalized, sentence, "report six-clause quotation")
-    unique(report, axis_row, "report noise-axis-row quotation")
     unique(
         report_normalized,
-        "flat-ground population, DELIVER-V6 / fork is `1.515208×` median "
-        "high-pass RMS; all `12/12`",
+        "**CORRECTION TO `249f77db`: THE OWNER'S COMPARATIVE “STRICTLY LOWER "
+        "NOISE” CLAUSE CANNOT BE CLAIMED TODAY.**",
+        "corrected report verdict",
+    )
+    unique(
+        report_normalized,
+        "On the twelve frozen coffee-paper ROIs, DELIVER-V6's fractional box9 "
+        "residual is `1.515208×` the fork's median site value, with all twelve "
+        "site ratios above one.",
         "coffee headline",
     )
     unique(
         report_normalized,
-        "median **`1.377766×`**, p75",
-        "113 diagnostic headline",
+        "The answer depends on the noun. A **residual** claim is available today. "
+        "A positive comparative **noise** claim is not.",
+        "residual-versus-noise distinction",
     )
     unique(
         report_normalized,
-        "The noise clause and its licence, exactly, are: at strictly lower noise "
-        "(existing flat-ROI instrument)",
-        "report noise-clause quotation",
+        "M158 already completed the document-governance audit.",
+        "M158 governance deferral",
     )
-    checks.append("report carries the verified verdict, numbers, and quotation")
+    unique(
+        report_normalized,
+        "**No.** Detail is one gate among several.",
+        "J_TR not sole gate",
+    )
+    checks.append("report carries the corrected verdict, number, and J_TR ruling")
 
     VERIFY_RESULTS.write_text(
         json.dumps({"status": "PASS", "checks": checks}, indent=2) + "\n",

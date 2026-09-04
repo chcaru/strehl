@@ -1,14 +1,13 @@
 {
   "status": "PASS",
   "checks": [
-    "primary-source plan quotations are exact and unique",
+    "M135's impossibility result and physical blocker are pinned",
     "historical instrument anchors are exact and unique",
-    "scorecard-only rule and bar are pinned",
     "DELIVER-V6 tone inverse matches the pinned source blob",
     "all five input files match recorded byte counts and SHA-256",
-    "null, degradation, improvement, and tone-inverse controls pass",
+    "null, degradation, improvement, tone, and blur-specificity controls are pinned",
     "all per-site ratios and both distributions rederive exactly",
     "geometry fits and historical comparator denominator are pinned",
-    "report carries the verified verdict, numbers, and quotation"
+    "report carries the corrected verdict, number, and J_TR ruling"
   ]
 }

@@ -1,4 +1,4 @@
-"""Print compact Markdown tables from the frozen M159 result."""
+"""Print compact Markdown tables for the frozen fractional-residual result."""
 
 from __future__ import annotations
 
