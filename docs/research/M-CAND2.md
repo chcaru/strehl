@@ -196,3 +196,88 @@ lane adjudication of Candidate 2.
 The historical downstream gate remained closed and byte-identical at
 `b030945a6cb11ac17895175fee3b1cc03b302b5f2819baa3c0fee423bc551408`.
 Candidate 2's historical `DEAD` status was not reopened.
+
+## Post-run operator classification and proposed physical confirmation
+
+### What the frozen improvement arm was
+
+**The arm was synthetic and signal-linear, but it was not a common linear
+operator on the complete realised observation.** The generator replaces each
+latent template with a periodic Gaussian-filtered template at sigma `0.85`,
+`1.35`, or `0.35`; Gaussian filtering is a linear shift-invariant operation
+on that planted signal (`experiments/M-CAND2/src/cand2.py:248-253,338-355`).
+It then adds the target to an unfiltered nuisance field and draws fresh,
+arm-specific noise before rendering
+(`experiments/M-CAND2/src/cand2.py:255-335,354-355`).
+
+Thus the improved signal component is produced by a linear operator, but the
+arm is not `Y_improved = A Y_base`: applying `A` to the baseline observation
+would also transform its nuisance and already-drawn noise, while the actual
+arm leaves nuisance unfiltered and replaces the noise draw. Candidate 2's
+exact USM congruence theorem therefore does not predict equality for this
+fixture. The measured optical response establishes the correct direction for
+this pre-noise synthetic forward model; it does not establish transfer to a
+denser real focus bracket. Because the signal intervention is synthetic and
+linear, the real pair is necessary rather than optional for the requested
+acquisition-side confirmation.
+
+### Proposed real-photon confirmation — not executed
+
+Outcome 3 makes a development-only confirmation on
+`high-res-calibration-slide-cpl` eligible. This section proposes that work; it
+does not authorise or take the reading. No capture under `D:\personal\macro`
+was opened for this proposal.
+
+1. **Task-admissibility gate first.** The existing Candidate 2 implementation
+   cannot lawfully score two natural renders merely by treating "dense" and
+   "sparse" as its classes. It requires a target variable, symmetric target
+   alternatives, an independent zero-target covariance population, and
+   separate derivative and held-out observations
+   (`experiments/M-CAND2/PREREGISTRATION.md:9-50`). Before any render is
+   opened, freeze a physical task from a traceable slide design or an
+   independent source-side reference with enough guard-separated instances.
+   The dense stack may not define its own labels or truth. If the capture
+   supplies no such task, report **UNCOMMISSIONED — NO LAWFUL TARGET TASK**
+   and stop; substituting an output sharpness proxy would no longer be
+   Candidate 2.
+2. **Freeze provenance and execution.** Bind the exact read-only RAW
+   manifests, `FocusPosition2` inventory, production source and executable
+   hashes, linear pre-tone output stage, merge settings, lane-owned warpmaps,
+   private output root, target support, 480 disjoint sites, folds, covariance
+   dimension, seeds, conditioning gates, interval construction, and effect
+   rule before rendering either stack. Do not transfer the synthetic `1.30`
+   bar without an arm-blind power calculation.
+3. **Prove the intervention and geometry.** Verify that both stacks cover the
+   same registered physical depth interval and that the dense bracket
+   materially reduces the maximum nearest-focus gap at the scored sites.
+   Freeze cross-capture photometric, scale, rotation, and local
+   nontranslation gates using input-only fiducials disjoint from scored
+   sites. Existing development evidence makes this a real refusal risk: the
+   released global maps report held-out errors `12.0952 px` and `8.6621 px`,
+   both above the product's `4 px` usability threshold
+   (`docs/research/cover-default.md:590-599`). A failed potency or geometry
+   gate is **UNCOMMISSIONED**, not a detail loss.
+4. **Run two density comparisons in frozen order.** First compare the full
+   182-frame `tilted-sw4-cpl` output with a predeclared,
+   endpoint-preserving 92-frame subset of that same capture. This isolates
+   sampling density from the 100-second cross-capture gap. Only if it is
+   admissible, compare full `tilted-sw4-cpl` against independent
+   `tilted-sw10-cpl`. Keep native and any separately justified
+   display-referred forms separate, and bootstrap acquisition block then
+   site as in the synthetic campaign.
+5. **Commission null and noise behavior.** An exact-copy scorer null must be
+   quiet. The `6 s / 2.5 s / 1 s` flat ladder is a no-target and
+   photon-noise guard: no rung may exceed a frozen shuffled/zero-target null,
+   and the noisier `1 s` rung may not outrank `6 s`. Because the flat contains
+   no target task, a near-zero denominator must produce a refusal rather than
+   an unstable ratio.
+
+The proposed confirmation is positive only if the within-capture density arm
+and the independent dense-versus-sparse arm both move Candidate 2 in the
+preregistered better-detail direction, with the same lawful physical task and
+all potency, rank, provenance, and geometry gates passing. A cross-capture
+increase without the within-capture result is a capture-confounded finding;
+a null or wrong sign in both is a failure of transfer from the synthetic
+optical result. In every case the calibration-slide session remains
+development material and cannot supply a scored or SOTA result
+(`docs/STATUS.md:2496-2547`).
