@@ -96,6 +96,32 @@ document’s proposed completions, not claims that the governing proposal alread
    any registered mode on that capture. This stops a deliberately blurred fast/quiet
    mode from becoming the quality comparator. In v1.7 no mode can yet be
    quality-qualified.
+
+   > **SCORECARD ADDITION — UNRATIFIED. This rule is authored here and is not
+   > traceable to the owner's plan.** An independent audit verified that neither
+   > this coupling nor the `98%` threshold appears anywhere in
+   > `docs/proposals/2026-08-sota-path.md`; the nearest source requires only
+   > comparators *"at matched output"* (`:1975-1978`), and Amendment 1 explicitly
+   > preserves the noise, veil and invented-structure instruments as live
+   > (`:2208-2210`). See `docs/research/M133-blocker-audit.md:1177,1190,1204,1209,1598`.
+   >
+   > **It is load-bearing and it has a price.** This rule is what propagates
+   > blocker `(a)` beyond the axes that intrinsically need a detail instrument. A
+   > mechanical re-derivation of all sixteen blocker subsets
+   > (`experiments/M140-readiness/readiness.json`) finds `(a)` is **intrinsic**
+   > only to M1, M5, M6 and M9, and **propagated by this rule** to M2, M3, M4 and
+   > M11. The consequence for the owner's spending decision:
+   >
+   > | cleared | rule 4 as written | rule 4 narrowed or removed |
+   > |---|---|---|
+   > | `b+d` — comparator bought | **2 axes** | **6 axes** |
+   > | `b+c+d` — comparator + capture | **4 axes** | **8 axes** |
+   >
+   > **Same money, same shooting, four more axes.** Until the owner ratifies,
+   > narrows or rejects this rule, blocker `(a)` assignments and any purchase
+   > ordering derived from them must not be presented as owner-mandated.
+   > Note it changes nothing measurable *today*: with only `(b)` cleared, all
+   > three scenarios leave exactly M8 and M12 scoreable.
 5. Each capture must pass independently, and the pooled one-sided 95% confidence bar
    must also pass. Pooling may not rescue a failed capture.
 6. All confidence intervals resample independent physical sites, not pixels:
@@ -455,8 +481,8 @@ the stated scope. No row may silently populate §6.
 | VEIL2 / A2 | **STOP — DO NOT BUILD.** Primary `theta=-0.081241`, CI `[-0.235876,+0.051078]`; four potency/provenance gates failed; re-scope audit `0/7`. | Effective `n=36` spatial clusters. The 20,000 bootstrap draws are Monte Carlo resamples, not independent observations. | `e4e3939f`, `bcc77de9` | Admissible refusal only. It does not prove zero veil or settle M3. |
 | LCA / C2 | **STOP.** Reproduced axial focus forfeits: R `4.22–7.54%`, B `3.51–7.13%`, but tone-normalised evidence was valid on only 1/4 stacks; both registered gamma arms were invalid. | 1,002 RAW frames across four stacks; frozen four-stack tone gate required 4/4. | `08cf9401` / `a3b87d36` | Axial CA exists; a field-valid corrective build is not licensed. This is not M7 colour fidelity. |
 | CAND1 / detail instrument | **KILL candidate 1.** USM/base `1.095732x`, one-sided UCB95 `1.129895`, against frozen `<=1.01`. | 480 independent macro-tile clusters, eight trials each (3,840 trials) across five acquisition blocks. | `613eaf1`, `efa25bd2`, `2d3d247d` | Admissible instrument KILL. M1 still has no statistic or bar. |
-| COVER / default path | **CLOSED — keep Scale.** Crop ring up to `+2.6106%`; minimum evidenced safe inset 256 px; retained area `64.6047%` against 80%. Scale changes 98.1463% of identity-arm samples. | Four development captures decoded; `109MSDCF` supplied the admitted inset profile, while the ruler specificity arm refused a general safe inset. | `66e79043` | Crop is not licensed as the default. The scorecard native-scale geometry gate remains unresolved; this is not M8-R/M8-O. |
-| Phase 1 / W1 | **REFUTED — DO NOT IMPLEMENT.** `NO_COMMON_K`: 16/42 predicates pass at some `k`, 26/42 at none, and no band-4–6 predicate passes anywhere in `[0,8]`. | 42 frozen capture/band predicates over the 161-value width grid on three development captures. | `f5658e5d` | Refutes the one-constant phase-1 design; no M1–M12 output was produced. |
+| COVER / default path | **SUPERSEDED 2026-09-05 — original verdict retained.** *Original:* **CLOSED — keep Scale.** Crop ring up to `+2.6106%`; minimum evidenced safe inset 256 px; retained area `64.6047%` against 80%. Scale changes 98.1463% of identity-arm samples. **Superseding result (M130 `crop-early`, commit `248178b9`):** the `64.6047%` was produced by late-crop boundary poisoning, not by the crop geometry itself. Evaluating warps in full-plane coordinates and extracting the covered rectangle *before* luma, variance, gate floor, pyramid, weighting, accumulation, confidence and collapse reduces the evidenced safe inset from 256 px to 8 px and raises retained area to **`96.22496088092659%`** — `FAIL -> PASS` on the same 80% gate, a `1.489442x` improvement. Default output is byte-for-byte unchanged. | Four development captures decoded; `109MSDCF` supplied the admitted inset profile, while the ruler specificity arm refused a general safe inset. Superseding arm: 121 unit tests, 4-row byte freeze, retention re-derived independently from plane geometry. | `66e79043`; superseded by `248178b9` | The original ruling that Crop is not licensed as the default was correct **on the evidence then available**. Blocker `(b)`, the scorecard native-scale geometry gate, is now **CLEARED**. `DEFAULT_COVER_MODE` remains `Scale`; this row licenses the geometry, not a default change. |
+| Phase 1 / W1 | **WITHDRAWN 2026-09-05 — original verdict retained.** *Original:* **REFUTED — DO NOT IMPLEMENT.** `NO_COMMON_K`: 16/42 predicates pass at some `k`, 26/42 at none, and no band-4–6 predicate passes anywhere in `[0,8]`. **Withdrawal (M138, commit `cac33527`):** the gate was **unsatisfiable by construction**. `experiments/PHASE1-DESIGN/measure.py:129-130` defines the legacy comparator's exponent as `min(2.0 * 1.4 ** (R.BANDS - 1 - band), 8.0)` = `[8.0, 8.0, 7.6832, 5.488, 3.92, 2.8, 2.0]` — **band-shaped by construction** — while the gate required a band-*constant* candidate to reproduce it per band within `±5%`, and evaluated that requirement *before* any quality bar. Bands 4–6 returned `0 of 18` width survivors, so the Pareto frontier the phase existed to render **was never rendered**. Legacy `n_eff` spans `2.88x–37.95x` within one capture and ROI. | 42 frozen capture/band predicates over the 161-value width grid on three development captures. | `f5658e5d`; withdrawn by `cac33527` | **Phase 1 returns to `untested`, not validated** — *"unvalidated, not rescued"*. The width match is a comparator-equivalence requirement, not an output-quality requirement. Real standardisation defects remain and must be repaired before re-run: pooled-only coverage gating, no positive-`q` commissioning, band-0-only Poisson control, approximate variance propagation, no selected-winner/stack-size calibration. A corrected gate is being specified and preregistered before any number exists. |
 
 **Strict systems-gate ruling.** D11 and D15 are admitted as phase-0 PASS
 verdicts because their governing proposal asks for those exact component estimands,
@@ -864,6 +890,54 @@ M8-O is the proposal's per-file invariant.
 `0.0000%`. **SCORECARD ADDITION (M8-R):** resampler violation fraction exactly
 `0.0000%`; the crop/reference identity arm also has zero violations. A missing
 pre-clamp trace is `UNMEASURED`, not a pass.
+
+> ### M8-O v1.5 — prospective bar replacement, registered before the deciding number exists
+>
+> **The v1.4 M8-O bar above was proven impossible to satisfy as written, and it
+> is retained here rather than deleted.** The output is normalized `u16` on
+> `[0,1]`. Where the source neighbourhood saturates, the hull's lower bound can
+> exceed `1`; once `lo - tolerance > 1` the set of representable values
+> satisfying the hull condition is **empty**, so every representable value is
+> charged a violation regardless of what the resampler does. The census was
+> pricing a limit of the output container as an algorithmic defect.
+>
+> **The original verdict stands and is not vacated: M8 FAILED under v1.4, and
+> that failure remains this program's only scored axis result.**
+>
+> **Ruling on legitimacy.** A repair is legitimate rather than goalpost-moving
+> only if it is versioned prospectively, keeps the denominator unchanged,
+> projects the hull into the output domain, retains the historical FAIL, and
+> still bites. It does still bite: under the replacement bar the **shipping
+> Catmull-Rom kernel fails at `31,148` violations while bilinear leaves zero**
+> (`experiments/M136-m8o-bar/analysis.json`). A repaired bar that the current
+> code passed trivially would be a worse outcome than an impossible one.
+>
+> **Normative text.** The v1.5 bar is § 6 of `docs/research/M136-m8o-bar.md`,
+> pinned at git blob `86291032355f1d6466e2357b1224d78d9716c80c`
+> (commit `6712449e9defdd93e301c6ed5dcd949a3c17c4b6`). It is referenced rather
+> than copied so that this bar has exactly one canonical site and cannot drift
+> between two transcriptions. **M8-R is unchanged by this replacement.**
+>
+> **Preregistered decision rule, fixed before the number exists.**
+> `experiments/M136-m8o-bar/clamped-m8o-preregistration.json`, protocol
+> `"M136 clamped-Catmull-Rom representable-domain M8-O v1"`, pinned at blob
+> `4d13bd2dfa00c7c7534e5c6a6b4390627ac789aa`:
+>
+> - **PASS iff every capture has `V=0` and aggregate `V=0`.**
+> - `FAIL iff aggregate V>=1`. `V=40` is a FAIL.
+> - Nonzero floor: **none**. *"No empirical or statistical allowance may be
+>   introduced after observing the result."*
+> - The candidate clears M8 only if M8-O `V=0`, M8-R `V=0`, **and** the
+>   crop/reference identity arm `V=0`.
+> - Seven named conditions force `UNMEASURED`, so a voided run is a defined
+>   outcome and not a judgement call.
+>
+> **Status: `UNMEASURED`.** The clamped kernel scores `0 / 6,131,678,976` M8-R
+> violations, but its M8-O residue under this bar has never been measured, and
+> M8-R zero does **not** imply M8-O zero — the clamp changes the gathered values
+> supplied to the merge. No old Scale-domain count is registered as the expected
+> value, because M130 moved the output to the compact Crop domain.
+
 
 **Current cover hypothesis.** The v1.3 definition was too weak: its all-frame hull and
 `5*sigma` tolerance could pass Catmull-Rom overshoot if another frame bracketed the
