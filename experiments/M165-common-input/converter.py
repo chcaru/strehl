@@ -22,12 +22,14 @@ import sys
 from typing import Any, BinaryIO, Iterable
 
 CONVERTER_ID = "m165-libraw-common-linear"
-CONVERTER_VERSION = "1.0.0"
+CONVERTER_VERSION = "1.1.0"
 SETTINGS_SCHEMA = "m165-common-input-settings-v1"
 FREEZE_SCHEMA = "m165-converter-freeze-v1"
 PATTERN_SCHEMA = "m165-sensor-pattern-map-v1"
-MANIFEST_SCHEMA = "m165-common-input-manifest-v1"
+MANIFEST_SCHEMA = "m165-common-input-manifest-v2"
 INSPECTION_SCHEMA = "m165-common-tiff-inspection-v1"
+CONSUMER_REGISTRY_SCHEMA = "m165-common-input-consumer-registry-v1"
+CONSUMER_RECEIPT_SCHEMA = "m165-common-input-consumer-receipt-v1"
 
 TIFF_TAGS = {
     "width": 256,
@@ -423,6 +425,253 @@ def verify_freeze(path: Path, settings: Path, icc: Path) -> dict[str, Any]:
             f"current converter bundle {actual} differs from frozen {expected}",
         )
     return freeze
+
+
+def _registry_artifact_path(registry_path: Path, value: Any, label: str) -> Path:
+    if not isinstance(value, str) or not value:
+        raise ContractFailure(
+            "CONSUMER_REGISTRY_INVALID", f"{label} must be a non-empty path"
+        )
+    path = Path(value)
+    if not path.is_absolute():
+        path = registry_path.parent / path
+    return path.resolve()
+
+
+def validate_consumer_registry(path: Path) -> dict[str, Any]:
+    """Validate an arbitrary-size consumer freeze and every frozen executable."""
+    registry = load_json(path, "consumer registry")
+    if registry.get("schema") != CONSUMER_REGISTRY_SCHEMA:
+        raise ContractFailure(
+            "CONSUMER_REGISTRY_SCHEMA_MISMATCH",
+            f"consumer registry schema must be {CONSUMER_REGISTRY_SCHEMA!r}",
+        )
+    if registry.get("status") != "FROZEN":
+        raise ContractFailure(
+            "CONSUMER_REGISTRY_NOT_FROZEN",
+            f"consumer registry status is {registry.get('status')!r}, not 'FROZEN'",
+        )
+    if registry.get("track") != "common-merge":
+        raise ContractFailure(
+            "CONSUMER_REGISTRY_TRACK_MISMATCH",
+            "consumer registry must name the common-merge track",
+        )
+    if not isinstance(registry.get("registry_id"), str) or not registry["registry_id"]:
+        raise ContractFailure(
+            "CONSUMER_REGISTRY_INVALID", "registry_id must be a non-empty string"
+        )
+    if not isinstance(registry.get("version"), str) or not registry["version"]:
+        raise ContractFailure(
+            "CONSUMER_REGISTRY_INVALID", "registry version must be a non-empty string"
+        )
+    consumers = registry.get("consumers")
+    if not isinstance(consumers, list) or not consumers:
+        raise ContractFailure(
+            "CONSUMER_REGISTRY_EMPTY", "consumer registry must contain at least one consumer"
+        )
+
+    ids: set[str] = set()
+    frozen: list[dict[str, Any]] = []
+    required_count = 0
+    for index, consumer in enumerate(consumers):
+        if not isinstance(consumer, dict):
+            raise ContractFailure(
+                "CONSUMER_REGISTRY_INVALID", f"consumer {index} is not an object"
+            )
+        consumer_id = consumer.get("consumer_id")
+        if not isinstance(consumer_id, str) or not consumer_id:
+            raise ContractFailure(
+                "CONSUMER_REGISTRY_INVALID",
+                f"consumer {index} has no non-empty consumer_id",
+            )
+        if consumer_id in ids:
+            raise ContractFailure(
+                "CONSUMER_REGISTRY_DUPLICATE", f"duplicate consumer_id {consumer_id!r}"
+            )
+        ids.add(consumer_id)
+        if not isinstance(consumer.get("role"), str) or not consumer["role"]:
+            raise ContractFailure(
+                "CONSUMER_REGISTRY_INVALID", f"{consumer_id}: role is absent"
+            )
+        if not isinstance(consumer.get("required"), bool):
+            raise ContractFailure(
+                "CONSUMER_REGISTRY_INVALID", f"{consumer_id}: required must be boolean"
+            )
+        required_count += int(consumer["required"])
+        if consumer.get("status") != "FROZEN":
+            if consumer["required"]:
+                raise ContractFailure(
+                    "CONSUMER_REQUIRED_NOT_FROZEN",
+                    f"required consumer {consumer_id!r} is {consumer.get('status')!r}",
+                )
+            frozen.append(
+                {
+                    "consumer_id": consumer_id,
+                    "role": consumer["role"],
+                    "required": False,
+                    "status": consumer.get("status"),
+                    "blocker": consumer.get("blocker"),
+                }
+            )
+            continue
+
+        kind = consumer.get("implementation_kind")
+        if kind not in {"installed-binary", "source-build", "script-runtime-bundle"}:
+            raise ContractFailure(
+                "CONSUMER_REGISTRY_INVALID",
+                f"{consumer_id}: unsupported implementation_kind {kind!r}",
+            )
+        executable = _registry_artifact_path(
+            path, consumer.get("executable_path"), f"{consumer_id} executable_path"
+        )
+        if not executable.is_file():
+            raise ContractFailure(
+                "CONSUMER_EXECUTABLE_ABSENT",
+                f"{consumer_id}: executable does not exist: {executable}",
+            )
+        executable_sha = check_hash(
+            str(consumer.get("executable_sha256", "")),
+            f"{consumer_id} executable",
+        )
+        actual_executable_sha = hash_file(executable)
+        if actual_executable_sha != executable_sha:
+            raise ContractFailure(
+                "CONSUMER_EXECUTABLE_HASH_MISMATCH",
+                f"{consumer_id}: executable hash is {actual_executable_sha}, "
+                f"expected {executable_sha}",
+            )
+        executable_bytes = consumer.get("executable_bytes")
+        if not isinstance(executable_bytes, int) or executable_bytes != executable.stat().st_size:
+            raise ContractFailure(
+                "CONSUMER_EXECUTABLE_SIZE_MISMATCH",
+                f"{consumer_id}: executable_bytes does not match {executable}",
+            )
+        if not isinstance(consumer.get("version"), str) or not consumer["version"]:
+            raise ContractFailure(
+                "CONSUMER_REGISTRY_INVALID", f"{consumer_id}: version is absent"
+            )
+
+        settings = consumer.get("settings")
+        if not isinstance(settings, dict):
+            raise ContractFailure(
+                "CONSUMER_REGISTRY_INVALID", f"{consumer_id}: settings must be an object"
+            )
+        settings_sha = check_hash(
+            str(consumer.get("settings_sha256", "")), f"{consumer_id} settings"
+        )
+        actual_settings_sha = hash_bytes(canonical_json(settings))
+        if actual_settings_sha != settings_sha:
+            raise ContractFailure(
+                "CONSUMER_SETTINGS_HASH_MISMATCH",
+                f"{consumer_id}: settings hash is {actual_settings_sha}, expected {settings_sha}",
+            )
+        invocation = consumer.get("invocation_template")
+        if (
+            not isinstance(invocation, list)
+            or not invocation
+            or not all(isinstance(value, str) for value in invocation)
+            or not any("{input_tiff}" in value for value in invocation)
+        ):
+            raise ContractFailure(
+                "CONSUMER_INVOCATION_INVALID",
+                f"{consumer_id}: invocation_template must contain {{input_tiff}}",
+            )
+        expected_input_contract = {
+            "kind": "exact-common-tiff-bytes",
+            "file_sha256_from": "input_manifest.output.file_sha256",
+            "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256",
+        }
+        if consumer.get("input_contract") != expected_input_contract:
+            raise ContractFailure(
+                "CONSUMER_INPUT_CONTRACT_MISMATCH",
+                f"{consumer_id}: input contract is not the frozen exact-byte contract",
+            )
+
+        source_revision = consumer.get("source_revision")
+        build_manifest_path: str | None = None
+        build_manifest_sha: str | None = None
+        if kind == "source-build":
+            if (
+                not isinstance(source_revision, str)
+                or len(source_revision) != 40
+                or any(ch not in "0123456789abcdefABCDEF" for ch in source_revision)
+            ):
+                raise ContractFailure(
+                    "CONSUMER_SOURCE_PIN_INVALID",
+                    f"{consumer_id}: source-build requires a full 40-hex source_revision",
+                )
+            build_manifest = _registry_artifact_path(
+                path,
+                consumer.get("build_manifest_path"),
+                f"{consumer_id} build_manifest_path",
+            )
+            if not build_manifest.is_file():
+                raise ContractFailure(
+                    "CONSUMER_BUILD_MANIFEST_ABSENT",
+                    f"{consumer_id}: build manifest does not exist: {build_manifest}",
+                )
+            build_manifest_sha = check_hash(
+                str(consumer.get("build_manifest_sha256", "")),
+                f"{consumer_id} build manifest",
+            )
+            actual_build_sha = hash_file(build_manifest)
+            if actual_build_sha != build_manifest_sha:
+                raise ContractFailure(
+                    "CONSUMER_BUILD_MANIFEST_HASH_MISMATCH",
+                    f"{consumer_id}: build manifest hash is {actual_build_sha}, "
+                    f"expected {build_manifest_sha}",
+                )
+            build_manifest_path = str(build_manifest)
+        elif source_revision is not None:
+            if (
+                not isinstance(source_revision, str)
+                or len(source_revision) != 40
+                or any(ch not in "0123456789abcdefABCDEF" for ch in source_revision)
+            ):
+                raise ContractFailure(
+                    "CONSUMER_SOURCE_PIN_INVALID",
+                    f"{consumer_id}: source_revision is not full 40-hex",
+                )
+
+        frozen.append(
+            {
+                "consumer_id": consumer_id,
+                "role": consumer["role"],
+                "required": consumer["required"],
+                "status": "FROZEN",
+                "implementation_kind": kind,
+                "version": consumer["version"],
+                "executable_path": str(executable),
+                "executable_bytes": executable_bytes,
+                "executable_sha256": executable_sha,
+                "source_revision": (
+                    source_revision.lower() if isinstance(source_revision, str) else None
+                ),
+                "build_manifest_path": build_manifest_path,
+                "build_manifest_sha256": build_manifest_sha,
+                "settings": settings,
+                "settings_sha256": settings_sha,
+                "invocation_template": invocation,
+                "input_contract": expected_input_contract,
+            }
+        )
+
+    if required_count == 0:
+        raise ContractFailure(
+            "CONSUMER_REGISTRY_NO_REQUIRED_CONSUMERS",
+            "consumer registry must contain at least one required consumer",
+        )
+
+    return {
+        "schema": CONSUMER_REGISTRY_SCHEMA,
+        "status": "FROZEN",
+        "track": "common-merge",
+        "registry_id": registry["registry_id"],
+        "version": registry["version"],
+        "consumer_count": len(consumers),
+        "required_consumer_count": required_count,
+        "consumers": frozen,
+    }
 
 
 def _tiff_entry(tag: int, kind: int, count: int, value: int | bytes) -> bytes:
@@ -923,8 +1172,11 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
     output_path = Path(args.output)
     pattern_path = Path(args.pattern_map)
     pattern_manifest_path = Path(args.pattern_manifest)
+    consumer_registry_path = Path(args.consumer_registry)
     settings = validate_settings(settings_path)
     freeze = verify_freeze(freeze_path, settings_path, icc_path)
+    consumer_registry = validate_consumer_registry(consumer_registry_path)
+    consumer_registry_sha = hash_file(consumer_registry_path)
     if not pattern_path.is_file() or not pattern_manifest_path.is_file():
         raise ContractFailure(
             "PATTERN_MAP_REQUIRED",
@@ -1024,6 +1276,15 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
             "manifest_sha256": pattern_manifest_sha,
             "manifest": pattern,
         },
+        # Consumer identity belongs in the manifest, not the TIFF. Keeping the
+        # roster out of ImageDescription means adding a comparator cannot alter
+        # the common bytes every consumer is required to receive.
+        "consumer_registry": {
+            "path": str(consumer_registry_path.resolve()),
+            "sha256": consumer_registry_sha,
+            **consumer_registry,
+            "receipt_schema": CONSUMER_RECEIPT_SCHEMA,
+        },
         "output": {
             "path": str(output_path.resolve()),
             "width": inspected["width"],
@@ -1042,13 +1303,13 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
-def failure_record(exc: BaseException) -> dict[str, Any]:
+def failure_record(exc: BaseException, schema: str = MANIFEST_SCHEMA) -> dict[str, Any]:
     if isinstance(exc, ContractFailure):
         failure_class = exc.failure_class
     else:
         failure_class = "UNEXPECTED_EXCEPTION"
     return {
-        "schema": MANIFEST_SCHEMA,
+        "schema": schema,
         "status": "FAIL",
         "failure_class": failure_class,
         "reason": str(exc),
@@ -1071,6 +1332,10 @@ def parse_args() -> argparse.Namespace:
     inspect.add_argument("--input", required=True)
     inspect.add_argument("--out", required=True)
 
+    consumers = subparsers.add_parser("verify-consumers")
+    consumers.add_argument("--registry", required=True)
+    consumers.add_argument("--out", required=True)
+
     render_parser = subparsers.add_parser("render")
     render_parser.add_argument("--input", required=True)
     render_parser.add_argument("--output", required=True)
@@ -1080,6 +1345,7 @@ def parse_args() -> argparse.Namespace:
     render_parser.add_argument("--freeze", required=True)
     render_parser.add_argument("--pattern-map", required=True)
     render_parser.add_argument("--pattern-manifest", required=True)
+    render_parser.add_argument("--consumer-registry", required=True)
     return parser.parse_args()
 
 
@@ -1110,6 +1376,15 @@ def main() -> int:
             report_path = Path(args.out)
             result = inspect_common_tiff(Path(args.input))
             write_json(report_path, result)
+        elif args.command == "verify-consumers":
+            report_path = Path(args.out)
+            registry_path = Path(args.registry)
+            result = {
+                **validate_consumer_registry(registry_path),
+                "registry_path": str(registry_path.resolve()),
+                "registry_sha256": hash_file(registry_path),
+            }
+            write_json(report_path, result)
         elif args.command == "render":
             report_path = Path(args.manifest)
             result = render(args)
@@ -1119,7 +1394,12 @@ def main() -> int:
         print(json.dumps(result, sort_keys=True))
         return 0
     except BaseException as exc:
-        result = failure_record(exc)
+        failure_schema = (
+            CONSUMER_REGISTRY_SCHEMA
+            if args.command == "verify-consumers"
+            else MANIFEST_SCHEMA
+        )
+        result = failure_record(exc, failure_schema)
         if report_path is not None:
             try:
                 write_json(report_path, result)

@@ -1,0 +1,6 @@
+{
+  "failure_class": "CONSUMER_REGISTRY_NOT_FROZEN",
+  "reason": "consumer registry status is 'BLOCKED', not 'FROZEN'",
+  "schema": "m165-common-input-consumer-registry-v1",
+  "status": "FAIL"
+}

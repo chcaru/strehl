@@ -1,0 +1,7 @@
+{
+  "command": [
+    "synthetic-build"
+  ],
+  "schema": "m165-synthetic-consumer-build-v1",
+  "source_revision": "0000000000000000000000000000000000000001"
+}

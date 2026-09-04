@@ -12,18 +12,20 @@ the same value.
 
 That is not a competitive result. No eligible deterministic-pattern map made from
 independent matching dark and flat captures exists. The converter therefore refuses
-to emit a common-merge TIFF, and no campaign/common-input identity can yet be tested.
-Per the live scorecard, **M1 and M9 remain `UNMEASURED`**. All downstream competitive
-work must continue to treat the common-merge package as absent.
+to emit a common-merge TIFF. Separately, no complete consumer freeze can yet be
+created because the fork has no reproducible binary. No campaign/common-input
+identity can therefore be tested. Per the live scorecard, **M1 and M9 remain
+`UNMEASURED`**. All downstream competitive work must continue to treat the
+common-merge package as absent.
 
 The governing text was re-read after its two-track amendment:
 `docs/proposals/2026-09-sota-scorecard.md` §1.2. The copy used for the final audit had
-SHA-256 `ad223867c20e9abcc0b6b576ec1471fa7a9ff34259c9e64f8fc41c003f9ac03b`;
+SHA-256 `7128f9bbc9cdab2012a5c0829dbb54683eafe3886854bc54e7375af8bfd72f87`;
 the hash is independently recorded in
 `experiments/M165-common-input/out/independent-hash-audit.json`. Section 1.2 names
 common-merge as the sole publication track, makes the missing map fatal to M1/M9,
 and requires either a Strehl TIFF adapter or hash identity at the internal pre-merge
-boundary (`2026-09-sota-scorecard.md:287-310`).
+boundary (`2026-09-sota-scorecard.md:288-320`).
 
 ## What already existed and was reused
 
@@ -54,25 +56,36 @@ boundary (`2026-09-sota-scorecard.md:287-310`).
    M71 measured PRNU and retained flat-analysis arrays, but did not emit the paired
    dark-offset plus flat-gain map demanded by §1.2. The measured file census is in
    `experiments/M165-common-input/out/pattern-map-audit.json`.
+6. **The fork is not currently a runnable consumer.**
+   `docs/research/M162-noise-regression.md` §1-§2, committed at `ed5fa20b`,
+   establishes that its archived output consumed 105 Lightroom-developed TIFFs,
+   has no producing executable or source revision bound to it, and cannot stand in
+   for a common-input rerun. The first retained source commit is
+   `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`.
 
 ## What was built
 
 | Artifact | Role |
 |---|---|
 | `experiments/M165-common-input/converter.py` | Fail-closed converter, frozen ICC generator/inspector, deterministic TIFF writer/inspector, pattern-map validator, and manifest writer. |
+| `experiments/M165-common-input/.gitattributes` | Pins evidence text to LF and fixture/profile payloads to binary so committed hashes survive checkout. |
 | `experiments/M165-common-input/settings-v1.json` | Exact v1 conversion settings. |
 | `experiments/M165-common-input/converter-freeze-v1.json` | Converter/runtime freeze made before any render attempt. |
 | `experiments/M165-common-input/linear-prophoto-d50-v1.icc` | Deterministically generated linear ProPhoto/ROMM RGB D50 ICC v2 profile. |
 | `experiments/M165-common-input/pattern-map-manifest-template.json` | Required map/source/capture/estimator contract; deliberately `UNFROZEN`. |
+| `experiments/M165-common-input/consumer-registry-template.json` | Arbitrary-length consumer freeze with a first-class executable hash per consumer. |
+| `experiments/M165-common-input/consumer-registry-fork-blocked.json` | Fail-closed record of the fork's known source pin and missing producing binary. |
+| `experiments/M165-common-input/consumer-receipt-template.json` | Per-run binding from one frozen consumer binary to the exact TIFF file and pixel hashes it received. |
 | `crates/strehl-raw/src/common_tiff.rs` | Strict TIFF parser, payload/internal hashing, provenance checks, and RGB merge-plane adapter. |
 | `crates/strehl-cli/src/bin/strehl-common-input.rs` | Fail-closed verifier; optionally passes the hashed planes into the actual core `BandMerge`. |
 | `experiments/M165-common-input/commission.py` | Null, mutation, repair, malformed-input, pattern degradation, and pattern improvement commissioning. |
 | `experiments/M165-common-input/development_probe.py` | One-frame in-memory probe on a burned development RAW; cannot emit a TIFF. |
 | `experiments/M165-common-input/out/` | Machine-readable freeze, preflight, commissioning, development-probe, pattern-audit, and independent-hash evidence. |
 
-The renderer is at `converter.py:918`; it validates the frozen converter and map
-before pixel development. The TIFF writer and independent Python parser are at
-`converter.py:438-637`. The strict Rust parser and identity boundary are at
+The renderer is at `converter.py:1167`; it validates the frozen converter, consumer
+registry, and map before pixel development. Consumer validation is at
+`converter.py:441-686`; the TIFF writer and independent Python parser begin at
+`converter.py:687`. The strict Rust parser and identity boundary are at
 `common_tiff.rs:97-430`; the actual core-ingestion probe is at
 `strehl-common-input.rs:135-165`.
 
@@ -80,7 +93,7 @@ before pixel development. The TIFF writer and independent Python parser are at
 
 `converter-freeze-v1.json` records:
 
-- converter ID/version: `m165-libraw-common-linear` `1.0.0`;
+- converter ID/version: `m165-libraw-common-linear` `1.1.0`;
 - Python `3.12.10`;
 - rawpy `0.27.0`;
 - LibRaw `0.22.1`;
@@ -89,13 +102,13 @@ before pixel development. The TIFF writer and independent Python parser are at
 - rawpy native extension SHA-256
   `51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897`;
 - converter source SHA-256
-  `91c5a072a49d61ba603b19cf699cab12d13d54b9831687c73e98a03c095e3043`;
+  `b99518cb0338bd75b84aac96cf56ffabd87e9b9ea3e91118e96dfd5f75664b5a`;
 - settings SHA-256
-  `a98782442233cfbe567af18d724083a7cdd7c8c85116ac76d71ba87ea49b9587`;
+  `1f9f39570b0ad5ab3cce6f41561870ba0e8d42efa4c4e97e74ce187ec4bd320f`;
 - ICC SHA-256
   `16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef`;
 - composite executable-bundle SHA-256
-  `f279733cf12053a8d59db297f9e20f18e9d1ee232661c5b0c6d76de0de3f7dd6`.
+  `09987d67aee229b6075001748bcd20f17b0cf47e0e42f238a9fc8940595fd95d`.
 
 The bundle digest covers the converter source, Python executable, rawpy Python
 module and native extension, NumPy module and native extension, ExifTool executable,
@@ -114,10 +127,10 @@ For each source, the renderer:
 3. verifies a frozen pattern-map manifest, disjoint non-empty dark/flat source
    sets, estimator executable hash, capture match, sensor fingerprint, map hash,
    shape, float32 types, finite offsets, and positive gains
-   (`converter.py:638-753`);
+   (`converter.py:887-1002`);
 4. computes, in sensor coordinates,
    `black + clip((raw - black - offset_dn) * gain, 0, white - black)`, with
-   `numpy.rint` to `u16` (`converter.py:754-780`);
+   `numpy.rint` to `u16`;
 5. tells LibRaw explicitly that total black is
    `user_black=0 + user_cblack=[camera channel levels]`, and supplies the camera
    white as `user_sat`;
@@ -127,7 +140,7 @@ For each source, the renderer:
 Auto WB, auto brightness, exposure shift, maximum auto-adjustment, FBDD/wavelet/
 median denoising, chromatic-aberration scaling, bad-pixel repair, and every
 sidecar-driven or cosmetic development operation are disabled in
-`settings-v1.json` and enforced by `converter.py:782-816`.
+`settings-v1.json` and enforced by the frozen postprocess argument builder.
 
 ### TIFF encoding
 
@@ -136,6 +149,10 @@ interleaved RGB strip. The only IFD entries are the structural fields,
 `ImageDescription` canonical provenance, and `ICCProfile`. Compression is `1`
 (none), `BitsPerSample=[16,16,16]`, `SampleFormat=[1,1,1]`,
 `PhotometricInterpretation=2`, and `PlanarConfiguration=1`.
+
+The rendered envelope is `m165-common-input-manifest-v2`; its consumer registry is
+`m165-common-input-consumer-registry-v1`, and per-consumer execution records use
+`m165-common-input-consumer-receipt-v1`.
 
 The manifest binds:
 
@@ -146,10 +163,29 @@ The manifest binds:
   source hashes, and estimator identity;
 - output dimensions, structural TIFF values, ICC hash, pixel-payload hash, and
   whole-file hash.
+- one arbitrary-length frozen consumer registry, its whole-file hash, and for
+  every consumer its unique ID, role, required status, implementation kind,
+  version, first-class executable path/size/SHA-256, canonical settings hash,
+  invocation template, exact-byte input contract, and optional source/build pins.
 
 The embedded canonical provenance binds source, converter, settings, ICC, map, and
 map-manifest hashes. The Rust verifier requires every one of those bindings as well
 as the expected file, payload, and ICC hashes.
+
+Consumer identity is deliberately bound in the input manifest, not embedded in the
+TIFF. A consumer roster is run provenance, not pixel provenance: adding a fourth
+consumer must not change the bytes everyone receives. The registry is frozen and
+hashed before rendering; the rendered input manifest records that hash and the
+validated normalized entries. A per-consumer receipt then binds the same registry,
+consumer executable/settings hashes, input-manifest hash, TIFF file hash, TIFF pixel
+hash, invocation, and consumer output hash. The list has no expected cardinality or
+hard-coded product names.
+
+For a `source-build` consumer, validation additionally requires a full 40-hex source
+revision and a separately hashed build manifest. Thus a future fork rerun must bind
+both `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6` (or a deliberately selected later
+pin) and the exact executable that was actually run. The historical May 10 output
+cannot satisfy that field.
 
 ## Measured TIFF properties
 
@@ -188,7 +224,7 @@ not be scored.
 The commissioned 7 x 5 synthetic TIFF has:
 
 - whole-file SHA-256
-  `a0a1e64e353d5f916b537e1454385a2a6ac6bf5513c5553517a62ec918009788`;
+  `ff2ced74ea786caf45aa5fc433e4c493cc83e91a2f76639a97647a379b45ad59`;
 - pixel-payload SHA-256
   `17258eb77d5692e323acb659ddc1787b275fabf71cd170e503c5d9cb65c5977b`;
 - Rust-decoded internal `u16` SHA-256: the same
@@ -200,7 +236,7 @@ The commissioned 7 x 5 synthetic TIFF has:
 `core_merge_exercised=true` proves those hashed allocations were accepted by the
 actual Strehl core merge, not merely compared inside a standalone TIFF parser. The
 commissioned verifier binary SHA-256 is
-`32c22234f3e0f11063de77136c99818825a41e78fe6edb646026a45d3181ada0`.
+`a90ff446914376062489f7f25cddd548298d8c803fee47e5e8d6664dadc9791f`.
 PowerShell/.NET independently recomputed the whole-file and strip-payload hashes;
 all cross-checks pass in `out/independent-hash-audit.json`.
 
@@ -212,6 +248,10 @@ common-input boundary; the shipping `strehl stack` ARW path remains CFA-specific
 Alignment, RGB noise modelling, and a production RGB-output path still need a
 frozen common-track integration before a competitive stack can run.
 
+**STREHL BYTE IDENTITY IMPACT: NONE.** Consumer registration does not alter the
+TIFF or the Strehl payload/internal/pre-merge hash proof. It adds a separate frozen
+record that identifies which Strehl executable consumed that TIFF.
+
 ## Commissioning
 
 `experiments/M165-common-input/out/commission/commission.json` is `PASS`.
@@ -222,10 +262,14 @@ frozen common-track integration before a competitive stack can run.
 | Movable null | Undisturbed correction error `0.0 DN`; planted fixed-pattern disturbance with null correction `7.025 DN` mean absolute error. |
 | Planted degradation | Wrong-sign/inverse map increased error to `14.1875 DN`. |
 | Planted improvement | Correct map reduced error from `7.025 DN` to `0.0 DN`. |
-| Single flipped bit | Bit `0x01` at inert TIFF padding byte offset `172`; payload hash stayed `17258e…`, file hash moved to `6716d1f8c8a74f0ae3003d553136baeff3dbd98f2ee05f000c92638b41c36241`; verifier returned `FAIL`. |
-| One-LSB pixel change | First sample `1000 -> 1001` at offset `1312`; payload hash moved to `f229a267899a682ab9b4fffd8533c1429aa893d6f236224ee7d1f5cd43abbd68`, file hash to `55b572cf6c5c0ae8db84ef794717413e679f4e1292efcbe7d1a48172611f91e7`; verifier returned `FAIL`. |
+| Single flipped bit | Bit `0x01` at inert TIFF padding byte offset `172`; payload hash stayed `17258e…`, file hash moved to `5b4c5b120429eec091bc7486edcce3fa4448525c01d20d4133b2b4506383a26f`; verifier returned `FAIL`. |
+| One-LSB pixel change | First sample `1000 -> 1001` at offset `1312`; payload hash moved to `f229a267899a682ab9b4fffd8533c1429aa893d6f236224ee7d1f5cd43abbd68`, file hash to `74bac69bdf27946a0f1a61cfa7129e1d1c5284b7fba8d922bed4ba10c354aec8`; verifier returned `FAIL`. |
 | Repaired input | Restoring the baseline bytes returned `PASS`. |
 | Malformed TIFF | Exit `1` with structured `status=FAIL`; no throw escaped. |
+| Comparator-count null | Valid 3-consumer and 4-consumer registries with the same registry ID both passed; adding only the fourth record moved the registry hash from `6af02e0600fc7f397895b13c4c6ca64cb778c8431bcefe0a69ac4a6513541b29` to `1ce07bb34d980259295ba798bf9e02fe87f75165c4c7c73534b4fa5b3b478cf6`. |
+| Empty-required-set guard | A registry with consumers but none marked required produced `CONSUMER_REGISTRY_NO_REQUIRED_CONSUMERS`. |
+| Consumer planted degradation | A one-bit mutation of the fourth executable produced `CONSUMER_EXECUTABLE_HASH_MISMATCH`. |
+| Consumer planted improvement | Restoring the fourth executable returned the same 4-consumer registry to PASS. |
 
 ## Pattern-map finding and required capture
 
@@ -263,12 +307,15 @@ precision.
 - Missing-map render preflight: expected exit `1`,
   `failure_class=PATTERN_MAP_REQUIRED`, and no TIFF created
   (`out/campaign-preflight.json`).
+- Fork consumer preflight: expected exit `1`,
+  `failure_class=CONSUMER_REGISTRY_NOT_FROZEN`
+  (`out/consumer-registry-preflight.json`).
 - Independent hash audit: **PASS**.
 
-**Blocked on compute: NO.** The current blocker is missing calibration photons, not
-host capacity. Once an eligible map exists, the full-stack common-TIFF render and
-per-frame core identity run will be bulk decode/I/O and must wait for a released
-quiet window.
+**Blocked on compute: NO.** The current blockers are missing calibration photons and
+the fork's missing reproducible executable, not host capacity. Once both freezes
+exist, the full-stack common-TIFF render and per-frame core identity run will be bulk
+decode/I/O and must wait for a released quiet window.
 
 ## Residual doubt
 
@@ -282,3 +329,6 @@ quiet window.
    independently.
 4. No comparator has consumed these fixture bytes. The fixture proves the Strehl
    boundary and verifier sensitivity only.
+5. The fork's archived output remains useful historical evidence only. Until a
+   source-built executable is hashed and registered, it cannot be a common-input
+   consumer.

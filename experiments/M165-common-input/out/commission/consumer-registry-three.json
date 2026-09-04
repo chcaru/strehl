@@ -1,0 +1,93 @@
+{
+  "consumers": [
+    {
+      "build_manifest_path": null,
+      "build_manifest_sha256": null,
+      "consumer_id": "synthetic-consumer-1",
+      "executable_bytes": 26,
+      "executable_path": "consumer-fixtures\\consumer-1.bin",
+      "executable_sha256": "4528015e7e6bbf53ea04a5518b33a13b3c208fdaeb40d5c3635d88be5a6c6f4a",
+      "implementation_kind": "installed-binary",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "consumer-fixtures\\consumer-1.bin",
+        "{input_tiff}"
+      ],
+      "required": true,
+      "role": "candidate",
+      "settings": {
+        "mode": "synthetic-1",
+        "workers": 1
+      },
+      "settings_sha256": "24537178634e8d82292b905bf9196c6cc49d29604ab088db43ad62948be4bcc4",
+      "source_revision": null,
+      "status": "FROZEN",
+      "version": "commission-v1"
+    },
+    {
+      "build_manifest_path": null,
+      "build_manifest_sha256": null,
+      "consumer_id": "synthetic-consumer-2",
+      "executable_bytes": 26,
+      "executable_path": "consumer-fixtures\\consumer-2.bin",
+      "executable_sha256": "b04d8230d15a190c7a0f53cc645f2a1cfd9652e91b3edb06be47a8abb9fc5e29",
+      "implementation_kind": "installed-binary",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "consumer-fixtures\\consumer-2.bin",
+        "{input_tiff}"
+      ],
+      "required": true,
+      "role": "comparator",
+      "settings": {
+        "mode": "synthetic-2",
+        "workers": 2
+      },
+      "settings_sha256": "308b58ecbfb2766b70a54a05a4392a21ef1395dd61e44a904d4ea9dd7a481fea",
+      "source_revision": null,
+      "status": "FROZEN",
+      "version": "commission-v1"
+    },
+    {
+      "build_manifest_path": null,
+      "build_manifest_sha256": null,
+      "consumer_id": "synthetic-consumer-3",
+      "executable_bytes": 26,
+      "executable_path": "consumer-fixtures\\consumer-3.bin",
+      "executable_sha256": "6dde2ad5a31c9cbddc3a046d0d83fa9d275b48794ce4e4853c8dc9778c4cb75f",
+      "implementation_kind": "installed-binary",
+      "input_contract": {
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "kind": "exact-common-tiff-bytes",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "invocation_template": [
+        "consumer-fixtures\\consumer-3.bin",
+        "{input_tiff}"
+      ],
+      "required": true,
+      "role": "comparator",
+      "settings": {
+        "mode": "synthetic-3",
+        "workers": 3
+      },
+      "settings_sha256": "d606348e129dacb9aa09931d6f0e61852f2e11100352888e8a40623c4741c113",
+      "source_revision": null,
+      "status": "FROZEN",
+      "version": "commission-v1"
+    }
+  ],
+  "registry_id": "m165-synthetic-cardinality-probe",
+  "schema": "m165-common-input-consumer-registry-v1",
+  "status": "FROZEN",
+  "track": "common-merge",
+  "version": "1"
+}

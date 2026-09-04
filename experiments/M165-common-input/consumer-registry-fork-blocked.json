@@ -1,0 +1,45 @@
+{
+  "schema": "m165-common-input-consumer-registry-v1",
+  "status": "BLOCKED",
+  "track": "common-merge",
+  "registry_id": "fork-rebuild-prerequisite",
+  "version": "1",
+  "registry_complete": false,
+  "consumers": [
+    {
+      "consumer_id": "focus-stack-fork",
+      "role": "comparator",
+      "required": true,
+      "status": "BLOCKED_NO_REPRODUCIBLE_BINARY",
+      "implementation_kind": "source-build",
+      "version": null,
+      "executable_path": null,
+      "executable_bytes": null,
+      "executable_sha256": null,
+      "source_revision": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+      "build_manifest_path": null,
+      "build_manifest_sha256": null,
+      "settings": {
+        "input": "common-merge linear TIFF",
+        "mode": "not yet frozen"
+      },
+      "settings_sha256": null,
+      "invocation_template": [],
+      "input_contract": {
+        "kind": "exact-common-tiff-bytes",
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256"
+      },
+      "historical_output_sha256": "8636c20d73ca0cb1f57db89bf8553abc166e0fbc517e5c62a07c74dee509066e",
+      "historical_input": "105 Lightroom-developed, gamma-encoded, tone-curved TIFFs",
+      "blocker": "Build the pinned source, hash the producing executable, freeze settings and invocation, then replace this blocked record in the complete registry."
+    }
+  ],
+  "evidence": {
+    "path": "docs/research/M162-noise-regression.md",
+    "sections": [
+      "1",
+      "2"
+    ]
+  }
+}

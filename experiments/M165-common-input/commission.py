@@ -110,6 +110,165 @@ def pattern_probe() -> dict[str, object]:
     }
 
 
+def consumer_registry_probe(out: Path) -> dict[str, object]:
+    fixture_dir = out / "consumer-fixtures"
+    fixture_dir.mkdir(parents=True, exist_ok=True)
+    build_manifest = fixture_dir / "source-build-manifest.json"
+    converter.write_json(
+        build_manifest,
+        {
+            "schema": "m165-synthetic-consumer-build-v1",
+            "source_revision": "0000000000000000000000000000000000000001",
+            "command": ["synthetic-build"],
+        },
+    )
+    input_contract = {
+        "kind": "exact-common-tiff-bytes",
+        "file_sha256_from": "input_manifest.output.file_sha256",
+        "pixel_sha256_from": "input_manifest.output.pixel_payload_sha256",
+    }
+    binaries: list[Path] = []
+    consumers: list[dict[str, object]] = []
+    for index in range(4):
+        binary = fixture_dir / f"consumer-{index + 1}.bin"
+        binary.write_bytes(f"M165 synthetic consumer {index + 1}\n".encode("ascii"))
+        binaries.append(binary)
+        registry_binary_path = str(Path("consumer-fixtures") / binary.name)
+        settings = {"mode": f"synthetic-{index + 1}", "workers": index + 1}
+        consumer: dict[str, object] = {
+            "consumer_id": f"synthetic-consumer-{index + 1}",
+            "role": "candidate" if index == 0 else "comparator",
+            "required": True,
+            "status": "FROZEN",
+            "implementation_kind": "source-build" if index == 3 else "installed-binary",
+            "version": "commission-v1",
+            "executable_path": registry_binary_path,
+            "executable_bytes": binary.stat().st_size,
+            "executable_sha256": converter.hash_file(binary),
+            "source_revision": (
+                "0000000000000000000000000000000000000001" if index == 3 else None
+            ),
+            "build_manifest_path": (
+                str(Path("consumer-fixtures") / build_manifest.name)
+                if index == 3
+                else None
+            ),
+            "build_manifest_sha256": (
+                converter.hash_file(build_manifest) if index == 3 else None
+            ),
+            "settings": settings,
+            "settings_sha256": converter.hash_bytes(converter.canonical_json(settings)),
+            "invocation_template": [registry_binary_path, "{input_tiff}"],
+            "input_contract": input_contract,
+        }
+        consumers.append(consumer)
+
+    four_path = out / "consumer-registry-four.json"
+    four = {
+        "schema": converter.CONSUMER_REGISTRY_SCHEMA,
+        "status": "FROZEN",
+        "track": "common-merge",
+        "registry_id": "m165-synthetic-cardinality-probe",
+        "version": "1",
+        "consumers": consumers,
+    }
+    converter.write_json(four_path, four)
+    four_summary = converter.validate_consumer_registry(four_path)
+    four_sha = converter.hash_file(four_path)
+
+    three_path = out / "consumer-registry-three.json"
+    three = {
+        **four,
+        "consumers": consumers[:3],
+    }
+    converter.write_json(three_path, three)
+    three_summary = converter.validate_consumer_registry(three_path)
+    three_sha = converter.hash_file(three_path)
+
+    no_required_path = out / "consumer-registry-no-required.json"
+    no_required = {
+        **three,
+        "registry_id": "m165-synthetic-no-required-consumers",
+        "consumers": [{**consumer, "required": False} for consumer in consumers[:3]],
+    }
+    converter.write_json(no_required_path, no_required)
+    try:
+        converter.validate_consumer_registry(no_required_path)
+    except converter.ContractFailure as exc:
+        no_required_result = {
+            "status": "FAIL",
+            "failure_class": exc.failure_class,
+            "reason": str(exc),
+        }
+    else:
+        no_required_result = {
+            "status": "UNEXPECTED_PASS",
+            "failure_class": None,
+            "reason": None,
+        }
+
+    original = binaries[3].read_bytes()
+    changed = bytearray(original)
+    changed[0] ^= 0x01
+    binaries[3].write_bytes(changed)
+    try:
+        converter.validate_consumer_registry(four_path)
+    except converter.ContractFailure as exc:
+        degradation = {
+            "status": "FAIL",
+            "failure_class": exc.failure_class,
+            "reason": str(exc),
+        }
+    else:
+        degradation = {
+            "status": "UNEXPECTED_PASS",
+            "failure_class": None,
+            "reason": None,
+        }
+    finally:
+        binaries[3].write_bytes(original)
+
+    repaired_summary = converter.validate_consumer_registry(four_path)
+    checks = {
+        "three_consumers_pass": three_summary["consumer_count"] == 3,
+        "four_consumers_pass": four_summary["consumer_count"] == 4,
+        "fourth_consumer_moves_registry_hash": three_sha != four_sha,
+        "no_required_consumers_fail": no_required_result["failure_class"]
+        == "CONSUMER_REGISTRY_NO_REQUIRED_CONSUMERS",
+        "binary_mutation_fails": degradation["failure_class"]
+        == "CONSUMER_EXECUTABLE_HASH_MISMATCH",
+        "binary_restoration_passes": repaired_summary["consumer_count"] == 4,
+        "fourth_consumer_is_source_build": four_summary["consumers"][3][
+            "implementation_kind"
+        ]
+        == "source-build",
+        "fourth_consumer_has_first_class_executable_hash": len(
+            str(four_summary["consumers"][3]["executable_sha256"])
+        )
+        == 64,
+    }
+    return {
+        "status": "PASS" if all(checks.values()) else "FAIL",
+        "checks": checks,
+        "three_consumer_registry": {
+            "path": str(three_path.resolve()),
+            "sha256": three_sha,
+            "summary": three_summary,
+        },
+        "four_consumer_registry": {
+            "path": str(four_path.resolve()),
+            "sha256": four_sha,
+            "summary": four_summary,
+        },
+        "no_required_consumers": no_required_result,
+        "planted_degradation": degradation,
+        "planted_improvement": {
+            "status": "PASS",
+            "summary": repaired_summary,
+        },
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--verifier", required=True)
@@ -200,6 +359,7 @@ def main() -> int:
     )
 
     pattern = pattern_probe()
+    consumers = consumer_registry_probe(out)
     checks = {
         "baseline_passes": baseline["exit_code"] == 0
         and baseline["report"].get("status") == "PASS",
@@ -222,9 +382,10 @@ def main() -> int:
         "malformed_degrades_to_fail": malformed["exit_code"] != 0
         and malformed["report"].get("status") == "FAIL",
         "pattern_probe_passes": pattern["status"] == "PASS",
+        "consumer_registry_probe_passes": consumers["status"] == "PASS",
     }
     report = {
-        "schema": "m165-common-input-commission-v1",
+        "schema": "m165-common-input-commission-v2",
         "status": "PASS" if all(checks.values()) else "FAIL",
         "working_directory": str(Path.cwd()),
         "complete_invocation": [
@@ -261,6 +422,7 @@ def main() -> int:
         "repaired_improvement": repaired,
         "malformed_input": malformed,
         "pattern_correction_probe": pattern,
+        "consumer_registry_probe": consumers,
     }
     converter.write_json(out / "commission.json", report)
     print(json.dumps(report, sort_keys=True))

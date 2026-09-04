@@ -1,0 +1,17 @@
+{
+  "schema": "m165-common-input-consumer-receipt-v1",
+  "status": "UNMEASURED",
+  "consumer_registry_sha256": null,
+  "consumer_id": null,
+  "consumer_executable_sha256": null,
+  "consumer_settings_sha256": null,
+  "input_manifest_sha256": null,
+  "input_path": null,
+  "input_file_sha256": null,
+  "input_pixel_payload_sha256": null,
+  "complete_invocation": [],
+  "working_directory": null,
+  "output_path": null,
+  "output_sha256": null,
+  "exit_code": null
+}
