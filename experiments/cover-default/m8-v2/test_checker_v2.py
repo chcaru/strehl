@@ -911,10 +911,20 @@ class OutputAndEvidenceTests(unittest.TestCase):
             image = np.rint(normalized * 65535.0).astype(np.uint16).reshape(1, 1, 3)
             tiff = arm.write_tiff(image)
 
-            correct, _ = arm.adjudicate(
+            correct, correct_output = arm.adjudicate(
                 tiff, "crop-correct", crop=m8.CropRect(1, 1, 1, 1)
             )
             self.assertEqual(correct["m8_o"]["violations"], 0)
+            mismatched_result = json.loads(
+                (correct_output / "result.json").read_text("utf-8")
+            )
+            mismatched_result["crop"]["x"] = 2
+            (correct_output / "result.json").write_text(
+                json.dumps(mismatched_result, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(m8.Refusal, "crop disagrees"):
+                m8.verify_result(correct_output / "result.json")
             wrong, _ = arm.adjudicate(
                 tiff, "crop-wrong-origin", crop=m8.CropRect(3, 1, 1, 1)
             )

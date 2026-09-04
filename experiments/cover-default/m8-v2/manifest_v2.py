@@ -1673,6 +1673,40 @@ def validate_plan(
     }
 
 
+def _verify_hash_record(row: Any, label: str) -> dict[str, Any]:
+    require(isinstance(row, dict), f"{label}: hash record is not an object")
+    require(
+        isinstance(row.get("path"), str)
+        and isinstance(row.get("bytes"), int)
+        and isinstance(row.get("sha256"), str),
+        f"{label}: incomplete hash record",
+    )
+    current = hash_record(Path(row["path"]))
+    require(
+        current["bytes"] == row["bytes"]
+        and current["sha256"] == row["sha256"],
+        f"{label}: identity changed",
+    )
+    return current
+
+
+def _arm_file_paths(root: Path, receipt_path: Path) -> set[Path]:
+    paths: set[Path] = set()
+    for directory, names, files in os.walk(root, followlinks=False):
+        names.sort()
+        files.sort()
+        for name in names:
+            path = Path(directory) / name
+            require(not path.is_symlink(), f"{path}: arm-directory symlink forbidden")
+        for name in files:
+            path = (Path(directory) / name).resolve()
+            require(not path.is_symlink(), f"{path}: arm-file symlink forbidden")
+            require(path.is_file(), f"{path}: arm entry is not a regular file")
+            if path != receipt_path:
+                paths.add(path)
+    return paths
+
+
 def verify_arm(receipt_path: Path) -> dict[str, Any]:
     receipt_path = receipt_path.resolve()
     receipt = read_json(receipt_path)
@@ -1682,26 +1716,184 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
         and receipt.get("version") == VERSION,
         f"{receipt_path}: unsupported arm receipt",
     )
-    verified = []
-    for row in receipt.get("files", []):
-        require(isinstance(row, dict), "receipt file row is not an object")
-        current = hash_record(Path(row["path"]))
-        require(
-            current["bytes"] == row["bytes"]
-            and current["sha256"] == row["sha256"],
-            f"{row['path']}: receipt identity changed",
-        )
-        verified.append(current)
-    source_trees = receipt.get("source_trees")
-    require(isinstance(source_trees, dict), "receipt has no source-tree identities")
+    required_fields = {
+        "arm",
+        "kind",
+        "case",
+        "mode",
+        "evidence_commit",
+        "source_commit",
+        "run_plan",
+        "input_manifest",
+        "prepare_receipt",
+        "binaries",
+        "outputs",
+        "source_trees",
+        "commands",
+        "trace",
+        "result",
+        "evidence_index",
+        "external_identity",
+        "reported_crop_rectangles",
+        "files",
+    }
+    require(
+        required_fields <= receipt.keys(),
+        f"{receipt_path}: missing receipt fields "
+        f"{sorted(required_fields - receipt.keys())}",
+    )
+    require(receipt.get("kind") in ("identity", "full"), "invalid arm kind")
+    require(receipt.get("mode") in ("scale", "crop"), "invalid arm mode")
+    require(
+        isinstance(receipt.get("arm"), str)
+        and receipt_path.name == "receipt.json"
+        and receipt_path.parent.name == receipt["arm"],
+        "receipt path does not match its arm identity",
+    )
+    arm_root = receipt_path.parent
+    output_root = arm_root.parent.parent
+
+    plan_record = _verify_hash_record(receipt["run_plan"], "run plan")
+    input_record = _verify_hash_record(
+        receipt["input_manifest"], "input manifest"
+    )
+    prepare_record = _verify_hash_record(
+        receipt["prepare_receipt"], "prepare receipt"
+    )
+    require(
+        Path(prepare_record["path"]) == output_root / "prepare.json",
+        "prepare receipt is not the selected private root's receipt",
+    )
+    validate_plan(
+        Path(plan_record["path"]),
+        Path(prepare_record["path"]),
+        Path(input_record["path"]),
+        output_root,
+    )
+    plan = read_json(Path(plan_record["path"]))
+    prepare = read_json(Path(prepare_record["path"]))
+    require(
+        receipt["source_commit"] == plan["source_commit"]
+        and receipt["source_commit"] == prepare["source_commit"],
+        "receipt source commit disagrees with plan/PREPARE",
+    )
+    repo = Path(plan["repo"]).resolve()
+    evidence_commit = exact_commit(repo, receipt["evidence_commit"])
+    require(
+        evidence_commit == receipt["evidence_commit"].lower(),
+        "receipt evidence commit is not its exact 40-hex commit",
+    )
+    committed_file(repo, evidence_commit, Path(plan_record["path"]))
+    committed_file(repo, evidence_commit, Path(input_record["path"]))
+
+    if receipt["kind"] == "identity":
+        entry = plan.get("identity")
+        require(isinstance(entry, dict), "run plan has no identity arm")
+    else:
+        entries = [
+            row
+            for row in plan.get("arms", [])
+            if isinstance(row, dict)
+            and row.get("case") == receipt["case"]
+            and row.get("mode") == receipt["mode"]
+        ]
+        require(len(entries) == 1, "run plan does not name exactly one receipt arm")
+        entry = entries[0]
+    require(
+        entry.get("kind") == receipt["kind"]
+        and entry.get("case") == receipt["case"]
+        and entry.get("mode") == receipt["mode"]
+        and Path(entry.get("root", "")).resolve() == arm_root,
+        "receipt arm context disagrees with the run plan",
+    )
+
+    binaries = receipt["binaries"]
+    require(
+        isinstance(binaries, dict)
+        and binaries == prepare.get("binaries")
+        and set(binaries) == {"uninstrumented", "instrumented", "fixture"},
+        "receipt binary identities disagree with PREPARE",
+    )
+    for name, row in binaries.items():
+        _verify_hash_record(row, f"{name} binary")
+
+    source_trees = receipt["source_trees"]
+    require(
+        isinstance(source_trees, dict)
+        and set(source_trees) == {"uninstrumented", "instrumented"},
+        "receipt has no complete prepared source-tree identities",
+    )
     for name, row in source_trees.items():
+        require(isinstance(row, dict) and row.get("root"), f"{name}: bad tree record")
         current = tree_audit(Path(row["root"]))
         require(
-            current["inventory_sha256"] == row["inventory_sha256"],
+            current == row,
             f"{name}: prepared source tree changed after rendering",
         )
 
+    file_rows = receipt["files"]
+    require(
+        isinstance(file_rows, list) and file_rows,
+        "receipt has no complete retained-file identities",
+    )
+    verified_files = [
+        _verify_hash_record(row, f"receipt file {index}")
+        for index, row in enumerate(file_rows)
+    ]
+    retained_paths = [Path(row["path"]).resolve() for row in verified_files]
+    require(
+        len(retained_paths) == len(set(retained_paths)),
+        "receipt has duplicate retained-file identities",
+    )
+    expected_lock = (
+        output_root / "locks" / f"{receipt['arm']}.lock.json"
+    ).resolve()
+    actual_arm_files = _arm_file_paths(arm_root, receipt_path)
+    require(
+        set(retained_paths) == actual_arm_files | {expected_lock},
+        "receipt retained-file set is incomplete or has extra paths",
+    )
+
+    outputs = receipt["outputs"]
+    require(
+        isinstance(outputs, dict)
+        and set(outputs)
+        == {"uninstrumented", "instrumented_off", "instrumented_on"},
+        "receipt has no complete three-way output identities",
+    )
+    output_hashes = []
+    for role in ("uninstrumented", "instrumented_off", "instrumented_on"):
+        row = _verify_hash_record(outputs[role], f"{role} output")
+        require(
+            Path(row["path"]).resolve()
+            == Path(entry["outputs"][role]).resolve(),
+            f"{role} output path disagrees with run plan",
+        )
+        output_hashes.append(row["sha256"])
+    require(
+        len(set(output_hashes)) == 1,
+        "receipt output-transparency hashes are not byte-identical",
+    )
+
     trace = receipt["trace"]
+    require(isinstance(trace, dict), "receipt has no trace record")
+    require(
+        Path(trace.get("trace_dir", "")).resolve()
+        == Path(
+            entry["render_commands"]["instrumented_on"]["environment"][
+                "STREHL_M8_V2_TRACE_DIR"
+            ]
+        ).resolve()
+        and Path(trace.get("inventory", "")).resolve()
+        == Path(entry["source_inventory"]).resolve(),
+        "receipt trace paths disagree with run plan",
+    )
+    require(
+        [value.upper() for value in trace.get("transparency_hashes", [])]
+        == output_hashes,
+        "trace transparency hashes do not bind the three receipt outputs",
+    )
+    _verify_hash_record(trace.get("audit"), "trace audit")
     current_trace = trace_audit(
         Path(trace["trace_dir"]),
         Path(trace["inventory"]),
@@ -1709,21 +1901,46 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
         trace["transparency_hashes"],
     )
     require(
-        sha256_bytes(canonical_json(current_trace)) == trace["audit_payload_sha256"],
+        sha256_bytes(canonical_json(current_trace))
+        == trace["audit_payload_sha256"],
         "current trace audit differs from the arm receipt",
     )
-    result = read_json(Path(receipt["result"]["path"]))
-    reports = receipt.get("reported_crop_rectangles")
+
+    result_record = _verify_hash_record(receipt["result"], "checker result")
+    expected_result_path = arm_root / "adjudication" / "result.json"
+    require(
+        Path(result_record["path"]).resolve() == expected_result_path.resolve(),
+        "checker result path disagrees with the arm root",
+    )
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from checker_v2 import verify_result as verify_checker_result
+
+    checker_verification = verify_checker_result(expected_result_path)
+    result = read_json(expected_result_path)
+    require(
+        result.get("capture") == receipt["case"]
+        and result.get("mode") == receipt["mode"],
+        "checker result context disagrees with receipt",
+    )
+    evidence_record = _verify_hash_record(
+        receipt["evidence_index"], "evidence index"
+    )
+    require(
+        Path(evidence_record["path"]).resolve()
+        == Path(checker_verification["evidence_index"]).resolve()
+        and evidence_record["sha256"]
+        == checker_verification["evidence_index_sha256"],
+        "receipt evidence index disagrees with checker verification",
+    )
+
+    reports = receipt["reported_crop_rectangles"]
     require(
         isinstance(reports, dict)
-        and set(reports) == {
-            "uninstrumented",
-            "instrumented_off",
-            "instrumented_on",
-        },
+        and set(reports)
+        == {"uninstrumented", "instrumented_off", "instrumented_on"},
         "receipt has no complete rendered Crop-rectangle reports",
     )
-    if receipt.get("mode") == "crop":
+    if receipt["mode"] == "crop":
         crop = result.get("crop")
         require(isinstance(crop, dict), "Crop result has no explicit rectangle")
         expected_crop = {
@@ -1741,14 +1958,26 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
             all(value is None for value in reports.values()),
             "non-Crop receipt contains a rendered Crop rectangle",
         )
+
+    external_identity = receipt["external_identity"]
+    if receipt["kind"] == "identity":
+        _verify_hash_record(external_identity, "external identity result")
+    else:
+        require(
+            external_identity is None,
+            "full arm unexpectedly carries an external identity result",
+        )
     return {
         "status": "VERIFIED",
         "receipt": hash_record(receipt_path),
-        "files": len(verified),
+        "files": len(verified_files),
         "trace_blocks": current_trace["observed_blocks"],
         "cartesian_product": current_trace["cartesian_product"],
-        "result": receipt["result"],
-        "evidence_index": receipt["evidence_index"],
+        "result": result_record,
+        "evidence_index": evidence_record,
+        "checker": checker_verification,
+        "source_commit": receipt["source_commit"],
+        "evidence_commit": evidence_commit,
     }
 
 

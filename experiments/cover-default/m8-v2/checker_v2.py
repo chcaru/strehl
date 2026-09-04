@@ -1655,7 +1655,7 @@ def verify_result(result_path: Path) -> dict[str, Any]:
         or index.get("version") != INDEX_VERSION
     ):
         raise Refusal(f"{index_path}: unsupported evidence index")
-    for key in ("capture", "mode", "sidecar_sha256"):
+    for key in ("capture", "mode", "sidecar_sha256", "crop"):
         if index.get(key) != result.get(key):
             raise Refusal(f"{index_path}: {key} disagrees with result")
     if index.get("m8_r", {}).get("summary") != result.get("m8_r"):
@@ -1858,6 +1858,15 @@ def verify_result(result_path: Path) -> dict[str, Any]:
         output_height = full_geometry.get("height")
     if o_summary["denominator"] != output_width * output_height * 3:
         raise Refusal(f"{index_path}: M8-O denominator does not match output grid")
+    tiff_record = result.get("tiff")
+    if (
+        not isinstance(tiff_record, dict)
+        or tiff_record.get("width") != output_width
+        or tiff_record.get("height") != output_height
+    ):
+        raise Refusal(
+            f"{result_path}: TIFF dimensions disagree with the bound output grid"
+        )
 
     required_artifact_paths = {row["path"] for row in r_files} | named_o_paths
     if set(paths) != required_artifact_paths:
