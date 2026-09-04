@@ -57,8 +57,13 @@ Check 'section 5 still exists'                   ($st.Contains('## 5. Landmines 
 Check 'preceding section 2.9.50 still exists'    ($st.Contains('### 2.9.50 The document blocking publication was mine'))
 Check '2.9.50.7 Position still exists'           ($st.Contains('#### 2.9.50.7 Position'))
 
-$body = if ($startIdx -ge 0 -and $gapsIdx -gt $startIdx) {
-  $st.Substring($startIdx, $gapsIdx - $startIdx)
+$body = if ($startIdx -ge 0) {
+  # The section ends at the NEXT section header, not at the Gaps header. Once 2.9.52
+  # was appended below, delimiting on Gaps silently swallowed it into this body and
+  # the occurrence-count assertions started counting a neighbouring section's figures.
+  $nextIdx = $st.IndexOf('### 2.9.52 ', $startIdx)
+  $endIdx  = if ($nextIdx -gt $startIdx -and ($gapsIdx -lt 0 -or $nextIdx -lt $gapsIdx)) { $nextIdx } else { $gapsIdx }
+  if ($endIdx -gt $startIdx) { $st.Substring($startIdx, $endIdx - $startIdx) } else { '' }
 } else {
   # Degrade to FAIL, never crash. A verifier that throws on a malformed document
   # reports nothing about WHICH check failed, so a negative control cannot prove

@@ -5687,6 +5687,112 @@ The reverse is not.
 
 ---
 
+### 2.9.52 No bar is impossible, the instruments are void, and one capture now unblocks three axes (M161, orchestrator, 2026-09-06)
+
+#### 2.9.52.1 I commissioned this audit expecting a third impossibility
+
+After M135 killed the detail statistic and M136 killed the M8-O bar, I put lane M161 onto
+the five remaining gating bars with two questions each: does an admissible output
+satisfying the bar exist at all, and is the instrument invariant to something it must not
+be invariant to. I expected a third impossibility. What came back is better and it changes
+the shape of the work.
+
+**No bar is impossible. Three named licensing paths are void.** The bars this program has
+been failing to meet are, on the whole, meetable. The instruments used to judge them are
+not sound. That is a far more tractable position than the one I thought we were in.
+
+#### 2.9.52.2 The seven gating axes, in one table
+
+| axis | state | what it actually needs |
+| --- | --- | --- |
+| M1 detail | INSTRUMENT VOID (M135) | external truth reference plus transfer veto |
+| M2 noise | INSTRUMENT VOID (M161, M159) | same-output non-compensating transfer veto |
+| M3 occlusion veil | **SOUND BUT UNMEASURED** (M161) | ratify the bar, recommission controls, run it |
+| M8 invented structure | BAR UNSATISFIABLE AS WRITTEN (M136) | licensed repair; M8-R `FAIL` at `1.030569%` stands |
+| M9 certified acuity | INSTRUMENT VOID (M161) | external truth reference plus transfer veto |
+| M10 physical depth | INSTRUMENT VOID (M161) | independent uncertainty calibration |
+| M11 speed | **SOUND BUT UNMEASURED** (M161) | formal control plus a real run; fork required |
+
+Four instrument voids, one bar repair, two axes that are sound and merely unrun. Still zero
+scored. M161 ruled explicitly that the M2, M9 and M10 repairs **do not lower their bars**,
+which is what lets me act on all of this without weakening the standard.
+
+#### 2.9.52.3 M9 fails by exactly the mechanism M1 does, found independently
+
+M161 on the acuity channel: D8's named empirical acuity channel is normalized coherence and
+is *exactly invariant to a common nonzero post-noise transfer*, so blur and unsharp mask are
+both invisible to it. That is M135's impossibility result, reached by a different lane on a
+different axis, with no shared derivation.
+
+Three of the seven — M1, M2 and M9 — are therefore void for one reason. Each judges two
+already-rendered outputs with no external reference, and against such a judge blur is a
+legal move. This is now the single most reproduced finding in the program.
+
+The consequence is the operative fact of the current plan: **the shared-optic inversion
+capture unblocks three gating axes, not one.**
+
+#### 2.9.52.4 M10 fails differently, by the cleanest null test anyone here has run
+
+M161 replaced every reported uncertainty in the M10 pipeline with zero, then with infinity,
+then with random values, and **every M10 pass/fail quantity was unchanged**. The plan
+requires a depth-plus-uncertainty product; the registered verdict never consumes the
+uncertainty at all. That is not a subtle invariance of the kind that took M135 a formal
+proof to expose. The instrument does not read one of its own mandatory inputs, and no one
+noticed until someone set that input to infinity and watched nothing happen.
+
+#### 2.9.52.5 A correction to 2.9.51 that runs in strehl's favour
+
+I wrote yesterday that the noise axis is *currently losing*. That is accurate about the
+statistic and incomplete about the artefact, and the incompleteness cuts against this
+project rather than for it, so it needs saying plainly.
+
+M159 §4.1 states that some or all of the excess may be recovered paper structure, and §4.2
+records the same adverse sign against a second comparator — Zerene PMax, median
+`1.377766x`, with zero of eleven sites below one. The sign is robust across comparators.
+Its *meaning* is not established in either direction.
+
+The honest reading is this. **The same instrument void that stops strehl proving it is
+better also stops it learning whether it is worse.** A higher fractional box9 residual is
+what recovered texture and added noise both look like, because the statistic cannot tell
+them apart — that is precisely why M161 voided it. So `1.515208x` is uninterpretable until
+the transfer veto exists, and lane M162 has been opened to settle whether it is a
+regression or a trade.
+
+I record the direction of my own error deliberately: it made the project look worse than
+the evidence supports. That is the kind of mistake this program is not otherwise set up to
+catch, because every other guard here is pointed at flattery.
+
+#### 2.9.52.6 What I resequenced, and the orchestration gap it exposed
+
+M139 held an exclusive host lock for the M12 campaign, having lost 23 consecutive attempts
+to a `<=5%` host-load admission gate. M12 is not one of the owner's seven. M3 and M11 are,
+they are the only two scoreable today, and both need the host. The entire scoreable surface
+of this program was queued behind a non-gating axis, and that is my error for letting it
+stand. M139 is stood down and asked to deliver from data it already holds; M153 has the
+host for M11; M3 is queued behind it; M162's rendering behind that.
+
+M139's admission gate is itself the same species of defect as the four dead instruments: a
+condition specified as desirable and adopted as a requirement without anyone checking it
+could be met in the environment the measurement actually lives in. It has been asked to
+write that up, because M12 will need measuring eventually and the next attempt should not
+rediscover this the same way.
+
+The gap this exposed is broader. **Every lane I had running was building or auditing
+measurement; none was pointed at the artefact.** The owner asked for a state-of-the-art
+focus stacker, and a perfect instrument that proves strehl loses is not that. M162 is the
+first lane aimed at the stacker itself.
+
+#### 2.9.52.7 Position
+
+Zero of seven gating axes scored, unchanged. What changed is the shape of the remaining
+work. It is no longer *the bars may be unreachable*. It is *four instruments need building,
+two axes need running, and one of the four bars needs a licensed repair*.
+
+The critical path is a single `$0` capture that unblocks three of the seven, gated on
+commissioning, gated on a host that is now finally moving.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
