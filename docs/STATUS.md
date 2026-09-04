@@ -2782,6 +2782,70 @@ changing the fold's reduction order; that passage is at `519-521`, while
 the argument unaffected -- only the line range was wrong. Corrected here. I
 hold every lane to citing at source; the rule applies to me identically.
 
+### 2.9.24 The comparator was not foreign; it was ours
+
+`docs/research/M8-COMPARATIVE.md`, preregistration `36331092`, result
+`4940581b`, 2,464 insertions of evidence. The lane executed the unlicensed
+`focus-stack` arm, its mandatory 92-input identity control crashed in
+`cv::histPrepareImages` constructing depthmap layer `-1`, no output was written,
+and it stopped at **`UNMEASURED`** rather than shrink the control until it
+passed. That is the fourth time this lane has refused to manufacture a number,
+and it was right every time.
+
+**Reviewing its evidence, I found something worse than the crash.** The lane's
+own `controls/focus-stack-command.json` records the binary as
+`C:\dev\macro\focus-stack\dist\focus-stack.exe`, SHA-256 `0ABA0CF0...4CA45D`.
+That is not an installed third-party release, so I inspected the tree:
+
+| probe | result |
+|---|---|
+| `git remote -v` | **`https://github.com/chcaru/macro.git`** -- the owner's own repository |
+| commit count | 92 -- **91 authored Chris Caruso**, 1 by Copilot on his behalf |
+| first commit | `4bc7f95`, 2026-05-10, *"init to win it"* |
+| recent subjects | "Phase 12.14 -- post-stack Wiener deconvolution", "Phase 12.15 + Phase 13 -- RCD demosaic" |
+| `LICENSE.md` | "Copyright (c) 2019 Petteri Aimonen" |
+| `README.md` | links `github.com/PetteriAimonen/focus-stack/releases` |
+
+**It is a fork of PetteriAimonen/focus-stack, heavily modified by the owner.**
+The captured help text corroborates it independently: `--breathing-k1`,
+`--align-residual-weight`, `--focus-measure=wavs`, `--depthmap-inpaint=guided`,
+`--noise-model`, and flags describing "Phase-2/3/4" and "bit-identity regression
+against pre-Phase-4 builds" are not upstream options. They are the owner's own
+development phases.
+
+**So the `focus-stack` arm is a self-comparison, not a foreign one.** Measuring
+strehl against the owner's previous-generation stacker is an honest progress
+baseline and worth keeping under that label. It is not evidence about the state
+of the art and it cannot support "strehl beats the field." The same almost
+certainly applies to the four retained `*-focus-stack-*` renders in the §8
+table; they are already `UNMEASURED`, so no claim collapses, but the labelling
+is wrong and the lane has been told to check provenance and relabel rather than
+assume.
+
+**Had this reached a paper, it would have been fatal, and it would have been
+found by a reviewer rather than by us.** It survived this long because the
+binary was named after the upstream project it was forked from.
+
+**The fix costs nothing.** Pristine upstream `PetteriAimonen/focus-stack` is
+MIT-licensed, free, published as source and Windows binaries, and genuinely
+third-party. It restores a foreign arm at zero cost, and because its source is
+readable it gives a *stronger* contract than a black box plus a vendor export --
+the `--no-align` question and the 93 `Align` task labels become answerable from
+the implementation rather than from a checkbox or a log. The lane must pin an
+exact upstream tag and record the binary hash, keep it outside `C:\dev\macro\`
+so the two can never be confused again, and re-run the identity control there,
+since the crash may be fork-specific.
+
+**This reframes the Zerene purchase I am putting to the owner.** An hour ago the
+argument was that Zerene was the only remaining third-party comparator, which
+made a licence a hard blocker. That is no longer true. The two arguments have
+now been separated and the lane has been asked to answer them apart: whether
+Zerene is required for the comparison to be **valid** (evidentiary necessity),
+and whether it is required because it is the tool practitioners actually use, so
+that beating it is what makes the result **interesting** (market relevance). I
+will put the honest version to the owner, not the one that most easily justifies
+a purchase.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
