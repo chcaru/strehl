@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "seed": 162,
+  "trials": 128,
+  "noise_tail_factor": 2.812076674547948,
+  "proxy": "sqrt(max(p99.5(|box5-box13 - median|)^2 - (K * 1.4826*MAD)^2, 0))",
+  "movable_null_second_over_first": {
+    "min": 0.9901521144970877,
+    "p25": 0.9976468075164915,
+    "median": 1.000232730794342,
+    "p75": 1.0024784568281846,
+    "max": 1.01319711336285,
+    "mean": 0.99998325868787,
+    "trials_below_1": 59,
+    "trials_above_1": 69
+  },
+  "planted_degradation_blur_over_original": {
+    "min": 0.8459341306270702,
+    "p25": 0.8520746901716043,
+    "median": 0.854356921862856,
+    "p75": 0.8562549867593496,
+    "max": 0.8605796278552116,
+    "mean": 0.8541853156491688
+  },
+  "planted_improvement_original_over_blur": {
+    "min": 1.162007521014947,
+    "p25": 1.1678764113574513,
+    "median": 1.1704709992233806,
+    "p75": 1.1736060366488896,
+    "max": 1.18212513692848,
+    "mean": 1.170719293104666
+  },
+  "added_noise_sigma3_over_original": {
+    "min": 0.9420121584974239,
+    "p25": 0.9518905195907441,
+    "median": 0.9558799148162205,
+    "p75": 0.9597771616673924,
+    "max": 0.9688307239759492,
+    "mean": 0.9557853680921009
+  },
+  "blurred_over_original_box9_residual": {
+    "min": 0.7334842769758861,
+    "p25": 0.7349275738849324,
+    "median": 0.7353090780075797,
+    "p75": 0.7356812149876959,
+    "max": 0.7372037357983225,
+    "mean": 0.7353607276710837
+  },
+  "checks": {
+    "movable_null": true,
+    "planted_degradation": true,
+    "planted_improvement": true,
+    "added_noise_not_rewarded": true,
+    "blur_trap": true
+  },
+  "passed": true
+}
