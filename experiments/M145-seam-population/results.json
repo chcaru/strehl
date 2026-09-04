@@ -1,0 +1,144 @@
+{
+  "experiment": "M145 seam-population commissioning",
+  "source": {
+    "path": "D:\\personal\\macro\\couch-fibers-cpl\\DSC00150.ARW",
+    "sha256": "9054a75b784915a9dbca5bbb267cf0fe5eeada67de99f6a7b87c386f5a3ceaba",
+    "decoded_width": 7028,
+    "decoded_height": 4688,
+    "crop_x": 3283,
+    "crop_y": 1738,
+    "crop_width": 1024,
+    "crop_height": 1024
+  },
+  "software": {
+    "python": "3.12.10",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "scikit_image": "0.26.0",
+    "rawpy": "0.27.0"
+  },
+  "parameters": {
+    "frame_count": 25,
+    "tile_px": 32,
+    "site_spacing_px": 12.0,
+    "minimum_sites": 1000,
+    "minimum_boundaries": 10,
+    "minimum_sites_per_boundary": 50,
+    "focus_sigma_frames": 0.62,
+    "defocus_sigma_px": 3.0,
+    "minimum_peak_to_median_ratio": 1.15,
+    "minimum_focus_tiles": 256,
+    "minimum_focus_tiles_per_quadrant": 32,
+    "maximum_focus_fit_absolute_residual_frames": 0.25,
+    "scoring_target": "the decoded real crop as a frozen local Lab reference map; score compares differential Lab errors at a shared local anchor",
+    "scoring_target_lab_d50": [
+      41.99100112973152,
+      -0.8454477982096503,
+      -4.196140595484888
+    ],
+    "baseline_step_delta_a": 0.5,
+    "planted_defect_step_delta_a": 3.0,
+    "planted_improvement_step_delta_a": 0.15,
+    "sparse_planted_defect": {
+      "boundary": 12,
+      "intended_consecutive_sites": 3
+    },
+    "profile_window": "two 3x9 median-Lab windows centred +/-3 px",
+    "profile_search": "+/- floor(one_focus_step_pitch/4)",
+    "quantile": "nearest-rank, rank ceil(q*n), one-based"
+  },
+  "focus_fit": {
+    "status": "OK",
+    "valid_tiles": 1024,
+    "rejected_tiles": 0,
+    "residual_rmse_frames": 0.1287486320451138,
+    "residual_p95_abs_frames": 0.18771342175945546,
+    "residual_max_abs_frames": 0.21644008138287063,
+    "quadrant_counts": [
+      256,
+      256,
+      256,
+      256
+    ],
+    "true_ax_frames_per_px": 0.021016617790811338,
+    "true_ay_frames_per_px": 0.00039100684261974585,
+    "true_c_frames": 1.25,
+    "fitted_ax_frames_per_px": 0.021005323065521032,
+    "fitted_ay_frames_per_px": 0.0004058785937376347,
+    "fitted_c_frames": 1.2405318096222673,
+    "fit_vs_truth_p50_abs_frames": 0.007636753154009579,
+    "fit_vs_truth_p95_abs_frames": 0.016805451656816038,
+    "fit_vs_truth_max_abs_frames": 0.02061532545247502,
+    "boundary_position_p95_abs_px": 0.7994884865777051,
+    "boundary_position_max_abs_px": 0.9807362326749106
+  },
+  "population": {
+    "boundary_components": 18,
+    "minimum_sites_per_boundary": 72,
+    "maximum_sites_per_boundary": 72,
+    "focus_pitch_px": 47.598095333174406,
+    "search_half_width_px": 11,
+    "eligible_sites": 1296,
+    "minimum_met": true
+  },
+  "arms": [
+    {
+      "name": "baseline",
+      "eligible_sites": 1296,
+      "p50_delta_e00": 0.692415657211911,
+      "p95_delta_e00": 0.7157546561466919,
+      "p99_nearest_rank_delta_e00": 0.7215534852960046,
+      "maximum_delta_e00": 0.7269559552677101,
+      "sites_over_1_delta_e00": 0,
+      "longest_consecutive_run_over_1": 0,
+      "verdict": "PASS"
+    },
+    {
+      "name": "planted_defect",
+      "eligible_sites": 1296,
+      "p50_delta_e00": 4.142753202404185,
+      "p95_delta_e00": 4.266670489821706,
+      "p99_nearest_rank_delta_e00": 4.300123625262583,
+      "maximum_delta_e00": 4.328415874271718,
+      "sites_over_1_delta_e00": 1296,
+      "longest_consecutive_run_over_1": 72,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "planted_improvement",
+      "eligible_sites": 1296,
+      "p50_delta_e00": 0.2080546667132612,
+      "p95_delta_e00": 0.21498913501706363,
+      "p99_nearest_rank_delta_e00": 0.21680132055013615,
+      "maximum_delta_e00": 0.2181349818874504,
+      "sites_over_1_delta_e00": 0,
+      "longest_consecutive_run_over_1": 0,
+      "verdict": "PASS"
+    },
+    {
+      "name": "sparse_planted_defect",
+      "eligible_sites": 1296,
+      "p50_delta_e00": 0.0,
+      "p95_delta_e00": 0.0,
+      "p99_nearest_rank_delta_e00": 0.0,
+      "maximum_delta_e00": 4.072292548376986,
+      "sites_over_1_delta_e00": 3,
+      "longest_consecutive_run_over_1": 3,
+      "verdict": "FAIL"
+    }
+  ],
+  "null": {
+    "name": "identical_frames_null",
+    "focus_fit_status": "UNMEASURED_FOCUS_FIT",
+    "eligible_sites": 0,
+    "p99_nearest_rank_delta_e00": null,
+    "verdict": "UNMEASURED_CAPTURE_INADEQUATE"
+  },
+  "commissioning_checks": {
+    "population_minimum_met": true,
+    "defect_raises_p99": true,
+    "improvement_does_not_raise_p99": true,
+    "sparse_defect_exposes_p99_dilution": true,
+    "null_is_unmeasured_with_zero_sites": true
+  }
+}
