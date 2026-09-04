@@ -38,6 +38,7 @@ BUNDLE_SOURCE_NAMES = (
     "M138-ADAPTER-AMENDMENT-2.md",
     "M138-ADAPTER-AMENDMENT-3.md",
     "M138-ADAPTER-AMENDMENT-4.md",
+    "M138-ADAPTER-AMENDMENT-5.md",
     "comparison-binding.json",
     "comparison-contract.json",
     "comparison_checker.py",
@@ -49,24 +50,85 @@ BUNDLE_SOURCE_NAMES = (
 
 
 _core: Any | None = None
+_core_sha256: str | None = None
 
 
-def install_core_module() -> Any:
-    global _core
+@dataclass(frozen=True)
+class FileSnapshot:
+    path: Path
+    data: bytes
+    sha256: str
+
+
+@dataclass(frozen=True)
+class BundleSnapshot:
+    manifest: FileSnapshot
+    files: dict[str, FileSnapshot]
+
+
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def normalized_text_sha256_bytes(data: bytes) -> str:
+    text = data.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
+    return sha256_bytes(text.encode("utf-8"))
+
+
+def install_core_module(bundle: BundleSnapshot) -> Any:
+    global _core, _core_sha256
+    source = bundle.files["comparison_checker.py"]
     if _core is not None:
+        if _core_sha256 != source.sha256:
+            raise RuntimeError("comparison checker source changed within one process")
         return _core
-    path = HERE / "comparison_checker.py"
     try:
-        code = compile(path.read_bytes(), str(path), "exec", dont_inherit=True)
+        code = compile(source.data, str(source.path), "exec", dont_inherit=True)
         module = types.ModuleType("m135_comparison_checker")
-        module.__file__ = str(path)
+        module.__file__ = str(source.path)
         module.__package__ = ""
         exec(code, module.__dict__)
+
+        snapshots_by_path = {
+            snapshot.path.resolve(): snapshot for snapshot in bundle.files.values()
+        }
+
+        def verified_sha256(path: Path) -> str:
+            resolved = Path(path).resolve()
+            snapshot = snapshots_by_path.get(resolved)
+            if snapshot is None:
+                raise RuntimeError(
+                    f"core attempted an unverified source read: {resolved}"
+                )
+            return snapshot.sha256
+
+        def verified_normalized_text_sha256(path: Path) -> str:
+            resolved = Path(path).resolve()
+            snapshot = snapshots_by_path.get(resolved)
+            if snapshot is None:
+                raise RuntimeError(
+                    f"core attempted an unverified text read: {resolved}"
+                )
+            return normalized_text_sha256_bytes(snapshot.data)
+
+        def verified_load_json(path: Path) -> dict[str, Any]:
+            resolved = Path(path).resolve()
+            snapshot = snapshots_by_path.get(resolved)
+            if snapshot is None:
+                raise RuntimeError(
+                    f"core attempted an unverified JSON read: {resolved}"
+                )
+            return json_object_from_bytes(snapshot.data, snapshot.path.name)
+
+        module.sha256 = verified_sha256
+        module.normalized_text_sha256 = verified_normalized_text_sha256
+        module.load_json = verified_load_json
     except Exception as error:
         raise RuntimeError(
             f"could not execute frozen comparison checker: {error}"
         ) from error
     _core = module
+    _core_sha256 = source.sha256
     return _core
 
 
@@ -103,6 +165,17 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def read_file_once(path: Path, label: str) -> FileSnapshot:
+    resolved = path.resolve()
+    try:
+        data = resolved.read_bytes()
+    except OSError as error:
+        raise AdapterRefusal(
+            "INSTRUMENT_INVALID", f"{label} could not be read: {error}"
+        ) from error
+    return FileSnapshot(path=resolved, data=data, sha256=sha256_bytes(data))
+
+
 def canonical_json_bytes(value: Any) -> bytes:
     return json.dumps(
         value,
@@ -134,14 +207,14 @@ def _object_without_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return value
 
 
-def load_json_object(path: Path, label: str) -> dict[str, Any]:
+def json_object_from_bytes(data: bytes, label: str) -> dict[str, Any]:
     try:
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            data.decode("utf-8"),
             object_pairs_hook=_object_without_duplicates,
             parse_constant=_reject_json_constant,
         )
-    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as error:
+    except (UnicodeError, json.JSONDecodeError, ValueError) as error:
         raise AdapterRefusal(
             "INSTRUMENT_INVALID", f"{label} is not strict JSON: {error}"
         ) from error
@@ -150,6 +223,10 @@ def load_json_object(path: Path, label: str) -> dict[str, Any]:
             "INSTRUMENT_INVALID", f"{label} must contain one JSON object"
         )
     return value
+
+
+def snapshot_json_object(snapshot: FileSnapshot, label: str) -> dict[str, Any]:
+    return json_object_from_bytes(snapshot.data, label)
 
 
 def write_json(path: Path, value: Any) -> None:
@@ -234,7 +311,7 @@ def verify_artifact_ref(
     base: Path,
     root: Path,
     label: str,
-) -> Path:
+) -> FileSnapshot:
     row = require_exact_keys(ref, {"path", "sha256"}, label)
     parts = parse_relative_posix_path(row["path"], label)
     if not valid_sha256(row["sha256"]):
@@ -250,17 +327,14 @@ def verify_artifact_ref(
         raise AdapterRefusal(
             "INSTRUMENT_INVALID", f"{label}.path escapes its evidence root"
         ) from error
-    if not target.is_file():
-        raise AdapterRefusal(
-            "INSTRUMENT_INVALID", f"{label}.path is not a file: {row['path']}"
-        )
-    observed = file_sha256(target)
-    if observed != row["sha256"]:
+    snapshot = read_file_once(target, label)
+    if snapshot.sha256 != row["sha256"]:
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
-            f"{label} SHA-256 mismatch: expected {row['sha256']}, observed {observed}",
+            f"{label} SHA-256 mismatch: expected {row['sha256']}, "
+            f"observed {snapshot.sha256}",
         )
-    return target
+    return snapshot
 
 
 def ref_key(ref: Any, label: str) -> tuple[str, str]:
@@ -275,13 +349,13 @@ def ref_key(ref: Any, label: str) -> tuple[str, str]:
 
 def verify_declared_artifacts(
     request: dict[str, Any], request_path: Path
-) -> dict[tuple[str, str], Path]:
+) -> dict[tuple[str, str], FileSnapshot]:
     refs = request.get("artifacts")
     if not isinstance(refs, list) or not refs:
         raise AdapterRefusal(
             "INSTRUMENT_INVALID", "request.artifacts must be a nonempty list"
         )
-    verified: dict[tuple[str, str], Path] = {}
+    verified: dict[tuple[str, str], FileSnapshot] = {}
     seen_paths: set[str] = set()
     for index, ref in enumerate(refs):
         label = f"request.artifacts[{index}]"
@@ -300,11 +374,11 @@ def verify_declared_artifacts(
     return verified
 
 
-def declared_artifact_path(
+def declared_artifact_snapshot(
     ref: Any,
-    verified: dict[tuple[str, str], Path],
+    verified: dict[tuple[str, str], FileSnapshot],
     label: str,
-) -> Path:
+) -> FileSnapshot:
     key = ref_key(ref, label)
     if key not in verified:
         raise AdapterRefusal(
@@ -326,10 +400,16 @@ def current_environment() -> dict[str, Any]:
     }
 
 
-def validate_environment() -> str:
-    manifest = load_json_object(ENVIRONMENT_PATH, "environment manifest")
+def environment_matches(
+    manifest: dict[str, Any], expected: dict[str, Any]
+) -> bool:
+    return manifest == expected
+
+
+def validate_environment(snapshot: FileSnapshot) -> str:
+    manifest = snapshot_json_object(snapshot, "environment manifest")
     expected = current_environment()
-    if manifest != expected:
+    if not environment_matches(manifest, expected):
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
             f"runtime environment differs from manifest: expected={manifest}, "
@@ -339,11 +419,12 @@ def validate_environment() -> str:
         raise AdapterRefusal(
             "INSTRUMENT_INVALID", "checker must be invoked through python -I"
         )
-    return file_sha256(ENVIRONMENT_PATH)
+    return snapshot.sha256
 
 
-def validate_bundle() -> str:
-    bundle = load_json_object(BUNDLE_PATH, "checker bundle manifest")
+def validate_bundle() -> BundleSnapshot:
+    manifest_snapshot = read_file_once(BUNDLE_PATH, "checker bundle manifest")
+    bundle = snapshot_json_object(manifest_snapshot, "checker bundle manifest")
     require_exact_keys(bundle, {"schema", "rule_id", "files"}, "checker bundle")
     if bundle["schema"] != "m135-checker-bundle/v1":
         raise AdapterRefusal(
@@ -357,6 +438,7 @@ def validate_bundle() -> str:
             "INSTRUMENT_INVALID", "checker bundle files must be a nonempty list"
         )
     observed_names: set[str] = set()
+    files: dict[str, FileSnapshot] = {}
     for index, ref in enumerate(refs):
         label = f"checker bundle files[{index}]"
         key = ref_key(ref, label)
@@ -365,19 +447,33 @@ def validate_bundle() -> str:
                 "INSTRUMENT_INVALID", f"duplicate checker bundle path: {key[0]}"
             )
         observed_names.add(key[0])
-        verify_artifact_ref(ref, base=HERE, root=HERE, label=label)
+        files[key[0]] = verify_artifact_ref(
+            ref, base=HERE, root=HERE, label=label
+        )
     missing = sorted(set(BUNDLE_SOURCE_NAMES) - observed_names)
     if missing:
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
             f"checker bundle omits required transitive files: {missing}",
         )
-    return file_sha256(BUNDLE_PATH)
+    return BundleSnapshot(manifest=manifest_snapshot, files=files)
+
+
+def bundle_file(bundle: BundleSnapshot, name: str) -> FileSnapshot:
+    try:
+        return bundle.files[name]
+    except KeyError as error:
+        raise AdapterRefusal(
+            "INSTRUMENT_INVALID",
+            f"checker bundle omits required transitive file: {name}",
+        ) from error
 
 
 def load_runtime() -> Runtime:
-    adapter_contract = load_json_object(
-        ADAPTER_CONTRACT_PATH, "M138 adapter contract"
+    bundle = validate_bundle()
+    adapter_contract = snapshot_json_object(
+        bundle_file(bundle, ADAPTER_CONTRACT_PATH.name),
+        "M138 adapter contract",
     )
     if canonical_json_sha256(adapter_contract) != EXPECTED_ADAPTER_CONTRACT_SHA256:
         raise AdapterRefusal("INSTRUMENT_INVALID", "adapter contract hash drift")
@@ -385,10 +481,11 @@ def load_runtime() -> Runtime:
         raise AdapterRefusal(
             "INSTRUMENT_INVALID", "unsupported adapter contract schema"
         )
-    bundle_sha256 = validate_bundle()
-    environment_sha256 = validate_environment()
+    environment_sha256 = validate_environment(
+        bundle_file(bundle, ENVIRONMENT_PATH.name)
+    )
     try:
-        module = install_core_module()
+        module = install_core_module(bundle)
         core_contract = module.load_json(CORE_CONTRACT_PATH)
         module.validate_contract(core_contract)
         binding = module.load_json(CORE_BINDING_PATH)
@@ -402,11 +499,23 @@ def load_runtime() -> Runtime:
         core_contract=core_contract,
         binding=binding,
         binding_state=str(state),
-        checker_sha256=file_sha256(Path(__file__).resolve()),
-        bundle_sha256=bundle_sha256,
+        checker_sha256=bundle_file(
+            bundle, Path(__file__).name
+        ).sha256,
+        bundle_sha256=bundle.manifest.sha256,
         environment_sha256=environment_sha256,
-        comparison_rule_sha256=file_sha256(CORE_CONTRACT_PATH),
+        comparison_rule_sha256=bundle_file(
+            bundle, CORE_CONTRACT_PATH.name
+        ).sha256,
     )
+
+
+def common_binding_hash_matches(observed: str, expected: str) -> bool:
+    return observed == expected
+
+
+def physical_binding_hash_matches(observed: str, expected: str) -> bool:
+    return observed == expected
 
 
 def validate_binding_hashes(request: dict[str, Any], runtime: Runtime) -> None:
@@ -426,7 +535,7 @@ def validate_binding_hashes(request: dict[str, Any], runtime: Runtime) -> None:
         "comparison_rule_sha256": runtime.comparison_rule_sha256,
     }
     for field, value in expected.items():
-        if hashes[field] != value:
+        if not common_binding_hash_matches(hashes[field], value):
             raise AdapterRefusal(
                 "INSTRUMENT_INVALID",
                 f"request binding hash mismatch for {field}",
@@ -436,14 +545,16 @@ def validate_binding_hashes(request: dict[str, Any], runtime: Runtime) -> None:
             "INSTRUMENT_UNBOUND", "physical M135 comparison binding is UNBOUND"
         )
     physical_hash = runtime.binding.get("physical_preregistration_sha256")
-    if hashes["physical_preregistration_sha256"] != physical_hash:
+    if not physical_binding_hash_matches(
+        hashes["physical_preregistration_sha256"], physical_hash
+    ):
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
             "request binding hash mismatch for physical_preregistration_sha256",
         )
 
 
-def common_output(request_path: Path, runtime: Runtime) -> dict[str, Any]:
+def common_output(request_sha256: str, runtime: Runtime) -> dict[str, Any]:
     hashes = {
         "checker_bundle_manifest_sha256": runtime.bundle_sha256,
         "environment_manifest_sha256": runtime.environment_sha256,
@@ -456,18 +567,18 @@ def common_output(request_path: Path, runtime: Runtime) -> dict[str, Any]:
         "schema": runtime.adapter_contract["interface_schema"],
         "checker_sha256": runtime.checker_sha256,
         **hashes,
-        "request_sha256": file_sha256(request_path),
+        "request_sha256": request_sha256,
     }
 
 
 def load_core_payload(
     ref: Any,
     *,
-    verified: dict[tuple[str, str], Path],
+    verified: dict[tuple[str, str], FileSnapshot],
     label: str,
 ) -> dict[str, Any]:
-    path = declared_artifact_path(ref, verified, label)
-    payload = load_json_object(path, label)
+    snapshot = declared_artifact_snapshot(ref, verified, label)
+    payload = snapshot_json_object(snapshot, label)
     reject_supplied_decisions(payload, label)
     return payload
 
@@ -485,7 +596,10 @@ def core_decision(payload: dict[str, Any], runtime: Runtime) -> dict[str, Any]:
 
 
 def process_evaluate(
-    request_path: Path, request: dict[str, Any], runtime: Runtime
+    request_path: Path,
+    request_sha256: str,
+    request: dict[str, Any],
+    runtime: Runtime,
 ) -> dict[str, Any]:
     require_exact_keys(
         request,
@@ -558,7 +672,7 @@ def process_evaluate(
             )
 
     return {
-        **common_output(request_path, runtime),
+        **common_output(request_sha256, runtime),
         runtime.adapter_contract["evaluation"]["decision_state_field"]: states,
         runtime.adapter_contract["evaluation"]["boolean_field"]: passes,
     }
@@ -581,7 +695,7 @@ def information_quantiles(
 def commission_payload(
     raw_control: Any,
     *,
-    verified: dict[tuple[str, str], Path],
+    verified: dict[tuple[str, str], FileSnapshot],
     label: str,
     runtime: Runtime,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -592,8 +706,97 @@ def commission_payload(
     return payload, core_decision(payload, runtime)
 
 
+def null_decision_requires_refusal(
+    status: Any, invalid_statuses: set[str]
+) -> bool:
+    return status in invalid_statuses
+
+
+def blur_decision_requires_refusal(
+    status: Any, invalid_statuses: set[str]
+) -> bool:
+    return status in invalid_statuses
+
+
+def improvement_decision_requires_refusal(
+    status: Any, invalid_statuses: set[str]
+) -> bool:
+    return status in invalid_statuses
+
+
+def missing_decision_requires_refusal(status: Any) -> bool:
+    return status == "NOT_APPLICABLE"
+
+
+def mutation_digest_is_invalid(value: Any) -> bool:
+    return not valid_sha256(value)
+
+
+def physical_null_control_passes(
+    status: Any,
+    q05: float,
+    q95: float,
+    low: float,
+    high: float,
+) -> bool:
+    return bool(
+        status == "DETAIL_PASS"
+        and q05 >= low
+        and q05 <= 1.0
+        and q95 >= 1.0
+        and q95 <= high
+    )
+
+
+def blur_control_passes(status: Any, q95: float, bar: float) -> bool:
+    return bool(status == "DETAIL_FAIL" and q95 < bar)
+
+
+def improvement_control_passes(status: Any, q05: float, bar: float) -> bool:
+    return bool(status == "DETAIL_PASS" and q05 > bar)
+
+
+def missing_flat_control_passes(status: Any, reason: str) -> bool:
+    return bool(
+        status == "INSTRUMENT_INVALID"
+        and "flat control is missing" in reason
+    )
+
+
+def hash_mutation_control_passes(
+    error: AdapterRefusal | None,
+    first_snapshot: FileSnapshot,
+    second_snapshot: FileSnapshot,
+) -> bool:
+    return bool(
+        error is not None
+        and "SHA-256 mismatch" in error.reason
+        and first_snapshot == second_snapshot
+    )
+
+
+def commissioning_control_set_matches(
+    controls: dict[str, bool], expected: set[str]
+) -> bool:
+    return set(controls) == expected
+
+
+def verify_snapshot_digest(
+    snapshot: FileSnapshot, expected_sha256: str, label: str
+) -> None:
+    if snapshot.sha256 != expected_sha256:
+        raise AdapterRefusal(
+            "INSTRUMENT_INVALID",
+            f"{label} SHA-256 mismatch: expected {expected_sha256}, "
+            f"observed {snapshot.sha256}",
+        )
+
+
 def process_commission(
-    request_path: Path, request: dict[str, Any], runtime: Runtime
+    request_path: Path,
+    request_sha256: str,
+    request: dict[str, Any],
+    runtime: Runtime,
 ) -> dict[str, Any]:
     require_exact_keys(
         request,
@@ -614,7 +817,6 @@ def process_commission(
     controls_in = require_exact_keys(
         request["controls"], expected_inputs, "commissioning request.controls"
     )
-    accepted = runtime.adapter_contract["evaluation"]["accepted_core_statuses"]
     invalid_statuses = set(
         runtime.adapter_contract["evaluation"]["invalid_core_statuses"]
     )
@@ -625,7 +827,9 @@ def process_commission(
         label="controls.physical_null",
         runtime=runtime,
     )
-    if null_decision.get("status") in invalid_statuses:
+    if null_decision_requires_refusal(
+        null_decision.get("status"), invalid_statuses
+    ):
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
             f"physical null could not be adjudicated: {null_decision.get('reason')}",
@@ -641,7 +845,9 @@ def process_commission(
         label="controls.pre_noise_blur",
         runtime=runtime,
     )
-    if blur_decision.get("status") in invalid_statuses:
+    if blur_decision_requires_refusal(
+        blur_decision.get("status"), invalid_statuses
+    ):
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
             f"blur control could not be adjudicated: {blur_decision.get('reason')}",
@@ -654,7 +860,9 @@ def process_commission(
         label="controls.pre_noise_optical_improvement",
         runtime=runtime,
     )
-    if improvement_decision.get("status") in invalid_statuses:
+    if improvement_decision_requires_refusal(
+        improvement_decision.get("status"), invalid_statuses
+    ):
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
             "optical-improvement control could not be adjudicated: "
@@ -671,7 +879,7 @@ def process_commission(
     _ = missing_payload
     missing_status = missing_decision.get("status")
     missing_reason = str(missing_decision.get("reason", "")).lower()
-    if missing_status == "NOT_APPLICABLE":
+    if missing_decision_requires_refusal(missing_status):
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
             "missing-flat control capture is absent from the physical binding",
@@ -682,10 +890,10 @@ def process_commission(
         {"artifact", "mutated_sha256"},
         "controls.hash_mutation",
     )
-    good_path = declared_artifact_path(
+    first_snapshot = declared_artifact_snapshot(
         mutation["artifact"], verified, "controls.hash_mutation.artifact"
     )
-    if not valid_sha256(mutation["mutated_sha256"]):
+    if mutation_digest_is_invalid(mutation["mutated_sha256"]):
         raise AdapterRefusal(
             "INSTRUMENT_INVALID",
             "controls.hash_mutation.mutated_sha256 is not a valid SHA-256",
@@ -694,63 +902,66 @@ def process_commission(
         "path": mutation["artifact"]["path"],
         "sha256": mutation["mutated_sha256"],
     }
-    hash_mutation_refused = False
+    hash_mutation_error: AdapterRefusal | None = None
     try:
-        verify_artifact_ref(
-            mutation_ref,
-            base=request_path.parent,
-            root=request_path.parent,
-            label="controls.hash_mutation.probe",
+        verify_snapshot_digest(
+            first_snapshot,
+            mutation_ref["sha256"],
+            "controls.hash_mutation.probe",
         )
     except AdapterRefusal as error:
-        hash_mutation_refused = (
-            "SHA-256 mismatch" in error.reason
-            and good_path == declared_artifact_path(
-                mutation["artifact"],
-                verified,
-                "controls.hash_mutation.artifact",
-            )
-        )
+        hash_mutation_error = error
+    second_snapshot = declared_artifact_snapshot(
+        mutation["artifact"],
+        verified,
+        "controls.hash_mutation.artifact",
+    )
+    hash_mutation_refused = hash_mutation_control_passes(
+        hash_mutation_error,
+        first_snapshot,
+        second_snapshot,
+    )
 
     commission_cfg = runtime.adapter_contract["commissioning"]
     controls_out = {
-        "physical_null_stays_null": bool(
-            null_decision.get("status") == "DETAIL_PASS"
-            and null_q05 >= float(null_low)
-            and null_q05 <= 1.0
-            and null_q95 >= 1.0
-            and null_q95 <= float(null_high)
+        "physical_null_stays_null": physical_null_control_passes(
+            null_decision.get("status"),
+            null_q05,
+            null_q95,
+            float(null_low),
+            float(null_high),
         ),
-        "pre_noise_blur_lowers_information": bool(
-            blur_decision.get("status") == "DETAIL_FAIL"
-            and blur_q95
-            < float(
+        "pre_noise_blur_lowers_information": blur_control_passes(
+            blur_decision.get("status"),
+            blur_q95,
+            float(
                 commission_cfg[
                     "pre_noise_blur_information_ratio_q95_strictly_below"
                 ]
+            ),
+        ),
+        "pre_noise_optical_improvement_raises_information": (
+            improvement_control_passes(
+                improvement_decision.get("status"),
+                improvement_q05,
+                float(
+                    commission_cfg[
+                        "pre_noise_optical_improvement_information_ratio_q05_strictly_above"
+                    ]
+                ),
             )
         ),
-        "pre_noise_optical_improvement_raises_information": bool(
-            improvement_decision.get("status") == "DETAIL_PASS"
-            and improvement_q05
-            > float(
-                commission_cfg[
-                    "pre_noise_optical_improvement_information_ratio_q05_strictly_above"
-                ]
-            )
-        ),
-        "missing_flat_control_refuses": bool(
-            missing_status == "INSTRUMENT_INVALID"
-            and "flat control is missing" in missing_reason
+        "missing_flat_control_refuses": missing_flat_control_passes(
+            missing_status, missing_reason
         ),
         "artifact_hash_mutation_refuses": hash_mutation_refused,
     }
     expected_outputs = set(commission_cfg["required_output_controls"])
-    if set(controls_out) != expected_outputs:
+    if not commissioning_control_set_matches(controls_out, expected_outputs):
         raise AdapterRefusal(
             "INSTRUMENT_INVALID", "internal commissioning control set drift"
         )
-    return {**common_output(request_path, runtime), "controls": controls_out}
+    return {**common_output(request_sha256, runtime), "controls": controls_out}
 
 
 def make_ref(path: Path, base: Path) -> dict[str, str]:
@@ -769,8 +980,125 @@ def write_bundle_manifest(root: Path) -> Path:
     return path
 
 
-def copy_self_test_runtime(root: Path, binding: dict[str, Any]) -> Path:
-    runtime = root / "runtime"
+def mutation_probe_checks() -> dict[str, bool]:
+    checks: dict[str, bool] = {}
+
+    try:
+        reject_supplied_decisions({"outer": {"detail_pass": True}})
+    except AdapterRefusal:
+        checks["guard_nested_supplied_decision"] = True
+    else:
+        checks["guard_nested_supplied_decision"] = False
+
+    observed_environment = current_environment()
+    changed_environment = dict(observed_environment)
+    changed_environment["python_version"] = "mutation-probe"
+    checks["guard_environment_equality"] = not environment_matches(
+        changed_environment, observed_environment
+    )
+    checks["guard_common_binding_hash"] = not common_binding_hash_matches(
+        "0" * 64, "1" * 64
+    )
+    checks["guard_physical_binding_hash"] = not physical_binding_hash_matches(
+        "0" * 64, "1" * 64
+    )
+    checks["guard_canonical_terminal_newline"] = canonical_json_line(
+        {"probe": True}
+    ).endswith(b"\n")
+
+    invalid_statuses = {"INSTRUMENT_INVALID", "NOT_APPLICABLE"}
+    checks["guard_commission_null_invalid_status"] = (
+        null_decision_requires_refusal("INSTRUMENT_INVALID", invalid_statuses)
+    )
+    checks["guard_commission_blur_invalid_status"] = (
+        blur_decision_requires_refusal("INSTRUMENT_INVALID", invalid_statuses)
+    )
+    checks["guard_commission_improvement_invalid_status"] = (
+        improvement_decision_requires_refusal(
+            "INSTRUMENT_INVALID", invalid_statuses
+        )
+    )
+    checks["guard_commission_missing_not_applicable"] = (
+        missing_decision_requires_refusal("NOT_APPLICABLE")
+    )
+    checks["guard_commission_mutated_sha_format"] = mutation_digest_is_invalid(
+        "g" * 64
+    )
+    checks["guard_commission_output_set"] = not commissioning_control_set_matches(
+        {"unexpected": False}, {"expected"}
+    )
+
+    snapshot_a = FileSnapshot(Path("a.json"), b"a", sha256_bytes(b"a"))
+    snapshot_b = FileSnapshot(Path("a.json"), b"b", sha256_bytes(b"b"))
+    mismatch = AdapterRefusal(
+        "INSTRUMENT_INVALID",
+        "probe SHA-256 mismatch: expected 0, observed 1",
+    )
+    wrong_reason = AdapterRefusal("INSTRUMENT_INVALID", "different refusal")
+    checks["guard_commission_hash_requires_error"] = (
+        not hash_mutation_control_passes(None, snapshot_a, snapshot_a)
+    )
+    checks["guard_commission_hash_requires_mismatch_reason"] = (
+        not hash_mutation_control_passes(
+            wrong_reason, snapshot_a, snapshot_a
+        )
+    )
+    checks["guard_commission_hash_requires_same_snapshot"] = (
+        not hash_mutation_control_passes(mismatch, snapshot_a, snapshot_b)
+    )
+
+    checks["guard_commission_null_status"] = not physical_null_control_passes(
+        "DETAIL_FAIL", 1.0, 1.0, 0.95, 1.05
+    )
+    checks["guard_commission_null_q05_lower"] = (
+        not physical_null_control_passes(
+            "DETAIL_PASS", 0.94, 1.0, 0.95, 1.05
+        )
+    )
+    checks["guard_commission_null_q05_upper"] = (
+        not physical_null_control_passes(
+            "DETAIL_PASS", 1.01, 1.01, 0.95, 1.05
+        )
+    )
+    checks["guard_commission_null_q95_lower"] = (
+        not physical_null_control_passes(
+            "DETAIL_PASS", 0.99, 0.99, 0.95, 1.05
+        )
+    )
+    checks["guard_commission_null_q95_upper"] = (
+        not physical_null_control_passes(
+            "DETAIL_PASS", 1.0, 1.06, 0.95, 1.05
+        )
+    )
+    checks["guard_commission_blur_status"] = not blur_control_passes(
+        "DETAIL_PASS", 0.80, 0.90
+    )
+    checks["guard_commission_blur_q95"] = not blur_control_passes(
+        "DETAIL_FAIL", 0.90, 0.90
+    )
+    checks["guard_commission_improvement_status"] = (
+        not improvement_control_passes("DETAIL_FAIL", 1.20, 1.10)
+    )
+    checks["guard_commission_improvement_q05"] = (
+        not improvement_control_passes("DETAIL_PASS", 1.10, 1.10)
+    )
+    checks["guard_commission_missing_status"] = (
+        not missing_flat_control_passes(
+            "DETAIL_FAIL", "flat control is missing"
+        )
+    )
+    checks["guard_commission_missing_reason"] = (
+        not missing_flat_control_passes(
+            "INSTRUMENT_INVALID", "different refusal"
+        )
+    )
+    return checks
+
+
+def copy_self_test_runtime(
+    root: Path, binding: dict[str, Any], name: str = "runtime"
+) -> Path:
+    runtime = root / name
     runtime.mkdir(parents=True, exist_ok=False)
     for name in BUNDLE_SOURCE_NAMES:
         if name == CORE_BINDING_PATH.name:
@@ -878,7 +1206,7 @@ def parsed_stderr(completed: subprocess.CompletedProcess[bytes]) -> dict[str, An
     return value
 
 
-def run_self_test() -> dict[str, Any]:
+def run_self_test(runtime_state: Runtime) -> dict[str, Any]:
     scratch = HERE / f".m138-adapter-selftest-{os.getpid()}"
     if scratch.exists():
         raise AdapterRefusal(
@@ -887,8 +1215,9 @@ def run_self_test() -> dict[str, Any]:
     checks: dict[str, bool] = {}
     try:
         scratch.mkdir()
+        checks.update(mutation_probe_checks())
         module = require_core_module()
-        contract = module.load_json(CORE_CONTRACT_PATH)
+        contract = copy.deepcopy(runtime_state.core_contract)
         bound = module.synthetic_binding(contract)
         capture_ids = (
             "capture-pass",
@@ -1100,6 +1429,39 @@ def run_self_test() -> dict[str, Any]:
             and commission_repeat.stderr == commission_run.stderr
         )
 
+        all_negative_request = {
+            "schema": "m135-m138-commission-request/v1",
+            "artifacts": [refs["fail"], refs["pass"]],
+            "binding_hashes": binding_hashes,
+            "controls": {
+                "physical_null": {"payload": refs["fail"]},
+                "pre_noise_blur": {"payload": refs["pass"]},
+                "pre_noise_optical_improvement": {"payload": refs["fail"]},
+                "missing_flat_control": {"payload": refs["pass"]},
+                "hash_mutation": {
+                    "artifact": refs["pass"],
+                    "mutated_sha256": refs["pass"]["sha256"],
+                },
+            },
+        }
+        all_negative_path = evidence / "commission-all-negative.json"
+        write_json(all_negative_path, all_negative_request)
+        all_negative_run = invoke_self_test_adapter(
+            runtime, "commission", all_negative_path
+        )
+        all_negative_output = parsed_stdout(all_negative_run)
+        checks["commission_all_negative_controls_reachable"] = bool(
+            all_negative_run.returncode == 0
+            and all_negative_output.get("controls")
+            == {
+                "physical_null_stays_null": False,
+                "pre_noise_blur_lowers_information": False,
+                "pre_noise_optical_improvement_raises_information": False,
+                "missing_flat_control_refuses": False,
+                "artifact_hash_mutation_refuses": False,
+            }
+        )
+
         bad_hash_request = copy.deepcopy(valid_request)
         wrong_hash = (
             ("0" if refs["pass"]["sha256"][0] != "0" else "1")
@@ -1144,7 +1506,7 @@ def run_self_test() -> dict[str, Any]:
             and parsed_stderr(duplicate_run).get("status") == "INSTRUMENT_INVALID"
         )
 
-        unbound = module.load_json(CORE_BINDING_PATH)
+        unbound = copy.deepcopy(runtime_state.binding)
         write_json(runtime / CORE_BINDING_PATH.name, unbound)
         write_bundle_manifest(runtime)
         unbound_request = copy.deepcopy(valid_request)
@@ -1168,7 +1530,7 @@ def run_self_test() -> dict[str, Any]:
     return {
         "schema": "m135-m138-adapter-self-test-v1",
         "rule_id": "m135-m138-adapter-v1",
-        "adapter_sha256": file_sha256(Path(__file__).resolve()),
+        "adapter_sha256": runtime_state.checker_sha256,
         "adapter_contract_canonical_sha256": EXPECTED_ADAPTER_CONTRACT_SHA256,
         "status": "PASS" if passed == len(checks) else "FAIL",
         "check_count": len(checks),
@@ -1193,19 +1555,13 @@ def describe(runtime: Runtime) -> dict[str, Any]:
 
 
 def refusal_object(
-    error: AdapterRefusal, request_path: Path | None
+    error: AdapterRefusal, request_sha256: str | None
 ) -> dict[str, Any]:
-    request_hash = None
-    if request_path is not None and request_path.is_file():
-        try:
-            request_hash = file_sha256(request_path)
-        except OSError:
-            request_hash = None
     return {
         "schema": "m135-m138-refusal/v1",
         "status": error.status,
         "reason": error.reason,
-        "request_sha256": request_hash,
+        "request_sha256": request_sha256,
     }
 
 
@@ -1219,32 +1575,15 @@ def main() -> int:
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     request_path = args.m138_evaluate or args.m138_commission
+    request_snapshot: FileSnapshot | None = None
     try:
         if sys.flags.isolated != 1:
             raise AdapterRefusal(
                 "INSTRUMENT_INVALID", "checker must be invoked through python -I"
             )
         if args.self_test:
-            adapter_contract = load_json_object(
-                ADAPTER_CONTRACT_PATH, "M138 adapter contract"
-            )
-            if (
-                canonical_json_sha256(adapter_contract)
-                != EXPECTED_ADAPTER_CONTRACT_SHA256
-            ):
-                raise AdapterRefusal(
-                    "INSTRUMENT_INVALID", "adapter contract hash drift"
-                )
-            validate_bundle()
-            validate_environment()
-            try:
-                install_core_module()
-            except (OSError, TypeError, ValueError, RuntimeError) as error:
-                raise AdapterRefusal(
-                    "INSTRUMENT_INVALID",
-                    f"frozen core bootstrap failed: {error}",
-                ) from error
-            result = run_self_test()
+            runtime = load_runtime()
+            result = run_self_test(runtime)
             emit_json(result, args.output)
             return 0 if result["status"] == "PASS" else 1
         runtime = load_runtime()
@@ -1253,15 +1592,25 @@ def main() -> int:
             return 0
         assert request_path is not None
         request_path = request_path.resolve()
-        request = load_json_object(request_path, "M138 request")
+        request_snapshot = read_file_once(request_path, "M138 request")
+        request = snapshot_json_object(request_snapshot, "M138 request")
         if args.m138_evaluate is not None:
-            result = process_evaluate(request_path, request, runtime)
+            result = process_evaluate(
+                request_path, request_snapshot.sha256, request, runtime
+            )
         else:
-            result = process_commission(request_path, request, runtime)
+            result = process_commission(
+                request_path, request_snapshot.sha256, request, runtime
+            )
         emit_json(result, args.output)
         return 0
     except AdapterRefusal as error:
-        sys.stderr.buffer.write(canonical_json_line(refusal_object(error, request_path)))
+        request_sha256 = (
+            request_snapshot.sha256 if request_snapshot is not None else None
+        )
+        sys.stderr.buffer.write(
+            canonical_json_line(refusal_object(error, request_sha256))
+        )
         sys.stderr.buffer.flush()
         return REQUEST_REFUSAL_EXIT_CODE
     except Exception as error:
@@ -1270,7 +1619,14 @@ def main() -> int:
             f"unexpected adapter failure: {type(error).__name__}: {error}",
         )
         sys.stderr.buffer.write(
-            canonical_json_line(refusal_object(wrapped, request_path))
+            canonical_json_line(
+                refusal_object(
+                    wrapped,
+                    request_snapshot.sha256
+                    if request_snapshot is not None
+                    else None,
+                )
+            )
         )
         sys.stderr.buffer.flush()
         return UNEXPECTED_ERROR_EXIT_CODE
