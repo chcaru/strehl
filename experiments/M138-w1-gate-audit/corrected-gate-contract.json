@@ -1,5 +1,5 @@
 {
-  "schema": 3,
+  "schema": 4,
   "status": "DRAFT_PENDING_THIRD_INDEPENDENT_REVIEW",
   "activation": {
     "required_status": "FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION",
@@ -14,11 +14,13 @@
     "estimate": "VERIFIED-ESTIMATE"
   },
   "source_baseline": {
-    "git_head_at_repair_start": "8ddce7b8d9f3b218a55b1cb9b9d3c84424377793",
+    "git_head_at_repair_start": "a1b3b039299caf9fadfb2ed3a42f0b8e9a556cfc",
     "files": {
       "crates/strehl-core/src/merge.rs": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
       "crates/strehl-core/src/pyramid.rs": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47",
       "docs/proposals/2026-09-phase1-design.md": "497ba0edbd093e333acb06dff8621485b1259e35a5c7efe8458ee011a10f32f5",
+      "docs/proposals/2026-08-sota-path.md": "218a7a0c8748ac3e5e13594ff9b11f13c23f559f19d81ff3accdca597111cc22",
+      "docs/proposals/2026-09-sota-scorecard.md": "4095c153566349af1fa856c73e27f2633767eef10122ae11b8867738be51f32a",
       "docs/research/M62-sqrt-n.md": "2d752281728a3b51a930e687c8889aedef5120eb0d6655cd26dfd18828e94597",
       "experiments/M135-detail-instrument/PREREGISTRATION.md": "7f584ae5b4437dfc4c592248ca27ce8d7d2afc4b1e953d8d9bffd3e9f3e8e807",
       "experiments/M135-detail-instrument/instrument.py": "264d035331ffbb7e982449b675d88724c566b2f88cd251b08d215dcca2c6823c",
@@ -191,14 +193,32 @@
     "independence_rule": "Every scored repeat pair uses two distinct source-capture identities and hash-distinct source artifacts; each mode uses two path-distinct outputs whose repeat hashes differ. Every pilot uses four unique source-capture identities and four path- and hash-distinct outputs partitioned into disjoint pairs A and B.",
     "commissioning_transforms": {
       "null": "IDENTITY",
-      "inflation_defect": "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_PLUS_DELTA_REQUIRED",
-      "averaging_improvement": "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_MINUS_DELTA_REQUIRED",
+      "inflation_defect": "DOUBLE_CANDIDATE_TEMPORAL_POWER",
+      "averaging_improvement": "HALVE_CANDIDATE_TEMPORAL_POWER",
       "common_scene_placebo": "ADD_IDENTICAL_SCENE_TERM_TO_BOTH_CANDIDATE_REPEATS"
     },
     "estimand": "per-capture/per-CFA ratio of arithmetic mean paired-repeat temporal power",
+    "reference": "LEGACY_STREHL",
     "natural_null_power_ratio": 1.0,
-    "pass_rule": "every simultaneous one-sided upper confidence bound is strictly below 1.0",
-    "reported_effect": "minimum guaranteed RMS reduction = 1 - sqrt(max simultaneous upper power-ratio bound)",
+    "pass_rule": "With delta_required UNBOUND, every simultaneous one-sided upper confidence bound is strictly below 1.0. If delta_required is later BOUND, every bound must also be at or below (1-delta_required)^2.",
+    "effect_output_schema": "m138-achieved-temporal-effect/v1",
+    "effect_output_rule": "Every PHASE1_GO contains estimated R, simultaneous two-sided confidence interval, and simultaneous one-sided decision upper bound for every registered capture and CFA plane, all recomputed from hash-bound extractor evidence. It also reports whether delta_required is unbound or, if bound, the derived power-ratio ceiling that every cell met.",
+    "reported_effect": "minimum guaranteed RMS reduction = 1 - sqrt(max simultaneous one-sided upper power-ratio bound)",
+    "scorecard_m2_claim": "NOT_LICENSED",
+    "scorecard_m2_reference": "SHIPPING_COMPARATOR",
+    "required_go_effect_phases": [
+      "development",
+      "holdout"
+    ],
+    "required_effect_cell_fields": [
+      "estimated_power_ratio",
+      "simultaneous_confidence_lower",
+      "simultaneous_confidence_upper",
+      "simultaneous_one_sided_upper"
+    ],
+    "minimum_effect_symbol": "delta_required",
+    "minimum_effect_binding_state": "UNBOUND",
+    "unbound_minimum_effect_claim": "DIRECTION_ONLY",
     "familywise_confidence": 0.95,
     "bootstrap_replicates": 8192,
     "bootstrap_seed": 138138,
@@ -210,6 +230,7 @@
     "effect_requirement": null,
     "pilot_evidence": null,
     "selected_sites_per_capture": null,
+    "power_analysis_requirement": "REQUIRED_ONLY_WHEN_MINIMUM_EFFECT_BOUND",
     "required_power_analysis_outputs": [
       "power_at_64_sites",
       "power_at_selected_sites",
@@ -222,7 +243,7 @@
       "G2",
       "B"
     ],
-    "binding_rule": "The exact extractor, transitive bundle, environment, candidate-independent four-burst pilot, and externally justified minimum RMS effect must be hash-bound before output generation. Sixty-four sites remain the lowest admissible count but are evaluated rather than presumed sufficient; selected_sites_per_capture must have a Monte Carlo lower confidence bound reaching power_target for both full capture-by-plane conjunctions.",
+    "binding_rule": "The exact extractor, transitive bundle, environment, and frozen site ledgers must be bound before output generation. An unbound delta_required permits only a directional W1 verdict and requires effect_requirement and pilot_evidence to remain null. A magnitude claim requires delta_required, an owner-approved effect requirement, a candidate-independent four-burst physical pilot, and a selected site count whose Monte Carlo lower confidence bound reaches power_target for both full capture-by-plane conjunctions.",
     "evidence_tag": "VERIFIED-PREREGISTERED"
   },
   "hull_instrument": {
@@ -244,6 +265,7 @@
     "evidence_tag": "VERIFIED-PREREGISTERED"
   },
   "evidence_contract": {
+    "adjudication_output_schema": "m138-adjudication/v2",
     "result_schema": "m138-result/v3",
     "standardisation_schema": "m138-standardisation-evidence/v2",
     "commissioning_schema": "m138-commissioning-evidence/v3",
@@ -268,7 +290,12 @@
       "pair_a_site_power",
       "pair_b_site_power",
       "passes_superiority",
-      "cost_status"
+      "cost_status",
+      "effect_size",
+      "achieved_effect",
+      "estimated_power_ratio",
+      "simultaneous_confidence_interval",
+      "simultaneous_one_sided_upper"
     ],
     "rule": "No submitted scalar, array, or status string may carry a verdict. Every quantity the gate scores must be recomputed by the adjudicator from a hash-bound artifact, and every artifact reference that is required to be independent must be verified distinct."
   },

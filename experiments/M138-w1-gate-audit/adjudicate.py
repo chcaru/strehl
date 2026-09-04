@@ -81,6 +81,13 @@ SOURCE_ANCHORS = (
     ("docs/proposals/2026-09-phase1-design.md", 312, 316, "Width match"),
     ("docs/proposals/2026-09-phase1-design.md", 340, 350, "No common value means"),
     (
+        "docs/proposals/2026-09-sota-scorecard.md",
+        633,
+        635,
+        "UCB95(sigma_strehl / min(sigma_comparator)) <=0.950",
+    ),
+    ("docs/proposals/2026-08-sota-path.md", 2517, 2521, "<=0.90"),
+    (
         "experiments/PHASE1-DESIGN/PREREGISTRATION.md",
         167,
         203,
@@ -108,9 +115,9 @@ REQUIRED_DOCUMENT_TEXT = (
     "# M138 corrected W1 gate draft",
     "NOT FROZEN",
     "Width is diagnostic, never dispositive",
-    "No replacement effect-size constant",
+    "Minimum effect remains named and unbound",
     "The temporal decision boundary is `1.0`",
-    "The old `64`-site minimum is withdrawn",
+    "`64` sites retained only as the lowest admissible evidence count",
     "Raw sealed evidence contract",
     "PRE-CLAMP",
     "M135 executable interface",
@@ -120,6 +127,9 @@ REQUIRED_DOCUMENT_TEXT = (
     "No submitted scalar, array, or status string may carry a verdict",
     "four unique source-capture identities",
     "hash-bound benchmark artifact",
+    "Every `PHASE1_GO` carries",
+    "licenses no scorecard M2 claim",
+    "`delta_required` remains unbound",
 )
 
 HEX64 = re.compile(r"[0-9a-f]{64}")
@@ -210,7 +220,7 @@ def tau_keys(contract: dict[str, Any]) -> list[str]:
 
 
 def validate_contract(contract: dict[str, Any], *, test_mode: bool = False) -> None:
-    if contract.get("schema") != 3:
+    if contract.get("schema") != 4:
         raise EvidenceError("unsupported contract schema")
     if contract.get("status") not in {
         "DRAFT_PENDING_THIRD_INDEPENDENT_REVIEW",
@@ -253,15 +263,53 @@ def validate_contract(contract: dict[str, Any], *, test_mode: bool = False) -> N
     noise = contract["noise_instrument"]
     if noise.get("commissioning_transforms") != {
         "null": "IDENTITY",
-        "inflation_defect": (
-            "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_PLUS_DELTA_REQUIRED"
-        ),
-        "averaging_improvement": (
-            "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_MINUS_DELTA_REQUIRED"
-        ),
+        "inflation_defect": "DOUBLE_CANDIDATE_TEMPORAL_POWER",
+        "averaging_improvement": "HALVE_CANDIDATE_TEMPORAL_POWER",
         "common_scene_placebo": ("ADD_IDENTICAL_SCENE_TERM_TO_BOTH_CANDIDATE_REPEATS"),
     }:
         raise EvidenceError("temporal commissioning transforms changed")
+    if noise.get("reference") != "LEGACY_STREHL":
+        raise EvidenceError("W1 temporal reference changed")
+    if noise.get("scorecard_m2_claim") != "NOT_LICENSED":
+        raise EvidenceError("W1 was allowed to license scorecard M2")
+    if noise.get("minimum_effect_symbol") != "delta_required":
+        raise EvidenceError("minimum-effect symbol changed")
+    if noise.get("unbound_minimum_effect_claim") != "DIRECTION_ONLY":
+        raise EvidenceError("unbound minimum-effect claim changed")
+    if noise.get("scorecard_m2_reference") != "SHIPPING_COMPARATOR":
+        raise EvidenceError("scorecard M2 reference changed")
+    if (
+        noise.get("power_analysis_requirement")
+        != "REQUIRED_ONLY_WHEN_MINIMUM_EFFECT_BOUND"
+    ):
+        raise EvidenceError("minimum-effect power requirement changed")
+    if noise.get("minimum_effect_binding_state") not in {"UNBOUND", "BOUND"}:
+        raise EvidenceError("invalid minimum-effect binding state")
+    if noise.get("minimum_effect_binding_state") == "UNBOUND" and any(
+        noise.get(field) is not None
+        for field in (
+            "required_rms_reduction",
+            "effect_requirement",
+            "pilot_evidence",
+        )
+    ):
+        raise EvidenceError("unbound minimum effect carries bound evidence")
+    if noise.get("effect_output_schema") != "m138-achieved-temporal-effect/v1":
+        raise EvidenceError("achieved-effect output schema changed")
+    if noise.get("required_go_effect_phases") != ["development", "holdout"]:
+        raise EvidenceError("required GO effect phases changed")
+    if noise.get("required_effect_cell_fields") != [
+        "estimated_power_ratio",
+        "simultaneous_confidence_lower",
+        "simultaneous_confidence_upper",
+        "simultaneous_one_sided_upper",
+    ]:
+        raise EvidenceError("required achieved-effect cell fields changed")
+    if (
+        contract["evidence_contract"].get("adjudication_output_schema")
+        != "m138-adjudication/v2"
+    ):
+        raise EvidenceError("adjudication output schema changed")
     if (
         contract["evidence_contract"].get("rule")
         != "No submitted scalar, array, or status string may carry a verdict. "
@@ -1158,15 +1206,13 @@ def parse_noise_cells(
 def transform_noise_cells(
     cells: list[dict[str, Any]],
     transform: str,
-    contract: dict[str, Any],
 ) -> list[dict[str, Any]]:
-    delta = float(contract["noise_instrument"]["required_rms_reduction"])
     if transform in {"IDENTITY", "ADD_IDENTICAL_SCENE_TERM_TO_BOTH_CANDIDATE_REPEATS"}:
         factor = 1.0
-    elif transform == "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_PLUS_DELTA_REQUIRED":
-        factor = (1.0 + delta) ** 2
-    elif transform == "SCALE_CANDIDATE_REPEAT_DIFFERENCE_BY_1_MINUS_DELTA_REQUIRED":
-        factor = (1.0 - delta) ** 2
+    elif transform == "DOUBLE_CANDIDATE_TEMPORAL_POWER":
+        factor = 2.0
+    elif transform == "HALVE_CANDIDATE_TEMPORAL_POWER":
+        factor = 0.5
     else:
         raise EvidenceError(f"unknown registered temporal transform: {transform}")
     return [
@@ -1180,6 +1226,16 @@ def transform_noise_cells(
     ]
 
 
+def noise_acceptance_upper(contract: dict[str, Any]) -> float:
+    cfg = contract["noise_instrument"]
+    if cfg["minimum_effect_binding_state"] == "UNBOUND":
+        return float(cfg["natural_null_power_ratio"])
+    required_rms = cfg.get("required_rms_reduction")
+    if not isinstance(required_rms, (int, float)) or not 0.0 < required_rms < 1.0:
+        raise EvidenceError("bound minimum effect lacks a valid RMS reduction")
+    return (1.0 - float(required_rms)) ** 2
+
+
 def bootstrap_noise(
     cells: list[dict[str, Any]],
     contract: dict[str, Any],
@@ -1191,6 +1247,7 @@ def bootstrap_noise(
     rng = np.random.default_rng(stable_seed(int(cfg["bootstrap_seed"]), label))
     observed: list[float] = []
     errors: list[np.ndarray] = []
+    cell_labels: list[tuple[str, str]] = []
     by_capture: dict[str, list[dict[str, Any]]] = {}
     for cell in cells:
         by_capture.setdefault(cell["capture_id"], []).append(cell)
@@ -1207,6 +1264,7 @@ def bootstrap_noise(
             sampled = np.log(candidate[picks].mean(axis=1) / legacy[picks].mean(axis=1))
             observed.append(theta)
             errors.append(sampled - theta)
+            cell_labels.append((capture_id, row["plane"]))
     error_matrix = np.column_stack(errors)
     q_upper = percentile_higher(np.max(error_matrix, axis=1), confidence)
     q_two_sided = percentile_higher(np.max(np.abs(error_matrix), axis=1), confidence)
@@ -1214,6 +1272,14 @@ def bootstrap_noise(
     upper = np.exp(theta + q_upper)
     lower_two = np.exp(theta - q_two_sided)
     upper_two = np.exp(theta + q_two_sided)
+    effect_by_capture_plane: dict[str, dict[str, dict[str, float]]] = {}
+    for index, (capture_id, plane) in enumerate(cell_labels):
+        effect_by_capture_plane.setdefault(capture_id, {})[plane] = {
+            "estimated_power_ratio": float(np.exp(theta[index])),
+            "simultaneous_confidence_lower": float(lower_two[index]),
+            "simultaneous_confidence_upper": float(upper_two[index]),
+            "simultaneous_one_sided_upper": float(upper[index]),
+        }
     return {
         "point": np.exp(theta),
         "upper": upper,
@@ -1222,7 +1288,266 @@ def bootstrap_noise(
         "score": -float(np.max(theta)),
         "passes_superiority": bool(np.all(upper < 1.0)),
         "minimum_guaranteed_rms_reduction": 1.0 - math.sqrt(float(np.max(upper))),
+        "effect_by_capture_plane": effect_by_capture_plane,
     }
+
+
+def achieved_effect_payload(
+    summary: dict[str, Any],
+    expected_noise: dict[str, list[str]],
+    contract: dict[str, Any],
+) -> dict[str, Any]:
+    cfg = contract["noise_instrument"]
+    cells = summary.get("effect_by_capture_plane")
+    expected_captures = set(expected_noise)
+    expected_planes = set(cfg["required_cfa_planes"])
+    if not isinstance(cells, dict) or set(cells) != expected_captures:
+        raise EvidenceError("achieved effect lacks the registered capture ledger")
+    for capture_id, planes in cells.items():
+        if not isinstance(planes, dict) or set(planes) != expected_planes:
+            raise EvidenceError(
+                f"{capture_id}: achieved effect lacks the registered CFA planes"
+            )
+        for plane, row in planes.items():
+            if not isinstance(row, dict) or set(row) != set(
+                cfg["required_effect_cell_fields"]
+            ):
+                raise EvidenceError(
+                    f"{capture_id}/{plane}: achieved effect fields are incomplete"
+                )
+            estimate = float(row["estimated_power_ratio"])
+            lower = float(row["simultaneous_confidence_lower"])
+            upper = float(row["simultaneous_confidence_upper"])
+            decision_upper = float(row["simultaneous_one_sided_upper"])
+            if (
+                not all(
+                    math.isfinite(value)
+                    for value in (estimate, lower, upper, decision_upper)
+                )
+                or min(estimate, lower, upper, decision_upper) <= 0.0
+                or not lower <= estimate <= upper
+            ):
+                raise EvidenceError(
+                    f"{capture_id}/{plane}: achieved effect interval is invalid"
+                )
+    minimum_state = cfg["minimum_effect_binding_state"]
+    required_rms = cfg.get("required_rms_reduction")
+    if minimum_state == "UNBOUND":
+        minimum_effect = {
+            "symbol": cfg["minimum_effect_symbol"],
+            "binding_state": "UNBOUND",
+            "required_rms_reduction": None,
+            "required_power_ratio_upper": None,
+            "claim": cfg["unbound_minimum_effect_claim"],
+        }
+    else:
+        if not isinstance(required_rms, (int, float)):
+            raise EvidenceError("bound minimum effect lacks its RMS value")
+        minimum_effect = {
+            "symbol": cfg["minimum_effect_symbol"],
+            "binding_state": "BOUND",
+            "required_rms_reduction": float(required_rms),
+            "required_power_ratio_upper": noise_acceptance_upper(contract),
+            "claim": "PREREGISTERED_MINIMUM_EFFECT_MET",
+        }
+    payload = {
+        "schema": cfg["effect_output_schema"],
+        "estimand": "P_candidate / P_legacy",
+        "reference": cfg["reference"],
+        "decision_boundary": float(cfg["natural_null_power_ratio"]),
+        "familywise_confidence": float(cfg["familywise_confidence"]),
+        "interval_method": "SIMULTANEOUS_TWO_SIDED_MAX_ABSOLUTE_BOOTSTRAP",
+        "decision_bound_method": "SIMULTANEOUS_ONE_SIDED_MAX_BOOTSTRAP",
+        "by_capture_and_plane": cells,
+        "maximum_simultaneous_one_sided_upper": float(np.max(summary["upper"])),
+        "minimum_guaranteed_rms_reduction": float(
+            summary["minimum_guaranteed_rms_reduction"]
+        ),
+        "minimum_effect": minimum_effect,
+        "scorecard_m2": {
+            "licensed": False,
+            "reference": cfg["scorecard_m2_reference"],
+            "reason": (
+                "W1 compares candidate Strehl with legacy Strehl; scorecard M2 "
+                "compares Strehl with a shipping comparator and has separate bars."
+            ),
+        },
+    }
+    validate_achieved_effect_output(payload, expected_noise, contract)
+    return payload
+
+
+def validate_achieved_effect_output(
+    payload: Any,
+    expected_noise: dict[str, list[str]],
+    contract: dict[str, Any],
+) -> None:
+    cfg = contract["noise_instrument"]
+    if not isinstance(payload, dict) or set(payload) != {
+        "schema",
+        "estimand",
+        "reference",
+        "decision_boundary",
+        "familywise_confidence",
+        "interval_method",
+        "decision_bound_method",
+        "by_capture_and_plane",
+        "maximum_simultaneous_one_sided_upper",
+        "minimum_guaranteed_rms_reduction",
+        "minimum_effect",
+        "scorecard_m2",
+    }:
+        raise EvidenceError("achieved-effect verdict object is incomplete")
+    if (
+        payload["schema"] != cfg["effect_output_schema"]
+        or payload["estimand"] != "P_candidate / P_legacy"
+        or payload["reference"] != "LEGACY_STREHL"
+        or float(payload["decision_boundary"]) != 1.0
+        or float(payload["familywise_confidence"])
+        != float(cfg["familywise_confidence"])
+        or payload["interval_method"] != "SIMULTANEOUS_TWO_SIDED_MAX_ABSOLUTE_BOOTSTRAP"
+        or payload["decision_bound_method"] != "SIMULTANEOUS_ONE_SIDED_MAX_BOOTSTRAP"
+    ):
+        raise EvidenceError("achieved-effect verdict metadata is invalid")
+    cells = payload["by_capture_and_plane"]
+    if not isinstance(cells, dict) or set(cells) != set(expected_noise):
+        raise EvidenceError("achieved-effect verdict capture ledger is incomplete")
+    required_planes = set(cfg["required_cfa_planes"])
+    decision_uppers: list[float] = []
+    for capture_id, planes in cells.items():
+        if not isinstance(planes, dict) or set(planes) != required_planes:
+            raise EvidenceError(
+                f"{capture_id}: achieved-effect verdict plane ledger is incomplete"
+            )
+        for plane, row in planes.items():
+            if not isinstance(row, dict) or set(row) != set(
+                cfg["required_effect_cell_fields"]
+            ):
+                raise EvidenceError(
+                    f"{capture_id}/{plane}: achieved-effect verdict cell is incomplete"
+                )
+            estimate = float(row["estimated_power_ratio"])
+            lower = float(row["simultaneous_confidence_lower"])
+            upper = float(row["simultaneous_confidence_upper"])
+            decision_upper = float(row["simultaneous_one_sided_upper"])
+            if (
+                not all(
+                    math.isfinite(value)
+                    for value in (estimate, lower, upper, decision_upper)
+                )
+                or min(estimate, lower, upper, decision_upper) <= 0.0
+                or not lower <= estimate <= upper
+            ):
+                raise EvidenceError(
+                    f"{capture_id}/{plane}: achieved-effect verdict values are invalid"
+                )
+            decision_uppers.append(decision_upper)
+    maximum_upper = max(decision_uppers)
+    reported_maximum = float(payload["maximum_simultaneous_one_sided_upper"])
+    reported_rms = float(payload["minimum_guaranteed_rms_reduction"])
+    if (
+        not math.isfinite(reported_maximum)
+        or not math.isclose(
+            reported_maximum,
+            maximum_upper,
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        )
+        or not math.isclose(
+            reported_rms,
+            1.0 - math.sqrt(maximum_upper),
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        )
+    ):
+        raise EvidenceError("achieved-effect aggregate values are inconsistent")
+    minimum = payload["minimum_effect"]
+    if (
+        not isinstance(minimum, dict)
+        or set(minimum)
+        != {
+            "symbol",
+            "binding_state",
+            "required_rms_reduction",
+            "required_power_ratio_upper",
+            "claim",
+        }
+        or minimum.get("symbol") != cfg["minimum_effect_symbol"]
+        or minimum.get("binding_state") != cfg["minimum_effect_binding_state"]
+    ):
+        raise EvidenceError("achieved-effect minimum binding is invalid")
+    if minimum["binding_state"] == "UNBOUND" and (
+        minimum["required_rms_reduction"] is not None
+        or minimum["required_power_ratio_upper"] is not None
+        or minimum["claim"] != "DIRECTION_ONLY"
+    ):
+        raise EvidenceError("unbound achieved effect claims a magnitude")
+    if minimum["binding_state"] == "BOUND" and (
+        not isinstance(minimum["required_rms_reduction"], (int, float))
+        or float(minimum["required_rms_reduction"])
+        != float(cfg["required_rms_reduction"])
+        or not isinstance(minimum["required_power_ratio_upper"], (int, float))
+        or not math.isclose(
+            float(minimum["required_power_ratio_upper"]),
+            noise_acceptance_upper(contract),
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        )
+        or minimum["claim"] != "PREREGISTERED_MINIMUM_EFFECT_MET"
+    ):
+        raise EvidenceError("bound achieved effect misstates its power target")
+    scorecard = payload["scorecard_m2"]
+    if (
+        not isinstance(scorecard, dict)
+        or set(scorecard) != {"licensed", "reference", "reason"}
+        or scorecard.get("licensed") is not False
+        or scorecard.get("reference") != cfg["scorecard_m2_reference"]
+        or not isinstance(scorecard.get("reason"), str)
+        or not scorecard["reason"].strip()
+    ):
+        raise EvidenceError("achieved-effect output incorrectly licenses M2")
+
+
+def validate_go_output(
+    output: Any,
+    ledgers: dict[str, Any],
+    contract: dict[str, Any],
+) -> None:
+    if not isinstance(output, dict) or set(output) != {
+        "schema",
+        "verdict",
+        "selected_tau",
+        "achieved_effect",
+    }:
+        raise EvidenceError("PHASE1_GO lacks its mandatory achieved effect")
+    if (
+        output["schema"] != contract["evidence_contract"]["adjudication_output_schema"]
+        or output["verdict"] != contract["verdicts"]["go"]
+    ):
+        raise EvidenceError("PHASE1_GO metadata is invalid")
+    effects = output["achieved_effect"]
+    if not isinstance(effects, dict) or set(effects) != set(
+        contract["noise_instrument"]["required_go_effect_phases"]
+    ):
+        raise EvidenceError("PHASE1_GO effect phases are incomplete")
+    for phase in contract["noise_instrument"]["required_go_effect_phases"]:
+        validate_achieved_effect_output(
+            effects[phase],
+            ledgers[phase]["noise"],
+            contract,
+        )
+        if float(effects[phase]["maximum_simultaneous_one_sided_upper"]) >= float(
+            contract["noise_instrument"]["natural_null_power_ratio"]
+        ):
+            raise EvidenceError("PHASE1_GO achieved effect does not clear the null")
+        if contract["noise_instrument"][
+            "minimum_effect_binding_state"
+        ] == "BOUND" and float(
+            effects[phase]["maximum_simultaneous_one_sided_upper"]
+        ) > noise_acceptance_upper(contract):
+            raise EvidenceError(
+                "PHASE1_GO achieved effect does not meet the bound minimum"
+            )
 
 
 def parse_noise_pilot(
@@ -1376,16 +1701,32 @@ def verify_noise_binding(
 ) -> dict[str, Any]:
     cfg = contract["noise_instrument"]
     if cfg.get("binding_state") != "BOUND":
-        raise EvidenceError("temporal-noise effect and power binding is absent")
+        raise EvidenceError("temporal-noise extractor and site binding is absent")
     extractor_paths = verify_temporal_extractor_binding(contract, contract_path)
-    rms = cfg.get("required_rms_reduction")
     sites = cfg.get("selected_sites_per_capture")
-    if not isinstance(rms, (int, float)) or not 0.0 < float(rms) < 1.0:
-        raise EvidenceError("required RMS reduction is not bound")
     if not isinstance(sites, int) or sites < 64:
         raise EvidenceError("selected temporal site count is not bound")
+    minimum_state = cfg["minimum_effect_binding_state"]
+    rms = cfg.get("required_rms_reduction")
+    requirement_ref = cfg.get("effect_requirement")
+    pilot_ref = cfg.get("pilot_evidence")
+    if minimum_state == "UNBOUND":
+        if any(value is not None for value in (rms, requirement_ref, pilot_ref)):
+            raise EvidenceError(
+                "unbound minimum effect carries a value, requirement, or pilot"
+            )
+        return {
+            "extractor_paths": extractor_paths,
+            "minimum_effect_binding_state": "UNBOUND",
+            "effect_requirement_sha256": None,
+            "pilot_sha256": None,
+            "power_at_64_sites": None,
+            "power_at_selected_sites": None,
+        }
+    if not isinstance(rms, (int, float)) or not 0.0 < float(rms) < 1.0:
+        raise EvidenceError("bound minimum effect lacks a valid RMS reduction")
     requirement_path, requirement = checked_json_ref(
-        cfg.get("effect_requirement"),
+        requirement_ref,
         contract_path.parent,
         ROOT,
         "noise effect requirement",
@@ -1408,7 +1749,7 @@ def verify_noise_binding(
     ):
         raise EvidenceError("noise effect requirement lacks claim text")
     pilot_path, pilot = checked_json_ref(
-        cfg.get("pilot_evidence"),
+        pilot_ref,
         contract_path.parent,
         ROOT,
         "noise pilot evidence",
@@ -1461,6 +1802,7 @@ def verify_noise_binding(
             )
     return {
         "extractor_paths": extractor_paths,
+        "minimum_effect_binding_state": "BOUND",
         "effect_requirement_sha256": sha256(requirement_path),
         "pilot_sha256": sha256(pilot_path),
         "power_at_64_sites": at_64,
@@ -1766,7 +2108,7 @@ def load_arm_evidence(
     noise_binding: dict[str, Any],
     caches: dict[str, Any],
     label: str,
-) -> bool:
+) -> dict[str, Any]:
     forbidden = set(contract["evidence_contract"]["forbidden_supplied_conclusions"])
     reject_supplied_conclusions(arm, forbidden)
     allowed = {
@@ -1810,7 +2152,10 @@ def load_arm_evidence(
             noise_binding["extractor_paths"],
         )
         caches["noise"][noise_hash] = bootstrap_noise(cells, contract, label)
-    noise_pass = caches["noise"][noise_hash]["passes_superiority"]
+    noise_summary = caches["noise"][noise_hash]
+    noise_pass = noise_summary["passes_superiority"] and bool(
+        np.all(noise_summary["upper"] <= noise_acceptance_upper(contract))
+    )
     hull_path, hull_document = checked_json_ref(
         arm["hull_evidence"],
         base,
@@ -1826,7 +2171,10 @@ def load_arm_evidence(
             ledger["hull"],
             contract,
         )
-    return detail_pass and noise_pass and caches["hull"][hull_hash]
+    return {
+        "passes": bool(detail_pass and noise_pass and caches["hull"][hull_hash]),
+        "noise_summary": noise_summary,
+    }
 
 
 def validate_noise_commissioning_summaries(
@@ -1928,7 +2276,7 @@ def validate_commissioning(
     summaries: dict[str, dict[str, Any]] = {}
     transformed: dict[str, list[dict[str, Any]]] = {}
     for name, transform in transforms.items():
-        transformed[name] = transform_noise_cells(base_cells, transform, contract)
+        transformed[name] = transform_noise_cells(base_cells, transform)
         summaries[name] = bootstrap_noise(
             transformed[name],
             contract,
@@ -1954,9 +2302,11 @@ def adjudicate_result(
     test_mode: bool = False,
 ) -> dict[str, Any]:
     verdicts: dict[str, str] = {}
+    output_schema = "m138-adjudication/v2"
     try:
         contract = load_json(contract_path)
         verdicts = contract["verdicts"]
+        output_schema = contract["evidence_contract"]["adjudication_output_schema"]
         validate_contract(contract, test_mode=test_mode)
         if contract["status"] != contract["activation"]["required_status"]:
             raise EvidenceError("contract is a draft and is not frozen")
@@ -1972,6 +2322,7 @@ def adjudicate_result(
             raise EvidenceError("frozen commit is absent")
         if contract["detail_instrument"].get("binding_state") != "BOUND":
             return {
+                "schema": output_schema,
                 "verdict": verdicts["blocked_detail"],
                 "reason": "physical M135 binding is absent",
             }
@@ -2044,10 +2395,8 @@ def adjudicate_result(
         if not isinstance(arms, dict) or set(arms) != set(keys):
             raise EvidenceError("development threshold grid is incomplete")
         caches: dict[str, Any] = {"m135": {}, "noise": {}, "hull": {}}
-        passing = {
-            index
-            for index, key in enumerate(keys)
-            if load_arm_evidence(
+        arm_results = {
+            key: load_arm_evidence(
                 arms[key],
                 development_path.parent,
                 evidence_root,
@@ -2058,6 +2407,10 @@ def adjudicate_result(
                 caches,
                 f"development-{key}",
             )
+            for key in keys
+        }
+        passing = {
+            index for index, key in enumerate(keys) if arm_results[key]["passes"]
         }
         robust = [
             index
@@ -2066,12 +2419,23 @@ def adjudicate_result(
         ]
         if not robust:
             return {
+                "schema": output_schema,
                 "verdict": verdicts["refuted_development"],
                 "reason": "no three-adjacent output-quality operating interval",
             }
         selected = keys[max(robust)]
+        development_effect = achieved_effect_payload(
+            arm_results[selected]["noise_summary"],
+            ledgers["development"]["noise"],
+            contract,
+        )
         if result.get("holdout") is None:
-            return {"verdict": verdicts["awaiting_holdout"], "selected_tau": selected}
+            return {
+                "schema": output_schema,
+                "verdict": verdicts["awaiting_holdout"],
+                "selected_tau": selected,
+                "achieved_effect": {"development": development_effect},
+            }
         holdout_path, holdout = checked_json_ref(
             result["holdout"],
             result_path.parent,
@@ -2087,7 +2451,7 @@ def adjudicate_result(
             )
         if holdout.get("ledger") != ledgers["holdout"]:
             raise EvidenceError("holdout evidence ledger mismatch")
-        holdout_pass = load_arm_evidence(
+        holdout_result = load_arm_evidence(
             holdout.get("arm"),
             holdout_path.parent,
             evidence_root,
@@ -2098,9 +2462,30 @@ def adjudicate_result(
             caches,
             f"holdout-{selected}",
         )
-        if not holdout_pass:
-            return {"verdict": verdicts["refuted_holdout"], "selected_tau": selected}
-        return {"verdict": verdicts["go"], "selected_tau": selected}
+        holdout_effect = achieved_effect_payload(
+            holdout_result["noise_summary"],
+            ledgers["holdout"]["noise"],
+            contract,
+        )
+        effect = {
+            "development": development_effect,
+            "holdout": holdout_effect,
+        }
+        if not holdout_result["passes"]:
+            return {
+                "schema": output_schema,
+                "verdict": verdicts["refuted_holdout"],
+                "selected_tau": selected,
+                "achieved_effect": effect,
+            }
+        go_output = {
+            "schema": output_schema,
+            "verdict": verdicts["go"],
+            "selected_tau": selected,
+            "achieved_effect": effect,
+        }
+        validate_go_output(go_output, ledgers, contract)
+        return go_output
     except (
         EvidenceError,
         ArithmeticError,
@@ -2112,6 +2497,7 @@ def adjudicate_result(
         subprocess.SubprocessError,
     ) as error:
         return {
+            "schema": output_schema,
             "verdict": verdicts.get("invalid_instrument", "INSTRUMENT_INVALID"),
             "reason": str(error),
         }
@@ -2572,7 +2958,10 @@ def run_self_test(contract: dict[str, Any]) -> None:
             {
                 "binding_state": "BOUND",
                 "bootstrap_replicates": 256,
-                "required_rms_reduction": 0.20,
+                "minimum_effect_binding_state": "UNBOUND",
+                "required_rms_reduction": None,
+                "effect_requirement": None,
+                "pilot_evidence": None,
                 "selected_sites_per_capture": 64,
                 "extractor_entrypoint": ref_for(temporal_extractor, root),
                 "extractor_bundle_manifest": ref_for(
@@ -2621,8 +3010,6 @@ def run_self_test(contract: dict[str, Any]) -> None:
             sites,
         )
         write_json(root / "pilot.json", pilot)
-        noise["effect_requirement"] = ref_for(root / "effect-requirement.json", root)
-        noise["pilot_evidence"] = ref_for(root / "pilot.json", root)
 
         binding = bound["detail_instrument"]
         binding.update(
@@ -2715,6 +3102,19 @@ def run_self_test(contract: dict[str, Any]) -> None:
         write_json(contract_path, bound)
         validate_contract(bound, test_mode=True)
         validate_frozen_bindings(bound, contract_path)
+        effect_bound = copy.deepcopy(bound)
+        effect_bound["noise_instrument"].update(
+            {
+                "minimum_effect_binding_state": "BOUND",
+                "required_rms_reduction": 0.20,
+                "effect_requirement": ref_for(root / "effect-requirement.json", root),
+                "pilot_evidence": ref_for(root / "pilot.json", root),
+            }
+        )
+        effect_bound_path = root / "effect-bound-contract.json"
+        write_json(effect_bound_path, effect_bound)
+        validate_contract(effect_bound, test_mode=True)
+        validate_frozen_bindings(effect_bound, effect_bound_path)
 
         manifest_sha = "a" * 64
         clean_standard = make_standardisation(
@@ -2847,7 +3247,112 @@ def run_self_test(contract: dict[str, Any]) -> None:
             verify_sources=False,
             test_mode=True,
         )
-        assert green == {"verdict": "PHASE1_GO", "selected_tau": "0.99"}, green
+        assert green["schema"] == "m138-adjudication/v2", green
+        assert green["verdict"] == "PHASE1_GO", green
+        assert green["selected_tau"] == "0.99", green
+        json.dumps(green, allow_nan=False)
+        assert set(green["achieved_effect"]) == {"development", "holdout"}, green
+        for phase, capture_id in (
+            ("development", "noise-development"),
+            ("holdout", "noise-holdout"),
+        ):
+            achieved = green["achieved_effect"][phase]
+            assert achieved["reference"] == "LEGACY_STREHL", achieved
+            assert achieved["scorecard_m2"]["licensed"] is False, achieved
+            assert achieved["minimum_effect"] == {
+                "symbol": "delta_required",
+                "binding_state": "UNBOUND",
+                "required_rms_reduction": None,
+                "required_power_ratio_upper": None,
+                "claim": "DIRECTION_ONLY",
+            }, achieved
+            rows = achieved["by_capture_and_plane"]
+            assert set(rows) == {capture_id}, achieved
+            assert set(rows[capture_id]) == {"R", "G1", "G2", "B"}, achieved
+            for row in rows[capture_id].values():
+                assert math.isclose(
+                    row["estimated_power_ratio"],
+                    0.5,
+                    rel_tol=1e-12,
+                    abs_tol=1e-12,
+                ), row
+                assert (
+                    row["simultaneous_confidence_lower"]
+                    <= row["estimated_power_ratio"]
+                    <= row["simultaneous_confidence_upper"]
+                ), row
+        bound_effect_result = copy.deepcopy(result)
+        bound_effect_result["contract_sha256"] = sha256(effect_bound_path)
+        write_json(root / "bound-effect-result.json", bound_effect_result)
+        bound_effect_verdict = adjudicate_result(
+            root / "bound-effect-result.json",
+            effect_bound_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert bound_effect_verdict["verdict"] == "PHASE1_GO", bound_effect_verdict
+        for achieved in bound_effect_verdict["achieved_effect"].values():
+            minimum = achieved["minimum_effect"]
+            assert minimum["symbol"] == "delta_required", achieved
+            assert minimum["binding_state"] == "BOUND", achieved
+            assert minimum["required_rms_reduction"] == 0.20, achieved
+            assert math.isclose(
+                minimum["required_power_ratio_upper"],
+                0.64,
+                rel_tol=1e-12,
+                abs_tol=1e-12,
+            ), achieved
+            assert minimum["claim"] == "PREREGISTERED_MINIMUM_EFFECT_MET", achieved
+        strict_effect_requirement = copy.deepcopy(effect_requirement)
+        strict_effect_requirement["required_rms_reduction"] = 0.40
+        write_json(
+            root / "strict-effect-requirement.json",
+            strict_effect_requirement,
+        )
+        strict_effect_bound = copy.deepcopy(effect_bound)
+        strict_effect_bound["noise_instrument"]["required_rms_reduction"] = 0.40
+        strict_effect_bound["noise_instrument"]["effect_requirement"] = ref_for(
+            root / "strict-effect-requirement.json",
+            root,
+        )
+        strict_effect_bound_path = root / "strict-effect-bound-contract.json"
+        write_json(strict_effect_bound_path, strict_effect_bound)
+        validate_contract(strict_effect_bound, test_mode=True)
+        validate_frozen_bindings(strict_effect_bound, strict_effect_bound_path)
+        strict_effect_result = copy.deepcopy(result)
+        strict_effect_result["contract_sha256"] = sha256(strict_effect_bound_path)
+        write_json(root / "strict-effect-result.json", strict_effect_result)
+        strict_effect_verdict = adjudicate_result(
+            root / "strict-effect-result.json",
+            strict_effect_bound_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert strict_effect_verdict["verdict"] in {
+            "PHASE1_REFUTED_NO_ROBUST_GLOBAL_TAU",
+            "PHASE1_REFUTED_NO_GLOBAL_OUTPUT_OPERATING_POINT",
+        }, strict_effect_verdict
+        bare_go = {
+            "schema": "m138-adjudication/v2",
+            "verdict": "PHASE1_GO",
+            "selected_tau": "0.99",
+        }
+        try:
+            validate_go_output(bare_go, bound["capture_ledgers"], bound)
+        except EvidenceError:
+            pass
+        else:
+            raise AssertionError("bare PHASE1_GO was accepted")
+        incomplete_go = copy.deepcopy(green)
+        del incomplete_go["achieved_effect"]["holdout"]["by_capture_and_plane"][
+            "noise-holdout"
+        ]["R"]["simultaneous_confidence_upper"]
+        try:
+            validate_go_output(incomplete_go, bound["capture_ledgers"], bound)
+        except EvidenceError:
+            pass
+        else:
+            raise AssertionError("PHASE1_GO with incomplete effect was accepted")
 
         try:
             validate_noise_commissioning_summaries(
@@ -3192,6 +3697,26 @@ def run_self_test(contract: dict[str, Any]) -> None:
             == "INSTRUMENT_INVALID"
         )
 
+        injected_effect = copy.deepcopy(development)
+        injected_effect["arms"]["0.50"]["achieved_effect"] = {
+            "estimated_power_ratio": 0.01
+        }
+        write_json(root / "injected-effect-development.json", injected_effect)
+        injected_effect_result = copy.deepcopy(result)
+        injected_effect_result["development"] = ref_for(
+            root / "injected-effect-development.json", root
+        )
+        write_json(root / "injected-effect-result.json", injected_effect_result)
+        assert (
+            adjudicate_result(
+                root / "injected-effect-result.json",
+                contract_path,
+                verify_sources=False,
+                test_mode=True,
+            )["verdict"]
+            == "INSTRUMENT_INVALID"
+        )
+
         postclamp = make_hull_evidence(
             bound,
             development_ledger["hull"],
@@ -3343,6 +3868,40 @@ def run_self_test(contract: dict[str, Any]) -> None:
             == "INSTRUMENT_INVALID"
         )
 
+        contradictory_effect_contract = copy.deepcopy(bound)
+        contradictory_effect_contract["noise_instrument"]["required_rms_reduction"] = (
+            0.20
+        )
+        contradictory_effect_path = root / "contradictory-effect-contract.json"
+        write_json(contradictory_effect_path, contradictory_effect_contract)
+        contradictory_effect_result = copy.deepcopy(result)
+        contradictory_effect_result["contract_sha256"] = sha256(
+            contradictory_effect_path
+        )
+        write_json(
+            root / "contradictory-effect-result.json",
+            contradictory_effect_result,
+        )
+        contradictory_effect_verdict = adjudicate_result(
+            root / "contradictory-effect-result.json",
+            contradictory_effect_path,
+            verify_sources=False,
+            test_mode=True,
+        )
+        assert contradictory_effect_verdict["verdict"] == "INSTRUMENT_INVALID"
+        assert "unbound minimum effect" in contradictory_effect_verdict["reason"]
+
+        bound_without_pilot = copy.deepcopy(effect_bound)
+        bound_without_pilot["noise_instrument"]["pilot_evidence"] = None
+        bound_without_pilot_path = root / "bound-without-pilot-contract.json"
+        write_json(bound_without_pilot_path, bound_without_pilot)
+        try:
+            validate_frozen_bindings(bound_without_pilot, bound_without_pilot_path)
+        except EvidenceError:
+            pass
+        else:
+            raise AssertionError("bound minimum effect was accepted without a pilot")
+
         null_cost_benchmark = copy.deepcopy(benchmark)
         null_cost_benchmark["measurements"]["scoring_arm_seconds"] = [None, None]
         write_json(root / "null-cost-benchmark.json", null_cost_benchmark)
@@ -3368,7 +3927,7 @@ def run_self_test(contract: dict[str, Any]) -> None:
         first_pilot = duplicate_pilot["captures"]["pilot-development"]
         first_pilot["source_outputs"][1] = first_pilot["source_outputs"][0]
         write_json(root / "duplicate-pilot.json", duplicate_pilot)
-        duplicate_pilot_contract = copy.deepcopy(bound)
+        duplicate_pilot_contract = copy.deepcopy(effect_bound)
         duplicate_pilot_contract["noise_instrument"]["pilot_evidence"] = ref_for(
             root / "duplicate-pilot.json", root
         )
@@ -3441,7 +4000,7 @@ def run_self_test(contract: dict[str, Any]) -> None:
             anticorrelated=True,
         )
         write_json(root / "low-power-pilot.json", low_power_pilot)
-        low_power_contract = copy.deepcopy(bound)
+        low_power_contract = copy.deepcopy(effect_bound)
         low_power_contract["noise_instrument"]["required_rms_reduction"] = 1e-6
         low_power_contract["noise_instrument"]["effect_requirement"] = ref_for(
             root / "weak-effect-requirement.json", root
@@ -3473,15 +4032,18 @@ def run_self_test(contract: dict[str, Any]) -> None:
         assert "draft" in draft_result["reason"], draft_result
 
     print(
-        "self-test: raw-evidence GO=GREEN missing-artifact=RED "
+        "self-test: raw-evidence GO=GREEN achieved-effect=MANDATORY "
+        "bound-effect=GREEN strict-bound=RED bare-GO=RED incomplete-effect=RED "
+        "direction-only-minimum=UNBOUND M2-claim=FALSE missing-artifact=RED "
         "missing-curve=RED missing-temporal-output=RED duplicate-output=RED "
-        "supplied-power=RED missing-M135-input=RED "
+        "supplied-power=RED supplied-effect=RED missing-M135-input=RED "
         "M135-null-state=INSTRUMENT_INVALID "
         "M135-invalid-plus-boolean=INSTRUMENT_INVALID "
         "M135-unknown-plus-boolean=INSTRUMENT_INVALID M135-valid-fail=REFUTED "
         "pipeline-mismatch=RED hash-mutation=RED supplied-boolean=RED "
         "postclamp-hull=RED M135-improvement-missing=RED M135-unbound=BLOCKED "
-        "unsupported-cost=RED null-cost=RED duplicate-pilot=RED "
+        "unsupported-cost=RED null-cost=RED contradictory-effect=RED "
+        "bound-without-pilot=RED duplicate-pilot=RED "
         "malformed-frozen-bindings=RED underpowered-design=RED improvement=GREEN "
         "development-refutation=RED holdout-refutation=RED width-irrelevance=GREEN"
     )

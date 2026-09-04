@@ -1,6 +1,6 @@
 # M138 corrected W1 gate draft
 
-Status: **SECOND REVIEW SEND-BACK UNDER REPAIR; NOT FROZEN.**
+Status: **SECOND REVIEW REPAIRS AND EFFECT-OUTPUT REFINEMENT COMPLETE; NOT FROZEN.**
 
 This document is a specification, not a campaign result. No corrected-gate
 candidate output was generated while repairing it. Commit `7fb925bf` is not a
@@ -8,8 +8,10 @@ design seal: independent review rejected that draft. A later commit may change
 `corrected-gate-contract.json` from
 `DRAFT_PENDING_THIRD_INDEPENDENT_REVIEW` to
 `FROZEN_BEFORE_CORRECTED_GATE_OUTCOME_GENERATION` only after a third
-independent review, all currently unbound inputs, and the cost benchmark are
-present. Until then, `adjudicate.py --result ...` returns
+independent review, every blocking instrument binding, and the cost benchmark
+are present. The named minimum-effect requirement may remain explicitly
+unbound under the direction-only rule below. Until then,
+`adjudicate.py --result ...` returns
 `INSTRUMENT_INVALID`.
 
 I am both the author of the original M138 audit and this replacement
@@ -46,7 +48,9 @@ estimate, and removed the premature freeze. The second-review repair closes
 four remaining assertion channels: temporal powers, pilot independence,
 inflation commissioning, and cost qualification. It also adds mutation
 coverage for the two M135 three-state guards that independent execution found
-correct but the prior self-test did not exercise.
+correct but the prior self-test did not exercise. This refinement makes the
+achieved temporal effect mandatory on every GO, keeps the minimum-effect
+symbol unbound, and explicitly denies any scorecard M2 interpretation.
 
 ## Existing behavior and provenance
 
@@ -323,7 +327,7 @@ unknown state, missing state, state/Boolean disagreement, or Boolean supplied
 for an internally invalid capture returns `INSTRUMENT_INVALID`. Only a valid
 `DETAIL_FAIL` may participate in the scientific output-quality verdict. The
 adjudicator never coerces an invalid state to `false`
-(`experiments/M138-w1-gate-audit/adjudicate.py:829-896`).
+(`experiments/M138-w1-gate-audit/adjudicate.py:877-944`).
 
 Physical commissioning must execute and pass:
 
@@ -363,7 +367,7 @@ contract and verify by SHA-256: `extractor_entrypoint`,
 `extractor_bundle_manifest`, and `extractor_environment_manifest`. The bundle
 uses schema `m138-temporal-extractor-bundle/v1`, lists every transitive source
 file, and must include the exact entrypoint
-(`experiments/M138-w1-gate-audit/adjudicate.py:898-933`).
+(`experiments/M138-w1-gate-audit/adjudicate.py:946-981`).
 
 For scored output, M138 invokes exactly:
 
@@ -405,7 +409,7 @@ The extractor may not emit site powers. The adjudicator computes
 bounds, and verdicts. Thus replacing a referenced output changes the
 hash-verified extractor input; changing a power assertion is impossible
 because the request has no such field
-(`experiments/M138-w1-gate-audit/adjudicate.py:935-1156`).
+(`experiments/M138-w1-gate-audit/adjudicate.py:983-1205`).
 
 For the pilot, M138 invokes:
 
@@ -423,76 +427,112 @@ duplicate hash, including reuse across pilot targets. Candidate and legacy
 renders of the same acquisition are
 paired measurements, not independent acquisitions; the repeat captures inside
 each temporal pair are the units that must be independent
-(`experiments/M138-w1-gate-audit/adjudicate.py:1228-1370`).
+(`experiments/M138-w1-gate-audit/adjudicate.py:1553-1696`).
 
-#### No replacement effect-size constant
+#### Natural decision boundary — [VERIFIED—PREREGISTERED]
 
-**[VERIFIED—PREREGISTERED]** The temporal decision boundary is `1.0`, the
-estimand's natural no-improvement null. For one arm, resample paired site
-indices within each capture, using the same resample for all four CFA planes.
-For bootstrap replicate `b` and capture-plane cell `j`, compute
-`e_bj=theta_bj-theta_j`. Let `q` be the `95th` percentile of
-`max_j(e_bj)` over `8,192` deterministic replicates. Then:
+The temporal decision boundary is `1.0`, the estimand's natural
+no-improvement null. For one arm, resample paired site indices within each
+capture, using the same resample for all four CFA planes. For bootstrap
+replicate `b` and capture-plane cell `j`, compute
+`e_bj=theta_bj-theta_j`. Let `q_upper` be the `95th` percentile of
+`max_j(e_bj)`, and let `q_two` be the `95th` percentile of
+`max_j(abs(e_bj))`, over `8,192` deterministic replicates. Then:
 
 ```text
-U_j = exp(theta_j + q)
+U_j       = exp(theta_j + q_upper)
+CI_j      = [exp(theta_j - q_two), exp(theta_j + q_two)]
+R_hat_j   = exp(theta_j)
 ```
 
 The arm passes temporal noise iff every `U_j < 1.0`. This is a simultaneous
 one-sided `95%` family bound across all registered captures and all four
-planes. Report the physically interpretable guaranteed RMS reduction:
+planes. The two-sided `CI_j` is the simultaneously covered effect interval
+reported to readers. The resampler is NumPy `default_rng`/PCG64 with seed
+`138138` mixed with the arm label by SHA-256; quantiles use method `higher`.
 
-```text
-delta_guaranteed = 1 - sqrt(max_j(U_j))
-```
+#### Mandatory achieved-effect verdict — [VERIFIED—PREREGISTERED]
 
-No positive magnitude is claimed beyond that lower bound. This is a strict
-Pareto-superiority test, not a disguised `0.90` replacement.
-The resampler is NumPy `default_rng`/PCG64 with seed `138138` mixed with the
-arm label by SHA-256; quantiles use method `higher`.
+Every `PHASE1_GO` carries an `achieved_effect` object for both development and
+holdout. For every registered capture and each of `R`, `G1`, `G2`, and `B`, it
+contains:
 
-#### Power and site-count binding
+- `estimated_power_ratio = R_hat_j`;
+- `simultaneous_confidence_lower` and
+  `simultaneous_confidence_upper`;
+- `simultaneous_one_sided_upper`, the value that made the directional
+  decision; and
+- the aggregate
+  `minimum_guaranteed_rms_reduction = 1-sqrt(max_j(U_j))`.
 
-The old `64`-site minimum is withdrawn as an assumption of adequacy. It remains
-the lowest admissible count, but it has no demonstrated power for this
-estimand or for the four-plane/all-capture conjunction.
+This object is part of the verdict, not a diagnostic attachment.
+It also names the estimand as `P_candidate/P_legacy`, the reference as
+`LEGACY_STREHL`, the familywise confidence, interval methods, and the
+minimum-effect binding state. These values are constructed only from the
+recomputed extractor summary; the result manifest is forbidden to submit
+them. If any registered capture, plane, estimate, or interval is absent,
+non-finite, or internally inconsistent, effect construction raises
+`INSTRUMENT_INVALID` before a GO can be returned. A GO is therefore unreadable
+without its achieved effect
+(`experiments/M138-w1-gate-audit/adjudicate.py:1239-1552`;
+`experiments/M138-w1-gate-audit/adjudicate.py:2427-2487`).
 
-Before freeze, acquire a candidate-independent pilot with four independent
-legacy repeat bursts per matched capture condition. The two disjoint burst
-pairs provide `P_A` and `P_B` under the null. The pilot must expose at least
-`64` support-separated sites so the old proposal can be evaluated rather than
-presumed.
+#### W1 licenses no scorecard M2 claim
 
-An owner-approved effect requirement must state the smallest RMS reduction
-worth detecting, `delta_required`, before candidate output. The requirement
-schema is `m138-noise-effect-requirement/v1`; it must contain the physical claim
-text, `authority=OWNER_APPROVED_REQUIREMENT`, and a hash-bound approval
-artifact. A bare number in the contract is invalid. The corresponding planted
-power shift is derived, not authored:
+**[VERIFIED]** W1's ratio is candidate Strehl temporal power divided by legacy
+Strehl temporal power, and its decision boundary is the natural null `1.0`.
+Scorecard M2 instead compares Strehl against the minimum-noise *shipping
+comparator* and requires
+`UCB95(sigma_strehl/min(sigma_comparator)) <=0.950` plus `eta <=1.10`
+(`docs/proposals/2026-09-sota-scorecard.md:633-635`). The pre-repair W1
+record separately carried an inherited `<=0.90` temporal-power ceiling
+(`docs/proposals/2026-08-sota-path.md:2517-2521`).
+
+Those are different estimands, references, and claims. The `0.950` scorecard
+bar is not imported into W1. `PHASE1_GO` licenses no scorecard M2 claim, does
+not establish the M2 shipping-comparator margin, and does not discharge the
+M2 `eta` condition. The mandatory output repeats
+`scorecard_m2.licensed=false` and names `SHIPPING_COMPARATOR` so this scope
+cannot disappear in a summary.
+
+#### Minimum effect remains named and unbound
+
+**[VERIFIED—PREREGISTERED]** The minimum effect is named
+`delta_required`; `minimum_effect_binding_state` is `UNBOUND`, and
+`required_rms_reduction`, `effect_requirement`, and `pilot_evidence` are all
+null. No replacement number is selected. In this state a GO claims direction
+only: the simultaneous upper bound cleared `1.0`, and the achieved estimate
+and interval are disclosed, but no minimum practically meaningful magnitude
+is claimed.
+
+The selected site count and exact site ledgers are still frozen before output,
+with `64` sites retained only as the lowest admissible evidence count. That
+floor carries no power or minimum-effect claim.
+
+If the owner later binds `delta_required`, the binding must occur before
+candidate output and must include an owner-approved requirement artifact plus
+a physical, candidate-independent four-burst pilot. The four unique bursts
+form disjoint pairs `P_A` and `P_B`. The planted ratio and log shift are then
+derived:
 
 ```text
 R_required = (1 - delta_required)^2
 log_shift  = 2 * log(1 - delta_required)
 ```
 
-Using the same max-statistic resampling and the complete development or
-holdout capture-by-plane conjunction, estimate the probability that all
-simultaneous upper bounds fall below `1.0`. The familywise type-I budget is
-`alpha=0.05`. Because a false refutation is no less serious than a false GO,
-the type-II budget is set symmetrically to `beta=0.05`, hence required power
-`0.95`. The one-sided `95%` Wilson lower bound on simulated power, not its
-point estimate, must be `>=0.95`.
+Using the same max-statistic resampling and complete capture-by-plane
+conjunction, the one-sided `95%` Wilson lower bound on power at both `64` sites
+and the selected count must reach `0.95`; otherwise the magnitude binding is
+invalid. That power qualification shows the instrument can detect the bound
+effect; it does not itself prove the observed effect. A later magnitude GO
+must additionally have every observed simultaneous upper bound
+`U_j <= R_required`, and the verdict must report both `delta_required` and
+`R_required`. This conditional path governs only a later minimum-effect claim.
+Its absence does not convert the present directional W1 question into
+`INSTRUMENT_INVALID`.
 
-The power artifact must report power at exactly `64` sites and at the selected
-site count. The selected count is frozen into every site ledger and must meet
-the power rule for both the full development conjunction and the full holdout
-conjunction. If no available count meets it, or if `delta_required` has no
-external provenance, the result is `INSTRUMENT_INVALID`; a convenient effect
-or threshold may not be invented.
-
-At this draft's authoring, the temporal extractor binding,
-`delta_required`, the physical pilot, and the power-qualified site count do not
-exist. The temporal instrument is therefore intentionally `UNBOUND`.
+At this draft's authoring, the temporal extractor and site ledgers remain
+blocking and unbound. `delta_required` remains unbound by design.
 
 ### Hull: PRE-CLAMP reconstruction
 
@@ -536,6 +576,8 @@ The top-level `m138-result/v3` file contains only the exact contract hash and
 hash-bound references to standardisation, commissioning, development, and
 optional holdout artifacts. Every reference is `{path, sha256}`. Paths are
 relative and must remain inside the sealed result tree.
+The adjudicator emits `m138-adjudication/v2`; every verdict has that schema,
+and every GO additionally has the mandatory `achieved_effect` object.
 
 The adjudicator itself:
 
@@ -547,6 +589,9 @@ The adjudicator itself:
 - executes the exact hash-bound temporal extractor on each scored request,
   accepts only per-site squared-difference sums and integer sample counts, and
   computes every temporal power as `0.5*sumsq/count`;
+- constructs every reported per-capture/per-plane ratio and simultaneous
+  interval from that recomputation and makes the complete achieved-effect
+  object mandatory on `PHASE1_GO`;
 - rejects repeated source-capture identities, repeated independent source
   hashes, repeated output paths, and repeated within-mode repeat hashes;
 - executes the same extractor on the four-burst pilot, requires four unique
@@ -559,7 +604,7 @@ The adjudicator itself:
 - opens the hash-bound cost benchmark, runner bundle, environment, and workload
   manifest; validates finite positive warm measurements; and recomputes both
   wall-clock totals
-  (`experiments/M138-w1-gate-audit/adjudicate.py:1483-1622`); and
+  (`experiments/M138-w1-gate-audit/adjudicate.py:1825-1965`); and
 - rejects old-style supplied conclusions such as `seal_valid`, `detail_pass`,
   `candidate_site_power`, `pair_a_site_power`,
   `noise_power_upper95_by_capture`, and
@@ -574,12 +619,14 @@ quality failure or a GO.
 `--check` has two modes. A draft receives structural/source/document checks and
 is reported explicitly as not frozen. A contract claiming the frozen status
 must additionally open and hash-verify the independent review, all M135
-bindings, the temporal extractor bundle/environment/effect/pilot, both
-complete disjoint capture ledgers, and every cost artifact; it also recomputes
-pilot power and benchmark totals. A malformed review object, an unbound M135
-adapter, a null ledger, a missing extractor, or null benchmark measurements
-therefore makes `--check` exit nonzero
-(`experiments/M138-w1-gate-audit/adjudicate.py:1624-1656`).
+bindings, the temporal extractor bundle/environment, both complete disjoint
+capture ledgers, and every cost artifact. If `delta_required` is bound, it must
+also verify the effect requirement and pilot and recompute pilot power;
+otherwise all three fields must be explicitly null. A malformed review object,
+an unbound M135 adapter, a null ledger, a missing extractor, contradictory
+minimum-effect state, or null benchmark measurements therefore makes `--check`
+exit nonzero
+(`experiments/M138-w1-gate-audit/adjudicate.py:1966-1999`).
 
 ## Pass/fail rule
 
@@ -588,8 +635,10 @@ therefore makes `--check` exit nonzero
 1. Commit this repaired draft.
 2. Obtain the third independent review.
 3. Bind the temporal extractor, transitive bundle, and environment.
-4. Bind the external temporal effect requirement and four-burst pilot.
-5. Bind the power-qualified temporal site count.
+4. Bind the exact temporal site count and site ledgers.
+5. Either retain `delta_required=UNBOUND` for a direction-only verdict, or,
+   before any candidate output, bind its owner-approved requirement,
+   four-burst physical pilot, and power qualification.
 6. Bind the physical M135 checker, dependency bundle, rule, environment, and
    bidirectional commissioning request.
 7. Bind disjoint development/holdout role and site ledgers.
@@ -631,17 +680,17 @@ pipeline, or artifact hash returns `INSTRUMENT_INVALID`.
 
 | Condition | Verdict | Meaning |
 |---|---|---|
-| Draft contract, absent artifact, hash mismatch, failed standardisation, failed bidirectional commissioning, unsupported temporal power, or unsupported cost | `INSTRUMENT_INVALID` | No Phase-1 inference |
+| Draft contract, absent artifact, hash mismatch, failed standardisation, failed bidirectional commissioning, unsupported temporal extraction/site ledger, malformed optional magnitude binding, missing achieved effect, or unsupported cost | `INSTRUMENT_INVALID` | No Phase-1 inference |
 | Physical M135 binding absent | `BLOCKED_DETAIL_INSTRUMENT` | No Phase-1 inference |
 | Valid instruments; no robust development center | `PHASE1_REFUTED_NO_GLOBAL_OUTPUT_OPERATING_POINT` | Frozen Phase-1 candidate family refuted |
 | Robust center selected; holdout unopened | `AWAITING_HOLDOUT` | No final verdict |
 | Selected center fails any holdout output requirement | `PHASE1_REFUTED_HOLDOUT` | Frozen Phase-1 version refuted |
-| Selected center passes every holdout output requirement | `PHASE1_GO` | Phase-1 may proceed to integration |
+| Selected center passes every holdout output requirement and the adjudicator emits the complete achieved-effect object | `PHASE1_GO` | Directional W1 result only; Phase-1 may proceed to integration |
 
-A genuine refutation exists only after all instruments, power, evidence,
-hashes, cost benchmark, and freeze are valid, and then either no
-three-adjacent development interval passes or the selected threshold fails
-holdout.
+A genuine refutation exists only after all blocking instruments, evidence,
+hashes, cost benchmark, and freeze are valid; if a minimum effect is bound, its
+pilot power must also be valid. Only then may either no three-adjacent
+development interval or a selected-threshold holdout failure refute Phase 1.
 
 ## Why this is not a weaker bar
 
@@ -653,11 +702,12 @@ survive. The simultaneous upper bound must clear the natural null in every
 capture and CFA plane. The guaranteed RMS reduction is reported rather than
 hidden behind a power ratio.
 
-The gate cannot refute Phase 1 unless a separately justified RMS target is
-shown detectable at the frozen site count. It cannot return GO unless the
-observed improvement itself clears the simultaneous no-improvement boundary.
-A stronger product claim, such as a specified minimum RMS reduction, requires
-its own external requirement and cannot be inferred from this GO.
+The gate cannot return GO unless the observed improvement itself clears the
+simultaneous no-improvement boundary, and it cannot return a bare GO without
+the achieved ratio and interval for every capture/plane cell. With
+`delta_required` unbound, it makes no minimum-magnitude claim. A stronger
+claim requires its own pre-output requirement and physical-pilot power
+binding; it cannot be inferred from a direction-only GO.
 
 Average-everything remains exposed to M135's detail/transfer veto.
 Winner-take-all remains exposed to the temporal superiority test. Width removes
@@ -692,9 +742,11 @@ Define `S_noise=-max_j(log(R_j))`, so larger is better.
 - The adjudicator applies the registered transforms to the recomputed
   candidate repeat-difference power:
   `IDENTITY`,
-  `(1+delta_required)^2`,
-  `(1-delta_required)^2`, and the identity induced by adding the same scene
-  term to both repeats. The legacy power is unchanged.
+  `DOUBLE_CANDIDATE_TEMPORAL_POWER`,
+  `HALVE_CANDIDATE_TEMPORAL_POWER`, and the identity induced by adding the
+  same scene term to both repeats. The legacy power is unchanged. Doubling and
+  halving are commissioning plants, corresponding to adding or averaging an
+  independent equal-variance realization; neither is a minimum-effect bar.
 - The null and common-scene placebo must have simultaneous two-sided `95%`
   intervals containing `1.0` in every cell, and their recomputed power arrays
   must be exactly equal.
@@ -708,14 +760,17 @@ Define `S_noise=-max_j(log(R_j))`, so larger is better.
 
 The transform application and the explicit inflation-superiority refusal are
 implemented at
-`experiments/M138-w1-gate-audit/adjudicate.py:1832-1947`.
+`experiments/M138-w1-gate-audit/adjudicate.py:2180-2296`.
 
 `python experiments\M138-w1-gate-audit\adjudicate.py --self-test` executes
 non-campaign null, defect, improvement, missing-artifact, hash-mutation,
-duplicate-output, duplicate-pilot, supplied-power, supplied-Boolean, M135
+duplicate-output, duplicate-pilot, supplied-power, supplied-effect,
+contradictory-effect, supplied-Boolean, M135
 `DETAIL_FAIL`, M135 internally invalid, M135 invalid-plus-Boolean, M135
 unknown-plus-Boolean, post-clamp, malformed-freeze, null-cost, refutation,
-holdout, and width-irrelevance controls. The M135 null-state plants must return
+bare-GO, incomplete-effect, valid-bound-effect, too-strict-bound-effect,
+bound-without-pilot, holdout, and width-irrelevance controls. The M135
+null-state plants must return
 `INSTRUMENT_INVALID`; the valid `DETAIL_FAIL` plant must remain a scientific
 failure rather than an instrument failure.
 
@@ -725,7 +780,8 @@ In a disposable scratch copy under this experiment directory, exact
 single-match source deletions produced:
 
 - removing the internally-invalid-plus-Boolean rejection: exit `1`;
-- removing the unknown/null-state rejection: exit `1`; and
+- removing the unknown/null-state rejection: exit `1`;
+- removing the mandatory GO achieved-effect field: exit `1`; and
 - an inert comment-only edit: exit `0`.
 
 The scratch tree was deleted after the checks. These mutations establish that
@@ -789,9 +845,11 @@ the adjudicator refuses campaign results.
 ## Could not determine — [VERIFIED]
 
 1. The smallest RMS improvement the program intends Phase 1 to claim. No
-   external requirement was available, so `delta_required` remains unbound.
+   external requirement was available, so `delta_required` remains unbound
+   and any future GO is direction-only.
 2. The power at `64` sites or the required site count. No qualifying four-burst
-   physical pilot exists in the reviewed inputs.
+   physical pilot exists in the reviewed inputs; no minimum-magnitude claim is
+   therefore available.
 3. Whether M135's physical path, positive improvement plant, and comparison
    checker will commission.
 4. Exact development and holdout capture/site ledgers.
@@ -827,6 +885,8 @@ The reference checker verifies these ranges against pinned bytes:
 - `docs/proposals/2026-09-phase1-design.md:226-230`
 - `docs/proposals/2026-09-phase1-design.md:312-316`
 - `docs/proposals/2026-09-phase1-design.md:340-350`
+- `docs/proposals/2026-09-sota-scorecard.md:633-635`
+- `docs/proposals/2026-08-sota-path.md:2517-2521`
 - `experiments/PHASE1-DESIGN/PREREGISTRATION.md:167-203`
 - `experiments/PHASE1-DESIGN/results/gate.json:1-1`
 - `experiments/PHASE1-DESIGN/results/run.json:1-1`
