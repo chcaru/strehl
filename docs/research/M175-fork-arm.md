@@ -338,4 +338,4 @@ cleared” with:
 > after both licensed PMax and DMap produce common-input outputs that pass
 > §1.3.
 
-The current text is at `docs/OWNER-ACTIONS.md:474-478`.
+The current text is at `docs/OWNER-ACTIONS.md:487-490`.
