@@ -3695,6 +3695,87 @@ There is a genuine residue underneath all this, and it is not explained by the
 rail: a one-frame bilinear null has M8-R zero but M8-O `52,570 / 24,724,512 =
 0.212623%`. That is a real post-gather defect and M136 is asked to diagnose it.
 
+### 2.9.33 The plan already contains a detail instrument. The scorecard never wired it in.
+
+Having just written that `(a)` is the program's critical path, I went and read
+the owner's plan properly rather than the instrument derived from it — and found
+that **`docs/proposals/2026-08-sota-path.md` specifies a detail instrument, in
+detail, and describes it as already commissioned.**
+
+Its information ledger lists among the channels the capture makes available:
+
+> **Split-stack halves** | **two independent realisations of the same latent —
+> empirical noise/resolution ground truth** | **D8** (new)
+> (`2026-08-sota-path.md:895`)
+
+And `D8` itself (`:1694-1745`), *"split-stack self-calibration: the stack
+contains its own ground truth"*:
+
+> The best-commissioned instrument in the corpus is **M115 §2's split-half
+> channel**: fold two interleaved disjoint half-stacks through the entire
+> pipeline, each re-deriving every data-dependent weight inside its own half;
+> the cross-spectrum of the two outputs is signal [...] validated with planted
+> blur recovered at `0.9938–0.9974`, gain-invariance to `0.54%` under filters
+> that moved naive metrics `8.25×`, and an exact
+> `(P(A)+P(B))/2 = P_sig + P_noise` identity.
+
+With the acuity channel stated outright: per-tile FRC between the two
+half-renders as *"a spatially-resolved, model-free certified-resolution map"*
+where *"no model assumption can inflate"* the measured resolution.
+
+**This is the architecture I had independently hypothesised and briefed to M135
+as a guess — and it is better than my version.** I proposed agreement against an
+*independent reference capture*, which would have needed the owner's session.
+D8 uses **split halves of one capture**, so it needs no new photography and is
+not blocked on him at all. I withdrew my suggestion in favour of it.
+
+It also prices the three defeats I had flagged as attacks on reference designs:
+fixed pattern is common-mode but **bounded** at `0.05–0.073%` of scene signal
+with C6's in-situ map upgrading the bound to a subtraction; quantisation is
+correlated between halves, under-reported `16×`, which is why no measurement
+path may see quantised intermediates; and a repeated bracket is named as the
+gold form.
+
+**The governance question this raises is serious.** The scorecard reports
+`NO ADMISSIBLE BAR — WITHDRAWN` for M1, which made the axis look hopeless. The
+withdrawn statistic is `f_licensed`/`S_25` — plausibly a *different* instrument
+that was tried and failed, while D8/M115 may simply never have been wired into
+the scorecard at all. If so the scorecard is not wrong, but **it omitted the
+plan's own answer**, which is nearly as expensive: it is why I have been
+treating `(a)` as an open research problem rather than an integration task.
+
+**I am not assuming the reconciliation.** There is real counter-evidence, and it
+is the reason I am not treating D8 as a solved answer:
+
+- `docs/research/M-FRC-VIABILITY.md:1-12` records that a metric of this family is
+  *"structurally blind to an arbitrary-strength common linear post-filter,
+  including blur"* — the impossibility result.
+- `docs/research/BUILD-SHARP.md:172` carries an *"18,644x more responsive than
+  ring FRC"* figure as counter-evidence.
+
+So the plan says FRC/split-half cannot be fooled; a later research document says
+a metric of that family is structurally blind. **Both cannot be right about the
+same estimand.** Three separable outcomes: the blindness may bind only
+ring-averaged FRC as a resolution-threshold readout while the cross-spectrum
+band-SNR statistic survives; or it may bind both, in which case the plan is
+wrong on its central instrument, which is precisely the *"unless evidence proves
+otherwise"* the owner licensed; or blindness to a *common* filter may be exactly
+right for **comparator qualification** while fatal for **absolute detail** — the
+two jobs M1 has to do.
+
+**M135 owns the technical ruling** and has been re-briefed with all of it,
+including an instruction to verify the `0.9938–0.9974`, `0.54%`, `8.25×` and the
+power identity at M115's primary source rather than trusting the plan's summary
+of its own instrument. **M133 owns the documentary question** — whether any later
+document actually retired D8, and more broadly whether the scorecard has drifted
+from, weakened, or silently omitted parts of the plan it was built to measure.
+M133 is also asked whether decision rule 4 — the rule now doing all the work in
+my advice not to buy software — is the owner's requirement or my invention.
+
+Recorded now, unresolved on purpose. If D8 stands, the critical path is an
+integration task and not a research programme, and that is a materially
+different program than the one described three sections above.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
