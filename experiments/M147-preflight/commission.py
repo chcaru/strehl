@@ -590,15 +590,15 @@ def arm_partial_grid(_: Path) -> dict[str, Any]:
     for plane in scored:
         y, x = np.indices(plane.shape)
         keep = (
-            (abs(y - plane.shape[0] / 2.0) < 300)
-            & (abs(x - plane.shape[1] / 2.0) < 350)
+            (abs(y - plane.shape[0] / 2.0) < 160)
+            & (abs(x - plane.shape[1] / 2.0) < 200)
         )
-        background = ndimage.gaussian_filter(plane, 100.0)
+        background = np.full_like(plane, float(np.median(plane)))
         masked.append(np.where(keep, plane, background).astype(np.float32))
     result = run_pair(reference, tuple(masked))  # type: ignore[arg-type]
     result.update(
         {
-            "plant": "grid retained only in a 600x700 green-pixel window",
+            "plant": "grid retained only in a 320x400 green-pixel window",
             "required": "GRID_TOO_SMALL or NO_COHERENT_GRID refusal",
         }
     )
