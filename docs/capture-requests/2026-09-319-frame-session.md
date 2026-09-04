@@ -1,12 +1,35 @@
 # Capture request: 383 claim frames + 60 witnesses + 160 reference = 603 for M1, M5 and M9
 
-Status: **FROZEN — FINAL SHOOT PROCEDURE**
+Status: **FROZEN — BLOCKED ON THREE PRE-SHOOT ITEMS (see next section)**
 Owning lane: **lane-FRC**
 Approver: **orchestrator**
 Raised: 2026-09
+Session length: **one uninterrupted session, 45–60 minutes** — acquisition floor
+is 18.4–22.6 minutes (255 bracket frames = 250 × 3 s intervals, plus fixed-focus
+exposures); the balance is gates, resets, calibration changes and the reference
+repositioning. **Splitting it across two sittings invalidates the same-session
+requirement.**
 Amended: 2026-09 (Sony A7C II automated-bracketing protocol)
 Amended: 2026-09 (truth-reference block; main sweeps pinned to 1.30× reproduction)
 Frozen: 2026-09-03
+Amended: 2026-09-04 (reference block made physically executable; three pre-shoot blockers raised)
+
+## DO NOT SHOOT YET — THREE UNRESOLVED ITEMS GATE THIS SESSION
+
+Raised by lane-FRC on review of the truth-reference integration, 2026-09-04.
+The procedure below is complete and correct **except** for these three, and
+each one can waste the whole session if it is wrong. **Settle all three before
+the owner sets up.** None requires holdout data; all can be settled on
+development captures or a bench dry run.
+
+| # | Blocker | Why it can ruin the session | What settles it |
+| --- | --- | --- | --- |
+| 1 | **`sw4` / `sw10` step widths are unverified at 1.30×** | The widths were frozen without a documented reproduction ratio. Sony's step width is *relative* and depends on aperture and initial focus, so depth-of-field per step changes with magnification. If they are wrong, the ladders have gaps and the sweeps do not sample what the gates assume. | A non-holdout rehearsal at **1.30×, f/5.6, the exact converter**, proving 55 frames at width 4 and 27 at width 10 give **gap-free coverage with interior peaks at 64 eligible sites**. Do not derive replacement widths from holdout data. |
+| 2 | **G2 and G3 were never commissioned at 1.30×** | G2 is a fixed-focus spectral repeat and G3 a ladder-node match. Their thresholds (`< 0.10` log-ratio, unique zero-lag maximum, `< 0.10` geometry) were frozen at a different configuration and there is no justified magnification-adjusted threshold. | An exact-configuration development dry run. G0 (`≤ 0.033`) and G1 (`< 0.10` native pixel) are unaffected and remain valid. |
+| 3 | **Converter identity is unresolved** | Every measured Focus-Bracket result in this repository was obtained with the **Sony SEL20TC**. This request specifies a **2× Viltrox**. Focus Bracket behaviour with the Viltrox is **UNKNOWN** — mode availability, 55/27-shot completion, aperture and exposure reporting, and endpoint repeatability are all unverified on that hardware. | Either confirm the owner will shoot the **Sony SEL20TC**, in which case this blocker closes immediately, or bench-rehearse the Viltrox before committing the session to it. **This is a question for the owner, not a measurement.** |
+
+**Blockers 1 and 2 are the same rehearsal** — one dry run at the exact
+configuration settles both. Blocker 3 is one question to the owner.
 
 ## STANDING EQUIPMENT CONSTRAINT — OWNER-SUPPLIED — DO NOT REOPEN
 
@@ -237,18 +260,22 @@ part of the session that can tell us whether the stacker resolves real detail
 rather than merely adding contrast**, so if bench time runs short, cut
 something else rather than this.
 
-1. **Do not touch the subject, the lighting or the tripod position.** The
-   reference must show the same patch under the same illumination. Moving the
-   target invalidates the block.
+1. **Do not touch the subject or the lighting.** The reference must show the
+   same patch under the same illumination. Moving or relighting the target
+   invalidates the block. **The camera does move for this block — see item 4 —
+   and this is the only block in which that is permitted.**
 2. **Leave the 2× teleconverter on.** Do not swap to the bare lens.
 3. **Turn Focus Bracket OFF.** Every frame in this block is fixed focus.
-4. **Increase magnification to the lens's maximum** — target **≥ 2.70×**
-   effective reproduction, versus the 1.30× used for the sweeps. Refocus and
-   reframe onto the same patch as needed; the framing may differ, but the same
-   physical detail and at least some of the same fiducial marks must be visible
-   so the two can be registered.
-5. Pick **three depths** across the patch — near, middle, far — matching the
-   depth range the sweeps covered. At each, lock focus and take **32 frames**
+4. **Translate the camera toward the subject until the grid measures ≥ 2.70×**
+   effective reproduction, versus the 1.30× used for the sweeps. Use a rigid
+   focusing rail if you have one; otherwise move the tripod. **You cannot reach
+   2.70× by refocusing alone from a fixed camera position** — on a fixed
+   focal-length macro lens reproduction is set by subject distance, so the
+   camera must come closer. Reframe onto the same physical patch; the framing
+   will differ, but the same detail and at least some of the same fiducial
+   marks must be visible so the two can be registered.
+5. Use the **same three physical near / middle / far regions you framed for the
+   sweeps**. Centre and focus each in turn, lock focus, and take **32 frames**
    without touching anything. That is 96 frames.
 6. **32 reference flats.** Move or rotate the diffuser first, exactly as you did
    between flats A and B. These must not reuse the main session's flats.
@@ -256,10 +283,11 @@ something else rather than this.
 8. Keep every frame in this block in its own folder, clearly separated from the
    main sweeps.
 
-**If the maximum reproduction you can reach is below about 2.0× while the main
-sweeps are at 1.30×, stop and tell me the number before shooting the block** —
-below that ratio the reference cannot serve as truth and those 160 frames would
-be wasted.
+**Stop and tell me the number before shooting the block if the reference
+reproduction divided by the measured main reproduction is below 2.0.** With the
+main sweeps at 1.30×, that means the reference must measure **at least 2.60×**;
+2.70× is the target so there is margin. Below that ratio the reference cannot
+serve as truth and those 160 frames would be wasted.
 
 For every six-frame fixed-focus burst, use the same lock method. Switching
 between the lock and Focus Bracket must not move focus. If it does, this setup
@@ -521,8 +549,11 @@ spend none of the holdout.
 2. **Reference eligibility — do this early, because it is the one thing that
    cannot be fixed later.** Measure effective reproduction on both the main
    sweeps and the reference block from the grid, as pixels per period, and
-   compute the ratio. It must be **≥ 2.0×**; below `1.25×` the block is an
-   automatic no-go. Confirm the reference is unclipped, that its two disjoint
+   compute the ratio, then apply exactly three bands so there is no ambiguity:
+   **≥ 2.0× is eligible**; **1.25× to 2.0× is degraded** — record it and do not
+   use it for a scored detail claim without an explicit ruling; **below 1.25×
+   is an automatic no-go** and the block is dead. Confirm the reference is
+   unclipped, that its two disjoint
    16-frame halves agree, and that it carries genuine power in every band the
    detail claim will use. A failed gate makes M1 `UNMEASURED`; it never
    produces a lower score.
