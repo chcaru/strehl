@@ -301,6 +301,15 @@ coverage banner and requires its reported `(x,y,width,height)` to equal the
 frozen rectangle before opening the checker. All three reported rectangles are
 retained in the arm receipt and rechecked against the adjudicated result.
 
+Receipt verification is relational, not a collection of free-standing hashes:
+it requires the exact planned arm/root/case/mode and evidence commit, binds the
+reported Crop rectangle to the immutable run-plan rectangle, binds both source
+trees and all three binaries to PREPARE, binds the writer and trace audit to
+their fixed arm paths, reruns the independent checker verification, and
+requires the retained-file index to equal every file below the arm plus its
+single create-only lock. Empty or internally consistent substitute trees,
+results, audits, writers, and file lists are refused.
+
 Do not pass `-ContinueAfterFlat1s` until both flat-1s receipts have been
 independently verified and the operator has read the Crop stopping result.
 Later cases require that explicit switch. They are refused unconditionally if

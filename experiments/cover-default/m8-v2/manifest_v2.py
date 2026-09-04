@@ -295,7 +295,9 @@ def committed_file(repo: Path, commit: str, path: Path) -> dict[str, Any]:
     blob = str(git(repo, "rev-parse", f"{commit}:{relative}")).strip()
     kind = str(git(repo, "cat-file", "-t", blob)).strip()
     require(kind == "blob", f"{relative}@{commit}: expected a Git blob, got {kind}")
-    checkout_blob = str(git(repo, "hash-object", "--no-filters", str(path))).strip()
+    checkout_blob = str(
+        git(repo, "hash-object", "--path", relative, str(path))
+    ).strip()
     require(
         checkout_blob == blob,
         f"{path}: checkout bytes do not match {relative}@{commit}",
@@ -1699,8 +1701,12 @@ def _arm_file_paths(root: Path, receipt_path: Path) -> set[Path]:
             path = Path(directory) / name
             require(not path.is_symlink(), f"{path}: arm-directory symlink forbidden")
         for name in files:
-            path = (Path(directory) / name).resolve()
-            require(not path.is_symlink(), f"{path}: arm-file symlink forbidden")
+            lexical_path = Path(directory) / name
+            require(
+                not lexical_path.is_symlink(),
+                f"{lexical_path}: arm-file symlink forbidden",
+            )
+            path = lexical_path.resolve()
             require(path.is_file(), f"{path}: arm entry is not a regular file")
             if path != receipt_path:
                 paths.add(path)
@@ -1825,6 +1831,13 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
     )
     for name, row in source_trees.items():
         require(isinstance(row, dict) and row.get("root"), f"{name}: bad tree record")
+        prepared_snapshot = prepare["snapshots"][name]
+        require(
+            Path(row["root"]).resolve()
+            == Path(prepared_snapshot["path"]).resolve()
+            and row == prepared_snapshot["post_build"],
+            f"{name}: receipt tree is not the PREPARE snapshot",
+        )
         current = tree_audit(Path(row["root"]))
         require(
             current == row,
@@ -1893,7 +1906,18 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
         == output_hashes,
         "trace transparency hashes do not bind the three receipt outputs",
     )
-    _verify_hash_record(trace.get("audit"), "trace audit")
+    require(
+        Path(trace.get("writer_record", "")).resolve()
+        == (arm_root / "writer-record.json").resolve(),
+        "trace writer record is not the arm writer record",
+    )
+    audit_record = _verify_hash_record(trace.get("audit"), "trace audit")
+    require(
+        Path(audit_record["path"]).resolve()
+        == (arm_root / "trace-audit.json").resolve()
+        and audit_record["sha256"] == trace.get("audit_payload_sha256"),
+        "trace audit record is not the arm's recomputed audit payload",
+    )
     current_trace = trace_audit(
         Path(trace["trace_dir"]),
         Path(trace["inventory"]),
@@ -1943,21 +1967,47 @@ def verify_arm(receipt_path: Path) -> dict[str, Any]:
     if receipt["mode"] == "crop":
         crop = result.get("crop")
         require(isinstance(crop, dict), "Crop result has no explicit rectangle")
-        expected_crop = {
+        result_crop = {
             "x": int(crop["x"]),
             "y": int(crop["y"]),
             "width": int(crop["width"]),
             "height": int(crop["height"]),
         }
+        planned_crop = entry.get("crop_xywh")
         require(
-            all(value == expected_crop for value in reports.values()),
+            isinstance(planned_crop, list)
+            and len(planned_crop) == 4
+            and result_crop
+            == {
+                "x": int(planned_crop[0]),
+                "y": int(planned_crop[1]),
+                "width": int(planned_crop[2]),
+                "height": int(planned_crop[3]),
+            },
+            "adjudicated Crop rectangle differs from the run plan",
+        )
+        require(
+            all(value == result_crop for value in reports.values()),
             "rendered Crop rectangles differ from the adjudicated rectangle",
         )
     else:
         require(
+            entry.get("crop_xywh") is None
+            and result.get("crop") is None
+            and
             all(value is None for value in reports.values()),
             "non-Crop receipt contains a rendered Crop rectangle",
         )
+
+    commands = receipt["commands"]
+    require(
+        isinstance(commands, list) and commands,
+        "receipt has no executed-command identities",
+    )
+    for index, command in enumerate(commands):
+        require(isinstance(command, dict), f"command {index}: not an object")
+        _verify_hash_record(command.get("command"), f"command {index} record")
+        _verify_hash_record(command.get("log"), f"command {index} log")
 
     external_identity = receipt["external_identity"]
     if receipt["kind"] == "identity":
