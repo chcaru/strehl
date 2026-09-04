@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import gcd
 from typing import Any
 
 import numpy as np
@@ -30,6 +29,7 @@ class CaptureSet:
     clip_fraction: float = 0.0
     effective_bits: int = 16
     calibration_correlation: float = 0.0
+    target_lineage: str = "nonperiodic-random"
 
 
 def _complex_cov(a: np.ndarray, b: np.ndarray) -> complex:
@@ -127,6 +127,8 @@ def _status(captures: CaptureSet) -> tuple[str, dict[str, Any]]:
         return "SHARED_REFERENCE", {
             "calibration_correlation": captures.calibration_correlation
         }
+    if captures.target_lineage != "nonperiodic-random":
+        return "PREDICTABLE_TARGET", {"target_lineage": captures.target_lineage}
 
     diagnostics = _reference_diagnostics(captures.reference_a, captures.reference_b)
     if diagnostics["minimum_repeat_coherence"] < MIN_REFERENCE_COHERENCE:
@@ -223,6 +225,7 @@ def postfilter(captures: CaptureSet, gains: np.ndarray) -> CaptureSet:
         clip_fraction=captures.clip_fraction,
         effective_bits=captures.effective_bits,
         calibration_correlation=captures.calibration_correlation,
+        target_lineage=captures.target_lineage,
     )
 
 
@@ -243,4 +246,5 @@ def rotate_cells(captures: CaptureSet, quarter_turns: int) -> CaptureSet:
         clip_fraction=captures.clip_fraction,
         effective_bits=captures.effective_bits,
         calibration_correlation=captures.calibration_correlation,
+        target_lineage=captures.target_lineage,
     )

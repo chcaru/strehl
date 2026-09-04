@@ -287,6 +287,7 @@ def refusal_trials() -> dict[str, dict]:
         template = complex_normal(rng, (1, len(FREQUENCIES)), 1.0)
         periodic_signal = np.repeat(template, SITE_COUNT, axis=0)
         periodic_capture, _ = make_capture(rng, signal=periodic_signal)
+        periodic_capture = replace(periodic_capture, target_lineage="periodic")
         periodic_results.append(score_arm(periodic_capture))
 
     all_components = np.concatenate(
@@ -318,6 +319,22 @@ def refusal_trials() -> dict[str, dict]:
     quantized_capture = replace(base_capture, effective_bits=8)
     shared_reference_capture = replace(base_capture, calibration_correlation=0.20)
 
+    shared_flat_pattern = complex_normal(rng, base_capture.reference_a.shape, 0.80)
+    shared_flat_capture = CaptureSet(
+        reference_a=shared_flat_pattern
+        + complex_normal(rng, shared_flat_pattern.shape, REFERENCE_NOISE_SD),
+        reference_b=shared_flat_pattern
+        + complex_normal(rng, shared_flat_pattern.shape, REFERENCE_NOISE_SD),
+        output_a=shared_flat_pattern
+        + complex_normal(rng, shared_flat_pattern.shape, OUTPUT_NOISE_SD),
+        output_b=shared_flat_pattern
+        + complex_normal(rng, shared_flat_pattern.shape, OUTPUT_NOISE_SD),
+        calibration_correlation=0.20,
+    )
+    shared_flat_without_lineage = replace(
+        shared_flat_capture, calibration_correlation=0.0
+    )
+
     return {
         "flat": {
             "status_counts": {
@@ -336,6 +353,8 @@ def refusal_trials() -> dict[str, dict]:
         "clipping": score_arm(clipped_capture),
         "quantization": score_arm(quantized_capture),
         "shared_reference": score_arm(shared_reference_capture),
+        "shared_flat": score_arm(shared_flat_capture),
+        "shared_flat_without_lineage": score_arm(shared_flat_without_lineage),
         "clipping_fraction": {"value": clipped_capture.clip_fraction},
         "unused_components_shape": {"signal": list(components["signal"].shape)},
     }
@@ -474,12 +493,13 @@ def main() -> None:
         <= 1e-10,
         "C14_flat": refusals["flat"]["status_counts"] == {"NO_DETAIL": TRIALS},
         "C15_periodic": refusals["periodic"]["status_counts"]
-        == {"NO_DETAIL": TRIALS},
+        == {"PREDICTABLE_TARGET": TRIALS},
         "C16_permutation": all(s != "OK" for s in statuses["permutation"]),
         "C17_clipping": refusals["clipping"]["status"] == "NONLINEAR_OUTPUT",
         "C18_quantization": refusals["quantization"]["status"] == "LOW_BIT_DEPTH",
         "C19_shared_reference": refusals["shared_reference"]["status"]
-        == "SHARED_REFERENCE",
+        == "SHARED_REFERENCE"
+        and refusals["shared_flat"]["status"] == "SHARED_REFERENCE",
         "C20_checker_mutations": all(mutations.values()),
     }
 
