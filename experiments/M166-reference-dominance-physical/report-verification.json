@@ -1,0 +1,106 @@
+{
+  "checks": [
+    {
+      "detail": "TARGET HOLDS AT 1.32x",
+      "name": "report contains TARGET HOLDS AT 1.32x",
+      "passed": true
+    },
+    {
+      "detail": "EXACT REFERENCE COUNT: `4`",
+      "name": "report contains EXACT REFERENCE COUNT: `4`",
+      "passed": true
+    },
+    {
+      "detail": "EXACT SCORED-WITNESS COUNT: `3`",
+      "name": "report contains EXACT SCORED-WITNESS COUNT: `3`",
+      "passed": true
+    },
+    {
+      "detail": "3 strips x (16 A + 16 B) = 96 frames",
+      "name": "report contains 3 strips x (16 A + 16 B) = 96 frames",
+      "passed": true
+    },
+    {
+      "detail": "revised registered session",
+      "name": "report contains revised registered session",
+      "passed": true
+    },
+    {
+      "detail": "**`1,147`**",
+      "name": "report contains **`1,147`**",
+      "passed": true
+    },
+    {
+      "detail": "`1,148` shutter releases",
+      "name": "report contains `1,148` shutter releases",
+      "passed": true
+    },
+    {
+      "detail": "does **not** require `delta_H,k > 1`",
+      "name": "report contains does **not** require `delta_H,k > 1`",
+      "passed": true
+    },
+    {
+      "detail": "`1.03405`",
+      "name": "report contains `1.03405`",
+      "passed": true
+    },
+    {
+      "detail": "`1.10985`",
+      "name": "report contains `1.10985`",
+      "passed": true
+    },
+    {
+      "detail": "No existing archive frame",
+      "name": "report contains No existing archive frame",
+      "passed": true
+    },
+    {
+      "detail": "PASTE-READY TEXT FOLLOWS",
+      "name": "report contains PASTE-READY TEXT FOLLOWS",
+      "passed": true
+    },
+    {
+      "detail": "TC0-DOM-S01-R01-03",
+      "name": "report contains TC0-DOM-S01-R01-03",
+      "passed": true
+    },
+    {
+      "detail": "TR-S04-R07-08",
+      "name": "report contains TR-S04-R07-08",
+      "passed": true
+    },
+    {
+      "detail": "same uninterrupted",
+      "name": "report contains same uninterrupted",
+      "passed": true
+    },
+    {
+      "detail": "PASS",
+      "name": "analysis passed",
+      "passed": true
+    },
+    {
+      "detail": {
+        "passed": 13,
+        "status": "PASS",
+        "total": 13
+      },
+      "name": "calculation verifier passed",
+      "passed": true
+    },
+    {
+      "detail": "blocking owner text",
+      "name": "owner text retains no-shoot gate",
+      "passed": true
+    },
+    {
+      "detail": "running/reading/inferred",
+      "name": "all evidence label classes present",
+      "passed": true
+    }
+  ],
+  "passed": 19,
+  "status": "PASS",
+  "total": 19
+}

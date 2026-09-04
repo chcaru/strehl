@@ -1,0 +1,78 @@
+{
+  "checks": [
+    {
+      "detail": "PASS",
+      "name": "analysis status",
+      "passed": true
+    },
+    {
+      "detail": "TARGET HOLDS AT 1.32x",
+      "name": "target remains 1.32x",
+      "passed": true
+    },
+    {
+      "detail": {
+        "hard_max": 2.031203007518797,
+        "target": 2.046590909090909
+      },
+      "name": "target ratio exceeds hard-max ratio",
+      "passed": true
+    },
+    {
+      "detail": {
+        "height": 7.987812342534763,
+        "limit": 8.0
+      },
+      "name": "tolerance-compensated panel fits",
+      "passed": true
+    },
+    {
+      "detail": 2,
+      "name": "reference admits two rows per strip",
+      "passed": true
+    },
+    {
+      "detail": 3,
+      "name": "scored witness admits three rows without pupil assumption",
+      "passed": true
+    },
+    {
+      "detail": 4,
+      "name": "exact reference strip count is four",
+      "passed": true
+    },
+    {
+      "detail": 3,
+      "name": "exact scored witness strip count is three",
+      "passed": true
+    },
+    {
+      "detail": 96,
+      "name": "scored witness costs 96 frames",
+      "passed": true
+    },
+    {
+      "detail": 128,
+      "name": "held-out validation costs 128 frames",
+      "passed": true
+    },
+    {
+      "detail": 1147,
+      "name": "revised session is 1147 frames",
+      "passed": true
+    },
+    {
+      "detail": 1.0340485341141645,
+      "name": "diffraction predicts positive transfer ratio",
+      "passed": true
+    },
+    {
+      "detail": 1.1098512445975568,
+      "name": "diffraction does not support ratio above two",
+      "passed": true
+    }
+  ],
+  "passed": 13,
+  "status": "PASS",
+  "total": 13
+}

@@ -1,0 +1,74 @@
+{
+  "diffraction_only_transfer": {
+    "interpretation": "A small strictly positive transfer margin is physically plausible under diffraction alone; a literal delta_H > 1 would require a ratio above 2 and is not supported.",
+    "maximum_conservative_ratio": 1.1098512445975568,
+    "minimum_conservative_ratio": 1.0340485341141645,
+    "rows": [
+      {
+        "cell_cyc_scored_px": 0.1,
+        "diffraction_only_ratio_conservative": 1.0340485341141645,
+        "diffraction_only_ratio_optimistic": 1.1070580337692528,
+        "object_frequency_cy_mm": 25.76757660167131
+      },
+      {
+        "cell_cyc_scored_px": 0.15,
+        "diffraction_only_ratio_conservative": 1.0553389927321188,
+        "diffraction_only_ratio_optimistic": 1.1783783751013825,
+        "object_frequency_cy_mm": 38.65136490250696
+      },
+      {
+        "cell_cyc_scored_px": 0.2,
+        "diffraction_only_ratio_conservative": 1.0803091492227288,
+        "diffraction_only_ratio_optimistic": 1.2666007376346755,
+        "object_frequency_cy_mm": 51.53515320334262
+      },
+      {
+        "cell_cyc_scored_px": 0.25,
+        "diffraction_only_ratio_conservative": 1.1098512445975568,
+        "diffraction_only_ratio_optimistic": 1.377774660653087,
+        "object_frequency_cy_mm": 64.41894150417828
+      }
+    ]
+  },
+  "focus_strips": {
+    "circle_of_confusion_sensor_pixels": 2.0,
+    "criterion": "Every complete guarded target row assigned to a strip must fit inside the repository's two-sensor-pixel, Nyquist-matched object-side DoF at worst registered tilt.",
+    "reference_dof_floor_um": 37.92413933024061,
+    "reference_rows_per_strip": 2,
+    "reference_strip_count": 4,
+    "row_depth_nominal_um": 17.338906630648346,
+    "row_depth_worst_um": 17.68564848760471,
+    "scored_dof_floor_um": 65.85678285553752,
+    "scored_rows_per_strip": 3,
+    "scored_witness_strip_count": 3,
+    "tilt_nominal_degrees": 1.0,
+    "tilt_tolerance_degrees": 0.02
+  },
+  "frame_count": {
+    "current_session": 891,
+    "held_out_flat_dark_validation": 128,
+    "new_reference": 128,
+    "old_reference": 96,
+    "reference_increment": 32,
+    "registered_frame_increment": 256,
+    "revised_session": 1147,
+    "revised_shutter_releases_with_histogram": 1148,
+    "scored_path_witness": 96
+  },
+  "status": "PASS",
+  "target": {
+    "decision": "TARGET HOLDS AT 1.32x",
+    "eight_row_height_mm": 7.947972879479728,
+    "fabrication_scale_tolerance_fraction": 0.0025,
+    "hard_max_magnification": 1.33,
+    "panel_height_limit_mm": 8.0,
+    "pixel_pitch_um": 5.122716894977169,
+    "ratio_at_hard_max": 2.031203007518797,
+    "ratio_at_target": 2.046590909090909,
+    "reference_lower_magnification": 2.7015,
+    "remaining_height_margin_um": 12.187657465236867,
+    "target_magnification": 1.32,
+    "tolerance_compensated_max_height_mm": 7.987812342534763,
+    "tolerance_compensated_nominal_height_mm": 7.967892611007246
+  }
+}
