@@ -132,7 +132,15 @@ def adjudicate(result: dict[str, object]) -> dict[str, object]:
         ladder = arms["blur_monotonicity"]
         if not isinstance(ladder, list) or len(ladder) != len(BLUR_SIGMAS):
             raise ValueError("blur ladder has wrong length")
-        got_sigmas = [float(item["added_sigma_px"]) for item in ladder]
+        raw_sigmas = [item["added_sigma_px"] for item in ladder]
+        if any(
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+            for value in raw_sigmas
+        ):
+            raise ValueError("blur ladder sigma is not finite numeric")
+        got_sigmas = [float(value) for value in raw_sigmas]
         if got_sigmas != BLUR_SIGMAS:
             raise ValueError(
                 f"blur ladder sigmas {got_sigmas!r} != {BLUR_SIGMAS!r}"
