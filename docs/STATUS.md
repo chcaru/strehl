@@ -6185,6 +6185,43 @@ subordinates, is not the lane to spend the night's remaining concurrency defendi
 
 ---
 
+### 2.9.56 Lanes were scheduling each other around a lock that did not exist
+
+The phantom reservation in §2.9.55 turned out to have a second cost, larger than the wasted
+timing work and harder to see.
+
+**A lane halted the program's highest-value measurement on a chain of three false premises.**
+M136 instructed M142 to stop its commissioning run and defer all execution *"until M139
+releases the host."* M142 complied. Every link in that instruction was wrong: M139 did not
+hold the reservation, M153 did; M153 cannot release anything, because it has never completed
+a turn and every message sent to it is still queued; and the reservation itself does not
+exist, because the machine cannot grant exclusivity to anyone while running eight lanes at
+the load recorded above.
+
+The lane that issued the order was not careless. **It was reasoning correctly from a partial
+board.** No lane can see the whole program, so a scheduling decision taken inside one lane is
+built from whatever that lane happened to be told — and in this case, from an assumption
+every brief in the program had inherited, including mine, until it was sampled instead of
+believed.
+
+**What it cost.** M142 is the executor of the M8-O v1.5 census, which is the program's only
+live path to a second real score. It sat halted, waiting on a release condition that could
+never be satisfied by a lane that could not hear the request.
+
+**The rule that replaces it, broadcast to `9` active lanes.** Scheduling belongs to the
+orchestrator; lanes do not start, stop or defer other lanes, and refer such instructions
+upward rather than complying. Technical defects in another lane's work are the opposite —
+those are wanted, reported with evidence, and routed. And the gate for running work is
+**measurement class, not queue position**: correctness work proceeds without asking, because
+contention makes it slower rather than wrong, while absolute timing is quarantined.
+
+**The general lesson is not about locks.** An inherited assumption that no one has measured
+will be reasoned from correctly by everyone, and will produce confident, coordinated, wrong
+decisions. This program had already learned that about its instruments. It had not yet
+applied it to how the instruments are scheduled.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking

@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
-SECTIONS = ["2.9.54", "2.9.55"]
+SECTIONS = ["2.9.54", "2.9.55", "2.9.56"]
 
 
 def collapse(s):
@@ -113,6 +113,10 @@ CLAIMS = [
      "\"tool_calls\": 2782"),
     ("m153 elapsed hours", "for `5.07`", E + "ORCH-verify/host-load-2026-09-06.json", None,
      "\"elapsed_hours\": 5.07"),
+    # --- coordination policy (2.9.56) ---
+    ("policy broadcast count", "broadcast to `9` active lanes",
+     E + "ORCH-verify/host-policy-broadcast-2026-09-06.json", None,
+     "\"recipients_active_lanes\": 9"),
     # --- M2 loose-direction defect ---
     ("m2 blur-improves ratio", "0.571215", R + "M166-bar-achievability.md", None, None),
     # --- M162 fork + gate ---

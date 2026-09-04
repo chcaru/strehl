@@ -1,0 +1,35 @@
+{
+  "_what": "Delivery record for the standing host policy broadcast. STATUS section 2.9.56 cites the recipient count. Recorded so that a lane cannot later claim it was not informed, and so the count in STATUS is checkable rather than asserted.",
+  "date": "2026-09-06",
+  "policy": {
+    "exclusive_host_lock": "does not exist and never did",
+    "gate": "measurement class, not queue position",
+    "correctness_work": "proceeds immediately without asking; contention makes it slower, not wrong",
+    "absolute_timing": "quarantined per STATUS 2.9.55 until reproduced on a quiet host or restated as a within-run ratio",
+    "scheduling_authority": "orchestrator only; lanes do not start, stop or defer other lanes",
+    "cross_lane_defects": "reported to orchestrator with evidence, never fixed directly"
+  },
+  "trigger": {
+    "chain": "M136 instructed M142 to defer all execution until M139 released the host",
+    "false_premise_1": "M139 did not hold the reservation; M153 did",
+    "false_premise_2": "M153 has never completed a turn, so it cannot receive or act on a release request",
+    "false_premise_3": "no exclusive reservation exists at all under the measured load",
+    "cost": "M142, executor of the M8-O v1.5 census and the only live path to a second real score, sat halted on an unsatisfiable condition"
+  },
+  "recipients_active_lanes": 9,
+  "recipients": [
+    { "lane": "M139", "agent": "9d278b93", "role": "M12 campaign" },
+    { "lane": "M153", "agent": "17d1b26e", "role": "M11 timing harness; queued, cannot receive" },
+    { "lane": "M160", "agent": "c2523cd3", "role": "scorecard" },
+    { "lane": "M164", "agent": "86251c75", "role": "transfer veto and M2 repair" },
+    { "lane": "M165", "agent": "3788deb6", "role": "common input, Stage 0M gate" },
+    { "lane": "M166", "agent": "6a16a536", "role": "bar definition repairs" },
+    { "lane": "M167", "agent": "f7b2e074", "role": "adversarial detail battery" },
+    { "lane": "M168", "agent": "84d2b475", "role": "identifiability verification" },
+    { "lane": "M169", "agent": "2286a722", "role": "capture proposal reconciliation" }
+  ],
+  "sent_separately_before_broadcast": [
+    { "lane": "M142", "agent": "2b35ad70", "note": "countermand issued directly; told to proceed" },
+    { "lane": "M136", "agent": "5b621b90", "note": "told not to schedule other lanes; credited for refusing the 31,148 promotion" }
+  ]
+}
