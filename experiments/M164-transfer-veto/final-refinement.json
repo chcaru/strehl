@@ -1,0 +1,4987 @@
+{
+  "amendment_sha256": "C7D6FDA5ABD928B6A27E0A08C7F80A91838DD7407B898956BC06502DC522687D",
+  "checks": {
+    "shift_has_final_threshold": true,
+    "usm_has_final_threshold": true,
+    "usm_refinement_has_no_clipping": true
+  },
+  "created_utc": "2026-09-04T16:23:20.661801+00:00",
+  "instrument_sha256": "E6C44578CA5913E4BB7FA966BBF1CD945F0AB084E2EEB8754B75435CD86E853B",
+  "original_contrast_unsharp_combined": {
+    "by_strength": {
+      "0.001": {
+        "fire_rate": 0.08333333333333333,
+        "fires": 1,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 3.6615694682308138,
+            "median": 1.0717760552309379,
+            "minimum": 0.7314777207749142
+          },
+          "fold_disagreement": {
+            "maximum": 0.021030597008023108,
+            "median": 0.013390424066795602,
+            "minimum": 0.007111110108879807
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 3.6501289969690616,
+            "median": 1.038234630263625,
+            "minimum": 0.6992528630530427
+          },
+          "residual_over_difference": {
+            "maximum": 0.2988515816564348,
+            "median": 0.2341933191928297,
+            "minimum": 0.0790630523640533
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28949485860135166,
+            "median": 0.27013395901123594,
+            "minimum": 0.2147008148969387
+          },
+          "tile_q90": {
+            "maximum": 0.13750969122977916,
+            "median": 0.13305131127353392,
+            "minimum": 0.08321591483038744
+          }
+        },
+        "trials": 12
+      },
+      "0.002": {
+        "fire_rate": 0.3333333333333333,
+        "fires": 4,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 7.316027446192086,
+            "median": 2.1103499731359916,
+            "minimum": 1.450411070334777
+          },
+          "fold_disagreement": {
+            "maximum": 0.017767147996541117,
+            "median": 0.0067129680165172664,
+            "minimum": 0.0017434092858582718
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 7.310502937206298,
+            "median": 2.0921274381806874,
+            "minimum": 1.428951634715092
+          },
+          "residual_over_difference": {
+            "maximum": 0.17169379414153743,
+            "median": 0.13098624738795211,
+            "minimum": 0.03930255647325819
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2875385818638714,
+            "median": 0.28233639272287625,
+            "minimum": 0.24902657973066616
+          },
+          "tile_q90": {
+            "maximum": 0.1418711115031736,
+            "median": 0.13188471051505263,
+            "minimum": 0.04172794068187508
+          }
+        },
+        "trials": 12
+      },
+      "0.0025": {
+        "fire_rate": 0.6666666666666666,
+        "fires": 8,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 9.140974594542456,
+            "median": 2.6302956299974274,
+            "minimum": 1.8061416377577608
+          },
+          "fold_disagreement": {
+            "maximum": 0.009780733018580939,
+            "median": 0.005472478797163163,
+            "minimum": 0.0012499717661843231
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 9.136400667582437,
+            "median": 2.615488192515068,
+            "minimum": 1.7878458673451905
+          },
+          "residual_over_difference": {
+            "maximum": 0.14128433050114292,
+            "median": 0.10653529295470014,
+            "minimum": 0.03153676495538668
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2888694444743667,
+            "median": 0.2837456440738159,
+            "minimum": 0.255179512080843
+          },
+          "tile_q90": {
+            "maximum": 0.1401390627344578,
+            "median": 0.12286108992958823,
+            "minimum": 0.0332306759888278
+          }
+        },
+        "trials": 12
+      },
+      "0.003": {
+        "fire_rate": 0.9166666666666666,
+        "fires": 11,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 10.962621989457476,
+            "median": 3.1517435204514266,
+            "minimum": 2.157922590602941
+          },
+          "fold_disagreement": {
+            "maximum": 0.009103584611373852,
+            "median": 0.0044665784391779186,
+            "minimum": 0.0014125444005347147
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 10.95885166041063,
+            "median": 3.139252294566184,
+            "minimum": 2.1425156330219632
+          },
+          "residual_over_difference": {
+            "maximum": 0.12040919760640144,
+            "median": 0.08908150400745304,
+            "minimum": 0.026374353726988157
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28918189771500946,
+            "median": 0.28441971786679987,
+            "minimum": 0.25983372763122725
+          },
+          "tile_q90": {
+            "maximum": 0.13058212560844457,
+            "median": 0.11879828198481165,
+            "minimum": 0.028031126572019317
+          }
+        },
+        "trials": 12
+      },
+      "0.0035": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 12.79187005399677,
+            "median": 3.6702180420575012,
+            "minimum": 2.518799054515785
+          },
+          "fold_disagreement": {
+            "maximum": 0.005568172171038204,
+            "median": 0.003221524616383458,
+            "minimum": 0.0016187401452223175
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 12.788517343505921,
+            "median": 3.6593432135292927,
+            "minimum": 2.5050888177843422
+          },
+          "residual_over_difference": {
+            "maximum": 0.1047143452966483,
+            "median": 0.07693777640489297,
+            "minimum": 0.022516047830314155
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.290530757766814,
+            "median": 0.2842507501256619,
+            "minimum": 0.26375439392743716
+          },
+          "tile_q90": {
+            "maximum": 0.13350394679681282,
+            "median": 0.1122303529161244,
+            "minimum": 0.02389237041185273
+          }
+        },
+        "trials": 12
+      },
+      "0.004": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 14.617997020028566,
+            "median": 4.193853743862876,
+            "minimum": 2.87356357313832
+          },
+          "fold_disagreement": {
+            "maximum": 0.006844983648662697,
+            "median": 0.0038307410764688047,
+            "minimum": 0.0009579872323029413
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 14.615172305742853,
+            "median": 4.184050632577685,
+            "minimum": 2.8609124108472646
+          },
+          "residual_over_difference": {
+            "maximum": 0.0924153503583126,
+            "median": 0.06742410675017929,
+            "minimum": 0.019772689675808152
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2896894496505807,
+            "median": 0.2863930039470932,
+            "minimum": 0.26556138438846244
+          },
+          "tile_q90": {
+            "maximum": 0.12234213336351024,
+            "median": 0.10969300440145016,
+            "minimum": 0.020834298786617966
+          }
+        },
+        "trials": 12
+      },
+      "0.0045": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 16.44417388486093,
+            "median": 4.717483962510554,
+            "minimum": 3.230898754761805
+          },
+          "fold_disagreement": {
+            "maximum": 0.0039004807904138563,
+            "median": 0.0026040116175719322,
+            "minimum": 0.0013317063148931233
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 16.441837987102733,
+            "median": 4.7088272450400535,
+            "minimum": 3.2199678216384924
+          },
+          "residual_over_difference": {
+            "maximum": 0.08245746752330903,
+            "median": 0.06028627667364202,
+            "minimum": 0.017604702537954254
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28949478972537224,
+            "median": 0.2865294061435112,
+            "minimum": 0.26589797962422623
+          },
+          "tile_q90": {
+            "maximum": 0.13313199027510547,
+            "median": 0.09850128063764098,
+            "minimum": 0.01891017960800285
+          }
+        },
+        "trials": 12
+      },
+      "0.005": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 18.26836981896642,
+            "median": 5.238679835151165,
+            "minimum": 3.5883015499115962
+          },
+          "fold_disagreement": {
+            "maximum": 0.004408060494183901,
+            "median": 0.0026600290744729664,
+            "minimum": 0.0008039944196989303
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 18.265916595748752,
+            "median": 5.230791357488471,
+            "minimum": 3.5785501243419695
+          },
+          "residual_over_difference": {
+            "maximum": 0.07474174230725879,
+            "median": 0.054209903777925846,
+            "minimum": 0.015834232457106082
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28926561432589526,
+            "median": 0.2865639254072487,
+            "minimum": 0.2666743299094355
+          },
+          "tile_q90": {
+            "maximum": 0.11830271574148526,
+            "median": 0.08784964689909272,
+            "minimum": 0.016817884905787128
+          }
+        },
+        "trials": 12
+      },
+      "0.01": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 36.54078270209552,
+            "median": 10.465730612179893,
+            "minimum": 7.168385474464403
+          },
+          "fold_disagreement": {
+            "maximum": 0.0023098546552966985,
+            "median": 0.0014179483445156686,
+            "minimum": 0.0007742913067640033
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 36.53985118331727,
+            "median": 10.461812077916598,
+            "minimum": 7.163492629724651
+          },
+          "residual_over_difference": {
+            "maximum": 0.03873163475638526,
+            "median": 0.02756005548894771,
+            "minimum": 0.00785941250650234
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2893122215584598,
+            "median": 0.28788836779597116,
+            "minimum": 0.27375339795631576
+          },
+          "tile_q90": {
+            "maximum": 0.10742254608256027,
+            "median": 0.050635112592352635,
+            "minimum": 0.008300719477170853
+          }
+        },
+        "trials": 12
+      },
+      "0.02": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 73.0717849383351,
+            "median": 20.92823339668549,
+            "minimum": 14.320718957378093
+          },
+          "fold_disagreement": {
+            "maximum": 0.0016439602532039089,
+            "median": 0.0006467908527620142,
+            "minimum": 0.0001933699029500473
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 73.0711185937184,
+            "median": 20.92643322917158,
+            "minimum": 14.31783309406305
+          },
+          "residual_over_difference": {
+            "maximum": 0.019986395364761173,
+            "median": 0.01378121744012754,
+            "minimum": 0.003953414241120292
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2895490891592692,
+            "median": 0.2883671251249894,
+            "minimum": 0.28436742445605956
+          },
+          "tile_q90": {
+            "maximum": 0.08560162804180751,
+            "median": 0.02490600309391726,
+            "minimum": 0.0041842439496265075
+          }
+        },
+        "trials": 12
+      },
+      "0.05": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 182.68389412162307,
+            "median": 52.30948530663922,
+            "minimum": 35.79988006332504
+          },
+          "fold_disagreement": {
+            "maximum": 0.0005311421790418307,
+            "median": 0.0002896862081859078,
+            "minimum": 5.568085927631832e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 182.68368735666883,
+            "median": 52.30859736112694,
+            "minimum": 35.798652626965044
+          },
+          "residual_over_difference": {
+            "maximum": 0.008074423807277159,
+            "median": 0.005539344421994081,
+            "minimum": 0.0015788842026334632
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28982007405679644,
+            "median": 0.288986162846249,
+            "minimum": 0.2882221275822903
+          },
+          "tile_q90": {
+            "maximum": 0.06386795134287512,
+            "median": 0.010125553992203658,
+            "minimum": 0.001681232113835896
+          }
+        },
+        "trials": 12
+      },
+      "0.1": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 365.3653965688305,
+            "median": 104.62081643504357,
+            "minimum": 71.60337717081889
+          },
+          "fold_disagreement": {
+            "maximum": 0.00018319789791686013,
+            "median": 0.00011484474033011342,
+            "minimum": 6.653398354014387e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 365.3651099833861,
+            "median": 104.62052461795196,
+            "minimum": 71.60292275419407
+          },
+          "residual_over_difference": {
+            "maximum": 0.004055056686978208,
+            "median": 0.002752142916625751,
+            "minimum": 0.0007927499327618963
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.29035575340675196,
+            "median": 0.288582511590181,
+            "minimum": 0.28705921449804656
+          },
+          "tile_q90": {
+            "maximum": 0.031300227916847424,
+            "median": 0.005222792241512529,
+            "minimum": 0.0008347346571773432
+          }
+        },
+        "trials": 12
+      },
+      "0.2": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 730.7325476745549,
+            "median": 209.23903188720692,
+            "minimum": 143.2032257848715
+          },
+          "fold_disagreement": {
+            "maximum": 0.00014664295187905534,
+            "median": 6.18227515698911e-05,
+            "minimum": 2.7982768071232962e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 730.7323763587724,
+            "median": 209.2388477062963,
+            "minimum": 143.2030825465758
+          },
+          "residual_over_difference": {
+            "maximum": 0.0020145058070300016,
+            "median": 0.0013845334227542234,
+            "minimum": 0.00039565783131712673
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.29069168330713263,
+            "median": 0.2886260131816052,
+            "minimum": 0.2880380563585822
+          },
+          "tile_q90": {
+            "maximum": 0.016090767982118896,
+            "median": 0.0026255549214101326,
+            "minimum": 0.00041955474400228067
+          }
+        },
+        "trials": 12
+      }
+    },
+    "refinement_trials": [
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 2.2600430965911515,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.2600430965911515,
+            "fired": false,
+            "fold_disagreement": 0.01512915485239399,
+            "informative_tiles": 60,
+            "kernel_effect_rms_lsb": 2.242131377707462,
+            "residual_over_difference": 0.12636486323374416,
+            "residual_rms_lsb": 0.2855900368031085,
+            "tile_q90": 0.13807363291399027
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.2600430965911515,
+            "fired": false,
+            "fold_disagreement": 0.006968015667043948,
+            "informative_tiles": 60,
+            "kernel_effect_rms_lsb": 2.2422651692492734,
+            "residual_over_difference": 0.12587367434860228,
+            "residual_rms_lsb": 0.2844799287541213,
+            "tile_q90": 0.13769281347602136
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 2.7117882987123805,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.7117882987123805,
+            "fired": true,
+            "fold_disagreement": 0.01230409620551406,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.6965848560240677,
+            "residual_over_difference": 0.10628328715993535,
+            "residual_rms_lsb": 0.28821777446900043,
+            "tile_q90": 0.11876789479460884
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.7117882987123805,
+            "fired": true,
+            "fold_disagreement": 0.005461333632499192,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.6965105294772362,
+            "residual_over_difference": 0.10592781955992421,
+            "residual_rms_lsb": 0.2872538215907189,
+            "tile_q90": 0.11883794745483137
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 3.1569231181785375,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.1569231181785375,
+            "fired": true,
+            "fold_disagreement": 0.01101933466331522,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 3.144132111573172,
+            "residual_over_difference": 0.09095559264920586,
+            "residual_rms_lsb": 0.28713981316190784,
+            "tile_q90": 0.10186493336399152
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.1569231181785375,
+            "fired": true,
+            "fold_disagreement": 0.003197966263124419,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 3.1439284965002514,
+            "residual_over_difference": 0.09040982949551421,
+            "residual_rms_lsb": 0.28541688084496863,
+            "tile_q90": 0.10200530271695307
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 3.601963741904916,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.601963741904916,
+            "fired": true,
+            "fold_disagreement": 0.010964300855019808,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 3.590717466054873,
+            "residual_over_difference": 0.08048008471179903,
+            "residual_rms_lsb": 0.2898863470773363,
+            "tile_q90": 0.08816070596935441
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.601963741904916,
+            "fired": true,
+            "fold_disagreement": 0.0043451275036335375,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 3.590371734913234,
+            "residual_over_difference": 0.07986807797345422,
+            "residual_rms_lsb": 0.28768192099601675,
+            "tile_q90": 0.08839980096233564
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 4.051551578665596,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.051551578665596,
+            "fired": true,
+            "fold_disagreement": 0.00932234346018718,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 4.041211418903527,
+            "residual_over_difference": 0.07166624197040738,
+            "residual_rms_lsb": 0.29035947579223464,
+            "tile_q90": 0.07964440390380999
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.051551578665596,
+            "fired": true,
+            "fold_disagreement": 0.003394877531130891,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 4.041341460852334,
+            "residual_over_difference": 0.07108080165684814,
+            "residual_rms_lsb": 0.28798753416561923,
+            "tile_q90": 0.07922133241142898
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 3.4522928422272288,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.4522928422272288,
+            "fired": true,
+            "fold_disagreement": 0.009911055159025206,
+            "informative_tiles": 39,
+            "kernel_effect_rms_lsb": 3.4399741677938804,
+            "residual_over_difference": 0.08346833861388812,
+            "residual_rms_lsb": 0.2881571479493246,
+            "tile_q90": 0.11698056827011452
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.4522928422272288,
+            "fired": true,
+            "fold_disagreement": 0.00556439781549595,
+            "informative_tiles": 39,
+            "kernel_effect_rms_lsb": 3.4403418848503264,
+            "residual_over_difference": 0.08302646202498154,
+            "residual_rms_lsb": 0.2866316605642946,
+            "tile_q90": 0.1162713237158788
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 4.138263056206147,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.138263056206147,
+            "fired": true,
+            "fold_disagreement": 0.010317448324344142,
+            "informative_tiles": 46,
+            "kernel_effect_rms_lsb": 4.128094686644469,
+            "residual_over_difference": 0.07012544608836352,
+            "residual_rms_lsb": 0.29019754284745064,
+            "tile_q90": 0.1275841145894841
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.138263056206147,
+            "fired": true,
+            "fold_disagreement": 0.004709609184989673,
+            "informative_tiles": 46,
+            "kernel_effect_rms_lsb": 4.128336608469395,
+            "residual_over_difference": 0.06935610430760764,
+            "residual_rms_lsb": 0.28701380417855266,
+            "tile_q90": 0.12703235214806846
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 4.826283316539878,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.826283316539878,
+            "fired": true,
+            "fold_disagreement": 0.008530020864021349,
+            "informative_tiles": 51,
+            "kernel_effect_rms_lsb": 4.817038288424324,
+            "residual_over_difference": 0.060273298915712,
+            "residual_rms_lsb": 0.290896016989722,
+            "tile_q90": 0.11997408611517006
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.826283316539878,
+            "fired": true,
+            "fold_disagreement": 0.0022042674299544325,
+            "informative_tiles": 51,
+            "kernel_effect_rms_lsb": 4.817960212011575,
+            "residual_over_difference": 0.05956447403282297,
+            "residual_rms_lsb": 0.2874750272830863,
+            "tile_q90": 0.1198182493995889
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 5.509803620854528,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 5.509803620854528,
+            "fired": true,
+            "fold_disagreement": 0.007388786004859006,
+            "informative_tiles": 56,
+            "kernel_effect_rms_lsb": 5.501469703407912,
+            "residual_over_difference": 0.053034398668618414,
+            "residual_rms_lsb": 0.2922091218141963,
+            "tile_q90": 0.12113274555635888
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 5.509803620854528,
+            "fired": true,
+            "fold_disagreement": 0.0020145249606643143,
+            "informative_tiles": 56,
+            "kernel_effect_rms_lsb": 5.5024440999665565,
+            "residual_over_difference": 0.052350995467557636,
+            "residual_rms_lsb": 0.288443704382488,
+            "tile_q90": 0.12085002811942766
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 6.1974274656984,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 6.1974274656984,
+            "fired": true,
+            "fold_disagreement": 0.006732156290393373,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 6.1904893841030715,
+            "residual_over_difference": 0.04732674025786554,
+            "residual_rms_lsb": 0.29330403993607007,
+            "tile_q90": 0.11503478731172541
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 6.1974274656984,
+            "fired": true,
+            "fold_disagreement": 0.0032444885017557843,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 6.190803061128547,
+            "residual_over_difference": 0.04657175007761405,
+            "residual_rms_lsb": 0.2886250430566469,
+            "tile_q90": 0.11546289204258896
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 9.140974594542456,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 9.140974594542456,
+            "fired": true,
+            "fold_disagreement": 0.003885326681895483,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 9.13658368906207,
+            "residual_over_difference": 0.03239311702261029,
+            "residual_rms_lsb": 0.2961046597417214,
+            "tile_q90": 0.03449589344430385
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 9.140974594542456,
+            "fired": true,
+            "fold_disagreement": 0.0012499717661843231,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 9.136400667582437,
+            "residual_over_difference": 0.03153676495538668,
+            "residual_rms_lsb": 0.2882767672512465,
+            "tile_q90": 0.0332306759888278
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 10.962621989457476,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 10.962621989457476,
+            "fired": true,
+            "fold_disagreement": 0.0038111644598906613,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 10.959002771118739,
+            "residual_over_difference": 0.02738848307274108,
+            "residual_rms_lsb": 0.30024958679111524,
+            "tile_q90": 0.02881431828381759
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 10.962621989457476,
+            "fired": true,
+            "fold_disagreement": 0.0014125444005347147,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 10.95885166041063,
+            "residual_over_difference": 0.026374353726988157,
+            "residual_rms_lsb": 0.2891320701252101,
+            "tile_q90": 0.028031126572019317
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 12.79187005399677,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 12.79187005399677,
+            "fired": true,
+            "fold_disagreement": 0.00304620460678783,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 12.788904290117678,
+            "residual_over_difference": 0.023690602286346778,
+            "residual_rms_lsb": 0.30304710594786677,
+            "tile_q90": 0.025198457599361828
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 12.79187005399677,
+            "fired": true,
+            "fold_disagreement": 0.0016187401452223175,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 12.788517343505921,
+            "residual_over_difference": 0.022516047830314155,
+            "residual_rms_lsb": 0.28802235797495457,
+            "tile_q90": 0.02389237041185273
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 14.617997020028566,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 14.617997020028566,
+            "fired": true,
+            "fold_disagreement": 0.0021940753146383074,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 14.615431242088036,
+            "residual_over_difference": 0.020955492068121556,
+            "residual_rms_lsb": 0.30632732060503315,
+            "tile_q90": 0.02223533898446531
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 14.617997020028566,
+            "fired": true,
+            "fold_disagreement": 0.0009579872323029413,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 14.615172305742853,
+            "residual_over_difference": 0.019772689675808152,
+            "residual_rms_lsb": 0.28903711875891314,
+            "tile_q90": 0.020834298786617966
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 16.44417388486093,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 16.44417388486093,
+            "fired": true,
+            "fold_disagreement": 0.002709684513552538,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 16.441985195407312,
+            "residual_over_difference": 0.018968751432485897,
+            "residual_rms_lsb": 0.31192544693450297,
+            "tile_q90": 0.020533353176802837
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 16.44417388486093,
+            "fired": true,
+            "fold_disagreement": 0.0017513890232154171,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 16.441837987102733,
+            "residual_over_difference": 0.017604702537954254,
+            "residual_rms_lsb": 0.28949478972537224,
+            "tile_q90": 0.01891017960800285
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 2.2461194324431704,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.2461194324431704,
+            "fired": false,
+            "fold_disagreement": 0.015354551401908532,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 2.2277929226321893,
+            "residual_over_difference": 0.1283856802078956,
+            "residual_rms_lsb": 0.28836957116238876,
+            "tile_q90": 0.1409132471329414
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.2461194324431704,
+            "fired": false,
+            "fold_disagreement": 0.009780733018580939,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 2.227765015460394,
+            "residual_over_difference": 0.1277163698768258,
+            "residual_rms_lsb": 0.286866220221438,
+            "tile_q90": 0.1401390627344578
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 2.6886568686728514,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.6886568686728514,
+            "fired": true,
+            "fold_disagreement": 0.015123130739137779,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.67371563302441,
+            "residual_over_difference": 0.10726064111816529,
+            "residual_rms_lsb": 0.2883870594806088,
+            "tile_q90": 0.11952286745360446
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.6886568686728514,
+            "fired": true,
+            "fold_disagreement": 0.009103584611373852,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.673284242317447,
+            "residual_over_difference": 0.10661819639398282,
+            "residual_rms_lsb": 0.2866597460601929,
+            "tile_q90": 0.11875861651479193
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 3.1306382385700786,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.1306382385700786,
+            "fired": true,
+            "fold_disagreement": 0.011507029695563305,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 3.1170065428363936,
+            "residual_over_difference": 0.09224303789901986,
+            "residual_rms_lsb": 0.2887795816885405,
+            "tile_q90": 0.10373627371482194
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.1306382385700786,
+            "fired": true,
+            "fold_disagreement": 0.0041567915872888425,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 3.117460325575307,
+            "residual_over_difference": 0.09162852447148394,
+            "residual_rms_lsb": 0.2868557624541818,
+            "tile_q90": 0.10304718768177241
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 3.5743660191083126,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.5743660191083126,
+            "fired": true,
+            "fold_disagreement": 0.011187333116441277,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 3.563469800056817,
+            "residual_over_difference": 0.0811375693923044,
+            "residual_rms_lsb": 0.29001537090889556,
+            "tile_q90": 0.09172206381601883
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.5743660191083126,
+            "fired": true,
+            "fold_disagreement": 0.00555139036914095,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 3.5625061305856556,
+            "residual_over_difference": 0.08035252553664585,
+            "residual_rms_lsb": 0.2872093368277198,
+            "tile_q90": 0.09053457447035745
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 4.016086063491927,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.016086063491927,
+            "fired": true,
+            "fold_disagreement": 0.009343394346504549,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 4.005648908735021,
+            "residual_over_difference": 0.07235235090790515,
+            "residual_rms_lsb": 0.2905732681421153,
+            "tile_q90": 0.0809014205719773
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.016086063491927,
+            "fired": true,
+            "fold_disagreement": 0.0025830211042506515,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 4.005687236075724,
+            "residual_over_difference": 0.07161186678287185,
+            "residual_rms_lsb": 0.28759942016733203,
+            "tile_q90": 0.08037329378490364
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 4.36155331010657,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.36155331010657,
+            "fired": true,
+            "fold_disagreement": 0.010103610498006546,
+            "informative_tiles": 63,
+            "kernel_effect_rms_lsb": 4.351199945186872,
+            "residual_over_difference": 0.06703201504261418,
+            "residual_rms_lsb": 0.29236370709222725,
+            "tile_q90": 0.09778093032526036
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.36155331010657,
+            "fired": true,
+            "fold_disagreement": 0.0046686706670258345,
+            "informative_tiles": 63,
+            "kernel_effect_rms_lsb": 4.3520137287727305,
+            "residual_over_difference": 0.06623086408344472,
+            "residual_rms_lsb": 0.2888694444743667,
+            "tile_q90": 0.097528699637618
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 5.232744036083161,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 5.232744036083161,
+            "fired": true,
+            "fold_disagreement": 0.006876470692457672,
+            "informative_tiles": 63,
+            "kernel_effect_rms_lsb": 5.224369907683189,
+            "residual_over_difference": 0.055979959944993087,
+            "residual_rms_lsb": 0.2929288015423368,
+            "tile_q90": 0.07904914395156605
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 5.232744036083161,
+            "fired": true,
+            "fold_disagreement": 0.0029297509664934196,
+            "informative_tiles": 63,
+            "kernel_effect_rms_lsb": 5.224761612339678,
+            "residual_over_difference": 0.05526391043034264,
+            "residual_rms_lsb": 0.28918189771500946,
+            "tile_q90": 0.07884674409802789
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 6.1015994297305465,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 6.1015994297305465,
+            "fired": true,
+            "fold_disagreement": 0.006421841504936675,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 6.095016922991191,
+            "residual_over_difference": 0.048402687422468366,
+            "residual_rms_lsb": 0.2953338099743589,
+            "tile_q90": 0.0700221537275582
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 6.1015994297305465,
+            "fired": true,
+            "fold_disagreement": 0.002174882501869391,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 6.094587258547207,
+            "residual_over_difference": 0.04761550821431818,
+            "residual_rms_lsb": 0.290530757766814,
+            "tile_q90": 0.06993168429668735
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 6.970629252394531,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 6.970629252394531,
+            "fired": true,
+            "fold_disagreement": 0.006186057533714022,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 6.964578246281446,
+            "residual_over_difference": 0.04228405340854012,
+            "residual_rms_lsb": 0.29474645959938245,
+            "tile_q90": 0.06136291479303122
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 6.970629252394531,
+            "fired": true,
+            "fold_disagreement": 0.004977059263245145,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 6.9647790587992855,
+            "residual_over_difference": 0.04155857945695037,
+            "residual_rms_lsb": 0.2896894496505807,
+            "tile_q90": 0.06115840284389462
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 7.848004694715921,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 7.848004694715921,
+            "fired": true,
+            "fold_disagreement": 0.004354375982076555,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 7.8422239963003735,
+            "residual_over_difference": 0.03733192744320377,
+            "residual_rms_lsb": 0.2929811418370573,
+            "tile_q90": 0.05605877326659228
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 7.848004694715921,
+            "fired": true,
+            "fold_disagreement": 0.0013317063148931233,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 7.842706654476472,
+            "residual_over_difference": 0.03655019666063943,
+            "residual_rms_lsb": 0.28684611498548845,
+            "tile_q90": 0.05556843498096788
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 3.2573740811619536,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.2573740811619536,
+            "fired": true,
+            "fold_disagreement": 0.009570945373786732,
+            "informative_tiles": 53,
+            "kernel_effect_rms_lsb": 3.2466318918650723,
+            "residual_over_difference": 0.08138462639168914,
+            "residual_rms_lsb": 0.2651001726133373,
+            "tile_q90": 0.11512856589661835
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.2573740811619536,
+            "fired": true,
+            "fold_disagreement": 0.0035349050142180903,
+            "informative_tiles": 53,
+            "kernel_effect_rms_lsb": 3.246563411058798,
+            "residual_over_difference": 0.08084266530521654,
+            "residual_rms_lsb": 0.2633348026172631,
+            "tile_q90": 0.11477036702501014
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 3.9075901997307207,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.9075901997307207,
+            "fired": true,
+            "fold_disagreement": 0.009819253967724205,
+            "informative_tiles": 55,
+            "kernel_effect_rms_lsb": 3.898738586131575,
+            "residual_over_difference": 0.06850603059366646,
+            "residual_rms_lsb": 0.26769349377026397,
+            "tile_q90": 0.09938423113657759
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.9075901997307207,
+            "fired": true,
+            "fold_disagreement": 0.0030753165845261734,
+            "informative_tiles": 55,
+            "kernel_effect_rms_lsb": 3.898812178349501,
+            "residual_over_difference": 0.06769223113481813,
+            "residual_rms_lsb": 0.2645134989803221,
+            "tile_q90": 0.09895865275736283
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 4.557390362678686,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.557390362678686,
+            "fired": true,
+            "fold_disagreement": 0.008377009573372129,
+            "informative_tiles": 57,
+            "kernel_effect_rms_lsb": 4.5488001260560935,
+            "residual_over_difference": 0.05903459672774766,
+            "residual_rms_lsb": 0.2690437021916599,
+            "tile_q90": 0.09146145333480273
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.557390362678686,
+            "fired": true,
+            "fold_disagreement": 0.00359954470355604,
+            "informative_tiles": 57,
+            "kernel_effect_rms_lsb": 4.549182431340661,
+            "residual_over_difference": 0.0582003049030858,
+            "residual_rms_lsb": 0.26524150867028434,
+            "tile_q90": 0.0908750957525306
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 5.202627616040012,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 5.202627616040012,
+            "fired": true,
+            "fold_disagreement": 0.007394790587976697,
+            "informative_tiles": 59,
+            "kernel_effect_rms_lsb": 5.196211120867307,
+            "residual_over_difference": 0.05214027223169307,
+            "residual_rms_lsb": 0.2712664202204505,
+            "tile_q90": 0.08539282158783852
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 5.202627616040012,
+            "fired": true,
+            "fold_disagreement": 0.002003666742820632,
+            "informative_tiles": 59,
+            "kernel_effect_rms_lsb": 5.19582292249448,
+            "residual_over_difference": 0.05124717652752697,
+            "residual_rms_lsb": 0.2666199758461893,
+            "tile_q90": 0.08466849833386843
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 5.853558099277665,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 5.853558099277665,
+            "fired": true,
+            "fold_disagreement": 0.006086096720822517,
+            "informative_tiles": 60,
+            "kernel_effect_rms_lsb": 5.846177492243548,
+            "residual_over_difference": 0.046238034158192366,
+            "residual_rms_lsb": 0.27065701934136427,
+            "tile_q90": 0.07554013357291846
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 5.853558099277665,
+            "fired": true,
+            "fold_disagreement": 0.001536783267135432,
+            "informative_tiles": 60,
+            "kernel_effect_rms_lsb": 5.847348844818026,
+            "residual_over_difference": 0.04542501759007711,
+            "residual_rms_lsb": 0.26589797962422623,
+            "tile_q90": 0.07522106249242046
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 1.8061416377577608,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.8061416377577608,
+            "fired": false,
+            "fold_disagreement": 0.01946081877350333,
+            "informative_tiles": 21,
+            "kernel_effect_rms_lsb": 1.7878168251886817,
+            "residual_over_difference": 0.14192167451384896,
+            "residual_rms_lsb": 0.25633064563976704,
+            "tile_q90": 0.1352478425430735
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.8061416377577608,
+            "fired": false,
+            "fold_disagreement": 0.007780283996136877,
+            "informative_tiles": 21,
+            "kernel_effect_rms_lsb": 1.7878458673451905,
+            "residual_over_difference": 0.14128433050114292,
+            "residual_rms_lsb": 0.255179512080843,
+            "tile_q90": 0.13503686692828284
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 2.157922590602941,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.157922590602941,
+            "fired": false,
+            "fold_disagreement": 0.015272913984865922,
+            "informative_tiles": 22,
+            "kernel_effect_rms_lsb": 2.1435413117631636,
+            "residual_over_difference": 0.12091267310346805,
+            "residual_rms_lsb": 0.2609201887801623,
+            "tile_q90": 0.11553984576794855
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.157922590602941,
+            "fired": false,
+            "fold_disagreement": 0.007816336518691746,
+            "informative_tiles": 22,
+            "kernel_effect_rms_lsb": 2.1425156330219632,
+            "residual_over_difference": 0.12040919760640144,
+            "residual_rms_lsb": 0.25983372763122725,
+            "tile_q90": 0.1154640503872357
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 2.518799054515785,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.518799054515785,
+            "fired": true,
+            "fold_disagreement": 0.014162122677649287,
+            "informative_tiles": 28,
+            "kernel_effect_rms_lsb": 2.5048232210493495,
+            "residual_over_difference": 0.10541914540626321,
+            "residual_rms_lsb": 0.2655296437771578,
+            "tile_q90": 0.1340059661365369
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.518799054515785,
+            "fired": true,
+            "fold_disagreement": 0.005568172171038204,
+            "informative_tiles": 28,
+            "kernel_effect_rms_lsb": 2.5050888177843422,
+            "residual_over_difference": 0.1047143452966483,
+            "residual_rms_lsb": 0.26375439392743716,
+            "tile_q90": 0.13350394679681282
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 2.87356357313832,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.87356357313832,
+            "fired": true,
+            "fold_disagreement": 0.013587390867865116,
+            "informative_tiles": 30,
+            "kernel_effect_rms_lsb": 2.8601655015478924,
+            "residual_over_difference": 0.09311110184027899,
+            "residual_rms_lsb": 0.2675606705029981,
+            "tile_q90": 0.12118735806686182
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.87356357313832,
+            "fired": true,
+            "fold_disagreement": 0.006844983648662697,
+            "informative_tiles": 30,
+            "kernel_effect_rms_lsb": 2.8609124108472646,
+            "residual_over_difference": 0.0924153503583126,
+            "residual_rms_lsb": 0.26556138438846244,
+            "tile_q90": 0.12211497605243667
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 3.230898754761805,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.230898754761805,
+            "fired": true,
+            "fold_disagreement": 0.010313257747162203,
+            "informative_tiles": 36,
+            "kernel_effect_rms_lsb": 3.22015499461612,
+            "residual_over_difference": 0.08310332986934008,
+            "residual_rms_lsb": 0.26849844499141035,
+            "tile_q90": 0.13332162718526902
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.230898754761805,
+            "fired": true,
+            "fold_disagreement": 0.0039004807904138563,
+            "informative_tiles": 36,
+            "kernel_effect_rms_lsb": 3.2199678216384924,
+            "residual_over_difference": 0.08245746752330903,
+            "residual_rms_lsb": 0.26641172914187106,
+            "tile_q90": 0.13313199027510547
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 2.711816057262716,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.711816057262716,
+            "fired": true,
+            "fold_disagreement": 0.012848750847234641,
+            "informative_tiles": 36,
+            "kernel_effect_rms_lsb": 2.697795106460196,
+            "residual_over_difference": 0.10297239088346719,
+            "residual_rms_lsb": 0.27924218305251924,
+            "tile_q90": 0.12336767042830726
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.711816057262716,
+            "fired": true,
+            "fold_disagreement": 0.0042357293604315316,
+            "informative_tiles": 36,
+            "kernel_effect_rms_lsb": 2.697620420227686,
+            "residual_over_difference": 0.10245611528641861,
+            "residual_rms_lsb": 0.27784213859847,
+            "tile_q90": 0.12309723521787022
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 3.245926407060739,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.245926407060739,
+            "fired": true,
+            "fold_disagreement": 0.01117545047793704,
+            "informative_tiles": 44,
+            "kernel_effect_rms_lsb": 3.2335251975673818,
+            "residual_over_difference": 0.08628127307226506,
+            "residual_rms_lsb": 0.28006266270008384,
+            "tile_q90": 0.12229080937231374
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.245926407060739,
+            "fired": true,
+            "fold_disagreement": 0.004807018073210217,
+            "informative_tiles": 44,
+            "kernel_effect_rms_lsb": 3.233871206972156,
+            "residual_over_difference": 0.08566765952239282,
+            "residual_rms_lsb": 0.2780709182748233,
+            "tile_q90": 0.12198828391548487
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 3.78470926740411,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.78470926740411,
+            "fired": true,
+            "fold_disagreement": 0.00862884015008834,
+            "informative_tiles": 49,
+            "kernel_effect_rms_lsb": 3.7737357525446575,
+            "residual_over_difference": 0.07451174490078742,
+            "residual_rms_lsb": 0.2820052914564611,
+            "tile_q90": 0.12175950895608031
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.78470926740411,
+            "fired": true,
+            "fold_disagreement": 0.0039715786721436705,
+            "informative_tiles": 49,
+            "kernel_effect_rms_lsb": 3.774338812192924,
+            "residual_over_difference": 0.07395594113211773,
+            "residual_rms_lsb": 0.27990173578231875,
+            "tile_q90": 0.12090468599585766
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 4.320560586352835,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.320560586352835,
+            "fired": true,
+            "fold_disagreement": 0.008613358163664714,
+            "informative_tiles": 52,
+            "kernel_effect_rms_lsb": 4.311713204342915,
+            "residual_over_difference": 0.06553637179764721,
+            "residual_rms_lsb": 0.28315386496148004,
+            "tile_q90": 0.1168339240562091
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.320560586352835,
+            "fired": true,
+            "fold_disagreement": 0.003800336870269649,
+            "informative_tiles": 52,
+            "kernel_effect_rms_lsb": 4.311009569953758,
+            "residual_over_difference": 0.06488539848356678,
+            "residual_rms_lsb": 0.2803412953178966,
+            "tile_q90": 0.11625400367894978
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 4.860781532779811,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.860781532779811,
+            "fired": true,
+            "fold_disagreement": 0.006551040239195479,
+            "informative_tiles": 52,
+            "kernel_effect_rms_lsb": 4.852368156033303,
+            "residual_over_difference": 0.058630625043295345,
+            "residual_rms_lsb": 0.2849906594657875,
+            "tile_q90": 0.1041007449630855
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.860781532779811,
+            "fired": true,
+            "fold_disagreement": 0.002625002130893213,
+            "informative_tiles": 52,
+            "kernel_effect_rms_lsb": 4.852518614293983,
+            "residual_over_difference": 0.05800127339528955,
+            "residual_rms_lsb": 0.2819315185975364,
+            "tile_q90": 0.10477123576255576
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 2.9270040878185486,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.9270040878185486,
+            "fired": true,
+            "fold_disagreement": 0.014935526021919918,
+            "informative_tiles": 45,
+            "kernel_effect_rms_lsb": 2.9128712469275597,
+            "residual_over_difference": 0.09768748085779098,
+            "residual_rms_lsb": 0.2859316557994504,
+            "tile_q90": 0.11685606229945086
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.9270040878185486,
+            "fired": true,
+            "fold_disagreement": 0.005735979965509547,
+            "informative_tiles": 45,
+            "kernel_effect_rms_lsb": 2.913414739645363,
+            "residual_over_difference": 0.09692188801529746,
+            "residual_rms_lsb": 0.28369076241986724,
+            "tile_q90": 0.11634499781542626
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 3.5067078953720845,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.5067078953720845,
+            "fired": true,
+            "fold_disagreement": 0.011003112294121112,
+            "informative_tiles": 49,
+            "kernel_effect_rms_lsb": 3.4952291880754456,
+            "residual_over_difference": 0.08184023701600254,
+            "residual_rms_lsb": 0.28698980530313883,
+            "tile_q90": 0.11070773223490192
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.5067078953720845,
+            "fired": true,
+            "fold_disagreement": 0.004015679246126196,
+            "informative_tiles": 49,
+            "kernel_effect_rms_lsb": 3.4951643055841806,
+            "residual_over_difference": 0.08116190725995895,
+            "residual_rms_lsb": 0.28461110099195497,
+            "tile_q90": 0.1100244295751343
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 4.089342486172097,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.089342486172097,
+            "fired": true,
+            "fold_disagreement": 0.007899228054012128,
+            "informative_tiles": 53,
+            "kernel_effect_rms_lsb": 4.079820280202812,
+            "residual_over_difference": 0.07002386802832378,
+            "residual_rms_lsb": 0.2863515785743323,
+            "tile_q90": 0.1121439301573414
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.089342486172097,
+            "fired": true,
+            "fold_disagreement": 0.0029259533303835914,
+            "informative_tiles": 53,
+            "kernel_effect_rms_lsb": 4.0793879777978015,
+            "residual_over_difference": 0.06952931792564765,
+            "residual_rms_lsb": 0.28432919382791805,
+            "tile_q90": 0.1116834664005256
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 4.669880459615074,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.669880459615074,
+            "fired": true,
+            "fold_disagreement": 0.008738298782459034,
+            "informative_tiles": 57,
+            "kernel_effect_rms_lsb": 4.6602272844456865,
+            "residual_over_difference": 0.062045321107042355,
+            "residual_rms_lsb": 0.28974423264831983,
+            "tile_q90": 0.12043527973816735
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.669880459615074,
+            "fired": true,
+            "fold_disagreement": 0.0023737434001643173,
+            "informative_tiles": 57,
+            "kernel_effect_rms_lsb": 4.660938358414673,
+            "residual_over_difference": 0.06128228707103481,
+            "residual_rms_lsb": 0.28618095491354695,
+            "tile_q90": 0.11957050821923798
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 5.252107072654109,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 5.252107072654109,
+            "fired": true,
+            "fold_disagreement": 0.007056214803703569,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 5.242635052180053,
+            "residual_over_difference": 0.055419404798704,
+            "residual_rms_lsb": 0.29106864790555437,
+            "tile_q90": 0.10468329693607954
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 5.252107072654109,
+            "fired": true,
+            "fold_disagreement": 0.00209087084235225,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 5.24405616109844,
+            "residual_over_difference": 0.054740292037789275,
+            "residual_rms_lsb": 0.28750187497082447,
+            "tile_q90": 0.10458335600549243
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 2.4430045627490893,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.4430045627490893,
+            "fired": true,
+            "fold_disagreement": 0.015057525874878686,
+            "informative_tiles": 34,
+            "kernel_effect_rms_lsb": 2.42717603037788,
+            "residual_over_difference": 0.11131452308442592,
+            "residual_rms_lsb": 0.27194188779549133,
+            "tile_q90": 0.12332955405474354
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.4430045627490893,
+            "fired": true,
+            "fold_disagreement": 0.005419064524638632,
+            "informative_tiles": 34,
+            "kernel_effect_rms_lsb": 2.4280492143013337,
+            "residual_over_difference": 0.11061447062298167,
+            "residual_rms_lsb": 0.2702316564380193,
+            "tile_q90": 0.12262494464130624
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 2.927807654403565,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.927807654403565,
+            "fired": true,
+            "fold_disagreement": 0.012274999952460883,
+            "informative_tiles": 39,
+            "kernel_effect_rms_lsb": 2.914367548613157,
+            "residual_over_difference": 0.09484603303572885,
+            "residual_rms_lsb": 0.27769094151182033,
+            "tile_q90": 0.1274720910975751
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.927807654403565,
+            "fired": true,
+            "fold_disagreement": 0.005698447405348448,
+            "informative_tiles": 39,
+            "kernel_effect_rms_lsb": 2.914355420800332,
+            "residual_over_difference": 0.09414051141529718,
+            "residual_rms_lsb": 0.2756253099111733,
+            "tile_q90": 0.12678393800652507
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 3.411384985278545,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.411384985278545,
+            "fired": true,
+            "fold_disagreement": 0.010218920616910007,
+            "informative_tiles": 41,
+            "kernel_effect_rms_lsb": 3.399910000658881,
+            "residual_over_difference": 0.08193399112878293,
+            "residual_rms_lsb": 0.27950838712067555,
+            "tile_q90": 0.11304948750221432
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.411384985278545,
+            "fired": true,
+            "fold_disagreement": 0.003245082969642497,
+            "informative_tiles": 41,
+            "kernel_effect_rms_lsb": 3.4004797346364772,
+            "residual_over_difference": 0.0812414294316307,
+            "residual_rms_lsb": 0.2771457925456314,
+            "tile_q90": 0.11277723943172321
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 3.8963672690458124,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.8963672690458124,
+            "fired": true,
+            "fold_disagreement": 0.010485706697188289,
+            "informative_tiles": 48,
+            "kernel_effect_rms_lsb": 3.8847509192249996,
+            "residual_over_difference": 0.07236474499732018,
+            "residual_rms_lsb": 0.28195962384040507,
+            "tile_q90": 0.12293403652830928
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.8963672690458124,
+            "fired": true,
+            "fold_disagreement": 0.004010093850941792,
+            "informative_tiles": 48,
+            "kernel_effect_rms_lsb": 3.8860481544587637,
+            "residual_over_difference": 0.07151504177911934,
+            "residual_rms_lsb": 0.2786488680326044,
+            "tile_q90": 0.12234213336351024
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 4.378520343731058,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.378520343731058,
+            "fired": true,
+            "fold_disagreement": 0.008699112328701885,
+            "informative_tiles": 52,
+            "kernel_effect_rms_lsb": 4.367088737302708,
+            "residual_over_difference": 0.0646982683533668,
+            "residual_rms_lsb": 0.28328268418938785,
+            "tile_q90": 0.11880033502974308
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.378520343731058,
+            "fired": true,
+            "fold_disagreement": 0.0027730556571197184,
+            "informative_tiles": 52,
+            "kernel_effect_rms_lsb": 4.36943919736629,
+            "residual_over_difference": 0.06394517630910868,
+            "residual_rms_lsb": 0.2799852553529016,
+            "tile_q90": 0.1182254472035554
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 2.2580521146840256,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.2580521146840256,
+            "fired": false,
+            "fold_disagreement": 0.015611536192013492,
+            "informative_tiles": 37,
+            "kernel_effect_rms_lsb": 2.2406328278084784,
+            "residual_over_difference": 0.12619101801352095,
+            "residual_rms_lsb": 0.284945895079561,
+            "tile_q90": 0.13310609500146012
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.2580521146840256,
+            "fired": false,
+            "fold_disagreement": 0.005525893069687694,
+            "informative_tiles": 37,
+            "kernel_effect_rms_lsb": 2.24035131818754,
+            "residual_over_difference": 0.1256837802290836,
+            "residual_rms_lsb": 0.2838005257277646,
+            "tile_q90": 0.13364719930730984
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 2.706960929204943,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.706960929204943,
+            "fired": true,
+            "fold_disagreement": 0.011751219102116801,
+            "informative_tiles": 47,
+            "kernel_effect_rms_lsb": 2.6920266994120734,
+            "residual_over_difference": 0.10554014455300922,
+            "residual_rms_lsb": 0.2856930477676378,
+            "tile_q90": 0.12768788561870512
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.706960929204943,
+            "fired": true,
+            "fold_disagreement": 0.004223547693366164,
+            "informative_tiles": 47,
+            "kernel_effect_rms_lsb": 2.6921056679417306,
+            "residual_over_difference": 0.10499905324644822,
+            "residual_rms_lsb": 0.2842283347416448,
+            "tile_q90": 0.1270142153563553
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 3.15493742735089,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.15493742735089,
+            "fired": true,
+            "fold_disagreement": 0.011987253928111712,
+            "informative_tiles": 54,
+            "kernel_effect_rms_lsb": 3.1420873550232145,
+            "residual_over_difference": 0.09073802355444342,
+            "residual_rms_lsb": 0.28627278659576016,
+            "tile_q90": 0.12347013497076705
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.15493742735089,
+            "fired": true,
+            "fold_disagreement": 0.0037743040128336244,
+            "informative_tiles": 54,
+            "kernel_effect_rms_lsb": 3.1423359732037133,
+            "residual_over_difference": 0.09003794294378377,
+            "residual_rms_lsb": 0.28406407607502737,
+            "tile_q90": 0.12364538796219615
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 3.601169510729442,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.601169510729442,
+            "fired": true,
+            "fold_disagreement": 0.009336977240127328,
+            "informative_tiles": 59,
+            "kernel_effect_rms_lsb": 3.5896833901554652,
+            "residual_over_difference": 0.0800038822017635,
+            "residual_rms_lsb": 0.28810754132498057,
+            "tile_q90": 0.1189189977100217
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.601169510729442,
+            "fired": true,
+            "fold_disagreement": 0.003861145282667961,
+            "informative_tiles": 59,
+            "kernel_effect_rms_lsb": 3.5901034154992084,
+            "residual_over_difference": 0.07958665986888955,
+            "residual_rms_lsb": 0.2866050529806395,
+            "tile_q90": 0.1180496581879126
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 4.044592233489388,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.044592233489388,
+            "fired": true,
+            "fold_disagreement": 0.008835256892766671,
+            "informative_tiles": 60,
+            "kernel_effect_rms_lsb": 4.03426292096454,
+            "residual_over_difference": 0.07134285603627315,
+            "residual_rms_lsb": 0.28855276143926184,
+            "tile_q90": 0.1076264449373559
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.044592233489388,
+            "fired": true,
+            "fold_disagreement": 0.0029046452055141426,
+            "informative_tiles": 60,
+            "kernel_effect_rms_lsb": 4.034478766431048,
+            "residual_over_difference": 0.07076190590216655,
+            "residual_rms_lsb": 0.2862030550388097,
+            "tile_q90": 0.10672195230182552
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0025,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 2.5487752027321386,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.5487752027321386,
+            "fired": true,
+            "fold_disagreement": 0.013575529652690743,
+            "informative_tiles": 46,
+            "kernel_effect_rms_lsb": 2.5336195422668744,
+            "residual_over_difference": 0.11144116195474166,
+            "residual_rms_lsb": 0.28403847015390177,
+            "tile_q90": 0.13325224091029694
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.5487752027321386,
+            "fired": true,
+            "fold_disagreement": 0.005111009427757357,
+            "informative_tiles": 46,
+            "kernel_effect_rms_lsb": 2.5333559648024497,
+            "residual_over_difference": 0.11079395491746873,
+            "residual_rms_lsb": 0.2823888849062668,
+            "tile_q90": 0.13279764323049098
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.003,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 3.0575606338421144,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.0575606338421144,
+            "fired": true,
+            "fold_disagreement": 0.01358312223361245,
+            "informative_tiles": 56,
+            "kernel_effect_rms_lsb": 3.0444144413491827,
+            "residual_over_difference": 0.09332057885301603,
+            "residual_rms_lsb": 0.28533332822834073,
+            "tile_q90": 0.13088585690857701
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.0575606338421144,
+            "fired": true,
+            "fold_disagreement": 0.0032524331995401586,
+            "informative_tiles": 56,
+            "kernel_effect_rms_lsb": 3.044633382160212,
+            "residual_over_difference": 0.09249534849251327,
+            "residual_rms_lsb": 0.28281013636421615,
+            "tile_q90": 0.13058212560844457
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0035,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 3.5557268167108926,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.5557268167108926,
+            "fired": true,
+            "fold_disagreement": 0.010464250510930272,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 3.544423615266917,
+            "residual_over_difference": 0.0806529837446856,
+            "residual_rms_lsb": 0.28677997714872633,
+            "tile_q90": 0.1153417734978643
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.5557268167108926,
+            "fired": true,
+            "fold_disagreement": 0.002772504491125298,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 3.544347614865661,
+            "residual_over_difference": 0.07991961167766819,
+            "residual_rms_lsb": 0.2841723064234058,
+            "tile_q90": 0.11413670621802666
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.004,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 4.067146901372916,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.067146901372916,
+            "fired": true,
+            "fold_disagreement": 0.008859792818984726,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 4.056213495230822,
+            "residual_over_difference": 0.07062531898365584,
+            "residual_rms_lsb": 0.2872435472628496,
+            "tile_q90": 0.10326199256678452
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.067146901372916,
+            "fired": true,
+            "fold_disagreement": 0.003188207283593908,
+            "informative_tiles": 58,
+            "kernel_effect_rms_lsb": 4.0570916952016125,
+            "residual_over_difference": 0.06996281501679179,
+            "residual_rms_lsb": 0.2845490463068712,
+            "tile_q90": 0.10313200512395054
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "amount": 0.0045,
+        "clipped_samples": 0,
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 4.574186392241296,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.574186392241296,
+            "fired": true,
+            "fold_disagreement": 0.0076619019350818544,
+            "informative_tiles": 59,
+            "kernel_effect_rms_lsb": 4.565196674036346,
+            "residual_over_difference": 0.06320718589138435,
+            "residual_rms_lsb": 0.2891214495962364,
+            "tile_q90": 0.09285601332437333
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.574186392241296,
+            "fired": true,
+            "fold_disagreement": 0.0019544464715931854,
+            "informative_tiles": 59,
+            "kernel_effect_rms_lsb": 4.565135875786124,
+            "residual_over_difference": 0.06257127995199449,
+            "residual_rms_lsb": 0.28621269730153387,
+            "tile_q90": 0.09241920526978953
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "radius": 1.0,
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      }
+    ],
+    "reliable_threshold": 0.0035,
+    "strength_key": "amount",
+    "zero_clipped_samples_in_refinement": true
+  },
+  "resampling_shift_combined": {
+    "by_strength": {
+      "0.0001": {
+        "fire_rate": 0.0,
+        "fires": 0,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 1.4489441659551767,
+            "median": 0.36969755996278286,
+            "minimum": 0.2194055796594804
+          },
+          "fold_disagreement": {
+            "maximum": 0.03425298610234442,
+            "median": 0.021917011700760124,
+            "minimum": 0.009581037299175832
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 1.420258439167071,
+            "median": 0.9604407883709478,
+            "minimum": 0.5006231375748246
+          },
+          "residual_over_difference": {
+            "maximum": 0.39801867317186745,
+            "median": 0.2981908612670645,
+            "minimum": 0.1983630493622616
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2874169831145277,
+            "median": 0.252404321153326,
+            "minimum": 0.21739165919212436
+          },
+          "tile_q90": {
+            "maximum": 1e+100,
+            "median": 1e+100,
+            "minimum": 1e+100
+          }
+        },
+        "trials": 12
+      },
+      "0.0002": {
+        "fire_rate": 0.08333333333333333,
+        "fires": 1,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 2.8538160196064957,
+            "median": 0.7116710823580634,
+            "minimum": 0.46053151572604367
+          },
+          "fold_disagreement": {
+            "maximum": 0.029805117101843564,
+            "median": 0.017327125594685286,
+            "minimum": 0.012398935723865469
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 2.8389781341718576,
+            "median": 0.6697052622990946,
+            "minimum": 0.5471776736825736
+          },
+          "residual_over_difference": {
+            "maximum": 0.42991200893373044,
+            "median": 0.3474002680984705,
+            "minimum": 0.10123206254094083
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2888976817771436,
+            "median": 0.25835001063454477,
+            "minimum": 0.2106745386311393
+          },
+          "tile_q90": {
+            "maximum": 1e+100,
+            "median": 1e+100,
+            "minimum": 0.10716687240317294
+          }
+        },
+        "trials": 12
+      },
+      "0.0004": {
+        "fire_rate": 0.08333333333333333,
+        "fires": 1,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 5.6804117961474985,
+            "median": 1.369406857282943,
+            "minimum": 0.9131011020927134
+          },
+          "fold_disagreement": {
+            "maximum": 0.018609961011913458,
+            "median": 0.011831241286923687,
+            "minimum": 0.0012997575751072306
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 5.673089256385463,
+            "median": 1.3409784138674383,
+            "minimum": 0.8819543063646671
+          },
+          "residual_over_difference": {
+            "maximum": 0.25835630422518274,
+            "median": 0.20039784501272012,
+            "minimum": 0.050757746056782856
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2883248994468085,
+            "median": 0.2775009114733772,
+            "minimum": 0.23590542612061471
+          },
+          "tile_q90": {
+            "maximum": 1e+100,
+            "median": 0.13628281112521543,
+            "minimum": 0.05347092066186951
+          }
+        },
+        "trials": 12
+      },
+      "0.0006": {
+        "fire_rate": 0.3333333333333333,
+        "fires": 4,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 8.51240645444061,
+            "median": 2.0354635834699026,
+            "minimum": 1.3565497899471528
+          },
+          "fold_disagreement": {
+            "maximum": 0.011219116739621803,
+            "median": 0.00658933490472132,
+            "minimum": 0.0015008958242401934
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 8.507374310091349,
+            "median": 2.0159168023171876,
+            "minimum": 1.3324932366888593
+          },
+          "residual_over_difference": {
+            "maximum": 0.18591242403909725,
+            "median": 0.13759984858284063,
+            "minimum": 0.034028610922401975
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2896653672515028,
+            "median": 0.2821624152596651,
+            "minimum": 0.25219945977880337
+          },
+          "tile_q90": {
+            "maximum": 0.14312955657421836,
+            "median": 0.13405056927932624,
+            "minimum": 0.035799714176943026
+          }
+        },
+        "trials": 12
+      },
+      "0.0008": {
+        "fire_rate": 0.8333333333333334,
+        "fires": 10,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 11.343886758774088,
+            "median": 2.7019920046591226,
+            "minimum": 1.802125701476835
+          },
+          "fold_disagreement": {
+            "maximum": 0.00846764557357735,
+            "median": 0.005378630088341762,
+            "minimum": 0.001312046467206959
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 11.340153211050977,
+            "median": 2.6868419444741947,
+            "minimum": 1.783168116864856
+          },
+          "residual_over_difference": {
+            "maximum": 0.14450436762609348,
+            "median": 0.10480359209339266,
+            "minimum": 0.025467733296842328
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28890308252203967,
+            "median": 0.2844709314977577,
+            "minimum": 0.26041503487464013
+          },
+          "tile_q90": {
+            "maximum": 0.13128785809704271,
+            "median": 0.12049189763860041,
+            "minimum": 0.0270409893376741
+          }
+        },
+        "trials": 12
+      },
+      "0.001": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 14.176711488630371,
+            "median": 3.3726722239174807,
+            "minimum": 2.245172471750156
+          },
+          "fold_disagreement": {
+            "maximum": 0.005761069288249563,
+            "median": 0.0036010549118036094,
+            "minimum": 0.0014543877636928539
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 14.173679474275573,
+            "median": 3.360397863929024,
+            "minimum": 2.229643900428792
+          },
+          "residual_over_difference": {
+            "maximum": 0.11787362736886767,
+            "median": 0.08442650480808708,
+            "minimum": 0.02038125444287732
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2889391640130377,
+            "median": 0.28579041525287874,
+            "minimum": 0.2646466233139174
+          },
+          "tile_q90": {
+            "maximum": 0.12610889432788133,
+            "median": 0.11710433067866721,
+            "minimum": 0.021550380800936204
+          }
+        },
+        "trials": 12
+      },
+      "0.002": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 28.29808119599652,
+            "median": 6.713532591978703,
+            "minimum": 4.464441247297383
+          },
+          "fold_disagreement": {
+            "maximum": 0.002987877996200452,
+            "median": 0.0021433448376332147,
+            "minimum": 0.0007743534211564395
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 28.296561990034714,
+            "median": 6.7074111504422795,
+            "minimum": 4.455971728171313
+          },
+          "residual_over_difference": {
+            "maximum": 0.06155891946133055,
+            "median": 0.042870273659872477,
+            "minimum": 0.010161233592182128
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28914159449422994,
+            "median": 0.2877731901519828,
+            "minimum": 0.27098612588521803
+          },
+          "tile_q90": {
+            "maximum": 0.10385243687498172,
+            "median": 0.07311080681417606,
+            "minimum": 0.010634432829844867
+          }
+        },
+        "trials": 12
+      },
+      "0.005": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 70.36804627701191,
+            "median": 16.68654449610426,
+            "minimum": 11.084884571527725
+          },
+          "fold_disagreement": {
+            "maximum": 0.001085431195639145,
+            "median": 0.0007640151539896084,
+            "minimum": 0.00017303463833041595
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 70.36743173996635,
+            "median": 16.684036475601374,
+            "minimum": 11.08146068114631
+          },
+          "residual_over_difference": {
+            "maximum": 0.025797818928006904,
+            "median": 0.01722516132329048,
+            "minimum": 0.004095892692715722
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2897664629719949,
+            "median": 0.28822801577964996,
+            "minimum": 0.28377098697612346
+          },
+          "tile_q90": {
+            "maximum": 0.09947681424164197,
+            "median": 0.0327890075539312,
+            "minimum": 0.004342732991230901
+          }
+        },
+        "trials": 12
+      },
+      "0.01": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 139.50451157865754,
+            "median": 33.07812863526908,
+            "minimum": 21.980334844504696
+          },
+          "fold_disagreement": {
+            "maximum": 0.0006037398900512363,
+            "median": 0.0004074212686631763,
+            "minimum": 8.916341256126323e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 139.50417969730097,
+            "median": 33.076882578494676,
+            "minimum": 21.978545551014072
+          },
+          "residual_over_difference": {
+            "maximum": 0.01315562411307008,
+            "median": 0.008711587141518169,
+            "minimum": 0.002068594059595093
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2903107374681912,
+            "median": 0.28854115130663827,
+            "minimum": 0.28630922831673533
+          },
+          "tile_q90": {
+            "maximum": 0.08037762079698768,
+            "median": 0.017334239087878425,
+            "minimum": 0.0021955034852954355
+          }
+        },
+        "trials": 12
+      },
+      "0.02": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 274.1526817537868,
+            "median": 65.01585391818261,
+            "minimum": 43.23231178836203
+          },
+          "fold_disagreement": {
+            "maximum": 0.00026379593609058785,
+            "median": 0.00019962294573606479,
+            "minimum": 7.84105959037746e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 274.1525723147338,
+            "median": 65.01515998159104,
+            "minimum": 43.23129220237625
+          },
+          "residual_over_difference": {
+            "maximum": 0.006686836328851771,
+            "median": 0.004438081350950503,
+            "minimum": 0.0010462256216204452
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.289087393046666,
+            "median": 0.2883571803406863,
+            "minimum": 0.28682555988676767
+          },
+          "tile_q90": {
+            "maximum": 0.04309476216688668,
+            "median": 0.008860127089852454,
+            "minimum": 0.001105571446406008
+          }
+        },
+        "trials": 12
+      },
+      "0.03": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 404.0810978838971,
+            "median": 95.84436020803551,
+            "minimum": 63.773642055747544
+          },
+          "fold_disagreement": {
+            "maximum": 0.00028104648543657323,
+            "median": 0.00012170613864936842,
+            "minimum": 4.043476390082485e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 404.08073167081574,
+            "median": 95.8439577024533,
+            "minimum": 63.77262425828062
+          },
+          "residual_over_difference": {
+            "maximum": 0.004510109226600284,
+            "median": 0.0030142813909583145,
+            "minimum": 0.0007155939656636323
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28957915405484513,
+            "median": 0.28797878079236694,
+            "minimum": 0.2866242865747809
+          },
+          "tile_q90": {
+            "maximum": 0.029760638310749512,
+            "median": 0.0060459861929403795,
+            "minimum": 0.0007614421146819163
+          }
+        },
+        "trials": 12
+      },
+      "0.04": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 529.420012632744,
+            "median": 125.59407459092722,
+            "minimum": 83.62506835218986
+          },
+          "fold_disagreement": {
+            "maximum": 0.00022860310830622455,
+            "median": 0.00010488819687244606,
+            "minimum": 3.6868252133564895e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 529.419886509891,
+            "median": 125.59383001080674,
+            "minimum": 83.62480168205845
+          },
+          "residual_over_difference": {
+            "maximum": 0.0034548412705346005,
+            "median": 0.0022971248966237095,
+            "minimum": 0.0005465632505984178
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.29015419766298245,
+            "median": 0.28889621134620125,
+            "minimum": 0.2877825173227496
+          },
+          "tile_q90": {
+            "maximum": 0.022652699963844447,
+            "median": 0.0045298902929250045,
+            "minimum": 0.0005798551108399837
+          }
+        },
+        "trials": 12
+      },
+      "0.05": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 650.2986932595218,
+            "median": 154.29966921724704,
+            "minimum": 102.81256325144338
+          },
+          "fold_disagreement": {
+            "maximum": 0.0002270645254182653,
+            "median": 0.00010062839713544549,
+            "minimum": 4.3445959880298606e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 650.2984894516975,
+            "median": 154.29936612642905,
+            "minimum": 102.81234950932928
+          },
+          "residual_over_difference": {
+            "maximum": 0.0028070302282569436,
+            "median": 0.0018789703526901904,
+            "minimum": 0.00044303419874690655
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.2910670177312471,
+            "median": 0.28869695273067264,
+            "minimum": 0.2881045605143926
+          },
+          "tile_q90": {
+            "maximum": 0.01806821128152622,
+            "median": 0.0037661445963947083,
+            "minimum": 0.00047029784554907433
+          }
+        },
+        "trials": 12
+      },
+      "0.1": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 1191.9127418690268,
+            "median": 283.66938500451477,
+            "minimum": 189.28975471129337
+          },
+          "fold_disagreement": {
+            "maximum": 8.36354828084581e-05,
+            "median": 3.909162514860174e-05,
+            "minimum": 8.674505855963529e-06
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 1191.9129347120552,
+            "median": 283.6692990719588,
+            "minimum": 189.28956436378675
+          },
+          "residual_over_difference": {
+            "maximum": 0.001519073373708247,
+            "median": 0.001017532520303541,
+            "minimum": 0.00024285335044740071
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28946000280384104,
+            "median": 0.2886484338626742,
+            "minimum": 0.2870929858060473
+          },
+          "tile_q90": {
+            "maximum": 0.009726100552398236,
+            "median": 0.001997460496346858,
+            "minimum": 0.00025938652543198103
+          }
+        },
+        "trials": 12
+      },
+      "0.2": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 2003.7048076756362,
+            "median": 480.5296314234761,
+            "minimum": 321.15295092137274
+          },
+          "fold_disagreement": {
+            "maximum": 4.6224799223522354e-05,
+            "median": 2.5925055506012655e-05,
+            "minimum": 1.2680456690734292e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 2003.7046177380746,
+            "median": 480.5296141328446,
+            "minimum": 321.1527325523262
+          },
+          "residual_over_difference": {
+            "maximum": 0.0008998004084406493,
+            "median": 0.0006007986884736924,
+            "minimum": 0.00014393645230936235
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28960562741651874,
+            "median": 0.2888242008504208,
+            "minimum": 0.28732532083739404
+          },
+          "tile_q90": {
+            "maximum": 0.005953257954045174,
+            "median": 0.001203095466223518,
+            "minimum": 0.0001514756465495733
+          }
+        },
+        "trials": 12
+      },
+      "0.35": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 2695.9316053887883,
+            "median": 652.3513263768264,
+            "minimum": 437.04937014483255
+          },
+          "fold_disagreement": {
+            "maximum": 3.3287268680529514e-05,
+            "median": 2.0057731012624302e-05,
+            "minimum": 4.346113563596571e-06
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 2695.9314649267785,
+            "median": 652.3512694547426,
+            "minimum": 437.0494952906038
+          },
+          "residual_over_difference": {
+            "maximum": 0.0006604733660085771,
+            "median": 0.00044292540569924215,
+            "minimum": 0.00010710933645322987
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.28959685732687734,
+            "median": 0.2887835213203299,
+            "minimum": 0.28814586313143126
+          },
+          "tile_q90": {
+            "maximum": 0.004560456339271677,
+            "median": 0.0008892774125725843,
+            "minimum": 0.00011374276006883594
+          }
+        },
+        "trials": 12
+      },
+      "0.5": {
+        "fire_rate": 1.0,
+        "fires": 12,
+        "selected_metrics": {
+          "difference_rms_lsb": {
+            "maximum": 2907.8325732737308,
+            "median": 706.0016927296084,
+            "minimum": 473.48484357804097
+          },
+          "fold_disagreement": {
+            "maximum": 3.1127237547642515e-05,
+            "median": 2.0027678498488008e-05,
+            "minimum": 1.2738325826588375e-05
+          },
+          "kernel_effect_rms_lsb": {
+            "maximum": 2907.832569764891,
+            "median": 706.0016052564449,
+            "minimum": 473.4849455935286
+          },
+          "residual_over_difference": {
+            "maximum": 0.0006118083390758994,
+            "median": 0.00041109946720748,
+            "minimum": 9.946753922403794e-05
+          },
+          "residual_rms_lsb": {
+            "maximum": 0.29107077524898217,
+            "median": 0.2896629853978026,
+            "minimum": 0.28813576583466644
+          },
+          "tile_q90": {
+            "maximum": 0.004101675570409749,
+            "median": 0.0008419598937663524,
+            "minimum": 0.00010589448850025799
+          }
+        },
+        "trials": 12
+      }
+    },
+    "refinement_trials": [
+      {
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 0.38180019343562166,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 0.7157697921980477,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.7157697921980477,
+            "fired": false,
+            "fold_disagreement": 0.049416960811966684,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.6698355236172271,
+            "residual_over_difference": 0.35412578137145534,
+            "residual_rms_lsb": 0.2534725369442179,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.7157697921980477,
+            "fired": false,
+            "fold_disagreement": 0.013630018191887423,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.6697052622990946,
+            "residual_over_difference": 0.35331542760531826,
+            "residual_rms_lsb": 0.25289251019742304,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 1.3881308648606745,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.3881308648606745,
+            "fired": false,
+            "fold_disagreement": 0.026563525525719462,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 1.3611123822877669,
+            "residual_over_difference": 0.1994941267853218,
+            "residual_rms_lsb": 0.2769239547491338,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.3881308648606745,
+            "fired": false,
+            "fold_disagreement": 0.008998541597882806,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 1.360458287612414,
+            "residual_over_difference": 0.19873710238290676,
+            "residual_rms_lsb": 0.27587310581068875,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 2.062663910594634,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.062663910594634,
+            "fired": false,
+            "fold_disagreement": 0.01813728863229167,
+            "informative_tiles": 40,
+            "kernel_effect_rms_lsb": 2.043055216500578,
+            "residual_over_difference": 0.13708038405837472,
+            "residual_rms_lsb": 0.28275076104766156,
+            "tile_q90": 0.13918103087522826
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.062663910594634,
+            "fired": false,
+            "fold_disagreement": 0.008814793744678476,
+            "informative_tiles": 40,
+            "kernel_effect_rms_lsb": 2.043455373346324,
+            "residual_over_difference": 0.13666289432051903,
+            "residual_rms_lsb": 0.28188962003234297,
+            "tile_q90": 0.13856323506682403
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-0",
+        "difference_rms_lsb": 2.7408348808399148,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.7408348808399148,
+            "fired": true,
+            "fold_disagreement": 0.012733681561824223,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.726202853599253,
+            "residual_over_difference": 0.10413246844792667,
+            "residual_rms_lsb": 0.2854099017500393,
+            "tile_q90": 0.11678421317914243
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.7408348808399148,
+            "fired": true,
+            "fold_disagreement": 0.005807034807179722,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.7260083956010925,
+            "residual_over_difference": 0.10385189703232234,
+            "residual_rms_lsb": 0.2846409018275843,
+            "tile_q90": 0.11640599197178175
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 0.42277907126429615,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 0.8446005830602505,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.8446005830602505,
+            "fired": false,
+            "fold_disagreement": 0.048038292794158735,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.8123185540875005,
+            "residual_over_difference": 0.2778030717075223,
+            "residual_rms_lsb": 0.2346326363401019,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.8446005830602505,
+            "fired": false,
+            "fold_disagreement": 0.017327125594685286,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.8116844991350298,
+            "residual_over_difference": 0.276573868376687,
+            "residual_rms_lsb": 0.23359445049017882,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 1.6751162730418363,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.6751162730418363,
+            "fired": false,
+            "fold_disagreement": 0.021622490579086235,
+            "informative_tiles": 19,
+            "kernel_effect_rms_lsb": 1.651813138461851,
+            "residual_over_difference": 0.16263533220718474,
+            "residual_rms_lsb": 0.2724330915518202,
+            "tile_q90": 0.132151971796726
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.6751162730418363,
+            "fired": false,
+            "fold_disagreement": 0.010648945689818704,
+            "informative_tiles": 19,
+            "kernel_effect_rms_lsb": 1.6531273193381142,
+            "residual_over_difference": 0.16224582150888794,
+            "residual_rms_lsb": 0.27178061584257934,
+            "tile_q90": 0.13162296917760818
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 2.498883788602825,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.498883788602825,
+            "fired": true,
+            "fold_disagreement": 0.014305670698262003,
+            "informative_tiles": 30,
+            "kernel_effect_rms_lsb": 2.483118199379479,
+            "residual_over_difference": 0.11315784973753858,
+            "residual_rms_lsb": 0.28276831626228954,
+            "tile_q90": 0.11356246671199412
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.498883788602825,
+            "fired": true,
+            "fold_disagreement": 0.006770392764568726,
+            "informative_tiles": 30,
+            "kernel_effect_rms_lsb": 2.482997527086108,
+            "residual_over_difference": 0.1127714270738611,
+            "residual_rms_lsb": 0.28180269093247723,
+            "tile_q90": 0.11306854316630782
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-1",
+        "difference_rms_lsb": 3.32372685765867,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.32372685765867,
+            "fired": true,
+            "fold_disagreement": 0.01272505933475669,
+            "informative_tiles": 37,
+            "kernel_effect_rms_lsb": 3.311361022164345,
+            "residual_over_difference": 0.0865066743424582,
+            "residual_rms_lsb": 0.2875245568787605,
+            "tile_q90": 0.12079334219530471
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.32372685765867,
+            "fired": true,
+            "fold_disagreement": 0.004565648185379559,
+            "informative_tiles": 37,
+            "kernel_effect_rms_lsb": 3.311414406044996,
+            "residual_over_difference": 0.08606245468064472,
+            "residual_rms_lsb": 0.286048092058091,
+            "tile_q90": 0.12065758661326241
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 1.4489441659551767,
+        "distance": 0.0001,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.4489441659551767,
+            "fired": false,
+            "fold_disagreement": 0.019960979818172953,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 1.4205680794812918,
+            "residual_over_difference": 0.1986202123415076,
+            "residual_rms_lsb": 0.2877895979130058,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.4489441659551767,
+            "fired": false,
+            "fold_disagreement": 0.009581037299175832,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 1.420258439167071,
+            "residual_over_difference": 0.1983630493622616,
+            "residual_rms_lsb": 0.2874169831145277,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 2.8538160196064957,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.8538160196064957,
+            "fired": true,
+            "fold_disagreement": 0.01676985556639965,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.8386761848651547,
+            "residual_over_difference": 0.10154182096096762,
+            "residual_rms_lsb": 0.289781675318424,
+            "tile_q90": 0.10766691672983064
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.8538160196064957,
+            "fired": true,
+            "fold_disagreement": 0.012985718779030358,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.8389781341718576,
+            "residual_over_difference": 0.10123206254094083,
+            "residual_rms_lsb": 0.2888976817771436,
+            "tile_q90": 0.10716687240317294
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 5.6804117961474985,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 5.6804117961474985,
+            "fired": true,
+            "fold_disagreement": 0.006443524020618468,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 5.673294298579727,
+            "residual_over_difference": 0.050967801084085614,
+            "residual_rms_lsb": 0.2895180985017392,
+            "tile_q90": 0.05353789697563789
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 5.6804117961474985,
+            "fired": true,
+            "fold_disagreement": 0.0012997575751072306,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 5.673089256385463,
+            "residual_over_difference": 0.050757746056782856,
+            "residual_rms_lsb": 0.2883248994468085,
+            "tile_q90": 0.05347092066186951
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 8.51240645444061,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 8.51240645444061,
+            "fired": true,
+            "fold_disagreement": 0.004040933144938894,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 8.507152088604288,
+            "residual_over_difference": 0.03412979137133564,
+            "residual_rms_lsb": 0.29052665635806896,
+            "tile_q90": 0.03602495121498306
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 8.51240645444061,
+            "fired": true,
+            "fold_disagreement": 0.0015008958242401934,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 8.507374310091349,
+            "residual_over_difference": 0.034028610922401975,
+            "residual_rms_lsb": 0.2896653672515028,
+            "tile_q90": 0.035799714176943026
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-2",
+        "difference_rms_lsb": 11.343886758774088,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 11.343886758774088,
+            "fired": true,
+            "fold_disagreement": 0.003442166418593861,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 11.340343634345457,
+            "residual_over_difference": 0.02555817234572889,
+            "residual_rms_lsb": 0.28992901285118006,
+            "tile_q90": 0.027142794760920227
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 11.343886758774088,
+            "fired": true,
+            "fold_disagreement": 0.001312046467206959,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 11.340153211050977,
+            "residual_over_difference": 0.025467733296842328,
+            "residual_rms_lsb": 0.28890308252203967,
+            "tile_q90": 0.0270409893376741
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 0.3647599140170504,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 0.7075723725180791,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.7075723725180791,
+            "fired": false,
+            "fold_disagreement": 0.056000927313612885,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.656533887056246,
+            "residual_over_difference": 0.377248448072345,
+            "residual_rms_lsb": 0.2669305794313125,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.7075723725180791,
+            "fired": false,
+            "fold_disagreement": 0.029805117101843564,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.6559741408785209,
+            "residual_over_difference": 0.37578330849706,
+            "residual_rms_lsb": 0.26589388714595796,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 1.3506828497052115,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.3506828497052115,
+            "fired": false,
+            "fold_disagreement": 0.030224397535202688,
+            "informative_tiles": 1,
+            "kernel_effect_rms_lsb": 1.3214870392852356,
+            "residual_over_difference": 0.20806417839018812,
+            "residual_rms_lsb": 0.28102871738963275,
+            "tile_q90": 0.14017585592814943
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.3506828497052115,
+            "fired": false,
+            "fold_disagreement": 0.018609961011913458,
+            "informative_tiles": 1,
+            "kernel_effect_rms_lsb": 1.3214985401224628,
+            "residual_over_difference": 0.2070335619587418,
+            "residual_rms_lsb": 0.27963668145105386,
+            "tile_q90": 0.13568926763502503
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 2.0082632563451717,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.0082632563451717,
+            "fired": false,
+            "fold_disagreement": 0.01854014671103422,
+            "informative_tiles": 22,
+            "kernel_effect_rms_lsb": 1.9881976046914758,
+            "residual_over_difference": 0.1421361959921237,
+            "residual_rms_lsb": 0.28544689980765786,
+            "tile_q90": 0.14323593618829686
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.0082632563451717,
+            "fired": false,
+            "fold_disagreement": 0.011219116739621803,
+            "informative_tiles": 22,
+            "kernel_effect_rms_lsb": 1.9883782312880518,
+            "residual_over_difference": 0.14164998356060532,
+            "residual_rms_lsb": 0.28447045724666126,
+            "tile_q90": 0.14312955657421836
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-3",
+        "difference_rms_lsb": 2.66314912847833,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.66314912847833,
+            "fired": true,
+            "fold_disagreement": 0.015274917392045534,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.647891135516958,
+            "residual_over_difference": 0.10783961072274967,
+            "residual_rms_lsb": 0.28719296531173316,
+            "tile_q90": 0.12074272064116984
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.66314912847833,
+            "fired": true,
+            "fold_disagreement": 0.00846764557357735,
+            "informative_tiles": 64,
+            "kernel_effect_rms_lsb": 2.647675493347297,
+            "residual_over_difference": 0.10738149591374566,
+            "residual_rms_lsb": 0.2859729372573911,
+            "tile_q90": 0.12032620866393841
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 0.5461845733510423,
+        "distance": 0.0001,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.5461845733510423,
+            "fired": false,
+            "fold_disagreement": 0.07558769177816928,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.5006281251863568,
+            "residual_over_difference": 0.39859127088406177,
+            "residual_rms_lsb": 0.217704403229261,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.5461845733510423,
+            "fired": false,
+            "fold_disagreement": 0.03425298610234442,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.5006231375748246,
+            "residual_over_difference": 0.39801867317186745,
+            "residual_rms_lsb": 0.21739165919212436,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 1.0798940233466567,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.0798940233466567,
+            "fired": false,
+            "fold_disagreement": 0.03487010498318177,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 1.0485254812247569,
+            "residual_over_difference": 0.24000894227891492,
+            "residual_rms_lsb": 0.259184222316753,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.0798940233466567,
+            "fired": false,
+            "fold_disagreement": 0.012398935723865469,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 1.0488762739696254,
+            "residual_over_difference": 0.23923644825248916,
+            "residual_rms_lsb": 0.25835001063454477,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 2.1314140766992593,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.1314140766992593,
+            "fired": false,
+            "fold_disagreement": 0.01783175103994857,
+            "informative_tiles": 28,
+            "kernel_effect_rms_lsb": 2.1122127763478162,
+            "residual_over_difference": 0.13180721017732472,
+            "residual_rms_lsb": 0.28093574318240777,
+            "tile_q90": 0.13754480649722436
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.1314140766992593,
+            "fired": false,
+            "fold_disagreement": 0.008058735609570255,
+            "informative_tiles": 28,
+            "kernel_effect_rms_lsb": 2.112854293886793,
+            "residual_over_difference": 0.13130981667660496,
+            "residual_rms_lsb": 0.27987559167331494,
+            "tile_q90": 0.13702988551439335
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 3.186489129711008,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.186489129711008,
+            "fired": true,
+            "fold_disagreement": 0.011448625168121316,
+            "informative_tiles": 59,
+            "kernel_effect_rms_lsb": 3.173592501916366,
+            "residual_over_difference": 0.09013330130782579,
+            "residual_rms_lsb": 0.28720878484235385,
+            "tile_q90": 0.12281153314093293
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.186489129711008,
+            "fired": true,
+            "fold_disagreement": 0.004443616243102023,
+            "informative_tiles": 59,
+            "kernel_effect_rms_lsb": 3.1737730735077405,
+            "residual_over_difference": 0.08982470582577472,
+            "residual_rms_lsb": 0.2862254486933202,
+            "tile_q90": 0.12288371874775854
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-4",
+        "difference_rms_lsb": 4.239312634559354,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 4.239312634559354,
+            "fired": true,
+            "fold_disagreement": 0.008782738150912359,
+            "informative_tiles": 63,
+            "kernel_effect_rms_lsb": 4.229508400396746,
+            "residual_over_difference": 0.06836457286760511,
+            "residual_rms_lsb": 0.289818797513892,
+            "tile_q90": 0.09630726369182141
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 4.239312634559354,
+            "fired": true,
+            "fold_disagreement": 0.004153657590131288,
+            "informative_tiles": 63,
+            "kernel_effect_rms_lsb": 4.229532415492381,
+            "residual_over_difference": 0.06811564602869466,
+            "residual_rms_lsb": 0.28876351882061796,
+            "tile_q90": 0.09598952700928734
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 0.4023436179648972,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 0.7970267304288022,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.7970267304288022,
+            "fired": false,
+            "fold_disagreement": 0.04741445718706598,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.7630815165175517,
+            "residual_over_difference": 0.2895265779767994,
+            "residual_rms_lsb": 0.2307604218170881,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.7970267304288022,
+            "fired": false,
+            "fold_disagreement": 0.014715596255180834,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.7630178749637343,
+            "residual_over_difference": 0.288420905772739,
+            "residual_rms_lsb": 0.2298791715153598,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 1.5700727796038758,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.5700727796038758,
+            "fired": false,
+            "fold_disagreement": 0.021939357652373162,
+            "informative_tiles": 10,
+            "kernel_effect_rms_lsb": 1.5502479440308672,
+            "residual_over_difference": 0.16120668311343692,
+            "residual_rms_lsb": 0.2531062250466351,
+            "tile_q90": 0.1333789805258552
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.5700727796038758,
+            "fired": false,
+            "fold_disagreement": 0.011398186983110927,
+            "informative_tiles": 10,
+            "kernel_effect_rms_lsb": 1.549580128047947,
+            "residual_over_difference": 0.16072622435193173,
+            "residual_rms_lsb": 0.25235186982347363,
+            "tile_q90": 0.13294682846198153
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 2.3389283916578156,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.3389283916578156,
+            "fired": true,
+            "fold_disagreement": 0.01594845649017597,
+            "informative_tiles": 37,
+            "kernel_effect_rms_lsb": 2.324673126374779,
+            "residual_over_difference": 0.11090809525609853,
+            "residual_rms_lsb": 0.25940609285917837,
+            "tile_q90": 0.1301349321544118
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.3389283916578156,
+            "fired": true,
+            "fold_disagreement": 0.007550734596275311,
+            "informative_tiles": 37,
+            "kernel_effect_rms_lsb": 2.3247285374204925,
+            "residual_over_difference": 0.11041989764222014,
+            "residual_rms_lsb": 0.2582642335993386,
+            "tile_q90": 0.12968046421335974
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "coffee-bean-5",
+        "difference_rms_lsb": 3.1154773235682187,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 3.1154773235682187,
+            "fired": true,
+            "fold_disagreement": 0.012224211240733482,
+            "informative_tiles": 52,
+            "kernel_effect_rms_lsb": 3.1041130988624106,
+            "residual_over_difference": 0.08459511537749059,
+            "residual_rms_lsb": 0.26355416364320905,
+            "tile_q90": 0.11769216461153553
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 3.1154773235682187,
+            "fired": true,
+            "fold_disagreement": 0.004509103923525452,
+            "informative_tiles": 52,
+            "kernel_effect_rms_lsb": 3.1043910144637064,
+            "residual_over_difference": 0.08419896186070912,
+            "residual_rms_lsb": 0.2623199563450246,
+            "tile_q90": 0.11687120437795039
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 0.2194055796594804,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 0.46053151572604367,
+        "distance": 0.0002,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 0.9131011020927134,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.9131011020927134,
+            "fired": false,
+            "fold_disagreement": 0.042997684292521814,
+            "informative_tiles": 1,
+            "kernel_effect_rms_lsb": 0.8823345859389871,
+            "residual_over_difference": 0.2599642345191505,
+            "residual_rms_lsb": 0.23737362904412496,
+            "tile_q90": 0.1419953837926574
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.9131011020927134,
+            "fired": false,
+            "fold_disagreement": 0.012264295590736447,
+            "informative_tiles": 1,
+            "kernel_effect_rms_lsb": 0.8819543063646671,
+            "residual_over_difference": 0.25835630422518274,
+            "residual_rms_lsb": 0.23590542612061471,
+            "tile_q90": 0.13687635461540582
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 1.3565497899471528,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.3565497899471528,
+            "fired": false,
+            "fold_disagreement": 0.026290347124679706,
+            "informative_tiles": 10,
+            "kernel_effect_rms_lsb": 1.3323624460047692,
+            "residual_over_difference": 0.1865886514776849,
+            "residual_rms_lsb": 0.253116795968576,
+            "tile_q90": 0.13558082013817624
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.3565497899471528,
+            "fired": false,
+            "fold_disagreement": 0.00898304269694524,
+            "informative_tiles": 10,
+            "kernel_effect_rms_lsb": 1.3324932366888593,
+            "residual_over_difference": 0.18591242403909725,
+            "residual_rms_lsb": 0.25219945977880337,
+            "tile_q90": 0.13535371067716134
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-0",
+        "difference_rms_lsb": 1.802125701476835,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.802125701476835,
+            "fired": false,
+            "fold_disagreement": 0.018869671081375803,
+            "informative_tiles": 21,
+            "kernel_effect_rms_lsb": 1.7830465331422436,
+            "residual_over_difference": 0.14506577792278902,
+            "residual_rms_lsb": 0.2614267667993889,
+            "tile_q90": 0.12683758513955148
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.802125701476835,
+            "fired": false,
+            "fold_disagreement": 0.00577676308294529,
+            "informative_tiles": 21,
+            "kernel_effect_rms_lsb": 1.783168116864856,
+            "residual_over_difference": 0.14450436762609348,
+            "residual_rms_lsb": 0.26041503487464013,
+            "tile_q90": 0.12653302790713356
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 0.33377841739228353,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 0.6781847168311902,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.6781847168311902,
+            "fired": false,
+            "fold_disagreement": 0.058857950129667984,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.6362558446611575,
+            "residual_over_difference": 0.3487755277118344,
+            "residual_rms_lsb": 0.23653423249889932,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.6781847168311902,
+            "fired": false,
+            "fold_disagreement": 0.022854332926458675,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.6361547277317076,
+            "residual_over_difference": 0.34801439923958566,
+            "residual_rms_lsb": 0.23601804680147517,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 1.3353955472603396,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.3353955472603396,
+            "fired": false,
+            "fold_disagreement": 0.02665211650078946,
+            "informative_tiles": 6,
+            "kernel_effect_rms_lsb": 1.3083003268544566,
+            "residual_over_difference": 0.20277882082509355,
+            "residual_rms_lsb": 0.27078993440853216,
+            "tile_q90": 0.1378158840871268
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.3353955472603396,
+            "fired": false,
+            "fold_disagreement": 0.012730163048306677,
+            "informative_tiles": 6,
+            "kernel_effect_rms_lsb": 1.3080989736003077,
+            "residual_over_difference": 0.20205858764253348,
+            "residual_rms_lsb": 0.2698281382235523,
+            "tile_q90": 0.1370046517363182
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 1.9872660974843916,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.9872660974843916,
+            "fired": false,
+            "fold_disagreement": 0.017918702222946382,
+            "informative_tiles": 24,
+            "kernel_effect_rms_lsb": 1.9686359638889006,
+            "residual_over_difference": 0.13912369947592212,
+            "residual_rms_lsb": 0.27647581132510707,
+            "tile_q90": 0.1334255042498804
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.9872660974843916,
+            "fired": false,
+            "fold_disagreement": 0.005463298854625793,
+            "informative_tiles": 24,
+            "kernel_effect_rms_lsb": 1.9681142954399984,
+            "residual_over_difference": 0.13853680284516226,
+            "residual_rms_lsb": 0.27530949154807016,
+            "tile_q90": 0.13274742788149116
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-1",
+        "difference_rms_lsb": 2.643374539969832,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.643374539969832,
+            "fired": true,
+            "fold_disagreement": 0.015158688449317326,
+            "informative_tiles": 36,
+            "kernel_effect_rms_lsb": 2.628728707757624,
+            "residual_over_difference": 0.10634123056942563,
+            "residual_rms_lsb": 0.2810997014362813,
+            "tile_q90": 0.12871403498622697
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.643374539969832,
+            "fired": true,
+            "fold_disagreement": 0.006990896271279143,
+            "informative_tiles": 36,
+            "kernel_effect_rms_lsb": 2.628361803497101,
+            "residual_over_difference": 0.10575528715446297,
+            "residual_rms_lsb": 0.27955083353130605,
+            "tile_q90": 0.12834448223183598
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 0.3746352059085154,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 0.7606124973643434,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.7606124973643434,
+            "fired": false,
+            "fold_disagreement": 0.050806329739697786,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.7139527870809186,
+            "residual_over_difference": 0.344867626018222,
+            "residual_rms_lsb": 0.2623106262858323,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.7606124973643434,
+            "fired": false,
+            "fold_disagreement": 0.014448472485879247,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.7143317574245707,
+            "residual_over_difference": 0.3434682816978073,
+            "residual_rms_lsb": 0.26124626750760904,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 1.4839525757558685,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.4839525757558685,
+            "fired": false,
+            "fold_disagreement": 0.022792966764269725,
+            "informative_tiles": 8,
+            "kernel_effect_rms_lsb": 1.457191172408646,
+            "residual_over_difference": 0.18928164932568695,
+            "residual_rms_lsb": 0.2808849910601722,
+            "tile_q90": 0.14245940724051423
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.4839525757558685,
+            "fired": false,
+            "fold_disagreement": 0.008418763092143474,
+            "informative_tiles": 8,
+            "kernel_effect_rms_lsb": 1.4571250359497985,
+            "residual_over_difference": 0.18874444029110948,
+            "residual_rms_lsb": 0.28008779832959163,
+            "tile_q90": 0.14220876241547611
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 2.2148258902823765,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.2148258902823765,
+            "fired": false,
+            "fold_disagreement": 0.01687922734719005,
+            "informative_tiles": 38,
+            "kernel_effect_rms_lsb": 2.1968643282278757,
+            "residual_over_difference": 0.12889008752596287,
+            "residual_rms_lsb": 0.28546910285326416,
+            "tile_q90": 0.14219433770279832
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.2148258902823765,
+            "fired": false,
+            "fold_disagreement": 0.004115626460090795,
+            "informative_tiles": 38,
+            "kernel_effect_rms_lsb": 2.1966112389566987,
+            "residual_over_difference": 0.12830915242455532,
+            "residual_rms_lsb": 0.28418243275009286,
+            "tile_q90": 0.1417809495345192
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-2",
+        "difference_rms_lsb": 2.938586266704901,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.938586266704901,
+            "fired": true,
+            "fold_disagreement": 0.011803278949362348,
+            "informative_tiles": 45,
+            "kernel_effect_rms_lsb": 2.9248039456834833,
+            "residual_over_difference": 0.09702712482376376,
+            "residual_rms_lsb": 0.2851225765049744,
+            "tile_q90": 0.11585018014875251
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.938586266704901,
+            "fired": true,
+            "fold_disagreement": 0.00458504406597422,
+            "informative_tiles": 45,
+            "kernel_effect_rms_lsb": 2.924736384873528,
+            "residual_over_difference": 0.09674752937803789,
+            "residual_rms_lsb": 0.28430096116793113,
+            "tile_q90": 0.1155306944664912
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 0.29771989100738605,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 0.6064317099819384,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.6064317099819384,
+            "fired": false,
+            "fold_disagreement": 0.06464499061857379,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.5677605527663457,
+            "residual_over_difference": 0.34905428790831233,
+            "residual_rms_lsb": 0.2116775886927657,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.6064317099819384,
+            "fired": false,
+            "fold_disagreement": 0.02058251781808491,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.5691023084914191,
+            "residual_over_difference": 0.3474002680984705,
+            "residual_rms_lsb": 0.2106745386311393,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 1.2005901418144644,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.2005901418144644,
+            "fired": false,
+            "fold_disagreement": 0.030280384608647373,
+            "informative_tiles": 3,
+            "kernel_effect_rms_lsb": 1.172269659454996,
+            "residual_over_difference": 0.21164760814084427,
+            "residual_rms_lsb": 0.2541020318725084,
+            "tile_q90": 0.13331821358893517
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.2005901418144644,
+            "fired": false,
+            "fold_disagreement": 0.013141471417736184,
+            "informative_tiles": 3,
+            "kernel_effect_rms_lsb": 1.1734579550939475,
+            "residual_over_difference": 0.2106518379471964,
+            "residual_rms_lsb": 0.2529065199945021,
+            "tile_q90": 0.13244335738942103
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 1.7951888898631043,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.7951888898631043,
+            "fired": false,
+            "fold_disagreement": 0.020439699978568836,
+            "informative_tiles": 19,
+            "kernel_effect_rms_lsb": 1.7747871983821324,
+            "residual_over_difference": 0.15003665368087413,
+            "residual_rms_lsb": 0.26934413376014343,
+            "tile_q90": 0.13022640394729387
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.7951888898631043,
+            "fired": false,
+            "fold_disagreement": 0.006408277044873914,
+            "informative_tiles": 19,
+            "kernel_effect_rms_lsb": 1.7751524575285313,
+            "residual_over_difference": 0.14936292149604843,
+            "residual_rms_lsb": 0.2681346572272012,
+            "tile_q90": 0.12946081823957517
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-3",
+        "difference_rms_lsb": 2.3823279516459137,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.3823279516459137,
+            "fired": true,
+            "fold_disagreement": 0.01559061306898399,
+            "informative_tiles": 34,
+            "kernel_effect_rms_lsb": 2.3653719146296557,
+            "residual_over_difference": 0.11609336002510871,
+            "residual_rms_lsb": 0.2765724565883088,
+            "tile_q90": 0.12871614100086798
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.3823279516459137,
+            "fired": true,
+            "fold_disagreement": 0.005317903735068539,
+            "informative_tiles": 34,
+            "kernel_effect_rms_lsb": 2.3664354028983583,
+            "residual_over_difference": 0.11560731020994804,
+            "residual_rms_lsb": 0.2754145265277592,
+            "tile_q90": 0.1283907375822628
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      {
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 0.2882129974612599,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 0.6058728724711537,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.6058728724711537,
+            "fired": false,
+            "fold_disagreement": 0.0628540830568604,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.5478020716746765,
+            "residual_over_difference": 0.4308302910009328,
+            "residual_rms_lsb": 0.26102838595631817,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.6058728724711537,
+            "fired": false,
+            "fold_disagreement": 0.024632597818090695,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.5471776736825736,
+            "residual_over_difference": 0.42991200893373044,
+            "residual_rms_lsb": 0.26047202376252354,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 1.1667092325046702,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.1667092325046702,
+            "fired": false,
+            "fold_disagreement": 0.03249104869364556,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 1.1330772899159114,
+            "residual_over_difference": 0.24041546099528296,
+            "residual_rms_lsb": 0.2804949379800631,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.1667092325046702,
+            "fired": false,
+            "fold_disagreement": 0.012271286211745815,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 1.1327615331381706,
+            "residual_over_difference": 0.2395085505304662,
+            "residual_rms_lsb": 0.27943683716770623,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 1.724963118605152,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.724963118605152,
+            "fired": false,
+            "fold_disagreement": 0.020677922135794682,
+            "informative_tiles": 14,
+            "kernel_effect_rms_lsb": 1.7009836895520545,
+            "residual_over_difference": 0.16592431729129717,
+            "residual_rms_lsb": 0.2862133278072267,
+            "tile_q90": 0.14285381633463254
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.724963118605152,
+            "fired": false,
+            "fold_disagreement": 0.008108043170724458,
+            "informative_tiles": 14,
+            "kernel_effect_rms_lsb": 1.700998920240596,
+            "residual_over_difference": 0.16543445522042297,
+            "residual_rms_lsb": 0.2853683338017652,
+            "tile_q90": 0.14228963016569574
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-4",
+        "difference_rms_lsb": 2.2858833137310692,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.2858833137310692,
+            "fired": false,
+            "fold_disagreement": 0.015354848327612507,
+            "informative_tiles": 39,
+            "kernel_effect_rms_lsb": 2.2682865669417085,
+            "residual_over_difference": 0.12538566222138678,
+            "residual_rms_lsb": 0.28661699305298816,
+            "tile_q90": 0.13210275650872252
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.2858833137310692,
+            "fired": false,
+            "fold_disagreement": 0.005439356441614986,
+            "informative_tiles": 39,
+            "kernel_effect_rms_lsb": 2.26824449588033,
+            "residual_over_difference": 0.12495247516900776,
+            "residual_rms_lsb": 0.2856267779982306,
+            "tile_q90": 0.13128785809704271
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 0.34974706291384555,
+        "distance": 0.0001,
+        "fired": false,
+        "kind": "bilinear-shift-roundtrip",
+        "status": "IDENTITY_EQUIVALENT"
+      },
+      {
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 0.6908040841369155,
+        "distance": 0.0002,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 0.6908040841369155,
+            "fired": false,
+            "fold_disagreement": 0.055973465629477845,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.6391081192540309,
+            "residual_over_difference": 0.38275849872374534,
+            "residual_rms_lsb": 0.26441113415647766,
+            "tile_q90": 1e+100
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 0.6908040841369155,
+            "fired": false,
+            "fold_disagreement": 0.029713802605381104,
+            "informative_tiles": 0,
+            "kernel_effect_rms_lsb": 0.6386803252971066,
+            "residual_over_difference": 0.38154639097262144,
+            "residual_rms_lsb": 0.26357380517158724,
+            "tile_q90": 1e+100
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 1.3354660073868752,
+        "distance": 0.0004,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.3354660073868752,
+            "fired": false,
+            "fold_disagreement": 0.028742692155806375,
+            "informative_tiles": 1,
+            "kernel_effect_rms_lsb": 1.3068280397225138,
+            "residual_over_difference": 0.20960492316431178,
+            "residual_rms_lsb": 0.2799202498668762,
+            "tile_q90": 0.13222853524976988
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.3354660073868752,
+            "fired": false,
+            "fold_disagreement": 0.016014400876032658,
+            "informative_tiles": 1,
+            "kernel_effect_rms_lsb": 1.3061340992505344,
+            "residual_over_difference": 0.2090122216455668,
+            "residual_rms_lsb": 0.2791287171360657,
+            "tile_q90": 0.12990560587277572
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 1.982269254159938,
+        "distance": 0.0006,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 1.982269254159938,
+            "fired": false,
+            "fold_disagreement": 0.01759555904106407,
+            "informative_tiles": 28,
+            "kernel_effect_rms_lsb": 1.9620871173722427,
+            "residual_over_difference": 0.14297019115703896,
+            "residual_rms_lsb": 0.2834054141919674,
+            "tile_q90": 0.13947876990334135
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 1.982269254159938,
+            "fired": false,
+            "fold_disagreement": 0.005061079608849585,
+            "informative_tiles": 28,
+            "kernel_effect_rms_lsb": 1.9621875522064953,
+            "residual_over_difference": 0.14248075022819234,
+            "residual_rms_lsb": 0.2824352104869873,
+            "tile_q90": 0.13925584475408512
+          }
+        },
+        "fired": false,
+        "firing_families": [],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "NOT_VETOED"
+      },
+      {
+        "crop": "113MSDCF-5",
+        "difference_rms_lsb": 2.6298488997325924,
+        "distance": 0.0008,
+        "families": {
+          "period-2-resampling": {
+            "difference_rms_lsb": 2.6298488997325924,
+            "fired": true,
+            "fold_disagreement": 0.013454708030053225,
+            "informative_tiles": 46,
+            "kernel_effect_rms_lsb": 2.6146982379271098,
+            "residual_over_difference": 0.10823510725035446,
+            "residual_rms_lsb": 0.2846419777147838,
+            "tile_q90": 0.1253081287657974
+          },
+          "smooth-zero-phase-lsi": {
+            "difference_rms_lsb": 2.6298488997325924,
+            "fired": true,
+            "fold_disagreement": 0.005872719819446195,
+            "informative_tiles": 46,
+            "kernel_effect_rms_lsb": 2.614596051031835,
+            "residual_over_difference": 0.10791181538014509,
+            "residual_rms_lsb": 0.2837917689456212,
+            "tile_q90": 0.12491715486440974
+          }
+        },
+        "fired": true,
+        "firing_families": [
+          "smooth-zero-phase-lsi",
+          "period-2-resampling"
+        ],
+        "kind": "bilinear-shift-roundtrip",
+        "selected_family": "smooth-zero-phase-lsi",
+        "status": "INADMISSIBLE_COMMON_TRANSFER"
+      }
+    ],
+    "reliable_threshold": 0.001,
+    "strength_key": "distance"
+  },
+  "schema": 1
+}

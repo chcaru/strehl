@@ -1,0 +1,59 @@
+{
+  "checks": [
+    {
+      "detail": "four JSON artifacts parsed without non-finite JSON tokens",
+      "name": "artifact parse",
+      "passed": true
+    },
+    {
+      "detail": "instrument, amendments, preserved run, and both source rasters match",
+      "name": "hash binding",
+      "passed": true
+    },
+    {
+      "detail": {
+        "blur_sigma": 0.27,
+        "false_positive_upper_95": 0.02058879229949584,
+        "false_positives": 0,
+        "gain_delta": 0.00018,
+        "legitimate_trials": 144,
+        "resampling_displacement_px": 0.001,
+        "usm_amount": 0.0035
+      },
+      "name": "aggregate re-derivation",
+      "passed": true
+    },
+    {
+      "detail": "original 0.5/1.0 failures are clipping-bound; repaired arms are linear",
+      "name": "sharpening clipping audit",
+      "passed": true
+    },
+    {
+      "detail": {
+        "fitted_gain_delta": 0.0009999518460172402,
+        "residual_rms_lsb": 0.2883593119416287
+      },
+      "name": "independent scalar algebra",
+      "passed": true
+    },
+    {
+      "detail": "small and non-finite inputs degrade to INSTRUMENT_INVALID",
+      "name": "fail-closed refusals",
+      "passed": true
+    },
+    {
+      "detail": {
+        "anchor_count": 1,
+        "negative_mutant": "INADMISSIBLE_COMMON_TRANSFER",
+        "negative_original": "NOT_VETOED",
+        "positive_mutant": "NOT_VETOED",
+        "positive_original": "INADMISSIBLE_COMMON_TRANSFER"
+      },
+      "name": "bidirectional mutation controls",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "schema": 1
+}
