@@ -2338,3 +2338,126 @@ Amendment 1 stands in full, including its central finding that no single-image
 high-frequency statistic separates resolved detail from sharpening. The phase
 gates, comparator pinning, banked-purge discipline and the rule that a negative
 result is a publishable stopping point all stand.
+
+---
+
+## 13. Amendment 3 — Phase 1's refutation is withdrawn, and section 9 cannot run as written (orchestrator, 2026-09-05)
+
+*Appended by the execution orchestrator. No text above this line has been
+altered. Evidence is in `docs/STATUS.md` sections 2.9.37--2.9.40,
+`docs/research/M133-blocker-audit.md`, and
+`experiments/M138-w1-gate-audit/REPORT.md`.*
+
+### 13.1 The finding that reopens the roadmap
+
+**Phase 1 was declared refuted by a gate that could not be satisfied by
+construction. The refutation is withdrawn.**
+
+`NO_COMMON_K` killed Workstream A's phase 1 by requiring a candidate with one
+fixed global `k` to reproduce a legacy comparator's per-band effective width to
+within `±5%`. I verified the comparator's definition in source:
+`experiments/PHASE1-DESIGN/measure.py:129-130` sets
+`exponent_at(band) = min(2.0 * 1.4 ** (R.BANDS - 1 - band), 8.0)`, which
+evaluates to `[8.0, 8.0, 7.6832, 5.488, 3.92, 2.8, 2.0]`. **The target is
+band-shaped by construction; the gate demanded a band-constant candidate match
+it.** That is unsatisfiable except by coincidence, and it duly found no
+coincidence: bands 4--6 returned `0 of 18` width survivors, so the Pareto
+frontier the phase existed to render **was never rendered at all**. Legacy
+`n_eff` spans `2.88x--37.95x` within a single capture and ROI.
+
+The audit's own framing, which I adopt verbatim, is that the width match is
+*"a comparator-equivalence requirement, not an output-quality requirement"*,
+and that because *"it is evaluated first and is empty, the gate never asks the
+question it later claims answered."*
+
+**The correct status of Phase 1 is `untested`, not `dead`.** The audit is
+equally explicit that this is *"unvalidated, not rescued"* — the merge rule has
+not been shown to work, it has merely not been shown to fail. Real
+standardisation defects remain and must be repaired before any re-run:
+pooled-only coverage gating, no positive-`q` commissioning, a band-0-only
+Poisson control, approximate variance propagation, and no selected-winner or
+stack-size calibration. A corrected gate is being specified and preregistered
+**before** any number exists, and will be reviewed by a lane that did not write
+it.
+
+### 13.2 Section 9 cannot be executed literally
+
+Four independent findings each break a specific step of the sequencing:
+
+| step | finding | consequence |
+|---|---|---|
+| Phase 1 includes **A2** | A2's base-band treatment is `STOP_DO_NOT_BUILD`, `0/7` gates passed (`docs/research/M-PHASE0-VEIL2.md:180-187,245-260`) | **Phase 1 cannot run as written.** Remove A2 from the bundle or commission a new causal/tone-safe instrument; building after a `0/7` audit would violate the stop rule |
+| Phase 2 includes **D8** | D8's per-tile FRC is `KILL` | Remove. It is scheduled work that cannot be done |
+| D11 owned Sony decoder | `DECODE2` verdict **PASS** at 381.0 MB/s per thread, 1,413.4 MB/s at 32 threads (`docs/research/M-PHASE0-DECODE2.md:3-7`) | **The build branch is false.** Retain rawler; do not build an owned decoder |
+| D15 IOCP prefetch | `NVME2` verdict **PASS**, storage `11.41%` of projected decode time (`docs/research/M-PHASE0-NVME2.md:3-7,83-96`) | **No build** unless a future workload crosses the `20%` materiality bar |
+
+Two further items were executed while **ungated**: `C13/MAKERNOTE` and
+`D10/TETHER`. Both need retroactive gating or explicit acceptance.
+
+### 13.3 A defect in my own instrument
+
+**Decision rule 4 of the scorecard is the scorecard author's invention, not a
+requirement traceable to this proposal.** Rule 4 makes a replacement M1 detail
+instrument a prerequisite for every noise, artifact, speed and memory
+comparison by demanding each retain `98%` of the best M1 score
+(`docs/proposals/2026-09-sota-scorecard.md:93-98`). The `98%` threshold appears
+**nowhere** in this document; the nearest source asks only for comparators *"at
+matched output"* (`:1975-1978`), and Amendment 1 explicitly preserves the noise,
+veil and invented-structure instruments as live (`:2208-2210`).
+
+This matters because rule 4 is load-bearing for the `(a)` blocker assignments
+and therefore for the purchase ordering I recommended to the owner. **Blocker
+counts and spending advice cannot be presented as owner-mandated while they
+rest on an unratified authored rule.** The rule needs owner ratification, an
+explicit `SCORECARD ADDITION` label, or removal — and the readiness table must
+then be re-derived. I have recorded this against myself rather than leaving it
+in a lane report.
+
+### 13.4 Amendment 2's critical path, one item down
+
+**Item 1 is complete.** `crop-early` is built, independently verified and
+committed. Retained area moves `0.6460471292618435 -> 0.9622496088092659`
+against the `80%` gate — `FAIL -> PASS`, a `1.489442x` improvement of
+`+31.620248` percentage points — with default output byte-for-byte unchanged
+across a four-row freeze. **Amendment 2 registered `96.22496%` in advance and
+the measured value is `96.22496088092659%`**, which is the first registered
+quantitative prediction in this program to land on its digits.
+
+**Item 2 was underpriced by a factor of five.** Amendment 2 costed `(d)` at
+Zerene Prosumer `$189`. The true floor for `4 of 12` is **`$925`**: `$189`
+Zerene, `$660` for the only NIST-traceable colour target that physically fits
+at `1.3x`, and `$76` to rent an illuminant meter — because the single axis the
+`$189` unlocks is M7, and M7 was itself blocked on unpriced hardware. The
+standing advice is unchanged and remains **do not buy yet**, but its stated
+justification rested partly on rule 4 and has been rewritten to rest on
+independent grounds.
+
+### 13.5 What is actually blocking SOTA
+
+**Amendment 1's central finding has now been confirmed twice more, and it is
+the program's real critical path.** Amendment 1 recorded that no single-image
+high-frequency statistic separates resolved detail from sharpening. Since then
+**two independently built detail instruments have failed the same test**: D8's
+per-tile FRC, and a band-power measure that scored a flat region with
+`13.314850%` of the structure at a *higher* kernel gap (`0.3488548829813006`)
+than the detailed region (`0.3403664343410666`), ratio `1.0249391472947889`.
+Both looked rigorous, both carried working sabotage controls, and both were
+undone by the first flat-ROI null anyone demanded.
+
+**A defensible resolution claim is the objective of Phase 3, and it is
+unreachable without an instrument that survives a flat null and a planted
+improvement.** This blocker cannot be bought, cannot be shot around with a
+better capture, and cannot be coded around. It outranks every speed branch,
+including D12 — which is the best-supported live speed work now that the fold
+is the measured bottleneck, but which is speed work and must stay secondary to
+the resolution claim.
+
+### 13.6 What this amendment does not change
+
+Workstreams A, B and C stand. Amendment 1 stands in full and is **strengthened**
+by 13.5. Amendment 2's conjunctive-blocker finding and its rule to schedule
+blockers as a set stand unchanged; only its item-1 status and item-2 price move.
+The phase gates, comparator pinning, banked-purge discipline, and the rule that
+a negative result is a publishable stopping point all stand. **Nothing here
+converts a withdrawn refutation into a validated design** — Phase 1 returns to
+the queue as untested work, not as a result.
