@@ -2943,7 +2943,8 @@ become measurable under every combination of removals:
 |---|---|
 | nothing -- today | **2 of 12** (M8, M12) |
 | any **one** of a, b, d | **2** |
-| any **two** -- `b+d`, `a+b` | **2** |
+| any **two** except `b+c` | **2** |
+| `b+c` | **3** (adds M10) |
 | **`a+b+d`** | **6** (adds M2 M3 M4 M11) |
 | **`a+b+c+d`** | **12** |
 
@@ -2966,21 +2967,45 @@ producing exactly zero axis movement, correctly.**
    `crates/`. The program record calls it *"the most consequential open build
    in the program"* and it has sat unbuilt for six days. lane-COVER has been
    redirected off border measurement onto it.
-2. **`(d)` -- build pristine upstream `PetteriAimonen/focus-stack`.** Free, MIT,
-   third-party, readable source. Newly available because §2.9.24 established
-   the existing comparator was our own fork. No owner action, no licence.
+2. **`(d)` -- obtain common-input Zerene or Helicon output.** **CORRECTED, see
+   the note below: this item is not the upstream `focus-stack` build and it is
+   not free.** `(d)` is defined three paragraphs above as *"unavailable
+   common-input Zerene/Helicon output"*. Zerene Stacker is **already installed**
+   on this machine (`1.04T2026-05-04-0750`), but its log reads
+   `License category = TRIAL` and `license ... expires on Sat Jun 06 20:13:34
+   PDT 2026` -- **the trial is consumed and expired**, so it cannot currently
+   save output at all. The export we need is Zerene's **Save Adjusted Input
+   Images**, which the vendor licenses only to **Prosumer ($189)** or
+   **Professional ($289)**; **Personal ($89) grants a 30-day trial of it, which
+   is exactly what has already lapsed.** Minimum spend to clear `(d)` via Zerene
+   is therefore **$189**. Helicon is being priced as the alternative, including
+   the decisive question of whether it can export aligned inputs at all.
 3. **`(a)`+`(c)` -- shoot one capture session.** lane-TRUTH's `GO` needs a
    160-frame higher-magnification reference block, the sweeps pinned to 1.30x,
    the 2x Viltrox installed throughout. That single session supplies the truth
    instrument **and** the missing captures. It is the only item requiring the
-   owner, and it is the master key: `a+b+d` is `6 of 12`, and adding the
-   capture is `12 of 12`.
+   owner's *time* (item 2 now requires his *authorisation to spend*), and it is
+   the master key: `a+b+d` is `6 of 12`, and adding the capture is `12 of 12`.
 
 **So the answer to "how far toward SOTA" is `2 of 12` axes measurable, none of
-them the detail axis, and the distance to `12 of 12` is two software items and
-one afternoon at the bench.** That is a far better position than "six days
-without a quality change" suggests, but only because the work is now correctly
-aimed -- and it was not aimed this way this morning.
+them the detail axis, and the distance to `12 of 12` is one software build, one
+$189 purchase, and one afternoon at the bench.** That is a far better position
+than "six days without a quality change" suggests, but only because the work is
+now correctly aimed -- and it was not aimed this way this morning.
+
+**CORRECTION, same day, caught by my own follow-up.** As first written, roadmap
+item 2 said `(d)` was cleared by building pristine upstream
+`PetteriAimonen/focus-stack`, *"Free, MIT ... No owner action, no licence."*
+**That was wrong, and it contradicted this entry's own legend three paragraphs
+earlier.** `(d)` is *common-input **Zerene/Helicon** output*; a third
+open-source stacker does not produce it at any quality. The error mattered
+because it was reported to the owner as a costed plan and it understated the
+cost by a purchase he has to authorise. The upstream `focus-stack` build is
+still worth doing -- §2.9.24 showed our existing "third-party" comparator is our
+own fork, so a genuine foreign arm is needed to repair that provenance defect --
+but it clears **no scorecard blocker** and belongs off the critical path.
+Verified by re-parsing §3.1: the eight `(d)` axes are M1 M2 M3 M4 M5 M6 M7 M11,
+none of which name an open-source comparator.
 
 ### 2.9.27 M12 unblocked, and a measurement merge that would have understated our own scaling
 
