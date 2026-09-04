@@ -2,6 +2,31 @@
 
 Status: **PASS at estimator level; physical capture path not commissioned**
 
+## D8 adjudication
+
+`python experiments/M135-detail-instrument/d8_audit.py` independently read the
+preserved byte-pinned M115 rerun and historical source at commit
+`77c8d5e9ac6ed342cdc841e541c98f87e5c743f8`. All source blob hashes and eleven
+audit checks passed. This is a post-brief source adjudication, not a change to
+the frozen M135 candidate or its admission bars.
+
+- Blur recovery reproduced at `0.9938215871-0.9973982082`.
+- Maximum normalized-SNR movement reproduced at `0.537785%`.
+- The naive gradient reading reproduced at `8.2513657x`. Source inspection
+  shows this is RMS-gradient gain; the corresponding energy ratio is
+  `68.085x`.
+- The power identity reproduced at
+  `0.999999999987-1.000000000000`.
+- The historical null still fails on `MEAN=0.438734` and
+  `WIENER_UNG=3.331288` against `0.25`.
+- The direct common-mode adversary reads FRC `0.972099`.
+
+The values are valid; D8's inference is not. A common filter multiplies
+`P_sig` by its power, so `P_sig` is sharpening-sensitive. The same factor
+cancels from normalized split SNR and ideal FRC, so they are also blind to
+post-render blur. D8 is rejected as M1 and retained only as an auxiliary
+diagnostic family. Machine-readable details are in `d8-audit.json`.
+
 ## Freeze history
 
 1. `053ec124` froze the candidate, population, challenges, and numeric bars.

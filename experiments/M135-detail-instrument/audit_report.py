@@ -24,30 +24,40 @@ def main() -> None:
             encoding="utf-8"
         )
     )
+    d8_audit = json.loads(
+        (Path(__file__).resolve().parent / "d8-audit.json").read_text(
+            encoding="utf-8"
+        )
+    )
 
     citation_pattern = re.compile(
         r"(?P<path>(?:docs|experiments)/[A-Za-z0-9_./-]+)"
-        r":(?P<start>\d+)(?:-(?P<end>\d+))?"
+        r":(?P<ranges>\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*)"
     )
     for match in citation_pattern.finditer(report):
         relative = match.group("path")
         path = ROOT / Path(relative)
-        start = int(match.group("start"))
-        end = int(match.group("end") or start)
         if not path.exists():
             findings.append(
                 {"kind": "missing_file", "citation": match.group(0)}
             )
             continue
         line_count = len(path.read_text(encoding="utf-8").splitlines())
-        if start < 1 or end < start or end > line_count:
-            findings.append(
-                {
-                    "kind": "line_range",
-                    "citation": match.group(0),
-                    "line_count": line_count,
-                }
-            )
+        for line_range in match.group("ranges").split(","):
+            if "-" in line_range:
+                start_text, end_text = line_range.split("-", maxsplit=1)
+                start, end = int(start_text), int(end_text)
+            else:
+                start = end = int(line_range)
+            if start < 1 or end < start or end > line_count:
+                findings.append(
+                    {
+                        "kind": "line_range",
+                        "citation": match.group(0),
+                        "invalid_range": line_range,
+                        "line_count": line_count,
+                    }
+                )
 
     quote_checks = {
         "docs/proposals/2026-09-sota-scorecard.md": [
@@ -72,6 +82,15 @@ def main() -> None:
             "nothing that uses one capture of one sensor can separate a static "
             "sensor pattern from a static scene.",
         ],
+        "docs/research/M-PHASE0-SPLIT.md": [
+            "the exact historical M115 numbers reproduce, but their controls "
+            "do not transfer to the common-mode and data-dependent-tuning "
+            "failures on which D8 depends.",
+        ],
+        "docs/proposals/2026-08-sota-path.md": [
+            "Per-tile FRC between the two half-renders is a spatially-resolved, "
+            "model-free certified-resolution map",
+        ],
     }
     for relative, quotes in quote_checks.items():
         source = normalize((ROOT / relative).read_text(encoding="utf-8"))
@@ -82,6 +101,7 @@ def main() -> None:
                 )
 
     required_sections = [
+        "## 0. D8-versus-blindness ruling",
         "## 2. What has already failed",
         "## 3. The precise impossibility result",
         "## 4. Candidate architecture A",
@@ -107,12 +127,24 @@ def main() -> None:
                 "expected": 22,
             }
         )
+    if d8_audit.get("status") != "PASS":
+        findings.append({"kind": "d8_audit_status", "value": d8_audit.get("status")})
+    failed_d8_checks = [
+        name for name, passed in d8_audit.get("checks", {}).items() if not passed
+    ]
+    if failed_d8_checks:
+        findings.append({"kind": "failed_d8_checks", "checks": failed_d8_checks})
 
     output = {
         "status": "PASS" if not findings else "FAIL",
         "citation_count": len(list(citation_pattern.finditer(report))),
+        "citation_range_count": sum(
+            len(match.group("ranges").split(","))
+            for match in citation_pattern.finditer(report)
+        ),
         "verified_tags": report.count("**VERIFIED."),
         "assumed_tags": report.count("**ASSUMED."),
+        "d8_checks": len(d8_audit.get("checks", {})),
         "findings": findings,
     }
     output_path = Path(__file__).resolve().parent / "audit.json"

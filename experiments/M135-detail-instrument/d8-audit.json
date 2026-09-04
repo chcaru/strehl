@@ -1,0 +1,107 @@
+{
+  "status": "PASS",
+  "source": {
+    "historical_commit": "77c8d5e9ac6ed342cdc841e541c98f87e5c743f8",
+    "source_blobs": {
+      "m115lib.py": "32ef59f026572ceb1d4b951254d693c4d3aaf94a",
+      "s01_rois.py": "dd8e7319848753312f5d847dab4b1bb92c87b174",
+      "s02_controls_a.py": "250ec013764c8efe75ffe1091b508972fc508e21",
+      "s03_instrument.py": "efa37273f1bbde8cff20a8d014c95f3454178e04"
+    },
+    "source_blob_checks": {
+      "m115lib.py": true,
+      "s01_rois.py": true,
+      "s02_controls_a.py": true,
+      "s03_instrument.py": true
+    },
+    "rerun_manifest": "experiments/M-PHASE0-SPLIT/out/m115-rerun/rerun-manifest.json",
+    "rerun_result": "experiments/M-PHASE0-SPLIT/out/m115-rerun/s03_instrument.json"
+  },
+  "headline_reproduction": {
+    "blur_recovery_min": 0.9938215871339492,
+    "blur_recovery_max": 0.9973982082455048,
+    "blur_recovery_count": 8,
+    "filter_snr_ratios": {
+      "flat x3": 0.9999999995707624,
+      "unsharp 1+2f": 0.9986024700086039,
+      "unsharp 1+6f": 0.9980240009854322,
+      "inverse taper": 0.9946221492886471
+    },
+    "filter_max_fractional_move": 0.005377850711352883,
+    "filter_max_percent_move": 0.5377850711352883,
+    "naive_gradient_rms_gain": 8.25136566877057,
+    "naive_gradient_energy_ratio": 68.08503539976559,
+    "identity_min": 0.9999999999873305,
+    "identity_max": 1.0000000000000002,
+    "direct_identity_max_absolute_error": 2.068147659301758,
+    "direct_identity_global_scaled_error": 4.398767565119055e-12
+  },
+  "source_semantics": {
+    "split_definitions_present": true,
+    "c2_filters_captured_cube_before_split": true,
+    "blur_cube_filters_every_realized_frame": true,
+    "c3_filters_completed_half_outputs": true,
+    "reported_naive_gain_is_rms_gradient": true
+  },
+  "structural_probe": {
+    "base_psig": 3.86,
+    "base_pnoise": 0.03375000000000002,
+    "base_snr": 114.3703703703703,
+    "base_frc": 0.9978333459094824,
+    "common_filter_results": {
+      "blur_like": {
+        "power_gain": 0.25,
+        "psig_ratio": 0.25,
+        "snr_ratio": 1.0,
+        "frc_ratio": 1.0
+      },
+      "sharpen_like": {
+        "power_gain": 4.0,
+        "psig_ratio": 4.0,
+        "snr_ratio": 1.0,
+        "frc_ratio": 1.0
+      }
+    },
+    "interpretation": "P_sig follows common-filter power and is sharpening-sensitive; normalized split SNR and ideal FRC cancel the same filter and are therefore also blind to post-render blur."
+  },
+  "failed_transfer_controls": {
+    "historical_null_bar": 0.25,
+    "historical_null_max_snr": {
+      "BEST1": 0.11269577078115299,
+      "FRAME*": 0.1408281646168066,
+      "FRAME_PIX": 0.08383066958632354,
+      "GATE": 0.12858337339883352,
+      "MEAN": 0.43873374239164753,
+      "MF": 0.07203106438954919,
+      "WIENER": 0.07395463633607881,
+      "WIENER_UNG": 3.3312875184656177
+    },
+    "historical_null_failed_arms": [
+      "MEAN",
+      "WIENER_UNG"
+    ],
+    "common_mode_adversary_low_band_frc": 0.972099,
+    "phase0_verdict": "STOP_REMOVE_RUST"
+  },
+  "ruling": {
+    "P_sig": "REJECT_AS_M1: blur-responsive but common-gain/sharpening-sensitive",
+    "R_SNR": "AUXILIARY_ONLY: useful noise-efficiency coordinate, but blind to common post-render blur and not commissioned for self-tuning",
+    "FRC": "REJECT_AS_ABSOLUTE_ACUITY: ideal common-filter invariance is the same property as post-render-blur blindness",
+    "half_difference": "DIAGNOSTIC_ONLY: omits common-mode structure and can be driven to zero by averaging the two halves",
+    "D8_as_M1": "NO_GO",
+    "replacement": "J_TR information plus veto-only T_TR and U_TR"
+  },
+  "checks": {
+    "historical_sources_match_manifest": true,
+    "source_semantics_confirmed": true,
+    "blur_range_reproduces": true,
+    "filter_move_reproduces_0_54_percent": true,
+    "naive_gain_reproduces_8_25x": true,
+    "identity_reproduces": true,
+    "common_filter_scales_psig": true,
+    "common_filter_leaves_snr_and_frc_unchanged": true,
+    "historical_null_failed": true,
+    "common_mode_adversary_is_strong": true,
+    "phase0_verdict_is_kill": true
+  }
+}
