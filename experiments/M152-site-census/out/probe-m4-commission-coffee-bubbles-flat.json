@@ -1,0 +1,410 @@
+{
+  "capture": {
+    "all_frames_evaluated": false,
+    "all_frames_required": true,
+    "capture_contiguous": true,
+    "capture_id": "m4-commission-coffee-bubbles",
+    "decoded_inputs": [
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "efc6a21ac425b92a2546337ae1fbb05594f649562425ba59068fb65824a7528e",
+        "file": "DSC00034.ARW",
+        "high_rail_fraction": 0.0007470726552590224,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39079936,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "d9df05110bc8cea6051e392407abcab184a66229cf2a2c0a1a2452d11e7d4ca0",
+        "file": "DSC00035.ARW",
+        "high_rail_fraction": 0.0010290991081990904,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39223296,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "2da9fbc60c058cfd44d0ad51383581d785773ccda932add5c6384b663ceb5a97",
+        "file": "DSC00036.ARW",
+        "high_rail_fraction": 0.0012867836309564278,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39370752,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "04d8f2353377987d585e847646aeaa4e07525a11edeac4a62ea6f9c09f01bfc2",
+        "file": "DSC00037.ARW",
+        "high_rail_fraction": 0.0015174552885483905,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39563264,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "9e2d15ea356d5b4813d2778af8f10a4a13b57d98cb8f56cdedc26cc406e838e4",
+        "file": "DSC00038.ARW",
+        "high_rail_fraction": 0.001639589860936556,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39796736,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "ef72574a41d37ef7c109d1d363c0707d5e761ca2bebefe3c0b3b62552515e4c7",
+        "file": "DSC00039.ARW",
+        "high_rail_fraction": 0.0017946861991332574,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 40148992,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "e53af22394320449a16f6c073ab9b547cec150228234b2e4baab9019e8a1069a",
+        "file": "DSC00040.ARW",
+        "high_rail_fraction": 0.0018562998129374262,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 40280064,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "afdda20eb6e07d2e8aaf7b5071cc502b9ea872d8ef59c14e173cf62f5a67a589",
+        "file": "DSC00041.ARW",
+        "high_rail_fraction": 0.002026207699674243,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 40263680,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "3f0e0854fc15b2f58e3300f5a498341125d6608782412d5148ac13e3145ff057",
+        "file": "DSC00042.ARW",
+        "high_rail_fraction": 0.0020047795167453053,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 40083456,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "76944be7102f5a274e91931bc555117a97159d1937c4d28a8afefa4e2f9ed4c1",
+        "file": "DSC00043.ARW",
+        "high_rail_fraction": 0.0020430831525191286,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39849984,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "d8b921d874efbb6e7da77112500a471cdd659017c5f3637af5dc551b6add187c",
+        "file": "DSC00044.ARW",
+        "high_rail_fraction": 0.0019694503312930626,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39616512,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "574266f41d5a3ce68a603a55a528f1cb30a949301888f86da8392c3000111414",
+        "file": "DSC00045.ARW",
+        "high_rail_fraction": 0.0017940184653875964,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39432192,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "5dd01846979f6df4b9dd8e79c55e8eeec1bf5dd1cd7f19706997cff819aa3b2e",
+        "file": "DSC00046.ARW",
+        "high_rail_fraction": 0.0016222287835493715,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39297024,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "fd88bedbcae36194526b44f66e0d0b15e43a3f17b7166c10906f89a00b1b2216",
+        "file": "DSC00047.ARW",
+        "high_rail_fraction": 0.001428828809578847,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39198720,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "9c5db92707306a950999197265035161031a53b69ce3c18eb13dbebb2237a5b5",
+        "file": "DSC00048.ARW",
+        "high_rail_fraction": 0.0012601956872655647,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39149568,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      },
+      {
+        "black_levels_dn": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "decoded_green_sha256": "2ffd462b26cce86398184289d5743784ab2cb7b3ee91ac2115801f3f7a9c1cc7",
+        "file": "DSC00049.ARW",
+        "high_rail_fraction": 0.0009569838636677085,
+        "iso": 1000.0,
+        "low_rail_fraction": 0.0,
+        "size_bytes": 39030784,
+        "visible_shape_native_px": [
+          4688,
+          7028
+        ],
+        "white_level_dn": 16383
+      }
+    ],
+    "eligible_site_count": 0,
+    "eligible_sites_quality_order": [],
+    "evidence_class": "DEVELOPMENT_NOT_HOLDOUT",
+    "first_failure_counts": {
+      "band_at_or_above_temporal_p99": 1768,
+      "high_rail_fraction": 0,
+      "low_rail_fraction": 0,
+      "signal_below_10_sigma": 0
+    },
+    "frozen_band_p99_over_model_dark_sigma": 0.2943578255886622,
+    "initial_candidate_count": 1768,
+    "inventory_frame_count": 19,
+    "logical_short_circuit_after_zero_survivors": true,
+    "noise_floor_normalized_linear": 3.720617905021895e-05,
+    "path": "D:\\personal\\macro\\coffee-bubbles",
+    "processed_frame_count": 16,
+    "stack_id": "coffee-bubbles",
+    "survivor_trajectory": [
+      {
+        "file": "DSC00034.ARW",
+        "frame_index_zero_based": 0,
+        "survivors": 155
+      },
+      {
+        "file": "DSC00035.ARW",
+        "frame_index_zero_based": 1,
+        "survivors": 89
+      },
+      {
+        "file": "DSC00036.ARW",
+        "frame_index_zero_based": 2,
+        "survivors": 55
+      },
+      {
+        "file": "DSC00037.ARW",
+        "frame_index_zero_based": 3,
+        "survivors": 36
+      },
+      {
+        "file": "DSC00038.ARW",
+        "frame_index_zero_based": 4,
+        "survivors": 23
+      },
+      {
+        "file": "DSC00039.ARW",
+        "frame_index_zero_based": 5,
+        "survivors": 14
+      },
+      {
+        "file": "DSC00040.ARW",
+        "frame_index_zero_based": 6,
+        "survivors": 7
+      },
+      {
+        "file": "DSC00041.ARW",
+        "frame_index_zero_based": 7,
+        "survivors": 4
+      },
+      {
+        "file": "DSC00042.ARW",
+        "frame_index_zero_based": 8,
+        "survivors": 2
+      },
+      {
+        "file": "DSC00043.ARW",
+        "frame_index_zero_based": 9,
+        "survivors": 2
+      },
+      {
+        "file": "DSC00044.ARW",
+        "frame_index_zero_based": 10,
+        "survivors": 2
+      },
+      {
+        "file": "DSC00045.ARW",
+        "frame_index_zero_based": 11,
+        "survivors": 2
+      },
+      {
+        "file": "DSC00046.ARW",
+        "frame_index_zero_based": 12,
+        "survivors": 1
+      },
+      {
+        "file": "DSC00047.ARW",
+        "frame_index_zero_based": 13,
+        "survivors": 1
+      },
+      {
+        "file": "DSC00048.ARW",
+        "frame_index_zero_based": 14,
+        "survivors": 0
+      }
+    ]
+  },
+  "definition_sha256": "b2e872a6a8214d4fbe379287f52fc57b8f5e61f292aab4c30e96b11d49325879",
+  "schema": "m152-non-holdout-probe-v1"
+}

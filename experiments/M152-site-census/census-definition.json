@@ -1,0 +1,217 @@
+{
+  "schema": "m152-input-only-site-census-definition-v1",
+  "status": "FROZEN_BEFORE_HOLDOUT_PIXEL_DECODE",
+  "purpose": "A shared, output-blind M3/M4 site population and capture-sufficiency census.",
+  "allowed_read_roots": [
+    "D:\\personal\\macro",
+    "D:\\edited\\macro"
+  ],
+  "inventory": {
+    "capture_manifest": "experiments/M141-capture-inventory/capture-manifest.json",
+    "holdout_register": "experiments/M141-capture-inventory/holdout-register.json"
+  },
+  "common_input": {
+    "representation": "mean of the two black-subtracted Bayer green samples in each 2x2 CFA cell",
+    "green_sample_pitch_native_px": 2,
+    "coordinate_origin_native_px": 0.5,
+    "candidate_output_visible": false,
+    "stacker_output_visible": false,
+    "frame_sampling": {
+      "edge_discovery_count": 17,
+      "rule": "integer indices floor((i*(N-1)+(K-1)/2)/(K-1)), i=0..K-1; all frames when N<K"
+    }
+  },
+  "noise": {
+    "calibration_capture": "D:\\personal\\macro\\requests\\6-11-extended-dark-frames",
+    "calibration_groups": [
+      {
+        "iso": 100,
+        "exposure_seconds": 1.0,
+        "first_file": "DSC01070.ARW",
+        "last_file": "DSC01091.ARW",
+        "frame_count": 22
+      },
+      {
+        "iso": 1000,
+        "exposure_seconds": 1.0,
+        "first_file": "DSC01004.ARW",
+        "last_file": "DSC01025.ARW",
+        "frame_count": 22
+      }
+    ],
+    "pairing": "adjacent disjoint pairs; difference divided by sqrt(2)",
+    "temporal_model": {
+      "camera": "Sony ILCE-7CM2",
+      "measured_green_gain_divisor": 446.2232509163197,
+      "shipped_gain_divisor_for_measured_dark_floor": 436.8,
+      "base_iso": 100.0,
+      "second_base_iso": 400.0,
+      "read_noise_e_low": 4.2,
+      "read_noise_e_high": 1.2392,
+      "green_luma_rule": "sqrt(g_measured*S+(RN_e*g_shipped)^2)/sqrt(2)"
+    },
+    "flat_band": {
+      "tile_size_native_px": 128,
+      "tile_size_green_px": 64,
+      "low_frequency_cycles_per_native_px": 0.016666666666666666,
+      "high_frequency_cycles_per_native_px": 0.05,
+      "window": "separable Hann normalized to mean-square one",
+      "transform": "orthonormal real FFT with exact Parseval half-spectrum weights",
+      "percentile": "nearest-rank empirical p99"
+    },
+    "flat_threshold_rule": "max ISO-specific dark band-p99/model-dark-sigma factor times model sigma at the tile median",
+    "noise_floor_rule": "the same frozen factor times model sigma at zero signal, divided by the decoded usable range"
+  },
+  "edge_selector": {
+    "discovery_blur_sigma_green_px": 1.0,
+    "candidate_grid_native_px": 64,
+    "maximum_candidates_per_discovery_frame": 2048,
+    "minimum_site_spacing_native_px": 64.0,
+    "narrow_plateaus_native_px": [
+      [-64, -48],
+      [48, 64]
+    ],
+    "broad_plateaus_native_px": [
+      [-400, -320],
+      [320, 400]
+    ],
+    "minimum_step_sigma": 10.0,
+    "maximum_narrow_plateau_mad_fraction": 0.2,
+    "maximum_broad_plateau_mad_fraction": 0.25,
+    "maximum_narrow_broad_step_disagreement_fraction": 0.35,
+    "maximum_midpoint_offset_native_px": 8.0,
+    "central_crossing_half_width_native_px": 32,
+    "maximum_reverse_variation_fraction": 0.35,
+    "quality_order": "descending minimum narrow/broad step-to-temporal-sigma, then frame name, y, x",
+    "deduplication": "greedy quality order with Euclidean native-pixel spacing"
+  },
+  "m3": {
+    "captures": [
+      {
+        "capture_id": "m3-duck-tape",
+        "stack_id": "duck-tape-side-layers-cpl",
+        "path": "D:\\personal\\macro\\duck-tape-side-layers-cpl",
+        "evidence_class": "HOLDOUT_QUALITY"
+      },
+      {
+        "capture_id": "m3-chia",
+        "stack_id": "chia-seeds-cpl",
+        "path": "D:\\personal\\macro\\chia-seeds-cpl",
+        "evidence_class": "HOLDOUT_QUALITY"
+      },
+      {
+        "capture_id": "m3-flower-fern",
+        "stack_id": "flower-bud-with-background-fern-cpl",
+        "path": "D:\\personal\\macro\\flower-bud-with-background-fern-cpl",
+        "evidence_class": "HOLDOUT_QUALITY"
+      },
+      {
+        "capture_id": "m3-razor-control",
+        "stack_id": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+        "evidence_class": "CONTROL_NOT_HOLDOUT"
+      }
+    ],
+    "minimum_edges_overall": 500,
+    "minimum_edges_per_capture": 50,
+    "required_veil_reach_native_px": 400,
+    "selection": "take the 50 highest-quality broad-eligible sites per capture, then quality-ranked round-robin by capture until exactly 500; if a floor cannot be met, select all and report NEEDS_NEW_CAPTURE",
+    "percentile_convention": "nearest-rank empirical quantile, one-based rank ceil(q*N), no interpolation",
+    "paired_p99": "on the identical frozen sites, compute a_e=max(h_e,v_e); choose the comparator having the lowest nearest-rank pooled p99(a_e), then compare Strehl p99(a_e) to that comparator p99(a_e); no sitewise deletion",
+    "missing_output_site_rule": "positive infinity; never remove a frozen site"
+  },
+  "m4": {
+    "bee_background_path": "D:\\personal\\macro\\bee-1-cpl",
+    "bee_background_reason": "the contiguous 299-frame registered focus-stack capture; the alternative 12-bee diagnostic changes ISO and light and has a continuity break",
+    "scored_flat_captures": [
+      {
+        "capture_id": "m4-flat-medication-pill",
+        "stack_id": "medication-pill-cpl",
+        "path": "D:\\personal\\macro\\medication-pill-cpl",
+        "quota": 84,
+        "evidence_class": "HOLDOUT_QUALITY"
+      },
+      {
+        "capture_id": "m4-flat-bee-background",
+        "stack_id": "bee-1-cpl",
+        "path": "D:\\personal\\macro\\bee-1-cpl",
+        "quota": 83,
+        "evidence_class": "HOLDOUT_PERFORMANCE"
+      },
+      {
+        "capture_id": "m4-flat-foam",
+        "stack_id": "foam",
+        "path": "D:\\personal\\macro\\foam",
+        "quota": 83,
+        "evidence_class": "HOLDOUT_QUALITY"
+      }
+    ],
+    "commissioning_flat_captures": [
+      {
+        "capture_id": "m4-commission-coffee-bubbles",
+        "stack_id": "coffee-bubbles",
+        "path": "D:\\personal\\macro\\coffee-bubbles",
+        "quota": 100,
+        "evidence_class": "DEVELOPMENT_NOT_HOLDOUT"
+      }
+    ],
+    "scored_edge_captures": [
+      {
+        "capture_id": "m4-edge-fabric-f5-6",
+        "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+        "quota": 50,
+        "evidence_class": "HOLDOUT_QUALITY"
+      },
+      {
+        "capture_id": "m4-edge-fabric-f8",
+        "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+        "quota": 50,
+        "evidence_class": "HOLDOUT_QUALITY"
+      },
+      {
+        "capture_id": "m4-edge-fabric-f11",
+        "stack_id": "requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+        "quota": 50,
+        "evidence_class": "HOLDOUT_QUALITY"
+      },
+      {
+        "capture_id": "m4-edge-duck-tape",
+        "stack_id": "duck-tape-side-layers-cpl",
+        "path": "D:\\personal\\macro\\duck-tape-side-layers-cpl",
+        "quota": 50,
+        "evidence_class": "HOLDOUT_QUALITY"
+      },
+      {
+        "capture_id": "m4-edge-flower-fern",
+        "stack_id": "flower-bud-with-background-fern-cpl",
+        "path": "D:\\personal\\macro\\flower-bud-with-background-fern-cpl",
+        "quota": 50,
+        "evidence_class": "HOLDOUT_QUALITY"
+      }
+    ],
+    "population_mix": {
+      "scored_total": 500,
+      "flat_sites": 250,
+      "edge_sites": 250,
+      "flat_fraction": 0.5,
+      "edge_fraction": 0.5,
+      "minimum_sites_per_scored_capture": 50,
+      "rationale": "equal category weight prevents either unlike failure gate from diluting the other"
+    },
+    "flat_site_grid": {
+      "tile_size_native_px": 128,
+      "stride_native_px": 128,
+      "outer_margin_native_px": 128,
+      "maximum_low_rail_fraction": 0.01,
+      "maximum_high_rail_fraction": 0.001,
+      "minimum_signal_sigma": 10.0,
+      "selection_order": "ascending maximum over-frame band-rms/noise-p99 ratio, then y, x"
+    },
+    "edge_reach_native_px": 64,
+    "selection": "each scored capture must meet its fixed quota; no cross-capture substitution",
+    "scorecard_status": "PROPOSED_OPERATIONAL_FREEZE_REQUIRES_OWNER_ADOPTION_BECAUSE_THE_CURRENT_TEXT CALLS_THE_FLAT_INPUTS_COMMISSIONING"
+  }
+}
