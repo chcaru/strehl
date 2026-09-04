@@ -1,0 +1,24 @@
+{
+  "_what": "Captured host-load observation taken by the orchestrator. A load sample is not reproducible after the fact, so it is recorded here as a dated artifact rather than as a re-runnable measurement. STATUS section 2.9.55 cites these figures.",
+  "counter": "\\Processor(_Total)\\% Processor Time",
+  "sample_interval_s": 1,
+  "max_samples": 3,
+  "samples_pct": [88.6, 97.0, 94.1],
+  "mean_pct": 93.2,
+  "top_processes": [
+    { "name": "copilot", "cpu_seconds": 44666, "working_set_gb": 10.3 },
+    { "name": "Code", "cpu_seconds": 16262, "working_set_gb": 0.5 },
+    { "name": "Code", "cpu_seconds": 4193, "working_set_gb": 0.3 },
+    { "name": "bun", "cpu_seconds": 2500, "working_set_gb": 0.1 }
+  ],
+  "earlier_same_day_pct_range": [44, 63],
+  "m153_state_at_capture": {
+    "elapsed_seconds": 18238,
+    "elapsed_hours": 5.07,
+    "completed_turns": 0,
+    "tool_calls": 2782,
+    "commits": 0,
+    "untracked_python_kb_approx": 337
+  },
+  "ruling": "Absolute timing measurements taken under this load carry an uncontrolled covariate and are quarantined on arrival. Correctness measurements (violation censuses, battery arms) are slowed but not invalidated."
+}

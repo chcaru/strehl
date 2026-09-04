@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify STATUS section 2.9.54 against lane sources.
+"""Verify STATUS sections 2.9.54 and 2.9.55 against lane sources.
 
 Every claim written into STATUS by the orchestrator must appear in the lane
 artifact it cites. This checks that direction: STATUS -> source. A claim
@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
-SECTION = "2.9.54"
+SECTIONS = ["2.9.54", "2.9.55"]
 
 
 def collapse(s):
@@ -104,6 +104,15 @@ CLAIMS = [
      "\"projected_plus_internal_quant_violations\": 31148"),
     ("improvement plant present", "planted improvement",
      E + "M136-m8o-bar/verifier-commission-e5489d64.json", None, "improvement_plant"),
+    # --- host load quarantine (2.9.55) ---
+    ("host cpu mean", "mean **`93.2%`**", E + "ORCH-verify/host-load-2026-09-06.json", None,
+     "\"mean_pct\": 93.2"),
+    ("host cpu samples", "`97.0%`", E + "ORCH-verify/host-load-2026-09-06.json", None,
+     "\"samples_pct\": [88.6, 97.0, 94.1]"),
+    ("m153 zero turns", "`2,782` tool calls", E + "ORCH-verify/host-load-2026-09-06.json", None,
+     "\"tool_calls\": 2782"),
+    ("m153 elapsed hours", "for `5.07`", E + "ORCH-verify/host-load-2026-09-06.json", None,
+     "\"elapsed_hours\": 5.07"),
     # --- M2 loose-direction defect ---
     ("m2 blur-improves ratio", "0.571215", R + "M166-bar-achievability.md", None, None),
     # --- M162 fork + gate ---
@@ -120,7 +129,7 @@ CLAIMS = [
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
-sec = collapse(section_text(status_raw, SECTION))
+sec = collapse("\n".join(section_text(status_raw, s) for s in SECTIONS))
 
 # Claims may carry a 4th element: a context literal that must occur within
 # WINDOW characters of the value in the source. Presence alone is not enough
@@ -159,7 +168,7 @@ for label, needle, rel, ctx, srclit in CLAIMS:
         # the assertion was removed or mistyped -- both are defects. Treating it
         # as "skipped" made the whole verifier a no-op: a wrong digit in STATUS
         # silently left the claim unchecked and the run still read GREEN.
-        print("RED   %-24s %s NOT ASSERTED IN STATUS %s" % (label, needle, SECTION))
+        print("RED   %-24s %s NOT ASSERTED IN STATUS %s" % (label, needle, "/".join(SECTIONS)))
         missing_in_status.append(label)
         red += 1
         continue

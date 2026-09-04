@@ -6146,6 +6146,45 @@ in the program has been located precisely enough to cost out.
 
 ---
 
+### 2.9.55 The host cannot produce a timing number, and one lane is producing them anyway
+
+**Measured, not assumed.** Three consecutive samples of `\Processor(_Total)\% Processor Time`
+returned `88.6%`, `97.0%`, `94.1%` — mean **`93.2%`**. Top consumer is the agent host process
+itself at `44,666s` CPU and `10.3GB` working set. Earlier the same machine measured `44-63%`.
+
+This has a consequence the program has been quietly assuming away. **"Exclusive host access"
+has never once been true.** Lane M153 has held a nominal exclusive reservation for `5.07`
+hours to build the M11 two-arm timing harness. That reservation cannot be honoured by a
+machine running eight concurrent lanes at the load above, and it was not honoured.
+
+**The distinction that matters is measurement class, not lane priority.**
+
+- **Timing measurements are invalid under this load.** Absolute wall time on a host that
+  busy carries an uncontrolled covariate. This is the whole of M11, and the whole D11-D15
+  speed program.
+- **Correctness measurements are unaffected.** M142's M8-O census counts violations; M167's
+  battery evaluates arms. Contention makes them slower, not wrong.
+
+**Standing quarantine, entered in advance rather than after the fact.** Any absolute timing
+figure M153 reports is quarantined on arrival and may not enter the scorecard, STATUS or the
+owner's file until it is reproduced on a quiet host or restated as a within-run ratio in
+which the load cancels. This is recorded *before* the lane reports, so that the decision is
+not made by whether the number turns out to be flattering.
+
+**Why the lane was not stopped.** It has completed **zero turns** in that time across
+`2,782` tool calls and has committed **nothing**; `experiments/M153-m11-harness/` holds
+`~337KB` of untracked Python. Zero completed turns also means it cannot receive redirection —
+every message sent to it is still queued. Stopping it would destroy five hours of work whose
+*harness* is legitimate infrastructure even though its *measurements* are not; a harness built
+now can be run later on a quiet machine. The quarantine achieves what a stand-down order would
+have achieved, at the gate the orchestrator actually controls.
+
+**The plan already ranked this correctly.** §13.5 puts speed work strictly behind the
+resolution claim. A lane that cannot produce a valid number, in the one workstream the plan
+subordinates, is not the lane to spend the night's remaining concurrency defending.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
