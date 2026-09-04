@@ -2,23 +2,49 @@
   "baseline_green": {
     "m8_o_violations": 0,
     "m8_r_violations": 0,
-    "output_sha256": "1DC4F5BE9CB8E384C489AE6398BD0514E66B62B6AA1E485DA1887F23F245C6B6",
+    "output_sha256": "3D769CB6CF1E9AED101B970E3935BD954CFF188DDF33493C47CEE37827A96F5F",
     "status": "PASS",
     "violations": []
   },
   "commissioning": "both directions",
+  "crop_origin_case": {
+    "compact_shape": [
+      2,
+      3
+    ],
+    "correct_origin_violations": 0,
+    "expected_wrong_origin_violations": 6,
+    "full_shape": [
+      8,
+      8
+    ],
+    "origin": [
+      2,
+      3
+    ],
+    "wrong_origin_violations": 6
+  },
   "degradation_plant": {
     "landed": {
-      "new_line": "  \"encoded_r\": 65534,",
-      "occurrences": 1,
-      "old_line": "  \"encoded_r\": 65535,",
-      "sha256_after": "91D85E433CA249BA0666006A16789F29A4B24DBDB3DCBD075F787C10C509AA68",
-      "sha256_before": "241C5E5632AD47C681F5E30A033FF6C28997A6075780CCB617EE960042BB551A"
+      "lower": {
+        "new_line": "  \"encoded_r\": 65534,",
+        "occurrences": 1,
+        "old_line": "  \"encoded_r\": 65535,",
+        "sha256_after": "8A237B8878B9D3D0AF7CB1D2753AB94CB1C0863C2D6814B9E41099E5DD950F1E",
+        "sha256_before": "570CE367000C5035BDA7BF3B370113CBB9758535A09B5C372840B0BBA8E1522C"
+      },
+      "upper": {
+        "new_line": "  \"encoded_b\": 1,",
+        "occurrences": 1,
+        "old_line": "  \"encoded_b\": 0,",
+        "sha256_after": "00F0C2680751E01CB7712429314651A27CF5B4BB9312D64AF9D1E55A94ED8306",
+        "sha256_before": "8A237B8878B9D3D0AF7CB1D2753AB94CB1C0863C2D6814B9E41099E5DD950F1E"
+      }
     },
     "result": {
-      "m8_o_violations": 1,
+      "m8_o_violations": 2,
       "m8_r_violations": 0,
-      "output_sha256": "803B5B42DF35D97649F7D4B9286B5ABEEE568B769C92AB2CAC260374FD5598B9",
+      "output_sha256": "68B70ADC45CA1332D3E64B229A5FAB22EB0A7F6F439D2B4944ABBE815A302D30",
       "status": "FAIL",
       "violations": [
         {
@@ -27,6 +53,13 @@
           "encoded": 65534,
           "x": 2,
           "y": 3
+        },
+        {
+          "channel": "B",
+          "direction": 1,
+          "encoded": 1,
+          "x": 3,
+          "y": 4
         }
       ]
     }
@@ -53,16 +86,25 @@
   },
   "improvement_plant": {
     "landed": {
-      "new_line": "  \"encoded_r\": 65535,",
-      "occurrences": 1,
-      "old_line": "  \"encoded_r\": 65534,",
-      "sha256_after": "241C5E5632AD47C681F5E30A033FF6C28997A6075780CCB617EE960042BB551A",
-      "sha256_before": "91D85E433CA249BA0666006A16789F29A4B24DBDB3DCBD075F787C10C509AA68"
+      "lower": {
+        "new_line": "  \"encoded_r\": 65535,",
+        "occurrences": 1,
+        "old_line": "  \"encoded_r\": 65534,",
+        "sha256_after": "29517F221B8795CA6B8A6B9839E44376F8F954669B7EBF6613D215D17E4C342D",
+        "sha256_before": "00F0C2680751E01CB7712429314651A27CF5B4BB9312D64AF9D1E55A94ED8306"
+      },
+      "upper": {
+        "new_line": "  \"encoded_b\": 0,",
+        "occurrences": 1,
+        "old_line": "  \"encoded_b\": 1,",
+        "sha256_after": "570CE367000C5035BDA7BF3B370113CBB9758535A09B5C372840B0BBA8E1522C",
+        "sha256_before": "29517F221B8795CA6B8A6B9839E44376F8F954669B7EBF6613D215D17E4C342D"
+      }
     },
     "result": {
       "m8_o_violations": 0,
       "m8_r_violations": 0,
-      "output_sha256": "1DC4F5BE9CB8E384C489AE6398BD0514E66B62B6AA1E485DA1887F23F245C6B6",
+      "output_sha256": "3D769CB6CF1E9AED101B970E3935BD954CFF188DDF33493C47CEE37827A96F5F",
       "status": "PASS",
       "violations": []
     }
@@ -83,6 +125,7 @@
       "re",
       "shutil",
       "struct",
+      "subprocess",
       "sys",
       "tifffile",
       "typing"
@@ -93,6 +136,89 @@
     "misses": 0,
     "scalar_samples": 69556,
     "seed": 136
+  },
+  "inverse_gain_order_case": {
+    "actual_contract": "f32 inv=1/g; f32 z*inv",
+    "actual_intermediate_u16": 1,
+    "actual_scaled_f32": 1.4999998807907104,
+    "direct_division_f32": 1.5,
+    "direct_division_intermediate_u16": 2,
+    "distinguishes_operation_order": true,
+    "site_gain_f32": 1.100000023841858,
+    "source_f32_bits": "0x3fd33333"
+  },
+  "m8_r_kernel_cases": {
+    "arms": {
+      "catmull_hard_step": {
+        "denominator": 252,
+        "lower_violations": 14,
+        "upper_violations": 14,
+        "violations": 28
+      },
+      "clamped_copy_null": {
+        "denominator": 252,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "clamped_hard_step": {
+        "denominator": 252,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "convex_bilinear_null": {
+        "denominator": 300,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "copy_null": {
+        "denominator": 252,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "explicit_high_low": {
+        "denominator": 252,
+        "lower_violations": 1,
+        "upper_violations": 1,
+        "violations": 2
+      },
+      "widened_clamp_sabotage": {
+        "denominator": 252,
+        "lower_violations": 14,
+        "upper_violations": 14,
+        "violations": 28
+      }
+    },
+    "clamped_copy_bit_exact": true,
+    "expected_exact": {
+      "catmull_hard_step": {
+        "denominator": 252,
+        "lower_violations": 14,
+        "upper_violations": 14,
+        "violations": 28
+      },
+      "clamped_hard_step": {
+        "denominator": 252,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "explicit_high_low": {
+        "denominator": 252,
+        "lower_violations": 1,
+        "upper_violations": 1,
+        "violations": 2
+      },
+      "widened_clamp_sabotage": {
+        "denominator": 252,
+        "lower_violations": 14,
+        "upper_violations": 14,
+        "violations": 28
+      }
+    }
   },
   "numeric_cases": {
     "convex_bilinear_green": {
@@ -153,10 +279,12 @@
     }
   },
   "preregistration": {
+    "canonical_sha256": "97E4B3FF9F1AFAE98E416C92E3D62CCD7F5C5A2C79D45C51343B2A5D96AD770D",
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\clamped-m8o-preregistration.json",
     "sha256": "B656EFB9D2BFEA4B8CF5DD67BE63A9CD7D6930F6B302C7EF93E9E1DF7529BCEB"
   },
   "prospective_interpretation": {
+    "canonical_sha256": "DBCCCF505D91FB86385D44BE3293A280A54ACE4C0C416945F23CFDFE355A203C",
     "commit": "746cc38a",
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\prospective-interpretations.md",
     "sha256": "8F827FAD6C2A218B473FAFD9287F95E3321E880FF2B36E2D877DC64DC4783C12"
@@ -173,7 +301,8 @@
   },
   "status": "PASS",
   "verifier": {
+    "canonical_sha256": "EF15C9659B08AD1E05C5FBF56BE7C5C9CCC26D158A90EFE63A3ED6096330D691",
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier_m136.py",
-    "sha256": "F599C47318DAC201A2CA7AB45C5AC991F0376E94B71769B08C9088998A639993"
+    "sha256": "F2EA3AC4DACB5DB200F9240F8D3F86A89E0BDC5A41E124C1C5576E23A4A1E9CE"
   }
 }

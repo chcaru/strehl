@@ -6,11 +6,14 @@ hull, crop, or warp implementation.  It parses trace-v3 blocks, warp maps, and
 the final TIFF directly and recomputes the certificate.
 
 Production verification consumes one JSON manifest with schema
-``m136-verifier-input-v1``.  It freezes the preregistration, commissioning
-report, candidate source commit/source manifest/binary, four instrument files,
-and all capture paths/hashes.  Each capture supplies ``input_dir``, ``warpmap``,
-``state_dir``, ``output_tiff``, and the twelve labeled ``checker_artifacts``
-named by ``REQUIRED_CHECKER_ARTIFACTS`` below.
+``m136-verifier-input-v1`` and protocol ``M136 independent verifier v1``.  It
+freezes the preregistration, both commissioning suites, fixture, source
+snapshot/patch, pre-target instrument freeze, candidate binary, and four
+instrument files.  Each capture supplies ``input_dir``, before/after input
+fingerprints, ``warpmap``, separate ``trace_state`` and ``checker_state``,
+``output_tiff``, render provenance, and every labeled ``checker_artifacts``
+entry named by ``REQUIRED_CHECKER_ARTIFACTS`` below.  All paths are absolute
+and every frozen-file object contains ``path`` and uppercase ``sha256``.
 
 Exit codes:
   0  independently verified PASS / commissioning passed
@@ -30,6 +33,7 @@ import os
 import re
 import shutil
 import struct
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -40,9 +44,13 @@ import tifffile
 
 
 PROTOCOL = "M136 clamped-Catmull-Rom representable-domain M8-O v1"
-PREREG_SHA256 = "B656EFB9D2BFEA4B8CF5DD67BE63A9CD7D6930F6B302C7EF93E9E1DF7529BCEB"
+PREREG_CANONICAL_SHA256 = (
+    "97E4B3FF9F1AFAE98E416C92E3D62CCD7F5C5A2C79D45C51343B2A5D96AD770D"
+)
 INTERPRETATION_COMMIT = "746cc38a"
-INTERPRETATION_SHA256 = "8F827FAD6C2A218B473FAFD9287F95E3321E880FF2B36E2D877DC64DC4783C12"
+INTERPRETATION_CANONICAL_SHA256 = (
+    "DBCCCF505D91FB86385D44BE3293A280A54ACE4C0C416945F23CFDFE355A203C"
+)
 MANIFEST_SCHEMA = "m136-verifier-input-v1"
 SOURCE_MANIFEST_SCHEMA = "m136-source-snapshot-v1"
 VERIFIER_PROTOCOL = "M136 independent verifier v1"
@@ -55,12 +63,22 @@ TRACE_NAME = re.compile(
     r"(?P<path_hash>[0-9a-f]{64})-s(?P<sx>[01])(?P<sy>[01])-"
     r"(?P<content_hash>[0-9a-f]{64})\.m8site$"
 )
+MAX_PATH_BYTES = 1 << 20
 U16_MAX = 65535
 FINAL_Q = 1.0 / 131070.0
 COVER_MARGIN = 3.0
 CHANNEL_NAMES = ("R", "G", "B")
 SITE_CHANNEL = {(0, 0): 0, (1, 0): 1, (0, 1): 1, (1, 1): 2}
+SITE_NAMES = {(0, 0): "R", (1, 0): "G1", (0, 1): "G2", (1, 1): "B"}
+SITE_BY_NAME = {name: site for site, name in SITE_NAMES.items()}
 GREEN_SITES = ((1, 0), (0, 1))
+GREEN_RULE = "same-frame-before-reduction"
+GREEN_RULE_STATUS = "ADOPTED_PROSPECTIVELY_AT_746cc38a"
+FIXTURE_REPRESENTATION = (
+    "fixture-only identity: P_fixture(z)=z; F_fixture(z)=clamp(z,0,1)"
+)
+CHECKER_PROTOCOL = "M136 independent checker"
+CHECKER_VERSION = 1
 REQUIRED_INSTRUMENTS = {"checker", "fixture", "hook", "runner"}
 INSTRUMENT_NAMES = {
     "checker": "checker_m136.py",
@@ -71,12 +89,15 @@ INSTRUMENT_NAMES = {
 REQUIRED_CHECKER_ARTIFACTS = {
     "meta",
     "m8_r",
+    "m8_r_block_manifest",
     "m8_r_violations",
     "pre_lower",
     "pre_upper",
     "projected_lower",
     "projected_upper",
     "valid_contributors",
+    "lower_frame_witness",
+    "upper_frame_witness",
     "m8_o",
     "violations",
     "rail_disclosure",
@@ -218,10 +239,17 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().upper()
 
 
+def sha256_canonical_text(path: Path) -> str:
+    text = path.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
+    return sha256_bytes(text.encode("utf-8"))
+
+
 def json_dump(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     staging = path.with_name(path.name + ".new")
-    staging.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    staging.write_text(
+        json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     os.replace(staging, path)
 
 
@@ -231,6 +259,8 @@ def require_absolute_existing_file(raw: str, label: str) -> Path:
         raise Unmeasured(f"{label} path is not absolute: {raw}")
     if not path.is_file():
         raise Unmeasured(f"{label} file is absent: {path}")
+    if path.is_symlink():
+        raise Unmeasured(f"{label} must not be a symlink: {path}")
     return path.resolve()
 
 
@@ -243,6 +273,17 @@ def require_absolute_existing_dir(raw: str, label: str) -> Path:
     return path.resolve()
 
 
+def require_under(path: Path, root: Path, label: str) -> None:
+    try:
+        common = os.path.commonpath(
+            [os.path.normcase(str(root)), os.path.normcase(str(path))]
+        )
+    except ValueError as error:
+        raise Unmeasured(f"{label} is outside the required output volume") from error
+    if os.path.normcase(common) != os.path.normcase(str(root)):
+        raise Unmeasured(f"{label} must remain below {root}")
+
+
 def frozen_file(raw: Mapping[str, Any], label: str) -> FrozenFile:
     if not isinstance(raw, Mapping):
         raise Unmeasured(f"{label} must be an object containing path and sha256")
@@ -252,8 +293,19 @@ def frozen_file(raw: Mapping[str, Any], label: str) -> FrozenFile:
         raise Unmeasured(f"{label}.sha256 is not a 64-digit hexadecimal digest")
     observed = sha256_file(path)
     if observed != expected:
-        raise Unmeasured(f"{label} hash mismatch: expected {expected}, observed {observed}")
+        raise Unmeasured(
+            f"{label} hash mismatch: expected {expected}, observed {observed}"
+        )
     return FrozenFile(path=path, sha256=observed)
+
+
+def assert_still_frozen(file: FrozenFile, label: str) -> None:
+    observed = sha256_file(file.path)
+    if observed != file.sha256:
+        raise Unmeasured(
+            f"{label} changed while being verified: "
+            f"expected {file.sha256}, observed {observed}"
+        )
 
 
 def same_f32(a: np.float32, b: np.float32) -> bool:
@@ -317,6 +369,8 @@ def parse_trace(path: Path, source_hash_cache: dict[Path, str]) -> TraceBlock:
             raise Unmeasured(
                 f"{path.name}: arithmetic contract {arithmetic_contract}, expected {ARITHMETIC_CONTRACT}"
             )
+        if path_bytes == 0 or path_bytes > MAX_PATH_BYTES:
+            raise Unmeasured(f"{path.name}: frame-path byte count is invalid")
         encoded_path = handle.read(path_bytes)
         if len(encoded_path) != path_bytes:
             raise Unmeasured(f"{path.name}: truncated frame path")
@@ -342,7 +396,9 @@ def parse_trace(path: Path, source_hash_cache: dict[Path, str]) -> TraceBlock:
     if sha256_bytes(encoded_path).lower() != match.group("path_hash"):
         raise Unmeasured(f"{path.name}: frame-path hash disagrees with filename")
     if not frame_path.is_absolute() or not frame_path.is_file():
-        raise Unmeasured(f"{path.name}: source frame is absent or not absolute: {frame_path}")
+        raise Unmeasured(
+            f"{path.name}: source frame is absent or not absolute: {frame_path}"
+        )
     frame_path = frame_path.resolve()
     observed_source_hash = source_hash_cache.get(frame_path)
     if observed_source_hash is None:
@@ -350,11 +406,32 @@ def parse_trace(path: Path, source_hash_cache: dict[Path, str]) -> TraceBlock:
         source_hash_cache[frame_path] = observed_source_hash
     if observed_source_hash != source_sha.hex().upper():
         raise Unmeasured(f"{path.name}: source frame SHA-256 mismatch")
-    if min(source_width, source_height, full_width, full_height, compact_width, compact_height) <= 0:
+    if (
+        min(
+            source_width,
+            source_height,
+            full_width,
+            full_height,
+            compact_width,
+            compact_height,
+        )
+        <= 0
+    ):
         raise Unmeasured(f"{path.name}: dimensions must be positive")
     if crop_x + compact_width > full_width or crop_y + compact_height > full_height:
         raise Unmeasured(f"{path.name}: crop rectangle exceeds full plane")
-    scalars = (a_re, a_im, b_re, b_im, cx, cy, black_level, sensor_range, site_gain, output_gain)
+    scalars = (
+        a_re,
+        a_im,
+        b_re,
+        b_im,
+        cx,
+        cy,
+        black_level,
+        sensor_range,
+        site_gain,
+        output_gain,
+    )
     if not all(math.isfinite(float(v)) for v in scalars):
         raise Unmeasured(f"{path.name}: non-finite transform or representation scalar")
     if sensor_range <= 0 or site_gain <= 0 or output_gain <= 0:
@@ -436,7 +513,9 @@ def parse_warpmap(path: Path) -> WarpMap:
                     raise Unmeasured(f"{path}: malformed placed line {line!r}")
                 values = [f64_from_hex(value) for value in fields[2:]]
                 if not all(math.isfinite(value) for value in values):
-                    raise Unmeasured(f"{path}: non-finite placement at frame {frame_order}")
+                    raise Unmeasured(
+                        f"{path}: non-finite placement at frame {frame_order}"
+                    )
                 placements[frame_order] = Placement(frame_order, True, *values)
             elif fields[1] == "refused":
                 placements[frame_order] = Placement(
@@ -577,7 +656,9 @@ def tau_r(lo: np.ndarray, hi: np.ndarray) -> np.ndarray:
     return np.asarray(np.float32(8.0) * ulp, dtype=np.float32)
 
 
-def source_interval(lo: np.ndarray, hi: np.ndarray, tau: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def source_interval(
+    lo: np.ndarray, hi: np.ndarray, tau: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
     return (
         f32_down(lo.astype(np.float64) - tau.astype(np.float64)),
         f32_up(hi.astype(np.float64) + tau.astype(np.float64)),
@@ -696,6 +777,8 @@ def exact_support(
 def block_geometry_key(block: TraceBlock) -> tuple[Any, ...]:
     return (
         block.kernel,
+        block.source_width,
+        block.source_height,
         block.full_width,
         block.full_height,
         block.compact_width,
@@ -713,7 +796,9 @@ def validate_block_set(
     warpmap: WarpMap,
     input_dir: Path,
 ) -> dict[int, dict[tuple[int, int], TraceBlock]]:
-    placed_orders = {index for index, placement in warpmap.placements.items() if placement.placed}
+    placed_orders = {
+        index for index, placement in warpmap.placements.items() if placement.placed
+    }
     raw_paths = sorted(
         (
             path.resolve()
@@ -729,17 +814,27 @@ def validate_block_set(
         )
     expected = {(frame, site) for frame in placed_orders for site in SITE_CHANNEL}
     grouped: dict[int, dict[tuple[int, int], TraceBlock]] = {}
+    keys = [(block.frame_order, block.site) for block in blocks]
     seen: set[tuple[int, tuple[int, int]]] = set()
-    for block in blocks:
-        key = (block.frame_order, block.site)
+    for key in keys:
         if key in seen:
             raise Unmeasured(f"duplicate trace-v3 frame/site {key}")
         seen.add(key)
+    if seen != expected:
+        missing = sorted(expected - seen)
+        extra = sorted(seen - expected)
+        raise Unmeasured(
+            f"incomplete trace set: missing={missing[:8]}, extra={extra[:8]}"
+        )
+    for block in blocks:
         if block.frame_order not in placed_orders:
             raise Unmeasured(f"trace exists for unplaced frame {block.frame_order}")
         try:
             common = os.path.commonpath(
-                [os.path.normcase(str(input_dir)), os.path.normcase(str(block.frame_path))]
+                [
+                    os.path.normcase(str(input_dir)),
+                    os.path.normcase(str(block.frame_path)),
+                ]
             )
         except ValueError as error:
             raise Unmeasured(
@@ -768,19 +863,24 @@ def validate_block_set(
                     f"frame {block.frame_order} site {block.site}: trace {label} differs from warpmap"
                 )
         grouped.setdefault(block.frame_order, {})[block.site] = block
-    if seen != expected:
-        missing = sorted(expected - seen)
-        extra = sorted(seen - expected)
-        raise Unmeasured(f"incomplete trace set: missing={missing[:8]}, extra={extra[:8]}")
     first = blocks[0]
     geometry = block_geometry_key(first)
     for block in blocks[1:]:
         if block_geometry_key(block) != geometry:
-            raise Unmeasured("trace-v3 blocks disagree on geometry or arithmetic contract")
+            raise Unmeasured(
+                "trace-v3 blocks disagree on geometry or arithmetic contract"
+            )
     if first.full_width != warpmap.width or first.full_height != warpmap.height:
         raise Unmeasured("trace full-plane dimensions disagree with warpmap")
-    if first.source_width != 2 * first.full_width or first.source_height != 2 * first.full_height:
-        raise Unmeasured("trace source is not the required full-resolution 2x gather plane")
+    for block in blocks:
+        if (
+            block.source_width != 2 * block.full_width
+            or block.source_height != 2 * block.full_height
+        ):
+            raise Unmeasured(
+                f"{block.path.name}: trace source is not the required "
+                "full-resolution 2x gather plane"
+            )
     if not same_f64(first.cx, first.full_width * 0.5) or not same_f64(
         first.cy, first.full_height * 0.5
     ):
@@ -790,13 +890,21 @@ def validate_block_set(
         reference = frame_blocks[0]
         for block in frame_blocks[1:]:
             if block.frame_path != reference.frame_path:
-                raise Unmeasured(f"frame {frame_order}: CFA sites name different source files")
+                raise Unmeasured(
+                    f"frame {frame_order}: CFA sites name different source files"
+                )
             if block.frame_source_sha256 != reference.frame_source_sha256:
-                raise Unmeasured(f"frame {frame_order}: CFA sites disagree on source SHA-256")
+                raise Unmeasured(
+                    f"frame {frame_order}: CFA sites disagree on source SHA-256"
+                )
             if not same_f32(block.black_level, reference.black_level):
-                raise Unmeasured(f"frame {frame_order}: CFA sites disagree on black level")
+                raise Unmeasured(
+                    f"frame {frame_order}: CFA sites disagree on black level"
+                )
             if not same_f32(block.sensor_range, reference.sensor_range):
-                raise Unmeasured(f"frame {frame_order}: CFA sites disagree on sensor range")
+                raise Unmeasured(
+                    f"frame {frame_order}: CFA sites disagree on sensor range"
+                )
         g1 = sites[GREEN_SITES[0]]
         g2 = sites[GREEN_SITES[1]]
         if not same_f32(g1.output_gain, g2.output_gain):
@@ -867,9 +975,16 @@ def m8r_rows(
     return rows
 
 
-def verify_m8r_block(block: TraceBlock, chunk_rows: int) -> tuple[dict[str, Any], list[np.ndarray]]:
+def verify_m8r_block(
+    block: TraceBlock, chunk_rows: int
+) -> tuple[dict[str, Any], list[np.ndarray]]:
     source = block.source()
     gathered = block.gathered()
+    if not np.all(np.isfinite(source)):
+        yy, xx = np.argwhere(~np.isfinite(source))[0]
+        raise Unmeasured(
+            f"{block.path.name}: non-finite source at ({int(xx)},{int(yy)})"
+        )
     denominator = 0
     lower_count = 0
     upper_count = 0
@@ -894,15 +1009,28 @@ def verify_m8r_block(block: TraceBlock, chunk_rows: int) -> tuple[dict[str, Any]
         upper_count += int(np.count_nonzero(upper))
         if np.any(lower | upper):
             parts.append(m8r_rows(block, y0, values, lo, hi, tau, lower, upper))
+    max_excess = 0.0
+    for rows in parts:
+        excess = np.where(
+            rows["direction"] > 0,
+            rows["signed_excess"] - rows["tau"],
+            -rows["signed_excess"] - rows["tau"],
+        )
+        max_excess = max(max_excess, float(np.max(excess, initial=0.0)))
     del source, gathered
     return (
         {
             "frame_order": block.frame_order,
-            "site": [block.site_x, block.site_y],
-            "denominator": denominator,
-            "lower_violations": lower_count,
-            "upper_violations": upper_count,
-            "violations": lower_count + upper_count,
+            "site": SITE_NAMES[block.site],
+            "eligible_samples": denominator,
+            "lower_violation_rows": lower_count,
+            "upper_violation_rows": upper_count,
+            "violation_rows": lower_count + upper_count,
+            "max_excess_over_tolerance": max_excess,
+            "trace": block.path.name,
+            "trace_sha256": block.file_sha256,
+            "source_path": str(block.frame_path),
+            "source_sha256": block.frame_source_sha256,
         },
         parts,
     )
@@ -928,7 +1056,9 @@ def compact_site_intervals(
     return valid, black_lo, black_hi
 
 
-def create_array(path: Path, dtype: str, shape: tuple[int, ...], fill: float | int) -> np.memmap:
+def create_array(
+    path: Path, dtype: str, shape: tuple[int, ...], fill: float | int
+) -> np.memmap:
     array = np.lib.format.open_memmap(path, mode="w+", dtype=dtype, shape=shape)
     array[...] = fill
     array.flush()
@@ -985,7 +1115,9 @@ def build_m8o_rows(
         lower = value < lo.astype(np.float64) - FINAL_Q
         upper = value > hi.astype(np.float64) + FINAL_Q
         if np.any(lower & upper):
-            raise Unmeasured("a coordinate is simultaneously below and above its interval")
+            raise Unmeasured(
+                "a coordinate is simultaneously below and above its interval"
+            )
         lower_count += int(np.count_nonzero(lower))
         upper_count += int(np.count_nonzero(upper))
         mask = lower | upper
@@ -1015,17 +1147,41 @@ def build_m8o_rows(
             upper[mask], selected_high_frames, selected_low_frames
         )
         parts.append(rows)
-    rows = (
-        np.concatenate(parts)
-        if parts
-        else np.empty(0, dtype=M8O_VIOLATION_DTYPE)
-    )
+    rows = np.concatenate(parts) if parts else np.empty(0, dtype=M8O_VIOLATION_DTYPE)
+    violations = lower_count + upper_count
+    per_channel: dict[str, dict[str, int]] = {}
+    for channel in CHANNEL_NAMES:
+        selected = rows["channel"] == channel
+        per_channel[channel] = {
+            "lower_violations": int(
+                np.count_nonzero(selected & (rows["direction"] < 0))
+            ),
+            "upper_violations": int(
+                np.count_nonzero(selected & (rows["direction"] > 0))
+            ),
+            "violations": int(np.count_nonzero(selected)),
+        }
+    signed = np.asarray(rows["signed_excess"], dtype=np.float64)
+    positive = signed[signed > 0.0]
+    negative = signed[signed < 0.0]
+    max_positive = float(np.max(positive)) if positive.size else 0.0
+    min_negative = float(np.min(negative)) if negative.size else 0.0
+    max_absolute = float(np.max(np.abs(signed))) if signed.size else 0.0
     return rows, {
         "denominator": int(height * width * 3),
         "lower_violations": lower_count,
         "upper_violations": upper_count,
-        "violations": lower_count + upper_count,
-        "fraction": (lower_count + upper_count) / float(height * width * 3),
+        "violations": violations,
+        "fraction_exact": f"{violations}/{height * width * 3}",
+        "fraction": violations / float(height * width * 3),
+        "percent": 100.0 * violations / float(height * width * 3),
+        "maximum_positive_signed_excess": max_positive,
+        "minimum_negative_signed_excess": min_negative,
+        "maximum_absolute_signed_excess": max_absolute,
+        "maximum_positive_signed_excess_lsb": max_positive * U16_MAX,
+        "minimum_negative_signed_excess_lsb": min_negative * U16_MAX,
+        "maximum_absolute_signed_excess_lsb": max_absolute * U16_MAX,
+        "per_channel": per_channel,
     }
 
 
@@ -1057,8 +1213,12 @@ def rail_disclosure(
         },
         "projected_violations": {
             "coordinates": int(np.count_nonzero(lower_violation | upper_violation)),
-            "at_full_rail": int(np.count_nonzero((lower_violation | upper_violation) & full)),
-            "at_zero_rail": int(np.count_nonzero((lower_violation | upper_violation) & zero)),
+            "at_full_rail": int(
+                np.count_nonzero((lower_violation | upper_violation) & full)
+            ),
+            "at_zero_rail": int(
+                np.count_nonzero((lower_violation | upper_violation) & zero)
+            ),
             "off_rail": int(
                 np.count_nonzero((lower_violation | upper_violation) & ~full & ~zero)
             ),
@@ -1066,17 +1226,23 @@ def rail_disclosure(
     }
 
 
-def load_checker_array(file: FrozenFile, label: str, shape: tuple[int, ...]) -> np.ndarray:
+def load_checker_array(
+    file: FrozenFile, label: str, shape: tuple[int, ...]
+) -> np.ndarray:
     try:
         array = np.load(file.path, mmap_mode="r", allow_pickle=False)
     except Exception as error:
-        raise Unmeasured(f"{label}: could not open NumPy artifact {file.path}") from error
+        raise Unmeasured(
+            f"{label}: could not open NumPy artifact {file.path}"
+        ) from error
     if array.shape == shape:
         return array
     channel_last = (shape[1], shape[2], shape[0])
     if array.shape == channel_last:
         return np.moveaxis(array, -1, 0)
-    raise Disagreement(f"{label}: checker shape {array.shape} != verifier shape {shape}")
+    raise Disagreement(
+        f"{label}: checker shape {array.shape} != verifier shape {shape}"
+    )
 
 
 def arrays_equal(a: np.ndarray, b: np.ndarray) -> bool:
@@ -1085,34 +1251,107 @@ def arrays_equal(a: np.ndarray, b: np.ndarray) -> bool:
     return bool(np.array_equal(a, b))
 
 
-def metric_counts(document: Mapping[str, Any], metric: str) -> Mapping[str, Any]:
-    candidates: list[Mapping[str, Any]] = []
-    direct = document.get(metric)
-    if isinstance(direct, Mapping):
-        nested = direct.get("aggregate")
-        if isinstance(nested, Mapping):
-            candidates.append(nested)
-        candidates.append(direct)
-    aggregate = document.get("aggregate")
-    if isinstance(aggregate, Mapping):
-        nested = aggregate.get(metric)
-        if isinstance(nested, Mapping):
-            candidates.append(nested)
-        candidates.append(aggregate)
-    candidates.append(document)
-    for candidate in candidates:
-        denominator = candidate.get("denominator")
-        violations = candidate.get("violations")
-        if (
-            isinstance(denominator, int)
-            and not isinstance(denominator, bool)
-            and isinstance(violations, int)
-            and not isinstance(violations, bool)
-        ):
-            return candidate
-    raise Unmeasured(
-        f"checker JSON has no aggregate {metric} object with integer denominator/violations"
-    )
+def numpy_dtype_metadata(array: np.ndarray) -> Any:
+    if array.dtype.names:
+        return json.loads(json.dumps(array.dtype.descr))
+    return array.dtype.str
+
+
+def checker_json(files: Mapping[str, FrozenFile], label: str) -> Mapping[str, Any]:
+    try:
+        document = json.loads(files[label].path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise Unmeasured(
+            f"{label}: invalid JSON artifact {files[label].path}"
+        ) from error
+    if not isinstance(document, Mapping):
+        raise Unmeasured(f"{label}: JSON root must be an object")
+    return document
+
+
+def require_checker_identity(
+    document: Mapping[str, Any], schema: str, label: str
+) -> None:
+    if document.get("schema") != schema or document.get("schema_version") != 1:
+        raise Unmeasured(f"{label}: unsupported checker schema/version")
+
+
+def require_frozen_reference(raw: Any, expected: FrozenFile, label: str) -> None:
+    if not isinstance(raw, Mapping):
+        raise Unmeasured(f"{label}: expected a path/hash object")
+    try:
+        actual_path = Path(str(raw["path"])).resolve(strict=True)
+    except Exception as error:
+        raise Unmeasured(f"{label}: referenced path is absent") from error
+    if actual_path != expected.path or raw.get("sha256") != expected.sha256:
+        raise Disagreement(f"{label}: path/hash does not identify frozen evidence")
+
+
+def parse_checker_command(
+    raw: Any,
+    *,
+    checker: FrozenFile,
+    capture: str,
+    input_dir: Path,
+    trace_state: Path,
+    warpmap: FrozenFile,
+    output_tiff: FrozenFile,
+    checker_state: Path,
+    preregistration: FrozenFile,
+    checker_commission: FrozenFile,
+    source_commit: str,
+    candidate_binary: FrozenFile,
+) -> dict[str, str]:
+    if not isinstance(raw, list) or not all(isinstance(item, str) for item in raw):
+        raise Unmeasured("provenance.command must be a string array")
+    try:
+        verb = raw.index("adjudicate")
+    except ValueError as error:
+        raise Unmeasured("provenance.command does not invoke adjudicate") from error
+    if verb < 1 or Path(raw[verb - 1]).resolve(strict=True) != checker.path:
+        raise Disagreement("provenance.command does not execute the frozen checker")
+    tail = raw[verb + 1 :]
+    if len(tail) % 2 != 0:
+        raise Unmeasured("provenance.command has an unpaired option")
+    parsed: dict[str, str] = {}
+    for index in range(0, len(tail), 2):
+        flag, value = tail[index : index + 2]
+        if not flag.startswith("--") or flag in parsed:
+            raise Unmeasured("provenance.command has an invalid or duplicate option")
+        parsed[flag] = value
+    expected_paths = {
+        "--input-dir": input_dir,
+        "--trace-state": trace_state,
+        "--warpmap": warpmap.path,
+        "--tiff": output_tiff.path,
+        "--output": checker_state,
+        "--preregistration": preregistration.path,
+        "--commissioning-report": checker_commission.path,
+        "--candidate-binary": candidate_binary.path,
+    }
+    for flag, path in expected_paths.items():
+        try:
+            actual = Path(parsed.get(flag, "")).resolve(strict=True)
+        except Exception as error:
+            raise Unmeasured(f"provenance.command {flag} path is absent") from error
+        if actual != path.resolve(strict=True):
+            raise Disagreement(f"provenance.command {flag} path mismatch")
+    expected_text = {
+        "--capture": capture,
+        "--source-commit": source_commit,
+        "--green-rule": GREEN_RULE,
+    }
+    for flag, value in expected_text.items():
+        if parsed.get(flag) != value:
+            raise Disagreement(f"provenance.command {flag} mismatch")
+    try:
+        if int(parsed["--chunk-rows"]) <= 0:
+            raise ValueError
+    except (KeyError, ValueError) as error:
+        raise Unmeasured("provenance.command --chunk-rows must be positive") from error
+    if set(parsed) != set(expected_paths) | set(expected_text) | {"--chunk-rows"}:
+        raise Unmeasured("provenance.command contains an unexpected or missing option")
+    return parsed
 
 
 def compare_checker_artifacts(
@@ -1122,44 +1361,212 @@ def compare_checker_artifacts(
     m8r_violations: np.ndarray,
     violations: np.ndarray,
     rails: Mapping[str, Any],
+    context: Mapping[str, Any],
 ) -> dict[str, Any]:
     compared: dict[str, Any] = {}
-    for label in ("meta", "m8_r", "m8_o", "rail_disclosure", "provenance"):
-        try:
-            document = json.loads(files[label].path.read_text(encoding="utf-8"))
-        except Exception as error:
-            raise Unmeasured(f"{label}: invalid JSON artifact {files[label].path}") from error
-        if not isinstance(document, Mapping):
-            raise Unmeasured(f"{label}: JSON root must be an object")
-        compared[label] = {"opened": True, "sha256": files[label].sha256}
+    checker_meta = checker_json(files, "meta")
+    checker_m8r = checker_json(files, "m8_r")
+    checker_m8r_blocks = checker_json(files, "m8_r_block_manifest")
+    checker_m8o = checker_json(files, "m8_o")
+    checker_rails_doc = checker_json(files, "rail_disclosure")
+    provenance = checker_json(files, "provenance")
+    require_checker_identity(checker_meta, "m136-checker-target", "meta")
+    require_checker_identity(checker_m8r, "m136-m8-r", "m8_r")
+    require_checker_identity(
+        checker_m8r_blocks, "m136-m8-r-block-manifest", "m8_r_block_manifest"
+    )
+    require_checker_identity(checker_m8o, "m136-m8-o", "m8_o")
+    require_checker_identity(
+        checker_rails_doc, "m136-rail-disclosure", "rail_disclosure"
+    )
+    require_checker_identity(provenance, "m136-checker-provenance", "provenance")
 
-    checker_m8r = json.loads(files["m8_r"].path.read_text(encoding="utf-8"))
-    checker_m8o = json.loads(files["m8_o"].path.read_text(encoding="utf-8"))
-    checker_m8r_counts = metric_counts(checker_m8r, "m8_r")
-    checker_m8o_counts = metric_counts(checker_m8o, "m8_o")
-    if checker_m8r_counts["denominator"] != result["m8_r"]["denominator"]:
-        raise Disagreement("checker/verifier M8-R denominator mismatch")
-    if checker_m8r_counts["violations"] != result["m8_r"]["violations"]:
-        raise Disagreement("checker/verifier M8-R violation-count mismatch")
-    if checker_m8o_counts["denominator"] != result["m8_o"]["denominator"]:
-        raise Disagreement("checker/verifier M8-O denominator mismatch")
-    if checker_m8o_counts["violations"] != result["m8_o"]["violations"]:
-        raise Disagreement("checker/verifier M8-O violation-count mismatch")
-    expected_m8o_status = "PASS" if result["m8_o"]["violations"] == 0 else "FAIL"
-    for key in ("status", "verdict", "decision"):
-        declared = checker_m8o.get(key)
-        if isinstance(declared, str) and declared.upper() in {"PASS", "FAIL"}:
-            if declared.upper() != expected_m8o_status:
+    for key in ("denominator", "lower_violations", "upper_violations", "violations"):
+        if checker_m8r.get(key) != result["m8_r"][key]:
+            raise Disagreement(f"checker/verifier M8-R {key} mismatch")
+        if checker_m8o.get(key) != result["m8_o"][key]:
+            raise Disagreement(f"checker/verifier M8-O {key} mismatch")
+    if checker_m8r.get("block_count") != result["trace_blocks"]:
+        raise Disagreement("checker/verifier M8-R block-count mismatch")
+    block_manifest_relative = (
+        files["m8_r_block_manifest"]
+        .path.relative_to(context["checker_state"])
+        .as_posix()
+    )
+    if checker_m8r.get("block_manifest") != block_manifest_relative:
+        raise Unmeasured("M8-R JSON does not name the frozen block manifest")
+    if checker_m8r.get("violation_array") != files["m8_r_violations"].path.name:
+        raise Unmeasured("M8-R JSON does not name the frozen violation array")
+    block_entries = checker_m8r_blocks.get("blocks")
+    if (
+        not isinstance(block_entries, list)
+        or len(block_entries) != result["trace_blocks"]
+    ):
+        raise Unmeasured("checker M8-R per-block manifest is incomplete")
+    expected_block_summaries = {
+        (item["frame_order"], item["site"]): item for item in result["m8_r"]["blocks"]
+    }
+    block_row_parts: list[np.ndarray] = []
+    block_artifact_paths: list[Path] = []
+    seen_block_keys: set[tuple[Any, Any]] = set()
+    for entry in block_entries:
+        if not isinstance(entry, Mapping):
+            raise Unmeasured("checker M8-R block entry is not an object")
+        key = (entry.get("frame_order"), entry.get("site"))
+        expected_summary = expected_block_summaries.get(key)
+        if expected_summary is None or key in seen_block_keys:
+            raise Disagreement("checker M8-R block identifies an unexpected frame/site")
+        seen_block_keys.add(key)
+        for name, value in expected_summary.items():
+            if entry.get(name) != value:
                 raise Disagreement(
-                    f"checker declares {declared.upper()} but raw evidence is "
-                    f"{expected_m8o_status}"
+                    f"checker/verifier M8-R block field mismatch: {key}.{name}"
                 )
+        artifact = entry.get("violation_array")
+        if not isinstance(artifact, Mapping):
+            raise Unmeasured("checker M8-R block omits violation-array evidence")
+        try:
+            artifact_path = (context["checker_state"] / str(artifact["path"])).resolve(
+                strict=True
+            )
+            artifact_path.relative_to(context["checker_state"])
+        except Exception as error:
+            raise Unmeasured(
+                "checker M8-R block artifact escapes or is absent"
+            ) from error
+        if artifact.get("bytes") != artifact_path.stat().st_size or artifact.get(
+            "sha256"
+        ) != sha256_file(artifact_path):
+            raise Disagreement("checker M8-R block artifact hash/size mismatch")
+        block_rows = np.load(artifact_path, allow_pickle=False)
+        if (
+            artifact.get("shape") != list(block_rows.shape)
+            or artifact.get("dtype") != numpy_dtype_metadata(block_rows)
+            or len(block_rows) != expected_summary["violation_rows"]
+        ):
+            raise Disagreement("checker M8-R block artifact metadata mismatch")
+        block_row_parts.append(np.asarray(block_rows))
+        block_artifact_paths.append(artifact_path)
+    if seen_block_keys != set(expected_block_summaries):
+        raise Disagreement("checker M8-R block manifest omits a frame/site")
+    if checker_m8o.get("capture") != result["capture"]:
+        raise Disagreement("checker/verifier M8-O capture mismatch")
+    if checker_m8o.get("fraction") != result["m8_o"]["fraction"]:
+        raise Disagreement("checker/verifier M8-O fraction mismatch")
+    if checker_m8o.get("q") != FINAL_Q:
+        raise Disagreement("checker M8-O uses a different final tolerance")
+    if checker_m8o.get("green_rule") != GREEN_RULE:
+        raise Disagreement("checker M8-O uses a different green rule")
+    if checker_m8o.get("green_rule_status") != GREEN_RULE_STATUS:
+        raise Unmeasured("checker M8-O green rule is not prospectively adopted")
+    if checker_m8o.get("violation_array") != files["violations"].path.name:
+        raise Unmeasured("M8-O JSON does not name the frozen violation array")
+    expected_m8o_status = "PASS" if result["m8_o"]["violations"] == 0 else "FAIL"
+    if checker_m8o.get("status") != expected_m8o_status:
+        raise Disagreement(
+            f"checker declares {checker_m8o.get('status')!r} but raw evidence is "
+            f"{expected_m8o_status}"
+        )
+    expected_max_excess = (
+        float(
+            np.max(
+                np.where(
+                    violations["direction"] > 0,
+                    violations["signed_excess"] - FINAL_Q,
+                    -violations["signed_excess"] - FINAL_Q,
+                ),
+                initial=0.0,
+            )
+        )
+        if len(violations)
+        else 0.0
+    )
+    if checker_m8o.get("max_excess_over_tolerance") != expected_max_excess:
+        raise Disagreement("checker/verifier M8-O maximum excess mismatch")
+
+    expected_overall = (
+        "PASS"
+        if result["m8_r"]["violations"] == 0 and result["m8_o"]["violations"] == 0
+        else "FAIL"
+    )
+    placed_frame_orders = sorted(
+        {block["frame_order"] for block in result["m8_r"]["blocks"]}
+    )
+    expected_frame_sites = [
+        f"{frame_order:08d}:{SITE_NAMES[site]}"
+        for frame_order in placed_frame_orders
+        for site in SITE_NAMES
+    ]
+    expected_frame_site_manifest = []
+    for block in result["m8_r"]["blocks"]:
+        site = SITE_BY_NAME[block["site"]]
+        expected_frame_site_manifest.append(
+            {
+                "frame_order": block["frame_order"],
+                "site": block["site"],
+                "site_x": site[0],
+                "site_y": site[1],
+                "channel": CHANNEL_NAMES[SITE_CHANNEL[site]],
+                "frame_path": block["source_path"],
+                "source_sha256": block["source_sha256"],
+                "trace": block["trace"],
+                "trace_sha256": block["trace_sha256"],
+            }
+        )
+    expected_meta = {
+        "protocol": CHECKER_PROTOCOL,
+        "checker_version": CHECKER_VERSION,
+        "status": expected_overall,
+        "capture": result["capture"],
+        "green_rule": GREEN_RULE,
+        "green_rule_status": GREEN_RULE_STATUS,
+        "arithmetic_contract": ARITHMETIC_CONTRACT,
+        "crop": {
+            **result["crop"],
+            "cover_margin": COVER_MARGIN,
+            "bisection_steps": 60,
+            "rounding": "inward",
+        },
+        "full_plane": result["full_plane"],
+        "placed_frames": result["frames"],
+        "trace_block_count": result["trace_blocks"],
+        "complete_frame_site_set": True,
+        "expected_frame_sites": expected_frame_sites,
+        "consumed_frame_sites": [
+            f"{block['frame_order']:08d}:{block['site']}"
+            for block in result["m8_r"]["blocks"]
+        ],
+        "frame_site_manifest": expected_frame_site_manifest,
+        "m8_r_status": ("PASS" if result["m8_r"]["violations"] == 0 else "FAIL"),
+        "m8_o_status": expected_m8o_status,
+    }
+    for key, value in expected_meta.items():
+        if checker_meta.get(key) != value:
+            raise Disagreement(f"checker/verifier meta field mismatch: {key}")
+    if (
+        "provisional" in json.dumps(checker_meta).lower()
+        or "pending" in json.dumps(checker_meta).lower()
+    ):
+        raise Unmeasured("checker metadata still carries a provisional ruling")
+    kernel = checker_meta.get("kernel")
+    if (
+        not isinstance(kernel, Mapping)
+        or kernel.get("id") != 2
+        or kernel.get("name") != "clamped-catmull"
+    ):
+        raise Disagreement("checker metadata does not identify clamped Catmull-Rom")
 
     checker_m8r_violations = np.load(files["m8_r_violations"].path, allow_pickle=False)
+    block_rows_all = (
+        np.concatenate(block_row_parts)
+        if block_row_parts
+        else np.empty(0, dtype=M8R_VIOLATION_DTYPE)
+    )
+    if not arrays_equal(np.asarray(block_rows_all), np.asarray(checker_m8r_violations)):
+        raise Disagreement("checker M8-R block arrays do not reproduce aggregate array")
     required_m8r_fields = set(M8R_VIOLATION_DTYPE.names or ())
-    if (
-        checker_m8r_violations.dtype.names is None
-        or not required_m8r_fields.issubset(checker_m8r_violations.dtype.names)
+    if checker_m8r_violations.dtype.names is None or not required_m8r_fields.issubset(
+        checker_m8r_violations.dtype.names
     ):
         raise Disagreement("checker M8-R violation artifact omits required fields")
     if len(checker_m8r_violations) != len(m8r_violations):
@@ -1175,7 +1582,9 @@ def compare_checker_artifacts(
         left = checker_m8r_violations[field][checker_m8r_order]
         right = m8r_violations[field][verifier_m8r_order]
         if not arrays_equal(np.asarray(left), np.asarray(right)):
-            raise Disagreement(f"checker/verifier M8-R violation field mismatch: {field}")
+            raise Disagreement(
+                f"checker/verifier M8-R violation field mismatch: {field}"
+            )
     compared["m8_r_violations"] = {
         "equal": True,
         "sha256": files["m8_r_violations"].sha256,
@@ -1187,6 +1596,8 @@ def compare_checker_artifacts(
         ("projected_lower", "projected_lower"),
         ("projected_upper", "projected_upper"),
         ("valid_contributors", "valid_contributors"),
+        ("lower_frame_witness", "lower_frame_witness"),
+        ("upper_frame_witness", "upper_frame_witness"),
     ):
         checker = load_checker_array(files[label], label, arrays[verifier_name].shape)
         if not arrays_equal(np.asarray(checker), np.asarray(arrays[verifier_name])):
@@ -1216,8 +1627,12 @@ def compare_checker_artifacts(
     if len(checker_violations) != len(violations):
         raise Disagreement("checker/verifier violation-row count mismatch")
     order_fields = ("capture", "y", "x", "channel", "direction")
-    checker_order = np.lexsort(tuple(checker_violations[name] for name in reversed(order_fields)))
-    verifier_order = np.lexsort(tuple(violations[name] for name in reversed(order_fields)))
+    checker_order = np.lexsort(
+        tuple(checker_violations[name] for name in reversed(order_fields))
+    )
+    verifier_order = np.lexsort(
+        tuple(violations[name] for name in reversed(order_fields))
+    )
     for field in required_fields:
         left = checker_violations[field][checker_order]
         right = violations[field][verifier_order]
@@ -1225,13 +1640,144 @@ def compare_checker_artifacts(
             raise Disagreement(f"checker/verifier violation field mismatch: {field}")
     compared["violations"] = {"equal": True, "sha256": files["violations"].sha256}
 
-    checker_rails_doc = json.loads(
-        files["rail_disclosure"].path.read_text(encoding="utf-8")
-    )
-    checker_rails = checker_rails_doc.get("rail_disclosure", checker_rails_doc)
-    if checker_rails != rails:
+    if (
+        checker_rails_doc.get("capture") != result["capture"]
+        or checker_rails_doc.get("rail_disclosure") != rails
+    ):
         raise Disagreement("checker/verifier rail disclosure mismatch")
-    compared["rail_disclosure"]["equal"] = True
+    compared["rail_disclosure"] = {
+        "equal": True,
+        "sha256": files["rail_disclosure"].sha256,
+    }
+
+    require_frozen_reference(
+        provenance.get("candidate_binary"),
+        context["candidate_binary"],
+        "provenance.candidate_binary",
+    )
+    require_frozen_reference(
+        provenance.get("checker"), context["checker"], "provenance.checker"
+    )
+    require_frozen_reference(
+        provenance.get("preregistration"),
+        context["preregistration"],
+        "provenance.preregistration",
+    )
+    provenance_commissioning = provenance.get("commissioning")
+    require_frozen_reference(
+        provenance_commissioning,
+        context["checker_commission"],
+        "provenance.commissioning",
+    )
+    if (
+        not isinstance(provenance_commissioning, Mapping)
+        or provenance_commissioning.get("fixture_manifest_sha256")
+        != context["fixture_manifest"].sha256
+    ):
+        raise Disagreement("checker provenance fixture-manifest hash mismatch")
+    require_frozen_reference(
+        provenance.get("warpmap"), context["warpmap"], "provenance.warpmap"
+    )
+    require_frozen_reference(
+        provenance.get("output_tiff"),
+        context["output_tiff"],
+        "provenance.output_tiff",
+    )
+    if (
+        provenance.get("protocol") != CHECKER_PROTOCOL
+        or provenance.get("capture") != result["capture"]
+        or provenance.get("source_commit") != context["source_commit"]
+        or provenance.get("green_rule") != GREEN_RULE
+        or provenance.get("green_rule_status") != GREEN_RULE_STATUS
+    ):
+        raise Disagreement("checker provenance governing identity mismatch")
+    if provenance.get("trace_sha256") != result["evidence"]["trace_sha256"]:
+        raise Disagreement("checker provenance trace inventory mismatch")
+    if provenance.get("source_sha256") != result["evidence"]["source_sha256"]:
+        raise Disagreement("checker provenance RAW-source inventory mismatch")
+
+    expected_environment = dict(context["environment"])
+    if provenance.get("environment") != expected_environment:
+        raise Disagreement("checker provenance environment mismatch")
+    versions = provenance.get("versions")
+    if (
+        not isinstance(versions, Mapping)
+        or set(versions) != {"python", "numpy", "tifffile"}
+        or not all(isinstance(value, str) and value for value in versions.values())
+    ):
+        raise Unmeasured("checker provenance software versions are incomplete")
+    parse_checker_command(
+        provenance.get("command"),
+        checker=context["checker"],
+        capture=result["capture"],
+        input_dir=context["input_dir"],
+        trace_state=context["trace_state"],
+        warpmap=context["warpmap"],
+        output_tiff=context["output_tiff"],
+        checker_state=context["checker_state"],
+        preregistration=context["preregistration"],
+        checker_commission=context["checker_commission"],
+        source_commit=context["source_commit"],
+        candidate_binary=context["candidate_binary"],
+    )
+
+    expected_artifacts = {
+        file.path.relative_to(context["checker_state"]).as_posix(): file
+        for label, file in files.items()
+        if label != "provenance"
+    }
+    artifact_inventory = provenance.get("artifacts")
+    if not isinstance(artifact_inventory, Mapping) or set(artifact_inventory) != set(
+        expected_artifacts
+    ):
+        raise Unmeasured("checker provenance artifact inventory is incomplete")
+    for name, expected in expected_artifacts.items():
+        metadata = artifact_inventory[name]
+        if (
+            not isinstance(metadata, Mapping)
+            or metadata.get("path") != name
+            or metadata.get("bytes") != expected.path.stat().st_size
+            or metadata.get("sha256") != expected.sha256
+        ):
+            raise Disagreement(f"checker provenance artifact metadata mismatch: {name}")
+        if expected.path.suffix == ".npy":
+            array = np.load(expected.path, mmap_mode="r", allow_pickle=False)
+            if metadata.get("shape") != list(array.shape) or metadata.get(
+                "dtype"
+            ) != numpy_dtype_metadata(array):
+                raise Disagreement(
+                    f"checker provenance array metadata mismatch: {name}"
+                )
+    expected_state_files = (
+        set(expected_artifacts)
+        | {"provenance.json"}
+        | {
+            path.relative_to(context["checker_state"]).as_posix()
+            for path in block_artifact_paths
+        }
+    )
+    observed_state_files = {
+        path.relative_to(context["checker_state"]).as_posix()
+        for path in context["checker_state"].rglob("*")
+        if path.is_file()
+    }
+    if observed_state_files != expected_state_files:
+        raise Unmeasured(
+            "checker output contains missing or unaccounted files: "
+            f"missing={sorted(expected_state_files - observed_state_files)[:8]}, "
+            f"extra={sorted(observed_state_files - expected_state_files)[:8]}"
+        )
+    compared["meta"] = {"equal": True, "sha256": files["meta"].sha256}
+    compared["m8_r"] = {"equal": True, "sha256": files["m8_r"].sha256}
+    compared["m8_r_block_manifest"] = {
+        "equal": True,
+        "sha256": files["m8_r_block_manifest"].sha256,
+    }
+    compared["m8_o"] = {"equal": True, "sha256": files["m8_o"].sha256}
+    compared["provenance"] = {
+        "equal": True,
+        "sha256": files["provenance"].sha256,
+    }
     return compared
 
 
@@ -1244,32 +1790,60 @@ def verify_capture(
     artifact_dir: Path,
     chunk_rows: int,
     checker_artifacts: Mapping[str, FrozenFile] | None,
+    checker_context: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     warpmap = parse_warpmap(warpmap_file.path)
     if warpmap.resampler != "clamped-catmull":
         raise Unmeasured(f"{capture}: warpmap resampler is {warpmap.resampler!r}")
-    crop_x, crop_y, compact_width, compact_height, cover_scale = reconstruct_crop(warpmap)
+    crop_x, crop_y, compact_width, compact_height, cover_scale = reconstruct_crop(
+        warpmap
+    )
 
     claims = state_dir / "claims"
     staging = state_dir / "staging"
     for directory, label in ((claims, "claim"), (staging, "staging")):
         if directory.exists() and any(directory.iterdir()):
-            raise Unmeasured(f"{capture}: unresolved trace {label} files exist in {directory}")
+            raise Unmeasured(
+                f"{capture}: unresolved trace {label} files exist in {directory}"
+            )
     block_dir = state_dir / "blocks"
     if not block_dir.is_dir():
         raise Unmeasured(f"{capture}: trace blocks directory is absent: {block_dir}")
     unexpected = [
         path.name
         for path in block_dir.iterdir()
-        if not path.is_file() or not TRACE_NAME.fullmatch(path.name)
+        if not path.is_file()
+        or path.is_symlink()
+        or not TRACE_NAME.fullmatch(path.name)
     ]
     if unexpected:
-        raise Unmeasured(f"{capture}: unexpected entries in trace blocks: {unexpected[:8]}")
+        raise Unmeasured(
+            f"{capture}: unexpected entries in trace blocks: {unexpected[:8]}"
+        )
     block_paths = sorted(block_dir.glob("*.m8site"))
     if not block_paths:
         raise Unmeasured(f"{capture}: no trace-v3 blocks")
     source_hash_cache: dict[Path, str] = {}
     blocks = [parse_trace(path, source_hash_cache) for path in block_paths]
+    expected_trace_files = {block.path.resolve() for block in blocks}
+    observed_trace_files = {
+        path.resolve() for path in state_dir.rglob("*") if path.is_file()
+    }
+    ignored_producer_files = {
+        path
+        for path in observed_trace_files
+        if path.name
+        in {"producer-supplied-hull.npy", "producer-supplied-contributor-mask.npy"}
+    }
+    unexpected_trace_files = (
+        observed_trace_files - expected_trace_files - ignored_producer_files
+    )
+    if expected_trace_files - observed_trace_files or unexpected_trace_files:
+        raise Unmeasured(
+            f"{capture}: trace state contains unaccounted files: "
+            f"missing={sorted(str(path) for path in expected_trace_files - observed_trace_files)[:8]}, "
+            f"extra={sorted(str(path) for path in unexpected_trace_files)[:8]}"
+        )
     grouped = validate_block_set(blocks, warpmap, input_dir)
     first = blocks[0]
     expected_crop = (crop_x, crop_y, compact_width, compact_height)
@@ -1410,7 +1984,7 @@ def verify_capture(
         raise Unmeasured(
             f"{capture}: Crop is not covered by every frame/site at "
             f"({int(x)},{int(y)},{CHANNEL_NAMES[int(channel)]}); "
-            f"contributors={int(valid_contributors[channel,y,x])}, expected={placed_count}"
+            f"contributors={int(valid_contributors[channel, y, x])}, expected={placed_count}"
         )
     if np.any(~np.isfinite(pre_lower)) or np.any(~np.isfinite(pre_upper)):
         raise Unmeasured(f"{capture}: aggregate interval contains non-finite values")
@@ -1430,13 +2004,39 @@ def verify_capture(
     rails = rail_disclosure(
         image, pre_lower, pre_upper, projected_lower, projected_upper
     )
+    rail_fractions = {
+        category: {
+            key: value / float(m8o["denominator"]) for key, value in counts.items()
+        }
+        for category, counts in rails.items()
+    }
     m8r = {
-        "denominator": sum(item["denominator"] for item in m8r_summaries),
-        "lower_violations": sum(item["lower_violations"] for item in m8r_summaries),
-        "upper_violations": sum(item["upper_violations"] for item in m8r_summaries),
-        "violations": sum(item["violations"] for item in m8r_summaries),
+        "denominator": sum(item["eligible_samples"] for item in m8r_summaries),
+        "lower_violations": sum(item["lower_violation_rows"] for item in m8r_summaries),
+        "upper_violations": sum(item["upper_violation_rows"] for item in m8r_summaries),
+        "violations": sum(item["violation_rows"] for item in m8r_summaries),
+        "max_excess_over_tolerance": max(
+            (item["max_excess_over_tolerance"] for item in m8r_summaries),
+            default=0.0,
+        ),
         "blocks": m8r_summaries,
     }
+    m8r_signed = np.asarray(m8r_violations["signed_excess"], dtype=np.float64)
+    m8r_positive = m8r_signed[m8r_signed > 0.0]
+    m8r_negative = m8r_signed[m8r_signed < 0.0]
+    m8r["maximum_positive_signed_excess"] = (
+        float(np.max(m8r_positive)) if m8r_positive.size else 0.0
+    )
+    m8r["minimum_negative_signed_excess"] = (
+        float(np.min(m8r_negative)) if m8r_negative.size else 0.0
+    )
+    m8r["maximum_absolute_signed_excess"] = (
+        float(np.max(np.abs(m8r_signed))) if m8r_signed.size else 0.0
+    )
+    if m8r["denominator"] <= 0:
+        raise Unmeasured(f"{capture}: M8-R denominator is empty")
+    m8r["fraction_exact"] = f"{m8r['violations']}/{m8r['denominator']}"
+    m8r["fraction"] = m8r["violations"] / float(m8r["denominator"])
     result: dict[str, Any] = {
         "capture": capture,
         "crop": {
@@ -1446,17 +2046,32 @@ def verify_capture(
             "height": compact_height,
             "cover_scale": cover_scale,
         },
+        "full_plane": {
+            "width": blocks[0].full_width,
+            "height": blocks[0].full_height,
+        },
         "frames": placed_count,
         "trace_blocks": len(blocks),
         "m8_r": m8r,
         "m8_o": m8o,
         "rail_disclosure": rails,
+        "rail_disclosure_fractions": rail_fractions,
         "evidence": {
             "warpmap": {"path": str(warpmap_file.path), "sha256": warpmap_file.sha256},
-            "output_tiff": {"path": str(output_file.path), "sha256": output_file.sha256},
+            "output_tiff": {
+                "path": str(output_file.path),
+                "sha256": output_file.sha256,
+            },
             "trace_sha256": {block.path.name: block.file_sha256 for block in blocks},
             "source_sha256": {
-                str(path): digest for path, digest in sorted(source_hash_cache.items(), key=lambda x: str(x[0]))
+                str(path): digest
+                for path, digest in sorted(
+                    source_hash_cache.items(), key=lambda x: str(x[0])
+                )
+            },
+            "ignored_producer_derived_artifacts": {
+                str(path): sha256_file(path)
+                for path in sorted(ignored_producer_files, key=lambda item: str(item))
             },
         },
     }
@@ -1466,8 +2081,12 @@ def verify_capture(
         "projected_lower": projected_lower,
         "projected_upper": projected_upper,
         "valid_contributors": valid_contributors,
+        "lower_frame_witness": low_frames,
+        "upper_frame_witness": high_frames,
     }
     if checker_artifacts is not None:
+        if checker_context is None:
+            raise Unmeasured("checker artifacts require strict comparison context")
         result["checker_comparison"] = compare_checker_artifacts(
             checker_artifacts,
             result,
@@ -1475,7 +2094,30 @@ def verify_capture(
             m8r_violations,
             violations,
             rails,
+            checker_context,
         )
+    assert_still_frozen(warpmap_file, f"{capture} warpmap")
+    assert_still_frozen(output_file, f"{capture} output TIFF")
+    for label, file in (checker_artifacts or {}).items():
+        assert_still_frozen(file, f"{capture} checker artifact {label}")
+    for block in blocks:
+        if sha256_file(block.path) != block.file_sha256:
+            raise Unmeasured(
+                f"{capture}: trace changed during verification: {block.path}"
+            )
+    for source_path, expected_hash in source_hash_cache.items():
+        if sha256_file(source_path) != expected_hash:
+            raise Unmeasured(
+                f"{capture}: source changed during verification: {source_path}"
+            )
+    for ignored_path in ignored_producer_files:
+        expected_hash = result["evidence"]["ignored_producer_derived_artifacts"][
+            str(ignored_path)
+        ]
+        if sha256_file(ignored_path) != expected_hash:
+            raise Unmeasured(
+                f"{capture}: ignored producer artifact changed: {ignored_path}"
+            )
     result["independent_artifacts"] = {
         path.name: {
             "path": str(path.resolve()),
@@ -1492,7 +2134,9 @@ def parse_instruments(raw: Any) -> dict[str, FrozenFile]:
         raise Unmeasured(
             f"instruments must contain exactly {sorted(REQUIRED_INSTRUMENTS)}"
         )
-    files = {name: frozen_file(value, f"instrument {name}") for name, value in raw.items()}
+    files = {
+        name: frozen_file(value, f"instrument {name}") for name, value in raw.items()
+    }
     for name, file in files.items():
         if file.path.name != INSTRUMENT_NAMES[name]:
             raise Unmeasured(
@@ -1515,9 +2159,7 @@ def verify_independence(verifier_path: Path) -> dict[str, Any]:
     forbidden = [
         name
         for name in imports
-        if "checker_m136" in name
-        or name.startswith("strehl")
-        or ".strehl" in name
+        if "checker_m136" in name or name.startswith("strehl") or ".strehl" in name
     ]
     if forbidden:
         raise Unmeasured(f"verifier has forbidden imports: {forbidden}")
@@ -1526,66 +2168,146 @@ def verify_independence(verifier_path: Path) -> dict[str, Any]:
 
 def validate_commission_report(
     file: FrozenFile,
-    prereg_hash: str,
-    interpretation_hash: str,
-    verifier_hash: str,
+    prereg_canonical_hash: str,
+    interpretation_canonical_hash: str,
+    verifier_canonical_hash: str,
 ) -> dict[str, Any]:
     try:
         report = json.loads(file.path.read_text(encoding="utf-8"))
     except Exception as error:
-        raise Unmeasured(f"invalid verifier commissioning report {file.path}") from error
+        raise Unmeasured(
+            f"invalid verifier commissioning report {file.path}"
+        ) from error
     if report.get("protocol") != VERIFIER_PROTOCOL or report.get("status") != "PASS":
-        raise Unmeasured("verifier commissioning report is not a PASS for this protocol")
-    if report.get("preregistration", {}).get("sha256") != prereg_hash:
+        raise Unmeasured(
+            "verifier commissioning report is not a PASS for this protocol"
+        )
+    if (
+        report.get("preregistration", {}).get("canonical_sha256")
+        != prereg_canonical_hash
+    ):
         raise Unmeasured("verifier commissioning used a different preregistration")
     if (
-        report.get("prospective_interpretation", {}).get("sha256")
-        != interpretation_hash
+        report.get("prospective_interpretation", {}).get("canonical_sha256")
+        != interpretation_canonical_hash
     ):
         raise Unmeasured("verifier commissioning used a different interpretation")
-    if report.get("verifier", {}).get("sha256") != verifier_hash:
-        raise Unmeasured("verifier commissioning was produced by different verifier bytes")
+    if report.get("verifier", {}).get("canonical_sha256") != verifier_canonical_hash:
+        raise Unmeasured(
+            "verifier commissioning was produced by different verifier bytes"
+        )
     defect = report.get("degradation_plant", {})
     improvement = report.get("improvement_plant", {})
     defect_landed = defect.get("landed", {})
     improvement_landed = improvement.get("landed", {})
-    if defect_landed.get("occurrences") != 1:
-        raise Unmeasured("commissioned degradation plant was not uniquely anchored")
-    if (
-        defect_landed.get("sha256_before") == defect_landed.get("sha256_after")
-        or not re.fullmatch(r"[0-9A-F]{64}", str(defect_landed.get("sha256_before", "")))
-        or not re.fullmatch(r"[0-9A-F]{64}", str(defect_landed.get("sha256_after", "")))
-    ):
-        raise Unmeasured("commissioned degradation plant has no valid changed hash")
-    if defect.get("result", {}).get("m8_o_violations") != 1:
-        raise Unmeasured("commissioned degradation did not produce exactly one violation")
+
+    def validate_landed_pair(value: Any, label: str) -> None:
+        if not isinstance(value, Mapping) or set(value) != {"lower", "upper"}:
+            raise Unmeasured(f"commissioned {label} does not contain both directions")
+        for direction, plant in value.items():
+            if not isinstance(plant, Mapping) or plant.get("occurrences") != 1:
+                raise Unmeasured(
+                    f"commissioned {label} {direction} plant was not uniquely anchored"
+                )
+            before = str(plant.get("sha256_before", ""))
+            after = str(plant.get("sha256_after", ""))
+            if (
+                before == after
+                or not re.fullmatch(r"[0-9A-F]{64}", before)
+                or not re.fullmatch(r"[0-9A-F]{64}", after)
+            ):
+                raise Unmeasured(
+                    f"commissioned {label} {direction} plant has no valid changed hash"
+                )
+
+    validate_landed_pair(defect_landed, "degradation")
+    expected_lines = {
+        ("degradation", "lower"): (
+            '  "encoded_r": 65535,',
+            '  "encoded_r": 65534,',
+        ),
+        ("degradation", "upper"): (
+            '  "encoded_b": 0,',
+            '  "encoded_b": 1,',
+        ),
+        ("improvement", "lower"): (
+            '  "encoded_r": 65534,',
+            '  "encoded_r": 65535,',
+        ),
+        ("improvement", "upper"): (
+            '  "encoded_b": 1,',
+            '  "encoded_b": 0,',
+        ),
+    }
+    for direction, plant in defect_landed.items():
+        old, new = expected_lines[("degradation", direction)]
+        if plant.get("old_line") != old or plant.get("new_line") != new:
+            raise Unmeasured(f"commissioned degradation {direction} line is wrong")
+    if defect.get("result", {}).get("m8_o_violations") != 2:
+        raise Unmeasured(
+            "commissioned degradations did not produce exactly two violations"
+        )
     if defect.get("result", {}).get("status") != "FAIL":
         raise Unmeasured("commissioned degradation was not reported FAIL")
-    if improvement_landed.get("occurrences") != 1:
-        raise Unmeasured("commissioned improvement plant was not uniquely anchored")
-    if (
-        improvement_landed.get("sha256_before")
-        == improvement_landed.get("sha256_after")
-        or not re.fullmatch(
-            r"[0-9A-F]{64}", str(improvement_landed.get("sha256_before", ""))
-        )
-        or not re.fullmatch(
-            r"[0-9A-F]{64}", str(improvement_landed.get("sha256_after", ""))
-        )
+    if defect.get("result", {}).get("violations") != [
+        {"x": 2, "y": 3, "channel": "R", "direction": -1, "encoded": 65534},
+        {"x": 3, "y": 4, "channel": "B", "direction": 1, "encoded": 1},
+    ]:
+        raise Unmeasured("commissioned degradation rows or signs are wrong")
+    validate_landed_pair(improvement_landed, "improvement")
+    for direction, plant in improvement_landed.items():
+        old, new = expected_lines[("improvement", direction)]
+        if plant.get("old_line") != old or plant.get("new_line") != new:
+            raise Unmeasured(f"commissioned improvement {direction} line is wrong")
+    if not (
+        defect_landed["lower"]["sha256_after"]
+        == defect_landed["upper"]["sha256_before"]
+        and defect_landed["upper"]["sha256_after"]
+        == improvement_landed["lower"]["sha256_before"]
+        and improvement_landed["lower"]["sha256_after"]
+        == improvement_landed["upper"]["sha256_before"]
+        and improvement_landed["upper"]["sha256_after"]
+        == defect_landed["lower"]["sha256_before"]
     ):
-        raise Unmeasured("commissioned improvement plant has no valid changed hash")
+        raise Unmeasured("commissioning plant hash chain is not reversible")
     if improvement.get("result", {}).get("m8_o_violations") != 0:
         raise Unmeasured("commissioned improvement did not remove the violation")
     if improvement.get("result", {}).get("status") != "PASS":
         raise Unmeasured("commissioned improvement was not reported PASS")
+    if improvement.get("result", {}).get("violations") != []:
+        raise Unmeasured("commissioned improvement retained violation rows")
+    baseline = report.get("baseline_green", {})
     if (
-        defect.get("result", {}).get("output_sha256")
-        == improvement.get("result", {}).get("output_sha256")
+        baseline.get("status") != "PASS"
+        or baseline.get("m8_r_violations") != 0
+        or baseline.get("m8_o_violations") != 0
+        or baseline.get("violations") != []
     ):
-        raise Unmeasured("commissioned defect and improvement TIFF hashes are identical")
+        raise Unmeasured("commissioned baseline is not a zero-violation PASS")
+    if defect.get("result", {}).get("output_sha256") == improvement.get(
+        "result", {}
+    ).get("output_sha256"):
+        raise Unmeasured(
+            "commissioned defect and improvement TIFF hashes are identical"
+        )
     numeric_cases = report.get("numeric_cases")
-    if not isinstance(numeric_cases, Mapping) or len(numeric_cases) != 8:
-        raise Unmeasured("commissioning report does not contain all eight numeric cases")
+    expected_numeric_names = {
+        "convex_bilinear_green",
+        "copy_green",
+        "in_range_high_red",
+        "in_range_low_red",
+        "unrepresentable_high_at_rail_green",
+        "unrepresentable_high_off_rail_red",
+        "unrepresentable_low_at_rail_green",
+        "unrepresentable_low_off_rail_red",
+    }
+    if (
+        not isinstance(numeric_cases, Mapping)
+        or set(numeric_cases) != expected_numeric_names
+    ):
+        raise Unmeasured(
+            "commissioning report does not contain all eight numeric cases"
+        )
     if any(not isinstance(case, Mapping) for case in numeric_cases.values()):
         raise Unmeasured("a numeric commissioning case is malformed")
     if any(
@@ -1595,10 +2317,73 @@ def validate_commission_report(
         raise Unmeasured("a numeric commissioning case did not match its expectation")
     if report.get("interval_containment", {}).get("misses") != 0:
         raise Unmeasured("outward interval commissioning found a containment miss")
+    quantizer = report.get("quantizer_case", {})
+    if (
+        quantizer.get("intermediate_u16") != 1013
+        or quantizer.get("green_violation") is not False
+        or quantizer.get("red_violation") is not True
+    ):
+        raise Unmeasured("intermediate-u16 commissioning is incomplete or wrong")
+    crop_case = report.get("crop_origin_case", {})
+    if (
+        crop_case.get("correct_origin_violations") != 0
+        or crop_case.get("wrong_origin_violations") != 6
+        or crop_case.get("expected_wrong_origin_violations") != 6
+    ):
+        raise Unmeasured("crop-origin commissioning is incomplete or wrong")
+    kernel_cases = report.get("m8_r_kernel_cases", {})
+    arms = kernel_cases.get("arms", {})
+    expected_exact = kernel_cases.get("expected_exact", {})
+    required_exact = {
+        "catmull_hard_step": {
+            "denominator": 252,
+            "lower_violations": 14,
+            "upper_violations": 14,
+            "violations": 28,
+        },
+        "clamped_hard_step": {
+            "denominator": 252,
+            "lower_violations": 0,
+            "upper_violations": 0,
+            "violations": 0,
+        },
+        "widened_clamp_sabotage": {
+            "denominator": 252,
+            "lower_violations": 14,
+            "upper_violations": 14,
+            "violations": 28,
+        },
+        "explicit_high_low": {
+            "denominator": 252,
+            "lower_violations": 1,
+            "upper_violations": 1,
+            "violations": 2,
+        },
+    }
+    if expected_exact != required_exact or any(
+        arms.get(name) != counts for name, counts in required_exact.items()
+    ):
+        raise Unmeasured("M8-R exact-count commissioning is incomplete or wrong")
+    if (
+        any(
+            arms.get(name, {}).get("violations") != 0
+            for name in ("copy_null", "clamped_copy_null", "convex_bilinear_null")
+        )
+        or kernel_cases.get("clamped_copy_bit_exact") is not True
+    ):
+        raise Unmeasured("M8-R null commissioning is incomplete or wrong")
+    inverse_gain = report.get("inverse_gain_order_case", {})
+    if (
+        inverse_gain.get("actual_intermediate_u16") != 1
+        or inverse_gain.get("direct_division_intermediate_u16") != 2
+        or inverse_gain.get("distinguishes_operation_order") is not True
+    ):
+        raise Unmeasured("inverse-gain operation-order commissioning is incomplete")
     pairing = report.get("green_pairing_case", {})
-    if pairing.get("same_frame_violation") is not True or pairing.get(
-        "independent_site_violation"
-    ) is not False:
+    if (
+        pairing.get("same_frame_violation") is not True
+        or pairing.get("independent_site_violation") is not False
+    ):
         raise Unmeasured("green-pairing commissioning does not distinguish the rules")
     fail_closed = report.get("fail_closed", {})
     if (
@@ -1612,8 +2397,462 @@ def validate_commission_report(
     return {
         "path": str(file.path),
         "sha256": file.sha256,
-        "degradation": "one planted lower violation caught",
-        "improvement": "the planted violation removed",
+        "degradation": "planted lower and upper violations caught",
+        "improvement": "both planted violations reversed to PASS",
+    }
+
+
+def validate_checker_fixture(
+    manifest_file: FrozenFile,
+    preregistration: FrozenFile,
+    prereg: Mapping[str, Any],
+) -> dict[str, Any]:
+    fixture_dir = manifest_file.path.parent
+    try:
+        document = json.loads(manifest_file.path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise Unmeasured(
+            f"invalid checker fixture manifest {manifest_file.path}"
+        ) from error
+    if (
+        not isinstance(document, Mapping)
+        or document.get("schema") != "m136-commissioning-fixture-manifest"
+        or document.get("schema_version") != 1
+    ):
+        raise Unmeasured("checker fixture manifest has an unsupported schema")
+    prereg_ref = document.get("preregistration")
+    if (
+        not isinstance(prereg_ref, Mapping)
+        or Path(str(prereg_ref.get("path", ""))).resolve(strict=True)
+        != preregistration.path
+        or prereg_ref.get("sha256") != preregistration.sha256
+        or prereg_ref.get("protocol") != PROTOCOL
+        or prereg_ref.get("status") != prereg.get("status")
+        or prereg_ref.get("result") != prereg.get("result")
+    ):
+        raise Disagreement("checker fixture identifies a different preregistration")
+    semantics = document.get("fixture_semantics")
+    if (
+        not isinstance(semantics, Mapping)
+        or semantics.get("numeric_cases") != FIXTURE_REPRESENTATION
+    ):
+        raise Unmeasured("checker fixture has not adopted the numeric identity ruling")
+
+    inventory = document.get("artifacts")
+    if not isinstance(inventory, list):
+        raise Unmeasured("checker fixture manifest omits its artifact inventory")
+    declared: dict[str, Mapping[str, Any]] = {}
+    for entry in inventory:
+        if not isinstance(entry, Mapping):
+            raise Unmeasured("checker fixture inventory entry is not an object")
+        name = str(entry.get("path", ""))
+        if not name or Path(name).name != name or name in declared:
+            raise Unmeasured("checker fixture inventory has an invalid path")
+        declared[name] = entry
+    observed = {
+        path.name
+        for path in fixture_dir.iterdir()
+        if path.is_file() and path.name != manifest_file.path.name
+    }
+    if set(declared) != observed:
+        raise Unmeasured("checker fixture inventory does not match its directory")
+    for name, metadata in declared.items():
+        path = fixture_dir / name
+        if metadata.get("bytes") != path.stat().st_size or metadata.get(
+            "sha256"
+        ) != sha256_file(path):
+            raise Disagreement(f"checker fixture artifact changed: {name}")
+
+    numeric_path = fixture_dir / "m8-o-numeric-cases.json"
+    intermediate_path = fixture_dir / "intermediate-quantizer-case.json"
+    crop_path = fixture_dir / "crop-origin-case.json"
+    try:
+        numeric = json.loads(numeric_path.read_text(encoding="utf-8"))
+        intermediate = json.loads(intermediate_path.read_text(encoding="utf-8"))
+        crop = json.loads(crop_path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise Unmeasured("checker fixture JSON is unreadable") from error
+    frozen_commissioning = prereg.get("commissioning", {})
+    expected_numeric = frozen_commissioning.get("m8_o_numeric_cases", {})
+    numeric_cases = numeric.get("cases") if isinstance(numeric, Mapping) else None
+    if (
+        numeric.get("schema_version") != 1
+        or numeric.get("case_count") != 8
+        or not isinstance(numeric_cases, Mapping)
+        or set(numeric_cases) != set(expected_numeric)
+    ):
+        raise Unmeasured("checker numeric fixture is incomplete")
+    for name, expected in expected_numeric.items():
+        actual = numeric_cases[name]
+        if (
+            not isinstance(actual, Mapping)
+            or actual.get("representation_map") != FIXTURE_REPRESENTATION
+            or {
+                key: actual.get(key)
+                for key in ("lo", "hi", "tau", "encoded", "expected_violations")
+            }
+            != {
+                key: expected.get(key)
+                for key in ("lo", "hi", "tau", "encoded", "expected_violations")
+            }
+        ):
+            raise Disagreement(f"checker numeric fixture differs at {name}")
+    expected_intermediate = frozen_commissioning.get("intermediate_quantizer_case", {})
+    if (
+        intermediate.get("schema_version") != 1
+        or intermediate.get("case") != expected_intermediate
+    ):
+        raise Disagreement("checker intermediate-quantizer fixture differs")
+    expected_crop = frozen_commissioning.get("crop_origin_case", {})
+    if crop.get("schema_version") != 1 or crop.get("case") != expected_crop:
+        raise Disagreement("checker crop-origin fixture differs")
+
+    source = np.load(fixture_dir / "crop-origin-source.npy", allow_pickle=False)
+    correct = tifffile.imread(fixture_dir / "crop-origin-correct.tiff")
+    wrong = tifffile.imread(fixture_dir / "crop-origin-wrong.tiff")
+    if source.shape != (8, 8) or source.dtype != np.float64:
+        raise Unmeasured("checker crop-origin source grid has wrong shape/dtype")
+    expected_source = np.asarray(
+        8 * np.indices((8, 8), dtype=np.float64)[0]
+        + np.indices((8, 8), dtype=np.float64)[1],
+        dtype=np.float64,
+    )
+    if not np.array_equal(source, expected_source):
+        raise Disagreement("checker crop-origin source grid has wrong values")
+    origin_x = int(expected_crop["origin_x"])
+    origin_y = int(expected_crop["origin_y"])
+    height = int(expected_crop["compact_height"])
+    width = int(expected_crop["compact_width"])
+    divisor_match = re.fullmatch(
+        r"F\(z\)=z/(\d+) before final-u16 serialization",
+        str(expected_crop["normalization"]),
+    )
+    if divisor_match is None:
+        raise Unmeasured("unsupported frozen crop-origin normalization")
+    divisor = float(divisor_match.group(1))
+
+    def encode(values: np.ndarray) -> np.ndarray:
+        return np.asarray(
+            np.floor(np.clip(values / divisor, 0.0, 1.0) * U16_MAX + 0.5),
+            dtype=np.uint16,
+        )
+
+    expected_correct = encode(
+        source[origin_y : origin_y + height, origin_x : origin_x + width]
+    )
+    expected_wrong = encode(source[:height, :width])
+    if not np.array_equal(correct, expected_correct) or not np.array_equal(
+        wrong, expected_wrong
+    ):
+        raise Disagreement("checker crop-origin TIFF fixture has wrong pixels")
+    if int(np.count_nonzero(correct != wrong)) != int(
+        expected_crop["expected_wrong_origin_violations"]
+    ):
+        raise Disagreement("checker crop-origin fixture does not plant six defects")
+    return {
+        "manifest": {
+            "path": str(manifest_file.path),
+            "sha256": manifest_file.sha256,
+        },
+        "directory": str(fixture_dir),
+        "artifacts": len(declared),
+        "numeric_representation": FIXTURE_REPRESENTATION,
+        "crop_defects_landed": int(np.count_nonzero(correct != wrong)),
+    }
+
+
+def validate_checker_commission_artifacts(
+    report_file: FrozenFile,
+    evidence_file: FrozenFile,
+    *,
+    checker: FrozenFile,
+    fixture_manifest: FrozenFile,
+    preregistration: FrozenFile,
+) -> dict[str, Any]:
+    try:
+        report = json.loads(report_file.path.read_text(encoding="utf-8"))
+        evidence = json.loads(evidence_file.path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise Unmeasured("checker commissioning artifacts are unreadable") from error
+    if (
+        report.get("schema") != "m136-checker-commissioning"
+        or report.get("schema_version") != 1
+        or report.get("protocol") != CHECKER_PROTOCOL
+        or report.get("checker_version") != CHECKER_VERSION
+        or report.get("status") != "PASS"
+        or report.get("numeric_representation") != FIXTURE_REPRESENTATION
+    ):
+        raise Unmeasured("checker commissioning report is not an adopted PASS")
+    require_frozen_reference(
+        report.get("preregistration"),
+        preregistration,
+        "checker commission preregistration",
+    )
+    require_frozen_reference(
+        report.get("checker"), checker, "checker commission checker"
+    )
+    fixture = report.get("fixture")
+    if (
+        not isinstance(fixture, Mapping)
+        or Path(str(fixture.get("path", ""))).resolve(strict=True)
+        != fixture_manifest.path.parent
+        or Path(str(fixture.get("manifest", ""))).resolve(strict=True)
+        != fixture_manifest.path
+        or fixture.get("manifest_sha256") != fixture_manifest.sha256
+        or fixture.get("artifacts_validated")
+        != len(
+            [
+                path
+                for path in fixture_manifest.path.parent.iterdir()
+                if path.is_file() and path != fixture_manifest.path
+            ]
+        )
+    ):
+        raise Disagreement("checker commissioning report identifies another fixture")
+    numeric = report.get("numeric_cases")
+    expected_numeric_names = {
+        "convex_bilinear_green",
+        "copy_green",
+        "in_range_high_red",
+        "in_range_low_red",
+        "unrepresentable_high_at_rail_green",
+        "unrepresentable_high_off_rail_red",
+        "unrepresentable_low_at_rail_green",
+        "unrepresentable_low_off_rail_red",
+    }
+    if (
+        not isinstance(numeric, Mapping)
+        or set(numeric) != expected_numeric_names
+        or any(
+            not isinstance(case, Mapping)
+            or case.get("status") != "PASS"
+            or case.get("observed_violations") != case.get("expected_violations")
+            or case.get("observed_direction") != case.get("expected_direction")
+            or case.get("representation_map") != FIXTURE_REPRESENTATION
+            for case in numeric.values()
+        )
+    ):
+        raise Unmeasured("checker numeric commissioning controls are incomplete")
+    quantizer = report.get("intermediate_quantizer_case", {})
+    if (
+        quantizer.get("status") != "PASS"
+        or quantizer.get("native_expectations_match") is not True
+        or quantizer.get("green", {}).get("observed_violations") != 0
+        or quantizer.get("red", {}).get("observed_violations") != 1
+    ):
+        raise Unmeasured("checker native-quantizer commissioning is incomplete")
+    crop = report.get("crop_origin_case", {})
+    if (
+        crop.get("correct", {}).get("status") != "PASS"
+        or crop.get("correct", {}).get("observed_violations") != 0
+        or crop.get("wrong", {}).get("status") != "PASS"
+        or crop.get("wrong", {}).get("observed_violations") != 6
+    ):
+        raise Unmeasured("checker crop-origin commissioning is incomplete")
+    green_names = {
+        "convex_bilinear_green",
+        "copy_green",
+        "unrepresentable_high_at_rail_green",
+        "unrepresentable_low_at_rail_green",
+        "intermediate_quantizer_green",
+        "crop_origin_correct",
+    }
+    red_names = {
+        "in_range_high_red",
+        "in_range_low_red",
+        "unrepresentable_high_off_rail_red",
+        "unrepresentable_low_off_rail_red",
+        "intermediate_quantizer_red",
+        "crop_origin_wrong",
+    }
+    directions = report.get("direction_controls", {})
+    for label, names in (("green", green_names), ("red", red_names)):
+        control = directions.get(label, {})
+        if (
+            control.get("expected") != len(names)
+            or control.get("passed") != len(names)
+            or set(control.get("controls", [])) != names
+        ):
+            raise Unmeasured(f"checker {label} direction commissioning is incomplete")
+    counts = report.get("violation_count_controls", {})
+    if counts.get("expected") != {"zero": 6, "one": 5, "six": 1} or counts.get(
+        "observed"
+    ) != {"zero": 6, "one": 5, "six": 1}:
+        raise Unmeasured("checker violation-count commissioning is incomplete")
+    m8r = report.get("m8_r_kernel_cases", {})
+    required_m8r = {
+        "catmull_hard_step": {
+            "denominator": 252,
+            "lower_violations": 14,
+            "upper_violations": 14,
+            "violations": 28,
+        },
+        "clamped_hard_step": {
+            "denominator": 252,
+            "lower_violations": 0,
+            "upper_violations": 0,
+            "violations": 0,
+        },
+        "widened_clamp_sabotage": {
+            "denominator": 252,
+            "lower_violations": 14,
+            "upper_violations": 14,
+            "violations": 28,
+        },
+        "explicit_high_low": {
+            "denominator": 252,
+            "lower_violations": 1,
+            "upper_violations": 1,
+            "violations": 2,
+        },
+    }
+    if any(
+        m8r.get("arms", {}).get(name) != expected
+        for name, expected in required_m8r.items()
+    ) or any(
+        m8r.get("arms", {}).get(name, {}).get("violations") != 0
+        for name in ("copy_null", "clamped_copy_null", "convex_bilinear_null")
+    ):
+        raise Unmeasured("checker M8-R commissioning is incomplete")
+    if report.get("violation_evidence") != evidence_file.path.name:
+        raise Unmeasured("checker report does not name the frozen violation evidence")
+    if (
+        evidence.get("schema") != "m136-checker-commissioning-violation-evidence"
+        or evidence.get("schema_version") != 1
+        or not isinstance(evidence.get("rows"), list)
+        or evidence.get("row_count") != len(evidence["rows"])
+        or evidence["row_count"]
+        != sum(
+            counts.get("observed", {}).get(key, 0) * n
+            for key, n in (("one", 1), ("six", 6))
+        )
+    ):
+        raise Unmeasured("checker commissioning violation evidence is incomplete")
+    for row in evidence["rows"]:
+        if (
+            not isinstance(row, Mapping)
+            or row.get("direction") not in (-1, 1)
+            or row.get("q") != FINAL_Q
+        ):
+            raise Unmeasured("checker commissioning violation row is malformed")
+    return {
+        "report": {"path": str(report_file.path), "sha256": report_file.sha256},
+        "violation_evidence": {
+            "path": str(evidence_file.path),
+            "sha256": evidence_file.sha256,
+            "rows": evidence["row_count"],
+        },
+        "green_controls": 6,
+        "red_controls": 6,
+        "crop_correct_origin_violations": 0,
+    }
+
+
+def fresh_checker_commission(
+    checker: FrozenFile,
+    fixture_manifest: FrozenFile,
+    report_file: FrozenFile,
+    evidence_file: FrozenFile,
+    output_dir: Path,
+) -> dict[str, Any]:
+    if output_dir.exists():
+        raise Unmeasured(f"checker commission recheck output exists: {output_dir}")
+    command = [
+        sys.executable,
+        str(checker.path),
+        "commission",
+        "--fixtures",
+        str(fixture_manifest.path.parent),
+        "--output",
+        str(output_dir),
+    ]
+    completed = subprocess.run(
+        command,
+        cwd=checker.path.parent,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    if completed.returncode != 0:
+        raise Unmeasured(
+            "fresh checker commissioning failed: "
+            f"exit={completed.returncode}; stderr={completed.stderr[-2000:]}"
+        )
+    fresh_report = output_dir / report_file.path.name
+    fresh_evidence = output_dir / evidence_file.path.name
+    if not fresh_report.is_file() or not fresh_evidence.is_file():
+        raise Unmeasured("fresh checker commissioning omitted required artifacts")
+    if fresh_report.read_bytes() != report_file.path.read_bytes():
+        raise Disagreement(
+            "fresh checker commissioning report differs from frozen report"
+        )
+    if fresh_evidence.read_bytes() != evidence_file.path.read_bytes():
+        raise Disagreement(
+            "fresh checker commissioning evidence differs from frozen evidence"
+        )
+    return {
+        "command": command,
+        "output": str(output_dir.resolve()),
+        "report_sha256": sha256_file(fresh_report),
+        "evidence_sha256": sha256_file(fresh_evidence),
+        "byte_identical": True,
+    }
+
+
+def fresh_checker_fixture(
+    fixture_tool: FrozenFile,
+    preregistration: FrozenFile,
+    fixture_manifest: FrozenFile,
+    output_dir: Path,
+) -> dict[str, Any]:
+    if output_dir.exists():
+        raise Unmeasured(f"checker fixture recheck output exists: {output_dir}")
+    command = [
+        sys.executable,
+        str(fixture_tool.path),
+        "commission",
+        "--preregistration",
+        str(preregistration.path),
+        "--output",
+        str(output_dir),
+    ]
+    completed = subprocess.run(
+        command,
+        cwd=fixture_tool.path.parent,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    if completed.returncode != 0:
+        raise Unmeasured(
+            "fresh checker fixture generation failed: "
+            f"exit={completed.returncode}; stderr={completed.stderr[-2000:]}"
+        )
+    expected_dir = fixture_manifest.path.parent
+    expected_files = {
+        path.relative_to(expected_dir).as_posix(): path
+        for path in expected_dir.rglob("*")
+        if path.is_file()
+    }
+    fresh_files = {
+        path.relative_to(output_dir).as_posix(): path
+        for path in output_dir.rglob("*")
+        if path.is_file()
+    }
+    if set(expected_files) != set(fresh_files):
+        raise Disagreement(
+            "fresh checker fixture inventory differs from frozen fixture"
+        )
+    for name, expected in expected_files.items():
+        if expected.read_bytes() != fresh_files[name].read_bytes():
+            raise Disagreement(f"fresh checker fixture differs at {name}")
+    return {
+        "command": command,
+        "output": str(output_dir.resolve()),
+        "files": len(expected_files),
+        "byte_identical": True,
     }
 
 
@@ -1630,12 +2869,270 @@ def build_relevant_source_files(source_root: Path) -> set[str]:
     hook = source_root / "experiments" / "M136-m8o-bar" / "m8_trace_v3.rs"
     if hook.is_file():
         paths.add(hook)
-    if not (source_root / "Cargo.toml").is_file() or not (source_root / "crates").is_dir():
+    if (
+        not (source_root / "Cargo.toml").is_file()
+        or not (source_root / "crates").is_dir()
+    ):
         raise Unmeasured(f"{source_root}: source snapshot lacks Cargo.toml or crates/")
     return {
         path.relative_to(source_root).as_posix()
         for path in paths
         if "target" not in path.relative_to(source_root).parts
+    }
+
+
+def git_blob_sha1(payload: bytes) -> str:
+    header = f"blob {len(payload)}\0".encode("ascii")
+    return hashlib.sha1(header + payload).hexdigest()
+
+
+def committed_source_blobs(repository: Path, commit: str) -> dict[str, str]:
+    command = [
+        "git",
+        "-C",
+        str(repository),
+        "ls-tree",
+        "-r",
+        "-z",
+        commit,
+        "--",
+        "Cargo.toml",
+        "Cargo.lock",
+        "rust-toolchain.toml",
+        ".cargo",
+        "crates",
+        "experiments/M136-m8o-bar/m8_trace_v3.rs",
+    ]
+    completed = subprocess.run(
+        command,
+        check=False,
+        capture_output=True,
+        timeout=120,
+    )
+    if completed.returncode != 0:
+        raise Unmeasured(
+            "source commit cannot be enumerated: "
+            + completed.stderr.decode("utf-8", "replace")[-2000:]
+        )
+    blobs: dict[str, str] = {}
+    for record in completed.stdout.split(b"\0"):
+        if not record:
+            continue
+        try:
+            metadata, raw_path = record.split(b"\t", 1)
+            mode, kind, object_id = metadata.decode("ascii").split(" ")
+            relative = raw_path.decode("utf-8")
+        except Exception as error:
+            raise Unmeasured(
+                "git ls-tree returned malformed source evidence"
+            ) from error
+        if kind != "blob" or mode == "120000":
+            raise Unmeasured(f"unsupported build-source tree entry: {relative}")
+        blobs[relative] = object_id.lower()
+    return blobs
+
+
+def git_blob_sha256(repository: Path, object_id: str) -> str:
+    completed = subprocess.run(
+        ["git", "-C", str(repository), "cat-file", "blob", object_id],
+        check=False,
+        capture_output=True,
+        timeout=120,
+    )
+    if completed.returncode != 0:
+        raise Unmeasured(f"cannot read source-commit blob {object_id}")
+    return hashlib.sha256(completed.stdout).hexdigest().upper()
+
+
+def verify_source_patch(
+    file: FrozenFile,
+    source_root: Path,
+    source_commit: str,
+    source_hashes: Mapping[str, str],
+) -> dict[str, Any]:
+    repository = Path(__file__).resolve().parents[2]
+    try:
+        resolved_commit = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repository),
+                "rev-parse",
+                "--verify",
+                f"{source_commit}^{{commit}}",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except OSError as error:
+        raise Unmeasured("git is unavailable for source-patch verification") from error
+    if (
+        resolved_commit.returncode != 0
+        or resolved_commit.stdout.strip().lower() != source_commit.lower()
+    ):
+        raise Unmeasured(
+            "registered source commit is not an immutable repository commit"
+        )
+    committed = committed_source_blobs(repository, source_commit)
+    snapshot_paths = set(source_hashes)
+    missing = sorted(set(committed) - snapshot_paths)
+    if missing:
+        raise Unmeasured(
+            f"source snapshot deleted build-relevant commit files: {missing[:8]}"
+        )
+    changed: dict[str, dict[str, Any]] = {}
+    for relative in sorted(snapshot_paths):
+        payload = (source_root / Path(relative)).read_bytes()
+        after_blob = git_blob_sha1(payload)
+        before_blob = committed.get(relative)
+        if before_blob == after_blob:
+            continue
+        changed[relative] = {
+            "path": relative,
+            "kind": "added" if before_blob is None else "modified",
+            "base_git_blob_sha1": before_blob,
+            "base_sha256": (
+                None
+                if before_blob is None
+                else git_blob_sha256(repository, before_blob)
+            ),
+            "snapshot_git_blob_sha1": after_blob,
+            "snapshot_sha256": source_hashes[relative],
+        }
+    try:
+        document = json.loads(file.path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise Unmeasured(f"invalid source patch manifest {file.path}") from error
+    if (
+        not isinstance(document, Mapping)
+        or document.get("schema") != "m136-source-patch-v1"
+        or document.get("schema_version") != 1
+        or document.get("source_commit", "").lower() != source_commit.lower()
+        or Path(str(document.get("source_root", ""))).resolve(strict=True)
+        != source_root
+        or Path(str(document.get("repository", ""))).resolve(strict=True) != repository
+    ):
+        raise Unmeasured("source patch manifest identity is invalid")
+    rows = document.get("changed_files")
+    if not isinstance(rows, list):
+        raise Unmeasured("source patch manifest changed_files is absent")
+    declared: dict[str, Mapping[str, Any]] = {}
+    for row in rows:
+        if not isinstance(row, Mapping):
+            raise Unmeasured("source patch row is not an object")
+        relative = str(row.get("path", "")).replace("\\", "/")
+        if not relative or relative in declared:
+            raise Unmeasured("source patch path is empty or duplicated")
+        declared[relative] = row
+    if declared != changed:
+        raise Disagreement(
+            "source patch manifest does not match immutable git evidence"
+        )
+    return {
+        "path": str(file.path),
+        "sha256": file.sha256,
+        "repository": str(repository),
+        "source_commit": source_commit,
+        "changed_files": list(changed.values()),
+    }
+
+
+def verify_instrument_freeze(
+    file: FrozenFile,
+    *,
+    source_commit: str,
+    preregistration: FrozenFile,
+    source_root: Path,
+    source_manifest: FrozenFile,
+    source_patch: FrozenFile,
+    binary: FrozenFile,
+    instruments: Mapping[str, FrozenFile],
+    verifier: FrozenFile,
+    verifier_commission: FrozenFile,
+    fixture_manifest: FrozenFile,
+    checker_commission_report: FrozenFile,
+    checker_commission_evidence: FrozenFile,
+) -> dict[str, Any]:
+    try:
+        document = json.loads(file.path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise Unmeasured(f"invalid instrument freeze {file.path}") from error
+    if (
+        not isinstance(document, Mapping)
+        or document.get("schema") != "m136-instrument-freeze-v1"
+        or document.get("schema_version") != 1
+        or document.get("protocol") != PROTOCOL
+        or document.get("status") != "FROZEN_PRE_TARGET"
+        or document.get("source_commit", "").lower() != source_commit.lower()
+    ):
+        raise Unmeasured("instrument freeze identity is invalid")
+    if not isinstance(document.get("created_utc"), str) or not document["created_utc"]:
+        raise Unmeasured("instrument freeze omits its creation timestamp")
+    require_frozen_reference(
+        document.get("preregistration"),
+        preregistration,
+        "instrument freeze preregistration",
+    )
+    snapshot = document.get("source_snapshot")
+    if (
+        not isinstance(snapshot, Mapping)
+        or Path(str(snapshot.get("root", ""))).resolve(strict=True) != source_root
+    ):
+        raise Disagreement("instrument freeze source root mismatch")
+    require_frozen_reference(
+        snapshot.get("manifest"), source_manifest, "instrument freeze source manifest"
+    )
+    require_frozen_reference(
+        snapshot.get("patch"), source_patch, "instrument freeze source patch"
+    )
+    require_frozen_reference(
+        document.get("candidate_binary"), binary, "instrument freeze binary"
+    )
+    frozen_instruments = document.get("instruments")
+    if not isinstance(frozen_instruments, Mapping) or set(frozen_instruments) != (
+        set(instruments) | {"verifier"}
+    ):
+        raise Unmeasured("instrument freeze instrument inventory is incomplete")
+    for name, expected in {**instruments, "verifier": verifier}.items():
+        require_frozen_reference(
+            frozen_instruments.get(name),
+            expected,
+            f"instrument freeze {name}",
+        )
+    commissioning = document.get("commissioning")
+    if not isinstance(commissioning, Mapping) or set(commissioning) != {
+        "verifier_report",
+        "fixture_manifest",
+        "checker_report",
+        "checker_violation_evidence",
+    }:
+        raise Unmeasured("instrument freeze commissioning inventory is incomplete")
+    for name, expected in {
+        "verifier_report": verifier_commission,
+        "fixture_manifest": fixture_manifest,
+        "checker_report": checker_commission_report,
+        "checker_violation_evidence": checker_commission_evidence,
+    }.items():
+        require_frozen_reference(
+            commissioning.get(name),
+            expected,
+            f"instrument freeze commissioning {name}",
+        )
+    versions = document.get("versions")
+    if (
+        not isinstance(versions, Mapping)
+        or not versions
+        or any(not isinstance(value, str) or not value for value in versions.values())
+    ):
+        raise Unmeasured("instrument freeze tool versions are absent")
+    return {
+        "path": str(file.path),
+        "sha256": file.sha256,
+        "status": "FROZEN_PRE_TARGET",
+        "created_utc": document["created_utc"],
+        "versions": dict(versions),
     }
 
 
@@ -1649,12 +3146,19 @@ def verify_source_manifest(
         document = json.loads(file.path.read_text(encoding="utf-8"))
     except Exception as error:
         raise Unmeasured(f"invalid source snapshot manifest {file.path}") from error
-    if document.get("schema") != SOURCE_MANIFEST_SCHEMA:
-        raise Unmeasured(
-            f"source manifest schema must be {SOURCE_MANIFEST_SCHEMA!r}"
-        )
+    if (
+        document.get("schema") != SOURCE_MANIFEST_SCHEMA
+        or document.get("schema_version") != 1
+    ):
+        raise Unmeasured(f"source manifest schema must be {SOURCE_MANIFEST_SCHEMA!r}")
     if str(document.get("source_commit", "")).lower() != expected_commit.lower():
         raise Unmeasured("source manifest commit differs from registered source commit")
+    try:
+        declared_root = Path(str(document.get("source_root", ""))).resolve(strict=True)
+    except Exception as error:
+        raise Unmeasured("source manifest root is absent") from error
+    if declared_root != source_root:
+        raise Disagreement("source manifest names another source snapshot")
     raw_files = document.get("files")
     if not isinstance(raw_files, list) or not raw_files:
         raise Unmeasured("source manifest files must be a non-empty list")
@@ -1687,7 +3191,9 @@ def verify_source_manifest(
                 [os.path.normcase(str(source_root)), os.path.normcase(str(path))]
             )
         except ValueError as error:
-            raise Unmeasured(f"source manifest path escapes root: {relative}") from error
+            raise Unmeasured(
+                f"source manifest path escapes root: {relative}"
+            ) from error
         if os.path.normcase(common) != os.path.normcase(str(source_root)):
             raise Unmeasured(f"source manifest path escapes root: {relative}")
         if not path.is_file() or path.is_symlink():
@@ -1723,31 +3229,239 @@ def verify_source_manifest(
         "sha256": file.sha256,
         "source_commit": expected_commit,
         "files": len(observed),
+        "file_sha256": observed,
         "matching_hook_paths": hook_matches,
     }
 
 
-def verify_manifest(manifest_path: Path, report_path: Path, chunk_rows: int) -> tuple[int, dict[str, Any]]:
+def validate_input_fingerprint(
+    before: FrozenFile,
+    after: FrozenFile,
+    input_dir: Path,
+) -> dict[str, Any]:
+    documents: list[Mapping[str, Any]] = []
+    for label, frozen, phase in (
+        ("before", before, "before-render"),
+        ("after", after, "after-census"),
+    ):
+        try:
+            document = json.loads(frozen.path.read_text(encoding="utf-8"))
+        except Exception as error:
+            raise Unmeasured(f"{label} input fingerprint is unreadable") from error
+        if (
+            not isinstance(document, Mapping)
+            or document.get("schema") != "m136-input-fingerprint-v1"
+            or document.get("schema_version") != 1
+            or document.get("phase") != phase
+        ):
+            raise Unmeasured(f"{label} input fingerprint has an unsupported schema")
+        try:
+            recorded_root = Path(str(document.get("root", ""))).resolve(strict=True)
+        except Exception as error:
+            raise Unmeasured(f"{label} input fingerprint root is absent") from error
+        if recorded_root != input_dir:
+            raise Disagreement(f"{label} input fingerprint names another root")
+        documents.append(document)
+
+    def indexed(
+        document: Mapping[str, Any], label: str
+    ) -> dict[str, Mapping[str, Any]]:
+        rows = document.get("files")
+        if not isinstance(rows, list):
+            raise Unmeasured(f"{label} input fingerprint files are absent")
+        result: dict[str, Mapping[str, Any]] = {}
+        total = 0
+        for row in rows:
+            if not isinstance(row, Mapping):
+                raise Unmeasured(f"{label} input fingerprint row is malformed")
+            relative = str(row.get("path", "")).replace("\\", "/")
+            path = Path(relative)
+            if (
+                not relative
+                or path.is_absolute()
+                or ".." in path.parts
+                or relative in result
+            ):
+                raise Unmeasured(f"{label} input fingerprint path is invalid")
+            size = row.get("bytes")
+            ticks = row.get("last_write_utc_ticks")
+            digest = str(row.get("sha256", "")).upper()
+            if (
+                not isinstance(size, int)
+                or isinstance(size, bool)
+                or size < 0
+                or not isinstance(ticks, int)
+                or isinstance(ticks, bool)
+                or ticks < 0
+                or re.fullmatch(r"[0-9A-F]{64}", digest) is None
+            ):
+                raise Unmeasured(f"{label} input fingerprint metadata is invalid")
+            result[relative] = {
+                "path": relative,
+                "bytes": size,
+                "last_write_utc_ticks": ticks,
+                "sha256": digest,
+            }
+            total += size
+        if (
+            document.get("file_count") != len(result)
+            or document.get("total_bytes") != total
+        ):
+            raise Unmeasured(f"{label} input fingerprint totals are wrong")
+        return result
+
+    before_rows = indexed(documents[0], "before")
+    after_rows = indexed(documents[1], "after")
+    if before_rows != after_rows:
+        raise Disagreement("input fingerprint changed between render boundaries")
+    current_paths = {
+        path.relative_to(input_dir).as_posix(): path
+        for path in input_dir.rglob("*")
+        if path.is_file()
+    }
+    if set(current_paths) != set(before_rows):
+        raise Disagreement("current input inventory differs from frozen fingerprints")
+    for relative, path in current_paths.items():
+        if path.is_symlink():
+            raise Unmeasured(f"input fingerprint refuses symlink: {relative}")
+        expected = before_rows[relative]
+        current_ticks = path.stat().st_mtime_ns // 100 + 621355968000000000
+        if (
+            path.stat().st_size != expected["bytes"]
+            or current_ticks != expected["last_write_utc_ticks"]
+            or sha256_file(path) != expected["sha256"]
+        ):
+            raise Disagreement(f"current input file changed: {relative}")
+    return {
+        "before": {"path": str(before.path), "sha256": before.sha256},
+        "after": {"path": str(after.path), "sha256": after.sha256},
+        "files": len(before_rows),
+        "bytes": sum(row["bytes"] for row in before_rows.values()),
+        "unchanged": True,
+    }
+
+
+def validate_render_provenance(
+    file: FrozenFile,
+    *,
+    capture: str,
+    source_commit: str,
+    binary: FrozenFile,
+    input_dir: Path,
+    output_tiff: FrozenFile,
+    warpmap: FrozenFile,
+    trace_state: Path,
+    environment: Mapping[str, str],
+    input_fingerprint_before: FrozenFile,
+    instrument_freeze: FrozenFile,
+) -> dict[str, Any]:
+    try:
+        document = json.loads(file.path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise Unmeasured(f"{capture}: render provenance is unreadable") from error
+    if (
+        not isinstance(document, Mapping)
+        or document.get("schema") != "m136-render-provenance-v1"
+        or document.get("schema_version") != 1
+        or document.get("protocol") != PROTOCOL
+        or document.get("capture") != capture
+        or document.get("source_commit") != source_commit.lower()
+        or document.get("exit_code") != 0
+    ):
+        raise Unmeasured(f"{capture}: render provenance identity is invalid")
+    require_frozen_reference(
+        document.get("candidate_binary"), binary, f"{capture} render binary"
+    )
+    require_frozen_reference(
+        document.get("warpmap"), warpmap, f"{capture} render warpmap"
+    )
+    require_frozen_reference(
+        document.get("output_tiff"), output_tiff, f"{capture} render output"
+    )
+    require_frozen_reference(
+        document.get("input_fingerprint_before"),
+        input_fingerprint_before,
+        f"{capture} render input fingerprint",
+    )
+    require_frozen_reference(
+        document.get("instrument_freeze"),
+        instrument_freeze,
+        f"{capture} render instrument freeze",
+    )
+    if instrument_freeze.path.stat().st_mtime_ns > output_tiff.path.stat().st_mtime_ns:
+        raise Unmeasured(f"{capture}: instrument freeze postdates target TIFF")
+    try:
+        recorded_input = Path(str(document.get("input_dir", ""))).resolve(strict=True)
+        recorded_trace = Path(str(document.get("trace_state", ""))).resolve(strict=True)
+    except Exception as error:
+        raise Unmeasured(f"{capture}: render provenance path is absent") from error
+    if recorded_input != input_dir or recorded_trace != trace_state:
+        raise Disagreement(f"{capture}: render provenance path mismatch")
+    if document.get("environment") != dict(environment):
+        raise Disagreement(f"{capture}: render environment mismatch")
+    expected_command = [
+        str(binary.path),
+        "stack",
+        str(input_dir),
+        "--out",
+        str(output_tiff.path),
+        "--merge",
+        "pyramid",
+        "--cover",
+        "crop",
+        "--resampler",
+        "clamped-catmull",
+        "--fix-ca",
+        "off",
+    ]
+    if document.get("command") != expected_command:
+        raise Disagreement(f"{capture}: render command differs from preregistration")
+    for field in ("started_utc", "completed_utc"):
+        if not isinstance(document.get(field), str) or not document[field]:
+            raise Unmeasured(f"{capture}: render provenance omits {field}")
+    return {
+        "path": str(file.path),
+        "sha256": file.sha256,
+        "command": expected_command,
+        "environment": dict(environment),
+        "exit_code": 0,
+    }
+
+
+def verify_manifest(
+    manifest_path: Path, report_path: Path, chunk_rows: int
+) -> tuple[int, dict[str, Any]]:
+    output_root = Path(__file__).with_name("out").resolve()
+    require_under(manifest_path, output_root, "verifier manifest")
+    require_under(report_path, output_root, "verifier report")
     manifest_file_hash = sha256_file(manifest_path)
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     except Exception as error:
         raise Unmeasured(f"invalid verifier manifest {manifest_path}") from error
-    if not isinstance(manifest, Mapping) or manifest.get("schema") != MANIFEST_SCHEMA:
+    if (
+        not isinstance(manifest, Mapping)
+        or manifest.get("schema") != MANIFEST_SCHEMA
+        or manifest.get("protocol") != VERIFIER_PROTOCOL
+    ):
         raise Unmeasured(f"manifest schema must be {MANIFEST_SCHEMA!r}")
 
     prereg_file = require_absolute_existing_file(
         str(manifest.get("preregistration", "")), "preregistration"
     )
     prereg_hash = sha256_file(prereg_file)
-    frozen_prereg = Path(__file__).with_name("clamped-m8o-preregistration.json").resolve()
+    prereg_canonical_hash = sha256_canonical_text(prereg_file)
+    frozen_prereg = (
+        Path(__file__).with_name("clamped-m8o-preregistration.json").resolve()
+    )
     if prereg_file != frozen_prereg:
         raise Unmeasured(
             f"preregistration must be the frozen repository file {frozen_prereg}"
         )
-    if prereg_hash != PREREG_SHA256:
+    if prereg_canonical_hash != PREREG_CANONICAL_SHA256:
         raise Unmeasured(
-            f"frozen preregistration hash mismatch: expected {PREREG_SHA256}, observed {prereg_hash}"
+            "frozen preregistration canonical hash mismatch: expected "
+            f"{PREREG_CANONICAL_SHA256}, observed {prereg_canonical_hash}"
         )
     prereg = json.loads(prereg_file.read_text(encoding="utf-8"))
     if prereg.get("protocol") != PROTOCOL:
@@ -1756,46 +3470,180 @@ def verify_manifest(manifest_path: Path, report_path: Path, chunk_rows: int) -> 
     if decision.get("example_40") != "V=40 is FAIL." or "V=0" not in str(
         decision.get("m8_o_pass", "")
     ):
-        raise Unmeasured("preregistration decision rule is not the frozen exact-zero rule")
-    interpretation_path = Path(__file__).with_name("prospective-interpretations.md").resolve()
+        raise Unmeasured(
+            "preregistration decision rule is not the frozen exact-zero rule"
+        )
+    interpretation_path = (
+        Path(__file__).with_name("prospective-interpretations.md").resolve()
+    )
     if not interpretation_path.is_file():
         raise Unmeasured(f"prospective interpretation is absent: {interpretation_path}")
     interpretation_hash = sha256_file(interpretation_path)
-    if interpretation_hash != INTERPRETATION_SHA256:
+    interpretation_canonical_hash = sha256_canonical_text(interpretation_path)
+    if interpretation_canonical_hash != INTERPRETATION_CANONICAL_SHA256:
         raise Unmeasured(
             "prospective interpretation bytes differ from the pre-target ruling"
         )
     verifier_path = Path(__file__).resolve()
     verifier_hash = sha256_file(verifier_path)
+    verifier_canonical_hash = sha256_canonical_text(verifier_path)
     commission_file = frozen_file(
         manifest.get("commission_report", {}), "verifier commissioning report"
     )
+    expected_commission_path = verifier_path.with_name("verifier-commission.json")
+    if commission_file.path != expected_commission_path:
+        raise Unmeasured(
+            f"commission report must be the frozen repository artifact "
+            f"{expected_commission_path}"
+        )
     commission_evidence = validate_commission_report(
-        commission_file, prereg_hash, interpretation_hash, verifier_hash
+        commission_file,
+        prereg_canonical_hash,
+        interpretation_canonical_hash,
+        verifier_canonical_hash,
     )
+    recheck_path = report_path.with_name(report_path.stem + "-commission-recheck.json")
+    if recheck_path.exists():
+        raise Unmeasured(f"commission recheck output already exists: {recheck_path}")
+    recheck_work = verifier_path.with_name("w")
+    recheck = commission(prereg_file, recheck_path, recheck_work)
+    frozen_commission = json.loads(commission_file.path.read_text(encoding="utf-8"))
+    if recheck != frozen_commission:
+        raise Unmeasured(
+            "fresh commissioning does not reproduce the frozen commissioning report"
+        )
+    commission_evidence["fresh_recheck"] = {
+        "path": str(recheck_path.resolve()),
+        "sha256": sha256_file(recheck_path),
+        "byte_identical": recheck_path.read_bytes()
+        == commission_file.path.read_bytes(),
+    }
+    if not commission_evidence["fresh_recheck"]["byte_identical"]:
+        raise Unmeasured(
+            "fresh commissioning report is not byte-identical to frozen report"
+        )
 
     source_root = require_absolute_existing_dir(
         str(manifest.get("source_root", "")), "source_root"
     )
     expected_commit = str(manifest.get("source_commit", ""))
-    if not re.fullmatch(r"[0-9a-fA-F]{40}", expected_commit):
-        raise Unmeasured("source_commit is not a full 40-digit commit")
+    if not re.fullmatch(r"[0-9a-f]{40}", expected_commit):
+        raise Unmeasured("source_commit is not a lowercase full 40-digit commit")
     binary = frozen_file(manifest.get("binary", {}), "candidate binary")
     instruments = parse_instruments(manifest.get("instruments"))
+    fixture_manifest = frozen_file(
+        manifest.get("checker_fixture_manifest", {}),
+        "checker fixture manifest",
+    )
+    checker_commission_raw = manifest.get("checker_commission_artifacts")
+    if not isinstance(checker_commission_raw, Mapping) or set(
+        checker_commission_raw
+    ) != {"report", "violation_evidence"}:
+        raise Unmeasured(
+            "checker_commission_artifacts must contain report and violation_evidence"
+        )
+    checker_commission_report = frozen_file(
+        checker_commission_raw["report"], "checker commissioning report"
+    )
+    checker_commission_violation_evidence = frozen_file(
+        checker_commission_raw["violation_evidence"],
+        "checker commissioning violation evidence",
+    )
+    if (
+        checker_commission_report.path.name != "commissioning.json"
+        or checker_commission_violation_evidence.path.name != "violation-evidence.json"
+        or checker_commission_report.path.parent
+        != checker_commission_violation_evidence.path.parent
+    ):
+        raise Unmeasured("checker commissioning artifact paths are not canonical")
+    checker_fixture_evidence = validate_checker_fixture(
+        fixture_manifest,
+        FrozenFile(prereg_file, prereg_hash),
+        prereg,
+    )
+    checker_commission_evidence = validate_checker_commission_artifacts(
+        checker_commission_report,
+        checker_commission_violation_evidence,
+        checker=instruments["checker"],
+        fixture_manifest=fixture_manifest,
+        preregistration=FrozenFile(prereg_file, prereg_hash),
+    )
+    checker_fixture_recheck_dir = report_path.with_name(
+        report_path.stem + "-checker-fixture-recheck"
+    )
+    checker_fixture_evidence["fresh_recheck"] = fresh_checker_fixture(
+        instruments["fixture"],
+        FrozenFile(prereg_file, prereg_hash),
+        fixture_manifest,
+        checker_fixture_recheck_dir,
+    )
+    checker_recheck_dir = report_path.with_name(
+        report_path.stem + "-checker-commission-recheck"
+    )
+    checker_commission_evidence["fresh_recheck"] = fresh_checker_commission(
+        instruments["checker"],
+        fixture_manifest,
+        checker_commission_report,
+        checker_commission_violation_evidence,
+        checker_recheck_dir,
+    )
     source_manifest = frozen_file(
         manifest.get("source_manifest", {}), "source snapshot manifest"
     )
     source_evidence = verify_source_manifest(
         source_manifest, source_root, expected_commit, instruments["hook"].sha256
     )
+    source_patch = frozen_file(
+        manifest.get("source_patch", {}), "source patch manifest"
+    )
+    source_patch_evidence = verify_source_patch(
+        source_patch,
+        source_root,
+        expected_commit,
+        source_evidence["file_sha256"],
+    )
     try:
         binary_common = os.path.commonpath(
             [os.path.normcase(str(source_root)), os.path.normcase(str(binary.path))]
         )
     except ValueError as error:
-        raise Unmeasured("candidate binary is outside the source snapshot volume") from error
+        raise Unmeasured(
+            "candidate binary is outside the source snapshot volume"
+        ) from error
     if os.path.normcase(binary_common) != os.path.normcase(str(source_root)):
         raise Unmeasured("candidate binary is outside the source snapshot")
+    instrument_freeze_file = frozen_file(
+        manifest.get("instrument_freeze", {}), "instrument freeze"
+    )
+    instrument_freeze_evidence = verify_instrument_freeze(
+        instrument_freeze_file,
+        source_commit=expected_commit,
+        preregistration=FrozenFile(prereg_file, prereg_hash),
+        source_root=source_root,
+        source_manifest=source_manifest,
+        source_patch=source_patch,
+        binary=binary,
+        instruments=instruments,
+        verifier=FrozenFile(verifier_path, verifier_hash),
+        verifier_commission=commission_file,
+        fixture_manifest=fixture_manifest,
+        checker_commission_report=checker_commission_report,
+        checker_commission_evidence=checker_commission_violation_evidence,
+    )
+    for label, path in (
+        ("source root", source_root),
+        ("source manifest", source_manifest.path),
+        ("source patch", source_patch.path),
+        ("candidate binary", binary.path),
+        ("checker fixture", fixture_manifest.path),
+        ("checker commission report", checker_commission_report.path),
+        (
+            "checker commission violation evidence",
+            checker_commission_violation_evidence.path,
+        ),
+        ("instrument freeze", instrument_freeze_file.path),
+    ):
+        require_under(path, output_root, label)
 
     prereg_captures = {
         item["name"]: item for item in prereg.get("scope", {}).get("captures", [])
@@ -1803,10 +3651,16 @@ def verify_manifest(manifest_path: Path, report_path: Path, chunk_rows: int) -> 
     raw_captures = manifest.get("captures")
     if not isinstance(raw_captures, list) or not raw_captures:
         raise Unmeasured("manifest captures must be a non-empty list")
-    if {item.get("name") for item in raw_captures} != set(prereg_captures):
+    if len(raw_captures) != len(prereg_captures) or {
+        item.get("name") for item in raw_captures
+    } != set(prereg_captures):
         raise Unmeasured("manifest capture set differs from preregistration")
 
     capture_results: list[dict[str, Any]] = []
+    postflight_files: list[tuple[str, FrozenFile]] = []
+    postflight_inputs: list[
+        tuple[str, FrozenFile, FrozenFile, Path, dict[str, Any]]
+    ] = []
     artifact_root = report_path.parent / (report_path.stem + "-artifacts")
     if artifact_root.exists():
         raise Unmeasured(f"verifier output directory already exists: {artifact_root}")
@@ -1816,7 +3670,9 @@ def verify_manifest(manifest_path: Path, report_path: Path, chunk_rows: int) -> 
             raise Unmeasured("capture entry must be an object")
         name = str(item["name"])
         registered = prereg_captures[name]
-        input_dir = require_absolute_existing_dir(str(item.get("input_dir", "")), f"{name} input")
+        input_dir = require_absolute_existing_dir(
+            str(item.get("input_dir", "")), f"{name} input"
+        )
         if os.path.normcase(str(input_dir)) != os.path.normcase(
             str(Path(registered["input"]).resolve())
         ):
@@ -1824,12 +3680,31 @@ def verify_manifest(manifest_path: Path, report_path: Path, chunk_rows: int) -> 
         warpmap_file = frozen_file(item.get("warpmap", {}), f"{name} warpmap")
         if warpmap_file.sha256 != str(registered["map_sha256"]).upper():
             raise Unmeasured(f"{name}: warpmap hash differs from preregistration")
-        state_dir = require_absolute_existing_dir(str(item.get("state_dir", "")), f"{name} state")
+        trace_state = require_absolute_existing_dir(
+            str(item.get("trace_state", "")), f"{name} trace state"
+        )
+        checker_state = require_absolute_existing_dir(
+            str(item.get("checker_state", "")), f"{name} checker state"
+        )
+        input_fingerprint_before = frozen_file(
+            item.get("input_fingerprint_before", {}),
+            f"{name} before-render input fingerprint",
+        )
+        input_fingerprint_after = frozen_file(
+            item.get("input_fingerprint_after", {}),
+            f"{name} after-census input fingerprint",
+        )
+        input_fingerprint_evidence = validate_input_fingerprint(
+            input_fingerprint_before,
+            input_fingerprint_after,
+            input_dir,
+        )
         output_file = frozen_file(item.get("output_tiff", {}), f"{name} output TIFF")
         raw_checker_artifacts = item.get("checker_artifacts")
-        if not isinstance(raw_checker_artifacts, Mapping) or set(
-            raw_checker_artifacts
-        ) != REQUIRED_CHECKER_ARTIFACTS:
+        if (
+            not isinstance(raw_checker_artifacts, Mapping)
+            or set(raw_checker_artifacts) != REQUIRED_CHECKER_ARTIFACTS
+        ):
             raise Unmeasured(
                 f"{name}: checker_artifacts must contain exactly "
                 f"{sorted(REQUIRED_CHECKER_ARTIFACTS)}"
@@ -1845,6 +3720,8 @@ def verify_manifest(manifest_path: Path, report_path: Path, chunk_rows: int) -> 
             "projected_lower",
             "projected_upper",
             "valid_contributors",
+            "lower_frame_witness",
+            "upper_frame_witness",
             "violations",
         }
         for label, file in checker_artifacts.items():
@@ -1860,53 +3737,274 @@ def verify_manifest(manifest_path: Path, report_path: Path, chunk_rows: int) -> 
         for label, file in checker_artifacts.items():
             try:
                 common = os.path.commonpath(
-                    [os.path.normcase(str(state_dir)), os.path.normcase(str(file.path))]
+                    [
+                        os.path.normcase(str(checker_state)),
+                        os.path.normcase(str(file.path)),
+                    ]
                 )
             except ValueError as error:
                 raise Unmeasured(
                     f"{name}: checker artifact {label} is outside the state volume"
                 ) from error
-            if os.path.normcase(common) != os.path.normcase(str(state_dir)):
+            if os.path.normcase(common) != os.path.normcase(str(checker_state)):
                 raise Unmeasured(
-                    f"{name}: checker artifact {label} is outside state directory"
+                    f"{name}: checker artifact {label} is outside checker state directory"
                 )
-        capture_results.append(
-            verify_capture(
+        required_environment = prereg.get("scope", {}).get("required_environment", {})
+        if not isinstance(required_environment, Mapping):
+            raise Unmeasured("preregistration required_environment is malformed")
+        environment = {
+            str(key): str(value) for key, value in required_environment.items()
+        }
+        substitutions = {
+            "STREHL_M8_CAPTURE": name,
+            "STREHL_M8_CHECKER": str(instruments["checker"].path),
+            "STREHL_M8_TRACE_DIR": str(trace_state),
+            "STREHL_WARPMAP": str(warpmap_file.path),
+        }
+        environment.update(substitutions)
+        render_provenance_file = frozen_file(
+            item.get("render_provenance", {}), f"{name} render provenance"
+        )
+        for label, path in (
+            ("warpmap", warpmap_file.path),
+            ("trace state", trace_state),
+            ("checker state", checker_state),
+            ("output TIFF", output_file.path),
+            ("before input fingerprint", input_fingerprint_before.path),
+            ("after input fingerprint", input_fingerprint_after.path),
+            ("render provenance", render_provenance_file.path),
+        ):
+            require_under(path, output_root, f"{name} {label}")
+        render_provenance_evidence = validate_render_provenance(
+            render_provenance_file,
+            capture=name,
+            source_commit=expected_commit,
+            binary=binary,
+            input_dir=input_dir,
+            output_tiff=output_file,
+            warpmap=warpmap_file,
+            trace_state=trace_state,
+            environment=environment,
+            input_fingerprint_before=input_fingerprint_before,
+            instrument_freeze=instrument_freeze_file,
+        )
+        if not (
+            instrument_freeze_file.path.stat().st_mtime_ns
+            <= input_fingerprint_before.path.stat().st_mtime_ns
+            <= output_file.path.stat().st_mtime_ns
+            <= render_provenance_file.path.stat().st_mtime_ns
+            <= input_fingerprint_after.path.stat().st_mtime_ns
+        ):
+            raise Unmeasured(
+                f"{name}: freeze/fingerprint/render timestamps are out of order"
+            )
+        if any(
+            file.path.stat().st_mtime_ns
+            > input_fingerprint_after.path.stat().st_mtime_ns
+            for file in checker_artifacts.values()
+        ):
+            raise Unmeasured(
+                f"{name}: after-census fingerprint predates checker artifacts"
+            )
+        checker_context = {
+            "candidate_binary": binary,
+            "checker": instruments["checker"],
+            "preregistration": FrozenFile(prereg_file, prereg_hash),
+            "checker_commission": checker_commission_report,
+            "fixture_manifest": fixture_manifest,
+            "warpmap": warpmap_file,
+            "output_tiff": output_file,
+            "source_commit": expected_commit,
+            "environment": environment,
+            "input_dir": input_dir,
+            "trace_state": trace_state,
+            "checker_state": checker_state,
+        }
+        capture_result = verify_capture(
+            name,
+            input_dir,
+            warpmap_file,
+            trace_state,
+            output_file,
+            artifact_root / name,
+            chunk_rows,
+            checker_artifacts,
+            checker_context,
+        )
+        post_verification_fingerprint = validate_input_fingerprint(
+            input_fingerprint_before,
+            input_fingerprint_after,
+            input_dir,
+        )
+        if post_verification_fingerprint != input_fingerprint_evidence:
+            raise Disagreement(f"{name}: input fingerprint changed during verification")
+        capture_result["input_fingerprint"] = input_fingerprint_evidence
+        capture_result["render_provenance"] = render_provenance_evidence
+        capture_results.append(capture_result)
+        postflight_files.extend(
+            [
+                (f"{name} warpmap", warpmap_file),
+                (f"{name} output TIFF", output_file),
+                (f"{name} before input fingerprint", input_fingerprint_before),
+                (f"{name} after input fingerprint", input_fingerprint_after),
+                (f"{name} render provenance", render_provenance_file),
+                *[
+                    (f"{name} checker artifact {label}", file)
+                    for label, file in checker_artifacts.items()
+                ],
+            ]
+        )
+        postflight_files.extend(
+            (
+                f"{name} trace {trace_name}",
+                FrozenFile(trace_state / "blocks" / trace_name, digest),
+            )
+            for trace_name, digest in capture_result["evidence"]["trace_sha256"].items()
+        )
+        postflight_files.extend(
+            (
+                f"{name} source {source_path}",
+                FrozenFile(Path(source_path), digest),
+            )
+            for source_path, digest in capture_result["evidence"][
+                "source_sha256"
+            ].items()
+        )
+        postflight_files.extend(
+            (
+                f"{name} ignored producer artifact {producer_path}",
+                FrozenFile(Path(producer_path), digest),
+            )
+            for producer_path, digest in capture_result["evidence"][
+                "ignored_producer_derived_artifacts"
+            ].items()
+        )
+        postflight_inputs.append(
+            (
                 name,
+                input_fingerprint_before,
+                input_fingerprint_after,
                 input_dir,
-                warpmap_file,
-                state_dir,
-                output_file,
-                artifact_root / name,
-                chunk_rows,
-                checker_artifacts,
+                input_fingerprint_evidence,
             )
         )
 
-    aggregate_r_denominator = sum(item["m8_r"]["denominator"] for item in capture_results)
+    aggregate_r_denominator = sum(
+        item["m8_r"]["denominator"] for item in capture_results
+    )
+    aggregate_r_lower = sum(
+        item["m8_r"]["lower_violations"] for item in capture_results
+    )
+    aggregate_r_upper = sum(
+        item["m8_r"]["upper_violations"] for item in capture_results
+    )
     aggregate_r_violations = sum(item["m8_r"]["violations"] for item in capture_results)
-    aggregate_o_denominator = sum(item["m8_o"]["denominator"] for item in capture_results)
+    aggregate_o_denominator = sum(
+        item["m8_o"]["denominator"] for item in capture_results
+    )
+    aggregate_o_lower = sum(
+        item["m8_o"]["lower_violations"] for item in capture_results
+    )
+    aggregate_o_upper = sum(
+        item["m8_o"]["upper_violations"] for item in capture_results
+    )
     aggregate_o_violations = sum(item["m8_o"]["violations"] for item in capture_results)
+    aggregate_per_channel = {
+        channel: {
+            key: sum(
+                item["m8_o"]["per_channel"][channel][key] for item in capture_results
+            )
+            for key in ("lower_violations", "upper_violations", "violations")
+        }
+        for channel in CHANNEL_NAMES
+    }
+    aggregate_max_positive = max(
+        item["m8_o"]["maximum_positive_signed_excess"] for item in capture_results
+    )
+    aggregate_min_negative = min(
+        item["m8_o"]["minimum_negative_signed_excess"] for item in capture_results
+    )
+    aggregate_max_absolute = max(
+        item["m8_o"]["maximum_absolute_signed_excess"] for item in capture_results
+    )
     evidence_verdict = (
         "PASS"
         if aggregate_r_violations == 0 and aggregate_o_violations == 0
         else "FAIL"
     )
+    for label, file in (
+        ("verifier manifest", FrozenFile(manifest_path, manifest_file_hash)),
+        ("preregistration", FrozenFile(prereg_file, prereg_hash)),
+        (
+            "prospective interpretation",
+            FrozenFile(interpretation_path, interpretation_hash),
+        ),
+        ("verifier", FrozenFile(verifier_path, verifier_hash)),
+        ("verifier commissioning", commission_file),
+        ("source manifest", source_manifest),
+        ("source patch", source_patch),
+        ("candidate binary", binary),
+        ("checker fixture manifest", fixture_manifest),
+        ("checker commissioning report", checker_commission_report),
+        (
+            "checker commissioning violation evidence",
+            checker_commission_violation_evidence,
+        ),
+        ("instrument freeze", instrument_freeze_file),
+        *tuple((f"instrument {name}", file) for name, file in instruments.items()),
+    ):
+        assert_still_frozen(file, label)
+    source_evidence_after = verify_source_manifest(
+        source_manifest, source_root, expected_commit, instruments["hook"].sha256
+    )
+    if source_evidence_after != source_evidence:
+        raise Disagreement("source snapshot changed during target verification")
+    for label, file in postflight_files:
+        assert_still_frozen(file, label)
+    for name, before, after, input_dir, expected in postflight_inputs:
+        if validate_input_fingerprint(before, after, input_dir) != expected:
+            raise Disagreement(f"{name}: final input fingerprint changed")
     result = {
         "protocol": VERIFIER_PROTOCOL,
         "status": evidence_verdict,
-        "decision_rule": "PASS iff aggregate M8-R V=0 and every capture and aggregate M8-O V=0",
+        "decision_rule": (
+            "PASS iff aggregate M8-R V=0, the commissioned crop/reference "
+            "identity V=0, and every capture and aggregate M8-O V=0"
+        ),
         "manifest": {"path": str(manifest_path), "sha256": manifest_file_hash},
-        "preregistration": {"path": str(prereg_file), "sha256": prereg_hash},
+        "preregistration": {
+            "path": str(prereg_file),
+            "sha256": prereg_hash,
+            "canonical_sha256": prereg_canonical_hash,
+        },
         "prospective_interpretation": {
             "path": str(interpretation_path),
             "sha256": interpretation_hash,
+            "canonical_sha256": interpretation_canonical_hash,
             "commit": INTERPRETATION_COMMIT,
         },
         "commissioning": commission_evidence,
-        "verifier": {"path": str(verifier_path), "sha256": verifier_hash},
+        "checker_fixture": checker_fixture_evidence,
+        "checker_commissioning": checker_commission_evidence,
+        "crop_reference_identity": {
+            "verifier_correct_origin_violations": frozen_commission["crop_origin_case"][
+                "correct_origin_violations"
+            ],
+            "checker_correct_origin_violations": checker_commission_evidence[
+                "crop_correct_origin_violations"
+            ],
+            "violations": 0,
+        },
+        "verifier": {
+            "path": str(verifier_path),
+            "sha256": verifier_hash,
+            "canonical_sha256": verifier_canonical_hash,
+        },
         "source_commit": expected_commit,
         "source_snapshot": source_evidence,
+        "source_patch": source_patch_evidence,
+        "instrument_freeze": instrument_freeze_evidence,
         "binary": {"path": str(binary.path), "sha256": binary.sha256},
         "instruments": {
             name: {"path": str(file.path), "sha256": file.sha256}
@@ -1917,11 +4015,55 @@ def verify_manifest(manifest_path: Path, report_path: Path, chunk_rows: int) -> 
         "aggregate": {
             "m8_r": {
                 "denominator": aggregate_r_denominator,
+                "lower_violations": aggregate_r_lower,
+                "upper_violations": aggregate_r_upper,
                 "violations": aggregate_r_violations,
+                "fraction_exact": (
+                    f"{aggregate_r_violations}/{aggregate_r_denominator}"
+                ),
+                "fraction": aggregate_r_violations / float(aggregate_r_denominator),
+                "max_excess_over_tolerance": max(
+                    item["m8_r"]["max_excess_over_tolerance"]
+                    for item in capture_results
+                ),
+                "maximum_positive_signed_excess": max(
+                    item["m8_r"]["maximum_positive_signed_excess"]
+                    for item in capture_results
+                ),
+                "minimum_negative_signed_excess": min(
+                    item["m8_r"]["minimum_negative_signed_excess"]
+                    for item in capture_results
+                ),
+                "maximum_absolute_signed_excess": max(
+                    item["m8_r"]["maximum_absolute_signed_excess"]
+                    for item in capture_results
+                ),
             },
             "m8_o": {
                 "denominator": aggregate_o_denominator,
+                "lower_violations": aggregate_o_lower,
+                "upper_violations": aggregate_o_upper,
                 "violations": aggregate_o_violations,
+                "fraction_exact": (
+                    f"{aggregate_o_violations}/{aggregate_o_denominator}"
+                ),
+                "fraction": aggregate_o_violations / float(aggregate_o_denominator),
+                "percent": 100.0
+                * aggregate_o_violations
+                / float(aggregate_o_denominator),
+                "maximum_positive_signed_excess": aggregate_max_positive,
+                "minimum_negative_signed_excess": aggregate_min_negative,
+                "maximum_absolute_signed_excess": aggregate_max_absolute,
+                "maximum_positive_signed_excess_lsb": (
+                    aggregate_max_positive * U16_MAX
+                ),
+                "minimum_negative_signed_excess_lsb": (
+                    aggregate_min_negative * U16_MAX
+                ),
+                "maximum_absolute_signed_excess_lsb": (
+                    aggregate_max_absolute * U16_MAX
+                ),
+                "per_channel": aggregate_per_channel,
             },
         },
     }
@@ -1988,12 +4130,13 @@ def write_synthetic_trace(
     full_width = full_height = 16
     crop_x, crop_y, compact_width, compact_height = crop_override or crop
     channel = SITE_CHANNEL[(site_x, site_y)]
-    source = np.full((source_height, source_width), np.float32(2000.0), dtype="<f4")
+    source_value = np.float32(0.0 if channel == 2 else 2000.0)
+    source = np.full((source_height, source_width), source_value, dtype="<f4")
     valid = synthetic_validity(
         full_width, full_height, site_x, site_y, source_width, source_height
     )
     gathered = np.full((full_height, full_width), np.float32(np.nan), dtype="<f4")
-    gathered[valid] = np.float32(2000.0)
+    gathered[valid] = source_value
     frame_bytes = str(frame_path.resolve()).encode("utf-8")
     source_sha = bytes.fromhex(sha256_file(frame_path))
     header = TRACE_HEADER.pack(
@@ -2030,8 +4173,7 @@ def write_synthetic_trace(
     path_hash = hashlib.sha256(frame_bytes).hexdigest()
     content_hash = hashlib.sha256(payload).hexdigest()
     filename = (
-        f"m8-trace-v3-p1-f00000000-{path_hash}-s{site_x}{site_y}-"
-        f"{content_hash}.m8site"
+        f"m8-trace-v3-p1-f00000000-{path_hash}-s{site_x}{site_y}-{content_hash}.m8site"
     )
     path = block_dir / filename
     path.write_bytes(payload)
@@ -2041,10 +4183,11 @@ def write_synthetic_trace(
 def write_synthetic_evidence(
     root: Path,
     encoded_r: int,
+    encoded_b: int = 0,
     crop_override: tuple[int, int, int, int] | None = None,
 ) -> tuple[Path, Path, Path, Path]:
     input_dir = root / "i"
-    state = root
+    state = root / "s"
     blocks = state / "blocks"
     input_dir.mkdir(parents=True, exist_ok=True)
     blocks.mkdir(parents=True, exist_ok=True)
@@ -2059,6 +4202,8 @@ def write_synthetic_evidence(
         write_synthetic_trace(blocks, frame, *site, crop, crop_override)
     image = np.full((height, width, 3), U16_MAX, dtype=np.uint16)
     image[3, 2, 0] = encoded_r
+    image[:, :, 2] = 0
+    image[4, 3, 2] = encoded_b
     output = root / "o.tif"
     tifffile.imwrite(
         output,
@@ -2167,7 +4312,9 @@ def green_pairing_control() -> dict[str, Any]:
     same_frame_violation = output < same_frame_lo - FINAL_Q
     wrong_rule_violation = output < independently_reduced_lo - FINAL_Q
     if not same_frame_violation or wrong_rule_violation:
-        raise RuntimeError("green-pairing control does not distinguish the two reductions")
+        raise RuntimeError(
+            "green-pairing control does not distinguish the two reductions"
+        )
     return {
         "same_frame_interval": [same_frame_lo, same_frame_hi],
         "independent_site_interval": [
@@ -2177,6 +4324,293 @@ def green_pairing_control() -> dict[str, Any]:
         "encoded_output": 0,
         "same_frame_violation": same_frame_violation,
         "independent_site_violation": wrong_rule_violation,
+    }
+
+
+def crop_origin_control(prereg: Mapping[str, Any]) -> dict[str, Any]:
+    case = prereg["commissioning"]["crop_origin_case"]
+    full_height = int(case["full_height"])
+    full_width = int(case["full_width"])
+    compact_height = int(case["compact_height"])
+    compact_width = int(case["compact_width"])
+    origin_x = int(case["origin_x"])
+    origin_y = int(case["origin_y"])
+    yy, xx = np.indices((full_height, full_width), dtype=np.float64)
+    source = 100.0 * yy + xx
+    correct = (
+        source[
+            origin_y : origin_y + compact_height,
+            origin_x : origin_x + compact_width,
+        ]
+        / 1000.0
+    )
+    wrong = source[:compact_height, :compact_width] / 1000.0
+
+    def encode(values: np.ndarray) -> np.ndarray:
+        return np.asarray(
+            np.floor(np.clip(values, 0.0, 1.0) * U16_MAX + 0.5), dtype=np.uint16
+        )
+
+    correct_encoded = encode(correct)
+    wrong_encoded = encode(wrong)
+    correct_decoded = correct_encoded.astype(np.float64) / U16_MAX
+    wrong_decoded = wrong_encoded.astype(np.float64) / U16_MAX
+    correct_violations = (correct_decoded < correct - FINAL_Q) | (
+        correct_decoded > correct + FINAL_Q
+    )
+    wrong_origin_violations = (wrong_decoded < correct - FINAL_Q) | (
+        wrong_decoded > correct + FINAL_Q
+    )
+    expected_wrong = int(case["expected_wrong_origin_violations"])
+    observed_correct = int(np.count_nonzero(correct_violations))
+    observed_wrong = int(np.count_nonzero(wrong_origin_violations))
+    if observed_correct != 0 or observed_wrong != expected_wrong:
+        raise RuntimeError(
+            f"crop-origin control observed correct={observed_correct}, "
+            f"wrong={observed_wrong}, expected wrong={expected_wrong}"
+        )
+    return {
+        "full_shape": [full_height, full_width],
+        "compact_shape": [compact_height, compact_width],
+        "origin": [origin_x, origin_y],
+        "correct_origin_violations": observed_correct,
+        "wrong_origin_violations": observed_wrong,
+        "expected_wrong_origin_violations": expected_wrong,
+    }
+
+
+def catmull_weights(t: float) -> tuple[float, float, float, float]:
+    t2 = t * t
+    t3 = t2 * t
+    return (
+        -0.5 * t + t2 - 0.5 * t3,
+        1.0 - 2.5 * t2 + 1.5 * t3,
+        0.5 * t + 2.0 * t2 - 1.5 * t3,
+        -0.5 * t2 + 0.5 * t3,
+    )
+
+
+def m8r_kernel_controls() -> dict[str, Any]:
+    source_width, source_height = 40, 32
+    output_width, output_height = 20, 16
+    step = np.zeros((source_height, source_width), dtype=np.float32)
+    step[:, 18:] = np.float32(1.0)
+
+    def catmull_sample(source: np.ndarray, sx: float, sy: float) -> np.float32:
+        ix = math.floor(sx)
+        iy = math.floor(sy)
+        wx = catmull_weights(sx - ix)
+        wy = catmull_weights(sy - iy)
+        total = 0.0
+        for row, dy in enumerate((-1, 0, 1, 2)):
+            for column, dx in enumerate((-1, 0, 1, 2)):
+                total += wy[row] * wx[column] * float(source[iy + dy, ix + dx])
+        return np.float32(total)
+
+    def catmull_fixture(
+        source: np.ndarray,
+        offset_x: float,
+        offset_y: float,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        values: list[np.float32] = []
+        lowers: list[np.float32] = []
+        uppers: list[np.float32] = []
+        coordinates: list[tuple[int, int]] = []
+        for y in range(output_height):
+            for x in range(output_width):
+                sx = 2.0 * (x + offset_x)
+                sy = 2.0 * (y + offset_y)
+                if not (
+                    1.5 <= sx <= source_width - 2.5 and 1.5 <= sy <= source_height - 2.5
+                ):
+                    continue
+                ix, iy = math.floor(sx), math.floor(sy)
+                support = source[iy - 1 : iy + 3, ix - 1 : ix + 3]
+                values.append(catmull_sample(source, sx, sy))
+                lowers.append(np.min(support))
+                uppers.append(np.max(support))
+                coordinates.append((x, y))
+        return (
+            np.asarray(values, dtype=np.float32),
+            np.asarray(lowers, dtype=np.float32),
+            np.asarray(uppers, dtype=np.float32),
+            np.asarray(coordinates, dtype=np.int32),
+        )
+
+    def census(
+        values: np.ndarray, lower: np.ndarray, upper: np.ndarray
+    ) -> dict[str, int]:
+        tolerance = tau_r(lower, upper)
+        low = values < np.asarray(lower - tolerance, dtype=np.float32)
+        high = values > np.asarray(upper + tolerance, dtype=np.float32)
+        return {
+            "denominator": int(values.size),
+            "lower_violations": int(np.count_nonzero(low)),
+            "upper_violations": int(np.count_nonzero(high)),
+            "violations": int(np.count_nonzero(low | high)),
+        }
+
+    raw, lower, upper, coordinates = catmull_fixture(step, 0.25, 0.0)
+    catmull = census(raw, lower, upper)
+    clamped_values = np.clip(raw, lower, upper).astype(np.float32)
+    clamped = census(clamped_values, lower, upper)
+    tolerance = tau_r(lower, upper)
+    widened_values = np.minimum(
+        np.maximum(raw, lower - np.float32(32.0) * tolerance),
+        upper + np.float32(32.0) * tolerance,
+    ).astype(np.float32)
+    widened = census(widened_values, lower, upper)
+
+    texture = np.fromfunction(
+        lambda y, x: (17 * x + 29 * y + 7 * ((x * y) % 19)) / 4096.0,
+        (source_height, source_width),
+        dtype=np.float64,
+    ).astype(np.float32)
+    copy_values, copy_lower, copy_upper, _ = catmull_fixture(texture, 0.0, 0.0)
+    copy_null = census(copy_values, copy_lower, copy_upper)
+    clamped_copy = census(
+        np.clip(copy_values, copy_lower, copy_upper).astype(np.float32),
+        copy_lower,
+        copy_upper,
+    )
+    clamped_copy_exact = bool(
+        np.array_equal(
+            copy_values.view(np.uint32),
+            np.clip(copy_values, copy_lower, copy_upper)
+            .astype(np.float32)
+            .view(np.uint32),
+        )
+    )
+
+    bilinear_values: list[np.float32] = []
+    bilinear_lower: list[np.float32] = []
+    bilinear_upper: list[np.float32] = []
+    for y in range(output_height):
+        for x in range(output_width):
+            sx = 2.0 * (x + 0.25)
+            sy = 2.0 * (y + 0.125)
+            if not (
+                0.5 <= sx <= source_width - 1.5 and 0.5 <= sy <= source_height - 1.5
+            ):
+                continue
+            ix, iy = math.floor(sx), math.floor(sy)
+            tx, ty = sx - ix, sy - iy
+            support = texture[iy : iy + 2, ix : ix + 2]
+            value = (1.0 - ty) * (
+                (1.0 - tx) * support[0, 0] + tx * support[0, 1]
+            ) + ty * ((1.0 - tx) * support[1, 0] + tx * support[1, 1])
+            bilinear_values.append(np.float32(value))
+            bilinear_lower.append(np.min(support))
+            bilinear_upper.append(np.max(support))
+    bilinear_null = census(
+        np.asarray(bilinear_values, dtype=np.float32),
+        np.asarray(bilinear_lower, dtype=np.float32),
+        np.asarray(bilinear_upper, dtype=np.float32),
+    )
+
+    constant = np.ones((source_height, source_width), dtype=np.float32)
+    plant_values, plant_lower, plant_upper, plant_coordinates = catmull_fixture(
+        constant, 0.0, 0.0
+    )
+    plant_tau = tau_r(plant_lower, plant_upper)
+    high_index = int(
+        np.flatnonzero((plant_coordinates[:, 0] == 5) & (plant_coordinates[:, 1] == 5))[
+            0
+        ]
+    )
+    low_index = int(
+        np.flatnonzero((plant_coordinates[:, 0] == 6) & (plant_coordinates[:, 1] == 5))[
+            0
+        ]
+    )
+    plant_values[high_index] = np.float32(
+        plant_values[high_index] + np.float32(32.0) * plant_tau[high_index]
+    )
+    plant_values[low_index] = np.float32(
+        plant_values[low_index] - np.float32(32.0) * plant_tau[low_index]
+    )
+    explicit = census(plant_values, plant_lower, plant_upper)
+
+    expected = {
+        "catmull_hard_step": {
+            "denominator": 252,
+            "lower_violations": 14,
+            "upper_violations": 14,
+            "violations": 28,
+        },
+        "clamped_hard_step": {
+            "denominator": 252,
+            "lower_violations": 0,
+            "upper_violations": 0,
+            "violations": 0,
+        },
+        "widened_clamp_sabotage": {
+            "denominator": 252,
+            "lower_violations": 14,
+            "upper_violations": 14,
+            "violations": 28,
+        },
+        "explicit_high_low": {
+            "denominator": 252,
+            "lower_violations": 1,
+            "upper_violations": 1,
+            "violations": 2,
+        },
+    }
+    observed = {
+        "catmull_hard_step": catmull,
+        "clamped_hard_step": clamped,
+        "widened_clamp_sabotage": widened,
+        "copy_null": copy_null,
+        "clamped_copy_null": clamped_copy,
+        "convex_bilinear_null": bilinear_null,
+        "explicit_high_low": explicit,
+    }
+    for name, counts in expected.items():
+        if observed[name] != counts:
+            raise RuntimeError(
+                f"M8-R {name} commissioning observed {observed[name]}, "
+                f"expected {counts}"
+            )
+    for name in ("copy_null", "clamped_copy_null", "convex_bilinear_null"):
+        if observed[name]["violations"] != 0:
+            raise RuntimeError(f"M8-R {name} commissioning was not green")
+    if not clamped_copy_exact:
+        raise RuntimeError("M8-R clamped copy control is not bit-exact")
+    return {
+        "arms": observed,
+        "expected_exact": expected,
+        "clamped_copy_bit_exact": clamped_copy_exact,
+    }
+
+
+def inverse_gain_order_control() -> dict[str, Any]:
+    site_gain = np.float32(1.1)
+    source_value = np.float32(1.649999976158142)
+    inverse_gain = np.float32(np.float32(1.0) / site_gain)
+    actual_scaled = np.float32(source_value * inverse_gain)
+    direct_division = np.float32(source_value / site_gain)
+    actual_code = int(
+        np.clip(
+            math.floor(float(actual_scaled) + 0.5),
+            0,
+            U16_MAX,
+        )
+    )
+    direct_code = int(math.floor(float(direct_division) + 0.5))
+    if actual_code != 1 or direct_code != 2:
+        raise RuntimeError(
+            "inverse-gain operation-order control did not separate multiply from divide"
+        )
+    return {
+        "source_f32_bits": f"0x{int(source_value.view(np.uint32)):08x}",
+        "site_gain_f32": float(site_gain),
+        "actual_contract": "f32 inv=1/g; f32 z*inv",
+        "actual_scaled_f32": float(actual_scaled),
+        "direct_division_f32": float(direct_division),
+        "actual_intermediate_u16": actual_code,
+        "direct_division_intermediate_u16": direct_code,
+        "distinguishes_operation_order": True,
     }
 
 
@@ -2193,9 +4627,7 @@ def interval_containment_control() -> dict[str, Any]:
         span = np.float32(rng.uniform(0.0, 8.0))
         lo = np.asarray([[np.float32(center - span)]], dtype=np.float32)
         hi = np.asarray([[np.float32(center + span)]], dtype=np.float32)
-        black_lo, black_hi, _, _ = intermediate_interval(
-            lo, hi, site_gain, black
-        )
+        black_lo, black_hi, _, _ = intermediate_interval(lo, hi, site_gain, black)
         _, _, projected_lo, projected_hi = output_interval(
             black_lo, black_hi, output_gain, sensor_range
         )
@@ -2231,7 +4663,7 @@ def interval_containment_control() -> dict[str, Any]:
             ):
                 raise RuntimeError(
                     f"outward interval missed scalar case {index}: "
-                    f"{projected_lo[0,0]} <= {projected} <= {projected_hi[0,0]}"
+                    f"{projected_lo[0, 0]} <= {projected} <= {projected_hi[0, 0]}"
                 )
             samples += 1
     return {
@@ -2243,35 +4675,49 @@ def interval_containment_control() -> dict[str, Any]:
 
 
 def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str, Any]:
+    if report_path.exists():
+        raise RuntimeError(f"refusing to overwrite commissioning report: {report_path}")
     if work_dir.exists():
-        raise RuntimeError(f"refusing to reuse commissioning work directory: {work_dir}")
+        raise RuntimeError(
+            f"refusing to reuse commissioning work directory: {work_dir}"
+        )
     work_dir.mkdir(parents=True)
     prereg = json.loads(prereg_path.read_text(encoding="utf-8"))
-    if sha256_file(prereg_path) != PREREG_SHA256:
-        raise RuntimeError("commissioning preregistration differs from the frozen bytes")
+    if sha256_canonical_text(prereg_path) != PREREG_CANONICAL_SHA256:
+        raise RuntimeError(
+            "commissioning preregistration differs from the frozen bytes"
+        )
     interpretation_path = Path(__file__).with_name("prospective-interpretations.md")
-    if sha256_file(interpretation_path) != INTERPRETATION_SHA256:
-        raise RuntimeError("commissioning interpretation differs from the pre-target ruling")
+    if sha256_canonical_text(interpretation_path) != INTERPRETATION_CANONICAL_SHA256:
+        raise RuntimeError(
+            "commissioning interpretation differs from the pre-target ruling"
+        )
     report: dict[str, Any] = {
         "protocol": VERIFIER_PROTOCOL,
         "commissioning": "both directions",
         "verifier": {
             "path": str(Path(__file__).resolve()),
             "sha256": sha256_file(Path(__file__).resolve()),
+            "canonical_sha256": sha256_canonical_text(Path(__file__).resolve()),
         },
         "preregistration": {
             "path": str(prereg_path.resolve()),
             "sha256": sha256_file(prereg_path),
+            "canonical_sha256": sha256_canonical_text(prereg_path),
         },
         "prospective_interpretation": {
             "path": str(interpretation_path.resolve()),
             "sha256": sha256_file(interpretation_path),
+            "canonical_sha256": sha256_canonical_text(interpretation_path),
             "commit": INTERPRETATION_COMMIT,
         },
         "independence": verify_independence(Path(__file__).resolve()),
         "numeric_cases": direct_numeric_controls(prereg),
         "quantizer_case": quantizer_control(prereg),
         "green_pairing_case": green_pairing_control(),
+        "crop_origin_case": crop_origin_control(prereg),
+        "m8_r_kernel_cases": m8r_kernel_controls(),
+        "inverse_gain_order_case": inverse_gain_order_control(),
         "interval_containment": interval_containment_control(),
     }
     try:
@@ -2279,6 +4725,7 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         recipe.write_text(
             "{\n"
             '  "encoded_r": 65535,\n'
+            '  "encoded_b": 0,\n'
             '  "plant_x": 2,\n'
             '  "plant_y": 3\n'
             "}\n",
@@ -2286,9 +4733,10 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         )
         input_dir, state, warpmap, output = write_synthetic_evidence(work_dir, U16_MAX)
 
-        def run_case(name: str, encoded: int) -> dict[str, Any]:
+        def run_case(name: str, encoded_r: int, encoded_b: int) -> dict[str, Any]:
             image = tifffile.imread(output)
-            image[3, 2, 0] = encoded
+            image[3, 2, 0] = encoded_r
+            image[4, 3, 2] = encoded_b
             tifffile.imwrite(
                 output,
                 image,
@@ -2327,27 +4775,44 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
                 "output_sha256": sha256_file(output),
             }
 
-        baseline = run_case("baseline", U16_MAX)
+        baseline = run_case("baseline", U16_MAX, 0)
         if baseline["status"] != "PASS":
             raise RuntimeError("synthetic high-rail baseline did not pass")
 
-        defect_plant = replace_unique_line(
+        defect_low_plant = replace_unique_line(
             recipe, '  "encoded_r": 65535,', '  "encoded_r": 65534,'
         )
+        defect_high_plant = replace_unique_line(
+            recipe, '  "encoded_b": 0,', '  "encoded_b": 1,'
+        )
         defect_recipe = json.loads(recipe.read_text(encoding="utf-8"))
-        defect = run_case("defect", int(defect_recipe["encoded_r"]))
-        if defect["status"] != "FAIL" or defect["m8_o_violations"] != 1:
-            raise RuntimeError("planted degradation was not charged exactly once")
+        defect = run_case(
+            "defect",
+            int(defect_recipe["encoded_r"]),
+            int(defect_recipe["encoded_b"]),
+        )
+        if defect["status"] != "FAIL" or defect["m8_o_violations"] != 2:
+            raise RuntimeError("planted degradations were not charged exactly twice")
         if defect["violations"] != [
-            {"x": 2, "y": 3, "channel": "R", "direction": -1, "encoded": 65534}
+            {"x": 2, "y": 3, "channel": "R", "direction": -1, "encoded": 65534},
+            {"x": 3, "y": 4, "channel": "B", "direction": 1, "encoded": 1},
         ]:
-            raise RuntimeError(f"planted degradation landed at wrong verdict row: {defect}")
+            raise RuntimeError(
+                f"planted degradation landed at wrong verdict row: {defect}"
+            )
 
-        improvement_plant = replace_unique_line(
+        improvement_low_plant = replace_unique_line(
             recipe, '  "encoded_r": 65534,', '  "encoded_r": 65535,'
         )
+        improvement_high_plant = replace_unique_line(
+            recipe, '  "encoded_b": 1,', '  "encoded_b": 0,'
+        )
         improvement_recipe = json.loads(recipe.read_text(encoding="utf-8"))
-        improvement = run_case("improvement", int(improvement_recipe["encoded_r"]))
+        improvement = run_case(
+            "improvement",
+            int(improvement_recipe["encoded_r"]),
+            int(improvement_recipe["encoded_b"]),
+        )
         if improvement["status"] != "PASS" or improvement["m8_o_violations"] != 0:
             raise RuntimeError("planted improvement was misreported")
         if baseline["output_sha256"] == defect["output_sha256"]:
@@ -2444,18 +4909,23 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
             duplicate_path.unlink(missing_ok=True)
             alternate_frame.unlink(missing_ok=True)
         if "duplicate trace-v3 frame/site" not in duplicate_message:
-            raise RuntimeError("duplicate frame/site evidence did not report UNMEASURED")
+            raise RuntimeError(
+                "duplicate frame/site evidence did not report UNMEASURED"
+            )
 
         producer_hull = state / "producer-supplied-hull.npy"
+        producer_mask = state / "producer-supplied-contributor-mask.npy"
         np.save(producer_hull, np.asarray([[-12345.0]], dtype=np.float32))
-        ignored_hull = run_case("producer-hull-ignored", U16_MAX)
+        np.save(producer_mask, np.asarray([[0]], dtype=np.uint8))
+        ignored_hull = run_case("producer-hull-ignored", U16_MAX, 0)
         producer_hull.unlink()
+        producer_mask.unlink()
         if ignored_hull["status"] != "PASS":
             raise RuntimeError("producer-supplied hull contaminated independent result")
 
         wrong_crop_root = work_dir / "c"
         wrong_input, wrong_state, wrong_map, wrong_output = write_synthetic_evidence(
-            wrong_crop_root, U16_MAX, crop_override=(0, 0, 9, 9)
+            wrong_crop_root, U16_MAX, 0, crop_override=(0, 0, 9, 9)
         )
         crop_message = ""
         try:
@@ -2478,11 +4948,17 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
             {
                 "baseline_green": baseline,
                 "degradation_plant": {
-                    "landed": defect_plant,
+                    "landed": {
+                        "lower": defect_low_plant,
+                        "upper": defect_high_plant,
+                    },
                     "result": defect,
                 },
                 "improvement_plant": {
-                    "landed": improvement_plant,
+                    "landed": {
+                        "lower": improvement_low_plant,
+                        "upper": improvement_high_plant,
+                    },
                     "result": improvement,
                 },
                 "fail_closed": {
@@ -2528,6 +5004,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     verify_parser.add_argument("--chunk-rows", type=int, default=64)
 
     args = parser.parse_args(argv)
+    report_output = args.report.resolve() if hasattr(args, "report") else None
     try:
         if args.command == "commission":
             report = commission(
@@ -2535,10 +5012,16 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.report.resolve(),
                 args.work_dir.resolve(),
             )
-            print(json.dumps({"status": report["status"], "report": str(args.report.resolve())}))
+            print(
+                json.dumps(
+                    {"status": report["status"], "report": str(args.report.resolve())}
+                )
+            )
             return 0
         if args.chunk_rows <= 0:
             raise Unmeasured("--chunk-rows must be positive")
+        if report_output is not None and report_output.exists():
+            raise Unmeasured(f"refusing to overwrite verifier report: {report_output}")
         code, result = verify_manifest(
             args.manifest.resolve(), args.report.resolve(), args.chunk_rows
         )
@@ -2560,8 +5043,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             "status": "DISAGREEMENT",
             "error": str(error),
         }
-        if hasattr(args, "report"):
-            json_dump(args.report.resolve(), failure)
+        if report_output is not None and not report_output.exists():
+            json_dump(report_output, failure)
         print(json.dumps(failure, sort_keys=True), file=sys.stderr)
         return 3
     except (Unmeasured, OSError, ValueError, KeyError, RuntimeError) as error:
@@ -2570,8 +5053,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             "status": "UNMEASURED",
             "error": str(error),
         }
-        if hasattr(args, "report"):
-            json_dump(args.report.resolve(), failure)
+        if report_output is not None and not report_output.exists():
+            json_dump(report_output, failure)
         print(json.dumps(failure, sort_keys=True), file=sys.stderr)
         return 2
 
