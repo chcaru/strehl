@@ -1,0 +1,100 @@
+{
+  "catmull_rom_a_minus_0_5": {
+    "one_dimensional_arbitrary_support_global_bound": {
+      "lower": {
+        "normalised_per_local_support_span": 0.125,
+        "uint16_dn_equivalent_per_full_scale_span": 8191.875
+      },
+      "upper": {
+        "normalised_per_local_support_span": 0.125,
+        "uint16_dn_equivalent_per_full_scale_span": 8191.875
+      }
+    },
+    "one_dimensional_hard_step_half_phase": {
+      "lower": {
+        "normalised_per_local_support_span": 0.0625,
+        "uint16_dn_equivalent_per_full_scale_span": 4095.9375
+      },
+      "upper": {
+        "normalised_per_local_support_span": 0.0625,
+        "uint16_dn_equivalent_per_full_scale_span": 4095.9375
+      }
+    },
+    "one_dimensional_hard_step_phase_one_third": {
+      "lower": {
+        "normalised_per_local_support_span": 0.07407407407407407,
+        "uint16_dn_equivalent_per_full_scale_span": 4854.444444444444
+      },
+      "upper": {
+        "normalised_per_local_support_span": 0.07407407407407396,
+        "uint16_dn_equivalent_per_full_scale_span": 4854.444444444437
+      }
+    },
+    "phase_bound_distribution": {
+      "grid_intervals_per_axis": 1024,
+      "one_dimensional": {
+        "max": {
+          "normalised_per_local_support_span": 0.125,
+          "uint16_dn_equivalent_per_full_scale_span": 8191.875
+        },
+        "median": {
+          "normalised_per_local_support_span": 0.09375,
+          "uint16_dn_equivalent_per_full_scale_span": 6143.90625
+        },
+        "p99": {
+          "normalised_per_local_support_span": 0.12498682022094726,
+          "uint16_dn_equivalent_per_full_scale_span": 8191.011263179778
+        }
+      },
+      "two_dimensional_separable": {
+        "max": {
+          "normalised_per_local_support_span": 0.28125,
+          "uint16_dn_equivalent_per_full_scale_span": 18431.71875
+        },
+        "median": {
+          "normalised_per_local_support_span": 0.1832011976002832,
+          "uint16_dn_equivalent_per_full_scale_span": 12006.09048473456
+        },
+        "p99": {
+          "normalised_per_local_support_span": 0.27925428614435077,
+          "uint16_dn_equivalent_per_full_scale_span": 18300.92964247003
+        }
+      }
+    },
+    "two_dimensional_separable_arbitrary_support_global_bound": {
+      "lower": {
+        "normalised_per_local_support_span": 0.28125,
+        "uint16_dn_equivalent_per_full_scale_span": 18431.71875
+      },
+      "upper": {
+        "normalised_per_local_support_span": 0.28125,
+        "uint16_dn_equivalent_per_full_scale_span": 18431.71875
+      }
+    }
+  },
+  "commission": {
+    "catmull_2d_plant_signed_excess": {
+      "lower": -0.28125,
+      "upper": 0.28125
+    },
+    "checks": {
+      "catmull_sign_symmetric": true,
+      "green_convex_null_zero": true,
+      "improvement_removing_negative_lobes_reaches_zero": true,
+      "red_catmull_lower_plant_found": true,
+      "red_catmull_upper_plant_found": true,
+      "weights_sum_to_one": true
+    },
+    "convex_null_signed_excess": {
+      "lower": 0.0,
+      "upper": 0.0
+    },
+    "negative_lobe_removed_signed_excess": {
+      "lower": 0.0,
+      "upper": 0.0
+    },
+    "passed": true
+  },
+  "normalisation": "Every excess is divided by that interpolation support's local hi-lo span. DN values are full-scale uint16 equivalents.",
+  "scope": "Synthetic Keys/Catmull-Rom negative-lobe analysis only; no real render pixels read and no foreign pipeline inferred."
+}

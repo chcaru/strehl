@@ -1,10 +1,15 @@
 # M8-COMPARATIVE — foreign-render applicability and candidate census
 
-**Final verdict: exact comparative M8-O is UNMEASURED because none of the nine
-foreign renders supplies the complete geometry/radiometry contract.** No
-outcome pixel was read by this lane. Predicates and exhaustive selection were
-committed first at `7601657fe87852049095b1c1cf67f28f4185fc37`, frozen at
-`2026-09-03T19:41:01.975-07:00`.
+**Final verdict: exact comparative M8-O and its requested magnitude
+distributions are UNMEASURED because none of the nine foreign renders supplies
+the complete geometry/radiometry contract.** No retained render outcome pixel
+was read by this lane. Predicates and exhaustive selection were committed
+first at `7601657fe87852049095b1c1cf67f28f4185fc37`, frozen at
+`2026-09-03T19:41:01.975-07:00`. Follow-up synthetic analysis, separately
+preregistered at `c107e1cf`, rejects `~6%` as a universal Catmull-Rom ceiling:
+the exact single-pass two-dimensional separable support bound is `28.125%` of
+local support span. M8-O can establish invention, but magnitude alone cannot
+name sharpening without the exact operator chain.
 
 ## 0. Question and prior art
 
@@ -263,6 +268,13 @@ future experiment:
 * zero never licenses “the renderer did not invent detail,” and must be paired
   with direct clamping/rail occupancy.
 
+The orchestrator's supplied synthetic result materially strengthens the
+interior case: its USM excursions were unchanged after global `[0,1]` clipping.
+That does not repeal the registered one-sided rule or repair an unknown output
+tone map. It establishes that rail clipping is not a general attack on local
+M8-O sensitivity; it does not establish that every excursion survives at a
+rail.
+
 ## 12. Proposed comparative clause — registrar licence required
 
 > **Candidate comparative M8-O (not scored).** A foreign render may receive a
@@ -272,10 +284,17 @@ future experiment:
 > per-frame photometric transforms, and serialization contract are frozen
 > before output samples are inspected. Apply the commissioned producer-
 > independent M8 checker over every geometrically valid output sample and all
-> frames; report lower/upper counts, denominator, fraction, signed extrema and
-> coordinates. A nonzero result is evidence of surviving invented values. A
-> zero result is not a pass because clipping or another frame's broad hull may
-> hide invention. A sharpening comparison is licensed only for byte-identical
+> frames; report lower/upper counts, both the all-output-sample and
+> valid-source-hull denominators, fractions, signed extrema, coordinates, and
+> absolute-excess median/p99/maximum in linear units and serialized DN. Report
+> sign balance but do not treat symmetry as a mechanism discriminator. A
+> nonzero result is evidence of surviving invented values. A zero result is not
+> a pass because clipping or another frame's broad hull may hide invention.
+> Attribute an excursion beyond resampling only against the frozen pipeline's
+> exact per-sample negative-weight bound, including every resampling pass; no
+> generic `~6%` ceiling is licensed. Even a bound exceedance establishes only
+> that the declared interpolation model is insufficient, not that sharpening
+> was the cause. A sharpening comparison is licensed only for byte-identical
 > inputs and geometry with sharpening as the sole changed setting.
 
 This extends a registered strehl self-check and therefore requires the
@@ -295,6 +314,8 @@ python -B experiments\M8-COMPARATIVE\applicability.py `
 python -B experiments\M8-COMPARATIVE\checker.py commission-assert `
   --root experiments\M8-COMPARATIVE\checker-fixture
 python -B experiments\M8-COMPARATIVE\checker.py independence
+python -B experiments\M8-COMPARATIVE\kernel-bound.py `
+  --output experiments\M8-COMPARATIVE\kernel-bound-results.json
 ```
 
 The admission audit opens TIFF containers and metadata only
@@ -341,3 +362,53 @@ proposed. Real-render rate, median, p99, maximum and sign symmetry remain
 `UNMEASURED` unless the frozen §3 contract is recovered. A finite render also
 cannot exhibit an “unbounded tail”; unbounded growth is a property of a
 controlled gain sweep, not one empirical histogram.
+
+## 15. Follow-up result — the `~6%` discriminator fails
+
+The preregistered script passed every control. The convex null read zero; the
+Catmull plant found exactly symmetric lower/upper excursions; changing the
+negative-lobe parameter from `a=-0.5` to `a=0` reduced the same plant to zero.
+`kernel-bound-results.json`, SHA-256
+`8F1AB53132C40249A3B5C1AC909B9C43C1FE2D2F8013A41588ED7ED3E6220F32`,
+contains the full result.
+
+| Catmull-Rom case | excess / local support span | full-scale uint16 equivalent |
+| --- | ---: | ---: |
+| 1-D hard step, half phase | `0.062500` | `4095.9375 DN` |
+| 1-D hard step, phase `1/3` | `0.074074` | `4854.4444 DN` |
+| 1-D arbitrary bounded support | `0.125000` | `8191.8750 DN` |
+| separable 2-D arbitrary bounded support | `0.281250` | `18431.7188 DN` |
+
+The half-phase commissioning value was one plant, not a kernel maximum.
+Catmull's one-dimensional negative mass is
+`n(t)=0.5*t*(1-t)`, maximised at `0.125`. For the separable two-dimensional
+kernel the negative mass is `n_x+n_y+2*n_x*n_y`, maximised at `0.28125`.
+Upper and lower bounds are exactly symmetric. Therefore neither sign symmetry
+nor excursion above `6%` separates sharpening from resampling.
+
+Across the registered uniform 1024-interval phase grid, the worst-case bound
+distribution—not an observed-image distribution—had
+median/p99/max `0.093750/0.124987/0.125000` in 1-D and
+`0.183201/0.279254/0.281250` in 2-D. It cannot substitute for the requested
+per-render histogram; it shows why a fixed `~6%` cutoff is not conservative.
+
+For a declared single resampling pass, a defensible per-sample diagnostic would
+normalise excess by that sample's support span and compare it with the exact
+negative weight mass at its two fractional phases. Multiple passes require the
+composed operator bound. Exceeding that bound rejects the declared resampler as
+the sole explanation, but still does not identify sharpening rather than local
+contrast, deconvolution, non-convex merging or an omitted transform.
+
+The requested real-render fields remain:
+
+| render IDs | all-pixel rate | valid-hull rate | median / p99 / max | sign symmetry | kernel comparison |
+| --- | --- | --- | --- | --- | --- |
+| `113-pmax-0`, `113-pmax-40` | `UNMEASURED` | `UNMEASURED` | `UNMEASURED` | `UNMEASURED` | unknown Zerene operator |
+| `119-pmax`, `119-pmax-udr`, `119-pmax-udr-neutral` | `UNMEASURED` | `UNMEASURED` | `UNMEASURED` | `UNMEASURED` | unknown Zerene operator |
+| `119-focus-stack-float`, `119-focus-stack-defringed`, `119-focus-stack-u16` | `UNMEASURED` | `UNMEASURED` | `UNMEASURED` | `UNMEASURED` | sources and invocation absent |
+| `coffee-focus-stack` | `UNMEASURED` | `UNMEASURED` | `UNMEASURED` | `UNMEASURED` | producing executable and exact operator unbound |
+
+The nominal sharpness pair remains unusable: its source pixels differ in eleven
+development fields, sharpening is upstream of each declared hull, and no
+frozen common placement survives. Consequently the within-pair movement and
+the registered sharpening prediction remain **untested**, not negative.

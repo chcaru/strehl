@@ -36,5 +36,35 @@
     "reason": "The retained PMax pair lacks exact geometry/domain contracts, differs in eleven development fields, and upstream Lightroom sharpening is already inside each arm's own input hull."
   },
   "theory_disposition": "NEITHER CONFIRMED NOR REFUTED",
-  "one_sided_caveat": "A nonzero M8-O is evidence of invented values. Zero cannot establish their absence because final clamping can erase overshoot."
+  "one_sided_caveat": "A nonzero M8-O is evidence of invented values. Zero cannot establish their absence because final clamping can erase overshoot.",
+  "orchestrator_clipping_premise": {
+    "status": "ACCEPTED AS SUPPLIED, NOT REPEATED",
+    "scope": "The supplied 1-D interior-edge arms show global [0,1] clipping need not change M8-O. This does not restore unknown geometry or a common linear domain."
+  },
+  "kernel_bound_followup": {
+    "preregistration_commit": "c107e1cf",
+    "artifact": "kernel-bound-results.json",
+    "artifact_sha256": "8F1AB53132C40249A3B5C1AC909B9C43C1FE2D2F8013A41588ED7ED3E6220F32",
+    "commission_passed": true,
+    "normalisation": "excess divided by local interpolation-support span",
+    "catmull_1d_half_phase_hard_step": 0.0625,
+    "catmull_1d_phase_optimal_hard_step": 0.07407407407407407,
+    "catmull_1d_arbitrary_support_bound": 0.125,
+    "catmull_2d_separable_arbitrary_support_bound": 0.28125,
+    "sign_symmetric": true,
+    "six_percent_universal_ceiling": "REJECTED"
+  },
+  "real_render_magnitude_fields": {
+    "status": "UNMEASURED FOR ALL NINE RENDERS",
+    "fields": [
+      "all_pixel_rate",
+      "valid_source_hull_rate",
+      "median_excess_dn_and_normalised",
+      "p99_excess_dn_and_normalised",
+      "max_excess_dn_and_normalised",
+      "sign_symmetry",
+      "exact_kernel_bound_comparison"
+    ]
+  },
+  "mechanism_disposition": "M8-O detects invention. Magnitude can reject a fully declared bounded operator, but cannot identify sharpening without the exact operator chain or a byte-identical sharpening-only pair."
 }
