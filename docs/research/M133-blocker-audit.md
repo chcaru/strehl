@@ -1362,3 +1362,287 @@ complete.”
 - Whether the live M135 technical adjudication will justify a new D8-derived
   instrument. This documentary audit neither reads that lane as authority nor
   pre-judges its technical result.
+
+### 8.10 Revised Q1 — phase-zero results have outrun section 9
+
+**VERIFIED — summary.** The plan has **16 canonical phase-zero gates** for this
+audit: the 13 named corpus/product gates in the phase-zero list
+(`docs/proposals/2026-08-sota-path.md:2039-2068`) plus D11 decode, D13 idle
+scaling, and D15 storage
+(`docs/proposals/2026-08-sota-path.md:1834-1862,1928-1930,1957-1963`).
+Fourteen have an execution record. The two without one are
+`M-PHASE0-MAKERNOTE` and `M-PHASE0-TETHER`.
+
+The apparent absence of `M-PHASE0-PHASE` is false. Its result is filed in the
+lane's amended preregistration rather than under `docs/research/`:
+
+> **Filed verdict: KILL at the measured rho, NOT ROBUST across the rho
+> census.**
+> (`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1392-1398`)
+
+The same record says the per-site joint census “has still not been run” and
+that the registered thresholds are defined over it
+(`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1406-1411`). That is a
+completed adverse phase-zero result, not a robust permanent retirement.
+
+The filesystem inventory is also wider than the canonical gate count. A
+path-scoped `git ls-files 'docs/research/M-PHASE0-*.md'` returned **16**
+research reports; adding the tracked PHASE preregistration gives **17 produced
+phase-zero result artifacts**. Three are adjuncts rather than extra canonical
+gates: `RHO` supports PHASE/C1, `SPLIT2` follows SPLIT/D8, and `SLANTEDGE`
+audits D1's replacement detail family.
+
+For the table below, **GO** means that the evidence licenses the named
+implementation, not merely that a kill condition failed to fire. **PASS —
+NO BUILD** means the measurement gate closed successfully but its result
+rejects the proposed implementation branch. **QUALIFIED** means a narrower
+next measurement survives. **INCONCLUSIVE** means the lane refuses both build
+and permanent kill.
+
+#### 8.10.1 Every produced phase-zero verdict
+
+| Lane -> plan item | Verbatim standing result | Does the live plan still assume it is available? | Current program consequence |
+|---|---|---|---|
+| `ZFIELD` -> A5 | Source wording: **SURVIVE, NOT ROBUST.** **This does not license A5.** It licenses only a decode-bearing run on the shipping 5×5 field (`docs/research/M-PHASE0-ZFIELD.md:183-194`). | **Yes.** Section 9 still schedules A5 v0 in phase 2 (`docs/proposals/2026-08-sota-path.md:2085-2091`). | **VERIFIED — QUALIFIED, not GO.** Record the gate as passed-with-conditions; run the real-operator sigma-z lane before an A5 build (`docs/research/M-PHASE0-ZFIELD.md:242-249`). |
+| `XSPEC` -> C10, C1 registration, C4b instrument | Source wording: **C10 is NOT ROBUST at this phase-0 gate. This is not a KILL.** The outcome is a failed measurement gate (`docs/research/M-PHASE0-XSPEC.md:14-27`). | **Yes.** Section 9 still calls C10 one of the cleared physics channels and schedules its exploits (`docs/proposals/2026-08-sota-path.md:2093-2101`). | **VERIFIED — INCONCLUSIVE.** No complex observer, phase admission, C1 registration instrument, or permanent C10 kill is licensed; a retry needs two >=160-tile stacks and a commissioned floor on every grid (`docs/research/M-PHASE0-XSPEC.md:257-269`). |
+| `LCA` -> C2 | Source wording: **NOT ROBUST.** It means this lane cannot certify C2's requested *whole-field, build-the-offset* step. The later audit says: The required four-stack tone gate cannot be evaluated and files STOP (`docs/research/M-PHASE0-LCA.md:8-35,399-414`). | **Yes.** Section 9 still labels C2 cleared (`docs/proposals/2026-08-sota-path.md:2093-2094`), and C2 still describes `index + delta(field)` as a one-line change (`docs/proposals/2026-08-sota-path.md:1051-1055`). | **VERIFIED — INCONCLUSIVE / STOP.** Axial CA exists, but the constant-frame implementation is dead: a fixed `delta_R` cannot transfer across step settings, and the report says not to bake one (`docs/research/M-PHASE0-LCA.md:250-253,266-292`). A tone-valid per-stack calibration seam is the only licensed next step. |
+| `PHASE` -> C1 | Source wording: **Filed verdict: KILL at the measured rho, NOT ROBUST across the rho census.** (`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1392-1398`). | **Yes.** Section 9 still schedules C1 after C4 and describes both the 1× and 2× rungs as phase-3 work (`docs/proposals/2026-08-sota-path.md:2093-2102`). | **VERIFIED — adverse but not a robust permanent KILL.** C1 is not build-ready: the verdict flips inside rho's measured uncertainty, and the joint per-site census remains owed (`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1392-1411`). |
+| `QUINCUNX` -> C12 | Source wording: **The kill condition is not met. C12 survives.** But the lane answers C12's kill gate and only its kill gate (`docs/research/M-PHASE0-QUINCUNX.md:15-17,27-33`). | **Partly.** Section 9 treats C12 as cleared (`docs/proposals/2026-08-sota-path.md:2093-2094`), while the card requires through-focus behaviour, a flat null, and imbalance residual (`docs/proposals/2026-08-sota-path.md:1471-1477`). | **VERIFIED — QUALIFIED.** Consumers 1-2 survive the optical cutoff test, but all three characterisation items remain open and need decodes (`docs/research/M-PHASE0-QUINCUNX.md:276-280`). The plan's f/11 prediction is false and must be replaced by a cut between f/14 and f/18 (`docs/research/M-PHASE0-QUINCUNX.md:276-278`). |
+| `ASTIG` -> C7 | Source wording: **NOT ROBUST.** The registered `D4` is therefore **not estimable**, so this result is neither evidence that C7 survives nor evidence that it is killed (`docs/research/M-PHASE0-ASTIG.md:12-27`). | **Yes.** Section 9 calls C7 cleared (`docs/proposals/2026-08-sota-path.md:2093-2094`). | **VERIFIED — INCONCLUSIVE.** C7 must not enter the phase-3 implementation queue; it needs a new controlled chart repeat with usable outer sectors (`docs/research/M-PHASE0-ASTIG.md:192-201`). |
+| `DPAR2` -> planned `DPAR` / C4c | Source wording: **Status: MEASURED. Verdict: KILL C4c's stated 0.3–0.6 px/depth-step prediction.** (`docs/research/M-PHASE0-DPAR2.md:3-5`). | **Only the parent C4 remains scheduled.** The plan itself made C4c conditional and said absence would graduate similarity suffices to measurement (`docs/proposals/2026-08-sota-path.md:1100-1142`). | **VERIFIED — KILL at stated scope.** Do not build the depth-conditioned warp; C4a's residual field and C4b's local refinement are not killed by this result (`docs/research/M-PHASE0-DPAR2.md:81-100`). |
+| `CURV` -> C5 field-curvature prerequisite | Source wording: `VERDICT: NARROWED`; the report says it is not SURVIVE, KILL, or NOT ROBUST (`docs/research/M-PHASE0-CURV.md:3,15-35`). | **Yes.** C5 still says the census fits it once and caches it in the optical profile behind the existing gear guard, and phase 4 still schedules C5 (`docs/proposals/2026-08-sota-path.md:1166-1176,2104-2106`). | **VERIFIED — QUALIFIED / NO BUILD.** No profile coefficient is licensed. A future metric-depth product must carry an uncalibrated focal-surface systematic (`docs/research/M-PHASE0-CURV.md:262-283`). C5's ruler and product ideas survive; the claimed curvature correction does not. |
+| `PTC` -> B1 | Source wording: **B1 is not a build. It is a port, with a bar that cannot be met as written and one output that must be struck.** (`docs/research/M-PHASE0-PTC.md:14-15`). | **Yes, with stale acceptance.** The plan still requires agreement with M90 within its CI and still outputs a read floor (`docs/proposals/2026-08-sota-path.md:688-711`). | **VERIFIED — QUALIFIED GO after specification repair.** The lane is complete; port and generalise the existing estimator, replace the bar with CONSIST-gated ±3%, and strike the read-floor output (`docs/research/M-PHASE0-PTC.md:169-175,242-254`). B5's black-level intercept must also be re-sourced. |
+| `SPLIT` -> D8 | Source wording: **Verdict: KILL — STOP/REMOVE RUST; retain the split instrument offline.** (`docs/research/M-PHASE0-SPLIT.md:3-8`). | **Yes in the unamended body and section 9.** Phase 2 still schedules D8 self-tuning, A4 still expects D8's empirical channel, and D2 still names per-tile FRC (`docs/proposals/2026-08-sota-path.md:574-577,1568-1577,2085-2091`). Amendment 1 records the instrument death but does not propagate a replacement through those dependencies (`docs/proposals/2026-08-sota-path.md:2179-2231`). | **VERIFIED — KILL.** Remove D8 tuning, product FRC, and shipped-null work from the build plan. The offline instrument survives only for future experiments; reopening needs an independent repeat or sensor-pattern subtraction plus a transferring tuner plant (`docs/research/M-PHASE0-SPLIT.md:252-274`). |
+| `SPLIT2` -> D8/M1 repeat follow-up | Source wording: **Final verdict: NOT ROBUST / NO BUILD.** No real FRC or `P_sig/P_noise` result was retained (`docs/research/M-PHASE0-SPLIT2.md:3-13`). | Amendment 1 says the independent-repeat route is closed, while old phase-2/phase-3 language still assumes FRC outputs (`docs/proposals/2026-08-sota-path.md:2224-2231,2085-2102`). | **VERIFIED — INCONCLUSIVE / NO REVIVAL.** The available repeat does not reopen D8 or M1; a new stabilization-off capture or two passing light blocks would be required (`docs/research/M-PHASE0-SPLIT2.md:143-155`). |
+| `SLANTEDGE` -> D1/M1 instrument | Source wording: **Status: complete. Verdict: NO COMMISSIONED SLANTED-EDGE RESOLUTION INSTRUMENT.** The follow-ups say **NO SURVIVOR IS ADMITTED BY THE FULL FROZEN BATTERY** and **NO ADMISSIBLE S25 VARIANT** (`docs/research/M-PHASE0-SLANTEDGE.md:3-4,145-148,231-235`). | **Reconciled in Amendment 1, stale in the original body.** D1 still names FRC and slanted-edge SFR (`docs/proposals/2026-08-sota-path.md:1525-1545`), while Amendment 1 says both are dead (`docs/proposals/2026-08-sota-path.md:2179-2209`). | **VERIFIED — KILLED INSTRUMENT FAMILY.** M1 remains blocked; buying a comparator cannot manufacture a statistic or bar (`docs/research/M-PHASE0-SLANTEDGE.md:292-316`). |
+| `PIPE` -> planned `IDLE` / D13, plus D11's overlap seam | Source wording: **Verdict: D13 is FALSE, and the queue is a measured negative result.** The queue missed its bar and was removed rather than shipped (`docs/research/M-PHASE0-PIPE.md:3-10`). | **Yes.** D13 still proposes scaling beyond eight and `M-PHASE0-IDLE`; D11 still proposes a bounded overlap channel (`docs/proposals/2026-08-sota-path.md:1842-1852,1908-1930`). | **VERIFIED — PASSING MEASUREMENT, NO BUILD.** Fold saturation is eight workers, and the tested decode/fold queue is slower; remove both branches from the live roadmap (`docs/research/M-PHASE0-PIPE.md:88-99,135-158`). |
+| `RHO` -> PHASE/C1 supporting input | Source wording: **There is no licensed universal point estimate of `rho` from these data.** A harmless grid refinement moves the median `30.49x` (`docs/research/M-PHASE0-RHO.md:10-12,28-30`). | C1 remains scheduled, while its go/no-go depends on this convention-sensitive input (`docs/proposals/2026-08-sota-path.md:2047-2049,2093-2102`). | **VERIFIED — QUALIFIED SUPPORT, NOT GO.** Any C1 bar must state the frequency grid and boundary convention; a universal rho must not be published (`docs/research/M-PHASE0-RHO.md:214-225,246-254`). |
+| `VEIL2` -> planned `V-VEIL2` / A2 | Source wording: **Verdict: NOT ROBUST**; **No Rust changes. `BaseBand::Mean` remains the default and no A2 phase-1 arm is licensed.** The later audit is `STOP_DO_NOT_BUILD`, 0/7 gates passed (`docs/research/M-PHASE0-VEIL2.md:4-6,180-187`). | **Yes.** Phase 1 still includes A2 and names phase 0's veil instrument as an entry condition (`docs/proposals/2026-08-sota-path.md:2074-2083`). | **VERIFIED — OPERATIONAL KILL / NO BUILD.** Phase 1 cannot run as written. Either remove A2 from the bundle or commission a new causal/tone-safe instrument; building after the 0/7 audit would violate the stop rule (`docs/research/M-PHASE0-VEIL2.md:245-260`). |
+| `DECODE2` -> planned `DECODE` / D11 | Source wording: **Verdict: PASS.** The measured rates are 381.0 MB/s per thread and 1,413.4 MB/s at 32 threads (`docs/research/M-PHASE0-DECODE2.md:3-7`). | **Yes, factually stale.** The plan still says the gating number has not been taken and leaves an owned decoder behind it (`docs/proposals/2026-08-sota-path.md:1820-1825,1834-1862`). | **VERIFIED — PASS, BUT THE BUILD BRANCH IS FALSE.** Retain rawler; do not build an owned Sony LJPEG decoder. The fold remains the measured bottleneck, so D12 is the live speed work (`docs/research/M-PHASE0-DECODE2.md:98-110`). |
+| `NVME2` -> planned `NVME` / D15 | Source wording: **Verdict: PASS; storage is not a material bottleneck.** (`docs/research/M-PHASE0-NVME2.md:3-7`). | **Yes, factually stale.** D15 still presents 5 GB/s as an assumption to replace and proposes IOCP readahead (`docs/proposals/2026-08-sota-path.md:1957-1965`). | **VERIFIED — PASS, NO BUILD.** Storage is 11.41% of projected decode time; do not build IOCP unless a future workload crosses the 20% materiality bar (`docs/research/M-PHASE0-NVME2.md:83-96`). |
+
+#### 8.10.2 The two genuinely ungated plan items
+
+**VERIFIED — `M-PHASE0-MAKERNOTE` has not produced a tracked gate result.**
+The plan asks for a clean-room Tag9405b decode and fitted knot semantics
+(`docs/proposals/2026-08-sota-path.md:2059-2061`). Exact tracked-filename
+searches returned no `M-PHASE0-MAKERNOTE` artifact, and content searches found
+no later GO/KILL document. The only later assessment says the existing
+semantic interpretation crosses the GPL fence, the clean walker does not read
+these arrays, a held-out grid is required, and the acceptance `[bar]` is still
+unspecified (`docs/proposals/2026-09-phase0-triage.md:194-206`). **Standing
+state: UNGATED.**
+
+**VERIFIED — `M-PHASE0-TETHER` has not produced a tracked gate result.** The
+plan asks for the one-day SDK feasibility check
+(`docs/proposals/2026-08-sota-path.md:2066`). Exact tracked-filename and
+content searches returned no completed lane artifact. The later assessment
+says explicitly:
+
+> No repository experiment measures latency or 299-frame stability.
+> (`docs/proposals/2026-09-phase0-triage.md:265`)
+
+Body support is known, but full-RAW latency, backpressure, recovery, and
+long-bracket stability remain unmeasured
+(`docs/proposals/2026-09-phase0-triage.md:265-274`). This is **not** a
+zero-camera idle-evening move: the same document prices one hardware day, the
+camera/cable, SDK access, and a fresh roughly 299-frame tether run
+(`docs/proposals/2026-09-phase0-triage.md:276-280`). **Standing state:
+UNGATED, correctly still phase 4.**
+
+**VERIFIED correction to the supplied absence list:** PHASE ran; MAKERNOTE and
+TETHER did not. `M-PHASE0-IDLE` also lacks that literal filename, but
+`M-PHASE0-PIPE` quotes D13's exact assertion, measures the 1-to-16 curve and
+files D13 FALSE, so it is the substantive result of the planned IDLE gate
+(`docs/research/M-PHASE0-PIPE.md:12-24,88-99`).
+
+#### 8.10.3 Q1a — dead items and no-build closures
+
+**VERIFIED — strict explicit KILLs:**
+
+1. **D8's product branch** — split-based self-tuning, empirical FRC acuity,
+   and shipped null (`docs/research/M-PHASE0-SPLIT.md:3-8,252-274`).
+2. **C4c's stated depth-conditioned warp mechanism** at
+   0.3–0.6 px/depth-step (`docs/research/M-PHASE0-DPAR2.md:3-5,81-100`).
+
+**VERIFIED — conditional KILL, not a permanent retirement:** C1 is KILL at the
+measured rho but NOT ROBUST across the allowed rho census, and its joint
+per-site calculation is still missing
+(`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1392-1411`). Calling C1 simply
+dead would discard the registered robustness qualifier.
+
+**VERIFIED — operational no-build closures whose documents do not use the
+bare word KILL:**
+
+- A2's current coherence-ramped base-band treatment: `STOP_DO_NOT_BUILD`,
+  0/7 (`docs/research/M-PHASE0-VEIL2.md:180-187,245-260`).
+- D13's beyond-eight worker-scaling redesign and the tested bounded
+  decode/fold queue (`docs/research/M-PHASE0-PIPE.md:3-10,88-99,135-158`).
+- D11's owned Sony decoder (`docs/research/M-PHASE0-DECODE2.md:98-110`).
+- D15's IOCP prefetch branch (`docs/research/M-PHASE0-NVME2.md:83-96`).
+- D1's slanted-edge/S25 replacement family
+  (`docs/research/M-PHASE0-SLANTEDGE.md:3-13,145-148,231-235`).
+- B1's PTC-intercept “read floor” output and B5's reuse of that intercept
+  (`docs/research/M-PHASE0-PTC.md:119-140,242-254`).
+- C2's fixed frame-offset / one-line change in gather indexing
+  (`docs/research/M-PHASE0-LCA.md:250-253,266-292`).
+- C5's present proposal to cache the observed curvature term as a lens
+  coefficient (`docs/research/M-PHASE0-CURV.md:262-283`).
+
+These scoped closures do not kill B1 portability, C2 axial-CA research, all of
+C4, or all of C5. The reports explicitly retain narrower successors.
+
+#### 8.10.4 Q1b — what is genuinely cleared to build
+
+**VERIFIED — one named feature path is evidence-ready:** **B1's runtime-noise
+work as a port and generalisation of the already validated estimator**, not a
+new estimator build. Its governing acceptance must first be changed from
+M90's impossible CI target to the proposed CONSIST-gated ±3% bar, and “read
+floor” must be removed
+(`docs/research/M-PHASE0-PTC.md:14-26,80-83,169-175,242-254`).
+
+No other positive-looking verdict licenses its named feature:
+
+- ZFIELD licenses the next measurement, not A5
+  (`docs/research/M-PHASE0-ZFIELD.md:189-194`).
+- QUINCUNX clears only C12's optical kill condition; three commissioning
+  questions remain (`docs/research/M-PHASE0-QUINCUNX.md:27-33,276-280`).
+- DECODE2 and NVME2 are successful measurements whose correct actions are
+  **retain/no-build**, not new feature implementations
+  (`docs/research/M-PHASE0-DECODE2.md:98-110`;
+  `docs/research/M-PHASE0-NVME2.md:83-96`).
+
+**VERIFIED secondary consequence:** D12's fold SIMD/fusion work is now the
+best-supported live speed branch, because decode is fast enough, storage is
+immaterial, fold is 98.5% of the current warm path, worker scaling saturates
+at eight, and the overlap queue lost
+(`docs/research/M-PHASE0-DECODE2.md:98-110`;
+`docs/research/M-PHASE0-NVME2.md:83-96`;
+`docs/research/M-PHASE0-PIPE.md:88-99,135-158`). That is a priority inference,
+not a claim that D12 itself has passed an acceptance gate.
+
+#### 8.10.5 Q1c — what remains genuinely ungated
+
+**VERIFIED list:**
+
+1. **C13 / `M-PHASE0-MAKERNOTE`** — no completed tracked gate; no capture
+   required, but the clean-room method, held-out geometry, and numeric bar must
+   be frozen first (`docs/proposals/2026-09-phase0-triage.md:194-206`).
+2. **D10 / `M-PHASE0-TETHER`** — no completed tracked gate; requires an owner
+   hardware day and a new long tether run, so it is neither corpus-only nor an
+   idle-box task (`docs/proposals/2026-09-phase0-triage.md:265-280`).
+
+**VERIFIED:** PHASE is not on this list
+(`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1343,1392-1411`). The planned
+literature passes are a separate phase-zero obligation
+(`docs/proposals/2026-08-sota-path.md:2069-2072`); I found no single
+commissioned completion ledger for all of them, so I do not count them as a
+seventeenth canonical lane.
+
+#### 8.10.6 What phases 1-4 have lost
+
+| Phase | Lost or qualified input | Consequence |
+|---|---|---|
+| 1 | A2's required veil instrument returned NOT ROBUST / STOP, while section 9 makes that instrument an entry condition (`docs/research/M-PHASE0-VEIL2.md:4-6,180-187`; `docs/proposals/2026-08-sota-path.md:2074-2076`). | **VERIFIED:** phase 1 cannot run *as written*. A1/A4/B3/B4/B6 are not killed by VEIL2, but A2 must be removed from the bundle or re-instrumented. |
+| 2 | A5 is only conditionally through phase zero; D8 is killed; D2 loses its empirical FRC channel; B1's bar/output need repair (`docs/research/M-PHASE0-ZFIELD.md:189-194`; `docs/research/M-PHASE0-SPLIT.md:3-8`; `docs/research/M-PHASE0-PTC.md:242-254`; `docs/proposals/2026-08-sota-path.md:2085-2091`). | **VERIFIED:** remove D8, redesign or narrow D2, run A5's real-operator measurement, and amend B1 before implementation. D3 remains downstream of a credible D2/C5 product. |
+| 3 | Section 9 calls C2/C7/C10/C12/C13 “cleared,” but C2, C7, and C10 are inconclusive/STOP, C12 is only partly gated, and C13 is unrun (`docs/proposals/2026-08-sota-path.md:2093-2102`; result citations in §8.10.1). C1 is adverse/not robust, and C4c is killed. | **VERIFIED:** the label “cleared physics channels” is false. C4a/b may proceed when independently justified, but none of C1/C2/C7/C10/C12/C13 is currently licensed as a complete phase-3 build. The FRC/split-half exit language is also obsolete after D8. |
+| 4 | C5 cannot claim a calibrated focal-surface profile, and D10 is ungated (`docs/research/M-PHASE0-CURV.md:262-283`; `docs/proposals/2026-09-phase0-triage.md:265-280`). C10's pupil read, a proposed D4 input, is also unavailable (`docs/research/M-PHASE0-XSPEC.md:14-27,257-269`). | **VERIFIED:** keep C5's products explicitly systematic-limited; do not schedule D10 before B5/D2/D3 and its hardware gate; do not assume C10 supplies D4. |
+| Speed program | The decoder replacement, queue, beyond-eight scaling redesign, and IOCP branch all lost; D12 did not (`docs/research/M-PHASE0-DECODE2.md:98-110`; `docs/research/M-PHASE0-PIPE.md:3-10,88-99`; `docs/research/M-PHASE0-NVME2.md:83-96`). | **VERIFIED:** rebase the speed order around fold SIMD/pass fusion. D14 remains behind the unresolved C1 1×-lattice architecture because the proposal explicitly places it there (`docs/proposals/2026-08-sota-path.md:1945-1955`). |
+
+#### 8.10.7 Q1d — section 9's sequencing no longer holds literally
+
+**VERIFIED answer: no.** The gate-first principle remains correct; the concrete
+phase membership and exits do not. The evidence requires these amendments:
+
+1. **Phase 1:** remove A2 from the bundled merge or commission a replacement
+   instrument before it enters. Its present entry condition failed
+   (`docs/research/M-PHASE0-VEIL2.md:180-187,245-260`).
+2. **Phase 2:** remove D8; narrow/rebuild D2 without claiming empirical FRC;
+   run A5's shipping-operator measurement; repair B1's acceptance and output
+   list (`docs/research/M-PHASE0-SPLIT.md:252-274`;
+   `docs/research/M-PHASE0-ZFIELD.md:189-194`;
+   `docs/research/M-PHASE0-PTC.md:242-254`).
+3. **Phase 3:** replace “cleared physics channels” with their actual states:
+   C2/C7/C10 unresolved, C12 partial, C13 ungated, C1 adverse/not robust, and
+   C4c killed (`docs/proposals/2026-08-sota-path.md:2093-2102`; §8.10.1).
+4. **Phase 4:** retain TETHER here rather than front-loading it. It needs a
+   camera, SDK, cable, and new run, and its B5/D2/D3 substrate is not ready
+   (`docs/proposals/2026-09-phase0-triage.md:261-280`).
+5. **Speed:** move D12 ahead of any decoder, queue, D13-scaling, or IOCP work.
+   The three measurements close those alternatives and identify fold work as
+   the remaining live branch (§8.10.4).
+6. **Owner spend:** do not buy Zerene on the premise that it unlocks D1 or A5
+   now. The plan says the purchase serves those two purposes
+   (`docs/proposals/2026-08-sota-path.md:2036-2037`), but D1 has no admitted
+   instrument and ZFIELD does not license A5
+   (`docs/research/M-PHASE0-SLANTEDGE.md:3-13,292-316`;
+   `docs/research/M-PHASE0-ZFIELD.md:189-194`). Section 8.3's separate rule-4
+   and Helicon findings strengthen the same no-purchase conclusion.
+
+The one never-run corpus gate, MAKERNOTE, is not automatically the next lane:
+its own later assessment prices 2-5 engineering days and says its acceptance
+bar is missing (`docs/proposals/2026-09-phase0-triage.md:194-206`). Unrun is
+not the same as highest decision value.
+
+#### 8.10.8 Original Q2, Q3, and Q4 — unchanged
+
+**Q2 — VERIFIED: yes, six plan channels still have no direct M-axis.** They are
+focus phase, spatial sampling phase, G1/G2 quincunx, orientation, time within
+the bracket, and the vendor-file payload. The full trace and the
+`2 direct / 5 partial / 6 none / 1 retired` tally remain §8.5. The new
+phase-zero evidence changes several channels' readiness, not their absence
+from M1-M12
+(`docs/proposals/2026-08-sota-path.md:875-897`;
+`docs/proposals/2026-09-sota-scorecard.md:388-403`).
+
+**Q3 — VERIFIED: decision rule 4 is the scorecard author's invention, not the
+owner's requirement.** Its M1 dependency and `98%` threshold appear in the
+scorecard (`docs/proposals/2026-09-sota-scorecard.md:93-98`) and not in the
+proposal, which expressly retains independent noise, veil, and hull
+instruments after detail dies
+(`docs/proposals/2026-08-sota-path.md:2208-2210`). No phase-zero result
+ratifies that governance rule. It must not be represented to the owner as his
+reason not to buy software.
+
+**Q4 — VERIFIED: yes.** A complete M1-M12 pass still would not test eight
+families of explicit plan commitments: one-path/default architecture;
+unknown-body portability plus the state ledger and re-renderable master;
+D2's multi-channel trust/disagreement product; C5's calibrated uncertainty,
+normals, physical reshoot advice, and refocusable output; D3/D10 advice
+correctness and tether operation; D7's owner print decisions; the novel
+C-channel products; and a perceptual-quality axis. The evidence and citations
+remain §8.6. Phase-zero results add one further warning: several of those
+products have now lost an input, so an unamended plan-completion ledger would
+overstate both scorecard coverage and build readiness.
+
+#### 8.10.9 Assumptions
+
+- **ASSUMED:** *canonical gate* means the 13 named phase-zero lanes in section
+  9 plus D11/DECODE, D13/IDLE, and D15/NVME. RHO, SPLIT2, and SLANTEDGE are
+  reported separately because they are supporting/follow-up decisions, not
+  three additional owner-plan gates.
+- **ASSUMED:** *genuinely ready to build* requires the result to license source
+  work under its own frozen rule. Merely surviving a kill condition is not
+  enough when the report explicitly requires another measurement.
+- **ASSUMED:** the PTC report's proposed ±3% bar is technically usable but
+  still requires governing-document adoption before it replaces the owner's
+  current CI wording.
+- **ASSUMED:** PIPE is the substantive completion of `M-PHASE0-IDLE` because it
+  quotes D13's exact assertion and runs the registered idle/load-controlled
+  worker curve, despite the filename change.
+
+#### 8.10.10 Could not determine
+
+- Whether the owner has ratified PTC's replacement B1 bar or the removal of
+  the read-floor output. No amendment says so.
+- Whether the orchestrator intends PHASE's `KILL at measured rho / NOT ROBUST`
+  as a temporary closure or a permanent C1 retirement. The file's still-owed
+  joint census prevents this audit from silently choosing the stronger claim.
+- Whether any untracked or off-repository MAKERNOTE/TETHER work exists. The
+  verified claim is limited to tracked filenames and documentary content in
+  this repository.
+- Whether all proposal-wide literature passes have been completed. Individual
+  lanes contain prior-art searches, but no single completion ledger closes
+  section 9's blanket obligation.
+- What replaces D8's empirical channel inside D2. Amendment 1 retires the old
+  instrument; no authoritative plan amendment supplies the replacement.
