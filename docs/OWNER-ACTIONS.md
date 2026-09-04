@@ -575,7 +575,7 @@ result — and why the certificate's *actual* uncertainty is the whole question.
 
 ---
 
-## Ask 3 — buy Zerene. **Not $189. The real figure is $925.** *Not yet. Wait.*
+## Ask 3 — buy Zerene **Professional, $289**. *Necessary either way, and the only thing on the board that unblocks an axis.*
 
 > **CORRECTION — the third time I have had to correct this ask, and this one
 > changes what it is for. Read it before the pricing table below.** Three
@@ -634,19 +634,49 @@ result — and why the certificate's *actual* uncertainty is the whole question.
 > today without your shutter or your wallet is the **M12-D sub-bar**, and a
 > sub-bar is not an axis.
 >
-> **But do not reach for your card yet, because money may not be the binding
-> constraint.** The scorecard requires the newest *generally available stable*
-> release of **both** named comparators, and rules that "if **either** product
-> cannot produce a linear output that passes §1.3, the named-comparator
-> requirement is unmet and the SOTA verdict remains `UNMEASURED`." Helicon is
-> not installed here at all — I checked four install locations and searched
-> both Program Files trees by name — and the section below says the export we
-> need exists only in a **beta**, while the scorecard demands a **stable**
-> release. If that is still true, the comparator bars are unreachable **at any
-> price**, and what you owe this program is a *rule decision, not a payment*.
-> Lane M157 is verifying Helicon's current stable capability now. **I will not
-> give you a buy-or-wait verdict until it reports**, and I would rather leave
-> this ask visibly unresolved than send you to a checkout that buys nothing.
+> **AND NOW THE PART THAT CHANGES YOUR ANSWER.** I was one paragraph away from
+> telling you this purchase might buy nothing. The thing that corrected me is
+> your own plan. The scorecard demands the newest stable build of **both**
+> named comparators and rules that "if **either** product cannot produce a
+> linear output that passes §1.3, the named-comparator requirement is unmet
+> and the SOTA verdict remains `UNMEASURED`." Helicon is not installed here at
+> all — I checked four install locations and searched both Program Files trees
+> by name — and the section below says the export we need from it exists only
+> in a beta. Read together, those make the comparator bars unreachable at any
+> price.
+>
+> **But that rule is not yours.** `docs/proposals/2026-08-sota-path.md` pins
+> the comparators as "licensed Zerene", "the fork rebuilt at its best-known
+> build", and — in its own words — "Helicon if obtainable". *If obtainable.*
+> Optional. Where it names this very purchase it says "licence a commercial
+> comparator", singular, and specifies that the export we need, *Save Adjusted
+> Input Images*, "is licensed only to **Prosumer ($189)** or **Professional
+> ($289)**". **I hardened your "if obtainable" into a mandatory comparator
+> whose absence voids the entire verdict, and then let that invention block
+> your purchase.** This is the third time the scorecard has manufactured a
+> blocker your plan does not contain — after rule 4 and the `98%` threshold,
+> both caught by M146.
+>
+> **So the verdict is: buy it, and buy Professional.** A licensed Zerene is
+> required by your plan no matter how the Helicon question lands, so this
+> purchase is necessary either way. Under your plan's own reading it is also
+> *sufficient*: it unblocks M11's comparator ratio and, through M12-S,
+> unblocks M12 — the closest thing to a first score this program has. Nothing
+> else you own, and nothing you could shoot tonight, does that. Take
+> Professional over the `$189` Prosumer for the licence-terms reason in D3
+> above.
+>
+> **One thing I need back from you, and it costs nothing.** Ratify or reject
+> this reading: *Helicon is optional, so a licensed Zerene plus the fork
+> satisfies the named-comparator requirement.* Ratify it and I correct the
+> scorecard and the comparator question closes. Reject it and the comparator
+> bars stay `UNMEASURED` until Helicon ships that export in a stable build,
+> and no purchase changes that. **I am not going to quietly relax a
+> pre-registered bar on my own authority** — a scorecard I can edit when it
+> becomes inconvenient is not a scorecard. Lane M157 is confirming the
+> edition, price, and whether *Save Adjusted Input Images* can be driven from
+> a script, which the timed runs require.
+>
 >
 
 **Correcting myself again, and this one is worth reading.** I previously wrote
