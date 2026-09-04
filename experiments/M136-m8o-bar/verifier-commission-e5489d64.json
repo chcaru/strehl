@@ -1,0 +1,499 @@
+{
+  "baseline_green": {
+    "m8_o_violations": 0,
+    "m8_r_violations": 0,
+    "output_sha256": "BFB5CC6ED6BA463DCF497ECECEB24E7832BC64C98893562C9A511D7B4CA25EE7",
+    "status": "PASS",
+    "violations": []
+  },
+  "commissioning": "both directions",
+  "crop_origin_case": {
+    "compact_shape": [
+      2,
+      3
+    ],
+    "correct_origin_violations": 0,
+    "expected_wrong_origin_violations": 6,
+    "full_shape": [
+      8,
+      8
+    ],
+    "origin": [
+      2,
+      3
+    ],
+    "wrong_origin_violations": 6
+  },
+  "degradation_plant": {
+    "landed": {
+      "lower": {
+        "new_line": "  \"encoded_r\": 65534,",
+        "occurrences": 1,
+        "old_line": "  \"encoded_r\": 65535,",
+        "sha256_after": "8A237B8878B9D3D0AF7CB1D2753AB94CB1C0863C2D6814B9E41099E5DD950F1E",
+        "sha256_before": "570CE367000C5035BDA7BF3B370113CBB9758535A09B5C372840B0BBA8E1522C"
+      },
+      "upper": {
+        "new_line": "  \"encoded_b\": 1,",
+        "occurrences": 1,
+        "old_line": "  \"encoded_b\": 0,",
+        "sha256_after": "00F0C2680751E01CB7712429314651A27CF5B4BB9312D64AF9D1E55A94ED8306",
+        "sha256_before": "8A237B8878B9D3D0AF7CB1D2753AB94CB1C0863C2D6814B9E41099E5DD950F1E"
+      }
+    },
+    "result": {
+      "m8_o_violations": 2,
+      "m8_r_violations": 0,
+      "output_sha256": "10A1D164829B95D1A886E3094AF006BF93841F267CFA55C85BC2773AD002F95A",
+      "status": "FAIL",
+      "violations": [
+        {
+          "channel": "R",
+          "direction": -1,
+          "encoded": 65534,
+          "x": 2,
+          "y": 3
+        },
+        {
+          "channel": "B",
+          "direction": 1,
+          "encoded": 1,
+          "x": 3,
+          "y": 4
+        }
+      ]
+    }
+  },
+  "fail_closed": {
+    "duplicate_frame_site": "duplicate trace-v3 frame/site (0, (0, 0))",
+    "missing_frame_site": "incomplete trace set: missing=[(0, (0, 0))], extra=[]",
+    "producer_supplied_hull_ignored": true,
+    "trace_v2_reason": "requires trace-v3",
+    "trace_v2_rejected": true,
+    "wrong_crop_origin": "commission-crop: trace crop (0, 0, 9, 9) != independently reconstructed (4, 4, 9, 9)",
+    "wrong_freeze_binding": "commission-freeze: trace blocks are not bound to the frozen instrument",
+    "wrong_tiff_freeze_binding": {
+      "defect_landed": {
+        "new_line": "  \"freeze_sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\"",
+        "occurrences": 1,
+        "old_line": "  \"freeze_sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\"",
+        "sha256_after": "22963D976BCB7DF9AE880CA03DDA7994B98EB3CA995B106A378BC58F06E8B1AA",
+        "sha256_before": "309727F310D3E081C5A9A10827F19D2E0ED6C8B4EED4DD8A415DCF76217137A5"
+      },
+      "defect_tiff_sha256": "46E4FAF433E67942833891C54FC8B91AFF7D3B58C372689B6616460FF900075B",
+      "improved_tiff_sha256": "BFB5CC6ED6BA463DCF497ECECEB24E7832BC64C98893562C9A511D7B4CA25EE7",
+      "improvement_landed": {
+        "new_line": "  \"freeze_sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\"",
+        "occurrences": 1,
+        "old_line": "  \"freeze_sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\"",
+        "sha256_after": "309727F310D3E081C5A9A10827F19D2E0ED6C8B4EED4DD8A415DCF76217137A5",
+        "sha256_before": "22963D976BCB7DF9AE880CA03DDA7994B98EB3CA995B106A378BC58F06E8B1AA"
+      },
+      "reason": "TIFF is not bound to the frozen M136 instrument",
+      "rejected": true
+    }
+  },
+  "green_pairing_case": {
+    "encoded_output": 0,
+    "independent_site_interval": [
+      0.0,
+      1.0
+    ],
+    "independent_site_violation": false,
+    "same_frame_interval": [
+      0.5,
+      0.5
+    ],
+    "same_frame_violation": true
+  },
+  "improvement_plant": {
+    "landed": {
+      "lower": {
+        "new_line": "  \"encoded_r\": 65535,",
+        "occurrences": 1,
+        "old_line": "  \"encoded_r\": 65534,",
+        "sha256_after": "29517F221B8795CA6B8A6B9839E44376F8F954669B7EBF6613D215D17E4C342D",
+        "sha256_before": "00F0C2680751E01CB7712429314651A27CF5B4BB9312D64AF9D1E55A94ED8306"
+      },
+      "upper": {
+        "new_line": "  \"encoded_b\": 0,",
+        "occurrences": 1,
+        "old_line": "  \"encoded_b\": 1,",
+        "sha256_after": "570CE367000C5035BDA7BF3B370113CBB9758535A09B5C372840B0BBA8E1522C",
+        "sha256_before": "29517F221B8795CA6B8A6B9839E44376F8F954669B7EBF6613D215D17E4C342D"
+      }
+    },
+    "result": {
+      "m8_o_violations": 0,
+      "m8_r_violations": 0,
+      "output_sha256": "BFB5CC6ED6BA463DCF497ECECEB24E7832BC64C98893562C9A511D7B4CA25EE7",
+      "status": "PASS",
+      "violations": []
+    }
+  },
+  "independence": {
+    "forbidden_imports": [],
+    "imports": [
+      "__future__",
+      "argparse",
+      "ast",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "math",
+      "numpy",
+      "os",
+      "pathlib",
+      "re",
+      "shutil",
+      "struct",
+      "subprocess",
+      "sys",
+      "tifffile",
+      "typing"
+    ]
+  },
+  "interval_containment": {
+    "cases": 4096,
+    "misses": 0,
+    "scalar_samples": 69556,
+    "seed": 136
+  },
+  "inverse_gain_order_case": {
+    "actual_contract": "f32 inv=1/g; f32 z*inv",
+    "actual_intermediate_u16": 1,
+    "actual_scaled_f32": 1.4999998807907104,
+    "direct_division_f32": 1.5,
+    "direct_division_intermediate_u16": 2,
+    "distinguishes_operation_order": true,
+    "production_path": {
+      "black_f32_bits": "0x439d30be",
+      "direct_division_interval_u16": [
+        17269,
+        17269
+      ],
+      "distinguishes_operation_order": true,
+      "intermediate_interval_u16": [
+        17268,
+        17269
+      ],
+      "site_gain_f32_bits": "0x3f167791",
+      "source_f32_bits": "0x461bb3f3"
+    },
+    "site_gain_f32": 1.100000023841858,
+    "source_f32_bits": "0x3fd33333"
+  },
+  "m8_r_kernel_cases": {
+    "arms": {
+      "catmull_hard_step": {
+        "denominator": 252,
+        "lower_violations": 14,
+        "upper_violations": 14,
+        "violations": 28
+      },
+      "clamped_copy_null": {
+        "denominator": 252,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "clamped_hard_step": {
+        "denominator": 252,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "convex_bilinear_null": {
+        "denominator": 300,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "copy_null": {
+        "denominator": 252,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "explicit_high_low": {
+        "denominator": 252,
+        "lower_violations": 1,
+        "upper_violations": 1,
+        "violations": 2
+      },
+      "widened_clamp_sabotage": {
+        "denominator": 252,
+        "lower_violations": 14,
+        "upper_violations": 14,
+        "violations": 28
+      }
+    },
+    "clamped_copy_bit_exact": true,
+    "expected_exact": {
+      "catmull_hard_step": {
+        "denominator": 252,
+        "lower_violations": 14,
+        "upper_violations": 14,
+        "violations": 28
+      },
+      "clamped_hard_step": {
+        "denominator": 252,
+        "lower_violations": 0,
+        "upper_violations": 0,
+        "violations": 0
+      },
+      "explicit_high_low": {
+        "denominator": 252,
+        "lower_violations": 1,
+        "upper_violations": 1,
+        "violations": 2
+      },
+      "widened_clamp_sabotage": {
+        "denominator": 252,
+        "lower_violations": 14,
+        "upper_violations": 14,
+        "violations": 28
+      }
+    }
+  },
+  "numeric_cases": {
+    "convex_bilinear_green": {
+      "H": 0.8,
+      "L": 0.2,
+      "encoded": 32768,
+      "expected_violations": 0,
+      "observed_violations": 0
+    },
+    "copy_green": {
+      "H": 0.4,
+      "L": 0.4,
+      "encoded": 26214,
+      "expected_violations": 0,
+      "observed_violations": 0
+    },
+    "in_range_high_red": {
+      "H": 0.8,
+      "L": 0.2,
+      "encoded": 58982,
+      "expected_violations": 1,
+      "observed_violations": 1
+    },
+    "in_range_low_red": {
+      "H": 0.8,
+      "L": 0.2,
+      "encoded": 6554,
+      "expected_violations": 1,
+      "observed_violations": 1
+    },
+    "unrepresentable_high_at_rail_green": {
+      "H": 1.0,
+      "L": 1.0,
+      "encoded": 65535,
+      "expected_violations": 0,
+      "observed_violations": 0
+    },
+    "unrepresentable_high_off_rail_red": {
+      "H": 1.0,
+      "L": 1.0,
+      "encoded": 65534,
+      "expected_violations": 1,
+      "observed_violations": 1
+    },
+    "unrepresentable_low_at_rail_green": {
+      "H": 0.0,
+      "L": 0.0,
+      "encoded": 0,
+      "expected_violations": 0,
+      "observed_violations": 0
+    },
+    "unrepresentable_low_off_rail_red": {
+      "H": 0.0,
+      "L": 0.0,
+      "encoded": 1,
+      "expected_violations": 1,
+      "observed_violations": 1
+    }
+  },
+  "preregistration": {
+    "canonical_sha256": "97E4B3FF9F1AFAE98E416C92E3D62CCD7F5C5A2C79D45C51343B2A5D96AD770D",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\clamped-m8o-preregistration.json",
+    "sha256": "B656EFB9D2BFEA4B8CF5DD67BE63A9CD7D6930F6B302C7EF93E9E1DF7529BCEB"
+  },
+  "production_path_controls": {
+    "green_pairing": {
+      "defect": {
+        "encoded_green": 26214,
+        "m8_o": {
+          "denominator": 243,
+          "lower_violations": 81,
+          "upper_violations": 0,
+          "violations": 81
+        },
+        "m8_r_violations": 0,
+        "recipe_sha256": "3D2E9F2334D09060ACD6C35EF24A01F11B7117606A7BC12EFF4522A9A95982E7",
+        "violation_channels": [
+          "G"
+        ],
+        "violation_directions": [
+          -1
+        ]
+      },
+      "improvement": {
+        "encoded_green": 32768,
+        "m8_o": {
+          "denominator": 243,
+          "lower_violations": 0,
+          "upper_violations": 0,
+          "violations": 0
+        },
+        "m8_r_violations": 0,
+        "recipe_sha256": "FA3D17171BFCDDEEEA382300AEDBDAA2D7E1119A36605FDC82198E4C724C3047",
+        "violation_channels": [],
+        "violation_directions": []
+      },
+      "improvement_landed": {
+        "new_line": "  \"encoded_green\": 32768",
+        "occurrences": 1,
+        "old_line": "  \"encoded_green\": 26214",
+        "sha256_after": "FA3D17171BFCDDEEEA382300AEDBDAA2D7E1119A36605FDC82198E4C724C3047",
+        "sha256_before": "3D2E9F2334D09060ACD6C35EF24A01F11B7117606A7BC12EFF4522A9A95982E7"
+      }
+    },
+    "inverse_gain": {
+      "black_f32_bits": "0x439d30be",
+      "direct_division_interval_u16": [
+        17269,
+        17269
+      ],
+      "distinguishes_operation_order": true,
+      "intermediate_interval_u16": [
+        17268,
+        17269
+      ],
+      "site_gain_f32_bits": "0x3f167791",
+      "source_f32_bits": "0x461bb3f3"
+    },
+    "m8_r": {
+      "defect": {
+        "m8_o_violations": 0,
+        "m8_r": {
+          "denominator": 784,
+          "lower_violations": 1,
+          "upper_violations": 1,
+          "violations": 2
+        },
+        "recipe_sha256": "638855AB7885FDECFB37C2121C79E10C846EC79636E838E988E5AC8F89F9FA1E",
+        "violation_directions": [
+          -1,
+          1
+        ]
+      },
+      "improvement": {
+        "m8_o_violations": 0,
+        "m8_r": {
+          "denominator": 784,
+          "lower_violations": 0,
+          "upper_violations": 0,
+          "violations": 0
+        },
+        "recipe_sha256": "7705F650BCAF8ECC2371C2DD21422676F4646990F201D921F057735131A67AD6",
+        "violation_directions": []
+      },
+      "improvement_landed": {
+        "lower": {
+          "new_line": "  \"low_gather\": 2000.0,",
+          "occurrences": 1,
+          "old_line": "  \"low_gather\": 1999.0,",
+          "sha256_after": "F5828846994B6A260765E3DA1F9A49FD5D8DC7C508E6060EC1FA16275EB82760",
+          "sha256_before": "638855AB7885FDECFB37C2121C79E10C846EC79636E838E988E5AC8F89F9FA1E"
+        },
+        "upper": {
+          "new_line": "  \"high_gather\": 2000.0",
+          "occurrences": 1,
+          "old_line": "  \"high_gather\": 2001.0",
+          "sha256_after": "7705F650BCAF8ECC2371C2DD21422676F4646990F201D921F057735131A67AD6",
+          "sha256_before": "F5828846994B6A260765E3DA1F9A49FD5D8DC7C508E6060EC1FA16275EB82760"
+        }
+      }
+    },
+    "reciprocal_order": {
+      "defect": {
+        "encoded_red": 54508,
+        "m8_o": {
+          "denominator": 243,
+          "lower_violations": 81,
+          "upper_violations": 0,
+          "violations": 81
+        },
+        "m8_r_violations": 0,
+        "recipe_sha256": "4B7F7D6350F1465D2C34FBF656B9993EFA26A5CB58F4436E2625841E62AC4D12",
+        "violation_channels": [
+          "R"
+        ],
+        "violation_directions": [
+          -1
+        ]
+      },
+      "improvement": {
+        "encoded_red": 54509,
+        "m8_o": {
+          "denominator": 243,
+          "lower_violations": 0,
+          "upper_violations": 0,
+          "violations": 0
+        },
+        "m8_r_violations": 0,
+        "recipe_sha256": "DA6A172B62A50C3F81670561318101448EAF8947ACDDFA7C4B3B4B5D35352854",
+        "violation_channels": [],
+        "violation_directions": []
+      },
+      "improvement_landed": {
+        "new_line": "  \"encoded_red\": 54509",
+        "occurrences": 1,
+        "old_line": "  \"encoded_red\": 54508",
+        "sha256_after": "DA6A172B62A50C3F81670561318101448EAF8947ACDDFA7C4B3B4B5D35352854",
+        "sha256_before": "4B7F7D6350F1465D2C34FBF656B9993EFA26A5CB58F4436E2625841E62AC4D12"
+      }
+    }
+  },
+  "prospective_interpretation": {
+    "canonical_sha256": "DBCCCF505D91FB86385D44BE3293A280A54ACE4C0C416945F23CFDFE355A203C",
+    "commit": "746cc38a",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\prospective-interpretations.md",
+    "sha256": "8F827FAD6C2A218B473FAFD9287F95E3321E880FF2B36E2D877DC64DC4783C12"
+  },
+  "protocol": "M136 independent verifier v1",
+  "quantizer_case": {
+    "green_violation": false,
+    "intermediate_u16": 1013,
+    "pre_final_interval": [
+      0.0611572265625,
+      0.0611572265625
+    ],
+    "red_violation": true
+  },
+  "source_inventory_case": {
+    "build_id": "m136-248178b921f9-aaaaaaaaaaaa",
+    "observed": [
+      "Cargo.toml",
+      "crates/app/src/target/mod.rs",
+      "outside-path-dependency/src/lib.rs"
+    ],
+    "required_present": [
+      "Cargo.toml",
+      "crates/app/src/target/mod.rs",
+      "outside-path-dependency/src/lib.rs"
+    ],
+    "status": "PASS",
+    "top_level_target_excluded": [
+      "target-m136-tests/debug/probe.exe",
+      "target-m136/release/strehl.exe"
+    ]
+  },
+  "status": "PASS",
+  "verifier": {
+    "canonical_sha256": "4AA3B534506482002C4F3FF3E57969F14F0E97BCF6E7E4AC64E4D29D7469DE0A",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier_m136.py",
+    "sha256": "2AA3789060D9885A63EC9DF16CC8933492466185EF549241F69BA852A85CC9F7"
+  }
+}

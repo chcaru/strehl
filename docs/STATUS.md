@@ -6096,7 +6096,45 @@ because the calibration frames that make those exposures interpretable were in n
 plan. The requirement has been routed into M164's staged plan and recorded as a
 demonstrated waste mode. **No capture request goes to the owner without it.**
 
-#### 2.9.54.9 The corrected scoreboard
+#### 2.9.54.9 A commissioned instrument plus an existing number is still not a score
+
+M136's replacement checker was recommissioned tonight and **passed**: `exit_code 0`,
+`commission_sha256 5FEC854466CC31C215458C16C9868EBFDE6A46E05D1839EE85FB3BD15EDA9865`, in
+`4.1` seconds. Its commissioning report carries a planted degradation **and** a planted
+improvement, alongside fail-closed, independence and interval-containment arms — the
+improvement arm being the one that distinguishes a sound instrument from a blind one.
+
+At that moment two facts sat next to each other: the checker is commissioned, and
+`analysis.json` records `catmull_aggregate.projected_plus_internal_quant_violations =
+31,148` against `denominator = 74,173,536`, or `0.041993%`. Announcing M8-O v1.5 as scored
+would have been a single sentence away, and it would have been wrong twice over.
+
+**The first objection was a timestamp.** `analysis.json` was written at `09:56:52Z` and the
+corrected `verifier_m136.py` at `15:48:43Z` — the analysis predates the fixed checker by
+close to six hours. A passing recommission validates the *instrument*, not a six-hour-old
+*output*.
+
+M136 ruled that objection does not apply, and the ruling was verified here rather than
+accepted: `analyze.py` contains no reference to `verifier_m136` or
+`validate_checker_fixture`, and `e5489d64` changed exactly one line in one file. The fix
+cannot reach the aggregate.
+
+**But M136 refused the promotion anyway, for a better reason.** `31,148` is a diagnostic
+computed from the old Scale-domain arrays using projected hulls plus a *conservative
+internal-quantization bound*. **The exact v1.5 per-frame transformed Crop census has never
+run.** M8-O v1.5 stays `UNMEASURED` until it does, and lane M142 is its executor.
+
+Two things are worth keeping from this. **A lane refused to claim a result it was entitled
+to claim**, on a distinction its orchestrator had not spotted — the timestamp objection was
+the wrong objection, and the right one was stronger. And **the near-miss was structural, not
+careless**: a commissioned instrument sitting beside a plausible number is exactly the shape
+of every figure this program has later had to withdraw.
+
+One correction followed. M142 had been challenged as possibly duplicating M136 and invited
+to stand down; M136's ruling establishes it is the executor of the only remaining path to
+the program's potential second score. That reversal was issued immediately.
+
+#### 2.9.54.10 The corrected scoreboard
 
 **Zero of seven axes passed.** Exactly one component — **M8-R** — is scored against an
 achievable bar, and it **fails at `1.030569%`** against `0.0000%`.

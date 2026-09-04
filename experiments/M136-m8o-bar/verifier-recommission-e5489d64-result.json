@@ -1,0 +1,13 @@
+﻿{
+    "schema":  "m136-verifier-recommission-result-v1",
+    "status":  "PASS",
+    "exit_code":  0,
+    "detail":  "Commissioning passed",
+    "verifier":  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier_m136.py",
+    "preregistration":  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\clamped-m8o-preregistration.json",
+    "interpretation":  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\prospective-interpretations.md",
+    "commission_report":  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier-commission-e5489d64.json",
+    "commission_sha256":  "5FEC854466CC31C215458C16C9868EBFDE6A46E05D1839EE85FB3BD15EDA9865",
+    "log":  "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier-recommission-e5489d64.log",
+    "completed_utc":  "2026-09-04T17:35:30.9710373Z"
+}

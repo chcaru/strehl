@@ -95,7 +95,17 @@ CLAIMS = [
     ("m10 improved-from crps", "0.109187", E + "M163-m10-uncertainty/commission.json"),
     ("m10 improved-from cov", "0.6764", E + "M163-m10-uncertainty/commission.json"),
     # --- M166 bar audit ---
-    ("m2 blur-improves ratio", "0.571215", R + "M166-bar-achievability.md"),
+    # --- M136 recommission and the refused promotion ---
+    ("recommission sha256", "5FEC854466CC31C215458C16C9868EBFDE6A46E05D1839EE85FB3BD15EDA9865",
+     E + "M136-m8o-bar/verifier-recommission-e5489d64-result.json", None, None),
+    ("recommission status", "PASS",
+     E + "M136-m8o-bar/verifier-recommission-e5489d64-result.json", None, None),
+    ("catmull v1.5 diagnostic", "31148", E + "M136-m8o-bar/analysis.json", None,
+     "\"projected_plus_internal_quant_violations\": 31148"),
+    ("improvement plant present", "planted improvement",
+     E + "M136-m8o-bar/verifier-commission-e5489d64.json", None, "improvement_plant"),
+    # --- M2 loose-direction defect ---
+    ("m2 blur-improves ratio", "0.571215", R + "M166-bar-achievability.md", None, None),
     # --- M162 fork + gate ---
     ("fork lightroom tiffs", "105", R + "M162-noise-regression.md", None,
      "used 105 Lightroom-developed TIFFs"),
