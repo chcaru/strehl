@@ -1,0 +1,138 @@
+{
+  "schema": "m164-aperture-identifiability-v1",
+  "status": "PASS",
+  "verdict": "OBJECTION_CORRECT",
+  "captures_opened": 0,
+  "construction": {
+    "samples": 256,
+    "selected_bin": 64,
+    "selected_frequency_cyc_per_px": 0.25,
+    "apertures": [
+      5.6,
+      8.0,
+      11.0
+    ],
+    "diffraction_cutoffs_cyc_per_px": [
+      0.5541,
+      0.3879,
+      0.2821
+    ],
+    "usm_sigma_px": 0.8,
+    "usm_amount": 0.75,
+    "latent_minimum": 0.45,
+    "latent_maximum": 0.55,
+    "sharpened_latent_minimum": 0.4295265277022713,
+    "sharpened_latent_maximum": 0.5704734722977288
+  },
+  "selected_frequency": {
+    "Airy_MTF": [
+      0.44567047812104205,
+      0.2404167769082094,
+      0.04528263542198139
+    ],
+    "unsharpened_metric_scores": [
+      0.022283523906052122,
+      0.012020838845410498,
+      0.002264131771099076
+    ],
+    "sharpened_metric_scores": [
+      0.031407946093778616,
+      0.016943005067349803,
+      0.003191224552979155
+    ],
+    "sharpening_reward_ratio": [
+      1.4094694459545662,
+      1.4094694459545614,
+      1.4094694459545705
+    ],
+    "predicted_relative_Airy": [
+      1.0,
+      0.5394496353489973,
+      0.10160564283480054
+    ],
+    "observed_relative_unsharpened": [
+      1.0,
+      0.539449635348998,
+      0.10160564283480075
+    ],
+    "observed_relative_sharpened": [
+      1.0,
+      0.5394496353489961,
+      0.10160564283480106
+    ],
+    "maximum_relative_calibration_error": 1.1102230246251565e-15
+  },
+  "two_world_witness": {
+    "world_A": "latent scene X, known aperture transfers H_i, common post-render sharpening K",
+    "world_B": "latent scene X'=KX, the same known aperture transfers H_i, identity postfilter",
+    "identity": "K H_i X = H_i K X for common LSI K and H_i",
+    "maximum_absolute_output_difference_by_aperture": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "maximum_absolute_output_difference": 0.0
+  },
+  "sharpening_sweep": {
+    "0.0": {
+      "scores": [
+        0.022283523906052122,
+        0.012020838845410498,
+        0.002264131771099076
+      ],
+      "aperture_order_passes": true
+    },
+    "0.5": {
+      "scores": [
+        0.028366472031203127,
+        0.015302282993370026,
+        0.0028821936256857583
+      ],
+      "aperture_order_passes": true
+    },
+    "1.0": {
+      "scores": [
+        0.034449420156354105,
+        0.01858372714132961,
+        0.0035002554802724684
+      ],
+      "aperture_order_passes": true
+    },
+    "2.0": {
+      "scores": [
+        0.04661531640665606,
+        0.025146615437248748,
+        0.004736379189445916
+      ],
+      "aperture_order_passes": true
+    }
+  },
+  "support": {
+    "nonzero_optical_bins": [
+      129,
+      100,
+      73
+    ],
+    "nonzero_bins_after_sharpening": [
+      129,
+      100,
+      73
+    ]
+  },
+  "checks": {
+    "C1_diffraction_transfer_strictly_decreases": true,
+    "C2_unsharpened_metric_recovers_aperture_order": true,
+    "C3_sharpened_metric_still_recovers_aperture_order": true,
+    "C4_metric_rewards_sharpening_in_every_arm": true,
+    "C5_relative_Airy_magnitude_survives_common_sharpening": true,
+    "C6_two_world_observations_are_identical": true,
+    "C7_sharpening_restores_no_optical_support": true,
+    "C8_aperture_order_survives_entire_USM_sweep": true,
+    "C9_metric_rises_monotonically_with_USM": true
+  },
+  "source": {
+    "witness_py_sha256": "85D2D2203AFE641788DBF5E11143F6A2B90B89EBD19FA3082C24193E8EA566AA",
+    "diffraction_cutoff_source": "docs/research/M5-diffraction-measured.md section 9.1"
+  },
+  "interpretation": "Aperture order and relative Airy attenuation are preserved by a common sharpening transfer. They can reject a statistic that misses the intervention, but cannot identify whether the observed high-frequency amplitude came from the latent scene or the common renderer transfer."
+}
