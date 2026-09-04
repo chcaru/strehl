@@ -20,9 +20,11 @@ Maintained by the orchestrator. Last updated after lanes M147, M149, M150.
 > **Why it matters more than its size suggests.** The preflight that sets the
 > session's magnification target has so far been commissioned only against a
 > *synthetic* plant. The lane that built it is refreshingly blunt about the
-> limit: the plant *"reuses correlated source pixels"*, its narrow interval is
-> *"suspicious rather than evidence that the optical case will be equally
-> precise"*, and the real-optics interval width is **"the gating unknown."**
+> limit: those plants resample one real capture, so *"source pixels are
+> correlated and interpolation adds non-optical blur"*, and they *"do not
+> predict the interval of a real converter change"*. The real-optics interval
+> near `2.03x` is **"the gating unknown"**, and the lane's own warning is that
+> the program *"must not infer it from the synthetic pass"*.
 > These two frames settle it.
 >
 > If they come back wide, **the magnification target moves, not the bar** — and
@@ -54,9 +56,25 @@ summary of one:
 | after | clears | reaches | which axes |
 | --- | --- | --- | --- |
 | `crop-early` — **DONE, free** | `b` | **`2 of 12`** | M8, M12 |
-| \+ capture session (`$0`, 45-60 min) | `b+c` | **`3 of 12`** | M8, M10, M12 |
+| \+ capture **sessions** (`$0`, **two sittings, 1,659 frames** — see note) | `b+c` | **`3 of 12`** | M8, M10, M12 |
 | \+ **Zerene `$189`** + a colour target | `b+c+d` | **`4 of 12`** | M7, M8, M10, M12 |
 | \+ a working detail instrument | `a` | **`12 of 12`** | all |
+
+> **Note on that middle row, because it used to say "45-60 min" and that was
+> wrong.** The `45-60 min` figure described the old **603**-frame single-sitting
+> design. That design no longer exists. The ask is now **two** sittings —
+> a **768**-frame non-holdout rehearsal and an **891**-frame scored session,
+> **1,659** frames in total — for the reasons set out under *"The capture ask is
+> now two sittings, not one"* below.
+>
+> **The duration is under revision and the old number was optimistic.** Lane
+> M150's re-derivation puts the *shutter-time floor alone* for the scored
+> sitting at roughly **28.5-35.4 minutes**, and that excludes setup, framing,
+> the mid-session teleconverter removal, and calibration handling. Its finding,
+> in its words: **"45 minutes is not credible."** Completion inside 60 minutes
+> is unverified and conditional on the rehearsal. I have not yet had that
+> arithmetic independently checked, so treat it as a floor rather than an
+> estimate — **but do not plan either sitting around 45 minutes.**
 
 > ### One decision from you is worth four axes, and it costs nothing
 >
