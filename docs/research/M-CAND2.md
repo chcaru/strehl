@@ -43,3 +43,16 @@ optical, or null arm
 Congruence protects only invertible linear transforms; it stops at nonlinear
 tone, clipping, quantization, rank loss, regularization, channel removal, and
 local-model failure (`PREREGISTRATION-V2.md:101-108`).
+
+## Frontier-coordinate audit — existing measurements only
+
+| statistic / variant | USM ratio | genuine optical improvement ratio | physical blur ratio | sign correct on improvement? |
+| --- | ---: | ---: | ---: | --- |
+| Candidate 1 finite-observer \(J_q\) | `1.095732` (`experiments/M-CAND1/out/usm.json:88-102`) | **NOT RUN** (`docs/research/M-CAND1.md:57-63`) | **NOT RUN** (`docs/research/M-CAND1.md:57-63`) | **UNKNOWN — NOT RUN** (`docs/research/M-CAND1.md:57-63`) |
+| Candidate 2 native full-covariance Hotelling | `1.0000000000000266` (`experiments/M-CAND2/out/unclipped-usm.json:214-231`) | **NOT RUN** (`experiments/M-CAND2/PREREGISTRATION.md:67-75,92-95`) | **NOT RUN** (`experiments/M-CAND2/PREREGISTRATION.md:67-75,92-95`) | **UNKNOWN — NOT RUN** (`experiments/M-CAND2/PREREGISTRATION.md:67-75,92-95`) |
+| Candidate 2 display-referred Hotelling | `1.0000000000000009` (`experiments/M-CAND2/out/amendment-unclipped-usm.json:210-225`) | **NOT RUN** (`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5,22-39`) | **NOT RUN** (`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5,22-39`) | **UNKNOWN — NOT RUN** (`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5,22-39`) |
+
+Therefore this lane has **no measured viable frontier coordinate and no
+wrong-signed optical result**. The universal-sign question remains unanswered:
+every lane-owned optical arm was stopped upstream, so Candidate 1's \(J_q\) has
+no lawful improvement or blur reading to recover.
