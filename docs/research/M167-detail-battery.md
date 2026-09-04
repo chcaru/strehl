@@ -381,7 +381,10 @@ attributes, and makes a wrong child-call count fail commissioning as well as
 admission.  Those changes were frozen at `4bf0a02b` and `b9c3392f`.  The
 final audit additionally requires canonical transcript bytes and exact
 allowlisted import module names, closing dotted-submodule import aliases.
-The final correction and freeze are `44104162` and `96d7316f`; all preceding
+Those changes were frozen at `44104162` and `96d7316f`.  A last malformed
+output probe used JSON `NaN`; strict parsing now rejects non-standard or
+overflowed non-finite numbers and duplicate object keys before sealing.  The
+final correction and freeze are `f7523c25` and `3224b63b`; all preceding
 challenges are superseded.
 
 **VERIFIED BY RUNNING.** The final run made 45 fresh child calls and produced:
@@ -401,12 +404,12 @@ state, so A2 is also false.
 All nine canary-commissioning checks are true.
 
 The disclosed replay nonce is
-`41689A1981B6355E1A422354BC8D2858DBB7DFFFCB61CAA6546AA2E3F1B63350`.
+`C1A06F8470CBFA976333FC8F4D5BCE0D07DBA4787B11DDAD60CCF0459ACBF4B1`.
 The semantic-free transcript is
 `experiments/M167-detail-battery/admission-sealed.json`, SHA-256
-`44E95EFF1BBB1DEFB9E96766DEE2AB6BD38BC4104C36E6C1F664AECC7AFE17AF`.
+`4361FD78DC11F49313AB16726D0DE606C9091287E77164C46684CFA1774DABA5`.
 The unblinded record is `admission-results.json`, SHA-256
-`0D8794A27E8FE9B70D31D6DBF10374ECFF516E74BE448022A01553C8456837E7`.
+`DAE1F3B4FFBE3C9E74B7C1C7E10C678FA091BAF404F25212F786ADA0D31D97D1`.
 A full replay with that nonce reproduced both hashes exactly.
 
 ### 8.3 What is and is not closed
@@ -442,7 +445,7 @@ $env:BLIS_NUM_THREADS='1'
 $env:VECLIB_MAXIMUM_THREADS='1'
 $env:PYTHONDONTWRITEBYTECODE='1'
 python -B experiments\M167-detail-battery\admission.py `
-  --nonce 41689A1981B6355E1A422354BC8D2858DBB7DFFFCB61CAA6546AA2E3F1B63350
+  --nonce C1A06F8470CBFA976333FC8F4D5BCE0D07DBA4787B11DDAD60CCF0459ACBF4B1
 ```
 
 No timing result is produced or used.
