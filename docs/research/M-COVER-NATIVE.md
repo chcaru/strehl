@@ -1,5 +1,79 @@
 # M-COVER-NATIVE — scorecard crop adjudication and prior Q1–Q4 record
 
+## Overlap-denominator ruling — Amendment 3
+
+**RULING: Reading A is the only grammatical reading, but the scorecard does
+not define it well enough to issue a formal PASS or FAIL. The §1.5 field-of-view
+status is `UNMEASURED_DENOMINATOR_UNDEFINED`.**
+
+The scorecard's surrounding definitions are:
+
+> **Lines 149–166:** “Competitive quality is measured only at a common merge
+> boundary” built from native-active-dimension linear ProPhoto TIFFs, and
+> “Zerene, Helicon, and strehl must receive the exact same TIFF bytes.”
+
+> **Lines 175–179:** “Each program must emit a native-size 16-bit linear TIFF.”
+> Visual crops are separately “cut 1:1” and “never resampled.”
+
+> **Lines 225–227:** “Outputs must retain native scale. Resize is a hard
+> invalidation. Crops are fixed from the common-input overlap before outputs
+> exist. Retained field of view must be `>=99.0%` of that overlap.”
+
+The immediate antecedent of “that overlap” is therefore **the common-input
+overlap**, not the original/native array. Reading B has no textual antecedent
+in §1.5. Section 1.3's native-size output rule is separate and does not silently
+replace the denominator named in §1.5.
+
+The scorecard nevertheless never constructs the common-input overlap. It
+specifies identical native-size input bytes and output-independent site
+selection, but gives no external registration/reference gauge, valid-support
+margin, intersection or maximal-rectangle algorithm, or cross-method
+scene-coordinate mapping. `common-input overlap` occurs only in line 226.
+Allowing each stacker's alignment-dependent output Crop to define its own
+denominator would violate “common” and “fixed” and recreate
+generator/checker cancellation.
+
+This is a **scorecard drafting defect**. The registrar must specify the
+input-derived overlap construction before the denominator can be applied.
+
+### Verified `109MSDCF` arithmetic
+
+The owner's denominator reading is correct:
+
+| Rectangle | Dimensions | Versus original `3516 x 2344` | Versus bare Crop |
+|---|---:|---:|---:|
+| original binned plane | `3516 x 2344` | 100% | — |
+| bare Crop | `3470 x 2312` | **97.344368212%** | 100% |
+| Crop after 256 px inset | `2958 x 1800` | **64.604712926%** | **66.367180878%** |
+
+Thus:
+
+- Under Reading A, **if** an independently frozen common-input overlap equals
+  bare Crop, zero-inset Crop retains 100% and passes, while the 256 px inset
+  retains 66.3672% and fails.
+- Under Reading B, bare Crop retains 97.3444% and fails, but Reading B is not
+  licensed by the text.
+- Because the scorecard never defines or freezes the overlap rectangle, the
+  equality required by Reading A is also not yet licensed. The formal 109
+  result is therefore **UNMEASURED**, not a conditional PASS promoted to fact.
+
+### Why `109MSDCF` is `3516 x 2344`
+
+The dimensions are the default **binned** output representation, not evidence
+of an additional half-frame crop: `3516 x 2344` is exactly half of
+`7032 x 4688`, and the COVER commands omit `--demosaic`.
+`STREHL_FULLRES_GATHER=1` selects the full-resolution warp source; it does not
+select the emitted sampling grid.
+
+The further change from `3516 x 2344` to `3470 x 2312` is stack geometry.
+The frozen 22-frame 109 solution has `k=0.9870480668`; other stacks in the
+same closed report emit different Crop rectangles and retain
+`94.1473%`–`97.6814%` of their original binned planes. Retained-original-plane
+fraction is therefore **per stack/solve**. The 109 fraction must not be applied
+to the eight full-resolution M1/M2 renders. The closed report also refutes an
+unqualified monotone relationship between frame count and `k`, so this loss
+must not be attributed to stack depth alone.
+
 ## Revised scorecard adjudication — Amendment 2
 
 This section supersedes the earlier Q3/Q4 framing for the scorecard question.
@@ -38,10 +112,11 @@ numeric readings but cannot license the whole similarity-fit conjunction.
 The non-translation residual limb remains **UNMEASURED** because the inherited
 residual reader fails pure-translation nulls.
 
-### Q1.2 — no-inset field of view
+### Q1.2 — no-inset field of view numeric diagnostic
 
-**PASS at a zero-pixel inset for these eight M1/M2 arms.** Header-only
-remeasurement gives:
+**The numerical threshold clears at a zero-pixel inset under the frozen
+diagnostic rectangle; formal §1.5 status remains UNMEASURED under Amendment
+3.** Header-only remeasurement gives:
 
 | Arms | Bare Crop output, HxW | Retained against `4688 x 7032` |
 |---|---:|---:|
@@ -49,16 +124,17 @@ remeasurement gives:
 | `m2-bright-first16` | `4672 x 7008` | **99.318570979%** |
 | `m2-second-first16` | `4664 x 7000` | **99.035321708%** |
 
-All eight exceed `99.0%` even when the denominator is the entire native plane,
-which is stricter than the scorecard's stated common-input-overlap
-denominator. Against the separately frozen diagnostic common rectangle
+All eight exceed `99.0%` when calculated against the entire native plane.
+That calculation does not define the scorecard denominator. Against the
+separately frozen diagnostic common rectangle
 `(y=40, x=58, h=4608, w=6912)`, every Crop arm retains
 **100.000000000% geometrically**.
 
 The COVER lane's `64.6047%` is the area left only after its separately required
 256 px level-profile inset. It is not bare Crop's retained field of view.
-Therefore that shipping inset and its `0.1%` level criterion are different and
-stricter than §1.5's no-inset `>=99.0%` geometry bar.
+That shipping inset and its `0.1%` level criterion are different from §1.5;
+if the frozen overlap equalled bare Crop, the inset would retain only
+66.3672% of it and fail.
 
 ### Q1.3 — the crop must be fixed before outputs exist
 
@@ -100,8 +176,10 @@ follows from the COVER profile alone.
 ### Program consequence
 
 **The cover geometry is not blocked on a new no-resample mode.** Bare Crop
-clears §1.5's native-sampling and numerical field-of-view bars at zero inset,
-and one fixed 1:1 score rectangle can be applied outside Rust.
+clears §1.5's native-sampling bar, and its measured rectangles have enough
+area to clear the numerical field-of-view threshold at zero inset if the
+registrar's independently frozen overlap is contained. One fixed 1:1 score
+rectangle can be applied outside Rust.
 
 That does **not** make M1/M2 immediately measurable under the scorecard as
 currently written. §1.3, lines 175–177, separately requires each program to emit a
@@ -111,6 +189,9 @@ instrument, and M1's withdrawn statistic/bar also remain unresolved. Native
 **size** and native **scale** are distinct requirements on the strict reading;
 if §1.5 was intended to authorize smaller emitted TIFFs, the registrar must
 resolve that drafting tension rather than this lane silently waiving §1.3.
+Amendment 3 adds a second registrar issue: the scorecard must operationally
+define the common-input overlap before the FOV limb can receive a formal
+PASS/FAIL.
 
 ## Superseded earlier Q1–Q4 answer
 

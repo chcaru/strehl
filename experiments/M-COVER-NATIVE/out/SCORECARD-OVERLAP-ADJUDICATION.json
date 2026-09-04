@@ -1,0 +1,120 @@
+{
+  "adjudication": {
+    "bare_crop_is_not_automatically_the_denominator": true,
+    "formal_109_fov_status": "UNMEASURED_DENOMINATOR_UNDEFINED",
+    "grammatical_denominator": "COMMON_INPUT_OVERLAP",
+    "missing_definition": [
+      "registration/reference gauge",
+      "valid-support margin",
+      "overlap/intersection algorithm",
+      "cross-method scene-coordinate mapping"
+    ],
+    "overlap_construction_defined_by_scorecard": false,
+    "reading_a_grammatically_supported": true,
+    "reading_b_grammatically_supported": false,
+    "scorecard_defect": "The antecedent is clear, but the scorecard does not operationally define the common-input overlap rectangle."
+  },
+  "arithmetic_109msdcf": {
+    "bare_crop_wh": [
+      3470,
+      2312
+    ],
+    "bare_pixels": 8022640,
+    "bare_vs_original_percent": 97.34436821240395,
+    "conditional_reading_a_bare_vs_overlap_percent": 100.0,
+    "conditional_reading_a_inset_vs_overlap_percent": 66.36718087811494,
+    "inset_crop_wh": [
+      2958,
+      1800
+    ],
+    "inset_pixels": 5324400,
+    "inset_vs_bare_percent": 66.36718087811494,
+    "inset_vs_original_percent": 64.60471292618435,
+    "original_pixels": 8241504,
+    "original_plane_wh": [
+      3516,
+      2344
+    ],
+    "reading_b_bare_vs_original_percent": 97.34436821240395
+  },
+  "representation": {
+    "cover_output_is_binned": true,
+    "coverage_fraction_is_per_stack": true,
+    "reason": "3516x2344 is exactly half of 7032x4688 and the recorded COVER commands omit --demosaic; STREHL_FULLRES_GATHER controls the warp source rather than the emitted sampling grid"
+  },
+  "scorecard_text": {
+    "all_overlap_occurrences": [
+      {
+        "line": 226,
+        "text": "- Crops are fixed from the common-input overlap before outputs exist. Retained field of"
+      },
+      {
+        "line": 227,
+        "text": "  view must be `>=99.0%` of that overlap."
+      }
+    ],
+    "common_input_overlap_occurrences": [
+      {
+        "line": 226,
+        "text": "- Crops are fixed from the common-input overlap before outputs exist. Retained field of"
+      }
+    ],
+    "common_input_passage_lines_149_171": [
+      "Competitive quality is measured only at a common merge boundary:",
+      "",
+      "1. Decode each ARW once with one independently versioned LibRaw-based converter whose",
+      "   executable hash is frozen before rendering.",
+      "2. Apply sensor black/white levels and one frozen deterministic-pattern map estimated",
+      "   from independent matching dark/flat captures; if no matching map exists, M1/M9 are",
+      "   `UNMEASURED`. Apply the recorded camera white balance and one camera matrix once.",
+      "   Demosaic once. Write **uncompressed** 16-bit **linear ProPhoto RGB, D50** TIFFs at",
+      "   the native active-image dimensions.",
+      "3. Ignore every XMP sidecar. Disable auto-brightening, exposure compensation, tone",
+      "   curves, contrast, clarity, texture, sharpening, denoising, chromatic-aberration",
+      "   correction, lens correction, local contrast, gamut compression, and output resize.",
+      "4. Strip development tags from the derivative and embed only the frozen linear ICC,",
+      "   provenance, and source hash. Hash the pixel payload and whole TIFF.",
+      "5. Zerene, Helicon, and strehl must receive the exact same TIFF bytes. A strehl TIFF",
+      "   adapter or a bit-for-bit hash identity at strehl\u2019s internal pre-merge linear-frame",
+      "   boundary is a prerequisite. Until one exists, **competitive quality remains",
+      "   UNMEASURED**; feeding TIFFs only to the commercial tools is forbidden.",
+      "",
+      "This deliberately separates the fair merge comparison from a native-RAW product run.",
+      "A native-RAW run is reported as a product diagnostic but cannot establish a",
+      "competitive detail, noise, clipping, or colour win unless its pre-merge samples pass",
+      "the same identity audit."
+    ],
+    "geometry_passage_lines_223_235": [
+      "### 1.5 Geometry and exclusions",
+      "",
+      "- Outputs must retain native scale. Resize is a hard invalidation.",
+      "- Crops are fixed from the common-input overlap before outputs exist. Retained field of",
+      "  view must be `>=99.0%` of that overlap.",
+      "- Translation may be removed analytically as a Fourier phase ramp. Frequency metrics",
+      "  may not resample an output.",
+      "- A similarity fit from input-derived landmarks must have scale disagreement",
+      "  `<=0.10%`, rotation disagreement `<=0.02 deg`, and non-translation residual",
+      "  `<=0.10 output px RMS`; otherwise that capture/arm is `UNMEASURED`.",
+      "- At least `80%` of pre-registered sites and at least the metric-specific minimum must",
+      "  survive identically in every arm. Differential site attrition over `2 percentage",
+      "  points` invalidates the comparison."
+    ],
+    "line_225": "- Outputs must retain native scale. Resize is a hard invalidation.",
+    "line_226": "- Crops are fixed from the common-input overlap before outputs exist. Retained field of",
+    "line_227": "  view must be `>=99.0%` of that overlap.",
+    "native_output_passage_lines_173_179": [
+      "### 1.3 Output transfer and the tone sentinel",
+      "",
+      "Each program must emit a native-size 16-bit linear TIFF. No output may be histogram",
+      "matched, auto-exposed, white-balanced, sharpened, denoised, resized, or tone-mapped",
+      "after stacking. Numerical metrics run in linear light before any display conversion.",
+      "Visual crops, when supplied, use one external colour transform, are cut 1:1 at",
+      "`<=400 px`, and are never resampled, per `AGENTS.md` rule 48 (lines 801\u2013835)."
+    ]
+  },
+  "source_hashes": {
+    "cover_default_report": "f1921cc8b77edc20e6726f29235a5cbb05fff0842ab2092a61637753dd368a18",
+    "scorecard": "a98852e18ce64ced72360507db0a7923f063ae095f108b23779b60fdd2092211"
+  },
+  "status": "GRAMMATICAL_READING_A_OPERATIONALLY_UNMEASURED"
+}
