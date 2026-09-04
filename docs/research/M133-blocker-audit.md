@@ -645,3 +645,408 @@ evidence closure.
   counts M12 as UNMEASURED and recommends the strict rerun.
 - **Could not determine:** the exact duration of the future admitted run. The
   210-minute recommendation is an evidence-based reservation, not a guarantee.
+
+## 7. Are the twelve bars well-formed and achievable?
+
+**SUMMARY — VERIFIED against the written instrument, with achievability
+judgments tagged separately below: 0 of 12 axes currently has a bar that is
+simultaneously precise, achievable, and backed by a complete commissioned or
+concretely plannable checker. The failing set is M1–M12.**
+
+That does **not** mean all twelve scientific objectives are impossible.
+**ASSUMED:** the ten precision defects are repairable before outputs. M1 has
+no active instrument or bar at all, and M8-O has a demonstrated
+representational impossibility under its present 16-bit rail semantics.
+
+The count is conjunctive at the axis level: every mandatory sub-bar must pass
+all three tests. This follows the scorecard's own decision rule:
+
+> Every primary metric is a hard gate. No win compensates for a loss.
+>
+> `UNMEASURED`, an uncommissioned checker, an invalid comparator arm, or an
+> under-powered capture blocks a SOTA claim; it is not a pass or a loss.
+> (`docs/proposals/2026-09-sota-scorecard.md:86-88`)
+
+This audit read documents and existing artifacts only. It ran no renderer,
+stacker, campaign, or benchmark. The retained extractor and rail checker are
+`experiments/M133-blocker-audit/audit_bar_cards.py`; their deterministic output
+is `experiments/M133-blocker-audit/bar-card-audit.json`. It mechanically
+extracts all twelve bars and uses whitespace-collapsed matching for wrapped
+prose. The audited scorecard is commit `a0413b73`, SHA-256
+`170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8`
+(`experiments/M133-blocker-audit/bar-card-audit.json:2-8`).
+
+Evidence convention: every factual finding in this section is **VERIFIED**
+unless explicitly tagged **ASSUMED** or **Could not determine**.
+
+### Per-axis result
+
+| Axis | (i) Precisely stated? | (ii) Achievable in principle? | (iii) Checker state | (iv) What a pass would license |
+|---|---|---|---|---|
+| M1 | **VERIFIED FAIL.** Bar: “**NO ADMISSIBLE BAR — WITHDRAWN.** `f_licensed` is blind; native `S_25` fails sharpening and tone, while tone-hardened derivatives reverse the optical controls.” (`docs/proposals/2026-09-sota-scorecard.md:392`) | **Could not determine.** There is no quantity or threshold to test. | **VERIFIED FAIL.** The old instrument was defeated and withdrawn; only requirements for a future replacement exist (`docs/proposals/2026-09-sota-scorecard.md:498-578`). | **VERIFIED: nothing today.** The scorecard says no detail, matched-information, comparator-quality, or SOTA claim is licensed (`docs/proposals/2026-09-sota-scorecard.md:559-562`). |
+| M2 | **VERIFIED FAIL.** Bar: “Cross-fit efficiency `<=1.10`; 95% upper bound of strehl / quietest qualifying comparator `<=0.950`.” (`docs/proposals/2026-09-sota-scorecard.md:393`) Per-ROI `eta` is defined, but its aggregation and RGB-channel reduction are not. | **ASSUMED YES.** The limits are not exact-zero floors, and the commissioned untouched-mean null read `eta=1.0035`; no physical impossibility was found (`docs/research/SCORECARD-BASELINE.md:44-45`). The unrun commercial comparison remains empirical. | **VERIFIED PARTIAL.** The residual/blur core was commissioned red/green, but the complete matched-information comparator verdict is not executable while M1 is absent (`docs/research/SCORECARD-BASELINE.md:44-45`; `docs/proposals/2026-09-sota-scorecard.md:424`). | **VERIFIED:** near-ideal cross-fit noise and at least a 5% pooled noise advantage over the quietest equally informative qualifying comparator; no standalone detail claim (`docs/proposals/2026-09-sota-scorecard.md:579-619`). |
+| M3 | **VERIFIED FAIL.** Bar: “Median excess `<=1%` edge step, p99 `<=5%`; edges above 5% `<=1%` with Wilson upper bound `<=2%`; local source coherence `>=0.90`; no worse than best comparator.” (`docs/proposals/2026-09-sota-scorecard.md:394`) The comparator's singular “paired p99” has no referent, and no percentile convention is frozen. | **ASSUMED YES.** The tolerances are nonzero, source-referenced, and the proposed 6% rim/veil and raw-null controls could in principle bracket them (`docs/proposals/2026-09-sota-scorecard.md:657-665`). | **VERIFIED PLAN ONLY.** The scorecard specifies a plant and null, but states that full-reach sites and the checker remain absent (`docs/proposals/2026-09-sota-scorecard.md:663-665,1147`). | **VERIFIED:** bounded stack-induced narrow rim and broad veil while preserving edge width/coherence, no worse than a qualifying comparator; not general resolution (`docs/proposals/2026-09-sota-scorecard.md:621-665`). |
+| M4 | **VERIFIED FAIL.** Bar: “Median flat-patchwork ratio `<=1.00`; sites above `1.25` or ghost ratio above `0.10`: `<=1%`, Wilson upper bound `<=2%`; no worse than best comparator.” (`docs/proposals/2026-09-sota-scorecard.md:395`) `noise_floor` is undefined, and no flat/edge site-mixture denominator is frozen. | **ASSUMED YES.** The fixed-weight mean is explicitly expected to produce at most 1% failures, so no numerical floor makes the target impossible (`docs/proposals/2026-09-sota-scorecard.md:697-701`). | **VERIFIED INCOMPLETE PLAN.** A selector plant and mean null are specified, but no v1.7 site manifest or control run exists, and the undefined denominator prevents a complete implementation (`docs/proposals/2026-09-sota-scorecard.md:697-701,1148`). | **VERIFIED:** a low rate of output-created flat patchwork and secondary-edge ghosts at registered sites, with a qualifying comparator guard (`docs/proposals/2026-09-sota-scorecard.md:667-701`). |
+| M5 | **VERIFIED FAIL.** Bar: “`>=99%` of eligible tiles pass `rho_best>=0.90` and focus margin `>=0.05`; Wilson lower bound `>=98%`; longest failed run `<=1%` of sweep.” (`docs/proposals/2026-09-sota-scorecard.md:396`) “source-signal” and the run construction on non-planar tile maps are undefined. | **ASSUMED YES.** Correlation, margin, coverage, and run tolerances are nonzero; no quantisation or noise floor forces failure once eligible truth and a complete focus sweep exist. | **VERIFIED INCOMPLETE PLAN.** Development captures and defect/null controls are named, but the checker is not commissioned and the run statistic is not implementable uniquely (`docs/proposals/2026-09-sota-scorecard.md:709-748,1149`). | **VERIFIED:** at least 99% coverage of input-eligible depth tiles, no long focus hole, retained field of view, and comparator parity; it says nothing about ineligible regions (`docs/proposals/2026-09-sota-scorecard.md:704-748`). |
+| M6 | **VERIFIED FAIL.** Bar: “Recoverable high-rail and low-rail clipping each `<=0.10%`; highlight-detail retention `>=0.90`; no worse than best comparator.” (`docs/proposals/2026-09-sota-scorecard.md:397`) The common image is RGB, but recoverability, clipping, and `rho_best` never say per-channel, any-channel, all-channel, or luminance; those choices change both denominator and verdict. | **ASSUMED YES.** The clipping allowance is nonzero, recoverability requires an interior source sample, and 16-bit quantisation does not itself force a sample to either rail. | **VERIFIED PARTIAL.** The rail eligibility census was commissioned red/green, while the full detail/comparator checker remains a plan and the registered capture is under-powered (`docs/research/SCORECARD-BASELINE.md:48`; `docs/proposals/2026-09-sota-scorecard.md:428,750-780`). | **VERIFIED:** recovery of input-recoverable highlights and shadows without erasing their detail, no worse than the qualifying comparator (`docs/proposals/2026-09-sota-scorecard.md:750-780`). |
+| M7 | **VERIFIED FAIL.** Bar: “Median DeltaE00 `<=1.0`, p95 `<=2.0`, maximum `<=3.0`, boundary-seam p99 `<=1.0`; ICC/300-DPI conformance `100%`; no worse than best comparator.” (`docs/proposals/2026-09-sota-scorecard.md:398`) The patch population is bounded, but the boundary-seam population, boundary constructor, minimum count, and percentile convention are absent. | **ASSUMED YES.** The DeltaE limits are far from an exact quantisation floor, and an identity colour transform is the proposed passing null (`docs/proposals/2026-09-sota-scorecard.md:814-817`). | **VERIFIED INCOMPLETE PLAN.** Patch computation and colour plants are specified, but no traceable target exists and the seam arm cannot yet be instantiated uniquely (`docs/proposals/2026-09-sota-scorecard.md:789-817,1151`). | **VERIFIED:** traceable patch colour accuracy, bounded focus-boundary colour discontinuity, and deliverable ICC/tag conformance; not general natural-object agreement (`docs/proposals/2026-09-sota-scorecard.md:782-817`). |
+| M8 | **VERIFIED PASS on precision.** Bar: “Per-frame resampler-hull violations and final-output source-hull violations: each exactly `0.0000%`.” (`docs/proposals/2026-09-sota-scorecard.md:399`) Population, tolerance, coordinates, and denominator are explicit (`docs/proposals/2026-09-sota-scorecard.md:834-866`). | **VERIFIED FAIL for M8-O as applied.** M8-R can reach zero with bilinear, but 977,684 of 980,097 bilinear M8-O violations are full-rail samples whose lower hull exceeds the maximum representable 16-bit value. No u16 output can pass those coordinates without changing the domain or bar (`experiments/M133-blocker-audit/bar-card-audit.json:1471-1491`). | **VERIFIED COMMISSIONED.** The checker passed Catmull-Rom, explicit high/low plants, copy, and bilinear nulls before the admitted FAIL (`docs/proposals/2026-09-sota-scorecard.md:430,1152`; `experiments/M8-overshoot/results.json:27-66`). | **VERIFIED:** only the internal claim that gathered/final samples remain within independently reconstructed source support. The scorecard explicitly says M8 alone is not SOTA (`docs/proposals/2026-09-sota-scorecard.md:881-887`). |
+| M9 | **VERIFIED FAIL.** Bar: “False-certification Wilson upper bound `<=1%`; true-band coverage `>=90%`; nominal 95% interval coverage `93%`–`97%`; variance ratio `0.90`–`1.10`.” (`docs/proposals/2026-09-sota-scorecard.md:400`) Its acuity truth is the nonexistent “future independently commissioned M1 condition”; decile construction is also unfrozen. | **ASSUMED YES after repair.** Calibrated coverage and variance intervals have no exact physical floor, and the proposed all-valid/all-invalid/1.25x controls can exercise both directions (`docs/proposals/2026-09-sota-scorecard.md:928-934`). | **VERIFIED FAIL TODAY.** There is no compatible certificate product or M1 truth from which to build the acuity checker; the variance-channel outline alone is not a complete checker (`docs/research/SCORECARD-BASELINE.md:50-52`; `docs/proposals/2026-09-sota-scorecard.md:908-934`). | **VERIFIED:** a calibrated statement about where/frequency the output is trustworthy and whether its `n_eff`/variance intervals have honest coverage; not image superiority by itself (`docs/proposals/2026-09-sota-scorecard.md:890-934`). |
+| M10 | **VERIFIED FAIL.** Bar: “Valid target pixels `>=99%`; rank correlation `>=0.99`; median error `<=0.5` focus step, p95 `<=1.0` step; physical slope error `<=5%`.” (`docs/proposals/2026-09-sota-scorecard.md:401`) “valid” and “layer confusion” are undefined, while required boundary bias is reported without any pass threshold. | **ASSUMED YES.** Error tolerances are nonzero, and the card requires an exact truth map to pass every bar, providing a constructive numerical null (`docs/proposals/2026-09-sota-scorecard.md:971-978`). | **VERIFIED INCOMPLETE PLAN.** Physical and synthetic controls are proposed, but no compatible depth product/checker exists and the missing definitions prevent unique implementation (`docs/research/SCORECARD-BASELINE.md:50-52`; `docs/proposals/2026-09-sota-scorecard.md:948-978`). | **VERIFIED:** coverage, ordering, typical/tail step error, and ruler slope on registered targets. It licenses no bounded boundary-accuracy claim because boundary bias has no gate. |
+| M11 | **VERIFIED FAIL.** Bar: “Warm common-input throughput `>=2.00x` fastest quality-qualified comparator; candidate/default baseline ratio `<=2.00`; native-RAW CPU at 16 workers `<=0.15 s/frame`; hybrid `<=0.06 s/frame`; cold `<=warm+20 s`; 100-frame live master `<=10 s` after last shutter.” (`docs/proposals/2026-09-sota-scorecard.md:402`) The live arm gives no capture/replay cadence, permitted pre-last-frame work, or initial state. | **ASSUMED YES.** No physical or numerical floor precludes the timing bars; actual attainment on the frozen host and named comparators is unmeasured. | **VERIFIED INCOMPLETE PLAN.** The end-to-end timer, six sweeps, load gate, sleep plant, async-child plant, and cold reset are planned, but no complete arm is commissioned and the live-input generator is unspecified (`docs/proposals/2026-09-sota-scorecard.md:994-1035,1155`; `docs/research/M-PHASE0-PIPE.md:240-258`). | **VERIFIED:** end-to-end common-input comparator speed plus native product CPU/hybrid/cold/live latency on the frozen host; not a hardware-independent speed claim (`docs/proposals/2026-09-sota-scorecard.md:981-1035`). |
+| M12 | **VERIFIED FAIL.** Bar: “Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; every fixed-worker repeat is byte-identical and the outputs at 1/2/4/8/16 workers are mutually byte-identical while 16 workers passes M11; N-mod-4 per-frame spread `<=2%`.” (`docs/proposals/2026-09-sota-scorecard.md:403`) Matrix/trials are exact, but “sample every 10 ms” has no allowed jitter, missed-interval, or maximum-gap rule. | **ASSUMED YES.** Bounded streaming and a worker-independent reduction order can satisfy memory and exact-byte bars in principle; exact determinism is an algorithmic requirement, not a sensor-noise floor. | **VERIFIED COMMISSIONED BUT PROTOCOL-INCOMPLETE.** Hash and 7-GiB process-tree plants went red and nulls green, but the real diagnostic missed the 10-ms cadence and therefore refused the ratio as formal (`experiments/m12-scorecard/out/commission.json:137-145,409`; `experiments/m12-scorecard/out/memory-commission.json:93-100`; `experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:332-348`). | **VERIFIED:** bounded process-tree memory, fixed- and cross-worker reproducibility, and absence of N-mod-4 timing cliffs while the 16-worker output also meets M11; not image quality (`docs/proposals/2026-09-sota-scorecard.md:1038-1103`). |
+
+### Why each axis fails
+
+#### Cross-cutting precision defects
+
+**VERIFIED:** the scorecard freezes Wilson/bootstrap confidence mechanics but
+never freezes an empirical percentile convention. The extractor found no
+`quantile type`, `percentile method`, or `nearest-rank` definition
+(`experiments/M133-blocker-audit/bar-card-audit.json:1359`). This can change
+M3 p99, M4's denominator-defining B99, M7 p95/p99, and M10 p95 at a threshold.
+The issue is especially material for M7's minimum 24-patch population.
+
+**VERIFIED:** the common quality object is RGB:
+
+> Write **uncompressed** 16-bit **linear ProPhoto RGB, D50** TIFFs
+> (`docs/proposals/2026-09-sota-scorecard.md:154-157`)
+
+Yet the core computations for M2–M6 contain no channel/luminance reduction,
+while M7 explicitly moves to Lab:
+
+> `"rgb_core_computation_channel_semantics": {`
+> `"M2": [],`
+> `"M3": [],`
+> `"M4": [],`
+> `"M5": [],`
+> `"M6": [],`
+> `"M7": [`
+> (`experiments/M133-blocker-audit/bar-card-audit.json:1403-1411`)
+
+M2–M5 already fail for independent reasons below. For M6 this omission is
+verdict-changing by itself: “at least one input is `>=0.98`” can mean a
+channel sample, any channel in an RGB pixel, every channel, or luminance.
+
+#### M1 — there is deliberately no test
+
+**VERIFIED:** this is not a weak bar; it is no bar:
+
+> There is deliberately no active numeric success bar. M1 remains
+> **UNMEASURED**, and no detail, matched-information, quality-qualified
+> comparator or SOTA claim is licensed until a replacement statistic and
+> numeric bar survive commissioning.
+> (`docs/proposals/2026-09-sota-scorecard.md:559-562`)
+
+The old checker does not satisfy criterion (iii), because the document
+explicitly withdraws it after its controls reversed or failed
+(`docs/proposals/2026-09-sota-scorecard.md:498-541`). A future challenge
+battery is specified
+(`docs/proposals/2026-09-sota-scorecard.md:566-578`), but the measured quantity
+and admission threshold are not. M1 fails (i), cannot be assessed under (ii),
+and fails (iii).
+
+#### M2 — no verdict-level aggregation
+
+The card computes one `eta` from each output/reference residual:
+
+> For each cross-fit output `O` and held-out 16-frame mean `R`, compute the
+> `0.15–0.35 cyc/px` residual and
+> `sigma_res = 1.4826 * MAD(BP(O-R))`.
+> (`docs/proposals/2026-09-sota-scorecard.md:591-593`)
+
+It then states only:
+
+> `eta = sigma_res / sigma_ideal`.
+> (`docs/proposals/2026-09-sota-scorecard.md:600-603`)
+
+**VERIFIED:** it never says median, mean, maximum, per-site all-pass, or a
+pooled functional across the at-least-32 ROIs and reversed cross-fits. The
+earlier baseline audit already named this exact defect verbatim:
+
+> M2 specifies no aggregation functional for eta.
+> (`docs/research/SCORECARD-BASELINE.md:74`)
+
+The current extractor again finds no aggregation term
+(`experiments/M133-blocker-audit/bar-card-audit.json:1360`). Two checkers can
+therefore produce different pass/fail results from the same ROI values.
+
+#### M3 — the comparator statistic and quantile are ambiguous
+
+The absolute gates say p99 “of each”:
+
+> median `h_e` and `v_e <=0.01`; p99 of each `<=0.05`
+> (`docs/proposals/2026-09-sota-scorecard.md:652-653`)
+
+but the comparator gate becomes singular:
+
+> strehl’s paired p99 is no greater than the best comparator’s.
+> (`docs/proposals/2026-09-sota-scorecard.md:654-655`)
+
+**VERIFIED:** the document does not say whether that is p99 of `h_e`, `v_e`,
+`max(h_e,v_e)`, or paired site-wise excess. The extractor finds exactly one
+undefined `paired p99` occurrence and no global percentile method
+(`experiments/M133-blocker-audit/bar-card-audit.json:1359-1361`). M3 fails
+(i). **ASSUMED:** its plant/null plan is concrete enough to repair before
+output.
+
+#### M4 — an undefined denominator and unfrozen population mix
+
+The defining formula is:
+
+> `Q_flat = RMS(BP_20-60(O)) / max(B99, noise_floor)`.
+> (`docs/proposals/2026-09-sota-scorecard.md:685`)
+
+**VERIFIED:** `noise_floor` appears nowhere else in the scorecard
+(`experiments/M133-blocker-audit/bar-card-audit.json:1362`). The card also
+requires “at least 500 sites overall” but supplies neither a minimum flat-site
+count nor a minimum edge-site count
+(`docs/proposals/2026-09-sota-scorecard.md:674-676`). Since flat and edge sites
+fail different gates, changing their mix changes the combined failed-site
+rate. M4 fails (i) and its checker plan is not complete until both quantities
+are frozen.
+
+#### M5 — eligibility and “longest run” are not executable uniquely
+
+The eligibility gate uses an undefined quantity:
+
+> A tile is eligible only when its best/far source-signal ratio is `>=2.0`
+> with bootstrap lower bound `>=1.5`.
+> (`docs/proposals/2026-09-sota-scorecard.md:721-722`)
+
+The run gate says only:
+
+> A connected run is measured along the known focus-sweep direction.
+> (`docs/proposals/2026-09-sota-scorecard.md:730-731`)
+
+**VERIFIED:** “source-signal” occurs only there, with no estimator or channel
+definition (`experiments/M133-blocker-audit/bar-card-audit.json:1363`).
+Likewise, the baseline audit already found:
+
+> M5's “longest failed run along the focus-sweep direction” is undefined for
+> non-planar flower/duck/pill tile maps.
+> (`docs/research/SCORECARD-BASELINE.md:75-76`)
+
+The current wording adds “connected” but still supplies no adjacency,
+projection, width, or tie rule. M5 fails (i).
+
+#### M6 — the rail denominator is not defined for RGB
+
+M6's scalar rules are:
+
+> A high-rail pixel is recoverable when at least one common input is `>=0.98`
+> and at least one aligned input lies in `[0.20,0.95]`. A low-rail pixel is
+> recoverable when at least one input is `<=0.02` and another lies in
+> `[0.05,0.80]`.
+> (`docs/proposals/2026-09-sota-scorecard.md:758-761`)
+
+and:
+
+> `clip_high` is the fraction of recoverable high pixels with output
+> `>=65534/65535`; `clip_low` is the mirrored fraction `<=1/65535`.
+> (`docs/proposals/2026-09-sota-scorecard.md:762-764`)
+
+**VERIFIED:** these lines never select a channel, luminance, or RGB reduction.
+The checker can therefore count three channel samples, one RGB pixel if any
+channel qualifies, one only if all qualify, or a luminance value. The existing
+rail census commissioned threshold detection, not this missing population
+choice (`docs/research/SCORECARD-BASELINE.md:48`). M6 fails (i); its checker is
+only partial.
+
+#### M7 — the seam arm has no registered population
+
+The patch arm has a minimum:
+
+> At least 24 valid patches, including all neutral patches and at least 12
+> chromatic patches, must survive.
+> (`docs/proposals/2026-09-sota-scorecard.md:789-792`)
+
+The seam arm does not:
+
+> Across input-defined focus boundaries, compute the p99 DeltaE00
+> discontinuity after subtracting the target’s true patch-to-patch difference.
+> (`docs/proposals/2026-09-sota-scorecard.md:801-802`)
+
+**VERIFIED:** there is no focus-boundary construction, no minimum boundary or
+sample count, no empty-population rule, and no p99 convention
+(`experiments/M133-blocker-audit/bar-card-audit.json:1359,1364`). M7 fails
+(i). A capture and checker can be planned only after those are frozen.
+
+#### M8 — M8-R is achievable; the present M8-O rail bar is not
+
+The governing output contract is finite:
+
+> Each program must emit a native-size 16-bit linear TIFF.
+> (`docs/proposals/2026-09-sota-scorecard.md:175`)
+
+M8-O nevertheless compares that serialized output against the unbounded source
+hull:
+
+> define `lo_O=min_k(lo_k)` and `hi_O=max_k(hi_k)` over every geometrically
+> valid input frame
+>
+> For a 16-bit serialized audit only, add exactly `0.5/65535` quantisation
+> tolerance
+> (`docs/proposals/2026-09-sota-scorecard.md:852-856`)
+
+and demands:
+
+> final-output violation fraction exactly `0.0000%`.
+> (`docs/proposals/2026-09-sota-scorecard.md:863-864`)
+
+The retained parser independently read the existing bilinear-stage violation
+arrays by their frozen SHA-256s. **VERIFIED:**
+
+> `"violation_coordinates": 980097,`
+> `"full_rail": 977684,`
+> `"full_rail_below_hull": 977684,`
+> `"nonrail": 2413,`
+> (`experiments/M133-blocker-audit/bar-card-audit.json:1480-1484`)
+
+For those 977,684 coordinates, the encoded output is exactly `65535`, while
+the smallest observed `lo-tolerance` is `1.0000004768371582` and the largest is
+`2.0605216026306152`
+(`experiments/M133-blocker-audit/bar-card-audit.json:1471-1477`). Therefore
+even the maximum u16 value, `65535/65535 = 1`, is below the registered hull.
+No alternative u16 output value can pass.
+
+This is not Catmull-Rom overshoot: the nonnegative bilinear M8-R census is
+exactly `0 / 6,131,678,976`, while M8-O still has the rail failures
+(`experiments/M133-blocker-audit/bar-card-audit.json:1489-1491`). **VERIFIED:
+M8-R is achievable; M8-O as currently applied is not.**
+
+The bar needs a pre-results semantic choice: intersect the final hull with the
+deliverable domain, audit an unclamped floating deliverable, or classify
+out-of-domain source rails under M6 rather than as invented values. Until then,
+an implementation cannot pass M8-O on the observed 6-second arm no matter how
+its resampler behaves.
+
+#### M9 — its truth predicate does not exist
+
+M9 defines truth as:
+
+> truth is the future independently commissioned M1 condition.
+> (`docs/proposals/2026-09-sota-scorecard.md:908-911`)
+
+M1 explicitly has no admitted computation or bar
+(`docs/proposals/2026-09-sota-scorecard.md:553-562`). **VERIFIED:** therefore
+`truth_valid`, false-certification, and true-band coverage cannot be computed
+today. The card also does not freeze decile edges, weighting, an empirical
+variance estimator, or how multiple tile-band/repeat cells aggregate
+(`docs/proposals/2026-09-sota-scorecard.md:918-925`). M9 fails (i) and (iii);
+its checker becomes plannable only after M1 exists.
+
+#### M10 — three reported concepts lack executable gates
+
+The exact-computation section requires:
+
+> Report valid-pixel fraction, Spearman rank correlation, median and p95
+> absolute error
+>
+> report layer confusion and boundary bias separately.
+> (`docs/proposals/2026-09-sota-scorecard.md:961-965`)
+
+The success paragraph gates “valid target pixels” and “synthetic layer
+confusion” but never defines either, and it omits boundary bias entirely
+(`docs/proposals/2026-09-sota-scorecard.md:967-969`;
+`experiments/M133-blocker-audit/bar-card-audit.json:1365-1366`). **VERIFIED:**
+an output can have arbitrarily bad layer-boundary depth and still pass every
+written M10 gate. M10 fails (i), and a pass would not license a boundary
+accuracy claim.
+
+#### M11 — “after last shutter” has no input-time contract
+
+The live bar is:
+
+> first-100 streaming master closed and readable `<=10 s` after
+> `DSC00100.ARW` becomes available.
+> (`docs/proposals/2026-09-sota-scorecard.md:1020-1021`)
+
+**VERIFIED:** neither the M11 card nor the separate execution plan specifies
+frame-arrival cadence, whether the first 99 frames may be preloaded or
+preprocessed, the delay between file close and availability, or the live arm's
+initial cache/process state. The extractor finds no capture-, arrival-, or
+replay-cadence term
+(`experiments/M133-blocker-audit/bar-card-audit.json:1367`). A slow stacker
+given minutes before frame 100 and a fast stacker given all 100 at once are
+not the same test. M11 fails (i), and its live checker is not concretely
+plannable until the replay contract is frozen.
+
+#### M12 — the sampling target has no admission tolerance
+
+M12 requires:
+
+> Sample process-tree private committed bytes and working set every 10 ms;
+> report peak committed bytes.
+> (`docs/proposals/2026-09-sota-scorecard.md:1051-1052`)
+
+The commissioned monitor's diagnostic campaign recorded:
+
+> `"ratio_protocol_caveat": "diagnostic only because the 10 ms cadence was not
+> maintained under load",`
+>
+> `"sampling_protocol_exactly_achieved": false,`
+>
+> `"worst_max_gap_ms": 1048.092800017912`
+> (`experiments/m12-scorecard/out/campaign-16bc3e3d/audit.json:332-348`)
+
+**VERIFIED:** the scorecard contains no allowed jitter, maximum gap, missed
+interval count, or alternative peak-accounting rule
+(`experiments/M133-blocker-audit/bar-card-audit.json:1368`). This is not
+academic: the existing checker itself refuses the memory ratio on that basis.
+The 6-GiB diagnostic FAIL remains certain because missed samples can hide only
+a higher peak, but a future apparent PASS cannot be admitted reproducibly
+until the sampling-validity rule is numeric. M12 fails (i), despite strong
+commissioning of its hash and allocation controls.
+
+### Refusal answer
+
+**VERIFIED refusal: M1.** I would refuse to spend the owner's money, capture
+time, or comparator effort to “unlock M1” under this revision. The governing
+instrument itself says there is no admitted statistic or numeric bar
+(`docs/proposals/2026-09-sota-scorecard.md:392,559-562`). Clearing `(b)`, buying
+`(d)`, and shooting `(c)` cannot turn an undefined test into a score.
+
+**VERIFIED additional stop condition:** I would also refuse implementation
+spend aimed at making M8-O green until its rail domain is corrected. The
+current checker classifies a maximum representable output as below a source
+hull that starts above the maximum; no resampler change can repair that
+contradiction.
+
+This does not imply refusing every future Zerene purchase. **ASSUMED:** M6 is
+physically achievable, its missing channel rule is cheap to freeze, and the
+other textual gaps are likewise repairable before outputs. The verified
+consequence is that the scorecard should be repaired before the owner spends
+money expecting the present “unlocked” axes to yield interpretable pass/fail
+values.
+
+### Assumptions
+
+- **ASSUMED:** nonzero M2–M7 and M9–M12 thresholds are physically/numerically
+  achievable unless a specific contradiction is identified above. No
+  scorecard run exists to prove actual attainment.
+- **ASSUMED:** “concretely plannable” means a competent independent implementer
+  can write the checker without inventing a population, reduction, threshold,
+  or timing-validity rule. A list of desired outputs is not by itself a
+  concrete checker plan.
+- **ASSUMED:** the existing M8 bilinear-stage arrays are valid read-only
+  artifacts. The retained audit records and checks their exact SHA-256s; it
+  does not promote them to a formal score.
+- **ASSUMED:** u16 code value `65535` represents normalized linear value `1.0`,
+  consistent with the checker's own `encoded/65535` convention and the
+  scorecard's `0.5/65535` quantisation tolerance.
+
+### Could not determine
+
+- Whether the scorecard author intended a particular library's percentile
+  convention. No convention is written.
+- Whether M2's `eta` was intended to pass per ROI, per cross-fit, by a median,
+  or by a hierarchical pooled estimator.
+- Whether M6 intended a per-channel or luminance rail census.
+- Whether M11 intended recorded real-camera arrival times or a synthetic file
+  replay for the live arm.
+- Whether M12's “every 10 ms” means a nominal polling request or a hard
+  maximum gap. The existing audit treats failure to maintain it as
+  disqualifying, but the governing document supplies no tolerance.
+- Whether the named commercial outputs make M2's strict 5% advantage and
+  M11's 2x advantage attainable in practice. Those outputs do not yet exist.
