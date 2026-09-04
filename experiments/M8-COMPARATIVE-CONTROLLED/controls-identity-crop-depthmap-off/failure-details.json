@@ -1,0 +1,200 @@
+{
+  "admission": {
+    "border_checks": [
+      {
+        "edge": 0,
+        "max_abs_dn": 18817
+      },
+      {
+        "edge": 1,
+        "max_abs_dn": 18817
+      },
+      {
+        "edge": 2,
+        "max_abs_dn": 18817
+      },
+      {
+        "edge": 3,
+        "max_abs_dn": 18817
+      }
+    ],
+    "errors": [
+      "marker 0 at (32, 32) differs by 10101 DN",
+      "marker 1 at (3359, 39) differs by 10247 DN",
+      "marker 2 at (47, 2221) differs by 10392 DN",
+      "marker 3 at (3340, 2213) differs by 10535 DN",
+      "marker 4 at (1379, 1342) differs by 10677 DN",
+      "marker 5 at (2097, 838) differs by 10818 DN",
+      "marker 6 at (1130, 754) differs by 10958 DN",
+      "marker 7 at (2261, 1508) differs by 11096 DN",
+      "border 0 differs by 18817 DN",
+      "border 1 differs by 18817 DN",
+      "border 2 differs by 18817 DN",
+      "border 3 differs by 18817 DN",
+      "constant patch 0 median differs by 16972.0 DN",
+      "constant patch 1 median differs by 18740.0 DN",
+      "constant patch 2 median differs by 18741.0 DN",
+      "only 0.000000000 of coordinates are within 4 DN; require 0.999000000"
+    ],
+    "full_array_near_fraction": 0.0,
+    "marker_checks": [
+      {
+        "index": 0,
+        "max_abs_dn": 10101,
+        "x": 32,
+        "y": 32
+      },
+      {
+        "index": 1,
+        "max_abs_dn": 10247,
+        "x": 3359,
+        "y": 39
+      },
+      {
+        "index": 2,
+        "max_abs_dn": 10392,
+        "x": 47,
+        "y": 2221
+      },
+      {
+        "index": 3,
+        "max_abs_dn": 10535,
+        "x": 3340,
+        "y": 2213
+      },
+      {
+        "index": 4,
+        "max_abs_dn": 10677,
+        "x": 1379,
+        "y": 1342
+      },
+      {
+        "index": 5,
+        "max_abs_dn": 10818,
+        "x": 2097,
+        "y": 838
+      },
+      {
+        "index": 6,
+        "max_abs_dn": 10958,
+        "x": 1130,
+        "y": 754
+      },
+      {
+        "index": 7,
+        "max_abs_dn": 11096,
+        "x": 2261,
+        "y": 1508
+      }
+    ],
+    "max_abs_dn": 18817,
+    "pass": false,
+    "patch_checks": [
+      {
+        "index": 0,
+        "max_median_error_dn": 16972.0,
+        "median": [
+          941.0,
+          3335.0,
+          7604.0
+        ],
+        "target": [
+          8192.0,
+          16384.0,
+          24576.0
+        ]
+      },
+      {
+        "index": 1,
+        "max_median_error_dn": 18740.0,
+        "median": [
+          14028.0,
+          22841.0,
+          34245.0
+        ],
+        "target": [
+          32768.0,
+          40960.0,
+          49152.0
+        ]
+      },
+      {
+        "index": 2,
+        "max_median_error_dn": 18741.0,
+        "median": [
+          1924.0,
+          18123.0,
+          48422.0
+        ],
+        "target": [
+          12288.0,
+          36864.0,
+          57344.0
+        ]
+      }
+    ]
+  },
+  "canonical_output": {
+    "file_sha256": "B48B5B49122F9B45F21AD8C73AE834D8442AFD8C0D66BDA5632708FEEA816D8F",
+    "pixel_sha256": "910A2E6A9DF637722FEAF2B5C3FC7AB506084025C30C50E8B924F1DDF2EFF7D3",
+    "tags": {
+      "compression": "NONE",
+      "dtype": "uint16",
+      "icc_bytes": 552,
+      "icc_sha256": "A7FEE628AF2961869B68E2F38A11123F4899F4CAB88B27A15742672B8BF43445",
+      "orientation": 1,
+      "photometric": "RGB",
+      "shape": [
+        2262,
+        3392,
+        3
+      ]
+    }
+  },
+  "control_directory": "controls-identity-crop-depthmap-off",
+  "direct_output": {
+    "file_sha256": "505684A0EA3DB0F383FF89324C382B0EFA92830A99848484FC7C63F4CE6E97F8",
+    "pixel_sha256": "910A2E6A9DF637722FEAF2B5C3FC7AB506084025C30C50E8B924F1DDF2EFF7D3",
+    "tags": {
+      "compression": "LZW",
+      "dtype": "uint16",
+      "icc_bytes": 0,
+      "icc_sha256": null,
+      "orientation": 1,
+      "photometric": "RGB",
+      "shape": [
+        2262,
+        3392,
+        3
+      ]
+    }
+  },
+  "failure_stage": "registered-pixel-and-linear-domain-witness",
+  "input": {
+    "file_sha256": "45F27A1E6B43AF778CE6312AB78653EA8F8CE6983989BC1B40DC1AFF5932F52B",
+    "pixel_sha256": "347BBAFBDE9C9D3146B6BAB5993B8DC693FBE0DDFFA092092058521A442DEBDC",
+    "tags": {
+      "compression": "NONE",
+      "dtype": "uint16",
+      "icc_bytes": 552,
+      "icc_sha256": "A7FEE628AF2961869B68E2F38A11123F4899F4CAB88B27A15742672B8BF43445",
+      "orientation": 1,
+      "photometric": "RGB",
+      "shape": [
+        2262,
+        3392,
+        3
+      ]
+    }
+  },
+  "source_predicted_srgb_eotf": {
+    "max_abs_dn": 1,
+    "mean_abs_dn": 0.001539222678210967,
+    "note": "Prediction applies the source-declared sRGB EOTF once to the uint16 input codes at registered coordinates.",
+    "samples": 23018112,
+    "within_1_dn_fraction": 1.0,
+    "within_2_dn_fraction": 1.0,
+    "within_4_dn_fraction": 1.0
+  },
+  "status": "FAIL"
+}

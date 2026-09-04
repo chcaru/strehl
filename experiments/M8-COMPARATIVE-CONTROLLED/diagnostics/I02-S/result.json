@@ -1,0 +1,69 @@
+{
+  "arm": "I02-S",
+  "command": [
+    "C:\\dev\\macro\\focus-stack\\dist\\focus-stack.exe",
+    "--no-align",
+    "--no-transform",
+    "--no-whitebalance",
+    "--no-contrast",
+    "--nocrop",
+    "--input-colorspace=linear-rec2020",
+    "--internal-colorspace=linear",
+    "--output-colorspace=linear-rec2020",
+    "--output-bitdepth=16",
+    "--hdr-preserve=off",
+    "--threads=6",
+    "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I02-S\\direct-output.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I02-S\\input\\000.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I02-S\\input\\001.tif"
+  ],
+  "comparator_sha256": "0ABA0CF0936AF8B1CACE2681CA43D49729D253E8ED1F786F2A8960B7974CA45D",
+  "count": 2,
+  "diagnostic_only": true,
+  "dimensions": [
+    192,
+    256,
+    3
+  ],
+  "extra_options": [],
+  "host_gate": {
+    "class": "small",
+    "cpu_limit_percent": 50.0,
+    "cpu_samples_percent": [
+      22.619225996548288,
+      19.879025935240303,
+      15.994031198670179,
+      20.926784872503113,
+      21.089733140549484
+    ],
+    "free_memory_gib": 35.58855056762695,
+    "mean_cpu_percent": 20.101760228702272,
+    "measured_at": "2026-09-04T05:08:45.0617517Z",
+    "minimum_free_memory_gib": 8.0,
+    "pass": true,
+    "samples_seconds": 5,
+    "total_memory_gib": 61.5550422668457
+  },
+  "last_stdout_lines": [
+    "[ 17/ 23] Construct depthmap layer 1              ",
+    "[ 18/ 23] Denoise merge_result.jpg                ",
+    "[ 18/ 23] Construct depthmap layer 1              ",
+    "[ 19/ 23] Inverse-wavelet denoised_merge_result.jp",
+    "[ 19/ 23] Construct depthmap layer 1              ",
+    "[ 20/ 23] Construct depthmap layer 0              ",
+    "[ 21/ 23] Construct depthmap layer -1             ",
+    "[ 22/ 23] Compose color (winner-copy)             ",
+    "",
+    "Error exit due to failed steps"
+  ],
+  "output_exists": false,
+  "output_sha256": null,
+  "pixel_sha256": [
+    "3CD506AF968E8F10003F710AD8CD6582C5D2C8CCB13E852A0F3CFC8CE09AAA8F"
+  ],
+  "returncode": 1,
+  "stderr": "--noise-model=auto: loaded C:/dev/macro/presets/noise_profile.json (source=preset:iso_50, iso_hint=50)\n\n\nTask Construct depthmap layer -1 on thread 5 failed with exception:\nOpenCV(4.13.0) C:\\GHA-OCV-3\\_work\\ci-gha-workflow\\ci-gha-workflow\\opencv\\modules\\imgproc\\src\\histogram.cpp:202: error: (-215:Assertion failed) ranges[i] && ranges[i][0] < ranges[i][1] in function 'cv::histPrepareImages'\n\n",
+  "stderr_sha256": "B4FBA070647519BF8792F8652B450286AE8C22EBCFA56599A623D06003C8B25E",
+  "stdout_sha256": "3B9A987403B69736BD66AF639D53350979E56B68C74B3238EDECBC8BF395133C",
+  "variant_offsets": false
+}

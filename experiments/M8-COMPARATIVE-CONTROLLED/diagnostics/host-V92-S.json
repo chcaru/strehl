@@ -1,0 +1,18 @@
+{
+  "measured_at": "2026-09-04T05:09:28.5800454Z",
+  "class": "small",
+  "samples_seconds": 5,
+  "cpu_samples_percent": [
+    26.956312009165195,
+    16.799168741267735,
+    22.96365915098808,
+    31.514026715147846,
+    37.460067596182064
+  ],
+  "mean_cpu_percent": 27.138646842550184,
+  "cpu_limit_percent": 50.0,
+  "free_memory_gib": 35.99669647216797,
+  "total_memory_gib": 61.5550422668457,
+  "minimum_free_memory_gib": 8.0,
+  "pass": true
+}

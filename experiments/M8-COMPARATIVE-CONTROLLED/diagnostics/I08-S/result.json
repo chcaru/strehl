@@ -1,0 +1,75 @@
+{
+  "arm": "I08-S",
+  "command": [
+    "C:\\dev\\macro\\focus-stack\\dist\\focus-stack.exe",
+    "--no-align",
+    "--no-transform",
+    "--no-whitebalance",
+    "--no-contrast",
+    "--nocrop",
+    "--input-colorspace=linear-rec2020",
+    "--internal-colorspace=linear",
+    "--output-colorspace=linear-rec2020",
+    "--output-bitdepth=16",
+    "--hdr-preserve=off",
+    "--threads=6",
+    "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\direct-output.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\input\\000.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\input\\001.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\input\\002.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\input\\003.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\input\\004.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\input\\005.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\input\\006.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S\\input\\007.tif"
+  ],
+  "comparator_sha256": "0ABA0CF0936AF8B1CACE2681CA43D49729D253E8ED1F786F2A8960B7974CA45D",
+  "count": 8,
+  "diagnostic_only": true,
+  "dimensions": [
+    192,
+    256,
+    3
+  ],
+  "extra_options": [],
+  "host_gate": {
+    "class": "small",
+    "cpu_limit_percent": 50.0,
+    "cpu_samples_percent": [
+      34.22523144412265,
+      37.870146730194996,
+      37.860161474321785,
+      29.03280916999934,
+      34.38924162202874
+    ],
+    "free_memory_gib": 35.07423400878906,
+    "mean_cpu_percent": 34.6755180881335,
+    "measured_at": "2026-09-04T05:09:05.2331817Z",
+    "minimum_free_memory_gib": 8.0,
+    "pass": true,
+    "samples_seconds": 5,
+    "total_memory_gib": 61.5550422668457
+  },
+  "last_stdout_lines": [
+    "[ 65/ 71] Merge 8 images                          ",
+    "[ 66/ 71] Construct depthmap layer 0              ",
+    "[ 66/ 71] Construct depthmap layer 0              ",
+    "[ 67/ 71] Denoise merge_result.jpg                ",
+    "[ 67/ 71] Construct depthmap layer 0              ",
+    "[ 68/ 71] Inverse-wavelet denoised_merge_result.jp",
+    "[ 68/ 71] Inverse-wavelet denoised_merge_result.jp",
+    "[ 69/ 71] Construct depthmap layer -1             ",
+    "[ 69/ 71] Construct depthmap layer -1             ",
+    "[ 70/ 71] Compose color (winner-copy)             "
+  ],
+  "output_exists": false,
+  "output_sha256": null,
+  "pixel_sha256": [
+    "3CD506AF968E8F10003F710AD8CD6582C5D2C8CCB13E852A0F3CFC8CE09AAA8F"
+  ],
+  "returncode": 1,
+  "stderr": "--noise-model=auto: loaded C:/dev/macro/presets/noise_profile.json (source=preset:iso_50, iso_hint=50)\n\n\nTask Construct depthmap layer -1 on thread 1 failed with exception:\nOpenCV(4.13.0) C:\\GHA-OCV-3\\_work\\ci-gha-workflow\\ci-gha-workflow\\opencv\\modules\\imgproc\\src\\histogram.cpp:202: error: (-215:Assertion failed) ranges[i] && ranges[i][0] < ranges[i][1] in function 'cv::histPrepareImages'\n\n",
+  "stderr_sha256": "F7C910F6238D5967BBC16DB39FEEBA1984709535F63049D017D968879DFBE80E",
+  "stdout_sha256": "9B5FCCADDCBA062ECD640C9E99300C9CED3FCAEEDBAAF89E6A2F6752EEAFEE21",
+  "variant_offsets": false
+}

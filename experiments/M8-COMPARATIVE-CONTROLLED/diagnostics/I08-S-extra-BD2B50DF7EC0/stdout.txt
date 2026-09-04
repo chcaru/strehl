@@ -1,0 +1,98 @@
+[  1/  2] Load C:\dev\blog\death-of-software\proje
+[  2/  8] Load C:\dev\blog\death-of-software\proje
+[  3/ 13] Load C:\dev\blog\death-of-software\proje
+[  4/ 23] Load C:\dev\blog\death-of-software\proje
+[  5/ 25] Load C:\dev\blog\death-of-software\proje
+[  6/ 31] Load C:\dev\blog\death-of-software\proje
+[  6/ 53] Load C:\dev\blog\death-of-software\proje
+[  6/ 53] Load C:\dev\blog\death-of-software\proje
+[  7/ 53] Load C:\dev\blog\death-of-software\proje
+[  8/ 53] Load C:\dev\blog\death-of-software\proje
+[  8/ 53] Load C:\dev\blog\death-of-software\proje
+[  8/ 53] Load C:\dev\blog\death-of-software\proje
+[  9/ 53] Grayscale C:\dev\blog\death-of-software\
+[  9/ 53] Grayscale C:\dev\blog\death-of-software\
+[  9/ 53] Grayscale C:\dev\blog\death-of-software\
+[  9/ 53] Grayscale C:\dev\blog\death-of-software\
+[  9/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 10/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 11/ 53] Align 004.tif to 004.tif                
+[ 11/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 12/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 13/ 53] Grayscale aligned_004.tif               
+[ 14/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 15/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 16/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 16/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 17/ 53] Align 003.tif to 004.tif                
+[ 17/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 18/ 53] Grayscale aligned_003.tif               
+[ 18/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 19/ 53] Align 002.tif to 003.tif                
+[ 19/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 20/ 53] Grayscale aligned_002.tif               
+[ 20/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 21/ 53] Forward-wavelet aligned_003.tif         
+[ 21/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 22/ 53] Align-residual aligned_003.tif          
+[ 22/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 23/ 53] Align 005.tif to 004.tif                
+[ 23/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 24/ 53] Grayscale aligned_005.tif               
+[ 24/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 25/ 53] Align-residual aligned_004.tif          
+[ 25/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 26/ 53] Align-residual aligned_002.tif          
+[ 26/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 27/ 53] Align 001.tif to 002.tif                
+[ 27/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 28/ 53] Grayscale aligned_001.tif               
+[ 28/ 53] Grayscale aligned_005.tif               
+[ 29/ 53] Align 006.tif to 005.tif                
+[ 29/ 53] Grayscale aligned_005.tif               
+[ 30/ 53] Grayscale aligned_006.tif               
+[ 30/ 53] Align-residual aligned_003.tif          
+[ 31/ 53] Align-residual aligned_005.tif          
+[ 31/ 53] Align-residual aligned_003.tif          
+[ 32/ 53] Align-residual aligned_001.tif          
+[ 32/ 53] Align-residual aligned_003.tif          
+[ 33/ 53] Align-residual aligned_006.tif          
+[ 33/ 53] Align-residual aligned_003.tif          
+[ 34/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 34/ 53] Align-residual aligned_003.tif          
+[ 35/ 53] Grayscale C:\dev\blog\death-of-software\
+[ 35/ 53] Align-residual aligned_003.tif          
+[ 35/ 53] Align-residual aligned_003.tif          
+[ 35/ 53] Forward-wavelet aligned_003.tif         
+[ 36/ 53] Align 007.tif to 006.tif                
+[ 36/ 53] Forward-wavelet aligned_003.tif         
+[ 37/ 53] Align 000.tif to 001.tif                
+[ 37/ 53] Forward-wavelet aligned_003.tif         
+[ 38/ 53] Grayscale aligned_000.tif               
+[ 38/ 53] Forward-wavelet aligned_003.tif         
+[ 39/ 53] Grayscale aligned_007.tif               
+[ 39/ 53] Forward-wavelet aligned_003.tif         
+[ 39/ 53] Forward-wavelet aligned_003.tif         
+[ 40/ 53] Align-residual aligned_000.tif          
+[ 40/ 53] Forward-wavelet aligned_003.tif         
+[ 41/ 53] Align-residual aligned_007.tif          
+[ 41/ 53] Forward-wavelet aligned_003.tif         
+[ 41/ 53] Forward-wavelet aligned_003.tif         
+[ 42/ 53] Forward-wavelet aligned_004.tif         
+[ 43/ 53] Forward-wavelet aligned_005.tif         
+[ 44/ 53] Forward-wavelet aligned_002.tif         
+[ 45/ 53] Forward-wavelet aligned_006.tif         
+[ 46/ 53] Forward-wavelet aligned_001.tif         
+[ 47/ 53] Forward-wavelet aligned_007.tif         
+[ 48/ 53] Forward-wavelet aligned_000.tif         
+[ 49/ 53] Merge 8 images                          
+[ 50/ 53] Denoise merge_result.jpg                
+[ 51/ 53] Inverse-wavelet denoised_merge_result.jp
+[ 52/ 53] Compose color (winner-copy)             
+[ 53/ 53] Save C:\dev\blog\death-of-software\proje
+Saved Linear Rec.2020 (D65, gamma 1.0) TIFF: C:\dev\blog\death-of-software\projects\strehl\experiments\M8-COMPARATIVE-CONTROLLED\diagnostics\I08-S-extra-BD2B50DF7EC0\direct-output.tif
+  Tip: embed the colour profile so Lightroom auto-detects it:
+       python scripts\embed_icc.py "C:\dev\blog\death-of-software\projects\strehl\experiments\M8-COMPARATIVE-CONTROLLED\diagnostics\I08-S-extra-BD2B50DF7EC0\direct-output.tif"
+  Note: Lightroom treats this as HDR/linear and only offers "Color" /
+        "Monochrome" profiles. For full Adobe profile selection use
+        --output-colorspace=rec2020 (16-bit gamma-encoded wide gamut).

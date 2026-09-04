@@ -1,6 +1,7 @@
 # M8-COMPARATIVE-PROTOCOL — manufacturing a foreign-render contract
 
-**Status: specification only. No render was made and no holdout was opened.**
+**Status: protocol plus synthetic commissioning results. No subject render or
+holdout was opened.**
 
 ## 1. Decision
 
@@ -8,9 +9,10 @@ The contract can be manufactured under full input control.
 
 | candidate | protocol disposition |
 | --- | --- |
-| Zerene PMax | **conditionally manufacturable**; needs a valid Professional licence and all pixel gates |
+| Zerene PMax | **conditionally manufacturable**; needs a valid Prosumer or Professional licence for the adjusted-input evidence, vendor confirmation, and all pixel gates |
 | Zerene DMap | conditionally manufacturable as a separately preregistered project |
-| retained `focus-stack` CLI | **conditionally manufacturable** through its documented `--no-align` bypass |
+| direct Enfuse 4.2 on prepared frames | **conditionally manufacturable**; strongest free/source-readable candidate, not yet run |
+| retained `focus-stack` CLI | source proves a true `--no-align` bypass, but the registered uint16-linear arms remain **UNMEASURED** after mandatory-control failures |
 | Helicon Focus | not admitted; no verified bypass plus tagged-linear output contract |
 
 The primary comparative boundary is the set of already-warped TIFFs delivered
@@ -170,7 +172,8 @@ For Zerene this is the load-bearing pixel test:
 * require every saved adjustment to be identity and every brightness
   adjustment to be neutral.
 
-Zerene documents “Save Adjusted Input Images” as a Professional-only feature.
+Zerene's purchasing table places “Save Adjusted Input Images” among the
+technical features available in **Prosumer and Professional**, not Personal.
 Use a valid licence that exposes it. The currently installed expired trial
 cannot save output and is not an execution path.
 
@@ -182,6 +185,14 @@ remain a strong diagnostic but not the sole basis of the contract.
 For a CLI comparator that cannot export adjusted planes, require a documented
 true bypass plus §4.3. “Maximum shift = 0” is weaker than a bypass and is not a
 substitute unless a pixel commissioning arm proves it.
+
+For a source-readable comparator, exact source can replace the adjusted-plane
+export for the narrow fact it proves: that the selected path cannot construct
+or apply a transform. This is stronger than inspecting a serialized
+post-processing plane when the source is tied to the executable by a
+reproducible build or equivalent provenance. Without that binding, source is
+corroborative rather than dispositive and the full output-grid witness remains
+load-bearing. Source never replaces the output-domain witness.
 
 ### 4.3 Output-grid identity witness
 
@@ -241,9 +252,10 @@ values is an M8 observation, not automatically a domain failure.
 
 ### 5.1 Owner prerequisite
 
-Install a valid Zerene licence before scheduling the run. A Professional
-licence is required for the adjusted-input export used by §4.2. Do not attempt
-to bypass the expired-trial save restriction.
+Install a valid Zerene **Prosumer or Professional** licence before scheduling
+the run. Either tier is documented as exposing the adjusted-input export used
+by §4.2; obtain vendor confirmation before relying on it. Do not attempt to
+bypass the expired-trial save restriction.
 
 The registered starting build is Zerene Stacker
 `1.04 Build T2026-05-04-0750`, with:
@@ -699,10 +711,10 @@ the same frozen prepared inputs.
 
 ## 12. Imperative owner instructions
 
-1. **Install a valid Zerene Professional licence.** The current expired trial
-   cannot save the output or adjusted-input evidence. Do not bypass it. Ask
-   Zerene support to confirm that Save Adjusted Input Images exports the planes
-   used by stacking, and archive the response.
+1. **Install a valid Zerene Prosumer or Professional licence.** The current
+   expired trial cannot save the output or adjusted-input evidence. Do not
+   bypass it. Ask Zerene support to confirm that Save Adjusted Input Images
+   exports the planes used by stacking, and archive the response.
 2. **Ask the registrar for one non-holdout subject/session.** Do not open image
    outcomes until the selection row is committed.
 3. **Create a fresh run root under
@@ -822,15 +834,21 @@ equality, or an equivalently direct vendor-supported export/API, remains the
 load-bearing evidence for the strongest contract. A Personal-only run must be
 labelled conditional rather than promoted by trusting a checkbox.
 
-### 15.3 Is `focus-stack` enough for the headline?
+### 15.3 Is Zerene necessary?
 
-No. It is sufficient to commission the foreign-render M8 instrument and to
-make a narrow candidate claim about this one controlled merge. It is not
-sufficient for the governing market-leading SOTA headline:
-`docs/proposals/2026-08-sota-path.md` explicitly names licensed Zerene PMax
-and DMap as the comparator. Omitting both leaves the proposal's comparative
-arm incomplete. A headline would need the licensed Zerene arms or a separately
-registered change to that governance document; this lane cannot grant either.
+For the **scientific M8 claim**, no. A source-readable comparator that passes
+the complete manufactured contract can establish the same narrow proposition,
+and can provide stronger evidence about its operator path than a black-box
+export. Neither the current `focus-stack` build nor Enfuse has yet produced an
+admitted result, so that logical alternative is not a completed comparison.
+
+For the **current market-leading SOTA headline**, yes. The governing
+`docs/proposals/2026-08-sota-path.md` explicitly names licensed Zerene PMax and
+DMap. Omitting them leaves that proposal's market comparison incomplete.
+Replacing them requires a separately registered governance change. Thus
+Zerene is not logically necessary to prove invention, but it remains necessary
+for the named headline and desirable because it is the tool practitioners
+actually use. Evidentiary strength and market relevance are different axes.
 
 Sources:
 
@@ -852,3 +870,107 @@ survey are preregistered in
 `experiments/M8-COMPARATIVE-CONTROLLED/SOURCE-AUDIT-PREREGISTRATION.md`.
 Diagnostics are not scorecard or quality evidence. A reduced diagnostic can
 localize the prior `cv::histPrepareImages` crash, but cannot admit a subject.
+
+### 16.1 `focus-stack --no-align` is a true bypass
+
+The clean local source candidate is `chcaru/macro`
+`864ff08862414682e75d58245a1e7f1d25cf3315`; the frozen upstream comparison is
+`PetteriAimonen/focus-stack`
+`0cd289e224fe24aead5b146faeaa46950775f346`.
+
+In the local fork, `focus-stack/src/main.cc:1300-1308` maps `--no-align` to
+`ALIGN_NONE`. `focus-stack/src/focusstack.cc:864,894-939` schedules one
+`Task_Align` wrapper per input, including the reference, so downstream task
+types remain uniform. The wrapper exits through
+`focus-stack/src/task_align.cc:133-138` by aliasing the source image:
+
+```cpp
+if (m_refcolor == m_srccolor || m_flags == FocusStack::ALIGN_NONE)
+    m_result = m_srccolor->img();
+```
+
+No fit, transform, `warpAffine`, or interpolation runs. Upstream has the same
+branch at `src/task_align.cc:59-63`. This is stronger than a zero-shift fit:
+`--no-transform` without `--no-align` still reaches the fork's
+`cv::warpAffine(..., INTER_LANCZOS4, ...)` at
+`focus-stack/src/task_align.cc:828-834`.
+
+The 93 progress lines beginning with `Align` for 92 inputs were 92 unique
+source names plus a second display of frame `048`. `worker.cc:267-272` prints a
+task when it starts; `worker.cc:351-356` redraws one still-running task after
+another task finishes. The duplicate is progress presentation, not a 93rd
+alignment operation.
+
+The selected executable still has no cryptographic build manifest or embedded
+Git revision tying its SHA-256 to either source commit. Therefore source alone
+does not admit the binary. The later full-size coordinate witness strongly
+corroborates the source path—every output coordinate matched a single
+pointwise EOTF of the corresponding input coordinate within 1 DN—but that same
+result failed the registered linear-domain predicate.
+
+### 16.2 The depthmap can be skipped, but that changes the merge
+
+Default `--depthmap-chain=auto` is load-bearing for the fork's current
+confidence pipeline. `focusstack.cc:1091-1114,1251-1265` schedules the final
+depthmap even when no PNG is requested; `main.cc:1858-1879` documents that
+`off` restores the pre-Phase-12.5 path. It is therefore legal to register
+`--depthmap-chain=off` as a separate comparator arm, but not to describe it as
+mere suppression of an unused artifact.
+
+The default identical-input crash is a zero-range bug. Failed Gaussian fits
+write amplitude zero at `task_depthmap.cc:1274-1305`; the final confidence path
+constructs a histogram of that all-zero plane at
+`task_depthmap.cc:1589-1594`; and `histogrampercentile.cc:6-19` passes equal
+minimum and maximum values directly to OpenCV. The diagnostic result is not an
+input-count limit: identical `N=2`, `N=8`, and `N=92` all fail, while varied
+`N=92` completes.
+
+### 16.3 The registered uint16-linear input contract is incompatible
+
+The source explains the full-control radiometric failure.
+`colormgmt.cc:282-288` passes uint8/uint16 inputs through as already encoded,
+whereas `colormgmt.cc:290-404` applies an OETF only to float inputs. Linear
+Rec.2020 output then applies the sRGB EOTF at
+`colormgmt.cc:548-607`. Accordingly, the full normal-crop control matched
+exactly one EOTF of the registered uint16 input codes: mean absolute error
+`0.001539 DN`, maximum `1 DN`, over all `23,018,112` samples. It did not match
+the declared linear samples directly.
+
+A float-linear input path, or a correctly encoded uint16 path with a frozen
+decode back to the checker domain, may be manufacturable. Neither is
+registered or tested. Any attempt requires a new preregistration and the
+unchanged full `N=92`, `3392x2262` control; the current arm remains
+`UNMEASURED`.
+
+## 17. Free/source-readable comparator survey
+
+This is a capability survey, not an admission result. A `YES` still requires a
+frozen executable, exact invocation, full-size geometry/domain controls, and
+the ordinary stop rules.
+
+| route | identity placement | linear 16-bit RGB | readable merge | disposition |
+| --- | --- | --- | --- | --- |
+| Hugin `align_image_stack` → Enfuse | **NO** — the documented workflow finds control points, optimizes positions/lens parameters, then remaps every image | **YES** downstream in Enfuse | **YES** | reject this route; it reintroduces the transform the protocol removes |
+| direct Enfuse 4.2 on prepared frames | **YES** — omit `align_image_stack`, use equal zero-offset canvases, and verify the fixed grid | **YES** — uint16 input, `--depth=16`, `--blend-colorspace=IDENTITY`, and source-copied ICC; pixel witness still mandatory | **YES**, GPL source | strongest free candidate; not run |
+| CombineZP | **CONDITIONAL** — alignment is an explicit GUI operation, but no frozen source-bound CLI bypass was found | **NO** — merge channels clamp/cast to byte and TIFF save uses `PixelFormat32bppRGB` | **YES**, archival GPL source | reject for this colour contract |
+| EPFL/Fiji Extended Depth of Field | **YES** — it consumes an already aligned axial stack; registration is external | **NO** for colour — RGB output is an ImageJ `ColorProcessor`, i.e. 8 bits per channel; 16-bit support is grayscale | **YES**, GPL source | reject for this colour contract |
+| selected `focus-stack` fork | **YES** in source and strongly corroborated by the coordinate witness | **CONDITIONAL** — current linear-uint16 protocol failed; alternate input encoding is untested | **YES**, but exact binary/source binding is incomplete | current result stays `UNMEASURED` |
+
+Direct Enfuse is the only surveyed free route whose three capabilities can
+reach `YES` without changing the colour problem. It must bypass
+`align_image_stack`; using the usual Hugin alignment pipeline would make the
+placement nonidentity. Enfuse 4.2 source accepts `IDENTITY` blend space
+(`src/enfuse.cc:1643-1649`), preserves the input ICC on output
+(`:2394-2399`), supports 16-bit output (`:323-328`), and exposes focus-stack
+hard masks (`:356-359`). Its multiresolution merge may itself invent values;
+that is exactly what M8 would audit, not a domain disqualification.
+
+Material sources:
+
+* <https://hugin.sourceforge.io/docs/manual/Align_image_stack.html>
+* <https://hugin.sourceforge.io/docs/manual/Enfuse.html>
+* <https://github.com/kyflores/enblend-enfuse/tree/e1057434d569cbf5369a0484346b8f7d250fe334>
+* <https://github.com/Vincentdecursay/CombineZP/tree/fbc64d84ebf6ea65318ccae33100d6e91c348462>
+* <https://bigwww.epfl.ch/demo/edf/index.html>
+* <https://github.com/Biomedical-Imaging-Group/EDF-Extended-Depth-of-Field/tree/742a6e2c12bf33bdb0daf2aac30946744e8a1cd5>
+* <https://imagej.net/ij/docs/guide/146-28.html>

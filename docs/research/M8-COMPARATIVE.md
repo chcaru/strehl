@@ -2,9 +2,11 @@
 
 **Final verdict: exact comparative M8-O and its requested magnitude
 distributions are UNMEASURED because none of the nine foreign renders supplies
-the complete geometry/radiometry contract.** No retained render outcome pixel
-was read by this lane. Predicates and exhaustive selection were committed
-first at `7601657fe87852049095b1c1cf67f28f4185fc37`, frozen at
+the complete geometry/radiometry contract. A fresh controlled `focus-stack`
+arm is also UNMEASURED after its mandatory synthetic controls failed.** No
+retained render outcome pixel was read by this lane, no subject frame was
+decoded, and no holdout was opened. Predicates and exhaustive selection were
+committed first at `7601657fe87852049095b1c1cf67f28f4185fc37`, frozen at
 `2026-09-03T19:41:01.975-07:00`. Follow-up synthetic analysis, separately
 preregistered at `c107e1cf`, rejects `~6%` as a universal Catmull-Rom ceiling:
 the exact single-pass two-dimensional separable support bound is `28.125%` of
@@ -445,18 +447,19 @@ in function 'cv::histPrepareImages'
 ```
 
 The progress stream reached `Compose color (winner-copy)` and then
-`Error exit due to failed steps`. It also contained 93 `Align ...` task labels
-despite `--no-align --no-transform`, and no log statement saying alignment was
-skipped. That is a concerning diagnostic, not a pixel-level finding: because
-no output exists, the preregistered geometry predicate cannot tell whether the
-labels denote an actual transform.
+`Error exit due to failed steps`. It also contained 93 `Align ...` progress
+lines despite `--no-align --no-transform`, and no log statement saying
+alignment was skipped. At this stage there was no output with which to
+adjudicate them, so the registered stop rule fired. The separately
+preregistered source audit in §17 later proved that those labels do not denote
+warps.
 
 The stop rule therefore fired. No threshold, witness, source count, or
 comparator option was changed; there was no retry with non-identical inputs.
 The geometry GREEN/RED verdicts, adapter commissioning, prepared subject
 frames, subject render, and M8-O were not run.
 
-**Candidate result: `UNMEASURED`.** The frozen `focus-stack` build cannot
+**Candidate result: `UNMEASURED`.** The frozen `focus-stack` build did not
 manufacture the required contract under this preregistered control. There is
 no violation rate, denominator, sign split, magnitude distribution, or
 comparator-versus-strehl reading to report.
@@ -473,3 +476,151 @@ Artifacts:
 * `experiments/M8-COMPARATIVE-CONTROLLED/controls/focus-stack.stdout.txt`
 * `experiments/M8-COMPARATIVE-CONTROLLED/controls/focus-stack.stderr.txt`
 * `experiments/M8-COMPARATIVE-CONTROLLED/controls/FAIL.json`
+
+## 17. Source audit, diagnostics, and final controlled-arm result
+
+**Preregistration:** source questions, diagnostic order, host gates, survey
+criteria, and the no-subject rule were frozen at commit `43c6a760`. The two
+nondefault full-control retries were separately frozen before their outcomes
+at `b5a45137` and `ed064117`.
+
+### 17.1 `--no-align` does not warp
+
+The local source candidate at `chcaru/macro`
+`864ff08862414682e75d58245a1e7f1d25cf3315` and public upstream
+`PetteriAimonen/focus-stack`
+`0cd289e224fe24aead5b146faeaa46950775f346` agree on the material path:
+
+1. local `focus-stack/src/main.cc:1300-1308` maps `--no-align` to
+   `ALIGN_NONE`;
+2. local `focus-stack/src/focusstack.cc:864,894-939` schedules one
+   `Task_Align` wrapper for each input, including the reference, to preserve
+   pipeline types;
+3. local `focus-stack/src/task_align.cc:133-138` then assigns
+   `m_result = m_srccolor->img()` and exits the alignment branch;
+4. upstream `src/task_align.cc:59-63` has the same direct alias.
+
+No transform is fitted and no interpolator is invoked. By contrast,
+`--no-transform` without `--no-align` can still reach
+`cv::warpAffine(..., INTER_LANCZOS4, ...)` at local
+`task_align.cc:828-834`; it is not an equivalent bypass.
+
+The original stdout contains 93 lines matching `] Align `, but exactly 92
+unique source names. `048-identity-witness.tif` occurs twice and no source is
+missing. `worker.cc:267-272` prints a task at start, while
+`worker.cc:351-356` redraws one still-running task after a different task
+finishes. Therefore:
+
+> The 93 labels are 92 scheduled identity wrappers plus one progress redraw.
+> There is no 93rd input and no source evidence of a warp.
+
+The binary remains SHA-256
+`0ABA0CF0936AF8B1CACE2681CA43D49729D253E8ED1F786F2A8960B7974CA45D`,
+but its `dist` artifact has no embedded Git revision or reproducible-build
+record. The source is therefore not cryptographically bound to that exact
+binary. It is supported by executable behavior in §17.4, not treated as sole
+proof.
+
+### 17.2 The default crash is a zero-range depthmap bug
+
+Every comparator process passed its preregistered host-load gate. These
+reduced runs are diagnostics only; none is evidence about image quality:
+
+| arm | N | input relation | default depthmap | result |
+| --- | ---: | --- | --- | --- |
+| `I02-S` | 2 | identical | on | exit `1`, no output, same `cv::histPrepareImages` assertion |
+| `I08-S` | 8 | identical | on | exit `1`, no output, same assertion |
+| `I92-S` | 92 | identical | on | exit `1`, no output, same assertion |
+| `V92-S` | 92 | deterministic ordinal offsets | on | exit `0`, output written |
+| `I08-S + --depthmap-chain=off` | 8 | identical | off | exit `0`, output written |
+
+The fault boundary was then explained, so preregistered `I02-F` was not run.
+This is not an inability to ingest 92 frames or full-size data. It is a
+degenerate-input bug:
+
+* failed Gaussian fits store `m_gauss_amp = 0` at
+  `task_depthmap.cc:1274-1305`;
+* the final confidence path builds a histogram from that plane at
+  `task_depthmap.cc:1589-1594`;
+* `histogrampercentile.cc:6-19` uses the image minimum and maximum directly as
+  the OpenCV range;
+* an all-zero plane therefore supplies `[0,0]`, violating OpenCV's required
+  strictly increasing range.
+
+The selected default build can process the varied 92-frame diagnostic, but it
+cannot complete the unchanged all-identical admission control. That default
+arm remains `UNMEASURED`.
+
+### 17.3 Depthmap-off is a different comparator arm
+
+Source shows that `--depthmap-chain=off` can write a merge without constructing
+the crashing final depthmap. It is not mere suppression of a diagnostic file.
+`focusstack.cc:1091-1114,1251-1265` makes the depthmap feed the default
+confidence consumers; `main.cc:1858-1879` says `off` restores the
+pre-Phase-12.5 path. The option therefore changes the merge operator and was
+correctly preregistered as a separate arm.
+
+### 17.4 Both nondefault full controls also fail admission
+
+The unchanged full control remained `N=92`, `3392x2262`, with 92 byte-identical
+hard links to the registered aperiodic uint16 witness.
+
+| arm | preregistration | outcome | admission decision |
+| --- | --- | --- | --- |
+| default, `--nocrop` | `36331092` | no output; zero-range depthmap crash | **FAIL** before geometry |
+| depthmap-off, `--nocrop` | `b5a45137` | output `3584x2560`, not `3392x2262` | **FAIL** dimensions |
+| depthmap-off, normal crop | `ed064117` | output exactly `3392x2262`, uint16, Orientation 1 | **FAIL** linear-domain witness |
+
+The first depthmap-off output retained internal reflected wavelet padding.
+Source explains the dimensions: `task_loadimg.cc:224-236` records the centered
+original rectangle as `valid_area`; `task_saveimg.cc:203-213` writes the whole
+padded matrix under `--nocrop` and otherwise crops to that registered area.
+Omitting `--nocrop` was therefore source-derived, not fitted from the failed
+output.
+
+The normal-crop retry established exact dimensions but rejected the declared
+linear samples completely: `0.000000000` of coordinates were within `4 DN` of
+the input and the largest registered error was `18,817 DN`. The mismatch was
+not an unknown tone curve. Every one of the `23,018,112` output samples matched
+one application of the source-declared sRGB EOTF to the corresponding uint16
+input code within `1 DN`; mean absolute error was `0.001539 DN`, maximum
+`1 DN`.
+
+Source predicts that exact result. `colormgmt.cc:282-288` assumes uint8/uint16
+inputs are already encoded and passes them through. Float inputs alone receive
+the OETF at `:290-404`. Linear Rec.2020 output then applies the EOTF at
+`:548-607`. Thus the registered linear uint16 TIFFs were interpreted as
+encoded values. The per-coordinate equality strongly corroborates identity
+geometry, but it fails the frozen common-linear-domain contract.
+
+### 17.5 Final result and scope
+
+No control was weakened, no threshold or transform was estimated from an
+output, and no subject frame was decoded. The geometry RED/GREEN pair,
+prepared subject, subject comparator render, checker adapter, and M8-O were not
+run.
+
+**Final controlled `focus-stack` result: `UNMEASURED`.** There is no M8-O rate,
+valid-hull denominator, signed extremum, magnitude distribution, common-stack
+strehl comparison, or sharpening-pair movement. A float-linear or correctly
+encoded uint16 input contract may be testable only under a new preregistration
+and the same full admission control.
+
+This remains a **controlled merge audit, not a default-settings product
+benchmark**. Disabling a comparator's normal alignment deliberately removes
+one part of its product.
+
+The free-field survey in `M8-COMPARATIVE-PROTOCOL.md` §17 identifies direct
+Enfuse—without `align_image_stack`—as the strongest unlicensed next candidate.
+That can make Zerene scientifically unnecessary if it passes all controls.
+Zerene remains necessary for the currently named market-leading PMax/DMap
+headline. Those are separate claims.
+
+Additional retained artifacts:
+
+* `experiments/M8-COMPARATIVE-CONTROLLED/SOURCE-AUDIT-RESULT.md`
+* `experiments/M8-COMPARATIVE-CONTROLLED/diagnostics/`
+* `experiments/M8-COMPARATIVE-CONTROLLED/controls-depthmap-off/`
+* `experiments/M8-COMPARATIVE-CONTROLLED/controls-identity-crop-depthmap-off/`
+* `experiments/M8-COMPARATIVE-CONTROLLED/host-load-depthmap-off-control.json`
+* `experiments/M8-COMPARATIVE-CONTROLLED/host-load-identity-crop-control.json`

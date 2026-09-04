@@ -1,0 +1,136 @@
+[  1/  1] Load C:\dev\blog\death-of-software\proje
+[  2/  9] Load C:\dev\blog\death-of-software\proje
+[  3/ 17] Load C:\dev\blog\death-of-software\proje
+[  4/ 26] Load C:\dev\blog\death-of-software\proje
+[  5/ 33] Load C:\dev\blog\death-of-software\proje
+[  6/ 42] Load C:\dev\blog\death-of-software\proje
+[  6/ 71] Load C:\dev\blog\death-of-software\proje
+[  7/ 71] Grayscale C:\dev\blog\death-of-software\
+[  7/ 71] Load C:\dev\blog\death-of-software\proje
+[  8/ 71] Load C:\dev\blog\death-of-software\proje
+[  8/ 71] Load C:\dev\blog\death-of-software\proje
+[  9/ 71] Load C:\dev\blog\death-of-software\proje
+[  9/ 71] Load C:\dev\blog\death-of-software\proje
+[  9/ 71] Grayscale C:\dev\blog\death-of-software\
+[  9/ 71] Grayscale C:\dev\blog\death-of-software\
+[  9/ 71] Grayscale C:\dev\blog\death-of-software\
+[  9/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 10/ 71] Align 004.tif to 004.tif                
+[ 10/ 71] Grayscale aligned_004.tif               
+[ 11/ 71] Grayscale aligned_004.tif               
+[ 12/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 13/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 14/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 15/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 16/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 16/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 17/ 71] Forward-wavelet aligned_004.tif         
+[ 17/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 18/ 71] Align-residual aligned_004.tif          
+[ 18/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 19/ 71] Align 003.tif to 004.tif                
+[ 19/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 19/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 20/ 71] Grayscale aligned_003.tif               
+[ 21/ 71] Align 005.tif to 004.tif                
+[ 21/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 22/ 71] Grayscale aligned_005.tif               
+[ 22/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 22/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 23/ 71] Align 006.tif to 005.tif                
+[ 24/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 24/ 71] Grayscale aligned_003.tif               
+[ 25/ 71] Align 002.tif to 003.tif                
+[ 25/ 71] Grayscale aligned_003.tif               
+[ 26/ 71] Grayscale aligned_002.tif               
+[ 26/ 71] Grayscale aligned_003.tif               
+[ 27/ 71] Grayscale aligned_006.tif               
+[ 27/ 71] Grayscale aligned_006.tif               
+[ 28/ 71] Align-residual aligned_003.tif          
+[ 28/ 71] Grayscale aligned_006.tif               
+[ 29/ 71] Align-residual aligned_005.tif          
+[ 29/ 71] Grayscale aligned_006.tif               
+[ 30/ 71] Align-residual aligned_002.tif          
+[ 30/ 71] Grayscale aligned_006.tif               
+[ 31/ 71] Align 001.tif to 002.tif                
+[ 31/ 71] Grayscale aligned_006.tif               
+[ 32/ 71] Grayscale aligned_001.tif               
+[ 32/ 71] Forward-wavelet aligned_004.tif         
+[ 33/ 71] Align-residual aligned_006.tif          
+[ 33/ 71] Forward-wavelet aligned_004.tif         
+[ 34/ 71] Align-residual aligned_001.tif          
+[ 34/ 71] Forward-wavelet aligned_004.tif         
+[ 35/ 71] Align 007.tif to 006.tif                
+[ 35/ 71] Forward-wavelet aligned_004.tif         
+[ 36/ 71] Grayscale aligned_007.tif               
+[ 36/ 71] Forward-wavelet aligned_004.tif         
+[ 37/ 71] Grayscale C:\dev\blog\death-of-software\
+[ 37/ 71] Forward-wavelet aligned_004.tif         
+[ 37/ 71] Forward-wavelet aligned_004.tif         
+[ 37/ 71] Forward-wavelet aligned_004.tif         
+[ 38/ 71] Align 000.tif to 001.tif                
+[ 38/ 71] Forward-wavelet aligned_004.tif         
+[ 39/ 71] Grayscale aligned_000.tif               
+[ 39/ 71] Forward-wavelet aligned_004.tif         
+[ 39/ 71] Forward-wavelet aligned_004.tif         
+[ 40/ 71] Align-residual aligned_007.tif          
+[ 40/ 71] Forward-wavelet aligned_004.tif         
+[ 41/ 71] Align-residual aligned_000.tif          
+[ 42/ 71] Cross-bracket defective-pixel map       
+[ 42/ 71] Forward-wavelet aligned_004.tif         
+[ 42/ 71] Forward-wavelet aligned_004.tif         
+[ 42/ 71] Forward-wavelet aligned_004.tif         
+[ 43/ 71] Forward-wavelet aligned_003.tif         
+[ 44/ 71] WAVS focus measure for aligned_004.tif  
+[ 44/ 71] Forward-wavelet aligned_003.tif         
+[ 45/ 71] Construct depthmap layer 4              
+[ 45/ 71] Construct depthmap layer 4              
+[ 46/ 71] Forward-wavelet aligned_005.tif         
+[ 47/ 71] WAVS focus measure for aligned_003.tif  
+[ 47/ 71] Construct depthmap layer 4              
+[ 47/ 71] Construct depthmap layer 4              
+[ 48/ 71] WAVS focus measure for aligned_005.tif  
+[ 49/ 71] Forward-wavelet aligned_002.tif         
+[ 49/ 71] WAVS focus measure for aligned_005.tif  
+[ 50/ 71] Construct depthmap layer 3              
+[ 50/ 71] Forward-wavelet aligned_002.tif         
+[ 50/ 71] Forward-wavelet aligned_002.tif         
+[ 51/ 71] Construct depthmap layer 5              
+[ 51/ 71] Construct depthmap layer 5              
+[ 52/ 71] WAVS focus measure for aligned_002.tif  
+[ 53/ 71] Forward-wavelet aligned_006.tif         
+[ 53/ 71] Construct depthmap layer 5              
+[ 53/ 71] Construct depthmap layer 5              
+[ 54/ 71] WAVS focus measure for aligned_006.tif  
+[ 55/ 71] Forward-wavelet aligned_001.tif         
+[ 55/ 71] Construct depthmap layer 5              
+[ 55/ 71] Forward-wavelet aligned_001.tif         
+[ 56/ 71] Construct depthmap layer 2              
+[ 56/ 71] Construct depthmap layer 2              
+[ 57/ 71] WAVS focus measure for aligned_001.tif  
+[ 58/ 71] Forward-wavelet aligned_007.tif         
+[ 58/ 71] Construct depthmap layer 2              
+[ 58/ 71] Forward-wavelet aligned_007.tif         
+[ 59/ 71] Construct depthmap layer 6              
+[ 59/ 71] Construct depthmap layer 6              
+[ 60/ 71] WAVS focus measure for aligned_007.tif  
+[ 61/ 71] Forward-wavelet aligned_000.tif         
+[ 61/ 71] Forward-wavelet aligned_000.tif         
+[ 61/ 71] Forward-wavelet aligned_000.tif         
+[ 62/ 71] Construct depthmap layer 1              
+[ 62/ 71] Construct depthmap layer 1              
+[ 63/ 71] WAVS focus measure for aligned_000.tif  
+[ 64/ 71] Merge 8 images                          
+[ 64/ 71] Construct depthmap layer 1              
+[ 64/ 71] Merge 8 images                          
+[ 65/ 71] Construct depthmap layer 7              
+[ 65/ 71] Merge 8 images                          
+[ 66/ 71] Construct depthmap layer 0              
+[ 66/ 71] Construct depthmap layer 0              
+[ 67/ 71] Denoise merge_result.jpg                
+[ 67/ 71] Construct depthmap layer 0              
+[ 68/ 71] Inverse-wavelet denoised_merge_result.jp
+[ 68/ 71] Inverse-wavelet denoised_merge_result.jp
+[ 69/ 71] Construct depthmap layer -1             
+[ 69/ 71] Construct depthmap layer -1             
+[ 70/ 71] Compose color (winner-copy)             

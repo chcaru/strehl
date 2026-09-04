@@ -1,0 +1,738 @@
+Usage: C:\dev\macro\focus-stack\dist\focus-stack.exe [options] file1.jpg file2.jpg ...
+
+Output file options:
+  --output=output.jpg           Set output filename
+  --depthmap=depthmap.png       Write a depth map image (default disabled)
+  --3dview=3dview.png           Write a 3D preview image (default disabled)
+  --save-steps                  Save intermediate images from processing steps
+  --jpgquality=95               Quality for saving in JPG format (0-100, default 95)
+  --output-bitdepth=auto        Output bit depth: auto, 8, 16, or 32 (32=float, TIFF/EXR/DNG only)
+  --output-colorspace=srgb      Output colour space: srgb (default), linear-rec2020, rec2020, adobergb, displayp3
+                                Pair linear-rec2020 with --output-bitdepth=32 (32-bit float TIFF) for max info preserved.
+                                adobergb = Adobe RGB (1998), D65, gamma 2.19921875.
+                                displayp3 = DCI-P3 primaries + D65 white + sRGB tone curve (Apple Display P3).
+  --output-format=auto          Output format override: auto (default; detect from --output extension),
+                                  dng (force Linear DNG even if --output= has a different extension).
+                                Linear DNG output writes a TIFF/EP container with DNG color-management
+                                tags so Lightroom / Camera Raw treats the stacked image as if it were
+                                a raw file (full profile picker, Temperature/Tint, etc.).
+  --hdr-preserve=auto           HDR-preserve mode: auto (default), on, off.
+                                  auto    On when output is 32-bit float linear-rec2020, off otherwise.
+                                  on      Keep an unclipped CV_32FC3 linear-light companion buffer all
+                                          the way through compose, so highlights > 1.0 from Lightroom's
+                                          32-bit float Linear Rec.2020 export survive into the output.
+                                          Costs ~3.6 GB extra peak RAM per 32 MP frame; output must be
+                                          32-bit float TIFF or the surplus is clipped at save time.
+                                  off     Legacy path: source frames are clipped to [0, 1] at load.
+                                          Use this for bit-identity regression against pre-Phase-4 builds.
+  --nocrop                      Save full image, including extrapolated border data
+
+Input file options:
+  --input-colorspace=auto       Input float colorspace: auto (linear-rec2020),
+                                linear-rec2020, linear-srgb, srgb, none,
+                                prophoto (= linear-prophoto),
+                                adobe-rgb (= linear-adobe-rgb / linear-argb),
+                                display-p3 (= linear-p3 / linear-display-p3)
+  --internal-colorspace=linear  Phase-2 P2.4: internal blend colour space.
+                                  linear   (default) inverse-OETF source colours before blends; gamma-
+                                           correct (removes the dark-rim halo at high-contrast edges
+                                           where multiple frames contribute in --reassign=guided-blend).
+                                  encoded  blend gamma-encoded amplitudes directly (pre-P2.4 default;
+                                           bit-identical to historical builds for regression testing).
+                                Has no effect with --reassign=winner-copy (pure pixel copy, no blend)
+                                or --reassign=legacy (legacy reassign path not gamma-corrected);
+                                affects --reassign=guided-blend only.
+
+Raw input options (apply only to .arw/.cr2/.cr3/.nef/.nrw/.raf/.rw2/.dng/.pef/.srw/.orf):
+  --lr-match=auto               Phase 6.1 Adobe-Color baseline approximation (default auto).
+                                  auto  on when any input is a camera raw AND output is not DNG;
+                                        off otherwise. DNG output is auto-suppressed because
+                                        Lightroom re-tone-maps LinearRaw on import, so baking
+                                        the PCHIP curve here would double-tone-map and crush
+                                        highlight/shadow texture.
+                                  on    apply a PCHIP S-curve tone curve in linear-light
+                                        Rec.2020 BEFORE the rest of the pipeline. Closes most
+                                        of the brightness / contrast gap vs the Lightroom-export
+                                        TIFF route. Also switches the default --demosaic from
+                                        ahd to dht. Per-feature flags (--demosaic= etc.) can
+                                        still override.
+                                  off   bit-identical to pre-Phase-6 ARW path: neutral LibRaw
+                                        decode, no tone curve, ahd default. Use this when the
+                                        ARW frames have already been LR-developed (rare) or
+                                        for regression / scientific output.
+  --demosaic=auto               Demosaic algorithm (default: dht for raw->DNG or when --lr-match=on,
+                                else ahd):
+                                  linear    bilinear; fast but zipper-prone
+                                  vng       variable number of gradients
+                                  ppg       patterned pixel grouping
+                                  ahd       adaptive homogeneity directed (legacy / lr-match=off default)
+                                  dcb       iterative refinement
+                                  rcd       Phase 12.15 clean-room Ratio Corrected Demosaicing
+                                            (post-pass over LibRaw bilinear; ~2-3x DHT wall cost,
+                                            sharper colour edges than AHD/DHT)
+                                  dht       LibRaw default; very good detail at low ISO
+                                            (default whenever raw input produces a tone-curved
+                                            result, i.e. lr-match=on OR output=.dng)
+                                  aahd      modified AHD
+                                LMMSE is in LibRaw's GPL2 demosaic pack and is not available
+                                in this LGPL build; pick dht or ahd as the high-detail option.
+  --raw-wb=camera               White-balance source (default camera):
+                                  camera    as-shot recorded by the camera (matches Lightroom AsShot)
+                                  auto      LibRaw auto WB from gray-world assumption
+                                  daylight  per-camera daylight multipliers
+                                  custom    reserved (falls back to camera)
+  --raw-colorspace=rec2020      LibRaw output colour primaries (default rec2020):
+                                  rec2020   matches Lightroom's 32-bit float Linear Rec.2020 export.
+                                            Pair with --output-colorspace=linear-rec2020 and
+                                            --output-bitdepth=32 for the default HDR pipeline.
+                                  srgb      Linear sRGB / Rec.709 primaries. Use for sRGB output.
+  --raw-auto-bright             Enable LibRaw auto-brightness (analyses each frame independently;
+                                shifts the bracket exposure -- not what you want for a focus stack).
+                                Default OFF (--raw-no-auto-bright is the implicit default).
+  --raw-no-auto-bright          Explicit form of the default; documented for symmetry.
+  --raw-bps=16                  LibRaw output bit depth (default 16). Internally the focus-stack
+                                pipeline converts to CV_32FC3 in [0, 1] regardless.
+  --raw-highlight=0             Highlight handling. 0=clip (default, safest), 1=unclip,
+                                2=blend, 3..9=rebuild. Higher modes can introduce artifacts.
+                                Note: mode 2 (blend) renormalises the image and can darken
+                                output by ~2-3x vs mode 0/1; raise exposure downstream.
+  --raw-clip-detect=auto        Phase 12.1a per-pixel sensor-clip detection (default auto).
+                                  auto  on for raw input, off for TIFF / rendered input.
+                                  on    scan the post-unpack raw_image and produce a CV_8U
+                                        mask at output resolution where 255 = pixel's raw
+                                        Bayer value is at or above the per-channel linearity
+                                        ceiling (imgdata.color.linear_max[c], or maximum if
+                                        linear_max is unpopulated). Logs N clipped pixels +
+                                        per-channel linear_max at --verbose. No consumer in
+                                        Phase 12.1; the mask rides via clipped_pixels() for a
+                                        future Phase 13 confidence-mask fold. Float decode
+                                        result is bit-identical regardless of this flag.
+                                  off   skip the scan entirely.
+  --raw-fbdd=auto               Phase 12.1c FBDD (Fast Bayer Domain Denoising) chroma denoise.
+                                Applied to the raw Bayer mosaic BEFORE demosaic via LibRaw's
+                                imgdata.params.fbdd_noiserd, between unpack() and dcraw_process().
+                                  off   level 0 (default for low ISO; bit-identical baseline).
+                                  auto  ISO probe of the first raw: <400 -> off (0), 400..1599 ->
+                                        level 1 (chroma-only), >=1600 -> level 2 (chroma + low-
+                                        amplitude luminance).  No effect when no raw inputs.
+                                  1     level 1 (chroma-only) regardless of ISO.
+                                  2     level 2 (chroma + low-amplitude luma) regardless of ISO.
+  --ca-correct=auto             Phase 6.2 lateral chromatic aberration correction (default auto).
+                                  auto  on when --lr-match resolves on OR output is .dng with
+                                        raw input. LR will not auto-apply a Sony lens profile to
+                                        the focus-stack output DNG because we do not write an
+                                        EXIF LensModel tag, so rig-specific lateral CA must be
+                                        applied here. Off otherwise.
+                                  on    apply per-channel radial scaling about the image centre
+                                        to align R and B with G. Coefficients are hardcoded for
+                                        the Sony FE 100mm GM Macro + 2x teleconverter; if you use
+                                        a different lens combo the correction may add fringing
+                                        rather than remove it. Adds ~150 ms per 32 MP frame.
+                                  off   skip the correction (bit-identical to Phase 6.1 output).
+  --axial-defringe=auto         Phase 7.1 longitudinal-CA defringe applied per frame at load time
+                                BEFORE the wavelet stacker can pick a fringe-laden out-of-focus
+                                frame and pull its chroma forward (default auto).
+                                  auto  Phase 12.10: on unconditionally. Suppression-based defringe
+                                        with a 0.95 internal clamp on saturated edge colour, so
+                                        running it on already-LR-Defringed input is a near-no-op
+                                        rather than damaging legitimate colour. ~12 s extra wall
+                                        time on a 33-frame TIFF stack.
+                                  on    detect macro-edge bands (dark/bright transition over a
+                                        15-px window), score LCA-characteristic hues (cool green
+                                        a*<<0, cool magenta a*>>0,b*<=0; saturated subject
+                                        colours rejected via chroma>35 threshold), and suppress
+                                        a*/b* on matching pixels. L is preserved everywhere.
+                                        Adds ~150 ms per 32 MP frame.
+                                  off   skip the defringe (bit-identical to Phase 6.2 output).
+                                Only takes effect when the decoded frame is CV_32FC3 linear-light
+                                (i.e. 32-bit float LR TIFF export or ARW via LibRaw); 8/16-bit
+                                integer TIFF input is logged-and-skipped.
+  --axial-defringe-strength=1.0 Multiplier on the chroma suppression amount. 0 disables; 1.0 is the
+                                default tuned for FE 100 mm GM + 2x TC; 1.5-2 is aggressive (the
+                                post-stack scripts/defringe.py CLI uses 1.5 as its default).
+  --dcp=<path|auto|off>         Phase 7.2 Adobe DNG Camera Profile (.dcp). When set, LibRaw emits
+                                camera-native linear RGB and the DCP applier converts it to
+                                Linear Rec.2020 via the profile's ForwardMatrix + optional
+                                HueSatMap LUT + optional ProfileToneCurve + optional LookTable.
+                                Replaces / supersedes the lr-match PCHIP tone curve when the
+                                profile contains its own ProfileToneCurve (e.g. "Camera Standard").
+                                  off    skip DCP entirely (default; bit-identical to Phase 7.1).
+                                  <path> load the given .dcp file (e.g. "Sony ILCE-7CM2 Adobe Standard.dcp").
+                                  auto   search standard Adobe install dirs for a profile matching
+                                         the camera's UniqueCameraModel tag (e.g. "Sony ILCE-7CM2").
+                                         Search order: Adobe Standard, then Camera Standard / NT / VV.
+                                When a DCP is supplied with --lr-match=on, lr-match's PCHIP tone curve
+                                is skipped iff the DCP has its own ProfileToneCurve.
+  --dcp-temp=5500               Color temperature (Kelvin) used to interpolate between the DCP's two
+                                calibration illuminants (typically StdA ~2856K and D65 ~6504K).
+                                Default 5500K = daylight (matches the typical macro shoot WB).
+  --vignette-correct=off        Phase 6.2 vignette correction (accept-and-warn stub).
+                                On the calibrated rig (FE 100mm GM + 2x TC) vignetting was measured
+                                at < 0.05 EV at the image corner -- well below visibility -- so no
+                                correction is applied even when on. Documented for forward compat.
+  --distortion-correct=off      Phase 6.2 distortion correction (accept-and-warn stub).
+                                On the calibrated rig lens distortion is < 0.05% of the image
+                                diagonal, well below the 0.2% visibility threshold; no correction
+                                applied. Documented for forward compat.
+
+Image alignment options:
+  --reference=0                 Set index of image used as alignment reference (default middle one)
+  --global-align                Align directly against reference (default with neighbour image)
+  --full-resolution-align       Use full resolution images in alignment (default max 2048 px)
+  --no-whitebalance             Don't attempt to correct white balance differences
+  --no-contrast                 Don't attempt to correct contrast and exposure differences
+  --no-transform                Don't attempt to correct image position alignment
+  --align-only                  Only align the input image stack and exit
+  --align-keep-size             Keep original image size by not cropping alignment borders
+  --no-align                    Skips the alignment completely, overrides all other alignment options
+  --dense-align                 Phase-3 P3.1: DIS dense-flow refinement of the ECC affine fit
+                                (default ON). Gates itself off when the affine already fits to
+                                <0.5 px median residual, so planar / well-aligned brackets get
+                                bit-identical output. Use --no-dense-align to disable.
+  --no-dense-align              Disable the DIS dense-flow affine refinement.
+  --breathing-correct           Phase-3 P3.2: isotropic radial-scale breathing model fitted
+                                from the dense-flow residuals; applied via per-frame cv::remap
+                                (default ON). Skipped when |k1|<1e-6 and |k2|<1e-6 (no
+                                detectable breathing). Use --no-breathing-correct to disable.
+  --no-breathing-correct        Disable the breathing-model fit and per-frame remap.
+  --breathing-k1=A:k2=B         Override the fitted breathing coefficients with explicit
+                                Brown-Conrady k1, k2 (r normalised to image diag/2). Accepts
+                                either --breathing-k1=A:B or --breathing-k1=A:k2=B.
+  --align-seed=auto             Phase-3 P3.3: AKAZE feature-based affine seed for the coarsest
+                                ECC pyramid level. Allowed values: none, auto (default), akaze.
+                                'auto' kicks in only on the first frame after the reference, or
+                                when the predecessor's ECC score is < 0.85 (low-confidence).
+
+Image merge options:
+  --consistency=2               Neighbour pixel consistency filter level 0..2 (default 2)
+  --denoise=bayesshrink         Wavelet denoise mode (default bayesshrink). Allowed:
+                                  bayesshrink  per-subband adaptive soft-threshold (Chang/Yu/Vetterli 2000;
+                                               sigma_noise estimated via MAD of the merged finest HH band)
+                                  fixed        legacy fixed-lambda |c|^2 soft-threshold (matches pre-Phase-2)
+                                  off          skip denoise entirely (pass-through; for debugging)
+                                  <float>      legacy compatibility: same as `fixed` at that level
+                                               (e.g. --denoise=1.0 == --denoise=fixed; --denoise=0 == --denoise=off)
+  --reassign=winner-copy        Color-output mode: winner-copy (default), guided-blend, legacy.
+                                winner-copy copies BGR from the per-pixel winning source frame
+                                (full-res argmin of |gray_k - merged_gray|). guided-blend computes
+                                per-frame saliency, smooths it with a guided filter, and produces
+                                a soft weighted average of source colors. legacy keeps the old
+                                grayscale-distance Task_Reassign path (slower; can produce halos).
+  --guided-radius=8             Guided-filter radius for --reassign=guided-blend (default 8)
+  --guided-eps=0.01             Guided-filter epsilon for --reassign=guided-blend (default 0.01)
+  --winner-smooth=3             Box-filter kernel applied to each per-frame |gray_k - merged_gray|
+                                distance map prior to the per-pixel argmin in winner-copy mode.
+                                Suppresses isolated single-pixel winner flips at marginal edges
+                                (frames nearly tied). Allowed values: 0 (disable), 3 (default), 5
+                                (heavier; very slightly softer fine boundaries).
+  --compose-mode=winner         Top-level color-compose dispatch (Phase 12.4 Pick-5-swap):
+                                winner (default) routes to --reassign={winner-copy,guided-blend,legacy};
+                                mertens replaces the entire compose path with multi-scale Laplacian-
+                                pyramid fusion (Burt-Adelson 1983 / Mertens-Kautz-Van Reeth 2007).
+                                Mertens fuses low-frequency cleanness from the cleanest frames with
+                                high-frequency detail from the sharpest frames simultaneously, with
+                                no halo / seam artefacts at the focused / defocused boundary. When
+                                set to mertens, --reassign and the Phase 8.2 / 9.1 / 11.7.3 cross-
+                                frame-mean overrides do not apply (the pyramid IS the fuse), and
+                                --cross-frame-denoise is auto-suppressed (Mertens already averages
+                                across frames).
+  --mertens-levels=auto         Pyramid depth for --compose-mode=mertens. auto (default) =
+                                clamp(floor(log2(min(rows,cols))) - 2, 3, 8); on a 32 MP frame
+                                that resolves to 8. Override with an integer in [3, 10] to test
+                                shallower (faster, less low-frequency separation) or deeper
+                                (slower, more aggressive low-frequency averaging).
+  --mertens-weights=confidence  Per-frame weight strategy for --compose-mode=mertens.
+                                  confidence (default): argmax-frame gets weight = depth_confidence(p),
+                                                       remaining frames split (1 - confidence) / (N-1).
+                                                       Falls back to saliency when no depthmap is wired.
+                                  saliency:   per-frame |Laplacian(gray_k)|, normalised across frames.
+                                  equal:      uniform 1/N. Pure pyramid average. Debug baseline.
+  --blend-sharpness=16          Wavelet-coefficient merge mode (default 16 = softmax blend).
+                                Activates softmax blend:
+                                    w_k = exp(beta * (|c_k|^2 / max_k|c_k|^2 - 1))
+                                    c_out = (sum_k w_k * c_k) / (sum_k w_k)
+                                Smaller beta = softer blend, larger = sharper / more WTA-like.
+                                Typical useful range: 4..32. Reduces 'which frame won' edge
+                                speckle when two frames have near-tied |c|^2 (no measurable
+                                detail loss for beta >= 8 on macro stacks).
+                                The shipped default of 16 measurably improves edge speckle vs
+                                pure WTA (closer to the v3 reference on every metric we track).
+                                Set --blend-sharpness=inf for the legacy WTA pre-Phase-2 behaviour
+                                (also reachable via --legacy-merge-wta, which is bit-identical to
+                                pre-P2.1 builds when paired with the other --legacy-* flags).
+  --align-residual-weight=on    Phase-2 P2.6 per-pixel alignment-residual soft weighting in merge
+                                (default on). Each frame's wavelet contribution is multiplied by
+                                a per-pixel reliability weight W_k(x,y) derived from a high-pass
+                                of |I_k_aligned - I_ref| (smoothed at ~8 px, baseline subtracted
+                                at ~32 px to discount focus-blur differences). W_k is in (0, 1];
+                                pixels with residual much larger than the robust scale get heavily
+                                down-weighted. Removes 'two-edges-add' ghosting in regions where
+                                affine alignment couldn't capture local breathing / parallax.
+                                Set =off (or use --legacy-merge-weights) for a bit-identical
+                                pre-P2.6 binary.
+  --align-residual-sigma=auto   Robust scale for the residual-to-weight mapping (default auto).
+                                'auto' uses 1.4826 x MAD(R) per frame (in 16-bit grayscale units,
+                                0..65535). A fixed float overrides — smaller = more aggressive
+                                down-weighting.
+  --legacy-merge-weights        Alias for --align-residual-weight=off (legacy bit-identical merge).
+
+Depth map generation options:
+  --depthmap-threshold=10       Threshold to accept depth points (0-255, default 10)
+  --depthmap-smooth-xy=20       Smoothing of depthmap in X and Y directions (default 20)
+  --depthmap-smooth-z=40        Smoothing of depthmap in Z direction (default 40)
+  --focus-measure=wavs          Per-frame focus measure that drives the depthmap (default wavs):
+                                  wavs       Multi-scale Wavelet Activity Value Sum -- reuses the
+                                             per-frame complex Daubechies pyramid already computed
+                                             by the merge stage (no extra DWT pass). For each of
+                                             the 4 finest pyramid levels L=0..3, sums |c|^2 across
+                                             the HL/LH/HH detail subbands, bilinearly upsamples to
+                                             full resolution, weights by 1/2^L (level 0 finest),
+                                             accumulates, and takes sqrt. Captures focus at multiple
+                                             spatial frequencies; less spike-prone than the single-
+                                             scale Sobel, yielding a ~50x smoother depthmap with
+                                             wider dynamic range. Coarser levels (L>=4) are skipped
+                                             because each coefficient there spans 32+ full-res
+                                             pixels and pollutes the per-pixel noise floor used by
+                                             the depthmap Gaussian fit.
+                                  tenengrad  Legacy single-scale Sobel |grad|^2 (bit-identical
+                                             to pre-Phase-2.2 builds).
+  --depthmap-inpaint=guided     Depthmap polish mode (default guided):
+                                  guided  -- guided filter on the depthmap with the merged
+                                             AIF luminance as edge guide (He et al. 2010).
+                                             Smoother in flat regions and better aligned to
+                                             real subject edges than the legacy chain.
+                                  legacy  -- median + bilateral + median (matches pre-Phase-2).
+                                  tv      -- Phase 11.7.1 confidence-weighted Poisson/TV
+                                             relaxation. Replaces the polish stage with a
+                                             Jacobi sweep driving u_new = (w*d + lambda*Lap(u))
+                                             / (w + 4*lambda); w is the Phase 8.6 fused
+                                             confidence map (CV_32F [0,1]), so high-confidence
+                                             pixels stay anchored to the raw depthmap d and
+                                             low-confidence pixels fill from neighbours. With
+                                             --confidence-mask=off it degenerates to a weighted
+                                             smoothing pass biased toward d everywhere.
+  --depthmap-inpaint-lambda=0.5 Smoothness weight for --depthmap-inpaint=tv (range 1e-4..10,
+                                default 0.5). Higher = smoother / more neighbour-driven; lower
+                                = more fidelity-driven.
+  --depthmap-inpaint-iters=150  Jacobi sweep count for --depthmap-inpaint=tv (range 1..1000,
+                                default 150). More iterations = closer to the variational
+                                minimum; cost is linear in iters.
+  --depthmap-guided-radius=20   Guided filter radius for --depthmap-inpaint=guided (default 20).
+                                Wider than the compose path's --guided-radius=8 to roughly
+                                match the legacy bilateral's 41-px diameter (the depthmap
+                                signal is smoother than the color signal so wide windows
+                                don't blur structure -- they just denoise more).
+  --depthmap-guided-eps=1e-2    Guided filter epsilon for --depthmap-inpaint=guided (default 1e-2).
+                                Same magnitude as the compose path's --guided-eps. The AIF
+                                guide carries paper-grain / marker-fiber micro-texture; a
+                                smaller eps (e.g. 1e-4) transfers that texture into the
+                                depthmap. 1e-2 preserves macro subject boundaries while
+                                ignoring guide micro-texture.
+  --remove-bg=0                 Positive value removes black background, negative white
+  --halo-radius=20              Radius of halo effects to remove from depthmap
+  --3dviewpoint=x:y:z:zscale    Viewpoint for 3D view (default 1:1:1:2)
+
+Performance options:
+  --threads=2                   Select number of threads to use (default number of CPUs + 1)
+  --batchsize=8                 Images per merge batch (default 8)
+  --no-opencl                   Disable OpenCL GPU acceleration (default enabled)
+  --wait-images=0.0             Wait for image files to appear (allows simultaneous capture and processing)
+  --parallel-tiff-load          Allow concurrent libtiff decoding across worker threads.
+                                Default is serial decode (matches behaviour known good for
+                                32-bit float Linear-Rec.2020 inputs); opt in only when host RAM
+                                comfortably fits N_threads x raw_frame_size.
+
+Legacy / compatibility flags (opt back to pre-Phase-0 behaviour):
+  --legacy-depthmap-8bit        Quantise the depthmap to 8 bits (default: 16-bit, finer banding)
+  --legacy-ecc-pyramid          Use the hand-rolled 256+2048 two-call ECC pyramid
+                                (default: 4-level multi-scale 256->512->1024->2048)
+  --legacy-align-tweaks         Disable the Phase-0 align tweaks (saturation mask in ECC + sigma-
+                                clipped contrast/WB refit). Default: tweaks ON with softened
+                                thresholds (sat mask = 2..253, conditional 1-pass refit on >5%
+                                heavy-tailed residuals only).
+  --legacy-lf-merge             Pick argmax(|c|^2) on the wavelet low-pass band (default:
+                                cross-frame mean on the LP band for free sqrt(N) noise reduction)
+  --legacy-flat-noise-merge     Disable Phase-8 P8.2 noise-floor-gated merge fallback (default ON).
+                                Default behavior: pixels where max_k |c_k|^2 falls below alpha *
+                                noise_floor (median |c|^2 over the image) get the per-pixel
+                                cross-frame mean instead of the argmax winner. Reduces flat-region
+                                noise (substrate, bokeh, deep shadow) toward the sqrt(N) floor.
+  --flat-noise-alpha=2.0        Threshold multiplier for --legacy-flat-noise-merge=off (default).
+                                Higher = more aggressive (more pixels classified flat); lower =
+                                more conservative. Typical 1.5..3.0.
+  --focus-aware-flat=auto|on|off
+                                Phase 13 focus-aware flat-region detection. AND the Phase 8.2
+                                cross-frame-variance flat-mask with a "no frame in focus" mask
+                                (per-pixel fm_max_global < p25 * alpha) before the union with the
+                                Phase 9.1 low-confidence mask. Preserves substrate micro-texture
+                                via winner-copy (low variance + some frame in focus); leaves true
+                                OOF / bokeh on the cross-frame mean path (low variance + nothing
+                                in focus). auto resolves to on when raw input is in use AND
+                                --legacy-flat-noise-merge is NOT set; off otherwise.
+  --focus-aware-flat-alpha=1.0  Multiplier on the scene-relative p25 of fm_max for the focus-
+                                aware AND-mask threshold. Higher = engage on more pixels (more
+                                substitution, may oversmooth bokeh boundary); lower = engage on
+                                fewer (more substrate texture preserved). Typical 0.8..1.5.
+  --noise-model=off|auto|custom:scale=A,offset=B
+                                Phase 12.1 calibrated Poisson-Gaussian noise model (default auto).
+                                auto loads presets/noise_profile.json (BGR per-channel Var(I)=a*I+b
+                                coefficients) and routes Task_Compose_Color through a principled
+                                per-pixel sqrt(predict_var(I)) threshold instead of the legacy
+                                alpha * median(g_var) percentile. custom:scale=...,offset=...
+                                supplies the two coefficients directly (applied to all 3 channels).
+                                Default `auto` silently falls back to `off` if no profile JSON is
+                                found (legacy alpha path still active).  Explicit `--noise-model=off`
+                                opts out and yields the pre-12.7 default; the legacy bit-identical
+                                contract requires this AND `--depthmap-chain=off`.
+  --noise-sigma-k=4.0           One-sided k-sigma threshold for --noise-model={auto,custom}.
+                                Smaller = more aggressive (more pixels classified flat). Default 4.0.
+  --anscombe-stabilise=off|compose
+                                Phase 12.1 generalised Anscombe variance stabilisation. MVP only
+                                accepts off; compose is reserved for downstream picks.
+  --cross-scale-mask=on|off     Phase-8 P8.5 cross-scale agreement halo killer. Default on.
+                                Tracks per-pixel argmax frame indices for each of the 4 WAVS
+                                wavelet scales (fine..coarse) across the bracket, then demotes
+                                depthmap confidence on pixels where fewer than 3 of the 4
+                                scales agree (to within +/-1 frame) with the Guo Gaussian-fit
+                                mean. Targets the halo annulus around occlusion edges where the
+                                fine-scale focus measure picks a different frame from the
+                                coarse scales. =off reverts to pre-8.5 (bit-identical to
+                                Phase 8.4 mask output).
+  --confidence-mask=on|off      Phase-8 P8.6 5-channel fused confidence vector (amplitude, fit-
+                                width, local texture, cross-scale agreement, neighbour
+                                consistency) geometric-mean-fused into a scalar [0,1] confidence
+                                map. Multiplies the legacy amp/dev-based mask returned by
+                                Task_Depthmap::mask(), which the depthmap-inpaint stage consumes.
+                                Default on. Largest depthmap-quality win on smooth substrate /
+                                bokeh / deep shadow next to sharp edges (texture channel zeroes
+                                confidence so inpaint fills from spatial neighbours rather than
+                                propagating wrong depth from far-away edges). =off reverts to
+                                Phase 8.5 hard mask (or legacy when --cross-scale-mask=off).
+  --depthmap-chain=auto         Phase-12.5 gate whether the Task_Depthmap chain runs even
+                                when no --depthmap PNG / --3dview is requested. Pre-12.5 the
+                                chain was gated on PNG output only, which meant the entire
+                                confidence pipeline (P8.6 mask, P9.1 confidence-color-blend,
+                                P9.8 Helmli-Scherer, P11.2.3 cross-channel, P12.x DA2)
+                                silently no-opped at default flags because the per-pixel
+                                confidence vector was never computed. auto (default) = on
+                                when --confidence-mask=on AND --reassign!=legacy. on =
+                                always run the chain. off = restore pre-12.5 fast path
+                                (bit-identical to pre-12.5 default-flags output). Cost:
+                                ~+45 s wall on a 33-frame 32 MP stack; pays for ~3.6% mean
+                                SMOOTH-region noise drop (96% of ROIs improved vs pre-12.5).
+  --confidence-color-blend=auto Phase-9.1 route the P8.6 confidence map into the color compose
+                                path. auto = on when --confidence-mask=on (default), off
+                                otherwise. Pixels with depth confidence < threshold get the
+                                cross-frame mean color (same override Phase 8.2 flat-noise merge
+                                produces; the two masks are OR-ed). Distinct trigger: 8.2 gates
+                                on cross-frame gray variance (flat regions); 9.1 gates on depth
+                                confidence (ambiguous-depth halo annulus around occlusion edges,
+                                where gray variance is HIGH but the chosen winner is unreliable).
+                                =off is bit-identical to Phase 8.2 output.
+  --confidence-color-threshold=0.20
+                                Threshold beta in [0,1] for --confidence-color-blend. Lower =
+                                more conservative (fewer pixels overridden). Typical 0.15..0.30.
+  --confidence-color-softblend=off
+                                Phase-12.6 confidence-weighted soft blend. When on, replaces the
+                                Phase 9.1 binary low-conf gate with a linear ramp of width
+                                --confidence-color-softband BELOW the threshold. Pixels with
+                                confidence >= T are untouched; pixels with confidence <= T-B get
+                                the full cross-frame mean (same as binary); in between, a partial
+                                blend. Phase 8.2 flat-mask pixels still get full replacement.
+                                =off is bit-identical to Phase 9.1 binary path.
+  --confidence-color-softband=0.10
+                                Width B of the soft-blend ramp (0 < B <= 0.5). Used only when
+                                --confidence-color-softblend=on.
+  --temporal-fm-filter=off      Phase-9.4 N-tap centered median filter of the per-frame focus
+                                measure across frame index (delay = (N-1)/2 frames). Applied
+                                per-pixel BEFORE Task_Depthmap's add_to_guo / per-scale argmax
+                                update -- eliminates single-frame focus-measure spikes from
+                                motion blur or exposure jumps that would otherwise pull Guo's
+                                Gaussian-fit mean off the true peak. Edge-clipped windows at
+                                the bracket endpoints (3, 4, then 5 taps on entry; mirror on
+                                exit). Off by default: spike-free brackets (the marker test
+                                set) gain nothing from the smoothing. Modes:
+                                  off      no filter (default; bit-identical to pre-9.4).
+                                  median3  3-tap centered median (1-frame delay).
+                                  median5  5-tap centered median (2-frame delay).
+  --robust-guo=off              Phase-9.3 Robust Guo via IRLS (Tier 2.7): two-pass Gaussian fit.
+                                Pass 1 = the existing Guo closed-form Hankel solve. Pass 2 =
+                                Cauchy-weighted re-fit. Per-pixel, computes residuals
+                                r_x = y_x - A*exp(-(x-mu)^2/(2*sigma^2)) against the pass-1
+                                fit, derives a robust scale s = 1.4826 * MAD(r), then weights
+                                w_x = (1 + (r_x/s)^2 / 2.385)^-1 (Cauchy psi-function tuning
+                                constant k=2.385), and re-accumulates m_guo with each frame's
+                                contribution multiplied by w_x. The closed-form Hankel solve
+                                is unchanged. Eliminates motion-blur / exposure-spike-frame
+                                domination of the Gaussian fit. ~3-5 s extra wall time and
+                                ~8 GB transient RAM on a 33-frame 32 MP bracket (per-frame
+                                y_nobias buffer + residuals). off (default) is bit-identical
+                                to pre-9.3 output.
+  --helmli-scherer-channel=auto Phase-9.8 6th confidence channel (Tier 2.13): Helmli-Scherer
+                                ratio HS(p)=max(M/mu, mu/M) on a 7x7 window of each frame's
+                                grayscale, running-maxed across the bracket, normalised by
+                                p95 and folded into the geometric-mean confidence fuse as
+                                channel f. Different failure mode from WAVS: WAVS responds
+                                to high-frequency content (blind on textureless smooth-
+                                gradient regions); HS responds to local contrast (blind on
+                                high-frequency). Combining them cuts smooth-region depth
+                                fizz where WAVS alone returns noise. ~2.6 s extra wall time
+                                on a 33-frame 32 MP bracket. auto = on when --confidence-
+                                mask=on (default); off is bit-identical to pre-9.8 (4- or
+                                5-channel fuse depending on cross-scale-mask).
+  --cross-channel-channel=auto  Phase-11.2.3 7th confidence channel: per-channel Laplacian-
+                                variance focus measure on the aligned color image (B, G, R
+                                separately) with a per-pixel per-channel running argmax across
+                                the bracket. At depthmap finalisation the cross-channel
+                                agreement count -- number of channels (1..3) whose argmax is
+                                within +/-1 frame of the median of the three -- is normalised
+                                by 3 and folded into the geometric-mean confidence fuse as
+                                channel h. Catches axial CA, halo annulus and color-fringe
+                                edges where the three color channels see slightly different
+                                in-focus frames even though luma is unambiguous -- a failure
+                                mode the luma-based WAVS / Helmli-Scherer channels miss.
+                                ~10-15 s extra wall time on a 33-frame 32 MP bracket. auto
+                                = on when --confidence-mask=on (default); off is bit-
+                                identical to pre-11.2.3 output.
+  --cross-frame-denoise=off     Phase-10.1 cross-frame patch denoise via OpenCV's
+                                cv::fastNlMeansDenoisingColoredMulti, scheduled AFTER
+                                Task_Compose_Color and gated on the Phase 8.2 + 9.1 union
+                                override mask. Replaces the cross-frame arithmetic mean
+                                substitution with a patch-similarity-weighted denoise that
+                                exploits non-local self-similarity across the bracket.
+                                Modes:
+                                  off      no scheduling (default; bit-identical to pre-10.1).
+                                  light    h=10, hColor=10, template=7, search=21, T=5.
+                                  strong   h=15, hColor=15, template=9, search=27, T=7
+                                           (~50%% more wall time).
+                                Wall-time cost: ~60-130 s on a 33-frame 32 MP bracket
+                                (CPU-only — OpenCV's Multi NLM lacks an OpenCL kernel).
+                                HDR-preserve path keeps any pixel with channel > 1.0
+                                verbatim from compose (the 8-bit NLM can't represent
+                                overshoot above 1.0).
+  --per-frame-denoise=off       Phase-12.8 per-frame single-image NLM denoise inserted
+                                BETWEEN Task_Align and Task_Compose_Color. Targets the
+                                in-focus pinch zone (~15%% of image) that is verbatim
+                                single-frame-copy and therefore carries 1x per-frame
+                                shot noise -- the only zone NOT already cleaned up by
+                                Phase 8.2 (cross-frame mean of flat regions) or Phase
+                                9.1 (confidence-blend low-confidence regions). The
+                                grayscale chain (focus measure / wavelet / depthmap /
+                                Phase 11.7.3 lucky imaging) keeps reading the UN-
+                                denoised aligned grayscale so WAVS peaks and Guo
+                                Gaussian fits are preserved.
+                                Modes:
+                                  off        no scheduling (default; bit-identical to pre-12.8).
+                                  nlm-light  h=6,  hColor=6,  template=7, search=21 (+25-40 s).
+                                  nlm-strong h=10, hColor=10, template=9, search=27 (+60-80 s).
+                                HDR-preserve path keeps any pixel with channel > 1.0
+                                verbatim from the aligned HDR companion (NLM uint8 quantises
+                                overshoot above 1.0).
+  --per-frame-denoise-vst=auto  Phase-12.9 Anscombe variance-stabilising transform wrap
+                                around --per-frame-denoise. When on, the linear-light HDR
+                                companion is routed through apply_anscombe -> uint8 NLM
+                                (h_vst=102 light / 178 strong, vst_scale=51) -> inverse_
+                                anscombe before being re-encoded for compose. Stabilises
+                                Poisson-Gaussian noise to (near-)intensity-uniform sigma
+                                so a single h is optimal across the whole intensity range,
+                                where the Phase 12.8 constant-h NLM over-smooths shadows
+                                and under-smooths highlights. Values:
+                                  off   never wrap with Anscombe (Phase 12.8 path).
+                                  auto  (default) on iff --per-frame-denoise != off AND
+                                        the loaded noise profile's source starts with
+                                        'preset:raw_' (raw-domain calibrated). The shipped
+                                        presets/noise_profile.json is 'preset:iso_50' so
+                                        auto resolves to off there.
+                                  on    force VST regardless of profile source (logs a
+                                        verbose warning when source is not raw-domain;
+                                        Anscombe with a near-zero shot-noise slope is
+                                        degenerate and over-denoises).
+                                Has no effect when --per-frame-denoise=off. Off-VST path
+                                is bit-identical to Phase 12.8.
+  --match-residual-confidence=auto
+                                Phase-11.2.4 per-frame quality weight from Task_Align's
+                                match_contrast() post-fit residual RMS. q_i = exp(-(r_i/
+                                sigma_ref)^2), with sigma_ref = bracket-median residual.
+                                Plumbed to (a) the depthmap Guo accumulator (multiplies
+                                each frame's contribution by q_i; composes with --robust-guo
+                                Cauchy weight when both are on), and (b) Task_Denoise_Multi
+                                window selection (low-q frames inside the NLM temporal
+                                window are replaced by the nearest higher-q neighbour
+                                outside the window).
+                                Values: auto (default; resolves to on), on, off. Off path
+                                is bit-identical to pre-11.2.4 output.
+  --match-residual-threshold=0.1
+                                Phase-11.2.4 NLM window-substitution threshold. Frames
+                                with q_i < threshold are excluded from the NLM temporal
+                                window. Range [0, 1]; default 0.1. Has no effect on the
+                                Guo accumulator (which weights every frame, never excludes
+                                any).
+  --defect-map=auto             Phase-12.1d cross-bracket defective-pixel map (consensus
+                                across N frames). Aggregates per-pixel statistics across
+                                every aligned grayscale frame; flags pixels whose value
+                                deviates from the per-pixel bracket median by > kσ in
+                                >= T%% of frames. Folds into the Phase 8.6 m_confidence
+                                (zero confidence at defective pixels -> Phase 9.1 color
+                                compose substitutes cross-frame mean) AND into
+                                Task_Depthmap::mask() (depthmap-inpaint replaces with
+                                neighbour depth). auto = on when --confidence-mask=on
+                                (default); off is bit-identical to pre-12.1d. Cost:
+                                ~2-5 s on a 33-frame 32 MP bracket.
+  --defect-sigma=4.0            Phase-12.1d per-pixel kσ threshold for the 'frame i
+                                disagrees with bracket median' predicate, where
+                                σ_bracket = 1.4826 * MAD_across_frames + epsilon (epsilon
+                                ~ 1 LSB to prevent the σ=0 collapse on flat pixels).
+                                Smaller = more aggressive (more pixels flagged). Typical
+                                3.0..6.0.
+  --defect-fraction=0.70        Phase-12.1d fraction in [0, 1] of frames a pixel must
+                                exceed kσ in to be flagged as defective. Smaller = more
+                                aggressive. Typical 0.50..0.90.
+  --da2-prior=off               Phase-12.x DepthAnything V2-Small monocular depth prior
+                                folded into the Phase 8.6 confidence vector as channel `i`.
+                                Spawns a Python sidecar (scripts/da2_inference.py) on the
+                                geometric-centre input frame, runs DA2-S inference,
+                                resizes the output to the aligned-frame size and runs an
+                                LSQ linear regression of d_pipeline ~ slope * d_da2 +
+                                intercept on high-confidence pixels (Phase 8.6 channel a
+                                > 0.5). When slope > 0 and Pearson |r| >= --da2-prior-
+                                min-correlation, channel i = exp(-(d_pipeline -
+                                d_da2_scaled)^2 / (2*sigma^2)) folds into the geometric-
+                                mean fuse; otherwise channel is omitted with a warning.
+                                Modes: off (default; bit-identical to pre-12.x), auto
+                                (resolves to off; explicit on required), on. Cost: ~5-15 s
+                                on the first run (model download + CPU inference); cached
+                                .da2.f32.bin reused on subsequent runs unless --da2-prior-
+                                recompute is set.
+  --da2-prior-python=python     Phase-12.x Python interpreter to spawn the sidecar with.
+                                Default tries 'python' then 'py -3' from PATH; override to
+                                pin a venv (e.g. C:\venvs\macro\Scripts\python.exe).
+  --da2-prior-cache=<path>      Phase-12.x DA2 prior cache file (raw int32 header +
+                                float32 pixels). Default: <output>.da2.f32.bin alongside
+                                the main output. Reused across runs (skip Python sidecar)
+                                unless --da2-prior-recompute is set.
+  --da2-prior-recompute         Phase-12.x force the sidecar to rebuild the cache file
+                                even if it exists.
+  --da2-prior-sigma=0.05        Phase-12.x channel-i Gaussian sigma as a fraction of the
+                                output depth-code range (depth_range = 65535 in 16-bit
+                                mode, 255 in 8-bit mode). Smaller = stricter agreement
+                                requirement. Range (0, 1].
+  --da2-prior-min-correlation=0.20
+                                Phase-12.x minimum |Pearson r| between DA2 prior and
+                                pipeline depth on the high-confidence subsample required
+                                to engage channel i. Below this threshold the channel is
+                                omitted with a warning. Range [0, 1].
+  --lucky-imaging=off           Phase-11.7.3 lucky-imaging tie-breaker for the compose
+                                argmin winner. Per pixel: compute local sharpness S_k =
+                                7x7 boxFilter(Laplacian(gray_k)^2) for every source frame.
+                                For each pixel that is NOT in the P8.2+P9.1 cross-frame-
+                                mean union override mask AND has depth confidence >= 0.5,
+                                examine a [k* - W/2 .. k* + W/2] window in depth-chain
+                                order around the argmin winner k*; if the sharpest frame
+                                k_lucky in that window satisfies S_lucky / S_winner >
+                                ratio, override the winner index to k_lucky before Pass 2
+                                copies the color. Targets motion-blur, exposure-jitter
+                                and focus-wobble contamination of the original argmin
+                                pick. Modes: off (default), on, auto (resolves to off).
+                                Off path is bit-identical to pre-11.7.3 output.
+  --lucky-imaging-window=5      Phase-11.7.3 depth-chain window size W for the lucky-
+                                imaging tie-breaker. Must be odd; range 3..11; clamped to
+                                n_frames. Larger windows survey more neighbouring frames
+                                at the risk of pulling in genuinely-out-of-focus frames
+                                whose macro detail noise happens to score high.
+  --lucky-imaging-ratio=1.10    Phase-11.7.3 minimum sharpness ratio S_lucky / S_winner
+                                required to swap the winner. Range 1.0..3.0; clamped.
+                                1.10 = lucky frame must be at least 10%% sharper than
+                                the original winner. Lower = more aggressive tie-breaks,
+                                higher = more conservative (only swap on clear wins).
+  --subpixel-depth=off          Phase-12.1e sub-pixel parabolic depth refine fed into the
+                                compose color write pass. Reads the continuous Guo
+                                Gaussian-fit mean mu from Task_Depthmap and, per pixel,
+                                bilinearly blends frame_color[floor(mu)] and frame_color
+                                [ceil(mu)] with t = mu - floor(mu). Fires only at pixels
+                                NOT in the P8.2+P9.1 cross-frame-mean union override mask
+                                AND with depth confidence >= confidence-floor; everywhere
+                                else the existing integer winner_idx path runs. Smooths
+                                the visible staircase pattern on smooth focus-falloff
+                                gradients (substrate, bokeh) where adjacent pixels would
+                                otherwise alternate between frame k and k+1. Off path is
+                                bit-identical to pre-12.1e output. Modes: off (default), on.
+  --subpixel-depth-confidence-floor=0.10
+                                Phase-12.1e depth confidence threshold below which sub-
+                                pixel interpolation falls back to integer winner_idx.
+                                Range 0..1; clamped. Default 0.10 = use sub-pixel
+                                everywhere except deeply ambiguous halo annulus.
+  --motion-blur-detect=auto     Phase-11.7.2 per-frame cepstrum motion-blur detector.
+                                Diagnostic-only: runs a 256x256 center-crop 2D real
+                                cepstrum on each aligned grayscale frame, finds the
+                                strongest peak outside a small DC-exclusion disk, and
+                                emits a stderr 'motion-blur warning:' line when the
+                                peak-to-median ratio exceeds the threshold.  Reports
+                                blur length (px, in the 256-crop space) and direction
+                                (deg).  Modes:
+                                  auto/off  detector inactive (default).
+                                  on        detector active.
+                                Default is off because macro substrate with regular
+                                spatial texture (foam, paper fibres) produces cepstrum
+                                peaks 50-100x median even on stationary tripod brackets,
+                                yielding false positives at the empirical 100x default
+                                threshold.  The detector remains useful on smoother
+                                subjects (skin, metal, ceramic).  ~2 ms wall-time per
+                                frame; bit-identical to pre-11.7.2 output regardless of
+                                mode.
+  --motion-blur-threshold=100   Phase-11.7.2 peak-to-median ratio threshold.  Higher
+                                values suppress more borderline detections; lower
+                                values flag more frames.  Empirical guidance: clean
+                                tripod macros on textured substrate score 50-100x; a
+                                12-px synthetic motion blur on the same substrate
+                                scores ~220x.  Range [0.5, 1000.0]; clamped.
+  --tonemap=off                 Phase-11.5.1 SDR tone-mapping output op. Compresses HDR
+                                pixels (linear-light values > 1.0) into [0..1] without
+                                clipping, so 8/16-bit save modes preserve specular
+                                highlight detail instead of saturating to flat white.
+                                Inserted in the task graph between the compose / denoise
+                                result and Task_SaveImg. Per-channel application (no
+                                chroma desaturation) -- saturated highlight pigment hue is
+                                preserved. Modes:
+                                  off       no scheduling (default; bit-identical to
+                                            pre-11.5.1 output).
+                                  reinhard  y = x / (1 + x), Reinhard 2002 simple.
+                                  aces      Narkowicz-fitted ACES Filmic approximation.
+                                  hable     Uncharted 2 / John Hable filmic curve.
+                                ~50 ms wall-time on a 32 MP CV_32FC3 stack (CPU,
+                                cv::parallel_for_ over row ranges).
+  --tonemap-exposure=1.0        Phase-11.5.1 pre-curve exposure multiplier. Applied to
+                                linear-light input before the tone curve. Range
+                                0.1..16.0; clamped. Ignored when --tonemap=off.
+  --deconv=off                  Phase-12.14 post-stack Wiener deconvolution. Sharpens
+                                the composed result using a fixed Airy(r=2.1px) ⊗
+                                Gaussian(σ=0.7px) PSF calibrated for the Sony FE
+                                100 mm GM Macro + 2× TC rig. Per-pixel blend
+                                modulated by the Phase 8.6 confidence map so the
+                                inpainted halo annulus around depth discontinuities
+                                is not amplified into ringing. Scheduled between
+                                Task_Compose_Color / Task_Denoise_Multi / Task_Tonemap
+                                and Task_SaveImg. Modes:
+                                  off    no scheduling (default; bit-identical to
+                                         pre-12.14).
+                                  gentle strength_mult = 0.5, K = 0.04 / strength = 0.08
+                                         (~5.6× more regularisation than light; safer
+                                         on low-SNR scenes and when paired with
+                                         --noise-model=off / --legacy-flat-noise-merge).
+                                  light  strength_mult = 0.7, K = 0.01 / strength.
+                                  strong strength_mult = 1.0, K = 0.01 (~50%% more
+                                         sharpening, some halo risk on hard edges).
+                                Per-pixel: alpha = strength_mult ×
+                                clamp(conf/0.05, 0, 1); output = (1-alpha)·input +
+                                alpha·wiener. HDR-preserve path operates on the
+                                CV_32FC3 linear-light buffer so overshoot > 1.0
+                                survives deconvolution.
+  --legacy-merge-wta            Alias for --blend-sharpness=inf (WTA wavelet-coefficient merge,
+                                pre-P2.1 bit-identical).
+  --legacy-grayscale-8bit       Force the internal grayscale / wavelet / merge pipeline to 8-bit
+                                (default: 16-bit when source frames are 16-bit color)
+  --align-ecc-warn=0.9          Warn when per-frame ECC score falls below this threshold
+
+Information options:
+  --verbose                     Verbose output from steps
+  --version                     Show application version number
+  --opencv-version              Show OpenCV library version and build info

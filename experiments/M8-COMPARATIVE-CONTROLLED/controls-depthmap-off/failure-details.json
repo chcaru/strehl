@@ -1,0 +1,62 @@
+{
+  "admission": {
+    "errors": [
+      "shape (2560, 3584, 3), expected (2262, 3392, 3)"
+    ],
+    "pass": false
+  },
+  "canonical_output": {
+    "file_sha256": "CD9D07705F3CE13A547C1D597F69AC08C251EFD759E159BB335964A4559A5C2C",
+    "pixel_sha256": "1D9F4485F0EF4B72854A4C9E61C5477DD9C9DF43AB514469FE821C0A6DD38439",
+    "tags": {
+      "compression": "NONE",
+      "dtype": "uint16",
+      "icc_bytes": 552,
+      "icc_sha256": "A7FEE628AF2961869B68E2F38A11123F4899F4CAB88B27A15742672B8BF43445",
+      "orientation": 1,
+      "photometric": "RGB",
+      "shape": [
+        2560,
+        3584,
+        3
+      ]
+    }
+  },
+  "control_directory": "controls-depthmap-off",
+  "direct_output": {
+    "file_sha256": "70F46DF2AD09051D165D5AD13A34009355C835C6AA32B353A77E6FA86270AE70",
+    "pixel_sha256": "1D9F4485F0EF4B72854A4C9E61C5477DD9C9DF43AB514469FE821C0A6DD38439",
+    "tags": {
+      "compression": "LZW",
+      "dtype": "uint16",
+      "icc_bytes": 0,
+      "icc_sha256": null,
+      "orientation": 1,
+      "photometric": "RGB",
+      "shape": [
+        2560,
+        3584,
+        3
+      ]
+    }
+  },
+  "failure_stage": "dimensions-before-pixel-correspondence",
+  "input": {
+    "file_sha256": "45F27A1E6B43AF778CE6312AB78653EA8F8CE6983989BC1B40DC1AFF5932F52B",
+    "pixel_sha256": "347BBAFBDE9C9D3146B6BAB5993B8DC693FBE0DDFFA092092058521A442DEBDC",
+    "tags": {
+      "compression": "NONE",
+      "dtype": "uint16",
+      "icc_bytes": 552,
+      "icc_sha256": "A7FEE628AF2961869B68E2F38A11123F4899F4CAB88B27A15742672B8BF43445",
+      "orientation": 1,
+      "photometric": "RGB",
+      "shape": [
+        2262,
+        3392,
+        3
+      ]
+    }
+  },
+  "status": "FAIL"
+}

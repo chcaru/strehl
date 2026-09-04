@@ -1,0 +1,1511 @@
+[  1/  2] Load C:\dev\blog\death-of-software\proje
+[  2/  9] Load C:\dev\blog\death-of-software\proje
+[  3/ 18] Load C:\dev\blog\death-of-software\proje
+[  4/ 26] Load C:\dev\blog\death-of-software\proje
+[  5/ 33] Load C:\dev\blog\death-of-software\proje
+[  6/ 41] Load C:\dev\blog\death-of-software\proje
+[  6/754] Load C:\dev\blog\death-of-software\proje
+[  7/754] Load C:\dev\blog\death-of-software\proje
+[  7/754] Load C:\dev\blog\death-of-software\proje
+[  8/754] Load C:\dev\blog\death-of-software\proje
+[  8/754] Load C:\dev\blog\death-of-software\proje
+[  9/754] Grayscale C:\dev\blog\death-of-software\
+[  8/754] Load C:\dev\blog\death-of-software\proje
+[  8/754] Load C:\dev\blog\death-of-software\proje
+[ 10/754] Load C:\dev\blog\death-of-software\proje
+[ 11/754] Load C:\dev\blog\death-of-software\proje
+[ 11/754] Grayscale C:\dev\blog\death-of-software\
+[ 12/754] Load C:\dev\blog\death-of-software\proje
+[ 12/754] Load C:\dev\blog\death-of-software\proje
+[ 13/754] Align 046.tif to 046.tif                
+[ 13/754] Load C:\dev\blog\death-of-software\proje
+[ 14/754] Grayscale aligned_046.tif               
+[ 14/754] Load C:\dev\blog\death-of-software\proje
+[ 15/754] Forward-wavelet aligned_046.tif         
+[ 15/754] Load C:\dev\blog\death-of-software\proje
+[ 16/754] Align-residual aligned_046.tif          
+[ 16/754] Load C:\dev\blog\death-of-software\proje
+[ 17/754] Grayscale C:\dev\blog\death-of-software\
+[ 17/754] Load C:\dev\blog\death-of-software\proje
+[ 18/754] Align 045.tif to 046.tif                
+[ 18/754] Load C:\dev\blog\death-of-software\proje
+[ 19/754] Grayscale aligned_045.tif               
+[ 19/754] Load C:\dev\blog\death-of-software\proje
+[ 20/754] Align-residual aligned_045.tif          
+[ 20/754] Align-residual aligned_045.tif          
+[ 21/754] Grayscale C:\dev\blog\death-of-software\
+[ 21/754] Align-residual aligned_045.tif          
+[ 22/754] Grayscale C:\dev\blog\death-of-software\
+[ 22/754] Align-residual aligned_045.tif          
+[ 22/754] Align-residual aligned_045.tif          
+[ 23/754] Grayscale C:\dev\blog\death-of-software\
+[ 24/754] Grayscale C:\dev\blog\death-of-software\
+[ 24/754] Align-residual aligned_045.tif          
+[ 25/754] Align 047.tif to 046.tif                
+[ 25/754] Align-residual aligned_045.tif          
+[ 26/754] Grayscale aligned_047.tif               
+[ 26/754] Align-residual aligned_045.tif          
+[ 27/754] Align-residual aligned_047.tif          
+[ 27/754] Align-residual aligned_045.tif          
+[ 28/754] Align 048.tif to 047.tif                
+[ 28/754] Align-residual aligned_045.tif          
+[ 29/754] Grayscale aligned_048.tif               
+[ 29/754] Align-residual aligned_045.tif          
+[ 30/754] Grayscale C:\dev\blog\death-of-software\
+[ 30/754] Align-residual aligned_045.tif          
+[ 31/754] Align 044.tif to 045.tif                
+[ 31/754] Align-residual aligned_045.tif          
+[ 32/754] Grayscale aligned_044.tif               
+[ 32/754] Align-residual aligned_045.tif          
+[ 33/754] Align-residual aligned_048.tif          
+[ 33/754] Align-residual aligned_045.tif          
+[ 34/754] Align 043.tif to 044.tif                
+[ 34/754] Align-residual aligned_045.tif          
+[ 35/754] Grayscale aligned_043.tif               
+[ 35/754] Align-residual aligned_045.tif          
+[ 36/754] Align-residual aligned_044.tif          
+[ 36/754] Align-residual aligned_045.tif          
+[ 37/754] Align-residual aligned_043.tif          
+[ 37/754] Align-residual aligned_045.tif          
+[ 38/754] Align 049.tif to 048.tif                
+[ 38/754] Align-residual aligned_045.tif          
+[ 39/754] Grayscale aligned_049.tif               
+[ 39/754] Align-residual aligned_045.tif          
+[ 40/754] Grayscale C:\dev\blog\death-of-software\
+[ 40/754] Align-residual aligned_045.tif          
+[ 41/754] Align-residual aligned_049.tif          
+[ 41/754] Align-residual aligned_045.tif          
+[ 42/754] Grayscale C:\dev\blog\death-of-software\
+[ 42/754] Align-residual aligned_045.tif          
+[ 43/754] Grayscale C:\dev\blog\death-of-software\
+[ 43/754] Align-residual aligned_045.tif          
+[ 44/754] Align 042.tif to 043.tif                
+[ 44/754] Align-residual aligned_045.tif          
+[ 45/754] Grayscale aligned_042.tif               
+[ 45/754] Align-residual aligned_045.tif          
+[ 46/754] Align 041.tif to 042.tif                
+[ 46/754] Align-residual aligned_045.tif          
+[ 47/754] Grayscale aligned_041.tif               
+[ 47/754] Align-residual aligned_045.tif          
+[ 48/754] Align 050.tif to 049.tif                
+[ 48/754] Align-residual aligned_045.tif          
+[ 49/754] Grayscale aligned_050.tif               
+[ 49/754] Align-residual aligned_045.tif          
+[ 50/754] Align-residual aligned_041.tif          
+[ 50/754] Align-residual aligned_041.tif          
+[ 51/754] Align-residual aligned_042.tif          
+[ 51/754] Align-residual aligned_041.tif          
+[ 52/754] Align-residual aligned_050.tif          
+[ 52/754] Align-residual aligned_045.tif          
+[ 53/754] Grayscale C:\dev\blog\death-of-software\
+[ 53/754] Align-residual aligned_045.tif          
+[ 54/754] Load C:\dev\blog\death-of-software\proje
+[ 54/754] Align-residual aligned_045.tif          
+[ 55/754] Load C:\dev\blog\death-of-software\proje
+[ 55/754] Load C:\dev\blog\death-of-software\proje
+[ 56/754] Align 051.tif to 050.tif                
+[ 56/754] Load C:\dev\blog\death-of-software\proje
+[ 57/754] Grayscale aligned_051.tif               
+[ 57/754] Load C:\dev\blog\death-of-software\proje
+[ 58/754] Align-residual aligned_051.tif          
+[ 58/754] Align-residual aligned_051.tif          
+[ 59/754] Load C:\dev\blog\death-of-software\proje
+[ 59/754] Load C:\dev\blog\death-of-software\proje
+[ 60/754] Load C:\dev\blog\death-of-software\proje
+[ 60/754] Load C:\dev\blog\death-of-software\proje
+[ 61/754] Load C:\dev\blog\death-of-software\proje
+[ 61/754] Load C:\dev\blog\death-of-software\proje
+[ 62/754] Grayscale C:\dev\blog\death-of-software\
+[ 62/754] Load C:\dev\blog\death-of-software\proje
+[ 63/754] Load C:\dev\blog\death-of-software\proje
+[ 63/754] Load C:\dev\blog\death-of-software\proje
+[ 64/754] Grayscale C:\dev\blog\death-of-software\
+[ 64/754] Load C:\dev\blog\death-of-software\proje
+[ 65/754] Align 052.tif to 051.tif                
+[ 65/754] Load C:\dev\blog\death-of-software\proje
+[ 66/754] Grayscale aligned_052.tif               
+[ 66/754] Load C:\dev\blog\death-of-software\proje
+[ 67/754] Align-residual aligned_052.tif          
+[ 67/754] Load C:\dev\blog\death-of-software\proje
+[ 68/754] Grayscale C:\dev\blog\death-of-software\
+[ 68/754] Load C:\dev\blog\death-of-software\proje
+[ 69/754] Align 053.tif to 052.tif                
+[ 69/754] Load C:\dev\blog\death-of-software\proje
+[ 70/754] Grayscale aligned_053.tif               
+[ 70/754] Load C:\dev\blog\death-of-software\proje
+[ 71/754] Align-residual aligned_053.tif          
+[ 71/754] Load C:\dev\blog\death-of-software\proje
+[ 72/754] Load C:\dev\blog\death-of-software\proje
+[ 72/754] Forward-wavelet aligned_046.tif         
+[ 72/754] Forward-wavelet aligned_046.tif         
+[ 73/754] Grayscale C:\dev\blog\death-of-software\
+[ 73/754] Forward-wavelet aligned_046.tif         
+[ 74/754] Grayscale C:\dev\blog\death-of-software\
+[ 75/754] Load C:\dev\blog\death-of-software\proje
+[ 75/754] Load C:\dev\blog\death-of-software\proje
+[ 76/754] Align 038.tif to 039.tif                
+[ 76/754] Load C:\dev\blog\death-of-software\proje
+[ 77/754] Grayscale aligned_038.tif               
+[ 77/754] Load C:\dev\blog\death-of-software\proje
+[ 78/754] Align 040.tif to 041.tif                
+[ 78/754] Load C:\dev\blog\death-of-software\proje
+[ 79/754] Grayscale aligned_040.tif               
+[ 79/754] Load C:\dev\blog\death-of-software\proje
+[ 80/754] Align 039.tif to 040.tif                
+[ 80/754] Load C:\dev\blog\death-of-software\proje
+[ 81/754] Grayscale aligned_039.tif               
+[ 81/754] Load C:\dev\blog\death-of-software\proje
+[ 82/754] Align-residual aligned_040.tif          
+[ 82/754] Align-residual aligned_040.tif          
+[ 83/754] Align-residual aligned_039.tif          
+[ 83/754] Align-residual aligned_040.tif          
+[ 84/754] Align-residual aligned_038.tif          
+[ 84/754] Load C:\dev\blog\death-of-software\proje
+[ 85/754] Load C:\dev\blog\death-of-software\proje
+[ 85/754] Load C:\dev\blog\death-of-software\proje
+[ 86/754] Load C:\dev\blog\death-of-software\proje
+[ 86/754] Load C:\dev\blog\death-of-software\proje
+[ 87/754] Grayscale C:\dev\blog\death-of-software\
+[ 87/754] Load C:\dev\blog\death-of-software\proje
+[ 88/754] WAVS focus measure for aligned_046.tif  
+[ 88/754] Load C:\dev\blog\death-of-software\proje
+[ 89/754] Forward-wavelet aligned_045.tif         
+[ 89/754] Forward-wavelet aligned_045.tif         
+[ 90/754] Construct depthmap layer 46             
+[ 90/754] Forward-wavelet aligned_045.tif         
+[ 91/754] Align 054.tif to 053.tif                
+[ 91/754] Forward-wavelet aligned_045.tif         
+[ 92/754] Grayscale aligned_054.tif               
+[ 92/754] Load C:\dev\blog\death-of-software\proje
+[ 93/754] WAVS focus measure for aligned_045.tif  
+[ 92/754] Load C:\dev\blog\death-of-software\proje
+[ 93/754] Load C:\dev\blog\death-of-software\proje
+[ 94/754] Forward-wavelet aligned_047.tif         
+[ 95/754] Align-residual aligned_054.tif          
+[ 95/754] Load C:\dev\blog\death-of-software\proje
+[ 96/754] Grayscale C:\dev\blog\death-of-software\
+[ 96/754] Load C:\dev\blog\death-of-software\proje
+[ 97/754] Align 037.tif to 038.tif                
+[ 97/754] Load C:\dev\blog\death-of-software\proje
+[ 98/754] Grayscale aligned_037.tif               
+[ 98/754] Load C:\dev\blog\death-of-software\proje
+[ 99/754] Grayscale C:\dev\blog\death-of-software\
+[ 99/754] Load C:\dev\blog\death-of-software\proje
+[100/754] Align-residual aligned_037.tif          
+[100/754] Align-residual aligned_037.tif          
+[101/754] Align 055.tif to 054.tif                
+[101/754] Align-residual aligned_037.tif          
+[102/754] Grayscale aligned_055.tif               
+[102/754] Align-residual aligned_037.tif          
+[103/754] Align-residual aligned_055.tif          
+[103/754] Align-residual aligned_037.tif          
+[103/754] Load C:\dev\blog\death-of-software\proje
+[104/754] Grayscale C:\dev\blog\death-of-software\
+[105/754] Load C:\dev\blog\death-of-software\proje
+[105/754] Load C:\dev\blog\death-of-software\proje
+[106/754] WAVS focus measure for aligned_047.tif  
+[106/754] Load C:\dev\blog\death-of-software\proje
+[107/754] Forward-wavelet aligned_044.tif         
+[107/754] Construct depthmap layer 46             
+[108/754] Grayscale C:\dev\blog\death-of-software\
+[108/754] Construct depthmap layer 46             
+[109/754] Align 056.tif to 055.tif                
+[109/754] Construct depthmap layer 46             
+[110/754] Grayscale aligned_056.tif               
+[110/754] Construct depthmap layer 46             
+[111/754] Align 036.tif to 037.tif                
+[111/754] Construct depthmap layer 46             
+[112/754] Grayscale aligned_036.tif               
+[112/754] Construct depthmap layer 46             
+[113/754] Align-residual aligned_056.tif          
+[113/754] Construct depthmap layer 46             
+[114/754] Align-residual aligned_036.tif          
+[114/754] Align-residual aligned_036.tif          
+[115/754] Load C:\dev\blog\death-of-software\proje
+[115/754] Align-residual aligned_036.tif          
+[116/754] WAVS focus measure for aligned_044.tif  
+[116/754] Construct depthmap layer 46             
+[117/754] Forward-wavelet aligned_048.tif         
+[117/754] Construct depthmap layer 46             
+[118/754] Load C:\dev\blog\death-of-software\proje
+[118/754] Construct depthmap layer 46             
+[119/754] Load C:\dev\blog\death-of-software\proje
+[119/754] Load C:\dev\blog\death-of-software\proje
+[120/754] Construct depthmap layer 45             
+[120/754] Load C:\dev\blog\death-of-software\proje
+[121/754] WAVS focus measure for aligned_048.tif  
+[121/754] Load C:\dev\blog\death-of-software\proje
+[122/754] Forward-wavelet aligned_043.tif         
+[122/754] Load C:\dev\blog\death-of-software\proje
+[123/754] WAVS focus measure for aligned_043.tif  
+[123/754] Load C:\dev\blog\death-of-software\proje
+[124/754] Forward-wavelet aligned_049.tif         
+[124/754] Load C:\dev\blog\death-of-software\proje
+[125/754] Grayscale C:\dev\blog\death-of-software\
+[125/754] Load C:\dev\blog\death-of-software\proje
+[126/754] Construct depthmap layer 47             
+[126/754] Construct depthmap layer 47             
+[127/754] Align 035.tif to 036.tif                
+[127/754] Construct depthmap layer 47             
+[128/754] Grayscale aligned_035.tif               
+[128/754] Construct depthmap layer 47             
+[129/754] Align-residual aligned_035.tif          
+[129/754] Construct depthmap layer 47             
+[130/754] Load C:\dev\blog\death-of-software\proje
+[130/754] Construct depthmap layer 47             
+[131/754] Grayscale C:\dev\blog\death-of-software\
+[131/754] Construct depthmap layer 47             
+[132/754] Load C:\dev\blog\death-of-software\proje
+[132/754] Construct depthmap layer 47             
+[133/754] WAVS focus measure for aligned_049.tif  
+[133/754] WAVS focus measure for aligned_049.tif  
+[134/754] Forward-wavelet aligned_042.tif         
+[134/754] Construct depthmap layer 47             
+[134/754] Load C:\dev\blog\death-of-software\proje
+[135/754] Construct depthmap layer 44             
+[136/754] Grayscale C:\dev\blog\death-of-software\
+[136/754] Load C:\dev\blog\death-of-software\proje
+[137/754] Align 034.tif to 035.tif                
+[137/754] Load C:\dev\blog\death-of-software\proje
+[138/754] Grayscale aligned_034.tif               
+[138/754] Load C:\dev\blog\death-of-software\proje
+[138/754] Load C:\dev\blog\death-of-software\proje
+[139/754] Grayscale C:\dev\blog\death-of-software\
+[140/754] Align-residual aligned_034.tif          
+[140/754] Load C:\dev\blog\death-of-software\proje
+[141/754] Align 057.tif to 056.tif                
+[141/754] Load C:\dev\blog\death-of-software\proje
+[142/754] Grayscale aligned_057.tif               
+[142/754] Load C:\dev\blog\death-of-software\proje
+[143/754] Align-residual aligned_057.tif          
+[143/754] Load C:\dev\blog\death-of-software\proje
+[144/754] Align 058.tif to 057.tif                
+[144/754] Load C:\dev\blog\death-of-software\proje
+[145/754] Grayscale aligned_058.tif               
+[145/754] Load C:\dev\blog\death-of-software\proje
+[145/754] Load C:\dev\blog\death-of-software\proje
+[146/754] Align-residual aligned_058.tif          
+[147/754] Load C:\dev\blog\death-of-software\proje
+[147/754] Load C:\dev\blog\death-of-software\proje
+[148/754] WAVS focus measure for aligned_042.tif  
+[148/754] Load C:\dev\blog\death-of-software\proje
+[149/754] Merge 8 images                          
+[149/754] Merge 8 images                          
+[150/754] Construct depthmap layer 48             
+[150/754] Merge 8 images                          
+[151/754] Forward-wavelet aligned_050.tif         
+[151/754] Merge 8 images                          
+[152/754] Grayscale C:\dev\blog\death-of-software\
+[152/754] Merge 8 images                          
+[153/754] Align 033.tif to 034.tif                
+[153/754] Merge 8 images                          
+[154/754] Grayscale aligned_033.tif               
+[154/754] Merge 8 images                          
+[155/754] Align-residual aligned_033.tif          
+[155/754] Merge 8 images                          
+[156/754] WAVS focus measure for aligned_050.tif  
+[156/754] Merge 8 images                          
+[157/754] Forward-wavelet aligned_041.tif         
+[157/754] Merge 8 images                          
+[158/754] Grayscale C:\dev\blog\death-of-software\
+[158/754] Grayscale C:\dev\blog\death-of-software\
+[159/754] Load C:\dev\blog\death-of-software\proje
+[159/754] Load C:\dev\blog\death-of-software\proje
+[160/754] Align 059.tif to 058.tif                
+[160/754] Load C:\dev\blog\death-of-software\proje
+[161/754] Grayscale aligned_059.tif               
+[161/754] Load C:\dev\blog\death-of-software\proje
+[162/754] Construct depthmap layer 43             
+[162/754] Load C:\dev\blog\death-of-software\proje
+[163/754] Align-residual aligned_059.tif          
+[163/754] Load C:\dev\blog\death-of-software\proje
+[164/754] WAVS focus measure for aligned_041.tif  
+[164/754] Load C:\dev\blog\death-of-software\proje
+[165/754] Forward-wavelet aligned_051.tif         
+[165/754] Load C:\dev\blog\death-of-software\proje
+[166/754] Load C:\dev\blog\death-of-software\proje
+[166/754] Load C:\dev\blog\death-of-software\proje
+[167/754] Construct depthmap layer 49             
+[167/754] Load C:\dev\blog\death-of-software\proje
+[168/754] Load C:\dev\blog\death-of-software\proje
+[168/754] Load C:\dev\blog\death-of-software\proje
+[169/754] WAVS focus measure for aligned_051.tif  
+[169/754] Load C:\dev\blog\death-of-software\proje
+[170/754] Forward-wavelet aligned_040.tif         
+[170/754] Load C:\dev\blog\death-of-software\proje
+[171/754] Grayscale C:\dev\blog\death-of-software\
+[171/754] Load C:\dev\blog\death-of-software\proje
+[172/754] Align 032.tif to 033.tif                
+[172/754] Load C:\dev\blog\death-of-software\proje
+[173/754] Grayscale aligned_032.tif               
+[173/754] Load C:\dev\blog\death-of-software\proje
+[174/754] Align-residual aligned_032.tif          
+[174/754] Load C:\dev\blog\death-of-software\proje
+[175/754] Construct depthmap layer 42             
+[175/754] Align-residual aligned_032.tif          
+[176/754] Grayscale C:\dev\blog\death-of-software\
+[176/754] Align-residual aligned_032.tif          
+[177/754] Align 060.tif to 059.tif                
+[177/754] Align-residual aligned_032.tif          
+[178/754] Grayscale aligned_060.tif               
+[178/754] Align-residual aligned_032.tif          
+[178/754] Load C:\dev\blog\death-of-software\proje
+[179/754] Align-residual aligned_060.tif          
+[180/754] Load C:\dev\blog\death-of-software\proje
+[180/754] Load C:\dev\blog\death-of-software\proje
+[181/754] WAVS focus measure for aligned_040.tif  
+[181/754] Load C:\dev\blog\death-of-software\proje
+[182/754] Forward-wavelet aligned_052.tif         
+[182/754] Load C:\dev\blog\death-of-software\proje
+[183/754] Load C:\dev\blog\death-of-software\proje
+[183/754] Load C:\dev\blog\death-of-software\proje
+[184/754] Construct depthmap layer 50             
+[184/754] Load C:\dev\blog\death-of-software\proje
+[185/754] WAVS focus measure for aligned_052.tif  
+[185/754] Load C:\dev\blog\death-of-software\proje
+[186/754] Forward-wavelet aligned_039.tif         
+[186/754] Load C:\dev\blog\death-of-software\proje
+[187/754] Grayscale C:\dev\blog\death-of-software\
+[187/754] Load C:\dev\blog\death-of-software\proje
+[188/754] Construct depthmap layer 41             
+[188/754] Load C:\dev\blog\death-of-software\proje
+[189/754] Align 031.tif to 032.tif                
+[189/754] Load C:\dev\blog\death-of-software\proje
+[190/754] Grayscale aligned_031.tif               
+[190/754] Load C:\dev\blog\death-of-software\proje
+[191/754] Align-residual aligned_031.tif          
+[191/754] Load C:\dev\blog\death-of-software\proje
+[192/754] Grayscale C:\dev\blog\death-of-software\
+[192/754] Load C:\dev\blog\death-of-software\proje
+[193/754] Align 061.tif to 060.tif                
+[193/754] Load C:\dev\blog\death-of-software\proje
+[194/754] Grayscale aligned_061.tif               
+[194/754] Load C:\dev\blog\death-of-software\proje
+[195/754] Align-residual aligned_061.tif          
+[195/754] Load C:\dev\blog\death-of-software\proje
+[196/754] WAVS focus measure for aligned_039.tif  
+[196/754] WAVS focus measure for aligned_039.tif  
+[197/754] Forward-wavelet aligned_053.tif         
+[197/754] Load C:\dev\blog\death-of-software\proje
+[198/754] Load C:\dev\blog\death-of-software\proje
+[198/754] Load C:\dev\blog\death-of-software\proje
+[199/754] Load C:\dev\blog\death-of-software\proje
+[199/754] Load C:\dev\blog\death-of-software\proje
+[200/754] Construct depthmap layer 51             
+[200/754] Load C:\dev\blog\death-of-software\proje
+[201/754] Grayscale C:\dev\blog\death-of-software\
+[201/754] Load C:\dev\blog\death-of-software\proje
+[202/754] Align 062.tif to 061.tif                
+[202/754] Load C:\dev\blog\death-of-software\proje
+[203/754] Grayscale aligned_062.tif               
+[203/754] Load C:\dev\blog\death-of-software\proje
+[204/754] Align-residual aligned_062.tif          
+[204/754] Align-residual aligned_062.tif          
+[205/754] Grayscale C:\dev\blog\death-of-software\
+[205/754] Align-residual aligned_062.tif          
+[206/754] Align 030.tif to 031.tif                
+[206/754] Align-residual aligned_062.tif          
+[207/754] Grayscale aligned_030.tif               
+[207/754] Align-residual aligned_062.tif          
+[208/754] Align-residual aligned_030.tif          
+[208/754] Load C:\dev\blog\death-of-software\proje
+[209/754] Load C:\dev\blog\death-of-software\proje
+[209/754] Load C:\dev\blog\death-of-software\proje
+[210/754] WAVS focus measure for aligned_053.tif  
+[210/754] Load C:\dev\blog\death-of-software\proje
+[211/754] Forward-wavelet aligned_038.tif         
+[211/754] Load C:\dev\blog\death-of-software\proje
+[212/754] Load C:\dev\blog\death-of-software\proje
+[212/754] Load C:\dev\blog\death-of-software\proje
+[213/754] Construct depthmap layer 40             
+[213/754] Load C:\dev\blog\death-of-software\proje
+[214/754] WAVS focus measure for aligned_038.tif  
+[214/754] WAVS focus measure for aligned_038.tif  
+[215/754] Construct depthmap layer 52             
+[215/754] WAVS focus measure for aligned_038.tif  
+[216/754] Merge 8 images                          
+[216/754] Load C:\dev\blog\death-of-software\proje
+[217/754] Forward-wavelet aligned_054.tif         
+[217/754] Forward-wavelet aligned_054.tif         
+[218/754] Grayscale C:\dev\blog\death-of-software\
+[218/754] Forward-wavelet aligned_054.tif         
+[219/754] Align 029.tif to 030.tif                
+[219/754] Forward-wavelet aligned_054.tif         
+[220/754] Grayscale aligned_029.tif               
+[220/754] Construct depthmap layer 52             
+[221/754] WAVS focus measure for aligned_054.tif  
+[221/754] Construct depthmap layer 52             
+[222/754] Forward-wavelet aligned_037.tif         
+[222/754] Load C:\dev\blog\death-of-software\proje
+[223/754] Construct depthmap layer 39             
+[223/754] Load C:\dev\blog\death-of-software\proje
+[224/754] Align-residual aligned_029.tif          
+[224/754] Load C:\dev\blog\death-of-software\proje
+[225/754] Grayscale C:\dev\blog\death-of-software\
+[225/754] Load C:\dev\blog\death-of-software\proje
+[226/754] Align 063.tif to 062.tif                
+[226/754] Load C:\dev\blog\death-of-software\proje
+[227/754] Grayscale aligned_063.tif               
+[227/754] Load C:\dev\blog\death-of-software\proje
+[228/754] Align-residual aligned_063.tif          
+[228/754] Load C:\dev\blog\death-of-software\proje
+[229/754] Grayscale C:\dev\blog\death-of-software\
+[229/754] Load C:\dev\blog\death-of-software\proje
+[230/754] WAVS focus measure for aligned_037.tif  
+[230/754] Load C:\dev\blog\death-of-software\proje
+[231/754] Forward-wavelet aligned_055.tif         
+[231/754] Load C:\dev\blog\death-of-software\proje
+[232/754] Align 028.tif to 029.tif                
+[232/754] Load C:\dev\blog\death-of-software\proje
+[233/754] Grayscale aligned_028.tif               
+[233/754] Load C:\dev\blog\death-of-software\proje
+[234/754] Align-residual aligned_028.tif          
+[234/754] Load C:\dev\blog\death-of-software\proje
+[235/754] Load C:\dev\blog\death-of-software\proje
+[235/754] Load C:\dev\blog\death-of-software\proje
+[236/754] Construct depthmap layer 53             
+[236/754] Construct depthmap layer 53             
+[237/754] WAVS focus measure for aligned_055.tif  
+[237/754] WAVS focus measure for aligned_055.tif  
+[238/754] Forward-wavelet aligned_036.tif         
+[238/754] WAVS focus measure for aligned_055.tif  
+[239/754] Grayscale C:\dev\blog\death-of-software\
+[239/754] WAVS focus measure for aligned_055.tif  
+[240/754] Align 064.tif to 063.tif                
+[240/754] WAVS focus measure for aligned_055.tif  
+[241/754] Grayscale aligned_064.tif               
+[241/754] Construct depthmap layer 53             
+[242/754] Load C:\dev\blog\death-of-software\proje
+[242/754] Construct depthmap layer 53             
+[243/754] WAVS focus measure for aligned_036.tif  
+[243/754] Construct depthmap layer 53             
+[244/754] Forward-wavelet aligned_056.tif         
+[244/754] Construct depthmap layer 53             
+[245/754] Align-residual aligned_064.tif          
+[245/754] Align-residual aligned_064.tif          
+[246/754] Construct depthmap layer 38             
+[246/754] Merge 8 images                          
+[247/754] Load C:\dev\blog\death-of-software\proje
+[247/754] Merge 8 images                          
+[248/754] WAVS focus measure for aligned_056.tif  
+[248/754] Merge 8 images                          
+[249/754] Construct depthmap layer 54             
+[249/754] WAVS focus measure for aligned_056.tif  
+[250/754] Forward-wavelet aligned_035.tif         
+[250/754] Load C:\dev\blog\death-of-software\proje
+[251/754] Load C:\dev\blog\death-of-software\proje
+[251/754] Load C:\dev\blog\death-of-software\proje
+[252/754] WAVS focus measure for aligned_035.tif  
+[252/754] Load C:\dev\blog\death-of-software\proje
+[253/754] Forward-wavelet aligned_057.tif         
+[253/754] Load C:\dev\blog\death-of-software\proje
+[254/754] Construct depthmap layer 37             
+[254/754] Load C:\dev\blog\death-of-software\proje
+[255/754] WAVS focus measure for aligned_057.tif  
+[255/754] Load C:\dev\blog\death-of-software\proje
+[256/754] Forward-wavelet aligned_034.tif         
+[256/754] Forward-wavelet aligned_034.tif         
+[257/754] Grayscale C:\dev\blog\death-of-software\
+[257/754] Forward-wavelet aligned_034.tif         
+[258/754] Construct depthmap layer 55             
+[258/754] Forward-wavelet aligned_034.tif         
+[259/754] Grayscale C:\dev\blog\death-of-software\
+[259/754] Grayscale C:\dev\blog\death-of-software\
+[260/754] Grayscale C:\dev\blog\death-of-software\
+[260/754] Grayscale C:\dev\blog\death-of-software\
+[261/754] Align 027.tif to 028.tif                
+[261/754] Forward-wavelet aligned_034.tif         
+[262/754] Align 065.tif to 064.tif                
+[262/754] Forward-wavelet aligned_034.tif         
+[263/754] Grayscale aligned_065.tif               
+[263/754] Forward-wavelet aligned_034.tif         
+[264/754] Grayscale aligned_027.tif               
+[264/754] Forward-wavelet aligned_034.tif         
+[265/754] Align 026.tif to 027.tif                
+[265/754] Forward-wavelet aligned_034.tif         
+[266/754] Grayscale aligned_026.tif               
+[266/754] Grayscale aligned_026.tif               
+[267/754] Align-residual aligned_065.tif          
+[267/754] Grayscale aligned_026.tif               
+[268/754] Align-residual aligned_027.tif          
+[268/754] Forward-wavelet aligned_034.tif         
+[269/754] Align-residual aligned_026.tif          
+[269/754] Load C:\dev\blog\death-of-software\proje
+[270/754] WAVS focus measure for aligned_034.tif  
+[270/754] Load C:\dev\blog\death-of-software\proje
+[271/754] Merge 8 images                          
+[271/754] Load C:\dev\blog\death-of-software\proje
+[272/754] Forward-wavelet aligned_058.tif         
+[272/754] Load C:\dev\blog\death-of-software\proje
+[273/754] Load C:\dev\blog\death-of-software\proje
+[273/754] Load C:\dev\blog\death-of-software\proje
+[274/754] Construct depthmap layer 36             
+[274/754] Forward-wavelet aligned_058.tif         
+[275/754] Grayscale C:\dev\blog\death-of-software\
+[275/754] Forward-wavelet aligned_058.tif         
+[276/754] Load C:\dev\blog\death-of-software\proje
+[276/754] Forward-wavelet aligned_058.tif         
+[277/754] Align 066.tif to 065.tif                
+[277/754] Forward-wavelet aligned_058.tif         
+[278/754] Grayscale aligned_066.tif               
+[278/754] Forward-wavelet aligned_058.tif         
+[279/754] Align-residual aligned_066.tif          
+[279/754] Align-residual aligned_066.tif          
+[280/754] WAVS focus measure for aligned_058.tif  
+[280/754] Load C:\dev\blog\death-of-software\proje
+[281/754] Forward-wavelet aligned_033.tif         
+[281/754] Load C:\dev\blog\death-of-software\proje
+[282/754] Load C:\dev\blog\death-of-software\proje
+[282/754] Load C:\dev\blog\death-of-software\proje
+[283/754] Construct depthmap layer 56             
+[283/754] Construct depthmap layer 56             
+[284/754] WAVS focus measure for aligned_033.tif  
+[284/754] Construct depthmap layer 56             
+[285/754] Forward-wavelet aligned_059.tif         
+[285/754] Load C:\dev\blog\death-of-software\proje
+[286/754] Construct depthmap layer 35             
+[286/754] Load C:\dev\blog\death-of-software\proje
+[287/754] WAVS focus measure for aligned_059.tif  
+[287/754] Load C:\dev\blog\death-of-software\proje
+[288/754] Forward-wavelet aligned_032.tif         
+[288/754] Merge 8 images                          
+[288/754] Merge 8 images                          
+[289/754] Construct depthmap layer 57             
+[290/754] Grayscale C:\dev\blog\death-of-software\
+[290/754] Merge 8 images                          
+[291/754] Grayscale C:\dev\blog\death-of-software\
+[291/754] Merge 8 images                          
+[292/754] WAVS focus measure for aligned_032.tif  
+[291/754] Merge 8 images                          
+[292/754] WAVS focus measure for aligned_032.tif  
+[292/754] WAVS focus measure for aligned_032.tif  
+[293/754] Forward-wavelet aligned_060.tif         
+[294/754] Align 025.tif to 026.tif                
+[295/754] Grayscale aligned_025.tif               
+[295/754] WAVS focus measure for aligned_032.tif  
+[296/754] Grayscale C:\dev\blog\death-of-software\
+[296/754] WAVS focus measure for aligned_032.tif  
+[297/754] Align-residual aligned_025.tif          
+[297/754] WAVS focus measure for aligned_032.tif  
+[298/754] Align 067.tif to 066.tif                
+[298/754] WAVS focus measure for aligned_032.tif  
+[299/754] Grayscale aligned_067.tif               
+[299/754] Merge 8 images                          
+[300/754] Align 024.tif to 025.tif                
+[300/754] Merge 8 images                          
+[301/754] Grayscale aligned_024.tif               
+[301/754] Merge 8 images                          
+[302/754] Align-residual aligned_067.tif          
+[302/754] Merge 8 images                          
+[303/754] Align-residual aligned_024.tif          
+[303/754] Align-residual aligned_067.tif          
+[304/754] Load C:\dev\blog\death-of-software\proje
+[304/754] Align-residual aligned_067.tif          
+[305/754] Load C:\dev\blog\death-of-software\proje
+[305/754] Construct depthmap layer 57             
+[306/754] Load C:\dev\blog\death-of-software\proje
+[306/754] Load C:\dev\blog\death-of-software\proje
+[307/754] Construct depthmap layer 34             
+[307/754] Load C:\dev\blog\death-of-software\proje
+[308/754] WAVS focus measure for aligned_060.tif  
+[308/754] Load C:\dev\blog\death-of-software\proje
+[309/754] Forward-wavelet aligned_031.tif         
+[309/754] Load C:\dev\blog\death-of-software\proje
+[310/754] Load C:\dev\blog\death-of-software\proje
+[310/754] Load C:\dev\blog\death-of-software\proje
+[311/754] WAVS focus measure for aligned_031.tif  
+[311/754] Load C:\dev\blog\death-of-software\proje
+[312/754] Construct depthmap layer 58             
+[312/754] Load C:\dev\blog\death-of-software\proje
+[313/754] Forward-wavelet aligned_061.tif         
+[313/754] Load C:\dev\blog\death-of-software\proje
+[314/754] WAVS focus measure for aligned_061.tif  
+[314/754] Load C:\dev\blog\death-of-software\proje
+[315/754] Construct depthmap layer 33             
+[315/754] Load C:\dev\blog\death-of-software\proje
+[316/754] Forward-wavelet aligned_030.tif         
+[316/754] Load C:\dev\blog\death-of-software\proje
+[317/754] Grayscale C:\dev\blog\death-of-software\
+[317/754] Grayscale C:\dev\blog\death-of-software\
+[318/754] Grayscale C:\dev\blog\death-of-software\
+[318/754] Load C:\dev\blog\death-of-software\proje
+[319/754] Load C:\dev\blog\death-of-software\proje
+[319/754] Load C:\dev\blog\death-of-software\proje
+[320/754] Align 023.tif to 024.tif                
+[320/754] Load C:\dev\blog\death-of-software\proje
+[321/754] Grayscale aligned_023.tif               
+[321/754] Load C:\dev\blog\death-of-software\proje
+[322/754] Align-residual aligned_023.tif          
+[322/754] Load C:\dev\blog\death-of-software\proje
+[323/754] Grayscale C:\dev\blog\death-of-software\
+[323/754] Load C:\dev\blog\death-of-software\proje
+[324/754] Align 068.tif to 067.tif                
+[324/754] Load C:\dev\blog\death-of-software\proje
+[325/754] Grayscale aligned_068.tif               
+[325/754] Load C:\dev\blog\death-of-software\proje
+[326/754] Align-residual aligned_068.tif          
+[326/754] Load C:\dev\blog\death-of-software\proje
+[327/754] WAVS focus measure for aligned_030.tif  
+[327/754] Load C:\dev\blog\death-of-software\proje
+[328/754] Merge 8 images                          
+[328/754] Load C:\dev\blog\death-of-software\proje
+[329/754] Forward-wavelet aligned_062.tif         
+[329/754] Load C:\dev\blog\death-of-software\proje
+[330/754] Align 069.tif to 068.tif                
+[330/754] Load C:\dev\blog\death-of-software\proje
+[331/754] Grayscale aligned_069.tif               
+[331/754] Load C:\dev\blog\death-of-software\proje
+[332/754] Grayscale C:\dev\blog\death-of-software\
+[332/754] Load C:\dev\blog\death-of-software\proje
+[333/754] Align-residual aligned_069.tif          
+[333/754] Load C:\dev\blog\death-of-software\proje
+[334/754] Construct depthmap layer 59             
+[334/754] Load C:\dev\blog\death-of-software\proje
+[335/754] Align 022.tif to 023.tif                
+[335/754] Load C:\dev\blog\death-of-software\proje
+[336/754] Grayscale aligned_022.tif               
+[336/754] Load C:\dev\blog\death-of-software\proje
+[337/754] Align-residual aligned_022.tif          
+[337/754] Load C:\dev\blog\death-of-software\proje
+[338/754] Load C:\dev\blog\death-of-software\proje
+[338/754] Load C:\dev\blog\death-of-software\proje
+[339/754] WAVS focus measure for aligned_062.tif  
+[339/754] Load C:\dev\blog\death-of-software\proje
+[340/754] Forward-wavelet aligned_029.tif         
+[340/754] Load C:\dev\blog\death-of-software\proje
+[341/754] Construct depthmap layer 32             
+[341/754] Load C:\dev\blog\death-of-software\proje
+[342/754] Load C:\dev\blog\death-of-software\proje
+[342/754] Load C:\dev\blog\death-of-software\proje
+[343/754] WAVS focus measure for aligned_029.tif  
+[343/754] Merge 8 images                          
+[344/754] Forward-wavelet aligned_063.tif         
+[344/754] Merge 8 images                          
+[345/754] Grayscale C:\dev\blog\death-of-software\
+[345/754] Merge 8 images                          
+[346/754] Construct depthmap layer 60             
+[346/754] Merge 8 images                          
+[347/754] Align 070.tif to 069.tif                
+[347/754] Merge 8 images                          
+[348/754] Grayscale aligned_070.tif               
+[348/754] Merge 8 images                          
+[349/754] Align-residual aligned_070.tif          
+[349/754] Merge 8 images                          
+[350/754] Load C:\dev\blog\death-of-software\proje
+[350/754] Merge 8 images                          
+[351/754] WAVS focus measure for aligned_063.tif  
+[351/754] Merge 8 images                          
+[352/754] Forward-wavelet aligned_028.tif         
+[352/754] Merge 8 images                          
+[353/754] Construct depthmap layer 31             
+[353/754] Merge 8 images                          
+[354/754] WAVS focus measure for aligned_028.tif  
+[354/754] Merge 8 images                          
+[355/754] Forward-wavelet aligned_064.tif         
+[355/754] Merge 8 images                          
+[356/754] Construct depthmap layer 61             
+[356/754] Construct depthmap layer 61             
+[357/754] Grayscale C:\dev\blog\death-of-software\
+[357/754] Construct depthmap layer 61             
+[358/754] Align 021.tif to 022.tif                
+[358/754] Construct depthmap layer 61             
+[359/754] Grayscale aligned_021.tif               
+[359/754] Construct depthmap layer 61             
+[360/754] Align-residual aligned_021.tif          
+[360/754] Construct depthmap layer 61             
+[361/754] WAVS focus measure for aligned_064.tif  
+[361/754] Construct depthmap layer 61             
+[362/754] Forward-wavelet aligned_027.tif         
+[362/754] Construct depthmap layer 61             
+[363/754] Load C:\dev\blog\death-of-software\proje
+[363/754] Construct depthmap layer 61             
+[364/754] Grayscale C:\dev\blog\death-of-software\
+[364/754] Merge 8 images                          
+[365/754] Construct depthmap layer 30             
+[365/754] Construct depthmap layer 30             
+[366/754] Align 020.tif to 021.tif                
+[366/754] Construct depthmap layer 30             
+[367/754] Grayscale aligned_020.tif               
+[367/754] Construct depthmap layer 30             
+[367/754] Construct depthmap layer 30             
+[368/754] Grayscale C:\dev\blog\death-of-software\
+[369/754] Align-residual aligned_020.tif          
+[369/754] Align-residual aligned_020.tif          
+[370/754] Align 071.tif to 070.tif                
+[370/754] Align-residual aligned_020.tif          
+[371/754] Grayscale aligned_071.tif               
+[371/754] Align-residual aligned_020.tif          
+[372/754] Align-residual aligned_071.tif          
+[372/754] Align-residual aligned_020.tif          
+[373/754] WAVS focus measure for aligned_027.tif  
+[373/754] Align-residual aligned_020.tif          
+[374/754] Forward-wavelet aligned_065.tif         
+[374/754] Forward-wavelet aligned_065.tif         
+[375/754] Load C:\dev\blog\death-of-software\proje
+[375/754] Load C:\dev\blog\death-of-software\proje
+[376/754] Load C:\dev\blog\death-of-software\proje
+[376/754] Load C:\dev\blog\death-of-software\proje
+[377/754] Load C:\dev\blog\death-of-software\proje
+[377/754] Load C:\dev\blog\death-of-software\proje
+[378/754] Construct depthmap layer 62             
+[378/754] Load C:\dev\blog\death-of-software\proje
+[379/754] WAVS focus measure for aligned_065.tif  
+[379/754] Load C:\dev\blog\death-of-software\proje
+[380/754] Forward-wavelet aligned_026.tif         
+[380/754] Load C:\dev\blog\death-of-software\proje
+[381/754] Grayscale C:\dev\blog\death-of-software\
+[381/754] Load C:\dev\blog\death-of-software\proje
+[382/754] Align 072.tif to 071.tif                
+[382/754] Load C:\dev\blog\death-of-software\proje
+[383/754] Grayscale aligned_072.tif               
+[383/754] Load C:\dev\blog\death-of-software\proje
+[384/754] Align-residual aligned_072.tif          
+[384/754] Load C:\dev\blog\death-of-software\proje
+[385/754] Construct depthmap layer 29             
+[385/754] Load C:\dev\blog\death-of-software\proje
+[386/754] Load C:\dev\blog\death-of-software\proje
+[386/754] Load C:\dev\blog\death-of-software\proje
+[387/754] WAVS focus measure for aligned_026.tif  
+[387/754] Load C:\dev\blog\death-of-software\proje
+[388/754] Merge 8 images                          
+[388/754] Merge 8 images                          
+[389/754] Forward-wavelet aligned_066.tif         
+[389/754] Merge 8 images                          
+[390/754] Construct depthmap layer 63             
+[390/754] Merge 8 images                          
+[391/754] Grayscale C:\dev\blog\death-of-software\
+[391/754] Merge 8 images                          
+[392/754] Align 073.tif to 072.tif                
+[392/754] Merge 8 images                          
+[393/754] Grayscale aligned_073.tif               
+[393/754] Merge 8 images                          
+[394/754] Align-residual aligned_073.tif          
+[394/754] Merge 8 images                          
+[395/754] WAVS focus measure for aligned_066.tif  
+[395/754] Merge 8 images                          
+[396/754] Forward-wavelet aligned_025.tif         
+[396/754] Merge 8 images                          
+[397/754] Construct depthmap layer 28             
+[397/754] Merge 8 images                          
+[398/754] Grayscale C:\dev\blog\death-of-software\
+[398/754] Merge 8 images                          
+[399/754] Load C:\dev\blog\death-of-software\proje
+[399/754] Merge 8 images                          
+[400/754] Grayscale C:\dev\blog\death-of-software\
+[400/754] Merge 8 images                          
+[401/754] Grayscale C:\dev\blog\death-of-software\
+[401/754] Merge 8 images                          
+[402/754] Align 019.tif to 020.tif                
+[402/754] Merge 8 images                          
+[403/754] Grayscale aligned_019.tif               
+[403/754] Grayscale aligned_019.tif               
+[404/754] Align 018.tif to 019.tif                
+[404/754] Grayscale aligned_019.tif               
+[405/754] WAVS focus measure for aligned_025.tif  
+[404/754] Grayscale aligned_019.tif               
+[406/754] Forward-wavelet aligned_067.tif         
+[406/754] Merge 8 images                          
+[407/754] Align-residual aligned_019.tif          
+[407/754] Merge 8 images                          
+[408/754] Grayscale aligned_018.tif               
+[408/754] Merge 8 images                          
+[409/754] Align-residual aligned_018.tif          
+[409/754] Merge 8 images                          
+[410/754] WAVS focus measure for aligned_067.tif  
+[410/754] Merge 8 images                          
+[411/754] Forward-wavelet aligned_024.tif         
+[411/754] Merge 8 images                          
+[412/754] Align 074.tif to 073.tif                
+[412/754] Merge 8 images                          
+[413/754] Grayscale aligned_074.tif               
+[413/754] Merge 8 images                          
+[414/754] Construct depthmap layer 64             
+[414/754] Merge 8 images                          
+[415/754] Load C:\dev\blog\death-of-software\proje
+[415/754] Load C:\dev\blog\death-of-software\proje
+[416/754] Align-residual aligned_074.tif          
+[416/754] Load C:\dev\blog\death-of-software\proje
+[416/754] Load C:\dev\blog\death-of-software\proje
+[417/754] WAVS focus measure for aligned_024.tif  
+[418/754] Forward-wavelet aligned_068.tif         
+[418/754] Load C:\dev\blog\death-of-software\proje
+[419/754] Load C:\dev\blog\death-of-software\proje
+[419/754] Load C:\dev\blog\death-of-software\proje
+[420/754] Construct depthmap layer 27             
+[420/754] Load C:\dev\blog\death-of-software\proje
+[421/754] Grayscale C:\dev\blog\death-of-software\
+[421/754] Load C:\dev\blog\death-of-software\proje
+[422/754] Align 017.tif to 018.tif                
+[422/754] Load C:\dev\blog\death-of-software\proje
+[423/754] Grayscale aligned_017.tif               
+[423/754] Load C:\dev\blog\death-of-software\proje
+[424/754] Align-residual aligned_017.tif          
+[424/754] Load C:\dev\blog\death-of-software\proje
+[425/754] WAVS focus measure for aligned_068.tif  
+[425/754] Load C:\dev\blog\death-of-software\proje
+[426/754] Forward-wavelet aligned_023.tif         
+[426/754] Forward-wavelet aligned_023.tif         
+[427/754] Load C:\dev\blog\death-of-software\proje
+[427/754] Forward-wavelet aligned_023.tif         
+[428/754] Construct depthmap layer 65             
+[428/754] Construct depthmap layer 65             
+[429/754] WAVS focus measure for aligned_023.tif  
+[429/754] Construct depthmap layer 65             
+[430/754] Forward-wavelet aligned_069.tif         
+[430/754] Construct depthmap layer 65             
+[431/754] WAVS focus measure for aligned_069.tif  
+[431/754] WAVS focus measure for aligned_069.tif  
+[432/754] Construct depthmap layer 26             
+[432/754] Load C:\dev\blog\death-of-software\proje
+[433/754] Forward-wavelet aligned_022.tif         
+[433/754] Load C:\dev\blog\death-of-software\proje
+[434/754] Grayscale C:\dev\blog\death-of-software\
+[434/754] Load C:\dev\blog\death-of-software\proje
+[435/754] WAVS focus measure for aligned_022.tif  
+[435/754] Load C:\dev\blog\death-of-software\proje
+[436/754] Forward-wavelet aligned_070.tif         
+[436/754] Load C:\dev\blog\death-of-software\proje
+[437/754] Construct depthmap layer 66             
+[437/754] Load C:\dev\blog\death-of-software\proje
+[438/754] Align 016.tif to 017.tif                
+[438/754] Load C:\dev\blog\death-of-software\proje
+[439/754] Grayscale aligned_016.tif               
+[439/754] Load C:\dev\blog\death-of-software\proje
+[440/754] Align-residual aligned_016.tif          
+[440/754] Load C:\dev\blog\death-of-software\proje
+[441/754] Merge 8 images                          
+[441/754] Load C:\dev\blog\death-of-software\proje
+[442/754] Grayscale C:\dev\blog\death-of-software\
+[442/754] Forward-wavelet aligned_070.tif         
+[443/754] Grayscale C:\dev\blog\death-of-software\
+[443/754] Grayscale C:\dev\blog\death-of-software\
+[444/754] Load C:\dev\blog\death-of-software\proje
+[444/754] Load C:\dev\blog\death-of-software\proje
+[444/754] Load C:\dev\blog\death-of-software\proje
+[445/754] Align 075.tif to 074.tif                
+[445/754] Load C:\dev\blog\death-of-software\proje
+[446/754] Grayscale aligned_075.tif               
+[447/754] Align 076.tif to 075.tif                
+[447/754] Load C:\dev\blog\death-of-software\proje
+[448/754] Grayscale aligned_076.tif               
+[448/754] Load C:\dev\blog\death-of-software\proje
+[449/754] WAVS focus measure for aligned_070.tif  
+[449/754] Load C:\dev\blog\death-of-software\proje
+[450/754] Forward-wavelet aligned_021.tif         
+[450/754] Load C:\dev\blog\death-of-software\proje
+[451/754] Align-residual aligned_075.tif          
+[451/754] Align-residual aligned_075.tif          
+[452/754] Construct depthmap layer 25             
+[452/754] Align-residual aligned_075.tif          
+[453/754] Align-residual aligned_076.tif          
+[453/754] Align-residual aligned_075.tif          
+[454/754] WAVS focus measure for aligned_021.tif  
+[454/754] Load C:\dev\blog\death-of-software\proje
+[455/754] Forward-wavelet aligned_071.tif         
+[455/754] Load C:\dev\blog\death-of-software\proje
+[456/754] Load C:\dev\blog\death-of-software\proje
+[456/754] Load C:\dev\blog\death-of-software\proje
+[457/754] Load C:\dev\blog\death-of-software\proje
+[457/754] Load C:\dev\blog\death-of-software\proje
+[458/754] Construct depthmap layer 67             
+[458/754] Load C:\dev\blog\death-of-software\proje
+[459/754] WAVS focus measure for aligned_071.tif  
+[459/754] Load C:\dev\blog\death-of-software\proje
+[460/754] Forward-wavelet aligned_020.tif         
+[460/754] Load C:\dev\blog\death-of-software\proje
+[461/754] Construct depthmap layer 24             
+[461/754] Load C:\dev\blog\death-of-software\proje
+[462/754] WAVS focus measure for aligned_020.tif  
+[462/754] Load C:\dev\blog\death-of-software\proje
+[463/754] Forward-wavelet aligned_072.tif         
+[463/754] Load C:\dev\blog\death-of-software\proje
+[464/754] WAVS focus measure for aligned_072.tif  
+[464/754] WAVS focus measure for aligned_072.tif  
+[465/754] Construct depthmap layer 68             
+[465/754] Load C:\dev\blog\death-of-software\proje
+[466/754] Forward-wavelet aligned_019.tif         
+[466/754] Forward-wavelet aligned_019.tif         
+[467/754] Grayscale C:\dev\blog\death-of-software\
+[467/754] Forward-wavelet aligned_019.tif         
+[468/754] Align 015.tif to 016.tif                
+[468/754] Forward-wavelet aligned_019.tif         
+[469/754] Grayscale aligned_015.tif               
+[469/754] Forward-wavelet aligned_019.tif         
+[470/754] Align-residual aligned_015.tif          
+[470/754] Align-residual aligned_015.tif          
+[471/754] WAVS focus measure for aligned_019.tif  
+[471/754] Load C:\dev\blog\death-of-software\proje
+[472/754] Forward-wavelet aligned_073.tif         
+[472/754] Load C:\dev\blog\death-of-software\proje
+[473/754] Grayscale C:\dev\blog\death-of-software\
+[473/754] Merge 8 images                          
+[474/754] Grayscale C:\dev\blog\death-of-software\
+[474/754] Merge 8 images                          
+[475/754] Load C:\dev\blog\death-of-software\proje
+[475/754] Merge 8 images                          
+[476/754] Align 014.tif to 015.tif                
+[476/754] Merge 8 images                          
+[477/754] Grayscale aligned_014.tif               
+[477/754] Merge 8 images                          
+[478/754] Align-residual aligned_014.tif          
+[478/754] Merge 8 images                          
+[479/754] Align 077.tif to 076.tif                
+[479/754] Merge 8 images                          
+[479/754] Merge 8 images                          
+[480/754] Construct depthmap layer 23             
+[481/754] Grayscale aligned_077.tif               
+[481/754] Merge 8 images                          
+[482/754] Align-residual aligned_077.tif          
+[482/754] Merge 8 images                          
+[483/754] WAVS focus measure for aligned_073.tif  
+[483/754] Merge 8 images                          
+[484/754] Forward-wavelet aligned_018.tif         
+[484/754] Merge 8 images                          
+[485/754] Load C:\dev\blog\death-of-software\proje
+[485/754] Merge 8 images                          
+[486/754] Load C:\dev\blog\death-of-software\proje
+[486/754] Merge 8 images                          
+[487/754] WAVS focus measure for aligned_018.tif  
+[487/754] Merge 8 images                          
+[488/754] Forward-wavelet aligned_074.tif         
+[488/754] Merge 8 images                          
+[489/754] Construct depthmap layer 69             
+[489/754] Load C:\dev\blog\death-of-software\proje
+[490/754] Merge 8 images                          
+[490/754] Load C:\dev\blog\death-of-software\proje
+[491/754] WAVS focus measure for aligned_074.tif  
+[491/754] Load C:\dev\blog\death-of-software\proje
+[492/754] Forward-wavelet aligned_017.tif         
+[492/754] Merge 8 images                          
+[493/754] Grayscale C:\dev\blog\death-of-software\
+[493/754] Merge 8 images                          
+[494/754] Align 078.tif to 077.tif                
+[494/754] Merge 8 images                          
+[495/754] Grayscale aligned_078.tif               
+[495/754] Merge 8 images                          
+[496/754] Align-residual aligned_078.tif          
+[496/754] Merge 8 images                          
+[497/754] Construct depthmap layer 22             
+[497/754] Merge 8 images                          
+[497/754] Merge 8 images                          
+[498/754] WAVS focus measure for aligned_017.tif  
+[499/754] Forward-wavelet aligned_075.tif         
+[499/754] Merge 8 images                          
+[500/754] Load C:\dev\blog\death-of-software\proje
+[500/754] Merge 8 images                          
+[501/754] Construct depthmap layer 70             
+[500/754] Merge 8 images                          
+[502/754] Grayscale C:\dev\blog\death-of-software\
+[502/754] Merge 8 images                          
+[503/754] Align 079.tif to 078.tif                
+[503/754] Merge 8 images                          
+[504/754] Grayscale aligned_079.tif               
+[504/754] Merge 8 images                          
+[505/754] Align-residual aligned_079.tif          
+[505/754] Merge 8 images                          
+[506/754] WAVS focus measure for aligned_075.tif  
+[506/754] Merge 8 images                          
+[507/754] Forward-wavelet aligned_016.tif         
+[507/754] Merge 8 images                          
+[508/754] Load C:\dev\blog\death-of-software\proje
+[508/754] Merge 8 images                          
+[509/754] Grayscale C:\dev\blog\death-of-software\
+[509/754] Merge 8 images                          
+[510/754] Align 013.tif to 014.tif                
+[510/754] Merge 8 images                          
+[511/754] Grayscale aligned_013.tif               
+[511/754] Merge 8 images                          
+[512/754] Align-residual aligned_013.tif          
+[512/754] Merge 8 images                          
+[513/754] Construct depthmap layer 21             
+[513/754] Construct depthmap layer 21             
+[514/754] Load C:\dev\blog\death-of-software\proje
+[514/754] Load C:\dev\blog\death-of-software\proje
+[515/754] WAVS focus measure for aligned_016.tif  
+[515/754] Load C:\dev\blog\death-of-software\proje
+[516/754] Forward-wavelet aligned_076.tif         
+[516/754] Load C:\dev\blog\death-of-software\proje
+[517/754] Construct depthmap layer 71             
+[517/754] Load C:\dev\blog\death-of-software\proje
+[518/754] WAVS focus measure for aligned_076.tif  
+[518/754] Load C:\dev\blog\death-of-software\proje
+[519/754] Forward-wavelet aligned_015.tif         
+[519/754] Load C:\dev\blog\death-of-software\proje
+[520/754] Grayscale C:\dev\blog\death-of-software\
+[520/754] Load C:\dev\blog\death-of-software\proje
+[521/754] Align 080.tif to 079.tif                
+[521/754] Load C:\dev\blog\death-of-software\proje
+[522/754] Grayscale aligned_080.tif               
+[522/754] Load C:\dev\blog\death-of-software\proje
+[523/754] Align-residual aligned_080.tif          
+[523/754] Load C:\dev\blog\death-of-software\proje
+[524/754] Grayscale C:\dev\blog\death-of-software\
+[524/754] Load C:\dev\blog\death-of-software\proje
+[525/754] WAVS focus measure for aligned_015.tif  
+[525/754] Load C:\dev\blog\death-of-software\proje
+[526/754] Forward-wavelet aligned_077.tif         
+[526/754] Merge 8 images                          
+[527/754] Align 012.tif to 013.tif                
+[527/754] Merge 8 images                          
+[528/754] Grayscale aligned_012.tif               
+[528/754] Merge 8 images                          
+[529/754] Construct depthmap layer 20             
+[529/754] Merge 8 images                          
+[530/754] Align-residual aligned_012.tif          
+[530/754] Merge 8 images                          
+[531/754] Grayscale C:\dev\blog\death-of-software\
+[531/754] Merge 8 images                          
+[532/754] Load C:\dev\blog\death-of-software\proje
+[532/754] Merge 8 images                          
+[533/754] Align 011.tif to 012.tif                
+[533/754] Merge 8 images                          
+[534/754] Grayscale aligned_011.tif               
+[534/754] Merge 8 images                          
+[535/754] Align-residual aligned_011.tif          
+[535/754] Merge 8 images                          
+[536/754] WAVS focus measure for aligned_077.tif  
+[536/754] Merge 8 images                          
+[537/754] Forward-wavelet aligned_014.tif         
+[537/754] Forward-wavelet aligned_014.tif         
+[538/754] Load C:\dev\blog\death-of-software\proje
+[538/754] Forward-wavelet aligned_014.tif         
+[539/754] Load C:\dev\blog\death-of-software\proje
+[539/754] Forward-wavelet aligned_014.tif         
+[540/754] Construct depthmap layer 72             
+[540/754] Merge 8 images                          
+[541/754] WAVS focus measure for aligned_014.tif  
+[541/754] Merge 8 images                          
+[542/754] Forward-wavelet aligned_078.tif         
+[542/754] Merge 8 images                          
+[543/754] Construct depthmap layer 19             
+[543/754] Merge 8 images                          
+[544/754] WAVS focus measure for aligned_078.tif  
+[544/754] Merge 8 images                          
+[545/754] Forward-wavelet aligned_013.tif         
+[545/754] Merge 8 images                          
+[546/754] Grayscale C:\dev\blog\death-of-software\
+[546/754] Merge 8 images                          
+[547/754] Align 081.tif to 080.tif                
+[547/754] Merge 8 images                          
+[548/754] Grayscale aligned_081.tif               
+[548/754] Merge 8 images                          
+[549/754] Align-residual aligned_081.tif          
+[549/754] Align-residual aligned_081.tif          
+[550/754] Construct depthmap layer 73             
+[549/754] Align-residual aligned_081.tif          
+[551/754] WAVS focus measure for aligned_013.tif  
+[551/754] Merge 8 images                          
+[551/754] Merge 8 images                          
+[552/754] Forward-wavelet aligned_079.tif         
+[553/754] Load C:\dev\blog\death-of-software\proje
+[553/754] Load C:\dev\blog\death-of-software\proje
+[554/754] Merge 8 images                          
+[554/754] Load C:\dev\blog\death-of-software\proje
+[555/754] Construct depthmap layer 18             
+[555/754] Construct depthmap layer 18             
+[556/754] Grayscale C:\dev\blog\death-of-software\
+[556/754] Construct depthmap layer 18             
+[557/754] WAVS focus measure for aligned_079.tif  
+[557/754] Construct depthmap layer 18             
+[558/754] Forward-wavelet aligned_012.tif         
+[558/754] Forward-wavelet aligned_012.tif         
+[559/754] Align 082.tif to 081.tif                
+[559/754] Forward-wavelet aligned_012.tif         
+[560/754] Grayscale aligned_082.tif               
+[560/754] Forward-wavelet aligned_012.tif         
+[560/754] Forward-wavelet aligned_012.tif         
+[561/754] Grayscale C:\dev\blog\death-of-software\
+[562/754] Align-residual aligned_082.tif          
+[562/754] Forward-wavelet aligned_012.tif         
+[563/754] Align 010.tif to 011.tif                
+[563/754] Forward-wavelet aligned_012.tif         
+[564/754] Grayscale aligned_010.tif               
+[564/754] Forward-wavelet aligned_012.tif         
+[565/754] Align-residual aligned_010.tif          
+[565/754] Forward-wavelet aligned_012.tif         
+[566/754] Construct depthmap layer 74             
+[566/754] Load C:\dev\blog\death-of-software\proje
+[567/754] WAVS focus measure for aligned_012.tif  
+[567/754] Load C:\dev\blog\death-of-software\proje
+[568/754] Forward-wavelet aligned_080.tif         
+[568/754] Load C:\dev\blog\death-of-software\proje
+[569/754] Load C:\dev\blog\death-of-software\proje
+[569/754] Load C:\dev\blog\death-of-software\proje
+[570/754] Load C:\dev\blog\death-of-software\proje
+[570/754] Load C:\dev\blog\death-of-software\proje
+[571/754] Construct depthmap layer 17             
+[571/754] Load C:\dev\blog\death-of-software\proje
+[572/754] WAVS focus measure for aligned_080.tif  
+[572/754] Load C:\dev\blog\death-of-software\proje
+[573/754] Forward-wavelet aligned_011.tif         
+[573/754] Merge 8 images                          
+[574/754] Grayscale C:\dev\blog\death-of-software\
+[574/754] Merge 8 images                          
+[575/754] Align 009.tif to 010.tif                
+[575/754] Merge 8 images                          
+[576/754] Grayscale aligned_009.tif               
+[576/754] Merge 8 images                          
+[577/754] Align-residual aligned_009.tif          
+[577/754] Merge 8 images                          
+[578/754] Construct depthmap layer 75             
+[578/754] Merge 8 images                          
+[579/754] Load C:\dev\blog\death-of-software\proje
+[579/754] Merge 8 images                          
+[580/754] WAVS focus measure for aligned_011.tif  
+[580/754] Merge 8 images                          
+[581/754] Forward-wavelet aligned_081.tif         
+[581/754] Merge 8 images                          
+[582/754] Construct depthmap layer 16             
+[582/754] Construct depthmap layer 16             
+[583/754] WAVS focus measure for aligned_081.tif  
+[583/754] Construct depthmap layer 16             
+[584/754] Forward-wavelet aligned_010.tif         
+[584/754] Merge 8 images                          
+[585/754] Construct depthmap layer 76             
+[585/754] Merge 8 images                          
+[585/754] Merge 8 images                          
+[586/754] Grayscale C:\dev\blog\death-of-software\
+[587/754] Grayscale C:\dev\blog\death-of-software\
+[587/754] Merge 8 images                          
+[588/754] Align 083.tif to 082.tif                
+[587/754] Merge 8 images                          
+[588/754] Merge 8 images                          
+[589/754] Grayscale aligned_083.tif               
+[590/754] Align 008.tif to 009.tif                
+[590/754] Grayscale aligned_083.tif               
+[590/754] Grayscale aligned_083.tif               
+[591/754] Grayscale aligned_008.tif               
+[592/754] Grayscale C:\dev\blog\death-of-software\
+[592/754] Merge 8 images                          
+[593/754] Align-residual aligned_083.tif          
+[593/754] Merge 8 images                          
+[594/754] Align-residual aligned_008.tif          
+[594/754] Merge 8 images                          
+[595/754] Align 084.tif to 083.tif                
+[595/754] Merge 8 images                          
+[596/754] Grayscale aligned_084.tif               
+[596/754] Merge 8 images                          
+[597/754] Align-residual aligned_084.tif          
+[597/754] Merge 8 images                          
+[598/754] Load C:\dev\blog\death-of-software\proje
+[598/754] Load C:\dev\blog\death-of-software\proje
+[599/754] WAVS focus measure for aligned_010.tif  
+[599/754] Load C:\dev\blog\death-of-software\proje
+[600/754] Forward-wavelet aligned_082.tif         
+[600/754] Forward-wavelet aligned_082.tif         
+[601/754] Load C:\dev\blog\death-of-software\proje
+[601/754] Forward-wavelet aligned_082.tif         
+[602/754] Load C:\dev\blog\death-of-software\proje
+[602/754] Forward-wavelet aligned_082.tif         
+[603/754] Construct depthmap layer 15             
+[603/754] Load C:\dev\blog\death-of-software\proje
+[604/754] WAVS focus measure for aligned_082.tif  
+[604/754] Load C:\dev\blog\death-of-software\proje
+[605/754] Forward-wavelet aligned_009.tif         
+[605/754] Load C:\dev\blog\death-of-software\proje
+[606/754] Construct depthmap layer 77             
+[606/754] Load C:\dev\blog\death-of-software\proje
+[607/754] WAVS focus measure for aligned_009.tif  
+[607/754] Load C:\dev\blog\death-of-software\proje
+[608/754] Forward-wavelet aligned_083.tif         
+[608/754] Merge 8 images                          
+[609/754] Grayscale C:\dev\blog\death-of-software\
+[609/754] Merge 8 images                          
+[610/754] Align 007.tif to 008.tif                
+[610/754] Merge 8 images                          
+[611/754] Grayscale aligned_007.tif               
+[611/754] Merge 8 images                          
+[612/754] Align-residual aligned_007.tif          
+[612/754] Merge 8 images                          
+[613/754] Construct depthmap layer 14             
+[613/754] Merge 8 images                          
+[614/754] WAVS focus measure for aligned_083.tif  
+[614/754] Merge 8 images                          
+[615/754] Forward-wavelet aligned_008.tif         
+[615/754] Merge 8 images                          
+[616/754] Grayscale C:\dev\blog\death-of-software\
+[616/754] Merge 8 images                          
+[617/754] Align 006.tif to 007.tif                
+[617/754] Merge 8 images                          
+[618/754] Grayscale aligned_006.tif               
+[618/754] Merge 8 images                          
+[619/754] Align-residual aligned_006.tif          
+[619/754] Merge 8 images                          
+[620/754] Load C:\dev\blog\death-of-software\proje
+[620/754] Merge 8 images                          
+[621/754] Load C:\dev\blog\death-of-software\proje
+[621/754] Merge 8 images                          
+[621/754] Merge 8 images                          
+[622/754] Construct depthmap layer 78             
+[623/754] WAVS focus measure for aligned_008.tif  
+[623/754] Merge 8 images                          
+[624/754] Forward-wavelet aligned_084.tif         
+[624/754] Forward-wavelet aligned_084.tif         
+[625/754] Grayscale C:\dev\blog\death-of-software\
+[625/754] Forward-wavelet aligned_084.tif         
+[626/754] Align 085.tif to 084.tif                
+[626/754] Forward-wavelet aligned_084.tif         
+[627/754] Grayscale aligned_085.tif               
+[627/754] Forward-wavelet aligned_084.tif         
+[628/754] Align-residual aligned_085.tif          
+[628/754] Forward-wavelet aligned_084.tif         
+[629/754] Merge 8 images                          
+[629/754] Forward-wavelet aligned_084.tif         
+[630/754] Load C:\dev\blog\death-of-software\proje
+[630/754] Load C:\dev\blog\death-of-software\proje
+[631/754] WAVS focus measure for aligned_084.tif  
+[631/754] WAVS focus measure for aligned_084.tif  
+[632/754] Construct depthmap layer 13             
+[632/754] Load C:\dev\blog\death-of-software\proje
+[633/754] Forward-wavelet aligned_007.tif         
+[633/754] Load C:\dev\blog\death-of-software\proje
+[634/754] WAVS focus measure for aligned_007.tif  
+[634/754] Load C:\dev\blog\death-of-software\proje
+[635/754] Construct depthmap layer 79             
+[635/754] Load C:\dev\blog\death-of-software\proje
+[636/754] Forward-wavelet aligned_085.tif         
+[636/754] Load C:\dev\blog\death-of-software\proje
+[637/754] Grayscale C:\dev\blog\death-of-software\
+[637/754] Load C:\dev\blog\death-of-software\proje
+[638/754] Align 086.tif to 085.tif                
+[638/754] Load C:\dev\blog\death-of-software\proje
+[639/754] Grayscale aligned_086.tif               
+[639/754] Load C:\dev\blog\death-of-software\proje
+[640/754] Align-residual aligned_086.tif          
+[640/754] Load C:\dev\blog\death-of-software\proje
+[641/754] WAVS focus measure for aligned_085.tif  
+[641/754] WAVS focus measure for aligned_085.tif  
+[642/754] Construct depthmap layer 12             
+[642/754] WAVS focus measure for aligned_085.tif  
+[643/754] Forward-wavelet aligned_006.tif         
+[643/754] WAVS focus measure for aligned_085.tif  
+[644/754] Grayscale C:\dev\blog\death-of-software\
+[644/754] Load C:\dev\blog\death-of-software\proje
+[645/754] Load C:\dev\blog\death-of-software\proje
+[645/754] Load C:\dev\blog\death-of-software\proje
+[646/754] Grayscale C:\dev\blog\death-of-software\
+[646/754] Load C:\dev\blog\death-of-software\proje
+[647/754] Align 087.tif to 086.tif                
+[647/754] Load C:\dev\blog\death-of-software\proje
+[648/754] Grayscale aligned_087.tif               
+[648/754] Load C:\dev\blog\death-of-software\proje
+[649/754] Align 005.tif to 006.tif                
+[649/754] Load C:\dev\blog\death-of-software\proje
+[650/754] Grayscale aligned_005.tif               
+[650/754] Load C:\dev\blog\death-of-software\proje
+[651/754] Align-residual aligned_087.tif          
+[651/754] Load C:\dev\blog\death-of-software\proje
+[652/754] Align-residual aligned_005.tif          
+[652/754] Load C:\dev\blog\death-of-software\proje
+[653/754] WAVS focus measure for aligned_006.tif  
+[653/754] WAVS focus measure for aligned_006.tif  
+[654/754] Construct depthmap layer 80             
+[654/754] Load C:\dev\blog\death-of-software\proje
+[655/754] Forward-wavelet aligned_086.tif         
+[655/754] Load C:\dev\blog\death-of-software\proje
+[656/754] Load C:\dev\blog\death-of-software\proje
+[656/754] Load C:\dev\blog\death-of-software\proje
+[657/754] Load C:\dev\blog\death-of-software\proje
+[657/754] Load C:\dev\blog\death-of-software\proje
+[658/754] WAVS focus measure for aligned_086.tif  
+[658/754] Load C:\dev\blog\death-of-software\proje
+[659/754] Construct depthmap layer 11             
+[659/754] Construct depthmap layer 11             
+[660/754] Forward-wavelet aligned_005.tif         
+[660/754] Construct depthmap layer 11             
+[661/754] WAVS focus measure for aligned_005.tif  
+[661/754] Construct depthmap layer 11             
+[662/754] Forward-wavelet aligned_087.tif         
+[662/754] Load C:\dev\blog\death-of-software\proje
+[663/754] Construct depthmap layer 81             
+[663/754] Load C:\dev\blog\death-of-software\proje
+[664/754] WAVS focus measure for aligned_087.tif  
+[664/754] Load C:\dev\blog\death-of-software\proje
+[665/754] Grayscale C:\dev\blog\death-of-software\
+[665/754] Load C:\dev\blog\death-of-software\proje
+[666/754] Load C:\dev\blog\death-of-software\proje
+[666/754] Load C:\dev\blog\death-of-software\proje
+[667/754] Load C:\dev\blog\death-of-software\proje
+[667/754] Load C:\dev\blog\death-of-software\proje
+[668/754] Grayscale C:\dev\blog\death-of-software\
+[668/754] Load C:\dev\blog\death-of-software\proje
+[669/754] Align 004.tif to 005.tif                
+[669/754] Load C:\dev\blog\death-of-software\proje
+[670/754] Grayscale aligned_004.tif               
+[670/754] Load C:\dev\blog\death-of-software\proje
+[671/754] Forward-wavelet aligned_004.tif         
+[671/754] Load C:\dev\blog\death-of-software\proje
+[672/754] Align-residual aligned_004.tif          
+[672/754] Load C:\dev\blog\death-of-software\proje
+[673/754] Construct depthmap layer 10             
+[673/754] Load C:\dev\blog\death-of-software\proje
+[674/754] Grayscale C:\dev\blog\death-of-software\
+[674/754] Load C:\dev\blog\death-of-software\proje
+[675/754] Align 088.tif to 087.tif                
+[675/754] Load C:\dev\blog\death-of-software\proje
+[676/754] Grayscale aligned_088.tif               
+[676/754] Load C:\dev\blog\death-of-software\proje
+[677/754] Align-residual aligned_088.tif          
+[677/754] Load C:\dev\blog\death-of-software\proje
+[678/754] WAVS focus measure for aligned_004.tif  
+[678/754] Load C:\dev\blog\death-of-software\proje
+[678/754] Load C:\dev\blog\death-of-software\proje
+[679/754] Align 003.tif to 004.tif                
+[680/754] Forward-wavelet aligned_088.tif         
+[680/754] Load C:\dev\blog\death-of-software\proje
+[681/754] Grayscale aligned_003.tif               
+[681/754] Load C:\dev\blog\death-of-software\proje
+[682/754] Align-residual aligned_003.tif          
+[682/754] Load C:\dev\blog\death-of-software\proje
+[683/754] Construct depthmap layer 82             
+[683/754] Load C:\dev\blog\death-of-software\proje
+[684/754] WAVS focus measure for aligned_088.tif  
+[684/754] Load C:\dev\blog\death-of-software\proje
+[685/754] Forward-wavelet aligned_003.tif         
+[685/754] Load C:\dev\blog\death-of-software\proje
+[686/754] Load C:\dev\blog\death-of-software\proje
+[686/754] Load C:\dev\blog\death-of-software\proje
+[687/754] Construct depthmap layer 9              
+[687/754] Load C:\dev\blog\death-of-software\proje
+[688/754] WAVS focus measure for aligned_003.tif  
+[688/754] Load C:\dev\blog\death-of-software\proje
+[689/754] Load C:\dev\blog\death-of-software\proje
+[689/754] Load C:\dev\blog\death-of-software\proje
+[690/754] Construct depthmap layer 83             
+[690/754] Load C:\dev\blog\death-of-software\proje
+[691/754] Grayscale C:\dev\blog\death-of-software\
+[691/754] Load C:\dev\blog\death-of-software\proje
+[692/754] Grayscale C:\dev\blog\death-of-software\
+[692/754] Load C:\dev\blog\death-of-software\proje
+[693/754] Align 089.tif to 088.tif                
+[693/754] Load C:\dev\blog\death-of-software\proje
+[693/754] Load C:\dev\blog\death-of-software\proje
+[694/754] Grayscale aligned_089.tif               
+[695/754] Align 002.tif to 003.tif                
+[695/754] Load C:\dev\blog\death-of-software\proje
+[696/754] Grayscale aligned_002.tif               
+[696/754] Load C:\dev\blog\death-of-software\proje
+[697/754] Forward-wavelet aligned_089.tif         
+[697/754] Load C:\dev\blog\death-of-software\proje
+[698/754] Align-residual aligned_089.tif          
+[698/754] Load C:\dev\blog\death-of-software\proje
+[699/754] Merge 8 images                          
+[699/754] Load C:\dev\blog\death-of-software\proje
+[700/754] Align-residual aligned_002.tif          
+[700/754] Load C:\dev\blog\death-of-software\proje
+[701/754] Construct depthmap layer 8              
+[701/754] Load C:\dev\blog\death-of-software\proje
+[702/754] WAVS focus measure for aligned_089.tif  
+[702/754] Load C:\dev\blog\death-of-software\proje
+[703/754] Forward-wavelet aligned_002.tif         
+[703/754] Forward-wavelet aligned_002.tif         
+[704/754] Load C:\dev\blog\death-of-software\proje
+[704/754] Forward-wavelet aligned_002.tif         
+[705/754] Construct depthmap layer 84             
+[705/754] Load C:\dev\blog\death-of-software\proje
+[706/754] WAVS focus measure for aligned_002.tif  
+[706/754] Load C:\dev\blog\death-of-software\proje
+[707/754] Load C:\dev\blog\death-of-software\proje
+[707/754] Load C:\dev\blog\death-of-software\proje
+[708/754] Construct depthmap layer 7              
+[708/754] Load C:\dev\blog\death-of-software\proje
+[708/754] Load C:\dev\blog\death-of-software\proje
+[709/754] Grayscale C:\dev\blog\death-of-software\
+[710/754] Grayscale C:\dev\blog\death-of-software\
+[710/754] Load C:\dev\blog\death-of-software\proje
+[711/754] Align 001.tif to 002.tif                
+[711/754] Load C:\dev\blog\death-of-software\proje
+[711/754] Load C:\dev\blog\death-of-software\proje
+[712/754] Align 090.tif to 089.tif                
+[713/754] Grayscale aligned_001.tif               
+[713/754] Grayscale aligned_001.tif               
+[714/754] Grayscale aligned_090.tif               
+[714/754] Load C:\dev\blog\death-of-software\proje
+[715/754] Forward-wavelet aligned_001.tif         
+[715/754] Load C:\dev\blog\death-of-software\proje
+[716/754] Align-residual aligned_090.tif          
+[716/754] Load C:\dev\blog\death-of-software\proje
+[717/754] Align-residual aligned_001.tif          
+[717/754] Load C:\dev\blog\death-of-software\proje
+[718/754] Grayscale C:\dev\blog\death-of-software\
+[718/754] Load C:\dev\blog\death-of-software\proje
+[719/754] Align 091.tif to 090.tif                
+[719/754] Load C:\dev\blog\death-of-software\proje
+[720/754] Grayscale aligned_091.tif               
+[720/754] Load C:\dev\blog\death-of-software\proje
+[721/754] Align-residual aligned_091.tif          
+[721/754] Load C:\dev\blog\death-of-software\proje
+[722/754] Construct depthmap layer 85             
+[722/754] Load C:\dev\blog\death-of-software\proje
+[723/754] Forward-wavelet aligned_090.tif         
+[723/754] Load C:\dev\blog\death-of-software\proje
+[724/754] WAVS focus measure for aligned_001.tif  
+[724/754] Load C:\dev\blog\death-of-software\proje
+[724/754] Load C:\dev\blog\death-of-software\proje
+[724/754] Merge 8 images                          
+[725/754] Grayscale C:\dev\blog\death-of-software\
+[725/754] Merge 8 images                          
+[726/754] WAVS focus measure for aligned_090.tif  
+[727/754] Forward-wavelet aligned_091.tif         
+[727/754] Merge 8 images                          
+[728/754] Align 000.tif to 001.tif                
+[728/754] Merge 8 images                          
+[729/754] Grayscale aligned_000.tif               
+[729/754] Merge 8 images                          
+[730/754] Align-residual aligned_000.tif          
+[731/754] Cross-bracket defective-pixel map       
+[731/754] Align-residual aligned_000.tif          
+[731/754] Merge 8 images                          
+[731/754] Merge 8 images                          
+[732/754] Construct depthmap layer 6              
+[732/754] Merge 8 images                          
+[732/754] Merge 8 images                          
+[733/754] WAVS focus measure for aligned_091.tif  
+[734/754] Forward-wavelet aligned_000.tif         
+[734/754] Merge 8 images                          
+[734/754] Merge 8 images                          
+[735/754] Construct depthmap layer 86             
+[735/754] Merge 8 images                          
+[736/754] WAVS focus measure for aligned_000.tif  
+[736/754] Merge 8 images                          
+[736/754] Merge 8 images                          
+[737/754] Construct depthmap layer 5              
+[737/754] Merge 8 images                          
+[738/754] Construct depthmap layer 87             
+[738/754] Merge 8 images                          
+[739/754] Construct depthmap layer 4              
+[739/754] Merge 8 images                          
+[740/754] Construct depthmap layer 88             
+[740/754] Merge 8 images                          
+[741/754] Construct depthmap layer 3              
+[741/754] Merge 8 images                          
+[742/754] Construct depthmap layer 89             
+[742/754] Construct depthmap layer 89             
+[743/754] Merge 8 images                          
+[743/754] Merge 8 images                          
+[744/754] Construct depthmap layer 2              
+[744/754] Merge 8 images                          
+[745/754] Construct depthmap layer 90             
+[745/754] Merge 8 images                          
+[746/754] Construct depthmap layer 1              
+[746/754] Merge 8 images                          
+[747/754] Construct depthmap layer 91             
+[747/754] Merge 8 images                          
+[748/754] Construct depthmap layer 0              
+[748/754] Merge 8 images                          
+[749/754] Construct depthmap layer -1             
+[749/754] Construct depthmap layer -1             
+[750/754] Merge 4 images                          
+[750/754] Merge 4 images                          
+[751/754] Denoise merge_result.jpg                
+[752/754] Inverse-wavelet denoised_merge_result.jp
+[753/754] Compose color (winner-copy)             
+[754/754] Save C:\dev\blog\death-of-software\proje
+Saved Linear Rec.2020 (D65, gamma 1.0) TIFF: C:\dev\blog\death-of-software\projects\strehl\experiments\M8-COMPARATIVE-CONTROLLED\diagnostics\V92-S\direct-output.tif
+  Tip: embed the colour profile so Lightroom auto-detects it:
+       python scripts\embed_icc.py "C:\dev\blog\death-of-software\projects\strehl\experiments\M8-COMPARATIVE-CONTROLLED\diagnostics\V92-S\direct-output.tif"
+  Note: Lightroom treats this as HDR/linear and only offers "Color" /
+        "Monochrome" profiles. For full Adobe profile selection use
+        --output-colorspace=rec2020 (16-bit gamma-encoded wide gamut).
+
+Saved to C:\dev\blog\death-of-software\projects\strehl\experiments\M8-COMPARATIVE-CONTROLLED\diagnostics\V92-S\direct-output.tif

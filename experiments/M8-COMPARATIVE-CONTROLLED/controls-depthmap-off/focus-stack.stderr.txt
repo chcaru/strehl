@@ -1,0 +1,3 @@
+--noise-model=auto: loaded C:/dev/macro/presets/noise_profile.json (source=preset:iso_50, iso_hint=50)
+[ WARN:5@48.261] global matrix_expressions.cpp:1334 cv::MatOp_AddEx::assign OpenCV/MatExpr: processing of multi-channel arrays might be changed in the future: https://github.com/opencv/opencv/issues/16739
+[ WARN:5@48.579] global loadsave.cpp:1140 cv::imwrite_ An unsupported key(1) was specified and has been ignored.

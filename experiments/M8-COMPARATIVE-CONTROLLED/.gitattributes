@@ -1,0 +1,5 @@
+# Process logs contain renderer padding and exact terminal newlines; retain bytes.
+controls*/focus-stack.stdout.txt binary
+controls*/focus-stack.stderr.txt binary
+diagnostics/*/stdout.txt binary
+diagnostics/*/stderr.txt binary

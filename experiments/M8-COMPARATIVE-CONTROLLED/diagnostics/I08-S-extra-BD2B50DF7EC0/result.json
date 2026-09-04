@@ -1,0 +1,78 @@
+{
+  "arm": "I08-S",
+  "command": [
+    "C:\\dev\\macro\\focus-stack\\dist\\focus-stack.exe",
+    "--no-align",
+    "--no-transform",
+    "--no-whitebalance",
+    "--no-contrast",
+    "--nocrop",
+    "--input-colorspace=linear-rec2020",
+    "--internal-colorspace=linear",
+    "--output-colorspace=linear-rec2020",
+    "--output-bitdepth=16",
+    "--hdr-preserve=off",
+    "--threads=6",
+    "--depthmap-chain=off",
+    "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\direct-output.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\input\\000.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\input\\001.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\input\\002.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\input\\003.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\input\\004.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\input\\005.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\input\\006.tif",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\input\\007.tif"
+  ],
+  "comparator_sha256": "0ABA0CF0936AF8B1CACE2681CA43D49729D253E8ED1F786F2A8960B7974CA45D",
+  "count": 8,
+  "diagnostic_only": true,
+  "dimensions": [
+    192,
+    256,
+    3
+  ],
+  "extra_options": [
+    "--depthmap-chain=off"
+  ],
+  "host_gate": {
+    "class": "small",
+    "cpu_limit_percent": 50.0,
+    "cpu_samples_percent": [
+      25.55223403849025,
+      35.19179720314276,
+      32.58231961585108,
+      31.280711550970242,
+      22.749422012456698
+    ],
+    "free_memory_gib": 34.309814453125,
+    "mean_cpu_percent": 29.471296884182202,
+    "measured_at": "2026-09-04T05:10:05.0256495Z",
+    "minimum_free_memory_gib": 8.0,
+    "pass": true,
+    "samples_seconds": 5,
+    "total_memory_gib": 61.5550422668457
+  },
+  "last_stdout_lines": [
+    "[ 50/ 53] Denoise merge_result.jpg                ",
+    "[ 51/ 53] Inverse-wavelet denoised_merge_result.jp",
+    "[ 52/ 53] Compose color (winner-copy)             ",
+    "[ 53/ 53] Save C:\\dev\\blog\\death-of-software\\proje",
+    "Saved Linear Rec.2020 (D65, gamma 1.0) TIFF: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\direct-output.tif",
+    "  Tip: embed the colour profile so Lightroom auto-detects it:",
+    "       python scripts\\embed_icc.py \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-COMPARATIVE-CONTROLLED\\diagnostics\\I08-S-extra-BD2B50DF7EC0\\direct-output.tif\"",
+    "  Note: Lightroom treats this as HDR/linear and only offers \"Color\" /",
+    "        \"Monochrome\" profiles. For full Adobe profile selection use",
+    "        --output-colorspace=rec2020 (16-bit gamma-encoded wide gamut)."
+  ],
+  "output_exists": true,
+  "output_sha256": "B8F04A4C26E5A26A65199377CA019D1F2A9DCD73CAE310F095F15C5838AAD09E",
+  "pixel_sha256": [
+    "3CD506AF968E8F10003F710AD8CD6582C5D2C8CCB13E852A0F3CFC8CE09AAA8F"
+  ],
+  "returncode": 0,
+  "stderr": "--noise-model=auto: loaded C:/dev/macro/presets/noise_profile.json (source=preset:iso_50, iso_hint=50)\n[ WARN:3@0.179] global matrix_expressions.cpp:1334 cv::MatOp_AddEx::assign OpenCV/MatExpr: processing of multi-channel arrays might be changed in the future: https://github.com/opencv/opencv/issues/16739\n[ WARN:3@0.180] global loadsave.cpp:1140 cv::imwrite_ An unsupported key(1) was specified and has been ignored.\n",
+  "stderr_sha256": "EA39F9E22B892B14312FE35F50A07A3DBE70119A480808CE2DCABA10A430344D",
+  "stdout_sha256": "5A2D323F5A7C4C66456A1FE40DECB91E23C1D1B5730C51BB57994873C83FE8CC",
+  "variant_offsets": false
+}

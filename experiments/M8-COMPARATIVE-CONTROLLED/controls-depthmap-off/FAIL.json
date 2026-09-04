@@ -1,0 +1,28 @@
+{
+  "arm": "focus-stack-depthmap-chain-off",
+  "error": "RuntimeError: geometry/domain GREEN failed: shape (2560, 3584, 3), expected (2262, 3392, 3)",
+  "host_gate": {
+    "class": "full",
+    "cpu_limit_percent": 35.0,
+    "cpu_samples_percent": [
+      26.067447925153065,
+      25.70233372747486,
+      21.362564378629912,
+      34.804486640131294,
+      19.895185980307073
+    ],
+    "free_memory_gib": 34.90962600708008,
+    "mean_cpu_percent": 25.566403730339243,
+    "measured_at": "2026-09-04T05:13:13.6138637Z",
+    "minimum_free_memory_gib": 24.0,
+    "pass": true,
+    "samples_seconds": 5,
+    "total_memory_gib": 61.5550422668457
+  },
+  "noise_preset": {
+    "path": "C:\\dev\\macro\\presets\\noise_profile.json",
+    "sha256": "860A57DB745776E0C50E3FC190320142FDE2D79AF0F85848A659719C7D2AAC1E"
+  },
+  "only_invocation_delta": "--depthmap-chain=off",
+  "status": "FAIL"
+}
