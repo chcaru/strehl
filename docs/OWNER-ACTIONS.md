@@ -60,19 +60,36 @@ priority lane.
 > read *your* plan rather than the scorecard derived from it, and
 > `2026-08-sota-path.md` **already specifies a detail instrument** — `D8`,
 > split-stack self-calibration, which it calls *"the best-commissioned
-> instrument in the corpus"* and reports as validated with planted blur
-> recovered at `0.9938–0.9974` and gain-invariance of `0.54%` against filters
-> that moved naive metrics `8.25×`. It works by splitting one stack into two
-> disjoint halves and measuring where they agree, **so it needs no new
-> photography and is not blocked on you either.**
+> instrument in the corpus"*.
 >
-> I am not calling this solved. There is real counter-evidence in our own
-> research notes that a metric of that family may be structurally blind to blur,
-> and both claims cannot be right. Two lanes are resolving it now — one on the
-> technical question, one on whether the scorecard silently dropped your plan's
-> answer. **If `D8` stands, the critical path is an integration job rather than a
-> research programme**, and the picture above is considerably too bleak. You will
-> get a straight answer either way.
+> **Retracted within the hour — it is not good news, and I was wrong.** I found
+> `D8`'s own registered gate, `docs/research/M-PHASE0-SPLIT.md`, and its verdict
+> is **KILL**. The M115 numbers reproduce exactly, but *"their controls do not
+> transfer"*. Worse, the very figure I was about to reassure you with — the
+> `0.54%` invariance — turns out to be the metric being **structurally unable to
+> see** the filter rather than resisting it. The published resolution crossing
+> was withdrawn (`9/12` values were a fallback returned when there was **no**
+> crossing, and a *flat* patch scored the same). And an adversary that simply
+> averages two renders scores **perfect** on it while throwing away `29.6%` of
+> real detail.
+>
+> **So the scorecard was right and I was wrong.** `(a)` is a genuine research
+> problem, exactly as stated above. I read the plan's prose without first
+> checking whether its own gate had already fired, and I should have.
+>
+> **The one piece of real news is better than the false one, and it concerns
+> you.** The kill names its own repair: *"the repair is a second independent
+> capture, not another FRC threshold."* Two halves of **one** stack share sensor
+> fixed-pattern structure, which is what defeated it. **Two independent brackets
+> of the same scene do not.** Your registered session already shoots exactly
+> that — two independent sw4 passes and two independent sw10 passes at matched
+> geometry, IBIS off.
+>
+> **That makes Ask 2 more important, not less.** It is no longer just "inputs for
+> a future instrument"; it is the specific repair for the specific confound that
+> killed the last one. Whether the repaired form is admissible is still open and
+> is being ruled on now — a second capture does not by itself defeat every
+> failure that killed D8, and I will not tell you it does.
 
 ---
 

@@ -3776,6 +3776,93 @@ Recorded now, unresolved on purpose. If D8 stands, the critical path is an
 integration task and not a research programme, and that is a materially
 different program than the one described three sections above.
 
+**CORRECTION, same night, and the optimism above was wrong.** I found the
+ruling within the hour, by auditing the plan's own §9 sequencing rather than its
+prose. **`docs/research/M-PHASE0-SPLIT.md` is D8's registered phase-0 go/no-go
+and its verdict is `KILL`:**
+
+> the exact historical M115 numbers reproduce, but their controls do not
+> transfer to the common-mode and data-dependent-tuning failures on which D8
+> depends.
+
+So **the scorecard was right and I was wrong.** `NO ADMISSIBLE BAR — WITHDRAWN`
+is correct and consistent with the corpus. D8 was wired in, preregistered,
+tested and killed. It was not silently omitted, and my governance concern is
+retracted. The lesson is the one this program keeps re-teaching: I read the
+plan's *prose*, which still advertises D8 as *"the best-commissioned instrument
+in the corpus"*, without first checking whether its own gate had already fired.
+
+The kill evidence is strong and it matters for whatever replaces it:
+
+- **The two celebrated M115 checks are not independent evidence.** *"A common
+  linear transfer function cancels algebraically from ideal FRC, and
+  `(P(A)+P(B))/2 = P_sig + P_noise` is an identity. They cannot catch a wrong
+  generator and checker that share an error."* So the `0.54%` gain-invariance
+  figure I quoted approvingly two paragraphs ago is **not** evidence of
+  sharpening resistance — it is the metric being structurally unable to see the
+  filter. That is the blindness result arriving by a second, algebraic route,
+  and it independently corroborates `M-FRC-VIABILITY`.
+- **The published FRC crossing was withdrawn.** The `0.4961` value was the final
+  ring returned *on no crossing*; **9/12** values were that fallback; a `4×4×2`
+  sweep repaired **0/32** settings; and **a flat ROI reached the same
+  endpoint** — a metric reporting detail where there is none.
+- **The adversarial demonstration.** `(A+B)/2` scores **perfect coherence and
+  zero half-difference while losing `29.6%` of delivered band power.** Averaging
+  destroys detail and the instrument calls it perfect.
+- Separately rendered halves also confound selection with registration:
+  `8.885 px` median half-field shift, with the planted residual sufficient for
+  `87.3%` of observed incoherence.
+
+**But the kill names its own repair, and it points straight at the owner:**
+
+> the repair is a second independent capture, not another FRC threshold.
+
+Two halves of *one* capture share fixed-pattern structure, so common sensor
+content is indistinguishable from scene signal. **Two independent brackets of
+the same scene do not share it.** The plan already names this as *"the gold
+form with fully independent realisations"* (`2026-08-sota-path.md:1732-1733`),
+and the scorecard's M1 input list is already built for precisely it: two
+independent sw4 passes and two independent sw10 passes at identical geometry
+and exposure, IBIS off (`scorecard:544-551`).
+
+**And the plan did not merely mention the repeated bracket — it predicted this
+exact failure and named this exact escape.** At `:2152-2156`, describing D8's
+own risk:
+
+> the fixed-pattern common mode (P13) and quantisation correlation (P18) are the
+> known leaks, both priced, and the repeated-bracket gold form is the escape.
+
+`P13` is precisely what M-PHASE0-SPLIT measured and killed on. So the owner's
+plan **already carried the correct diagnosis and the correct remedy**; what it
+lacked was the measurement proving the leak was fatal rather than merely
+priced. That is a point in the plan's favour and against my reading of it: I
+treated the KILL as evidence the plan had gone stale, when in fact the plan had
+pre-registered the failure mode and the response. The plan's defect is narrower
+than I implied — it is **bookkeeping**, that §9 still schedules D8 as though the
+gate had not fired, not misdiagnosis.
+
+**So my claim that this needs no new photography is retracted, and §2.9.31
+stands after all.** The capture session is on the critical path, and for a
+sharper reason than I gave: it is not merely M1's input, it is the *specific
+repair* for the confound that killed the previous attempt.
+
+**What remains genuinely open** is whether the repaired form is admissible at
+all. A second capture removes common-mode fixed pattern, but it does **not** by
+itself defeat the algebraic cancellation of a common linear transfer function,
+nor the `(A+B)/2` adversary, which attacks the estimator rather than the
+substrate — and it may *worsen* the selection-versus-registration confound,
+since two brackets must be registered to each other. M135 is re-briefed with all
+of it and is asked to rule per failure, with standing that "no member of this
+family can serve as M1" is a complete answer.
+
+**M133's charge is enlarged as a result.** The plan has *not* been amended to
+record that its own phase-0 gate killed one of its named instruments: §9 still
+schedules "D8 self-tuning" into Phase 2, and D2 at `:1569` still cites D8's
+per-tile FRC as a live input. If that pattern repeats elsewhere — a phase-0
+gate that fired KILL while the plan still assumes the item is alive — then the
+plan overstates what is buildable, and I need the full list before dispatching
+anything against it.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
