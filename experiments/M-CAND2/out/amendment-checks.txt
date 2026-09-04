@@ -1,0 +1,22 @@
+Scientific freeze:
+  3f0f7ac2b6725af5db9251dda84d01e30386c130
+  Frozen path verification: GREEN (13/13 paths)
+
+Pre-freeze:
+  Python compile: GREEN
+  V2 self-test: GREEN
+  Pinned display preflight checker: GREEN
+  Challenge transforms evaluated during preflight: none
+  Independent verifier defects resolved before freeze
+
+Mandatory arms:
+  amendment-unclipped-usm.json: GREEN
+  amendment-clipped-usm.json: GREEN record; INVALID_UNPOTENT; no scoring
+  amendment-gamma3.json: GREEN record; DEAD
+  amendment-logistic.json: GREEN record; DEAD
+
+Final gate:
+  Candidate status: DEAD
+  Downstream eligible: false
+  Downstream arms run: none
+  Full attempt checker: GREEN

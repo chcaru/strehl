@@ -1,45 +1,45 @@
 # M-CAND2 — full-covariance Hotelling information
 
-**BLOCKER: the clipped-USM kill arm was potency-invalid.** I stopped rather than
-turning a nonlinear no-op into a sharpening-safety claim.
+**VERDICT: CANDIDATE 2 IS DEAD.**
 
-## Freeze
+Scientific amendment freeze
+`3f0f7ac2b6725af5db9251dda84d01e30386c130` preceded every new arm. It
+preserved 480 independent macro-tile sites, all four CFA channels, `p=256`,
+`n_K=384/fold`, the original sealed task, full unregularized covariance,
+Cholesky solves, 10,000 block-then-site bootstrap draws, and USM r1.0/a0.5
+(`experiments/M-CAND2/PREREGISTRATION-V2.md:13-25,77-95`). The only fixture
+change was the preregistered global display map whose black/white points were
+the original baseline-only extrema; its pinned-task preflight retained
+`d'^2=6.012288529` and maximum condition number `1.92547e5`
+(`PREREGISTRATION-V2.md:27-49`).
 
-Scientific freeze `c1e7840d3e509d69ce7496b6459d277989cde8db` preceded every
-arm. It fixed 480 disjoint macro-tile sites, four complete CFA channels over
-`8x8` pixels (`p=256`), 384 independent covariance sites/fold (`n/p=1.5`), four
-sealed tasks, separate derivative/covariance/test streams, unregularized full
-covariance, Cholesky-only solves, and 10,000 block-then-site bootstrap draws
-(`experiments/M-CAND2/PREREGISTRATION.md:9-42,67-76`). Baseline-only tuning froze
-amplitude `0.0045`; `d'^2=5.920683`, accuracy `0.895573`, and maximum condition
-number `2.17187e5` (`PREREGISTRATION.md:44-50`).
+Mapped unclipped USM again proved implementation congruence:
+`R=1.0000000000000009`, CI
+`[0.9999999999996845,1.0000000000003315]`; maximum covariance residual was
+`1.25e-15`, score residual `1.93e-11`
+(`experiments/M-CAND2/out/amendment-unclipped-usm.json:3-11,221-225`).
 
-## Ordered results
+Clipped USM remained **UNCOMMISSIONED**, not green. Only `114/2,088,960`
+coordinates changed (`0.00546%`) against the frozen `0.1%` gate; only 22 hit
+the upper rail (`0.00105%`) against `0.05%`. Upper-rail coverage was 0
+covariance, 12 derivative, and 5 test sites, below 64/role, so scoring never ran
+(`experiments/M-CAND2/out/amendment-clipped-usm.json:2293-2346,2396`).
 
-**Unclipped USM r1/a0.5 correctness check:** baseline `d'^2=6.012288556102`,
-USM `6.012288556102`; `R=1.0000000000000266`, two-sided CI
-`[0.9999999999996833,1.0000000000004767]`
-(`experiments/M-CAND2/out/unclipped-usm.json:214-231`). Maximum covariance
-congruence residual was `1.25e-15`, held-score residual `1.64e-11`, and the
-operator minimum eigenvalue `1.0` (`unclipped-usm.json:2-12`). The implementation
-check passed; this is algebraic correctness, not empirical sharpening evidence.
+Both independent tone arms were potent and decisive. Gamma-3 changed
+`99.99995%` of values, materially transformed all 480 sites/role, introduced
+no ties, and moved `d'^2` from `6.012289` to `3.023536`:
+`R=0.502893`, CI `[0.443972,0.557901]`
+(`experiments/M-CAND2/out/amendment-gamma3.json:200-215,2503-2520,2531-2561`).
+Logistic changed `100%`, materially transformed all 480 sites/role with no
+ties, and moved `d'^2` to `2.926425`: `R=0.486741`, CI
+`[0.414213,0.565049]`
+(`experiments/M-CAND2/out/amendment-logistic.json:200-215,2503-2520,2531-2561`).
+Both intervals miss the frozen `[0.99,1.01]` equivalence region by orders of
+magnitude. A free monotone tone curve nearly halves this estimator.
 
-**Clipped USM:** the recorded `R=1.0000000000000266` is **INVALID**, not GREEN.
-No value hit either `[0,1]` rail (`clipped-usm.json:2545-2550`), so clipping
-changed exactly `0/2,088,960` scalars and the arm remained the same invertible
-linear USM. Freeze `c1e7840d` mistakenly tested baseline-to-USM potency rather
-than unclipped-to-clipped potency; the corrected assessment preserves both raw
-outputs and records zero nonlinear change
-(`experiments/M-CAND2/out/clipped-usm-invalidity.json:2-16`).
-
-I did not change the range or rerun after seeing the no-op. The frozen order
-therefore barred gamma, logistic, clipping/quantization, optical degradation,
-improvement, and null (`PREREGISTRATION.md:53-73`).
-
-Congruence invariance covers only full-rank linear transforms. It stops at actual
-clipping/tone nonlinearity, rank loss, regularization, projection, covariance-model
-failure, and the local-linear boundary (`PREREGISTRATION.md:78-88`).
-
-## Verdict
-
-**CANDIDATE 2 DOES NOT LIVE: it is uncommissioned, not empirically killed.**
+The literal gate therefore recorded `DEAD` and ran no saturation, quantization,
+optical, or null arm
+(`experiments/M-CAND2/out/amendment-downstream-gate.json:2-5,22-39`).
+Congruence protects only invertible linear transforms; it stops at nonlinear
+tone, clipping, quantization, rank loss, regularization, channel removal, and
+local-model failure (`PREREGISTRATION-V2.md:101-108`).

@@ -1,0 +1,41 @@
+{
+  "campaign": "display-amendment",
+  "candidate_status": "DEAD",
+  "downstream_arms_run": [],
+  "eligible": false,
+  "freeze": {
+    "commit": "3f0f7ac2b6725af5db9251dda84d01e30386c130",
+    "experiments/M-CAND1/input-manifest.json": "b956763f023c319b7e4c16344bddfe54d2337221bf9105216342b7be957e7cdc",
+    "experiments/M-CAND1/src/cand1.py": "6f0cb891593d3bdaa81391580727526ee2d3292279b87c7d111af1a16943a63d",
+    "experiments/M-CAND2/PREREGISTRATION-V2.md": "d7409f2f088695fede3fec71dc17df77894765847aea275c6a925ced52efba11",
+    "experiments/M-CAND2/README.md": "f82dea970bf3ede40a67ef737644550cbbce7c91d7d856dc3fde65317d3ca45a",
+    "experiments/M-CAND2/out/amendment-display-preflight.json": "ebc0df3387472deb61867ed7bed49d65885fc29931ce64a3f1989ca8b7f3867b",
+    "experiments/M-CAND2/out/clipped-usm-invalidity.json": "8a7dba567165d809ad3f99e616b62f8a56b08efea77f2cf5ac837026d5d16c51",
+    "experiments/M-CAND2/out/clipped-usm.json": "51e078bf558073de546fd04a4225c069b90e90d90aad92a2c20a0dec4cc3f59e",
+    "experiments/M-CAND2/out/preflight.json": "93ee82f26d531908df7c23f2ce4afd7cc4cb268ff1daabb732999b52b9b05aa8",
+    "experiments/M-CAND2/out/unclipped-usm.json": "c9d1b9550206278c39d8748d9f55e91a96dc2d9af4a6c5a8320ff0012e7ea6fc",
+    "experiments/M-CAND2/src/cand2.py": "f40249d01d7dffc7eb4aba3bf82bdf6980dcc163c125d7a51eb19b9bf07f2f98",
+    "experiments/M-CAND2/src/cand2_v2.py": "7be4233d7113a5a1bd9f472401afb844c9295901fea75d2f5e8c7fab38ab5c26",
+    "experiments/M-CAND2/src/check_v2.py": "d31ec2cda5da99f8c13632627efb64a87b722a423f1d1596458ae0463e8f8e1c",
+    "experiments/M-CAND2/src/run_v2.py": "b8bc6daabfb02558df240338ee0b90f7f53ea12a9a1cf91888ce8ca98a831468"
+  },
+  "mandatory_classifications": {
+    "clipped-usm": "INVALID_UNPOTENT",
+    "gamma3": "DEAD",
+    "logistic": "DEAD",
+    "unclipped-usm": "PASS"
+  },
+  "mandatory_literal_pass": {
+    "clipped-usm": false,
+    "gamma3": false,
+    "logistic": false,
+    "unclipped-usm": true
+  },
+  "mandatory_literal_state": {
+    "clipped-usm": "INVALID",
+    "gamma3": "DEAD",
+    "logistic": "DEAD",
+    "unclipped-usm": "PASS"
+  },
+  "stage": "downstream-gate"
+}
