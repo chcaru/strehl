@@ -1,0 +1,262 @@
+{
+  "protocol": "M136 quote verification v1",
+  "normalization": "collapse all whitespace and strip leading Markdown blockquote markers",
+  "report": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\docs\\research\\M136-m8o-bar.md",
+  "report_sha256": "8A96E50029622B9B27F324117086AAFF76ABAC453D0E77BD3B20970DA31767C9",
+  "quote_count": 21,
+  "passed": true,
+  "checks": [
+    {
+      "report_line": 31,
+      "source": "docs/proposals/2026-09-sota-scorecard.md",
+      "source_lines": [
+        175,
+        177
+      ],
+      "source_sha256": "170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8",
+      "quoted_normalized": "Each program must emit a native-size 16-bit linear TIFF. No output may be histogram matched, auto-exposed, white-balanced, sharpened, denoised, resized, or tone-mapped after stacking. Numerical metrics run in linear light before any display conversion.",
+      "source_normalized": "Each program must emit a native-size 16-bit linear TIFF. No output may be histogram matched, auto-exposed, white-balanced, sharpened, denoised, resized, or tone-mapped after stacking. Numerical metrics run in linear light before any display conversion.",
+      "passed": true
+    },
+    {
+      "report_line": 38,
+      "source": "docs/proposals/2026-09-sota-scorecard.md",
+      "source_lines": [
+        821,
+        823
+      ],
+      "source_sha256": "170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8",
+      "quoted_normalized": "**What it measures and why.** A merge or restoration stage can ring beyond any observed linear sample. The proposal explicitly requires a per-file hull census of `0.0000%` or coordinates for every exception",
+      "source_normalized": "**What it measures and why.** A merge or restoration stage can ring beyond any observed linear sample. The proposal explicitly requires a per-file hull census of `0.0000%` or coordinates for every exception",
+      "passed": true
+    },
+    {
+      "report_line": 55,
+      "source": "docs/research/M-FLATNULL.md",
+      "source_lines": [
+        3,
+        10
+      ],
+      "source_sha256": "F298ECCFCB670FCF2A6DB0EF35E052A98F58C3B1550CA1568E4370B5A9C77947",
+      "quoted_normalized": "**Final verdict: the registered noise-rise failure was not observed, but M8-O is not commissioned as a general comparative invention/detail axis.** It is sensitive to a downstream unsharp mask, yet it reads materially nonzero on every flat-target arm. On the clean 6-second arm, 97.827% of inset violations are a representation false positive: the output is encoded at 65535 while the entire independently reconstructed normalized source hull lies above `1+tolerance`. The census is literally detecting an outside-hull value, but the cause is output clamping rather than invented detail.",
+      "source_normalized": "**Final verdict: the registered noise-rise failure was not observed, but M8-O is not commissioned as a general comparative invention/detail axis.** It is sensitive to a downstream unsharp mask, yet it reads materially nonzero on every flat-target arm. On the clean 6-second arm, 97.827% of inset violations are a representation false positive: the output is encoded at 65535 while the entire independently reconstructed normalized source hull lies above `1+tolerance`. The census is literally detecting an outside-hull value, but the cause is output clamping rather than invented detail.",
+      "passed": true
+    },
+    {
+      "report_line": 67,
+      "source": "docs/research/M-FLATNULL.md",
+      "source_lines": [
+        178,
+        181
+      ],
+      "source_sha256": "F298ECCFCB670FCF2A6DB0EF35E052A98F58C3B1550CA1568E4370B5A9C77947",
+      "quoted_normalized": "**Do not use current M8-O as the surviving general comparative detail axis.** A rail-aware hull, pre-clamp output census, or frozen rail exclusion would be a new statistic, not a reinterpretation of this one; it requires a new preregistration and full commissioning. This lane made none of those changes.",
+      "source_normalized": "**Do not use current M8-O as the surviving general comparative detail axis.** A rail-aware hull, pre-clamp output census, or frozen rail exclusion would be a new statistic, not a reinterpretation of this one; it requires a new preregistration and full commissioning. This lane made none of those changes.",
+      "passed": true
+    },
+    {
+      "report_line": 85,
+      "source": "experiments/M8-overshoot/checker.py",
+      "source_lines": [
+        550,
+        555
+      ],
+      "source_sha256": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+      "quoted_normalized": "image = np.asarray(tifffile.imread(tiff_path)) expected = (meta[\"height\"], meta[\"width\"], 3) if image.shape != expected or image.dtype != np.uint16: raise ValueError( f\"{tiff_path}: expected uint16 {expected}, got {image.dtype} {image.shape}\" )",
+      "source_normalized": "image = np.asarray(tifffile.imread(tiff_path)) expected = (meta[\"height\"], meta[\"width\"], 3) if image.shape != expected or image.dtype != np.uint16: raise ValueError( f\"{tiff_path}: expected uint16 {expected}, got {image.dtype} {image.shape}\" )",
+      "passed": true
+    },
+    {
+      "report_line": 93,
+      "source": "experiments/M8-overshoot/checker.py",
+      "source_lines": [
+        577,
+        581
+      ],
+      "source_sha256": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+      "quoted_normalized": "encoded = np.asarray(image[y0:y1, :, channel], dtype=np.uint16) values = encoded.astype(np.float64) / 65535.0 tolerance = tau + U16_QUANT_TOL lower = bracketed & (values < lo - tolerance) upper = bracketed & (values > hi + tolerance)",
+      "source_normalized": "encoded = np.asarray(image[y0:y1, :, channel], dtype=np.uint16) values = encoded.astype(np.float64) / 65535.0 tolerance = tau + U16_QUANT_TOL lower = bracketed & (values < lo - tolerance) upper = bracketed & (values > hi + tolerance)",
+      "passed": true
+    },
+    {
+      "report_line": 103,
+      "source": "experiments/M8-overshoot/checker.py",
+      "source_lines": [
+        528,
+        535
+      ],
+      "source_sha256": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+      "quoted_normalized": "mask = lower | upper yy, xx = np.nonzero(mask) values = encoded.astype(np.float64) / 65535.0 out = np.empty(len(xx), dtype=O_VIOLATION_DTYPE) out[\"y\"] = yy + y0 out[\"x\"] = xx out[\"channel\"] = channel out[\"direction\"] = np.where(upper[mask], 1, -1)",
+      "source_normalized": "mask = lower | upper yy, xx = np.nonzero(mask) values = encoded.astype(np.float64) / 65535.0 out = np.empty(len(xx), dtype=O_VIOLATION_DTYPE) out[\"y\"] = yy + y0 out[\"x\"] = xx out[\"channel\"] = channel out[\"direction\"] = np.where(upper[mask], 1, -1)",
+      "passed": true
+    },
+    {
+      "report_line": 117,
+      "source": "experiments/M8-overshoot/stage_attribution.py",
+      "source_lines": [
+        181,
+        196
+      ],
+      "source_sha256": "46BD60E8192823D2A0391B3B6C78041A0429BAE7024551C5BFB4445E09084A2E",
+      "quoted_normalized": "encoded = rows[\"encoded\"] rail = (encoded == 0) | (encoded == 65535) stats = { \"coordinates\": len(rows), \"manifest_sha256\": result[\"violations_sha256\"], \"zero_rail\": int(np.count_nonzero(encoded == 0)), \"full_rail\": int(np.count_nonzero(encoded == 65535)), \"nonrail\": int(np.count_nonzero(~rail)), \"full_rail_below_hull\": int( np.count_nonzero( (encoded == 65535) & (rows[\"direction\"] < 0) & (rows[\"lo\"] > 1.0 + rows[\"tolerance\"]) ) ), }",
+      "source_normalized": "encoded = rows[\"encoded\"] rail = (encoded == 0) | (encoded == 65535) stats = { \"coordinates\": len(rows), \"manifest_sha256\": result[\"violations_sha256\"], \"zero_rail\": int(np.count_nonzero(encoded == 0)), \"full_rail\": int(np.count_nonzero(encoded == 65535)), \"nonrail\": int(np.count_nonzero(~rail)), \"full_rail_below_hull\": int( np.count_nonzero( (encoded == 65535) & (rows[\"direction\"] < 0) & (rows[\"lo\"] > 1.0 + rows[\"tolerance\"]) ) ), }",
+      "passed": true
+    },
+    {
+      "report_line": 137,
+      "source": "experiments/M8-overshoot/stage-attribution.json",
+      "source_lines": [
+        70,
+        76
+      ],
+      "source_sha256": "E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792",
+      "quoted_normalized": "\"nonnegative_bilinear_m8_o_rail\": { \"coordinates\": 980097, \"full_rail\": 977684, \"full_rail_below_hull\": 977684, \"nonrail\": 2413, \"zero_rail\": 0 },",
+      "source_normalized": "\"nonnegative_bilinear_m8_o_rail\": { \"coordinates\": 980097, \"full_rail\": 977684, \"full_rail_below_hull\": 977684, \"nonrail\": 2413, \"zero_rail\": 0 },",
+      "passed": true
+    },
+    {
+      "report_line": 155,
+      "source": "experiments/M8-overshoot/stage-attribution.json",
+      "source_lines": [
+        111,
+        117
+      ],
+      "source_sha256": "E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792",
+      "quoted_normalized": "\"shipping_catmull_m8_o_rail\": { \"coordinates\": 983648, \"full_rail\": 938063, \"full_rail_below_hull\": 938062, \"nonrail\": 45585, \"zero_rail\": 0 },",
+      "source_normalized": "\"shipping_catmull_m8_o_rail\": { \"coordinates\": 983648, \"full_rail\": 938063, \"full_rail_below_hull\": 938062, \"nonrail\": 45585, \"zero_rail\": 0 },",
+      "passed": true
+    },
+    {
+      "report_line": 182,
+      "source": "docs/proposals/2026-09-sota-scorecard.md",
+      "source_lines": [
+        852,
+        857
+      ],
+      "source_sha256": "170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8",
+      "quoted_normalized": "4. **M8-O, final-output hull.** At the same linear coordinate and channel, define `lo_O=min_k(lo_k)` and `hi_O=max_k(hi_k)` over every geometrically valid input frame, never strehl's elected contributor list. Compare the actual final linear output `O` to this interval. For a 16-bit serialized audit only, add exactly `0.5/65535` quantisation tolerance to the largest contributing `tau_R`; no tone, noise or scene-adaptive tolerance is allowed.",
+      "source_normalized": "4. **M8-O, final-output hull.** At the same linear coordinate and channel, define `lo_O=min_k(lo_k)` and `hi_O=max_k(hi_k)` over every geometrically valid input frame, never strehl's elected contributor list. Compare the actual final linear output `O` to this interval. For a 16-bit serialized audit only, add exactly `0.5/65535` quantisation tolerance to the largest contributing `tau_R`; no tone, noise or scene-adaptive tolerance is allowed.",
+      "passed": true
+    },
+    {
+      "report_line": 194,
+      "source": "experiments/M8-overshoot/checker.py",
+      "source_lines": [
+        409,
+        417
+      ],
+      "source_sha256": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+      "quoted_normalized": "lo_norm = np.asarray(lo * output_scale, dtype=np.float32) hi_norm = np.asarray(hi * output_scale, dtype=np.float32) tau_norm = np.asarray(tau * output_scale, dtype=np.float32) lo_view = o_lo[b.channel, y0:y1] hi_view = o_hi[b.channel, y0:y1] tau_view = o_tau[b.channel, y0:y1] np.minimum(lo_view, np.where(valid, lo_norm, np.float32(np.inf)), out=lo_view) np.maximum( hi_view, np.where(valid, hi_norm, np.float32(-np.inf)), out=hi_view",
+      "source_normalized": "lo_norm = np.asarray(lo * output_scale, dtype=np.float32) hi_norm = np.asarray(hi * output_scale, dtype=np.float32) tau_norm = np.asarray(tau * output_scale, dtype=np.float32) lo_view = o_lo[b.channel, y0:y1] hi_view = o_hi[b.channel, y0:y1] tau_view = o_tau[b.channel, y0:y1] np.minimum(lo_view, np.where(valid, lo_norm, np.float32(np.inf)), out=lo_view) np.maximum( hi_view, np.where(valid, hi_norm, np.float32(-np.inf)), out=hi_view",
+      "passed": true
+    },
+    {
+      "report_line": 234,
+      "source": "docs/proposals/2026-09-sota-scorecard.md",
+      "source_lines": [
+        877,
+        880
+      ],
+      "source_sha256": "170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8",
+      "quoted_normalized": "**Known defeat.** Final clamping can erase M8-O evidence; a broad all-frame hull can bracket a per-frame excursion; a producer-supplied contributor mask or hull can omit the disproof; and destructive clipping can force a zero rate.",
+      "source_normalized": "**Known defeat.** Final clamping can erase M8-O evidence; a broad all-frame hull can bracket a per-frame excursion; a producer-supplied contributor mask or hull can omit the disproof; and destructive clipping can force a zero rate.",
+      "passed": true
+    },
+    {
+      "report_line": 267,
+      "source": "experiments/M136-m8o-bar/analysis.json",
+      "source_lines": [
+        161,
+        165
+      ],
+      "source_sha256": "C2664E296B8F8E19307F7A090FBFA17D3AB987F768C5B9C6DA87F219AAEA2DF4",
+      "quoted_normalized": "\"expected_green\": 4, \"expected_red\": 4, \"observed_green\": 4, \"observed_red\": 4, \"passed\": true",
+      "source_normalized": "\"expected_green\": 4, \"expected_red\": 4, \"observed_green\": 4, \"observed_red\": 4, \"passed\": true",
+      "passed": true
+    },
+    {
+      "report_line": 279,
+      "source": "experiments/M136-m8o-bar/analysis.json",
+      "source_lines": [
+        87,
+        92
+      ],
+      "source_sha256": "C2664E296B8F8E19307F7A090FBFA17D3AB987F768C5B9C6DA87F219AAEA2DF4",
+      "quoted_normalized": "\"denominator\": 74173536, \"full_rail_below_hull\": 938062, \"nonrail\": 45585, \"projected_hull_violations\": 45586, \"projected_plus_internal_quant_violations\": 31148, \"violations\": 983648",
+      "source_normalized": "\"denominator\": 74173536, \"full_rail_below_hull\": 938062, \"nonrail\": 45585, \"projected_hull_violations\": 45586, \"projected_plus_internal_quant_violations\": 31148, \"violations\": 983648",
+      "passed": true
+    },
+    {
+      "report_line": 309,
+      "source": "docs/proposals/2026-09-sota-scorecard.md",
+      "source_lines": [
+        762,
+        768
+      ],
+      "source_sha256": "170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8",
+      "quoted_normalized": "1. A high-rail pixel is recoverable when at least one common input is `>=0.98` and at least one aligned input lies in `[0.20,0.95]`. A low-rail pixel is recoverable when at least one input is `<=0.02` and another lies in `[0.05,0.80]`. 2. `clip_high` is the fraction of recoverable high pixels with output `>=65534/65535`; `clip_low` is the mirrored fraction `<=1/65535`. 3. On recoverable-highlight tiles, compute M5\u2019s `rho_best` against the independently selected unsaturated source; report the median as highlight-detail retention.",
+      "source_normalized": "1. A high-rail pixel is recoverable when at least one common input is `>=0.98` and at least one aligned input lies in `[0.20,0.95]`. A low-rail pixel is recoverable when at least one input is `<=0.02` and another lies in `[0.05,0.80]`. 2. `clip_high` is the fraction of recoverable high pixels with output `>=65534/65535`; `clip_low` is the mirrored fraction `<=1/65535`. 3. On recoverable-highlight tiles, compute M5\u2019s `rho_best` against the independently selected unsaturated source; report the median as highlight-detail retention.",
+      "passed": true
+    },
+    {
+      "report_line": 357,
+      "source": "experiments/M136-m8o-bar/analysis.json",
+      "source_lines": [
+        174,
+        178
+      ],
+      "source_sha256": "C2664E296B8F8E19307F7A090FBFA17D3AB987F768C5B9C6DA87F219AAEA2DF4",
+      "quoted_normalized": "\"post_projection_residue_exact\": \"2413/74173536\", \"post_projection_residue_fraction\": 3.2531818356347474e-05, \"post_projection_residue_fraction_decimal\": \"0.000032531818356347471421613228739694976925463011497793\", \"post_projection_residue_percent\": 0.003253181835634747, \"post_projection_residue_percent_decimal\": \"0.0032531818356347471421613228739694976925463011497793\"",
+      "source_normalized": "\"post_projection_residue_exact\": \"2413/74173536\", \"post_projection_residue_fraction\": 3.2531818356347474e-05, \"post_projection_residue_fraction_decimal\": \"0.000032531818356347471421613228739694976925463011497793\", \"post_projection_residue_percent\": 0.003253181835634747, \"post_projection_residue_percent_decimal\": \"0.0032531818356347471421613228739694976925463011497793\"",
+      "passed": true
+    },
+    {
+      "report_line": 369,
+      "source": "experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/align_cmd.rs",
+      "source_lines": [
+        2143,
+        2147
+      ],
+      "source_sha256": "F00AE825D4ED850830AB78D49B551E211A95C62EACF448A56C4BCB7BB5FFBAFD",
+      "quoted_normalized": "// Undo the balance, restore the pedestal, then round and // clamp exactly as the shipped path does. (scratch.dst[lo + px] * inv + black) .round() .clamp(0.0, u16::MAX as f32) as u16",
+      "source_normalized": "// Undo the balance, restore the pedestal, then round and // clamp exactly as the shipped path does. (scratch.dst[lo + px] * inv + black) .round() .clamp(0.0, u16::MAX as f32) as u16",
+      "passed": true
+    },
+    {
+      "report_line": 378,
+      "source": "experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/merge_cmd.rs",
+      "source_lines": [
+        4779,
+        4781
+      ],
+      "source_sha256": "8E1D2E75EA28AB3EA392F95A761767012C8EF4C216856C0F3B2D5925351DF8DC",
+      "quoted_normalized": "for (px, o) in dst.iter_mut().enumerate() { *o = (f32::from(frame.data[row + 2 * px]) - black).max(0.0); }",
+      "source_normalized": "for (px, o) in dst.iter_mut().enumerate() { *o = (f32::from(frame.data[row + 2 * px]) - black).max(0.0); }",
+      "passed": true
+    },
+    {
+      "report_line": 386,
+      "source": "experiments/M8-overshoot/out/source-snapshot/crates/strehl-cli/src/merge_cmd.rs",
+      "source_lines": [
+        7365,
+        7369
+      ],
+      "source_sha256": "8E1D2E75EA28AB3EA392F95A761767012C8EF4C216856C0F3B2D5925351DF8DC",
+      "quoted_normalized": "let encode = |v: f32, gain: f32| -> u16 { let v = (v * gain / range).min(1.0); let v = if srgb { srgb_encode(v) } else { v }; (v * u16::MAX as f32 + 0.5) as u16 };",
+      "source_normalized": "let encode = |v: f32, gain: f32| -> u16 { let v = (v * gain / range).min(1.0); let v = if srgb { srgb_encode(v) } else { v }; (v * u16::MAX as f32 + 0.5) as u16 };",
+      "passed": true
+    },
+    {
+      "report_line": 404,
+      "source": "experiments/M8-overshoot/stage-attribution.json",
+      "source_lines": [
+        649,
+        664
+      ],
+      "source_sha256": "E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792",
+      "quoted_normalized": "\"m8_o\": { \"clamping_caveat\": \"Final clamping can erase M8-O evidence; a zero M8-O count is not a pass without the pre-clamp M8-R census.\", \"denominator\": 24724512, \"fraction\": 0.002126230034388545, \"lower_violations\": 27286, \"max_abs_signed_excess_linear\": 9.673507562264066e-05, \"max_abs_signed_excess_u16_lsb\": 6.339533180929756, \"max_upper_signed_excess_linear\": 9.597676976044744e-05, \"min_lower_signed_excess_linear\": -9.673507562264066e-05, \"percent\": 0.2126230034388545, \"quantisation_tolerance\": 7.629510948348211e-06, \"tiff_sha256\": \"9682FF568F221E55D9D04C4FF11ED675DCF29D4EB620D83D8816BFD1D7937E16\", \"unbracketed_samples\": 0, \"upper_violations\": 25284, \"violations\": 52570 },",
+      "source_normalized": "\"m8_o\": { \"clamping_caveat\": \"Final clamping can erase M8-O evidence; a zero M8-O count is not a pass without the pre-clamp M8-R census.\", \"denominator\": 24724512, \"fraction\": 0.002126230034388545, \"lower_violations\": 27286, \"max_abs_signed_excess_linear\": 9.673507562264066e-05, \"max_abs_signed_excess_u16_lsb\": 6.339533180929756, \"max_upper_signed_excess_linear\": 9.597676976044744e-05, \"min_lower_signed_excess_linear\": -9.673507562264066e-05, \"percent\": 0.2126230034388545, \"quantisation_tolerance\": 7.629510948348211e-06, \"tiff_sha256\": \"9682FF568F221E55D9D04C4FF11ED675DCF29D4EB620D83D8816BFD1D7937E16\", \"unbracketed_samples\": 0, \"upper_violations\": 25284, \"violations\": 52570 },",
+      "passed": true
+    }
+  ]
+}

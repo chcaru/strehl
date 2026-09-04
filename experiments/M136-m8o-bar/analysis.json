@@ -1,0 +1,892 @@
+{
+  "bilinear_aggregate": {
+    "by_channel": {
+      "B": {
+        "beyond_internal_bound": 351513,
+        "count": 352198,
+        "internal_half_step_lsb_max": 3.4439129664980133,
+        "internal_half_step_lsb_min": 3.3555522458306672,
+        "lower": 352179,
+        "nonrail_beyond_internal_bound": 0,
+        "projected_hull_violations": 574,
+        "projected_plus_internal_quant_violations": 0,
+        "rail": 351624,
+        "upper": 19
+      },
+      "G": {
+        "beyond_internal_bound": 318474,
+        "count": 318497,
+        "internal_half_step_lsb_max": 2.2068628771551726,
+        "internal_half_step_lsb_min": 2.2068628771551726,
+        "lower": 318497,
+        "nonrail_beyond_internal_bound": 0,
+        "projected_hull_violations": 0,
+        "projected_plus_internal_quant_violations": 0,
+        "rail": 318497,
+        "upper": 0
+      },
+      "R": {
+        "beyond_internal_bound": 307518,
+        "count": 309402,
+        "internal_half_step_lsb_max": 6.124906539916992,
+        "internal_half_step_lsb_min": 6.045166377363533,
+        "lower": 309354,
+        "nonrail_beyond_internal_bound": 0,
+        "projected_hull_violations": 1839,
+        "projected_plus_internal_quant_violations": 0,
+        "rail": 307563,
+        "upper": 48
+      }
+    },
+    "denominator": 74173536,
+    "full_rail_below_hull": 977684,
+    "nonrail": 2413,
+    "projected_hull_violations": 2413,
+    "projected_plus_internal_quant_violations": 0,
+    "violations": 980097
+  },
+  "catmull_aggregate": {
+    "by_channel": {
+      "B": {
+        "beyond_internal_bound": 350705,
+        "count": 358202,
+        "internal_half_step_lsb_max": 3.4439129664980133,
+        "internal_half_step_lsb_min": 3.3555522458306672,
+        "lower": 355052,
+        "nonrail_beyond_internal_bound": 15184,
+        "projected_hull_violations": 22592,
+        "projected_plus_internal_quant_violations": 15187,
+        "rail": 335611,
+        "upper": 3150
+      },
+      "G": {
+        "beyond_internal_bound": 306657,
+        "count": 306887,
+        "internal_half_step_lsb_max": 2.2068628771551726,
+        "internal_half_step_lsb_min": 2.2068628771551726,
+        "lower": 306834,
+        "nonrail_beyond_internal_bound": 247,
+        "projected_hull_violations": 460,
+        "projected_plus_internal_quant_violations": 247,
+        "rail": 306427,
+        "upper": 53
+      },
+      "R": {
+        "beyond_internal_bound": 311687,
+        "count": 318559,
+        "internal_half_step_lsb_max": 6.124906539916992,
+        "internal_half_step_lsb_min": 6.045166377363533,
+        "lower": 315039,
+        "nonrail_beyond_internal_bound": 15712,
+        "projected_hull_violations": 22534,
+        "projected_plus_internal_quant_violations": 15714,
+        "rail": 296025,
+        "upper": 3520
+      }
+    },
+    "denominator": 74173536,
+    "full_rail_below_hull": 938062,
+    "nonrail": 45585,
+    "projected_hull_violations": 45586,
+    "projected_plus_internal_quant_violations": 31148,
+    "violations": 983648
+  },
+  "proposed_instrument_commissioning": {
+    "cases": {
+      "in_range_convex_green": {
+        "encoded": 32768,
+        "expected_violation": false,
+        "hi": 0.8,
+        "lo": 0.2,
+        "observed_violation": false,
+        "passed": true
+      },
+      "in_range_copy_green": {
+        "encoded": 26214,
+        "expected_violation": false,
+        "hi": 0.4,
+        "lo": 0.4,
+        "observed_violation": false,
+        "passed": true
+      },
+      "in_range_high_plant_red": {
+        "encoded": 58982,
+        "expected_violation": true,
+        "hi": 0.8,
+        "lo": 0.2,
+        "observed_violation": true,
+        "passed": true
+      },
+      "in_range_low_plant_red": {
+        "encoded": 6554,
+        "expected_violation": true,
+        "hi": 0.8,
+        "lo": 0.2,
+        "observed_violation": true,
+        "passed": true
+      },
+      "unrepresentable_high_at_rail_green": {
+        "encoded": 65535,
+        "expected_violation": false,
+        "hi": 1.2,
+        "lo": 1.1,
+        "observed_violation": false,
+        "passed": true
+      },
+      "unrepresentable_high_off_rail_red": {
+        "encoded": 65000,
+        "expected_violation": true,
+        "hi": 1.2,
+        "lo": 1.1,
+        "observed_violation": true,
+        "passed": true
+      },
+      "unrepresentable_low_at_rail_green": {
+        "encoded": 0,
+        "expected_violation": false,
+        "hi": -0.1,
+        "lo": -0.2,
+        "observed_violation": false,
+        "passed": true
+      },
+      "unrepresentable_low_off_rail_red": {
+        "encoded": 500,
+        "expected_violation": true,
+        "hi": -0.1,
+        "lo": -0.2,
+        "observed_violation": true,
+        "passed": true
+      }
+    },
+    "expected_green": 4,
+    "expected_red": 4,
+    "observed_green": 4,
+    "observed_red": 4,
+    "passed": true
+  },
+  "protocol": "M136 deterministic analysis v1",
+  "quantisation_model": {
+    "checker_existing_tolerance": "mapped tau_R + 0.5/65535",
+    "comparison": "project lo/hi through clamp([0,1]), then add the omitted internal half-step to the existing tolerance",
+    "omitted_internal_half_step": "0.5 * output_gain[channel] / sensor_range"
+  },
+  "rates": {
+    "post_projection_residue_exact": "2413/74173536",
+    "post_projection_residue_fraction": 3.2531818356347474e-05,
+    "post_projection_residue_fraction_decimal": "0.000032531818356347471421613228739694976925463011497793",
+    "post_projection_residue_percent": 0.003253181835634747,
+    "post_projection_residue_percent_decimal": "0.0032531818356347471421613228739694976925463011497793"
+  },
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\stage-attribution.json",
+  "source_hashes_before_after": {
+    "bilinear-et1s_m8_o": {
+      "after": "866BE7FD877BA2764B6EE4766AC029A113C4E2B29956276D02A6159D4321C2A7",
+      "before": "866BE7FD877BA2764B6EE4766AC029A113C4E2B29956276D02A6159D4321C2A7",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et1s\\m8-o.json",
+      "unchanged": true
+    },
+    "bilinear-et1s_meta": {
+      "after": "B2A10D7150F6DA75BA598014EDCBFFD9C997CE04F400788F30EBEAE5965E64DC",
+      "before": "B2A10D7150F6DA75BA598014EDCBFFD9C997CE04F400788F30EBEAE5965E64DC",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et1s\\meta.json",
+      "unchanged": true
+    },
+    "bilinear-et1s_violations": {
+      "after": "B348E5BE9D9C7527BFD1ABE812B77B4EA41FA6B92F0A7BCE2B8001E18A506AA8",
+      "before": "B348E5BE9D9C7527BFD1ABE812B77B4EA41FA6B92F0A7BCE2B8001E18A506AA8",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et1s\\m8-o-violations.npy",
+      "unchanged": true
+    },
+    "bilinear-et2.5s_m8_o": {
+      "after": "B3420A6AF2B83EB2AA0A3D6B058ED48A158D2BACE51A5D8CDA8B265C9F4F5558",
+      "before": "B3420A6AF2B83EB2AA0A3D6B058ED48A158D2BACE51A5D8CDA8B265C9F4F5558",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et2.5s\\m8-o.json",
+      "unchanged": true
+    },
+    "bilinear-et2.5s_meta": {
+      "after": "DD66829BCE711D9FD8BC1681E2CEE387E705E02AA99491DADF9CF396CF2D71B6",
+      "before": "DD66829BCE711D9FD8BC1681E2CEE387E705E02AA99491DADF9CF396CF2D71B6",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et2.5s\\meta.json",
+      "unchanged": true
+    },
+    "bilinear-et2.5s_violations": {
+      "after": "FE150A22D9148FD9D7A7154B21F8095CE584F8EB32269A834887DF857A20FB5E",
+      "before": "FE150A22D9148FD9D7A7154B21F8095CE584F8EB32269A834887DF857A20FB5E",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et2.5s\\m8-o-violations.npy",
+      "unchanged": true
+    },
+    "bilinear-et6s_m8_o": {
+      "after": "A1C5AE3AC82E274782F060CC7F98DD5AE528BDC02E4A7AECFDBF7FB9F4B48AB7",
+      "before": "A1C5AE3AC82E274782F060CC7F98DD5AE528BDC02E4A7AECFDBF7FB9F4B48AB7",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et6s\\m8-o.json",
+      "unchanged": true
+    },
+    "bilinear-et6s_meta": {
+      "after": "0C22FFEECDB5C94F2E974842F945B3DACDEB055967170E47FAD350A40EF83756",
+      "before": "0C22FFEECDB5C94F2E974842F945B3DACDEB055967170E47FAD350A40EF83756",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et6s\\meta.json",
+      "unchanged": true
+    },
+    "bilinear-et6s_violations": {
+      "after": "DB4C1E9411F06B7126A67308A5B2E8C64DA94A5B40B17B2BDDDC1496F0C912E3",
+      "before": "DB4C1E9411F06B7126A67308A5B2E8C64DA94A5B40B17B2BDDDC1496F0C912E3",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et6s\\m8-o-violations.npy",
+      "unchanged": true
+    },
+    "catmull-et1s_m8_o": {
+      "after": "F159C80B6123044E1AEDBBA1037B0097CB8CD31BD620BF6786A60D58C12BAEE9",
+      "before": "F159C80B6123044E1AEDBBA1037B0097CB8CD31BD620BF6786A60D58C12BAEE9",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et1s-state\\m8-o.json",
+      "unchanged": true
+    },
+    "catmull-et1s_meta": {
+      "after": "7534DE796DE369FA882B0173EBED0276CC0EEE9FDD6B4EA0F9178F5D206FEA2D",
+      "before": "7534DE796DE369FA882B0173EBED0276CC0EEE9FDD6B4EA0F9178F5D206FEA2D",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et1s-state\\meta.json",
+      "unchanged": true
+    },
+    "catmull-et1s_violations": {
+      "after": "8CE8C33802F6AB116FEF5E6D76F5C916ADC13633EC3EA10F51D2B885E8C92925",
+      "before": "8CE8C33802F6AB116FEF5E6D76F5C916ADC13633EC3EA10F51D2B885E8C92925",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et1s-state\\m8-o-violations.npy",
+      "unchanged": true
+    },
+    "catmull-et2.5s_m8_o": {
+      "after": "FC550007B63CDDE687B9C0BAD052C56FEC6C8ED376213F37704674D24561D20B",
+      "before": "FC550007B63CDDE687B9C0BAD052C56FEC6C8ED376213F37704674D24561D20B",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et2.5s-state\\m8-o.json",
+      "unchanged": true
+    },
+    "catmull-et2.5s_meta": {
+      "after": "981725DFA9A875F1F2CAF2DEA1B45F33638114F2CF28447A49CFA90763B91195",
+      "before": "981725DFA9A875F1F2CAF2DEA1B45F33638114F2CF28447A49CFA90763B91195",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et2.5s-state\\meta.json",
+      "unchanged": true
+    },
+    "catmull-et2.5s_violations": {
+      "after": "4E8FDB296477D8D8B9194FA1675C5844543941683BF709DD928AEFF1E1E89A18",
+      "before": "4E8FDB296477D8D8B9194FA1675C5844543941683BF709DD928AEFF1E1E89A18",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et2.5s-state\\m8-o-violations.npy",
+      "unchanged": true
+    },
+    "catmull-et6s_m8_o": {
+      "after": "9613FEDC683FB1356C8F9E24FB50B2F4EC811A3DCF4CAC2A53FA910D4DB590AB",
+      "before": "9613FEDC683FB1356C8F9E24FB50B2F4EC811A3DCF4CAC2A53FA910D4DB590AB",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et6s-state\\m8-o.json",
+      "unchanged": true
+    },
+    "catmull-et6s_meta": {
+      "after": "846CCB936B68A586032724B55FF4F3C1585FD38044C9DA8C2BC1F184B0E8E4FF",
+      "before": "846CCB936B68A586032724B55FF4F3C1585FD38044C9DA8C2BC1F184B0E8E4FF",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et6s-state\\meta.json",
+      "unchanged": true
+    },
+    "catmull-et6s_violations": {
+      "after": "69D943773F4B17769B103C5EA1F9E6EAF0893813BF84689867D475761DB53927",
+      "before": "69D943773F4B17769B103C5EA1F9E6EAF0893813BF84689867D475761DB53927",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et6s-state\\m8-o-violations.npy",
+      "unchanged": true
+    },
+    "checker": {
+      "after": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+      "before": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\checker.py",
+      "unchanged": true
+    },
+    "one-frame-bilinear_m8_o": {
+      "after": "468107A3E33B3DDBD0005D1DD4BC3711817C51AC878794EFF6E873F18F0386A1",
+      "before": "468107A3E33B3DDBD0005D1DD4BC3711817C51AC878794EFF6E873F18F0386A1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-identity\\m8-o.json",
+      "unchanged": true
+    },
+    "one-frame-bilinear_meta": {
+      "after": "AE04F0FE9A97D86A06BDDB55DB8D3CAB62D17AC3A679ADE1A760D934BDF5D0CB",
+      "before": "AE04F0FE9A97D86A06BDDB55DB8D3CAB62D17AC3A679ADE1A760D934BDF5D0CB",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-identity\\meta.json",
+      "unchanged": true
+    },
+    "one-frame-bilinear_violations": {
+      "after": "81CE4A519B7278B95A6F580897FB757BD0BED5B1FD7BFFA89A2BA044898849D8",
+      "before": "81CE4A519B7278B95A6F580897FB757BD0BED5B1FD7BFFA89A2BA044898849D8",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-identity\\m8-o-violations.npy",
+      "unchanged": true
+    },
+    "rail_classifier": {
+      "after": "46BD60E8192823D2A0391B3B6C78041A0429BAE7024551C5BFB4445E09084A2E",
+      "before": "46BD60E8192823D2A0391B3B6C78041A0429BAE7024551C5BFB4445E09084A2E",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\stage_attribution.py",
+      "unchanged": true
+    },
+    "scorecard": {
+      "after": "170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8",
+      "before": "170B37816900AFA08BEB5211F9BB9580762EE79A190AF05181834C9A7BA947F8",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\docs\\proposals\\2026-09-sota-scorecard.md",
+      "unchanged": true
+    },
+    "snapshot_align": {
+      "after": "F00AE825D4ED850830AB78D49B551E211A95C62EACF448A56C4BCB7BB5FFBAFD",
+      "before": "F00AE825D4ED850830AB78D49B551E211A95C62EACF448A56C4BCB7BB5FFBAFD",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\source-snapshot\\crates\\strehl-cli\\src\\align_cmd.rs",
+      "unchanged": true
+    },
+    "snapshot_merge": {
+      "after": "8E1D2E75EA28AB3EA392F95A761767012C8EF4C216856C0F3B2D5925351DF8DC",
+      "before": "8E1D2E75EA28AB3EA392F95A761767012C8EF4C216856C0F3B2D5925351DF8DC",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\source-snapshot\\crates\\strehl-cli\\src\\merge_cmd.rs",
+      "unchanged": true
+    },
+    "snapshot_pyramid": {
+      "after": "021FF15EE266D71FDC83BEEC4D514D003735063FA6A54E516E5A5ACEDB587C47",
+      "before": "021FF15EE266D71FDC83BEEC4D514D003735063FA6A54E516E5A5ACEDB587C47",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\source-snapshot\\crates\\strehl-core\\src\\pyramid.rs",
+      "unchanged": true
+    },
+    "stage_attribution": {
+      "after": "E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792",
+      "before": "E0BFCEDA067F614EFEFAD60DFE27FD6803A085DBE2976AB19A1116B37207C792",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\stage-attribution.json",
+      "unchanged": true
+    }
+  },
+  "states": {
+    "bilinear-et1s": {
+      "abs_signed_excess_lsb_quantiles": {
+        "0.0": 0.5027692490284608,
+        "0.5": 1.5947019904888293,
+        "0.9": 3.6298851689825824,
+        "0.99": 4.880457145208493,
+        "0.999": 5.91806997436101,
+        "1.0": 6.032943221507594
+      },
+      "beyond_tolerance_lsb_quantiles": {
+        "0.0": 0.000827711481150616,
+        "0.5": 1.0936244547182952,
+        "0.9": 3.1279455165421193,
+        "0.99": 4.379422501804363,
+        "0.999": 5.416552538722404,
+        "1.0": 5.531865426134626
+      },
+      "by_channel": {
+        "B": {
+          "beyond_internal_bound": 0,
+          "count": 327,
+          "internal_half_step_lsb": 3.3555522458306672,
+          "lower": 317,
+          "max_abs_signed_excess_lsb": 3.4198084184936306,
+          "max_beyond_tolerance_lsb": 2.9187308780665546,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 327,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 10
+        },
+        "G": {
+          "beyond_internal_bound": 0,
+          "count": 0,
+          "internal_half_step_lsb": 2.2068628771551726,
+          "lower": 0,
+          "max_abs_signed_excess_lsb": 0.0,
+          "max_beyond_tolerance_lsb": 0.0,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 0,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 0
+        },
+        "R": {
+          "beyond_internal_bound": 0,
+          "count": 1082,
+          "internal_half_step_lsb": 6.124906539916992,
+          "lower": 1058,
+          "max_abs_signed_excess_lsb": 6.032943221507594,
+          "max_beyond_tolerance_lsb": 5.531865426134626,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 1082,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 24
+        }
+      },
+      "denominator": 24724512,
+      "full_rail_below_hull": 0,
+      "hull_width_lsb_quantiles": {
+        "0.0": 161.10209496226162,
+        "0.5": 605.2035337407142,
+        "0.9": 1913.2863446725535,
+        "0.99": 4069.3885301113146,
+        "0.999": 6864.140298018838,
+        "1.0": 8017.653781492263
+      },
+      "lower": 1375,
+      "nonrail": 1409,
+      "projected_hull_violations": 1409,
+      "projected_plus_internal_quant_violations": 0,
+      "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et1s",
+      "upper": 34,
+      "violations": 1409,
+      "zero_rail_above_hull": 0
+    },
+    "bilinear-et2.5s": {
+      "abs_signed_excess_lsb_quantiles": {
+        "0.0": 0.5033945518152905,
+        "0.5": 1.6066949772721273,
+        "0.9": 3.2805280787943047,
+        "0.99": 4.961961467175563,
+        "0.999": 5.528004313069687,
+        "1.0": 5.533575974877749
+      },
+      "beyond_tolerance_lsb_quantiles": {
+        "0.0": 0.0012394035565571615,
+        "0.5": 1.1027202035731138,
+        "0.9": 2.778372950326329,
+        "0.99": 4.460560605001633,
+        "0.999": 5.0251378982216846,
+        "1.0": 5.029265663350209
+      },
+      "by_channel": {
+        "B": {
+          "beyond_internal_bound": 0,
+          "count": 160,
+          "internal_half_step_lsb": 3.3814139201723297,
+          "lower": 154,
+          "max_abs_signed_excess_lsb": 2.910981105414976,
+          "max_beyond_tolerance_lsb": 2.4066708094870783,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 160,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 6
+        },
+        "G": {
+          "beyond_internal_bound": 0,
+          "count": 0,
+          "internal_half_step_lsb": 2.2068628771551726,
+          "lower": 0,
+          "max_abs_signed_excess_lsb": 0.0,
+          "max_beyond_tolerance_lsb": 0.0,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 0,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 0
+        },
+        "R": {
+          "beyond_internal_bound": 0,
+          "count": 511,
+          "internal_half_step_lsb": 6.08826916793297,
+          "lower": 499,
+          "max_abs_signed_excess_lsb": 5.533575974877749,
+          "max_beyond_tolerance_lsb": 5.029265663350209,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 511,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 12
+        }
+      },
+      "denominator": 24724512,
+      "full_rail_below_hull": 0,
+      "hull_width_lsb_quantiles": {
+        "0.0": 271.0420067422092,
+        "0.5": 1421.9064036849886,
+        "0.9": 4382.609639335424,
+        "0.99": 10226.862893387675,
+        "0.999": 13730.338879571675,
+        "1.0": 13819.1643772088
+      },
+      "lower": 653,
+      "nonrail": 671,
+      "projected_hull_violations": 671,
+      "projected_plus_internal_quant_violations": 0,
+      "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et2.5s",
+      "upper": 18,
+      "violations": 671,
+      "zero_rail_above_hull": 0
+    },
+    "bilinear-et6s": {
+      "abs_signed_excess_lsb_quantiles": {
+        "0.0": 0.51415093990272,
+        "0.5": 6662.4139630794525,
+        "0.9": 42383.57358062268,
+        "0.99": 57410.62896995525,
+        "0.999": 61897.110198140144,
+        "1.0": 69501.92384362221
+      },
+      "beyond_tolerance_lsb_quantiles": {
+        "0.0": 0.00710242484480296,
+        "0.5": 6661.844998637266,
+        "0.9": 42383.00461618049,
+        "0.99": 57410.06000551306,
+        "0.999": 61896.54123369796,
+        "1.0": 69501.28591467811
+      },
+      "by_channel": {
+        "B": {
+          "beyond_internal_bound": 351513,
+          "count": 351711,
+          "internal_half_step_lsb": 3.4439129664980133,
+          "lower": 351708,
+          "max_abs_signed_excess_lsb": 43287.487912774086,
+          "max_beyond_tolerance_lsb": 43286.9189483319,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 87,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 351624,
+          "upper": 3
+        },
+        "G": {
+          "beyond_internal_bound": 318474,
+          "count": 318497,
+          "internal_half_step_lsb": 2.2068628771551726,
+          "lower": 318497,
+          "max_abs_signed_excess_lsb": 4193.334451317787,
+          "max_beyond_tolerance_lsb": 4192.79996906695,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 0,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 318497,
+          "upper": 0
+        },
+        "R": {
+          "beyond_internal_bound": 307518,
+          "count": 307809,
+          "internal_half_step_lsb": 6.045166377363533,
+          "lower": 307797,
+          "max_abs_signed_excess_lsb": 69501.92384362221,
+          "max_beyond_tolerance_lsb": 69501.28591467811,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 246,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 307563,
+          "upper": 12
+        }
+      },
+      "denominator": 24724512,
+      "full_rail_below_hull": 977684,
+      "hull_width_lsb_quantiles": {
+        "0.0": 629.1403022781014,
+        "0.5": 3288.5670071840286,
+        "0.9": 13359.819579720497,
+        "0.99": 56296.16722555158,
+        "0.999": 72093.62654677496,
+        "1.0": 82970.95269441605
+      },
+      "lower": 978002,
+      "nonrail": 333,
+      "projected_hull_violations": 333,
+      "projected_plus_internal_quant_violations": 0,
+      "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-flat-et6s",
+      "upper": 15,
+      "violations": 978017,
+      "zero_rail_above_hull": 0
+    },
+    "catmull-et1s": {
+      "abs_signed_excess_lsb_quantiles": {
+        "0.0": 0.5030896787093297,
+        "0.5": 4.2047850822564214,
+        "0.9": 12.377217828267023,
+        "0.99": 27.15472957391467,
+        "0.999": 47.99882149423383,
+        "1.0": 73.89933928730898
+      },
+      "beyond_tolerance_lsb_quantiles": {
+        "0.0": 0.002550916701640248,
+        "0.5": 3.7031685436218105,
+        "0.9": 11.872907561385533,
+        "0.99": 26.650419530222603,
+        "0.999": 47.486416217100206,
+        "1.0": 73.39072130375278
+      },
+      "by_channel": {
+        "B": {
+          "beyond_internal_bound": 1878,
+          "count": 4187,
+          "internal_half_step_lsb": 3.3555522458306672,
+          "lower": 3556,
+          "max_abs_signed_excess_lsb": 73.89933928730898,
+          "max_beyond_tolerance_lsb": 73.39072130375278,
+          "nonrail_beyond_internal_bound": 1878,
+          "projected_hull_violations": 4187,
+          "projected_plus_internal_quant_violations": 1878,
+          "rail": 0,
+          "upper": 631
+        },
+        "G": {
+          "beyond_internal_bound": 22,
+          "count": 78,
+          "internal_half_step_lsb": 2.2068628771551726,
+          "lower": 64,
+          "max_abs_signed_excess_lsb": 10.640389205145766,
+          "max_beyond_tolerance_lsb": 10.131768730810808,
+          "nonrail_beyond_internal_bound": 22,
+          "projected_hull_violations": 78,
+          "projected_plus_internal_quant_violations": 22,
+          "rail": 0,
+          "upper": 14
+        },
+        "R": {
+          "beyond_internal_bound": 1469,
+          "count": 3297,
+          "internal_half_step_lsb": 6.124906539916992,
+          "lower": 2724,
+          "max_abs_signed_excess_lsb": 51.12071424111491,
+          "max_beyond_tolerance_lsb": 50.61209246270996,
+          "nonrail_beyond_internal_bound": 1469,
+          "projected_hull_violations": 3297,
+          "projected_plus_internal_quant_violations": 1469,
+          "rail": 0,
+          "upper": 573
+        }
+      },
+      "denominator": 24724512,
+      "full_rail_below_hull": 0,
+      "hull_width_lsb_quantiles": {
+        "0.0": 188.61675079911947,
+        "0.5": 828.5701205022633,
+        "0.9": 2629.855787720997,
+        "0.99": 5894.494770130705,
+        "0.999": 8489.436368562188,
+        "1.0": 9449.639010876417
+      },
+      "lower": 6344,
+      "nonrail": 7562,
+      "projected_hull_violations": 7562,
+      "projected_plus_internal_quant_violations": 3369,
+      "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et1s-state",
+      "upper": 1218,
+      "violations": 7562,
+      "zero_rail_above_hull": 0
+    },
+    "catmull-et2.5s": {
+      "abs_signed_excess_lsb_quantiles": {
+        "0.0": 0.5027383146898501,
+        "0.5": 7.065039117478591,
+        "0.9": 19.04732555212105,
+        "0.99": 47.283535282031494,
+        "0.999": 88.15867300387247,
+        "1.0": 125.19900969055016
+      },
+      "beyond_tolerance_lsb_quantiles": {
+        "0.0": 0.0005337509755990594,
+        "0.5": 6.559828965366872,
+        "0.9": 18.54243289589462,
+        "0.99": 46.76629494105258,
+        "0.999": 87.64143394823238,
+        "1.0": 124.68176686261637
+      },
+      "by_channel": {
+        "B": {
+          "beyond_internal_bound": 4689,
+          "count": 7456,
+          "internal_half_step_lsb": 3.3814139201723297,
+          "lower": 6316,
+          "max_abs_signed_excess_lsb": 125.19900969055016,
+          "max_beyond_tolerance_lsb": 124.68176686261637,
+          "nonrail_beyond_internal_bound": 4689,
+          "projected_hull_violations": 7456,
+          "projected_plus_internal_quant_violations": 4690,
+          "rail": 0,
+          "upper": 1140
+        },
+        "G": {
+          "beyond_internal_bound": 67,
+          "count": 172,
+          "internal_half_step_lsb": 2.2068628771551726,
+          "lower": 152,
+          "max_abs_signed_excess_lsb": 23.25617970986059,
+          "max_beyond_tolerance_lsb": 22.747558993629198,
+          "nonrail_beyond_internal_bound": 67,
+          "projected_hull_violations": 172,
+          "projected_plus_internal_quant_violations": 67,
+          "rail": 0,
+          "upper": 20
+        },
+        "R": {
+          "beyond_internal_bound": 4648,
+          "count": 7060,
+          "internal_half_step_lsb": 6.08826916793297,
+          "lower": 5841,
+          "max_abs_signed_excess_lsb": 117.78444234863855,
+          "max_beyond_tolerance_lsb": 117.27582531922232,
+          "nonrail_beyond_internal_bound": 4648,
+          "projected_hull_violations": 7060,
+          "projected_plus_internal_quant_violations": 4650,
+          "rail": 0,
+          "upper": 1219
+        }
+      },
+      "denominator": 24724512,
+      "full_rail_below_hull": 0,
+      "hull_width_lsb_quantiles": {
+        "0.0": 292.87748898379505,
+        "0.5": 1721.8185753654689,
+        "0.9": 5691.468256300316,
+        "0.99": 13545.653970631938,
+        "0.999": 21658.48019246401,
+        "1.0": 25752.150016129017
+      },
+      "lower": 12309,
+      "nonrail": 14688,
+      "projected_hull_violations": 14688,
+      "projected_plus_internal_quant_violations": 9407,
+      "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et2.5s-state",
+      "upper": 2379,
+      "violations": 14688,
+      "zero_rail_above_hull": 0
+    },
+    "catmull-et6s": {
+      "abs_signed_excess_lsb_quantiles": {
+        "0.0": 0.5052401218745217,
+        "0.5": 6264.373161792755,
+        "0.9": 42129.06027674675,
+        "0.99": 57000.528665184975,
+        "0.999": 61486.03834569454,
+        "1.0": 68758.35706472397
+      },
+      "beyond_tolerance_lsb_quantiles": {
+        "0.0": 0.0009298387409731323,
+        "0.5": 6263.804197350569,
+        "0.9": 42128.49131230456,
+        "0.99": 56999.95970074279,
+        "0.999": 61485.469381252355,
+        "1.0": 68757.71913577987
+      },
+      "by_channel": {
+        "B": {
+          "beyond_internal_bound": 344138,
+          "count": 346559,
+          "internal_half_step_lsb": 3.4439129664980133,
+          "lower": 345180,
+          "max_abs_signed_excess_lsb": 42906.64997398853,
+          "max_beyond_tolerance_lsb": 42906.081009546346,
+          "nonrail_beyond_internal_bound": 8617,
+          "projected_hull_violations": 10949,
+          "projected_plus_internal_quant_violations": 8619,
+          "rail": 335611,
+          "upper": 1379
+        },
+        "G": {
+          "beyond_internal_bound": 306568,
+          "count": 306637,
+          "internal_half_step_lsb": 2.2068628771551726,
+          "lower": 306618,
+          "max_abs_signed_excess_lsb": 3999.8920905590057,
+          "max_beyond_tolerance_lsb": 3999.357608308169,
+          "nonrail_beyond_internal_bound": 158,
+          "projected_hull_violations": 210,
+          "projected_plus_internal_quant_violations": 158,
+          "rail": 306427,
+          "upper": 19
+        },
+        "R": {
+          "beyond_internal_bound": 305570,
+          "count": 308202,
+          "internal_half_step_lsb": 6.045166377363533,
+          "lower": 306474,
+          "max_abs_signed_excess_lsb": 68758.35706472397,
+          "max_beyond_tolerance_lsb": 68757.71913577987,
+          "nonrail_beyond_internal_bound": 9595,
+          "projected_hull_violations": 12177,
+          "projected_plus_internal_quant_violations": 9595,
+          "rail": 296025,
+          "upper": 1728
+        }
+      },
+      "denominator": 24724512,
+      "full_rail_below_hull": 938062,
+      "hull_width_lsb_quantiles": {
+        "0.0": 613.4994276612997,
+        "0.5": 3895.229625105858,
+        "0.9": 13285.298060595991,
+        "0.99": 57114.918794703655,
+        "0.999": 74156.01774076403,
+        "1.0": 81884.05521690845
+      },
+      "lower": 958272,
+      "nonrail": 23335,
+      "projected_hull_violations": 23336,
+      "projected_plus_internal_quant_violations": 18372,
+      "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\flat-et6s-state",
+      "upper": 3126,
+      "violations": 961398,
+      "zero_rail_above_hull": 0
+    },
+    "one-frame-bilinear": {
+      "abs_signed_excess_lsb_quantiles": {
+        "0.0": 0.5005414998186097,
+        "0.5": 1.5899718380569539,
+        "0.9": 3.5240827692177845,
+        "0.99": 5.0692735580305435,
+        "0.999": 5.782763933530077,
+        "1.0": 6.3395333918742836
+      },
+      "beyond_tolerance_lsb_quantiles": {
+        "0.0": 2.731524588782744e-06,
+        "0.5": 1.0886854324044286,
+        "0.9": 3.0235318503828488,
+        "0.99": 4.568216095633918,
+        "0.999": 5.282224953130008,
+        "1.0": 5.838994422882969
+      },
+      "by_channel": {
+        "B": {
+          "beyond_internal_bound": 0,
+          "count": 12580,
+          "internal_half_step_lsb": 3.3555522458306672,
+          "lower": 6418,
+          "max_abs_signed_excess_lsb": 3.7426341695208976,
+          "max_beyond_tolerance_lsb": 3.2415566554109,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 12580,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 6162
+        },
+        "G": {
+          "beyond_internal_bound": 0,
+          "count": 3,
+          "internal_half_step_lsb": 2.2068628771551726,
+          "lower": 1,
+          "max_abs_signed_excess_lsb": 1.1503576936684112,
+          "max_beyond_tolerance_lsb": 0.6498188832329141,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 3,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 2
+        },
+        "R": {
+          "beyond_internal_bound": 0,
+          "count": 39987,
+          "internal_half_step_lsb": 6.124906539916992,
+          "lower": 20867,
+          "max_abs_signed_excess_lsb": 6.3395333918742836,
+          "max_beyond_tolerance_lsb": 5.838994422882969,
+          "nonrail_beyond_internal_bound": 0,
+          "projected_hull_violations": 39987,
+          "projected_plus_internal_quant_violations": 0,
+          "rail": 0,
+          "upper": 19120
+        }
+      },
+      "denominator": 24724512,
+      "full_rail_below_hull": 0,
+      "hull_width_lsb_quantiles": {
+        "0.0": 3.5349802393466234,
+        "0.5": 45.010482617653906,
+        "0.9": 114.6528525603935,
+        "0.99": 256.52157401293516,
+        "0.999": 419.5662902116005,
+        "1.0": 999.7215616330504
+      },
+      "lower": 27286,
+      "nonrail": 52570,
+      "projected_hull_violations": 52570,
+      "projected_plus_internal_quant_violations": 0,
+      "state": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\out\\stage-attribution\\bilinear-scale-identity",
+      "upper": 25284,
+      "violations": 52570,
+      "zero_rail_above_hull": 0
+    }
+  }
+}

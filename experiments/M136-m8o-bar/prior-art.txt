@@ -1,0 +1,16 @@
+terms: m8-o, representable, rail, below-hull, source-hull
+==============================================================================
+CITE THESE IN THE BRIEF (rule 40):
+
+  M136-m8o-bar.md                      score   179  <-- HEADLINE MATCH
+      M136 — M8-O representable-domain ruling
+  M8-overshoot.md                      score    78  <-- HEADLINE MATCH
+      M8 source-hull census
+  M-FLATNULL.md                        score    58  <-- HEADLINE MATCH
+      M-FLATNULL — real flat-target commissioning of M8-O
+
+  also mentions it: M133-blocker-audit.md, F-camera-lens-optics.md, REVIEW.md, M8-COMPARATIVE.md, M101-defect.md, ORCH-veiling.md
+
+IN THE SOURCE (a test name can be the whole answer):
+  crates\strehl-core\src\lib.rs:127  fn rail_capture_is_not_claimed_as_supported() {
+==============================================================================
