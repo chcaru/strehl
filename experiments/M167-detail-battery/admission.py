@@ -68,7 +68,14 @@ ARM_TERMS = (
     "usm",
 )
 DANGEROUS_NAMES = {
+    "__builtins__",
+    "__cached__",
+    "__file__",
     "__import__",
+    "__loader__",
+    "__name__",
+    "__package__",
+    "__spec__",
     "breakpoint",
     "compile",
     "eval",
@@ -82,21 +89,82 @@ DANGEROUS_NAMES = {
 }
 DANGEROUS_ATTRIBUTES = {
     "DataSource",
+    "Path",
+    "Popen",
+    "call",
+    "chdir",
+    "check_call",
+    "check_output",
     "ctypeslib",
+    "datetime64",
+    "default_rng",
+    "distutils",
     "dump",
     "dumps",
+    "environ",
+    "fork",
+    "forkpty",
     "fromfile",
+    "fromregex",
+    "f2py",
     "genfromtxt",
+    "getcwd",
+    "getenv",
+    "getpid",
+    "getppid",
+    "kill",
+    "listdir",
     "load",
     "load_library",
     "loadtxt",
+    "lstat",
+    "makedirs",
     "memmap",
+    "monotonic",
+    "NpzFile",
+    "open",
     "open_memmap",
+    "os",
+    "pathlib",
+    "perf_counter",
+    "popen",
+    "process_time",
+    "putenv",
+    "random",
+    "RandomState",
+    "readlink",
+    "recfromcsv",
+    "recfromtxt",
+    "remove",
+    "rename",
+    "replace",
+    "request",
+    "rmdir",
+    "run",
     "save",
     "savetxt",
     "savez",
     "savez_compressed",
+    "scandir",
+    "sleep",
+    "socket",
+    "spawnl",
+    "spawnle",
+    "spawnlp",
+    "spawnlpe",
+    "spawnv",
+    "spawnve",
+    "spawnvp",
+    "spawnvpe",
+    "stat",
+    "subprocess",
+    "symlink",
+    "sys",
+    "time",
     "tofile",
+    "unlink",
+    "urlopen",
+    "walk",
 }
 
 
@@ -334,7 +402,11 @@ def audit_candidate_source() -> dict[str, object]:
             dangerous_imports.extend(
                 alias.name
                 for alias in node.names
-                if alias.name in DANGEROUS_ATTRIBUTES
+                if (
+                    alias.name == "*"
+                    or alias.name.startswith("__")
+                    or alias.name in DANGEROUS_ATTRIBUTES
+                )
             )
         elif isinstance(node, ast.Constant) and isinstance(node.value, str):
             lowered = node.value.lower()
@@ -913,6 +985,8 @@ def validate_sealed_transcript(
         "packet_tokens_unique": False,
         "packet_tokens_exact": False,
         "packet_hashes_exact": False,
+        "packet_instance_membership_exact": False,
+        "packet_order_exact": False,
     }
     errors = []
     try:
@@ -970,6 +1044,10 @@ def validate_sealed_transcript(
     )
     packet_count_exact = len(sealed_instances) == len(instances)
     packet_fields_exact = True
+    packet_instance_membership_exact = (
+        len(sealed_instances) == len(instances)
+    )
+    packet_order_exact = len(sealed_instances) == len(instances)
 
     for index, sealed_instance in enumerate(sealed_instances):
         if not isinstance(sealed_instance, dict):
@@ -1005,18 +1083,35 @@ def validate_sealed_transcript(
         if not isinstance(packets, list):
             packet_count_exact = False
             packet_fields_exact = False
+            packet_instance_membership_exact = False
             continue
         packet_count_exact &= len(packets) == len(expected_packets)
+        actual_instance_token_hashes = {}
+        actual_instance_tokens = []
         for packet in packets:
             if not isinstance(packet, dict):
                 packet_fields_exact = False
+                packet_instance_membership_exact = False
                 continue
             packet_fields_exact &= set(packet) == expected_packet_fields
             token = packet.get("token")
             packet_hash = packet.get("packet_sha256")
             if isinstance(token, str):
                 actual_tokens.append(token)
+                actual_instance_tokens.append(token)
                 token_hashes[token] = packet_hash
+                actual_instance_token_hashes[token] = packet_hash
+        expected_instance_token_hashes = {
+            str(packet["token"]): str(packet["packet_sha256"])
+            for packet in expected_packets
+        }
+        packet_instance_membership_exact &= (
+            actual_instance_token_hashes
+            == expected_instance_token_hashes
+        )
+        packet_order_exact &= actual_instance_tokens == [
+            str(packet["token"]) for packet in expected_packets
+        ]
 
     checks["instance_fields_exact"] = bool(instance_fields_exact)
     checks["instance_commitments_exact"] = bool(
@@ -1035,6 +1130,10 @@ def validate_sealed_transcript(
         checks["packet_tokens_exact"]
         and token_hashes == expected_token_hashes
     )
+    checks["packet_instance_membership_exact"] = bool(
+        packet_instance_membership_exact
+    )
+    checks["packet_order_exact"] = bool(packet_order_exact)
     if not all(checks.values()):
         errors.append("sealed transcript does not exactly match challenge")
     return {
@@ -1146,6 +1245,8 @@ def main() -> int:
     ]
     all_children_succeeded = (
         len(sealed_packets)
+        == INSTANCE_COUNT * (12 + len(DUPLICATE_SEMANTICS))
+        and channel_audit["calls"]
         == INSTANCE_COUNT * (12 + len(DUPLICATE_SEMANTICS))
         and all(
             packet["returncode"] == 0
