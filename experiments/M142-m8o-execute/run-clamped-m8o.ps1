@@ -19,6 +19,9 @@ $Protocol = "M136 clamped-Catmull-Rom representable-domain M8-O v1"
 $VerifierProtocol = "M136 independent verifier v1"
 $SourceCommit = $SourceCommit.ToLowerInvariant()
 $RequiredCommit = "248178b921f98ec1f13ea4c07d30fa68ace787a0"
+$RequiredVerifierCommit = "636d3f57"
+$RequiredVerifierSha256 = "CAC0E96943DAB44CA1E5FC3B6A2FD8315868290509EE2632861B48157A012401"
+$RequiredVerifierCommissionSha256 = "35777789168C5751EFD8584393A314BE5EA4A827636D621A0CDDA494B65B191F"
 
 $Experiment = [IO.Path]::GetFullPath($PSScriptRoot)
 $Repo = [IO.Path]::GetFullPath((Join-Path $Experiment "..\.."))
@@ -391,6 +394,7 @@ function Assert-Prerequisites {
     foreach ($path in @(
         $Preregistration,
         $Verifier,
+        $VerifierCommission,
         $Checker,
         $Fixture,
         $Hook,
@@ -403,6 +407,12 @@ function Assert-Prerequisites {
     }
     if ($SourceCommit -ne $RequiredCommit) {
         throw "Source commit $SourceCommit differs from preregistered candidate $RequiredCommit"
+    }
+    if ((Get-Sha256 $Verifier) -cne $RequiredVerifierSha256) {
+        throw "M136 verifier differs from final commit $RequiredVerifierCommit"
+    }
+    if ((Get-Sha256 $VerifierCommission) -cne $RequiredVerifierCommissionSha256) {
+        throw "M136 commissioning report differs from final commit $RequiredVerifierCommit"
     }
     $resolvedCommit = Get-CommandText -File "git" -Arguments @(
         "-C", $Repo, "rev-parse", "$SourceCommit`^{commit}"
@@ -1320,9 +1330,18 @@ function Summarize {
     else {
         "FAIL"
     }
+    $m8rVerdict = if (
+        [int64]$verifier.aggregate.m8_r.violations -eq 0 -and
+        @($captureRows | Where-Object { $_.m8_r_violations -ne 0 }).Count -eq 0
+    ) {
+        "PASS"
+    }
+    else {
+        "FAIL"
+    }
     $combinedVerdict = if (
         $m8oVerdict -eq "PASS" -and
-        [int64]$verifier.aggregate.m8_r.violations -eq 0 -and
+        $m8rVerdict -eq "PASS" -and
         [int64]$verifier.crop_reference_identity.violations -eq 0
     ) {
         "PASS"
@@ -1340,9 +1359,9 @@ function Summarize {
         schema = "m142-m136-summary-v1"
         schema_version = 1
         protocol = $Protocol
-        status = $m8oVerdict
+        status = $combinedVerdict
         combined_m8_status = $combinedVerdict
-        decision = "PASS iff every capture has M8-O V=0 and aggregate M8-O V=0; aggregate V>=1 is FAIL"
+        decision = "PASS iff every capture and aggregate have M8-R V=0 and M8-O V=0; either aggregate V>=1 is FAIL"
         nonzero_floor = $null
         source_commit = $SourceCommit
         instrument_freeze = Get-FrozenFile $InstrumentFreeze
@@ -1356,12 +1375,14 @@ function Summarize {
     }
     Write-Json -Path $Summary -Value $document
     Write-Host (
-        "M8-O {0}: aggregate V={1}/{2}" -f
-        $m8oVerdict,
+        "M8 {0}: M8-R aggregate V={1}/{2}; M8-O aggregate V={3}/{4}" -f
+        $combinedVerdict,
+        $verifier.aggregate.m8_r.violations,
+        $verifier.aggregate.m8_r.denominator,
         $verifier.aggregate.m8_o.violations,
         $verifier.aggregate.m8_o.denominator
     )
-    return $(if ($m8oVerdict -eq "PASS") { 0 } else { 1 })
+    return $(if ($combinedVerdict -eq "PASS") { 0 } else { 1 })
 }
 
 try {

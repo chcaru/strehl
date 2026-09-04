@@ -28,6 +28,11 @@ SOURCE_TREE = {
     "bytes": 325020512,
     "manifest_sha256": "0F0EFD13D5EC0BB8825EBFEE40F7DCD93D7C99B804582A142F59685288CBF625",
 }
+APPROVED_CANDIDATE_TREE = {
+    "files": 9293,
+    "bytes": 325053057,
+    "manifest_sha256": "CE83FD38466856BF0C526AF9137AEEE8C7670E3D886A13A8D896155D32E92E12",
+}
 SOURCE_EXPECTED = {
     "crates/strehl-core/src/align.rs": (
         "E1C906B28E4ED1FBD1610FB1D9770E14FCFC636D9658114EF60A6E314D3C499C"
@@ -371,10 +376,12 @@ def write_json_atomic(path: Path, payload: MappingLike) -> None:
 
 
 def build_source_manifest(root: Path, source_commit: str) -> MappingLike:
-    excluded = {"target-m136", "target-m136-tests"}
     paths: list[Path] = []
     for top_level in root.iterdir():
-        if top_level.name.lower() in excluded:
+        # These are the protocol's only permitted build-output subtrees.  Do
+        # not blanket-ignore generic or nested `target` directories: those may
+        # be committed build inputs and belong in the frozen inventory.
+        if top_level.name.lower() in {"target-m136", "target-m136-tests"}:
             continue
         if top_level.is_symlink():
             raise RuntimeError(
@@ -587,6 +594,10 @@ def main() -> int:
         "restore nominal support",
     )
 
+    # Deliberately retain the approved CE83... candidate identity. Four
+    # development examples include align_cmd.rs directly and therefore do not
+    # resolve this crate-root module; the registered measurement and verifier
+    # both build only the strehl-cli binary target.
     replace_once(
         main_rs,
         "mod merge_cmd;\nmod stack;\n",
@@ -852,7 +863,11 @@ def main() -> int:
             },
             {
                 "file": "crates/strehl-cli/src/main.rs",
-                "change": "declare the value-only m8_trace_v3 module",
+                "change": (
+                    "declare the value-only m8_trace_v3 module for the registered "
+                    "bin-only build; consciously retain the approved CE83 private-"
+                    "snapshot example-module limitation"
+                ),
             },
             {
                 "file": "crates/strehl-cli/src/align_cmd.rs",
@@ -891,10 +906,22 @@ def main() -> int:
             "auxiliary_warps_traced": False,
         },
     }
-    write_json_atomic(
-        source_manifest_path,
-        build_source_manifest(destination, SOURCE_COMMIT),
-    )
+    candidate_manifest = build_source_manifest(destination, SOURCE_COMMIT)
+    candidate_tree = {
+        "files": candidate_manifest["file_count"],
+        "bytes": candidate_manifest["total_bytes"],
+        "manifest_sha256": candidate_manifest["tree_sha256"],
+    }
+    if candidate_tree != APPROVED_CANDIDATE_TREE:
+        raise RuntimeError(
+            "candidate source tree differs from the prospectively approved identity: "
+            f"expected {APPROVED_CANDIDATE_TREE}, observed {candidate_tree}"
+        )
+    if candidate_tree != payload["patched_tree"]:
+        raise RuntimeError(
+            "exhaustive source manifest disagrees with source-patch tree identity"
+        )
+    write_json_atomic(source_manifest_path, candidate_manifest)
     write_json_atomic(record, payload)
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
