@@ -46,20 +46,22 @@ FROZEN_PARAMETERS: dict[str, Any] = {
         "tile_stride_green_px": 256,
         "fft_size": 1024,
         "minimum_period_green_px": 20.0,
-        "maximum_period_green_px": 128.0,
+        # The commissioned slide is about 64 green pixels per primitive period
+        # in the reference state and about 32 in TC0.  The 96-pixel ceiling
+        # leaves broad setup tolerance without treating a Hann sidelobe near
+        # 128 pixels as an admissible alternate primitive.
+        "maximum_period_green_px": 96.0,
         "minimum_tile_robust_range_dn": 50.0,
         "minimum_peak_snr_db": 12.0,
         "minimum_median_peak_snr_db": 20.0,
         "subharmonic_factors": [2, 3],
-        # A lower-frequency alternative is judged against the same absolute
-        # spectral floor as an ordinary lattice candidate.  A relative-to-
-        # selected-peak threshold can miss a real but weaker primitive when a
-        # harmonic is exceptionally strong.  The alternative must also have
-        # 20 dB median local prominence (matching the selected grid's median
-        # SNR threshold), which rejects broad Hann-window leakage rather than
-        # a coherent peak.
+        # A lower-frequency alternative must clear absolute, local-prominence,
+        # and very permissive relative floors.  The conjunction detects a real
+        # but much weaker primitive without classifying broad Hann-window
+        # leakage as a coherent peak.
         "minimum_subharmonic_peak_snr_db": 12.0,
         "minimum_subharmonic_peak_prominence_db": 20.0,
+        "minimum_subharmonic_relative_db": -50.0,
         "reciprocal_angle_degrees": [70.0, 90.0],
         "maximum_axis_period_ratio": 1.5,
         "period_cluster_relative_half_width": 0.018,
@@ -760,6 +762,8 @@ def _find_cluster(
             peak_snr_db >= estimator["minimum_subharmonic_peak_snr_db"]
             and prominence_db
             >= estimator["minimum_subharmonic_peak_prominence_db"]
+            and median_subharmonic_relative[factor]
+            >= estimator["minimum_subharmonic_relative_db"]
         ):
             relative_db = median_subharmonic_relative[factor]
             raise MeasurementRefusal(
@@ -770,7 +774,9 @@ def _find_cluster(
                 f"local floor ({relative_db:.2f} dB relative to the selected "
                 "peak); the frozen evidence limits are "
                 f"{estimator['minimum_subharmonic_peak_snr_db']:.2f} and "
-                f"{estimator['minimum_subharmonic_peak_prominence_db']:.2f} dB.",
+                f"{estimator['minimum_subharmonic_peak_prominence_db']:.2f} dB, "
+                f"with a {estimator['minimum_subharmonic_relative_db']:.2f} dB "
+                "relative floor.",
                 "Use a sharper, larger grid view whose primitive period dominates; "
                 "do not trust a possible integer-period alias.",
             )
