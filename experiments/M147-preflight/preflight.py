@@ -24,12 +24,12 @@ import rawpy
 from scipy import ndimage
 
 
-TOOL_VERSION = "1.0.0"
+TOOL_VERSION = "1.1.0"
 
 # There are intentionally no CLI overrides for these values.  The canonical
 # serialization and SHA-256 are written into every result artifact.
 FROZEN_PARAMETERS: dict[str, Any] = {
-    "schema": "m147-preflight-parameters-v1",
+    "schema": "m147-preflight-parameters-v2",
     "decision": {
         "minimum_sampling_ratio": 2.0,
         "confidence_level": 0.95,
@@ -51,7 +51,11 @@ FROZEN_PARAMETERS: dict[str, Any] = {
         "minimum_peak_snr_db": 12.0,
         "minimum_median_peak_snr_db": 20.0,
         "subharmonic_factors": [2, 3],
-        "subharmonic_ambiguity_relative_db": -30.0,
+        # A lower-frequency alternative is judged against the same absolute
+        # spectral floor as an ordinary lattice candidate.  A relative-to-
+        # selected-peak threshold can miss a real but weaker primitive when a
+        # harmonic is exceptionally strong.
+        "minimum_subharmonic_peak_snr_db": 12.0,
         "reciprocal_angle_degrees": [70.0, 90.0],
         "maximum_axis_period_ratio": 1.5,
         "period_cluster_relative_half_width": 0.018,
@@ -101,12 +105,14 @@ class MeasurementRefusal(RuntimeError):
         message: str,
         action: str,
         details: dict[str, Any] | None = None,
+        input_record: dict[str, Any] | None = None,
     ):
         super().__init__(message)
         self.code = code
         self.message = message
         self.action = action
         self.details = details or {}
+        self.input_record = input_record
 
 
 class UsageError(RuntimeError):
@@ -164,8 +170,17 @@ def _validate_input_path(path: Path, role: str) -> Path:
     return path.resolve()
 
 
+def _file_input_record(path: Path, file_hash: str) -> dict[str, Any]:
+    return {
+        "path": str(path.resolve()),
+        "sha256": file_hash,
+        "size_bytes": path.stat().st_size,
+    }
+
+
 def decode_arw(path: Path) -> DecodedRaw:
     file_hash = sha256_file(path)
+    file_record = _file_input_record(path, file_hash)
     try:
         with rawpy.imread(str(path)) as raw:
             mosaic = np.array(raw.raw_image_visible, dtype=np.uint16, copy=True)
@@ -179,13 +194,27 @@ def decode_arw(path: Path) -> DecodedRaw:
             "RAW_DECODE_FAILED",
             f"rawpy could not decode {path.name}: {error}",
             "Check that this is an intact Sony ARW and retake the preflight frame.",
+            input_record=file_record,
         ) from error
+
+    decoded_hash = hashlib.sha256(memoryview(np.ascontiguousarray(mosaic))).hexdigest()
+    decoded_record = {
+        **file_record,
+        "decoded_visible_sha256": decoded_hash,
+        "visible_shape": [int(value) for value in mosaic.shape],
+        "raw_pattern": pattern.tolist(),
+        "color_desc": color_desc_bytes.decode("ascii", errors="replace").rstrip("\x00"),
+        "black_levels_dn": [float(value) for value in black],
+        "white_level_dn": white,
+        "pixel_aspect": pixel_aspect,
+    }
 
     if pattern.shape != (2, 2):
         raise MeasurementRefusal(
             "UNSUPPORTED_CFA",
             f"Expected a 2x2 Bayer CFA, found {pattern.shape}.",
             "Use an unmodified Sony ARW from the capture camera.",
+            input_record=decoded_record,
         )
     green_indices = [
         index for index, value in enumerate(color_desc_bytes) if value == ord("G")
@@ -196,15 +225,16 @@ def decode_arw(path: Path) -> DecodedRaw:
             "UNSUPPORTED_CFA",
             f"Expected two green CFA sites, found {len(green_positions)}.",
             "Use an unmodified Bayer Sony ARW from the capture camera.",
+            input_record=decoded_record,
         )
     if not math.isclose(pixel_aspect, 1.0, rel_tol=0.0, abs_tol=1e-12):
         raise MeasurementRefusal(
             "NON_SQUARE_PIXELS",
             f"RAW decoder reports pixel aspect {pixel_aspect}, not 1.0.",
             "Use the original camera ARW rather than a converted or rescaled file.",
+            input_record=decoded_record,
         )
 
-    decoded_hash = hashlib.sha256(memoryview(np.ascontiguousarray(mosaic))).hexdigest()
     planes: list[np.ndarray] = []
     low_count = 0
     high_count = 0
@@ -224,29 +254,7 @@ def decode_arw(path: Path) -> DecodedRaw:
     low_fraction = low_count / sample_count
     high_fraction = high_count / sample_count
     robust_fraction = min(robust_ranges) / usable_span
-    raw_rules = FROZEN_PARAMETERS["raw"]
-    if low_fraction > raw_rules["maximum_low_rail_fraction"]:
-        raise MeasurementRefusal(
-            "LOW_RAIL_CLIPPING",
-            f"Low-rail fraction {low_fraction:.6f} exceeds "
-            f"{raw_rules['maximum_low_rail_fraction']:.6f}.",
-            "Increase illumination or exposure without clipping highlights, then retake.",
-        )
-    if high_fraction > raw_rules["maximum_high_rail_fraction"]:
-        raise MeasurementRefusal(
-            "HIGH_RAIL_CLIPPING",
-            f"High-rail fraction {high_fraction:.6f} exceeds "
-            f"{raw_rules['maximum_high_rail_fraction']:.6f}.",
-            "Reduce illumination or exposure, then retake both preflight frames.",
-        )
-    if robust_fraction < raw_rules["minimum_robust_range_fraction"]:
-        raise MeasurementRefusal(
-            "INSUFFICIENT_CONTRAST",
-            f"Robust RAW range {robust_fraction:.6f} of usable span is too small.",
-            "Reframe on the grid, improve illumination, and focus before retaking.",
-        )
-
-    return DecodedRaw(
+    decoded = DecodedRaw(
         path=path,
         file_sha256=file_hash,
         decoded_sha256=decoded_hash,
@@ -261,6 +269,33 @@ def decode_arw(path: Path) -> DecodedRaw:
         high_rail_fraction=float(high_fraction),
         robust_range_fraction=float(robust_fraction),
     )
+    input_record = decoded.input_record()
+    raw_rules = FROZEN_PARAMETERS["raw"]
+    if low_fraction > raw_rules["maximum_low_rail_fraction"]:
+        raise MeasurementRefusal(
+            "LOW_RAIL_CLIPPING",
+            f"Low-rail fraction {low_fraction:.6f} exceeds "
+            f"{raw_rules['maximum_low_rail_fraction']:.6f}.",
+            "Increase illumination or exposure without clipping highlights, then retake.",
+            input_record=input_record,
+        )
+    if high_fraction > raw_rules["maximum_high_rail_fraction"]:
+        raise MeasurementRefusal(
+            "HIGH_RAIL_CLIPPING",
+            f"High-rail fraction {high_fraction:.6f} exceeds "
+            f"{raw_rules['maximum_high_rail_fraction']:.6f}.",
+            "Reduce illumination or exposure, then retake both preflight frames.",
+            input_record=input_record,
+        )
+    if robust_fraction < raw_rules["minimum_robust_range_fraction"]:
+        raise MeasurementRefusal(
+            "INSUFFICIENT_CONTRAST",
+            f"Robust RAW range {robust_fraction:.6f} of usable span is too small.",
+            "Reframe on the grid, improve illumination, and focus before retaking.",
+            input_record=input_record,
+        )
+
+    return decoded
 
 
 @lru_cache(maxsize=1)
@@ -321,6 +356,25 @@ def _angle_distance_mod_90(first: float, second: float) -> float:
 
 def _signed_angle_delta_mod_90(first: float, second: float) -> float:
     return (second - first + 45.0) % 90.0 - 45.0
+
+
+def _map_reference_coordinate_yx(
+    coordinate_yx: np.ndarray,
+    center_yx: np.ndarray,
+    scale_ratio: float,
+    rotation_degrees: float,
+) -> np.ndarray:
+    radians = math.radians(rotation_degrees)
+    # The conventional Cartesian rotation is expressed here for [y, x]
+    # image coordinates: y' = cos*y + sin*x; x' = -sin*y + cos*x.
+    rotation_yx = np.asarray(
+        [
+            [math.cos(radians), math.sin(radians)],
+            [-math.sin(radians), math.cos(radians)],
+        ],
+        dtype=np.float64,
+    )
+    return center_yx + rotation_yx @ (coordinate_yx - center_yx) / scale_ratio
 
 
 def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
@@ -427,26 +481,26 @@ def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
         float(power[int(first[0]), int(first[1])]),
         float(power[int(second[0]), int(second[1])]),
     )
-    subharmonic_relative_db = {
-        str(factor): min(
-            10.0
-            * math.log10(
-                max(
-                    neighborhood_peak(vector_1 / factor) / selected_powers[0],
-                    1e-30,
-                )
-            ),
-            10.0
-            * math.log10(
-                max(
-                    neighborhood_peak(vector_2 / factor) / selected_powers[1],
-                    1e-30,
-                )
-            ),
+    subharmonic_relative_db: dict[str, float] = {}
+    subharmonic_peak_snr_db: dict[str, float] = {}
+    for factor in estimator["subharmonic_factors"]:
+        if period * factor > estimator["maximum_period_green_px"]:
+            continue
+        alternative_powers = (
+            neighborhood_peak(vector_1 / factor),
+            neighborhood_peak(vector_2 / factor),
         )
-        for factor in estimator["subharmonic_factors"]
-        if period * factor <= estimator["maximum_period_green_px"]
-    }
+        subharmonic_relative_db[str(factor)] = min(
+            10.0 * math.log10(max(alternative_powers[0] / selected_powers[0], 1e-30)),
+            10.0 * math.log10(max(alternative_powers[1] / selected_powers[1], 1e-30)),
+        )
+        # Absolute evidence against the local spectral floor is what makes an
+        # alternative measurable.  Comparing only with an arbitrarily strong
+        # selected harmonic creates a tunable false-PASS path.
+        subharmonic_peak_snr_db[str(factor)] = min(
+            10.0 * math.log10(max(alternative_powers[0] / background, 1e-30)),
+            10.0 * math.log10(max(alternative_powers[1] / background, 1e-30)),
+        )
     orientations = [_orientation_mod_90(vector_1), _orientation_mod_90(vector_2)]
     if _angle_distance_mod_90(orientations[0], orientations[1]) <= 10.0:
         orientation = float(np.mean(orientations))
@@ -460,6 +514,9 @@ def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
         "peak_snr_db": float(10.0 * math.log10(max(strength / background, 1e-30))),
         "subharmonic_relative_db": {
             factor: float(value) for factor, value in subharmonic_relative_db.items()
+        },
+        "subharmonic_peak_snr_db": {
+            factor: float(value) for factor, value in subharmonic_peak_snr_db.items()
         },
     }
 
@@ -626,14 +683,31 @@ def _find_cluster(
             str(factor) in item["subharmonic_relative_db"] for item in best
         )
     }
-    for factor, relative_db in median_subharmonic_relative.items():
-        if relative_db >= estimator["subharmonic_ambiguity_relative_db"]:
+    median_subharmonic_peak_snr = {
+        str(factor): float(
+            np.median(
+                [
+                    item["subharmonic_peak_snr_db"][str(factor)]
+                    for item in best
+                    if str(factor) in item["subharmonic_peak_snr_db"]
+                ]
+            )
+        )
+        for factor in estimator["subharmonic_factors"]
+        if any(
+            str(factor) in item["subharmonic_peak_snr_db"] for item in best
+        )
+    }
+    for factor, peak_snr_db in median_subharmonic_peak_snr.items():
+        if peak_snr_db >= estimator["minimum_subharmonic_peak_snr_db"]:
+            relative_db = median_subharmonic_relative[factor]
             raise MeasurementRefusal(
                 "AMBIGUOUS_HARMONIC",
-                f"{phase_name}: the selected lattice has a coherent 1/{factor} "
-                f"frequency alternative only {-relative_db:.2f} dB below it; "
-                f"the frozen ambiguity limit is "
-                f"{-estimator['subharmonic_ambiguity_relative_db']:.2f} dB.",
+                f"{phase_name}: the selected lattice has a measurable 1/{factor} "
+                f"frequency alternative at {peak_snr_db:.2f} dB above the "
+                f"spectral floor ({relative_db:.2f} dB relative to the selected "
+                f"peak); the frozen alternative-evidence limit is "
+                f"{estimator['minimum_subharmonic_peak_snr_db']:.2f} dB.",
                 "Use a sharper, larger grid view whose primitive period dominates; "
                 "do not trust a possible integer-period alias.",
             )
@@ -669,6 +743,7 @@ def _find_cluster(
         "period_mad_fraction": mad_fraction,
         "median_peak_snr_db": median_snr,
         "median_subharmonic_relative_db": median_subharmonic_relative,
+        "median_subharmonic_peak_snr_db": median_subharmonic_peak_snr,
         "median_reciprocal_angle_degrees": float(
             np.median([item["reciprocal_angle_degrees"] for item in best])
         ),
@@ -861,20 +936,19 @@ def _bootstrap_ratio(
         reference["green_phases"][0]["image_shape_green_px"], dtype=np.float64
     )
     center = (shape - 1.0) / 2.0
-    rotation_radians = math.radians(
-        _signed_angle_delta_mod_90(
-            reference["orientation_degrees_mod_90"],
-            scored["orientation_degrees_mod_90"],
-        )
+    signed_rotation_degrees = _signed_angle_delta_mod_90(
+        reference["orientation_degrees_mod_90"],
+        scored["orientation_degrees_mod_90"],
     )
-    coordinate_rotation = np.asarray(
+    scored_samples = scored["local_period_samples"]
+    reference_samples = reference["local_period_samples"]
+    reference_coordinates = np.asarray(
         [
-            [math.cos(rotation_radians), -math.sin(rotation_radians)],
-            [math.sin(rotation_radians), math.cos(rotation_radians)],
+            [sample["center_y_green_px"], sample["center_x_green_px"]]
+            for sample in reference_samples
         ],
         dtype=np.float64,
     )
-    scored_samples = scored["local_period_samples"]
     scored_coordinates = np.asarray(
         [
             [sample["center_y_green_px"], sample["center_x_green_px"]]
@@ -886,17 +960,17 @@ def _bootstrap_ratio(
     maximum_distance = math.sqrt(2.0) * stride / 2.0 + 1e-9
     block_size = FROZEN_PARAMETERS["estimator"]["spatial_block_size_green_px"]
     grouped_local_ratios: dict[str, list[float]] = {}
-    grouped_distances: dict[str, list[float]] = {}
-    for sample in reference["local_period_samples"]:
+    mapped_local_sites: list[dict[str, Any]] = []
+    for sample in reference_samples:
         reference_coordinate = np.asarray(
             [sample["center_y_green_px"], sample["center_x_green_px"]],
             dtype=np.float64,
         )
-        mapped_coordinate = (
-            center
-            + coordinate_rotation
-            @ (reference_coordinate - center)
-            / global_period_ratio
+        mapped_coordinate = _map_reference_coordinate_yx(
+            reference_coordinate,
+            center,
+            global_period_ratio,
+            signed_rotation_degrees,
         )
         distances = np.linalg.norm(scored_coordinates - mapped_coordinate, axis=1)
         nearest = int(np.argmin(distances))
@@ -911,7 +985,72 @@ def _bootstrap_ratio(
             sample["period_green_px"]
             / scored_samples[nearest]["period_green_px"]
         )
-        grouped_distances.setdefault(block_key, []).append(distance)
+        mapped_local_sites.append(
+            {
+                "mapping_direction": "reference_to_scored",
+                "reference_center_y_green_px": float(reference_coordinate[0]),
+                "reference_center_x_green_px": float(reference_coordinate[1]),
+                "scored_center_y_green_px": float(
+                    scored_samples[nearest]["center_y_green_px"]
+                ),
+                "scored_center_x_green_px": float(
+                    scored_samples[nearest]["center_x_green_px"]
+                ),
+                "nearest_distance_green_px": distance,
+                "reference_block": block_key,
+                "ratio": float(
+                    sample["period_green_px"]
+                    / scored_samples[nearest]["period_green_px"]
+                ),
+            }
+        )
+    # Also walk retained TC0 sites back into the reference frame.  Reference
+    # sampling is denser in physical target coordinates, but the reciprocal
+    # pass prevents a retained TC0 defect in a coverage hole from being ignored.
+    for sample in scored_samples:
+        scored_coordinate = np.asarray(
+            [sample["center_y_green_px"], sample["center_x_green_px"]],
+            dtype=np.float64,
+        )
+        mapped_reference_coordinate = _map_reference_coordinate_yx(
+            scored_coordinate,
+            center,
+            1.0 / global_period_ratio,
+            -signed_rotation_degrees,
+        )
+        if np.any(mapped_reference_coordinate < 0.0) or np.any(
+            mapped_reference_coordinate >= shape
+        ):
+            continue
+        distances = np.linalg.norm(
+            reference_coordinates - mapped_reference_coordinate,
+            axis=1,
+        )
+        nearest = int(np.argmin(distances))
+        distance = float(distances[nearest])
+        if distance > maximum_distance:
+            continue
+        reference_sample = reference_samples[nearest]
+        reference_coordinate = reference_coordinates[nearest]
+        block_key = (
+            f"{int(reference_coordinate[0] // block_size)},"
+            f"{int(reference_coordinate[1] // block_size)}"
+        )
+        mapped_local_sites.append(
+            {
+                "mapping_direction": "scored_to_reference",
+                "reference_center_y_green_px": float(reference_coordinate[0]),
+                "reference_center_x_green_px": float(reference_coordinate[1]),
+                "scored_center_y_green_px": float(scored_coordinate[0]),
+                "scored_center_x_green_px": float(scored_coordinate[1]),
+                "nearest_distance_green_px": distance,
+                "reference_block": block_key,
+                "ratio": float(
+                    reference_sample["period_green_px"]
+                    / sample["period_green_px"]
+                ),
+            }
+        )
     mapped_block_ratios = {
         key: float(np.median(values))
         for key, values in sorted(grouped_local_ratios.items())
@@ -924,13 +1063,18 @@ def _bootstrap_ratio(
             f"TC0 grid region; {minimum_common} are required.",
             "Reframe both states so every retained reference strip maps onto grid.",
         )
-    local_ratios = np.asarray(list(mapped_block_ratios.values()), dtype=np.float64)
-    point = float(np.median(local_ratios))
+    local_block_ratios = np.asarray(
+        list(mapped_block_ratios.values()), dtype=np.float64
+    )
+    local_site_ratios = np.asarray(
+        [site["ratio"] for site in mapped_local_sites], dtype=np.float64
+    )
+    point = float(np.median(local_block_ratios))
     systematic = float(uncertainty["relative_systematic_allowance"])
-    lower = min(q_low, min(phase_ratios), float(np.min(local_ratios))) * (
+    lower = min(q_low, min(phase_ratios), float(np.min(local_site_ratios))) * (
         1.0 - systematic
     )
-    upper = max(q_high, max(phase_ratios), float(np.max(local_ratios))) * (
+    upper = max(q_high, max(phase_ratios), float(np.max(local_site_ratios))) * (
         1.0 + systematic
     )
     return {
@@ -943,19 +1087,24 @@ def _bootstrap_ratio(
         "global_median_period_ratio": float(global_period_ratio),
         "common_spatial_block_count": len(mapped_block_ratios),
         "local_spatial_ratios": mapped_block_ratios,
+        "mapped_local_site_count": len(mapped_local_sites),
+        "mapped_local_sites": mapped_local_sites,
         "local_mapping_maximum_distance_green_px": maximum_distance,
         "local_mapping_median_nearest_distance_green_px": float(
             np.median(
                 [
-                    distance
-                    for distances in grouped_distances.values()
-                    for distance in distances
+                    site["nearest_distance_green_px"]
+                    for site in mapped_local_sites
                 ]
             )
         ),
         "local_spatial_ratio_envelope": [
-            float(np.min(local_ratios)),
-            float(np.max(local_ratios)),
+            float(np.min(local_site_ratios)),
+            float(np.max(local_site_ratios)),
+        ],
+        "local_block_ratio_envelope": [
+            float(np.min(local_block_ratios)),
+            float(np.max(local_block_ratios)),
         ],
         "relative_systematic_allowance": systematic,
         "lower": float(lower),
@@ -1056,7 +1205,7 @@ def _tool_record() -> dict[str, Any]:
 def run_preflight(reference_path: Path, scored_path: Path) -> tuple[dict[str, Any], int]:
     started = time.perf_counter()
     artifact: dict[str, Any] = {
-        "schema": "m147-preflight-result-v1",
+        "schema": "m147-preflight-result-v2",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "tool": _tool_record(),
         "parameters": FROZEN_PARAMETERS,
@@ -1119,6 +1268,9 @@ def run_preflight(reference_path: Path, scored_path: Path) -> tuple[dict[str, An
                 inputs["reference"] = decoded_reference.input_record()
             if decoded_scored is not None:
                 inputs["scored"] = decoded_scored.input_record()
+            if refusal.input_record is not None:
+                failed_role = "reference" if decoded_reference is None else "scored"
+                inputs[failed_role] = refusal.input_record
             artifact["inputs"] = inputs
         artifact["status"] = "REFUSED"
         artifact["decision"] = {

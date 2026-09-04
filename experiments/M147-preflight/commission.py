@@ -44,7 +44,7 @@ MASTER_SEED = 147_202_609
 NOMINAL_RATIO = 2.0312
 
 RULES: dict[str, Any] = {
-    "schema": "m147-commission-rules-v1",
+    "schema": "m147-commission-rules-v2",
     "uniform_scale_maximum_relative_error": 0.0025,
     "null_maximum_relative_error": 0.0025,
     "mild_nuisance_maximum_relative_error": 0.0025,
@@ -201,6 +201,186 @@ def run_pair(
         }
 
 
+def synthetic_measurement(
+    period: float,
+    orientation_degrees: float,
+) -> dict[str, Any]:
+    block_periods = {
+        f"{row},{column}": period
+        for row in range(2)
+        for column in range(3)
+    }
+    local_samples = []
+    for y in (256.0, 512.0, 768.0, 1024.0, 1280.0):
+        for x in (256.0, 512.0, 768.0, 1024.0, 1280.0, 1536.0):
+            block_key = f"{min(int(y // 512), 1)},{min(int(x // 512), 2)}"
+            local_samples.append(
+                {
+                    "center_y_green_px": y,
+                    "center_x_green_px": x,
+                    "period_green_px": block_periods[block_key],
+                }
+            )
+    return {
+        "period_green_px": period,
+        "axis_periods_green_px": [period * 0.998, period * 1.002],
+        "orientation_degrees_mod_90": orientation_degrees,
+        "block_periods_green_px": block_periods,
+        "green_phases": [
+            {
+                "period_green_px": period * (1.0 - 0.00005),
+                "image_shape_green_px": [1536, 2048],
+            },
+            {
+                "period_green_px": period * (1.0 + 0.00005),
+                "image_shape_green_px": [1536, 2048],
+            },
+        ],
+        "local_period_samples": local_samples,
+    }
+
+
+def run_measurements(
+    reference: dict[str, Any],
+    scored: dict[str, Any],
+) -> dict[str, Any]:
+    started = time.perf_counter()
+    try:
+        decision = evaluate_measurements(reference, scored)
+        return {
+            "measurement_status": "OK",
+            "decision": decision,
+            "elapsed_seconds": time.perf_counter() - started,
+        }
+    except MeasurementRefusal as refusal:
+        return {
+            "measurement_status": "REFUSED",
+            "reason_code": refusal.code,
+            "message": refusal.message,
+            "action": refusal.action,
+            "diagnostics": refusal.details,
+            "elapsed_seconds": time.perf_counter() - started,
+        }
+
+
+def map_coordinate_yx_independently(
+    coordinate_yx: np.ndarray,
+    center_yx: np.ndarray,
+    scale_ratio: float,
+    rotation_degrees: float,
+) -> np.ndarray:
+    radians = math.radians(rotation_degrees)
+    offset_y, offset_x = coordinate_yx - center_yx
+    return center_yx + np.asarray(
+        [
+            math.cos(radians) * offset_y + math.sin(radians) * offset_x,
+            -math.sin(radians) * offset_y + math.cos(radians) * offset_x,
+        ],
+        dtype=np.float64,
+    ) / scale_ratio
+
+
+def arm_single_site_defect(_: Path) -> dict[str, Any]:
+    reference = synthetic_measurement(64.0, 4.0)
+    scored = synthetic_measurement(64.0 / 2.02, 4.0)
+    center = np.asarray([767.5, 1023.5])
+    for reference_sample, scored_sample in zip(
+        reference["local_period_samples"],
+        scored["local_period_samples"],
+        strict=True,
+    ):
+        mapped = map_coordinate_yx_independently(
+            np.asarray(
+                [
+                    reference_sample["center_y_green_px"],
+                    reference_sample["center_x_green_px"],
+                ]
+            ),
+            center,
+            2.02,
+            0.0,
+        )
+        scored_sample["center_y_green_px"] = float(mapped[0])
+        scored_sample["center_x_green_px"] = float(mapped[1])
+    reference["local_period_samples"][0]["period_green_px"] = (
+        scored["local_period_samples"][0]["period_green_px"] * 1.99
+    )
+    result = run_measurements(reference, scored)
+    result.update(
+        {
+            "plant": (
+                "one retained mapped site at ratio 1.99 inside an otherwise "
+                "nominal 2.02 block"
+            ),
+            "required": "numeric FAIL with local envelope at 1.99",
+        }
+    )
+    local_minimum = result.get("decision", {}).get("interval", {}).get(
+        "local_spatial_ratio_envelope",
+        [math.inf],
+    )[0]
+    result["pass"] = (
+        result["measurement_status"] == "OK"
+        and result["decision"]["verdict"] == "FAIL"
+        and math.isclose(float(local_minimum), 1.99, abs_tol=1e-12)
+    )
+    return result
+
+
+def arm_rotation_mapping(_: Path) -> dict[str, Any]:
+    reference = synthetic_measurement(64.0, 4.0)
+    scored = synthetic_measurement(64.0 / 2.02, 14.0)
+    center = np.asarray([767.5, 1023.5])
+    correctly_mapped = []
+    oppositely_mapped = []
+    for index, sample in enumerate(reference["local_period_samples"]):
+        coordinate = np.asarray(
+            [sample["center_y_green_px"], sample["center_x_green_px"]]
+        )
+        for angle, collection in (
+            (10.0, correctly_mapped),
+            (-10.0, oppositely_mapped),
+        ):
+            mapped = map_coordinate_yx_independently(
+                coordinate,
+                center,
+                2.02,
+                angle,
+            )
+            collection.append(
+                {
+                    "center_y_green_px": float(mapped[0]),
+                    "center_x_green_px": float(mapped[1]),
+                    "period_green_px": (
+                        64.0 / 1.99
+                        if angle == 10.0 and index == 0
+                        else 64.0 / 2.02
+                    ),
+                }
+            )
+    scored["local_period_samples"] = correctly_mapped + oppositely_mapped
+    result = run_measurements(reference, scored)
+    result.update(
+        {
+            "plant": (
+                "10 degree y,x-coordinate map with one 1.99 site only at the "
+                "physically correct rotation"
+            ),
+            "required": "numeric FAIL with local envelope at 1.99",
+        }
+    )
+    local_minimum = result.get("decision", {}).get("interval", {}).get(
+        "local_spatial_ratio_envelope",
+        [math.inf],
+    )[0]
+    result["pass"] = (
+        result["measurement_status"] == "OK"
+        and result["decision"]["verdict"] == "FAIL"
+        and math.isclose(float(local_minimum), 1.99, abs_tol=1e-12)
+    )
+    return result
+
+
 def arm_alias(_: Path) -> dict[str, Any]:
     reference = analytic_grid(fundamental=700.0, harmonic_2=80.0)
     # Same physical 64-pixel period, but a much stronger second harmonic in
@@ -214,7 +394,10 @@ def arm_alias(_: Path) -> dict[str, Any]:
             "required": "typed refusal; never a numeric PASS",
         }
     )
-    result["pass"] = result["measurement_status"] == "REFUSED"
+    result["pass"] = (
+        result["measurement_status"] == "REFUSED"
+        and result.get("reason_code") == "AMBIGUOUS_HARMONIC"
+    )
     return result
 
 
@@ -238,7 +421,64 @@ def arm_alias_third(_: Path) -> dict[str, Any]:
             "required": "typed refusal; never a numeric PASS",
         }
     )
-    result["pass"] = result["measurement_status"] == "REFUSED"
+    result["pass"] = (
+        result["measurement_status"] == "REFUSED"
+        and result.get("reason_code") == "AMBIGUOUS_HARMONIC"
+    )
+    return result
+
+
+def arm_alias_weak(_: Path) -> dict[str, Any]:
+    reference = analytic_grid(fundamental=700.0, harmonic_2=80.0)
+    # The primitive is more than 30 dB below the selected harmonic, defeating
+    # the retired relative-power guard while remaining measurable above the
+    # absolute spectral floor.
+    scored = analytic_grid(fundamental=20.0, harmonic_2=900.0, seed=MASTER_SEED + 12)
+    result = run_pair(reference, scored)
+    result.update(
+        {
+            "truth_ratio": 1.0,
+            "plant": (
+                "same 64 px primitive; second harmonic dominates with primitive "
+                "more than 30 dB below selected peak"
+            ),
+            "required": "typed refusal; never a numeric PASS",
+        }
+    )
+    result["pass"] = (
+        result["measurement_status"] == "REFUSED"
+        and result.get("reason_code") == "AMBIGUOUS_HARMONIC"
+    )
+    return result
+
+
+def arm_alias_third_weak(_: Path) -> dict[str, Any]:
+    reference = analytic_grid(
+        fundamental=700.0,
+        harmonic_2=60.0,
+        harmonic_3=30.0,
+    )
+    scored = analytic_grid(
+        fundamental=20.0,
+        harmonic_2=5.0,
+        harmonic_3=900.0,
+        seed=MASTER_SEED + 13,
+    )
+    result = run_pair(reference, scored)
+    result.update(
+        {
+            "truth_ratio": 1.0,
+            "plant": (
+                "same 64 px primitive; third harmonic dominates with primitive "
+                "more than 30 dB below selected peak"
+            ),
+            "required": "typed refusal; never a numeric PASS",
+        }
+    )
+    result["pass"] = (
+        result["measurement_status"] == "REFUSED"
+        and result.get("reason_code") == "AMBIGUOUS_HARMONIC"
+    )
     return result
 
 
@@ -378,7 +618,10 @@ def arm_no_grid(_: Path) -> dict[str, Any]:
     ).astype(np.float32)
     result = run_pair((plane, plane.copy()), (plane.copy(), plane.copy()))
     result.update({"plant": "smooth illumination plus correlated noise"})
-    result["pass"] = result["measurement_status"] == "REFUSED"
+    result["pass"] = (
+        result["measurement_status"] == "REFUSED"
+        and result.get("reason_code") == "NO_COHERENT_GRID"
+    )
     return result
 
 
@@ -416,7 +659,11 @@ SCALE_ERRORS = {
 }
 REQUIRED_NONCOVERAGE_ARMS = [
     "alias",
+    "alias-weak",
     "alias-third",
+    "alias-third-weak",
+    "single-site-defect",
+    "rotation-mapping",
     "anisotropic",
     "perspective",
     "blur-mild",
@@ -522,7 +769,11 @@ def arm_coverage(_: Path, index: int) -> dict[str, Any]:
 
 ARMS: dict[str, Callable[[Path], dict[str, Any]]] = {
     "alias": arm_alias,
+    "alias-weak": arm_alias_weak,
     "alias-third": arm_alias_third,
+    "alias-third-weak": arm_alias_third_weak,
+    "single-site-defect": arm_single_site_defect,
+    "rotation-mapping": arm_rotation_mapping,
     "anisotropic": arm_anisotropic,
     "perspective": arm_perspective,
     "blur-mild": arm_blur_mild,
@@ -540,7 +791,7 @@ def load_output() -> dict[str, Any]:
     if OUTPUT.exists():
         return json.loads(OUTPUT.read_text(encoding="utf-8"))
     return {
-        "schema": "m147-commission-v1",
+        "schema": "m147-commission-v2",
         "rules": RULES,
         "rules_sha256": RULES_SHA256,
         "preflight_parameters_sha256": PARAMETERS_SHA256,
@@ -548,6 +799,8 @@ def load_output() -> dict[str, Any]:
             "preflight.py": sha256_file(HERE / "preflight.py"),
             "commission.py": sha256_file(Path(__file__).resolve()),
         },
+        "required_noncov_arms": REQUIRED_NONCOVERAGE_ARMS,
+        "expected_coverage_arms": sorted(COVERAGE_ARMS),
         "arms": {},
     }
 
@@ -632,6 +885,7 @@ def main() -> int:
     }
     required_present = all(name in output["arms"] for name in REQUIRED_NONCOVERAGE_ARMS)
     output["synthetic_commission"] = {
+        "required_noncov_arm_count": len(REQUIRED_NONCOVERAGE_ARMS),
         "required_noncov_arms_present": required_present,
         "all_required_noncov_arms_pass": (
             required_present
