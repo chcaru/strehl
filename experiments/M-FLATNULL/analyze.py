@@ -414,14 +414,76 @@ def spatial_o_metrics(
         hull_hi_lt_zero = int(np.count_nonzero(inset_rows["hi"] < 0.0))
         encoded_low = int(np.count_nonzero(inset_rows["encoded"] == 0))
         encoded_high = int(np.count_nonzero(inset_rows["encoded"] == 65535))
+        high_clamp = (
+            (inset_rows["direction"] < 0)
+            & (inset_rows["encoded"] == 65535)
+            & (inset_rows["lo"] > 1.0 + inset_rows["tolerance"])
+        )
+        low_clamp = (
+            (inset_rows["direction"] > 0)
+            & (inset_rows["encoded"] == 0)
+            & (inset_rows["hi"] < 0.0 - inset_rows["tolerance"])
+        )
+        clamp_mask = high_clamp | low_clamp
+        residual_rows = inset_rows[~clamp_mask]
+        high_clamp_rows = inset_rows[high_clamp]
+        worst_clamp = (
+            serialise_row(
+                high_clamp_rows[int(np.argmax(high_clamp_rows["lo"] - 1.0))],
+            )
+            if high_clamp_rows.size
+            else None
+        )
+        clamp_attribution = {
+            "status": "POST HOC; descriptive only; not used by any predicate",
+            "definition": (
+                "lower at encoded 65535 with lo > 1+tolerance, or upper at "
+                "encoded 0 with hi < -tolerance"
+            ),
+            "high_clamp_false_positive_rows": int(np.count_nonzero(high_clamp)),
+            "low_clamp_false_positive_rows": int(np.count_nonzero(low_clamp)),
+            "total_clamp_false_positive_rows": int(np.count_nonzero(clamp_mask)),
+            "fraction_of_inset_violations": float(np.mean(clamp_mask)),
+            "residual_rows": int(residual_rows.shape[0]),
+            "residual_percent": (
+                100.0 * residual_rows.shape[0] / inset_denominator
+            ),
+            "clamp_rows_by_channel": np.bincount(
+                inset_rows["channel"][clamp_mask], minlength=3
+            ).tolist(),
+            "residual_rows_by_channel": np.bincount(
+                residual_rows["channel"], minlength=3
+            ).tolist(),
+            "worst_high_clamp_row": worst_clamp,
+        }
     else:
         distinct_pixels = 0
         max_abs = min_lower = max_upper = 0.0
         worst_lower = worst_upper = None
         hull_lo_gt_one = hull_hi_lt_zero = encoded_low = encoded_high = 0
+        residual_rows = inset_rows
+        clamp_attribution = {
+            "status": "POST HOC; descriptive only; not used by any predicate",
+            "definition": (
+                "lower at encoded 65535 with lo > 1+tolerance, or upper at "
+                "encoded 0 with hi < -tolerance"
+            ),
+            "high_clamp_false_positive_rows": 0,
+            "low_clamp_false_positive_rows": 0,
+            "total_clamp_false_positive_rows": 0,
+            "fraction_of_inset_violations": 0.0,
+            "residual_rows": 0,
+            "residual_percent": 0.0,
+            "clamp_rows_by_channel": [0, 0, 0],
+            "residual_rows_by_channel": [0, 0, 0],
+            "worst_high_clamp_row": None,
+        }
 
     interior = image[INSET:-INSET, INSET:-INSET]
     grid = grid_metrics(inset_rows, width, height)
+    clamp_attribution["residual_blocks_with_violations"] = grid_metrics(
+        residual_rows, width, height
+    )["blocks_with_violations"]
     return {
         "tiff": str(tiff_path.resolve()),
         "tiff_sha256": actual_tiff_sha,
@@ -470,6 +532,7 @@ def spatial_o_metrics(
             "violating_encoded_high_rail": encoded_high,
             "low_rail_samples": int(np.count_nonzero(interior == 0)),
             "high_rail_samples": int(np.count_nonzero(interior == 65535)),
+            "post_hoc_clamp_attribution": clamp_attribution,
         },
         "boundary": {
             "violations_outside_inset": full_count - inset_count,
