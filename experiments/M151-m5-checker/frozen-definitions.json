@@ -1,0 +1,89 @@
+{
+  "bands_cyc_per_native_px": {
+    "election": [
+      0.05,
+      0.12
+    ],
+    "evaluation": [
+      0.15,
+      0.25
+    ],
+    "upper_edge_exclusive": true
+  },
+  "bootstrap": {
+    "blocks": [
+      4,
+      4
+    ],
+    "draws": 10000,
+    "lcb_probability": 0.05,
+    "quantile": "nearest-rank",
+    "reelect_best_each_draw": true,
+    "seed": 20260902
+  },
+  "eligibility": {
+    "best_far_point_min": 2.0,
+    "best_far_ratio_lcb_min": 1.5,
+    "far_minimum_node_distance": 3,
+    "minimum_eligible_sites_per_capture": 50,
+    "minimum_eligible_sites_pooled": 500
+  },
+  "election": {
+    "candidate_nodes": "3 through N-4 inclusive",
+    "curve": "adjacent-frame source-signal in election band",
+    "regularizer": {
+      "boundary": "edge replication",
+      "kernel": [
+        0.0625,
+        0.25,
+        0.375,
+        0.25,
+        0.0625
+      ]
+    },
+    "tie_break": "lowest frame index"
+  },
+  "fov": {
+    "aggregation": "minimum across required outputs; never average",
+    "denominator": "frozen native active-pixel mask of the common-input anchor",
+    "numerator": "denominator pixels covered by finite non-padding output samples with independently reconstructed source support",
+    "threshold": 0.99
+  },
+  "protocol": "M151-M5-v1",
+  "run": {
+    "depth_coordinate": "input-only elected best frame index",
+    "duplicate_depth_state": "fail if any eligible tile at that depth fails",
+    "normalization": "best-index sweep interval [min(best)-0.5,max(best)+0.5]",
+    "partition": "one-dimensional Voronoi cells of sorted unique best indices",
+    "threshold_fraction": 0.01,
+    "tie_break": "earliest interval"
+  },
+  "source_signal": {
+    "estimator": "adjacent-frame real cross-power",
+    "formula": "0.5*Re(sum(F_j*conj(F_j-1))+sum(F_j*conj(F_j+1)))",
+    "frame_endpoints": "undefined and never election candidates",
+    "luminance": "linear ProPhoto RGB D50 Y = 0.2880402 R + 0.7118741 G + 0.0000857 B",
+    "normalization": "divide each spatial block by its positive arithmetic mean, subtract one, then window",
+    "passes": "average block cross-powers over complete input passes; one pass is permitted",
+    "spatial_blocks": "sixteen non-overlapping 32x32 blocks inside each 128x128 tile",
+    "window": "separable Tukey alpha=0.25"
+  },
+  "thresholds": {
+    "coverage_point_min": 0.99,
+    "focus_margin_min": 0.05,
+    "rho_best_min": 0.9,
+    "wilson_lcb95_min": 0.98
+  },
+  "tile": {
+    "anchor": "top-left of frozen common-input anchor active rectangle",
+    "overlap": 0,
+    "side_native_px": 128
+  },
+  "wilson": {
+    "confidence": "one-sided 95 percent",
+    "pooled_rule": "sum successes and distinct physical-site units after within-session duplicate collapse; every capture must also pass",
+    "unit": "one distinct non-overlapping eligible physical tile; frames, passes, channels, Fourier coefficients, and bootstrap draws never increase n",
+    "within_session_duplicate": "same subject coordinate across required A/B or step-width outputs counts once and succeeds only if every required output succeeds",
+    "z": 1.6448536269514722
+  }
+}
