@@ -227,6 +227,18 @@ class HarmonicTests(unittest.TestCase):
         self.assertIsNotNone(candidate)
         assert candidate is not None
         self.assertLess(candidate["subharmonic_relative_db"][str(factor)], -30.0)
+        self.assertGreaterEqual(
+            candidate["subharmonic_peak_snr_db"][str(factor)],
+            preflight.FROZEN_PARAMETERS["estimator"][
+                "minimum_subharmonic_peak_snr_db"
+            ],
+        )
+        self.assertGreaterEqual(
+            candidate["subharmonic_peak_prominence_db"][str(factor)],
+            preflight.FROZEN_PARAMETERS["estimator"][
+                "minimum_subharmonic_peak_prominence_db"
+            ],
+        )
         candidates = []
         for y in (256.0, 768.0, 1280.0):
             for x in (256.0, 768.0, 1280.0, 1792.0):

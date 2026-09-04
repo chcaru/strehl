@@ -54,8 +54,12 @@ FROZEN_PARAMETERS: dict[str, Any] = {
         # A lower-frequency alternative is judged against the same absolute
         # spectral floor as an ordinary lattice candidate.  A relative-to-
         # selected-peak threshold can miss a real but weaker primitive when a
-        # harmonic is exceptionally strong.
+        # harmonic is exceptionally strong.  The alternative must also have
+        # 20 dB median local prominence (matching the selected grid's median
+        # SNR threshold), which rejects broad Hann-window leakage rather than
+        # a coherent peak.
         "minimum_subharmonic_peak_snr_db": 12.0,
+        "minimum_subharmonic_peak_prominence_db": 20.0,
         "reciprocal_angle_degrees": [70.0, 90.0],
         "maximum_axis_period_ratio": 1.5,
         "period_cluster_relative_half_width": 0.018,
@@ -468,14 +472,37 @@ def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
     cosine = abs(float(vector_1 @ vector_2)) / (norm_1 * norm_2)
     angle = math.degrees(math.acos(float(np.clip(cosine, 0.0, 1.0))))
 
-    def neighborhood_peak(vector: np.ndarray) -> float:
+    def neighborhood_peak(vector: np.ndarray) -> tuple[float, float]:
         row = int(round(fft_size / 2 + vector[1] * fft_size))
         column = int(round(fft_size / 2 + vector[0] * fft_size))
         row_0 = max(0, row - 2)
         row_1 = min(fft_size, row + 3)
         column_0 = max(0, column - 2)
         column_1 = min(fft_size, column + 3)
-        return float(np.max(power[row_0:row_1, column_0:column_1]))
+        neighborhood = power[row_0:row_1, column_0:column_1]
+        peak_offset = np.unravel_index(int(np.argmax(neighborhood)), neighborhood.shape)
+        peak_row = row_0 + int(peak_offset[0])
+        peak_column = column_0 + int(peak_offset[1])
+        peak = float(power[peak_row, peak_column])
+        floor_row_0 = max(0, peak_row - 10)
+        floor_row_1 = min(fft_size, peak_row + 11)
+        floor_column_0 = max(0, peak_column - 10)
+        floor_column_1 = min(fft_size, peak_column + 11)
+        floor_region = power[
+            floor_row_0:floor_row_1,
+            floor_column_0:floor_column_1,
+        ]
+        floor_y, floor_x = np.indices(floor_region.shape)
+        radius = np.hypot(
+            floor_y - (peak_row - floor_row_0),
+            floor_x - (peak_column - floor_column_0),
+        )
+        local_floor = max(
+            float(np.median(floor_region[(radius >= 5.0) & (radius <= 10.0)])),
+            background,
+        )
+        prominence_db = 10.0 * math.log10(max(peak / local_floor, 1e-30))
+        return peak, prominence_db
 
     selected_powers = (
         float(power[int(first[0]), int(first[1])]),
@@ -483,12 +510,17 @@ def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
     )
     subharmonic_relative_db: dict[str, float] = {}
     subharmonic_peak_snr_db: dict[str, float] = {}
+    subharmonic_peak_prominence_db: dict[str, float] = {}
     for factor in estimator["subharmonic_factors"]:
         if period * factor > estimator["maximum_period_green_px"]:
             continue
-        alternative_powers = (
+        alternative_metrics = (
             neighborhood_peak(vector_1 / factor),
             neighborhood_peak(vector_2 / factor),
+        )
+        alternative_powers = (
+            alternative_metrics[0][0],
+            alternative_metrics[1][0],
         )
         subharmonic_relative_db[str(factor)] = min(
             10.0 * math.log10(max(alternative_powers[0] / selected_powers[0], 1e-30)),
@@ -500,6 +532,10 @@ def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
         subharmonic_peak_snr_db[str(factor)] = min(
             10.0 * math.log10(max(alternative_powers[0] / background, 1e-30)),
             10.0 * math.log10(max(alternative_powers[1] / background, 1e-30)),
+        )
+        subharmonic_peak_prominence_db[str(factor)] = min(
+            alternative_metrics[0][1],
+            alternative_metrics[1][1],
         )
     orientations = [_orientation_mod_90(vector_1), _orientation_mod_90(vector_2)]
     if _angle_distance_mod_90(orientations[0], orientations[1]) <= 10.0:
@@ -517,6 +553,10 @@ def _tile_candidate(tile: np.ndarray) -> dict[str, Any] | None:
         },
         "subharmonic_peak_snr_db": {
             factor: float(value) for factor, value in subharmonic_peak_snr_db.items()
+        },
+        "subharmonic_peak_prominence_db": {
+            factor: float(value)
+            for factor, value in subharmonic_peak_prominence_db.items()
         },
     }
 
@@ -698,16 +738,39 @@ def _find_cluster(
             str(factor) in item["subharmonic_peak_snr_db"] for item in best
         )
     }
+    median_subharmonic_peak_prominence = {
+        str(factor): float(
+            np.median(
+                [
+                    item["subharmonic_peak_prominence_db"][str(factor)]
+                    for item in best
+                    if str(factor) in item["subharmonic_peak_prominence_db"]
+                ]
+            )
+        )
+        for factor in estimator["subharmonic_factors"]
+        if any(
+            str(factor) in item["subharmonic_peak_prominence_db"]
+            for item in best
+        )
+    }
     for factor, peak_snr_db in median_subharmonic_peak_snr.items():
-        if peak_snr_db >= estimator["minimum_subharmonic_peak_snr_db"]:
+        prominence_db = median_subharmonic_peak_prominence[factor]
+        if (
+            peak_snr_db >= estimator["minimum_subharmonic_peak_snr_db"]
+            and prominence_db
+            >= estimator["minimum_subharmonic_peak_prominence_db"]
+        ):
             relative_db = median_subharmonic_relative[factor]
             raise MeasurementRefusal(
                 "AMBIGUOUS_HARMONIC",
                 f"{phase_name}: the selected lattice has a measurable 1/{factor} "
                 f"frequency alternative at {peak_snr_db:.2f} dB above the "
-                f"spectral floor ({relative_db:.2f} dB relative to the selected "
-                f"peak); the frozen alternative-evidence limit is "
-                f"{estimator['minimum_subharmonic_peak_snr_db']:.2f} dB.",
+                f"global spectral floor and {prominence_db:.2f} dB above its "
+                f"local floor ({relative_db:.2f} dB relative to the selected "
+                "peak); the frozen evidence limits are "
+                f"{estimator['minimum_subharmonic_peak_snr_db']:.2f} and "
+                f"{estimator['minimum_subharmonic_peak_prominence_db']:.2f} dB.",
                 "Use a sharper, larger grid view whose primitive period dominates; "
                 "do not trust a possible integer-period alias.",
             )
@@ -744,6 +807,9 @@ def _find_cluster(
         "median_peak_snr_db": median_snr,
         "median_subharmonic_relative_db": median_subharmonic_relative,
         "median_subharmonic_peak_snr_db": median_subharmonic_peak_snr,
+        "median_subharmonic_peak_prominence_db": (
+            median_subharmonic_peak_prominence
+        ),
         "median_reciprocal_angle_degrees": float(
             np.median([item["reciprocal_angle_degrees"] for item in best])
         ),
