@@ -427,7 +427,7 @@ mean a result has been run.
 | M5 | **(a)(b)(c)(d)** | No scored dense/sparse repeat unit exists, and failure coverage needs a licensed detail test. |
 | M6 | **(a)(b)(c)(d)** | The rail census is executable, but the registered capture set has fewer than 10,000 recoverable samples and the full axis includes detail retention and comparators. |
 | M7 | **(b)(c)(d)** | No traceable colour target exists. |
-| M8 | **(e)** | The v1.4 source-hull invariant needs neither detail nor a comparator and may use the development-only flat slide. Its checker still must be commissioned before a result is admitted. |
+| M8 | **(e)** | The v1.4 source-hull invariant needs neither detail nor a comparator and may use the development-only flat slide. **Checker commissioned and result read at `76b3d9cc`: FAIL, M8-R `1.030569%` and M8-O `1.326144%` against a bar of exactly `0.0000%`.** This is the only axis in the program with a produced-and-read score. |
 | M9 | **(a)(b)(c)** | Repeat calibration captures are absent and the shipping product emits no admissible acuity/variance certificate. |
 | M10 | **(b)(c)** | No scored geometric-truth capture or compatible depth product exists. The tilted slide is development-only. |
 | M11 | **(a)(b)(d)** | A quiet host is additionally required; native-decode timing alone is a diagnostic, not the registered competitive verdict. |
@@ -1149,7 +1149,7 @@ competitive statement is **unknown**.
 | M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
 | M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
 | M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | LCA confirms an axial effect but licenses no correction and is not colour fidelity; traceable target absent. |
-| M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | COVER closes the default-choice branch, not the hull census; M8-R/M8-O remain ready but unread. |
+| M8 | Independent source-hull census | **FAIL** — M8-R `1.030569%`, M8-O `1.326144%` against a bar of exactly `0.0000%` | **UNMEASURED** | **UNMEASURED** | **READ AND ADMITTED `76b3d9cc`**, superseding the prior UNMEASURED cell. Checker commissioned in both directions before the reading. M8-R is 100% attributable to the Catmull-Rom gather; bilinear gives `0/6,131,678,976` but costs 0.3404 dex of band detail. M8-O is a separate downstream failure. See `docs/research/M8-overshoot.md`. |
 | M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
 | M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
 | M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | D11 decode and D15 storage component gates PASS; the complete product/comparator v1.7 run is absent. |
