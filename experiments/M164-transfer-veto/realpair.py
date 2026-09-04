@@ -969,6 +969,11 @@ def evaluate_pair(
             comparator = decode_luminance(
                 comparator_raw, pair.comparator.encoding, None
             )
+            if comparator_rails > MAX_RAIL_FRACTION:
+                site["reason"] = "COMPARATOR_RAIL_FRACTION"
+                site["rail_fraction"] = {"comparator": comparator_rails}
+                sites.append(site)
+                continue
             preliminary, strehl_rails = map_strehl_to_comparator(
                 strehl_path,
                 pair.strehl.encoding,
@@ -1026,10 +1031,6 @@ def evaluate_pair(
                 "comparator": comparator_rails,
                 **{f"strehl_{name}": value for name, value in adapter_rails.items()},
             }
-            if comparator_rails > MAX_RAIL_FRACTION:
-                site["reason"] = "COMPARATOR_RAIL_FRACTION"
-                sites.append(site)
-                continue
             if max(adapter_rails.values()) > MAX_RAIL_FRACTION:
                 site["reason"] = "STREHL_RAIL_FRACTION"
                 sites.append(site)
