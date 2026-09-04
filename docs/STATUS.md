@@ -2236,17 +2236,39 @@ Invariance and blindness were the same property.
 `:264-267`: *"Instrument churn ate the project's middle. Three detail
 statistics, two rim instruments, one timing harness and one deconvolution
 channel failed their own commissioning. The cure is D1: build the instruments
-once, first."* **The cure caught the disease.** The count of dead detail
-statistics is no longer three; it is six -- `Q25` at `5.560744x`, three
-slant-edge builds, `S_25` at `1.028294x`, candidate 1 at `1.095732x`, and FRC.
-All six died the same death, and it is a structural one rather than six
-mistakes: **no single-image high-frequency statistic can separate resolved
-detail from sharpening, because sharpening adds exactly the thing being
-measured.** `Q25` is the cleanest demonstration -- it rewarded an unsharp mask
+once, first."* **The cure caught the disease.** The proposal counted three dead detail
+statistics. The count is now **six candidate families across eight
+implementations**, and I am enumerating them rather than asserting a total,
+because I got this arithmetic wrong once already: `Q25` at `5.560744x`;
+**slant-edge, three independent builds**, all three failing; `S_25` at
+`1.028294x`; candidate 1 at `1.095732x`; FRC, by blindness; and **candidate 2**,
+killed on nonlinear tone this hour. Most died the same structural death:
+**no single-image high-frequency statistic can separate resolved detail from
+sharpening, because sharpening adds exactly the thing being measured.** `Q25` is the cleanest demonstration -- it rewarded an unsharp mask
 `5.560744x` while reading a genuine optical improvement at `0.977981`, the
 **wrong sign**, with its tone-stability arms sitting at
 `0.999963 / 1.000000 / 0.999966`. A statistic can be perfectly invariant to
 everything it was tested against and still be pointed the wrong way.
+
+**Candidate 2 died the exact mirror of that death, and the pair is worth more
+than either result.** It was sharpening-invariant to fifteen decimal places --
+mapped unclipped USM returned `R = 1.0000000000000009`, CI
+`[0.9999999999996845, 1.0000000000003315]`, covariance residual `1.25e-15` --
+and **nonlinear tone destroyed it**: gamma-3 `R = 0.502893`
+CI `[0.443972, 0.557901]`, logistic `R = 0.486741` CI `[0.414213, 0.565049]`.
+So `Q25` is tone-proof and sharpening-fooled; candidate 2 is sharpening-proof
+and tone-destroyed. **Every candidate so far has bought one invariance by
+forfeiting the other, and none has held both.** I record that as an observed
+pattern, not a proven impossibility -- but it is the pattern a replacement
+instrument has to break, and naming it is more useful than the seventh
+autopsy.
+
+The lane also refused to manufacture its own adversary, which is why the kill
+is worth believing. Its clipping arm moved only `114 / 2,088,960` coordinates
+(`0.00546%`) against a frozen `0.1%` potency gate, and rather than report the
+resulting green it declared the arm **UNCOMMISSIONED** and let the tone arms
+do the killing. **An inert adversary and a survived adversary produce the same
+number**; only a potency gate tells them apart.
 
 **So the program can presently prove harm and cannot prove benefit.** M8 is the
 only axis with a value and it reads FAIL. Every instrument that could have
