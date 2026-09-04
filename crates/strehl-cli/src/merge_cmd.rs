@@ -2915,10 +2915,36 @@ pub fn preflight_soft_kernel() -> Result<()> {
 /// binary that ships nothing -- was the only way to run it.
 pub fn run(opts: &MergeOptions) -> Result<()> {
     preflight_soft_kernel()?;
+    preflight_cover_backend_support(opts.backend, opts.cover)?;
     match opts.backend {
         MergeBackend::Pyramid => run_pyramid(opts),
         MergeBackend::Estimator => run_estimator(opts),
     }
+}
+
+/// Refuse Crop on a backend that would still merge the uncovered full plane.
+///
+/// The estimator and pyramid are independent pipelines. M130 restricts the
+/// pyramid's analysis domain before any coefficient is weighted; the estimator
+/// still builds its guide, statistics, elections and accumulators over the full
+/// plane. Letting that backend reach the old writer-time crop would present two
+/// different operations under one flag, so it is refused before a frame is
+/// decoded instead.
+fn preflight_cover_backend_support(backend: MergeBackend, cover: align_cmd::CoverMode) -> Result<()> {
+    if backend == MergeBackend::Estimator && cover == align_cmd::CoverMode::Crop {
+        bail!(
+            "REFUSING TO RENDER: --cover crop is not implemented by the estimator backend.\n\
+             \n\
+             Crop must be the analysis, weighting, accumulation and collapse domain, not a \
+             window applied after a full-plane merge. The pyramid backend has that compact \
+             domain; the estimator's independent guide/statistics/election path does not.\n\
+             \n\
+             Nothing was rendered. Either:\n\
+             \x20 - run --merge pyramid --cover crop, or\n\
+             \x20 - use --cover scale with --merge estimator."
+        );
+    }
+    Ok(())
 }
 
 /// Refuse to run a backend that would silently drop a configured defect
@@ -3265,9 +3291,10 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 // divide by it to compare spectra at matched sensor bandwidth;
                 // a crop render has no such factor, and a line they could
                 // half-match would feed them a correction that does not apply.
-                align_cmd::CoverFit::Cropped { k, rect } => {
-                    eprintln!("{}", align_cmd::crop_banner(*k, *rect, map.geometry()))
-                }
+                align_cmd::CoverFit::Cropped { .. } => bail!(
+                    "internal error: estimator Crop passed the pre-decode backend refusal; \
+                     refusing a late-cropped full-plane merge"
+                ),
                 align_cmd::CoverFit::Scaled(k) if *k >= 0.999_999 => {
                     eprintln!("  coverage      : every frame covers the whole grid; no crop needed")
                 }
@@ -4458,11 +4485,6 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                         noise: &noise,
                     })
             }),
-            // ESTIMATOR BACKEND. The pyramid backend's call carries the
-            // identical expression; both read the one `CoverFit` their own
-            // `cover_or_explain` returned, so neither can honour `--cover crop`
-            // while the other quietly does not.
-            alignment.as_ref().and_then(|(_, _, fit)| fit.rect()),
             path,
         )?;
     }
@@ -4491,6 +4513,158 @@ const fn band_slot(p: CfaPlane) -> usize {
     }
 }
 
+/// The two coordinate systems an early-Crop pyramid must keep distinct.
+///
+/// `full` is the reference plane on which every similarity, optical profile
+/// and CFA gather is evaluated. `rect` is the compact destination domain that
+/// is allowed to enter a pyramid. Keeping both in one value prevents a local
+/// Crop coordinate from being mistaken for a full-plane warp coordinate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct PyramidDomain {
+    full: PlaneGeometry,
+    rect: align_cmd::CropRect,
+}
+
+impl PyramidDomain {
+    fn whole(full: PlaneGeometry) -> Self {
+        Self {
+            full,
+            rect: align_cmd::CropRect::whole(full),
+        }
+    }
+
+    fn cropped(full: PlaneGeometry, rect: align_cmd::CropRect) -> Result<Self> {
+        ensure!(
+            rect.width > 0 && rect.height > 0,
+            "Crop rectangle at {},{} is empty ({}x{})",
+            rect.x,
+            rect.y,
+            rect.width,
+            rect.height
+        );
+        let right = rect
+            .x
+            .checked_add(rect.width)
+            .context("Crop rectangle x extent overflowed")?;
+        let bottom = rect
+            .y
+            .checked_add(rect.height)
+            .context("Crop rectangle y extent overflowed")?;
+        ensure!(
+            right <= full.width && bottom <= full.height,
+            "Crop rectangle {},{} {}x{} does not fit the full {}x{} plane",
+            rect.x,
+            rect.y,
+            rect.width,
+            rect.height,
+            full.width,
+            full.height
+        );
+        Ok(Self { full, rect })
+    }
+
+    fn analysis(self) -> PlaneGeometry {
+        self.rect.geometry()
+    }
+
+    fn is_cropped(self) -> bool {
+        !self.rect.is_whole(self.full)
+    }
+}
+
+/// Resolve the Pyramid domain only after coverage geometry is known.
+///
+/// Crop without a `Cropped` fit is an error, not permission to fall back to
+/// the old full-plane merge. Scale and the explicit uncovered control retain
+/// the historical full-plane domain exactly.
+fn pyramid_domain(
+    full: PlaneGeometry,
+    mode: align_cmd::CoverMode,
+    fit: Option<&align_cmd::CoverFit>,
+) -> Result<PyramidDomain> {
+    if mode != align_cmd::CoverMode::Crop {
+        return Ok(PyramidDomain::whole(full));
+    }
+    if let Some(rect) = fit.copied().and_then(align_cmd::CoverFit::rect) {
+        return PyramidDomain::cropped(full, rect);
+    }
+    match fit {
+        Some(align_cmd::CoverFit::Cropped { .. }) => {
+            unreachable!("Cropped fits carry a rectangle")
+        }
+        Some(align_cmd::CoverFit::Uncovered) => bail!(
+            "--cover crop could not find a rectangle covered by every placed frame; \
+             refusing to merge the uncovered full plane"
+        ),
+        Some(align_cmd::CoverFit::Scaled(_)) => bail!(
+            "internal error: --cover crop resolved to a scaled fit instead of a Crop rectangle"
+        ),
+        None => bail!(
+            "--cover crop requires alignment geometry, but alignment is off; \
+             refusing to merge the uncovered full plane"
+        ),
+    }
+}
+
+/// Copy CFA sites from a full warped destination into a compact analysis grid.
+///
+/// The origin is applied only while addressing the already-warped full plane.
+/// Transform centres, CA and interpolation therefore stay in the original
+/// coordinate system, while no destination sample outside `domain.rect` can
+/// enter luma, variance or any pyramid.
+#[allow(clippy::too_many_arguments)]
+fn extract_planes(
+    data: &[u16],
+    stride: usize,
+    active_x: usize,
+    active_y: usize,
+    black: f32,
+    domain: PyramidDomain,
+    offsets: &[(usize, usize)],
+    planes: &mut [Vec<f32>],
+) -> Result<()> {
+    ensure!(
+        offsets.len() == planes.len(),
+        "{} CFA offsets were supplied for {} destination planes",
+        offsets.len(),
+        planes.len()
+    );
+    let local = domain.analysis();
+    ensure!(
+        planes.iter().all(|plane| plane.len() == local.pixels()),
+        "compact CFA destinations must each contain {} samples",
+        local.pixels()
+    );
+    let last_sensor_x = active_x
+        .checked_add(2 * (domain.rect.x + local.width))
+        .context("Crop sensor x extent overflowed")?;
+    let last_sensor_y = active_y
+        .checked_add(2 * (domain.rect.y + local.height))
+        .context("Crop sensor y extent overflowed")?;
+    ensure!(
+        last_sensor_x <= stride && last_sensor_y * stride <= data.len(),
+        "Crop rectangle exceeds the decoded active area"
+    );
+
+    for (plane_index, (dx, dy)) in offsets.iter().copied().enumerate() {
+        let out = &mut planes[plane_index];
+        for local_y in 0..local.height {
+            let full_y = domain.rect.y + local_y;
+            let row = (active_y + 2 * full_y + dy) * stride
+                + active_x
+                + 2 * domain.rect.x
+                + dx;
+            let dst =
+                &mut out[local_y * local.width..(local_y + 1) * local.width];
+            for (local_x, value) in dst.iter_mut().enumerate() {
+                *value =
+                    (f32::from(data[row + 2 * local_x]) - black).max(0.0);
+            }
+        }
+    }
+    Ok(())
+}
+
 /// A merged image ready to be developed, whichever backend produced it.
 ///
 /// **Both variants answer in black-subtracted, non-negative DN.** That is the
@@ -4516,7 +4690,7 @@ enum Merged<'a> {
     /// [`MergeBackend::Pyramid`] output: four collapsed planes in
     /// [`BAND_PLANES`] order on the quad grid.
     Bands {
-        geom: PlaneGeometry,
+        domain: PyramidDomain,
         planes: &'a [Vec<f32>],
     },
 }
@@ -4525,7 +4699,7 @@ impl Merged<'_> {
     fn geometry(&self) -> PlaneGeometry {
         match self {
             Self::Estimated { est, .. } => est.geometry(),
-            Self::Bands { geom, .. } => *geom,
+            Self::Bands { domain, .. } => domain.analysis(),
         }
     }
 
@@ -4583,6 +4757,7 @@ struct FoldPart {
 }
 
 struct BandWorker {
+    domain: PyramidDomain,
     merge: BandMerge,
     fws: FrameWorkspace,
     warp: WarpScratch,
@@ -4603,17 +4778,21 @@ struct BandWorker {
 }
 
 impl BandWorker {
-    fn new(geom: PlaneGeometry, cfg: MergeConfig) -> Self {
+    fn new(domain: PyramidDomain, cfg: MergeConfig) -> Self {
+        let geom = domain.analysis();
         let sizes = level_sizes(geom.width, geom.height, cfg.bands);
         let px = geom.pixels();
         Self {
+            domain,
             merge: BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg),
             fws: FrameWorkspace::new(&sizes, BAND_PLANES),
-            warp: WarpScratch::new(geom),
+            // The warp is deliberately still evaluated on the original plane.
+            // Only its prepared outputs become compact.
+            warp: WarpScratch::new(domain.full),
             planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
             luma: vec![0.0; px],
             var: vec![0.0; px],
-            floor: gatefloor::enabled().then(|| gatefloor::Probe::new(geom, cfg.bands)),
+            floor: gatefloor::enabled().then(|| gatefloor::Probe::new(domain, cfg.bands)),
             beta: Vec::new(),
             beta_sum: Vec::new(),
             beta_n: 0,
@@ -4626,7 +4805,6 @@ impl BandWorker {
         &mut self,
         path: &Path,
         index: usize,
-        geom: PlaneGeometry,
         levels: Levels,
         noise: &NoiseModel,
         warps: Option<&WarpMap>,
@@ -4639,7 +4817,7 @@ impl BandWorker {
         if !load_frame(
             path,
             index,
-            geom,
+            self.domain,
             levels,
             warps,
             defect,
@@ -4695,7 +4873,7 @@ impl BandWorker {
 fn load_frame(
     path: &Path,
     index: usize,
-    geom: PlaneGeometry,
+    domain: PyramidDomain,
     levels: Levels,
     warps: Option<&WarpMap>,
     defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
@@ -4744,7 +4922,13 @@ fn load_frame(
         if let Some(map) = warps {
             match map.warp(index)? {
                 FrameWarp::Placed(t) => {
-                    align_cmd::warp_frame_in_place(&mut frame, *t, geom, map.resampler(), scratch)?;
+                    align_cmd::warp_frame_in_place(
+                        &mut frame,
+                        *t,
+                        domain.full,
+                        map.resampler(),
+                        scratch,
+                    )?;
                     // This frame's own band-noise floor, at this frame's own
                     // sub-pixel phase, measured here because this is the only
                     // place the decoded frame and the transform that was
@@ -4758,7 +4942,7 @@ fn load_frame(
                     // bit-identical. That is a property of the control flow,
                     // not of a tolerance.
                     if let Some(p) = floor {
-                        p.measure(&frame, index, *t, geom, map.resampler(), scratch)?;
+                        p.measure(&frame, index, *t, map.resampler(), scratch)?;
                     }
                 }
                 // The solve could not connect this frame to the bracket, so its
@@ -4769,18 +4953,16 @@ fn load_frame(
         }
 
         let black = levels.black;
-        let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
-        let (gw, gh) = (geom.width, geom.height);
-        for (p, (dx, dy)) in BAND_PLANE_OFFSETS.iter().enumerate() {
-            let out = &mut planes[p];
-            for py in 0..gh {
-                let row = (ay + 2 * py + dy) * stride + ax + dx;
-                let dst = &mut out[py * gw..py * gw + gw];
-                for (px, o) in dst.iter_mut().enumerate() {
-                    *o = (f32::from(frame.data[row + 2 * px]) - black).max(0.0);
-                }
-            }
-        }
+        extract_planes(
+            &frame.data,
+            frame.stride,
+            frame.active.x,
+            frame.active.y,
+            black,
+            domain,
+            &BAND_PLANE_OFFSETS,
+            planes,
+        )?;
     }
 
     // Green luma, `L = (G1 + G2) / 2`, exactly as `plane::green_luma`
@@ -4863,19 +5045,20 @@ struct Centrality {
 
 fn confidence_pass(
     paths: &[PathBuf],
-    geom: PlaneGeometry,
+    domain: PyramidDomain,
     levels: Levels,
     warps: Option<&WarpMap>,
     defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     merged_luma: &[f32],
     per_chunk: usize,
 ) -> Result<Centrality> {
+    let geom = domain.analysis();
     let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
     let parts: Vec<Result<Centrality>> = indexed
         .par_chunks(per_chunk.max(1))
         .map(|chunk| {
             let px = geom.pixels();
-            let mut scratch = WarpScratch::new(geom);
+            let mut scratch = WarpScratch::new(domain.full);
             let mut planes: Vec<Vec<f32>> = (0..BAND_PLANES).map(|_| vec![0.0; px]).collect();
             let mut luma = vec![0.0f32; px];
             let mut c = Centrality {
@@ -4884,7 +5067,7 @@ fn confidence_pass(
             };
             for (i, p) in chunk {
                 if !load_frame(
-                    p, *i, geom, levels, warps, defect, &mut scratch, None, &mut planes,
+                    p, *i, domain, levels, warps, defect, &mut scratch, None, &mut planes,
                     &mut luma,
                 )? {
                     continue;
@@ -5011,7 +5194,7 @@ fn laplacian_abs(luma: &[f32], w: usize, h: usize, out: &mut [f32]) {
 
 fn confidence_debug_pass(
     paths: &[PathBuf],
-    geom: PlaneGeometry,
+    domain: PyramidDomain,
     levels: Levels,
     warps: Option<&WarpMap>,
     defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
@@ -5019,20 +5202,21 @@ fn confidence_debug_pass(
     sigma: &[f32],
     per_chunk: usize,
 ) -> Result<Candidates> {
+    let geom = domain.analysis();
     let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
     let parts: Vec<Result<Candidates>> = indexed
         .par_chunks(per_chunk.max(1))
         .map(|chunk| {
             let px = geom.pixels();
             let (gw, gh) = (geom.width, geom.height);
-            let mut scratch = WarpScratch::new(geom);
+            let mut scratch = WarpScratch::new(domain.full);
             let mut planes: Vec<Vec<f32>> = (0..BAND_PLANES).map(|_| vec![0.0; px]).collect();
             let mut luma = vec![0.0f32; px];
             let mut sharp = vec![0.0f32; px];
             let mut c = Candidates::new(px);
             for (i, p) in chunk {
                 if !load_frame(
-                    p, *i, geom, levels, warps, defect, &mut scratch, None, &mut planes,
+                    p, *i, domain, levels, warps, defect, &mut scratch, None, &mut planes,
                     &mut luma,
                 )? {
                     continue;
@@ -5375,7 +5559,23 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     drop(first);
 
     let noise = profile::noise_model_for(&camera, iso, levels);
-    let sizes = level_sizes(geom.width, geom.height, cfg.bands);
+    // Coverage must be resolved before any pyramid-sized allocation or banner
+    // is produced: under Crop, the rectangle is the level-zero geometry rather
+    // than a writer-time view onto `geom`.
+    let t_align = Instant::now();
+    let alignment = alignment_for(&opts.dir, &paths, opts.resampler)?;
+    let alignment = alignment.map(|(m, how)| {
+        let (m, fit) = align_cmd::cover_or_explain(m, opts.cover);
+        (m, how, fit)
+    });
+    let align_secs = t_align.elapsed().as_secs_f64();
+    let domain = pyramid_domain(
+        geom,
+        opts.cover,
+        alignment.as_ref().map(|(_, _, fit)| fit),
+    )?;
+    let analysis_geom = domain.analysis();
+    let sizes = level_sizes(analysis_geom.width, analysis_geom.height, cfg.bands);
 
     eprintln!("{}", merge_banner(MergeBackend::Pyramid));
     eprintln!("camera          : {camera}");
@@ -5420,6 +5620,16 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         "planes          : {} x {} per CFA plane",
         geom.width, geom.height
     );
+    if domain.is_cropped() {
+        eprintln!(
+            "analysis domain : {} x {} at full-plane origin ({}, {}) -- Crop is applied \
+             BEFORE luma, variance, weighting and accumulation",
+            analysis_geom.width,
+            analysis_geom.height,
+            domain.rect.x,
+            domain.rect.y
+        );
+    }
     eprintln!("--- the merge ---");
     eprintln!(
         "bands           : {} Laplacian levels + 1 base, coarsest {} x {}",
@@ -5482,12 +5692,6 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // --resampler behave identically on both arms and a sidecar solved for one
     // is the sidecar the other gathers through.
     cover_mode_line(opts);
-    let t_align = Instant::now();
-    let alignment = alignment_for(&opts.dir, &paths, opts.resampler)?;
-    let alignment = alignment.map(|(m, how)| {
-        let (m, fit) = align_cmd::cover_or_explain(m, opts.cover);
-        (m, how, fit)
-    });
     match &alignment {
         Some((map, how, fit)) => {
             let p = map.provenance();
@@ -5497,7 +5701,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                 p.reference,
                 map.placed_count(),
                 map.refused_count(),
-                t_align.elapsed().as_secs_f64()
+                align_secs
             );
             eprintln!(
                 "  held-out err  : {}   resampler: {:?}",
@@ -5537,8 +5741,14 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     }
 
     // ---- the fold ---------------------------------------------------------
+    // Budget against the original full plane even under Crop. A worker still
+    // owns a full decoded frame and full-plane warp scratch, and retaining the
+    // pre-M130 budget keeps the worker count (hence floating-point reduction
+    // order) stable. The actual BandMerge and frame workspaces below use the
+    // smaller analysis domain.
+    let budget_sizes = level_sizes(geom.width, geom.height, cfg.bands);
     let acc_floats = BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg).accumulator_floats();
-    let ws_floats = FrameWorkspace::new(&sizes, BAND_PLANES).floats();
+    let ws_floats = FrameWorkspace::new(&budget_sizes, BAND_PLANES).floats();
     // The plane extraction buffers, the luma and the variance field, and one
     // decoded frame, all of which are live at once inside `fold`.
     let per_worker_bytes =
@@ -5561,10 +5771,10 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let parts: Vec<Result<FoldPart>> = indexed
         .par_chunks(per_chunk)
         .map(|chunk| {
-            let mut w = BandWorker::new(geom, cfg);
+            let mut w = BandWorker::new(domain, cfg);
             let mut folded = 0usize;
             for (i, p) in chunk {
-                if w.fold(p, *i, geom, levels, &noise, warps, defect)? {
+                if w.fold(p, *i, levels, &noise, warps, defect)? {
                     folded += 1;
                 }
             }
@@ -5700,7 +5910,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // written means a run that fails to write still leaves the evidence.
     if let Some(cpath) = confidence_map_path(opts) {
         let t_conf = Instant::now();
-        let px = geom.pixels();
+        let px = analysis_geom.pixels();
         let mut merged_luma = vec![0.0f32; px];
         for i in 0..px {
             merged_luma[i] = 0.5 * (planes[1][i] + planes[2][i]);
@@ -5717,7 +5927,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
             let sigma: Vec<f32> = var.iter().map(|v| v.max(1.0).sqrt()).collect();
             let c = confidence_debug_pass(
                 &paths,
-                geom,
+                domain,
                 levels,
                 warps,
                 defect,
@@ -5725,7 +5935,13 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                 &sigma,
                 per_chunk,
             )?;
-            write_confidence_debug(Path::new(dir), &c, &merged_luma, &sigma, geom)?;
+            write_confidence_debug(
+                Path::new(dir),
+                &c,
+                &merged_luma,
+                &sigma,
+                analysis_geom,
+            )?;
             Centrality {
                 below: c.below,
                 seen: c.seen,
@@ -5733,7 +5949,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         } else {
             confidence_pass(
                 &paths,
-                geom,
+                domain,
                 levels,
                 warps,
                 defect,
@@ -5744,7 +5960,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         if let Some(parent) = cpath.parent() {
             std::fs::create_dir_all(parent).ok();
         }
-        write_confidence_map(&cpath, &conf, geom)?;
+        write_confidence_map(&cpath, &conf, analysis_geom)?;
         eprintln!(
             "                  second pass over {} frames in {:.1} s",
             paths.len(),
@@ -5758,7 +5974,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     }
     write_merged(
         Merged::Bands {
-            geom,
+            domain,
             planes: &planes,
         },
         levels,
@@ -5776,9 +5992,6 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                     noise: &noise,
                 })
         }),
-        // PYRAMID BACKEND -- the default one. Textually identical to the
-        // estimator's argument, and it must stay that way.
-        alignment.as_ref().and_then(|(_, _, fit)| fit.rect()),
         path,
     )?;
     eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
@@ -6921,12 +7134,6 @@ fn write_merged(
     // `None` leaves every arithmetic expression below textually and
     // numerically identical to what it was before this was wired.
     restore: Option<strehl_core::restore::RestorePlan<'_>>,
-    // `Some` only under `--cover crop`. The window every frame covered, in
-    // plane px, emitted at unity scale instead of being stretched back to the
-    // full plane. `None` -- every other run -- takes `CropRect::whole`, whose
-    // index map is the identity, so the byte-frozen branch below reads exactly
-    // the values it always read, in exactly the order it always read them.
-    crop: Option<align_cmd::CropRect>,
     path: &Path,
 ) -> Result<()> {
     // The transfer curve, and *only* the transfer curve. Bound here so the
@@ -6935,26 +7142,21 @@ fn write_merged(
     // that name has not changed -- what changed is that the matrix no longer
     // rides on it.
     let srgb = space.applies_curve();
-    // THE ONE PLACE THE CROP IS APPLIED, and it is applied by *addressing*, not
-    // by copying: every expression below asks `merged` for quad `i` of the grid
-    // it is writing, and `at` turns that into the quad of the merged grid it
-    // came from. Everything downstream -- the exposure statistic, the four
-    // restored planes, the demosaic interleave, the binned write and the
-    // byte-frozen encode -- is therefore cropped by construction rather than by
-    // four separate crops that could disagree.
-    //
-    // The offsets are whole PLANE pixels, so a `--demosaic`/`--srgb` render is
-    // cropped on an EVEN full-resolution boundary and keeps the CFA phase the
-    // merge produced.
-    let full = merged.geometry();
-    let rect = crop.unwrap_or(align_cmd::CropRect::whole(full));
-    let geom = rect.geometry();
-    let at = move |i: usize| -> usize {
-        if rect.x == 0 && rect.y == 0 && rect.width == full.width {
-            return i;
-        }
-        (i / rect.width + rect.y) * full.width + (i % rect.width) + rect.x
-    };
+    // Crop has already happened while preparing each frame. The collapsed
+    // planes are compact and every downstream consumer addresses them
+    // directly; applying `domain.rect` here would crop a second time and would
+    // also rebase a transform that was intentionally evaluated in full-plane
+    // coordinates.
+    let geom = merged.geometry();
+    if let Merged::Bands { domain, .. } = &merged
+        && domain.is_cropped()
+    {
+        eprintln!(
+            "output domain    : compact Crop {}x{} from full-plane origin ({}, {}); \
+             collapsed plane written directly (no second crop)",
+            geom.width, geom.height, domain.rect.x, domain.rect.y
+        );
+    }
     let n = geom.pixels();
     let range = levels.range();
     ensure!(range > 0.0, "white level is not above black level");
@@ -6967,8 +7169,8 @@ fn write_merged(
     // same order, which is what keeps the measurement branch byte-frozen.
     // Untreated pixels fall straight through to the estimator, so `halo = None`
     // and "treated nothing" produce the identical file.
-    let val = |p: CfaPlane, i: usize| merged.value(p, at(i), black);
-    let gmean = |i: usize| merged.green_mean(at(i), black);
+    let val = |p: CfaPlane, i: usize| merged.value(p, i, black);
+    let gmean = |i: usize| merged.green_mean(i, black);
     let gains = wb.unwrap_or([1.0, 1.0, 1.0]);
 
     // The colour matrix rides with `--srgb`, and only with `--srgb`. Both are
@@ -7420,6 +7622,263 @@ fn write_merged(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn extraction_fixture() -> (Vec<u16>, usize, usize, usize, PlaneGeometry) {
+        let full = PlaneGeometry {
+            width: 4,
+            height: 3,
+        };
+        let active_x = 2;
+        let active_y = 1;
+        let stride = active_x + 2 * full.width + 3;
+        let rows = active_y + 2 * full.height + 2;
+        let mut data = vec![60_000u16; stride * rows];
+        for y in 0..2 * full.height {
+            for x in 0..2 * full.width {
+                data[(active_y + y) * stride + active_x + x] =
+                    1_000 + (100 * y + x) as u16;
+            }
+        }
+        (data, stride, active_x, active_y, full)
+    }
+
+    #[test]
+    fn crop_domain_extracts_at_full_origin_and_excludes_every_outside_sample() {
+        let (data, stride, active_x, active_y, full) = extraction_fixture();
+        let rect = align_cmd::CropRect {
+            x: 1,
+            y: 1,
+            width: 2,
+            height: 1,
+        };
+        let domain = PyramidDomain::cropped(full, rect).unwrap();
+        let mut baseline = (0..BAND_PLANES)
+            .map(|_| vec![0.0; domain.analysis().pixels()])
+            .collect::<Vec<_>>();
+        extract_planes(
+            &data,
+            stride,
+            active_x,
+            active_y,
+            500.0,
+            domain,
+            &BAND_PLANE_OFFSETS,
+            &mut baseline,
+        )
+        .unwrap();
+
+        for (plane, (dx, dy)) in BAND_PLANE_OFFSETS.iter().copied().enumerate() {
+            let expected = (0..rect.width)
+                .map(|x| {
+                    let source_y = 2 * rect.y + dy;
+                    let source_x = 2 * (rect.x + x) + dx;
+                    f32::from(
+                        data[(active_y + source_y) * stride + active_x + source_x],
+                    ) - 500.0
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(baseline[plane], expected, "CFA plane {plane}");
+        }
+
+        // The plant: replace every active sample outside the promised
+        // rectangle by a large value. A late crop would still let these values
+        // enter luma, local energy and every reduced level; compact extraction
+        // must make them unobservable.
+        let mut poisoned = data.clone();
+        for y in 0..full.height {
+            for x in 0..full.width {
+                if x >= rect.x
+                    && x < rect.x + rect.width
+                    && y >= rect.y
+                    && y < rect.y + rect.height
+                {
+                    continue;
+                }
+                for (dx, dy) in BAND_PLANE_OFFSETS {
+                    poisoned[(active_y + 2 * y + dy) * stride + active_x + 2 * x + dx] =
+                        65_000;
+                }
+            }
+        }
+        let mut after_outside_plant = (0..BAND_PLANES)
+            .map(|_| vec![0.0; domain.analysis().pixels()])
+            .collect::<Vec<_>>();
+        extract_planes(
+            &poisoned,
+            stride,
+            active_x,
+            active_y,
+            500.0,
+            domain,
+            &BAND_PLANE_OFFSETS,
+            &mut after_outside_plant,
+        )
+        .unwrap();
+        assert_eq!(
+            after_outside_plant, baseline,
+            "a sample outside Crop entered the prepared pyramid planes"
+        );
+
+        // Specificity: an inside-domain plant must remain visible.
+        poisoned[(active_y + 2 * rect.y) * stride + active_x + 2 * rect.x] += 1;
+        let mut after_inside_plant = (0..BAND_PLANES)
+            .map(|_| vec![0.0; domain.analysis().pixels()])
+            .collect::<Vec<_>>();
+        extract_planes(
+            &poisoned,
+            stride,
+            active_x,
+            active_y,
+            500.0,
+            domain,
+            &BAND_PLANE_OFFSETS,
+            &mut after_inside_plant,
+        )
+        .unwrap();
+        assert_ne!(after_inside_plant, baseline);
+    }
+
+    #[test]
+    fn crop_domain_whole_plane_keeps_the_historical_addressing() {
+        let (data, stride, active_x, active_y, full) = extraction_fixture();
+        let domain = PyramidDomain::whole(full);
+        let mut got = vec![vec![0.0; full.pixels()]];
+        extract_planes(
+            &data,
+            stride,
+            active_x,
+            active_y,
+            500.0,
+            domain,
+            &BAND_PLANE_OFFSETS[..1],
+            &mut got,
+        )
+        .unwrap();
+        let expected = (0..full.height)
+            .flat_map(|y| {
+                let data = &data;
+                (0..full.width).map(move |x| {
+                    f32::from(data[(active_y + 2 * y) * stride + active_x + 2 * x])
+                        - 500.0
+                })
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(got[0], expected);
+    }
+
+    #[test]
+    fn crop_domain_rejects_empty_overflow_and_out_of_bounds_rectangles() {
+        let full = PlaneGeometry {
+            width: 10,
+            height: 8,
+        };
+        for rect in [
+            align_cmd::CropRect {
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 1,
+            },
+            align_cmd::CropRect {
+                x: 9,
+                y: 0,
+                width: 2,
+                height: 1,
+            },
+            align_cmd::CropRect {
+                x: usize::MAX,
+                y: 0,
+                width: 2,
+                height: 1,
+            },
+        ] {
+            assert!(
+                PyramidDomain::cropped(full, rect).is_err(),
+                "accepted invalid {rect:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn crop_domain_writer_reads_compact_indices_without_a_second_crop() {
+        let full = PlaneGeometry {
+            width: 10,
+            height: 8,
+        };
+        let domain = PyramidDomain::cropped(
+            full,
+            align_cmd::CropRect {
+                x: 3,
+                y: 2,
+                width: 2,
+                height: 2,
+            },
+        )
+        .unwrap();
+        let planes = vec![
+            vec![10.0, 11.0, 12.0, 13.0],
+            vec![20.0, 21.0, 22.0, 23.0],
+            vec![30.0, 31.0, 32.0, 33.0],
+            vec![40.0, 41.0, 42.0, 43.0],
+        ];
+        let merged = Merged::Bands {
+            domain,
+            planes: &planes,
+        };
+        assert_eq!(merged.geometry(), domain.analysis());
+        assert_eq!(merged.value(CfaPlane::R, 0, 512.0), 10.0);
+        assert_eq!(merged.value(CfaPlane::R, 3, 512.0), 13.0);
+        assert_eq!(merged.green_mean(0, 512.0), 25.0);
+    }
+
+    #[test]
+    fn crop_domain_requires_an_actual_covered_fit() {
+        let full = PlaneGeometry {
+            width: 10,
+            height: 8,
+        };
+        assert!(
+            pyramid_domain(full, align_cmd::CoverMode::Crop, None).is_err()
+        );
+        assert!(
+            pyramid_domain(
+                full,
+                align_cmd::CoverMode::Crop,
+                Some(&align_cmd::CoverFit::Uncovered)
+            )
+            .is_err()
+        );
+        assert_eq!(
+            pyramid_domain(full, align_cmd::CoverMode::Scale, None).unwrap(),
+            PyramidDomain::whole(full)
+        );
+    }
+
+    #[test]
+    fn cover_backend_refuses_only_estimator_crop_and_keeps_scale_default() {
+        assert_eq!(
+            align_cmd::DEFAULT_COVER_MODE,
+            align_cmd::CoverMode::Scale
+        );
+        let error = preflight_cover_backend_support(
+            MergeBackend::Estimator,
+            align_cmd::CoverMode::Crop,
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(error.contains("REFUSING TO RENDER"));
+        assert!(error.contains("--merge pyramid --cover crop"));
+        preflight_cover_backend_support(
+            MergeBackend::Pyramid,
+            align_cmd::CoverMode::Crop,
+        )
+        .unwrap();
+        preflight_cover_backend_support(
+            MergeBackend::Estimator,
+            align_cmd::CoverMode::Scale,
+        )
+        .unwrap();
+    }
 
     /// Ladder **shapes** for exercising the solver, generated rather than
     /// measured, and that is deliberate.

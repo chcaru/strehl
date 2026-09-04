@@ -46,11 +46,11 @@
 
 use anyhow::{Context, Result};
 use strehl_core::align::{Resampler, Similarity};
-use strehl_core::plane::PlaneGeometry;
 use strehl_core::pyramid::{level_sizes, LevelSize, Pyramid, Workspace};
 use strehl_raw::Frame;
 
 use crate::align_cmd::{self, WarpScratch};
+use super::{BAND_PLANE_OFFSETS, PyramidDomain, extract_planes};
 
 /// Probe level above black, in DN. Far enough above the pedestal that the
 /// `(data - black).max(0.0)` clamp in `load_frame` never fires -- it is a
@@ -159,7 +159,8 @@ fn debug() -> bool {
 }
 
 /// Reusable buffers for [`Probe::measure`].
-pub struct Probe {
+pub(super) struct Probe {
+    domain: PyramidDomain,
     planes: Vec<Vec<f32>>,
     luma: Vec<f32>,
     ws: Workspace,
@@ -169,10 +170,12 @@ pub struct Probe {
 }
 
 impl Probe {
-    pub fn new(geom: PlaneGeometry, bands: usize) -> Self {
+    pub(super) fn new(domain: PyramidDomain, bands: usize) -> Self {
+        let geom = domain.analysis();
         let sizes = level_sizes(geom.width, geom.height, bands);
         let px = geom.pixels();
         Self {
+            domain,
             planes: (0..2).map(|_| vec![0.0f32; px]).collect(),
             luma: vec![0.0f32; px],
             ws: Workspace::new(&sizes),
@@ -190,7 +193,7 @@ impl Probe {
     /// unwarped frame at some other frame's phase. Called unconditionally
     /// before each fold, so the invariant is "a floor is only ever this frame's
     /// floor" rather than "every caller remembers".
-    pub fn invalidate(&mut self) {
+    pub(super) fn invalidate(&mut self) {
         self.beta.clear();
     }
 
@@ -203,16 +206,15 @@ impl Probe {
     /// byte-reproducible.
     ///
     /// Returns the Laplacian bands only. The base band is never gated.
-    pub fn measure(
+    pub(super) fn measure(
         &mut self,
         template: &Frame,
         index: usize,
         t: Similarity,
-        geom: PlaneGeometry,
         resampler: Resampler,
         scratch: &mut WarpScratch,
     ) -> Result<&[f32]> {
-        self.run(template, index, t, geom, resampler, scratch)?;
+        self.run(template, index, t, resampler, scratch)?;
         if debug() {
             // The commissioning null, run on the REAL frame with its real white
             // balance and its real CA profile, because those are exactly the
@@ -225,7 +227,13 @@ impl Probe {
             // must come back at the white value. Any drift is the probe's, not
             // the warp's, and it is measured here rather than assumed.
             let got = self.beta.clone();
-            self.run(template, index, Similarity::IDENTITY, geom, resampler, scratch)?;
+            self.run(
+                template,
+                index,
+                Similarity::IDENTITY,
+                resampler,
+                scratch,
+            )?;
             let white = strehl_core::pyramid::BandGain::measure(self.sizes.len() - 1);
             let worst = self
                 .beta
@@ -252,7 +260,6 @@ impl Probe {
         template: &Frame,
         index: usize,
         t: Similarity,
-        geom: PlaneGeometry,
         resampler: Resampler,
         scratch: &mut WarpScratch,
     ) -> Result<()> {
@@ -260,25 +267,30 @@ impl Probe {
         let black = f64::from(template.levels.black);
         fill_noise(&mut probe.data, black + PROBE_LEVEL, PROBE_SIGMA, index);
 
-        align_cmd::warp_frame_in_place(&mut probe, t, geom, resampler, scratch)
+        align_cmd::warp_frame_in_place(
+            &mut probe,
+            t,
+            self.domain.full,
+            resampler,
+            scratch,
+        )
             .context("warping the noise probe for the band-noise floor")?;
 
         // Deinterleave the two green phases exactly as `load_frame` does, and
         // form the same `L = (G1 + G2) / 2`. Only the greens: the selection
         // runs on green luma, so that is the plane whose noise the gate models.
-        let (gw, gh) = (geom.width, geom.height);
-        let (stride, ax, ay) = (probe.stride, probe.active.x, probe.active.y);
         let blackf = template.levels.black;
-        for (p, (dx, dy)) in [(1usize, 0usize), (0, 1)].iter().enumerate() {
-            let out = &mut self.planes[p];
-            for py in 0..gh {
-                let row = (ay + 2 * py + dy) * stride + ax + dx;
-                let dst = &mut out[py * gw..py * gw + gw];
-                for (px, o) in dst.iter_mut().enumerate() {
-                    *o = (f32::from(probe.data[row + 2 * px]) - blackf).max(0.0);
-                }
-            }
-        }
+        extract_planes(
+            &probe.data,
+            probe.stride,
+            probe.active.x,
+            probe.active.y,
+            blackf,
+            self.domain,
+            &BAND_PLANE_OFFSETS[1..3],
+            &mut self.planes,
+        )
+        .context("extracting the compact gate-floor luma domain")?;
         for i in 0..self.luma.len() {
             self.luma[i] = 0.5 * (self.planes[0][i] + self.planes[1][i]);
         }
@@ -396,7 +408,7 @@ impl Probe {
     /// The floor measured by the last [`measure`](Self::measure) call, Laplacian
     /// bands only. Empty before the first call; `NaN` at a band the probe could
     /// not speak for.
-    pub fn last(&self) -> &[f32] {
+    pub(super) fn last(&self) -> &[f32] {
         &self.beta
     }
 }

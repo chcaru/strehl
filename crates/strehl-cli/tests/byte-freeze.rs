@@ -1082,6 +1082,8 @@ fn the_alignment_parser_names_every_mode_the_tool_can_report() {
     let solved = "alignment      : ON (solved), reference frame 10, 20 placed / 0 refused";
     let over = "alignment      : ON (sidecar-override), reference frame 10, 20 placed / 0 refused";
     let cache = "alignment      : ON (sidecar), reference frame 10, 20 placed / 0 refused";
+    let pyramid =
+        "alignment       : ON (sidecar-override), reference frame 10, 20 placed / 0 refused, 0.0 s";
 
     assert_eq!(alignment_mode(off), "off");
     assert_eq!(alignment_mode(solved), "on-solved");
@@ -1103,6 +1105,7 @@ fn the_alignment_parser_names_every_mode_the_tool_can_report() {
 
     // The counts on the same line, which the placement gate reads.
     assert_eq!(placement(over), Some((20, 0)));
+    assert_eq!(placement(pyramid), Some((20, 0)));
     assert_eq!(placement(off), None);
 }
 
@@ -1507,7 +1510,10 @@ fn placement(log: &str) -> Option<(usize, usize)> {
     let toks: Vec<&str> = line.split_whitespace().collect();
     let grab = |word: &str| -> Option<usize> {
         toks.iter()
-            .position(|t| *t == word)
+            // The estimator ends its line at `refused`; the pyramid follows
+            // `refused,` with elapsed time. Punctuation is presentation, not
+            // part of the field name this parser is checking.
+            .position(|t| t.trim_end_matches(|c: char| c.is_ascii_punctuation()) == word)
             .and_then(|i| i.checked_sub(1))
             .and_then(|i| toks[i].parse().ok())
     };
