@@ -17,7 +17,8 @@ from pathlib import Path
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
-            "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65"]
+            "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
+            "2.9.66"]
 
 
 def collapse(s):
@@ -338,6 +339,27 @@ else:
           "the named-comparator requirement is unmet and the dependent comparative axes remain"
           in joined,
           "STATUS 2.9.65 quotes this to justify 'all three arms are required'")
+
+# STATUS 2.9.66 overrules a lane on the authority of three verbatim quotes from
+# two lane-owned research files. Those lanes are live and may revise them, at
+# which point my justification silently ceases to exist in its own source.
+QUOTES = [
+    ("m12 load rule", "docs/research/M160-amendment6-reachability.md",
+     "Correctness arms may run under load; any absolute-time arm remains quarantined."),
+    ("m12 root cause", "docs/research/M160-amendment6-reachability.md",
+     "because reduction order changes with worker count"),
+    ("m12 fix achievable", "docs/research/M166-bar-achievability.md",
+     "can make all five outputs byte-identical"),
+    ("m12s diagnostic fail", "docs/STATUS.md",
+     "**M12-S, cross-worker scaling invariance** -- diagnostic FAIL."),
+]
+for label, rel, quote in QUOTES:
+    p = ROOT / rel
+    if not p.exists():
+        check(label, False, "SOURCE MISSING %s" % rel)
+        continue
+    check(label, collapse(quote) in load(p),
+          "STATUS 2.9.66 quotes this verbatim from %s" % rel)
 
 print()
 

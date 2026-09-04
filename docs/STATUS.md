@@ -6669,6 +6669,50 @@ briefed M175 that `(d)` covered "10 of 12" axes from memory rather than from the
 table; the verified count is seven explicit. I sent the correction to the lane
 within the hour and told it to verify the count itself rather than take mine.
 
+### 2.9.66 The quiet host was protecting arms that cannot be admitted anyway
+
+Lane M139 held a board-wide host lock for hours, pausing every other lane, to
+obtain a valid `N299/W16` timing run. **I overruled it**, and recorded the
+reasoning here because it is a throughput decision that cost another lane its
+autonomy.
+
+Two facts decide it. First, **a quiet host does not lift the timing quarantine**:
+§2.9.55's `93.2%` mean host CPU makes absolute wall time inadmissible as a matter
+of admissibility, not of noise, so the arms the lock protects cannot be admitted
+however quiet the host becomes. Second, **the admissible arms never needed the
+lock** — `M160-amendment6-reachability.md:106` states the rule directly:
+*"Correctness arms may run under load; any absolute-time arm remains
+quarantined."* Byte-identity and process-tree RSS are correctness arms.
+
+**The stronger reason is that measuring M12 today could only record a failure.**
+`STATUS:1534` already carries *"M12-S, cross-worker scaling invariance --
+diagnostic FAIL"*, and the same M160 line gives the cause: cross-worker
+invariance fails *"because reduction order changes with worker count"*. The bar
+requires outputs at 1/2/4/8/16 workers to be mutually byte-identical, and they
+are not. Running the registered matrix now spends the board's throughput
+confirming a defect that is already diagnosed.
+
+**M166 independently ruled the fix achievable** at
+`M166-bar-achievability.md:82`: *"Worker-independent arithmetic and canonical
+output ordering can make all five outputs byte-identical."* So the ordering is
+fix first, measure second. M172 — the only lane owning `crates/` — has the
+invariance fix; M139 has been asked to release the lock, run correctness arms
+under load, and pre-commission the `N=33/105/299 x 1/2/4/8/16` matrix so it
+executes as one command the moment the fix lands.
+
+**This matters because M12 is one of only three axes free of comparator
+dependence**, and M10 is `DEFINITION BLOCKED` for unrelated reasons. With the
+detail axis behind both a redesign and a licence, **M8 and M12 are the program's
+only near-term routes to a first passing axis.** Both now have a named defect, a
+diagnosed cause, and an owning lane.
+
+**I invited the correction rather than only issuing the instruction.** M139 has
+been closer to this campaign than I have; it was asked to answer
+`LOCK RELEASED` or `LOCK STILL REQUIRED: <the admissible arm that needs it>`, and
+if it names such an arm I will schedule a real quiet window with every lane stood
+down. Overruling a lane on two documents read the same night is worth doing and
+worth being checked on.
+
 ---
 
 ## 3. Gaps, ranked by what stands between here and print-worthy
