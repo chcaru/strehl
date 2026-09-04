@@ -1,0 +1,170 @@
+{
+  "generated_utc": "2026-09-04T10:07:09.277245+00:00",
+  "harness_sha256": "75A342629B47F2E8BAF023B45B2D96D43E398C281078AD02512FEFE500CF1ABE",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "null": {
+    "argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\commission-memory-8009447e-m139\\memory-control\\parent.py",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\commission-memory-8009447e-m139\\memory-control\\child.py",
+      "67108864"
+    ],
+    "completed_utc": "2026-09-04T10:07:05.355774+00:00",
+    "host_load_during_run": {
+      "external_busy_cpu_seconds": 28.328125,
+      "external_busy_fraction_of_wall_capacity": 0.4249252064231557,
+      "external_busy_max": 0.1,
+      "logical_processors": 32,
+      "memory_end": {
+        "available_page_file_bytes": 79310942208,
+        "available_physical_bytes": 41636155392,
+        "available_virtual_bytes": 140732206792704,
+        "memory_load_percent": 37,
+        "total_page_file_bytes": 117633830912,
+        "total_physical_bytes": 66094223360,
+        "total_virtual_bytes": 140737488224256
+      },
+      "memory_start": {
+        "available_page_file_bytes": 80237928448,
+        "available_physical_bytes": 43688038400,
+        "available_virtual_bytes": 140732206792704,
+        "memory_load_percent": 33,
+        "total_page_file_bytes": 117633830912,
+        "total_physical_bytes": 66094223360,
+        "total_virtual_bytes": 140737488224256
+      },
+      "pass": false,
+      "process_tree_cpu_seconds": 0.03125,
+      "system_busy_cpu_seconds": 28.359375,
+      "system_total_cpu_seconds": 67.0
+    },
+    "memory": {
+      "max_gap_ms": 10.458699951414019,
+      "max_lateness_ms": 4.24179999390617,
+      "median_gap_ms": 10.002449998864904,
+      "missed_intervals": 0,
+      "peak_process_count": 2,
+      "peak_process_tree_page_fault_count": 22340,
+      "peak_process_tree_private_committed_bytes": 80744448,
+      "peak_process_tree_working_set_bytes": 90705920,
+      "peak_temp_file_bytes": 0,
+      "process_lifetimes": [
+        {
+          "created": 134329900232735008,
+          "first_seen_s": 0.00424179999390617,
+          "last_seen_s": 2.060090899991337,
+          "max_cpu_100ns": 156250,
+          "name": "python.exe",
+          "parent_pid": 42496,
+          "pid": 38600,
+          "samples": 207
+        },
+        {
+          "created": 134329900233060638,
+          "first_seen_s": 0.04049669997766614,
+          "last_seen_s": 2.060090899991337,
+          "max_cpu_100ns": 156250,
+          "name": "python.exe",
+          "parent_pid": 38600,
+          "pid": 44552,
+          "samples": 203
+        }
+      ],
+      "sample_count": 209,
+      "sample_interval_ms": 10.0
+    },
+    "requested_allocation_bytes": 67108864,
+    "returncode": 0,
+    "started_utc": "2026-09-04T10:07:03.257204+00:00",
+    "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\commission-memory-8009447e-m139\\memory-control\\null-64mib.stderr.log",
+    "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\commission-memory-8009447e-m139\\memory-control\\null-64mib.stdout.log",
+    "wall_seconds": 2.08331699995324
+  },
+  "plant": {
+    "argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\commission-memory-8009447e-m139\\memory-control\\parent.py",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\commission-memory-8009447e-m139\\memory-control\\child.py",
+      "7516192768"
+    ],
+    "completed_utc": "2026-09-04T10:07:09.277245+00:00",
+    "host_load_during_run": {
+      "external_busy_cpu_seconds": 64.3125,
+      "external_busy_fraction_of_wall_capacity": 0.5121534097762689,
+      "external_busy_max": 0.1,
+      "logical_processors": 32,
+      "memory_end": {
+        "available_page_file_bytes": 79356473344,
+        "available_physical_bytes": 41813106688,
+        "available_virtual_bytes": 140732206792704,
+        "memory_load_percent": 36,
+        "total_page_file_bytes": 117633830912,
+        "total_physical_bytes": 66094223360,
+        "total_virtual_bytes": 140737488224256
+      },
+      "memory_start": {
+        "available_page_file_bytes": 79309889536,
+        "available_physical_bytes": 41636216832,
+        "available_virtual_bytes": 140732206792704,
+        "memory_load_percent": 37,
+        "total_page_file_bytes": 117633830912,
+        "total_physical_bytes": 66094223360,
+        "total_virtual_bytes": 140737488224256
+      },
+      "pass": false,
+      "process_tree_cpu_seconds": 1.78125,
+      "system_busy_cpu_seconds": 66.09375,
+      "system_total_cpu_seconds": 125.5
+    },
+    "memory": {
+      "max_gap_ms": 36.44739999435842,
+      "max_lateness_ms": 28.6313992110081,
+      "median_gap_ms": 10.007799981394783,
+      "missed_intervals": 10,
+      "peak_process_count": 2,
+      "peak_process_tree_page_fault_count": 1844542,
+      "peak_process_tree_private_committed_bytes": 7544418304,
+      "peak_process_tree_working_set_bytes": 7539781632,
+      "peak_temp_file_bytes": 0,
+      "process_lifetimes": [
+        {
+          "created": 134329900253859243,
+          "first_seen_s": 0.03030469996156171,
+          "last_seen_s": 3.8903510999516584,
+          "max_cpu_100ns": 17500000,
+          "name": "python.exe",
+          "parent_pid": 25404,
+          "pid": 13152,
+          "samples": 377
+        },
+        {
+          "created": 134329900253580908,
+          "first_seen_s": 0.004779099952429533,
+          "last_seen_s": 3.9005260999547318,
+          "max_cpu_100ns": 312500,
+          "name": "python.exe",
+          "parent_pid": 42496,
+          "pid": 25404,
+          "samples": 381
+        }
+      ],
+      "sample_count": 383,
+      "sample_interval_ms": 10.0
+    },
+    "requested_allocation_bytes": 7516192768,
+    "returncode": 0,
+    "started_utc": "2026-09-04T10:07:05.356774+00:00",
+    "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\commission-memory-8009447e-m139\\memory-control\\plant-7gib.stderr.log",
+    "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\commission-memory-8009447e-m139\\memory-control\\plant-7gib.stdout.log",
+    "wall_seconds": 3.924147699959576
+  },
+  "schema": 1,
+  "status": "COMMISSIONED",
+  "verdict": {
+    "null_peak_private_committed_bytes": 80744448,
+    "null_stayed_below_one_gib": true,
+    "plant_peak_private_committed_bytes": 7544418304,
+    "plant_peak_process_count": 2,
+    "seven_gib_child_exceeded_six_gib_bar": true
+  }
+}
