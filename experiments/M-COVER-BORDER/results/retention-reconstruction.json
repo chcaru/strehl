@@ -1,0 +1,42 @@
+{
+  "schema": "M-COVER-BORDER-RETENTION-1",
+  "unit": "linear_plane_pixels",
+  "full_plane": [
+    3516,
+    2344
+  ],
+  "coverage_crop": [
+    3470,
+    2312
+  ],
+  "safe_inset_per_side": 256,
+  "remaining": [
+    2958,
+    1800
+  ],
+  "numerator_pixels": 5324400,
+  "denominator_pixels": 8241504,
+  "retained_fraction": 0.6460471292618435,
+  "retained_percent": 64.60471292618435,
+  "emitted_crop_retained_fraction": 0.6636718087811494,
+  "full_resolution_equivalent": {
+    "full_plane": [
+      7032,
+      4688
+    ],
+    "coverage_crop": [
+      6940,
+      4624
+    ],
+    "inset_per_side": 512,
+    "remaining": [
+      5916,
+      3600
+    ],
+    "retained_fraction": 0.6460471292618435
+  },
+  "scorecard_distinction": {
+    "cover_default_gate": "at least 80% original pixels",
+    "sota_section_1_5_gate": "at least 80% preregistered sites"
+  }
+}

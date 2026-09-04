@@ -109,13 +109,16 @@ sensor photosites, per axis.
 | Record | Source/space | Native statistic | Linear-plane px | Full-resolution output/sensor px | Admission |
 | --- | --- | ---: | ---: | ---: | --- |
 | cover-default | 109, default linear | Scale 8 / Crop 256 plane px | 8 / 256 | 16 / 512 | specific on 109 |
-| deleted `COVER-BORDER-RESULT` | 113, nonlinear full-resolution sRGB | 768 / 768 output px | 384 / 384 | 768 / 768 | withdrawn |
+| deleted `COVER-BORDER-RESULT` | 113, nonlinear full-resolution sRGB | 768 / 768 output px | 384 / 384 | 768 / 768 | withdrawn, censored |
 | deleted corrected-linear profile | 113, default linear | 640 / 320 plane px | 640 / 320 | 1280 / 640 | nonspecific |
 | sensitivity required clearance | full-resolution site coordinates | 1280 / 640 output px | 640 / 320 | 1280 / 640 | copied conservative gates |
 
 The sRGB record also used `deep_start=768` **sRGB output pixels**, equivalent
 to 384 plane px, not the linear profile's 768 plane px. It was rendered through
 a nonlinear viewing path explicitly documented as not for measurement.
+Moreover, its 768+ row is zero by deep-normalization construction. A nominal
+safe value equal to that deep start is a censored `NEVER_SAFE_BEFORE_DEEP`,
+not a measured 768 px safe inset or evidence that the modes agree.
 Both linear profile records use threshold `0.001`, deep start 768 plane px and
 the fixed edges above. The sensitivity file performs no new border profile; it
 copies the corrected-linear nominal values into a site-clearance filter.
@@ -181,6 +184,67 @@ This does not vindicate Scale's resampling or weaken the case for repairing
 Crop. Scale still changes `98.1462%` of the registered external overlap and may
 remain implicated in M8 overshoot. It establishes only that the 109 border
 blocker was real rather than invented by a unit or output-space mistake.
+
+## Retention gate: exact reconstruction of 64.6047%
+
+The number reconstructs exactly. It is neither asymmetric nor rotation-aware.
+It applies the confirmed 256 **linear-plane-pixel inset per side** to the
+already coverage-cropped 109 rectangle, then divides by the original full
+reference-plane area (`results/retention-reconstruction.json`):
+
+```text
+full reference plane:                  3516 x 2344
+emitted coverage Crop:                 3470 x 2312
+remove 256 from all four Crop edges:  (3470 - 512) x (2312 - 512)
+remaining rectangle:                   2958 x 1800
+
+(2958 * 1800) / (3516 * 2344)
+  = 5,324,400 / 8,241,504
+  = 0.6460471292618435
+  = 64.6047%
+```
+
+The full-resolution construction is identical:
+
+```text
+emitted Crop:       6940 x 4624
+inset per side:     512 full-resolution pixels
+remaining:          5916 x 3600
+reference:          7032 x 4688
+
+(5916 * 3600) / (7032 * 4688) = 0.6460471292618435
+```
+
+The attempted 549/550 full-resolution insets used the wrong conversion.
+`256 plane px * 2 = 512`, not approximately 550. If the denominator were the
+emitted Crop rather than the original plane, retention would be `66.3672%`;
+that alternative also fails 80%, but it is not the registered construction.
+
+### Is the rejection sound?
+
+There are two different 80% predicates in the repository:
+
+1. `experiments/cover-default/PREREGISTRATION.md:121-122` froze “at least 80%
+   of the original **pixels**” after the safe inset. Under that exact phase-0
+   gate, the rejection is sound: the arithmetic is correct and this lane
+   independently reconfirmed that 256 is boundary-specific on 109.
+2. Scorecard §1.5 requires at least 80% of preregistered **sites** to survive
+   identically in every arm
+   (`docs/proposals/2026-09-sota-scorecard.md:233-235`). Pixel-area retention is
+   not site survival. A centrally concentrated site manifest could retain more
+   than 80% even when global area retention is 64.6%, or vice versa.
+
+Therefore `64.6047%` is a valid result for the frozen COVER pixel-area gate,
+but it is not a measurement of the scorecard's site-survival estimand.
+`M-COVER-NATIVE.md` already labels formal clean-site survival unmeasured. The
+COVER/default rejection remains licensed at its registered scope; the
+scorecard site gate remains unresolved rather than numerically failed by
+64.6047%.
+
+Finally, the area failure is not independent of the 256 px finding. It is its
+deterministic geometric consequence on the 109 rectangle. There is one causal
+blocker—boundary contamination—and two registered consequences: excessive
+inset and insufficient retained pixel area.
 
 ## Recovered prior-corpus review
 
