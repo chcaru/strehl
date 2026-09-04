@@ -6504,7 +6504,7 @@ calibration, frozen tone and geometry -- is a near-exact description of the §3.
 atlas arrived at from a different direction. That is the strongest corroboration
 this program has produced, and it raises the value of Ask 2a rather than lowering it.
 
-### 2.9.61 M3 is capture-unblocked, and it is the best candidate for a first passing axis
+### 2.9.61 M3 is capture-unblocked — but I was wrong that this made it the best candidate for a first passing axis
 
 M169 reports the occlusion-veil axis needs **no new photography**: 693 existing
 ARWs, 1,233 census-eligible sites, and a frozen 500-site population across four
@@ -6537,6 +6537,20 @@ conclusion. M174 is also required to show that any re-registration is derivable
 without reference to the observed outcome, because ruling "the assertion was wrong"
 after it failed is the exact shape of moving a goalpost.
 
+**CORRECTION, same night, by me.** The heading of this section originally read
+"and it is the best candidate for a first passing axis". **That conclusion was
+wrong and I did not check it before writing it.** "Needs no new photography" is
+true; "can therefore score" does not follow. The scorecard's own readiness table
+classes M3 at `2026-09-sota-scorecard.md:780` as
+`DEFINED; UNMEASURED_COMPARATOR_QUALIFICATION; (a)(b)(d)` — so M3 is blocked on
+`(a)` a missing admissible detail instrument *and* `(d)` an unavailable licensed
+comparator set, neither of which any amount of existing photography supplies.
+**M169 told me this and I under-weighted it**: its `:185` remark that the run
+spans "693 RAWs plus licensed comparator outputs" was the correct reading. A
+cleanly commissioned M3 battery is a sound *instrument* that remains an
+`UNMEASURED` *axis*. Recorded here rather than silently edited, because the
+error was mine and the original claim is the one that would have misled.
+
 ### 2.9.62 Amendment 6 is now sourced, and four of my own wording defects are repaired
 
 M168's identifiability verdict existed only in a transcript while Amendment 6 quoted
@@ -6556,6 +6570,104 @@ all three introducing commits are `2026-09-04`. All three corrected.
 
 **The pattern worth keeping:** every one of these defects was in text I wrote, found
 by a lane I asked to check me, on a document I own. None was found by me.
+
+### 2.9.63 The truth-referenced atlas does not discharge the hedge as designed
+
+**`AMBIGUITY SURVIVES`.** M164, commit `a78a901e`, verification
+`TOTAL: PASS 12/12 passed; 0 failed; 0 skipped`. I sent it the single question the
+whole program rests on — whether `2026-09-truth-referenced-detail.md` §3.1's
+higher-magnification optical reference actually breaks `X <-> KX` or merely
+relocates it — and the answer is that it relocates it.
+
+The reference is itself an optical capture `R = H_R X` with its own unknown
+transfer, so for `Y = K H_S X` the observed pair identifies only the composite
+`K H_S / H_R` on modes the reference carries. If `H_R` may vary over the
+admissible optical family, the companion world `X' = KX`, `K' = I`,
+`H_R' = H_R K^-1` reproduces the identical pair. If `H_R` is physically fixed,
+the ambiguity still survives for every nonidentity `K_null` with
+`H_R (K_null - I) X = 0`. **The reference breaks the ambiguity only on its own
+supported subspace, and not because its sampling ratio exceeds `2.0x`.**
+
+**The route is not dead; its admission contract changed.** M164's replacement
+gate is `REFERENCE_INFORMATION_DOMINANCE`: simultaneous `LCB95` on both an
+information ratio `I_R,k / I_S,k` and a transfer ratio `|H_R,k| / |H_S,k|`,
+each strictly above one by a frozen positive margin, in **every** licensed cell,
+with no strong cell compensating for a null one, and estimated from a
+**pre-render scored-path physical witness** that the candidate never touches —
+otherwise candidate sharpening participates in its own admission.
+
+**The number that decides the owner ask.** M164 constructed a case that assigns
+the reference the design's exact `2.031203x` sampling ratio and still leaves it
+*less* informative than the scored path: `1.160964` bits against `1.660964`, a
+ratio of `0.698970`. A second construction with stronger reference transfer
+reaches `2.350220` bits, ratio `1.414973`, proving the gate is movable and not
+tautological. Its ruling on the threshold itself: *"There is no identifiability
+discontinuity at exactly `2.0x`... The physical information gate, not the
+integer-looking sampling threshold, decides the theorem."*
+
+**Consequence I applied immediately: Ask 2a is on hold.** The preflight measures
+the sampling ratio, which is now established as necessary but not sufficient. I
+do not yet know whether `REFERENCE_INFORMATION_DOMINANCE` is an analysis change
+or a change to what must be photographed — M171 is answering that. The ask
+requires the owner to remove the teleconverter and leave the rig locked, a state
+that cannot be reassembled identically, so shooting a superseded specification
+costs more than waiting. **Two independent lanes reached compatible conclusions
+from different directions**: M166 ruled the aperture premise `NOT FORCED` on
+physical grounds (commit `4dc266e7`) while M164 ruled this on formal grounds,
+and neither read the other.
+
+M164 also routes a defect into the geometric gate itself: it should read
+`LCB95(ratio) >= 2.0`, not `point_estimate >= 2.0`. It re-derives the margin
+independently as `2.7015 / 1.33 = 2.031203x`, clearing the `2.0x` bar by
+`0.031203x` — **`1.560%` relative to the bar, or `1.536%` of the achieved
+ratio** — and rules that this "does **not** clear REFERENCE_INFORMATION_DOMINANCE",
+since "the reference could be defocused, aberration-limited, noisy, or null in a
+licensed cell while retaining exactly the same sampling ratio". M173's independent
+Ask 2a audit reached the same lower-bound requirement — "its unrounded lower bound
+is at least `2.0`" — and that wording is now in the owner text.
+
+### 2.9.64 M3's commissioning failure was a mis-registered assertion, and the adjudication was blind
+
+**Verdict `(B) ASSERTION DEFECT`.** M174, commit `a9176fef`, `23/23 checks passed`.
+
+M174 independently recovered the discriminator I withheld from it —
+`median_h_e = 0.0029430516302103543` on the clean null, `3.398x` below the
+unchanged `0.01` gate — and then supplied the thing I actually required, an
+argument that does not depend on the observed outcome: the arm plants a `0.5%`
+rim **and** a `0.5%` veil, they overlap across nine `h_e` samples, and the arm
+therefore delivers `1.0%` before noise into a `1%` gate. Measured gate crossing
+is `0.477804796%` per component. **The arm's own construction implies
+`FAIL_MEDIAN_H_E`; it was registered to expect a pass.** The instrument was
+right and the registration was wrong.
+
+**No gate moved**, including the ratified `0.05` headline, and no score is
+authorised. The correct repair is to retain both improvement assertions and
+change the expected outcome. **The blind adjudication earned its keep**: I found
+the discriminator first and deliberately kept it out of M174's brief, so its
+agreement is evidence rather than an echo.
+
+### 2.9.65 The systemic blocker is a licence, not a photograph
+
+Counted directly from `2026-09-sota-scorecard.md` §3.1, lines `:778-:789`.
+Blocker `(d)` — "unavailable common-input output from licensed Zerene PMax,
+licensed Zerene DMap, or a fresh commit-pinned best-known-source fork rebuild
+whose executable hash was frozen before rendering" — is carried explicitly by
+**seven axes: M1, M2, M3, M4, M5, M6, M7.** M11 carries no literal `(d)` but
+carries `UNMEASURED_COMPARATOR_QUALIFICATION`, the same dependency renamed. M9
+is `(a)(c)` and blocked transitively through M1. Only **M8, M10 and M12** are
+free of comparator dependence, and M10 is `DEFINITION BLOCKED` for other reasons.
+
+**All three named arms are required, not any one of them**: `:472-477` rules
+that if *any* required arm "cannot produce a linear output that passes §1.3, the
+named-comparator requirement is unmet and the dependent comparative axes remain
+`UNMEASURED`". Two of the three arms need a paid licence nobody has bought. The
+third — the fork rebuild — needs no licence, no money, no photography and no
+owner action, and has never been attempted. Lane M175 is on it.
+
+**I over-claimed this once already and corrected it before it propagated.** I
+briefed M175 that `(d)` covered "10 of 12" axes from memory rather than from the
+table; the verified count is seven explicit. I sent the correction to the lane
+within the hour and told it to verify the count itself rather than take mine.
 
 ---
 

@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
-            "2.9.60", "2.9.61", "2.9.62"]
+            "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65"]
 
 
 def collapse(s):
@@ -152,6 +152,26 @@ CLAIMS = [
     ("aperture airy calibration error", "1.11e-15", R + "M164-aperture-identifiability.md"),
     ("m3 improvement arm median", "0.0104133574", R + "M169-m3-veil.md"),
     ("m3 census eligible sites", "1,233", R + "M169-m3-veil.md"),
+    # --- M164 reference identifiability: AMBIGUITY SURVIVES ---
+    ("ref info dominance ratio", "0.698970",
+     R + "M164-reference-identifiability.md", "a ratio of"),
+    ("ref bits inferior", "1.160964",
+     R + "M164-reference-identifiability.md", "reference information"),
+    ("scored bits superior", "1.660964",
+     R + "M164-reference-identifiability.md", "scored state"),
+    ("ref bits movable", "2.350220",
+     R + "M164-reference-identifiability.md", "stronger reference transfer"),
+    ("ref dominance movable ratio", "1.414973",
+     R + "M164-reference-identifiability.md", "dominance gate can move"),
+    ("margin over bar", "1.560%",
+     R + "M164-reference-identifiability.md", "relative to the bar"),
+    ("margin over achieved", "1.536%",
+     R + "M164-reference-identifiability.md", "achieved ratio"),
+    # --- M174 M3 assertion adjudication: (B) ---
+    ("m3 clean null full precision", "0.0029430516302103543",
+     R + "M174-m3-improvement-assertion.md"),
+    ("m3 gate crossing per component", "0.477804796",
+     R + "M174-m3-improvement-assertion.md"),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
@@ -164,15 +184,55 @@ WINDOW = 160
 CLAIMS = [(c + (None, None))[:5] for c in CLAIMS]
 
 
+def rounds_to(full, short):
+    """True if the longer decimal `full` rounds exactly to `short`."""
+    if "." not in short:
+        return False
+    try:
+        dec = len(short.split(".")[1])
+        return format(float(full), ".%df" % dec) == short
+    except ValueError:
+        return False
+
+
+def positions(hay, needle, extend=False):
+    """Boundary-aware matches of a numeric needle.
+
+    A bare substring search makes a check unfalsifiable as soon as any other
+    site carries a longer number with the same prefix: `2.0312` is satisfied by
+    `2.031203`, so mutating the canonical site still reads GREEN. Commissioning
+    caught exactly that.
+
+    STATUS is searched strictly (`extend=False`): a quoted value must have its
+    own canonical site, not ride on a longer neighbour. Sources are searched
+    with `extend=True`, because STATUS legitimately quotes a rounded form of a
+    full-precision artifact value -- but only when the longer value actually
+    rounds to the quoted one.
+    """
+    out = []
+    for v in variants(needle):
+        for m in re.finditer(re.escape(v), hay):
+            if m.start() > 0 and hay[m.start() - 1].isdigit():
+                continue
+            after = hay[m.end()] if m.end() < len(hay) else ""
+            if after.isdigit():
+                if not extend:
+                    continue
+                tail = re.match(r"\d+", hay[m.end():]).group(0)
+                if not rounds_to(v + tail, v):
+                    continue
+            out.append(m)
+    return out
+
+
 def found(src, needle, ctx):
     """True if needle occurs in src, and (if ctx given) ctx occurs near it."""
-    for v in variants(needle):
-        for m in re.finditer(re.escape(v), src):
-            if ctx is None:
-                return True
-            w = src[max(0, m.start() - WINDOW):m.end() + WINDOW]
-            if ctx in w:
-                return True
+    for m in positions(src, needle, extend=True):
+        if ctx is None:
+            return True
+        w = src[max(0, m.start() - WINDOW):m.end() + WINDOW]
+        if ctx in w:
+            return True
     return False
 
 
@@ -188,7 +248,7 @@ for label, needle, rel, ctx, srclit in CLAIMS:
     if rel not in cache:
         cache[rel] = load(p)
     src = cache[rel]
-    in_status = any(v in sec for v in variants(needle))
+    in_status = bool(positions(sec, needle))
     if not in_status:
         # Every entry in CLAIMS is something this section asserts. Absence means
         # the assertion was removed or mistyped -- both are defects. Treating it
