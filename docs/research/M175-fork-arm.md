@@ -262,14 +262,14 @@ a missing required arm
 (`docs/proposals/2026-09-sota-scorecard.md:1867-1876`). Licensed Zerene PMax and
 DMap are still absent, and this lane created no scored campaign corpus.
 
-The task brief's “10 of 12; only M8 and M12 escape” count is not the current
-§3.1 classification. The table marks `(d)` explicitly on seven axes, M1–M7;
+Direct verification against §3.1 gives this classification: the table marks
+`(d)` explicitly on seven axes, M1–M7;
 M11 carries the same comparator dependency under
 `UNMEASURED_COMPARATOR_QUALIFICATION`; M9 is transitively blocked through M1;
 and **M10, M8, and M12 are comparator-independent**
 (`docs/proposals/2026-09-sota-scorecard.md:776-789`,
 `docs/STATUS.md:6649-6658`). Thus the comparator dependency reaches nine axes,
-not ten, and no status changes from this fork rebuild alone.
+and no status changes from this fork rebuild alone.
 
 ## 5. Defects for the orchestrator to repair
 
