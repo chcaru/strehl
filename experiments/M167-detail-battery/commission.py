@@ -24,6 +24,9 @@ BLUR_SIGMAS = [0.0, 0.5, 1.0, 1.5]
 PREDICATES = ("P1", "P2", "P3", "P4", "P5", "P6")
 REJECTION_PRIORITY = PREDICATES
 
+FIXTURE_SHA256 = (
+    "7082DD08A51E3D74D9C402275F68342344AAB7E17112E753985FA4692F626B36"
+)
 D8_SHA256 = "C0408661BDDF15554BB8EC0F3D10C972D88CB632AF226C2E6944466855898288"
 BAND_SHA256 = "4AAE9064AD89C7846492C00EA1FC60A1965CEC3A6AB7550BF84634C9E021EC1D"
 BAND_EVIDENCE_SHA256 = (
@@ -391,6 +394,10 @@ def commission_battery() -> dict[str, object]:
     d8_provenance = measurements["d8"].get("provenance", {})
     band_provenance = measurements["band-power"].get("provenance", {})
     m2_provenance = measurements["m2"].get("provenance", {})
+    oracle_measurement = measurements["oracle"]
+    oracle_diagnostics = oracle_measurement.get("diagnostics", {})
+    oracle_construction = oracle_diagnostics.get("construction", {})
+    oracle_checks = oracle_construction.get("checks", {})
     band_snapshot = measurements["band-power"].get(
         "diagnostics", {}
     ).get("historical_flat_snapshot", {})
@@ -398,12 +405,71 @@ def commission_battery() -> dict[str, object]:
         "diagnostics", {}
     ).get("m159_specificity_replay", {})
     reconstructed_ratio = m2_replay.get("blurred_over_unblurred")
+    expected_oracle_checks = {
+        "all_valid_observations_finite_256_square",
+        "optical_renders_byte_distinct",
+        "downstream_repeat_difference_held_fixed",
+        "gaussian_transfer_strictly_ordered",
+        "blur_sigma_vector_exact",
+        "usm_pixels_differ_from_base",
+        "nonfinite_fixture_contains_nonfinite",
+        "wrong_shape_fixture_is_one_dimensional",
+    }
+    oracle_sigmas = oracle_construction.get("optical_sigmas_px")
+    oracle_frequencies = oracle_construction.get(
+        "positive_frequencies_cyc_per_output_px"
+    )
+    expected_oracle_sigmas = {
+        "improved": 0.55,
+        "base": 1.0,
+        "degraded": 1.65,
+    }
+    expected_oracle_frequencies = [0.05, 0.1, 0.2, 0.3, 0.4]
+    expected_gaussian_transfer = {
+        name: [
+            math.exp(-2.0 * math.pi**2 * sigma**2 * frequency**2)
+            for frequency in expected_oracle_frequencies
+        ]
+        for name, sigma in expected_oracle_sigmas.items()
+    }
+    repeat_differences = oracle_construction.get(
+        "repeat_difference_max_abs", {}
+    )
+    optical_hashes = oracle_construction.get("optical_image_sha256", {})
 
     checks = {
         "checker_commissioned": checker["commissioned"],
         "oracle_passes_all_arms": (
             verdicts["oracle"]["verdict"]
             == "ACCEPTED_BY_SYNTHETIC_BATTERY"
+        ),
+        "oracle_fixture_source_pinned": (
+            oracle_construction.get("fixture_source_sha256")
+            == FIXTURE_SHA256
+        ),
+        "oracle_construction_verified": (
+            oracle_measurement.get("candidate", {}).get("kind")
+            == "INELIGIBLE_CONSTRUCTION_TRUTH"
+            and oracle_diagnostics.get("eligible_as_candidate") is False
+            and oracle_sigmas == expected_oracle_sigmas
+            and oracle_frequencies == expected_oracle_frequencies
+            and oracle_construction.get("gaussian_transfer")
+            == expected_gaussian_transfer
+            and set(oracle_checks) == expected_oracle_checks
+            and all(oracle_checks.values())
+            and oracle_construction.get("all_checks") is True
+            and set(repeat_differences)
+            == {"base", "improved", "degraded"}
+            and all(
+                float(value) <= 1e-15
+                for value in repeat_differences.values()
+            )
+            and set(optical_hashes) == {"base", "improved", "degraded"}
+            and len(set(optical_hashes.values())) == 3
+            and all(
+                isinstance(value, str) and len(value) == 64
+                for value in optical_hashes.values()
+            )
         ),
         "d8_source_pinned": d8_provenance.get("sha256") == D8_SHA256,
         "d8_rejected": (
@@ -462,6 +528,7 @@ def commission_battery() -> dict[str, object]:
             "8a305128",
             "ca79eac7",
             "5fe75c14",
+            "a183fd47",
         ],
         "checker": checker,
         "commissioning_checks": checks,

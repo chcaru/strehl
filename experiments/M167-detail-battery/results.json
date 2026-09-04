@@ -52,6 +52,8 @@
     "m2_rejected": true,
     "m2_rejected_by_signed_blur": true,
     "m2_sources_pinned": true,
+    "oracle_construction_verified": true,
+    "oracle_fixture_source_pinned": true,
     "oracle_passes_all_arms": true
   },
   "measurements": {
@@ -505,6 +507,67 @@
         "score_orientation": "higher_is_more_resolved"
       },
       "diagnostics": {
+        "construction": {
+          "all_checks": true,
+          "checks": {
+            "all_valid_observations_finite_256_square": true,
+            "blur_sigma_vector_exact": true,
+            "downstream_repeat_difference_held_fixed": true,
+            "gaussian_transfer_strictly_ordered": true,
+            "nonfinite_fixture_contains_nonfinite": true,
+            "optical_renders_byte_distinct": true,
+            "usm_pixels_differ_from_base": true,
+            "wrong_shape_fixture_is_one_dimensional": true
+          },
+          "fixture_source": "experiments/M167-detail-battery/fixtures.py",
+          "fixture_source_sha256": "7082DD08A51E3D74D9C402275F68342344AAB7E17112E753985FA4692F626B36",
+          "gaussian_transfer": {
+            "base": [
+              0.9518498073692735,
+              0.8208687174155399,
+              0.454040738727245,
+              0.16922454248244997,
+              0.042499056285362526
+            ],
+            "degraded": [
+              0.8742840204647905,
+              0.5842653928087798,
+              0.11653077956962814,
+              0.00793398667197148,
+              0.00018440071779918455
+            ],
+            "improved": [
+              0.985183090250255,
+              0.9420366424206404,
+              0.7875373927863202,
+              0.5842653928087798,
+              0.38466682613286357
+            ]
+          },
+          "optical_image_sha256": {
+            "base": "8F1EA5F8E1D1D1CAE2865CC551DAA0C7EF8526FC7DFB107E9E8E43243BED5452",
+            "degraded": "FBD1C0056C4091D8AD3094D30919D77E2A20901D124EF1C245D746FAA4208944",
+            "improved": "13CDD26A4B94B12065C77F5BB59F3D86D5D55E7CE2BD9BBFBB535463681EF86E"
+          },
+          "optical_sigmas_px": {
+            "base": 1.0,
+            "degraded": 1.65,
+            "improved": 0.55
+          },
+          "positive_frequencies_cyc_per_output_px": [
+            0.05,
+            0.1,
+            0.2,
+            0.3,
+            0.4
+          ],
+          "repeat_difference_max_abs": {
+            "base": 0.0,
+            "degraded": 1.6653345369377348e-16,
+            "improved": 1.6653345369377348e-16
+          },
+          "usm_max_abs_pixel_change": 0.03730393225208628
+        },
         "eligible_as_candidate": false,
         "purpose": "prove the registered accepted set is nonempty"
       },
@@ -521,7 +584,8 @@
   "preregistration_commits": [
     "8a305128",
     "ca79eac7",
-    "5fe75c14"
+    "5fe75c14",
+    "a183fd47"
   ],
   "schema": 1,
   "status": "COMMISSIONED",

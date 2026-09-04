@@ -34,6 +34,10 @@ from fixtures import (
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 
+FIXTURE_PATH = HERE / "fixtures.py"
+FIXTURE_SHA256 = (
+    "7082DD08A51E3D74D9C402275F68342344AAB7E17112E753985FA4692F626B36"
+)
 D8_PATH = ROOT / "experiments/M-PHASE0-SPLIT2/frc.py"
 D8_SHA256 = "C0408661BDDF15554BB8EC0F3D10C972D88CB632AF226C2E6944466855898288"
 BAND_PATH = ROOT / "experiments/M95-coverage/src/m95cov.py"
@@ -171,7 +175,127 @@ def environment() -> dict[str, object]:
     }
 
 
-def oracle_result() -> dict[str, object]:
+def array_sha256(array: np.ndarray) -> str:
+    value = np.ascontiguousarray(array, dtype=np.float64)
+    digest = hashlib.sha256()
+    digest.update(str(value.shape).encode("ascii"))
+    digest.update(value.tobytes())
+    return digest.hexdigest().upper()
+
+
+def oracle_result(fixtures: dict[str, object]) -> dict[str, object]:
+    fixture_hash = require_hash(FIXTURE_PATH, FIXTURE_SHA256)
+    observations = {
+        name: fixtures[name]
+        for name in (
+            "flat_detail",
+            "flat",
+            "base",
+            "improved",
+            "degraded",
+            "usm",
+        )
+    }
+    observations.update(
+        {
+            f"blur_{item['added_sigma_px']:.2f}": item["observation"]
+            for item in fixtures["blur_ladder"]
+        }
+    )
+    if not all(
+        isinstance(observation, Observation)
+        for observation in observations.values()
+    ):
+        raise TypeError("fixture generator returned a non-observation")
+
+    optical = {
+        name: observations[name]
+        for name in ("base", "improved", "degraded")
+    }
+    optical_hashes = {
+        name: array_sha256(observation.image)
+        for name, observation in optical.items()
+    }
+    base_difference = (
+        optical["base"].repeat_a - optical["base"].repeat_b
+    )
+    repeat_difference_max_abs = {
+        name: float(
+            np.max(
+                np.abs(
+                    observation.repeat_a
+                    - observation.repeat_b
+                    - base_difference
+                )
+            )
+        )
+        for name, observation in optical.items()
+    }
+
+    frequencies = [0.05, 0.10, 0.20, 0.30, 0.40]
+    optical_sigmas = {
+        "improved": IMPROVED_SIGMA,
+        "base": BASE_SIGMA,
+        "degraded": DEGRADED_SIGMA,
+    }
+    gaussian_transfer = {
+        name: [
+            math.exp(-2.0 * math.pi**2 * sigma**2 * frequency**2)
+            for frequency in frequencies
+        ]
+        for name, sigma in optical_sigmas.items()
+    }
+    transfer_strictly_ordered = all(
+        improved > base > degraded
+        for improved, base, degraded in zip(
+            gaussian_transfer["improved"],
+            gaussian_transfer["base"],
+            gaussian_transfer["degraded"],
+        )
+    )
+
+    nonfinite = fixtures["nonfinite"]
+    wrong_shape = fixtures["wrong_shape"]
+    usm_delta = float(
+        np.max(
+            np.abs(
+                observations["usm"].image - observations["base"].image
+            )
+        )
+    )
+    construction_checks = {
+        "all_valid_observations_finite_256_square": all(
+            observation.image.shape == (256, 256)
+            and observation.repeat_a.shape == (256, 256)
+            and observation.repeat_b.shape == (256, 256)
+            and np.isfinite(observation.image).all()
+            and np.isfinite(observation.repeat_a).all()
+            and np.isfinite(observation.repeat_b).all()
+            for observation in observations.values()
+        ),
+        "optical_renders_byte_distinct": (
+            len(set(optical_hashes.values())) == len(optical_hashes)
+        ),
+        "downstream_repeat_difference_held_fixed": all(
+            value <= 1e-15
+            for value in repeat_difference_max_abs.values()
+        ),
+        "gaussian_transfer_strictly_ordered": transfer_strictly_ordered,
+        "blur_sigma_vector_exact": [
+            float(item["added_sigma_px"])
+            for item in fixtures["blur_ladder"]
+        ]
+        == list(BLUR_SIGMAS),
+        "usm_pixels_differ_from_base": usm_delta > 0.0,
+        "nonfinite_fixture_contains_nonfinite": (
+            isinstance(nonfinite, Observation)
+            and not np.isfinite(nonfinite.image).all()
+        ),
+        "wrong_shape_fixture_is_one_dimensional": (
+            isinstance(wrong_shape, Observation)
+            and wrong_shape.image.ndim == 1
+        ),
+    }
     value = numeric_record
     return {
         "schema": 1,
@@ -229,6 +353,18 @@ def oracle_result() -> dict[str, object]:
         "diagnostics": {
             "eligible_as_candidate": False,
             "purpose": "prove the registered accepted set is nonempty",
+            "construction": {
+                "fixture_source": "experiments/M167-detail-battery/fixtures.py",
+                "fixture_source_sha256": fixture_hash,
+                "optical_sigmas_px": optical_sigmas,
+                "positive_frequencies_cyc_per_output_px": frequencies,
+                "gaussian_transfer": gaussian_transfer,
+                "optical_image_sha256": optical_hashes,
+                "repeat_difference_max_abs": repeat_difference_max_abs,
+                "usm_max_abs_pixel_change": usm_delta,
+                "checks": construction_checks,
+                "all_checks": all(construction_checks.values()),
+            },
         },
     }
 
@@ -441,10 +577,10 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    fixtures = build_fixtures()
     if args.candidate == "oracle":
-        result = oracle_result()
+        result = oracle_result(fixtures)
     else:
-        fixtures = build_fixtures()
         if args.candidate == "d8":
             result = d8_result(fixtures)
         elif args.candidate == "band-power":
@@ -455,5 +591,4 @@ def main() -> int:
     return 0
 
 if __name__ == "__main__":
-    raise SystemExit(main())
     raise SystemExit(main())

@@ -9,8 +9,11 @@ M167 does not propose another detail statistic.  It freezes and commissions the
 acceptance battery that a future candidate must survive before this program may
 use it for a resolution claim.
 
-The predicates were committed before candidate execution in `8a305128`,
-`ca79eac7`, and `5fe75c14`.  The executable preregistration is
+The original predicates were committed before candidate execution in
+`8a305128`, `ca79eac7`, and `5fe75c14`.  After M164's concurrent result, the
+stronger binding from the oracle to actual rendered fixtures was frozen in
+`a183fd47` before that revised oracle was executed.  The executable
+preregistration is
 `experiments/M167-detail-battery/PREREGISTRATION.md`.
 
 **VERIFIED.** The battery is commissioned:
@@ -25,8 +28,8 @@ The predicates were committed before candidate execution in `8a305128`,
 
 The machine-readable record is
 `experiments/M167-detail-battery/results.json`.  Its top-level status is
-`COMMISSIONED` and every hard commissioning check is true
-(`results.json:1-50,527`).
+`COMMISSIONED` and all `15` hard commissioning checks are true
+(`results.json:40-56,591`).
 
 No known-good deployable instrument exists in the repository.  The positive
 control is therefore a construction-truth oracle, not a candidate and not
@@ -95,10 +98,22 @@ are the decisive commissioning requirement.
 - USM `1.0`, tied with base; and
 - typed refusal/error for the two malformed cases.
 
-All six gates are true (`results.json:910-1019`).  This proves the accepted set
-is nonempty.  It does **not** commission an image instrument: the oracle uses
-truth metadata ordinary candidates are forbidden to receive
-(`results.json:501-525`).
+The revised oracle actually instantiates the hash-pinned `256 x 256` fixture
+generator before emitting those truth scores.  The independent checker
+requires eight construction checks: finite/shape validity, three byte-distinct
+optical renders, common downstream repeat differences, strict analytic
+Gaussian-transfer ordering at five positive frequencies, the exact blur
+ladder, changed USM pixels, and both malformed plants.  All eight passed.  The
+largest repeat-difference mismatch was
+`1.6653345369377348e-16`, below the frozen `1e-15` bound; USM changed pixels by
+up to `0.03730393225208628`.  The three optical render hashes are distinct.
+The serialized construction evidence is at `results.json:510-570`.
+
+All six score gates and all eight construction checks are true.  This proves
+that the rendered construction has a nonempty accepted result, rather than
+only proving that a hand-written score vector can pass.  It still does **not**
+commission an image instrument: the oracle uses truth metadata ordinary
+candidates are forbidden to receive (`results.json:1000-1082`).
 
 ## 4. Known-dead instruments
 
@@ -118,15 +133,15 @@ crossing.
 **MEASURED.** On M167's matched flat arm, both detailed and no-scene records
 were `LOWER_BOUND 0.5`; P1 therefore cannot establish
 `flat.upper < detail.lower` and rejects D8
-(`results.json:664-679,761-774`).  The pooled low-band FRC was
+(`results.json:718-734,825-838`).  The pooled low-band FRC was
 `0.9989656493074857` on detail and `0.9940552535661507` on the flat
-(`results.json:278-280`).
+(`results.json:280-282`).
 
 **MEASURED.** D8 also failed signed blur.  Its crossing sequence for added
 sigma `[0,.5,1,1.5]` was
 `0.44807855374505606, 0.44806009012025305,
 0.4481711193804649, 0.4485069054687077`; the last two steps rose rather than
-fell (`results.json:689-723`).  This is the normalized common-filter
+fell (`results.json:750-783`).  This is the normalized common-filter
 blindness recorded in the plan, now exercised by the frozen M167 predicate.
 
 ### 4.2 M137 band power
@@ -138,8 +153,8 @@ independently verified historical kernel-gap snapshot.
 
 **VERIFIED FROM PINNED SERIALIZED EVIDENCE, not newly re-rendered.** The adapter
 reproduced the exact detail gap, flat gap, ratio and structure share above
-(`results.json:148-158`).  Since the flat point is greater than the detail
-point, P1 rejects it (`results.json:538-550,634-648`).  This is the same
+(`results.json:150-160`).  Since the flat point is greater than the detail
+point, P1 rejects it (`results.json:594-607,698-712`).  This is the same
 historical `1.0249391472947889` failure, not a newly tuned surrogate.
 
 The synthetic underlying statistic also called USM better than base
@@ -163,14 +178,49 @@ blurred / unblurred = 0.5712148772282098
 ```
 
 The replay equals the frozen value and is recorded at
-`results.json:389-394`.  On the independent M167 blur ladder, the
+`results.json:391-396`.  On the independent M167 blur ladder, the
 higher-is-better scores rose
 `-0.04995233606232108 -> -0.0445857853669207 ->
 -0.03166242401262384 -> -0.021340729420569155`; every signed step is wrong.
-P4 is false (`results.json:809-843,881-898`).  Thus M2 is rejected on the blur
+P4 is false (`results.json:873-907,945-962`).  Thus M2 is rejected on the blur
 arm as required.
 
-## 5. Reproduction
+## 5. Concurrent M164 result and M167 interpretation
+
+M164 commit `19f6f54a` landed after M167's initial commissioning.
+
+**VERIFIED FROM M164'S PINNED ARTIFACT, not reclassified as an M167
+measurement.** Its mechanism probe reports:
+
+```text
+fractional R_box9 blurred/unblurred                 0.5711797973518002
+additive sd(a-U9(a))/mean(a), local division removed
+                                                    0.5713180075739982
+median local mean blurred/unblurred                 0.9996748398406278
+```
+
+Thus the local division is not the cause of the wrong sign: removing it changes
+the ratio only slightly, while blur contracts the high-pass numerator and
+barely moves the local mean
+(`19f6f54a:docs/research/M164-m2-repair.md`, sections 0 and 3;
+`19f6f54a:experiments/M164-m2-repair/commission.json`,
+`m159_mechanism_probe`).
+
+**ARGUED BY M164, NOT ASSUMED BY M167.** The same rendered pair `(A,B=GA)`
+admits both a degradation world (blur removed signal) and an improvement world
+(smoothing removed noise).  Without an external assumption or observation, a
+deterministic two-output statistic sees identical bytes in both worlds.
+
+M167 does not turn that argument into an automatic rejection of reference-free
+candidates.  P1-P6 remain empirical and unchanged.  M2 is rejected because
+M167 independently observes its `0.5712148772282098` replay and wrong-signed
+blur ladder, not because M164 declared it unidentifiable.  Conversely, the
+construction-truth oracle supplies exactly the external information that makes
+its positive direction known by construction; its pass is why a future
+universal rejection is distinguishable from a checker incapable of passing
+anything.
+
+## 6. Reproduction
 
 From the repository root:
 
@@ -192,11 +242,11 @@ one numerical thread, zero captures opened (`results.json`, each measurement's
 
 **VERIFIED repeatability and external contract.** Two identical full runs
 produced the same `results.json` SHA-256,
-`4843990388867C6F4393A39302F34FF692872BBB158BD17C0204EA16ED9F7EA0`.
+`210675AB3BC25FCE53EE090AAEE98E69330E95F3EC8C19FDC1CA59BCEF9229B0`.
 Passing the serialized oracle back through `commission.py --input` exited `0`;
 passing serialized M2 exited `1`.
 
-## 6. Scope and consequences
+## 7. Scope and consequences
 
 - **VERIFIED:** this battery can accept its construction-truth oracle and
   reject all three required dead instruments.
@@ -207,6 +257,10 @@ passing serialized M2 exited `1`.
   amendment 1's non-separability result makes a single-image high-frequency
   candidate unlikely to survive P5 without an independent reference, physical
   constraint, or explicit refusal.
+- **NOT ESTABLISHED:** M164's identifiability argument as a universal
+  impossibility theorem.  M167 will continue to judge every candidate
+  empirically, including candidates that exploit independently justified
+  signal/noise structure.
 - **NOT ESTABLISHED:** physical false-accept/false-refusal rates.  This battery
   is synthetic and small by design; later physical commissioning still needs
   independently registered targets, calibration and provenance.
