@@ -68,3 +68,77 @@ optical-sign measurement, followed by two existing 480-site arm invocations and
 their checker/report. Scope estimate: one short dedicated lane; compute should
 take minutes, while the new freeze and review are the substantive work. No new
 capture is required. Neither arm was run for this audit.
+
+## Post-mortem optical-sign preregistration
+
+<!-- CAND2-POSTMORTEM-PREREG-START -->
+
+**Status: FROZEN before either optical arm.** The freeze is the path-scoped Git
+commit containing this block. The historical `DEAD` verdict and downstream gate
+remain closed; this is a separately authorised sign measurement, not a rescue.
+
+### Registered prior and outcomes
+
+The orchestrator predicts blur will read approximately `1.0`, because unclipped
+USM and Gaussian blur are both linear shift-invariant filters. The measurement
+will report unrounded values rather than fit that prediction.
+
+For each native and display-referred variant, `R≈1` means the complete two-sided
+95% ratio CI lies inside inclusive `[0.99,1.01]`. `R` is meaningfully non-unity
+only when that CI is strictly disjoint from `[0.99,1.01]`. Genuine improvement
+is meaningfully above one only when its original one-sided `LCB95>=1.30`.
+
+1. Blur `≈1` and improvement `≈1`: `OUTCOME_1_STRUCTURALLY_BLIND`.
+2. Blur `≈1` and improvement meaningfully above one:
+   `OUTCOME_2_PRIZE`.
+3. Blur meaningfully non-unity:
+   `OUTCOME_3_PRIOR_WRONG_NEEDS_ANALYSIS`.
+4. Every other interval configuration: `UNRESOLVED_OUTSIDE_REGISTERED_CASES`.
+
+These labels are mechanical frozen-predicate dispositions, not this lane's
+adjudication. Native and display results are not pooled.
+
+### Frozen implementation and provenance
+
+- Runner SHA-256: `fa40d3eac987596dcfbb8b1a4111b04d45b684ad0e69ce7e1f92e92b2cea8462`
+- Checker SHA-256: `e69cf12df3af8eab13609eb7770675168c5e10c6ce79999501ddc6bb07186b03`
+- Session directory:
+  `C:\Users\chris\.copilot\session-state\841ddf83-8ef0-40bd-a341-d2c66d487731\files\cand2-postmortem-optics`
+- CAND1 manifest SHA-256:
+  `b956763f023c319b7e4c16344bddfe54d2337221bf9105216342b7be957e7cdc`
+- CAND1 loader SHA-256:
+  `6f0cb891593d3bdaa81391580727526ee2d3292279b87c7d111af1a16943a63d`
+- Candidate 2 core SHA-256:
+  `f40249d01d7dffc7eb4aba3bf82bdf6980dcc163c125d7a51eb19b9bf07f2f98`
+- Display-map implementation SHA-256:
+  `7be4233d7113a5a1bd9f472401afb844c9295901fea75d2f5e8c7fab38ab5c26`
+- Closed historical gate SHA-256:
+  `b030945a6cb11ac17895175fee3b1cc03b302b5f2819baa3c0fee423bc551408`
+
+The pinned task seed remains `1687423341261369299`. Both variants retain 480
+sites, four tasks, five leave-one-block-out folds, `p=256`, 384 covariance
+training sites/fold, and the frozen 10,000-draw block-then-site bootstrap at
+`0xC2B0057A`. Before constructing either optical arm, native and display
+baselines must reproduce `6.0122885561019395` and `6.012288528538082`
+respectively within absolute and relative `1e-12`.
+
+Exactly two invocations are authorised, in order: degraded sigma `1.35`, then
+improved sigma `0.35`. Each invocation reports native and display variants.
+Improved cannot start until the independent checker accepts degraded. Permanent
+exclusive invocation locks forbid reruns. No USM, tone, clipping, quantisation,
+null, alternate seed, threshold change, or statistic retuning is authorised.
+All six numerical thread variables are fixed at eight.
+
+The checker independently recomputes held-out `d'^2`, all four 10,000-draw
+bootstraps and every disposition from stored score arrays without regenerating
+observations. It also verifies this commit changed only this report, this block
+remains byte-identical, dependency/script hashes match, the historical gate is
+unchanged, and artifacts remain outside the repository.
+
+**Prior caveat frozen before measurement:** registered USM acts on the complete
+realised observation after noise, whereas these existing optical arms change
+only the target before nuisance and arm-specific noise. Thus the orchestrator's
+generic-LSI prediction is a prediction to test, not an algebraic consequence of
+this fixture. This caveat cannot change the registered outcome labels.
+
+<!-- CAND2-POSTMORTEM-PREREG-END -->
