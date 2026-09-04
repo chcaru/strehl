@@ -2213,6 +2213,82 @@ linear output space on one definition and writes only `M-COVER-BORDER.md`. COVER
 owns `cover-default.md` and makes any amendment *after* a measured answer, in
 whichever direction it falls. Both outcomes are authorised in advance.
 
+### 2.9.15 The border is a bug, and the shipping default is a workaround for it
+
+**2.9.14 asked which of three contradictory border numbers was real. The answer
+is that the mechanism was never a property of `crop` at all.**
+`docs/research/M-COVER-BORDER.md`, commit `f83de900`, 563 lines.
+
+**The mechanism.** `CoverMode::Crop` does not resample the final image, but it
+also does not make the crop rectangle the merge domain. Every aligned frame is
+warped over the complete `3516x2344` reference plane. Where a shifted frame has
+no source sample the warp writes that frame's black level, and `prepare_frame`
+then subtracts the black level -- turning unavailable samples into **exact
+zero**. The seven-band pyramid is built, weighted, merged and collapsed over
+that entire plane, so its five-tap filters see an artificial
+real-signal-to-zero step outside the common intersection. Spatially varying
+per-band choices stop those transients cancelling as they would in a single
+linear pyramid, and the collapse **transports positive level error inward at
+dyadically increasing scale**. Only afterwards does `write_merged` address the
+covered rectangle. **Crop crops too late.** The bad values come from letting
+invalid samples *outside* the rectangle participate in nonlocal filtering
+before the rectangle is cut.
+
+**It is not physical.** VERIFIED: every emitted Crop pixel already has a valid
+Catmull-Rom value from every one of the `22` frames, and the common rectangle
+carries `3.086628 px` of exact site slack against 2 px Catmull-Rom support. No
+inset is required by absent capture data. The rest is implementation order.
+
+**My Hypothesis 5 was wrong, it was tested properly, and the refutation is the
+part I most want on the record.** I had argued `scale` might merely smear the
+same contamination below the detection threshold while conserving total error
+-- that the default conceals rather than mitigates. Against a **preregistered**
+rejection threshold of `20%` for either ratio:
+
+| quantity, through 256 px | value |
+|---|---|
+| Crop peak | `2.518012%` |
+| Scale peak | `0.058796%` |
+| Scale / Crop peak ratio | `2.335151%` |
+| Scale / Crop **positive radial residual mass** | `0.058330%` |
+
+A rescale that merely spread the same positive error would lower the peak while
+approximately **conserving** the mass. The mass is not conserved. `Scale`
+contracts placements before the gather, so all 22 frames cover the full pyramid
+domain and the artificial zero boundary never exists. It removes the cause
+rather than hiding it. Post-hoc and unregistered: `scale` retains `0.052204%`
+of crop's positive residual mass over the complete profile.
+
+**So the 256 px figure was correct as a measurement and wrong as a
+conclusion.** It measured a real contamination and attributed it to `crop` as a
+mode, when it belongs to crop-*ordering* as an implementation. That distinction
+is the whole finding, and it means **strehl ships a default that resamples
+`98.1462%` of every frame in order to work around a fixable bug** -- while the
+mode it avoids is byte-exact against an external decode at `0` DN error.
+
+**The prediction is registered before the implementation exists, which is what
+makes it a test.** On `109` the safe inset must fall from `256/264 px` to
+**`<=8 px`**. An 8 px inset on the `3470x2312` rectangle leaves `3454x2296` =
+**`96.22496%`** of the original plane, against the registered `>=80%` gate --
+independently checked: `3454*2296 / (3516*2344) = 0.9622496`. The bar does not
+move to meet whatever the fix achieves.
+
+**Ownership, and the discipline that goes with it.** BORDER diagnosed and does
+not implement. COVER implements, and **does not verify its own fix** -- an
+independent lane takes that reading. Only then does `cover-default.md` change
+its verdict. The report also names the trap that would produce a fix that looks
+right and changes nothing: every pyramid operation, including local
+energy/variance smoothing and every reduced level, must use the cropped domain.
+Cropping only the RGB bands after their weights were computed on the full plane
+leaves the poisoning path intact.
+
+**The payoff I am actually waiting for.** If crop becomes viable, the whole-frame
+Catmull-Rom resample disappears from the shipping path. M8 then gets re-run under
+`--cover crop`: **does the overshoot collapse toward the identity arm's exact
+`0 / 32,919,152`?** That would convert the program's only scored axis from a
+fail into a pass, and it would do it by deleting a resample rather than by
+tuning anything.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
