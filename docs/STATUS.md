@@ -4227,6 +4227,128 @@ That single number now decides whether M8 can pass, and nothing in flight
 produces it. **Queued as the next M8 measurement**, to run against the repaired
 bar once M136's replacement text lands.
 
+### 2.9.39 RETRACTION — §2.9.37's headline is withdrawn. The detail metric failed its null.
+
+**I asked for the control that would falsify my own good news, and it did.**
+
+M137's flat-ROI null **FAILED**, and it failed in the worst available direction.
+A genuinely low-structure region — `13.314850%` of the detailed region's
+structure — shows a Catmull-Rom-over-bilinear band gap of
+`0.3488548829813006` dex against the detailed region's
+`0.3403664343410666`. **The flat patch scores `2.4939147295%` HIGHER than
+the detailed one**, ratio `1.0249391472947889`, which I reproduced by division
+myself to the last digit.
+
+`S7_flat_band_null: false` in the main run **and** in an independently written
+verifier run. `all_pass` flipped `true → false` on the strength of it. Every
+pre-existing number reproduced unchanged (`S1`–`S6` still true, decomposition
+byte-identical), so the harness was not perturbed to produce this — the null was
+simply added and it fired.
+
+**What this kills.** The band statistic is **not specific to resolved detail**.
+M137's own withdrawal, verbatim: *"The flat null shows that the gap cannot be
+called resolved detail; it is at least substantially, and plausibly
+predominantly, noise amplification or another within-hull kernel-transfer
+effect."* The earlier claim is *"withdrawn as written"*. So:
+
+- *"retains `99.758712%` of the detail advantage"* — **withdrawn.** The quantity
+  retained is not detail. Clamped Catmull-Rom faithfully preserves `99.76%` of
+  something we can no longer call resolution.
+- *"the sharpness is real, not overshoot"* — **withdrawn by its own author.**
+- *"bilinear's `0.3404` dex loss is not the price of hull compliance, it is the
+  price of bilinear"* — **withdrawn.** That sentence assumed the gap was detail.
+
+**What survives, and it is not nothing.** All of it is independent of the band
+metric: the clamp demonstrably reaches (`DCO 2.48028047667808 → 0.5559096954858782`,
+`S6` true); support excursions go `2,709,943 → 0` with `max 0.0` (`S5` true); the
+render census remains `0 / 6,131,678,976` M8-R violations; and both sabotage arms
+still behave correctly.
+
+**And the reframing is arguably better news for M8, not worse.** The reason we
+feared hull compliance was that bilinear appeared to cost `0.3404` dex of
+resolution. **We no longer have evidence that it costs any resolution at all** —
+the number that scared us may have been mostly amplified noise, which
+Catmull-Rom's negative lobes produce and which a hull clamp does not remove
+because it stays inside the hull. A simpler kernel may be sufficient.
+
+**The pattern is the real finding.** This program has now had **two** detail
+instruments fail the same way: D8's per-tile FRC, where a flat ROI reached the
+same endpoint as a detailed one, and now this band-power measure, where a flat
+ROI scores *higher*. Two independent statistics, the same blindness. **A metric
+that cannot tell structure from noise cannot support a resolution claim**, and a
+resolution claim is the entire objective of Phase 3.
+
+That makes **M135, the replacement M1 detail instrument, unambiguously the
+program's critical path.** It is the one blocker that cannot be bought, shot, or
+coded around, and we now have two worked examples of exactly how it fails if
+built carelessly. **Whatever M135 produces must pass a flat null before any
+number it emits is quoted.**
+
+### 2.9.40 Phase 1 was killed by a self-contradictory gate — the refutation is withdrawn
+
+**`NO_COMMON_K` is an artifact of the gate, not a fact about merge rules.** I
+verified the decisive evidence in the gate's own source rather than accepting the
+audit's summary.
+
+`experiments/PHASE1-DESIGN/measure.py:129-130`:
+
+```python
+def exponent_at(band: int) -> float:
+    return min(2.0 * 1.4 ** (R.BANDS - 1 - band), 8.0)
+```
+
+Evaluated across the seven bands, the legacy comparator's soft-power exponent is
+`[8.0, 8.0, 7.6832, 5.488, 3.92, 2.8, 2.0]`. **The comparator is explicitly
+band-shaped by construction** — a deliberate exponential ramp in band index,
+clamped at the fine end.
+
+The W1 gate then required a candidate carrying **exactly one fixed global `k`**
+to reproduce that comparator's per-band effective width to within **±5%**, and
+disqualified any `k` that did not, *before* the quality bars were ever consulted.
+
+**That is a contradiction written into the gate.** The comparator is
+band-parameterised by design; the candidate is required to be band-constant by
+design; the gate demands they agree band by band. It is unsatisfiable except by
+coincidence. I had guessed the band-dependence came from band SNR; the truth is
+blunter — it is hard-coded.
+
+The measured consequences, all from the gate's own artifacts:
+
+- Legacy `n_eff` spans **`2.88×` to `37.95×`** within a single capture/ROI across
+  bands, against a `±5%` window.
+- **Bands 4–6: `0 of 18` width survivors.** The Pareto bars were **never
+  rendered** there, so Phase 1's merge quality *"neither passed nor failed"*.
+- Even *within* one band the gate contradicts itself: coffee band 0 requires
+  `k ∈ [1.35, 1.45]` on the detail ROI and `k ∈ [1.90, 2.20]` on the flat ROI —
+  same band, same capture, disjoint intervals.
+
+So the headline finding — *"no predicate in bands 4–6 passes at any `k`"* — was a
+statement about **the width pre-gate alone**. It was never a verdict on the merge
+law.
+
+**I am withdrawing the refutation, and I am not replacing it with an
+endorsement.** The audit's own framing is the correct one and I adopt it
+verbatim: **Phase 1 remains unvalidated, not rescued.** The gate proved nothing
+either way, so Phase 1 returns to *untested*, which is a materially different and
+much more actionable state than *dead*.
+
+The proposed repair passes the hostile test I set. The width match is, in the
+audit's words, *"a comparator-equivalence requirement, not an output-quality
+requirement"* — so deleting it removes an obligation to imitate a comparator,
+not a bar on quality. The Pareto bars stay unchanged and width becomes a
+diagnostic. The sharpest statement of the damage is the audit's own: because the
+width match *"is evaluated first and is empty, the gate never asks the question
+it later claims answered: whether any one global candidate threshold
+simultaneously preserves detail and reduces flat power."*
+
+**Not everything survives.** The audit confirms the standardisation is genuinely
+incomplete — pooled-only coverage gating, no positive-`q` commissioning,
+band-0-only Poisson control, approximate variance propagation, and no
+selected-winner or stack-size calibration. Those are real defects and they must
+be repaired before any re-run. And the corrected gate's Pareto outcome is
+explicitly **could not determine**: nobody knows yet whether Phase 1 actually
+works.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
