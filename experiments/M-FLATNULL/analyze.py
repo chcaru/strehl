@@ -89,8 +89,12 @@ def displacement_metrics(before: np.ndarray, after: np.ndarray, inset: int) -> d
         raise ValueError("USM displacement arrays do not match")
     if 2 * inset >= min(before.shape[:2]):
         raise ValueError(f"inset {inset} leaves no image interior")
-    before_i = before[inset:-inset, inset:-inset]
-    after_i = after[inset:-inset, inset:-inset]
+    if inset == 0:
+        before_i = before
+        after_i = after
+    else:
+        before_i = before[inset:-inset, inset:-inset]
+        after_i = after[inset:-inset, inset:-inset]
     delta = after_i.astype(np.int32) - before_i.astype(np.int32)
     samples = int(delta.size)
     changed = int(np.count_nonzero(delta))
