@@ -86,7 +86,116 @@ across its complete registered focus schedule. Each additional independently
 matched dark-temperature class adds `96`; each additional flat-focus class
 adds `96`. No repository evidence yet licenses the two-plus-two assumption.
 
-## 1. Release conditions before asking for Stage 1
+## 1. Existing-corpus exhaustion before any new-frame request
+
+### 1.1 Holdout ruling first
+
+The authoritative files were read in the required order:
+
+| Artifact | SHA-256 |
+|---|---|
+| `experiments/M141-capture-inventory/holdout-register.json` | `804102b54cba607bd500e595e636142d2d8b80f0ad053e43f56f1df9bfd31488` |
+| `experiments/M141-capture-inventory/capture-manifest.json` | `e2849d543cb126ab95ad342f2a3a1a96f4b6f5658548025007f593ddd5764b03` |
+| `experiments/M141-capture-inventory/capture-stacks.csv` | `ae0ac8b283b0009f56535ba868c312f9faf77d223b567d8ef1fbdc682818b66a` |
+
+**VERIFIED FROM THE REGISTER.** The `68` stack directories divide into:
+
+- `11` directories in two burned development units: the five-stack
+  `calibration-grid-2026-09-01` session and six-stack
+  `high-res-calibration-slide-2026-09-02` session;
+- `6` explicit `NOT HOLDOUT` control/historical rows;
+- `16` clean registered holdout rows; and
+- `35` `INDETERMINATE — DO NOT ASSUME CLEAN` rows.
+
+Only the burned and explicit-not-holdout material was considered available for
+development use. No clean or indeterminate RAW was decoded, rendered, or
+scored for this audit. The source trees remained read-only.
+
+The slide path is not merely nominally burned: before this amendment the
+repository already contained `61` files referring to it, including released
+geometry and M8 work. The register's whole-session ruling therefore controls
+all six members.
+
+### 1.2 Cross-cutting geometric result
+
+**VERIFIED FROM M141 METADATA.** All `10,509` inventoried ARWs report:
+
+- camera `ILCE-7CM2`;
+- focal length `200 mm`;
+- lens protocol string
+  `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter`; and
+- `ImageStabilization: On`.
+
+Physical reproduction ratio is recoverable from metadata for `0` stacks.
+Thus no existing capture proves the required bare-lens TC0 state, accepted
+`M_work`, or stabilization-off geometry.
+
+M1's reference requirement is not “more focus-bracket frames.” It is a
+fixed-focus near/middle/far atlas of the **same physical patch** at
+independently measured subject sampling satisfying
+`LCB95(M_reference/M_scored) >= 2.0`, stronger object-space transfer in every
+licensed cell, different sensor footprints, and disjoint matched
+calibration. A dense `sw1`/`sw4` stack at the same lateral sampling cannot be
+promoted into that reference, and a merge of it would be circular truth.
+
+### 1.3 Candidate-family rulings
+
+| Existing family | Holdout status | M1 truth-reference ruling | Development value that remains |
+|---|---|---|---|
+| `requests\misc-diagnostic\high-res-calibration-slide-cpl` — six stacks, `657` frames | **BURNED — DEVELOPMENT OK** | **NO.** All six are converter-on, 200 mm, stabilization-on. The `flat-*` name describes a fronto-parallel patterned slide, not a uniform illumination flat. The three tilted stacks are focus brackets, not fixed-focus reference halves; there is no same-session TC0 partner, no measured `>=2x` ratio, no disjoint matching pattern map, and no full stochastic target/sentinel/tone contract. | Reference-resampler, registration, focus-density, flat-path/null and failure-branch commissioning already use it. It cannot demonstrate the final native-geometry success path. |
+| `requests\30-calibration-grid` — five stacks, `242` frames | **BURNED — DEVELOPMENT OK** | **NO.** It is a predictable periodic grid, converter-on and stabilization-on. The apparent `55`-frame sw4 and `27`-frame sw10 matches are not bare-lens A/B pairs and have no higher-sampling fixed-focus atlas. | Step-width, coverage, registration and rejection-path development only. |
+| `requests\6-11-extended-dark-frames` — `506` frames | **NOT HOLDOUT** | **NOT A TRUTH CANDIDATE; NOT SCORE CALIBRATION.** Its only ISO-100/1-s segment has `22` frames, not a `32`-frame A/B/V group, and it was not acquired at the future session's sensor temperature. It is converter-on/stabilization-on and has no paired matching flat. | Dark-estimator and temperature-sensitivity development, without frame credit to rehearsal or score. |
+| `flat-fields\flat-fields` plus its with/without-CPL focus sweeps | **INDETERMINATE — DO NOT TOUCH** | **NO USE AUTHORIZED.** Metadata alone shows converter-on, stabilization-on data. The uniform-flat directory stops at `0.2 s`, not the required `1 s`; its focus is infinity. The two subject sweeps are `0.2 s`, not flat fields or a higher-sampling reference. | None unless the orchestrator later classifies the whole subject/session. No pixels were read here. |
+| `requests\10-paper-iso-var` | **NOT HOLDOUT** | **NO.** Textured printer paper is a scene/noise control, not a spatially uniform flat or an independently oversampled reference; its exposures are `0.125/0.5 s`. | Noise and flat-null development already allowed; no M1 frame credit. |
+| `requests\19-razor-edge` | one f/5.6 horizontal stack **NOT HOLDOUT**; the other five **INDETERMINATE** | **NO.** All are converter-on, stabilization-on, deterministic edges at `2.5/3.2 s`, with no same-session TC0/reference pair or M165 map. | The explicit control row may support edge-algorithm development. Indeterminate siblings remain untouched. |
+| `requests\7-aperture-pairs` and `requests\8-tilted-planar` | mixed clean registered holdout and indeterminate rows | **DO NOT TOUCH.** Metadata already rules them out: converter-on, stabilization-on, no fixed high-sampling atlas, no measured magnification ratio, and no TC0 partner. | Preserve their existing holdout roles. |
+| clean natural-subject rows (`bee-1`, fabric, rulers, duck tape, chia, flower/fern, pill, foam, battery, salt) | **CLEAN REGISTERED HOLDOUT** | **DO NOT TOUCH.** None has a registered same-subject higher-sampling fixed-focus reference or bare-lens counterpart; all report stabilization on. | Preserve for their registered axes. |
+| explicit historical/development scenes (`coffee-bean`, `113MSDCF`, `coffee-bubbles`) | **NOT HOLDOUT** | **NO.** They are single optical-state stacks with no independently sampled same-session truth, no required repeats/calibration, and incompatible capture settings. | Renderer/veto development only. |
+| remaining general stacks | **INDETERMINATE — DO NOT ASSUME CLEAN** | **DO NOT TOUCH.** Their metadata shares the converter-on/stabilization-on disqualifiers, so no pixel inspection is needed to reject them as M1 truth. | None without an explicit holdout ruling. |
+| rendered files under `D:\edited\macro` | not raw capture candidates | **NO.** A rendered output cannot become the external physical truth or sensor pattern calibration for another rendered output. | Historical output diagnostics only. |
+
+### 1.4 Existing-data subtraction
+
+M141 already evaluated the two predecessor capture designs block by block:
+
+- committed `603`-frame design: `0/24` blocks satisfied, `0` existing frames
+  creditable;
+- live `448`-frame inverted block: `0/21` blocks satisfied, `0` existing
+  frames creditable.
+
+The new M165 blocks also receive zero credit. The `22` matching-setting darks
+are too few and not temperature-matched to a future session; the available
+uniform-flat metadata is wrong-exposure, wrong-focus, stabilization-on and
+indeterminate; the slide's “flat” runs are patterned focus brackets rather
+than diffuser flats.
+
+**DERIVED.** Existing captures reduce software-development work, but they
+replace **zero physical frames** in the exact rehearsal or sealed score:
+
+| Route | Before corpus subtraction | Existing eligible frames | After subtraction |
+|---|---:|---:|---:|
+| conditional M1-only path | `1,602` | `0` | **`1,602`** |
+| conditional combined M1/M5/M9 path | `1,917` | `0` | **`1,917`** |
+
+Both totals remain conditional on M165 freezing the focus/temperature class
+count. This is not a claim that the corpus is useless. It has already paid for
+synthetic/real development of M147 geometry, reference resampling, focus
+coverage, failure paths and M165's no-map refusal. Those are zero-frame
+software prerequisites, not interchangeable photons in the registered
+physical protocol.
+
+### 1.5 Stage 0 judgement
+
+**JUDGEMENT — Stage 0 cannot be reduced to zero new frames.** It requires one
+real converter-on and one physically unmoved converter-off image of the same
+coplanar grid. Every inventoried RAW reports the converter-on protocol
+identity, and no existing stack has a measured bare-lens reproduction ratio.
+Synthetic resampling and the burned slide have already commissioned the code,
+but neither tests the real optical-state change. Stage 0 therefore remains
+two fresh frames, with an optional second pair only if M147 prescribes a new
+placement.
+
+## 2. Release conditions before asking for Stage 1
 
 **PROPOSAL.** The two-frame M147 preflight may proceed under its existing
 owner ask. No later physical stage should be released until all of these
@@ -131,7 +240,7 @@ The final numerical M1 margins may use arm-blind power information from the
 rehearsal, but every margin, reduction, uncertainty rule, executable, and hash
 must be frozen before the sealed score starts.
 
-## 2. Staged capture with falsification gates
+## 3. Staged capture with falsification gates
 
 The original physical rehearsal remains `768` frames. M165 adds one dedicated
 `FLAT-V/DARK-V` validation pair per optical state, `2 x 64 = 128`, making the
@@ -423,7 +532,7 @@ The full `704` may yield a valid but wide-interval M1 tuple. It qualifies a
 comparator, and thereby helps M2/M3/M11, only if the future frozen M1 success
 and comparator-retention predicates actually pass.
 
-## 3. What the original 768 frames and M165's added 128 de-risk
+## 4. What the original 768 frames and M165's added 128 de-risk
 
 **ARGUED.** The rehearsal is not ceremonial. Its blocks exercise distinct
 physical branches that synthetic plants and the burned IBIS-on archive do not
@@ -474,7 +583,7 @@ rehearsal read -> freeze -> independent sealed score
 is load-bearing. Controls may not be added to the scored manifest and called
 free validation.
 
-## 4. Weakest presently admissible M1 capture
+## 5. Weakest presently admissible M1 capture
 
 **ARGUED.** The smallest scored sitting under the unchanged current M1 design
 was `576` frames before M165's held-out pattern-map requirement was integrated.
@@ -508,7 +617,7 @@ might justify fewer validation frames or require more; no repository evidence
 presently does either. Conversely, all `704` frames do not guarantee a
 positive or qualifying result; they only make an admissible reading possible.
 
-### 4.1 Judgement on over-capture
+### 5.1 Judgement on over-capture
 
 **JUDGEMENT.** Over-capturing is sound when it means more independently named
 frames at the **same matched condition**, with their roles and inclusion order
@@ -528,7 +637,7 @@ powered session rather than be appended as one long tail. More frames are
 useful only until the frozen residual-precision target is met; they are not a
 substitute for matching.
 
-## 5. Ways the capture can still be unusable
+## 6. Ways the capture can still be unusable
 
 The table distinguishes an instruction that can prevent waste from a result
 that must remain a typed refusal. Items marked **ADD** are not yet safely
@@ -540,6 +649,10 @@ resolved in the owner-owned request.
 | Current capture request still carries a STOP banner | Replace it only after `M_work`, target contract, control optical state/offset, stage readers, block order and failure actions are reconciled | Do not infer permission from this report |
 | Stage data are acquired before their reader exists | Require a dry-run-passing, persistent, fail-closed checker for every stage before that stage is released | Missing checker is STOP at zero frames |
 | Common-input or comparator adapter is unavailable | Freeze and hash every required renderer, license, setting and native-size linear output path on development data before choosing the target | Do not spend physical capture on an unrunnable comparator |
+| A directory or stack named `flat` is assumed to be a calibration flat | Require a spatially uniform diffuse/integrating-field capture and run M165's flat sentinels; the burned slide's `flat-*` name means fronto-parallel target orientation only | Patterned-target focus frames receive no calibration role |
+| A denser focus bracket is assumed to provide higher-sampling truth | Require a fixed-focus independently sampled atlas with measured `LCB95(M_reference/M_scored) >= 2.0` and different sensor footprints | Dense `sw1`/`sw4` z-sampling at one lateral scale receives no truth role |
+| Clean or indeterminate old captures are opened to save development frames | Read the authoritative whole-session holdout register before any outcome-producing access; use only burned or explicit-not-holdout units for development | Treat any unauthorized read as burning the whole subject/session; never backfill capture credit |
+| Old darks or flats are reused because nominal ISO/exposure matches | Require same physical body and session, dark temperature within the frozen tolerance, and flats matching lens/converter/aperture/focus domain; bind exact sources in `m165-common-input-manifest-v2` | Unmatched legacy calibration receives zero score credit |
 | **No frozen M165 deterministic-pattern map** | For every admitted optical-state package, acquire named `32`-frame `FLAT-A/DARK-A`, `FLAT-B/DARK-B`, and held-out `FLAT-V/DARK-V` blocks; split further wherever focus or temperature creates another class; freeze the estimator, map, source hashes and validation result into the M165 chain | Converter returns `PATTERN_MAP_REQUIRED`; M1/M9 are `UNMEASURED` |
 | Pattern-map body or temperature is only assumed | Record the physical body identifier externally and bracket each optical-state subject block with same-body, ISO-100, 1-second darks under continuous power; freeze a temperature witness/tolerance before shooting | Missing or out-of-range witness is refusal |
 | Flat does not match lens/aperture/focus | Match body, lens, converter state, marked f/5.6, exposure and the registered focus class/schedule; never substitute a convenient generic flat | `PATTERN_MAP_CAMERA_MISMATCH` or physical calibration refusal |
@@ -553,6 +666,7 @@ resolved in the owner-owned request.
 | Target, tone strip and fiducials are not coplanar | Mount all on one rigid plane and verify plane residual from input-only fiducials | Restart with a coplanar target |
 | Natural specimen dries, shifts or changes | Use a rigid inert one-use target for the score; if a natural patch is used in rehearsal, lock and monitor it | Any visible/metric scene change invalidates pairing |
 | Reference field or near/mid/far atlas misses sites | Stage 2 map must assign every retained site to exactly one well-focused strip with guards away from seams | Reframe or redesign atlas |
+| EXIF `200 mm` or the lens protocol string is treated as proof of magnification | Measure the physical grid pitch at both optical states and use M147's bootstrap lower bound; lens labels and nominal teleconverter factors are provenance only | No ratio decision without `LCB95(M_reference/M_scored)` |
 | Reference sampling ratio is below `2.0` | Stage 0 plus a live ratio check before the first TC0 scored frame; use unrounded M147 lower bound | STOP; never substitute lens labels |
 | No `M_work` satisfies ratio, field and frequency simultaneously | Compute the feasible set after Stage 0 | Abandon the current shared-prime inversion |
 | Converter-on transfer is not stronger in every licensed cell | Measure it in the complete rehearsal with adequate target power and both calibrated reference halves | Refuse the failed cell; if every registered cell is required, no M1 score |
@@ -590,7 +704,7 @@ resolved in the owner-owned request.
 | Stage 6 is split or resumed after interruption | Declare one subject plus one uninterrupted sitting as the holdout unit; provision power/storage before frame 1 | Discard the entire sitting for M1 |
 | A failed score gate is repaired after looking | Freeze all remediation policy beforehand; a failed eligibility gate returns `UNMEASURED` | Any changed code/threshold requires a fresh holdout |
 
-## 6. Revised totals and stopping losses
+## 7. Revised totals and stopping losses
 
 | Last completed gate | Newly exposed frames | Cumulative registered/setup exposures |
 |---|---:|---:|
@@ -639,15 +753,17 @@ floor rather than an owner-ready total.
 The M1-only route still defers `315` converter-on M5/M9 focus/witness frames.
 That unbundles other axes without weakening M1.
 
-## 7. Final recommendation
+## 8. Final recommendation
 
-**PROPOSAL.** First route the Stage 0M manifest/estimator gaps to M165; no
-calibration capture is executable until they are closed. Then execute the
-two-frame M147 preflight. If the feasible working-magnification set is
-nonempty, expose only one development stage at a time while the rig remains
-locked. Do not release the next block until the previous verdict is on disk
-and accepted. After the conditional `896`-frame rehearsal passes, freeze the
-M1 bar and choose between:
+**PROPOSAL.** Treat the existing-corpus audit as complete for capture-credit
+purposes: do not open clean or indeterminate stacks in search of a shortcut,
+and budget zero old frames against the physical protocol. First route the
+Stage 0M manifest/estimator gaps to M165; no calibration capture is executable
+until they are closed. Then execute the two-fresh-frame M147 preflight. If the
+feasible working-magnification set is nonempty, expose only one development
+stage at a time while the rig remains locked. Do not release the next block
+until the previous verdict is on disk and accepted. After the conditional
+`896`-frame rehearsal passes, freeze the M1 bar and choose between:
 
 - **M1-first:** `704` sealed frames, conditional `1,602`
   registered/setup exposures total; or
@@ -658,7 +774,7 @@ smallest unchanged-scope route to any admissible M1 reading. It is not a
 promise of a qualifying result. Neither number is owner-ready until M165
 freezes the dark/flat class counts and match tolerances.
 
-## 8. Governing sources
+## 9. Governing sources
 
 - `docs/research/M147-preflight.md`, §§0–2: two-frame field gate, exact
   `LCB95 >= 2.0` rule, typed quality refusals, and measured `25.40 s` runtime.
@@ -684,3 +800,13 @@ freezes the dark/flat class counts and match tolerances.
   `converter.py:887-1002,1080-1139`: current map schema, exact
   `capture_match` behavior, source disjointness, array/hash checks, and the
   metadata fields that are `null` on the development body.
+- `experiments/M141-capture-inventory/holdout-register.json`: whole-subject/
+  uninterrupted-session holdout rulings used before any suitability work.
+- `experiments/M141-capture-inventory/capture-manifest.json` and
+  `capture-stacks.csv`: `68`-stack/`10,509`-RAW metadata inventory, universal
+  converter-on/stabilization-on findings, and absent measured magnification.
+- `experiments/M141-capture-inventory/capture-design-coverage.json`: verified
+  zero-frame coverage of the predecessor `603`-frame and live `448`-frame
+  designs.
+- `docs/research/M141-capture-inventory.md`: four-way slide characterization,
+  holdout analysis and human-readable block-by-block coverage rationale.
