@@ -230,3 +230,46 @@ closes adapter choices that the sections above did not spell out:
 - The child measurement process emits JSON on stdout.  The checker invokes it
   once per built-in candidate with numerical thread environment variables set
   to one, then adjudicates only that serialized JSON.
+
+## 10. Post-commissioning amendment 1 — bind the oracle to rendered fixtures
+
+Status: **FROZEN BEFORE THE REVISED ORACLE IS EXECUTED**
+
+M164 commit `19f6f54a` landed after M167's first commissioning.  Its
+two-render identifiability argument does not change P1-P6 and is not assumed as
+a theorem by this battery.  It does make the positive witness especially
+important.  The first M167 oracle emitted the registered construction labels
+but did not instantiate `build_fixtures()` in its child process.  That proved a
+nonempty score-vector acceptance set, but the evidence connecting those labels
+to actual rendered arrays was weaker than necessary.
+
+This amendment strengthens only the oracle commissioning.  It does not alter a
+candidate fixture, score, threshold, dead-instrument adapter, or prior result.
+
+The revised oracle must:
+
+1. execute the existing fixture generator, pinned before this amendment at
+   implementation commit `b6c0a76f` and SHA-256
+   `7082DD08A51E3D74D9C402275F68342344AAB7E17112E753985FA4692F626B36`;
+2. show that every valid observation is finite and exactly `256 x 256`;
+3. show that base, true-improvement and degradation arrays are byte-distinct;
+4. show that their repeat differences are equal to within `1e-15`, proving the
+   downstream-noise realization is held fixed while optical rendering changes;
+5. evaluate the analytic Gaussian transfer at
+   `[0.05,0.10,0.20,0.30,0.40]` cycles/output-px and show
+   `H(0.55) > H(1.00) > H(1.65)` at every frequency;
+6. show that the USM pixels differ from base while its construction-truth
+   optical score remains tied to base;
+7. show that the non-finite and one-dimensional malformed fixtures actually
+   contain those defects; and
+8. remain explicitly `INELIGIBLE_CONSTRUCTION_TRUTH`.
+
+The independent checker must validate the pinned fixture hash, the literal
+sigma/frequency vectors, and every construction check before counting the
+oracle as a positive control.  Failure makes the battery
+`NOT_COMMISSIONED`.
+
+M2's rejection remains empirical: P4 observes its wrong-signed blur response
+and independently replays `0.5712148772282098`.  M164's argument and its
+normalization-removed `0.571318x` probe are interpretation, not substitutions
+for that M167 measurement.
