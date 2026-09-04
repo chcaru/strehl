@@ -1,0 +1,44 @@
+{
+  "schema": "strehl.m10-uncertainty.v1",
+  "scope": "Uncertainty add-on to the canonical M10 depth-value result. Existing M10 value bars remain unchanged.",
+  "candidate_product": {
+    "depth": "Per-pixel physical depth estimate, micrometres, on one declared grid.",
+    "uncertainty": "Per-pixel one-standard-deviation uncertainty of the candidate depth estimate, micrometres, on exactly the same grid.",
+    "validity": "An explicit validity mask. Every depth-valid pixel must carry finite, non-negative uncertainty.",
+    "exclusion": "Candidate uncertainty excludes independent reference-truth uncertainty; the checker combines independent local/repeat terms in quadrature.",
+    "systematics": "Correlated angle, pitch, perspective, and focus-scale uncertainty stays in the existing value-arm nuisance envelope. It must not be converted into fake independent pixel samples."
+  },
+  "uncertainty_bars": {
+    "reported_sigma_fraction": {
+      "minimum": 1.0
+    },
+    "nominal_95_interval_coverage": {
+      "minimum": 0.93,
+      "maximum": 0.97,
+      "source": "Same nominal-95 calibration band already frozen for M9."
+    },
+    "predicted_uncertainty_deciles": {
+      "count": 10,
+      "minimum_passing": 9,
+      "empirical_to_predicted_variance_ratio_minimum": 0.9,
+      "empirical_to_predicted_variance_ratio_maximum": 1.1,
+      "source": "Same decile fraction and variance-ratio band already frozen for M9."
+    },
+    "reported_95_half_width_steps": {
+      "median_maximum": 0.5,
+      "p95_maximum": 1.0,
+      "source": "The existing M10 median and p95 point-error bars; this prevents all-wide intervals from passing."
+    }
+  },
+  "evaluation": {
+    "origin_fit": "Subtract one unweighted mean residual before value and uncertainty checks. Reported uncertainty cannot move the fitted origin.",
+    "unit_adapter": "Convert depth residual, candidate sigma, and local/repeat truth sigma from micrometres to focus-step equivalents with the same independently measured conversion before calling the checker.",
+    "combined_sigma": "sqrt(candidate_sigma_steps^2 + independent_truth_sigma_steps^2)",
+    "coverage_multiplier": 1.959963984540054,
+    "decile_sort_key": "candidate_sigma_steps",
+    "minimum_target_pixels": 10000,
+    "proper_score": "Mean Gaussian CRPS in focus-step units, reported for directional commissioning but not thresholded.",
+    "exact_control": "An exact zero-error product reporting zero candidate uncertainty against zero-uncertainty synthetic truth passes the nominal-coverage component as the degenerate exact distribution."
+  },
+  "bar_relation": "STRICTLY HARDER than the written M10 success clause: all seven existing value bars are retained and five uncertainty vetoes are added."
+}

@@ -1,0 +1,447 @@
+{
+  "schema": "strehl.m163-m10-commission.v1",
+  "seed": 20260904,
+  "population": 20000,
+  "probe_nontriviality": {
+    "residual_sd_steps": 0.18257683160870466,
+    "residual_nonzero_count": 20000,
+    "candidate_sigma_p05_steps": 0.12614425801911422,
+    "candidate_sigma_p95_steps": 0.23414580302344898
+  },
+  "legacy_zero_infinity_random": {
+    "all_results_identical": true,
+    "canonical_sha256": {
+      "reported": "3a07606bd833ccea2392054424370d36ec98da6cb1d8cff481eed4a5483d5945",
+      "zero": "3a07606bd833ccea2392054424370d36ec98da6cb1d8cff481eed4a5483d5945",
+      "infinity": "3a07606bd833ccea2392054424370d36ec98da6cb1d8cff481eed4a5483d5945",
+      "random": "3a07606bd833ccea2392054424370d36ec98da6cb1d8cff481eed4a5483d5945"
+    },
+    "canonical_result": {
+      "value": {
+        "metrics": {
+          "valid_fraction": 1.0,
+          "rank_correlation": 0.9995,
+          "median_abs_error_steps": 0.11667353407657707,
+          "p95_abs_error_steps": 0.3653134003682642,
+          "ruler_slope_error_fraction": 0.01,
+          "flat_null_p95_range_steps": 0.2,
+          "synthetic_layer_confusion_fraction": 0.005
+        },
+        "bars": {
+          "valid_fraction": [
+            ">=",
+            0.99
+          ],
+          "rank_correlation": [
+            ">=",
+            0.99
+          ],
+          "median_abs_error_steps": [
+            "<=",
+            0.5
+          ],
+          "p95_abs_error_steps": [
+            "<=",
+            1.0
+          ],
+          "ruler_slope_error_fraction": [
+            "<=",
+            0.05
+          ],
+          "flat_null_p95_range_steps": [
+            "<=",
+            0.5
+          ],
+          "synthetic_layer_confusion_fraction": [
+            "<=",
+            0.01
+          ]
+        },
+        "missing": [],
+        "components": {
+          "valid_fraction": true,
+          "rank_correlation": true,
+          "median_abs_error_steps": true,
+          "p95_abs_error_steps": true,
+          "ruler_slope_error_fraction": true,
+          "flat_null_p95_range_steps": true,
+          "synthetic_layer_confusion_fraction": true
+        },
+        "pass": true
+      },
+      "pass": true,
+      "uncertainty_quantities": {}
+    }
+  },
+  "uncertainty_arms": {
+    "reported": {
+      "pass": true,
+      "uncertainty": {
+        "population": 20000,
+        "valid_target_pixels": 20000,
+        "calibration_pixels": 20000,
+        "metrics": {
+          "residual_fraction": 1.0,
+          "reported_sigma_fraction": 1.0,
+          "truth_sigma_fraction": 1.0,
+          "interval_coverage_95": 0.94925,
+          "exact_zero_error_zero_uncertainty": false,
+          "decile_variance_ratios": [
+            1.0234744426097349,
+            0.9869371025955438,
+            0.9873272879276683,
+            1.0970186047403834,
+            0.9765800474407564,
+            1.0467718534460304,
+            0.9590656916669518,
+            0.9531425113098003,
+            0.9756663056248752,
+            0.9597711023400145
+          ],
+          "deciles_within_variance_ratio_bar": 10,
+          "median_reported_95_half_width_steps": 0.35367517788372005,
+          "p95_reported_95_half_width_steps": 0.4589173410571697,
+          "mean_gaussian_crps_steps": 0.10120507157889282
+        },
+        "components": {
+          "shapes_match": true,
+          "minimum_population": true,
+          "residual_complete": true,
+          "reported_sigma_complete": true,
+          "truth_sigma_complete": true,
+          "coverage": true,
+          "decile_calibration": true,
+          "median_width": true,
+          "p95_width": true
+        },
+        "pass": true
+      }
+    },
+    "zero": {
+      "pass": false,
+      "uncertainty": {
+        "population": 20000,
+        "valid_target_pixels": 20000,
+        "calibration_pixels": 20000,
+        "metrics": {
+          "residual_fraction": 1.0,
+          "reported_sigma_fraction": 1.0,
+          "truth_sigma_fraction": 1.0,
+          "interval_coverage_95": 0.0,
+          "exact_zero_error_zero_uncertainty": false,
+          "decile_variance_ratios": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "deciles_within_variance_ratio_bar": 0,
+          "median_reported_95_half_width_steps": 0.0,
+          "p95_reported_95_half_width_steps": 0.0,
+          "mean_gaussian_crps_steps": 0.14296823381038298
+        },
+        "components": {
+          "shapes_match": true,
+          "minimum_population": true,
+          "residual_complete": true,
+          "reported_sigma_complete": true,
+          "truth_sigma_complete": true,
+          "coverage": false,
+          "decile_calibration": false,
+          "median_width": true,
+          "p95_width": true
+        },
+        "pass": false
+      }
+    },
+    "infinity": {
+      "pass": false,
+      "uncertainty": {
+        "population": 20000,
+        "valid_target_pixels": 20000,
+        "calibration_pixels": 0,
+        "metrics": {
+          "residual_fraction": 1.0,
+          "reported_sigma_fraction": 0.0,
+          "truth_sigma_fraction": 1.0,
+          "interval_coverage_95": null,
+          "deciles_within_variance_ratio_bar": 0,
+          "median_reported_95_half_width_steps": null,
+          "p95_reported_95_half_width_steps": null,
+          "mean_gaussian_crps_steps": null
+        },
+        "components": {
+          "shapes_match": true,
+          "minimum_population": false,
+          "residual_complete": true,
+          "reported_sigma_complete": false,
+          "truth_sigma_complete": true,
+          "coverage": false,
+          "decile_calibration": false,
+          "median_width": false,
+          "p95_width": false
+        },
+        "pass": false
+      }
+    },
+    "random": {
+      "pass": false,
+      "uncertainty": {
+        "population": 20000,
+        "valid_target_pixels": 20000,
+        "calibration_pixels": 20000,
+        "metrics": {
+          "residual_fraction": 1.0,
+          "reported_sigma_fraction": 1.0,
+          "truth_sigma_fraction": 1.0,
+          "interval_coverage_95": 0.9203,
+          "exact_zero_error_zero_uncertainty": false,
+          "decile_variance_ratios": [
+            10.467902091506396,
+            1.8574574370296015,
+            0.7341427261386267,
+            0.394152804620312,
+            0.23194978593464566,
+            0.17935647631815357,
+            0.12175362660457671,
+            0.09172137076395469,
+            0.07062461982986275,
+            0.05857567877754743
+          ],
+          "deciles_within_variance_ratio_bar": 0,
+          "median_reported_95_half_width_steps": 0.8013344182129801,
+          "p95_reported_95_half_width_steps": 1.492741561454075,
+          "mean_gaussian_crps_steps": 0.137550540346999
+        },
+        "components": {
+          "shapes_match": true,
+          "minimum_population": true,
+          "residual_complete": true,
+          "reported_sigma_complete": true,
+          "truth_sigma_complete": true,
+          "coverage": false,
+          "decile_calibration": false,
+          "median_width": false,
+          "p95_width": false
+        },
+        "pass": false
+      }
+    },
+    "sigma_x1p25": {
+      "pass": false,
+      "uncertainty": {
+        "population": 20000,
+        "valid_target_pixels": 20000,
+        "calibration_pixels": 20000,
+        "metrics": {
+          "residual_fraction": 1.0,
+          "reported_sigma_fraction": 1.0,
+          "truth_sigma_fraction": 1.0,
+          "interval_coverage_95": 0.9854,
+          "exact_zero_error_zero_uncertainty": false,
+          "decile_variance_ratios": [
+            0.6550236432702302,
+            0.631639745661148,
+            0.6318894642737077,
+            0.7020919070338455,
+            0.6250112303620842,
+            0.6699339862054593,
+            0.6138020426668491,
+            0.6100112072382722,
+            0.6244264355999201,
+            0.6142535054976093
+          ],
+          "deciles_within_variance_ratio_bar": 0,
+          "median_reported_95_half_width_steps": 0.4420939723546501,
+          "p95_reported_95_half_width_steps": 0.573646676321462,
+          "mean_gaussian_crps_steps": 0.10270340543927163
+        },
+        "components": {
+          "shapes_match": true,
+          "minimum_population": true,
+          "residual_complete": true,
+          "reported_sigma_complete": true,
+          "truth_sigma_complete": true,
+          "coverage": false,
+          "decile_calibration": false,
+          "median_width": true,
+          "p95_width": true
+        },
+        "pass": false
+      }
+    },
+    "depth_residual_x1p50": {
+      "pass": false,
+      "value": {
+        "metrics": {
+          "valid_fraction": 1.0,
+          "rank_correlation": 0.9995,
+          "median_abs_error_steps": 0.1750103011148656,
+          "p95_abs_error_steps": 0.5479701005523964,
+          "ruler_slope_error_fraction": 0.01,
+          "flat_null_p95_range_steps": 0.2,
+          "synthetic_layer_confusion_fraction": 0.005
+        },
+        "bars": {
+          "valid_fraction": [
+            ">=",
+            0.99
+          ],
+          "rank_correlation": [
+            ">=",
+            0.99
+          ],
+          "median_abs_error_steps": [
+            "<=",
+            0.5
+          ],
+          "p95_abs_error_steps": [
+            "<=",
+            1.0
+          ],
+          "ruler_slope_error_fraction": [
+            "<=",
+            0.05
+          ],
+          "flat_null_p95_range_steps": [
+            "<=",
+            0.5
+          ],
+          "synthetic_layer_confusion_fraction": [
+            "<=",
+            0.01
+          ]
+        },
+        "missing": [],
+        "components": {
+          "valid_fraction": true,
+          "rank_correlation": true,
+          "median_abs_error_steps": true,
+          "p95_abs_error_steps": true,
+          "ruler_slope_error_fraction": true,
+          "flat_null_p95_range_steps": true,
+          "synthetic_layer_confusion_fraction": true
+        },
+        "pass": true
+      },
+      "uncertainty": {
+        "population": 20000,
+        "valid_target_pixels": 20000,
+        "calibration_pixels": 20000,
+        "metrics": {
+          "residual_fraction": 1.0,
+          "reported_sigma_fraction": 1.0,
+          "truth_sigma_fraction": 1.0,
+          "interval_coverage_95": 0.8113,
+          "exact_zero_error_zero_uncertainty": false,
+          "decile_variance_ratios": [
+            2.3028174958719037,
+            2.2206084808399735,
+            2.221486397837254,
+            2.4682918606658624,
+            2.197305106741702,
+            2.3552366702535688,
+            2.157897806250641,
+            2.1445706504470508,
+            2.195249187655969,
+            2.159484980265033
+          ],
+          "deciles_within_variance_ratio_bar": 0,
+          "median_reported_95_half_width_steps": 0.35367517788372005,
+          "p95_reported_95_half_width_steps": 0.4589173410571697,
+          "mean_gaussian_crps_steps": 0.15659021367292417
+        },
+        "components": {
+          "shapes_match": true,
+          "minimum_population": true,
+          "residual_complete": true,
+          "reported_sigma_complete": true,
+          "truth_sigma_complete": true,
+          "coverage": false,
+          "decile_calibration": false,
+          "median_width": true,
+          "p95_width": true
+        },
+        "pass": false
+      }
+    },
+    "sigma_x0p50": {
+      "pass": false,
+      "uncertainty": {
+        "population": 20000,
+        "valid_target_pixels": 20000,
+        "calibration_pixels": 20000,
+        "metrics": {
+          "residual_fraction": 1.0,
+          "reported_sigma_fraction": 1.0,
+          "truth_sigma_fraction": 1.0,
+          "interval_coverage_95": 0.6764,
+          "exact_zero_error_zero_uncertainty": false,
+          "decile_variance_ratios": [
+            4.093897770438939,
+            3.947748410382175,
+            3.9493091517106733,
+            4.3880744189615335,
+            3.9063201897630258,
+            4.187087413784122,
+            3.836262766667807,
+            3.8125700452392013,
+            3.902665222499501,
+            3.839084409360058
+          ],
+          "deciles_within_variance_ratio_bar": 0,
+          "median_reported_95_half_width_steps": 0.17683758894186002,
+          "p95_reported_95_half_width_steps": 0.22945867052858485,
+          "mean_gaussian_crps_steps": 0.10918744515631343
+        },
+        "components": {
+          "shapes_match": true,
+          "minimum_population": true,
+          "residual_complete": true,
+          "reported_sigma_complete": true,
+          "truth_sigma_complete": true,
+          "coverage": false,
+          "decile_calibration": false,
+          "median_width": true,
+          "p95_width": true
+        },
+        "pass": false
+      }
+    }
+  },
+  "movable_null": {
+    "disturbance": "multiply every reported candidate sigma by 1.25",
+    "before_arm": "reported",
+    "after_arm": "sigma_x1p25",
+    "metrics_moved": true
+  },
+  "planted_degradation": {
+    "disturbance": "multiply every depth residual by 1.50 while holding sigma fixed",
+    "before_arm": "reported",
+    "after_arm": "depth_residual_x1p50"
+  },
+  "planted_improvement": {
+    "disturbance": "replace a 0.50x under-reported sigma field with the calibrated reported field while holding depth residuals fixed",
+    "before_arm": "sigma_x0p50",
+    "after_arm": "reported"
+  },
+  "bar_relation": {
+    "classification": "HARDER",
+    "existing_value_bars_retained": 7,
+    "new_uncertainty_vetoes": 5
+  },
+  "current_product_preflight": {
+    "depth_map_option_count": 0,
+    "sigma_z_map_option_count": 0,
+    "required_numeric_planes": 2,
+    "advertised_numeric_planes": 0,
+    "pass": false,
+    "scope": "Input-contract preflight only; not a scored M10 result."
+  }
+}

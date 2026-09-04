@@ -103,7 +103,7 @@ def main() -> int:
         "   invariance"
     )
 
-    actual_m10_implementation_found = bool(
+    preexisting_m10_implementation_found = bool(
         "measure_m10" in measure_functions
         or "m10" in verified_axes
         or decision_sources
@@ -112,7 +112,10 @@ def main() -> int:
     substitutions = {
         name: {
             "status": "NOT_RUN",
-            "reason": "no executable M10 decision accepts an uncertainty input",
+            "reason": (
+                "no pre-M163 production or scorecard-baseline M10 decision "
+                "accepts an uncertainty input"
+            ),
         }
         for name in ("zero", "infinity", "random")
     }
@@ -132,17 +135,17 @@ def main() -> int:
             decision_sources
         )
         == 0,
-        "no_actual_m10_implementation_found": not actual_m10_implementation_found,
+        "no_preexisting_m10_implementation_found": not preexisting_m10_implementation_found,
     }
     if failures:
         checks["audit_completed_without_read_or_parse_failures"] = False
 
     result = {
-        "verdict": "FAIL",
+        "verdict": "FAIL_PREEXISTING_IMPLEMENTATION_ABSENT",
         "reason": (
-            "The requested zero/infinity/random reproduction cannot run: the "
-            "repository has no executable M10 score decision or compatible depth "
-            "plus uncertainty product."
+            "The requested substitutions cannot run against a pre-existing "
+            "production or scorecard-baseline M10 decision. M163 therefore "
+            "reproduces the written decision in a standalone checker before repair."
         ),
         "counts": {
             "m10_decision_source_files": len(decision_sources),
@@ -161,7 +164,7 @@ def main() -> int:
             "verified_axes": verified_axes,
             "stack_help_mentions_depth_output": help_mentions_depth_output,
         },
-        "actual_m10_implementation_found": actual_m10_implementation_found,
+        "preexisting_m10_implementation_found": preexisting_m10_implementation_found,
         "substitutions": substitutions,
         "checks": checks,
         "failures": failures,
@@ -171,8 +174,8 @@ def main() -> int:
     for name, passed in checks.items():
         print(f"{'PASS' if passed else 'FAIL'} {name}")
     print(
-        "FAIL substitution probe: no executable M10 implementation accepts "
-        "reported uncertainty"
+        "FAIL pre-existing substitution probe: no production or baseline M10 "
+        "implementation accepts reported uncertainty"
     )
     return 1
 
