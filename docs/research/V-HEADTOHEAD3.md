@@ -19,24 +19,6 @@
 > reading is `UNLICENSED_GT_0.25`; physical resolution remains undetermined.
 > Details are in §0.5.
 
-> **2026-09-03 COVER-MODE ARM, AMENDED.  FINAL VERDICT:
-> `BORDER_UNRESOLVED`.**  The original frozen comparison measured
-> crop/default ordinal band power at
-> `1.0093 [1.0031,1.0156]` (independent:
-> `1.0103 [1.0043,1.0165]`) in 0.10–0.20 cyc/native-px, but its 256-output-px
-> ROI gate was not profiled on this stack.  The requested matched
-> camera-linear bands-7/bands-2 profile returned nominal stable tails of 640
-> plane px for Scale and 320 for Crop.  Scale should have returned the
-> 8-px minimum, so the profile is nonspecific and neither tail is admitted as
-> black-fill reach.  Converting those tails to the full-resolution comparison
-> grid and filtering without replacement retained only 4 detail / 8 flat
-> sites, below the frozen 12-detail minimum.  The earlier
-> `COVER_NOT_CAUSE` label is therefore superseded; its number remains a
-> descriptive ordinal observation, not resolution or a licensed causal
-> verdict.  Firm geometry is 63 frames, exact `k=0.9808883168`
-> (`1/k-1=1.948406%`), and 96.1415% pixel retention under Crop.  Details and
-> the no-Rust disposition are in §10.
-
 > **2026-09-04 SHARPENING FOLLOW-UP / CAUSAL CORRECTION.**  The two
 > 63-frame 113 source sets do **not** form a sharpening-only ladder.  An
 > all-file XMP census found eleven differing development fields on every
@@ -290,12 +272,36 @@ physical cause.  Sharpening-0 remains the only admissible descriptive arm.
 Whether PMax40 recovered scene detail, amplified noise/ringing, or both could
 not be determined.
 
-The geometry factor `s` was measured from image content by scale sweeps and
-registered rank correlation, not inferred from nominal dimensions.  The
-§10 cover follow-up is independent and now reads `BORDER_UNRESOLVED`; it does
-not rehabilitate the sharpened comparator.  No Rust source change follows:
-this result refuses the metric rather than isolating a defect in
-`crates/strehl-core` or `crates/strehl-cli`.
+The sharpening-matched re-expression is therefore PMax0, not PMax40.  In the
+licensed 0.20–0.25 band its original head-to-head observation is
+`0.8721 [0.7817,0.9745]`, but the input-fixed flat arm is
+`2.3833 [2.1009,2.6967]`, so the registered result is `UNRESOLVED`.  At
+0.10–0.20 the observed band-power ratio is
+`0.8842 [0.8420,0.9311]` (`TRAILS`).  Neither label is a resolution verdict:
+`Q25` has the wrong sign on genuine improvement and strongly rewards USM.
+
+The geometry factor `s` is derived from the images, not hardcoded or inferred
+from dimensions.  In
+[`ordinal.py:277-282`](../../experiments/V-HEADTOHEAD3/ordinal.py#L277-L282)
+each green plane is sampled every eight pixels and converted to global
+midranks.  For each candidate `s`,
+[`ordinal.py:285-313`](../../experiments/V-HEADTOHEAD3/ordinal.py#L285-L313)
+zooms only the comparator rank field, phase-registers 36 fixed 128-pixel
+tiles, and scores the median aligned Pearson correlation:
+
+```text
+s = argmax_s median_tiles corr(rank(strehl), register(zoom(rank(comparator), s)))
+```
+
+[`ordinal.py:316-356`](../../experiments/V-HEADTOHEAD3/ordinal.py#L316-L356)
+selects the maximum first on `0.960..1.080` in 0.005 steps, then within
+`best +/- 0.006` in 0.001 steps.  Measurement pixels are never resampled:
+`s` sets the native comparator crop size and multiplies its band edges.  On
+113 the author/checker fits are `1.002/1.002` for PMax0 and `1.003/1.008`
+for PMax40.
+
+No Rust source change follows: the metric is refused rather than a defect
+being isolated in `crates/strehl-core` or `crates/strehl-cli`.
 
 ## 1. Question and scope
 
@@ -319,17 +325,17 @@ pipeline comparison, not an isolation of merge algorithms.
 
 Nine unique-byte render pairings are measured:
 
-| ID | strehl master | comparator render | provenance |
-| --- | --- | --- | --- |
-| `113` | `113MSDCF.tiff` | `D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif` | Zerene PMax; 63/63 source identities; LR sharpening 0, colour NR 0, contrast +100; `Enhance` present; see §0.2 |
-| `113-sharp` | same | `D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif` | Zerene PMax; same 63/63 identities; LR sharpening 40, colour NR 25, contrast +100; Dehaze +100 and other confounds; see §0.2 |
-| `119-pmax` | `119MSDCF.tiff` | `D:\edited\macro\marker\2026-05-09-13.35.07 ZS PMax.tif` | Zerene PMax; 33/33 identities; LR contrast +50 |
-| `119-pmax-udr` | same | `D:\edited\macro\marker\2026-05-09-13.40.00 ZS PMax UDR.tif` | Zerene PMax UDR; same 33 identities; LR contrast +50 |
-| `119-pmax-udr-neutral` | same | `D:\edited\macro\marker2\2026-05-09-13.47.08 ZS PMax UDR.tif` | Zerene PMax UDR; same 33 identities; LR contrast 0 |
-| `119-fork` | same | `C:\dev\macro\out\stack_test2_rec2020.tif` | focus-stack fork, float Rec.2020 marker render |
-| `119-fork-defringed` | same | `C:\dev\macro\out\stack_test2_rec2020_defringed.tif` | postprocessed variant |
-| `119-fork-u16` | same | `C:\dev\macro\out\stack_test2_rec2020_16bit.tif` | 16-bit variant |
-| `cb` | `coffee-bean.tiff` | `C:\dev\macro\out\coffee-bean\stack.tif` | focus-stack fork; 105-frame bracket |
+| ID | strehl master | comparator render | frames, strehl/comparator | provenance |
+| --- | --- | --- | ---: | --- |
+| `113` | `113MSDCF.tiff` | `D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif` | 63 / 63 | Zerene PMax; all source identities match; LR sharpening 0, colour NR 0, contrast +100; `Enhance` present; see §0.2 |
+| `113-sharp` | same | `D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif` | 63 / 63 | Zerene PMax; all source identities match; LR sharpening 40, colour NR 25, contrast +100; Dehaze +100 and other confounds; see §0.2 |
+| `119-pmax` | `119MSDCF.tiff` | `D:\edited\macro\marker\2026-05-09-13.35.07 ZS PMax.tif` | 33 / 33 | Zerene PMax; all identities match; LR contrast +50 |
+| `119-pmax-udr` | same | `D:\edited\macro\marker\2026-05-09-13.40.00 ZS PMax UDR.tif` | 33 / 33 | Zerene PMax UDR; same identities; LR contrast +50 |
+| `119-pmax-udr-neutral` | same | `D:\edited\macro\marker2\2026-05-09-13.47.08 ZS PMax UDR.tif` | 33 / 33 | Zerene PMax UDR; same identities; LR contrast 0 |
+| `119-fork` | same | `C:\dev\macro\out\stack_test2_rec2020.tif` | 33 / unknown | focus-stack fork, float Rec.2020 marker render |
+| `119-fork-defringed` | same | `C:\dev\macro\out\stack_test2_rec2020_defringed.tif` | 33 / unknown | postprocessed variant |
+| `119-fork-u16` | same | `C:\dev\macro\out\stack_test2_rec2020_16bit.tif` | 33 / unknown | 16-bit variant |
+| `cb` | `coffee-bean.tiff` | `C:\dev\macro\out\coffee-bean\stack.tif` | 105 / 105 | focus-stack fork |
 
 `C:\dev\macro\out\stack_v3.tif` is byte-identical to
 `stack_test2_rec2020.tif` and is not double-counted.  The three marker-fork
@@ -338,6 +344,18 @@ repository documentation are available, but their individual source
 identities and exact invocation cannot be re-audited.  In contrast, the
 Zerene 113 and 119 identity counts above come from embedded
 `OriginalDocumentID` values.
+
+This depth census is part of the interpretation, not a cover experiment.
+Coverage scale is depth-dependent (`k=0.9870` at 22 frames and `0.9321` at
+299 in the existing corpus), so the 33-, 63-, and 105-frame strehl masters
+can carry different resampling taxes and must not be pooled as though depth
+were fixed.  Known comparator pairs have matching input counts.  The three
+119 fork depths are **unknown**, so a depth mismatch remains an explicit
+confound there.  The sharpening discriminator itself uses only the same
+63-frame 113 identities, so stack depth does not create its PMax0/PMax40
+difference.  Cover-mode and border-profile inference belongs to the dedicated
+COVER lane.  This lane uses only the frozen default masters; its complete
+512-pixel ROIs are at least 256 output pixels from their borders.
 
 No Helicon render was found under `C:\dev`, `D:\edited`, or
 `D:\personal\macro`.  The twelve distinct frozen byte streams hash as follows:
@@ -361,7 +379,7 @@ DELIVER-V6 records executable SHA-256
 `2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7`
 and command `strehl.exe stack <source> -o <master> --srgb`, with a private
 `STREHL_CACHE_DIR` and all other `STREHL_*` variables unset.  The baseline
-did not rerender; the later controlled scale/crop pair is documented in §10.
+did not rerender.  No cover-mode treatment is part of this lane.
 
 ## 3. Tone-neutral statistic
 
@@ -634,10 +652,9 @@ not raw power across independently toned renders.
   `1.7301x` versus an observed PMax40/PMax0 `1.6985x`, but the paired closure
   interval spans one and the registered transfer verdict is `UNRESOLVED`.
 * **P10.** Comparator scale `s` was fitted from image content, not nominal
-  dimensions.  The exact-stack border profile failed its Scale specificity
-  control, and conservative central filtering left only 4 detail / 8 flat
-  sites; the former `COVER_NOT_CAUSE` label is superseded by
-  `BORDER_UNRESOLVED`.
+  dimensions.  Known pair depths are 63/63, 33/33, and 105/105; the three
+  deleted-source 119 fork comparators are 33/unknown and retain a
+  depth-dependent resampling confound.
 
 ## 9. Reproduction
 
@@ -710,193 +727,4 @@ f6f238c8c0ed46bb2a0711dd5d45b11cabe5c07e  preregister external USM transfer
 a5276964415ebe26ce8cb8f26073a2e7ad2e4ae1  correct checker registration before rerun
 c000634609f0ab5a15fcaeb2a9598c272f1a2698  withdraw unlicensed cross-grid readings
 894b778e08976dfe93907be3f9163635aeef3049  final external-USM transfer outcome
-e4b1d9482244d8baba4fa673a083f334d3613f19  preregister cover intervention
-ba3e2bb9949444f672362b6c6bbf5e8bce301dd7  cover instruments and site freezes
-ee33fb1ed7918bc34c2ac6036b8b4f7df69a9ff1  original cover outcome
-afa8917c16e364ce7647d4ffa3d17e2f566f5247  preregister exact-stack border profile
-2fd0c7e5070da80a51506ad44ad7df1bd118a990  commissioned border instrument
-f879175006c29a1adc5a4709406ed977b7021d16  correct profile output space
-f1fed1f31d9dc32161141036f39bb35c186f53ea  add matched camera-linear render arm
-19e0c3cca8d48f27cecac2bf42f00bc2997dd138  preregister central-site sensitivity
-f2565630c861c07e002ecda0561fec536fad135b  correct count-gate execution order
-955d0e52995eb98fa722f33b8864778a64b421b5  gate sites before spectral evaluation
-2b34a673699e099e6a54f2e40549dc9ffff92cdd  remove synthetic pre-gate spectrum
-03fb2f4497808f27a8e28dcf1535ced204e5799c  final cover-border artifacts
-```
-
-## 10. Controlled `cover=scale` versus `cover=crop`
-
-Cover preregistration:
-[`experiments/V-HEADTOHEAD3/COVER-PREREGISTRATION.md`](../../experiments/V-HEADTOHEAD3/COVER-PREREGISTRATION.md),
-commit `e4b1d9482244d8baba4fa673a083f334d3613f19`.  Author and
-independent instruments plus both input-only site freezes were committed at
-`ba3e2bb9949444f672362b6c6bbf5e8bce301dd7` before either treatment
-render existed.  The declared bias was toward crop improving 0.10–0.20.
-Contrary prior evidence was also frozen: BUILD-CROP had measured a
-`-0.0030 dex` wrong-sign effect on other stacks.
-
-The exact-stack border amendment was separately frozen at `afa8917c`, its
-output-space correction at `f8791750`, and its no-replacement central-site
-sensitivity at `19e0c3cc`.  Its bias was toward validating the old 256-pixel
-gate and preserving `COVER_NOT_CAUSE`.  Independently commissioned
-COVER-default evidence (`c40a965e`, outcome `66e79043`) was recorded as a
-contrary prior: 109 needed a 256-plane-pixel inset, while a second structured
-subject failed specificity and licensed no general safe inset.
-The count-gate correction is frozen at `f2565630`; final independently
-verified artifacts are commit `03fb2f4497808f27a8e28dcf1535ced204e5799c`.
-
-### 10.1 Commissioning and provenance
-
-The final author commission is 16/16 controls GREEN and 26/26 plants RED;
-the independently implemented checker is 19/19 and 27/27.  Both execute
-blur-degradation and independent-USM-improvement arms.  They recover planted
-scale, translation correction sign and exact crop origin against fixed
-predicates, and reject changed executable/comparator/scale identities,
-swapped comparator labels, extra flags, inherited `STREHL_*`, excess thread
-caps, a changed source manifest, missing border clearance and numeric
-above-cap output.  Independent final verification found no defect.
-
-The exact historical default invocation, using the pinned executable, yielded
-SHA-256
-`4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F`:
-byte-identical to the frozen master.  Only then did the script add
-`--cover crop`.  Both runs placed 63/63 frames with none refused.  All 63
-ARWs and 63 XMPs were byte-stable before and after at manifest digest
-`A6275BE83552AC1BE4E23381A42BF1024FB33C217A9529DCDCC018BB4992AC5D`;
-both comparator hashes also remained fixed.  The crop hash is
-`5B5F863AB2602EA18DB995FEA6361D4AB86B8FF24ECBCB9D2A470E637091F18B`.
-Full logs and manifests are in
-`out/COVER-RENDER-PROVENANCE.json`; compact outcomes are in
-`out/COVER-RESULTS.json`.
-
-The renderer printed `k=0.9809`; an independently commissioned parser of the
-same frozen 63-frame, reference-31 warp map reads
-`k=0.9808883167827137`, hence `1/k-1=1.9484056329646338%`.  It also confirms
-63 placed / 0 refused and a `3448 x 2298` plane-pixel rectangle at `(34,23)`
-of `3516 x 2344`, emitted at unity scale.  Output dimensions changed from
-`7032 x 4688` to `6896 x 4596`: 98.066% width, 98.038% height and 96.1415%
-of pixels retained.  At 300 dpi this is `23.440 x 15.627 in` versus
-`22.987 x 15.320 in`, a `0.453 x 0.307 in` linear loss.
-
-### 10.2 Original sharpening-0 PMax observation
-
-Sites were frozen in the unchanged PMax native grid before crop existed:
-34 detail and 16 flat, digest
-`79DC2EDB0F9F67878E97A7EABCC0E2E06BEA4327B6CB8E03F635479391641543`.
-One detail site hit the preregistered 256-pixel crop-border gate, leaving
-33 detail and 16 flat in both implementations.  PMax pixels are identical
-between arms.  The statistic here uses the separately preregistered strict
-rank-energy denominator and sites, so its absolute strehl/PMax ratios do not
-replace §5's earlier score; crop/default is the controlled causal effect.
-
-| cyc/native px | default/PMax | crop/PMax | crop/default |
-| --- | ---: | ---: | ---: |
-| 0.02–0.05 | `0.5096 [0.4478,0.5792]` | `0.5097 [0.4485,0.5787]` | `1.0004 [0.9976,1.0028]` |
-| 0.05–0.10 | `0.4580 [0.4019,0.5228]` | `0.4583 [0.4015,0.5242]` | `1.0007 [0.9963,1.0051]` |
-| **0.10–0.20** | **`0.4631 [0.3894,0.5510]`** | **`0.4674 [0.3931,0.5568]`** | **`1.0093 [1.0031,1.0156]`** |
-| 0.20–0.25 | `UNLICENSED_GT_0.25` | `UNLICENSED_GT_0.25` | `UNLICENSED_GT_0.25` |
-
-The final band is unlicensed because crop's measured scale maps its upper edge
-above 0.25.  No wider-band number is used.  At the primary band the
-input-fixed flat crop/default reading is
-`1.0047 [0.9956,1.0154]`.  All four detail quadrants are positive and there is
-no leave-one-site reversal, but the registered recovery rule requires the
-gain lower bound to exceed 1.02.  Instead the complete interval lies inside
-`[0.98,1.02]`: the original registered label was **`COVER_NOT_CAUSE`**.
-Section 10.4 supersedes that label after testing the previously unmeasured
-border assumption; the table remains the unchanged first-pass observation.
-
-The independent checker reads default/PMax
-`0.4628 [0.3895,0.5499]`, crop/PMax
-`0.4675 [0.3931,0.5561]`, and crop/default
-`1.0103 [1.0043,1.0165]`, with the same verdict.  Author/checker image-fitted
-scales disagree by only 0.020% (default) and 0.061% (crop), below the 0.5%
-stop bar.  These `s` values, like the earlier §5 values of about 1.002 and
-1.003, come from image content via scale sweeps and correlation—not nominal
-dimensions.
-
-### 10.3 Confounded Sharpness-40 secondary
-
-The secondary arm also returns `COVER_NOT_CAUSE`.  Author default/PMax40 is
-`0.3084 [0.2706,0.3513]`, crop/PMax40 is
-`0.3089 [0.2714,0.3517]`, and crop/default is
-`1.0015 [0.9957,1.0076]` at 0.10–0.20.  The independent crop/default reading
-is `1.0069 [1.0012,1.0127]`; its largest geometry disagreement is 0.387%,
-still below the stop bar.  This does not rehabilitate the comparator:
-§0's eleven-field development confound remains.
-
-### 10.4 Exact-stack border profile
-
-The amendment commissioned a direct annulus implementation against an
-external mask oracle.  Nine fixed controls passed, including a 2% outer
-16-pixel plant (safe inset 16), a 0.05% improvement arm (8), and an untuned
-null (8); four answer-changing mutants went RED.
-
-The first matched bands-7/bands-2 attempt used the existing full-resolution
-`--srgb` space.  Both modes returned 768 pixels and Scale failed specificity.
-The binary's help explicitly labels `--srgb` “For looking at, NOT for
-measuring”, so that result is retained as
-`WITHDRAWN_OUTPUT_SPACE_SPECIFICITY_FAILURE`.  Before new pixels, the
-correction froze four camera-linear, binned renders: Scale/Crop crossed with
-bands 7/2.  All used the same hashes and 63-frame map and repeated
-63 placed / 0 refused, `k=0.9809`, and the exact Crop rectangle.
-
-At the fixed 0.1% tail threshold and 768-plane-pixel deep reference:
-
-| mode | deep bands7/bands2 | nominal stable tail | specificity |
-| --- | ---: | ---: | --- |
-| Scale | `0.9946922179` | 640 plane px = 1280 output px | **FAIL** (must be 8) |
-| Crop | `0.9948436510` | 320 plane px = 640 output px | not admitted |
-
-Crop's largest boundary-annulus effect is +8.85%, but Scale itself varies by
-up to +1.11% and remains 0.108% from deep in the 512–640 annulus.  Scene
-structure therefore defeats the registered specificity predicate, just as in
-the contrary ruler prior.  **No finite 113 black-fill reach is licensed.**
-
-The old 256-output-pixel gate equals only 128 profile-plane pixels.  A
-preregistered conservative sensitivity therefore required the complete
-Scale patch to clear 1280 output pixels and Crop to clear 640, without adding
-sites.  It retained 4 detail and 8 flat sites from 34/16, missing the
-12-detail minimum.  Independent verification then found that schema 1 had
-touched per-site spectral components before this failed count gate, although
-it emitted no bootstrap or aggregate.  `COVER-BORDER-Q25-CORRECTION.md`
-withdrew that execution order.  The commissioned schema-2 geometry-only gate
-passes 8/8 controls and catches 7/7 mutants, returns the same 4/8 counts, and
-records exactly zero `rank_energy` calls before stopping.  No filtered
-aggregate or replacement-site result was computed.  Thus the original ROI
-set is not validated by this exact-stack profile.
-
-### 10.5 Disposition and Rust consequence
-
-The firm result is geometric: Scale applies a 1.9484% coverage upsample on
-this 63-frame stack; Crop emits 96.1415% of the pixels at unity scale.  The
-first-pass 0.10–0.20 ordinal change remains `1.0093
-[1.0031,1.0156]`, but it cannot now carry the causal
-`COVER_NOT_CAUSE` label because its border gate was not validated and the
-conservative central set is underpowered.  Final cover verdict:
-**`BORDER_UNRESOLVED`**.  Nothing here measures recovered resolution:
-`Q25` rewards post-render sharpening and the border profile is a band-depth
-diagnostic only.
-
-**No Rust change follows.**  In particular,
-`crates/strehl-cli/src/align_cmd.rs` should retain `CoverMode::Scale` as the
-default because this failed-specificity result gives no basis for switching
-it to Crop.  `crates/strehl-cli/src/merge_cmd.rs` likewise gets no change:
-the lane did not isolate a merge defect or a safe Crop border.  Future
-phase-1 detail work needs common linear inputs and a sharpening-safe,
-resolution-calibrated instrument.
-
-Reproduction, with all numerical and Rayon thread caps set to 8:
-
-```powershell
-python -B cover-commission.py
-python -B cover-check.py --commission
-python -B cover-render.py
-python -B cover-measure.py --crop out\113-cover-crop.tiff --scale out\113-cover-scale-control.tiff --pmax "D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif" --frozen-sites cover_frozen_113.py --provenance out\COVER-RENDER-PROVENANCE.json
-python -B cover-check.py --crop out\113-cover-crop.tiff --scale out\113-cover-scale-control.tiff --pmax "D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif" --frozen-sites cover_frozen_113.py --provenance out\COVER-RENDER-PROVENANCE.json
-python -B cover-border.py commission
-python -B cover-border.py commission-sensitivity
-python -B cover-border.py render-linear
-python -B cover-border.py measure-linear --output out\COVER-BORDER-LINEAR-RESULT.json
-python -B cover-border.py sensitivity --output out\COVER-BORDER-SENSITIVITY.json
 ```
