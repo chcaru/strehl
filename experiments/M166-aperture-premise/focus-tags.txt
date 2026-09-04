@@ -1,0 +1,613 @@
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl/DSC00021.ARW
+[System]        FileName                        : DSC00021.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 58
+[Composite]     FocusDistance2                  : 0.277110541270397
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 58
+[Composite]     FocusDistance2                  : 0.277110541270397
+[ExifIFD]       FNumber                         : 11
+[Sony]          SonyFNumber2                    : 25.8727118856635
+[Sony]          SonyFNumber                     : 11.3137084989848
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 11
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl/DSC00092.ARW
+[System]        FileName                        : DSC00092.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 60
+[Composite]     FocusDistance2                  : 0.284089641525371
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 60
+[Composite]     FocusDistance2                  : 0.284089641525371
+[ExifIFD]       FNumber                         : 11
+[Sony]          SonyFNumber2                    : 25.1815795350154
+[Sony]          SonyFNumber                     : 11.3137084989848
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 11
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl/DSC00163.ARW
+[System]        FileName                        : DSC00163.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f11-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 61
+[Composite]     FocusDistance2                  : 0.287812608018665
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 61
+[Composite]     FocusDistance2                  : 0.287812608018665
+[ExifIFD]       FNumber                         : 11
+[Sony]          SonyFNumber2                    : 24.5089092585489
+[Sony]          SonyFNumber                     : 11.3137084989848
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 11
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f5.6-cpl/DSC00021.ARW
+[System]        FileName                        : DSC00021.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f5.6-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 58
+[Composite]     FocusDistance2                  : 0.277110541270397
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 58
+[Composite]     FocusDistance2                  : 0.277110541270397
+[ExifIFD]       FNumber                         : 5.6
+[Sony]          SonyFNumber2                    : 13.2734247372929
+[Sony]          SonyFNumber                     : 5.81211198339621
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 5.6
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f5.6-cpl/DSC00160.ARW
+[System]        FileName                        : DSC00160.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f5.6-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 5.6
+[Sony]          SonyFNumber2                    : 12.9538810815589
+[Sony]          SonyFNumber                     : 5.81211198339621
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 5.6
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f5.6-cpl/DSC00299.ARW
+[System]        FileName                        : DSC00299.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f5.6-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 61
+[Composite]     FocusDistance2                  : 0.287812608018665
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 61
+[Composite]     FocusDistance2                  : 0.287812608018665
+[ExifIFD]       FNumber                         : 5.6
+[Sony]          SonyFNumber2                    : 12.6420301012226
+[Sony]          SonyFNumber                     : 5.81211198339621
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 5.6
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f8-cpl/DSC00021.ARW
+[System]        FileName                        : DSC00021.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f8-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 58
+[Composite]     FocusDistance2                  : 0.277110541270397
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 58
+[Composite]     FocusDistance2                  : 0.277110541270397
+[ExifIFD]       FNumber                         : 8
+[Sony]          SonyFNumber2                    : 18.2947700220385
+[Sony]          SonyFNumber                     : 8
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 8
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f8-cpl/DSC00125.ARW
+[System]        FileName                        : DSC00125.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f8-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 8
+[Sony]          SonyFNumber2                    : 17.8060656501978
+[Sony]          SonyFNumber                     : 8
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 8
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f8-cpl/DSC00230.ARW
+[System]        FileName                        : DSC00230.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/diagonal-tilt-all-axes/diagonal-tilt-all-axes-sw4-f8-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 61
+[Composite]     FocusDistance2                  : 0.287812608018665
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 61
+[Composite]     FocusDistance2                  : 0.287812608018665
+[ExifIFD]       FNumber                         : 8
+[Sony]          SonyFNumber2                    : 17.4009449746843
+[Sony]          SonyFNumber                     : 8
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 8
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f11-cpl/DSC00021.ARW
+[System]        FileName                        : DSC00021.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f11-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 58
+[Composite]     FocusDistance2                  : 0.277110541270397
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 58
+[Composite]     FocusDistance2                  : 0.277110541270397
+[ExifIFD]       FNumber                         : 11
+[Sony]          SonyFNumber2                    : 25.559385566538
+[Sony]          SonyFNumber                     : 11.3137084989848
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 11
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f11-cpl/DSC00040.ARW
+[System]        FileName                        : DSC00040.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f11-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 11
+[Sony]          SonyFNumber2                    : 25.3869579321638
+[Sony]          SonyFNumber                     : 11.3137084989848
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 11
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f11-cpl/DSC00060.ARW
+[System]        FileName                        : DSC00060.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f11-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 11
+[Sony]          SonyFNumber2                    : 25.1815795350154
+[Sony]          SonyFNumber                     : 11.3137084989848
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 11
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f5.6-cpl/DSC00018.ARW
+[System]        FileName                        : DSC00018.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f5.6-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 5.6
+[Sony]          SonyFNumber2                    : 13.1304435811521
+[Sony]          SonyFNumber                     : 5.81211198339621
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 5.6
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f5.6-cpl/DSC00051.ARW
+[System]        FileName                        : DSC00051.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f5.6-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 5.6
+[Sony]          SonyFNumber2                    : 13.0418635439251
+[Sony]          SonyFNumber                     : 5.81211198339621
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 5.6
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f5.6-cpl/DSC00084.ARW
+[System]        FileName                        : DSC00084.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f5.6-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 5.6
+[Sony]          SonyFNumber2                    : 12.9714299619401
+[Sony]          SonyFNumber                     : 5.81211198339621
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 5.6
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f8-cpl/DSC00031.ARW
+[System]        FileName                        : DSC00031.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f8-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 8
+[Sony]          SonyFNumber2                    : 18.0732148570606
+[Sony]          SonyFNumber                     : 8
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 8
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f8-cpl/DSC00055.ARW
+[System]        FileName                        : DSC00055.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f8-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 8
+[Sony]          SonyFNumber2                    : 17.9512901075306
+[Sony]          SonyFNumber                     : 8
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 8
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+======== D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f8-cpl/DSC00080.ARW
+[System]        FileName                        : DSC00080.ARW
+[System]        Directory                       : D:/personal/macro/requests/19-razor-edge/horizontal-flat/razor-edge-horizontal-flat-sw4-f8-cpl
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[Sony]          FocusMode                       : 0
+[Sony]          FocusLocation                   : 7008 4672 3504 2336
+[Sony]          FocusFrameSize                  : 0 0 0
+[Sony]          FocusMode                       : 0
+[Sony]          FocusPosition2                  : 59
+[Composite]     FocusDistance2                  : 0.280524516597463
+[ExifIFD]       FNumber                         : 8
+[Sony]          SonyFNumber2                    : 17.8301878815343
+[Sony]          SonyFNumber                     : 8
+[ExifIFD]       MaxApertureValue                : 5.59591869015324
+[Sony]          SonyMaxApertureValue            : 5.81211198339621
+[Composite]     Aperture                        : 8
+[Sony]          LensType                        : 65535
+[Sony]          LensSpec                        : 82 200 0 5.6 0 60
+[Sony]          LensMount                       : 2
+[Sony]          LensFormat                      : 2
+[Sony]          LensMount                       : 2
+[Sony]          LensType2                       : 0
+[Sony]          LensMount2                      : 4
+[Sony]          LensType3                       : 33094
+[Sony]          LensE-mountVersion              : 400
+[Sony]          LensFirmwareVersion             : 257
+[ExifIFD]       LensInfo                        : 200 200 5.6 5.6
+[ExifIFD]       LensModel                       : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[Composite]     LensID                          : 65535
+   18 image files read

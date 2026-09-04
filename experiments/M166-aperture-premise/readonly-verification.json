@@ -1,0 +1,11 @@
+{
+  "schema": "strehl.m166.readonly-verification.v2",
+  "status": "PASS",
+  "before_files": 789,
+  "after_files": 789,
+  "before_bytes": 28397993984.0,
+  "after_bytes": 28397993984.0,
+  "before_metadata_sha256": "463405279C55A1CA5A68F007132B5B2BC12CEF7FB111A9EF7BA389D65E8E29CB",
+  "after_metadata_sha256": "463405279C55A1CA5A68F007132B5B2BC12CEF7FB111A9EF7BA389D65E8E29CB",
+  "per_root_identical": true
+}

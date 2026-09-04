@@ -1,0 +1,4 @@
+[SubIFD]        ImageWidth                      : 7168
+[SubIFD]        ImageHeight                     : 5120
+[ExifIFD]       ExifImageWidth                  : 7008
+[ExifIFD]       ExifImageHeight                 : 4672

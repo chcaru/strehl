@@ -1,0 +1,611 @@
+{
+  "schema": "strehl.m166.aperture-premise-analysis.v1",
+  "status": "PASS",
+  "captures_opened_by_analysis_script": 0,
+  "inputs": {
+    "exif_csv": {
+      "path": "experiments\\M166-aperture-premise\\exif.csv",
+      "sha256": "B341D4D927B8060F01AAECC153B2325264CB09FFC628D6E520509A689532CD3A",
+      "rows": 789
+    },
+    "existing_focus_surveys": {
+      "f5.6": {
+        "path": "experiments\\M128-razor-ladder\\out\\focus-hflat-f5.6.json",
+        "sha256": "0E642E0AE98B009A14365A02B38481BE765EED211E42D5CDE944F12FB5F0D1D8"
+      },
+      "f8": {
+        "path": "experiments\\M128-razor-ladder\\out\\focus-hflat-f8.json",
+        "sha256": "68F4B7CBF9770297E92AB89E80CDD52A83AE1BD3167C9F35C30312C0F5879AB8"
+      },
+      "f11": {
+        "path": "experiments\\M128-razor-ladder\\out\\focus-hflat-f11.json",
+        "sha256": "1AF4D397D31EE161E921FC5931E5726EC329E72C8DAAFD9A5A97E34F98EBBB3B"
+      }
+    },
+    "m128_across_best": {
+      "path": "experiments\\M128-razor-ladder\\out\\across-best.json",
+      "sha256": "EA4DFA68A91ABFD47308ACF8AC54F623B8B7CF806AB66BF2327443005DB4D216"
+    },
+    "m128_controls": {
+      "path": "experiments\\M128-razor-ladder\\out\\controls.json",
+      "sha256": "ABE918D4B2083D1F62A9AB5D884EB6D5C291219DEB350DE6B4F65D56F13C64F5"
+    },
+    "m128_ragged_tolerance": {
+      "path": "experiments\\M128-razor-ladder\\out\\ragged-tolerance.json",
+      "sha256": "14AFD8D15A74A38BD55930D461071BA7BC326E95CD1826B0BB10F34854F62A20"
+    },
+    "m128_smooth_edge_refit": {
+      "path": "experiments\\M128-razor-ladder\\refit\\refit.json",
+      "sha256": "A1419381E0BC319687C346EC2400FB1E47D5405A2CAE52BA5EAC42B6A48F24D4"
+    },
+    "m164_witness": {
+      "path": "experiments\\M164-aperture-identifiability\\results.json",
+      "sha256": "EFB9CB588F58DE748FE30E033DB30DA45A3CCD211C99955261C0707B85941033"
+    }
+  },
+  "arms": {
+    "diagonal-f11": {
+      "count": 143,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00163.ARW",
+      "display_f_number": 11.0,
+      "sony_f_number": 11.3137084989848,
+      "sony_f_number2_min": 24.5089092585489,
+      "sony_f_number2_max": 25.8727118856635,
+      "focus_coordinate_definition": "SonyFNumber2 / SonyFNumber",
+      "focus_coordinate_start": 2.2868462527547977,
+      "focus_coordinate_end": 2.166301992025703,
+      "focus_coordinate_span": 0.12054426072909452,
+      "focus_coordinate_unique_values": 33,
+      "focus_coordinate_monotone_nonincreasing": true,
+      "mean_coordinate_step_per_frame": 0.0008489032445710881,
+      "mean_coordinate_step_per_frame_per_f_number": 7.503315510093456e-05,
+      "coarse_focus_positions": [
+        58,
+        59,
+        60,
+        61
+      ],
+      "coarse_focus_distances_m": [
+        0.277110541270397,
+        0.280524516597463,
+        0.284089641525371,
+        0.287812608018665
+      ],
+      "exposure_s": 2.5,
+      "iso": 100,
+      "focal_length_mm": 200.0,
+      "lens_model": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+      "image_stabilization_numeric": 1,
+      "electronic_front_curtain_numeric": 1,
+      "shutter_count_first": 16158,
+      "shutter_count_last": 16300,
+      "shutter_counts_consecutive": true,
+      "total_capture_photon_opportunity_proxy": 2.79296874999998
+    },
+    "diagonal-f5.6": {
+      "count": 279,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00299.ARW",
+      "display_f_number": 5.6,
+      "sony_f_number": 5.81211198339621,
+      "sony_f_number2_min": 12.6420301012226,
+      "sony_f_number2_max": 13.2734247372929,
+      "focus_coordinate_definition": "SonyFNumber2 / SonyFNumber",
+      "focus_coordinate_start": 2.2837524079391187,
+      "focus_coordinate_end": 2.17511812183554,
+      "focus_coordinate_span": 0.1086342861035785,
+      "focus_coordinate_unique_values": 30,
+      "focus_coordinate_monotone_nonincreasing": true,
+      "mean_coordinate_step_per_frame": 0.0003907708133222248,
+      "mean_coordinate_step_per_frame_per_f_number": 6.723387547221423e-05,
+      "coarse_focus_positions": [
+        58,
+        59,
+        60,
+        61
+      ],
+      "coarse_focus_distances_m": [
+        0.277110541270397,
+        0.280524516597463,
+        0.284089641525371,
+        0.287812608018665
+      ],
+      "exposure_s": 2.5,
+      "iso": 100,
+      "focal_length_mm": 200.0,
+      "lens_model": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+      "image_stabilization_numeric": 1,
+      "electronic_front_curtain_numeric": 1,
+      "shutter_count_first": 15628,
+      "shutter_count_last": 15906,
+      "shutter_counts_consecutive": true,
+      "total_capture_photon_opportunity_proxy": 20.647917924326702
+    },
+    "diagonal-f8": {
+      "count": 210,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00230.ARW",
+      "display_f_number": 8.0,
+      "sony_f_number": 8.0,
+      "sony_f_number2_min": 17.4009449746843,
+      "sony_f_number2_max": 18.2947700220385,
+      "focus_coordinate_definition": "SonyFNumber2 / SonyFNumber",
+      "focus_coordinate_start": 2.2868462527548123,
+      "focus_coordinate_end": 2.1751181218355375,
+      "focus_coordinate_span": 0.1117281309192748,
+      "focus_coordinate_unique_values": 31,
+      "focus_coordinate_monotone_nonincreasing": true,
+      "mean_coordinate_step_per_frame": 0.0005345843584654297,
+      "mean_coordinate_step_per_frame_per_f_number": 6.682304480817871e-05,
+      "coarse_focus_positions": [
+        58,
+        59,
+        60,
+        61
+      ],
+      "coarse_focus_distances_m": [
+        0.277110541270397,
+        0.280524516597463,
+        0.284089641525371,
+        0.287812608018665
+      ],
+      "exposure_s": 2.5,
+      "iso": 100,
+      "focal_length_mm": 200.0,
+      "lens_model": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+      "image_stabilization_numeric": 1,
+      "electronic_front_curtain_numeric": 1,
+      "shutter_count_first": 15927,
+      "shutter_count_last": 16136,
+      "shutter_counts_consecutive": true,
+      "total_capture_photon_opportunity_proxy": 8.203125
+    },
+    "horizontal-f11": {
+      "count": 40,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00060.ARW",
+      "display_f_number": 11.0,
+      "sony_f_number": 11.3137084989848,
+      "sony_f_number2_min": 25.1815795350154,
+      "sony_f_number2_max": 25.559385566538,
+      "focus_coordinate_definition": "SonyFNumber2 / SonyFNumber",
+      "focus_coordinate_start": 2.2591518571325655,
+      "focus_coordinate_end": 2.225758206274714,
+      "focus_coordinate_span": 0.0333936508578514,
+      "focus_coordinate_unique_values": 9,
+      "focus_coordinate_monotone_nonincreasing": true,
+      "mean_coordinate_step_per_frame": 0.0008562474578936256,
+      "mean_coordinate_step_per_frame_per_f_number": 7.568229798129041e-05,
+      "coarse_focus_positions": [
+        58,
+        59
+      ],
+      "coarse_focus_distances_m": [
+        0.277110541270397,
+        0.280524516597463
+      ],
+      "exposure_s": 3.2,
+      "iso": 100,
+      "focal_length_mm": 200.0,
+      "lens_model": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+      "image_stabilization_numeric": 1,
+      "electronic_front_curtain_numeric": 1,
+      "shutter_count_first": 15011,
+      "shutter_count_last": 15050,
+      "shutter_counts_consecutive": true,
+      "total_capture_photon_opportunity_proxy": 0.9999999999999929
+    },
+    "horizontal-f5.6": {
+      "count": 67,
+      "first_file": "DSC00018.ARW",
+      "last_file": "DSC00084.ARW",
+      "display_f_number": 5.6,
+      "sony_f_number": 5.81211198339621,
+      "sony_f_number2_min": 12.9714299619401,
+      "sony_f_number2_max": 13.1304435811521,
+      "focus_coordinate_definition": "SonyFNumber2 / SonyFNumber",
+      "focus_coordinate_start": 2.259151857132585,
+      "focus_coordinate_end": 2.2317928489671774,
+      "focus_coordinate_span": 0.027359008165407595,
+      "focus_coordinate_unique_values": 7,
+      "focus_coordinate_monotone_nonincreasing": true,
+      "mean_coordinate_step_per_frame": 0.0004145304267485999,
+      "mean_coordinate_step_per_frame_per_f_number": 7.132182379362486e-05,
+      "coarse_focus_positions": [
+        59
+      ],
+      "coarse_focus_distances_m": [
+        0.280524516597463
+      ],
+      "exposure_s": 3.2,
+      "iso": 100,
+      "focal_length_mm": 200.0,
+      "lens_model": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+      "image_stabilization_numeric": 1,
+      "electronic_front_curtain_numeric": 1,
+      "shutter_count_first": 15235,
+      "shutter_count_last": 15301,
+      "shutter_counts_consecutive": true,
+      "total_capture_photon_opportunity_proxy": 6.346829538316336
+    },
+    "horizontal-f8": {
+      "count": 50,
+      "first_file": "DSC00031.ARW",
+      "last_file": "DSC00080.ARW",
+      "display_f_number": 8.0,
+      "sony_f_number": 8.0,
+      "sony_f_number2_min": 17.8301878815343,
+      "sony_f_number2_max": 18.0732148570606,
+      "focus_coordinate_definition": "SonyFNumber2 / SonyFNumber",
+      "focus_coordinate_start": 2.259151857132575,
+      "focus_coordinate_end": 2.2287734851917875,
+      "focus_coordinate_span": 0.030378371940787297,
+      "focus_coordinate_unique_values": 8,
+      "focus_coordinate_monotone_nonincreasing": true,
+      "mean_coordinate_step_per_frame": 0.0006199667743017816,
+      "mean_coordinate_step_per_frame_per_f_number": 7.74958467877227e-05,
+      "coarse_focus_positions": [
+        59
+      ],
+      "coarse_focus_distances_m": [
+        0.280524516597463
+      ],
+      "exposure_s": 3.2,
+      "iso": 100,
+      "focal_length_mm": 200.0,
+      "lens_model": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+      "image_stabilization_numeric": 1,
+      "electronic_front_curtain_numeric": 1,
+      "shutter_count_first": 15155,
+      "shutter_count_last": 15204,
+      "shutter_counts_consecutive": true,
+      "total_capture_photon_opportunity_proxy": 2.5
+    }
+  },
+  "focus_step": {
+    "coordinate": "q = SonyFNumber2 / SonyFNumber; a fine monotone lens-state coordinate, not asserted here as a calibrated distance",
+    "mean_delta_q_over_n_range": [
+      6.682304480817871e-05,
+      7.74958467877227e-05
+    ],
+    "mean_delta_q_over_n_max_over_min": 1.1597173850754807,
+    "interpretation": "Delta q per frame scales approximately with f-number, contradicting an aperture-independent absolute focus step.",
+    "pixel_derived_horizontal_edge_peaks": {
+      "f5.6": {
+        "aperture": "f5.6",
+        "survey_frames": 67,
+        "valid_frames": 67,
+        "best_index": 27,
+        "best_file": "DSC00045.ARW",
+        "best_focus_coordinate": 2.243911263441333,
+        "best_coarse_focus_position": 59,
+        "best_coarse_focus_distance_m": 0.280524516597463,
+        "maxgrad_dn_per_green_px": 5695.733333333334,
+        "local_step_dn": 905.9428571428575,
+        "contrast_dn": 2695.0,
+        "w50_green_px": 2.3981525340257965
+      },
+      "f8": {
+        "aperture": "f8",
+        "survey_frames": 50,
+        "valid_frames": 45,
+        "best_index": 25,
+        "best_file": "DSC00056.ARW",
+        "best_focus_coordinate": 2.243911263441325,
+        "best_coarse_focus_position": 59,
+        "best_coarse_focus_distance_m": 0.280524516597463,
+        "maxgrad_dn_per_green_px": 2380.791208791209,
+        "local_step_dn": 328.54977375565613,
+        "contrast_dn": 1396.0,
+        "w50_green_px": 1.2102628715149715
+      },
+      "f11": {
+        "aperture": "f11",
+        "survey_frames": 40,
+        "valid_frames": 34,
+        "best_index": 21,
+        "best_file": "DSC00042.ARW",
+        "best_focus_coordinate": 2.2439112634413214,
+        "best_coarse_focus_position": 59,
+        "best_coarse_focus_distance_m": 0.280524516597463,
+        "maxgrad_dn_per_green_px": 1343.2352941176468,
+        "local_step_dn": 223.66745923913038,
+        "contrast_dn": 690.0,
+        "w50_green_px": 2.3647115292551013
+      }
+    },
+    "pixel_peak_coordinate_range": [
+      2.2439112634413214,
+      2.243911263441333
+    ],
+    "pixel_peak_coordinate_spread": 1.1546319456101628e-14
+  },
+  "coverage": {
+    "diagonal": {
+      "ranges": {
+        "f5.6": {
+          "min": 2.17511812183554,
+          "max": 2.2837524079391187,
+          "span": 0.1086342861035785
+        },
+        "f8": {
+          "min": 2.1751181218355375,
+          "max": 2.2868462527548123,
+          "span": 0.1117281309192748
+        },
+        "f11": {
+          "min": 2.166301992025703,
+          "max": 2.2868462527547977,
+          "span": 0.12054426072909452
+        }
+      },
+      "intersection_span": 0.1086342861035785,
+      "union_span": 0.12054426072910918,
+      "intersection_over_union": 0.9011983270419225,
+      "f5.6_span_over_f11_span": 0.9011983270420321
+    },
+    "horizontal": {
+      "ranges": {
+        "f5.6": {
+          "min": 2.2317928489671774,
+          "max": 2.259151857132585,
+          "span": 0.027359008165407595
+        },
+        "f8": {
+          "min": 2.2287734851917875,
+          "max": 2.259151857132575,
+          "span": 0.030378371940787297
+        },
+        "f11": {
+          "min": 2.225758206274714,
+          "max": 2.2591518571325655,
+          "span": 0.0333936508578514
+        }
+      },
+      "intersection_span": 0.027359008165388055,
+      "union_span": 0.03339365085787094,
+      "intersection_over_union": 0.8192877227420461,
+      "f5.6_span_over_f11_span": 0.8192877227431107
+    },
+    "interpretation": "All arms share a large common interval, but their total focus-coordinate spans are not equal."
+  },
+  "optics": {
+    "sensor_mm": [
+      35.9,
+      23.9
+    ],
+    "delivered_image_px": [
+      7008,
+      4672
+    ],
+    "derived_pitch_um": {
+      "horizontal": 5.122716894977169,
+      "vertical": 5.115582191780822,
+      "representative_mean": 5.119149543378995
+    },
+    "wavelength_um": 0.55,
+    "airy_diameter_formula": "2.44 * wavelength * f_number",
+    "airy": {
+      "f5.6": {
+        "display_f_number": 5.6,
+        "sony_f_number": 5.81211198339621,
+        "marked_airy_diameter_um": 7.5152,
+        "marked_airy_diameter_px": 1.4680563512195122,
+        "sony_precise_airy_diameter_um": 7.799854281717714,
+        "sony_precise_airy_diameter_px": 1.5236621270042576,
+        "sony_f_number2_airy_diameter_um_range": [
+          17.407659008923616,
+          17.62105528590612
+        ],
+        "sony_f_number2_airy_diameter_px_range": [
+          3.4004982392902217,
+          3.4421841238642537
+        ],
+        "caveat": "ExifTool documents SonyFNumber2 as sometimes deviating; its optical meaning is not independently calibrated here."
+      },
+      "f8": {
+        "display_f_number": 8.0,
+        "sony_f_number": 8.0,
+        "marked_airy_diameter_um": 10.736,
+        "marked_airy_diameter_px": 2.0972233588850178,
+        "sony_precise_airy_diameter_um": 10.736,
+        "sony_precise_airy_diameter_px": 2.0972233588850178,
+        "sony_f_number2_airy_diameter_um_range": [
+          23.92811213701903,
+          24.254254338175326
+        ],
+        "sony_f_number2_airy_diameter_px_range": [
+          4.674235814807788,
+          4.737946046046904
+        ],
+        "caveat": "ExifTool documents SonyFNumber2 as sometimes deviating; its optical meaning is not independently calibrated here."
+      },
+      "f11": {
+        "display_f_number": 11.0,
+        "sony_f_number": 11.3137084989848,
+        "marked_airy_diameter_um": 14.762,
+        "marked_airy_diameter_px": 2.8836821184668993,
+        "sony_precise_airy_diameter_um": 15.182996805637602,
+        "sony_precise_airy_diameter_px": 2.965921717460859,
+        "sony_f_number2_airy_diameter_um_range": [
+          33.793679735990665,
+          34.300695430294
+        ],
+        "sony_f_number2_airy_diameter_px_range": [
+          6.601424601806901,
+          6.700467556111508
+        ],
+        "caveat": "ExifTool documents SonyFNumber2 as sometimes deviating; its optical meaning is not independently calibrated here."
+      }
+    },
+    "teleconverter_folded_into_exif": {
+      "all_focal_lengths_mm": [
+        200.0
+      ],
+      "all_lens_models": [
+        "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      ],
+      "all_maximum_apertures": [
+        5.59591869015324
+      ],
+      "finding": "The 100 mm f/2.8 base lens reports 200 mm and an approximately f/5.6 maximum with the 2X converter; EXIF FNumber is already teleconverter-adjusted."
+    }
+  },
+  "raggedness": {
+    "common_coordinate_rms_green_px": {
+      "f5.6": 1.776375038956196,
+      "f8": 1.6414365141177003,
+      "f11": 1.9176592059030786
+    },
+    "cross_aperture_correlations": [
+      [
+        1.0,
+        0.8071333676760784,
+        0.8034649547257343
+      ],
+      [
+        0.8071333676760784,
+        1.0,
+        0.915353077571425
+      ],
+      [
+        0.8034649547257342,
+        0.915353077571425,
+        1.0
+      ]
+    ],
+    "mean_offdiagonal_correlation": 0.8419837999910792,
+    "shared_component_green_px": 1.6319368802976038,
+    "independent_component_green_px": 0.7069721343258358,
+    "commissioning_summary": {
+      "passed": 5,
+      "failed": 5,
+      "skipped": 0,
+      "errored": 0,
+      "total": 10
+    },
+    "subject_contamination_control": {
+      "id": "C2",
+      "status": "FAIL",
+      "headline": "full contamination: 1/15 within 5%; worst |error|=359.770%"
+    },
+    "straight_line_tolerance": {
+      "bar_definition": "Absolute error of the median recovered fc across 64 independent locus plants, each itself the median of 2 noise realizations.",
+      "maximum_passing_sampled_rms_green_px_anywhere": 0.7,
+      "passing_sampled_rms_green_px": [
+        0.0,
+        0.01,
+        0.02,
+        0.7
+      ],
+      "first_contiguous_failure": "passes at 0.020, fails at 0.030 green px",
+      "maximum_contiguous_passing_rms_green_px": 0.02,
+      "first_crossing_bracket_green_px": [
+        0.02,
+        0.03
+      ],
+      "interpolated_first_crossing_green_px": 0.022782556310759622
+    },
+    "per_column_tolerance": {
+      "bar_definition": "Absolute error of the median recovered fc across 64 independent locus plants, each itself the median of 2 noise realizations.",
+      "maximum_passing_sampled_rms_green_px_anywhere": null,
+      "passing_sampled_rms_green_px": [],
+      "first_contiguous_failure": "already fails at zero raggedness",
+      "maximum_contiguous_passing_rms_green_px": null,
+      "first_crossing_bracket_green_px": [
+        0.0,
+        0.0
+      ],
+      "interpolated_first_crossing_green_px": 0.0
+    },
+    "per_column_result": "Per-column registration fails before raggedness is introduced: at 0.00 green px it leaves only 0.668 um median residual smear but biases fc by +91.047%. The failure is self-registration sharpening, not untracked locus smear.",
+    "smooth_edge_f11_over_f5.6_rise": {
+      "sharp_diffraction_prediction": 1.9642857142857144,
+      "isotonic_measured": 0.790987535953979,
+      "erf_measured": 0.9022801302931596,
+      "interpretation": "The one smooth detected feature becomes narrower rather than broader at f/11 and is width-dominated, so it is not an optical reference."
+    }
+  },
+  "exposure_and_count": {
+    "all_iso_values": [
+      100
+    ],
+    "all_stabilization_values": [
+      1
+    ],
+    "all_efcs_values": [
+      1
+    ],
+    "exposure_by_composition_s": {
+      "diagonal": [
+        2.5
+      ],
+      "horizontal": [
+        3.2
+      ]
+    },
+    "best_edge_contrast_dn": {
+      "f5.6": 2695.0,
+      "f8": 1396.0,
+      "f11": 690.0
+    },
+    "f5.6_over_f11_total_capture_photon_proxy": {
+      "diagonal": 7.392820963115628,
+      "horizontal": 6.346829538316381
+    },
+    "warning": "The total-capture proxy is not a per-output-pixel photon count; contribution maps are required for that.  It records the direction and size of the aligned acquisition budget."
+  },
+  "identifiability_witness": {
+    "verdict": "OBJECTION_CORRECT",
+    "two_world_identity": "K H_i X = H_i K X for common LSI K and H_i",
+    "maximum_absolute_output_difference": 0.0,
+    "sharpening_reward_ratio": [
+      1.4094694459545662,
+      1.4094694459545614,
+      1.4094694459545705
+    ],
+    "relative_unsharpened": [
+      1.0,
+      0.539449635348998,
+      0.10160564283480075
+    ],
+    "relative_sharpened": [
+      1.0,
+      0.5394496353489961,
+      0.10160564283480106
+    ],
+    "all_checks": {
+      "C1_diffraction_transfer_strictly_decreases": true,
+      "C2_unsharpened_metric_recovers_aperture_order": true,
+      "C3_sharpened_metric_still_recovers_aperture_order": true,
+      "C4_metric_rewards_sharpening_in_every_arm": true,
+      "C5_relative_Airy_magnitude_survives_common_sharpening": true,
+      "C6_two_world_observations_are_identical": true,
+      "C7_sharpening_restores_no_optical_support": true,
+      "C8_aperture_order_survives_entire_USM_sweep": true,
+      "C9_metric_rises_monotonically_with_USM": true
+    }
+  },
+  "checks": {
+    "C1_expected_six_arms_and_counts": {
+      "diagonal-f5.6": true,
+      "diagonal-f8": true,
+      "diagonal-f11": true,
+      "horizontal-f5.6": true,
+      "horizontal-f8": true,
+      "horizontal-f11": true
+    },
+    "C2_all_focus_coordinates_monotone": true,
+    "C3_all_shutter_counts_consecutive": true,
+    "C4_step_is_not_aperture_independent": true,
+    "C5_delta_q_over_n_is_near_common": true,
+    "C6_pixel_focus_peaks_share_exact_metadata_coordinate": true,
+    "C7_depth_coverage_is_not_equal": true,
+    "C8_teleconverter_is_folded_into_exif": true,
+    "C9_m164_two_world_outputs_are_identical": true,
+    "C10_m164_sharpening_preserves_order_and_is_rewarded": true,
+    "C11_m128_subject_contamination_control_failed": true,
+    "C12_m128_smooth_edge_reverses_diffraction_prediction": true
+  }
+}

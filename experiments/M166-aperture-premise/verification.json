@@ -1,0 +1,23 @@
+{
+  "schema": "strehl.m166.aperture-premise-verification.v1",
+  "status": "PASS",
+  "checks": {
+    "V1_analysis_passes": true,
+    "V2_capture_tree_unchanged": true,
+    "V3_verdict_is_not_forced": true,
+    "V4_exact_two_world_identity_reported": true,
+    "V5_sharpening_reward_not_promoted_to_pass": true,
+    "V6_focus_threat_rejected": true,
+    "V7_coverage_mismatch_reported": true,
+    "V8_tc_is_not_doubled": true,
+    "V9_subject_control_failure_reported": true,
+    "V10_smooth_edge_reversal_reported": true,
+    "V11_photon_proxy_is_caveated": true,
+    "V12_no_new_capture_decode_claim": true
+  },
+  "inputs": {
+    "analysis_sha256": "1BE68B9C2531FCCC199861B6142663F86772350339A745170B800029C63DA795",
+    "readonly_verification_sha256": "69C6FA58441F0A1E042794B22976B70333E7B19E58092489F1C9CCB56EF81643",
+    "report_sha256": "E0BB3C25B88086C5EBF352A5606D716F5C20B3B9DD451E6E7B4E686D0A8E2752"
+  }
+}
