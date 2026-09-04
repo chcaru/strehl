@@ -1,0 +1,1021 @@
+{
+  "checker": {
+    "caught": 8,
+    "commissioned": true,
+    "literal_green_passes": true,
+    "sabotages": {
+      "blur_equal_rung": {
+        "caught": true,
+        "target_gate": "P4"
+      },
+      "degradation_blind": {
+        "caught": true,
+        "target_gate": "P3"
+      },
+      "flat_equal": {
+        "caught": true,
+        "target_gate": "P1"
+      },
+      "generic_flat_refusal": {
+        "caught": true,
+        "target_gate": "P1"
+      },
+      "improvement_blind": {
+        "caught": true,
+        "target_gate": "P2"
+      },
+      "malformed_numeric": {
+        "caught": true,
+        "target_gate": "P6"
+      },
+      "missing_arm": {
+        "caught": true,
+        "target_gate": "P2"
+      },
+      "usm_rewarded": {
+        "caught": true,
+        "target_gate": "P5"
+      }
+    },
+    "total": 8
+  },
+  "commissioning_checks": {
+    "band_rejected": true,
+    "band_rejected_by_flat_null": true,
+    "band_snapshot_exact": true,
+    "band_sources_pinned": true,
+    "checker_commissioned": true,
+    "d8_rejected": true,
+    "d8_rejected_by_flat_null": true,
+    "d8_source_pinned": true,
+    "m2_blur_ratio_reproduced": true,
+    "m2_rejected": true,
+    "m2_rejected_by_signed_blur": true,
+    "m2_sources_pinned": true,
+    "oracle_passes_all_arms": true
+  },
+  "measurements": {
+    "band-power": {
+      "arms": {
+        "blur_monotonicity": [
+          {
+            "added_sigma_px": 0.0,
+            "measurement": {
+              "score": -2.3844797126768977,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 0.5,
+            "measurement": {
+              "score": -2.7400892433623274,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 1.0,
+            "measurement": {
+              "score": -4.191492400525039,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 1.5,
+            "measurement": {
+              "score": -6.237554559460152,
+              "status": "VALUE"
+            }
+          }
+        ],
+        "fail_closed": {
+          "nonfinite": {
+            "reason": "candidate returned a non-finite scalar",
+            "status": "INVALID"
+          },
+          "wrong_shape": {
+            "score": -2.6493315664518855,
+            "status": "VALUE"
+          }
+        },
+        "flat_roi": {
+          "detail": {
+            "score": 0.3403664343410666,
+            "status": "VALUE"
+          },
+          "flat": {
+            "score": 0.3488548829813006,
+            "status": "VALUE"
+          }
+        },
+        "planted_degradation": {
+          "base": {
+            "score": -2.3844797126768977,
+            "status": "VALUE"
+          },
+          "degraded": {
+            "score": -2.885654262836535,
+            "status": "VALUE"
+          }
+        },
+        "planted_improvement": {
+          "base": {
+            "score": -2.3844797126768977,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": -1.0928266920098033,
+            "status": "VALUE"
+          }
+        },
+        "sharpening_discrimination": {
+          "base": {
+            "score": -2.3844797126768977,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": -1.0928266920098033,
+            "status": "VALUE"
+          },
+          "usm": {
+            "score": -1.9949655187454454,
+            "status": "VALUE"
+          }
+        }
+      },
+      "candidate": {
+        "input_mode": "single_image_and_historical_kernel_pair",
+        "kind": "KNOWN_DEAD",
+        "name": "M137-high-low-band-power-gap",
+        "score_orientation": "higher_band_gap_is_more_detail"
+      },
+      "diagnostics": {
+        "historical_flat_snapshot": {
+          "detail_gap_dex": 0.3403664343410666,
+          "flat_gap_dex": 0.3488548829813006,
+          "flat_over_detail": 1.0249391472947889,
+          "flat_structure_share": 0.13314850036584688,
+          "recorded_flat_over_detail": 1.0249391472947889
+        },
+        "synthetic_extension_scope": "ordinary arms exercise the tracked underlying band_ratio; only the serialized historical kernel-gap pair decides P1"
+      },
+      "environment": {
+        "captures_opened": 0,
+        "numpy": "2.4.4",
+        "python": "3.12.10",
+        "scipy": "1.17.1",
+        "thread_contract": 1
+      },
+      "provenance": {
+        "flat_evidence": "experiments/M135-detail-instrument/AMENDMENT-4.md",
+        "flat_evidence_sha256": "79E257EA22103C2D0C17E84A518249BA69F61457301190BC07EBFB43CAEDB5EB",
+        "report": "docs/research/M135-detail-instrument.md",
+        "report_sha256": "9BA4CA24C9DAB0656A2DD6F8CC3F9F3AF6225D291BE21180F2D733627D8689AA",
+        "underlying_source": "experiments/M95-coverage/src/m95cov.py",
+        "underlying_source_sha256": "4AAE9064AD89C7846492C00EA1FC60A1965CEC3A6AB7550BF84634C9E021EC1D"
+      },
+      "schema": 1
+    },
+    "d8": {
+      "arms": {
+        "blur_monotonicity": [
+          {
+            "added_sigma_px": 0.0,
+            "measurement": {
+              "score": 0.44807855374505606,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 0.5,
+            "measurement": {
+              "score": 0.44806009012025305,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 1.0,
+            "measurement": {
+              "score": 0.4481711193804649,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 1.5,
+            "measurement": {
+              "score": 0.4485069054687077,
+              "status": "VALUE"
+            }
+          }
+        ],
+        "fail_closed": {
+          "nonfinite": {
+            "code": "INSUFFICIENT",
+            "reason": "D8 found no physically valid crossing",
+            "status": "REFUSED"
+          },
+          "wrong_shape": {
+            "code": "VALUEERROR",
+            "reason": "analyse_pair needs equal 2-D arrays",
+            "status": "ERROR"
+          }
+        },
+        "flat_roi": {
+          "detail": {
+            "reason": "D8 FRC remained above 1/7 through the last ring",
+            "score": 0.5,
+            "status": "LOWER_BOUND"
+          },
+          "flat": {
+            "reason": "D8 FRC remained above 1/7 through the last ring",
+            "score": 0.5,
+            "status": "LOWER_BOUND"
+          }
+        },
+        "planted_degradation": {
+          "base": {
+            "score": 0.44807855374505606,
+            "status": "VALUE"
+          },
+          "degraded": {
+            "score": 0.2770997769889125,
+            "status": "VALUE"
+          }
+        },
+        "planted_improvement": {
+          "base": {
+            "score": 0.44807855374505606,
+            "status": "VALUE"
+          },
+          "improved": {
+            "reason": "D8 FRC remained above 1/7 through the last ring",
+            "score": 0.5,
+            "status": "LOWER_BOUND"
+          }
+        },
+        "sharpening_discrimination": {
+          "base": {
+            "score": 0.44807855374505606,
+            "status": "VALUE"
+          },
+          "improved": {
+            "reason": "D8 FRC remained above 1/7 through the last ring",
+            "score": 0.5,
+            "status": "LOWER_BOUND"
+          },
+          "usm": {
+            "score": 0.4480777716715143,
+            "status": "VALUE"
+          }
+        }
+      },
+      "candidate": {
+        "input_mode": "repeat_pair",
+        "kind": "KNOWN_DEAD",
+        "name": "D8-per-tile-FRC",
+        "score_orientation": "higher_crossing_is_more_resolved"
+      },
+      "diagnostics": {
+        "detail_low_band_frc": 0.9989656493074857,
+        "flat_low_band_frc": 0.9940552535661507,
+        "historical_common_mode_low_band_frc": 0.972099
+      },
+      "environment": {
+        "captures_opened": 0,
+        "numpy": "2.4.4",
+        "python": "3.12.10",
+        "scipy": "1.17.1",
+        "thread_contract": 1
+      },
+      "provenance": {
+        "sha256": "C0408661BDDF15554BB8EC0F3D10C972D88CB632AF226C2E6944466855898288",
+        "source": "experiments/M-PHASE0-SPLIT2/frc.py"
+      },
+      "schema": 1
+    },
+    "m2": {
+      "arms": {
+        "blur_monotonicity": [
+          {
+            "added_sigma_px": 0.0,
+            "measurement": {
+              "score": -0.04995233606232108,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 0.5,
+            "measurement": {
+              "score": -0.0445857853669207,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 1.0,
+            "measurement": {
+              "score": -0.03166242401262384,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 1.5,
+            "measurement": {
+              "score": -0.021340729420569155,
+              "status": "VALUE"
+            }
+          }
+        ],
+        "fail_closed": {
+          "nonfinite": {
+            "reason": "candidate returned a non-finite scalar",
+            "status": "INVALID"
+          },
+          "wrong_shape": {
+            "score": -0.0528712070137028,
+            "status": "VALUE"
+          }
+        },
+        "flat_roi": {
+          "detail": {
+            "score": -0.09396261600347644,
+            "status": "VALUE"
+          },
+          "flat": {
+            "score": -0.07971602712659102,
+            "status": "VALUE"
+          }
+        },
+        "planted_degradation": {
+          "base": {
+            "score": -0.04995233606232108,
+            "status": "VALUE"
+          },
+          "degraded": {
+            "score": -0.025538581168625923,
+            "status": "VALUE"
+          }
+        },
+        "planted_improvement": {
+          "base": {
+            "score": -0.04995233606232108,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": -0.08649553836550665,
+            "status": "VALUE"
+          }
+        },
+        "sharpening_discrimination": {
+          "base": {
+            "score": -0.04995233606232108,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": -0.08649553836550665,
+            "status": "VALUE"
+          },
+          "usm": {
+            "score": -0.0653067759858624,
+            "status": "VALUE"
+          }
+        }
+      },
+      "candidate": {
+        "input_mode": "single_image",
+        "kind": "KNOWN_DEAD",
+        "name": "M2-R_box9",
+        "score_orientation": "negative_residual; higher is favourable because historical M2 treated lower R_box9 as better"
+      },
+      "diagnostics": {
+        "frozen_blurred_over_unblurred": 0.5712148772282098,
+        "m159_specificity_replay": {
+          "blurred_over_unblurred": 0.5712148772282098,
+          "blurred_r_box9": 0.02980493738409746,
+          "unblurred_r_box9": 0.0521781532174448
+        }
+      },
+      "environment": {
+        "captures_opened": 0,
+        "numpy": "2.4.4",
+        "python": "3.12.10",
+        "scipy": "1.17.1",
+        "thread_contract": 1
+      },
+      "provenance": {
+        "frozen_result": "experiments/M159-noise-clause/results.json",
+        "frozen_result_sha256": "5EBA810719313ECD85116E268965FE699C43E0EA32BC4D43B6354FDE8DD30389",
+        "source": "experiments/M159-noise-clause/measure.py",
+        "source_sha256": "6109FAFFF52F3C287DE2DEACC57B76843215D72CA4AD155E3BBB92BC4F057DA9"
+      },
+      "schema": 1
+    },
+    "oracle": {
+      "arms": {
+        "blur_monotonicity": [
+          {
+            "added_sigma_px": 0.0,
+            "measurement": {
+              "score": 1.0,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 0.5,
+            "measurement": {
+              "score": 0.8944271909999159,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 1.0,
+            "measurement": {
+              "score": 0.7071067811865475,
+              "status": "VALUE"
+            }
+          },
+          {
+            "added_sigma_px": 1.5,
+            "measurement": {
+              "score": 0.5547001962252291,
+              "status": "VALUE"
+            }
+          }
+        ],
+        "fail_closed": {
+          "nonfinite": {
+            "code": "NONFINITE_INPUT",
+            "reason": "construction oracle refuses malformed input",
+            "status": "REFUSED"
+          },
+          "wrong_shape": {
+            "code": "INVALID_SHAPE",
+            "reason": "construction oracle requires a 2-D image",
+            "status": "ERROR"
+          }
+        },
+        "flat_roi": {
+          "detail": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "flat": {
+            "code": "NO_DETAIL",
+            "reason": "construction truth has no scene modulation",
+            "status": "REFUSED"
+          }
+        },
+        "planted_degradation": {
+          "base": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "degraded": {
+            "score": 0.6060606060606061,
+            "status": "VALUE"
+          }
+        },
+        "planted_improvement": {
+          "base": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": 1.8181818181818181,
+            "status": "VALUE"
+          }
+        },
+        "sharpening_discrimination": {
+          "base": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": 1.8181818181818181,
+            "status": "VALUE"
+          },
+          "usm": {
+            "score": 1.0,
+            "status": "VALUE"
+          }
+        }
+      },
+      "candidate": {
+        "input_mode": "private_truth_labels",
+        "kind": "INELIGIBLE_CONSTRUCTION_TRUTH",
+        "name": "constructed-optical-truth-oracle",
+        "score_orientation": "higher_is_more_resolved"
+      },
+      "diagnostics": {
+        "eligible_as_candidate": false,
+        "purpose": "prove the registered accepted set is nonempty"
+      },
+      "environment": {
+        "captures_opened": 0,
+        "numpy": "2.4.4",
+        "python": "3.12.10",
+        "scipy": "1.17.1",
+        "thread_contract": 1
+      },
+      "schema": 1
+    }
+  },
+  "preregistration_commits": [
+    "8a305128",
+    "ca79eac7",
+    "5fe75c14"
+  ],
+  "schema": 1,
+  "status": "COMMISSIONED",
+  "verdicts": {
+    "band-power": {
+      "details": {
+        "P1": {
+          "detail": {
+            "score": 0.3403664343410666,
+            "status": "VALUE"
+          },
+          "explicit_featureless_refusal": false,
+          "flat": {
+            "score": 0.3488548829813006,
+            "status": "VALUE"
+          },
+          "intervals_separated": false
+        },
+        "P2": {
+          "base": {
+            "score": -2.3844797126768977,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": -1.0928266920098033,
+            "status": "VALUE"
+          }
+        },
+        "P3": {
+          "base": {
+            "score": -2.3844797126768977,
+            "status": "VALUE"
+          },
+          "degraded": {
+            "score": -2.885654262836535,
+            "status": "VALUE"
+          }
+        },
+        "P4": {
+          "ladder": [
+            {
+              "added_sigma_px": 0.0,
+              "measurement": {
+                "score": -2.3844797126768977,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 0.5,
+              "measurement": {
+                "score": -2.7400892433623274,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 1.0,
+              "measurement": {
+                "score": -4.191492400525039,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 1.5,
+              "measurement": {
+                "score": -6.237554559460152,
+                "status": "VALUE"
+              }
+            }
+          ],
+          "strictly_decreasing_steps": [
+            true,
+            true,
+            true
+          ]
+        },
+        "P5": {
+          "base": {
+            "score": -2.3844797126768977,
+            "status": "VALUE"
+          },
+          "explicit_sharpening_refusal": false,
+          "improved": {
+            "score": -1.0928266920098033,
+            "status": "VALUE"
+          },
+          "true_improvement": true,
+          "usm": {
+            "score": -1.9949655187454454,
+            "status": "VALUE"
+          },
+          "usm_not_improved": false
+        },
+        "P6": {
+          "records": {
+            "nonfinite": {
+              "reason": "candidate returned a non-finite scalar",
+              "status": "INVALID"
+            },
+            "wrong_shape": {
+              "score": -2.6493315664518855,
+              "status": "VALUE"
+            }
+          },
+          "statuses": {
+            "nonfinite": "INVALID",
+            "wrong_shape": "VALUE"
+          }
+        }
+      },
+      "failed_arms": [
+        "P1",
+        "P5",
+        "P6"
+      ],
+      "gates": {
+        "P1": false,
+        "P2": true,
+        "P3": true,
+        "P4": true,
+        "P5": false,
+        "P6": false
+      },
+      "primary_rejecting_arm": "P1",
+      "verdict": "REJECTED_BY_SYNTHETIC_BATTERY"
+    },
+    "d8": {
+      "details": {
+        "P1": {
+          "detail": {
+            "reason": "D8 FRC remained above 1/7 through the last ring",
+            "score": 0.5,
+            "status": "LOWER_BOUND"
+          },
+          "explicit_featureless_refusal": false,
+          "flat": {
+            "reason": "D8 FRC remained above 1/7 through the last ring",
+            "score": 0.5,
+            "status": "LOWER_BOUND"
+          },
+          "intervals_separated": false
+        },
+        "P2": {
+          "base": {
+            "score": 0.44807855374505606,
+            "status": "VALUE"
+          },
+          "improved": {
+            "reason": "D8 FRC remained above 1/7 through the last ring",
+            "score": 0.5,
+            "status": "LOWER_BOUND"
+          }
+        },
+        "P3": {
+          "base": {
+            "score": 0.44807855374505606,
+            "status": "VALUE"
+          },
+          "degraded": {
+            "score": 0.2770997769889125,
+            "status": "VALUE"
+          }
+        },
+        "P4": {
+          "ladder": [
+            {
+              "added_sigma_px": 0.0,
+              "measurement": {
+                "score": 0.44807855374505606,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 0.5,
+              "measurement": {
+                "score": 0.44806009012025305,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 1.0,
+              "measurement": {
+                "score": 0.4481711193804649,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 1.5,
+              "measurement": {
+                "score": 0.4485069054687077,
+                "status": "VALUE"
+              }
+            }
+          ],
+          "strictly_decreasing_steps": [
+            true,
+            false,
+            false
+          ]
+        },
+        "P5": {
+          "base": {
+            "score": 0.44807855374505606,
+            "status": "VALUE"
+          },
+          "explicit_sharpening_refusal": false,
+          "improved": {
+            "reason": "D8 FRC remained above 1/7 through the last ring",
+            "score": 0.5,
+            "status": "LOWER_BOUND"
+          },
+          "true_improvement": true,
+          "usm": {
+            "score": 0.4480777716715143,
+            "status": "VALUE"
+          },
+          "usm_not_improved": true
+        },
+        "P6": {
+          "records": {
+            "nonfinite": {
+              "code": "INSUFFICIENT",
+              "reason": "D8 found no physically valid crossing",
+              "status": "REFUSED"
+            },
+            "wrong_shape": {
+              "code": "VALUEERROR",
+              "reason": "analyse_pair needs equal 2-D arrays",
+              "status": "ERROR"
+            }
+          },
+          "statuses": {
+            "nonfinite": "REFUSED",
+            "wrong_shape": "ERROR"
+          }
+        }
+      },
+      "failed_arms": [
+        "P1",
+        "P4"
+      ],
+      "gates": {
+        "P1": false,
+        "P2": true,
+        "P3": true,
+        "P4": false,
+        "P5": true,
+        "P6": true
+      },
+      "primary_rejecting_arm": "P1",
+      "verdict": "REJECTED_BY_SYNTHETIC_BATTERY"
+    },
+    "m2": {
+      "details": {
+        "P1": {
+          "detail": {
+            "score": -0.09396261600347644,
+            "status": "VALUE"
+          },
+          "explicit_featureless_refusal": false,
+          "flat": {
+            "score": -0.07971602712659102,
+            "status": "VALUE"
+          },
+          "intervals_separated": false
+        },
+        "P2": {
+          "base": {
+            "score": -0.04995233606232108,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": -0.08649553836550665,
+            "status": "VALUE"
+          }
+        },
+        "P3": {
+          "base": {
+            "score": -0.04995233606232108,
+            "status": "VALUE"
+          },
+          "degraded": {
+            "score": -0.025538581168625923,
+            "status": "VALUE"
+          }
+        },
+        "P4": {
+          "ladder": [
+            {
+              "added_sigma_px": 0.0,
+              "measurement": {
+                "score": -0.04995233606232108,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 0.5,
+              "measurement": {
+                "score": -0.0445857853669207,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 1.0,
+              "measurement": {
+                "score": -0.03166242401262384,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 1.5,
+              "measurement": {
+                "score": -0.021340729420569155,
+                "status": "VALUE"
+              }
+            }
+          ],
+          "strictly_decreasing_steps": [
+            false,
+            false,
+            false
+          ]
+        },
+        "P5": {
+          "base": {
+            "score": -0.04995233606232108,
+            "status": "VALUE"
+          },
+          "explicit_sharpening_refusal": false,
+          "improved": {
+            "score": -0.08649553836550665,
+            "status": "VALUE"
+          },
+          "true_improvement": false,
+          "usm": {
+            "score": -0.0653067759858624,
+            "status": "VALUE"
+          },
+          "usm_not_improved": true
+        },
+        "P6": {
+          "records": {
+            "nonfinite": {
+              "reason": "candidate returned a non-finite scalar",
+              "status": "INVALID"
+            },
+            "wrong_shape": {
+              "score": -0.0528712070137028,
+              "status": "VALUE"
+            }
+          },
+          "statuses": {
+            "nonfinite": "INVALID",
+            "wrong_shape": "VALUE"
+          }
+        }
+      },
+      "failed_arms": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "gates": {
+        "P1": false,
+        "P2": false,
+        "P3": false,
+        "P4": false,
+        "P5": false,
+        "P6": false
+      },
+      "primary_rejecting_arm": "P1",
+      "verdict": "REJECTED_BY_SYNTHETIC_BATTERY"
+    },
+    "oracle": {
+      "details": {
+        "P1": {
+          "detail": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "explicit_featureless_refusal": true,
+          "flat": {
+            "code": "NO_DETAIL",
+            "reason": "construction truth has no scene modulation",
+            "status": "REFUSED"
+          },
+          "intervals_separated": false
+        },
+        "P2": {
+          "base": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "improved": {
+            "score": 1.8181818181818181,
+            "status": "VALUE"
+          }
+        },
+        "P3": {
+          "base": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "degraded": {
+            "score": 0.6060606060606061,
+            "status": "VALUE"
+          }
+        },
+        "P4": {
+          "ladder": [
+            {
+              "added_sigma_px": 0.0,
+              "measurement": {
+                "score": 1.0,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 0.5,
+              "measurement": {
+                "score": 0.8944271909999159,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 1.0,
+              "measurement": {
+                "score": 0.7071067811865475,
+                "status": "VALUE"
+              }
+            },
+            {
+              "added_sigma_px": 1.5,
+              "measurement": {
+                "score": 0.5547001962252291,
+                "status": "VALUE"
+              }
+            }
+          ],
+          "strictly_decreasing_steps": [
+            true,
+            true,
+            true
+          ]
+        },
+        "P5": {
+          "base": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "explicit_sharpening_refusal": false,
+          "improved": {
+            "score": 1.8181818181818181,
+            "status": "VALUE"
+          },
+          "true_improvement": true,
+          "usm": {
+            "score": 1.0,
+            "status": "VALUE"
+          },
+          "usm_not_improved": true
+        },
+        "P6": {
+          "records": {
+            "nonfinite": {
+              "code": "NONFINITE_INPUT",
+              "reason": "construction oracle refuses malformed input",
+              "status": "REFUSED"
+            },
+            "wrong_shape": {
+              "code": "INVALID_SHAPE",
+              "reason": "construction oracle requires a 2-D image",
+              "status": "ERROR"
+            }
+          },
+          "statuses": {
+            "nonfinite": "REFUSED",
+            "wrong_shape": "ERROR"
+          }
+        }
+      },
+      "failed_arms": [],
+      "gates": {
+        "P1": true,
+        "P2": true,
+        "P3": true,
+        "P4": true,
+        "P5": true,
+        "P6": true
+      },
+      "primary_rejecting_arm": null,
+      "verdict": "ACCEPTED_BY_SYNTHETIC_BATTERY"
+    }
+  }
+}
