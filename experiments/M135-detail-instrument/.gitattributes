@@ -10,3 +10,15 @@ m138-adapter-result-manifest-run1-pre-m149.json -text
 m149-artifact-race-retest.json -text
 m149-source-race-retest.json -text
 comparison-verification-rerun-m149.json -text
+m138-adapter-verification-run6-pre-threshold-fix.json -text
+m138-adapter-mutation-verification-run1-pre-threshold-fix.json -text
+m138-adapter-race-verification-run1-pre-threshold-fix.json -text
+m138-adapter-result-manifest-run2-pre-threshold-fix.json -text
+m149-artifact-race-retest-run1-pre-threshold-fix.json -text
+m149-source-race-retest-run1-pre-threshold-fix.json -text
+m149-mutation-manifest-reanchored.json -text
+m149-mutation-verification.json -text
+m149-artifact-race-control.json -text
+m149-source-race-control.json -text
+m149-artifact-race-repaired.json -text
+m149-source-race-repaired.json -text

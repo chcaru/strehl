@@ -260,6 +260,16 @@ MUTATIONS = (
         "    return bool(status == \"DETAIL_FAIL\" and True)\n",
     ),
     Mutation(
+        "commission-blur-contract-threshold",
+        "guard_commission_blur_contract_threshold",
+        '        config["pre_noise_blur_information_ratio_q95_strictly_below"]\n',
+        (
+            '        config[\n'
+            '            "pre_noise_optical_improvement_information_ratio_q05_strictly_above"\n'
+            '        ]\n'
+        ),
+    ),
+    Mutation(
         "commission-improvement-status",
         "guard_commission_improvement_status",
         (
@@ -276,6 +286,16 @@ MUTATIONS = (
         "guard_commission_improvement_q05",
         "    return bool(status == \"DETAIL_PASS\" and q05 > bar)\n",
         "    return bool(status == \"DETAIL_PASS\" and True)\n",
+    ),
+    Mutation(
+        "commission-improvement-contract-threshold",
+        "guard_commission_improvement_contract_threshold",
+        (
+            '        config[\n'
+            '            "pre_noise_optical_improvement_information_ratio_q05_strictly_above"\n'
+            '        ]\n'
+        ),
+        '        config["pre_noise_blur_information_ratio_q95_strictly_below"]\n',
     ),
     Mutation(
         "commission-missing-status",

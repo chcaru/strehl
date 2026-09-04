@@ -41,6 +41,7 @@ BUNDLE_SOURCE_NAMES = (
     "M138-ADAPTER-AMENDMENT-5.md",
     "M138-ADAPTER-AMENDMENT-6.md",
     "M138-ADAPTER-AMENDMENT-7.md",
+    "M138-ADAPTER-AMENDMENT-8.md",
     "comparison-binding.json",
     "comparison-contract.json",
     "comparison_checker.py",
@@ -758,6 +759,22 @@ def improvement_control_passes(status: Any, q05: float, bar: float) -> bool:
     return bool(status == "DETAIL_PASS" and q05 > bar)
 
 
+def commissioning_blur_information_bar(config: dict[str, Any]) -> float:
+    return float(
+        config["pre_noise_blur_information_ratio_q95_strictly_below"]
+    )
+
+
+def commissioning_improvement_information_bar(
+    config: dict[str, Any],
+) -> float:
+    return float(
+        config[
+            "pre_noise_optical_improvement_information_ratio_q05_strictly_above"
+        ]
+    )
+
+
 def missing_flat_control_passes(status: Any, reason: str) -> bool:
     return bool(
         status == "INSTRUMENT_INVALID"
@@ -936,21 +953,13 @@ def process_commission(
         "pre_noise_blur_lowers_information": blur_control_passes(
             blur_decision.get("status"),
             blur_q95,
-            float(
-                commission_cfg[
-                    "pre_noise_blur_information_ratio_q95_strictly_below"
-                ]
-            ),
+            commissioning_blur_information_bar(commission_cfg),
         ),
         "pre_noise_optical_improvement_raises_information": (
             improvement_control_passes(
                 improvement_decision.get("status"),
                 improvement_q05,
-                float(
-                    commission_cfg[
-                        "pre_noise_optical_improvement_information_ratio_q05_strictly_above"
-                    ]
-                ),
+                commissioning_improvement_information_bar(commission_cfg),
             )
         ),
         "missing_flat_control_refuses": missing_flat_control_passes(
@@ -1084,6 +1093,16 @@ def mutation_probe_checks() -> dict[str, bool]:
     checks["guard_commission_improvement_q05"] = (
         not improvement_control_passes("DETAIL_PASS", 1.10, 1.10)
     )
+    threshold_config = {
+        "pre_noise_blur_information_ratio_q95_strictly_below": 0.90,
+        "pre_noise_optical_improvement_information_ratio_q05_strictly_above": 1.10,
+    }
+    checks["guard_commission_blur_contract_threshold"] = (
+        commissioning_blur_information_bar(threshold_config) == 0.90
+    )
+    checks["guard_commission_improvement_contract_threshold"] = (
+        commissioning_improvement_information_bar(threshold_config) == 1.10
+    )
     checks["guard_commission_missing_status"] = (
         not missing_flat_control_passes(
             "DETAIL_FAIL", "flat control is missing"
@@ -1188,6 +1207,23 @@ def invoke_self_test_adapter(
     )
 
 
+def invoke_self_test_description(
+    runtime: Path,
+) -> subprocess.CompletedProcess[bytes]:
+    return subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            str(runtime / Path(__file__).name),
+            "--describe",
+        ],
+        cwd=runtime,
+        check=False,
+        capture_output=True,
+        timeout=120,
+    )
+
+
 def parsed_stdout(completed: subprocess.CompletedProcess[bytes]) -> dict[str, Any]:
     try:
         value = json.loads(completed.stdout.decode("utf-8"))
@@ -1229,6 +1265,8 @@ def run_self_test(runtime_state: Runtime) -> dict[str, Any]:
             "capture-improvement",
             "capture-missing-flat",
             "capture-flat-roi",
+            "capture-blur-threshold",
+            "capture-improvement-threshold",
         )
         for capture_id in capture_ids:
             add_synthetic_capture(bound, contract, capture_id)
@@ -1263,6 +1301,15 @@ def run_self_test(runtime_state: Runtime) -> dict[str, Any]:
             ),
             "flat-roi": synthetic_payload_for(
                 contract, bound, "capture-flat-roi"
+            ),
+            "blur-threshold": synthetic_payload_for(
+                contract, bound, "capture-blur-threshold", information=0.95
+            ),
+            "improvement-threshold": synthetic_payload_for(
+                contract,
+                bound,
+                "capture-improvement-threshold",
+                information=1.00,
             ),
         }
         del payloads["missing-flat"]["modes"]["candidate"]["flat_control"]
@@ -1464,6 +1511,42 @@ def run_self_test(runtime_state: Runtime) -> dict[str, Any]:
             }
         )
 
+        threshold_request = copy.deepcopy(commission_request)
+        threshold_request["artifacts"] = [
+            refs["null"],
+            refs["blur-threshold"],
+            refs["improvement-threshold"],
+            refs["missing-flat"],
+        ]
+        threshold_request["controls"]["pre_noise_blur"] = {
+            "payload": refs["blur-threshold"]
+        }
+        threshold_request["controls"]["pre_noise_optical_improvement"] = {
+            "payload": refs["improvement-threshold"]
+        }
+        threshold_path = evidence / "commission-threshold-discrimination.json"
+        write_json(threshold_path, threshold_request)
+        threshold_run = invoke_self_test_adapter(
+            runtime, "commission", threshold_path
+        )
+        threshold_output = parsed_stdout(threshold_run)
+        checks["commission_blur_threshold_rejects_marginal_control"] = bool(
+            threshold_run.returncode == 0
+            and threshold_output.get("controls", {}).get(
+                "pre_noise_blur_lowers_information"
+            )
+            is False
+        )
+        checks[
+            "commission_improvement_threshold_rejects_marginal_control"
+        ] = bool(
+            threshold_run.returncode == 0
+            and threshold_output.get("controls", {}).get(
+                "pre_noise_optical_improvement_raises_information"
+            )
+            is False
+        )
+
         bad_hash_request = copy.deepcopy(valid_request)
         wrong_hash = (
             ("0" if refs["pass"]["sha256"][0] != "0" else "1")
@@ -1506,6 +1589,27 @@ def run_self_test(runtime_state: Runtime) -> dict[str, Any]:
             duplicate_run.returncode != 0
             and duplicate_run.stdout == b""
             and parsed_stderr(duplicate_run).get("status") == "INSTRUMENT_INVALID"
+        )
+
+        tampered_runtime = copy_self_test_runtime(
+            scratch, bound, name="bundle-tamper-runtime"
+        )
+        tampered_member = tampered_runtime / "M138-ADAPTER-AMENDMENT-8.md"
+        tampered_member.write_bytes(
+            tampered_member.read_bytes() + b"\nM138 bundle mutation probe\n"
+        )
+        tampered_bundle_run = invoke_self_test_description(tampered_runtime)
+        tampered_bundle_error = (
+            parsed_stderr(tampered_bundle_run)
+            if tampered_bundle_run.stderr
+            else {}
+        )
+        checks["bundle_member_hash_refuses"] = bool(
+            tampered_bundle_run.returncode != 0
+            and tampered_bundle_run.stdout == b""
+            and tampered_bundle_error.get("status") == "INSTRUMENT_INVALID"
+            and "SHA-256 mismatch"
+            in str(tampered_bundle_error.get("reason"))
         )
 
         unbound = copy.deepcopy(runtime_state.binding)
