@@ -2143,6 +2143,76 @@ work it was thought to be ignoring was reassigned only after a full census
 recovered the real identifiers. **Verify a deliverable on disk, and verify the
 identity of whatever you believe is producing it.**
 
+### 2.9.14 The number holding up the shipping default contradicts itself
+
+**Recorded before the answer exists, so that it cannot be written to fit one.**
+
+`crop` is not the default for exactly one reason. `docs/research/cover-default.md`
+found crop's border needs a **256 px** inset where `scale` settles at **8 px**,
+a 32x asymmetry, and that single blocker outweighed everything crop had going
+for it -- crop is **byte-exact** against an external rawpy/LibRaw decode across
+all `24,580,566` serialized samples, `0` DN max error, while `scale` alters
+**`98.1462%`** of the same overlap.
+
+I went looking through a corpus that a departing lane deleted in `d1ad7458`, and
+found two artifacts measuring that same border. They do not merely disagree with
+`8 / 256`. **They disagree with each other, and they disagree in direction.**
+
+| source | scale | crop | implication |
+|---|---|---|---|
+| `cover-default.md` | `8 px` | `256 px` | crop **32x worse** |
+| `COVER-BORDER-SENSITIVITY.json` | `640` plane px | `320` plane px | crop **2x better** |
+| `COVER-BORDER-RESULT.json` | `768 px` | `768 px` | **identical** |
+
+Three measurements of one quantity giving 32x worse, 2x better, and no
+difference. At most one of these is the border.
+
+**Why this is not a filing detail.** Because of `256`, strehl ships `cover=scale`,
+which pushes **`98.1462%`** of every frame through a Catmull-Rom kernel with
+negative lobes. That is the leading suspect for the M8 failure -- M8-O
+`1.326144%`, extrema `-240.040039 / +586.215820` DN -- and **the identity arm,
+which resamples nothing, reads exactly `0 / 32,919,152`**. So the chain reads:
+a border measurement forces a resampling default, and the resampling default is
+the prime candidate for the only axis this program has scored, which scored a
+fail. **If `256` is an artifact, strehl resamples nearly every pixel it ships to
+dodge a defect that was never correctly measured.**
+
+**The caveats, which are load-bearing and must not be dropped when this is
+quoted.** Both recovered artifacts are non-results *by their own declarations*,
+and I am not offering them as evidence that `256` is wrong:
+
+- `COVER-BORDER-RESULT.json` carries `admission = WITHDRAWN_OUTPUT_SPACE_SPECIFICITY_FAILURE`
+  and `output_space = SRGB_VIEWING_NOT_MEASUREMENT`. It was rendered with
+  `--srgb`, whose own help text reads *"For looking at, NOT for measuring."*
+  The lane withdrew the number itself, unprompted.
+- `COVER-BORDER-SENSITIVITY.json` carries `counts_pass = false` and
+  `BORDER_UNRESOLVED_INSUFFICIENT_CENTRAL_SITES`, retaining `4` detail and `8`
+  flat sites against a frozen `34 / 16`.
+
+Their correction record does assert that the **geometry-only facts survive** the
+withdrawal, and clearances are geometry. That is the whole of my basis for
+treating this as open rather than closed.
+
+**The most likely dull explanation, which must be eliminated first: units.**
+`SENSITIVITY` records `output_pixels_per_plane_pixel = 2`, so a binning factor
+alone converts `768` output px to `384` plane px. Nobody has yet stated which
+unit `8` and `256` are in. Until that is pinned, there may be no contradiction
+at all, and I would rather find that than a scandal.
+
+**One inherited assumption is worth more suspicion than it has had.** The
+withdrawing lane reasoned that `scale` "has no black-fill crop boundary" and so
+*should* have returned ~8 px; its failure to do so is what condemned the output
+space. That inference runs the other way just as easily. If `scale` shows
+boundary contamination where it structurally should have none, the assumption
+that scale's border is clean is the thing in question -- which is the standing
+Hypothesis 5 arriving from a second direction: **that `scale` does not fix the
+contamination but smears it below a detection threshold while conserving it.**
+
+**Ownership, to keep two lanes off one file.** BORDER re-measures both modes in
+linear output space on one definition and writes only `M-COVER-BORDER.md`. COVER
+owns `cover-default.md` and makes any amendment *after* a measured answer, in
+whichever direction it falls. Both outcomes are authorised in advance.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
