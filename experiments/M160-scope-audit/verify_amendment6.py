@@ -23,9 +23,11 @@ ROOT = Path(__file__).resolve().parents[2]
 PLAN = ROOT / "docs/proposals/2026-08-sota-path.md"
 SCORECARD = ROOT / "docs/proposals/2026-09-sota-scorecard.md"
 REPORT = ROOT / "docs/research/M160-amendment6-reachability.md"
+PLAN_PATH = "docs/proposals/2026-08-sota-path.md"
 SCORECARD_PATH = "docs/proposals/2026-09-sota-scorecard.md"
+PLAN_REV = "d839c402"
 BASE_REV = "1549df47"
-PLAN_SHA256 = "D7AD61E0E9B37D0C761810620EE0F296C9E8DC188509E1E860CBA44D9FA905F5"
+PLAN_SHA256 = "1E075C8BECEC35BC67231868781E614DC0748989F14E2F172C777E3964CEB443"
 EVIDENCE_PATHS = {
     "m152": ROOT / "docs/research/M152-site-census.md",
     "m164_m2": ROOT / "docs/research/M164-m2-repair.md",
@@ -199,7 +201,11 @@ def run_checks(
         ),
         (
             "source.m1-current-route",
-            contains(amendment, "M1 remains the only route with a path to an admissible result"),
+            contains(
+                amendment,
+                "M1 remains the only currently specified and physically actionable "
+                "route with an evidenced path to an admissible result",
+            ),
             "current practical route retained",
         ),
     )
@@ -239,8 +245,10 @@ def run_checks(
         (
             "evidence.m167",
             contains(evidence["m167"], "NO DEPLOYABLE DETAIL INSTRUMENT ADMITTED")
-            and contains(evidence["m167"], "all `15` hard commissioning checks are true"),
-            "detail battery is live but admits no candidate",
+            and contains(evidence["m167"], "all `15` hard commissioning checks are true")
+            and contains(evidence["m167"], "ARM-IDENTITY CANARY REJECTED")
+            and contains(evidence["m167"], "`A6_capability_sandbox=false`"),
+            "detail battery and canary are commissioned but admit no candidate",
         ),
         (
             "evidence.m167-admission",
@@ -305,19 +313,20 @@ def run_checks(
             "scorecard.version",
             scorecard.startswith(
                 "# strehl — pre-registered SOTA scorecard\n\n"
-                "**Status: SPEC / PRE-REGISTRATION v1.9"
+                "**Status: SPEC / PRE-REGISTRATION v1.10"
             ),
-            "v1.9 status",
+            "v1.10 status",
         ),
         (
             "scorecard.revision",
-            scorecard.count("**Revision 1.9 — Amendment 6 scope correction") == 1,
-            "one v1.9 revision entry",
+            scorecard.count("**Revision 1.10 — razor ruling") == 1
+            and scorecard.count("**Revision 1.9 — Amendment 6 scope correction") == 1,
+            "one v1.10 and one v1.9 revision entry",
         ),
         (
             "scorecard.no-stale-version",
-            "v1.8" not in scorecard,
-            f"v1.8 occurrences={scorecard.count('v1.8')}",
+            "v1.9" not in scorecard,
+            f"v1.9 occurrences={scorecard.count('v1.9')}",
         ),
         (
             "scorecard.scope-hedge",
@@ -358,7 +367,7 @@ def run_checks(
                 scorecard,
                 "Capture likewise does not replace or “shoot around” an instrument: "
                 "it supplies identifying information and is a precondition of the "
-                "current usable instrument.",
+                "currently specified instrument route.",
             )
             and contains(
                 m1,
@@ -375,7 +384,11 @@ def run_checks(
         ),
         (
             "scorecard.m1-current-route",
-            contains(scorecard, "registry shorthand for the current usable route")
+            contains(
+                scorecard,
+                "registry shorthand for the currently specified and physically "
+                "actionable route",
+            )
             and contains(scorecard, "no such archive-qualified route is admitted today"),
             "registry and practical state separated",
         ),
@@ -517,10 +530,12 @@ def run_checks(
                 2717,
             ),
             (
+                "fresh capture is the currently specified way to obtain that information. "
                 "Capture is therefore a precondition of the instrument, not a way around it",
+                "fresh capture is the currently specified way to obtain that information. "
                 "Capture is therefore a precondition of the instrument, not a way around it",
-                2721,
-                2726,
+                2723,
+                2728,
             ),
             (
                 "M1 is the current proposed implementation of that condition, not the "
@@ -529,6 +544,14 @@ def run_checks(
                 "only mathematically possible one",
                 2690,
                 2693,
+            ),
+            (
+                "the only currently specified and physically actionable route with "
+                "an evidenced path to an admissible result",
+                "the only currently specified and physically actionable route with "
+                "an evidenced path to an admissible result",
+                2750,
+                2754,
             ),
         ),
         1,
@@ -662,15 +685,18 @@ def run_checks(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--plan", type=Path, default=PLAN)
+    parser.add_argument("--plan", type=Path)
     parser.add_argument("--scorecard", type=Path, default=SCORECARD)
     parser.add_argument("--report", type=Path, default=REPORT)
     parser.add_argument("--base-rev", default=BASE_REV)
     args = parser.parse_args()
 
-    plan_path = args.plan.resolve()
-    plan_bytes = plan_path.read_bytes()
-    plan = plan_bytes.decode("utf-8").replace("\r\n", "\n")
+    if args.plan:
+        plan_bytes = args.plan.resolve().read_bytes()
+        plan = plan_bytes.decode("utf-8").replace("\r\n", "\n")
+    else:
+        plan = git_blob(PLAN_REV, PLAN_PATH)
+        plan_bytes = plan.encode("utf-8")
     scorecard = read_utf8(args.scorecard.resolve())
     report = read_utf8(args.report.resolve())
     base = git_blob(args.base_rev, SCORECARD_PATH)

@@ -12,8 +12,8 @@ This report answers two questions:
 The source snapshot used for the reconciliation is:
 
 - authoritative plan: `docs/proposals/2026-08-sota-path.md`, Amendment 6,
-  path commit `cc92f97f`, SHA-256
-  `D7AD61E0E9B37D0C761810620EE0F296C9E8DC188509E1E860CBA44D9FA905F5`;
+  wording-repair commit `d839c402`, SHA-256
+  `1E075C8BECEC35BC67231868781E614DC0748989F14E2F172C777E3964CEB443`;
 - pre-edit scorecard: commit `1549df47`, SHA-256
   `EF7CBB5CD740C647BDAF360DD574421449BE4F24A17D971F295531A569892CCF`;
 - reachability evidence cutoff: repository `HEAD` `7f0f54d4`.
@@ -23,11 +23,10 @@ at `832a2e85`. This Amendment 6 task does not transcribe that separate
 specification into the scorecard; Part 2 takes M166's ruling as given for
 reachability, while the scorecard's current M10 card remains non-operative until
 its dedicated adoption.
-M167's blinded-admission preregistration landed at `20ef67e8`; its runner,
-canary, and hash freeze followed through `7f0f54d4`. They change no
-classification or rank: the original battery still has no admitted candidate,
-the blinded protocol has not yet run its canary, and it fail-closes without an
-evaluator-attested disposable sandbox.
+As of the stated reachability cutoff, M167's blinded-admission preregistration
+had landed at `20ef67e8`, with its runner, canary, and hash freeze following
+through `7f0f54d4`; the canary had not yet run. This report remains a ranking
+snapshot at that cutoff rather than silently incorporating later lane outcomes.
 
 **Evidence labels.** `VERIFIED BY RUNNING` means this lane executed a command
 and read its output. `INFERRED BY READING` means the conclusion is a synthesis
@@ -44,8 +43,8 @@ immediately before editing. Scorecard line references name the pre-edit
 | --- | --- | --- | --- | --- |
 | A6-1 | `scorecard@1549df47:792-801`: *“No admissible detail statistic in this repository is sharpening-safe: no statistic that still responds correctly to physical blur and genuine improvement survives sharpening. ... [A] future instrument [must] have a structural reason sharpening cannot improve it.”* | Plan §16.1, lines 2678-2693: *“no output-only statistic can guarantee the intended ranking across those worlds without additional identifying assumptions or evidence”*; valid information includes an independent reference, scoped certified target, or validated prior, and *“This does not prove that every no-reference metric is impossible.”* | The scorecard described a repository inventory but omitted the load-bearing observation boundary at the point of the claim, allowing an empirical inventory to read as a universal impossibility theorem. | The inventory is now explicitly limited to tested candidates under the current output-only contract. The exact hedge — **“without an assumption or observation outside those outputs”** — and the admissible external-information families are stated in the operative rule and again where M1's structural protection is defined. |
 | A6-2 | `scorecard@1549df47:855-863`: *“the existing flat-ROI statistic ... [is not] a stand-alone comparative noise instrument: a blur challenge improves it to `0.571215x`.”* The card did not state how that empirical failure related to the broader output-only argument. | Plan §16.2, lines 2701-2717: the single-image sentence is qualified, and *“The three instrument deaths ... are not all instances of one theorem.”* D8 is algebraic, band-power is empirical, and only M2 is the identifiability construction. | The old card's silence could let three differently supported failures be read as one theorem, and it did not record that M164's external-reference candidate remains synthetic-only. | M2 now separates the `0.571215x` empirical defeat from its output-only identifiability construction, distinguishes both from D8 and band power, records `Q_EIN` as unadmitted synthetic evidence, and retains `UNMEASURED`. |
-| A6-3 | `scorecard@1549df47:815`: *“Input needed by a future replacement. The capture deficiency remains.”* | Plan §16.3, lines 2721-2726: *“capture is the currently usable form of that information. Capture is therefore a precondition of the instrument, not a way around it.”* | “Deficiency” left capture looking like a separate obstacle or an alternative route around the instrument. | The M1 card now says the listed captures are part of the current instrument's construction and cannot themselves admit or replace the instrument. |
-| A6-4 | `scorecard@1549df47:1454-1459`: *“M9 remains DEFINITION BLOCKED until M1 admits an independent, higher-sampling, candidate-specific acuity-truth predicate. No threshold invented inside M9 may substitute for it.”* Similar `M1-qualified` shorthand appears in M3 and M11. | Plan §16.1, lines 2690-2693: *“M1 is the current proposed implementation of that condition, not the only mathematically possible one.”* Plan §16.4, lines 2739-2751 adds that a sufficiently powered independent same-resolution reference can normalize relative transfer, while M1 remains *“the only route with a path to an admissible result.”* | The registry dependency was correct, but without an explicit interpretation it could be read as mathematical uniqueness. | A central rule now defines every `M1-qualified`/`M1 truth` reference as registry shorthand for the current usable route. M9 repeats the distinction locally and allows an independently admitted candidate-specific truth producer without pretending one exists today. |
+| A6-3 | `scorecard@1549df47:815`: *“Input needed by a future replacement. The capture deficiency remains.”* | Plan §16.3, lines 2723-2728: *“fresh capture is the currently specified way to obtain that information. Capture is therefore a precondition of the instrument, not a way around it.”* | “Deficiency” left capture looking like a separate obstacle or an alternative route around the instrument. | The M1 card now says the listed captures are part of the currently specified instrument's construction and cannot themselves admit or replace the instrument. |
+| A6-4 | `scorecard@1549df47:1454-1459`: *“M9 remains DEFINITION BLOCKED until M1 admits an independent, higher-sampling, candidate-specific acuity-truth predicate. No threshold invented inside M9 may substitute for it.”* Similar `M1-qualified` shorthand appears in M3 and M11. | Plan §16.1, lines 2690-2693: *“M1 is the current proposed implementation of that condition, not the only mathematically possible one.”* Plan §16.4, lines 2739-2754 adds that a sufficiently powered independent same-resolution reference can normalize relative transfer, while M1 remains *“the only currently specified and physically actionable route with an evidenced path to an admissible result.”* | The registry dependency was correct, but without an explicit interpretation it could be read as mathematical uniqueness. | A central rule now defines every `M1-qualified`/`M1 truth` reference as registry shorthand for the currently specified and physically actionable route. M9 repeats the distinction locally and allows an independently admitted candidate-specific truth producer without pretending one exists today. |
 
 **INFERRED BY READING.** These changes narrow claims; they do not relax an
 instrument, capture, comparator, threshold, or verdict. M1 still has no
@@ -143,7 +142,7 @@ python -B experiments\M160-scope-audit\verify_amendment6.py
 python -B experiments\M160-scope-audit\nc_amendment6.py
 ```
 
-Result: **66/66 checks PASS, `VERDICT GREEN`; 14/14 targeted controls PASS.**
+Result: **67/67 checks PASS, `VERDICT GREEN`; 14/14 targeted controls PASS.**
 The controls individually remove the hedge, universalize the no-reference
 claim, merge proof statuses, make capture a workaround, assert M1 uniqueness,
 promote M2, erase the M8 failure, soften M3, damage the twelve-row partition,
@@ -152,7 +151,9 @@ one whitespace-only reflow remains GREEN.
 
 ## 6. Routed defects outside M160 ownership
 
-These files were not edited.
+These files were not edited by M160. The orchestrator subsequently applied all
+four routed repairs at `44f9c3c0`; the quotations below are retained as the
+historical routing record, not as claims about current file contents.
 
 1. `docs/OWNER-ACTIONS.md:48-50` still says:
 

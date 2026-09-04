@@ -1,0 +1,1058 @@
+{
+  "schema": "M160-request-registration-audit-v1",
+  "method": "Recursive filesystem enumeration and numeric EXIF metadata only; no image pixels decoded. The path/size/mtime tree fingerprint was identical before and after.",
+  "request_root": "D:\\personal\\macro\\requests",
+  "scorecard_baseline_revision": "1bb4c9f8",
+  "exiftool_version": "13.58",
+  "tree_before": {
+    "file_count": 3918,
+    "total_bytes": 149982011502,
+    "path_size_mtime_sha256": "9DD4CF5C29A00560D0DAB40393A14FD1B2873E562C7BF6FD71FB93F9DC8C314D"
+  },
+  "tree_after": {
+    "file_count": 3918,
+    "total_bytes": 149982011502,
+    "path_size_mtime_sha256": "9DD4CF5C29A00560D0DAB40393A14FD1B2873E562C7BF6FD71FB93F9DC8C314D"
+  },
+  "arw_count": 3908,
+  "stack_count": 32,
+  "baseline_registered_count": 22,
+  "baseline_unregistered": [
+    "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f11-cpl",
+    "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f5.6-cpl",
+    "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f8-cpl",
+    "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f11-cpl",
+    "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl",
+    "requests\\7-aperture-pairs\\fabric-weave-f14-sw5-cpl",
+    "requests\\7-aperture-pairs\\fabric-weave-f18-sw5-cpl",
+    "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso200-sw4-cpl",
+    "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso400-sw4-cpl",
+    "requests\\misc-diagnostic\\razor-flat-vertical-slightly-tilted-sw1-cpl"
+  ],
+  "current_registered_count": 32,
+  "current_unregistered": [],
+  "scorecard_paths_not_on_disk": [],
+  "stacks": [
+    {
+      "path": "requests\\10-paper-iso-var",
+      "frame_count": 110,
+      "first_file": "DSC00165.ARW",
+      "last_file": "DSC00274.ARW",
+      "first_datetime": "2026:08:30 19:27:05",
+      "last_datetime": "2026:08:30 19:31:07",
+      "exif": {
+        "ISO": {
+          "100": 10,
+          "125": 10,
+          "160": 10,
+          "200": 10,
+          "250": 10,
+          "320": 10,
+          "400": 10,
+          "50": 10,
+          "500": 5,
+          "64": 10,
+          "640": 5,
+          "80": 10
+        },
+        "ExposureTime": {
+          "0.125": 60,
+          "0.5": 50
+        },
+        "FNumber": {
+          "5.6": 110
+        },
+        "FocalLength": {
+          "200": 110
+        },
+        "ImageStabilization": {
+          "1": 110
+        },
+        "CameraModelName": {
+          "<MISSING>": 110
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 110
+        }
+      }
+    },
+    {
+      "path": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+      "frame_count": 576,
+      "first_file": "DSC00296.ARW",
+      "last_file": "DSC00871.ARW",
+      "first_datetime": "2026:08:30 19:51:12",
+      "last_datetime": "2026:08:30 20:19:20",
+      "exif": {
+        "ISO": {
+          "100": 64,
+          "200": 64,
+          "320": 64,
+          "400": 64,
+          "50": 64,
+          "500": 64,
+          "64": 64,
+          "640": 64,
+          "80": 64
+        },
+        "ExposureTime": {
+          "1.6": 576
+        },
+        "FNumber": {
+          "5.6": 576
+        },
+        "FocalLength": {
+          "200": 576
+        },
+        "ImageStabilization": {
+          "1": 576
+        },
+        "CameraModelName": {
+          "<MISSING>": 576
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 576
+        }
+      }
+    },
+    {
+      "path": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f11-cpl",
+      "frame_count": 143,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00163.ARW",
+      "first_datetime": "2026:08:30 16:57:45",
+      "last_datetime": "2026:08:30 17:04:46",
+      "exif": {
+        "ISO": {
+          "100": 143
+        },
+        "ExposureTime": {
+          "2.5": 143
+        },
+        "FNumber": {
+          "11": 143
+        },
+        "FocalLength": {
+          "200": 143
+        },
+        "ImageStabilization": {
+          "1": 143
+        },
+        "CameraModelName": {
+          "<MISSING>": 143
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 143
+        }
+      }
+    },
+    {
+      "path": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f5.6-cpl",
+      "frame_count": 279,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00299.ARW",
+      "first_datetime": "2026:08:30 16:29:45",
+      "last_datetime": "2026:08:30 16:43:31",
+      "exif": {
+        "ISO": {
+          "100": 279
+        },
+        "ExposureTime": {
+          "2.5": 279
+        },
+        "FNumber": {
+          "5.6": 279
+        },
+        "FocalLength": {
+          "200": 279
+        },
+        "ImageStabilization": {
+          "1": 279
+        },
+        "CameraModelName": {
+          "<MISSING>": 279
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 279
+        }
+      }
+    },
+    {
+      "path": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f8-cpl",
+      "frame_count": 210,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00230.ARW",
+      "first_datetime": "2026:08:30 16:45:30",
+      "last_datetime": "2026:08:30 16:55:50",
+      "exif": {
+        "ISO": {
+          "100": 210
+        },
+        "ExposureTime": {
+          "2.5": 210
+        },
+        "FNumber": {
+          "8": 210
+        },
+        "FocalLength": {
+          "200": 210
+        },
+        "ImageStabilization": {
+          "1": 210
+        },
+        "CameraModelName": {
+          "<MISSING>": 210
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 210
+        }
+      }
+    },
+    {
+      "path": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f11-cpl",
+      "frame_count": 40,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00060.ARW",
+      "first_datetime": "2026:08:30 15:32:46",
+      "last_datetime": "2026:08:30 15:35:08",
+      "exif": {
+        "ISO": {
+          "100": 40
+        },
+        "ExposureTime": {
+          "3.2": 40
+        },
+        "FNumber": {
+          "11": 40
+        },
+        "FocalLength": {
+          "200": 40
+        },
+        "ImageStabilization": {
+          "1": 40
+        },
+        "CameraModelName": {
+          "<MISSING>": 40
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 40
+        }
+      }
+    },
+    {
+      "path": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+      "frame_count": 67,
+      "first_file": "DSC00018.ARW",
+      "last_file": "DSC00084.ARW",
+      "first_datetime": "2026:08:30 15:48:31",
+      "last_datetime": "2026:08:30 15:52:30",
+      "exif": {
+        "ISO": {
+          "100": 67
+        },
+        "ExposureTime": {
+          "3.2": 67
+        },
+        "FNumber": {
+          "5.6": 67
+        },
+        "FocalLength": {
+          "200": 67
+        },
+        "ImageStabilization": {
+          "1": 67
+        },
+        "CameraModelName": {
+          "<MISSING>": 67
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 67
+        }
+      }
+    },
+    {
+      "path": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl",
+      "frame_count": 50,
+      "first_file": "DSC00031.ARW",
+      "last_file": "DSC00080.ARW",
+      "first_datetime": "2026:08:30 15:43:12",
+      "last_datetime": "2026:08:30 15:46:09",
+      "exif": {
+        "ISO": {
+          "100": 50
+        },
+        "ExposureTime": {
+          "3.2": 50
+        },
+        "FNumber": {
+          "8": 50
+        },
+        "FocalLength": {
+          "200": 50
+        },
+        "ImageStabilization": {
+          "1": 50
+        },
+        "CameraModelName": {
+          "<MISSING>": 50
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 50
+        }
+      }
+    },
+    {
+      "path": "requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+      "frame_count": 91,
+      "first_file": "DSC00026.ARW",
+      "last_file": "DSC00116.ARW",
+      "first_datetime": "2026:09:01 21:03:51",
+      "last_datetime": "2026:09:01 21:06:03",
+      "exif": {
+        "ISO": {
+          "100": 91
+        },
+        "ExposureTime": {
+          "1": 91
+        },
+        "FNumber": {
+          "5.6": 91
+        },
+        "FocalLength": {
+          "200": 91
+        },
+        "ImageStabilization": {
+          "1": 91
+        },
+        "CameraModelName": {
+          "<MISSING>": 91
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 91
+        }
+      }
+    },
+    {
+      "path": "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+      "frame_count": 23,
+      "first_file": "DSC00007.ARW",
+      "last_file": "DSC00029.ARW",
+      "first_datetime": "2026:09:01 21:07:18",
+      "last_datetime": "2026:09:01 21:07:50",
+      "exif": {
+        "ISO": {
+          "100": 23
+        },
+        "ExposureTime": {
+          "1": 23
+        },
+        "FNumber": {
+          "5.6": 23
+        },
+        "FocalLength": {
+          "200": 23
+        },
+        "ImageStabilization": {
+          "1": 23
+        },
+        "CameraModelName": {
+          "<MISSING>": 23
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 23
+        }
+      }
+    },
+    {
+      "path": "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+      "frame_count": 55,
+      "first_file": "DSC00015.ARW",
+      "last_file": "DSC00069.ARW",
+      "first_datetime": "2026:09:01 20:57:42",
+      "last_datetime": "2026:09:01 20:59:01",
+      "exif": {
+        "ISO": {
+          "100": 55
+        },
+        "ExposureTime": {
+          "1": 55
+        },
+        "FNumber": {
+          "5.6": 55
+        },
+        "FocalLength": {
+          "200": 55
+        },
+        "ImageStabilization": {
+          "1": 55
+        },
+        "CameraModelName": {
+          "<MISSING>": 55
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 55
+        }
+      }
+    },
+    {
+      "path": "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+      "frame_count": 27,
+      "first_file": "DSC00008.ARW",
+      "last_file": "DSC00034.ARW",
+      "first_datetime": "2026:09:01 21:08:28",
+      "last_datetime": "2026:09:01 21:09:06",
+      "exif": {
+        "ISO": {
+          "100": 27
+        },
+        "ExposureTime": {
+          "1": 27
+        },
+        "FNumber": {
+          "5.6": 27
+        },
+        "FocalLength": {
+          "200": 27
+        },
+        "ImageStabilization": {
+          "1": 27
+        },
+        "CameraModelName": {
+          "<MISSING>": 27
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 27
+        }
+      }
+    },
+    {
+      "path": "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+      "frame_count": 46,
+      "first_file": "DSC00024.ARW",
+      "last_file": "DSC00069.ARW",
+      "first_datetime": "2026:09:01 21:00:34",
+      "last_datetime": "2026:09:01 21:01:39",
+      "exif": {
+        "ISO": {
+          "100": 46
+        },
+        "ExposureTime": {
+          "1": 46
+        },
+        "FNumber": {
+          "5.6": 46
+        },
+        "FocalLength": {
+          "200": 46
+        },
+        "ImageStabilization": {
+          "1": 46
+        },
+        "CameraModelName": {
+          "<MISSING>": 46
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 46
+        }
+      }
+    },
+    {
+      "path": "requests\\6-11-extended-dark-frames",
+      "frame_count": 506,
+      "first_file": "DSC00872.ARW",
+      "last_file": "DSC01377.ARW",
+      "first_datetime": "2026:08:30 22:09:38",
+      "last_datetime": "2026:08:30 22:44:30",
+      "exif": {
+        "ISO": {
+          "100": 88,
+          "1000": 88,
+          "160": 88,
+          "2000": 88,
+          "400": 66,
+          "800": 88
+        },
+        "ExposureTime": {
+          "0.125": 88,
+          "1": 132,
+          "10": 22,
+          "2.5": 132,
+          "5": 132
+        },
+        "FNumber": {
+          "5.6": 506
+        },
+        "FocalLength": {
+          "200": 506
+        },
+        "ImageStabilization": {
+          "1": 506
+        },
+        "CameraModelName": {
+          "<MISSING>": 506
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 506
+        }
+      }
+    },
+    {
+      "path": "requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+      "frame_count": 109,
+      "first_file": "DSC00001.ARW",
+      "last_file": "DSC00109.ARW",
+      "first_datetime": "2026:08:29 17:42:27",
+      "last_datetime": "2026:08:29 17:45:31",
+      "exif": {
+        "ISO": {
+          "100": 109
+        },
+        "ExposureTime": {
+          "1.3": 109
+        },
+        "FNumber": {
+          "11": 109
+        },
+        "FocalLength": {
+          "200": 109
+        },
+        "ImageStabilization": {
+          "1": 109
+        },
+        "CameraModelName": {
+          "<MISSING>": 109
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 109
+        }
+      }
+    },
+    {
+      "path": "requests\\7-aperture-pairs\\fabric-weave-f14-sw5-cpl",
+      "frame_count": 83,
+      "first_file": "DSC00001.ARW",
+      "last_file": "DSC00083.ARW",
+      "first_datetime": "2026:08:29 17:46:27",
+      "last_datetime": "2026:08:29 17:48:46",
+      "exif": {
+        "ISO": {
+          "100": 83
+        },
+        "ExposureTime": {
+          "1.3": 83
+        },
+        "FNumber": {
+          "14": 83
+        },
+        "FocalLength": {
+          "200": 83
+        },
+        "ImageStabilization": {
+          "1": 83
+        },
+        "CameraModelName": {
+          "<MISSING>": 83
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 83
+        }
+      }
+    },
+    {
+      "path": "requests\\7-aperture-pairs\\fabric-weave-f18-sw5-cpl",
+      "frame_count": 71,
+      "first_file": "DSC00001.ARW",
+      "last_file": "DSC00071.ARW",
+      "first_datetime": "2026:08:29 17:49:47",
+      "last_datetime": "2026:08:29 17:51:46",
+      "exif": {
+        "ISO": {
+          "100": 71
+        },
+        "ExposureTime": {
+          "1.3": 71
+        },
+        "FNumber": {
+          "18": 71
+        },
+        "FocalLength": {
+          "200": 71
+        },
+        "ImageStabilization": {
+          "1": 71
+        },
+        "CameraModelName": {
+          "<MISSING>": 71
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 71
+        }
+      }
+    },
+    {
+      "path": "requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+      "frame_count": 210,
+      "first_file": "DSC00001.ARW",
+      "last_file": "DSC00210.ARW",
+      "first_datetime": "2026:08:29 17:27:06",
+      "last_datetime": "2026:08:29 17:33:01",
+      "exif": {
+        "ISO": {
+          "100": 210
+        },
+        "ExposureTime": {
+          "1.3": 210
+        },
+        "FNumber": {
+          "5.6": 210
+        },
+        "FocalLength": {
+          "200": 210
+        },
+        "ImageStabilization": {
+          "1": 210
+        },
+        "CameraModelName": {
+          "<MISSING>": 210
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 210
+        }
+      }
+    },
+    {
+      "path": "requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+      "frame_count": 150,
+      "first_file": "DSC00001.ARW",
+      "last_file": "DSC00150.ARW",
+      "first_datetime": "2026:08:29 17:37:38",
+      "last_datetime": "2026:08:29 17:41:52",
+      "exif": {
+        "ISO": {
+          "100": 150
+        },
+        "ExposureTime": {
+          "1.3": 150
+        },
+        "FNumber": {
+          "8": 150
+        },
+        "FocalLength": {
+          "200": 150
+        },
+        "ImageStabilization": {
+          "1": 150
+        },
+        "CameraModelName": {
+          "<MISSING>": 150
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 150
+        }
+      }
+    },
+    {
+      "path": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl",
+      "frame_count": 65,
+      "first_file": "DSC00016.ARW",
+      "last_file": "DSC00080.ARW",
+      "first_datetime": "2026:08:29 22:48:04",
+      "last_datetime": "2026:08:29 22:52:49",
+      "exif": {
+        "ISO": {
+          "100": 65
+        },
+        "ExposureTime": {
+          "4": 65
+        },
+        "FNumber": {
+          "11": 65
+        },
+        "FocalLength": {
+          "200": 65
+        },
+        "ImageStabilization": {
+          "1": 65
+        },
+        "CameraModelName": {
+          "<MISSING>": 65
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 65
+        }
+      }
+    },
+    {
+      "path": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl",
+      "frame_count": 120,
+      "first_file": "DSC00040.ARW",
+      "last_file": "DSC00159.ARW",
+      "first_datetime": "2026:08:29 22:15:12",
+      "last_datetime": "2026:08:29 22:24:03",
+      "exif": {
+        "ISO": {
+          "100": 120
+        },
+        "ExposureTime": {
+          "4": 120
+        },
+        "FNumber": {
+          "5.6": 120
+        },
+        "FocalLength": {
+          "200": 120
+        },
+        "ImageStabilization": {
+          "1": 120
+        },
+        "CameraModelName": {
+          "<MISSING>": 120
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 120
+        }
+      }
+    },
+    {
+      "path": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl",
+      "frame_count": 85,
+      "first_file": "DSC00026.ARW",
+      "last_file": "DSC00110.ARW",
+      "first_datetime": "2026:08:29 22:38:11",
+      "last_datetime": "2026:08:29 22:44:25",
+      "exif": {
+        "ISO": {
+          "100": 85
+        },
+        "ExposureTime": {
+          "4": 85
+        },
+        "FNumber": {
+          "8": 85
+        },
+        "FocalLength": {
+          "200": 85
+        },
+        "ImageStabilization": {
+          "1": 85
+        },
+        "CameraModelName": {
+          "<MISSING>": 85
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 85
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso100-sw4-cpl",
+      "frame_count": 30,
+      "first_file": "DSC00011.ARW",
+      "last_file": "DSC00040.ARW",
+      "first_datetime": "2026:09:01 20:15:20",
+      "last_datetime": "2026:09:01 20:21:43",
+      "exif": {
+        "ISO": {
+          "100": 30
+        },
+        "ExposureTime": {
+          "13": 30
+        },
+        "FNumber": {
+          "5.6": 30
+        },
+        "FocalLength": {
+          "200": 30
+        },
+        "ImageStabilization": {
+          "1": 30
+        },
+        "CameraModelName": {
+          "<MISSING>": 30
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 30
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso200-sw4-cpl",
+      "frame_count": 27,
+      "first_file": "DSC00014.ARW",
+      "last_file": "DSC00040.ARW",
+      "first_datetime": "2026:09:01 20:29:18",
+      "last_datetime": "2026:09:01 20:35:02",
+      "exif": {
+        "ISO": {
+          "200": 27
+        },
+        "ExposureTime": {
+          "13": 27
+        },
+        "FNumber": {
+          "5.6": 27
+        },
+        "FocalLength": {
+          "200": 27
+        },
+        "ImageStabilization": {
+          "1": 27
+        },
+        "CameraModelName": {
+          "<MISSING>": 27
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 27
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso400-sw4-cpl",
+      "frame_count": 27,
+      "first_file": "DSC00014.ARW",
+      "last_file": "DSC00040.ARW",
+      "first_datetime": "2026:09:01 20:42:25",
+      "last_datetime": "2026:09:01 20:48:09",
+      "exif": {
+        "ISO": {
+          "400": 27
+        },
+        "ExposureTime": {
+          "13": 27
+        },
+        "FNumber": {
+          "5.6": 27
+        },
+        "FocalLength": {
+          "200": 27
+        },
+        "ImageStabilization": {
+          "1": 27
+        },
+        "CameraModelName": {
+          "<MISSING>": 27
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 27
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+      "frame_count": 60,
+      "first_file": "DSC00016.ARW",
+      "last_file": "DSC00075.ARW",
+      "first_datetime": "2026:09:02 20:28:39",
+      "last_datetime": "2026:09:02 20:30:05",
+      "exif": {
+        "ISO": {
+          "100": 60
+        },
+        "ExposureTime": {
+          "1": 60
+        },
+        "FNumber": {
+          "5.6": 60
+        },
+        "FocalLength": {
+          "200": 60
+        },
+        "ImageStabilization": {
+          "1": 60
+        },
+        "CameraModelName": {
+          "<MISSING>": 60
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 60
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+      "frame_count": 61,
+      "first_file": "DSC00020.ARW",
+      "last_file": "DSC00080.ARW",
+      "first_datetime": "2026:09:02 20:24:07",
+      "last_datetime": "2026:09:02 20:27:06",
+      "exif": {
+        "ISO": {
+          "100": 61
+        },
+        "ExposureTime": {
+          "2.5": 61
+        },
+        "FNumber": {
+          "5.6": 61
+        },
+        "FocalLength": {
+          "200": 61
+        },
+        "ImageStabilization": {
+          "1": 61
+        },
+        "CameraModelName": {
+          "<MISSING>": 61
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 61
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+      "frame_count": 65,
+      "first_file": "DSC00015.ARW",
+      "last_file": "DSC00079.ARW",
+      "first_datetime": "2026:09:02 20:13:04",
+      "last_datetime": "2026:09:02 20:20:19",
+      "exif": {
+        "ISO": {
+          "100": 65
+        },
+        "ExposureTime": {
+          "6": 65
+        },
+        "FNumber": {
+          "5.6": 65
+        },
+        "FocalLength": {
+          "200": 65
+        },
+        "ImageStabilization": {
+          "1": 65
+        },
+        "CameraModelName": {
+          "<MISSING>": 65
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 65
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+      "frame_count": 92,
+      "first_file": "DSC00016.ARW",
+      "last_file": "DSC00107.ARW",
+      "first_datetime": "2026:09:02 20:52:52",
+      "last_datetime": "2026:09:02 20:55:04",
+      "exif": {
+        "ISO": {
+          "100": 92
+        },
+        "ExposureTime": {
+          "1": 92
+        },
+        "FNumber": {
+          "5.6": 92
+        },
+        "FocalLength": {
+          "200": 92
+        },
+        "ImageStabilization": {
+          "1": 92
+        },
+        "CameraModelName": {
+          "<MISSING>": 92
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 92
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+      "frame_count": 182,
+      "first_file": "DSC00031.ARW",
+      "last_file": "DSC00212.ARW",
+      "first_datetime": "2026:09:02 20:46:50",
+      "last_datetime": "2026:09:02 20:51:13",
+      "exif": {
+        "ISO": {
+          "100": 182
+        },
+        "ExposureTime": {
+          "1": 182
+        },
+        "FNumber": {
+          "5.6": 182
+        },
+        "FocalLength": {
+          "200": 182
+        },
+        "ImageStabilization": {
+          "1": 182
+        },
+        "CameraModelName": {
+          "<MISSING>": 182
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 182
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+      "frame_count": 197,
+      "first_file": "DSC00004.ARW",
+      "last_file": "DSC00200.ARW",
+      "first_datetime": "2026:09:02 20:57:12",
+      "last_datetime": "2026:09:02 21:01:58",
+      "exif": {
+        "ISO": {
+          "100": 197
+        },
+        "ExposureTime": {
+          "1": 197
+        },
+        "FNumber": {
+          "5.6": 197
+        },
+        "FocalLength": {
+          "200": 197
+        },
+        "ImageStabilization": {
+          "1": 197
+        },
+        "CameraModelName": {
+          "<MISSING>": 197
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 197
+        }
+      }
+    },
+    {
+      "path": "requests\\misc-diagnostic\\razor-flat-vertical-slightly-tilted-sw1-cpl",
+      "frame_count": 51,
+      "first_file": "DSC00021.ARW",
+      "last_file": "DSC00071.ARW",
+      "first_datetime": "2026:08:29 23:23:38",
+      "last_datetime": "2026:08:29 23:32:29",
+      "exif": {
+        "ISO": {
+          "100": 51
+        },
+        "ExposureTime": {
+          "10": 51
+        },
+        "FNumber": {
+          "11": 51
+        },
+        "FocalLength": {
+          "200": 51
+        },
+        "ImageStabilization": {
+          "1": 51
+        },
+        "CameraModelName": {
+          "<MISSING>": 51
+        },
+        "LensModel": {
+          "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter": 51
+        }
+      }
+    }
+  ]
+}

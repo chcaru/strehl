@@ -1,17 +1,31 @@
 # strehl — pre-registered SOTA scorecard
 
-**Status: SPEC / PRE-REGISTRATION v1.9 (2026-09-06).** The v1.0 metric, bar, and
+**Status: SPEC / PRE-REGISTRATION v1.10 (2026-09-04).** The v1.0 metric, bar, and
 control protocol was written before implementation lanes reported outcomes.
 Subsequent revisions quarantine leaked evidence, classify captures before use, or
 withdraw/tighten an instrument defeated by independent commissioning; each change is
-recorded below. No v1.9 score output has been read. The competitive position remains
+recorded below. No v1.10 score output has been read. The competitive position remains
 **UNKNOWN**.
+
+**Revision 1.10 — razor ruling and request-register closure, with no bar or verdict
+movement:** the razor remains barred from every positive M1/detail use, including an
+aperture-ordering statistic that fits no edge locus. Its fixed subject geometry is
+filtered differently by each arm and therefore does not cancel from an arbitrary
+score. More decisively, M164's independent two-world construction proves that even
+the exact expected aperture order and relative Airy attenuation can survive common
+post-render sharpening; M166's audit also rejects cancellation in the actual
+request-19 arms. The broad-boundary exception is M3-specific, not a general
+no-registration exception. Razor captures may still reject a candidate in development,
+but cannot tune, admit, qualify, or score one. A read-only filesystem and EXIF census
+also closes the request register: all 32 ARW-bearing directories are now explicitly
+classified. The protected three-arm fabric-weave holdout remains sealed; this revision
+does not authorize a render or score.
 
 **Revision 1.9 — Amendment 6 scope correction, with no bar or verdict movement:**
 the output-only detail/noise limitation now retains its load-bearing qualification,
 *“without an assumption or observation outside those outputs”*; the scorecard no
 longer permits the three failed instruments to read as one theorem; capture is
-identified as a precondition of the current usable instrument rather than an
+identified as a precondition of the currently specified instrument route rather than an
 alternative to it; and every `M1`-qualification reference is explicitly registry
 shorthand for the current practical route, not a claim that M1 is the unique
 mathematical anchor. A validated external model, prior, reference, or narrowly scoped
@@ -79,7 +93,7 @@ explicit in the timing protocol. It imports no phase-1 acceptance bar and no mea
 quality result.
 
 This document owns the definition and protocol, not a result. The first render of any
-scored capture **under this protocol** seals v1.9; pre-existing unrelated masters are
+scored capture **under this protocol** seals v1.10; pre-existing unrelated masters are
 not score outputs. A later change to an instrument, bar, eligibility rule, comparator
 setting, capture, or aggregation rule requires a numbered revision and a fresh
 holdout capture. Existing score outputs may then be used only for development.
@@ -145,7 +159,7 @@ or verdict from one into the other. SOTA is not an average, a weighted score, or
 > the retained May 17 executable postdates the render by six days and is not its
 > producer (`docs/research/M162-noise-regression.md`, "Correction to the premise"
 > clause). That byte-pinned artifact is **HISTORICAL /
-> `PRODUCT_NATIVE_END_TO_END` DIAGNOSTIC ONLY**, not a v1.9 scored arm. The first
+> `PRODUCT_NATIVE_END_TO_END` DIAGNOSTIC ONLY**, not a v1.10 scored arm. The first
 > retained fork commit, `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`, makes a fresh
 > rebuild plausibly constructible but does not establish that it builds. Until a
 > qualifying rebuild exists, every fork result cell is `UNMEASURED` under blocker
@@ -188,7 +202,7 @@ document’s proposed completions, not claims that the governing proposal alread
    speed, or memory envelope only if it passes the input/output transfer audit and
    retains at least `98%` of the highest replacement-M1 information score achieved by
    any registered mode on that capture. This stops a deliberately blurred fast/quiet
-   mode from becoming the quality comparator. In v1.9 no mode can yet be
+   mode from becoming the quality comparator. In v1.10 no mode can yet be
    quality-qualified for a claim that contains scene detail. A separately
    commissioned M2 protocol on input-certified featureless or deliberately defocused
    ground is exempt because its stated scope contains no photographic-detail claim;
@@ -251,7 +265,7 @@ document’s proposed completions, not claims that the governing proposal alread
    instrument must state its physical optical/sampling ceiling and refuse above it.
    Existing FRC, slanted-edge, and single-image certificate readings remain
    `UNLICENSED_GT_0.25` unless separately admitted under this rule. No licensed
-   high-frequency instrument exists in v1.9, so every current reading above
+   high-frequency instrument exists in v1.10, so every current reading above
    `0.25 cyc/native px` remains `UNLICENSED_GT_0.25`. Absence of such an instrument
    makes only that band `UNMEASURED`; it does not permanently forbid a future C1 or
    C12 instrument from earning credit there.
@@ -279,13 +293,14 @@ limited: no statistic can universally certify latent signal provenance when the 
 observed pixels admit opposite ground-truth labels.
 
 Throughout this scorecard, `M1-qualified`, `M1 truth`, and equivalent phrases are
-registry shorthand for the **current usable route** to an independently anchored
-detail/transfer judgement. M1 is not the unique mathematical anchor. A sufficiently
+registry shorthand for the **currently specified and physically actionable route**
+to an independently anchored detail/transfer judgement. M1 is not the unique
+mathematical anchor. A sufficiently
 powered independent same-resolution reference could in principle normalize relative
 transfer, but no such archive-qualified route is admitted today. This changes the
 justification, not the schedule, bar, or current blocker cascade. Capture likewise
 does not replace or “shoot around” an instrument: it supplies identifying information
-and is a precondition of the current usable instrument.
+and is a precondition of the currently specified instrument route.
 
 ### 0.2 Joint anti-cheat constraints
 
@@ -506,19 +521,25 @@ term rather than subject/object identity (rule 35, lines 457–462). Accordingly
    overconfident certificate, permuted depth, a 60-second timed delay, and a 7-GiB
    allocation. Every applicable gate must fail.
 4. A failed commissioning result voids the metric. It may not be repaired against the
-   scored captures under v1.9.
+   scored captures under v1.10.
 
 ## 2. Frozen capture set
 
 ### 2.1 Read-only inventory
 
-The trees were enumerated with `Get-ChildItem -Force` on 2026-09-02 and were never
-written:
+The full trees were enumerated with `Get-ChildItem -Force` on 2026-09-02 and were
+never written:
 
 - `D:\personal\macro`: `10,067` files, `9,852` ARWs, `429.352 GiB`;
 - `D:\personal\macro\requests`: `3,261` files, `3,251` ARWs, `115.321 GiB`.
 
-The prompt’s approximate requests count of 3,361 is not the current filesystem count.
+Those are the historical pre-slide totals. A v1.10 request-only re-audit enumerated
+`3,918` files, `3,908` ARWs, `139.682 GiB`, and exactly `32` ARW-bearing directories
+under `D:\personal\macro\requests`. ExifTool `13.58` read the headers of all `3,908`
+ARWs; the path/size/mtime tree fingerprint was identical before and after. The
+machine-readable census is
+`experiments/M160-razor-ruling/request-audit.json`.
+
 All input derivatives, manifests, and outputs must be written beneath
 `experiments/SCORECARD/`, never to either capture tree.
 
@@ -543,13 +564,21 @@ other wording implies holdout status.
 | `requests\7-aperture-pairs\fabric-weave-f5.6-sw5-cpl` | 210; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Natural oriented high-frequency and colour-seam stress. |
 | `requests\7-aperture-pairs\fabric-weave-f8-sw5-cpl` | 150; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Aperture robustness. |
 | `requests\7-aperture-pairs\fabric-weave-f11-sw5-cpl` | 109; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Aperture robustness / diffraction control. |
+| `requests\7-aperture-pairs\fabric-weave-f14-sw5-cpl` | 83; ISO 100, 1.3 s | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | M129 aperture-spectrum outcome already read; development evidence only and never an M1 scored arm. |
+| `requests\7-aperture-pairs\fabric-weave-f18-sw5-cpl` | 71; ISO 100, 1.3 s | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | M129 aperture-spectrum outcome already read; development evidence only and never an M1 scored arm. |
 | `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl` | 120 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Outcome already read by M-PHASE0-CURV (`:167`, `+0.316961 [+0.078558,+0.543411]`, DETECTED-SMALL). Was M5 depth coverage and conditional M10 slope; M10 now needs a fresh metrology-backed unit. |
 | `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f8-sw7-cpl` | 85 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Outcome already read by M-PHASE0-CURV (`:168`, `+0.047308 [-0.265968,+0.261226]`, UNRESOLVED). |
 | `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f11-sw7-cpl` | 65 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Outcome already read by M-PHASE0-CURV (`:169`) *and* M-PHASE0-LCA (`:125,181`, the "primary ruler"). |
 | `requests\12-bee-iso-var-no-bracket-32-repeat-diff-light` | 576 total | **HOLDOUT — QUALITY** | Independent repeated exposures for M1/M2/M9. Bright ISO 100 is `DSC00328.ARW`–`DSC00359.ARW`; second-light ISO 100 is `DSC00584.ARW`–`DSC00615.ARW`, 32 each, 1.6 s, f/5.6. |
 | `requests\10-paper-iso-var` | 110 total | **CONTROL — NOT HOLDOUT** | Flat/noise transfer control. ISO 100, 1/8 s is `DSC00245.ARW`–`DSC00249.ARW`. The actual EXIF census includes ISO 250 although the README list omits it. |
 | `requests\6-11-extended-dark-frames` | 506 | **CONTROL — NOT HOLDOUT** | Independent temporal-noise and fixed-pattern floor; never an image-quality subject. |
-| `requests\19-razor-edge\horizontal-flat\razor-edge-horizontal-flat-sw4-f5.6-cpl` | 67 | **CONTROL — NOT HOLDOUT** | Isolated bright-on-dark boundary control for M3 only. The razor is forbidden for M1. |
+| `requests\19-razor-edge\horizontal-flat\razor-edge-horizontal-flat-sw4-f5.6-cpl` | 67; ISO 100, 3.2 s, f/5.6 | **CONTROL — NOT HOLDOUT** | Frozen M3 broad-boundary control and M128 development material. It may reject a detail candidate but can never supply positive M1 evidence. |
+| `requests\19-razor-edge\horizontal-flat\razor-edge-horizontal-flat-sw4-f8-cpl` | 50; ISO 100, 3.2 s, f/8 | **CONTROL — NOT HOLDOUT** | M128-consumed aperture/edge development. Negative-only for detail; never positive M1 evidence. |
+| `requests\19-razor-edge\horizontal-flat\razor-edge-horizontal-flat-sw4-f11-cpl` | 40; ISO 100, 3.2 s, f/11 | **CONTROL — NOT HOLDOUT** | M128-consumed aperture/edge development. Negative-only for detail; never positive M1 evidence. |
+| `requests\19-razor-edge\diagonal-tilt-all-axes\diagonal-tilt-all-axes-sw4-f5.6-cpl` | 279; ISO 100, 2.5 s, f/5.6 | **CONTROL — NOT HOLDOUT** | Razor aperture-ordering/detail use refused; broad-boundary development or negative-only candidate challenge only. |
+| `requests\19-razor-edge\diagonal-tilt-all-axes\diagonal-tilt-all-axes-sw4-f8-cpl` | 210; ISO 100, 2.5 s, f/8 | **CONTROL — NOT HOLDOUT** | Razor aperture-ordering/detail use refused; broad-boundary development or negative-only candidate challenge only. |
+| `requests\19-razor-edge\diagonal-tilt-all-axes\diagonal-tilt-all-axes-sw4-f11-cpl` | 143; ISO 100, 2.5 s, f/11 | **CONTROL — NOT HOLDOUT** | Razor aperture-ordering/detail use refused; broad-boundary development or negative-only candidate challenge only. |
+| `requests\misc-diagnostic\razor-flat-vertical-slightly-tilted-sw1-cpl` | 51; ISO 100, 10 s, f/11 | **DEVELOPMENT — NOT HOLDOUT** | M128 focus-step systematic control. The razor prohibition applies; never positive M1 evidence. |
 | `duck-tape-side-layers-cpl` | 197 | **HOLDOUT — QUALITY** | Thin fibres crossing textured ground; occlusion/ghost stress. |
 | `chia-seeds-cpl` | 130 | **HOLDOUT — QUALITY** | Deep-crevice broad-veil specimen. |
 | `flower-bud-with-background-fern-cpl` | 299 | **HOLDOUT — QUALITY** | Dense multi-layer occlusion and coverage stress. |
@@ -557,16 +586,66 @@ other wording implies holdout status.
 | `medication-pill-cpl` | 146 | **HOLDOUT — QUALITY** | Low-contrast powder/focus-election stress. |
 | `foam` | 100 | **HOLDOUT — QUALITY** | Specular, coloured, near-rail highlight stress. |
 | `requests\misc-diagnostic\flat-round-3V-battery-cpl\flat-round-3V-battery-iso100-sw4-cpl` | 30 | **HOLDOUT — QUALITY** | Reflective neutral metal, fine scratches, clipping/colour-seam stress. |
+| `requests\misc-diagnostic\flat-round-3V-battery-cpl\flat-round-3V-battery-iso200-sw4-cpl` | 27; ISO 200, 13 s, f/5.6 | **CONTROL — NOT HOLDOUT** | ISO/noise and frame-count sensitivity control; never substitutes for the protected ISO-100 score arm. |
+| `requests\misc-diagnostic\flat-round-3V-battery-cpl\flat-round-3V-battery-iso400-sw4-cpl` | 27; ISO 400, 13 s, f/5.6 | **CONTROL — NOT HOLDOUT** | ISO/noise and frame-count sensitivity control; never substitutes for the protected ISO-100 score arm. |
 | `maldon-sea-salt-cpl` | 255 | **HOLDOUT — QUALITY** | Translucent facets and recoverable highlights. |
 | `highly-angled-ruler-mm-cpl` | 299 | **HOLDOUT — QUALITY** | Neutral edges and lateral-colour stress. |
 | `bee-1-cpl` | 299, `DSC00001.ARW`–`DSC00299.ARW` | **HOLDOUT — PERFORMANCE** | 33 MP wall-clock and memory master. First 100 frames are the live-latency arm. |
 | `coffee-bean` | 105 ARWs, `DSC00016.ARW`–`DSC00120.ARW` | **FIXED HISTORICAL BENCHMARK — NOT HOLDOUT** | Comparator continuity and medium-N speed; never used to recover the retracted detail claim. |
 | `113MSDCF` | 63 ARWs, `DSC00001.ARW`–`DSC00063.ARW` | **HISTORICAL CONTROL — NOT HOLDOUT** | `Contrast2012` regression sentinel only; not a primary acuity subject. |
 
-The razor’s measured `1.23 green px` locus raggedness makes it
-resolution-ineligible; using it for M1 would repeat a known failure. It remains useful
-for broad boundary profiles, where the checker does not self-register the edge to
-sharpen it.
+**Ruling — the razor prohibition binds every positive M1/detail use.** It is not
+limited to statistics that fit a line, estimate `f_c`, or self-register the edge.
+It therefore bars the proposed three-aperture ordering statistic from using any razor
+capture to tune, admit, qualify, or score itself. A razor result may only reject a
+candidate in development. The existing broad-boundary exception is specific to M3:
+there the edge is an artifact boundary, not a straightness-dependent resolution truth.
+
+The common-subject argument does not clear the bar. For arm `N`, the observation is
+`I_N = S * h_N + epsilon_N`; the fixed subject `S` remains inside the arm-specific
+convolution and therefore does not cancel from an arbitrary scalar `q(I_N)`. The
+ragged locus can be attenuated and reweighted differently by the three optical,
+sampling, and stack operators. Without a pre-registered proof that `q` is monotone
+under those actual operators for every allowed fixed locus, a subject-induced
+ordering or inversion cannot be excluded.
+
+M166's read-only audit of all `789` request-19 headers and retained M128 evidence
+rejects cancellation on this capture directly (`4dc266e7`). Common-coordinate locus
+RMS is `1.77638/1.64144/1.91766 green px` at f/5.6/f/8/f/11, decomposing into
+`1.63194 px` shared and `0.70697 px` aperture-specific components; the independent
+two-green-plane registration component also spreads by `33%`. The arms cover unequal
+focus spans, and their frame/photon budgets are aligned with the desired order.
+ExifTool already folds the 2× teleconverter into the reported focal length and
+f-number, so doubling those f-numbers again does not establish that all three complete
+imaging operators are diffraction-ordered.
+
+The ruling does not depend on that unresolved possibility. M164's independent
+counterexample at `77fbc946` grants the strongest premise — true diffraction transfer
+strictly decreases from f/5.6 to f/8 to f/11 — and constructs two worlds with
+identical rendered triplets: `Y_i = K H_i X = H_i K X`. One world contains common
+post-render sharpening; the other contains a sharper latent scene. Both recover the
+correct aperture order, common USM raises every score by `1.409469446×`, the relative
+score vector matches the predicted Airy attenuation to `1.11e-15`, and the arrays
+match exactly. Aperture order is therefore a necessary screen and useful model check,
+not a truth reference that identifies resolved-detail provenance.
+
+M128 independently supplies the capture-specific warning: straight-line recovery
+passes at `0.02` and fails at `0.03 green px RMS`, while this razor measures
+`1.23 green px RMS` (`54×` over), and per-column registration biases `f_c` by
+`+91.05%` even at zero wander. Its required straight-edge truth target remains a
+lithographic chrome-on-glass edge, not a razor.
+
+This is also a precedent rule: “the defect is common across arms” never overrides a
+capture's claim-specific ineligibility. A future monotonicity proof would require a
+new pre-results scorecard amendment; it cannot be inferred from a favourable order.
+The three registered fabric-weave holdouts remain sealed, and this ruling does not
+authorize their render, measurement, or score.
+
+**Request-register closure.** The v1.10 audit found ten previously unregistered
+ARW-bearing directories: five additional `19-razor-edge` arms, fabric f/14 and f/18,
+battery ISO 200 and 400, and the vertical sw1 razor. All ten now have explicit rows
+above. The current request tree contains `32/32` registered ARW-bearing directories;
+no scorecard request path is absent on disk.
 
 ### 2.3 Holdout units and burn log
 
@@ -608,7 +687,7 @@ same-focus bee sentinel; M5 retains ruler/natural holdouts but still lacks its
 replacement controlled-slide holdout; M9 retains bee repeats but lacks independent
 depth-stack truth.
 
-**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.9** until a
+**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.10** until a
 fresh untouched subject/session supplies,
 at identical subject geometry, exposure, ISO, aperture, and focal length with
 **IBIS off**:
@@ -682,7 +761,7 @@ completions — including freezing D5's “roughly 2x” as `<=2.00` — are
 **SCORECARD ADDITIONS** because the proposal is silent, approximate, or contains
 `[bar]`.
 
-### 3.1 Measurement readiness as of v1.9
+### 3.1 Measurement readiness as of v1.10
 
 This table separates scientific blockers from the baseline's single pre-metric
 refusal. Codes are the owner's requested categories: **(a)** missing admissible
@@ -704,7 +783,7 @@ and **(e)** scientifically measurable now. The archived fork output cannot clear
 | M6 | **(a)(b)(c)(d)** | The rail census is executable, but the registered capture set has fewer than 10,000 recoverable samples and the full axis includes detail retention and comparators. |
 | M7 | **(b)(c)(d)** | No traceable colour target exists. |
 | M8 | **(e) for M8-R; M8-O v1.5 `UNMEASURED`** | **M8 remains `FAIL`: M8-R is `1.030569%` against the achievable `0.0000%` bar.** M8-R is the only produced-and-read score against an achievable bar. The historical M8-O v1.4 `1.326144%` figure is superseded because its bar was impossible as written; the corrected v1.5 checker at `e5489d64` has not been recommissioned, so no v1.5 M8-O score exists. |
-| M9 | **DEFINITION BLOCKED — `DEFINITION_BLOCKED_M1_TRUTH`; (a)(c)** | No independent candidate-specific acuity-truth producer is admitted through the current M1 registry route; the balanced manifest, repeat captures/truth, calibration, and certificate product are also absent. M1 is the only usable route today, not a unique mathematical anchor. The downstream contract is not presently scoreable. |
+| M9 | **DEFINITION BLOCKED — `DEFINITION_BLOCKED_M1_TRUTH`; (a)(c)** | No independent candidate-specific acuity-truth producer is admitted through the current M1 registry route; the balanced manifest, repeat captures/truth, calibration, and certificate product are also absent. M1 is the only currently specified and physically actionable route with an evidenced path today, not a unique mathematical anchor. The downstream contract is not presently scoreable. |
 | M10 | **DEFINITION BLOCKED beyond M163; (b)(c)** | M163 repaired uncertainty handling only. The target-valid predicate, stored depth/invalid encoding, flat-null reduction, and layer-confusion/boundary population remain undefined; no scored truth capture or compatible product exists. |
 | M11 | **DEFINED; `UNMEASURED_COMPARATOR_QUALIFICATION`; absolute timing QUARANTINED** | M1/M2 qualification, required common-input comparator outputs, the fresh hash-bound fork, frozen modes, timing harness, trace, reboot receipts, and quiet-host release are absent. STATUS §2.9.55's `93.2%` mean host CPU makes current absolute wall time inadmissible. |
 | M12 | **(e), scheduled; formal value UNMEASURED** | Hashes and process-tree RSS need no detail, comparator or holdout. Existing out-of-protocol evidence diagnoses fixed-worker determinism as holding and cross-worker scaling invariance as failing, but the registered N/worker matrix still requires the reserved quiet host. |
@@ -856,7 +935,7 @@ numeric bar changes. The superseding result strengthens the admission requiremen
 a replacement needs structural sharpening protection plus the full commissioned
 battery; it does not resurrect or select a statistic.
 
-**Input needed by the current usable replacement route.** These captures are part of
+**Input needed by the currently specified replacement route.** These captures are part of
 the instrument's construction, not an alternative to the instrument or a way to
 “shoot around” it:
 
@@ -868,7 +947,7 @@ the instrument's construction, not an alternative to the instrument or a way to
 The burned grid and the development-only high-resolution slide may commission a new
 instrument but may never provide its scored value.
 
-**Exact computation.** None is admitted in v1.9. A replacement must be
+**Exact computation.** None is admitted in v1.10. A replacement must be
 pre-registered before its fresh holdout is rendered, must declare and commission its
 licensed frequency range, and must be implemented and audited independently of the
 pipeline producing the render. Any claimed band above `0.25 cyc/native px` must also
@@ -941,7 +1020,7 @@ ROIs total and 16 per light must qualify.
    `sigma_ideal = sigma_1 * sqrt(2/16)`.
 4. `eta = sigma_res / sigma_ideal`. On a natural-detail target, the comparator ratio
    uses paired ROIs and only modes within `98%` of a future replacement-M1 information
-   envelope; no mode qualifies by that route in v1.9. An M1-independent replacement
+   envelope; no mode qualifies by that route in v1.10. An M1-independent replacement
    may instead use a pre-registered, input-certified featureless or deliberately
    defocused target whose scope makes no photographic-detail claim. No such
    instrument or qualifying common-merge comparator output exists today.
@@ -1512,8 +1591,8 @@ current text cannot choose between those manifests.
 The D8/FRC channel cannot fill this hole: common post-noise blur or sharpening leaves
 that statistic invariant, so it cannot establish delivered acuity. M9 remains
 **DEFINITION BLOCKED** until the scorecard registry admits an independent,
-candidate-specific acuity-truth predicate. M1 is the current usable route to that
-truth, not the unique mathematical anchor; a sufficiently powered independent
+candidate-specific acuity-truth predicate. M1 is the currently specified and
+physically actionable route to that truth, not the unique mathematical anchor; a sufficiently powered independent
 same-resolution reference could in principle normalize relative transfer, but no
 such route is admitted today. No threshold invented inside M9 may substitute for
 external truth. The exact downstream contract below is registered now but is not a
@@ -1530,7 +1609,7 @@ is no longer admissible.
 IBIS independently disqualifies them as repeat-pair truth. The burned grid may
 commission but may not score; same-frame odd/even halves are forbidden; and bee
 same-focus repeats alone cannot close the depth-stack certificate claim. The
-withdrawn v1.3 `D>=1 && FRC>=1/7` rule is not truth in v1.9.
+withdrawn v1.3 `D>=1 && FRC>=1/7` rule is not truth in v1.10.
 
 **Required truth and product contracts.** Before any candidate output is opened, the
 truth producer must freeze a sampling manifest of exactly 1,000 independently
@@ -1936,7 +2015,7 @@ separate host window rediscovering the already-understood reduction-order mechan
    (`2026-08-sota-path.md` lines 1525–1536) but supplies neither an all-in-focus truth
    image nor a bar. In this registered use, without an external model, prior, or
    reference, comparing two unknown renders does not create one.
-   They may commission synthetic plants, but do not rank real outputs in v1.9.
+   They may commission synthetic plants, but do not rank real outputs in v1.10.
 5. **A single composite “SOTA score”:** weights would let noise purchase a halo or
    speed purchase lost depth. The proposal’s end-state is conjunctive.
 6. **Natural-object colour agreement:** programs can agree and all be wrong. M7 waits
@@ -1967,10 +2046,10 @@ column.
 | M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
 | M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | LCA confirms an axial effect but licenses no correction and is not colour fidelity; traceable target absent. |
 | M8 | Independent source-hull census | **FAIL** — M8-R `1.030569%` against the achievable bar of exactly `0.0000%`; M8-O v1.5 **UNMEASURED** because the corrected checker at `e5489d64` has not been recommissioned. Historical M8-O v1.4 `1.326144%` is **SUPERSEDED** because that bar was impossible as written. | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | **M8-R READ AND ADMITTED `76b3d9cc`.** M8-R is the only produced-and-read score against an achievable bar and remains a genuine axis-level failure. It is 100% attributable to the Catmull-Rom gather; bilinear gives `0/6,131,678,976` but costs 0.3404 dex of band detail. Under the repaired M8-O v1.5 predicate, clean bilinear measures `0/74,173,536`, independently zero in R, G, and B; this proves the bar discriminates but is not a v1.5 candidate score. |
-| M9 | Certificate calibration | **DEFINITION BLOCKED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | `truth_valid` has no admitted independent candidate-specific producer through the current M1 registry route. M1 is the only usable route today, not a unique mathematical anchor. M166's downstream contract is registered but cannot be used or scored. |
+| M9 | Certificate calibration | **DEFINITION BLOCKED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | `truth_valid` has no admitted independent candidate-specific producer through the current M1 registry route. M1 is the only currently specified and physically actionable route with an evidenced path today, not a unique mathematical anchor. M166's downstream contract is registered but cannot be used or scored. |
 | M10 | Physical depth accuracy | **DEFINITION BLOCKED beyond uncertainty repair** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | M163 repaired uncertainty handling only; the remaining bar is ill-defined pending M166. The existing downstream draft is non-operative. |
 | M11 | Wall-clock throughput | **UNMEASURED_COMPARATOR_QUALIFICATION; absolute timing QUARANTINED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | M166 defines the campaign, but quality-qualified required comparator outputs are absent. Full-process absolute QPC timings also await a quiet host under STATUS §2.9.55; D11/D15 component PASSes are not M11 scores. |
-| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.9 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
+| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.10 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -2007,7 +2086,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 7. **The proposal’s competitive axis table is historical, not this scorecard.** Its
    “ahead” labels for noise, clipping, invented structure, and speed were obtained
    under different instruments and, in the old head-to-head, asymmetric development.
-   None is a v1.9 current-position value.
+   None is a v1.10 current-position value.
 8. **D2’s CRLB channel cannot certify itself.** The same noise model cannot generate
    admission and then validate its own certificate. M9 requires independent repeated
    exposures and external fixed-pattern treatment.
@@ -2035,7 +2114,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
   runtime.
 - **Accepted with correction:** “averaging fails MTF” becomes “averaging must fail a
   future commissioned sharpening-safe information constraint.” Standalone MTF remains
-  inadmissible, and v1.9 has no such instrument.
+  inadmissible, and v1.10 has no such instrument.
 - **Accepted with correction:** a future detail instrument, M8, and the retained M4
   flat-power-plus-transfer component should bracket sharpening together on the same
   output. Full M4 remains a mandatory disclosure. Hull is corroborative, not
@@ -2054,7 +2133,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 A result report must reproduce this scorecard verbatim by hash, publish every invalid
 and refused arm, include commands and complete manifests, and state the verdict as:
 
-- `PASS — SOTA under scorecard v1.9`, only when all seven owner gates pass on the
+- `PASS — SOTA under scorecard v1.10`, only when all seven owner gates pass on the
   common-merge track, including the retained M4 flat-power-plus-transfer component
   within M1/M2/M8 and the retained common-merge M12 cross-worker byte-identity
   component within M11, all five mandatory disclosure axes are measured on their

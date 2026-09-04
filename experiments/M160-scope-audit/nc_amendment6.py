@@ -119,15 +119,15 @@ def main() -> int:
             "scorecard",
             "Capture likewise\ndoes not replace or “shoot around” an instrument: "
             "it supplies identifying information\nand is a precondition of the "
-            "current usable instrument.",
+            "currently specified instrument route.",
             "Capture can replace and “shoot around” the instrument.",
             ("scorecard.capture-precondition",),
         ),
         Control(
             "assert-m1-uniqueness",
             "scorecard",
-            "M1 is not the unique mathematical anchor.",
-            "M1 is the unique mathematical anchor.",
+            "M1 is not the unique\nmathematical anchor.",
+            "M1 is the unique\nmathematical anchor.",
             ("scorecard.m1-not-unique",),
         ),
         Control(
@@ -184,8 +184,8 @@ def main() -> int:
         Control(
             "corrupt-source-hash",
             "report",
-            "D7AD61E0E9B37D0C761810620EE0F296C9E8DC188509E1E860CBA44D9FA905F5",
-            "07AD61E0E9B37D0C761810620EE0F296C9E8DC188509E1E860CBA44D9FA905F5",
+            "1E075C8BECEC35BC67231868781E614DC0748989F14E2F172C777E3964CEB443",
+            "0E075C8BECEC35BC67231868781E614DC0748989F14E2F172C777E3964CEB443",
             ("report.source-hashes",),
         ),
         Control(
