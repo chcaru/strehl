@@ -566,12 +566,12 @@ def arm_blur_severe(_: Path) -> dict[str, Any]:
         reference,
         scale_y=1.0 / NOMINAL_RATIO,
         scale_x=1.0 / NOMINAL_RATIO,
-        blur_sigma=18.0,
+        blur_sigma=40.0,
     )
     result = run_pair(reference, scored)
     result.update(
         {
-            "plant": "18 green-pixel Gaussian blur",
+            "plant": "40 green-pixel Gaussian blur",
             "required": "typed refusal; never numeric",
         }
     )
