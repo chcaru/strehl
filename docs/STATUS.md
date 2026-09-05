@@ -23,16 +23,34 @@ marked as unmeasured.
 > across twelve axes, conjunctively. `enfuse` is not one of them.
 >
 > **Current position against that bar: 0 of 12 axes passed.** **Two** axes have
-> produced a read score. **M8** (fine detail) **FAILED**. **M12** (memory,
-> determinism and cross-worker invariance) has **no settled overall verdict as
-> of this writing**: lane M139's committed report (`2ba256aa`) recorded a flat
-> `M12 FAIL` against an incomplete matrix, and M139 is now rewriting it after
-> completing the registered matrix. **That revision is uncommitted and is
-> therefore not quotable here.** The one finding stable across both the
-> committed report and the in-flight revision is that **M12's absolute
-> peak-memory bar FAILED**. Every specific memory figure this header previously
-> carried has been withdrawn pending M139's commit — see §2.9.74. The overall
-> verdict is `UNMEASURED`.
+> produced a read score and both **FAILED**. **M8** (invented values) fails on
+> its `M8-R` arm at `1.030569%` against an achievable bar of exactly `0.0000%`;
+> `M8-O` v1.5 is separately `UNMEASURED` because the corrected checker at
+> `e5489d64` has not been recommissioned. **M12** (memory, determinism and
+> cross-worker invariance) was closed by lane M139's completed campaign
+> (`0c089f96`) across the full `N=33/105/299` x workers `1/2/4/8/16` matrix:
+>
+> - **`M12-D` fixed-worker determinism PASSES** — all 15 cells hold one TIFF
+>   hash and one pixel hash across six scored runs. **This is the first
+>   registered sub-property in this program to pass anything.**
+> - **Absolute memory FAILS** at a Job Object peak of `35.65745162963867 GiB`
+>   against the `6 GiB` bar — `5.94x` over.
+> - **Cross-worker byte invariance FAILS** at every N: five distinct TIFF
+>   hashes and five distinct pixel hashes across the five worker counts.
+> - **N-mod-4 per-frame spread FAILS** at `0.07618677189815302`.
+> - Only the `299/33` peak ratio is unread, at
+>   `UNMEASURED_SAMPLING_COVERAGE`, because minimum coverage was
+>   `0.7957678743186919` against a preregistered `0.90`.
+>
+> **M139 assigned no overall M12 verdict**, on the ground that `M12-S` also
+> requires the 16-worker output to pass `M11`, which is licence-blocked.
+> **That precondition is under adjudication and is not being relied on here**:
+> it appears in the scorecard but not in the governing plan, whose own bars are
+> *"memory <=6 GiB warm; bytes invariant to worker count (D9a); the staircase
+> gone"* (`proposals/2026-08-sota-path.md:1981-1982`) and which states that
+> *"Two axes -- M8 and M12 -- are measurable today"* (`:2262-2263`). If that
+> adjudication holds, M12 is a licence-free FAIL decided today. Either way the
+> measured terms above stand, and no reading of them yields a pass.
 >
 > **How long it stays `UNMEASURED` depends on a question the owner has not yet
 > ruled on.** Under the scorecard *as written*, every axis waits until licensed

@@ -418,6 +418,44 @@ def found(src, needle, ctx):
 cache = {}
 green = red = 0
 missing_in_status = []
+
+# ---- header-scoped claims ----------------------------------------------------
+# `sec` above concatenates EVERY section, so a value that also appears in
+# 2.9.66 or 2.9.74 satisfies a whole-file presence check even when the header
+# itself has been corrupted. The header is the most owner-facing prose in the
+# file and must not inherit its correctness from a section further down. These
+# claims are therefore matched against the HEADER TEXT ALONE, and separately
+# against the lane source, so neither a header edit nor lane drift passes.
+HDR = collapse(unquote(section_text(status_raw, "HEADER")))
+HEADER_ONLY = [
+    ("hdr m8r score", "1.030569",
+     "docs/proposals/2026-09-sota-scorecard.md"),
+    ("hdr m12 peak", "35.65745162963867", R + "M139-m12-campaign.md"),
+    ("hdr m12 modulo", "0.07618677189815302", R + "M139-m12-campaign.md"),
+    ("hdr m12 coverage", "0.7957678743186919", R + "M139-m12-campaign.md"),
+    ("hdr plan m12 bar", "bytes invariant to worker count (D9a)",
+     "docs/proposals/2026-08-sota-path.md"),
+    ("hdr plan measurable", "Two axes -- M8 and M12 -- are measurable today",
+     "docs/proposals/2026-08-sota-path.md"),
+]
+for label, needle, rel in HEADER_ONLY:
+    p = ROOT / rel
+    if not p.exists():
+        print("RED   %-24s SOURCE MISSING %s" % (label, rel))
+        red += 1
+        continue
+    if rel not in cache:
+        cache[rel] = load(p)
+    if not positions(HDR, needle):
+        print("RED   %-24s %s NOT IN STATUS HEADER" % (label, needle))
+        red += 1
+    elif not positions(cache[rel], needle):
+        print("RED   %-24s %s NOT IN %s" % (label, needle, rel))
+        red += 1
+    else:
+        print("GREEN %-24s %s  [header-scoped]" % (label, needle))
+        green += 1
+
 for label, needle, rel, ctx, srclit in CLAIMS:
     p = ROOT / rel
     if not p.exists():
@@ -570,7 +608,11 @@ print("not asserted (RED)  : %d  %s" % (len(missing_in_status), missing_in_statu
 print("controls pass       : %d" % ctl_pass)
 print("controls fail       : %d" % ctl_fail)
 print("controls skipped    : %d  %s" % (ctl_skip, ctl_skip_reasons))
-print("controls accounted  : %d of %d claims" % (ctl_pass + ctl_fail + ctl_skip, len(CLAIMS)))
+print("controls accounted  : %d of %d CLAIMS entries" % (ctl_pass + ctl_fail + ctl_skip, len(CLAIMS)))
+print("header-scoped       : %d, commissioned separately by commission_header.py"
+      % len(HEADER_ONLY))
+print("checks accounted    : %d of %d green+red"
+      % (ctl_pass + ctl_fail + ctl_skip + len(HEADER_ONLY), green + red))
 print("xdoc derived pass   : %d" % xdoc_pass)
 print("xdoc derived fail   : %d" % xdoc_fail)
 print()

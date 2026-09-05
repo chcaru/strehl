@@ -135,6 +135,26 @@ CONTROLS = [
      "**Current position against that bar: 0 of 12 axes passed.**",
      "**Current position against that bar: 3 of 12 axes passed.**",
      True, True, "header scored axis count"),
+    # The header-scoped pins added when M139's completed campaign landed. Each
+    # of these values ALSO occurs further down in STATUS, so the whole-file
+    # presence check cannot see a corrupted header -- these arms are the only
+    # proof that the header-scoped matcher is doing real work.
+    ("hdr m8r score drift",
+     "at `1.030569%` against an achievable bar",
+     "at `1.030579%` against an achievable bar",
+     True, True, "hdr m8r score"),
+    ("hdr m12 peak drift",
+     "peak of `35.65745162963867 GiB`",
+     "peak of `35.65745162963868 GiB`",
+     True, True, "hdr m12 peak"),
+    ("hdr m12 modulo drift",
+     "FAILS** at `0.07618677189815302`",
+     "FAILS** at `0.07618677189815303`",
+     True, True, "hdr m12 modulo"),
+    ("hdr plan bar drift",
+     "bytes invariant to worker count (D9a)",
+     "bytes invariant to worker count (D9b)",
+     True, True, "hdr plan m12 bar"),
     # INERT 1: header prose no pin covers. If this goes RED the suite is
     # reacting to any edit at all, which would make every GREEN meaningless.
     ("inert header prose",
