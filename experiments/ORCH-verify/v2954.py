@@ -801,6 +801,49 @@ QUOTES = [
      "even a complete M8 pass licenses only the internal no-invention invariant"),
     ("s82 artifact prospective", "docs/research/M136-m8-v15-execution-assessment.md",
      "Before a score run, the scorecard owner must make one prospective, explicit"),
+
+    # ---- 2.9.82 correction: my (e)-coding claim overstated M136 ----
+    #
+    # Withdrawn visibly, so it is pinned twice: once on the corrected statement
+    # and once on the strikethrough that withdraws the original. A pin on the
+    # correction alone stays GREEN if someone un-strikes the original and leaves
+    # both standing, which makes the file assert a claim and its correction at
+    # the same time -- the exact defect that produced 2.9.80.
+    ("s82c coding is correct", "docs/STATUS.md",
+     "**M8 cannot reach a pass now, though its `(e)` coding is"),
+    ("s82c overclaim struck", "docs/STATUS.md",
+     "~~**M8's `(e)` coding is wrong.**"),
+    ("s82c e definition", "docs/STATUS.md",
+     "immediately by *\"An **(e)** does not mean a result has been run.\"*"),
+
+    # ---- 2.9.83: M10's definition freeze ----
+    ("s83 heading", "docs/STATUS.md",
+     "### 2.9.83 M10's definition is closed, frozen before any product existed"),
+    # The ordering IS the preregistration claim: precommit before freeze.
+    ("s83 precommit ordering", "docs/STATUS.md",
+     "**before** the normative freeze `a9753219` at `00:48:50`"),
+    ("s83 no reroll", "docs/STATUS.md",
+     "license another seed.\"** A naive design would permit a re-draw after a leak,"),
+    ("s83 no threshold moved", "docs/STATUS.md",
+     "**Nothing here changed a threshold**, which is the line between a freeze and"),
+    ("s83 partition sums", "docs/STATUS.md",
+     "`DEFINITION BLOCKED` (M9), nine `UNMEASURED`**, summing to twelve."),
+    ("s83 supersedes label", "docs/STATUS.md",
+     "**This section supersedes their label only.**"),
+    # Cross-document into the live scorecard: 2.9.83 claims these rows were
+    # applied, so the scorecard must actually carry them.
+    ("s83 scorecard 815", "docs/proposals/2026-09-sota-scorecard.md",
+     "**DEFINED; UNMEASURED — MISSING PRODUCT, CHECKER, AND SCORED TRUTH.**"),
+    ("s83 scorecard 849", "docs/proposals/2026-09-sota-scorecard.md",
+     "| M10 | **DEFINED; UNMEASURED; (b)(c)** |"),
+    ("s83 scoreboard fixed", "docs/proposals/2026-09-sota-scorecard.md",
+     "**two owner gates have an admitted `FAIL` (M8 and M12),"),
+    # Cross-document into M190's artifact: the escrow clause is quoted, and M190
+    # is a live lane that could revise it.
+    ("s83 artifact no reroll", "docs/research/M190-m10-definition-freeze.md",
+     "`UNMEASURED_SYNTHETIC_TRUTH`; it does not license another seed."),
+    ("s83 artifact verdict", "docs/research/M190-m10-definition-freeze.md",
+     "**Verdict: DEFINED; UNMEASURED.**"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel
@@ -817,6 +860,10 @@ for label, rel, quote in QUOTES:
         _who = "the M176/M187 route corrections"
     elif label.startswith("s82 "):
         _who = "STATUS 2.9.82"
+    elif label.startswith("s82c "):
+        _who = "the STATUS 2.9.82 (e)-coding correction"
+    elif label.startswith("s83 "):
+        _who = "STATUS 2.9.83"
     else:
         _who = "STATUS 2.9.66"
     check(label, collapse(quote) in load(p),

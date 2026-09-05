@@ -8292,13 +8292,29 @@ rather than the window.
 Two corrections to the board, both taken from committed lane output rather than
 chat, and one derivation that follows from them.
 
-**1. M8's `(e)` coding is wrong.** The scorecard codes M8 **`(e)` for M8-R**
-(`2026-09-sota-scorecard.md:847`), and `(e)` means scientifically measurable now.
-M136's execution assessment (`c0244711`,
-`docs/research/M136-m8-v15-execution-assessment.md`) rules otherwise and I accept
-it:
+**1.** ~~**M8's `(e)` coding is wrong.** The scorecard codes M8 **`(e)` for
+M8-R** (`2026-09-sota-scorecard.md:847`), and `(e)` means scientifically
+measurable now.~~ **M8 cannot reach a pass now, though its `(e)` coding is
+correct.** M136's execution assessment (`c0244711`,
+`docs/research/M136-m8-v15-execution-assessment.md`) rules:
 
 > There is no scoreable M8-O movement executable now.
+
+> ⚠️ **CORRECTED 2026-09-05 — the withdrawn sentence above was mine and it
+> overstated M136.** I read M136's ruling as invalidating the scorecard's
+> readiness code. It does not. The code is scoped — `(e) for M8-R` — and
+> **M8-R was in fact measured**, at `1.030569%`. The scorecard also defines the
+> class narrowly at `:834`: *"**(e)** scientifically measurable now"*, followed
+> immediately by *"An **(e)** does not mean a result has been run."* Measurable
+> is exactly what M8-R is, so the coding is right and I was wrong to say
+> otherwise. What M136 actually establishes is narrower and still decisive: the
+> **M8-O half** has no executable route to a score, so **the M8 axis cannot
+> reach a pass now** even though one of its halves is measurable. The axis-level
+> consequence in this section is unaffected; only my claim about the coding is
+> withdrawn. **This is the second time this session I have published an
+> overstatement about an axis's status** — the first was M12's failure count in
+> §2.9.80 — and both had the same cause: I read a lane's conclusion at the axis
+> level when its scope was a sub-property.
 
 The reason is a distinction I had collapsed. **Two different "first numbers"
 exist and only one of them is a score.** The exact section-7 CE83 development
@@ -8371,6 +8387,66 @@ directed M179 to close out, commit whatever its audit genuinely established, and
 report whether any of its artifacts span the earlier termination boundary. The
 general lesson is one I should have caught sooner: **a lane's stated intent is a
 cheap, continuous signal of drift, and I was reading turn counts instead.**
+
+### 2.9.83 M10's definition is closed, frozen before any product existed
+
+Lane M190 closed the four gaps M186 localised, and I have applied its scorecard
+replacements at `:815` and `:849`. **M10 moves from `PARTIALLY DEFINED;
+DEFINITION BLOCKED` to `DEFINED; UNMEASURED`.** This is not a score and does not
+move the scoreboard; it removes a class of blocker.
+
+**What was closed.** M186's test for a gap was whether *"two compliant
+instruments can give different verdicts"*, and it found four places where they
+could: SHA-256 byte order for the quota hash, the origin divisor `N`, the
+manifest schema and contract-failure-to-verdict mapping, and the synthetic
+renderer's algorithm, PRNG-to-seed mapping, scored seed and affine-certificate
+acceptance. M190 froze all four with machine-checkable contracts, round-trip
+fixtures, and `8/8` mutation commissioning whose planted defects are the exact
+disagreements — little-endian quota interpretation, all-target origin division,
+an uppercase digest, an extra `default_pass` member, and so on.
+
+**Why the timing is the whole point.** Every one of those was a researcher
+degree of freedom. Fixing digest order after seeing a quota hash, or choosing a
+seed after seeing a rendered surface, is unfalsifiable. M190's own sequencing
+records that it was not: the algorithm precommit `1fb63317` lands at `00:44:24`,
+**before** the normative freeze `a9753219` at `00:48:50`, and no candidate
+product, integrated checker, scored truth capture or M10 verdict existed when
+the choices were made. **Frozen before measurement, these are a preregistration;
+frozen after, they would have been tuning.**
+
+**The best piece of design in it is the seed escrow, and specifically its
+failure clause.** The scored seed is published only as
+`SHA256(ASCII("M10-SYNTH-SEED-COMMIT-V1") || 0x00 || seed)`, with the seed itself
+held in local encrypted escrow and disclosed only after the candidate executable,
+settings and manifests are hash-frozen. The clause that matters is what happens
+when that goes wrong: a missing escrow, a commitment mismatch, a second draw or
+early disclosure makes the arm `UNMEASURED_SYNTHETIC_TRUTH`, and **"it does not
+license another seed."** A naive design would permit a re-draw after a leak,
+which would hand back the entire degree of freedom the commitment was built to
+remove.
+
+**Nothing here changed a threshold**, which is the line between a freeze and
+tuning. I verified that independently before applying: all eight backticked
+numeric thresholds in the `:815` row and the one in `:849` survive verbatim into
+the replacements, both anchors occurred exactly once, and the applier refused to
+write unless both held.
+
+**Two consequential edits beyond M190's scope, which I made and own.**
+
+1. **The scoreboard sentence at `:902` was stale in a second way.** It read
+   *"one owner gate has an admitted `FAIL` (M8), two are `DEFINITION BLOCKED`
+   (M9 and M10), and the other nine axes are `UNMEASURED`."* Removing M10 from
+   the blocked count exposed that **M12 is also an admitted `FAIL`** — `:2122`
+   records it *"READ AND ADMITTED `0c089f96`"* — so the FAIL count was already
+   wrong before tonight. Derived from the readiness table rather than assumed,
+   the correct partition is **two admitted `FAIL` (M8, M12), one
+   `DEFINITION BLOCKED` (M9), nine `UNMEASURED`**, summing to twelve. **No axis
+   passes**, which is the part that has not changed.
+2. **Two earlier STATUS passages (`:6717`, `:6776`) still call M10
+   `DEFINITION BLOCKED`.** I have left them standing rather than rewriting
+   history. They were true when written, and the argument they serve — that
+   M10's blockage is *not* comparator dependence — remains true: M10 is `(b)(c)`,
+   never `(d)`. **This section supersedes their label only.**
 
 ### 3.1 Blocking
 
