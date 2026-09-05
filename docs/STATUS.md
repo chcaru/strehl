@@ -7725,6 +7725,146 @@ of the load is verification recursion — lanes running six to ten verifier
 subagents while `0 of 12` axes pass. I have issued stop-and-report orders,
 capped further verifier spawning, and begun closing lanes.
 
+### 2.9.78 Exactly one axis is unblocked, and the thing failing it is our own code
+
+**The scoreboard is unchanged at `0 of 12`.** What changed tonight is that I
+read the board correctly for the first time, and the answer is more actionable
+than the number suggests.
+
+**1. M12 is the only axis in the program with no blockers at all.** I had been
+hunting for an axis scoreable with what exists, on the reasoning that one
+honestly passed axis is worth more than any amount of further preparation.
+Mapping the board at source settles it. Blocker `(a)`, the missing admissible
+detail statistic, binds M8 onward. Blocker `(d)`, the unlicensed comparator,
+binds M1 through M7. M10's bar is non-operative (below). M11 is quarantined
+behind comparator qualification. `STATUS.md:3129` records the remaining entry
+plainly: **`M12  (e) none`**.
+
+**And M12 is measured, and it fails.** Lane M139 completed the registered
+`N=33/105/299` x `1/2/4/8/16` matrix on a guarded host at `0c089f96`
+(`2026-09-sota-scorecard.md:851`):
+
+- **Memory — FAIL.** Peak Job Object memory `35.65745162963867` GiB against the
+  `<=6 GiB` bar at `:817`. **`5.94x` over.**
+- **`M12-S` cross-worker invariance — FAIL.** Five distinct TIFF hashes and five
+  distinct pixel hashes across `1/2/4/8/16` workers, **at every registered N**.
+- **`M12-D` fixed-worker determinism — PASS**, all 15 cells, one TIFF hash each.
+  It remains *"the first registered sub-property in this program to pass
+  anything."*
+- **N-mod-4 per-frame spread — passes**, `0.07618677189815302` against a `2%` bar.
+- `peak_N299/peak_N33` is `UNMEASURED_SAMPLING_COVERAGE` (minimum coverage
+  `0.7957678743186919` against `0.90`) and cannot rescue two exact bar failures.
+
+**The consequence is the useful part: both failures are defects in our own code,
+not missing infrastructure.** No detail instrument, no comparator licence, no
+holdout, no capture campaign and no owner time stands between here and an M12
+verdict — only engineering. That converts the job from *certifying* an axis to
+*repairing* one, which is work this program can do tonight without asking
+anybody for anything. `M12-S` is assigned to lane M172 through D9's fixed
+reduction lattice; the memory overrun is assigned to lane M182. **I have
+registered a prospective rule that D9 may not be cashed as an `M12-S` pass until
+its negative control fires** — M172 established that the pre-D9 binary produces
+one pixel hash where the determinism test requires two, so the test as built
+cannot presently distinguish a repaired binary from a blind one, and a
+post-repair pass would certify nothing.
+
+**2. M10 is not a second candidate, and I briefly believed it was.** The owner
+has shot calibration slides flat and angled at several step widths, and a
+calibration slide at a known angle is a tilted ruler — so I dispatched a lane to
+ask whether M10 could be scored from existing frames at zero cost. Checking the
+scorecard immediately afterwards refuted the premise: `:815` records M10's bar as
+**`ILL-DEFINED beyond M163's uncertainty repair; non-operative pending M166`**,
+stating of its provisional numbers that *"These numbers are not yet a usable
+bar."* `:849` records **`DEFINITION BLOCKED beyond M163; (b)(c)`**, with the
+target-valid predicate, stored depth/invalid encoding, flat-null reduction and
+layer-confusion population all undefined. **No capture can score an axis whose
+bar is not operative**, and M10's binding constraint is definitional rather than
+photographic. I corrected the lane within minutes and redirected it to the
+question that actually governs — what M166 owes, and whether that work is
+compute-bound or capture-bound.
+
+**A defect this surfaced in a document I own.** `:849` attributes M10 blockers
+`(b)(c)`, while the readiness table at `:2111` shows M10's comparator column as
+`UNMEASURED — blocker (d)`. Those lines disagree about whether M10 carries `(d)`.
+It is logged for repair rather than silently reconciled.
+
+**3. A correction against myself, on the record.** I had been carrying a
+`3074965504`-byte peak (`2.863` GiB) against the `6442450944`-byte bar as a
+*preliminary* memory reading with `3.136` GiB of headroom, and I circulated it to
+a lane. **It is withdrawn.** It was a narrower-scope figure and never the
+registered quantity, which is warm peak **process-tree** memory across the full
+matrix. The registered value is `35.657` GiB. An apparent pass with comfortable
+headroom sat one document away from a `5.94x` failure, and the only thing that
+caught it was verifying my own number at source before writing it down.
+
+**4. N6's flagged assumption came back adverse, and N6 is stronger for it.**
+§2.9.77 registered N6 while explicitly flagging its dependency: that bilinear
+actually costs meaningful detail and that restoration does not cheaply recover
+it. Lane M182 has now priced it (`docs/research/M182-kernel-trade.md`, commit
+`9f64c87f`):
+
+- **Bilinear cannot overshoot.** Tap sums are exactly `[1, 1]`; step and impulse
+  overshoot are both `0` DN. Catmull-Rom, the shipping default, overshoots
+  `7.407422%` on a step; Lanczos3 reaches `14.799638%` on an impulse. Clamped
+  Catmull-Rom is *"bounded only by destructive nonlinear clamp"* and **has no
+  linear tap sum at all** — independent support for the standing ruling against
+  a clamped shipping default.
+- **Bilinear's detail cost is real**: MTF `0.811592` at half-Nyquist
+  (`0.863174x` Catmull-Rom) and `0.627956` at 0.75 Nyquist (`0.802501x`).
+- **Restoration does not recover it for free.** Bilinear has no in-band zero, so
+  it is numerically well-posed — but reaching parity with unrestored Catmull-Rom
+  over `74.7082%` of sampled frequencies costs **`1.902341x` output-noise SD** in
+  2-D. Buying the noise back down to `1.314015x` leaves only `29.1829%` of the
+  band at parity.
+
+So *"restoration recovers bilinear's deficit"* is **false as stated**; the honest
+form is a priced trade, and **N6 stands on measured ground rather than on an
+assumption**. M182 also volunteered three corrections to my briefing — Lanczos
+taps require consumer normalisation, `gather_mtf` is an explicitly phase-averaged
+approximation rather than a true LSI MTF, and Nearest's unit MTF magnitude
+conceals phase quantisation behind truth-referenced RMS errors of
+`0.159683/0.315691/0.464481`. Its harness carried a **positive sharpen control**
+(`0.895952 > 0.627956`) alongside its 74 planted defects and 2 inert arms, which
+is the arm that separates a blind statistic from one that scores a defect
+*better*. **No end-to-end RAW M8-R score was rerun**, so the result reaches the
+gather invariant and its trade curve, not the shipping pipeline.
+
+**5. M4 is closed as the cheap first pass, and the reason generalises.** Lane
+M152 answered the deciding question adversely (`cd937f3e`): **frames do not
+generate sites.** Every frame re-tests the same `1,768` spatial candidates, so an
+added frame can only *remove* survivors, never add one. Yields are medication
+`55/1,768` over `146` frames and bee `123/1,768` over `299`, against requirements
+of `4.75%` and `4.69%` — **a scene deficit, not a frame-count deficit**, and no
+amount of shooting fixes it. `coffee-bubbles` fails on flatness rather than
+exposure: all `1,768` tiles fail band power (best `1.091006` against `<1.0`)
+while signal is fine (worst `11.665702` sigma against `>=10`), leaving `8`
+feasible tiles under a favourable model — it needs a different target. M4's
+retained `Q/g/r` component is scoreable without `(a)` and without the licence,
+but **full M4 remains blocked `(a)(b)(d)` and would not produce an axis PASS.**
+M152 also self-reported a priority-masking defect — `176` tiles exceed the `0.1%`
+high-rail limit, hidden because band failure had priority — and correctly ruled
+the frozen census still usable as published, with `first_failure_counts` valid
+only as priority-assigned attribution. **None of the published `178`/`138`/`112`
+figures change.** The owner-facing ask has been corrected accordingly.
+
+**6. Amendment 8: two more phase-0 gates had fired unread** (`a58b6ef2`).
+§2.9.77 recorded one; the audit found two more. `M-PHASE0-SPLIT2.md:3` reads
+**"Final verdict: NOT ROBUST / NO BUILD"**, confirming the D8 kill by an
+independent scorecard-licensed route — its second-light run fails the
+scorecard's own `0.10` native-pixel non-translation RMS gate at `0.107703`
+(independent spatial estimator `0.105202`) while the bright run passes at
+`0.064031`. **A scorecard-registered capture failed a scorecard-registered
+gate.** And `M-PHASE0-PHASE` was **never absent** as the plan's audit had
+implied: its filed verdict is *"KILL at the measured rho, NOT ROBUST across the
+rho census."* C1 is **not** killed by it — the verdict flips inside its own
+measured uncertainty (KILL at rho `0.0055`, NARROWED at `0.01`, itself inside the
+95% interval `0.00185-0.01078`, SURVIVE at the census top), and rho's median
+moves `30.49x` under a frequency-grid refinement. **C1 is blocked on rho, neither
+schedulable nor struck**, and the decidable quantity is rho's grid and boundary
+convention rather than the aligner. The class matters more than either incident:
+**this plan has no mechanism forcing a fired gate to change the text it
+governs**, which is now twice-demonstrated.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
