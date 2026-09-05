@@ -8287,7 +8287,90 @@ adjudicated — and to tell me whether a contention-robust design would make the
 bar admissible **without** a quiet host at all, in which case I want the design
 rather than the window.
 
+### 2.9.82 M8 is not measurable now, M12's four bars all have routes, and that leaves exactly one reachable axis
 
+Two corrections to the board, both taken from committed lane output rather than
+chat, and one derivation that follows from them.
+
+**1. M8's `(e)` coding is wrong.** The scorecard codes M8 **`(e)` for M8-R**
+(`2026-09-sota-scorecard.md:847`), and `(e)` means scientifically measurable now.
+M136's execution assessment (`c0244711`,
+`docs/research/M136-m8-v15-execution-assessment.md`) rules otherwise and I accept
+it:
+
+> There is no scoreable M8-O movement executable now.
+
+The reason is a distinction I had collapsed. **Two different "first numbers"
+exist and only one of them is a score.** The exact section-7 CE83 development
+campaign is executable with no new capture — the 186 registered ARWs and three
+warp maps exist — but *"A result commissions or rejects this development
+mechanism only."* The common-merge shipping-default campaign is the one that
+scores, and *"No common-merge, Scale-capable, end-to-end same-byte score
+apparatus is frozen."* A protocol does not become a score merely because it
+finally produces a number.
+
+This also answers the question I put to M136 about whether M8 is transitively
+blocked by `(a)`. **It is not, for its own verdict** — but M136 bounds what a
+pass buys, and the bound is the honest part: *"While M1 remains absent, even a
+complete M8 pass licenses only the internal no-invention invariant, not a detail
+or full SOTA claim."* M8 is worth having. M8 is not a SOTA claim.
+
+**2. A ruling I owe, and it is prospective.** M136 §5 puts one decision on me as
+scorecard owner: *"Before a score run, the scorecard owner must make one
+prospective, explicit ruling"* — either register which
+existing units remain fresh as the scored M8 population, in which case no owner
+capture is needed, or rule them spent and register replacement capture, in which
+case owner shutter time is required. M136 could rule neither way and said so
+plainly — new photography is **"not yet proved necessary"**, because the
+authoritative live table still labels twelve quality rows holdout, and **"not yet
+proved avoidable"**, because of the bee render, seven top-level subjects carrying
+masters and visual verdicts and metric outcomes, and the battery ISO-100 row
+labelled holdout while sharing a subject/session family with live control rows.
+I have dispatched **M191** to reconcile those labels against the burn record
+under the established rule that *the holdout unit is subject plus uninterrupted
+capture session, and reading an outcome on one member burns all*. **The ruling
+must be made before any render, and that is exactly what makes it a
+preregistration rather than tuning.**
+
+**3. M12's four bars: not one of them is a standing unrepaired failure.**
+
+| # | Bar | State | Route |
+|---|---|---|---|
+| 1 | Warm peak `<=6 GiB` | Was `35.65745162963867 GiB` | **Measured repair** — M182: `3,074,797,568 B` (`2.8636 GiB`) |
+| 2 | Byte identity across repeats and workers | Was five distinct hashes | **Measured repair** — M172: one hash `6EFC261E…F9B89` |
+| 3 | `peak_N299/peak_N33 <= 1.10` | Formally `UNMEASURED_SAMPLING_COVERAGE`, coverage `0.7957678743186919` against `0.90` | **Void, not merely under-sampled — see below** |
+| 4 | N-mod-4 per-frame spread `<=2%` | Formally `UNMEASURED_HOST_QUARANTINE` at `93.2%` host CPU | Host now measured at `20-29%`; needs per-sweep contention instrumentation |
+
+**The reading that matters is on bar 3.** Its observed values
+(`1.4615654159027742` sampled, `1.461570587793803` kernel) were measured on the
+**pre-repair memory model**, where warm peak was `35.66 GiB`. That model no
+longer exists. M182's repair is bounded recycling, and bounded recycling is
+precisely a mechanism that makes peak memory insensitive to frame count — which
+is the exact property bar 3 asks for. **So the repair that fixed bar 1 may also
+fix bar 3, by the same mechanism.** I hold no repaired peaks at `N=33` and
+`N=299` at a common worker count. *This is plausible and unmeasured, and it must
+not be cited as established until M192 measures it.* If it is false, that is the
+more important finding, because it would mean the bound is not doing what its
+name claims.
+
+**The consequence, and it is why this section exists.** Eight axes wait on the
+owner's purchase, five wait on blocker `(a)`, M10 is definition-blocked with
+M190 now freezing its four open specification choices, and M8 — as of tonight —
+waits on a frozen score apparatus plus my population ruling. **That leaves M12
+as the only axis with a route to a first passing score that depends on nothing
+external: no detail metric, no comparator, no holdout, no purchase.** It needs
+one clean, complete, end-to-end certified run of the registered
+`N=33/105/299` x `1/2/4/8/16` matrix on a frozen lineage containing both
+repairs, reporting all four bars from that one run.
+
+**Lane action taken.** M179 held that certificate and drifted off it — 3.9 hours,
+202 tool calls, **zero completed turns**, with its reported intent
+*"Auditing identifiability sources"*, which is blocker `(a)` work already owned
+by M135 and M189. I have reassigned the certificate to a fresh lane **M192** and
+directed M179 to close out, commit whatever its audit genuinely established, and
+report whether any of its artifacts span the earlier termination boundary. The
+general lesson is one I should have caught sooner: **a lane's stated intent is a
+cheap, continuous signal of drift, and I was reading turn counts instead.**
 
 ### 3.1 Blocking
 

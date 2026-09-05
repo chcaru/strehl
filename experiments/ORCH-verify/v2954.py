@@ -600,10 +600,15 @@ SCORECARD = ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md"
 def check(label, ok, detail):
     global xdoc_pass, xdoc_fail
     if ok:
-        print("XDOC  %-24s %s" % (label, detail))
+        print("XDOC  %-24s  %s" % (label, detail))
         xdoc_pass += 1
     else:
-        print("XFAIL %-24s %s" % (label, detail))
+        # Two literal spaces after the field, not one. Commissioners delimit the
+        # label on a run of >=2 spaces, and `%-24s` emits NO padding for a label
+        # of exactly 24 characters -- so a one-space separator made two genuine
+        # XFAILs unparseable and they were reported as decorative pins. The
+        # field width must never be the only thing producing the delimiter.
+        print("XFAIL %-24s  %s" % (label, detail))
         xdoc_fail += 1
 
 
@@ -766,6 +771,36 @@ QUOTES = [
      "M8-R and M165 stop before that boundary"),
     ("m187 artifact route2", "docs/research/M187-m176-adjudication.md",
      "Historical pre-D9 hashes are not repaired retroactively"),
+
+    # ---- 2.9.82: M8 is not measurable now; M12 is the only reachable axis ----
+    #
+    # Two of these are cross-document pins into M136's artifact, which is a LIVE
+    # lane's file. That is deliberate: 2.9.82 quotes M136 and a quote silently
+    # goes stale when its source lane revises the passage. Re-reading the source
+    # is the only thing that catches that; a STATUS-side presence check cannot.
+    # All STATUS-side needles are kept contiguous within one physical line, per
+    # the anchor-length note above.
+    ("s82 m8 not measurable", "docs/STATUS.md",
+     "There is no scoreable M8-O movement executable now."),
+    ("s82 m8 not (a) blocked", "docs/STATUS.md",
+     "internal no-invention invariant, not a detail"),
+    ("s82 ruling is mine", "docs/STATUS.md",
+     "Before a score run, the scorecard owner must make one"),
+    ("s82 bar3 void", "docs/STATUS.md",
+     "**The reading that matters is on bar 3.**"),
+    ("s82 bar3 unmeasured", "docs/STATUS.md",
+     "not be cited as established until M192 measures it"),
+    ("s82 m12 only reachable", "docs/STATUS.md",
+     "as the only axis with a route to a first passing score that depends on nothing"),
+    ("s82 m179 drift", "docs/STATUS.md",
+     "a lane's stated intent is a"),
+    # Cross-document: 2.9.82 attributes these to M136, so M136 must still say them.
+    ("s82 artifact no movement", "docs/research/M136-m8-v15-execution-assessment.md",
+     "There is no scoreable M8-O movement executable now."),
+    ("s82 artifact m1 bound", "docs/research/M136-m8-v15-execution-assessment.md",
+     "even a complete M8 pass licenses only the internal no-invention invariant"),
+    ("s82 artifact prospective", "docs/research/M136-m8-v15-execution-assessment.md",
+     "Before a score run, the scorecard owner must make one prospective, explicit"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel
@@ -780,6 +815,8 @@ for label, rel, quote in QUOTES:
         _who = "STATUS 2.9.79"
     elif label.startswith("m187 "):
         _who = "the M176/M187 route corrections"
+    elif label.startswith("s82 "):
+        _who = "STATUS 2.9.82"
     else:
         _who = "STATUS 2.9.66"
     check(label, collapse(quote) in load(p),
