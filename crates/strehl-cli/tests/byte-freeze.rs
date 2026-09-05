@@ -115,7 +115,9 @@
 //! than failing, because a test that fails on a fresh clone is a test that gets
 //! ignored. Set `STREHL_FREEZE_REQUIRE=1` to turn every skip into a hard
 //! failure -- that is the setting for a machine that is supposed to have the
-//! data, and for CI.
+//! data, and for CI. Long-running hosts may shard the render arm by setting
+//! `STREHL_FREEZE_IDS` to a comma-separated list of row IDs; unknown or empty
+//! selections fail rather than passing vacuously.
 //!
 //! Measured cost at `fea1a72` on the reference rig: 3.3 s (unaligned) and 7.6 s
 //! (sidecar) per render in `--release`, 26 s unaligned in `dev`. The hash is
@@ -358,6 +360,7 @@ mod sha256 {
 
 const REGISTRY_TEXT: &str = include_str!("byte-freezes.tsv");
 const REGISTRY_FILE: &str = "crates/strehl-cli/tests/byte-freezes.tsv";
+const FREEZE_IDS_ENV: &str = "STREHL_FREEZE_IDS";
 
 /// The header, verbatim. Checked rather than skipped: renaming or reordering a
 /// column otherwise shifts every field silently, which is the same class of
@@ -924,6 +927,25 @@ fn parse_registry() -> Vec<Freeze> {
     rows
 }
 
+fn selected_freezes(rows: &[Freeze]) -> Vec<&Freeze> {
+    let Ok(raw) = std::env::var(FREEZE_IDS_ENV) else {
+        return rows.iter().collect();
+    };
+    let requested: BTreeSet<&str> =
+        raw.split(',').map(str::trim).filter(|id| !id.is_empty()).collect();
+    assert!(
+        !requested.is_empty(),
+        "{FREEZE_IDS_ENV} was set but selected no byte-freeze rows"
+    );
+    for id in &requested {
+        assert!(
+            rows.iter().any(|row| row.id == *id),
+            "{FREEZE_IDS_ENV} requested unknown row {id:?}"
+        );
+    }
+    rows.iter().filter(|row| requested.contains(row.id.as_str())).collect()
+}
+
 // ---------------------------------------------------------------------------
 // Locating the capture library
 // ---------------------------------------------------------------------------
@@ -1452,15 +1474,14 @@ fn alignment_mode(log: &str) -> String {
 /// each says so in its own words:
 ///
 /// * the estimator prints `workers         : N chunks of <= M frames (...)`;
-/// * the pyramid prints `memory plan     : N workers x M MB = ... budget, ...`
+/// * the pyramid prints `memory plan     : N canonical chunks, 1 reusable
+///   frame worker, 1 retained + 1 scratch accumulator, M execution threads`
 ///   and no `workers` line at all.
 ///
 /// The pyramid arm was added with the first pyramid row. Without it that row
 /// would record `unknown` in the `workers` column -- and this column exists to
 /// be "the first thing to suspect when a hash moves on a machine that is not
-/// the one above", which `unknown` cannot be. Only the host-dependent head of
-/// the line is kept (`N workers x M MB`); everything after the `=` is derived
-/// from it and the timings that follow are not reproducible text.
+/// the one above", which `unknown` cannot be.
 fn workers_line(log: &str) -> String {
     log.lines()
         .find_map(|l| {
@@ -1833,6 +1854,7 @@ fn check_pipeline(r: &Freeze, g: &Rendered, stack_dir: &Path, out: &Path) {
 #[test]
 fn the_frozen_renders_still_produce_their_recorded_bytes() {
     let rows = parse_registry();
+    let selected = selected_freezes(&rows);
     let lib = match capture_library() {
         Ok(lib) => lib,
         Err(why) => {
@@ -1843,7 +1865,7 @@ fn the_frozen_renders_still_produce_their_recorded_bytes() {
 
     report_strays(&lib);
 
-    for r in &rows {
+    for r in selected {
         let stack_dir = lib.join(&r.stack);
         assert!(
             stack_dir.is_dir(),
@@ -1998,11 +2020,9 @@ fn nondeterminism_report(r: &Freeze, stack_dir: &Path, a: &Rendered, b: &Rendere
          will be red for one person in two and get deleted by the third.\n\n\
          This is a more important finding than a moved hash and it should be\n\
          reported as one. Likely causes, roughly in order:\n\n\
-         \x20 * A reduction whose order depends on thread scheduling. The merge\n\
-         \x20   reduces in a chunk tree and f32 addition is not associative, so an\n\
-         \x20   order that varies run to run varies the low bits. Try pinning\n\
-         \x20   RAYON_NUM_THREADS and see whether the disagreement disappears --\n\
-         \x20   if it does, that is the answer.\n\
+         \x20 * A reduction whose order depends on thread scheduling. Pyramid's\n\
+         \x20   canonical chunks and left-to-right absorb are meant to prevent this;\n\
+         \x20   disagreement means a new reduction escaped that contract.\n\
          \x20 * Something in the render reading wall-clock time, a process id, a\n\
          \x20   hash-map iteration order, or an uninitialised buffer.\n\
          \x20 * Something MUTATING UNDERNEATH THE RUN. The capture library is\n\
@@ -2124,11 +2144,10 @@ fn moved_report(
         if got_workers == r.workers {
             "   (as recorded)"
         } else {
-            "   <-- DIFFERENT CHUNKING. This is a property of the HOST (RAM and core \
-             count), not of the code. If you are not on the machine named in the row, \
-             suspect this FIRST: the merge reduces in a chunk tree and floating-point \
-             addition is not associative. Reproduce on the baseline host, or \
-             re-baseline for yours and say so."
+            "   <-- DIFFERENT CHUNKING OR EXECUTION PLAN. Pyramid's arithmetic chunks \
+             are build- and input-dependent but worker-count invariant; estimator \
+             chunking may still be host-dependent. Check the backend and build before \
+             attributing the moved bytes."
         },
         out.display(),
         r.command(stack_dir, out),

@@ -4767,22 +4767,8 @@ impl Merged<'_> {
     }
 }
 
-/// One worker's per-frame buffers for the band merge, allocated once per chunk.
-/// One chunk's contribution to the fold: its partial merge, how many frames it
-/// actually folded, and the running sum of the per-frame MEASURED noise floors
-/// so the banner can report the floor the gate really used.
-///
-/// A struct rather than a tuple because the floor accumulator made the tuple
-/// four-wide and unreadable, and because a caller that swapped `folded` and
-/// `beta_n` -- both `usize` -- would compile and silently report a wrong frame
-/// count beside a wrong floor.
-struct FoldPart {
-    merge: BandMerge,
-    folded: usize,
-    beta_sum: Vec<f64>,
-    beta_n: usize,
-}
-
+/// Per-frame buffers for the band merge, allocated once and reused across
+/// canonical chunks.
 struct BandWorker {
     domain: PyramidDomain,
     merge: BandMerge,
@@ -4824,6 +4810,13 @@ impl BandWorker {
             beta_sum: Vec::new(),
             beta_n: 0,
         }
+    }
+
+    /// Restore chunk-local fold state while retaining every allocation.
+    fn reset_chunk(&mut self) {
+        self.merge.reset_for_reuse();
+        self.beta_sum.fill(0.0);
+        self.beta_n = 0;
     }
 
     /// Decode, register and fold one frame. `false` means the alignment solve
@@ -5434,12 +5427,12 @@ fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Res
     Ok(())
 }
 
-/// Canonical number of partial accumulators in the band merge's fold.
+/// Canonical number of arithmetic chunks in the band merge's fold.
 ///
-/// Each worker holds a whole accumulator plus one frame's working set, which is
-/// hundreds of megabytes, so defaulting to the core count would ask for tens of
-/// gigabytes. Solved against the same [`MEMORY_BUDGET_BYTES`] the estimator's
-/// plan uses rather than against a hardcoded count.
+/// The value was originally the number of simultaneously retained partial
+/// accumulators. It remains the partitioning rule after those chunks became
+/// serial and reusable, because changing it would regroup the existing sums and
+/// move output bytes.
 ///
 /// # Why execution threads are deliberately not an input
 ///
@@ -5447,9 +5440,9 @@ fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Res
 /// that was wrong for a reason worth writing down, because it was measured
 /// rather than reasoned about.
 ///
-/// The worker count sets how the fold is partitioned, and `BandMerge::absorb`
-/// sums the per-worker accumulators. Float addition is not associative, so a
-/// different worker count is a different reduction order and a different image.
+/// The chunk count sets how the fold is partitioned, and `BandMerge::absorb`
+/// sums the partial accumulators. Float addition is not associative, so a
+/// different chunk count is a different reduction order and a different image.
 /// Measured on flower-bud-alone-cpl, 205 frames: 2 workers against 7 differ on
 /// 0.2573% of pixels, `max |delta| = 1 DN`, and *zero* pixels differ by more
 /// than 1 DN. So the effect is last-bit rounding and nothing a viewer could
@@ -5462,7 +5455,7 @@ fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Res
 /// have meant the shipped default merge produced different bytes on a laptop
 /// and a workstation, which is a bad property to hand a user and a worse one to
 /// hand a byte-freeze. Every remaining input -- the budget constant, the
-/// per-worker size implied by the plane geometry, the frame count -- is a
+/// legacy per-worker size implied by the plane geometry, the frame count -- is a
 /// property of the build and the stack, not of the host.
 ///
 /// Keeping this value independent of [`BAND_WORKERS_ENV`] makes both the chunk
@@ -5470,12 +5463,12 @@ fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Res
 /// the requested execution-thread count, and the pyramid's spatial operators
 /// expose row-level work inside each accumulator, so a 16-thread run is not
 /// capped at this number of chunks.
-fn canonical_band_workers(per_worker_bytes: usize, frames: usize) -> usize {
+fn canonical_band_chunks(per_worker_bytes: usize, frames: usize) -> usize {
     let by_memory = (MEMORY_BUDGET_BYTES / per_worker_bytes.max(1)).max(1);
     by_memory.min(frames.max(1))
 }
 
-/// Execution threads for the fold. Unlike [`canonical_band_workers`], this is
+/// Execution threads for the fold. Unlike [`canonical_band_chunks`], this is
 /// operational only and must not affect arithmetic grouping.
 fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
     if let Ok(v) = std::env::var(BAND_WORKERS_ENV)
@@ -5488,7 +5481,7 @@ fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
         ensure!(n >= 1, "{BAND_WORKERS_ENV} must be at least 1");
         return Ok(n.min(frames.max(1)));
     }
-    Ok(canonical_band_workers(per_worker_bytes, frames))
+    Ok(canonical_band_chunks(per_worker_bytes, frames))
 }
 
 /// The `lateral CA` prologue line, reporting the **resolved decision** rather
@@ -5793,78 +5786,74 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // floating-point reduction order) stable. The actual BandMerge and frame
     // workspaces below use the smaller analysis domain.
     let budget_sizes = level_sizes(geom.width, geom.height, cfg.bands);
-    let acc_floats = BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg).accumulator_floats();
-    let ws_floats = FrameWorkspace::new(&budget_sizes, BAND_PLANES).floats();
-    // The plane extraction buffers, the luma and the variance field, and one
-    // decoded frame, all of which are live at once inside `fold`.
-    let per_worker_bytes =
+    let acc_floats =
+        BandMerge::planning_accumulator_floats(geom.width, geom.height, BAND_PLANES, cfg);
+    let ws_floats = FrameWorkspace::planning_floats(&budget_sizes, BAND_PLANES);
+    // Preserve the pre-M172 partition formula exactly. It now chooses
+    // arithmetic chunks, not simultaneously resident workers.
+    let planning_bytes =
         4 * (acc_floats + ws_floats + (BAND_PLANES + 2) * geom.pixels()) + frame_bytes;
-    let canonical_workers = canonical_band_workers(per_worker_bytes, paths.len());
-    let workers = band_workers(per_worker_bytes, paths.len())?;
-    let per_chunk = paths.len().div_ceil(canonical_workers);
+    let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());
+    let workers = band_workers(planning_bytes, paths.len())?;
+    let per_chunk = paths.len().div_ceil(canonical_chunks);
     eprintln!(
-        "memory plan     : {canonical_workers} workers x {:.0} MB = {:.1} GB against a {} MB \
-         budget,\n                  CONSTANT in the frame count and reduction order; {workers} \
-         execution threads.\n                  The merge is a fold: every accumulator is a sum, so a \
-         frame is built,\n                  added and dropped. {BAND_WORKERS_ENV}=N changes threads, \
-         never arithmetic.",
-        per_worker_bytes as f64 / (1 << 20) as f64,
-        canonical_workers as f64 * per_worker_bytes as f64 / (1 << 30) as f64,
-        MEMORY_BUDGET_BYTES / (1 << 20),
+        "memory plan     : {canonical_chunks} canonical chunks, 1 reusable frame worker, \
+         1 retained + 1 scratch accumulator, {workers} execution threads\n                  \
+         CONSTANT in the frame count and reduction order. Chunks run serially; spatial work \
+         uses\n                  the execution pool. {BAND_WORKERS_ENV}=N changes threads, never \
+         arithmetic.",
     );
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
     let t_fold = Instant::now();
-    let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
     let pool = ThreadPoolBuilder::new()
         .num_threads(workers)
         .build()
         .context("building Pyramid execution pool")?;
-    let parts: Vec<Result<FoldPart>> = pool.install(|| {
-        indexed
-            .par_chunks(per_chunk)
-            .map(|chunk| {
-                let mut w = BandWorker::new(domain, cfg);
-                let mut folded = 0usize;
-                for (i, p) in chunk {
-                    if w.fold(p, *i, levels, &noise, warps, defect)? {
-                        folded += 1;
-                    }
-                }
-                Ok(FoldPart {
-                    merge: w.merge,
-                    folded,
-                    beta_sum: w.beta_sum,
-                    beta_n: w.beta_n,
-                })
-            })
-            .collect()
-    });
-
+    let mut worker = BandWorker::new(domain, cfg);
     let mut merged: Option<BandMerge> = None;
     let mut folded_total = 0usize;
     let mut beta_sum: Vec<f64> = Vec::new();
     let mut beta_n = 0usize;
-    for part in parts {
-        let FoldPart {
-            merge: m,
-            folded: n,
-            beta_sum: bs,
-            beta_n: bn,
-        } = part?;
-        folded_total += n;
-        if beta_sum.len() < bs.len() {
-            beta_sum.resize(bs.len(), 0.0);
+    pool.install(|| -> Result<()> {
+        let mut chunks = paths.chunks(per_chunk).enumerate().peekable();
+        while let Some((chunk_index, chunk)) = chunks.next() {
+            let mut folded = 0usize;
+            for (offset, path) in chunk.iter().enumerate() {
+                let index = chunk_index * per_chunk + offset;
+                if worker.fold(path, index, levels, &noise, warps, defect)? {
+                    folded += 1;
+                }
+            }
+            folded_total += folded;
+            if beta_sum.len() < worker.beta_sum.len() {
+                beta_sum.resize(worker.beta_sum.len(), 0.0);
+            }
+            for (acc, value) in beta_sum.iter_mut().zip(&worker.beta_sum) {
+                *acc += value;
+            }
+            beta_n += worker.beta_n;
+            match merged.as_mut() {
+                Some(acc) => acc.absorb(&worker.merge),
+                None => {
+                    merged = Some(std::mem::replace(
+                        &mut worker.merge,
+                        BandMerge::new(
+                            analysis_geom.width,
+                            analysis_geom.height,
+                            BAND_PLANES,
+                            cfg,
+                        ),
+                    ));
+                }
+            }
+            if chunks.peek().is_some() {
+                worker.reset_chunk();
+            }
         }
-        for (acc, v) in beta_sum.iter_mut().zip(&bs) {
-            *acc += v;
-        }
-        beta_n += bn;
-        match &mut merged {
-            Some(a) => a.absorb(&m),
-            None => merged = Some(m),
-        }
-    }
+        Ok(())
+    })?;
+    drop(worker);
     let merge = merged.context("no frames were folded")?;
     ensure!(
         folded_total > 0,
@@ -5877,7 +5866,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     }
     eprintln!(
         "folded          : {folded_total} / {} frames in {fold_secs:.1} s ({:.2} s per frame, \
-         {workers} workers)",
+         {workers} execution threads)",
         paths.len(),
         fold_secs / folded_total as f64
     );
@@ -9252,7 +9241,7 @@ mod tests {
 
         let third = MEMORY_BUDGET_BYTES / 3;
         assert_eq!(
-            canonical_band_workers(third, 64),
+            canonical_band_chunks(third, 64),
             3,
             "the canonical reduction count did not follow the memory budget"
         );
@@ -9283,7 +9272,7 @@ mod tests {
             "{BAND_WORKERS_ENV} did not override the execution-thread count"
         );
         assert_eq!(
-            canonical_band_workers(third, 64),
+            canonical_band_chunks(third, 64),
             3,
             "{BAND_WORKERS_ENV} changed the floating-point reduction partition"
         );
@@ -9294,7 +9283,7 @@ mod tests {
             "{BAND_WORKERS_ENV} was not clamped to the frame count"
         );
         assert_eq!(
-            canonical_band_workers(third, 5),
+            canonical_band_chunks(third, 5),
             3,
             "a large execution-thread override changed the canonical partition"
         );

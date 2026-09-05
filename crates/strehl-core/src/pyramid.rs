@@ -1530,8 +1530,34 @@ impl BandMerge {
         &self.gain
     }
 
-    /// Peak resident floats held by this accumulator. For an honest memory
-    /// report rather than a guess.
+    /// The legacy buffer estimate used to choose canonical reduction chunks.
+    ///
+    /// This deliberately matches [`Self::accumulator_floats`] without
+    /// allocating an accumulator. Its value is part of the output contract:
+    /// changing the resulting chunk boundaries changes floating-point
+    /// association and therefore output bytes.
+    pub fn planning_accumulator_floats(
+        width: usize,
+        height: usize,
+        planes: usize,
+        cfg: MergeConfig,
+    ) -> usize {
+        let sizes = level_sizes(width, height, cfg.bands);
+        let per_level: usize = sizes.iter().map(LevelSize::pixels).sum();
+        per_level
+            * (2 * planes
+                + 1
+                + usize::from(cfg.select == SelectMode::HardMax)
+                + usize::from(cfg.fallback != Fallback::Mean)
+                    * cfg.fallback_slots()
+                    * (planes + 1))
+            + usize::from(cfg.hull.bounds()) * 2 * planes * sizes[0].pixels()
+    }
+
+    /// Legacy accumulator estimate retained for canonical chunk planning.
+    ///
+    /// This excludes optional per-level hull and diagnostic storage, so it is
+    /// not a process-peak measurement.
     pub fn accumulator_floats(&self) -> usize {
         let per_level: usize = self.sizes.iter().map(LevelSize::pixels).sum();
         per_level
@@ -1542,6 +1568,42 @@ impl BandMerge {
                     * self.cfg.fallback_slots()
                     * (self.planes + 1))
             + self.lo.iter().chain(&self.hi).map(Vec::len).sum::<usize>()
+    }
+
+    /// Restore the additive, extrema and diagnostic identities without
+    /// releasing any of the accumulator's storage.
+    ///
+    /// This is the bounded-memory counterpart to [`Self::absorb`]: a caller
+    /// can fold one canonical chunk, absorb it left-to-right, reset this
+    /// scratch accumulator and fold the next chunk without retaining one
+    /// full-frame accumulator per chunk.
+    pub fn reset_for_reuse(&mut self) {
+        for values in self
+            .num
+            .iter_mut()
+            .chain(&mut self.usum)
+            .chain(&mut self.den)
+            .chain(&mut self.best)
+            .chain(&mut self.fkey)
+            .chain(&mut self.fval)
+            .chain(&mut self.sig_lv)
+            .chain(&mut self.dmax)
+        {
+            values.fill(0.0);
+        }
+        for values in self.lo.iter_mut().chain(&mut self.lo_lv) {
+            values.fill(f32::INFINITY);
+        }
+        for values in self.hi.iter_mut().chain(&mut self.hi_lv) {
+            values.fill(f32::NEG_INFINITY);
+        }
+        for values in &mut self.darg {
+            values.fill(-1);
+        }
+        for values in &mut self.dsq {
+            values.fill(0.0);
+        }
+        self.frames = 0;
     }
 
     /// The band-noise floor to use at level `k`: the caller's measured value if
@@ -2446,7 +2508,10 @@ impl FrameWorkspace {
         }
     }
 
-    /// Floats held by this workspace, for the memory report.
+    /// Legacy workspace estimate retained for canonical chunk planning.
+    ///
+    /// This excludes `ghull` and the plane cache's workspace, so it is not a
+    /// process-peak measurement.
     pub fn floats(&self) -> usize {
         self.ws.scratch.len()
             + self.ws.expanded.len()
@@ -2457,6 +2522,18 @@ impl FrameWorkspace {
             + self.weight.len()
             + self.coarse.len()
             + self.smooth_scratch.len()
+    }
+
+    /// The legacy workspace estimate used to choose canonical reduction
+    /// chunks, computed without allocating the workspace.
+    ///
+    /// Keep this paired with [`Self::floats`]. The estimate predates the
+    /// reusable bounded fold and now defines arithmetic grouping rather than a
+    /// claim about the process peak.
+    pub fn planning_floats(sizes: &[LevelSize], planes: usize) -> usize {
+        let n0 = sizes[0].pixels();
+        let pyramid = sizes.iter().map(LevelSize::pixels).sum::<usize>();
+        6 * n0 + 2 * sizes[0].width + (planes + 2) * pyramid
     }
 
     /// Drop the memoised plane pyramids, so the next frame rebuilds them.
@@ -3533,6 +3610,157 @@ mod tests {
             run(1),
             run(4),
             "spatial work scheduling changed a destination sample's arithmetic"
+        );
+    }
+
+    #[test]
+    fn resetting_a_merge_restores_fresh_state_without_reallocating() {
+        let (w, h) = (64usize, 48usize);
+        let cfg = MergeConfig {
+            bands: 3,
+            select: SelectMode::HardMax,
+            fallback: Fallback::TopK,
+            fallback_k: 3,
+            hull: Hull::PerLevel,
+            ..Default::default()
+        };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let var = vec![9.0f32; w * h];
+        let mut merge = BandMerge::new(w, h, 2, cfg);
+        let mut fresh = BandMerge::new(w, h, 2, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 2);
+        assert_eq!(
+            BandMerge::planning_accumulator_floats(w, h, 2, cfg),
+            merge.accumulator_floats(),
+            "allocation-free planning changed the canonical accumulator estimate"
+        );
+        assert_eq!(
+            FrameWorkspace::planning_floats(&sizes, 2),
+            fws.floats(),
+            "allocation-free planning changed the canonical workspace estimate"
+        );
+        for i in 0..3 {
+            let mut a = split_focus(w, h, i % 2 == 0);
+            let mut b = split_focus(w, h, i % 2 != 0);
+            for (j, v) in a.iter_mut().enumerate() {
+                *v += ((i * 19 + j * 7) % 11) as f32;
+            }
+            for (j, v) in b.iter_mut().enumerate() {
+                *v += ((i * 13 + j * 5) % 17) as f32;
+            }
+            fws.next_frame();
+            merge.add_frame(&[&a, &b], &a, &var, &mut fws);
+        }
+
+        // Diagnostics are normally allocated only when their output is
+        // requested. Plant them directly so reset coverage does not depend on
+        // a process-global environment variable.
+        let diagnostic_f32 = || sizes.iter().map(|s| vec![7.0f32; s.pixels()]).collect();
+        let diagnostic_i32 = || sizes.iter().map(|s| vec![23i32; s.pixels()]).collect();
+        let diagnostic_f64 = || sizes.iter().map(|s| vec![11.0f64; s.pixels()]).collect();
+        merge.dmax = diagnostic_f32();
+        merge.darg = diagnostic_i32();
+        merge.dsq = diagnostic_f64();
+        fresh.dmax = sizes.iter().map(|s| vec![0.0f32; s.pixels()]).collect();
+        fresh.darg = sizes.iter().map(|s| vec![-1i32; s.pixels()]).collect();
+        fresh.dsq = sizes.iter().map(|s| vec![0.0f64; s.pixels()]).collect();
+
+        let num_ptr = merge.num[0].as_ptr();
+        let fallback_ptr = merge.fval[0].as_ptr();
+        let hull_ptr = merge.lo_lv[0].as_ptr();
+        let diagnostic_ptr = merge.dsq[0].as_ptr();
+        merge.reset_for_reuse();
+
+        assert_eq!(merge.num, fresh.num);
+        assert_eq!(merge.usum, fresh.usum);
+        assert_eq!(merge.den, fresh.den);
+        assert_eq!(merge.best, fresh.best);
+        assert_eq!(merge.fkey, fresh.fkey);
+        assert_eq!(merge.fval, fresh.fval);
+        assert_eq!(merge.lo, fresh.lo);
+        assert_eq!(merge.hi, fresh.hi);
+        assert_eq!(merge.lo_lv, fresh.lo_lv);
+        assert_eq!(merge.hi_lv, fresh.hi_lv);
+        assert_eq!(merge.sig_lv, fresh.sig_lv);
+        assert_eq!(merge.dmax, fresh.dmax);
+        assert_eq!(merge.darg, fresh.darg);
+        assert_eq!(merge.dsq, fresh.dsq);
+        assert_eq!(merge.frames, 0);
+        assert_eq!(merge.band_gain().all(), fresh.band_gain().all());
+
+        assert_eq!(merge.num[0].as_ptr(), num_ptr);
+        assert_eq!(merge.fval[0].as_ptr(), fallback_ptr);
+        assert_eq!(merge.lo_lv[0].as_ptr(), hull_ptr);
+        assert_eq!(merge.dsq[0].as_ptr(), diagnostic_ptr);
+    }
+
+    #[test]
+    fn recycled_canonical_chunks_are_bit_identical_to_retained_partials() {
+        let (w, h, nf) = (64usize, 48usize, 10usize);
+        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let var = vec![9.0f32; w * h];
+        let frames: Vec<Vec<f32>> = (0..nf)
+            .map(|i| {
+                let mut v = split_focus(w, h, i % 2 == 0);
+                for (j, x) in v.iter_mut().enumerate() {
+                    *x += ((i * 31 + j * 17) % 13) as f32;
+                }
+                v
+            })
+            .collect();
+        let per_chunk = nf.div_ceil(4);
+
+        let fold_into = |merge: &mut BandMerge,
+                         fws: &mut FrameWorkspace,
+                         chunk: &[Vec<f32>]| {
+            for frame in chunk {
+                fws.next_frame();
+                merge.add_frame(&[frame.as_slice()], frame, &var, fws);
+            }
+        };
+
+        let mut retained: Vec<BandMerge> = frames
+            .chunks(per_chunk)
+            .map(|chunk| {
+                let mut merge = BandMerge::new(w, h, 1, cfg);
+                let mut fws = FrameWorkspace::new(&sizes, 1);
+                fold_into(&mut merge, &mut fws, chunk);
+                merge
+            })
+            .collect();
+        let mut retained_acc = retained.remove(0);
+        for part in &retained {
+            retained_acc.absorb(part);
+        }
+
+        let mut scratch = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let mut recycled_acc: Option<BandMerge> = None;
+        for chunk in frames.chunks(per_chunk) {
+            fold_into(&mut scratch, &mut fws, chunk);
+            match recycled_acc.as_mut() {
+                Some(acc) => {
+                    acc.absorb(&scratch);
+                    scratch.reset_for_reuse();
+                }
+                None => {
+                    recycled_acc =
+                        Some(std::mem::replace(&mut scratch, BandMerge::new(w, h, 1, cfg)));
+                }
+            }
+        }
+
+        let output_bits = |merge: BandMerge| {
+            merge.finish(&mut Workspace::new(&sizes))[0]
+                .iter()
+                .map(|v| v.to_bits())
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(
+            output_bits(retained_acc),
+            output_bits(recycled_acc.unwrap()),
+            "reusing the scratch accumulator changed the canonical four-chunk result"
         );
     }
 
