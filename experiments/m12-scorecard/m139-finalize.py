@@ -11,6 +11,14 @@ COUNTS = (33, 105, 299)
 WORKERS = (1, 2, 4, 8, 16)
 MODULO_COUNTS = (96, 97, 98, 99)
 SIX_GIB = 6 * (1 << 30)
+LOCAL_ONLY_ROOT_LOGS = {
+    "build-archive.log",
+    "build-release.log",
+    "commission-archive.log",
+    "commission-build-initial.log",
+    "commission-build-planted.log",
+    "commission-build-restored.log",
+}
 
 
 def sha256(path: Path) -> str:
@@ -879,8 +887,15 @@ def main() -> int:
     audit_inputs = {
         path.name: artifact(path)
         for path in sorted(root.iterdir(), key=lambda candidate: candidate.name)
-        if path.is_file() and path != paths["audit"]
+        if path.is_file()
+        and path != paths["audit"]
+        and path.name not in LOCAL_ONLY_ROOT_LOGS
     }
+    local_only_logs = [
+        path.name
+        for path in sorted(root.iterdir(), key=lambda candidate: candidate.name)
+        if path.is_file() and path.name in LOCAL_ONLY_ROOT_LOGS
+    ]
     audit = {
         "schema": 2,
         "evidence_tag": "VERIFIED",
@@ -910,6 +925,7 @@ def main() -> int:
         "absolute_bars": closeout["absolute_bars"],
         "record_accounting": closeout["record_accounting"],
         "artifacts": audit_inputs,
+        "local_only_nonpersistent_logs": local_only_logs,
         "could_not_determine": closeout["could_not_determine"],
     }
     write_json(paths["audit"], audit)

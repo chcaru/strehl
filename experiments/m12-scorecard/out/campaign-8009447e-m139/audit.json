@@ -147,24 +147,14 @@
   "adjudicated_evidence_cutoff_utc": "2026-09-05T01:58:49.867621+00:00",
   "artifacts": {
     ".gitattributes": {
-      "bytes": 41,
+      "bytes": 66,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\.gitattributes",
-      "sha256": "3F57416EE0E59D479E1E035FB43363F04A7814FCDEFB3DB06629DBE84081F90D"
+      "sha256": "1774001C1877BF5F2993701E7A198E083081FE8649003C30CA9DD378E9E0CFB5"
     },
     "RUN-MANIFEST.json": {
       "bytes": 7934,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\RUN-MANIFEST.json",
       "sha256": "BFFFF91C0FB01854E30C0C34481E99FEA524E9BF314EFA8FC198D0B623238DB5"
-    },
-    "build-archive.log": {
-      "bytes": 295,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\build-archive.log",
-      "sha256": "1997A80C3B9312154E16E750EB0CEDD8840F2C1E3354B6E87129A19269DC378B"
-    },
-    "build-release.log": {
-      "bytes": 5479,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\build-release.log",
-      "sha256": "B4165B2ABBAC998B6D59DB91C8B65968708357013C9FCDEB754056C3DB42E337"
     },
     "build.json": {
       "bytes": 1086,
@@ -174,27 +164,7 @@
     "closeout.json": {
       "bytes": 38280,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\closeout.json",
-      "sha256": "41ED78BF2EA2748883D69AD17299782E739DE53909387CD886EF3B6BED044DD9"
-    },
-    "commission-archive.log": {
-      "bytes": 307,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\commission-archive.log",
-      "sha256": "FCCC61C025E63D83F502B5A025DC48DE4E72E0C8E15B58AB404C861373A26476"
-    },
-    "commission-build-initial.log": {
-      "bytes": 5551,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\commission-build-initial.log",
-      "sha256": "A69CD1A924B8F7469BC46884D0337A6B0C8C1BA01208CC7A334527DF0602783D"
-    },
-    "commission-build-planted.log": {
-      "bytes": 1134,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\commission-build-planted.log",
-      "sha256": "AFAB82E4228906C5716CF002D189452CA715CB59D847682F571604B260589E65"
-    },
-    "commission-build-restored.log": {
-      "bytes": 1134,
-      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\commission-build-restored.log",
-      "sha256": "C803DFC98EED107E537CC746482BD5BA7F8A6375CECFE9011347A91F9BF1A8AE"
+      "sha256": "AE067E0DC171DD57016D6079F14419220E67138670D949CFC4C742ACC361FC75"
     },
     "determinism-commission.json": {
       "bytes": 22232,
@@ -212,9 +182,9 @@
       "sha256": "125AA32B50AD1F524E6F6CF2AA2D840407822957C83AFE6F8DDC34265FC4D5C2"
     },
     "diagnostic-monitor-v1-resume-wait.json": {
-      "bytes": 23858,
+      "bytes": 23264,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\diagnostic-monitor-v1-resume-wait.json",
-      "sha256": "717099C06AB05B9C59A249E40105789F7145DB6793570DF64EBED280A5F72D6B"
+      "sha256": "8B57BA524FC3E46707653C2447D1A9FAA7F072E6D982DB6A97195684A8C77EFC"
     },
     "final-modulo-window-invalidation.json": {
       "bytes": 14477,
@@ -222,24 +192,24 @@
       "sha256": "E1ACC56108E02C90782D8929671192FE0AE21291BC00D7429997E64965385896"
     },
     "final-window-start-r2.json": {
-      "bytes": 27311,
+      "bytes": 26345,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-start-r2.json",
-      "sha256": "E87B31A23ACD747635DB63D6CDB89A061D10A398D32F2E47C27EEC673317DBDE"
+      "sha256": "9213BA3967F3FF7EBAC19B25D04B3570338DE3CD6F70DB24ED9F01FE9DB6FE95"
     },
     "final-window-start-r3.json": {
-      "bytes": 1019,
+      "bytes": 984,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-start-r3.json",
-      "sha256": "EC10B2A0D2E841A686EF22879B81633F9F88C46F1B4F934C5111EA806644A088"
+      "sha256": "EBB19E2CC352161A3678A3243C8666BA4F020A5C76EE33C4BE65105AFFAEE7B8"
     },
     "final-window-start-r4.json": {
-      "bytes": 1019,
+      "bytes": 984,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-start-r4.json",
-      "sha256": "6E12E7AA963FCE0BB71029839A9B7565581E61B6D18157F3A72FF38DB26AC517"
+      "sha256": "CF1235CCE8825BC212A5BF9D6445375AD3B1561299D9E4871669E2242AE4510C"
     },
     "final-window-start.json": {
-      "bytes": 25290,
+      "bytes": 24394,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-start.json",
-      "sha256": "3137E25BF9F4036E730204FBEE5C8EB214FE9E99211984716B8DF0791C1E535F"
+      "sha256": "FE396DCB1A97419938B2B3F26836949B2FB90A977A40265B3F8A8A21AC38ADBB"
     },
     "final-window-tail-invalidation.json": {
       "bytes": 7449,
@@ -277,9 +247,9 @@
       "sha256": "DB2572CAE5E1C39CA6FC3DE9BC6A2F65ABE22CD29A05F47647E4E3A99BAA6FAF"
     },
     "monitor-amendment.json": {
-      "bytes": 4225,
+      "bytes": 4132,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\monitor-amendment.json",
-      "sha256": "EFE69AC7E6FC3E505285C07F4EEC59DD1CD46E375AFB712963A0880BD3AC1B24"
+      "sha256": "82BCAA21A1D26E7B4971D78F705C00B1871DC85AA3D8B5C2117DC75BE078B0C9"
     },
     "preflight.json": {
       "bytes": 4751,
@@ -287,14 +257,14 @@
       "sha256": "31E16D38DA95C92ED03F8975D17912DF326E8CF2CCD1DF4B0529BB0945CE84B3"
     },
     "read-only-after.json": {
-      "bytes": 797,
+      "bytes": 772,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-after.json",
-      "sha256": "F6769178BE3F9486D38ED6C0CB8E268FA0B1F2A4C2818A5760016BEA34656C2D"
+      "sha256": "1C64E16E6BEEFBE492FC2F2019DC028A5123C76CA5A963FF777A9E4B1B042516"
     },
     "read-only-before.json": {
-      "bytes": 798,
+      "bytes": 773,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-before.json",
-      "sha256": "6F8396AE2A54B9C515EACEE5DC3A2C6757244ADE8EE8CCA51F922FDC76838E88"
+      "sha256": "C8B1F3A52AD689AA396B22EE81AB766F977AD081FB052B6181EF14976761C4FB"
     },
     "records-before-final-modulo-rerun.jsonl": {
       "bytes": 2181540,
@@ -322,44 +292,44 @@
       "sha256": "282E2FE10CD8D2835A8763D71C82C062FF2D0AD68FCEF6CB70B247CD3A7A4BC7"
     },
     "resume-wait-r3.json": {
-      "bytes": 208928,
+      "bytes": 202685,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r3.json",
-      "sha256": "57E8040FD4D7EEE3466EF2E8C3D0BC9CEFB17E280E2B48ED65A4A909D372B5B3"
+      "sha256": "D1242293AFF1B4CC831A1EACD5D93C556F0D7F822D31E8B63B1353A4DAEE4C13"
     },
     "resume-wait-r4.json": {
-      "bytes": 495113,
+      "bytes": 480071,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r4.json",
-      "sha256": "1123E8B883A7DE957AB88BC34AE710E662B791CBBE52C6D39D555B7702B33D2B"
+      "sha256": "01A56A173C2CB8750D24F315670BAF2E536DD03CE6A24BD367D2AA9000CADEBB"
     },
     "resume-wait-r5.json": {
-      "bytes": 119234,
+      "bytes": 115637,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r5.json",
-      "sha256": "9BCEF965DB83F9A382861DA709147F6E73FC97DCAF44B16D80A05FB3E78E12BC"
+      "sha256": "3C3B9A89EF5EA64B81616840230201279BC4058729B25D59293CFEF623EF5647"
     },
     "resume-wait-r6.json": {
-      "bytes": 25545,
+      "bytes": 24783,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r6.json",
-      "sha256": "842E817FC53A169424E223AB930286C5FA8AA20D5B61EF0CDCB4E490AEBDE2F3"
+      "sha256": "F9879B2D9D8183977CE543422C3F66BBAFAF9B51D86601A843425A6F559F781C"
     },
     "resume-wait-r7.json": {
-      "bytes": 104561,
+      "bytes": 101433,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r7.json",
-      "sha256": "82E7A99211E0DA4E9345CD8C06AC1C818DA2A8562549E1BF79115B6582C266B8"
+      "sha256": "AEB285A8FFA86A967546751782202142A119E77A5A4223B1A765768883B41E03"
     },
     "resume-wait-r8.json": {
-      "bytes": 55260,
+      "bytes": 53616,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r8.json",
-      "sha256": "A539AD6152D9375AF176623260B3F2E19ADB2ECC8FD9180DCEBEA48D8552AF15"
+      "sha256": "EFA9BF7A02D2D7A79D507972AD707E0B6D7DBABA81C7A4EEC02CF1E9245BFC49"
     },
     "resume-wait-r9.json": {
-      "bytes": 550554,
+      "bytes": 533865,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r9.json",
-      "sha256": "ACE042E14EF31461A6E0F8AC079E6BF66788B8A122D350493F0F833BFA96A7D4"
+      "sha256": "EDB23B294E335B8E83D395E22C1FB10E724142C48C1302587A49E64C1EE7ABC1"
     },
     "runtime-quiesce-final.json": {
-      "bytes": 510,
+      "bytes": 495,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\runtime-quiesce-final.json",
-      "sha256": "E238BD25617C83A0400474C3A22DA671D1B59F718BE325B73F1D8D67CC50ABB9"
+      "sha256": "6600F2C056C1082FF8B9520BC6639907509655574F118C1B06AF93B94B9D1019"
     },
     "smoke.json": {
       "bytes": 21155,
@@ -415,6 +385,14 @@
     "registered_campaign_complete": true,
     "smoke_passed": true
   },
+  "local_only_nonpersistent_logs": [
+    "build-archive.log",
+    "build-release.log",
+    "commission-archive.log",
+    "commission-build-initial.log",
+    "commission-build-planted.log",
+    "commission-build-restored.log"
+  ],
   "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
   "record_accounting": {
     "accepted": 133,

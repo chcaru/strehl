@@ -647,9 +647,9 @@
     },
     "helpers": {
       "finalizer": {
-        "bytes": 39397,
+        "bytes": 39938,
         "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m139-finalize.py",
-        "sha256": "2802E0D740A847E5DA8DA8E72DED5D6B714055D59706EB018AB0A326CCF623F7"
+        "sha256": "450D9663322529EA02188EA54EBF14F8A86D09659FA40758CE62815B049F1AC2"
       },
       "modulo_window_invalidator": {
         "bytes": 5720,

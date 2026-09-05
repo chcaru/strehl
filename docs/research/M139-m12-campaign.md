@@ -361,8 +361,9 @@ All campaign artifacts record measured commit
 - `closeout.json`: authoritative machine-readable result, all 15 cells, both
   commissioning controls, host conditions, read-only proof, and uncertainty
   ledger.
-- `audit.json`: integrity PASS and SHA-256 manifest for every root campaign
-  artifact.
+- `audit.json`: integrity PASS and SHA-256 manifest for every persistent root
+  campaign artifact; six ignored local build logs are identified separately
+  and are not required to reproduce the adjudication.
 - `memory-commission.json`, `determinism-commission.json`, and `smoke.json`:
   bidirectional commissioning and end-to-end smoke.
 - `m172-overlap-invalidation.json`,
