@@ -215,8 +215,8 @@ def main() -> int:
     expected_total = len(report_lines) + len(semantic)
     if baseline_failures:
         raise RuntimeError(f"baseline is RED before commissioning: {baseline_failures}")
-    if expected_total != 41:
-        raise RuntimeError(f"registered check count changed: {expected_total}, expected 41")
+    if expected_total != 44:
+        raise RuntimeError(f"registered check count changed: {expected_total}, expected 44")
     print(f"BASELINE GREEN: {expected_total}/{expected_total} checks passed")
 
     report_results = []
@@ -243,7 +243,11 @@ def main() -> int:
 
     specs = semantic_specs()
     semantic_ids = [row[0] for row in semantic]
-    external_ids = ["S21-product-run-witnesses", "S22-holdout-exclusion"]
+    external_ids = [
+        "S21-product-run-witnesses",
+        "S22-holdout-exclusion",
+        "S23-m172-boundary-and-n7",
+    ]
     if [spec["id"] for spec in specs] + external_ids != semantic_ids:
         raise RuntimeError("semantic mutation specs do not match verifier order")
 
@@ -261,6 +265,11 @@ def main() -> int:
             ledger_line(
                 "S22-holdout-exclusion",
                 ("external", "owned_text_contains_prohibited_name"),
+                False,
+            ),
+            ledger_line(
+                "S23-m172-boundary-and-n7",
+                ("m172_evidence_boundary", "m172_answered_step3"),
                 False,
             ),
         ]
@@ -290,7 +299,7 @@ def main() -> int:
     records = {
         "pre-n33-w1": verify.read_json(HERE / "pre-n33-w1.json"),
     }
-    record_anchor = ledger_lines[-2]
+    record_anchor = ledger_lines[-3]
     record_replacement = ledger_line(
         "S21-product-run-witnesses",
         ("external", "pre-n33-w1", "output_removed_after_hash"),
@@ -314,7 +323,7 @@ def main() -> int:
     if not caught:
         missed.append("S21-product-run-witnesses")
 
-    holdout_anchor = ledger_lines[-1]
+    holdout_anchor = ledger_lines[-2]
     holdout_replacement = ledger_line(
         "S22-holdout-exclusion",
         ("external", "owned_text_contains_prohibited_name"),
@@ -338,6 +347,29 @@ def main() -> int:
     )
     if not caught:
         missed.append("S22-holdout-exclusion")
+
+    boundary_anchor = ledger_lines[-1]
+    boundary_replacement = ledger_line(
+        "S23-m172-boundary-and-n7",
+        ("m172_evidence_boundary", "m172_answered_step3"),
+        True,
+    )
+    replace_unique_full_line(
+        ledger, boundary_anchor, boundary_replacement, "S23-m172-boundary-and-n7"
+    )
+    broken_boundary = deepcopy(result)
+    broken_boundary["m172_evidence_boundary"]["m172_answered_step3"] = True
+    caught = "S23-m172-boundary-and-n7" in failed_semantic_ids(broken_boundary)
+    semantic_results.append(
+        {
+            "check": "S23-m172-boundary-and-n7",
+            "defect": "M172 falsely credited with independent allocation attribution",
+            "anchor_sha256": hashlib.sha256(boundary_anchor.encode("utf-8")).hexdigest().upper(),
+            "caught": caught,
+        }
+    )
+    if not caught:
+        missed.append("S23-m172-boundary-and-n7")
 
     inert_report = replace_unique_full_line(
         report,

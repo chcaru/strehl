@@ -1,7 +1,7 @@
 {
   "schema": "m182-memory-check-commission-v1",
-  "baseline_checks": 41,
-  "baseline_passed": 41,
+  "baseline_checks": 44,
+  "baseline_passed": 44,
   "report_mutations": [
     {
       "check": "R-bar-ruling",
@@ -84,6 +84,16 @@
       "caught": true
     },
     {
+      "check": "R-m172-boundary",
+      "anchor_sha256": "DA637BB5C28955D44B82611FD6D9040E274B609BC25D271C18D1BC773423BF5F",
+      "caught": true
+    },
+    {
+      "check": "R-n7-ruling",
+      "anchor_sha256": "B06F6AC0AA8524D027462C1C0A8D19A2CC786D6546E722BC159B7E3D1693C18B",
+      "caught": true
+    },
+    {
       "check": "R-probe-commission",
       "anchor_sha256": "CA2F2E8ED6AC340CF26A005627AFE9A81E5CB93A476C71D023097B2E93FCEB8F",
       "caught": true
@@ -95,7 +105,7 @@
     },
     {
       "check": "R-check-commission",
-      "anchor_sha256": "0FB443A2F7753BAF888D6C11E20092BAEBDBDDF05BF1C7F74E76692A79EA3D2A",
+      "anchor_sha256": "099B239E198E8194DBECD6820DC9B6E267664E12D5E3791CD48F62CAEF09D69D",
       "caught": true
     }
   ],
@@ -231,10 +241,16 @@
       "defect": "prohibited holdout name planted into owned-text view",
       "anchor_sha256": "C6604EF90923638174A64E19C67F7C6FF47837070DCF1E22A369E86F1C62D0CB",
       "caught": true
+    },
+    {
+      "check": "S23-m172-boundary-and-n7",
+      "defect": "M172 falsely credited with independent allocation attribution",
+      "anchor_sha256": "C031FA3010BAF4287E407FEB201252C1FE65961D9BB55F39AA9765F230F27E64",
+      "caught": true
     }
   ],
-  "planted_defects": 41,
-  "caught": 41,
+  "planted_defects": 44,
+  "caught": 44,
   "missed": [],
   "inert_arms": {
     "unmeasured_report_sentence_stayed_green": true,

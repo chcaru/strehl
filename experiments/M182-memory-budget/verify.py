@@ -29,6 +29,27 @@ M139_RECORDS = M139_CLOSEOUT.with_name("records.jsonl")
 HARNESS = ROOT / "experiments" / "m12-scorecard" / "m12-harness.py"
 PROPOSAL = ROOT / "docs" / "proposals" / "2026-08-sota-path.md"
 SCORECARD = ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md"
+M172_ARTIFACTS = {
+    "experiments/M172-worker-memory/measure_memory.py": (
+        ROOT / "experiments" / "M172-worker-memory" / "measure_memory.py"
+    ),
+    "experiments/M172-worker-memory/results/campaign.json": (
+        ROOT / "experiments" / "M172-worker-memory" / "results" / "campaign.json"
+    ),
+    "experiments/M172-worker-memory/results/negative-control-summary.json": (
+        ROOT
+        / "experiments"
+        / "M172-worker-memory"
+        / "results"
+        / "negative-control-summary.json"
+    ),
+    "docs/research/M172-worker-invariance-control.md": (
+        ROOT / "docs" / "research" / "M172-worker-invariance-control.md"
+    ),
+    "docs/research/M172-m12s-closure.md": (
+        ROOT / "docs" / "research" / "M172-m12s-closure.md"
+    ),
+}
 M139_COMMIT = "8009447e059febb8f9c59fda509f141835d6abdb"
 BOUNDED_COMMIT = "a97275817c58e164f75c7cd3d80ca99444a2a145"
 BAR_BYTES = 6 << 30
@@ -151,6 +172,22 @@ def expected_report_lines(result: dict[str, Any]) -> dict[str, str]:
         "headroom, and measures "
         f"`peak_N299/peak_N33 = {bounded['n299_over_n33_ratio']:.9f}`."
     )
+    lines["m172-boundary"] = (
+        "**CANONICAL M172 BOUNDARY:** M172 supplied the `a9727581` bounded-memory "
+        "candidate and its M12-S and prequantization evidence; M182 "
+        "independently established the bar semantics, unrepaired failure/scaling, "
+        "allocation ledger, fresh pre-repair W1/W2/W4 peaks, `a9727581` N33/N299 "
+        "W16 memory, and meter commissioning; no unrerun M172 M12-S finding enters "
+        "this memory verdict."
+    )
+    n7 = result["n7"]
+    lines["n7-ruling"] = (
+        "**CANONICAL N7 RULING:** the certifying unrepaired M139 campaign at "
+        f"`8009447e` was already RED at `{n7['unrepaired_registered_job_peak_bytes']:,} "
+        f"B > {BAR_BYTES:,} B`, and M182 independently reproduced a RED unrepaired "
+        "W4 cell; the `a9727581` readings remain diagnostic and are not cashed as "
+        "a pass before M179's certifying rerun."
+    )
 
     probe = result["probe_commission"]["deltas"]
     raw_probe = read_json(COMMISSION)
@@ -175,7 +212,7 @@ def expected_report_lines(result: dict[str, Any]) -> dict[str, str]:
         "fails; M139 formally records `UNMEASURED_HOST_QUARANTINE`.”"
     )
     lines["check-commission"] = (
-        "**CANONICAL CHECK COMMISSION:** `41/41` baseline checks passed; `41/41` "
+        "**CANONICAL CHECK COMMISSION:** `44/44` baseline checks passed; `44/44` "
         "uniquely anchored planted defects were caught; `0` were missed; `2/2` "
         "inert arms survived; both allocation-up and saving-down positive controls "
         "remained discriminating."
@@ -445,6 +482,40 @@ def semantic_checks(
         "S22-holdout-exclusion",
         prohibited_name not in own_text,
         "owned artifacts name the prohibited holdout",
+    )
+    boundary = result["m172_evidence_boundary"]
+    n7 = result["n7"]
+    m172_artifacts_ok = set(boundary["artifacts"]) == set(M172_ARTIFACTS) and all(
+        boundary["artifacts"][relative]["sha256"] == sha256(path)
+        and boundary["artifacts"][relative]["last_commit"]
+        == git("log", "-1", "--format=%H", "--", relative)
+        for relative, path in M172_ARTIFACTS.items()
+    )
+    fresh_w4 = next(
+        row["fresh_job_peak_bytes"]
+        for row in result["reproduction"]["rows"]
+        if row["workers"] == 4
+    )
+    add(
+        "S23-m172-boundary-and-n7",
+        boundary["authored_bounded_memory_commit"] == BOUNDED_COMMIT
+        and boundary["m172_answered_step4"]
+        and not boundary["m172_answered_step3"]
+        and boundary["m172_throughput_campaign_timed_runs"] == 0
+        and not boundary["unrerun_m172_claims_used_in_memory_verdict"]
+        and not boundary["m12_s_acted_on"]
+        and not boundary["m179_outputs_read_or_acted_on"]
+        and boundary["closure_doc_is_downstream_of_m182"]
+        and m172_artifacts_ok
+        and n7["unrepaired_certifying_commit"] == M139_COMMIT
+        and n7["unrepaired_registered_job_peak_bytes"]
+        == result["m139"]["maximum_job_peak_bytes"]
+        and n7["unrepaired_registered_test_failed"]
+        and n7["fresh_unrepaired_w4_job_peak_bytes"] == fresh_w4
+        and n7["fresh_unrepaired_w4_failed"]
+        and not n7["repaired_result_cashed_as_formal_pass"]
+        and n7["certifying_rerun_owner"] == "M179-m12-rerun",
+        "M172 provenance boundary or N7 fail-before-pass record is inconsistent",
     )
     return checks
 

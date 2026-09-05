@@ -14,6 +14,16 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 PROPOSAL = ROOT / "docs" / "proposals" / "2026-08-sota-path.md"
 SCORECARD = ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md"
+M172_CLOSURE = ROOT / "docs" / "research" / "M172-m12s-closure.md"
+M172_INVARIANCE = (
+    ROOT / "docs" / "research" / "M172-worker-invariance-control.md"
+)
+M172_EXPERIMENT = ROOT / "experiments" / "M172-worker-memory"
+M172_MEASURE = M172_EXPERIMENT / "measure_memory.py"
+M172_CAMPAIGN = M172_EXPERIMENT / "results" / "campaign.json"
+M172_NEGATIVE_SUMMARY = (
+    M172_EXPERIMENT / "results" / "negative-control-summary.json"
+)
 HARNESS = ROOT / "experiments" / "m12-scorecard" / "m12-harness.py"
 M139 = (
     ROOT
@@ -424,6 +434,22 @@ def build() -> dict[str, Any]:
             "bytes": len(data),
             "anchors": anchors,
         }
+    m172_artifacts = {}
+    for path in (
+        M172_MEASURE,
+        M172_CAMPAIGN,
+        M172_NEGATIVE_SUMMARY,
+        M172_INVARIANCE,
+        M172_CLOSURE,
+    ):
+        relative = str(path.relative_to(ROOT)).replace("\\", "/")
+        m172_artifacts[relative] = {
+            "sha256": sha256(path),
+            "last_commit": git("log", "-1", "--format=%H", "--", relative),
+        }
+    fresh_w4_peak = next(
+        row["fresh_job_peak_bytes"] for row in reproduction if row["workers"] == 4
+    )
     return {
         "schema": "m182-memory-budget-v1",
         "bar": {
@@ -474,6 +500,53 @@ def build() -> dict[str, Any]:
         },
         "bounded_implementation": bounded,
         "plan": plan,
+        "m172_evidence_boundary": {
+            "authored_bounded_memory_commit": BOUNDED_COMMIT,
+            "m172_answered_step4": True,
+            "m172_answered_step3": False,
+            "step4_imported_conclusion": (
+                "one reusable BandWorker, two BandMerge accumulators, and spatial "
+                "parallelism bound memory without tiling"
+            ),
+            "step3_gap_in_m172": (
+                "the committed M172 material contains a Job Object wrapper and "
+                "bounded implementation, but no ranked source allocation ledger"
+            ),
+            "independently_verified_by_m182": [
+                "bar and warm lifecycle semantics from governing documents and harness",
+                "registered unrepaired M139 failure and fifteen-cell scaling law",
+                "fresh unrepaired N33 W1/W2/W4 Job peaks",
+                "exact source allocation ledger and 99.847647 percent slope closure",
+                "a9727581 source shape, binary identity, and aligned N33/N299 W16 memory",
+                "bidirectional and inert commissioning of the Job Object meter",
+            ],
+            "accepted_from_m172_without_independent_rerun": [
+                "post-D9 cross-worker byte invariance on the registered N33 arm",
+                "prequantization f32 negative-control results",
+            ],
+            "m172_throughput_campaign_timed_runs": len(
+                read_json(M172_CAMPAIGN)["timed_runs"]
+            ),
+            "unrerun_m172_claims_used_in_memory_verdict": False,
+            "m12_s_acted_on": False,
+            "m179_outputs_read_or_acted_on": False,
+            "closure_doc_is_downstream_of_m182": (
+                m172_artifacts[
+                    "docs/research/M172-m12s-closure.md"
+                ]["last_commit"]
+                == "15b5f2f671a062dff0c0620bd5af16c7ffcead67"
+            ),
+            "artifacts": m172_artifacts,
+        },
+        "n7": {
+            "unrepaired_certifying_commit": M139_COMMIT,
+            "unrepaired_registered_job_peak_bytes": old_peak,
+            "unrepaired_registered_test_failed": old_peak > BAR_BYTES,
+            "fresh_unrepaired_w4_job_peak_bytes": fresh_w4_peak,
+            "fresh_unrepaired_w4_failed": fresh_w4_peak > BAR_BYTES,
+            "repaired_result_cashed_as_formal_pass": False,
+            "certifying_rerun_owner": "M179-m12-rerun",
+        },
         "probe_commission": {
             "status": probe_commission["status"],
             "harness_sha256": probe_commission["harness_sha256"],

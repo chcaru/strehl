@@ -338,6 +338,61 @@
     ],
     "already_landed_concurrently_at": "a97275817c58e164f75c7cd3d80ca99444a2a145"
   },
+  "m172_evidence_boundary": {
+    "authored_bounded_memory_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+    "m172_answered_step4": true,
+    "m172_answered_step3": false,
+    "step4_imported_conclusion": "one reusable BandWorker, two BandMerge accumulators, and spatial parallelism bound memory without tiling",
+    "step3_gap_in_m172": "the committed M172 material contains a Job Object wrapper and bounded implementation, but no ranked source allocation ledger",
+    "independently_verified_by_m182": [
+      "bar and warm lifecycle semantics from governing documents and harness",
+      "registered unrepaired M139 failure and fifteen-cell scaling law",
+      "fresh unrepaired N33 W1/W2/W4 Job peaks",
+      "exact source allocation ledger and 99.847647 percent slope closure",
+      "a9727581 source shape, binary identity, and aligned N33/N299 W16 memory",
+      "bidirectional and inert commissioning of the Job Object meter"
+    ],
+    "accepted_from_m172_without_independent_rerun": [
+      "post-D9 cross-worker byte invariance on the registered N33 arm",
+      "prequantization f32 negative-control results"
+    ],
+    "m172_throughput_campaign_timed_runs": 0,
+    "unrerun_m172_claims_used_in_memory_verdict": false,
+    "m12_s_acted_on": false,
+    "m179_outputs_read_or_acted_on": false,
+    "closure_doc_is_downstream_of_m182": true,
+    "artifacts": {
+      "experiments/M172-worker-memory/measure_memory.py": {
+        "sha256": "18DCF848885CD0AE3B34371187A36BD504A0425FC3BBF5C73AF869800D7EB9AD",
+        "last_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145"
+      },
+      "experiments/M172-worker-memory/results/campaign.json": {
+        "sha256": "7CDAB7894DF7398B690346C4BEE8E34065D93A318386EFC50DEC67B2E0CC9675",
+        "last_commit": "09b4dccff4c60ef5414d8150d53a21e08ffa16d9"
+      },
+      "experiments/M172-worker-memory/results/negative-control-summary.json": {
+        "sha256": "490F7FEACA7A97C8F3E6CC75AB3E4AD9D54894E3D9E583A06465F3019093E9C5",
+        "last_commit": "15b5f2f671a062dff0c0620bd5af16c7ffcead67"
+      },
+      "docs/research/M172-worker-invariance-control.md": {
+        "sha256": "870082D9966B618403439F5E9F772B9B266F27F7FB80672CE439D20D29BFCC60",
+        "last_commit": "97e5ad9cd5fdb0f47cdffc7a1c7a9418d6df89a8"
+      },
+      "docs/research/M172-m12s-closure.md": {
+        "sha256": "3523F2185F2B8CA750B9402AC503D28BFC216A078910F58655911EF50E673846",
+        "last_commit": "15b5f2f671a062dff0c0620bd5af16c7ffcead67"
+      }
+    }
+  },
+  "n7": {
+    "unrepaired_certifying_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+    "unrepaired_registered_job_peak_bytes": 38286897152,
+    "unrepaired_registered_test_failed": true,
+    "fresh_unrepaired_w4_job_peak_bytes": 9586323456,
+    "fresh_unrepaired_w4_failed": true,
+    "repaired_result_cashed_as_formal_pass": false,
+    "certifying_rerun_owner": "M179-m12-rerun"
+  },
   "probe_commission": {
     "status": "COMMISSIONED",
     "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",

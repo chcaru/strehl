@@ -125,6 +125,37 @@ remained below 100 ms and the unsampled kernel peak supplies the memory result.
 A formal current-commit M12 campaign is still required before changing the
 scoreboard.
 
+### 4.1 Prior-work boundary and N7
+
+I audited the committed M172 material after the bounded-memory handoff:
+`a9727581`, `measure_memory.py`, its committed campaign and negative-control
+summaries, and both M172 reports. The compact M172 campaign is a throughput and
+worker-semantics protocol, and `measure_memory.py` is a Job Object wrapper; they
+do not contain a ranked source-allocation ledger. M172 therefore did not answer
+step 3's top-three-consumer question. Its retained throughput campaign has zero
+warm-ups and zero timed runs, so it supplies no throughput result to accept.
+M172 did answer the architectural half of step 4 by landing the
+reusable-worker/two-accumulator design at `a9727581`. I independently checked
+that source shape and measured its memory, rather than inventing or re-deriving
+a competing design.
+
+The addendum requesting this explicit audit arrived after the first M182 report
+commit, so that ordering cannot be made retroactive. The `a9727581` diff and
+M172 meter wrapper had nevertheless already been read during the initial
+investigation before I treated that candidate as the concrete step-4 answer.
+
+**CANONICAL M172 BOUNDARY:** M172 supplied the `a9727581` bounded-memory candidate and its M12-S and prequantization evidence; M182 independently established the bar semantics, unrepaired failure/scaling, allocation ledger, fresh pre-repair W1/W2/W4 peaks, `a9727581` N33/N299 W16 memory, and meter commissioning; no unrerun M172 M12-S finding enters this memory verdict.
+
+The M172 N33 cross-worker result and f32 negative control are accepted as
+M172-owned findings but were not independently rerun or extended here. The
+unfinished throughput protocol makes no result claim. These are adjacent
+artifacts, not inputs to the memory verdict. The superseding
+`M172-m12s-closure.md` is downstream rather than prior memory evidence: it was
+committed after this M182 report's first commit and explicitly declines to
+assess the memory repair. No M179 output was opened or used.
+
+**CANONICAL N7 RULING:** the certifying unrepaired M139 campaign at `8009447e` was already RED at `38,286,897,152 B > 6,442,450,944 B`, and M182 independently reproduced a RED unrepaired W4 cell; the `a9727581` readings remain diagnostic and are not cashed as a pass before M179's certifying rerun.
+
 ## 5. Probe commissioning and correction to the briefing
 
 The same Job Object meter saw both parent and child and was commissioned in
@@ -132,7 +163,7 @@ both directions from a uniquely anchored 256-MiB fixture:
 
 **CANONICAL PROBE COMMISSION:** baseline `282,509,312 B`; planted allocation `551,432,192 B` (`+268,922,880 B`); planted saving `80,834,560 B` (`-201,674,752 B`); inert label-only arm `282,673,152 B` (`|delta|=163,840 B`); all five gates passed.
 
-**CANONICAL CHECK COMMISSION:** `41/41` baseline checks passed; `41/41` uniquely anchored planted defects were caught; `0` were missed; `2/2` inert arms survived; both allocation-up and saving-down positive controls remained discriminating.
+**CANONICAL CHECK COMMISSION:** `44/44` baseline checks passed; `44/44` uniquely anchored planted defects were caught; `0` were missed; `2/2` inert arms survived; both allocation-up and saving-down positive controls remained discriminating.
 
 The assignment's N-mod-4 statement is arithmetically wrong; the repository
 documents are already correct, so I changed none. Exact replacement text:
