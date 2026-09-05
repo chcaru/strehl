@@ -305,3 +305,86 @@ defend N6 because I wrote it.
 
 **UNRESOLVED.** No arm has been read. Executing lanes append findings below this
 line under their own lane heading and do not modify sections 1-9.
+
+### ORCH — the arm has been read; N6's flagged assumption is discharged
+
+**Status: RESOLVED in N6's favour, and now on measured ground rather than
+assumption.** Lane M182 measured exactly what §9 flagged
+(`docs/research/M182-kernel-trade.md`, commit `9f64c87f`; verifier `74/74`,
+planted defects `74/74` caught, `0` missed, `2/2` inert arms surviving, and a
+**positive sharpen control preserved at `0.895952 > 0.627956`**).
+
+**The non-overshoot claim is confirmed and sharpened.** Bilinear's raw tap sums
+are exactly `[1, 1]` and its step and impulse overshoot are both `0` DN, so §4's
+convex-combination argument holds as written. By contrast the shipping
+Catmull-Rom default overshoots `7.407422%` on a step, and Lanczos3 reaches
+`14.799638%` on an impulse. `ClampedCatmullRom` is *"bounded only by destructive
+nonlinear clamp"* and **has no linear tap sum at all** — independent support for
+N5 arriving from a lane that was not asked to adjudicate it.
+
+**The flagged assumption was correct.** Bilinear's detail cost is real and
+material: MTF `0.811592` at half-Nyquist (`0.863174x` Catmull-Rom) and `0.627956`
+at 0.75 Nyquist (`0.802501x`).
+
+**And restoration does not cheaply recover it.** Bilinear has no in-band zero —
+its inverse is bounded at `2x` per axis and `4x` at the 2-D Nyquist corner, so it
+is numerically well-posed and the recovery is genuinely available. But the
+strongest production nine-tap inverse reaches or exceeds unrestored Catmull-Rom
+over only `74.7082%` of sampled frequencies, and does so at **`1.902341x`
+output-noise SD** in 2-D. Buying the noise penalty down to `1.314015x` collapses
+the matched band to `29.1829%`.
+
+**Therefore §9's overturning condition is not met.** Recovery is not available
+"across the band at an acceptable noise cost" under any threshold this program
+has defined. **N6 stands, unqualified**, and no longer rests on a textbook
+assumption. The honest statement of the trade is not *"bilinear loses detail
+that restoration recovers"* but *"bilinear's deficit is invertible at a
+roughly `1.9x` noise price and a residual finite-FIR shortfall"* — which is
+precisely a cost paid in a currency blocker `(a)` cannot count.
+
+**One caveat recorded rather than buried:** M182 did not rerun an end-to-end RAW
+M8-R score, so this establishes the gather invariant and its trade curve, not a
+shipping-pipeline result. It also corrected three points in my briefing — Lanczos
+taps require consumer normalisation, `gather_mtf` is an explicitly
+phase-averaged approximation rather than a true LSI MTF, and Nearest's unit MTF
+magnitude conceals phase quantisation behind truth-referenced RMS errors of
+`0.159683/0.315691/0.464481`.
+
+### ORCH — N7, registered before the result it governs exists
+
+**Why this is being written now.** M12 is the only axis in this program whose
+blocker set is `(e) none` (`docs/STATUS.md:3129`) — no detail instrument, no
+comparator licence, no holdout, no capture campaign, no owner time. It is
+therefore the most reachable first pass on the board. It currently **fails**, on
+peak memory `35.65745162963867` GiB against a `<=6 GiB` bar and on five distinct
+pixel hashes across `1/2/4/8/16` workers at every registered N. D9's fixed
+reduction lattice is the candidate repair for the second failure.
+
+**The hazard.** Lane M172 established that the determinism campaign's own gate
+produces **one** distinct hash where **two** are required, so the pre-repair
+binary cannot fail it. A test that the broken artifact passes cannot certify the
+fixed one. In M172's words, the evidence *"does not distinguish 'no differing
+intermediate arithmetic' from 'differences erased by final quantization.'"* A
+post-D9 green under that gate would be indistinguishable from a green produced by
+a blind meter — and it would be cashed against the one axis we can actually
+reach, which is exactly where a false pass would do most damage.
+
+> **N7 (generalises the D9 case, which is its first instance).** **A repair may
+> not be cashed as a pass on the sub-property it repairs until the test
+> certifying it has been shown to FAIL on the unrepaired artifact.** A green from
+> a gate that has never been observed to go red is a claim about the gate, not
+> about the code. This binds `M12-S`/D9 specifically and every future repair
+> equally, and it is not satisfied by the gate failing on some *other* defect: the
+> negative control must be the **same** property, on the **same** gate, with the
+> **unrepaired** binary.
+
+**This is the M8 discipline applied to M12.** N6 refuses a pass bought in a
+currency the program cannot count. N7 refuses a pass certified by an instrument
+the program has never seen respond. Both are the same rule: *an unexercised
+instrument is not evidence.*
+
+**What would make me wrong.** If the pre-D9 binary genuinely cannot be made to
+fail any admissible determinism gate — because the defect is real but invisible
+to every output-only test — then N7 blocks M12-S permanently and the correct
+response is a **different instrument**, not a relaxed rule. That would itself be
+a finding, and a more valuable one than a green.
