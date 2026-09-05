@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "impulse_center": 1.0,
+  "smoother_edge_self": 0.75,
+  "smoother_edge_neighbor": 0.25,
+  "smoother_interior_neighbor": 0.25,
+  "smoother_interior_self": 0.5,
+  "degradation_label": "prefer_A",
+  "improvement_label": "prefer_B",
+  "featureless_profile": [0.5, 0.5, 0.5, 0.5, 0.5],
+  "usm_amount": 0.75,
+  "faithful_signal_probability": 0.5,
+  "hallucination_signal_probability": 0.5,
+  "reference_link": "same_latent",
+  "inert_note": "baseline"
+}
