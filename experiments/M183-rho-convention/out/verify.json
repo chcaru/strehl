@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "tally": {
+    "pass": 6,
+    "fail": 0
+  },
+  "checks": [
+    {
+      "name": "V1 preregistration commit is isolated",
+      "status": "PASS",
+      "paths": [
+        "experiments/M183-rho-convention/PREREGISTRATION.md"
+      ]
+    },
+    {
+      "name": "V2 commissioning green without exception catches",
+      "status": "PASS"
+    },
+    {
+      "name": "V3 stored boundary-average aggregation",
+      "status": "PASS",
+      "independently_aggregated": {
+        "median": 0.005516497527476576,
+        "interval_95": [
+          0.0018470602911773233,
+          0.010779318421129128
+        ]
+      }
+    },
+    {
+      "name": "V4 stored grid ladder",
+      "status": "PASS",
+      "independently_aggregated": {
+        "8": 0.005516497527476574,
+        "16": 0.0009659044849517193,
+        "32": 0.0001809346823903216,
+        "factor": 30.488889441196807
+      }
+    },
+    {
+      "name": "V5 independent PHASE endpoint reads",
+      "status": "PASS",
+      "independently_computed": {
+        "interval_low": [
+          {
+            "fraction": 0.05,
+            "verdict": "KILL"
+          },
+          {
+            "fraction": 0.015625,
+            "verdict": "KILL"
+          },
+          {
+            "fraction": 0.0,
+            "verdict": "KILL"
+          }
+        ],
+        "median": [
+          {
+            "fraction": 0.221875,
+            "verdict": "KILL"
+          },
+          {
+            "fraction": 0.075,
+            "verdict": "KILL"
+          },
+          {
+            "fraction": 0.0125,
+            "verdict": "KILL"
+          }
+        ],
+        "interval_high": [
+          {
+            "fraction": 0.371875,
+            "verdict": "NARROWED"
+          },
+          {
+            "fraction": 0.16875,
+            "verdict": "KILL"
+          },
+          {
+            "fraction": 0.028125,
+            "verdict": "KILL"
+          }
+        ]
+      }
+    },
+    {
+      "name": "V6 filed answer follows endpoint classes",
+      "status": "PASS"
+    }
+  ]
+}

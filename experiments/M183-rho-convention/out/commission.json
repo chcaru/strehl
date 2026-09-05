@@ -1,0 +1,132 @@
+{
+  "status": "PASS",
+  "known_answer_tally": {
+    "pass": 10,
+    "fail": 0
+  },
+  "mutation_tally": {
+    "caught": 4,
+    "missed": 0
+  },
+  "controls": [
+    {
+      "name": "C1 white null",
+      "status": "PASS",
+      "observed": 1.0,
+      "expected": 1.0
+    },
+    {
+      "name": "C2 known rho plant",
+      "status": "PASS",
+      "observed": 0.040000000000000015,
+      "expected": 0.04
+    },
+    {
+      "name": "C3 raise direction",
+      "status": "PASS",
+      "observed": 0.08000000000000003,
+      "ratio": 2.0
+    },
+    {
+      "name": "C4 lower direction",
+      "status": "PASS",
+      "observed": 0.020000000000000007,
+      "ratio": 0.5
+    },
+    {
+      "name": "C5 inert common scale",
+      "status": "PASS",
+      "observed": 0.04000000000000002,
+      "expected": 0.040000000000000015
+    },
+    {
+      "name": "C6 boundary exchange invariance",
+      "status": "PASS",
+      "before": 1.4454221262603109,
+      "after": 1.4454221262603109
+    },
+    {
+      "name": "C7 independent geometry",
+      "status": "PASS",
+      "instrument_groups": 32,
+      "instrument_ambiguous": 8,
+      "independent": {
+        "groups": 32,
+        "ambiguous": 8
+      }
+    },
+    {
+      "name": "C8 sensor-frequency unit",
+      "status": "PASS",
+      "observed": [
+        0.125,
+        -0.25
+      ]
+    },
+    {
+      "name": "C9 degenerate bootstrap",
+      "status": "PASS",
+      "observed": {
+        "n_scenes": 6,
+        "draws": 10000,
+        "seed": 20260902,
+        "median": 0.037,
+        "interval_95": [
+          0.037,
+          0.037
+        ]
+      }
+    },
+    {
+      "name": "C10 verdict directions",
+      "status": "PASS",
+      "observed": [
+        "KILL",
+        "NARROWED",
+        "SURVIVE"
+      ]
+    }
+  ],
+  "mutants": [
+    {
+      "name": "D1-grid-16",
+      "status": "CAUGHT",
+      "anchor": "GRID = 8",
+      "replacement": "GRID = 16",
+      "observed_groups": 128,
+      "expected_groups": 32
+    },
+    {
+      "name": "D2-native-frequency-scale",
+      "status": "CAUGHT",
+      "anchor": "FREQUENCY_SCALE = 1.0",
+      "replacement": "FREQUENCY_SCALE = 2.0",
+      "observed": [
+        0.25,
+        -0.5
+      ]
+    },
+    {
+      "name": "D3-primary-boundary-label",
+      "status": "CAUGHT",
+      "anchor": "BOUNDARY = \"average\"",
+      "replacement": "BOUNDARY = \"primary\"",
+      "before": 1.936266776619814,
+      "after": 1.095178956722165
+    },
+    {
+      "name": "D4-invert-ratio",
+      "status": "CAUGHT",
+      "anchor": "    return alias_total / (aliases_per_group * base_total)",
+      "replacement": "    return (aliases_per_group * base_total) / alias_total",
+      "observed": 24.999999999999993,
+      "expected": 0.04
+    }
+  ],
+  "input_sha256": {
+    "scene-estimates.json": "1a209935774de95b35b7459661a3a8693f5e5fc95431eb111eb195d1ca8ec97d",
+    "p1_bar.json": "374ae62c513539f134194bb416c5b6268a45633c79e04ad74c165c2b1d2f7d6f"
+  },
+  "instrument_sha256": "c1a3f11b91ce0c67cc9795a43f12696728a4065a46050029e51f1b66a56be034",
+  "preregistration_commit": "014063e498a2f0a1faf627b7bb7534e3163e76cd"
+}

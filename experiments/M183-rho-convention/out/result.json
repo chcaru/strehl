@@ -1,0 +1,191 @@
+{
+  "status": "PASS",
+  "answer": "STILL_FLIPS",
+  "convention": {
+    "frequency_unit": "cycles per full-resolution sensor pixel",
+    "grid": 8,
+    "grid_sampling": "cell-centred over [-0.5,0.5)^2",
+    "alias_pairs_deduplicated": true,
+    "boundary": "average",
+    "spatial_boundary": "stored commissioned fits: in-bounds square GQ patches, 256-square 50%-overlap periodic-Hann Welch, no padding",
+    "unique_groups": 32,
+    "ambiguous_groups": 8
+  },
+  "grid_crux": {
+    "8": {
+      "scene_median": 0.005516497527476575,
+      "minimum_base_radius": 0.08838834764831845,
+      "unique_groups": 32,
+      "ambiguous_groups": 8
+    },
+    "16": {
+      "scene_median": 0.0009659044849517197,
+      "minimum_base_radius": 0.04419417382415922,
+      "unique_groups": 128,
+      "ambiguous_groups": 16
+    },
+    "32": {
+      "scene_median": 0.00018093468239032144,
+      "minimum_base_radius": 0.02209708691207961,
+      "unique_groups": 512,
+      "ambiguous_groups": 32
+    },
+    "factor_8_to_32": 30.48888944119684
+  },
+  "boundary_sensitivity": {
+    "primary": {
+      "n_scenes": 6,
+      "draws": 10000,
+      "seed": 20260902,
+      "median": 0.005516497527476573,
+      "interval_95": [
+        0.0018470602911773235,
+        0.01077931842112913
+      ]
+    },
+    "swap": {
+      "n_scenes": 6,
+      "draws": 10000,
+      "seed": 20260902,
+      "median": 0.005516497527476575,
+      "interval_95": [
+        0.0018470602911773231,
+        0.010779318421129131
+      ]
+    },
+    "average": {
+      "n_scenes": 6,
+      "draws": 10000,
+      "seed": 20260902,
+      "median": 0.005516497527476575,
+      "interval_95": [
+        0.0018470602911773233,
+        0.01077931842112913
+      ]
+    },
+    "exclude": {
+      "n_scenes": 6,
+      "draws": 10000,
+      "seed": 20260902,
+      "median": 0.0027831974396766274,
+      "interval_95": [
+        0.0008199365140311623,
+        0.0059565446873421374
+      ]
+    }
+  },
+  "rho": {
+    "n_scenes": 6,
+    "draws": 10000,
+    "seed": 20260902,
+    "median": 0.005516497527476575,
+    "interval_95": [
+      0.0018470602911773233,
+      0.01077931842112913
+    ],
+    "scene_values": {
+      "bee-1-cpl": 0.005947697489624069,
+      "dry-erase-marker-head-cpl": 0.0018191288154111409,
+      "flower-inner-edge-cpl": 0.007327372598280683,
+      "pencil-steep-angle-cpl": 0.005085297565329081,
+      "wrapped-text-1": 0.014231264243977575,
+      "bee-repeat": 0.0018749917669435056
+    },
+    "accepted_record_counts": {
+      "bee-1-cpl": 3,
+      "dry-erase-marker-head-cpl": 1,
+      "flower-inner-edge-cpl": 4,
+      "pencil-steep-angle-cpl": 2,
+      "wrapped-text-1": 4,
+      "bee-repeat": 5
+    },
+    "population": "five f/5.6 ordinary scenes plus independent bee repeat",
+    "scope": "scene-cluster sampling interval only; model/grid/sensor systematics are not included"
+  },
+  "c1": {
+    "phase_curves": 320,
+    "gauge": "zero_mean",
+    "snr": "inf",
+    "interpolation": "linear log(bar) in log(rho)",
+    "points": {
+      "interval_low": {
+        "field centre": {
+          "accuracy_px": 0.0801,
+          "winnable_fraction": 0.05,
+          "verdict": "KILL"
+        },
+        "inner annulus": {
+          "accuracy_px": 0.1168,
+          "winnable_fraction": 0.015625,
+          "verdict": "KILL"
+        },
+        "corner": {
+          "accuracy_px": 0.2256,
+          "winnable_fraction": 0.0,
+          "verdict": "KILL"
+        }
+      },
+      "median": {
+        "field centre": {
+          "accuracy_px": 0.0801,
+          "winnable_fraction": 0.221875,
+          "verdict": "KILL"
+        },
+        "inner annulus": {
+          "accuracy_px": 0.1168,
+          "winnable_fraction": 0.075,
+          "verdict": "KILL"
+        },
+        "corner": {
+          "accuracy_px": 0.2256,
+          "winnable_fraction": 0.0125,
+          "verdict": "KILL"
+        }
+      },
+      "interval_high": {
+        "field centre": {
+          "accuracy_px": 0.0801,
+          "winnable_fraction": 0.371875,
+          "verdict": "NARROWED"
+        },
+        "inner annulus": {
+          "accuracy_px": 0.1168,
+          "winnable_fraction": 0.16875,
+          "verdict": "KILL"
+        },
+        "corner": {
+          "accuracy_px": 0.2256,
+          "winnable_fraction": 0.028125,
+          "verdict": "KILL"
+        }
+      }
+    },
+    "transitions_within_interval": {
+      "field centre": {
+        "kill_to_narrowed_rho": 0.006333396417934717,
+        "narrowed_to_survive_rho": null
+      },
+      "inner annulus": {
+        "kill_to_narrowed_rho": null,
+        "narrowed_to_survive_rho": null
+      },
+      "corner": {
+        "kill_to_narrowed_rho": null,
+        "narrowed_to_survive_rho": null
+      }
+    },
+    "verdict_flips_across_interval": true,
+    "additional_decision_required": "Preregister the target scene population and product risk functional (which scene/quantile must pass), then run the owed per-site joint scene-frequency census; the corpus contains neither a licensed population weighting nor that census."
+  },
+  "stored_value_reproduction": {
+    "records": 19,
+    "primary_max_relative_error": 5.859967890704723e-16,
+    "average_max_relative_error": 7.031961468845665e-16
+  },
+  "input_sha256": {
+    "scene-estimates.json": "1a209935774de95b35b7459661a3a8693f5e5fc95431eb111eb195d1ca8ec97d",
+    "p1_bar.json": "374ae62c513539f134194bb416c5b6268a45633c79e04ad74c165c2b1d2f7d6f"
+  },
+  "instrument_sha256": "c1a3f11b91ce0c67cc9795a43f12696728a4065a46050029e51f1b66a56be034",
+  "preregistration_commit": "014063e498a2f0a1faf627b7bb7534e3163e76cd"
+}
