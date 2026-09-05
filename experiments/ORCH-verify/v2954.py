@@ -613,6 +613,22 @@ QUOTES = [
     ("m175 sentinel slope", "experiments/M175-fork-arm/render-result.json",
      "1.0000000000000002"),
     ("m139 m12 memory fail", "docs/research/M139-m12-campaign.md", "8.9312"),
+    # Amendment 8 quotes four documents it does not own. Three of the four are
+    # lane-owned and live. Pin each quote at its SOURCE so that a lane revising
+    # its own file fails my amendment rather than silently orphaning it.
+    ("a8 split2 verdict", "docs/research/M-PHASE0-SPLIT2.md",
+     "Final verdict: NOT ROBUST / NO BUILD."),
+    ("a8 split2 fail rms", "docs/research/M-PHASE0-SPLIT2.md", "0.107703"),
+    ("a8 split2 spatial", "docs/research/M-PHASE0-SPLIT2.md", "0.105202"),
+    ("a8 phase filed verdict", "experiments/M-PHASE0-PHASE/PREREGISTRATION.md",
+     "Filed verdict: KILL at the measured rho, NOT ROBUST across the rho census."),
+    ("a8 phase rho ci", "experiments/M-PHASE0-PHASE/PREREGISTRATION.md",
+     "(0.00185-0.01078)"),
+    ("a8 phase rho 30x", "experiments/M-PHASE0-PHASE/PREREGISTRATION.md", "30.49x"),
+    ("a8 status phase closed", "docs/STATUS.md",
+     "CLOSED. C1 is KILL at the measured"),
+    ("a8 m133 phase not absent", "docs/research/M133-blocker-audit.md",
+     "is false. Its result is filed in the"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel
@@ -620,7 +636,8 @@ for label, rel, quote in QUOTES:
         check(label, False, "SOURCE MISSING %s" % rel)
         continue
     check(label, collapse(quote) in load(p),
-          "STATUS 2.9.66 quotes this verbatim from %s" % rel)
+          "%s quotes this verbatim from %s"
+          % ("Amendment 8" if label.startswith("a8 ") else "STATUS 2.9.66", rel))
 
 # ---- 2.9.75: re-derive M172's memory figures instead of matching them ----
 #
@@ -866,6 +883,58 @@ check("2.9.77 M4 arithmetic re-derives",
       and 29 + 83 == 112 and collapse("`29` medication + `83` foam = `112`") in _s77),
      "the M4 shortfall is printed with its addends and they sum to the total "
      "printed beside them")
+
+# ---- Amendment 8: the phase-0 audit -----------------------------------------
+#
+# Two kinds of pin here, and they are not equally strong.
+#
+#   (1) TRANSCRIPTION pins: the plan reproduces a quote that the QUOTES block
+#       has separately confirmed still exists in its source. Together those two
+#       halves catch both a lane revising the source and me mistyping it. Either
+#       half alone is worthless.
+#   (2) One LIVE pin on an ABSENCE. Amendment 8 asserts two phase-0 gates have
+#       never produced a tracked result. An absence claim decays the moment
+#       somebody does the work, and nothing in the prose would notice. This is
+#       the thing that notices.
+PLAN = ROOT / "docs" / "proposals" / "2026-08-sota-path.md"
+if not PLAN.exists():
+    check("a8 plan present", False, "MISSING %s" % PLAN)
+else:
+    _plan = load(PLAN)
+    check("a8 section present", collapse("## 18. Amendment 8") in _plan,
+          "Amendment 8 is registered in the plan")
+    for _lbl, _q in [
+        ("a8 cites split2", "Final verdict: NOT ROBUST / NO BUILD."),
+        ("a8 cites phase", "Filed verdict: KILL at the measured rho, "
+                           "NOT ROBUST across the rho census."),
+        ("a8 cites rho ci", "(0.00185-0.01078)"),
+        ("a8 cites rho 30x", "30.49x"),
+    ]:
+        check(_lbl, collapse(_q) in _plan,
+              "Amendment 8 reproduces this verbatim from its pinned source")
+    # THIRD occurrence of the blockquote/collapse defect. `load()` does not
+    # strip `>` markers, so any quote spanning a line break inside a blockquote
+    # silently fails. The ruling below is blockquoted and wraps, so it needs the
+    # stripped copy; the transcription pins above do not, because each of those
+    # quotes sits entirely on one line.
+    _plan_bq = collapse(re.sub(r"(?m)^[ \t]*>[ \t]?", "",
+                               PLAN.read_text(encoding="utf-8", errors="replace")))
+    # The ruling itself. If this sentence is softened, C1 silently becomes
+    # schedulable again, which is the exact failure Amendment 8 documents.
+    check("a8 c1 ruling intact",
+          collapse("It may not be scheduled as build-ready phase-3 work") in _plan_bq
+          and collapse("and it may not be struck, because that same interval "
+                       "contains SURVIVE") in _plan_bq,
+          "C1 is held at BLOCKED -- neither schedulable nor struck")
+
+_gate_hits = []
+for _stem in ("M-PHASE0-MAKERNOTE", "M-PHASE0-TETHER"):
+    for _d in (ROOT / "docs" / "research", ROOT / "experiments"):
+        if _d.exists():
+            _gate_hits += sorted(str(x.relative_to(ROOT)) for x in _d.glob(_stem + "*"))
+check("a8 makernote/tether unrun", not _gate_hits,
+      "Amendment 8 section 18.3 says neither gate has a tracked result; "
+      "found %s" % (_gate_hits if _gate_hits else "none, as asserted"))
 
 print()
 print("RED                 : %d" % red)

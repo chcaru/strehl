@@ -2906,3 +2906,134 @@ item is alive as unverified rather than true.**
 
 **Amendments 1–6 stand. No result is retracted by this amendment; one inference
 is.**
+
+## 18. Amendment 8 — the phase-0 audit lands: SPLIT2 confirms, PHASE was never absent, and C1 is unresolved rather than alive
+
+**Status: registered by the orchestrator. This amendment discharges §17.6 and
+§17.7.**
+
+### 18.1 §17.7 discharge — SPLIT2 does not overturn Amendment 7
+
+I named SPLIT2 as the document that would make Amendment 7 wrong. I have now
+read it. It does not reverse the KILL. It reaches the same disposition
+independently, by a different licence:
+
+> **Final verdict: NOT ROBUST / NO BUILD.**
+> (`docs/research/M-PHASE0-SPLIT2.md:3`)
+
+Its substance is that the *scorecard-licensed* re-registration also fails. The
+second-light run fails the scorecard's `0.10`-native-pixel non-translation RMS
+gate at **`0.107703`**, corroborated by an independent spatial estimator at
+**`0.105202`**, while the bright run passes at `0.064031` and `0.070005`. SPLIT2
+concludes that **no Rust is warranted** — the same disposition as SPLIT's
+*"STOP/REMOVE RUST"*.
+
+Amendment 7 therefore stands, and stands better than when written: two
+independently licensed analyses of the same capture both decline to build.
+
+Note one thing SPLIT2 establishes that is not about D8 at all: **a
+scorecard-registered capture failed a scorecard-registered gate.** That is a
+fact about the scorecard's capture inventory, and it belongs to whoever next
+revises it.
+
+### 18.2 §17.6 discharge, part 1 — `M-PHASE0-PHASE` was never absent, and I grouped it wrongly
+
+Content search across `docs/` resolves all three reportedly-absent gates, and my
+own §17.6 wording was wrong about one of them.
+
+`M-PHASE0-PHASE` **exists and is closed.** Its verdict is filed:
+
+> **Filed verdict: KILL at the measured rho, NOT ROBUST across the rho census.**
+> (`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1398`)
+
+and STATUS already carries it:
+
+> **M-PHASE0-PHASE — CLOSED. C1 is KILL at the measured ρ, and NOT ROBUST across
+> the ρ census.**
+> (`docs/STATUS.md:483-484`)
+
+M133's audit had established this and said so plainly — *"The apparent absence of
+`M-PHASE0-PHASE` is false"* (`docs/research/M133-blocker-audit.md:1376`). §17.6
+listed it among the reported-absent, which was an accurate report of what I had
+been told and a wrong description of the corpus. **Corrected here.**
+
+### 18.3 §17.6 discharge, part 2 — MAKERNOTE and TETHER are confirmed absent
+
+`M-PHASE0-MAKERNOTE` and `M-PHASE0-TETHER` are now confirmed absent **by content
+search, not by filename**. Every occurrence of either token under `docs/` is a
+planning reference in this document (`:2059`, `:2066`), a triage heading
+(`docs/proposals/2026-09-phase0-triage.md:186` and `:257`), or M133's audit
+recording their absence. **No result document exists for either.** M133 reached
+the same conclusion independently (`M133-blocker-audit.md:1426-1434` and
+`:1436`).
+
+Of the three gates §17.6 could not resolve: one is closed with an adverse
+verdict, and two have never run.
+
+### 18.4 The finding: C1's gate fired and the plan did not read it back
+
+This is Amendment 7's failure mode occurring a second time, on a different axis.
+
+C1's phase-0 gate returned an adverse verdict. Section 9 nonetheless still
+schedules C1 after C4 and describes both the 1× and 2× rungs as phase-3 work
+(`:2093-2102`). M133 flagged precisely this contradiction
+(`M133-blocker-audit.md:1409`).
+
+**Two of the phase-0 gates that fired were never read back into the plan.** One
+instance is an oversight. Two is a process defect, and the defect is nameable:
+**this plan has no mechanism that forces a fired gate to change the text that
+gate governs.** Amendment 7 recorded the incident. Amendment 8 records the class.
+
+### 18.5 But C1 is *not* killed, and that distinction is the whole point
+
+It would be easy, and wrong, to treat C1 the way Amendment 7 treats D8. The two
+verdicts are not the same kind of object.
+
+D8's is a clean KILL. C1's verdict **flips inside its own measured uncertainty**:
+
+> **At the measured rho = 0.0055 the verdict is KILL at every radius.** But it
+> flips to NARROWED at rho = 0.01, which is inside M-PHASE0-RHO's own 95%
+> interval (0.00185-0.01078), and to SURVIVE at the top of the design census.
+> (`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1392-1396`)
+
+and the dominant term is itself unpinned: RHO's median moves by **`30.49x`**
+under a frequency-grid refinement, which *"spans this entire range by itself"*
+(`:1400-1404`).
+
+The correct disposition is therefore neither *alive* nor *dead*:
+
+> **C1 is blocked on ρ.** It may not be scheduled as build-ready phase-3 work
+> while its verdict flips across the measured ρ interval, and it may not be
+> struck, because that same interval contains SURVIVE. The decidable quantity is
+> ρ's grid and boundary convention — **not the aligner.**
+
+M133 put the same point as *"adverse but not a robust permanent KILL"*, and the
+lane itself records that the per-site joint census §9's thresholds are actually
+defined over **has still not been run** (`PREREGISTRATION.md` §A10.4).
+
+### 18.6 What this changes
+
+- **§17.6 is discharged.** The audit it promised has landed for all three named
+  gates.
+- **§17.7 is discharged.** My named falsifier returned negative; Amendment 7
+  stands.
+- **A third structural blocker is now visible.** C1 cannot be scheduled until ρ's
+  grid and boundary convention is pinned. That is a **compute** question, not a
+  capture question, which makes it cheap relative to blocker `(a)` and gives the
+  program something it can actually move without the owner picking up a camera.
+- No result is retracted. One of my own descriptions is — §17.6's grouping of
+  `M-PHASE0-PHASE` with the genuinely absent gates.
+
+### 18.7 What would make me wrong
+
+- If a `M-PHASE0-MAKERNOTE` or `M-PHASE0-TETHER` result exists outside `docs/`
+  and `experiments/` — in a lane transcript, or uncommitted on disk — then §18.3
+  is wrong about *"never run"* and correct only about *"not tracked"*.
+- If a later RHO revision supersedes the `0.00185-0.01078` interval with one
+  excluding `0.01`, C1's verdict stops flipping and §18.5 collapses to a plain
+  KILL.
+- If §9's per-site joint census is run and its thresholds turn out to be defined
+  over something other than what §A10.4 implies, the *"blocked on ρ"* framing may
+  be too narrow.
+
+**Amendments 1–7 stand. No result is retracted by this amendment.**
