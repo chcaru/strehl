@@ -1,0 +1,7 @@
+a_bytes_equal=True
+b_bytes_equal=True
+max_abs_summary_difference=0
+cross_power=6356407177.43
+difference_noise_power=1778.18247864
+coherence=0.998914239588
+PASS: identical repeat observations retain opposite provenance labels

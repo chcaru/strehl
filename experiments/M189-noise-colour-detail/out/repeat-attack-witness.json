@@ -1,0 +1,29 @@
+{
+  "captures_opened": 0,
+  "cross_statistics": {
+    "max_abs_summary_difference": 0.0,
+    "world_g": {
+      "coherence": 0.9989142395882038,
+      "cross_power": 6356407177.425046,
+      "difference_noise_power": 1778.1824786351344
+    },
+    "world_r": {
+      "coherence": 0.9989142395882038,
+      "cross_power": 6356407177.425046,
+      "difference_noise_power": 1778.1824786351344
+    }
+  },
+  "labels": {
+    "world_g": "genuine optical mean plus calibrated independent noise",
+    "world_r": "denoised-sharpened mean plus calibrated independent re-noise"
+  },
+  "observation": {
+    "a_bytes_equal": true,
+    "a_max_abs_difference": 0.0,
+    "a_sha256": "583259546A5D2DCF595E6AA5144021B1E7F3CBADA68A551FEFCEB97D637EFE9B",
+    "b_bytes_equal": true,
+    "b_max_abs_difference": 0.0,
+    "b_sha256": "827F80F58BB3168F9B043A544E97F2706239CAF42356DDDAD4C21841D49CF8C9"
+  },
+  "schema": "m189-repeat-attack-witness-v1"
+}
