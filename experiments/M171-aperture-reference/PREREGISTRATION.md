@@ -102,3 +102,17 @@ block is prior-burned development, while M171 prospectively assigned the
 diagonal block to development before opening any of its pixels.  The original
 claim that prior M128 access itself burned all six was broader than the
 available evidence.  No holdout was opened or reclassified.
+
+## 7. Post-freeze holdout correction (2026-09-04)
+
+The later authoritative classification makes `requests\7-aperture-pairs`
+`HOLDOUT - QUALITY` and strictly inaccessible to M171.  The section 3
+inference that tracked M129 references made that session ineligible was wrong
+and is withdrawn; M171 makes no independent eligibility ruling for it.
+
+Before that prohibition arrived, M171 listed filenames and counts and searched
+tracked M129 references.  It decoded no pixels and inspected no numeric quality
+outcome.  That access was disclosed immediately.  This correction supersedes
+the final sentence of section 6 about holdout access; it does not alter the
+frozen aperture-physics stop rule or any result derived from the razor
+development unit.

@@ -158,15 +158,21 @@ candidate execution.
   diagonal block, after a 37-minute gap and geometry change, is the same
   uninterrupted unit; M171 conservatively assigned those three stacks to
   development prospectively, before opening any of their pixels.
-- **Holdout:** none assigned and none spent by M171.  The
-  `7-aperture-pairs` fabric session is already represented by decoded-frame
-  artifacts throughout M129 despite an older register calling three rows
-  clean.  The miscellaneous razor directory has only one aperture and cannot
-  form a ladder.
+- **Holdout:** the later authoritative classification makes
+  `7-aperture-pairs` `HOLDOUT - QUALITY` and strictly inaccessible to M171.
+  The earlier inference that references in tracked M129 artifacts made that
+  session ineligible was wrong and is withdrawn.  M171 makes no independent
+  eligibility ruling for it.  Before the prohibition arrived, M171 listed
+  filenames and counts and searched tracked M129 references; it decoded no
+  pixels and inspected no numeric quality outcome.  That access was disclosed
+  immediately.  The miscellaneous razor directory has only one aperture and
+  cannot form a ladder.
 
 **Disclosure.**  During preflight planning, an agent surfaced historical M128
 numbers before the declaration.  They belong to the already-burned development
-unit and were not used for the physical decision.  No clean unit was opened.
+unit and were not used for the physical decision.  The separate
+`7-aperture-pairs` access disclosure above supersedes the report's original
+claim that no clean unit was opened.
 
 ## 3. Preregistration and commissioning evidence
 
