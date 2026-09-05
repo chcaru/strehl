@@ -158,6 +158,48 @@ the contender-free runtime-suspended interval. Residual thermal, turbo, and
 cache state was not directly instrumented and remains in the could-not-
 determine list.
 
+### Admission-gate ruling and replacement protocol
+
+The self-imposed `<=5%` resume precondition is **INSTRUMENT VOID on this
+shared host**. It was specified as a desirable quiet condition without first
+showing that the orchestration runtime and editor baseline could satisfy it.
+At several points the agent runtime alone consumed nearly the entire allowance,
+so waiting for repeated qualifying samples coupled progress to whether any
+other agent happened to be generating a response. That is an operational
+deadlock, not a measurement strategy. It was not part of the registered M12
+bar, and dropping it did not relax the registered per-invocation gates.
+
+A future contention-robust protocol should be scoped by measurement type:
+
+- **Determinism:** no timing estimator is needed. Hash the highest-precision
+  output directly across the registered repetitions. Host contention may
+  lengthen a run, but it cannot be repaired or summarized by minimum-of-N and
+  does not turn unequal bytes into equal bytes.
+- **Memory:** retain whole-process-tree Job Object accounting, 10 ms samples,
+  maximum peak across scored repetitions, sampling-coverage rules, and the
+  planted over-allocation. Minimum-of-N is wrong for this quantity: selecting
+  the smallest observed peak would reward an under-observed or
+  pressure-dependent run, and external pressure can change paging and cache
+  behavior in either direction.
+- **Timing:** minimum-of-N plus an interleaved calibration witness is a
+  defensible replacement for an absolute idle-host prerequisite, but only
+  after commissioning. The witness must exercise the same relevant CPU,
+  memory-bandwidth, and storage resources, run adjacent to every target
+  invocation, and reject deviations on both sides of its commissioned range.
+  A null must remain admitted, a planted slowdown must be rejected, and a
+  planted speedup must also be rejected. This guards against both additive
+  contention and flattering cache, turbo, affinity, or calibration failures.
+  Sweep order remains alternating, and the registered minimum is taken only
+  over witness-admitted repetitions.
+
+For the M12 modulo arm, that replacement adds one calibration invocation beside
+each of four warm-ups and 24 scored target runs, plus null, slowdown, and
+speedup commissioning. It requires no hardware or new capture. If the witness
+is target-length, the timed arm costs roughly twice its target-only runtime;
+determinism and memory should not pay that cost because the calibration
+estimator does not adjudicate their bars. This design is a proposal for the
+next campaign and was not applied retroactively to M139.
+
 ## 3. Instrument commissioning
 
 All measurements in this section are **VERIFIED**.
