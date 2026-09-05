@@ -7523,11 +7523,105 @@ M130's `crop-early`, which raised retained area from `64.6047%` to
 `96.22496088092659%` and hit its preregistered prediction on the digits. It
 blocked ten of twelve axes, more than any other, and clearing it alone still
 yields only `2 of 12`, because it is a necessary precondition and not a
-sufficient one. The remaining route is unchanged and the cheapest step in it is
-still free: the **bench session is 45-60 minutes of owner time and moves the
-board from `2 of 12` to `4 of 12`**, which is more than the licence buys.
+sufficient one. The remaining route is unchanged, and the next step in it is
+still free in money but no longer cheap in time: the capture ask is **two
+sittings totalling 2,307 frames** — a `1,092`-frame non-holdout rehearsal and a
+`1,215`-frame scored session — and it reaches **`3 of 12`**, not `4 of 12`.
+Reaching `4 of 12` additionally requires the `$189` Zerene licence and a colour
+target. Both figures are **scoreability, not passes**
+(`docs/OWNER-ACTIONS.md:196-212`).
+
+> **Correction, recorded rather than silently patched.** This paragraph said
+> until now that "the bench session is 45-60 minutes of owner time and moves the
+> board from `2 of 12` to `4 of 12`". Both halves were wrong. The `45-60 min`
+> figure described the retired **603**-frame single-sitting design, and
+> `docs/OWNER-ACTIONS.md:205-212` retired it explicitly; STATUS went on carrying
+> it. And the capture row reaches `3 of 12`, not `4 of 12` — `4 of 12` is the
+> row *below* it, which also costs `$189`. This is the second time an
+> owner-facing figure has gone stale in this document while its correction
+> landed only in `OWNER-ACTIONS.md`. **The two documents are not independently
+> maintained and must not be treated as such.**
 
 **The scoreboard remains `0 of 12` passed, with two axes read and both failed.**
+
+---
+
+### 2.9.76 The axis that could be made to pass tomorrow, and the clause that says it must not be
+
+Two lanes returned on the same night and between them they settled the shape of
+the two hardest questions in the program.
+
+**M8 can be forced to zero, and that is exactly the problem.** M136's
+`docs/research/M136-m8-passability.md` rules `M8 PASSABLE BUT ILLEGITIMATE`. The
+mechanism is not in doubt: the M8-R failure is `100%` attributable to the
+Catmull-Rom gather, and M172's exact same-support clamp makes `V_R = 0` a
+mathematical consequence rather than a statistical hope. Flipping
+`DEFAULT_RESAMPLER_NAME` at `crates/strehl-cli/src/align_cmd.rs:59` from
+`"catmull-rom"` to the clamped kernel would turn the program's most prominent red
+axis green, this week, with no capture and no instrument.
+
+I registered that decision prospectively at
+`docs/research/ORCH-clamp-default-decision.md` before reading any deciding
+number, because `ORCH-kernel-decision.md`'s Amendment 3 had already recorded the
+failure mode: *"The gate that should have failed was never written."*
+
+**Writing the gate first is what found the disqualifying clause.** Verifying one
+of my own citations turned up the scorecard clause at `:1629-1631` and
+`:1639-1642`. It lists *"destructive clipping can force a zero rate"* as a
+**known defeat** of this very census, and it names the control against buying the
+hull result by clamping: **"A future M1 and the retained M4 flat-power-plus-transfer
+component"** — conjunctive, and M1 is blocker `(a)`.
+
+So the ruling, recorded as N5 in the decision document:
+
+> **A clamped shipping default is not a route to an M8 pass while M1 is absent.**
+> The product decision and the axis score are separable and only the first is
+> available. Any M8 zero taken under a clamped default before M1 exists is
+> defeated in advance by the scorecard's own clause.
+
+That is a real result and it is the opposite of the one I was looking for. I
+found this route while hunting for movement on M8, drafted a document aimed at
+it, and the anti-Goodhart clause I wrote into §2 disqualified its author. **The
+instrument worked on the person holding it**, which is the only evidence that it
+is an instrument at all.
+
+**Two defects fell out of the same verification.** M136 §4.4 anchors the licence
+limit at `:1573-1582`, which is the v1.5 legitimacy ruling instead — the anchor
+does not resolve. And M136 §4.2 paraphrases the control as *"M1's detail and
+flat-power-plus-transfer component"*, **silently dropping M4 from a conjunctive
+pair**. Both routed to M136 with exact replacement text.
+
+**The dropped half is the most actionable thing on this page.** The scorecard
+describes M4's component as **retained** — and `:809`/`:843` record it as
+`RETAINED COMPONENT DEFINED; UNMEASURED_CAPTURE_INADEQUATE`. That is a
+categorically better state than M1: **the statistic exists and its bar is exact;
+only inputs are missing.** Of the four named-absent inputs, two ("materialized
+Dirichlet matrices/plants", "base/planted renders") read as *computed* artifacts
+rather than captures, and the owner has since delivered flat calibration stacks
+that the `CAPTURE_INADEQUATE` verdict may well predate. Lane M181 is testing
+exactly that. If it returns `MEASURABLE_NOW`, the program gains a scoreable axis
+and half of the clamp control in one move.
+
+**Blocker `(a)` is not closed.** M180 returns **UNDECIDED with a surviving
+route**: an independently calibrated `R1/R2` reference, a complete
+candidate-blind `S1/S2` witness, a concealed random-code target, PCHIP
+linearisation, and noncompensating transfer/artifact gates. Output-only and
+archive-only routes are closed. Commissioning was `23` checks, `23` mutations
+planted, `23` killed, `1/1` inert survived, at commit `11cc220c`. The immediate
+owner cost is unchanged and remains the smallest ask on the board: **two frames,
+about five minutes, `$0`**.
+
+**And an orchestration failure, recorded because it was expensive.** Lanes M139,
+M136 and M142 spent many hours passing `HOST HOLD` and `HOST RELEASED` notices
+between themselves over a host lock **that I never issued and that does not
+exist**. M142 burned roughly turns 58-76 of a 77-turn, 18-hour lane arbitrating
+it and produced no measurement. Scheduling is the orchestrator's and is not
+delegable; the hold is abolished retroactively and prospectively, and every lane
+has been told to ignore scheduling instructions that do not come from me.
+
+**The scoreboard is unchanged at `0 of 12`.** Nothing above is a pass. What
+changed is that the cheapest apparent route to a pass was examined and found to
+be barred by a clause written before anyone thought to take it.
 
 ---
 

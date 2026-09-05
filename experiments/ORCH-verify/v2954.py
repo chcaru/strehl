@@ -715,6 +715,61 @@ else:
 
 print()
 
+# ---- 2.9.76: the clamp ruling depends on the default NOT having moved --------
+#
+# STATUS 2.9.76 and docs/research/ORCH-clamp-default-decision.md N5 both rest on
+# a live fact about the shipping code: the clamped kernel is still OPT-IN. If any
+# lane flips DEFAULT_RESAMPLER_NAME, N5 is violated, 2.9.76's premise is false,
+# and an M8 zero taken afterwards is defeated by the scorecard clause at :1631.
+# Nothing else in this corpus would notice, so it is pinned here.
+ALIGN_CMD = ROOT / "crates" / "strehl-cli" / "src" / "align_cmd.rs"
+RESTORE_RS = ROOT / "crates" / "strehl-core" / "src" / "restore.rs"
+CLAMP_DOC = ROOT / "docs" / "research" / "ORCH-clamp-default-decision.md"
+
+if not ALIGN_CMD.exists():
+    check("clamp default source", False,
+         "crates/strehl-cli/src/align_cmd.rs is missing; 2.9.76's premise "
+         "cannot be checked and must not be trusted")
+else:
+    align_src = ALIGN_CMD.read_text(encoding="utf-8", errors="replace")
+    check("clamp still opt-in",
+         'pub const DEFAULT_RESAMPLER_NAME: &str = "catmull-rom";' in align_src,
+         "shipping default is still catmull-rom, so ORCH-clamp-default-decision "
+         "N5 holds and 2.9.76's premise is intact")
+
+if not RESTORE_RS.exists():
+    check("restore source", False, "crates/strehl-core/src/restore.rs is missing")
+else:
+    restore_src = RESTORE_RS.read_text(encoding="utf-8", errors="replace")
+    check("restoration refuses clamp",
+         "!matches!(r, Resampler::ClampedCatmullRom)" in restore_src,
+         "restoration_supported() still excludes ClampedCatmullRom, which is the "
+         "cost G4 of the clamp decision is written against")
+
+if not CLAMP_DOC.exists():
+    check("clamp decision doc", False,
+         "docs/research/ORCH-clamp-default-decision.md is missing; 2.9.76 cites "
+         "a ruling that no longer exists")
+else:
+    clamp_txt = collapse(CLAMP_DOC.read_text(encoding="utf-8"))
+    check("clamp N5 ruling present",
+         collapse("A clamped shipping default is NOT a route to an M8 PASS while "
+                  "M1 is absent.") in clamp_txt,
+         "the N5 prohibition 2.9.76 quotes is present in the decision document")
+    check("clamp decision unresolved",
+         "**UNRESOLVED.** No arm has been read." in clamp_txt,
+         "the clamp decision is still registered-and-unresolved; if this flips, "
+         "2.9.76 needs rewriting rather than a footnote")
+
+s76 = section_text(status_raw, "2.9.76")
+check("2.9.76 present", bool(s76.strip()),
+     "STATUS 2.9.76 exists and is non-empty")
+check("2.9.76 keeps the scoreboard honest",
+     collapse("The scoreboard is unchanged at `0 of 12`.") in collapse(s76),
+     "2.9.76 still states the scoreboard is 0 of 12; no axis was quietly cashed")
+
+print()
+
 print("GREEN               : %d" % green)
 print("RED                 : %d" % red)
 print("not asserted (RED)  : %d  %s" % (len(missing_in_status), missing_in_status))
