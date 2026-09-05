@@ -669,6 +669,50 @@ else:
           "re-derived peak %d B is under the %d B bar; 2.9.75 must not "
           "call this a pass, only preliminary" % (n299, BAR_BYTES))
 
+# ---- M8-O v1.5: the bar's normative text lives OUTSIDE the scorecard --------
+# The scorecard delegates the v1.5 bar to a git blob rather than transcribing
+# it, so the bar has one canonical site and cannot drift between two copies.
+# That is the right call, but it makes the hex digits load-bearing: a single
+# mistyped character leaves the bar with no text at all and nothing else in the
+# repository would notice. The hash is READ FROM THE SCORECARD, never hardcoded
+# here, so corrupting it there turns this check RED.
+import subprocess
+
+SCORECARD = ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md"
+V15_ANCHORS = ("final serialized source-support certificate",
+               "crop origin, frame-site trace, or arithmetic metadata")
+
+
+def git_blob(sha):
+    """Return blob bytes, or None. Bytes, not a redirected stream: on Windows
+    `git show ... > file` re-encodes and silently corrupts the comparison."""
+    p = subprocess.run(["git", "cat-file", "-p", sha], cwd=str(ROOT),
+                       stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    return p.stdout if p.returncode == 0 else None
+
+
+if not SCORECARD.exists():
+    check("m8o v1.5 blob pin", False, "scorecard not found at %s" % SCORECARD)
+else:
+    sc = SCORECARD.read_text(encoding="utf-8")
+    m = re.search(r"v1\.5 bar is .{0,120}?pinned at git blob\s*`?([0-9a-f]{40})`?",
+                  collapse(sc))
+    if not m:
+        check("m8o v1.5 blob pin", False,
+              "scorecard no longer names a 40-hex blob for the v1.5 normative "
+              "text; the bar may have been silently orphaned")
+    else:
+        sha = m.group(1)
+        blob = git_blob(sha)
+        check("m8o v1.5 blob resolves", blob is not None,
+              "scorecard-referenced blob %s resolves to %d bytes"
+              % (sha, len(blob) if blob else 0))
+        if blob is not None:
+            txt = blob.decode("utf-8", "replace")
+            for anchor in V15_ANCHORS:
+                check("m8o v1.5 anchor", anchor in txt,
+                      "pinned blob contains %r" % anchor[:46])
+
 print()
 
 print("GREEN               : %d" % green)
