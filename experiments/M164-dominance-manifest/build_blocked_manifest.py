@@ -179,12 +179,15 @@ def build() -> tuple[str, str]:
             {
                 "id": "production-software",
                 "missing": (
-                    "the Strehl candidate binary, native-output adapter, "
-                    "settings, reduction/extraction software, and "
-                    "environment freeze required by the exact rehearsal"
+                    "the Strehl candidate plus licensed Zerene PMax/DMap "
+                    "and registered fork binaries, versions, settings, "
+                    "native-output adapters, non-secret licence/edition "
+                    "authorisation receipt, reduction/extraction software, "
+                    "and environment freeze required by the exact rehearsal"
                 ),
                 "producer": (
-                    "M164 registrar with the Strehl candidate execution owner"
+                    "M164 registrar with the Strehl and comparator execution "
+                    "owners; the owner must purchase the admitted Zerene tier"
                 ),
             },
             {

@@ -4,6 +4,6 @@
   "launcher_path": "experiments\\M164-dominance-manifest\\reader.py",
   "launcher_sha256": "603a0a9e6cdfdf8592c2f86a7a0d0f7c0f5a40cd5bb6b46c728688161efabe6b",
   "manifest_path": "experiments\\M164-dominance-manifest\\production-manifest-v1.json",
-  "manifest_sha256": "9ff16920bee0bb386cadf928c1fa160ae48e4253d937b063b7410c9027576dc5",
+  "manifest_sha256": "0e8035a763ae890330d7e4deeca041ddae08d037421823d280817d2e6ac8bbcc",
   "schema": "m164-dominance-freeze/v1"
 }

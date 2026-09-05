@@ -8,7 +8,7 @@
   "family_result": null,
   "manifest": {
     "path": "experiments\\M164-dominance-manifest\\production-manifest-v1.json",
-    "sha256": "9ff16920bee0bb386cadf928c1fa160ae48e4253d937b063b7410c9027576dc5",
+    "sha256": "0e8035a763ae890330d7e4deeca041ddae08d037421823d280817d2e6ac8bbcc",
     "verified_bytes_consumed": true
   },
   "reasons": [
@@ -89,7 +89,7 @@
     },
     {
       "code": "UNRESOLVED_FIELDS",
-      "detail": "{\"id\": \"production-software\", \"missing\": \"the Strehl candidate binary, native-output adapter, settings, reduction/extraction software, and environment freeze required by the exact rehearsal\", \"producer\": \"M164 registrar with the Strehl candidate execution owner\"}",
+      "detail": "{\"id\": \"production-software\", \"missing\": \"the Strehl candidate plus licensed Zerene PMax/DMap and registered fork binaries, versions, settings, native-output adapters, non-secret licence/edition authorisation receipt, reduction/extraction software, and environment freeze required by the exact rehearsal\", \"producer\": \"M164 registrar with the Strehl and comparator execution owners; the owner must purchase the admitted Zerene tier\"}",
       "pointer": "$.unresolved[4]"
     },
     {

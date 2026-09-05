@@ -48,7 +48,7 @@
       {
         "id": "manifest-builder",
         "path": "experiments\\M164-dominance-manifest\\build_blocked_manifest.py",
-        "sha256": "29dde870d1c163b75a54453e1d10b83222dc8a8602bedffd587a1fb2c158a406"
+        "sha256": "afd6a127dc00fd326bb2c64ed10f5ff8cd1b850d91b81d062dba66cdabbd7cd8"
       }
     ],
     "target": [
@@ -137,8 +137,8 @@
     },
     {
       "id": "production-software",
-      "missing": "the Strehl candidate binary, native-output adapter, settings, reduction/extraction software, and environment freeze required by the exact rehearsal",
-      "producer": "M164 registrar with the Strehl candidate execution owner"
+      "missing": "the Strehl candidate plus licensed Zerene PMax/DMap and registered fork binaries, versions, settings, native-output adapters, non-secret licence/edition authorisation receipt, reduction/extraction software, and environment freeze required by the exact rehearsal",
+      "producer": "M164 registrar with the Strehl and comparator execution owners; the owner must purchase the admitted Zerene tier"
     },
     {
       "id": "production-seed",
