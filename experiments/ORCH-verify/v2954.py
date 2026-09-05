@@ -629,15 +629,37 @@ QUOTES = [
      "CLOSED. C1 is KILL at the measured"),
     ("a8 m133 phase not absent", "docs/research/M133-blocker-audit.md",
      "is false. Its result is filed in the"),
+    # --- M183 (d8adb3b5): the lane that falsified my own Amendment 8. ---
+    # These pin the FILED document, not the lane's chat summary. I wrote STATUS
+    # 2.9.78 from the summary first, whose precision differs from the artifact
+    # (summary "0.00551649753" vs filed "0.00551650"), and pinning the artifact
+    # is what caught it. Quote the committed file, never the message.
+    ("m183 rho pinned", "docs/research/M183-rho-convention.md",
+     "rho = 0.00551650"),
+    ("m183 rho interval", "docs/research/M183-rho-convention.md",
+     "0.00184706--0.01077932"),
+    ("m183 verdict line", "docs/research/M183-rho-convention.md",
+     "KILL at the median, but NARROWED at field centre at the upper endpoint"),
+    ("m183 transition", "docs/research/M183-rho-convention.md",
+     "rho = 0.00633340"),
+    ("m183 30x diagnosis", "docs/research/M183-rho-convention.md",
+     "0.0055165 / 0.0001809 = 30.49x"),
+    ("m183 falsifies a8 survive", "docs/research/M183-rho-convention.md",
+     "It says the measured interval contains **SURVIVE**"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel
     if not p.exists():
         check(label, False, "SOURCE MISSING %s" % rel)
         continue
+    if label.startswith("a8 "):
+        _who = "Amendment 8"
+    elif label.startswith("m183 "):
+        _who = "STATUS 2.9.78 / the Amendment 8 correction"
+    else:
+        _who = "STATUS 2.9.66"
     check(label, collapse(quote) in load(p),
-          "%s quotes this verbatim from %s"
-          % ("Amendment 8" if label.startswith("a8 ") else "STATUS 2.9.66", rel))
+          "%s quotes this verbatim from %s" % (_who, rel))
 
 # ---- 2.9.75: re-derive M172's memory figures instead of matching them ----
 #
@@ -950,7 +972,7 @@ else:
         ("a8 cites phase", "Filed verdict: KILL at the measured rho, "
                            "NOT ROBUST across the rho census."),
         ("a8 cites rho ci", "(0.00185-0.01078)"),
-        ("a8 cites rho 30x", "30.49x"),
+        ("a8 cites rho 30x", "RHO's median moves by **`30.49x`**"),
     ]:
         check(_lbl, collapse(_q) in _plan,
               "Amendment 8 reproduces this verbatim from its pinned source")
@@ -963,11 +985,29 @@ else:
                                PLAN.read_text(encoding="utf-8", errors="replace")))
     # The ruling itself. If this sentence is softened, C1 silently becomes
     # schedulable again, which is the exact failure Amendment 8 documents.
+    #
+    # RE-ANCHORED after M183 (d8adb3b5) falsified the original stated ground.
+    # The ruling used to say C1 could not be struck "because that same interval
+    # contains SURVIVE". That is false: the measured interval reaches NARROWED,
+    # and SURVIVE occurs only at rho 0.06 in the wider design census. The
+    # DISPOSITION is unchanged and is what this pin protects; only the reason
+    # moved. The old wording survives verbatim inside the correction block, so
+    # this is anchored on the NEW reason -- anchoring on the shared prefix would
+    # match the quoted history and pass even if the ruling were reverted.
     check("a8 c1 ruling intact",
           collapse("It may not be scheduled as build-ready phase-3 work") in _plan_bq
-          and collapse("and it may not be struck, because that same interval "
-                       "contains SURVIVE") in _plan_bq,
+          and collapse("and it may not be struck, because that interval does not "
+                       "deliver a uniform KILL") in _plan_bq,
           "C1 is held at BLOCKED -- neither schedulable nor struck")
+    # The correction must not be quietly reverted, and the superseded wording
+    # must stay on the record rather than being tidied away. Both halves are
+    # required: the falsification note AND the verbatim original.
+    check("a8 c1 correction recorded",
+          collapse("Both statements were wrong, and the lane falsified them by "
+                   "doing exactly what they prescribed.") in _plan_bq
+          and collapse("may not be struck, because that same interval contains "
+                       "SURVIVE") in _plan_bq,
+          "Amendment 8 records M183's falsification and preserves the original wording")
 
 _gate_hits = []
 for _stem in ("M-PHASE0-MAKERNOTE", "M-PHASE0-TETHER"):

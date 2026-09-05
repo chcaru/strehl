@@ -7858,12 +7858,68 @@ gate.** And `M-PHASE0-PHASE` was **never absent** as the plan's audit had
 implied: its filed verdict is *"KILL at the measured rho, NOT ROBUST across the
 rho census."* C1 is **not** killed by it — the verdict flips inside its own
 measured uncertainty (KILL at rho `0.0055`, NARROWED at `0.01`, itself inside the
-95% interval `0.00185-0.01078`, SURVIVE at the census top), and rho's median
-moves `30.49x` under a frequency-grid refinement. **C1 is blocked on rho, neither
-schedulable nor struck**, and the decidable quantity is rho's grid and boundary
-convention rather than the aligner. The class matters more than either incident:
-**this plan has no mechanism forcing a fired gate to change the text it
+95% interval `0.00185-0.01078`), while SURVIVE occurs only at rho `0.06` — the
+top of the *wider design census*, well outside that interval. **C1 is blocked on
+rho, neither schedulable nor struck.** The class matters more than either
+incident: **this plan has no mechanism forcing a fired gate to change the text it
 governs**, which is now twice-demonstrated.
+
+**7. That mechanism was tested on me within the hour, and I am what it caught.**
+Amendment 8 ruled that C1's blocking quantity *"is rho's grid and boundary
+convention — not the aligner"*, and I dispatched lane M183 to pin exactly that,
+requiring preregistration **before** computation to foreclose a garden of forking
+paths. It complied — registering the 8x8 PHASE grid in cycles per
+full-resolution sensor pixel, reciprocal averaging on green-boundary ties, and a
+periodic-Hann/no-padding Welch fit before measuring anything — and returned
+rho = `0.00551650`, scene-bootstrap 95% interval `0.00184706--0.01077932`, and
+**C1 still flips** — *"KILL at the median, but NARROWED at field centre at the
+upper endpoint"*, with the KILL/NARROWED transition at rho `0.00633340`, inside
+the pinned interval. **Grid and boundary were *a* blocker, not
+the sole blocker.** What remains is an absent preregistered scene population and
+risk functional, plus PHASE's own per-site joint census, still unrun.
+
+It also diagnosed the `30.49x`: the free parameter is **scalar quadrature
+resolution**, 8x8 against 32x32 cell-centred grids, and explicitly *"not Welch
+resolution or padding"* — refinement moves the nearest base radius toward DC
+under a steep power law. And it caught a **second** error: Amendment 8 gave
+*"that same interval contains SURVIVE"* as the reason C1 may not be struck, which
+is false. The correct ground is that the interval fails to deliver a uniform
+KILL. **Both statements are corrected in the plan at `d8adb3b5`, with the
+original wording quoted rather than deleted**, per the forward anti-cheat
+discipline. C1's disposition is unchanged.
+
+M183 commissioned at **PASS 10 / FAIL 0, CAUGHT 4 / MISSED 0** across null,
+inert, known-effect, raise, lower, boundary and geometry arms, reproduced `5/5`
+deterministically by SHA-256, and filed its own falsifiers — including that its
+six-scene sample does not establish a general product population. **The point
+worth keeping is procedural: I wrote the claim, I dispatched the lane capable of
+falsifying it, and it did.** That is precisely the mechanism this section says
+the plan lacks, and it works when someone runs it.
+
+**8. A qualifying development flat appears to already exist — PROVISIONAL.**
+§2.9.77 and the owner document both record that no existing capture supplies
+qualifying tiles for M4's development role, and I asked the owner for a third
+sitting on that basis. Lane M181 has now run M152's census predicate —
+**unmodified**, source SHA-256 `640a9b...e0539`, only the input provider rebound
+— against `D:\personal\macro\flat-fields\flat-fields\DSC00103.ARW`–`DSC00122.ARW`
+(**20 frames**) and measured **`1,768/1,768` eligible**, every term clearing by a
+wide margin: minimum signal `62.121293265` sigma against `>=10`, worst band-power
+ratio `0.956877856` against `<1.0`, and **zero** low- and high-rail failures.
+
+That capture is **not** coffee bubbles, which genuinely stays `0/1,768`; the
+shared `1,768` is only the fixed grid denominator, which is what misled me into
+treating the two reports as contradictory. M181 also reconciled the frame
+inventory exactly — `10,509 - 623 = 9,886` allowed, `68 - 5 = 63`, the `623`
+being the prohibited holdout subtree, which was **not** opened.
+
+**This is marked provisional and not yet cashed**, because passing the predicate
+is not the same as filling the role: the predicate selects *for* flatness, so a
+flat field satisfies it by construction, and nobody has yet confirmed that M4's
+development role accepts a uniform field rather than requiring scene structure.
+M152 is adjudicating. The owner document now carries a **do not shoot item 3
+yet** notice rather than a retraction, because the asymmetry favours caution — a
+wrongly retracted ask costs a capture session that has already passed, which is
+worse than a wasted one.
 
 ## 3. Gaps, ranked by what stands between here and print-worthy
 

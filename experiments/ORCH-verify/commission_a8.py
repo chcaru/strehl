@@ -93,6 +93,18 @@ WIRING = [
      "It may not be scheduled as build-ready phase-3 work",
      "It may now be scheduled as build-ready phase-3 work",
      "C1 is quietly made schedulable again"),
+    # Two arms, one per conjunct of `a8 c1 correction recorded`. The check
+    # requires BOTH that M183's falsification is recorded AND that the
+    # superseded wording survives verbatim; a single arm would leave half the
+    # conjunction unexercised and I would not know which half works.
+    ("a8 c1 correction recorded",
+     "**Both statements were wrong, and the lane falsified them by doing exactly what",
+     "**Both statements were arguable, and the lane broadly agreed by doing exactly what",
+     "M183's falsification of my own amendment is softened away"),
+    ("a8 c1 correction recorded",
+     "C1 *\"may not be struck, because that same interval contains SURVIVE\"*, and that",
+     "C1 something to that general effect, and that",
+     "the superseded wording is tidied away instead of preserved"),
 ]
 
 INERT = ("uncommitted on disk", "uncommitted on the disk",
@@ -113,6 +125,23 @@ PREDICATE = [
      "CLOSED. C1 is KILL at the measured"),
     ("a8 m133 phase not absent", "docs/research/M133-blocker-audit.md",
      "is false. Its result is filed in the"),
+    # M183's artifacts. These are predicate arms rather than wiring arms
+    # deliberately: M183-rho-convention.md belongs to that lane and I must not
+    # mutate another lane's file to commission my own checks. What these prove
+    # is that each needle is present AND that a one-character corruption of it
+    # is absent -- i.e. the pin cannot be satisfied by a near-miss.
+    ("m183 rho pinned", "docs/research/M183-rho-convention.md",
+     "rho = 0.00551650"),
+    ("m183 rho interval", "docs/research/M183-rho-convention.md",
+     "0.00184706--0.01077932"),
+    ("m183 verdict line", "docs/research/M183-rho-convention.md",
+     "KILL at the median, but NARROWED at field centre at the upper endpoint"),
+    ("m183 transition", "docs/research/M183-rho-convention.md",
+     "rho = 0.00633340"),
+    ("m183 30x diagnosis", "docs/research/M183-rho-convention.md",
+     "0.0055165 / 0.0001809 = 30.49x"),
+    ("m183 falsifies a8 survive", "docs/research/M183-rho-convention.md",
+     "It says the measured interval contains **SURVIVE**"),
 ]
 
 

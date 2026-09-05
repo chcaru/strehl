@@ -3004,8 +3004,47 @@ The correct disposition is therefore neither *alive* nor *dead*:
 
 > **C1 is blocked on ρ.** It may not be scheduled as build-ready phase-3 work
 > while its verdict flips across the measured ρ interval, and it may not be
-> struck, because that same interval contains SURVIVE. The decidable quantity is
-> ρ's grid and boundary convention — **not the aligner.**
+> struck, because that interval does not deliver a uniform KILL — it reaches
+> NARROWED at ρ = 0.01. The decidable quantity **includes** ρ's grid and
+> boundary convention — **not the aligner** — but is not exhausted by it.
+
+**Correction (M183, commit `d8adb3b5`).** As first written, the ruling above said
+C1 *"may not be struck, because that same interval contains SURVIVE"*, and that
+the decidable quantity *"is ρ's grid and boundary convention — not the aligner."*
+**Both statements were wrong, and the lane falsified them by doing exactly what
+they prescribed.** The text is corrected above and quoted here so nothing is
+hidden.
+
+1. **The measured interval does not contain SURVIVE.** It reaches NARROWED at
+   ρ = 0.01; SURVIVE occurs only at ρ = 0.06, the top of the *wider design
+   census*, far outside `0.00185-0.01078`
+   (`experiments/M-PHASE0-PHASE/PREREGISTRATION.md:1385-1398`). The paragraph
+   preceding the ruling stated this correctly and the ruling itself
+   misattributed it. **The disposition survives on the corrected ground** — a
+   non-uniform verdict across the interval, not a contained SURVIVE.
+2. **Pinning grid and boundary does not decide C1.** M183 preregistered, then
+   pinned, the exact 8x8 PHASE grid in cycles per full-resolution sensor pixel,
+   reciprocal averaging on green-boundary ties, and a commissioned
+   periodic-Hann/no-padding Welch fit. It measured ρ = `0.00551650`,
+   scene-bootstrap 95% interval `0.00184706--0.01077932` — and **C1 still
+   flips**: *"KILL at the median, but NARROWED at field centre at the upper
+   endpoint"*, with the KILL/NARROWED transition at ρ = `0.00633340`, inside the
+   pinned interval. **Grid and boundary were *a* blocker, not the
+   sole blocker.** What remains is an **absent preregistered scene population and
+   risk functional**, plus PHASE's own **per-site joint census, still unrun**.
+3. **The `30.49x` is now diagnosed.** The unpinned degree of freedom is **scalar
+   quadrature resolution** — an 8x8 versus a 32x32 cell-centred grid — and it is
+   explicitly *"not Welch resolution or padding"*. Refinement moves the nearest
+   base radius toward DC under a steep power law
+   (`docs/research/M183-rho-convention.md` §3).
+
+**C1's disposition is unchanged: blocked, neither schedulable nor struck.** What
+changed is that the quantity blocking it is *larger* than this amendment claimed,
+and one of the two reasons given for not striking it was false. M183's own
+falsifiers are recorded at `docs/research/M183-rho-convention.md` §9, and its
+commissioning ran **PASS 10 / FAIL 0, CAUGHT 4 / MISSED 0** with null, inert,
+known-effect, raise, lower, boundary and geometry arms, and `5/5` deterministic
+reproduction.
 
 M133 put the same point as *"adverse but not a robust permanent KILL"*, and the
 lane itself records that the per-site joint census §9's thresholds are actually
