@@ -1,0 +1,456 @@
+{
+  "schema": "m182-commission-v1",
+  "baseline": {
+    "checks_passed": 74,
+    "checks_failed": 0,
+    "report_checks": 52,
+    "semantic_checks": 22
+  },
+  "mutations": {
+    "defects_planted": 74,
+    "defects_caught": 74,
+    "defects_missed": 0,
+    "missed_ids": [],
+    "all_anchors_unique_full_lines": true,
+    "report": [
+      {
+        "check": "R-frequency-convention",
+        "anchor_sha256": "059CCE48279B04618D75CF3EE8A0EEDE79660163148E39E4385CE616E6BDEBB2",
+        "caught": true
+      },
+      {
+        "check": "R-method-counts",
+        "anchor_sha256": "3877FD9710457B6469AC48B41CB1BDE00B0132A3961E72D970ED5ADEF68A6B48",
+        "caught": true
+      },
+      {
+        "check": "R-commission-summary",
+        "anchor_sha256": "4CF1F09B2E39399399574E62CFABD68F1D6044A53D50AC1B5DEF036E3C1D4128",
+        "caught": true
+      },
+      {
+        "check": "R-tap-nearest",
+        "anchor_sha256": "19B67102DFEF0F30920AB3189C8CDED2842731B9312452DE3419D69853E1C14B",
+        "caught": true
+      },
+      {
+        "check": "R-tap-bilinear",
+        "anchor_sha256": "19E23A5A61051D8CA82E14373C95BFA53A43A914B2D55DE30B29F7D03D0AEA40",
+        "caught": true
+      },
+      {
+        "check": "R-tap-catmull-rom",
+        "anchor_sha256": "2C74615D584E02A691D00D6D07379348DCAFB6EBC88E5AAE651A25E222AD2108",
+        "caught": true
+      },
+      {
+        "check": "R-tap-clamped-catmull-rom",
+        "anchor_sha256": "A4382ED6B168D8EAE060EB11B0B4C50D462E010CC20884941A37E77D22E95606",
+        "caught": true
+      },
+      {
+        "check": "R-tap-lanczos2",
+        "anchor_sha256": "CC1D6B7C6976620666C1FCCFE37830F853C33310B7910C4BBC9479DFE6D6A007",
+        "caught": true
+      },
+      {
+        "check": "R-tap-lanczos3",
+        "anchor_sha256": "4D1DFEE1675C65CFDEF95B32F26C8FAF79B19D7299FA30FE6AC79DDBFCF7B7AB",
+        "caught": true
+      },
+      {
+        "check": "R-overshoot-nearest",
+        "anchor_sha256": "01B33917B2E16061798D531962EE1059B3307725E98F45D5936C1A8BE8DC685E",
+        "caught": true
+      },
+      {
+        "check": "R-overshoot-bilinear",
+        "anchor_sha256": "530ABC5AB4F10F6AAED78AA68833FA5A81842CDA11F755ACC5CDD2249C601A92",
+        "caught": true
+      },
+      {
+        "check": "R-overshoot-catmull-rom",
+        "anchor_sha256": "216CEC28F29FD324C82D311BB087CA906CCD125FAC92D58F9EE714E007953D32",
+        "caught": true
+      },
+      {
+        "check": "R-overshoot-clamped-catmull-rom",
+        "anchor_sha256": "A2BEFE3615FD0CCF5C5CE408F0CC0925CC4388242A5336C36AE21AE64669D98F",
+        "caught": true
+      },
+      {
+        "check": "R-overshoot-lanczos2",
+        "anchor_sha256": "2DFD0B47F105D1E84426CE6633FB1FCB233495ACEE7AF4B6BA8788B8870CDEF5",
+        "caught": true
+      },
+      {
+        "check": "R-overshoot-lanczos3",
+        "anchor_sha256": "795C45A13E5494A17D2578CE51A1DE509356B541DC05470F0CB72BFC8D1064FD",
+        "caught": true
+      },
+      {
+        "check": "R-mtf-nearest",
+        "anchor_sha256": "07D57E003679435C98CC56AE680E030D3CE69E6B5264864C7B09E0868A1FD02D",
+        "caught": true
+      },
+      {
+        "check": "R-fidelity-nearest",
+        "anchor_sha256": "08D3883B193F504AB613D7B1E619B1A8560D7374435D36FCC730AE7409C2B1C0",
+        "caught": true
+      },
+      {
+        "check": "R-mtf-bilinear",
+        "anchor_sha256": "0544D54C00A01AB8327F61DC00FB6F01378B70F3291BD092F9E0C62383D6F37E",
+        "caught": true
+      },
+      {
+        "check": "R-fidelity-bilinear",
+        "anchor_sha256": "18E3A0E4D383B5DA3F3C0C6A676AA0603B971887757BEAE1774769454BCD7659",
+        "caught": true
+      },
+      {
+        "check": "R-mtf-catmull-rom",
+        "anchor_sha256": "B036CD9AC4E79380D4C44B22CDC45900A178963D45C1CE7D9A30FAADD1BE82DE",
+        "caught": true
+      },
+      {
+        "check": "R-fidelity-catmull-rom",
+        "anchor_sha256": "71D9AF2FBEB60BFEE0F6B028689DE71885455F6FBF53DE2B6319C056C74485DF",
+        "caught": true
+      },
+      {
+        "check": "R-mtf-clamped-catmull-rom",
+        "anchor_sha256": "8C38ECEFAA0AEF8EF015E8A39B993F8BBB5B402FC013D50EC3C4C92C28A16B4C",
+        "caught": true
+      },
+      {
+        "check": "R-fidelity-clamped-catmull-rom",
+        "anchor_sha256": "597447DC29D63662CCDE34EB5ED425594C0199B4386C00FCD03D8E00AB224416",
+        "caught": true
+      },
+      {
+        "check": "R-mtf-lanczos2",
+        "anchor_sha256": "C80FBB23ACD36789B0FC47E1510017C1CD662FE020B41B59CE28A3B1020FE614",
+        "caught": true
+      },
+      {
+        "check": "R-fidelity-lanczos2",
+        "anchor_sha256": "48F67EB4066AC9F80F3AADAF830F0ACBCB7A418E0B24B58D0FFF60C0EB586EEB",
+        "caught": true
+      },
+      {
+        "check": "R-mtf-lanczos3",
+        "anchor_sha256": "7459AFF344D54BF1A470EE9082C117174F4812D83024CD44A60BAAB1A35503B9",
+        "caught": true
+      },
+      {
+        "check": "R-fidelity-lanczos3",
+        "anchor_sha256": "4B65805A2528A5772B0D0EB35E33EEECC9B4FB754AF60D7F2B431799B6F28320",
+        "caught": true
+      },
+      {
+        "check": "R-conditioning-nearest",
+        "anchor_sha256": "302458497818DC7C2B0D344806F6EE2FB3B1EC6763BA6759CE85B61F165B2A20",
+        "caught": true
+      },
+      {
+        "check": "R-conditioning-bilinear",
+        "anchor_sha256": "0688E74BDBE834F2B6D0F134F0B4A99EF89BF4B209ED8A36E7D2580A561B1AE8",
+        "caught": true
+      },
+      {
+        "check": "R-conditioning-catmull-rom",
+        "anchor_sha256": "1EDB2FD233C4D332918E61792E51F94A0B1B783889D51DBA2A09ECBF180DCE29",
+        "caught": true
+      },
+      {
+        "check": "R-conditioning-clamped-catmull-rom",
+        "anchor_sha256": "98ABD4CC6ACBB6D849559C10E94CB006AF7204DB54F48C8872EA8B15853CC695",
+        "caught": true
+      },
+      {
+        "check": "R-conditioning-lanczos2",
+        "anchor_sha256": "D2BEF64AE6A17EC2254F2C97E0D4D09A8BC4D824B332B83EDD62FAB37155FEFF",
+        "caught": true
+      },
+      {
+        "check": "R-conditioning-lanczos3",
+        "anchor_sha256": "A3B10128F2E237CCB12919C39C24BFFFDB33E7C9F2304336C341ECF257D56B6C",
+        "caught": true
+      },
+      {
+        "check": "R-restore-trade-0.000000000000",
+        "anchor_sha256": "9683A2EE302F63FDADA8BD54BC7A88EB20E4BEB0D0559B6726E81ECDC480EC54",
+        "caught": true
+      },
+      {
+        "check": "R-restore-trade-0.001000000000",
+        "anchor_sha256": "DE300DDEF2326B64B08EDA90350EA73AA60F82D46D1F7FEBDDD49D54AECF6A0C",
+        "caught": true
+      },
+      {
+        "check": "R-restore-trade-0.010000000000",
+        "anchor_sha256": "6E0D1D6DB5970C775805D64C45B7C04A2B75172BC608D6C880941E5A5D648407",
+        "caught": true
+      },
+      {
+        "check": "R-restore-trade-0.030000000000",
+        "anchor_sha256": "285C67B651CA8C716AA6F9D5068790FECAE151526E888A2A3FB616850251D499",
+        "caught": true
+      },
+      {
+        "check": "R-restore-trade-0.100000000000",
+        "anchor_sha256": "9640A2A6B80375AEE12AA7A5D7F6D842C4D0FA3993BBAD81B64E71668CFBA8D8",
+        "caught": true
+      },
+      {
+        "check": "R-restore-trade-0.150000000000",
+        "anchor_sha256": "A358A41C51FE35D2071FFF065ACA10C76FBF6204585A28C52425DF9227EB9159",
+        "caught": true
+      },
+      {
+        "check": "R-restore-trade-0.200000000000",
+        "anchor_sha256": "C866375F4F37982564F05CDC61C2F74D68CE5130B89F55CDEDDA72191AF64CC9",
+        "caught": true
+      },
+      {
+        "check": "R-restore-trade-0.300000000000",
+        "anchor_sha256": "A8FE6009301A09A5880C88C96DB6A018D95A2A26F889C179F1A415AF7463ADF0",
+        "caught": true
+      },
+      {
+        "check": "R-control-mtf-direction",
+        "anchor_sha256": "B36A51EE5EFEACCEF41C206558029F7C7284DE7DE3832BC530636DE6806837EF",
+        "caught": true
+      },
+      {
+        "check": "R-control-model-shipping",
+        "anchor_sha256": "88C25699780C4FA255366F851DB1EC05DDB52CCFCE2B466BB4ACC4A825526E01",
+        "caught": true
+      },
+      {
+        "check": "R-control-noise-application",
+        "anchor_sha256": "C51104B265ABE96E3763CA0F16F2D5FA93B1E6D611CF150BE15C932E82B40BA6",
+        "caught": true
+      },
+      {
+        "check": "R-control-null-arms",
+        "anchor_sha256": "0B2722CB09204B0A72E31F179ED477E842821B6FA782E4EB9DE113CA6F718654",
+        "caught": true
+      },
+      {
+        "check": "R-source-crates/strehl-core/src/restore.rs",
+        "anchor_sha256": "030A904292D30D1A17CA14AA550127CB8F9146AAFEDD6B7A0147B2137AF905B3",
+        "caught": true
+      },
+      {
+        "check": "R-source-crates/strehl-core/src/align.rs",
+        "anchor_sha256": "58B513B309CF2C0E9F5EEE0269C20343E3698CCFBB668B1A81F210DFF14CF07F",
+        "caught": true
+      },
+      {
+        "check": "R-source-crates/strehl-cli/src/align_cmd.rs",
+        "anchor_sha256": "739A97DEBBECC93CDC9E8BDBA5AEA91D762DF28F7660CB9117224018796F9BB0",
+        "caught": true
+      },
+      {
+        "check": "R-artifact-probe",
+        "anchor_sha256": "94745484F3312325FB3B6527DA25745ED2AD419B0C2A8E352977D8F4359D40C7",
+        "caught": true
+      },
+      {
+        "check": "R-artifact-mtf",
+        "anchor_sha256": "256F68512370AA5DD6AEC85D6FA7277C1857F984D8733808607635A0F3840A04",
+        "caught": true
+      },
+      {
+        "check": "R-artifact-restoration",
+        "anchor_sha256": "49865662AD6F149BA77CB600278191E73390396EA2AF6C09088AE21E998A223A",
+        "caught": true
+      },
+      {
+        "check": "R-artifact-tap-phases",
+        "anchor_sha256": "B095E9CAAFDE3D08B5749DA59DF33544F73B66C3297FF52BA3C9175CBB2DB462",
+        "caught": true
+      }
+    ],
+    "semantic": [
+      {
+        "check": "S01-schema",
+        "path": "/schema",
+        "defect": "wrong result schema",
+        "anchor": "S01-schema\t/schema\t\"m182-kernel-trade-v1\"",
+        "caught": true
+      },
+      {
+        "check": "S02-source-anchors",
+        "path": "/source/anchors/0/count",
+        "defect": "required production-source anchor absent",
+        "anchor": "S02-source-anchors\t/source/anchors/0/count\t1",
+        "caught": true
+      },
+      {
+        "check": "S03-source-hashes",
+        "path": "/source/files/crates/strehl-core/src/restore.rs",
+        "defect": "measured restore.rs identity does not match current bytes",
+        "anchor": "S03-source-hashes\t/source/files/crates/strehl-core/src/restore.rs\t\"3AB5C6660B7A45837AC4B5560078092E6AAFA9C85A041A935E95B0CD77533AFD\"",
+        "caught": true
+      },
+      {
+        "check": "S04-convex-raw-taps",
+        "path": "/raw_taps/bilinear/maximum_raw_negative_mass",
+        "defect": "bilinear plant contains a negative tap",
+        "anchor": "S04-convex-raw-taps\t/raw_taps/bilinear/maximum_raw_negative_mass\t0.0",
+        "caught": true
+      },
+      {
+        "check": "S05-negative-lobes",
+        "path": "/raw_taps/lanczos3/most_negative_raw_tap",
+        "defect": "negative-lobe kernel falsely reported non-negative",
+        "anchor": "S05-negative-lobes\t/raw_taps/lanczos3/most_negative_raw_tap\t-0.14726666283785345",
+        "caught": true
+      },
+      {
+        "check": "S06-shipping-dc",
+        "path": "/shipping_effective_tap_probe/catmull-rom/maximum_constant_dc_error",
+        "defect": "shipping gather changes a constant plane",
+        "anchor": "S06-shipping-dc\t/shipping_effective_tap_probe/catmull-rom/maximum_constant_dc_error\t2.38419e-07",
+        "caught": true
+      },
+      {
+        "check": "S07-overshoot-discrimination",
+        "path": "/overshoot/bilinear/step/dn",
+        "defect": "convex bilinear step reports out-of-range output",
+        "anchor": "S07-overshoot-discrimination\t/overshoot/bilinear/step/dn\t0.0",
+        "caught": true
+      },
+      {
+        "check": "S08-restoration-support",
+        "path": "/restoration_supported/clamped-catmull-rom",
+        "defect": "nonlinear clamped kernel falsely declared restorable",
+        "anchor": "S08-restoration-support\t/restoration_supported/clamped-catmull-rom\tfalse",
+        "caught": true
+      },
+      {
+        "check": "S09-model-shipping-crosscheck",
+        "path": "/controls/model_vs_shipping_mtf/maximum_absolute_error",
+        "defect": "MTF model disagrees with shipping sampler",
+        "anchor": "S09-model-shipping-crosscheck\t/controls/model_vs_shipping_mtf/maximum_absolute_error\t2.293900003280669e-08",
+        "caught": true
+      },
+      {
+        "check": "S10-mtf-direction",
+        "path": "/controls/mtf_direction_control/sharpened",
+        "defect": "positive sharpened arm cannot move above baseline",
+        "anchor": "S10-mtf-direction\t/controls/mtf_direction_control/sharpened\t0.895952412356",
+        "caught": true
+      },
+      {
+        "check": "S11-restoration-application",
+        "path": "/controls/restore_application_noise_prediction/measured_sd_ratio",
+        "defect": "applied noise gain disagrees with returned FIR energy",
+        "anchor": "S11-restoration-application\t/controls/restore_application_noise_prediction/measured_sd_ratio\t1.313269719146",
+        "caught": true
+      },
+      {
+        "check": "S12-high-noise-identity",
+        "path": "/restoration/high_noise_null/bilinear/noise_sd_ratio_2d",
+        "defect": "noise-dominated restoration is not identity",
+        "anchor": "S12-high-noise-identity\t/restoration/high_noise_null/bilinear/noise_sd_ratio_2d\t1.0",
+        "caught": true
+      },
+      {
+        "check": "S13-conditioning-positive",
+        "path": "/restoration/conditioning/bilinear/minimum_in_band_mtf_1d",
+        "defect": "bilinear has a planted in-band zero",
+        "anchor": "S13-conditioning-positive\t/restoration/conditioning/bilinear/minimum_in_band_mtf_1d\t0.5",
+        "caught": true
+      },
+      {
+        "check": "S14-frequency-convention",
+        "path": "/frequency_convention/primary",
+        "defect": "frequency axis silently changed by two",
+        "anchor": "S14-frequency-convention\t/frequency_convention/primary\t\"cycles per gather-plane sample\"",
+        "caught": true
+      },
+      {
+        "check": "S15-method-counts",
+        "path": "/methods/raw_tap_sweep_phases",
+        "defect": "dense tap sweep collapsed to one phase",
+        "anchor": "S15-method-counts\t/methods/raw_tap_sweep_phases\t1000001",
+        "caught": true
+      },
+      {
+        "check": "S16-probe-artifact",
+        "path": "/artifacts/probe_tsv_sha256",
+        "defect": "raw Rust probe artifact changed",
+        "anchor": "S16-probe-artifact\t/artifacts/probe_tsv_sha256\t\"D4A6E392EEC5E79FC5A527BD001F8EEDC51A89BDB2F566D3068F196A33A877D9\"",
+        "caught": true
+      },
+      {
+        "check": "S17-mtf-artifact",
+        "path": "/artifacts/mtf_curve_sha256",
+        "defect": "MTF curve artifact changed",
+        "anchor": "S17-mtf-artifact\t/artifacts/mtf_curve_sha256\t\"E62CB73BD0725E156D2A6BE197D2C1A694BFBA31570367E11C811B035262D663\"",
+        "caught": true
+      },
+      {
+        "check": "S18-restoration-artifact",
+        "path": "/artifacts/restoration_curve_sha256",
+        "defect": "restoration curve artifact changed",
+        "anchor": "S18-restoration-artifact\t/artifacts/restoration_curve_sha256\t\"588F9BB207C914C93C53734CDF4DB509EAFB32ED8FC7D13BB169333D08BF43B3\"",
+        "caught": true
+      },
+      {
+        "check": "S19-tap-phase-artifact",
+        "path": "/artifacts/tap_phase_sums_sha256",
+        "defect": "per-phase tap-sum artifact changed",
+        "anchor": "S19-tap-phase-artifact\t/artifacts/tap_phase_sums_sha256\t\"2309EF871F5A1EAAA7A206F2F9DB614DE4A152E52B74369DB955B997590FF171\"",
+        "caught": true
+      },
+      {
+        "check": "S20-inverse-has-noise-cost",
+        "path": "/restoration/ideal_inverse/bilinear/noise_sd_ratio_2d",
+        "defect": "potent bilinear inverse falsely reported noise-free",
+        "anchor": "S20-inverse-has-noise-cost\t/restoration/ideal_inverse/bilinear/noise_sd_ratio_2d\t1.902340551547",
+        "caught": true
+      },
+      {
+        "check": "S21-restoration-recovers-high-band",
+        "path": "/restoration/ideal_inverse/bilinear/selected/192/restored_mtf",
+        "defect": "restoration positive arm cannot recover upper-band MTF",
+        "anchor": "S21-restoration-recovers-high-band\t/restoration/ideal_inverse/bilinear/selected/192/restored_mtf\t1.002100428864",
+        "caught": true
+      },
+      {
+        "check": "S22-clamped-is-not-an-otf",
+        "path": "/mtf/clamped-catmull-rom/method",
+        "defect": "nonlinear clamp falsely presented as a linear OTF",
+        "anchor": "S22-clamped-is-not-an-otf\t/mtf/clamped-catmull-rom/method\t\"shipping sampler, 64-phase cosine fundamental (nonlinear; not an OTF)\"",
+        "caught": true
+      }
+    ]
+  },
+  "inert_arms": {
+    "survived": 2,
+    "total": 2,
+    "arms": [
+      {
+        "id": "inert-report-wording",
+        "survived": true,
+        "unexpected_failures": []
+      },
+      {
+        "id": "inert-unconsumed-result-metadata",
+        "survived": true,
+        "unexpected_failures": []
+      }
+    ]
+  },
+  "positive_control": {
+    "preserved": true,
+    "baseline_mtf": 0.627955597613,
+    "sharpened_mtf": 0.895952412356,
+    "ratio": 1.4267766952977503
+  }
+}

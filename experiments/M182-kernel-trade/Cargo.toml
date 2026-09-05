@@ -1,0 +1,12 @@
+[package]
+name = "m182-kernel-trade"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+strehl-core = { path = "../../crates/strehl-core" }
+
+# Keep this measurement harness outside the production workspace while still
+# compiling against the production crate by path.
+[workspace]
