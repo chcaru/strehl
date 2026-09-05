@@ -1,0 +1,50 @@
+{
+  "accounted": 6,
+  "arms": [
+    {
+      "arm": "source-freeze",
+      "reason": "frozen M152 dependency hashes differ",
+      "status": "KILLED"
+    },
+    {
+      "arm": "prohibited-path",
+      "reason": "prohibited stack present in inventory: D:\\personal\\macro\\requests\\7-aperture-pairs\\forbidden-sentinel",
+      "status": "KILLED"
+    },
+    {
+      "arm": "inventory-integrity",
+      "reason": "inventory ARW denominator mismatch",
+      "status": "KILLED"
+    },
+    {
+      "arm": "probe-accounting",
+      "reason": "score-medication-pill: failure partition does not close",
+      "status": "KILLED"
+    },
+    {
+      "arm": "verdict-reduction",
+      "reason": "stored summary differs from exact reduction",
+      "status": "KILLED"
+    },
+    {
+      "arm": "inert",
+      "reason": null,
+      "status": "INERT_GREEN"
+    }
+  ],
+  "baseline_checks": [
+    "source-freeze",
+    "prohibited-path",
+    "inventory-integrity",
+    "probe-accounting",
+    "verdict-reduction"
+  ],
+  "expected_total": 6,
+  "inert_arms_green": 1,
+  "inert_arms_run": 1,
+  "mutation_arms_killed": 5,
+  "mutation_arms_missed": 0,
+  "mutation_arms_planted": 5,
+  "schema": "m181-verifier-commission-v1",
+  "verdict": "COMMISSIONED"
+}

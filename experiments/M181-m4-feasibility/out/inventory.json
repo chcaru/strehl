@@ -1,0 +1,2008 @@
+{
+  "arw_frame_count_excluding_prohibited": 9886,
+  "capture_root": "D:\\personal\\macro",
+  "detailed_flat_and_slide_stacks": [
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 0.697,
+        "median_positive_gap_seconds": 0.641
+      },
+      "exif": {
+        "first_capture_at": "2026:08:27 21:25:04.330",
+        "first_file": "DSC00001.ARW",
+        "frame_count": 146,
+        "last_capture_at": "2026:08:27 21:26:37.565",
+        "last_file": "DSC00146.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 146,
+              "value": 0.2
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 146,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 146,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 22,
+              "value": 0.270710678118655
+            },
+            {
+              "frame_count": 69,
+              "value": 0.273841307296975
+            },
+            {
+              "frame_count": 55,
+              "value": 0.277110541270397
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 146,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 22,
+              "value": 56
+            },
+            {
+              "frame_count": 69,
+              "value": 57
+            },
+            {
+              "frame_count": 55,
+              "value": 58
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 146,
+              "value": 50
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 146,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 146,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 146,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 146,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "flat/background sites around medication pill",
+      "path": "D:\\personal\\macro\\medication-pill-cpl",
+      "role": "scored-flat",
+      "stack_id": "medication-pill-cpl",
+      "step_width": null,
+      "step_width_status": "not recoverable from path or Sony EXIF"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 1.052,
+        "median_positive_gap_seconds": 0.9
+      },
+      "exif": {
+        "first_capture_at": "2026:08:23 11:42:25.240",
+        "first_file": "DSC00001.ARW",
+        "frame_count": 299,
+        "last_capture_at": "2026:08:23 11:46:55.268",
+        "last_file": "DSC00299.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 70,
+              "value": 0.3333333
+            },
+            {
+              "frame_count": 166,
+              "value": 0.4
+            },
+            {
+              "frame_count": 63,
+              "value": 0.5
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 299,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 299,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 13,
+              "value": 0.270710678118655
+            },
+            {
+              "frame_count": 40,
+              "value": 0.273841307296975
+            },
+            {
+              "frame_count": 40,
+              "value": 0.277110541270397
+            },
+            {
+              "frame_count": 41,
+              "value": 0.280524516597463
+            },
+            {
+              "frame_count": 40,
+              "value": 0.284089641525371
+            },
+            {
+              "frame_count": 40,
+              "value": 0.287812608018665
+            },
+            {
+              "frame_count": 40,
+              "value": 0.291700404320467
+            },
+            {
+              "frame_count": 41,
+              "value": 0.295760328069857
+            },
+            {
+              "frame_count": 4,
+              "value": 0.3
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 299,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 13,
+              "value": 56
+            },
+            {
+              "frame_count": 40,
+              "value": 57
+            },
+            {
+              "frame_count": 40,
+              "value": 58
+            },
+            {
+              "frame_count": 41,
+              "value": 59
+            },
+            {
+              "frame_count": 40,
+              "value": 60
+            },
+            {
+              "frame_count": 40,
+              "value": 61
+            },
+            {
+              "frame_count": 40,
+              "value": 62
+            },
+            {
+              "frame_count": 41,
+              "value": 63
+            },
+            {
+              "frame_count": 4,
+              "value": 64
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 299,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 299,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 299,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 299,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 299,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "flat background sites within bee stack",
+      "path": "D:\\personal\\macro\\bee-1-cpl",
+      "role": "scored-flat",
+      "stack_id": "bee-1-cpl",
+      "step_width": null,
+      "step_width_status": "not recoverable from path or Sony EXIF"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 2.757,
+        "median_positive_gap_seconds": 2.482
+      },
+      "exif": {
+        "first_capture_at": "2026:05:25 16:25:55.386",
+        "first_file": "DSC00001.ARW",
+        "frame_count": 100,
+        "last_capture_at": "2026:05:25 16:30:04.060",
+        "last_file": "DSC00100.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 74,
+              "value": 1.6
+            },
+            {
+              "frame_count": 26,
+              "value": 2
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 100,
+              "value": 8
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 100,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 9,
+              "value": 0.270710678118655
+            },
+            {
+              "frame_count": 27,
+              "value": 0.273841307296975
+            },
+            {
+              "frame_count": 27,
+              "value": 0.277110541270397
+            },
+            {
+              "frame_count": 29,
+              "value": 0.280524516597463
+            },
+            {
+              "frame_count": 8,
+              "value": 0.284089641525371
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 100,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 9,
+              "value": 56
+            },
+            {
+              "frame_count": 27,
+              "value": 57
+            },
+            {
+              "frame_count": 27,
+              "value": 58
+            },
+            {
+              "frame_count": 29,
+              "value": 59
+            },
+            {
+              "frame_count": 8,
+              "value": 60
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 100,
+              "value": 1000
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 100,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 100,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 100,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 100,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "fronto-parallel textured foam subject",
+      "path": "D:\\personal\\macro\\foam",
+      "role": "scored-flat",
+      "stack_id": "foam",
+      "step_width": null,
+      "step_width_status": "not recoverable from path or Sony EXIF"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 3.421,
+        "median_positive_gap_seconds": 3.3360000000000003
+      },
+      "exif": {
+        "first_capture_at": "2026:05:25 16:18:29.365",
+        "first_file": "DSC00034.ARW",
+        "frame_count": 19,
+        "last_capture_at": "2026:05:25 16:19:29.425",
+        "last_file": "DSC00052.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 19,
+              "value": 2.5
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 19,
+              "value": 8
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 19,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 19,
+              "value": 0.284089641525371
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 19,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 19,
+              "value": 60
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 19,
+              "value": 1000
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 19,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 19,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 19,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 19,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "fronto-parallel flat-category development subject",
+      "path": "D:\\personal\\macro\\coffee-bubbles",
+      "role": "development-flat",
+      "stack_id": "coffee-bubbles",
+      "step_width": null,
+      "step_width_status": "fixed focus; no bracket width applies"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 58.106,
+        "median_positive_gap_seconds": 1.018
+      },
+      "exif": {
+        "first_capture_at": "2026:08:23 16:41:30.106",
+        "first_file": "DSC00083.ARW",
+        "frame_count": 360,
+        "last_capture_at": "2026:08:23 16:50:32.556",
+        "last_file": "DSC00442.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 40,
+              "value": 0.004
+            },
+            {
+              "frame_count": 40,
+              "value": 0.008
+            },
+            {
+              "frame_count": 40,
+              "value": 0.01666667
+            },
+            {
+              "frame_count": 40,
+              "value": 0.03333333
+            },
+            {
+              "frame_count": 40,
+              "value": 0.05
+            },
+            {
+              "frame_count": 40,
+              "value": 0.07692308
+            },
+            {
+              "frame_count": 40,
+              "value": 0.1
+            },
+            {
+              "frame_count": 40,
+              "value": 0.125
+            },
+            {
+              "frame_count": 40,
+              "value": 0.2
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 360,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 360,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 360,
+              "value": "inf"
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 360,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 360,
+              "value": 255
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 360,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 360,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 360,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 360,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 360,
+              "value": 0
+            }
+          ]
+        }
+      },
+      "geometry": "fronto-parallel defocused paper flat",
+      "path": "D:\\personal\\macro\\flat-fields\\flat-fields",
+      "role": "development-flat-candidate",
+      "stack_id": "flat-fields\\flat-fields",
+      "step_width": null,
+      "step_width_status": "fixed focus; no bracket width applies"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 0.666,
+        "median_positive_gap_seconds": 0.643
+      },
+      "exif": {
+        "first_capture_at": "2026:08:23 16:51:17.858",
+        "first_file": "DSC00001.ARW",
+        "frame_count": 62,
+        "last_capture_at": "2026:08:23 16:51:56.820",
+        "last_file": "DSC00062.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 62,
+              "value": 0.2
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 62,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 62,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 13,
+              "value": 0.270710678118655
+            },
+            {
+              "frame_count": 40,
+              "value": 0.273841307296975
+            },
+            {
+              "frame_count": 9,
+              "value": 0.277110541270397
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 62,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 13,
+              "value": 56
+            },
+            {
+              "frame_count": 40,
+              "value": 57
+            },
+            {
+              "frame_count": 9,
+              "value": 58
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 62,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 62,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 62,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 62,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 62,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "fronto-parallel paper focus sweep without CPL",
+      "path": "D:\\personal\\macro\\flat-fields\\subject-focus-sweep-no-cpl",
+      "role": "development-flat-candidate",
+      "stack_id": "flat-fields\\subject-focus-sweep-no-cpl",
+      "step_width": null,
+      "step_width_status": "not recoverable from path or Sony EXIF"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 0.768,
+        "median_positive_gap_seconds": 0.701
+      },
+      "exif": {
+        "first_capture_at": "2026:08:23 16:31:55.086",
+        "first_file": "DSC00001.ARW",
+        "frame_count": 62,
+        "last_capture_at": "2026:08:23 16:32:38.250",
+        "last_file": "DSC00062.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 62,
+              "value": 0.2
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 62,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 62,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 13,
+              "value": 0.270710678118655
+            },
+            {
+              "frame_count": 40,
+              "value": 0.273841307296975
+            },
+            {
+              "frame_count": 9,
+              "value": 0.277110541270397
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 62,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 13,
+              "value": 56
+            },
+            {
+              "frame_count": 40,
+              "value": 57
+            },
+            {
+              "frame_count": 9,
+              "value": 58
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 62,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 62,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 62,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 62,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 62,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "fronto-parallel paper focus sweep with CPL",
+      "path": "D:\\personal\\macro\\flat-fields\\subject-focus-sweep-with-cpl",
+      "role": "development-flat-candidate",
+      "stack_id": "flat-fields\\subject-focus-sweep-with-cpl",
+      "step_width": null,
+      "step_width_status": "not recoverable from path or Sony EXIF"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 46.68,
+        "median_positive_gap_seconds": 0.651
+      },
+      "exif": {
+        "first_capture_at": "2026:08:30 19:27:05.291",
+        "first_file": "DSC00165.ARW",
+        "frame_count": 110,
+        "last_capture_at": "2026:08:30 19:31:07.417",
+        "last_file": "DSC00274.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 60,
+              "value": 0.125
+            },
+            {
+              "frame_count": 50,
+              "value": 0.5
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 110,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 110,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 110,
+              "value": 0.270710678118655
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 110,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 110,
+              "value": 56
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 10,
+              "value": 100
+            },
+            {
+              "frame_count": 10,
+              "value": 125
+            },
+            {
+              "frame_count": 10,
+              "value": 160
+            },
+            {
+              "frame_count": 10,
+              "value": 200
+            },
+            {
+              "frame_count": 10,
+              "value": 250
+            },
+            {
+              "frame_count": 10,
+              "value": 320
+            },
+            {
+              "frame_count": 10,
+              "value": 400
+            },
+            {
+              "frame_count": 10,
+              "value": 50
+            },
+            {
+              "frame_count": 5,
+              "value": 500
+            },
+            {
+              "frame_count": 10,
+              "value": 64
+            },
+            {
+              "frame_count": 5,
+              "value": 640
+            },
+            {
+              "frame_count": 10,
+              "value": 80
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 110,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 110,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 110,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 110,
+              "value": 2
+            }
+          ]
+        }
+      },
+      "geometry": "fronto-parallel paper, fixed focus",
+      "path": "D:\\personal\\macro\\requests\\10-paper-iso-var",
+      "role": "development-flat-candidate",
+      "stack_id": "requests\\10-paper-iso-var",
+      "step_width": null,
+      "step_width_status": "fixed focus; no bracket width applies"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 1.484,
+        "median_positive_gap_seconds": 1.459
+      },
+      "exif": {
+        "first_capture_at": "2026:09:02 20:28:39.502",
+        "first_file": "DSC00016.ARW",
+        "frame_count": 60,
+        "last_capture_at": "2026:09:02 20:30:05.390",
+        "last_file": "DSC00075.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 60,
+              "value": 1
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 60,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 60,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 60,
+              "value": 0.273841307296975
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 60,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 60,
+              "value": 57
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 60,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 60,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 60,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 60,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 60,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "flat/fronto-parallel calibration slide",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+      "role": "development-flat",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+      "step_width": 4,
+      "step_width_status": "inherited from unique sw4 path label"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 2.989,
+        "median_positive_gap_seconds": 2.978
+      },
+      "exif": {
+        "first_capture_at": "2026:09:02 20:24:07.993",
+        "first_file": "DSC00020.ARW",
+        "frame_count": 61,
+        "last_capture_at": "2026:09:02 20:27:06.436",
+        "last_file": "DSC00080.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 61,
+              "value": 2.5
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 61,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 61,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 61,
+              "value": 0.273841307296975
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 61,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 61,
+              "value": 57
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 61,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 61,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 61,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 61,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 61,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "flat/fronto-parallel calibration slide",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+      "role": "development-flat",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+      "step_width": 4,
+      "step_width_status": "inherited from unique sw4 path label"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 67.94,
+        "maximum_positive_gap_seconds": 6.815,
+        "median_positive_gap_seconds": 6.794
+      },
+      "exif": {
+        "first_capture_at": "2026:09:02 20:13:04.463",
+        "first_file": "DSC00015.ARW",
+        "frame_count": 65,
+        "last_capture_at": "2026:09:02 20:20:19.204",
+        "last_file": "DSC00079.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 65,
+              "value": 6
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 65,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 65,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 65,
+              "value": 0.273841307296975
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 65,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 65,
+              "value": 57
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 65,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 65,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 65,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 65,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 65,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "flat/fronto-parallel calibration slide",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+      "role": "development-flat",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+      "step_width": 4,
+      "step_width_status": "inherited from unique sw4 path label"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 1.499,
+        "median_positive_gap_seconds": 1.459
+      },
+      "exif": {
+        "first_capture_at": "2026:09:02 20:46:50.071",
+        "first_file": "DSC00031.ARW",
+        "frame_count": 182,
+        "last_capture_at": "2026:09:02 20:51:13.767",
+        "last_file": "DSC00212.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 182,
+              "value": 1
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 182,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 182,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 76,
+              "value": 0.273841307296975
+            },
+            {
+              "frame_count": 80,
+              "value": 0.277110541270397
+            },
+            {
+              "frame_count": 26,
+              "value": 0.280524516597463
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 182,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 76,
+              "value": 57
+            },
+            {
+              "frame_count": 80,
+              "value": 58
+            },
+            {
+              "frame_count": 26,
+              "value": 59
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 182,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 182,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 182,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 182,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 182,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "tilted calibration slide",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+      "role": "inventory-only",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+      "step_width": 4,
+      "step_width_status": "inherited from unique sw4 path label"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 1.491,
+        "median_positive_gap_seconds": 1.458
+      },
+      "exif": {
+        "first_capture_at": "2026:09:02 20:52:52.160",
+        "first_file": "DSC00016.ARW",
+        "frame_count": 92,
+        "last_capture_at": "2026:09:02 20:55:04.626",
+        "last_file": "DSC00107.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 92,
+              "value": 1
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 92,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 92,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 38,
+              "value": 0.273841307296975
+            },
+            {
+              "frame_count": 40,
+              "value": 0.277110541270397
+            },
+            {
+              "frame_count": 14,
+              "value": 0.280524516597463
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 92,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 38,
+              "value": 57
+            },
+            {
+              "frame_count": 40,
+              "value": 58
+            },
+            {
+              "frame_count": 14,
+              "value": 59
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 92,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 92,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 92,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 92,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 92,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "tilted calibration slide",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+      "role": "inventory-only",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+      "step_width": 10,
+      "step_width_status": "inherited from unique sw10 path label"
+    },
+    {
+      "continuity": {
+        "capture_contiguous": true,
+        "continuity_threshold_seconds": 60.0,
+        "maximum_positive_gap_seconds": 1.495,
+        "median_positive_gap_seconds": 1.46
+      },
+      "exif": {
+        "first_capture_at": "2026:09:02 20:57:12.415",
+        "first_file": "DSC00004.ARW",
+        "frame_count": 197,
+        "last_capture_at": "2026:09:02 21:01:58.443",
+        "last_file": "DSC00200.ARW",
+        "settings": {
+          "ExposureTime": [
+            {
+              "frame_count": 197,
+              "value": 1
+            }
+          ],
+          "FNumber": [
+            {
+              "frame_count": 197,
+              "value": 5.6
+            }
+          ],
+          "FocalLength": [
+            {
+              "frame_count": 197,
+              "value": 200
+            }
+          ],
+          "FocusDistance2": [
+            {
+              "frame_count": 10,
+              "value": 0.270710678118655
+            },
+            {
+              "frame_count": 40,
+              "value": 0.273841307296975
+            },
+            {
+              "frame_count": 40,
+              "value": 0.277110541270397
+            },
+            {
+              "frame_count": 41,
+              "value": 0.280524516597463
+            },
+            {
+              "frame_count": 40,
+              "value": 0.284089641525371
+            },
+            {
+              "frame_count": 26,
+              "value": 0.287812608018665
+            }
+          ],
+          "FocusMode": [
+            {
+              "frame_count": 197,
+              "value": 0
+            }
+          ],
+          "FocusPosition2": [
+            {
+              "frame_count": 10,
+              "value": 56
+            },
+            {
+              "frame_count": 40,
+              "value": 57
+            },
+            {
+              "frame_count": 40,
+              "value": 58
+            },
+            {
+              "frame_count": 41,
+              "value": 59
+            },
+            {
+              "frame_count": 40,
+              "value": 60
+            },
+            {
+              "frame_count": 26,
+              "value": 61
+            }
+          ],
+          "ISO": [
+            {
+              "frame_count": 197,
+              "value": 100
+            }
+          ],
+          "ImageStabilization": [
+            {
+              "frame_count": 197,
+              "value": 1
+            }
+          ],
+          "LensModel": [
+            {
+              "frame_count": 197,
+              "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+            }
+          ],
+          "Model": [
+            {
+              "frame_count": 197,
+              "value": "ILCE-7CM2"
+            }
+          ],
+          "ReleaseMode": [
+            {
+              "frame_count": 197,
+              "value": 5
+            }
+          ]
+        }
+      },
+      "geometry": "very tilted calibration slide on all axes",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+      "role": "inventory-only",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+      "step_width": 10,
+      "step_width_status": "inherited from unique sw10 path label"
+    }
+  ],
+  "elapsed_seconds": 28.976337100029923,
+  "prohibited_root": "D:\\personal\\macro\\requests\\7-aperture-pairs",
+  "prohibited_root_descended": false,
+  "schema": "m181-m4-flat-inventory-v1",
+  "stack_directory_count_excluding_prohibited": 63,
+  "stacks": [
+    {
+      "first_file": "DSC00009.ARW",
+      "frame_count": 22,
+      "last_file": "DSC00030.ARW",
+      "path": "D:\\personal\\macro\\109MSDCF",
+      "stack_id": "109MSDCF"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 79,
+      "last_file": "DSC00079.ARW",
+      "path": "D:\\personal\\macro\\112MSDCF",
+      "stack_id": "112MSDCF"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 63,
+      "last_file": "DSC00063.ARW",
+      "path": "D:\\personal\\macro\\113MSDCF",
+      "stack_id": "113MSDCF"
+    },
+    {
+      "first_file": "DSC00024.ARW",
+      "frame_count": 33,
+      "last_file": "DSC00056.ARW",
+      "path": "D:\\personal\\macro\\119MSDCF",
+      "stack_id": "119MSDCF"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\bee-1-cpl",
+      "stack_id": "bee-1-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\bee-2-cpl",
+      "stack_id": "bee-2-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\bee-3-cpl",
+      "stack_id": "bee-3-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 130,
+      "last_file": "DSC00130.ARW",
+      "path": "D:\\personal\\macro\\chia-seeds-cpl",
+      "stack_id": "chia-seeds-cpl"
+    },
+    {
+      "first_file": "DSC00016.ARW",
+      "frame_count": 105,
+      "last_file": "DSC00120.ARW",
+      "path": "D:\\personal\\macro\\coffee-bean",
+      "stack_id": "coffee-bean"
+    },
+    {
+      "first_file": "DSC00034.ARW",
+      "frame_count": 19,
+      "last_file": "DSC00052.ARW",
+      "path": "D:\\personal\\macro\\coffee-bubbles",
+      "stack_id": "coffee-bubbles"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\couch-fibers-cpl",
+      "stack_id": "couch-fibers-cpl"
+    },
+    {
+      "first_file": "DSC00124.ARW",
+      "frame_count": 176,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\defunct-dont-use\\flowers-cpl",
+      "stack_id": "defunct-dont-use\\flowers-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 207,
+      "last_file": "DSC00207.ARW",
+      "path": "D:\\personal\\macro\\dime-flat-narrow-slices-cpl",
+      "stack_id": "dime-flat-narrow-slices-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\dry-erase-marker-head-cpl",
+      "stack_id": "dry-erase-marker-head-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 197,
+      "last_file": "DSC00197.ARW",
+      "path": "D:\\personal\\macro\\duck-tape-side-layers-cpl",
+      "stack_id": "duck-tape-side-layers-cpl"
+    },
+    {
+      "first_file": "DSC00083.ARW",
+      "frame_count": 360,
+      "last_file": "DSC00442.ARW",
+      "path": "D:\\personal\\macro\\flat-fields\\flat-fields",
+      "stack_id": "flat-fields\\flat-fields"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 62,
+      "last_file": "DSC00062.ARW",
+      "path": "D:\\personal\\macro\\flat-fields\\subject-focus-sweep-no-cpl",
+      "stack_id": "flat-fields\\subject-focus-sweep-no-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 62,
+      "last_file": "DSC00062.ARW",
+      "path": "D:\\personal\\macro\\flat-fields\\subject-focus-sweep-with-cpl",
+      "stack_id": "flat-fields\\subject-focus-sweep-with-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 79,
+      "last_file": "DSC00079.ARW",
+      "path": "D:\\personal\\macro\\flat-on-ruler-cpl",
+      "stack_id": "flat-on-ruler-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 205,
+      "last_file": "DSC00205.ARW",
+      "path": "D:\\personal\\macro\\flower-bud-alone-cpl",
+      "stack_id": "flower-bud-alone-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\flower-bud-with-background-fern-cpl",
+      "stack_id": "flower-bud-with-background-fern-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\flower-inner-edge-cpl",
+      "stack_id": "flower-inner-edge-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 100,
+      "last_file": "DSC00100.ARW",
+      "path": "D:\\personal\\macro\\foam",
+      "stack_id": "foam"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\highly-angled-ruler-mm-cpl",
+      "stack_id": "highly-angled-ruler-mm-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\lavendar-cpl",
+      "stack_id": "lavendar-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 123,
+      "last_file": "DSC00123.ARW",
+      "path": "D:\\personal\\macro\\lead-1-cpl",
+      "stack_id": "lead-1-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 182,
+      "last_file": "DSC00182.ARW",
+      "path": "D:\\personal\\macro\\leaf-2-cpl",
+      "stack_id": "leaf-2-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 255,
+      "last_file": "DSC00255.ARW",
+      "path": "D:\\personal\\macro\\maldon-sea-salt-cpl",
+      "stack_id": "maldon-sea-salt-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 146,
+      "last_file": "DSC00146.ARW",
+      "path": "D:\\personal\\macro\\medication-pill-cpl",
+      "stack_id": "medication-pill-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\pencil-flatter-angle-cpl",
+      "stack_id": "pencil-flatter-angle-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 299,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\pencil-steep-angle-cpl",
+      "stack_id": "pencil-steep-angle-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 123,
+      "last_file": "DSC00123.ARW",
+      "path": "D:\\personal\\macro\\pottery-art-glazed-cpl",
+      "stack_id": "pottery-art-glazed-cpl"
+    },
+    {
+      "first_file": "DSC00165.ARW",
+      "frame_count": 110,
+      "last_file": "DSC00274.ARW",
+      "path": "D:\\personal\\macro\\requests\\10-paper-iso-var",
+      "stack_id": "requests\\10-paper-iso-var"
+    },
+    {
+      "first_file": "DSC00296.ARW",
+      "frame_count": 576,
+      "last_file": "DSC00871.ARW",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+      "stack_id": "requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light"
+    },
+    {
+      "first_file": "DSC00021.ARW",
+      "frame_count": 143,
+      "last_file": "DSC00163.ARW",
+      "path": "D:\\personal\\macro\\requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f11-cpl",
+      "stack_id": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f11-cpl"
+    },
+    {
+      "first_file": "DSC00021.ARW",
+      "frame_count": 279,
+      "last_file": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f5.6-cpl",
+      "stack_id": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f5.6-cpl"
+    },
+    {
+      "first_file": "DSC00021.ARW",
+      "frame_count": 210,
+      "last_file": "DSC00230.ARW",
+      "path": "D:\\personal\\macro\\requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f8-cpl",
+      "stack_id": "requests\\19-razor-edge\\diagonal-tilt-all-axes\\diagonal-tilt-all-axes-sw4-f8-cpl"
+    },
+    {
+      "first_file": "DSC00021.ARW",
+      "frame_count": 40,
+      "last_file": "DSC00060.ARW",
+      "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f11-cpl",
+      "stack_id": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f11-cpl"
+    },
+    {
+      "first_file": "DSC00018.ARW",
+      "frame_count": 67,
+      "last_file": "DSC00084.ARW",
+      "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl",
+      "stack_id": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl"
+    },
+    {
+      "first_file": "DSC00031.ARW",
+      "frame_count": 50,
+      "last_file": "DSC00080.ARW",
+      "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl",
+      "stack_id": "requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl"
+    },
+    {
+      "first_file": "DSC00026.ARW",
+      "frame_count": 91,
+      "last_file": "DSC00116.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+      "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl"
+    },
+    {
+      "first_file": "DSC00007.ARW",
+      "frame_count": 23,
+      "last_file": "DSC00029.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+      "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl"
+    },
+    {
+      "first_file": "DSC00015.ARW",
+      "frame_count": 55,
+      "last_file": "DSC00069.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+      "stack_id": "requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00008.ARW",
+      "frame_count": 27,
+      "last_file": "DSC00034.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+      "stack_id": "requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl"
+    },
+    {
+      "first_file": "DSC00024.ARW",
+      "frame_count": 46,
+      "last_file": "DSC00069.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+      "stack_id": "requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00872.ARW",
+      "frame_count": 506,
+      "last_file": "DSC01377.ARW",
+      "path": "D:\\personal\\macro\\requests\\6-11-extended-dark-frames",
+      "stack_id": "requests\\6-11-extended-dark-frames"
+    },
+    {
+      "first_file": "DSC00016.ARW",
+      "frame_count": 65,
+      "last_file": "DSC00080.ARW",
+      "path": "D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl",
+      "stack_id": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl"
+    },
+    {
+      "first_file": "DSC00040.ARW",
+      "frame_count": 120,
+      "last_file": "DSC00159.ARW",
+      "path": "D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl",
+      "stack_id": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl"
+    },
+    {
+      "first_file": "DSC00026.ARW",
+      "frame_count": 85,
+      "last_file": "DSC00110.ARW",
+      "path": "D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl",
+      "stack_id": "requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl"
+    },
+    {
+      "first_file": "DSC00011.ARW",
+      "frame_count": 30,
+      "last_file": "DSC00040.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso100-sw4-cpl",
+      "stack_id": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso100-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00014.ARW",
+      "frame_count": 27,
+      "last_file": "DSC00040.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso200-sw4-cpl",
+      "stack_id": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso200-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00014.ARW",
+      "frame_count": 27,
+      "last_file": "DSC00040.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso400-sw4-cpl",
+      "stack_id": "requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso400-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00016.ARW",
+      "frame_count": 60,
+      "last_file": "DSC00075.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00020.ARW",
+      "frame_count": 61,
+      "last_file": "DSC00080.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00015.ARW",
+      "frame_count": 65,
+      "last_file": "DSC00079.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00016.ARW",
+      "frame_count": 92,
+      "last_file": "DSC00107.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw10-cpl"
+    },
+    {
+      "first_file": "DSC00031.ARW",
+      "frame_count": 182,
+      "last_file": "DSC00212.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\tilted-sw4-cpl"
+    },
+    {
+      "first_file": "DSC00004.ARW",
+      "frame_count": 197,
+      "last_file": "DSC00200.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl",
+      "stack_id": "requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\very-tilted-all-axis-sw10-cpl"
+    },
+    {
+      "first_file": "DSC00021.ARW",
+      "frame_count": 51,
+      "last_file": "DSC00071.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\razor-flat-vertical-slightly-tilted-sw1-cpl",
+      "stack_id": "requests\\misc-diagnostic\\razor-flat-vertical-slightly-tilted-sw1-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 100,
+      "last_file": "DSC00100.ARW",
+      "path": "D:\\personal\\macro\\tweezers-cpl",
+      "stack_id": "tweezers-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 234,
+      "last_file": "DSC00234.ARW",
+      "path": "D:\\personal\\macro\\unpopped-popcorn-kernels-cpl",
+      "stack_id": "unpopped-popcorn-kernels-cpl"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 130,
+      "last_file": "DSC00130.ARW",
+      "path": "D:\\personal\\macro\\wrapped-text-1",
+      "stack_id": "wrapped-text-1"
+    },
+    {
+      "first_file": "DSC00001.ARW",
+      "frame_count": 120,
+      "last_file": "DSC00120.ARW",
+      "path": "D:\\personal\\macro\\wrapped-text-2",
+      "stack_id": "wrapped-text-2"
+    }
+  ]
+}
