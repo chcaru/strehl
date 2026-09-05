@@ -47,6 +47,7 @@ AMENDMENT_THREE_COMMIT = "75259ef0"
 AMENDMENT_THREE_COMMIT_FULL = (
     "75259ef0084d3c36d44861b50c0b6b387db502b8"
 )
+IMPLEMENTATION_COMMIT = "e2c8071915b76d24dde7c8df957cebbd578c319d"
 VERIFICATION_SCHEMA = "m171-reference-admission-verification-v4"
 EMBEDDED_EVIDENCE_SCHEMA = "m171-reference-admission-embedded-evidence-v1"
 HERE = pathlib.Path(__file__).resolve().parent
@@ -7245,7 +7246,7 @@ def verify(
             "The canary exit code is a recorded mapping from an independently reproduced hard error, not a separately observed subprocess exit.",
             "This verifier establishes synthetic commissioning consistency only; it does not license production thresholds, real data, M1 admission, or global object truth.",
         ],
-        "implementation_commit": "PENDING",
+        "implementation_commit": IMPLEMENTATION_COMMIT,
     }
     for key in _walk_keys(result):
         lowered = key.casefold()

@@ -192,11 +192,11 @@
             "raw_sha256": "BD0A1FA2627459E70ADA8CD040AFE9BF8435DD8B49F2728B107F2A7F321DDC53"
           },
           "experiments/M171-reference-admission/verify.py": {
-            "clean_git_object": "05312322fa6f25105c813934aff5ed18d13ac760",
+            "clean_git_object": "17fe9344afa746ff1151fac6248691fca64ab2ea",
             "hash_bound": false,
             "raw_equals_git_clean": true,
-            "raw_git_object": "05312322fa6f25105c813934aff5ed18d13ac760",
-            "raw_sha256": "D13DFD8F8A3C302CCA84BD26B66DB553E5CC7BCFB919DABC986D45828D460926"
+            "raw_git_object": "17fe9344afa746ff1151fac6248691fca64ab2ea",
+            "raw_sha256": "EA1344EBD51DEEBDA7160550542B6F18FE5DC5957813E941B6C233E18C8D8423"
           }
         },
         "policy": "LF",
@@ -7099,7 +7099,7 @@
       "vector_exact_recomputation": "HERMITIAN_MATRICES_GENERALIZED_EIGENVALUES_AND_EIGENSPACES"
     }
   },
-  "implementation_commit": "PENDING",
+  "implementation_commit": "e2c8071915b76d24dde7c8df957cebbd578c319d",
   "inputs": {
     "admission_source": {
       "path": "experiments/M171-reference-admission/admission.py",
@@ -7139,7 +7139,7 @@
     },
     "verifier_source": {
       "path": "experiments/M171-reference-admission/verify.py",
-      "sha256": "D13DFD8F8A3C302CCA84BD26B66DB553E5CC7BCFB919DABC986D45828D460926"
+      "sha256": "EA1344EBD51DEEBDA7160550542B6F18FE5DC5957813E941B6C233E18C8D8423"
     }
   },
   "limitations": [
@@ -7216,11 +7216,11 @@
           "raw_sha256": "BD0A1FA2627459E70ADA8CD040AFE9BF8435DD8B49F2728B107F2A7F321DDC53"
         },
         "experiments/M171-reference-admission/verify.py": {
-          "clean_git_object": "05312322fa6f25105c813934aff5ed18d13ac760",
+          "clean_git_object": "17fe9344afa746ff1151fac6248691fca64ab2ea",
           "hash_bound": false,
           "raw_equals_git_clean": true,
-          "raw_git_object": "05312322fa6f25105c813934aff5ed18d13ac760",
-          "raw_sha256": "D13DFD8F8A3C302CCA84BD26B66DB553E5CC7BCFB919DABC986D45828D460926"
+          "raw_git_object": "17fe9344afa746ff1151fac6248691fca64ab2ea",
+          "raw_sha256": "EA1344EBD51DEEBDA7160550542B6F18FE5DC5957813E941B6C233E18C8D8423"
         }
       },
       "policy": "LF",
