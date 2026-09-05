@@ -467,6 +467,22 @@ ASK3 = [
      "It is not held up by Helicon.", True),
     ("owner says action unchanged", owner_flat,
      "The action has never changed", True),
+    # The 2026-09-07 correction. The title of this ask asserted the purchase was
+    # "the only thing on the board that unblocks an axis". Re-deriving the
+    # readiness table mechanically (check_ask3_claim2.py) shows (d) is never a
+    # sole blocker and every (d) axis also carries (b), so the purchase is
+    # necessary for eight axes and sufficient for none. Pin the correction AND
+    # the absence of the withdrawn wording: a pin on the new sentence alone stays
+    # green if the old title is restored alongside it.
+    ("owner d not sufficient", owner_flat,
+     "is *necessary* for eight axes and *sufficient* for none", True),
+    ("owner d never alone", owner_flat,
+     "No axis anywhere on the board has `(d)` as its only blocker.", True),
+    ("owner b is the free half", owner_flat,
+     "What actually stands between your `$289` and a moving scoreboard is free",
+     True),
+    ("owner drops only-unblocker", owner_flat,
+     "the only thing on the board that unblocks an axis", False),
     # Absence: the cheaper edition must never become the recommendation.
     ("owner does not buy prosumer", owner_flat,
      "Buy Zerene Stacker Prosumer", False),

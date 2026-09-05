@@ -1540,7 +1540,7 @@ as its own truth would be circular. It commissions the instrument. It cannot
 score it. That limitation was reported by the lane that wanted the result, against
 its own interest, which is the reason I trust it.
 
-## Ask 3 — buy Zerene **Professional, $289**. *Necessary either way, and the only thing on the board that unblocks an axis.*
+## Ask 3 — buy Zerene **Professional, $289**. *Necessary for eight axes, sufficient for none. The largest owner-side blocker on the board.*
 
 > ### ✅ BOTTOM LINE — current, and it already accounts for every correction below. You do not need to read the rest of this ask to act on it.
 >
@@ -1566,9 +1566,21 @@ its own interest, which is the reason I trust it.
 > Zerene** belongs on Professional. The `$100` difference buys the right to
 > publish the result.
 >
-> **Three things this purchase is *not*, each of which I claimed at some point
+> **Four things this purchase is *not*, each of which I claimed at some point
 > and then had to withdraw:**
 >
+> - **It does not, on its own, unblock a single axis — and the title of this very
+>   ask said it did, until 2026-09-07.** This is the newest correction and it is
+>   mine. I checked every `(d)`-carrying row of the readiness table
+>   (`2026-09-sota-scorecard.md:840-851`) one at a time: `M1` is `(a)(b)(c)(d)`,
+>   `M2` is `(b)(c)(d)` plus an instrument void, `M3` and `M4` are `(a)(b)(d)`,
+>   `M5` and `M6` are `(a)(b)(c)(d)`, `M7` is `(b)(c)(d)`, and `M11` additionally
+>   needs M1/M2 qualification, the hash-bound fork, and a quiet host.
+>   **No axis anywhere on the board has `(d)` as its only blocker.** The purchase
+>   is *necessary* for eight axes and *sufficient* for none. The claim in the
+>   sentence above — "gating eight of the twelve axes" — was always true, because
+>   gating is not the same as unblocking; the title conflated them and the title
+>   was wrong.
 > - **It is not urgent, and nothing is ageing.** The purchased-licence clauses
 >   state no duration, renewal or subscription term anywhere. What ran out in
 >   June was a *trial* clock. Buying ends that class of loss; it does not restart
@@ -1579,6 +1591,16 @@ its own interest, which is the reason I trust it.
 > - **It is not held up by Helicon.** Your plan says *"Helicon if obtainable"*
 >   (`2026-08-sota-path.md:1538`) — optional. The rule that made Helicon's
 >   absence void the whole verdict was manufactured by the scorecard, not by you.
+>
+> **What actually stands between your `$289` and a moving scoreboard is free, and
+> it is mine to fix, not yours.** Every one of those eight axes also carries
+> blocker `(b)` — the native-scale/`cover=scale` overlap geometry. Lane
+> `M-COVER-NATIVE` ruled it a *"scorecard drafting defect"* requiring that "the
+> registrar must specify the input-derived overlap construction", and I am the
+> registrar. It costs `$0`, needs no capture and no licence, and it sat
+> unassigned from 09-03 until I caught it on 09-07. It is now assigned. **Buy the
+> licence when convenient; do not expect the board to move on the purchase
+> alone.**
 >
 > **Everything below this box is the history of how this ask changed, preserved
 > so you can audit me.** It is long because I got this ask wrong repeatedly. The
