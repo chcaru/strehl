@@ -26,15 +26,20 @@ from __future__ import annotations
 
 import argparse
 import ast
+import ctypes
 import hashlib
 import json
 import math
+import mmap
+import msvcrt
 import os
 import re
 import shutil
 import struct
 import subprocess
 import sys
+from contextlib import ExitStack
+from ctypes import wintypes
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -118,6 +123,8 @@ TRACE_NAME = re.compile(
     r"(?P<content_hash>[0-9a-f]{64})\.m8site$"
 )
 MAX_PATH_BYTES = 1 << 20
+MAX_CAPTURE_BYTES = 16 << 20
+NPY_MAX_HEADER_BYTES = 10_000
 U16_MAX = 65535
 FINAL_Q = 1.0 / 131070.0
 COVER_MARGIN = 3.0
@@ -193,6 +200,29 @@ CAPTURE_MANIFEST_FIELDS = {
     "checker_artifacts",
 }
 
+GENERIC_READ = 0x80000000
+FILE_SHARE_READ = 0x00000001
+FILE_SHARE_DELETE = 0x00000004
+OPEN_EXISTING = 3
+FILE_ATTRIBUTE_NORMAL = 0x00000080
+INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
+
+_KERNEL32 = ctypes.WinDLL("kernel32", use_last_error=True)
+_CREATE_FILE_W = _KERNEL32.CreateFileW
+_CREATE_FILE_W.argtypes = (
+    wintypes.LPCWSTR,
+    wintypes.DWORD,
+    wintypes.DWORD,
+    wintypes.LPVOID,
+    wintypes.DWORD,
+    wintypes.DWORD,
+    wintypes.HANDLE,
+)
+_CREATE_FILE_W.restype = wintypes.HANDLE
+_CLOSE_HANDLE = _KERNEL32.CloseHandle
+_CLOSE_HANDLE.argtypes = (wintypes.HANDLE,)
+_CLOSE_HANDLE.restype = wintypes.BOOL
+
 
 def measurement_description(instrument_freeze_sha256: str) -> str:
     return (
@@ -267,10 +297,104 @@ class Disagreement(RuntimeError):
     """The independent result and checker artifacts disagree."""
 
 
+class PinnedFile:
+    """A retained read handle whose accepted bytes cannot be modified in place."""
+
+    def __init__(self, path: Path, label: str, *, allow_delete: bool = True):
+        self.path = path
+        self.label = label
+        self._stream: Any | None = None
+        # Denying FILE_SHARE_WRITE makes in-place mutation incompatible with
+        # this handle. Delete sharing stays enabled for ordinary evidence so a
+        # pathname may move while all parsing remains bound to this file object.
+        handle = _CREATE_FILE_W(
+            str(path),
+            GENERIC_READ,
+            FILE_SHARE_READ | (FILE_SHARE_DELETE if allow_delete else 0),
+            None,
+            OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL,
+            None,
+        )
+        if handle == INVALID_HANDLE_VALUE:
+            error = ctypes.WinError(ctypes.get_last_error())
+            raise Unmeasured(f"{label}: cannot pin file {path}: {error}") from error
+        try:
+            descriptor = msvcrt.open_osfhandle(
+                int(handle), os.O_RDONLY | os.O_BINARY
+            )
+        except Exception:
+            _CLOSE_HANDLE(handle)
+            raise
+        stream: Any | None = None
+        try:
+            stream = os.fdopen(descriptor, "rb", buffering=0)
+            self._stream = stream
+            metadata = os.fstat(descriptor)
+            self.size = int(metadata.st_size)
+            self.mtime_ns = int(metadata.st_mtime_ns)
+        except Exception:
+            if stream is None:
+                os.close(descriptor)
+            else:
+                stream.close()
+            self._stream = None
+            raise
+
+    @property
+    def stream(self) -> Any:
+        if self._stream is None:
+            raise RuntimeError(f"{self.label}: pinned file is closed")
+        return self._stream
+
+    def digest(self, capture_limit: int | None = None) -> tuple[str, bytes | None]:
+        if capture_limit is not None and self.size > capture_limit:
+            raise Unmeasured(
+                f"{self.label}: {self.size} bytes exceeds bounded capture limit "
+                f"{capture_limit}"
+            )
+        payload = bytearray() if capture_limit is not None else None
+        digest = hashlib.sha256()
+        self.stream.seek(0)
+        total = 0
+        while True:
+            chunk = self.stream.read(1024 * 1024)
+            if not chunk:
+                break
+            digest.update(chunk)
+            total += len(chunk)
+            if payload is not None:
+                payload.extend(chunk)
+        if total != self.size:
+            raise Unmeasured(
+                f"{self.label}: pinned read returned {total} bytes, expected {self.size}"
+            )
+        self.stream.seek(0)
+        return digest.hexdigest().upper(), None if payload is None else bytes(payload)
+
+    def map_readonly(self) -> mmap.mmap:
+        if self.size <= 0:
+            raise Unmeasured(f"{self.label}: cannot map an empty file")
+        return mmap.mmap(self.stream.fileno(), 0, access=mmap.ACCESS_READ)
+
+    def close(self) -> None:
+        if self._stream is not None:
+            self._stream.close()
+            self._stream = None
+
+    def __enter__(self) -> PinnedFile:
+        return self
+
+    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> None:
+        self.close()
+
+
 @dataclass(frozen=True)
 class FrozenFile:
     path: Path
     sha256: str
+    size: int | None = None
+    mtime_ns: int | None = None
 
 
 @dataclass(frozen=True)
@@ -331,40 +455,370 @@ class TraceBlock:
     def site(self) -> tuple[int, int]:
         return (self.site_x, self.site_y)
 
-    def source(self) -> np.memmap:
-        return np.memmap(
-            self.path,
-            mode="r",
-            dtype="<f4",
-            offset=self.source_offset,
-            shape=(self.source_height, self.source_width),
-        )
 
-    def gathered(self) -> np.memmap:
-        return np.memmap(
-            self.path,
-            mode="r",
-            dtype="<f4",
-            offset=self.gathered_offset,
-            shape=(self.full_height, self.full_width),
-        )
+class PinnedTraceBlock:
+    """Trace metadata plus source/body views backed by one accepted handle."""
+
+    def __init__(self, block: TraceBlock, pin: PinnedFile):
+        self.block = block
+        self.pin = pin
+        self.mapping: mmap.mmap | None = None
+        self.source: np.ndarray | None = None
+        self.gathered: np.ndarray | None = None
+
+    def map_arrays(self) -> None:
+        if self.mapping is not None:
+            return
+        mapping = self.pin.map_readonly()
+        source: np.ndarray | None = None
+        gathered: np.ndarray | None = None
+        try:
+            source = np.frombuffer(
+                mapping,
+                dtype="<f4",
+                count=self.block.source_height * self.block.source_width,
+                offset=self.block.source_offset,
+            ).reshape((self.block.source_height, self.block.source_width))
+            gathered = np.frombuffer(
+                mapping,
+                dtype="<f4",
+                count=self.block.full_height * self.block.full_width,
+                offset=self.block.gathered_offset,
+            ).reshape((self.block.full_height, self.block.full_width))
+            source.flags.writeable = False
+            gathered.flags.writeable = False
+            self.mapping = mapping
+            self.source = source
+            self.gathered = gathered
+        except Exception:
+            source = None
+            gathered = None
+            mapping.close()
+            raise
+
+    def close(self) -> bool:
+        self.source = None
+        self.gathered = None
+        if self.mapping is not None:
+            try:
+                self.mapping.close()
+            except BufferError:
+                return False
+            self.mapping = None
+        return True
+
+
+class AcceptedTrace:
+    """Context manager for one hashed, parsed, descriptor-backed trace block."""
+
+    def __init__(
+        self,
+        path: Path,
+        source_hash_cache: dict[Path, str],
+    ):
+        self.path = path
+        self.source_hash_cache = source_hash_cache
+        self.pin: PinnedFile | None = None
+        self.view: PinnedTraceBlock | None = None
+
+    def __enter__(self) -> PinnedTraceBlock:
+        pin = PinnedFile(self.path, f"trace {self.path.name}")
+        try:
+            file_sha, _ = pin.digest()
+            block = parse_trace(pin, file_sha, self.source_hash_cache)
+            self.pin = pin
+            self.view = PinnedTraceBlock(block, pin)
+            return self.view
+        except Exception:
+            pin.close()
+            raise
+
+    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> None:
+        mapping_closed = True
+        if self.view is not None:
+            mapping_closed = self.view.close()
+            if mapping_closed:
+                self.view = None
+        if mapping_closed and self.pin is not None:
+            self.pin.close()
+            self.pin = None
+        if not mapping_closed and exc_type is None:
+            raise Unmeasured(
+                f"{self.path.name}: trace arrays outlived their pinned mapping"
+            )
+
+
+class PinnedNpy:
+    """A read-only NPY array mapped from the same handle whose digest was accepted."""
+
+    def __init__(
+        self,
+        file: FrozenFile,
+        label: str,
+        expected_channel_first_shape: tuple[int, ...] | None = None,
+    ):
+        self.file = file
+        self.label = label
+        self.expected_channel_first_shape = expected_channel_first_shape
+        self.pin: PinnedFile | None = None
+        self.mapping: mmap.mmap | None = None
+        self.array: np.ndarray | None = None
+
+    def __enter__(self) -> PinnedNpy:
+        pin = PinnedFile(self.file.path, self.label)
+        mapping: mmap.mmap | None = None
+        array: np.ndarray | None = None
+        try:
+            observed, _ = pin.digest()
+            if observed != self.file.sha256:
+                raise Unmeasured(
+                    f"{self.label}: accepted SHA-256 {self.file.sha256} "
+                    f"does not match pinned bytes {observed}"
+                )
+            pin.stream.seek(0)
+            version = np.lib.format.read_magic(pin.stream)
+            if version == (1, 0):
+                length_format, encoding = "<H", "latin1"
+            elif version == (2, 0):
+                length_format, encoding = "<I", "latin1"
+            elif version == (3, 0):
+                length_format, encoding = "<I", "utf-8"
+            else:
+                raise Unmeasured(
+                    f"{self.label}: unsupported NPY version {version!r}"
+                )
+            length_bytes = pin.stream.read(struct.calcsize(length_format))
+            if len(length_bytes) != struct.calcsize(length_format):
+                raise Unmeasured(f"{self.label}: truncated NPY header length")
+            header_length = struct.unpack(length_format, length_bytes)[0]
+            encoded_header_limit = (
+                NPY_MAX_HEADER_BYTES
+                if encoding == "latin1"
+                else 4 * NPY_MAX_HEADER_BYTES
+            )
+            if header_length > encoded_header_limit:
+                raise Unmeasured(
+                    f"{self.label}: NPY header length {header_length} exceeds "
+                    f"allow_pickle=False limit {NPY_MAX_HEADER_BYTES}"
+                )
+            header_bytes = pin.stream.read(header_length)
+            if len(header_bytes) != header_length:
+                raise Unmeasured(f"{self.label}: truncated NPY header")
+            try:
+                header_text = header_bytes.decode(encoding)
+            except UnicodeDecodeError as error:
+                raise Unmeasured(
+                    f"{self.label}: NPY header has invalid {encoding} text"
+                ) from error
+            if len(header_text) > NPY_MAX_HEADER_BYTES:
+                raise Unmeasured(
+                    f"{self.label}: NPY header length {len(header_text)} exceeds "
+                    f"allow_pickle=False limit {NPY_MAX_HEADER_BYTES}"
+                )
+            try:
+                header = ast.literal_eval(header_text)
+            except Exception as error:
+                raise Unmeasured(f"{self.label}: invalid NPY header") from error
+            if not isinstance(header, dict) or set(header) != {
+                "descr",
+                "fortran_order",
+                "shape",
+            }:
+                raise Unmeasured(f"{self.label}: malformed NPY header fields")
+            shape = header["shape"]
+            fortran_order = header["fortran_order"]
+            if (
+                not isinstance(shape, tuple)
+                or not all(
+                    isinstance(value, int)
+                    and not isinstance(value, bool)
+                    and value >= 0
+                    for value in shape
+                )
+                or not isinstance(fortran_order, bool)
+            ):
+                raise Unmeasured(f"{self.label}: malformed NPY shape/order")
+            try:
+                dtype = np.lib.format.descr_to_dtype(header["descr"])
+            except Exception as error:
+                raise Unmeasured(f"{self.label}: invalid NPY dtype") from error
+            if dtype.hasobject:
+                raise Unmeasured(
+                    f"{self.label}: object arrays require allow_pickle=True"
+                )
+            data_offset = pin.stream.tell()
+            expected_data_bytes = math.prod(shape) * dtype.itemsize
+            if data_offset + expected_data_bytes > pin.size:
+                raise Unmeasured(
+                    f"{self.label}: NPY payload is truncated for shape {shape} "
+                    f"and dtype {dtype}"
+                )
+            if expected_data_bytes == 0:
+                array = np.empty(
+                    shape,
+                    dtype=dtype,
+                    order="F" if fortran_order else "C",
+                )
+            else:
+                mapping = pin.map_readonly()
+                array = np.frombuffer(
+                    mapping,
+                    dtype=dtype,
+                    count=math.prod(shape),
+                    offset=data_offset,
+                ).reshape(
+                    shape,
+                    order="F" if fortran_order else "C",
+                )
+            array.flags.writeable = False
+            if self.expected_channel_first_shape is not None:
+                expected = self.expected_channel_first_shape
+                if array.shape == expected:
+                    pass
+                elif len(expected) == 3 and array.shape == (
+                    expected[1],
+                    expected[2],
+                    expected[0],
+                ):
+                    array = np.moveaxis(array, -1, 0)
+                else:
+                    raise Disagreement(
+                        f"{self.label}: checker shape {array.shape} "
+                        f"!= verifier shape {expected}"
+                    )
+            self.pin = pin
+            self.mapping = mapping
+            self.array = array
+            return self
+        except Exception:
+            array = None
+            if mapping is not None:
+                mapping.close()
+            pin.close()
+            raise
+
+    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> None:
+        self.array = None
+        if self.mapping is not None:
+            try:
+                self.mapping.close()
+            except BufferError:
+                if exc_type is None:
+                    raise Unmeasured(
+                        f"{self.label}: array view outlived its pinned mapping"
+                    )
+                return
+            self.mapping = None
+        if self.pin is not None:
+            self.pin.close()
+            self.pin = None
 
 
 def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest().upper()
+    with PinnedFile(path, str(path)) as pin:
+        digest, _ = pin.digest()
+        return digest
 
 
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().upper()
 
 
-def sha256_canonical_text(path: Path) -> str:
-    text = path.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
+def canonical_text_sha256(data: bytes, label: str) -> str:
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise Unmeasured(f"{label}: text is not UTF-8") from error
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     return sha256_bytes(text.encode("utf-8"))
+
+
+def capture_file(path: Path, label: str) -> tuple[FrozenFile, bytes]:
+    with PinnedFile(path, label) as pin:
+        digest, payload = pin.digest(MAX_CAPTURE_BYTES)
+        assert payload is not None
+        return FrozenFile(path, digest, pin.size, pin.mtime_ns), payload
+
+
+def read_frozen_bytes(
+    file: FrozenFile, label: str, capture_limit: int = MAX_CAPTURE_BYTES
+) -> bytes:
+    with PinnedFile(file.path, label) as pin:
+        digest, payload = pin.digest(capture_limit)
+        if digest != file.sha256:
+            raise Unmeasured(
+                f"{label}: accepted SHA-256 {file.sha256} "
+                f"does not match pinned bytes {digest}"
+            )
+        assert payload is not None
+        return payload
+
+
+def require_accepted_pin(pin: PinnedFile, file: FrozenFile, label: str) -> None:
+    digest, _ = pin.digest()
+    if digest != file.sha256:
+        raise Unmeasured(
+            f"{label}: accepted SHA-256 {file.sha256} "
+            f"does not match pinned bytes {digest}"
+        )
+
+
+def read_frozen_text(file: FrozenFile, label: str) -> str:
+    try:
+        return read_frozen_bytes(file, label).decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise Unmeasured(f"{label}: text is not UTF-8") from error
+
+
+def load_frozen_json(file: FrozenFile, label: str) -> Any:
+    try:
+        return json.loads(read_frozen_text(file, label))
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        raise Unmeasured(f"{label}: invalid JSON in {file.path}") from error
+
+
+def frozen_from_path(path: Path, label: str) -> FrozenFile:
+    with PinnedFile(path, label) as pin:
+        digest, _ = pin.digest()
+        return FrozenFile(path, digest, pin.size, pin.mtime_ns)
+
+
+def frozen_mtime_ns(file: FrozenFile, label: str) -> int:
+    if file.mtime_ns is None:
+        current = frozen_from_path(file.path, label)
+        if current.sha256 != file.sha256:
+            raise Unmeasured(
+                f"{label}: accepted SHA-256 {file.sha256} "
+                f"does not match pinned bytes {current.sha256}"
+            )
+        assert current.mtime_ns is not None
+        return current.mtime_ns
+    return file.mtime_ns
+
+
+def frozen_equals_generated(
+    accepted: FrozenFile,
+    generated: Path,
+    label: str,
+) -> bool:
+    with PinnedFile(accepted.path, label) as pin:
+        observed, _ = pin.digest()
+        if observed != accepted.sha256:
+            raise Unmeasured(
+                f"{label}: accepted SHA-256 {accepted.sha256} "
+                f"does not match pinned bytes {observed}"
+            )
+        if generated.stat().st_size != pin.size:
+            return False
+        pin.stream.seek(0)
+        with generated.open("rb") as generated_stream:
+            while True:
+                accepted_chunk = pin.stream.read(1024 * 1024)
+                generated_chunk = generated_stream.read(1024 * 1024)
+                if accepted_chunk != generated_chunk:
+                    return False
+                if not accepted_chunk:
+                    return True
 
 
 def m136_build_id(source_commit: str, source_manifest_sha256: str) -> str:
@@ -428,12 +882,18 @@ def frozen_file(raw: Mapping[str, Any], label: str) -> FrozenFile:
     expected = str(raw.get("sha256", "")).upper()
     if not re.fullmatch(r"[0-9A-F]{64}", expected):
         raise Unmeasured(f"{label}.sha256 is not a 64-digit hexadecimal digest")
-    observed = sha256_file(path)
-    if observed != expected:
-        raise Unmeasured(
-            f"{label} hash mismatch: expected {expected}, observed {observed}"
+    with PinnedFile(path, label) as pin:
+        observed, _ = pin.digest()
+        if observed != expected:
+            raise Unmeasured(
+                f"{label} hash mismatch: expected {expected}, observed {observed}"
+            )
+        return FrozenFile(
+            path=path,
+            sha256=observed,
+            size=pin.size,
+            mtime_ns=pin.mtime_ns,
         )
-    return FrozenFile(path=path, sha256=observed)
 
 
 def assert_still_frozen(file: FrozenFile, label: str) -> None:
@@ -453,74 +913,78 @@ def same_f64(a: float, b: float) -> bool:
     return struct.pack("<d", a) == struct.pack("<d", b)
 
 
-def parse_trace(path: Path, source_hash_cache: dict[Path, str]) -> TraceBlock:
+def parse_trace(
+    pin: PinnedFile,
+    file_sha: str,
+    source_hash_cache: dict[Path, str],
+) -> TraceBlock:
+    path = pin.path
     match = TRACE_NAME.fullmatch(path.name)
     if match is None:
         raise Unmeasured(f"trace block has an invalid filename: {path.name}")
-    file_sha = sha256_file(path)
     if file_sha.lower() != match.group("content_hash"):
         raise Unmeasured(
             f"{path.name}: content hash in filename does not match {file_sha}"
         )
-    with path.open("rb") as handle:
-        raw = handle.read(TRACE_HEADER.size)
-        if len(raw) != TRACE_HEADER.size:
-            raise Unmeasured(f"{path}: truncated trace-v3 header")
-        (
-            magic,
-            version,
-            kernel,
-            frame_order,
-            source_width,
-            source_height,
-            full_width,
-            full_height,
-            compact_width,
-            compact_height,
-            crop_x,
-            crop_y,
-            site_x,
-            site_y,
-            channel,
-            arithmetic_contract,
-            a_re,
-            a_im,
-            b_re,
-            b_im,
-            cx,
-            cy,
-            black_level,
-            sensor_range,
-            site_gain,
-            output_gain,
-            instrument_freeze_sha,
-            source_sha,
-            path_bytes,
-        ) = TRACE_HEADER.unpack(raw)
-        if magic != TRACE_MAGIC or version != TRACE_VERSION:
-            raise Unmeasured(
-                f"{path.name}: requires trace-v3 {TRACE_MAGIC!r}, got magic={magic!r}, version={version}"
-            )
-        if kernel not in (0, 1, 2):
-            raise Unmeasured(f"{path.name}: unknown kernel code {kernel}")
-        if arithmetic_contract != ARITHMETIC_CONTRACT:
-            raise Unmeasured(
-                f"{path.name}: arithmetic contract {arithmetic_contract}, expected {ARITHMETIC_CONTRACT}"
-            )
-        if path_bytes == 0 or path_bytes > MAX_PATH_BYTES:
-            raise Unmeasured(f"{path.name}: frame-path byte count is invalid")
-        encoded_path = handle.read(path_bytes)
-        if len(encoded_path) != path_bytes:
-            raise Unmeasured(f"{path.name}: truncated frame path")
-        try:
-            frame_path = Path(encoded_path.decode("utf-8"))
-        except UnicodeDecodeError as error:
-            raise Unmeasured(f"{path.name}: frame path is not UTF-8") from error
-        source_offset = TRACE_HEADER.size + path_bytes
-        gathered_offset = source_offset + source_width * source_height * 4
-        expected_size = gathered_offset + full_width * full_height * 4
-        handle.seek(0, os.SEEK_END)
-        observed_size = handle.tell()
+    handle = pin.stream
+    handle.seek(0)
+    raw = handle.read(TRACE_HEADER.size)
+    if len(raw) != TRACE_HEADER.size:
+        raise Unmeasured(f"{path}: truncated trace-v3 header")
+    (
+        magic,
+        version,
+        kernel,
+        frame_order,
+        source_width,
+        source_height,
+        full_width,
+        full_height,
+        compact_width,
+        compact_height,
+        crop_x,
+        crop_y,
+        site_x,
+        site_y,
+        channel,
+        arithmetic_contract,
+        a_re,
+        a_im,
+        b_re,
+        b_im,
+        cx,
+        cy,
+        black_level,
+        sensor_range,
+        site_gain,
+        output_gain,
+        instrument_freeze_sha,
+        source_sha,
+        path_bytes,
+    ) = TRACE_HEADER.unpack(raw)
+    if magic != TRACE_MAGIC or version != TRACE_VERSION:
+        raise Unmeasured(
+            f"{path.name}: requires trace-v3 {TRACE_MAGIC!r}, got magic={magic!r}, version={version}"
+        )
+    if kernel not in (0, 1, 2):
+        raise Unmeasured(f"{path.name}: unknown kernel code {kernel}")
+    if arithmetic_contract != ARITHMETIC_CONTRACT:
+        raise Unmeasured(
+            f"{path.name}: arithmetic contract {arithmetic_contract}, expected {ARITHMETIC_CONTRACT}"
+        )
+    if path_bytes == 0 or path_bytes > MAX_PATH_BYTES:
+        raise Unmeasured(f"{path.name}: frame-path byte count is invalid")
+    encoded_path = handle.read(path_bytes)
+    if len(encoded_path) != path_bytes:
+        raise Unmeasured(f"{path.name}: truncated frame path")
+    try:
+        frame_path = Path(encoded_path.decode("utf-8"))
+    except UnicodeDecodeError as error:
+        raise Unmeasured(f"{path.name}: frame path is not UTF-8") from error
+    source_offset = TRACE_HEADER.size + path_bytes
+    gathered_offset = source_offset + source_width * source_height * 4
+    expected_size = gathered_offset + full_width * full_height * 4
+    observed_size = pin.size
     if observed_size != expected_size:
         raise Unmeasured(
             f"{path.name}: size {observed_size} does not equal header-implied {expected_size}"
@@ -615,8 +1079,9 @@ def f64_from_hex(bits: str) -> float:
     return struct.unpack(">d", bytes.fromhex(bits))[0]
 
 
-def parse_warpmap(path: Path) -> WarpMap:
-    lines = path.read_text(encoding="utf-8").splitlines()
+def parse_warpmap(file: FrozenFile) -> WarpMap:
+    path = file.path
+    lines = read_frozen_text(file, f"warpmap {path}").splitlines()
     if not lines or lines[0] != "strehl-warpmap 1":
         raise Unmeasured(f"{path}: not a strehl-warpmap 1 file")
     frame_count: int | None = None
@@ -931,14 +1396,38 @@ def block_geometry_key(block: TraceBlock) -> tuple[Any, ...]:
     )
 
 
-def validate_block_set(
-    blocks: Sequence[TraceBlock],
+def group_trace_paths(
+    block_paths: Sequence[Path],
     warpmap: WarpMap,
-    input_dir: Path,
-) -> dict[int, dict[tuple[int, int], TraceBlock]]:
+) -> dict[int, list[tuple[tuple[int, int], Path]]]:
     placed_orders = {
         index for index, placement in warpmap.placements.items() if placement.placed
     }
+    expected = {(frame, site) for frame in placed_orders for site in SITE_CHANNEL}
+    seen: set[tuple[int, tuple[int, int]]] = set()
+    grouped: dict[int, list[tuple[tuple[int, int], Path]]] = {}
+    for path in block_paths:
+        match = TRACE_NAME.fullmatch(path.name)
+        if match is None:
+            raise Unmeasured(f"trace block has an invalid filename: {path.name}")
+        site = (int(match.group("sx")), int(match.group("sy")))
+        key = (int(match.group("frame")), site)
+        if key in seen:
+            raise Unmeasured(f"duplicate trace-v3 frame/site {key}")
+        seen.add(key)
+        grouped.setdefault(key[0], []).append((site, path))
+    if seen != expected:
+        missing = sorted(expected - seen)
+        extra = sorted(seen - expected)
+        raise Unmeasured(
+            f"incomplete trace set: missing={missing[:8]}, extra={extra[:8]}"
+        )
+    for entries in grouped.values():
+        entries.sort(key=lambda item: item[1].name)
+    return grouped
+
+
+def input_raw_paths(input_dir: Path, warpmap: WarpMap) -> list[Path]:
     raw_paths = sorted(
         (
             path.resolve()
@@ -952,23 +1441,28 @@ def validate_block_set(
             f"registered input has {len(raw_paths)} .ARW files but warpmap has "
             f"{warpmap.frame_count} frames"
         )
-    expected = {(frame, site) for frame in placed_orders for site in SITE_CHANNEL}
-    grouped: dict[int, dict[tuple[int, int], TraceBlock]] = {}
-    keys = [(block.frame_order, block.site) for block in blocks]
-    seen: set[tuple[int, tuple[int, int]]] = set()
-    for key in keys:
-        if key in seen:
-            raise Unmeasured(f"duplicate trace-v3 frame/site {key}")
-        seen.add(key)
-    if seen != expected:
-        missing = sorted(expected - seen)
-        extra = sorted(seen - expected)
-        raise Unmeasured(
-            f"incomplete trace set: missing={missing[:8]}, extra={extra[:8]}"
-        )
+    return raw_paths
+
+
+def validate_frame_block_set(
+    blocks: Sequence[TraceBlock],
+    warpmap: WarpMap,
+    input_dir: Path,
+    raw_paths: Sequence[Path],
+    expected_geometry: tuple[Any, ...] | None,
+) -> tuple[Any, ...]:
+    if len(blocks) != len(SITE_CHANNEL) or {block.site for block in blocks} != set(
+        SITE_CHANNEL
+    ):
+        raise Unmeasured("trace frame does not contain exactly four CFA sites")
+    frame_orders = {block.frame_order for block in blocks}
+    if len(frame_orders) != 1:
+        raise Unmeasured("trace frame group contains more than one frame order")
+    frame_order = next(iter(frame_orders))
+    placement = warpmap.placements.get(frame_order)
+    if placement is None or not placement.placed:
+        raise Unmeasured(f"trace exists for unplaced frame {frame_order}")
     for block in blocks:
-        if block.frame_order not in placed_orders:
-            raise Unmeasured(f"trace exists for unplaced frame {block.frame_order}")
         try:
             common = os.path.commonpath(
                 [
@@ -989,8 +1483,6 @@ def validate_block_set(
                 f"frame {block.frame_order}: trace path {block.frame_path} differs from "
                 f"sorted input {raw_paths[block.frame_order]}"
             )
-        placement = warpmap.placements[block.frame_order]
-        assert placement.placed
         for actual, expected_value, label in (
             (block.a_re, placement.a_re, "a.re"),
             (block.a_im, placement.a_im, "a.im"),
@@ -1002,7 +1494,6 @@ def validate_block_set(
                 raise Unmeasured(
                     f"frame {block.frame_order} site {block.site}: trace {label} differs from warpmap"
                 )
-        grouped.setdefault(block.frame_order, {})[block.site] = block
     first = blocks[0]
     geometry = block_geometry_key(first)
     for block in blocks[1:]:
@@ -1010,6 +1501,10 @@ def validate_block_set(
             raise Unmeasured(
                 "trace-v3 blocks disagree on geometry or arithmetic contract"
             )
+    if expected_geometry is not None and geometry != expected_geometry:
+        raise Unmeasured(
+            "trace-v3 blocks disagree on geometry or arithmetic contract"
+        )
     if first.full_width != warpmap.width or first.full_height != warpmap.height:
         raise Unmeasured("trace full-plane dimensions disagree with warpmap")
     for block in blocks:
@@ -1025,67 +1520,80 @@ def validate_block_set(
         first.cy, first.full_height * 0.5
     ):
         raise Unmeasured("trace transform centre differs from full-plane centre")
-    for frame_order, sites in grouped.items():
-        frame_blocks = list(sites.values())
-        reference = frame_blocks[0]
-        for block in frame_blocks[1:]:
-            if block.frame_path != reference.frame_path:
-                raise Unmeasured(
-                    f"frame {frame_order}: CFA sites name different source files"
-                )
-            if block.frame_source_sha256 != reference.frame_source_sha256:
-                raise Unmeasured(
-                    f"frame {frame_order}: CFA sites disagree on source SHA-256"
-                )
-            if not same_f32(block.black_level, reference.black_level):
-                raise Unmeasured(
-                    f"frame {frame_order}: CFA sites disagree on black level"
-                )
-            if not same_f32(block.sensor_range, reference.sensor_range):
-                raise Unmeasured(
-                    f"frame {frame_order}: CFA sites disagree on sensor range"
-                )
-        g1 = sites[GREEN_SITES[0]]
-        g2 = sites[GREEN_SITES[1]]
-        if not same_f32(g1.output_gain, g2.output_gain):
-            raise Unmeasured(f"frame {frame_order}: G1/G2 output gains differ")
-    return grouped
+    sites = {block.site: block for block in blocks}
+    reference = first
+    for block in blocks[1:]:
+        if block.frame_path != reference.frame_path:
+            raise Unmeasured(
+                f"frame {frame_order}: CFA sites name different source files"
+            )
+        if block.frame_source_sha256 != reference.frame_source_sha256:
+            raise Unmeasured(
+                f"frame {frame_order}: CFA sites disagree on source SHA-256"
+            )
+        if not same_f32(block.black_level, reference.black_level):
+            raise Unmeasured(
+                f"frame {frame_order}: CFA sites disagree on black level"
+            )
+        if not same_f32(block.sensor_range, reference.sensor_range):
+            raise Unmeasured(
+                f"frame {frame_order}: CFA sites disagree on sensor range"
+            )
+    g1 = sites[GREEN_SITES[0]]
+    g2 = sites[GREEN_SITES[1]]
+    if not same_f32(g1.output_gain, g2.output_gain):
+        raise Unmeasured(f"frame {frame_order}: G1/G2 output gains differ")
+    return geometry
 
 
 def load_tiff(
-    path: Path,
+    file: FrozenFile,
     expected_height: int,
     expected_width: int,
     expected_instrument_freeze_sha256: str | None = None,
 ) -> np.ndarray:
-    with tifffile.TiffFile(path) as tif:
-        if len(tif.pages) != 1:
-            raise Unmeasured(f"{path}: expected one TIFF page, found {len(tif.pages)}")
-        page = tif.pages[0]
-        if int(page.photometric) != 2:
-            raise Unmeasured(f"{path}: TIFF photometric is not RGB")
-        if int(page.samplesperpixel) != 3:
+    path = file.path
+    with PinnedFile(path, f"TIFF {path}") as pin:
+        observed, _ = pin.digest()
+        if observed != file.sha256:
             raise Unmeasured(
-                f"{path}: TIFF has {page.samplesperpixel} samples per pixel, expected 3"
+                f"{path}: accepted TIFF SHA-256 {file.sha256} "
+                f"does not match pinned bytes {observed}"
             )
-        orientation = page.tags.get("Orientation")
-        if orientation is not None and int(orientation.value) != 1:
-            raise Unmeasured(f"{path}: TIFF orientation is not top-left")
-        description = page.description or ""
-        if "This is the measurement output." not in description:
-            raise Unmeasured(
-                f"{path}: TIFF does not identify the linear camera-native measurement path"
-            )
-        if expected_instrument_freeze_sha256 is not None:
-            freeze_marker = (
-                "M136 instrument freeze sha256: "
-                f"{expected_instrument_freeze_sha256.upper()}."
-            )
-            if description.count(freeze_marker) != 1:
+        with tifffile.TiffFile(pin.stream, name=pin.path.name) as tif:
+            if len(tif.pages) != 1:
                 raise Unmeasured(
-                    f"{path}: TIFF is not bound to the frozen M136 instrument"
+                    f"{path}: expected one TIFF page, found {len(tif.pages)}"
                 )
-        image = page.asarray()
+            page = tif.pages[0]
+            if int(page.photometric) != 2:
+                raise Unmeasured(f"{path}: TIFF photometric is not RGB")
+            if int(page.samplesperpixel) != 3:
+                raise Unmeasured(
+                    f"{path}: TIFF has {page.samplesperpixel} samples per pixel, expected 3"
+                )
+            orientation = page.tags.get("Orientation")
+            if orientation is not None and int(orientation.value) != 1:
+                raise Unmeasured(f"{path}: TIFF orientation is not top-left")
+            description = page.description or ""
+            if "This is the measurement output." not in description:
+                raise Unmeasured(
+                    f"{path}: TIFF does not identify the linear camera-native measurement path"
+                )
+            if expected_instrument_freeze_sha256 is not None:
+                freeze_marker = (
+                    "M136 instrument freeze sha256: "
+                    f"{expected_instrument_freeze_sha256.upper()}."
+                )
+                if description.count(freeze_marker) != 1:
+                    raise Unmeasured(
+                        f"{path}: TIFF is not bound to the frozen M136 instrument"
+                    )
+            image = page.asarray()
+            if isinstance(image, np.memmap):
+                image = np.array(image, copy=True)
+            else:
+                image = np.asarray(image)
     if image.dtype != np.uint16:
         raise Unmeasured(f"{path}: output TIFF dtype is {image.dtype}, expected uint16")
     if image.ndim != 3:
@@ -1098,6 +1606,25 @@ def load_tiff(
         f"{path}: output TIFF shape {image.shape}, expected "
         f"({expected_height},{expected_width},3)"
     )
+
+
+def load_frozen_tiff_array(file: FrozenFile, label: str) -> np.ndarray:
+    with PinnedFile(file.path, label) as pin:
+        observed, _ = pin.digest()
+        if observed != file.sha256:
+            raise Unmeasured(
+                f"{label}: accepted SHA-256 {file.sha256} "
+                f"does not match pinned bytes {observed}"
+            )
+        with tifffile.TiffFile(pin.stream, name=pin.path.name) as tif:
+            if len(tif.pages) != 1:
+                raise Unmeasured(
+                    f"{label}: expected one TIFF page, found {len(tif.pages)}"
+                )
+            image = tif.pages[0].asarray()
+            if isinstance(image, np.memmap):
+                return np.array(image, copy=True)
+            return np.asarray(image)
 
 
 def m8r_rows(
@@ -1130,10 +1657,11 @@ def m8r_rows(
 
 
 def verify_m8r_block(
-    block: TraceBlock, chunk_rows: int
+    block: TraceBlock,
+    source: np.ndarray,
+    gathered: np.ndarray,
+    chunk_rows: int,
 ) -> tuple[dict[str, Any], list[np.ndarray]]:
-    source = block.source()
-    gathered = block.gathered()
     if not np.all(np.isfinite(source)):
         yy, xx = np.argwhere(~np.isfinite(source))[0]
         raise Unmeasured(
@@ -1171,7 +1699,6 @@ def verify_m8r_block(
             -rows["signed_excess"] - rows["tau"],
         )
         max_excess = max(max_excess, float(np.max(excess, initial=0.0)))
-    del source, gathered
     return (
         {
             "frame_order": block.frame_order,
@@ -1217,6 +1744,33 @@ def create_array(
     array[...] = fill
     array.flush()
     return array
+
+
+def close_generated_memmaps(arrays: dict[str, np.memmap]) -> None:
+    """Drop verifier-owned array objects before closing their write mappings."""
+
+    mappings: dict[str, mmap.mmap] = {}
+    for label, array in arrays.items():
+        array.flush()
+        mapping = getattr(array, "_mmap", None)
+        if not isinstance(mapping, mmap.mmap) or mapping.closed:
+            raise Unmeasured(f"generated array {label} has no live mmap to close")
+        mappings[label] = mapping
+    if arrays:
+        del array
+    arrays.clear()
+
+    failures: list[str] = []
+    for label, mapping in mappings.items():
+        try:
+            mapping.close()
+        except (BufferError, OSError) as error:
+            failures.append(f"{label}: {error}")
+    if failures:
+        raise Unmeasured(
+            "generated array views outlived their verifier-owned mappings: "
+            + "; ".join(failures)
+        )
 
 
 def update_aggregate(
@@ -1382,21 +1936,8 @@ def rail_disclosure(
 
 def load_checker_array(
     file: FrozenFile, label: str, shape: tuple[int, ...]
-) -> np.ndarray:
-    try:
-        array = np.load(file.path, mmap_mode="r", allow_pickle=False)
-    except Exception as error:
-        raise Unmeasured(
-            f"{label}: could not open NumPy artifact {file.path}"
-        ) from error
-    if array.shape == shape:
-        return array
-    channel_last = (shape[1], shape[2], shape[0])
-    if array.shape == channel_last:
-        return np.moveaxis(array, -1, 0)
-    raise Disagreement(
-        f"{label}: checker shape {array.shape} != verifier shape {shape}"
-    )
+) -> PinnedNpy:
+    return PinnedNpy(file, label, expected_channel_first_shape=shape)
 
 
 def arrays_equal(a: np.ndarray, b: np.ndarray) -> bool:
@@ -1412,12 +1953,7 @@ def numpy_dtype_metadata(array: np.ndarray) -> Any:
 
 
 def checker_json(files: Mapping[str, FrozenFile], label: str) -> Mapping[str, Any]:
-    try:
-        document = json.loads(files[label].path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured(
-            f"{label}: invalid JSON artifact {files[label].path}"
-        ) from error
+    document = load_frozen_json(files[label], label)
     if not isinstance(document, Mapping):
         raise Unmeasured(f"{label}: JSON root must be an object")
     return document
@@ -1590,19 +2126,41 @@ def compare_checker_artifacts(
             raise Unmeasured(
                 "checker M8-R block artifact escapes or is absent"
             ) from error
-        if artifact.get("bytes") != artifact_path.stat().st_size or artifact.get(
-            "sha256"
-        ) != sha256_file(artifact_path):
-            raise Disagreement("checker M8-R block artifact hash/size mismatch")
-        block_rows = np.load(artifact_path, allow_pickle=False)
+        artifact_file = frozen_file(
+            {
+                "path": str(artifact_path),
+                "sha256": str(artifact.get("sha256", "")),
+            },
+            f"checker M8-R block artifact {key}",
+        )
         if (
-            artifact.get("shape") != list(block_rows.shape)
-            or artifact.get("dtype") != numpy_dtype_metadata(block_rows)
-            or len(block_rows) != expected_summary["violation_rows"]
+            artifact.get("bytes") != artifact_file.size
+            or artifact.get("sha256") != artifact_file.sha256
         ):
-            raise Disagreement("checker M8-R block artifact metadata mismatch")
-        block_row_parts.append(np.asarray(block_rows))
+            raise Disagreement("checker M8-R block artifact hash/size mismatch")
+        with PinnedNpy(
+            artifact_file, f"checker M8-R block artifact {key}"
+        ) as pinned_rows:
+            assert pinned_rows.array is not None
+            block_rows = pinned_rows.array
+            if (
+                artifact.get("shape") != list(block_rows.shape)
+                or artifact.get("dtype") != numpy_dtype_metadata(block_rows)
+                or len(block_rows) != expected_summary["violation_rows"]
+            ):
+                raise Disagreement("checker M8-R block artifact metadata mismatch")
+            block_row_parts.append(np.array(block_rows, copy=True))
+            del block_rows
         block_artifact_paths.append(artifact_path)
+        postflight = context.get("postflight_files")
+        if isinstance(postflight, list):
+            postflight.append(
+                (
+                    f"{result['capture']} checker M8-R block artifact "
+                    f"{artifact_path.name}",
+                    artifact_file,
+                )
+            )
     if seen_block_keys != set(expected_block_summaries):
         raise Disagreement("checker M8-R block manifest omits a frame/site")
     if checker_m8o.get("capture") != result["capture"]:
@@ -1713,35 +2271,55 @@ def compare_checker_artifacts(
     ):
         raise Disagreement("checker metadata does not identify clamped Catmull-Rom")
 
-    checker_m8r_violations = np.load(files["m8_r_violations"].path, allow_pickle=False)
     block_rows_all = (
         np.concatenate(block_row_parts)
         if block_row_parts
         else np.empty(0, dtype=M8R_VIOLATION_DTYPE)
     )
-    if not arrays_equal(np.asarray(block_rows_all), np.asarray(checker_m8r_violations)):
-        raise Disagreement("checker M8-R block arrays do not reproduce aggregate array")
-    required_m8r_fields = set(M8R_VIOLATION_DTYPE.names or ())
-    if checker_m8r_violations.dtype.names is None or not required_m8r_fields.issubset(
-        checker_m8r_violations.dtype.names
-    ):
-        raise Disagreement("checker M8-R violation artifact omits required fields")
-    if len(checker_m8r_violations) != len(m8r_violations):
-        raise Disagreement("checker/verifier M8-R violation-row count mismatch")
-    m8r_order_fields = ("frame_order", "site_x", "site_y", "y", "x", "direction")
-    checker_m8r_order = np.lexsort(
-        tuple(checker_m8r_violations[name] for name in reversed(m8r_order_fields))
-    )
-    verifier_m8r_order = np.lexsort(
-        tuple(m8r_violations[name] for name in reversed(m8r_order_fields))
-    )
-    for field in required_m8r_fields:
-        left = checker_m8r_violations[field][checker_m8r_order]
-        right = m8r_violations[field][verifier_m8r_order]
-        if not arrays_equal(np.asarray(left), np.asarray(right)):
+    with PinnedNpy(
+        files["m8_r_violations"], "checker aggregate M8-R violations"
+    ) as pinned_m8r:
+        assert pinned_m8r.array is not None
+        checker_m8r_violations = pinned_m8r.array
+        if not arrays_equal(
+            np.asarray(block_rows_all), np.asarray(checker_m8r_violations)
+        ):
             raise Disagreement(
-                f"checker/verifier M8-R violation field mismatch: {field}"
+                "checker M8-R block arrays do not reproduce aggregate array"
             )
+        required_m8r_fields = set(M8R_VIOLATION_DTYPE.names or ())
+        if (
+            checker_m8r_violations.dtype.names is None
+            or not required_m8r_fields.issubset(checker_m8r_violations.dtype.names)
+        ):
+            raise Disagreement("checker M8-R violation artifact omits required fields")
+        if len(checker_m8r_violations) != len(m8r_violations):
+            raise Disagreement("checker/verifier M8-R violation-row count mismatch")
+        m8r_order_fields = (
+            "frame_order",
+            "site_x",
+            "site_y",
+            "y",
+            "x",
+            "direction",
+        )
+        checker_m8r_order = np.lexsort(
+            tuple(
+                checker_m8r_violations[name]
+                for name in reversed(m8r_order_fields)
+            )
+        )
+        verifier_m8r_order = np.lexsort(
+            tuple(m8r_violations[name] for name in reversed(m8r_order_fields))
+        )
+        for field in required_m8r_fields:
+            left = checker_m8r_violations[field][checker_m8r_order]
+            right = m8r_violations[field][verifier_m8r_order]
+            if not arrays_equal(np.asarray(left), np.asarray(right)):
+                raise Disagreement(
+                    f"checker/verifier M8-R violation field mismatch: {field}"
+                )
+        del checker_m8r_violations
     compared["m8_r_violations"] = {
         "equal": True,
         "sha256": files["m8_r_violations"].sha256,
@@ -1756,12 +2334,17 @@ def compare_checker_artifacts(
         ("lower_frame_witness", "lower_frame_witness"),
         ("upper_frame_witness", "upper_frame_witness"),
     ):
-        checker = load_checker_array(files[label], label, arrays[verifier_name].shape)
-        if not arrays_equal(np.asarray(checker), np.asarray(arrays[verifier_name])):
-            raise Disagreement(f"checker/verifier array mismatch: {label}")
+        with load_checker_array(
+            files[label], label, arrays[verifier_name].shape
+        ) as pinned_checker:
+            assert pinned_checker.array is not None
+            if not arrays_equal(
+                np.asarray(pinned_checker.array),
+                np.asarray(arrays[verifier_name]),
+            ):
+                raise Disagreement(f"checker/verifier array mismatch: {label}")
         compared[label] = {"equal": True, "sha256": files[label].sha256}
 
-    checker_violations = np.load(files["violations"].path, allow_pickle=False)
     required_fields = {
         "capture",
         "x",
@@ -1777,24 +2360,30 @@ def compare_checker_artifacts(
         "upper_frame_order",
         "extremising_frame_order",
     }
-    if checker_violations.dtype.names is None or not required_fields.issubset(
-        checker_violations.dtype.names
-    ):
-        raise Disagreement("checker violation artifact omits required fields")
-    if len(checker_violations) != len(violations):
-        raise Disagreement("checker/verifier violation-row count mismatch")
-    order_fields = ("capture", "y", "x", "channel", "direction")
-    checker_order = np.lexsort(
-        tuple(checker_violations[name] for name in reversed(order_fields))
-    )
-    verifier_order = np.lexsort(
-        tuple(violations[name] for name in reversed(order_fields))
-    )
-    for field in required_fields:
-        left = checker_violations[field][checker_order]
-        right = violations[field][verifier_order]
-        if not arrays_equal(np.asarray(left), np.asarray(right)):
-            raise Disagreement(f"checker/verifier violation field mismatch: {field}")
+    with PinnedNpy(files["violations"], "checker M8-O violations") as pinned_violations:
+        assert pinned_violations.array is not None
+        checker_violations = pinned_violations.array
+        if checker_violations.dtype.names is None or not required_fields.issubset(
+            checker_violations.dtype.names
+        ):
+            raise Disagreement("checker violation artifact omits required fields")
+        if len(checker_violations) != len(violations):
+            raise Disagreement("checker/verifier violation-row count mismatch")
+        order_fields = ("capture", "y", "x", "channel", "direction")
+        checker_order = np.lexsort(
+            tuple(checker_violations[name] for name in reversed(order_fields))
+        )
+        verifier_order = np.lexsort(
+            tuple(violations[name] for name in reversed(order_fields))
+        )
+        for field in required_fields:
+            left = checker_violations[field][checker_order]
+            right = violations[field][verifier_order]
+            if not arrays_equal(np.asarray(left), np.asarray(right)):
+                raise Disagreement(
+                    f"checker/verifier violation field mismatch: {field}"
+                )
+        del checker_violations
     compared["violations"] = {"equal": True, "sha256": files["violations"].sha256}
 
     if (
@@ -1901,18 +2490,23 @@ def compare_checker_artifacts(
         if (
             not isinstance(metadata, Mapping)
             or metadata.get("path") != name
-            or metadata.get("bytes") != expected.path.stat().st_size
+            or metadata.get("bytes") != expected.size
             or metadata.get("sha256") != expected.sha256
         ):
             raise Disagreement(f"checker provenance artifact metadata mismatch: {name}")
         if expected.path.suffix == ".npy":
-            array = np.load(expected.path, mmap_mode="r", allow_pickle=False)
-            if metadata.get("shape") != list(array.shape) or metadata.get(
-                "dtype"
-            ) != numpy_dtype_metadata(array):
-                raise Disagreement(
-                    f"checker provenance array metadata mismatch: {name}"
-                )
+            with PinnedNpy(
+                expected, f"checker provenance array {name}"
+            ) as pinned_array:
+                assert pinned_array.array is not None
+                if metadata.get("shape") != list(
+                    pinned_array.array.shape
+                ) or metadata.get("dtype") != numpy_dtype_metadata(
+                    pinned_array.array
+                ):
+                    raise Disagreement(
+                        f"checker provenance array metadata mismatch: {name}"
+                    )
     expected_state_files = (
         set(expected_artifacts)
         | {"provenance.json"}
@@ -1958,7 +2552,7 @@ def verify_capture(
     checker_context: Mapping[str, Any] | None = None,
     expected_freeze_sha256: str | None = None,
 ) -> dict[str, Any]:
-    warpmap = parse_warpmap(warpmap_file.path)
+    warpmap = parse_warpmap(warpmap_file)
     if warpmap.resampler != "clamped-catmull":
         raise Unmeasured(f"{capture}: warpmap resampler is {warpmap.resampler!r}")
     crop_x, crop_y, compact_width, compact_height, cover_scale = reconstruct_crop(
@@ -1989,9 +2583,8 @@ def verify_capture(
     block_paths = sorted(block_dir.glob("*.m8site"))
     if not block_paths:
         raise Unmeasured(f"{capture}: no trace-v3 blocks")
-    source_hash_cache: dict[Path, str] = {}
-    blocks = [parse_trace(path, source_hash_cache) for path in block_paths]
-    expected_trace_files = {block.path.resolve() for block in blocks}
+    grouped_paths = group_trace_paths(block_paths, warpmap)
+    expected_trace_files = {path.resolve() for path in block_paths}
     observed_trace_files = {
         path.resolve() for path in state_dir.rglob("*") if path.is_file()
     }
@@ -2010,73 +2603,102 @@ def verify_capture(
             f"missing={sorted(str(path) for path in expected_trace_files - observed_trace_files)[:8]}, "
             f"extra={sorted(str(path) for path in unexpected_trace_files)[:8]}"
         )
-    grouped = validate_block_set(blocks, warpmap, input_dir)
-    first = blocks[0]
-    expected_crop = (crop_x, crop_y, compact_width, compact_height)
-    trace_crop = (first.crop_x, first.crop_y, first.compact_width, first.compact_height)
-    if trace_crop != expected_crop:
-        raise Unmeasured(
-            f"{capture}: trace crop {trace_crop} != independently reconstructed {expected_crop}"
-        )
-    if any(block.kernel != 2 for block in blocks):
-        raise Unmeasured(f"{capture}: target contains a non-clamped-Catmull trace")
-    if expected_freeze_sha256 is not None and any(
-        block.instrument_freeze_sha256 != expected_freeze_sha256 for block in blocks
-    ):
-        raise Unmeasured(
-            f"{capture}: trace blocks are not bound to the frozen instrument"
-        )
-
-    image = load_tiff(
-        output_file.path,
-        compact_height,
-        compact_width,
-        expected_freeze_sha256,
-    )
+    raw_paths = input_raw_paths(input_dir, warpmap)
     artifact_dir.mkdir(parents=True, exist_ok=True)
     shape = (3, compact_height, compact_width)
-    pre_lower = create_array(artifact_dir / "pre-lower.npy", "<f4", shape, np.inf)
-    pre_upper = create_array(artifact_dir / "pre-upper.npy", "<f4", shape, -np.inf)
-    projected_lower = create_array(
-        artifact_dir / "projected-lower.npy", "<f4", shape, np.inf
-    )
-    projected_upper = create_array(
-        artifact_dir / "projected-upper.npy", "<f4", shape, -np.inf
-    )
-    valid_contributors = create_array(
-        artifact_dir / "valid-contributors.npy", "<u2", shape, 0
-    )
-    low_frames = create_array(artifact_dir / "low-frames.npy", "<i4", shape, -1)
-    high_frames = create_array(artifact_dir / "high-frames.npy", "<i4", shape, -1)
+    arrays = {
+        "pre_lower": create_array(
+            artifact_dir / "pre-lower.npy", "<f4", shape, np.inf
+        ),
+        "pre_upper": create_array(
+            artifact_dir / "pre-upper.npy", "<f4", shape, -np.inf
+        ),
+        "projected_lower": create_array(
+            artifact_dir / "projected-lower.npy", "<f4", shape, np.inf
+        ),
+        "projected_upper": create_array(
+            artifact_dir / "projected-upper.npy", "<f4", shape, -np.inf
+        ),
+        "valid_contributors": create_array(
+            artifact_dir / "valid-contributors.npy", "<u2", shape, 0
+        ),
+        "lower_frame_witness": create_array(
+            artifact_dir / "low-frames.npy", "<i4", shape, -1
+        ),
+        "upper_frame_witness": create_array(
+            artifact_dir / "high-frames.npy", "<i4", shape, -1
+        ),
+    }
 
+    source_hash_cache: dict[Path, str] = {}
+    blocks: list[TraceBlock] = []
     m8r_summaries: list[dict[str, Any]] = []
     m8r_parts: list[np.ndarray] = []
-    for block in blocks:
-        summary, parts = verify_m8r_block(block, chunk_rows)
-        m8r_summaries.append(summary)
-        m8r_parts.extend(parts)
-    m8r_violations = (
-        np.concatenate(m8r_parts)
-        if m8r_parts
-        else np.empty(0, dtype=M8R_VIOLATION_DTYPE)
-    )
-    np.save(artifact_dir / "m8-r-violations.npy", m8r_violations, allow_pickle=False)
+    expected_geometry: tuple[Any, ...] | None = None
+    expected_crop = (crop_x, crop_y, compact_width, compact_height)
+    for frame_order in sorted(grouped_paths):
+        with ExitStack() as stack:
+            views = [
+                stack.enter_context(AcceptedTrace(path, source_hash_cache))
+                for _, path in grouped_paths[frame_order]
+            ]
+            frame_blocks = [view.block for view in views]
+            expected_geometry = validate_frame_block_set(
+                frame_blocks,
+                warpmap,
+                input_dir,
+                raw_paths,
+                expected_geometry,
+            )
+            for block in frame_blocks:
+                trace_crop = (
+                    block.crop_x,
+                    block.crop_y,
+                    block.compact_width,
+                    block.compact_height,
+                )
+                if trace_crop != expected_crop:
+                    raise Unmeasured(
+                        f"{capture}: trace crop {trace_crop} != independently "
+                        f"reconstructed {expected_crop}"
+                    )
+                if block.kernel != 2:
+                    raise Unmeasured(
+                        f"{capture}: target contains a non-clamped-Catmull trace"
+                    )
+                if (
+                    expected_freeze_sha256 is not None
+                    and block.instrument_freeze_sha256 != expected_freeze_sha256
+                ):
+                    raise Unmeasured(
+                        f"{capture}: trace blocks are not bound to the frozen instrument"
+                    )
+            for view in views:
+                view.map_arrays()
+                assert view.source is not None
+                assert view.gathered is not None
+                summary, parts = verify_m8r_block(
+                    view.block,
+                    view.source,
+                    view.gathered,
+                    chunk_rows,
+                )
+                m8r_summaries.append(summary)
+                m8r_parts.extend(parts)
 
-    for frame_order in sorted(grouped):
-        sites = grouped[frame_order]
-        red = sites[(0, 0)]
-        g1 = sites[(1, 0)]
-        blue = sites[(1, 1)]
-        sources = {site: block.source() for site, block in sites.items()}
-        try:
+            sites = {view.block.site: view for view in views}
+            red = sites[(0, 0)].block
+            g1 = sites[(1, 0)].block
+            blue = sites[(1, 1)].block
             for y0 in range(0, compact_height, chunk_rows):
                 y1 = min(compact_height, y0 + chunk_rows)
                 site_intervals: dict[
                     tuple[int, int], tuple[np.ndarray, np.ndarray, np.ndarray]
                 ] = {}
-                for site, block in sites.items():
+                for site, view in sites.items():
+                    assert view.source is not None
                     site_intervals[site] = compact_site_intervals(
-                        block, sources[site], y0, y1
+                        view.block, view.source, y0, y1
                     )
 
                 for channel, block in ((0, red), (2, blue)):
@@ -2085,8 +2707,8 @@ def verify_capture(
                         black_lo, black_hi, block.output_gain, block.sensor_range
                     )
                     update_aggregate(
-                        pre_lower,
-                        pre_upper,
+                        arrays["pre_lower"],
+                        arrays["pre_upper"],
                         channel,
                         y0,
                         valid,
@@ -2095,17 +2717,17 @@ def verify_capture(
                         frame_order,
                     )
                     update_aggregate(
-                        projected_lower,
-                        projected_upper,
+                        arrays["projected_lower"],
+                        arrays["projected_upper"],
                         channel,
                         y0,
                         valid,
                         proj_lo,
                         proj_hi,
                         frame_order,
-                        valid_contributors,
-                        low_frames,
-                        high_frames,
+                        arrays["valid_contributors"],
+                        arrays["lower_frame_witness"],
+                        arrays["upper_frame_witness"],
                     )
 
                 valid_g1, g1_lo, g1_hi = site_intervals[GREEN_SITES[0]]
@@ -2119,8 +2741,8 @@ def verify_capture(
                     g1_lo, g1_hi, g2_lo, g2_hi, g1.output_gain, g1.sensor_range
                 )
                 update_aggregate(
-                    pre_lower,
-                    pre_upper,
+                    arrays["pre_lower"],
+                    arrays["pre_upper"],
                     1,
                     y0,
                     valid_green,
@@ -2129,57 +2751,73 @@ def verify_capture(
                     frame_order,
                 )
                 update_aggregate(
-                    projected_lower,
-                    projected_upper,
+                    arrays["projected_lower"],
+                    arrays["projected_upper"],
                     1,
                     y0,
                     valid_green,
                     proj_lo,
                     proj_hi,
                     frame_order,
-                    valid_contributors,
-                    low_frames,
-                    high_frames,
+                    arrays["valid_contributors"],
+                    arrays["lower_frame_witness"],
+                    arrays["upper_frame_witness"],
                 )
-        finally:
-            sources.clear()
+            blocks.extend(frame_blocks)
 
-    for array in (
-        pre_lower,
-        pre_upper,
-        projected_lower,
-        projected_upper,
-        valid_contributors,
-        low_frames,
-        high_frames,
-    ):
+    image = load_tiff(
+        output_file,
+        compact_height,
+        compact_width,
+        expected_freeze_sha256,
+    )
+    m8r_violations = (
+        np.concatenate(m8r_parts)
+        if m8r_parts
+        else np.empty(0, dtype=M8R_VIOLATION_DTYPE)
+    )
+    np.save(artifact_dir / "m8-r-violations.npy", m8r_violations, allow_pickle=False)
+
+    for array in arrays.values():
         array.flush()
+    del array
 
-    placed_count = len(grouped)
-    if np.any(valid_contributors != placed_count):
-        channel, y, x = np.argwhere(valid_contributors != placed_count)[0]
+    placed_count = len(grouped_paths)
+    if np.any(arrays["valid_contributors"] != placed_count):
+        channel, y, x = np.argwhere(
+            arrays["valid_contributors"] != placed_count
+        )[0]
         raise Unmeasured(
             f"{capture}: Crop is not covered by every frame/site at "
             f"({int(x)},{int(y)},{CHANNEL_NAMES[int(channel)]}); "
-            f"contributors={int(valid_contributors[channel, y, x])}, expected={placed_count}"
+            f"contributors={int(arrays['valid_contributors'][channel, y, x])}, "
+            f"expected={placed_count}"
         )
-    if np.any(~np.isfinite(pre_lower)) or np.any(~np.isfinite(pre_upper)):
+    if np.any(~np.isfinite(arrays["pre_lower"])) or np.any(
+        ~np.isfinite(arrays["pre_upper"])
+    ):
         raise Unmeasured(f"{capture}: aggregate interval contains non-finite values")
-    if np.any(pre_lower > pre_upper) or np.any(projected_lower > projected_upper):
+    if np.any(arrays["pre_lower"] > arrays["pre_upper"]) or np.any(
+        arrays["projected_lower"] > arrays["projected_upper"]
+    ):
         raise Unmeasured(f"{capture}: aggregate interval is inverted")
 
     violations, m8o = build_m8o_rows(
         capture,
         image,
-        projected_lower,
-        projected_upper,
-        low_frames,
-        high_frames,
+        arrays["projected_lower"],
+        arrays["projected_upper"],
+        arrays["lower_frame_witness"],
+        arrays["upper_frame_witness"],
         chunk_rows,
     )
     np.save(artifact_dir / "m8-o-violations.npy", violations, allow_pickle=False)
     rails = rail_disclosure(
-        image, pre_lower, pre_upper, projected_lower, projected_upper
+        image,
+        arrays["pre_lower"],
+        arrays["pre_upper"],
+        arrays["projected_lower"],
+        arrays["projected_upper"],
     )
     rail_fractions = {
         category: {
@@ -2252,15 +2890,6 @@ def verify_capture(
             },
         },
     }
-    arrays = {
-        "pre_lower": pre_lower,
-        "pre_upper": pre_upper,
-        "projected_lower": projected_lower,
-        "projected_upper": projected_upper,
-        "valid_contributors": valid_contributors,
-        "lower_frame_witness": low_frames,
-        "upper_frame_witness": high_frames,
-    }
     if checker_artifacts is not None:
         if checker_context is None:
             raise Unmeasured("checker artifacts require strict comparison context")
@@ -2295,6 +2924,7 @@ def verify_capture(
             raise Unmeasured(
                 f"{capture}: ignored producer artifact changed: {ignored_path}"
             )
+    close_generated_memmaps(arrays)
     result["independent_artifacts"] = {
         path.name: {
             "path": str(path.resolve()),
@@ -2324,9 +2954,9 @@ def parse_instruments(raw: Any) -> dict[str, FrozenFile]:
     return files
 
 
-def verify_independence(verifier_path: Path) -> dict[str, Any]:
-    source = verifier_path.read_text(encoding="utf-8")
-    tree = ast.parse(source, filename=str(verifier_path))
+def verify_independence(verifier: FrozenFile) -> dict[str, Any]:
+    source = read_frozen_text(verifier, "verifier source")
+    tree = ast.parse(source, filename=str(verifier.path))
     imports: list[str] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -2349,12 +2979,7 @@ def validate_commission_report(
     interpretation_canonical_hash: str,
     verifier_canonical_hash: str,
 ) -> dict[str, Any]:
-    try:
-        report = json.loads(file.path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured(
-            f"invalid verifier commissioning report {file.path}"
-        ) from error
+    report = load_frozen_json(file, "verifier commissioning report")
     if report.get("protocol") != VERIFIER_PROTOCOL or report.get("status") != "PASS":
         raise Unmeasured(
             "verifier commissioning report is not a PASS for this protocol"
@@ -2373,6 +2998,126 @@ def validate_commission_report(
         raise Unmeasured(
             "verifier commissioning was produced by different verifier bytes"
         )
+    json_substitution = report.get("transient_json_substitution", {})
+    if not isinstance(json_substitution, Mapping):
+        raise Unmeasured("transient JSON substitution commissioning is malformed")
+    json_cases = json_substitution.get("cases", {})
+    expected_json_cases = {
+        "allow_to_deny": ("ALLOW", "DENY!"),
+        "deny_to_allow": ("DENY!", "ALLOW"),
+    }
+    if (
+        json_substitution.get("status") != "PASS"
+        or not isinstance(json_cases, Mapping)
+        or set(json_cases) != set(expected_json_cases)
+    ):
+        raise Unmeasured("transient JSON substitution commissioning is absent")
+    for name, (accepted, substitute) in expected_json_cases.items():
+        case = json_cases[name]
+        if (
+            not isinstance(case, Mapping)
+            or case.get("accepted_sentinel") != accepted
+            or case.get("substitute_sentinel") != substitute
+            or case.get("vulnerable_sentinel") != substitute
+            or case.get("defended_sentinel") != accepted
+            or case.get("attack_landed") is not True
+            or case.get("vulnerable_witness_differs") is not True
+            or case.get("defended_matches_accepted") is not True
+            or case.get("restoration_succeeded") is not True
+            or case.get("accepted_sha256") != case.get("final_sha256")
+            or case.get("accepted_sha256") == case.get("substitute_sha256")
+            or any(
+                re.fullmatch(r"[0-9A-F]{64}", str(case.get(field, ""))) is None
+                for field in (
+                    "accepted_sha256",
+                    "substitute_sha256",
+                    "final_sha256",
+                )
+            )
+        ):
+            raise Unmeasured(
+                f"transient JSON substitution commissioning is wrong at {name}"
+            )
+    equal_bytes = json_substitution.get("equal_bytes_refusal", {})
+    if (
+        not isinstance(equal_bytes, Mapping)
+        or equal_bytes.get("error")
+        != "transient substitution did not change the bytes"
+        or equal_bytes.get("original_preserved") is not True
+        or equal_bytes.get("scratch_absent") is not True
+        or equal_bytes.get("accepted_sha256") != equal_bytes.get("final_sha256")
+        or re.fullmatch(
+            r"[0-9A-F]{64}", str(equal_bytes.get("accepted_sha256", ""))
+        )
+        is None
+    ):
+        raise Unmeasured(
+            "equal-bytes transient substitution commissioning is incomplete"
+        )
+    header_substitution = report.get(
+        "transient_trace_header_substitution", {}
+    )
+    if not isinstance(header_substitution, Mapping):
+        raise Unmeasured("transient trace-header commissioning is malformed")
+    if (
+        header_substitution.get("status") != "PASS"
+        or header_substitution.get("accepted_kernel") != 2
+        or header_substitution.get("substitute_kernel") != 0
+        or header_substitution.get("vulnerable_kernel") != 0
+        or header_substitution.get("defended_kernel") != 2
+        or header_substitution.get("equal_size") is not True
+        or header_substitution.get("attack_landed") is not True
+        or header_substitution.get("vulnerable_witness_differs") is not True
+        or header_substitution.get("defended_matches_accepted") is not True
+        or header_substitution.get("restoration_succeeded") is not True
+        or header_substitution.get("accepted_sha256")
+        != header_substitution.get("final_sha256")
+        or header_substitution.get("accepted_sha256")
+        == header_substitution.get("substitute_sha256")
+        or any(
+            re.fullmatch(
+                r"[0-9A-F]{64}", str(header_substitution.get(field, ""))
+            )
+            is None
+            for field in (
+                "accepted_sha256",
+                "substitute_sha256",
+                "final_sha256",
+            )
+        )
+    ):
+        raise Unmeasured("transient trace-header commissioning is incomplete")
+    body_substitution = report.get("transient_trace_body_substitution", {})
+    if not isinstance(body_substitution, Mapping):
+        raise Unmeasured("transient trace-body commissioning is malformed")
+    if (
+        body_substitution.get("status") != "PASS"
+        or body_substitution.get("accepted_violations") != 2
+        or body_substitution.get("substitute_violations") != 0
+        or body_substitution.get("vulnerable_violations") != 0
+        or body_substitution.get("defended_violations") != 2
+        or body_substitution.get("equal_size") is not True
+        or body_substitution.get("attack_landed") is not True
+        or body_substitution.get("vulnerable_witness_differs") is not True
+        or body_substitution.get("defended_matches_accepted") is not True
+        or body_substitution.get("restoration_succeeded") is not True
+        or body_substitution.get("accepted_sha256")
+        != body_substitution.get("final_sha256")
+        or body_substitution.get("accepted_sha256")
+        == body_substitution.get("substitute_sha256")
+        or any(
+            re.fullmatch(
+                r"[0-9A-F]{64}", str(body_substitution.get(field, ""))
+            )
+            is None
+            for field in (
+                "accepted_sha256",
+                "substitute_sha256",
+                "final_sha256",
+            )
+        )
+    ):
+        raise Unmeasured("transient trace-body commissioning is incomplete")
     defect = report.get("degradation_plant", {})
     improvement = report.get("improvement_plant", {})
     defect_landed = defect.get("landed", {})
@@ -2714,14 +3459,10 @@ def validate_checker_fixture(
     manifest_file: FrozenFile,
     preregistration: FrozenFile,
     prereg: Mapping[str, Any],
+    accepted_artifacts: dict[str, FrozenFile] | None = None,
 ) -> dict[str, Any]:
     fixture_dir = manifest_file.path.parent
-    try:
-        document = json.loads(manifest_file.path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured(
-            f"invalid checker fixture manifest {manifest_file.path}"
-        ) from error
+    document = load_frozen_json(manifest_file, "checker fixture manifest")
     if (
         not isinstance(document, Mapping)
         or document.get("schema") != "m136-commissioning-fixture-manifest"
@@ -2764,22 +3505,37 @@ def validate_checker_fixture(
     }
     if set(declared) != observed:
         raise Unmeasured("checker fixture inventory does not match its directory")
+    artifact_files: dict[str, FrozenFile] = {}
     for name, metadata in declared.items():
         path = fixture_dir / name
-        if metadata.get("bytes") != path.stat().st_size or metadata.get(
-            "sha256"
-        ) != sha256_file(path):
+        artifact = frozen_file(
+            {
+                "path": str(path),
+                "sha256": str(metadata.get("sha256", "")),
+            },
+            f"checker fixture artifact {name}",
+        )
+        if (
+            metadata.get("bytes") != artifact.size
+            or metadata.get("sha256") != artifact.sha256
+        ):
             raise Disagreement(f"checker fixture artifact changed: {name}")
+        artifact_files[name] = artifact
+    if accepted_artifacts is not None:
+        accepted_artifacts.update(artifact_files)
 
-    numeric_path = fixture_dir / "m8-o-numeric-cases.json"
-    intermediate_path = fixture_dir / "intermediate-quantizer-case.json"
-    crop_path = fixture_dir / "crop-origin-case.json"
-    try:
-        numeric = json.loads(numeric_path.read_text(encoding="utf-8"))
-        intermediate = json.loads(intermediate_path.read_text(encoding="utf-8"))
-        crop = json.loads(crop_path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured("checker fixture JSON is unreadable") from error
+    numeric = load_frozen_json(
+        artifact_files["m8-o-numeric-cases.json"],
+        "checker numeric fixture",
+    )
+    intermediate = load_frozen_json(
+        artifact_files["intermediate-quantizer-case.json"],
+        "checker intermediate-quantizer fixture",
+    )
+    crop = load_frozen_json(
+        artifact_files["crop-origin-case.json"],
+        "checker crop-origin fixture",
+    )
     frozen_commissioning = prereg.get("commissioning", {})
     expected_numeric = frozen_commissioning.get("m8_o_numeric_cases", {})
     numeric_cases = numeric.get("cases") if isinstance(numeric, Mapping) else None
@@ -2815,18 +3571,31 @@ def validate_checker_fixture(
     if crop.get("schema_version") != 1 or crop.get("case") != expected_crop:
         raise Disagreement("checker crop-origin fixture differs")
 
-    source = np.load(fixture_dir / "crop-origin-source.npy", allow_pickle=False)
-    correct = tifffile.imread(fixture_dir / "crop-origin-correct.tiff")
-    wrong = tifffile.imread(fixture_dir / "crop-origin-wrong.tiff")
-    if source.shape != (8, 8) or source.dtype != np.float64:
-        raise Unmeasured("checker crop-origin source grid has wrong shape/dtype")
-    expected_source = np.asarray(
-        100 * np.indices((8, 8), dtype=np.float64)[0]
-        + np.indices((8, 8), dtype=np.float64)[1],
-        dtype=np.float64,
+    with PinnedNpy(
+        artifact_files["crop-origin-source.npy"],
+        "checker crop-origin source grid",
+    ) as pinned_source:
+        assert pinned_source.array is not None
+        source = pinned_source.array
+        if source.shape != (8, 8) or source.dtype != np.float64:
+            raise Unmeasured("checker crop-origin source grid has wrong shape/dtype")
+        expected_source = np.asarray(
+            100 * np.indices((8, 8), dtype=np.float64)[0]
+            + np.indices((8, 8), dtype=np.float64)[1],
+            dtype=np.float64,
+        )
+        if not np.array_equal(source, expected_source):
+            raise Disagreement("checker crop-origin source grid has wrong values")
+        source_copy = np.array(source, copy=True)
+        del source
+    correct = load_frozen_tiff_array(
+        artifact_files["crop-origin-correct.tiff"],
+        "checker crop-origin correct TIFF",
     )
-    if not np.array_equal(source, expected_source):
-        raise Disagreement("checker crop-origin source grid has wrong values")
+    wrong = load_frozen_tiff_array(
+        artifact_files["crop-origin-wrong.tiff"],
+        "checker crop-origin wrong TIFF",
+    )
     origin_x = int(expected_crop["origin_x"])
     origin_y = int(expected_crop["origin_y"])
     height = int(expected_crop["compact_height"])
@@ -2846,9 +3615,9 @@ def validate_checker_fixture(
         )
 
     expected_correct = encode(
-        source[origin_y : origin_y + height, origin_x : origin_x + width]
+        source_copy[origin_y : origin_y + height, origin_x : origin_x + width]
     )
-    expected_wrong = encode(source[:height, :width])
+    expected_wrong = encode(source_copy[:height, :width])
     if not np.array_equal(correct, expected_correct) or not np.array_equal(
         wrong, expected_wrong
     ):
@@ -2877,11 +3646,10 @@ def validate_checker_commission_artifacts(
     fixture_manifest: FrozenFile,
     preregistration: FrozenFile,
 ) -> dict[str, Any]:
-    try:
-        report = json.loads(report_file.path.read_text(encoding="utf-8"))
-        evidence = json.loads(evidence_file.path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured("checker commissioning artifacts are unreadable") from error
+    report = load_frozen_json(report_file, "checker commissioning report")
+    evidence = load_frozen_json(
+        evidence_file, "checker commissioning violation evidence"
+    )
     if (
         report.get("schema") != "m136-checker-commissioning"
         or report.get("schema_version") != 1
@@ -3059,6 +3827,7 @@ def validate_checker_commission_artifacts(
 def fresh_checker_commission(
     checker: FrozenFile,
     fixture_manifest: FrozenFile,
+    fixture_artifacts: Mapping[str, FrozenFile],
     report_file: FrozenFile,
     evidence_file: FrozenFile,
     output_dir: Path,
@@ -3074,14 +3843,44 @@ def fresh_checker_commission(
         "--output",
         str(output_dir),
     ]
-    completed = subprocess.run(
-        command,
-        cwd=checker.path.parent,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
+    with ExitStack() as pins:
+        checker_pin = pins.enter_context(
+            PinnedFile(
+                checker.path, "frozen checker executable", allow_delete=False
+            )
+        )
+        require_accepted_pin(checker_pin, checker, "frozen checker executable")
+        fixture_manifest_pin = pins.enter_context(
+            PinnedFile(
+                fixture_manifest.path,
+                "frozen checker fixture manifest",
+                allow_delete=False,
+            )
+        )
+        require_accepted_pin(
+            fixture_manifest_pin,
+            fixture_manifest,
+            "frozen checker fixture manifest",
+        )
+        for name, artifact in sorted(fixture_artifacts.items()):
+            artifact_pin = pins.enter_context(
+                PinnedFile(
+                    artifact.path,
+                    f"frozen checker fixture {name}",
+                    allow_delete=False,
+                )
+            )
+            require_accepted_pin(
+                artifact_pin, artifact, f"frozen checker fixture {name}"
+            )
+        completed = subprocess.run(
+            command,
+            cwd=checker.path.parent,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
     if completed.returncode != 0:
         raise Unmeasured(
             "fresh checker commissioning failed: "
@@ -3091,11 +3890,17 @@ def fresh_checker_commission(
     fresh_evidence = output_dir / evidence_file.path.name
     if not fresh_report.is_file() or not fresh_evidence.is_file():
         raise Unmeasured("fresh checker commissioning omitted required artifacts")
-    if fresh_report.read_bytes() != report_file.path.read_bytes():
+    if not frozen_equals_generated(
+        report_file, fresh_report, "frozen checker commissioning report"
+    ):
         raise Disagreement(
             "fresh checker commissioning report differs from frozen report"
         )
-    if fresh_evidence.read_bytes() != evidence_file.path.read_bytes():
+    if not frozen_equals_generated(
+        evidence_file,
+        fresh_evidence,
+        "frozen checker commissioning evidence",
+    ):
         raise Disagreement(
             "fresh checker commissioning evidence differs from frozen evidence"
         )
@@ -3112,6 +3917,7 @@ def fresh_checker_fixture(
     fixture_tool: FrozenFile,
     preregistration: FrozenFile,
     fixture_manifest: FrozenFile,
+    fixture_artifacts: Mapping[str, FrozenFile],
     output_dir: Path,
 ) -> dict[str, Any]:
     if output_dir.exists():
@@ -3125,14 +3931,37 @@ def fresh_checker_fixture(
         "--output",
         str(output_dir),
     ]
-    completed = subprocess.run(
-        command,
-        cwd=fixture_tool.path.parent,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
+    with ExitStack() as pins:
+        fixture_pin = pins.enter_context(
+            PinnedFile(
+                fixture_tool.path,
+                "frozen fixture executable",
+                allow_delete=False,
+            )
+        )
+        require_accepted_pin(
+            fixture_pin, fixture_tool, "frozen fixture executable"
+        )
+        preregistration_pin = pins.enter_context(
+            PinnedFile(
+                preregistration.path,
+                "frozen fixture preregistration",
+                allow_delete=False,
+            )
+        )
+        require_accepted_pin(
+            preregistration_pin,
+            preregistration,
+            "frozen fixture preregistration",
+        )
+        completed = subprocess.run(
+            command,
+            cwd=fixture_tool.path.parent,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
     if completed.returncode != 0:
         raise Unmeasured(
             "fresh checker fixture generation failed: "
@@ -3140,9 +3969,10 @@ def fresh_checker_fixture(
         )
     expected_dir = fixture_manifest.path.parent
     expected_files = {
-        path.relative_to(expected_dir).as_posix(): path
-        for path in expected_dir.rglob("*")
-        if path.is_file()
+        fixture_manifest.path.relative_to(expected_dir).as_posix(): fixture_manifest,
+        **{
+            Path(name).as_posix(): file for name, file in fixture_artifacts.items()
+        },
     }
     fresh_files = {
         path.relative_to(output_dir).as_posix(): path
@@ -3154,7 +3984,9 @@ def fresh_checker_fixture(
             "fresh checker fixture inventory differs from frozen fixture"
         )
     for name, expected in expected_files.items():
-        if expected.read_bytes() != fresh_files[name].read_bytes():
+        if not frozen_equals_generated(
+            expected, fresh_files[name], f"frozen checker fixture {name}"
+        ):
             raise Disagreement(f"fresh checker fixture differs at {name}")
     return {
         "command": command,
@@ -3189,6 +4021,32 @@ def build_relevant_source_files(source_root: Path) -> set[str]:
 def git_blob_sha1(payload: bytes) -> str:
     header = f"blob {len(payload)}\0".encode("ascii")
     return hashlib.sha1(header + payload).hexdigest()
+
+
+def git_blob_sha1_file(path: Path, expected_sha256: str, label: str) -> str:
+    with PinnedFile(path, label) as pin:
+        sha1 = hashlib.sha1(f"blob {pin.size}\0".encode("ascii"))
+        sha256 = hashlib.sha256()
+        pin.stream.seek(0)
+        total = 0
+        while True:
+            chunk = pin.stream.read(1024 * 1024)
+            if not chunk:
+                break
+            sha1.update(chunk)
+            sha256.update(chunk)
+            total += len(chunk)
+        if total != pin.size:
+            raise Unmeasured(
+                f"{label}: pinned read returned {total} bytes, expected {pin.size}"
+            )
+        observed_sha256 = sha256.hexdigest().upper()
+        if observed_sha256 != expected_sha256:
+            raise Unmeasured(
+                f"{label}: accepted source SHA-256 {expected_sha256} "
+                f"does not match pinned bytes {observed_sha256}"
+            )
+        return sha1.hexdigest()
 
 
 def committed_source_blobs(repository: Path, commit: str) -> dict[str, str]:
@@ -3284,8 +4142,11 @@ def verify_source_patch(
         )
     changed: dict[str, dict[str, Any]] = {}
     for relative in sorted(snapshot_paths):
-        payload = (source_root / Path(relative)).read_bytes()
-        after_blob = git_blob_sha1(payload)
+        after_blob = git_blob_sha1_file(
+            source_root / Path(relative),
+            source_hashes[relative],
+            f"source patch file {relative}",
+        )
         before_blob = committed.get(relative)
         if before_blob == after_blob:
             continue
@@ -3301,10 +4162,7 @@ def verify_source_patch(
             "snapshot_git_blob_sha1": after_blob,
             "snapshot_sha256": source_hashes[relative],
         }
-    try:
-        document = json.loads(file.path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured(f"invalid source patch manifest {file.path}") from error
+    document = load_frozen_json(file, "source patch manifest")
     if (
         not isinstance(document, Mapping)
         or document.get("schema") != "m136-source-patch-v1"
@@ -3392,10 +4250,7 @@ def verify_reproducible_build(
     candidate_binary: FrozenFile,
     rebuild_target: Path,
 ) -> dict[str, Any]:
-    try:
-        receipt = json.loads(receipt_file.path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured(f"invalid build receipt {receipt_file.path}") from error
+    receipt = load_frozen_json(receipt_file, "candidate build receipt")
     if (
         not isinstance(receipt, Mapping)
         or receipt.get("schema") != "m136-build-receipt-v1"
@@ -3430,7 +4285,7 @@ def verify_reproducible_build(
     cargo = frozen_file(receipt.get("cargo", {}), "candidate build cargo")
     rustc = frozen_file(receipt.get("rustc", {}), "candidate build rustc")
     build_log = frozen_file(receipt.get("build_log", {}), "candidate build log")
-    if build_log.path.stat().st_size == 0:
+    if build_log.size == 0:
         raise Unmeasured("candidate build log is empty")
     environment = receipt.get("environment")
     repository = Path(__file__).resolve().parents[2]
@@ -3493,46 +4348,57 @@ def verify_reproducible_build(
         "cargo_version": [str(cargo.path), "--version", "--verbose"],
         "rustc_version": [str(rustc.path), "-vV"],
     }
-    for field, command in version_commands.items():
+    with ExitStack() as tool_pins:
+        cargo_pin = tool_pins.enter_context(
+            PinnedFile(cargo.path, "candidate build cargo", allow_delete=False)
+        )
+        rustc_pin = tool_pins.enter_context(
+            PinnedFile(rustc.path, "candidate build rustc", allow_delete=False)
+        )
+        require_accepted_pin(cargo_pin, cargo, "candidate build cargo")
+        require_accepted_pin(rustc_pin, rustc, "candidate build rustc")
+        for field, command in version_commands.items():
+            completed = subprocess.run(
+                command,
+                cwd=source_root,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            observed = completed.stdout.strip()
+            if completed.returncode != 0 or receipt.get(field) != observed:
+                raise Unmeasured(f"candidate build {field} does not reproduce")
+        if rebuild_target.exists():
+            raise Unmeasured(
+                f"independent rebuild target already exists: {rebuild_target}"
+            )
+        rebuild_target.parent.mkdir(parents=True, exist_ok=True)
+        rebuild_command = [
+            str(cargo.path),
+            *expected_command[1:-1],
+            str(rebuild_target),
+        ]
+        environment_for_build = os.environ.copy()
+        for key in list(environment_for_build):
+            upper = key.upper()
+            if (
+                upper.startswith("CARGO")
+                or upper.startswith("RUST")
+                or upper.startswith("STREHL_")
+            ):
+                environment_for_build.pop(key)
+        environment_for_build.update(
+            {str(key): str(value) for key, value in environment.items()}
+        )
         completed = subprocess.run(
-            command,
+            rebuild_command,
             cwd=source_root,
+            env=environment_for_build,
             check=False,
             capture_output=True,
-            text=True,
-            timeout=30,
+            timeout=3600,
         )
-        observed = completed.stdout.strip()
-        if completed.returncode != 0 or receipt.get(field) != observed:
-            raise Unmeasured(f"candidate build {field} does not reproduce")
-    if rebuild_target.exists():
-        raise Unmeasured(f"independent rebuild target already exists: {rebuild_target}")
-    rebuild_target.parent.mkdir(parents=True, exist_ok=True)
-    rebuild_command = [
-        str(cargo.path),
-        *expected_command[1:-1],
-        str(rebuild_target),
-    ]
-    environment_for_build = os.environ.copy()
-    for key in list(environment_for_build):
-        upper = key.upper()
-        if (
-            upper.startswith("CARGO")
-            or upper.startswith("RUST")
-            or upper.startswith("STREHL_")
-        ):
-            environment_for_build.pop(key)
-    environment_for_build.update(
-        {str(key): str(value) for key, value in environment.items()}
-    )
-    completed = subprocess.run(
-        rebuild_command,
-        cwd=source_root,
-        env=environment_for_build,
-        check=False,
-        capture_output=True,
-        timeout=3600,
-    )
     rebuild_log = rebuild_target.with_name(rebuild_target.name + "-build.log")
     rebuild_log.write_bytes(completed.stdout + completed.stderr)
     if completed.returncode != 0:
@@ -3590,10 +4456,7 @@ def verify_instrument_freeze(
     checker_commission_report: FrozenFile,
     checker_commission_evidence: FrozenFile,
 ) -> dict[str, Any]:
-    try:
-        document = json.loads(file.path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured(f"invalid instrument freeze {file.path}") from error
+    document = load_frozen_json(file, "instrument freeze")
     if (
         not isinstance(document, Mapping)
         or document.get("schema") != "m136-instrument-freeze-v1"
@@ -3682,10 +4545,7 @@ def verify_source_manifest(
     expected_commit: str,
     hook_hash: str,
 ) -> dict[str, Any]:
-    try:
-        document = json.loads(file.path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured(f"invalid source snapshot manifest {file.path}") from error
+    document = load_frozen_json(file, "source snapshot manifest")
     if (
         document.get("schema") != SOURCE_MANIFEST_SCHEMA
         or document.get("schema_version") != 1
@@ -3751,9 +4611,10 @@ def verify_source_manifest(
             or expected_bytes < 0
         ):
             raise Unmeasured(f"source manifest byte count is invalid: {relative}")
-        if path.stat().st_size != expected_bytes:
+        current = frozen_from_path(path, f"source snapshot file {relative}")
+        if current.size != expected_bytes:
             raise Unmeasured(f"source snapshot byte count changed: {relative}")
-        actual_hash = sha256_file(path)
+        actual_hash = current.sha256
         if actual_hash != expected_hash:
             raise Unmeasured(f"source snapshot hash changed: {relative}")
         observed[relative] = actual_hash
@@ -3812,10 +4673,7 @@ def validate_input_fingerprint(
         ("before", before, "before-render"),
         ("after", after, "after-census"),
     ):
-        try:
-            document = json.loads(frozen.path.read_text(encoding="utf-8"))
-        except Exception as error:
-            raise Unmeasured(f"{label} input fingerprint is unreadable") from error
+        document = load_frozen_json(frozen, f"{label} input fingerprint")
         if (
             not isinstance(document, Mapping)
             or document.get("schema") != "m136-input-fingerprint-v1"
@@ -3893,11 +4751,13 @@ def validate_input_fingerprint(
         if path.is_symlink():
             raise Unmeasured(f"input fingerprint refuses symlink: {relative}")
         expected = before_rows[relative]
-        current_ticks = path.stat().st_mtime_ns // 100 + 621355968000000000
+        current = frozen_from_path(path, f"current input file {relative}")
+        assert current.mtime_ns is not None
+        current_ticks = current.mtime_ns // 100 + 621355968000000000
         if (
-            path.stat().st_size != expected["bytes"]
+            current.size != expected["bytes"]
             or current_ticks != expected["last_write_utc_ticks"]
-            or sha256_file(path) != expected["sha256"]
+            or current.sha256 != expected["sha256"]
         ):
             raise Disagreement(f"current input file changed: {relative}")
     return {
@@ -3923,10 +4783,7 @@ def validate_render_provenance(
     input_fingerprint_before: FrozenFile,
     instrument_freeze: FrozenFile,
 ) -> dict[str, Any]:
-    try:
-        document = json.loads(file.path.read_text(encoding="utf-8"))
-    except Exception as error:
-        raise Unmeasured(f"{capture}: render provenance is unreadable") from error
+    document = load_frozen_json(file, f"{capture} render provenance")
     if (
         not isinstance(document, Mapping)
         or document.get("schema") != "m136-render-provenance-v1"
@@ -3956,7 +4813,11 @@ def validate_render_provenance(
         instrument_freeze,
         f"{capture} render instrument freeze",
     )
-    if instrument_freeze.path.stat().st_mtime_ns > output_tiff.path.stat().st_mtime_ns:
+    if (
+        instrument_freeze.mtime_ns is None
+        or output_tiff.mtime_ns is None
+        or instrument_freeze.mtime_ns > output_tiff.mtime_ns
+    ):
         raise Unmeasured(f"{capture}: instrument freeze postdates target TIFF")
     try:
         recorded_input = Path(str(document.get("input_dir", ""))).resolve(strict=True)
@@ -4016,9 +4877,10 @@ def verify_manifest(
     output_root = matching_roots[0]
     require_under(manifest_path, output_root, "verifier manifest")
     require_under(report_path, output_root, "verifier report")
-    manifest_file_hash = sha256_file(manifest_path)
+    manifest_file, manifest_bytes = capture_file(manifest_path, "verifier manifest")
+    manifest_file_hash = manifest_file.sha256
     try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest = json.loads(manifest_bytes.decode("utf-8"))
     except Exception as error:
         raise Unmeasured(f"invalid verifier manifest {manifest_path}") from error
     if (
@@ -4036,8 +4898,11 @@ def verify_manifest(
     prereg_file = require_absolute_existing_file(
         str(manifest.get("preregistration", "")), "preregistration"
     )
-    prereg_hash = sha256_file(prereg_file)
-    prereg_canonical_hash = sha256_canonical_text(prereg_file)
+    preregistration, prereg_bytes = capture_file(prereg_file, "preregistration")
+    prereg_hash = preregistration.sha256
+    prereg_canonical_hash = canonical_text_sha256(
+        prereg_bytes, "preregistration"
+    )
     frozen_prereg = (
         Path(__file__).with_name("clamped-m8o-preregistration.json").resolve()
     )
@@ -4050,7 +4915,10 @@ def verify_manifest(
             "frozen preregistration canonical hash mismatch: expected "
             f"{PREREG_CANONICAL_SHA256}, observed {prereg_canonical_hash}"
         )
-    prereg = json.loads(prereg_file.read_text(encoding="utf-8"))
+    try:
+        prereg = json.loads(prereg_bytes.decode("utf-8"))
+    except Exception as error:
+        raise Unmeasured(f"invalid preregistration {prereg_file}") from error
     if prereg.get("protocol") != PROTOCOL:
         raise Unmeasured("preregistration protocol mismatch")
     decision = prereg.get("decision", {})
@@ -4065,15 +4933,21 @@ def verify_manifest(
     )
     if not interpretation_path.is_file():
         raise Unmeasured(f"prospective interpretation is absent: {interpretation_path}")
-    interpretation_hash = sha256_file(interpretation_path)
-    interpretation_canonical_hash = sha256_canonical_text(interpretation_path)
+    interpretation, interpretation_bytes = capture_file(
+        interpretation_path, "prospective interpretation"
+    )
+    interpretation_hash = interpretation.sha256
+    interpretation_canonical_hash = canonical_text_sha256(
+        interpretation_bytes, "prospective interpretation"
+    )
     if interpretation_canonical_hash != INTERPRETATION_CANONICAL_SHA256:
         raise Unmeasured(
             "prospective interpretation bytes differ from the pre-target ruling"
         )
     verifier_path = Path(__file__).resolve()
-    verifier_hash = sha256_file(verifier_path)
-    verifier_canonical_hash = sha256_canonical_text(verifier_path)
+    verifier, verifier_bytes = capture_file(verifier_path, "verifier")
+    verifier_hash = verifier.sha256
+    verifier_canonical_hash = canonical_text_sha256(verifier_bytes, "verifier")
     commission_file = frozen_file(
         manifest.get("commission_report", {}), "verifier commissioning report"
     )
@@ -4094,7 +4968,9 @@ def verify_manifest(
         raise Unmeasured(f"commission recheck output already exists: {recheck_path}")
     recheck_work = output_root / "v"
     recheck = commission(prereg_file, recheck_path, recheck_work)
-    frozen_commission = json.loads(commission_file.path.read_text(encoding="utf-8"))
+    frozen_commission = load_frozen_json(
+        commission_file, "verifier commissioning report"
+    )
     if recheck != frozen_commission:
         raise Unmeasured(
             "fresh commissioning does not reproduce the frozen commissioning report"
@@ -4102,8 +4978,11 @@ def verify_manifest(
     commission_evidence["fresh_recheck"] = {
         "path": str(recheck_path.resolve()),
         "sha256": sha256_file(recheck_path),
-        "byte_identical": recheck_path.read_bytes()
-        == commission_file.path.read_bytes(),
+        "byte_identical": frozen_equals_generated(
+            commission_file,
+            recheck_path,
+            "frozen verifier commissioning report",
+        ),
     }
     if not commission_evidence["fresh_recheck"]["byte_identical"]:
         raise Unmeasured(
@@ -4146,25 +5025,28 @@ def verify_manifest(
         != checker_commission_violation_evidence.path.parent
     ):
         raise Unmeasured("checker commissioning artifact paths are not canonical")
+    fixture_artifacts: dict[str, FrozenFile] = {}
     checker_fixture_evidence = validate_checker_fixture(
         fixture_manifest,
-        FrozenFile(prereg_file, prereg_hash),
+        preregistration,
         prereg,
+        fixture_artifacts,
     )
     checker_commission_evidence = validate_checker_commission_artifacts(
         checker_commission_report,
         checker_commission_violation_evidence,
         checker=instruments["checker"],
         fixture_manifest=fixture_manifest,
-        preregistration=FrozenFile(prereg_file, prereg_hash),
+        preregistration=preregistration,
     )
     checker_fixture_recheck_dir = report_path.with_name(
         report_path.stem + "-checker-fixture-recheck"
     )
     checker_fixture_evidence["fresh_recheck"] = fresh_checker_fixture(
         instruments["fixture"],
-        FrozenFile(prereg_file, prereg_hash),
+        preregistration,
         fixture_manifest,
+        fixture_artifacts,
         checker_fixture_recheck_dir,
     )
     checker_recheck_dir = report_path.with_name(
@@ -4173,6 +5055,7 @@ def verify_manifest(
     checker_commission_evidence["fresh_recheck"] = fresh_checker_commission(
         instruments["checker"],
         fixture_manifest,
+        fixture_artifacts,
         checker_commission_report,
         checker_commission_violation_evidence,
         checker_recheck_dir,
@@ -4222,14 +5105,14 @@ def verify_manifest(
     instrument_freeze_evidence = verify_instrument_freeze(
         instrument_freeze_file,
         source_commit=expected_commit,
-        preregistration=FrozenFile(prereg_file, prereg_hash),
+        preregistration=preregistration,
         source_root=source_root,
         source_manifest=source_manifest,
         source_patch=source_patch,
         build_receipt=build_receipt,
         binary=binary,
         instruments=instruments,
-        verifier=FrozenFile(verifier_path, verifier_hash),
+        verifier=verifier,
         verifier_commission=commission_file,
         fixture_manifest=fixture_manifest,
         checker_commission_report=checker_commission_report,
@@ -4246,12 +5129,13 @@ def verify_manifest(
         rebuild_target=rebuild_target,
     )
     if not (
-        source_manifest.path.stat().st_mtime_ns <= build_receipt.path.stat().st_mtime_ns
-        and source_patch.path.stat().st_mtime_ns
-        <= build_receipt.path.stat().st_mtime_ns
-        and binary.path.stat().st_mtime_ns
-        <= build_receipt.path.stat().st_mtime_ns
-        <= instrument_freeze_file.path.stat().st_mtime_ns
+        frozen_mtime_ns(source_manifest, "source manifest")
+        <= frozen_mtime_ns(build_receipt, "build receipt")
+        and frozen_mtime_ns(source_patch, "source patch")
+        <= frozen_mtime_ns(build_receipt, "build receipt")
+        and frozen_mtime_ns(binary, "candidate binary")
+        <= frozen_mtime_ns(build_receipt, "build receipt")
+        <= frozen_mtime_ns(instrument_freeze_file, "instrument freeze")
     ):
         raise Unmeasured("source/build/freeze timestamps are out of order")
     for label, path in (
@@ -4284,6 +5168,10 @@ def verify_manifest(
 
     capture_results: list[dict[str, Any]] = []
     postflight_files: list[tuple[str, FrozenFile]] = []
+    postflight_files.extend(
+        (f"checker fixture artifact {name}", file)
+        for name, file in sorted(fixture_artifacts.items())
+    )
     postflight_inputs: list[
         tuple[str, FrozenFile, FrozenFile, Path, dict[str, Any]]
     ] = []
@@ -4417,19 +5305,27 @@ def verify_manifest(
             instrument_freeze=instrument_freeze_file,
         )
         if not (
-            instrument_freeze_file.path.stat().st_mtime_ns
-            <= input_fingerprint_before.path.stat().st_mtime_ns
-            <= output_file.path.stat().st_mtime_ns
-            <= render_provenance_file.path.stat().st_mtime_ns
-            <= input_fingerprint_after.path.stat().st_mtime_ns
+            frozen_mtime_ns(instrument_freeze_file, "instrument freeze")
+            <= frozen_mtime_ns(
+                input_fingerprint_before, f"{name} before input fingerprint"
+            )
+            <= frozen_mtime_ns(output_file, f"{name} output TIFF")
+            <= frozen_mtime_ns(
+                render_provenance_file, f"{name} render provenance"
+            )
+            <= frozen_mtime_ns(
+                input_fingerprint_after, f"{name} after input fingerprint"
+            )
         ):
             raise Unmeasured(
                 f"{name}: freeze/fingerprint/render timestamps are out of order"
             )
         if any(
-            file.path.stat().st_mtime_ns
-            > input_fingerprint_after.path.stat().st_mtime_ns
-            for file in checker_artifacts.values()
+            frozen_mtime_ns(file, f"{name} checker artifact {label}")
+            > frozen_mtime_ns(
+                input_fingerprint_after, f"{name} after input fingerprint"
+            )
+            for label, file in checker_artifacts.items()
         ):
             raise Unmeasured(
                 f"{name}: after-census fingerprint predates checker artifacts"
@@ -4437,7 +5333,7 @@ def verify_manifest(
         checker_context = {
             "candidate_binary": binary,
             "checker": instruments["checker"],
-            "preregistration": FrozenFile(prereg_file, prereg_hash),
+            "preregistration": preregistration,
             "checker_commission": checker_commission_report,
             "fixture_manifest": fixture_manifest,
             "instrument_freeze": instrument_freeze_file,
@@ -4448,6 +5344,7 @@ def verify_manifest(
             "input_dir": input_dir,
             "trace_state": trace_state,
             "checker_state": checker_state,
+            "postflight_files": postflight_files,
         }
         capture_result = verify_capture(
             name,
@@ -4563,13 +5460,10 @@ def verify_manifest(
         else "FAIL"
     )
     for label, file in (
-        ("verifier manifest", FrozenFile(manifest_path, manifest_file_hash)),
-        ("preregistration", FrozenFile(prereg_file, prereg_hash)),
-        (
-            "prospective interpretation",
-            FrozenFile(interpretation_path, interpretation_hash),
-        ),
-        ("verifier", FrozenFile(verifier_path, verifier_hash)),
+        ("verifier manifest", manifest_file),
+        ("preregistration", preregistration),
+        ("prospective interpretation", interpretation),
+        ("verifier", verifier),
         ("verifier commissioning", commission_file),
         ("source manifest", source_manifest),
         ("source patch", source_patch),
@@ -4662,7 +5556,7 @@ def verify_manifest(
             name: {"path": str(file.path), "sha256": file.sha256}
             for name, file in instruments.items()
         },
-        "independence": verify_independence(Path(__file__).resolve()),
+        "independence": verify_independence(verifier),
         "captures": capture_results,
         "aggregate": {
             "m8_r": {
@@ -4788,6 +5682,7 @@ def write_synthetic_trace(
     sensor_range: float = 1000.0,
     site_gain: float = 1.0,
     output_gain: float = 1.0,
+    frame_sha256: str | None = None,
 ) -> Path:
     source_width = source_height = 32
     full_width = full_height = 16
@@ -4809,7 +5704,7 @@ def write_synthetic_trace(
             raise RuntimeError("M8-R commissioning plant targets an ineligible sample")
         gathered[y, x] = np.float32(value)
     frame_bytes = str(frame_path.resolve()).encode("utf-8")
-    source_sha = bytes.fromhex(sha256_file(frame_path))
+    source_sha = bytes.fromhex(frame_sha256 or sha256_file(frame_path))
     header = TRACE_HEADER.pack(
         TRACE_MAGIC,
         TRACE_VERSION,
@@ -4869,7 +5764,7 @@ def write_synthetic_evidence(
     frame.write_bytes(b"M136 independent verifier synthetic source\n")
     warpmap = root / "m.txt"
     write_synthetic_warpmap(warpmap)
-    parsed = parse_warpmap(warpmap)
+    parsed = parse_warpmap(frozen_from_path(warpmap, "synthetic warpmap"))
     crop_x, crop_y, width, height, _ = reconstruct_crop(parsed)
     crop = (crop_x, crop_y, width, height)
     for site in SITE_CHANNEL:
@@ -4911,7 +5806,9 @@ def write_green_pairing_evidence(
     blocks.mkdir(parents=True, exist_ok=True)
     warpmap = root / "m.txt"
     write_synthetic_warpmap(warpmap, frames=2)
-    crop = reconstruct_crop(parse_warpmap(warpmap))[:4]
+    crop = reconstruct_crop(
+        parse_warpmap(frozen_from_path(warpmap, "synthetic green warpmap"))
+    )[:4]
     green_values = {
         0: {(1, 0): 100.0, (0, 1): 900.0},
         1: {(1, 0): 900.0, (0, 1): 100.0},
@@ -4961,7 +5858,9 @@ def write_reciprocal_order_evidence(
     frame.write_bytes(b"M136 reciprocal-order synthetic source\n")
     warpmap = root / "m.txt"
     write_synthetic_warpmap(warpmap)
-    crop = reconstruct_crop(parse_warpmap(warpmap))[:4]
+    crop = reconstruct_crop(
+        parse_warpmap(frozen_from_path(warpmap, "synthetic reciprocal warpmap"))
+    )[:4]
     special_source = np.array([0x471BCAC5], dtype=np.uint32).view(np.float32)[0]
     special_gain = np.array([0x3F3B4F55], dtype=np.uint32).view(np.float32)[0]
     black = np.array([0x0368236A], dtype=np.uint32).view(np.float32)[0]
@@ -5535,6 +6434,401 @@ def source_inventory_control(work_dir: Path) -> dict[str, Any]:
     }
 
 
+class TransientPathReplacement:
+    """Deterministically replace a generated path while an accepted handle stays open."""
+
+    def __init__(self, path: Path, replacement: bytes):
+        self.path = path
+        self.replacement = replacement
+        self.original_held = path.with_name(path.name + ".a")
+        self.replacement_staging = path.with_name(path.name + ".n")
+        self.substitute_held = path.with_name(path.name + ".s")
+        self.original_sha256 = ""
+        self.substitute_sha256 = ""
+        self.final_sha256 = ""
+        self.attack_landed = False
+        self.restoration_succeeded = False
+
+    def _digest_if_present(self, path: Path) -> str | None:
+        if not path.exists():
+            return None
+        if not path.is_file():
+            raise RuntimeError(f"transient-substitution path is not a file: {path}")
+        return sha256_file(path)
+
+    def _restore_original_path(self) -> None:
+        restore_error: BaseException | None = None
+        if self.original_sha256 and self.original_held.exists():
+            try:
+                os.replace(self.original_held, self.path)
+            except BaseException as error:
+                restore_error = error
+                current = self._digest_if_present(self.path)
+                if (
+                    current == self.substitute_sha256
+                    and self.substitute_sha256 != self.original_sha256
+                ):
+                    self.path.unlink()
+                if self.original_held.exists():
+                    try:
+                        os.replace(self.original_held, self.path)
+                    except BaseException as retry_error:
+                        restore_error = retry_error
+
+        current = (
+            self._digest_if_present(self.path) if self.original_sha256 else None
+        )
+        if (
+            current == self.substitute_sha256
+            and self.substitute_sha256 != self.original_sha256
+        ):
+            self.path.unlink()
+            current = None
+        self.final_sha256 = current or ""
+        self.restoration_succeeded = bool(
+            self.original_sha256 and current == self.original_sha256
+        )
+
+        cleanup_errors: list[str] = []
+        for candidate in (self.replacement_staging, self.substitute_held):
+            try:
+                candidate.unlink(missing_ok=True)
+            except OSError as error:
+                cleanup_errors.append(f"{candidate}: {error}")
+        if self.restoration_succeeded and self.original_held.exists():
+            try:
+                if self._digest_if_present(self.original_held) != self.original_sha256:
+                    cleanup_errors.append(
+                        f"{self.original_held}: retained bytes differ from original"
+                    )
+                else:
+                    self.original_held.unlink()
+            except OSError as error:
+                cleanup_errors.append(f"{self.original_held}: {error}")
+
+        if self.original_sha256 and not self.restoration_succeeded:
+            detail = (
+                f"; last replace error: {restore_error}"
+                if restore_error is not None
+                else ""
+            )
+            cleanup_errors.append(
+                "accepted pathname could not be restored"
+                f" (current sha256={self.final_sha256 or 'ABSENT'}){detail}"
+            )
+        if cleanup_errors:
+            raise RuntimeError(
+                "transient substitution recovery failed: "
+                + "; ".join(cleanup_errors)
+            )
+
+    def __enter__(self) -> TransientPathReplacement:
+        for candidate in (
+            self.original_held,
+            self.replacement_staging,
+            self.substitute_held,
+        ):
+            if candidate.exists():
+                raise RuntimeError(
+                    f"transient-substitution scratch path already exists: {candidate}"
+                )
+        try:
+            self.original_sha256 = sha256_file(self.path)
+            self.replacement_staging.write_bytes(self.replacement)
+            self.substitute_sha256 = sha256_file(self.replacement_staging)
+            if self.original_sha256 == self.substitute_sha256:
+                raise RuntimeError("transient substitution did not change the bytes")
+            os.replace(self.path, self.original_held)
+            os.replace(self.replacement_staging, self.path)
+            self.attack_landed = sha256_file(self.path) == self.substitute_sha256
+            if not self.attack_landed:
+                raise RuntimeError(
+                    "transient substitution did not land at the pathname"
+                )
+            return self
+        except BaseException:
+            try:
+                self._restore_original_path()
+            except BaseException as recovery_error:
+                raise RuntimeError(
+                    "transient substitution entry failed and recovery was incomplete"
+                ) from recovery_error
+            raise
+
+    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> None:
+        restore_error: BaseException | None = None
+        try:
+            if self.path.exists():
+                os.replace(self.path, self.substitute_held)
+            os.replace(self.original_held, self.path)
+        except BaseException as error:
+            restore_error = error
+        try:
+            self._restore_original_path()
+        except BaseException as recovery_error:
+            raise RuntimeError(
+                "transient substitution exit failed and recovery was incomplete"
+            ) from recovery_error
+        if restore_error is not None and exc_type is None:
+            raise RuntimeError(
+                "transient substitution exit required recovery"
+            ) from restore_error
+
+
+def vulnerable_json_path_reopen(path: Path) -> Mapping[str, Any]:
+    document = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(document, Mapping):
+        raise RuntimeError("vulnerable JSON witness did not read an object")
+    return document
+
+
+def transient_json_substitution_control(work_dir: Path) -> dict[str, Any]:
+    cases: dict[str, Any] = {}
+    for name, accepted, substitute in (
+        ("allow_to_deny", "ALLOW", "DENY!"),
+        ("deny_to_allow", "DENY!", "ALLOW"),
+    ):
+        path = work_dir / f"transient-json-{name}.json"
+        accepted_bytes = (
+            json.dumps({"sentinel": accepted}, sort_keys=True) + "\n"
+        ).encode("utf-8")
+        substitute_bytes = (
+            json.dumps({"sentinel": substitute}, sort_keys=True) + "\n"
+        ).encode("utf-8")
+        path.write_bytes(accepted_bytes)
+        with PinnedFile(path, f"transient JSON {name}") as pin:
+            accepted_sha256, pinned_bytes = pin.digest(MAX_CAPTURE_BYTES)
+            assert pinned_bytes is not None
+            with TransientPathReplacement(path, substitute_bytes) as attack:
+                if accepted_sha256 != attack.original_sha256:
+                    raise RuntimeError(
+                        "JSON substitution changed before the attack landed"
+                    )
+                vulnerable = vulnerable_json_path_reopen(path)
+                defended = json.loads(pinned_bytes.decode("utf-8"))
+                if vulnerable.get("sentinel") != substitute:
+                    raise RuntimeError("vulnerable JSON reopen missed the substitute")
+                if defended.get("sentinel") != accepted:
+                    raise RuntimeError("pinned JSON parser lost the accepted bytes")
+                if vulnerable.get("sentinel") == defended.get("sentinel"):
+                    raise RuntimeError("JSON substitution witness did not diverge")
+            if not attack.restoration_succeeded:
+                raise RuntimeError("JSON substitution restoration was not proved")
+        cases[name] = {
+            "accepted_sentinel": accepted,
+            "substitute_sentinel": substitute,
+            "vulnerable_sentinel": str(vulnerable["sentinel"]),
+            "defended_sentinel": str(defended["sentinel"]),
+            "accepted_sha256": accepted_sha256,
+            "substitute_sha256": attack.substitute_sha256,
+            "final_sha256": attack.final_sha256,
+            "attack_landed": attack.attack_landed,
+            "vulnerable_witness_differs": vulnerable != defended,
+            "defended_matches_accepted": defended.get("sentinel") == accepted,
+            "restoration_succeeded": attack.restoration_succeeded,
+        }
+
+    equal_path = work_dir / "transient-json-equal.json"
+    equal_bytes = (
+        json.dumps({"sentinel": "UNCHANGED"}, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    equal_path.write_bytes(equal_bytes)
+    equal_sha256 = sha256_file(equal_path)
+    equal_error = ""
+    try:
+        with TransientPathReplacement(equal_path, equal_bytes):
+            raise RuntimeError("equal-bytes substitution was unexpectedly admitted")
+    except RuntimeError as error:
+        equal_error = str(error)
+    final_sha256 = sha256_file(equal_path) if equal_path.is_file() else ""
+    scratch_absent = not any(
+        equal_path.with_name(equal_path.name + suffix).exists()
+        for suffix in (".a", ".n", ".s")
+    )
+    original_preserved = final_sha256 == equal_sha256
+    if (
+        equal_error != "transient substitution did not change the bytes"
+        or not original_preserved
+        or not scratch_absent
+    ):
+        raise RuntimeError("equal-bytes substitution recovery did not fail closed")
+
+    return {
+        "cases": cases,
+        "equal_bytes_refusal": {
+            "accepted_sha256": equal_sha256,
+            "error": equal_error,
+            "final_sha256": final_sha256,
+            "original_preserved": original_preserved,
+            "scratch_absent": scratch_absent,
+        },
+        "status": "PASS",
+    }
+
+
+def trace_payload_with_kernel(payload: bytes, kernel: int) -> bytes:
+    fields = list(TRACE_HEADER.unpack(payload[: TRACE_HEADER.size]))
+    fields[2] = kernel
+    return TRACE_HEADER.pack(*fields) + payload[TRACE_HEADER.size :]
+
+
+def vulnerable_trace_header_kernel(path: Path) -> int:
+    with path.open("rb") as handle:
+        raw = handle.read(TRACE_HEADER.size)
+    if len(raw) != TRACE_HEADER.size:
+        raise RuntimeError("vulnerable trace-header witness read a truncated header")
+    return int(TRACE_HEADER.unpack(raw)[2])
+
+
+def transient_trace_header_control(
+    work_dir: Path,
+    stable_source: FrozenFile,
+) -> dict[str, Any]:
+    block_dir = work_dir / "th"
+    block_dir.mkdir()
+    path = write_synthetic_trace(
+        block_dir,
+        stable_source.path,
+        0,
+        0,
+        (3, 3, 9, 9),
+        frame_sha256=stable_source.sha256,
+    )
+    accepted_payload = path.read_bytes()
+    replacement = trace_payload_with_kernel(accepted_payload, 0)
+    if len(replacement) != len(accepted_payload):
+        raise RuntimeError("trace-header substitute changed file size")
+    with AcceptedTrace(path, {}) as accepted:
+        if accepted.block.kernel != 2:
+            raise RuntimeError("trace-header accepted fixture has the wrong verdict")
+        with TransientPathReplacement(path, replacement) as attack:
+            if accepted.block.file_sha256 != attack.original_sha256:
+                raise RuntimeError(
+                    "trace-header substitution changed before the attack landed"
+                )
+            vulnerable_kernel = vulnerable_trace_header_kernel(path)
+            defended_kernel = accepted.block.kernel
+            if vulnerable_kernel != 0 or defended_kernel != 2:
+                raise RuntimeError("trace-header substitution verdicts are wrong")
+            if vulnerable_kernel == defended_kernel:
+                raise RuntimeError("trace-header vulnerable witness did not diverge")
+        if not attack.restoration_succeeded:
+            raise RuntimeError("trace-header substitution restoration was not proved")
+    return {
+        "accepted_kernel": 2,
+        "substitute_kernel": 0,
+        "vulnerable_kernel": vulnerable_kernel,
+        "defended_kernel": defended_kernel,
+        "equal_size": len(replacement) == len(accepted_payload),
+        "attack_landed": attack.attack_landed,
+        "vulnerable_witness_differs": vulnerable_kernel != defended_kernel,
+        "defended_matches_accepted": defended_kernel == 2,
+        "accepted_sha256": attack.original_sha256,
+        "substitute_sha256": attack.substitute_sha256,
+        "final_sha256": attack.final_sha256,
+        "restoration_succeeded": attack.restoration_succeeded,
+        "status": "PASS",
+    }
+
+
+def vulnerable_trace_body_arrays(
+    path: Path,
+    block: TraceBlock,
+) -> tuple[np.ndarray, np.ndarray]:
+    with path.open("rb") as handle:
+        handle.seek(block.source_offset)
+        source_bytes = handle.read(block.source_width * block.source_height * 4)
+        gathered_bytes = handle.read(block.full_width * block.full_height * 4)
+    source = np.frombuffer(source_bytes, dtype="<f4").reshape(
+        block.source_height, block.source_width
+    )
+    gathered = np.frombuffer(gathered_bytes, dtype="<f4").reshape(
+        block.full_height, block.full_width
+    )
+    return source, gathered
+
+
+def transient_trace_body_control(
+    work_dir: Path,
+    stable_source: FrozenFile,
+) -> dict[str, Any]:
+    accepted_dir = work_dir / "tb-a"
+    substitute_dir = work_dir / "tb-s"
+    accepted_dir.mkdir()
+    substitute_dir.mkdir()
+    accepted_path = write_synthetic_trace(
+        accepted_dir,
+        stable_source.path,
+        0,
+        0,
+        (3, 3, 9, 9),
+        gathered_plants={
+            (1, 1): np.float32(1999.0),
+            (1, 2): np.float32(2001.0),
+        },
+        frame_sha256=stable_source.sha256,
+    )
+    substitute_path = write_synthetic_trace(
+        substitute_dir,
+        stable_source.path,
+        0,
+        0,
+        (3, 3, 9, 9),
+        frame_sha256=stable_source.sha256,
+    )
+    replacement = substitute_path.read_bytes()
+    if accepted_path.stat().st_size != len(replacement):
+        raise RuntimeError("trace-body substitute changed file size")
+    with AcceptedTrace(accepted_path, {}) as accepted:
+        with TransientPathReplacement(accepted_path, replacement) as attack:
+            if accepted.block.file_sha256 != attack.original_sha256:
+                raise RuntimeError(
+                    "trace-body substitution changed before the attack landed"
+                )
+            vulnerable_source, vulnerable_gathered = vulnerable_trace_body_arrays(
+                accepted_path, accepted.block
+            )
+            accepted.map_arrays()
+            assert accepted.source is not None
+            assert accepted.gathered is not None
+            vulnerable_summary, _ = verify_m8r_block(
+                accepted.block,
+                vulnerable_source,
+                vulnerable_gathered,
+                4,
+            )
+            defended_summary, _ = verify_m8r_block(
+                accepted.block,
+                accepted.source,
+                accepted.gathered,
+                4,
+            )
+            vulnerable_count = int(vulnerable_summary["violation_rows"])
+            defended_count = int(defended_summary["violation_rows"])
+            if vulnerable_count != 0 or defended_count != 2:
+                raise RuntimeError("trace-body substitution counts are wrong")
+            if vulnerable_count == defended_count:
+                raise RuntimeError("trace-body vulnerable witness did not diverge")
+            accepted.close()
+        if not attack.restoration_succeeded:
+            raise RuntimeError("trace-body substitution restoration was not proved")
+    return {
+        "accepted_violations": 2,
+        "substitute_violations": 0,
+        "vulnerable_violations": vulnerable_count,
+        "defended_violations": defended_count,
+        "equal_size": accepted_path.stat().st_size == len(replacement),
+        "attack_landed": attack.attack_landed,
+        "vulnerable_witness_differs": vulnerable_count != defended_count,
+        "defended_matches_accepted": defended_count == 2,
+        "accepted_sha256": attack.original_sha256,
+        "substitute_sha256": attack.substitute_sha256,
+        "final_sha256": attack.final_sha256,
+        "restoration_succeeded": attack.restoration_succeeded,
+        "status": "PASS",
+    }
+
+
 def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str, Any]:
     if report_path.exists():
         raise RuntimeError(f"refusing to overwrite commissioning report: {report_path}")
@@ -5543,36 +6837,56 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
             f"refusing to reuse commissioning work directory: {work_dir}"
         )
     work_dir.mkdir(parents=True)
-    prereg = json.loads(prereg_path.read_text(encoding="utf-8"))
-    if sha256_canonical_text(prereg_path) != PREREG_CANONICAL_SHA256:
+    preregistration, prereg_bytes = capture_file(
+        prereg_path, "commissioning preregistration"
+    )
+    try:
+        prereg = json.loads(prereg_bytes.decode("utf-8"))
+    except Exception as error:
+        raise RuntimeError("commissioning preregistration is invalid JSON") from error
+    prereg_canonical = canonical_text_sha256(
+        prereg_bytes, "commissioning preregistration"
+    )
+    if prereg_canonical != PREREG_CANONICAL_SHA256:
         raise RuntimeError(
             "commissioning preregistration differs from the frozen bytes"
         )
     interpretation_path = Path(__file__).with_name("prospective-interpretations.md")
-    if sha256_canonical_text(interpretation_path) != INTERPRETATION_CANONICAL_SHA256:
+    interpretation, interpretation_bytes = capture_file(
+        interpretation_path, "commissioning prospective interpretation"
+    )
+    interpretation_canonical = canonical_text_sha256(
+        interpretation_bytes, "commissioning prospective interpretation"
+    )
+    if interpretation_canonical != INTERPRETATION_CANONICAL_SHA256:
         raise RuntimeError(
             "commissioning interpretation differs from the pre-target ruling"
         )
+    verifier, verifier_bytes = capture_file(
+        Path(__file__).resolve(), "commissioning verifier"
+    )
     report: dict[str, Any] = {
         "protocol": VERIFIER_PROTOCOL,
         "commissioning": "both directions",
         "verifier": {
-            "path": str(Path(__file__).resolve()),
-            "sha256": sha256_file(Path(__file__).resolve()),
-            "canonical_sha256": sha256_canonical_text(Path(__file__).resolve()),
+            "path": str(verifier.path),
+            "sha256": verifier.sha256,
+            "canonical_sha256": canonical_text_sha256(
+                verifier_bytes, "commissioning verifier"
+            ),
         },
         "preregistration": {
-            "path": str(prereg_path.resolve()),
-            "sha256": sha256_file(prereg_path),
-            "canonical_sha256": sha256_canonical_text(prereg_path),
+            "path": str(preregistration.path),
+            "sha256": preregistration.sha256,
+            "canonical_sha256": prereg_canonical,
         },
         "prospective_interpretation": {
-            "path": str(interpretation_path.resolve()),
-            "sha256": sha256_file(interpretation_path),
-            "canonical_sha256": sha256_canonical_text(interpretation_path),
+            "path": str(interpretation.path),
+            "sha256": interpretation.sha256,
+            "canonical_sha256": interpretation_canonical,
             "commit": INTERPRETATION_COMMIT,
         },
-        "independence": verify_independence(Path(__file__).resolve()),
+        "independence": verify_independence(verifier),
         "numeric_cases": direct_numeric_controls(prereg),
         "quantizer_case": quantizer_control(prereg),
         "green_pairing_case": green_pairing_control(),
@@ -5582,6 +6896,15 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         "interval_containment": interval_containment_control(),
     }
     try:
+        report["transient_json_substitution"] = (
+            transient_json_substitution_control(work_dir)
+        )
+        report["transient_trace_header_substitution"] = (
+            transient_trace_header_control(work_dir, preregistration)
+        )
+        report["transient_trace_body_substitution"] = (
+            transient_trace_body_control(work_dir, preregistration)
+        )
         report["source_inventory_case"] = source_inventory_control(work_dir)
         recipe = work_dir / "recipe.json"
         recipe.write_text(
@@ -5990,7 +7313,9 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         alternate_frame.write_bytes(
             b"M136 independent verifier alternate synthetic source\n"
         )
-        parsed_map = parse_warpmap(warpmap)
+        parsed_map = parse_warpmap(
+            frozen_from_path(warpmap, "synthetic duplicate warpmap")
+        )
         duplicate_crop = reconstruct_crop(parsed_map)[:4]
         duplicate_path = write_synthetic_trace(
             state / "blocks",
@@ -6284,6 +7609,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     except (
         Unmeasured,
         OSError,
+        TypeError,
         ValueError,
         KeyError,
         RuntimeError,

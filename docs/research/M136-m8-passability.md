@@ -6,7 +6,7 @@ same-support clamp makes M8-R integer zero a mathematical consequence, but
 promoting that opt-in nonlinear limiter to the shipping default solely to turn
 the failed axis green is not licensed by the available product-quality evidence.
 M8 also lacks a scoreable M8-O v1.5 target census, a scoreable identity result,
-and a verifier that satisfies the required single-read rule.
+and a scored campaign through the now-repaired single-read verifier.
 
 **INFERRED BY READING — scope:** This is a ruling about the evidence now
 available. It does not say that a
@@ -384,40 +384,76 @@ the landed M172 implementation.
 
 ### 5.7 Commissioning status
 
-**VERIFIED BY RUNNING — CORRECTION TO THE SCORECARD:** The statement that the
-corrected M136 verifier “has not been independently recommissioned”
-(`docs/proposals/2026-09-sota-scorecard.md:1548-1557`) is stale.
-`experiments/M136-m8o-bar/verifier-recommission-e5489d64-result.json:1-12`
-records `PASS`, exit `0`, and commission SHA-256
-`5FEC854466CC31C215458C16C9868EBFDE6A46E05D1839EE85FB3BD15EDA9865`;
-the recommission was committed at `9dbfedbd`.
+**VERIFIED BY RUNNING — SUPERSEDING CORRECTION TO THE SCORECARD:** The earlier
+crop-corrected verifier recommission at `9dbfedbd` is now historical. The
+single-read repair was independently commissioned through
+`recommission-verifier.ps1` and reproduced byte-identically by three further
+full runs. The final verifier has raw SHA-256
+`EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB`,
+canonical SHA-256
+`03E3BCD41FA01D161D6077994E042B0BB9B6DA73CCAE767CA59AFA28D6686C9C`,
+and its `PASS` report has SHA-256
+`E60B699113D5896E735F85EA791C28747CFA6CCC57EF50BA17F9A3749CDF11E4`
+(`experiments/M136-m8o-bar/verifier-commission.json`, `verifier` and
+`transient_*` objects).
 
-**INFERRED BY READING:** That correction does not create a target score. M142
-must still freshly commission its checker/fixture, bind that commissioning into
-the freeze, and run the target. Any verifier change made to close §5.8 must
-itself be recommissioned again before target evidence is accepted.
+**VERIFIED BY RUNNING — invocation record:** The approved report was produced
+with Python 3.12.10, NumPy 2.4.4, tifffile 2026.5.2 and PowerShell 7.6.5:
 
-### 5.8 Single-read / TOCTOU
+```powershell
+pwsh -NoProfile -NonInteractive -File C:\dev\blog\death-of-software\projects\strehl\experiments\M136-m8o-bar\recommission-verifier.ps1 `
+  -CommissionReport C:\Users\chris\.copilot\session-state\841ddf83-8ef0-40bd-a341-d2c66d487731\files\m136-equal-control\verifier-commission.json `
+  -Result C:\Users\chris\.copilot\session-state\841ddf83-8ef0-40bd-a341-d2c66d487731\files\m136-equal-control\verifier-recommission-result.json `
+  -Log C:\Users\chris\.copilot\session-state\841ddf83-8ef0-40bd-a341-d2c66d487731\files\m136-equal-control\verifier-recommission.log `
+  -Work C:\m136eq\w1
+```
 
-**VERIFIED BY RUNNING:** The current verifier has raw SHA-256
-`2AA3789060D9885A63EC9DF16CC8933492466185EF549241F69BA852A85CC9F7`.
+The wrapper set `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`,
+`MKL_NUM_THREADS`, and `NUMEXPR_NUM_THREADS` to `1`; `-Python` and `-Root`
+used the script's explicit defaults. A direct run with those thread variables
+unset produced the same 18,585 report bytes.
 
-**INFERRED BY READING — HARD VERDICT GATE:** It hashes paths and later reopens
-them. `frozen_file` retains a path and digest
-(`experiments/M136-m8o-bar/verifier_m136.py:350-445`); JSON consumers reopen
-the path (`experiments/M136-m8o-bar/verifier_m136.py:1414-1418`); and
-`parse_trace` hashes and closes a trace before later path-based header reads and
-memory maps (`experiments/M136-m8o-bar/verifier_m136.py:334-349`,
-`experiments/M136-m8o-bar/verifier_m136.py:458-524`). A transient
-substitution followed by restoration can therefore feed bytes other than the
-bytes whose digest was approved. End-of-run rehashing does not close that gap.
+**INFERRED BY READING:** This correction does not create a target score. M142
+must update its stale `636d3f57` verifier/report pins, regenerate the
+source/build/freeze evidence, commission its checker/fixture, and run the
+target. The repaired verifier closes one instrument gate; it does not repair
+the private candidate's configuration mismatch or create the missing scored
+population.
 
-**INFERRED BY READING:** No M8 verdict may be promoted through this verifier
-unchanged. Metadata must be
-hashed and parsed from the same in-memory bytes; large traces must be parsed
-from the same sealed handle or immutable snapshot that was hashed. This is not
-an advisory hardening item: it gates the verdict under the assigned verification
-standard.
+### 5.8 Single-read / TOCTOU — closed for the verifier
+
+**INFERRED BY READING:** `PinnedFile` opens a retained Windows read handle with
+write sharing denied, hashes that handle, and keeps path replacement harmless
+because parsing remains attached to the accepted file object
+(`experiments/M136-m8o-bar/verifier_m136.py`, `PinnedFile`). Bounded text and
+JSON are parsed from the captured bytes. `PinnedNpy` and `AcceptedTrace` map the
+same accepted handle, and `verify_capture` admits only one frame's four CFA
+blocks at a time before closing mappings and handles
+(`verifier_m136.py`, `PinnedNpy`, `AcceptedTrace`, and `verify_capture`).
+TIFF decoding likewise receives the pinned stream. Postflight path rehashing
+remains as defense in depth, not as the byte-identity mechanism.
+
+**VERIFIED BY RUNNING:** Commissioning landed and restored substitutions in
+both JSON trust directions: a vulnerable path reopen saw the substitute while
+the verifier retained the accepted sentinel. The trace-header control retained
+kernel `2` while the vulnerable reopen saw kernel `0`; the trace-body control
+retained exactly `2` planted M8-R violations while the vulnerable reopen saw
+`0`. The equal-bytes recovery control preserves the original path and digest,
+leaves no `.a`, `.n`, or `.s` scratch, and is mutation-tested: removing either
+hash-inequality guard makes commissioning red
+(`experiments/M136-m8o-bar/verifier-commission.json`,
+`transient_json_substitution`, `transient_trace_header_substitution`, and
+`transient_trace_body_substitution`).
+
+**VERIFIED BY RUNNING:** The same commissioning measured at most four live
+trace handles and four live mappings, mapping-before-handle closure, NPY parity
+for C, Fortran, structured, empty and non-native-endian arrays, the corrected
+`100*y+x` crop fixture, and freeze-then-source trace order. No accepted
+evidence path was reparsed outside a digest-checked retained handle.
+
+**INFERRED BY READING — RESIDUAL LIMIT:** The full `verify --manifest` path has
+not run because no target evidence exists. That is now a target-campaign gate,
+not evidence that the commissioned single-read primitive remains defective.
 
 ## 6. Complete path to a defensible M8 PASS
 
@@ -434,8 +470,9 @@ standard.
 3. **Exact source/build binding.** Freeze the full scored commit, source tree,
    lockfile/toolchain, deterministic environment, instrumentation-only patch,
    reproducible build, candidate executable, maps, and capture identities.
-4. **Single-read verifier repair.** Close §5.8, commission both directions, and
-   freeze the repaired verifier before target bytes are opened.
+4. **Single-read verifier — satisfied.** Preserve the final verifier and
+   commission hashes from §5.7, and bind those exact bytes before target
+   evidence is opened.
 5. **Live commissioning.** Require Catmull and explicit high/low defects to go
    red; copy, clamped-copy, convex bilinear, and correct-rail cases to go green;
    widened-clamp and one-code-off-rail plants to go red. Every source mutation
@@ -475,8 +512,9 @@ all provenance, population, commissioning and single-read gates: PASS
 
 **INFERRED BY READING:** M142 owns the freeze/census runner. M136 must not run or
 edit that lane's apparatus. After the product decision, scored commit, target
-configuration, population, and single-read verifier are resolved, M142 must run
-the following sequence against the **same full commit**:
+configuration, and population are resolved, and after M142 pins the repaired
+verifier/report identities from §5.7, M142 must run the following sequence
+against the **same full commit**:
 
 ```powershell
 $Commit = '<full scored shipping-default commit>'
@@ -491,7 +529,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\experiments\M142-m8o-execu
 **INFERRED BY READING:** Those commands are not ready to run as written today:
 the runner rejects commits other than `248178b9`, targets a private patched
 candidate, uses a non-default configuration, and covers only the development
-flat set. Running it now would create diagnostic evidence, not an M8 score.
+flat set. It also pins the pre-crop-fix `636d3f57` verifier and report rather
+than the final §5.7 identities. Running it now would create no admissible M8
+score.
 
 ## 8. Exact owner-facing scorecard correction
 
@@ -499,17 +539,19 @@ flat set. Running it now would create diagnostic evidence, not an M8 score.
 `docs/proposals/2026-09-sota-scorecard.md:1548-1557` with:
 
 > **Status: `UNMEASURED` for M8-O v1.5; the M8 axis remains `FAIL` on
-> M8-R.** The corrected M136 verifier was independently recommissioned PASS at
-> `9dbfedbd`, with `verifier-commission.json` SHA-256
-> `5FEC854466CC31C215458C16C9868EBFDE6A46E05D1839EE85FB3BD15EDA9865`.
-> No frozen target v1.5 census exists. M142 has not completed a
-> Prepare→Commission→Freeze→Census→Verify→Summarize campaign for a scored
-> shipping-default commit, and verifier SHA-256
-> `2AA3789060D9885A63EC9DF16CC8933492466185EF549241F69BA852A85CC9F7`
-> reopens hash-checked paths. That single-read/TOCTOU defect blocks promotion
-> until it is repaired and the repaired verifier is recommissioned. The admitted
-> M8-R result remains `63,191,176 / 6,131,678,976 = 1.030569%`; it is the
-> governing score but not a fresh measurement of M172.
+> M8-R.** The single-read M136 verifier has raw SHA-256
+> `EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB`
+> and was independently recommissioned `PASS`; `verifier-commission.json` has
+> SHA-256
+> `E60B699113D5896E735F85EA791C28747CFA6CCC57EF50BA17F9A3749CDF11E4`.
+> Its planted JSON, trace-header, and trace-body substitutions all landed,
+> distinguished a vulnerable reopen, retained the accepted bytes, and restored
+> the original path. No frozen target v1.5 census exists. M142 has not completed
+> a Prepare→Commission→Freeze→Census→Verify→Summarize campaign for a scored
+> shipping-default commit and still pins the superseded `636d3f57` verifier.
+> The admitted M8-R result remains
+> `63,191,176 / 6,131,678,976 = 1.030569%`; it is the governing score but not a
+> fresh measurement of M172.
 
 ## 9. Final answer
 
@@ -523,5 +565,5 @@ than a statistical hope.
 default still fails on the admitted historical result; the clamped kernel is
 opt-in; its promotion lacks independent product-quality license; M8-O v1.5,
 identity, and the scored capture population are unmeasured; M142 is not frozen
-to M172 or to the default configuration; and the independent verifier's
-single-read defect is a hard promotion blocker.
+to M172 or to the default configuration; and M142 has not pinned or run the
+repaired verifier. The verifier defect itself is no longer a promotion blocker.

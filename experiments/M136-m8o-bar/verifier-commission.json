@@ -137,10 +137,15 @@
       "__future__",
       "argparse",
       "ast",
+      "contextlib",
+      "ctypes",
+      "ctypes",
       "dataclasses",
       "hashlib",
       "json",
       "math",
+      "mmap",
+      "msvcrt",
       "numpy",
       "os",
       "pathlib",
@@ -491,9 +496,77 @@
     ]
   },
   "status": "PASS",
+  "transient_json_substitution": {
+    "cases": {
+      "allow_to_deny": {
+        "accepted_sentinel": "ALLOW",
+        "accepted_sha256": "27759B6C8AB70845B3ACC62E333D2EA2CBAE6F21DBC64BD19ACAF6F7A52A42E8",
+        "attack_landed": true,
+        "defended_matches_accepted": true,
+        "defended_sentinel": "ALLOW",
+        "final_sha256": "27759B6C8AB70845B3ACC62E333D2EA2CBAE6F21DBC64BD19ACAF6F7A52A42E8",
+        "restoration_succeeded": true,
+        "substitute_sentinel": "DENY!",
+        "substitute_sha256": "21E6BF19EBD4E647EA8E38D6346C86EA0CECCD9AB73613A54522C6F403EF6791",
+        "vulnerable_sentinel": "DENY!",
+        "vulnerable_witness_differs": true
+      },
+      "deny_to_allow": {
+        "accepted_sentinel": "DENY!",
+        "accepted_sha256": "21E6BF19EBD4E647EA8E38D6346C86EA0CECCD9AB73613A54522C6F403EF6791",
+        "attack_landed": true,
+        "defended_matches_accepted": true,
+        "defended_sentinel": "DENY!",
+        "final_sha256": "21E6BF19EBD4E647EA8E38D6346C86EA0CECCD9AB73613A54522C6F403EF6791",
+        "restoration_succeeded": true,
+        "substitute_sentinel": "ALLOW",
+        "substitute_sha256": "27759B6C8AB70845B3ACC62E333D2EA2CBAE6F21DBC64BD19ACAF6F7A52A42E8",
+        "vulnerable_sentinel": "ALLOW",
+        "vulnerable_witness_differs": true
+      }
+    },
+    "equal_bytes_refusal": {
+      "accepted_sha256": "D61D93CD69881873C361C1647E704808985EE3ED3385A274D33BFF91E63459D0",
+      "error": "transient substitution did not change the bytes",
+      "final_sha256": "D61D93CD69881873C361C1647E704808985EE3ED3385A274D33BFF91E63459D0",
+      "original_preserved": true,
+      "scratch_absent": true
+    },
+    "status": "PASS"
+  },
+  "transient_trace_body_substitution": {
+    "accepted_sha256": "935C64FC033BF513A4C4D33D7B405E40C2F612EB1600D3D768729B1DAFAC7F0D",
+    "accepted_violations": 2,
+    "attack_landed": true,
+    "defended_matches_accepted": true,
+    "defended_violations": 2,
+    "equal_size": true,
+    "final_sha256": "935C64FC033BF513A4C4D33D7B405E40C2F612EB1600D3D768729B1DAFAC7F0D",
+    "restoration_succeeded": true,
+    "status": "PASS",
+    "substitute_sha256": "80120E23BBE0ED32F169ACFC5839932DACA5B7F2AD9ED654858EFED1AE6BC473",
+    "substitute_violations": 0,
+    "vulnerable_violations": 0,
+    "vulnerable_witness_differs": true
+  },
+  "transient_trace_header_substitution": {
+    "accepted_kernel": 2,
+    "accepted_sha256": "80120E23BBE0ED32F169ACFC5839932DACA5B7F2AD9ED654858EFED1AE6BC473",
+    "attack_landed": true,
+    "defended_kernel": 2,
+    "defended_matches_accepted": true,
+    "equal_size": true,
+    "final_sha256": "80120E23BBE0ED32F169ACFC5839932DACA5B7F2AD9ED654858EFED1AE6BC473",
+    "restoration_succeeded": true,
+    "status": "PASS",
+    "substitute_kernel": 0,
+    "substitute_sha256": "DF44BECFAC38C57876975F435E93B981D7922EC953ACC7B2E37BEF055C2FBB86",
+    "vulnerable_kernel": 0,
+    "vulnerable_witness_differs": true
+  },
   "verifier": {
-    "canonical_sha256": "4AA3B534506482002C4F3FF3E57969F14F0E97BCF6E7E4AC64E4D29D7469DE0A",
+    "canonical_sha256": "03E3BCD41FA01D161D6077994E042B0BB9B6DA73CCAE767CA59AFA28D6686C9C",
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier_m136.py",
-    "sha256": "2AA3789060D9885A63EC9DF16CC8933492466185EF549241F69BA852A85CC9F7"
+    "sha256": "EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB"
   }
 }

@@ -1,15 +1,30 @@
+param(
+    [string]$Python = "C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe",
+    [string]$Root = "C:\dev\blog\death-of-software\projects\strehl\experiments\M136-m8o-bar",
+    [string]$CommissionReport = "",
+    [string]$Result = "",
+    [string]$Log = "",
+    [string]$Work = ""
+)
+
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
-$Python = "C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe"
-$Root = "C:\dev\blog\death-of-software\projects\strehl\experiments\M136-m8o-bar"
 $Verifier = Join-Path $Root "verifier_m136.py"
 $Preregistration = Join-Path $Root "clamped-m8o-preregistration.json"
 $Interpretation = Join-Path $Root "prospective-interpretations.md"
-$CommissionReport = Join-Path $Root "verifier-commission-e5489d64.json"
-$Result = Join-Path $Root "verifier-recommission-e5489d64-result.json"
-$Log = Join-Path $Root "verifier-recommission-e5489d64.log"
-$Work = Join-Path $Root "rc"
+if ([string]::IsNullOrWhiteSpace($CommissionReport)) {
+    $CommissionReport = Join-Path $Root "verifier-commission-candidate.json"
+}
+if ([string]::IsNullOrWhiteSpace($Result)) {
+    $Result = Join-Path $Root "verifier-recommission-result.json"
+}
+if ([string]::IsNullOrWhiteSpace($Log)) {
+    $Log = Join-Path $Root "verifier-recommission.log"
+}
+if ([string]::IsNullOrWhiteSpace($Work)) {
+    $Work = Join-Path $Root "rc"
+}
 
 function Write-Result {
     param(
@@ -49,13 +64,13 @@ try {
         }
     }
 
-    $fixedLine = "        100 * np.indices((8, 8), dtype=np.float64)[0]"
-    $oldLine = "        8 * np.indices((8, 8), dtype=np.float64)[0]"
+    $fixedLine = "100 * np.indices((8, 8), dtype=np.float64)[0]"
+    $oldLine = "8 * np.indices((8, 8), dtype=np.float64)[0]"
     $verifierLines = @(Get-Content -LiteralPath $Verifier)
-    if (@($verifierLines | Where-Object { $_ -ceq $fixedLine }).Count -ne 1) {
+    if (@($verifierLines | Where-Object { $_.Trim() -ceq $fixedLine }).Count -ne 1) {
         throw "Corrected crop-fixture line is not uniquely present"
     }
-    if (@($verifierLines | Where-Object { $_ -ceq $oldLine }).Count -ne 0) {
+    if (@($verifierLines | Where-Object { $_.Trim() -ceq $oldLine }).Count -ne 0) {
         throw "Obsolete crop-fixture line remains present"
     }
 

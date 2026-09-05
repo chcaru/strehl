@@ -512,24 +512,43 @@ as untrustworthy or narrower than claimed if any item below is not discharged.
 | **M8-O rail deletion.** | Keep rails in `N`; project support through `[0,1]`; require correct-rail green and one-code-off-rail red in both directions (`experiments/M136-m8o-bar/clamped-m8o-preregistration.json:134-225`). |
 | **Whole-axis overclaim.** | A clean M8-R is not a clean M8 axis. Require exact M8-O zero and crop/reference identity zero in the same candidate evidence (`experiments/M136-m8o-bar/clamped-m8o-preregistration.json:88-104`). |
 
-**VERIFIED BY RUNNING — inspected verifier identity:** The present
+**VERIFIED BY RUNNING — repaired verifier identity:** The present
 `verifier_m136.py` has raw SHA-256
-`2AA3789060D9885A63EC9DF16CC8933492466185EF549241F69BA852A85CC9F7`.
+`EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB`
+and canonical SHA-256
+`03E3BCD41FA01D161D6077994E042B0BB9B6DA73CCAE767CA59AFA28D6686C9C`.
+The independently reproduced `PASS` commissioning report has SHA-256
+`E60B699113D5896E735F85EA791C28747CFA6CCC57EF50BA17F9A3749CDF11E4`.
 
-**INFERRED BY READING — current verifier limitation:** At that hash, the
-verifier does **not** yet meet the single-read requirement in the tasking
-order. `frozen_file` hashes a path and retains only that path and digest
-(`experiments/M136-m8o-bar/verifier_m136.py:350-445`); JSON consumers later
-reopen the path
-(`experiments/M136-m8o-bar/verifier_m136.py:1414-1418`). More importantly,
-`parse_trace` hashes a trace, closes that read, reopens it for the header, and
-later `TraceBlock.source()` / `gathered()` create new path-based memory maps
-(`experiments/M136-m8o-bar/verifier_m136.py:334-349`;
-`experiments/M136-m8o-bar/verifier_m136.py:458-524`). End-of-run rehashing
-detects persistent mutation but not substitution followed by restoration.
-Therefore a future M142 or M170 result must not be promoted through this
-verifier unchanged: metadata must be hashed and parsed from one byte buffer,
-and large traces must be bound to one sealed handle or immutable snapshot.
+**INFERRED BY READING — single-read requirement satisfied:** `PinnedFile`
+retains a Windows read handle with write sharing denied and hashes that file
+object; bounded metadata is parsed from the captured bytes, while `PinnedNpy`,
+`AcceptedTrace`, and TIFF decoding consume the same digest-checked handle
+(`experiments/M136-m8o-bar/verifier_m136.py`, `PinnedFile`, `PinnedNpy`,
+`AcceptedTrace`, and `load_tiff`). `verify_capture` processes one frame's four
+CFA traces within one `ExitStack`, then closes mappings before handles. A
+pathname replacement can therefore land without changing the bytes consumed
+by the verifier, and an in-place writer cannot open the accepted file while it
+is pinned. End-of-run path rehashing remains a persistent-mutation alarm rather
+than the identity mechanism.
+
+**VERIFIED BY RUNNING — commissioned attack:** Both JSON trust-direction
+substitutions, a trace-header kernel `2`→`0` substitution, and a trace-body
+`2`→`0` violation substitution landed at the pathname. Deliberately vulnerable
+reopens saw every substitute; the verifier retained every accepted value and
+restored every original digest. The equal-bytes recovery case reports exactly
+`transient substitution did not change the bytes`, preserves the original
+path/digest, and leaves no scratch; deleting either inequality guard makes that
+control red
+(`experiments/M136-m8o-bar/verifier-commission.json`,
+`transient_json_substitution`, `transient_trace_header_substitution`, and
+`transient_trace_body_substitution`).
+
+**INFERRED BY READING — remaining boundary:** No target `verify --manifest`
+campaign has run. M142 must replace its superseded `636d3f57` pins with the
+identities above and regenerate the source/build/freeze chain before target
+bytes are admissible. That is a campaign/provenance blocker, not an open
+single-read defect.
 
 **INFERRED BY READING — discrimination versus quality:** A destructive in-hull
 operator can earn a truthful M8-R zero. That is not an artifact in M8-R; it is
