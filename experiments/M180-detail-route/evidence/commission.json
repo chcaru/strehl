@@ -1,0 +1,332 @@
+{
+  "baseline": {
+    "checks_passed": 23,
+    "checks_run": 23,
+    "green": true,
+    "returncode": 0,
+    "verdict": "UNDECIDED_REFERENCE_ROUTE_OPEN_PHYSICAL_UNMEASURED"
+  },
+  "counts": {
+    "checks_run": 23,
+    "inert_controls_run": 1,
+    "inert_controls_survived": 1,
+    "mutations_killed": 23,
+    "mutations_planted": 23
+  },
+  "inert_control": {
+    "checks_passed": 23,
+    "checks_run": 23,
+    "label": "inert-note",
+    "mutation_anchor_matches": 1,
+    "source": "fixture",
+    "survived": true,
+    "verdict": "UNDECIDED_REFERENCE_ROUTE_OPEN_PHYSICAL_UNMEASURED",
+    "verify_returncode": 0
+  },
+  "mutations": [
+    {
+      "failed_checks": [
+        "collision_operator_valid"
+      ],
+      "killed": true,
+      "label": "collision-operator",
+      "mutation_anchor_matches": 1,
+      "source": "fixture",
+      "target_check": "collision_operator_valid",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "collision_labels_opposite"
+      ],
+      "killed": true,
+      "label": "collision-labels",
+      "mutation_anchor_matches": 1,
+      "source": "fixture",
+      "target_check": "collision_labels_opposite",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "featureless_blur_usm_blind"
+      ],
+      "killed": true,
+      "label": "featureless-blindness",
+      "mutation_anchor_matches": 1,
+      "source": "fixture",
+      "target_check": "featureless_blur_usm_blind",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "marginal_prior_collision",
+        "reference_breaks_collision"
+      ],
+      "killed": true,
+      "label": "prior-marginal",
+      "mutation_anchor_matches": 1,
+      "source": "fixture",
+      "target_check": "marginal_prior_collision",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "reference_breaks_collision"
+      ],
+      "killed": true,
+      "label": "reference-link",
+      "mutation_anchor_matches": 1,
+      "source": "fixture",
+      "target_check": "reference_breaks_collision",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m164_output_only_scope"
+      ],
+      "killed": true,
+      "label": "m164-qualifier",
+      "mutation_anchor_matches": 1,
+      "source": "m164_report",
+      "target_check": "m164_output_only_scope",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m168_distribution_free_scope"
+      ],
+      "killed": true,
+      "label": "m168-scope",
+      "mutation_anchor_matches": 1,
+      "source": "m168_report",
+      "target_check": "m168_distribution_free_scope",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m135_estimator_commissioned"
+      ],
+      "killed": true,
+      "label": "m135-estimator-status",
+      "mutation_anchor_matches": 1,
+      "source": "m135_commission",
+      "target_check": "m135_estimator_commissioned",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m135_blur_defect_direction"
+      ],
+      "killed": true,
+      "label": "blur-wrong-sign",
+      "mutation_anchor_matches": 1,
+      "source": "m135_commission",
+      "target_check": "m135_blur_defect_direction",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m135_improvement_direction",
+        "m135_usm_not_rewarded"
+      ],
+      "killed": true,
+      "label": "improvement-suppressed",
+      "mutation_anchor_matches": 1,
+      "source": "m135_commission",
+      "target_check": "m135_improvement_direction",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m135_usm_not_rewarded",
+        "pchip_is_enabler_only"
+      ],
+      "killed": true,
+      "label": "usm-rewarded",
+      "mutation_anchor_matches": 1,
+      "source": "m135_commission",
+      "target_check": "m135_usm_not_rewarded",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m135_postblur_transfer_veto"
+      ],
+      "killed": true,
+      "label": "postblur-transfer-hidden",
+      "mutation_anchor_matches": 1,
+      "source": "m135_commission",
+      "target_check": "m135_postblur_transfer_veto",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m135_averaging_veto"
+      ],
+      "killed": true,
+      "label": "averaging-promoted",
+      "mutation_anchor_matches": 1,
+      "source": "m135_commission",
+      "target_check": "m135_averaging_veto",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m135_flat_common_mode"
+      ],
+      "killed": true,
+      "label": "flat-common-mode-missed",
+      "mutation_anchor_matches": 1,
+      "source": "m135_commission",
+      "target_check": "m135_flat_common_mode",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "dominance_legitimate_moves"
+      ],
+      "killed": true,
+      "label": "dominance-legitimate-rejected",
+      "mutation_anchor_matches": 1,
+      "source": "dominance_commission",
+      "target_check": "dominance_legitimate_moves",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "dominance_no_compensation"
+      ],
+      "killed": true,
+      "label": "dominance-compensation",
+      "mutation_anchor_matches": 1,
+      "source": "dominance_commission",
+      "target_check": "dominance_no_compensation",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "dominance_improvement_shaped_defect"
+      ],
+      "killed": true,
+      "label": "dominance-common-mode-missed",
+      "mutation_anchor_matches": 1,
+      "source": "dominance_commission",
+      "target_check": "dominance_improvement_shaped_defect",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m167_canary_bites"
+      ],
+      "killed": true,
+      "label": "m167-canary-admitted",
+      "mutation_anchor_matches": 1,
+      "source": "m167_admission",
+      "target_check": "m167_canary_bites",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m167_a6_fail_closed"
+      ],
+      "killed": true,
+      "label": "m167-a6-forged",
+      "mutation_anchor_matches": 1,
+      "source": "m167_admission",
+      "target_check": "m167_a6_fail_closed",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "m167_reference_schema_pending"
+      ],
+      "killed": true,
+      "label": "m167-schema-assumed",
+      "mutation_anchor_matches": 1,
+      "source": "m167_preregistration",
+      "target_check": "m167_reference_schema_pending",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "archive_route_closed"
+      ],
+      "killed": true,
+      "label": "archive-route-forged",
+      "mutation_anchor_matches": 1,
+      "source": "archive_report",
+      "target_check": "archive_route_closed",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "pchip_is_enabler_only"
+      ],
+      "killed": true,
+      "label": "pchip-overclaimed",
+      "mutation_anchor_matches": 1,
+      "source": "slanted_report",
+      "target_check": "pchip_is_enabler_only",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    },
+    {
+      "failed_checks": [
+        "physical_route_uncommissioned"
+      ],
+      "killed": true,
+      "label": "physical-chain-forged",
+      "mutation_anchor_matches": 1,
+      "source": "m135_results",
+      "target_check": "physical_route_uncommissioned",
+      "target_check_false": true,
+      "verdict": "EVIDENCE_FAILED",
+      "verify_returncode": 2
+    }
+  ],
+  "schema": 1,
+  "status": "PASS"
+}

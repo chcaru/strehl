@@ -1,0 +1,191 @@
+{
+  "checks": {
+    "archive_route_closed": true,
+    "collision_labels_opposite": true,
+    "collision_operator_valid": true,
+    "dominance_improvement_shaped_defect": true,
+    "dominance_legitimate_moves": true,
+    "dominance_no_compensation": true,
+    "featureless_blur_usm_blind": true,
+    "m135_averaging_veto": true,
+    "m135_blur_defect_direction": true,
+    "m135_estimator_commissioned": true,
+    "m135_flat_common_mode": true,
+    "m135_improvement_direction": true,
+    "m135_postblur_transfer_veto": true,
+    "m135_usm_not_rewarded": true,
+    "m164_output_only_scope": true,
+    "m167_a6_fail_closed": true,
+    "m167_canary_bites": true,
+    "m167_reference_schema_pending": true,
+    "m168_distribution_free_scope": true,
+    "marginal_prior_collision": true,
+    "pchip_is_enabler_only": true,
+    "physical_route_uncommissioned": true,
+    "reference_breaks_collision": true
+  },
+  "counts": {
+    "checks_failed": 0,
+    "checks_passed": 23,
+    "checks_run": 23
+  },
+  "derived": {
+    "collision": {
+      "A": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "A_minus_B": [
+        0.0,
+        -0.25,
+        0.5,
+        -0.25,
+        0.0
+      ],
+      "B": [
+        0.0,
+        0.25,
+        0.5,
+        0.25,
+        0.0
+      ],
+      "improvement_world_reconstructed_A": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "labels": [
+        "prefer_A",
+        "prefer_B"
+      ],
+      "observation_bytes_identical": true,
+      "row_sums": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "featureless": {
+      "blurred": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "input": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "usm": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "generative_prior": {
+      "faithful_output_probability": 0.5,
+      "faithful_output_reference_covariance": 0.25,
+      "hallucinated_output_probability": 0.5,
+      "hallucinated_output_reference_covariance": 0.0,
+      "marginal_total_variation": 0.0
+    },
+    "m135": {
+      "averaging_information_q05_ratio": 1.808783244584569,
+      "averaging_promotions": 0,
+      "averaging_transfer_q95_ratio": 0.8326035416635249,
+      "blur_q95_ratio": 0.6315114151966404,
+      "common_flat_rejections": 128,
+      "flat_worst_ratios": {
+        "information": 0.0023196142160268125,
+        "output": 0.09619849966263185,
+        "reference": 0.0011493247893537382
+      },
+      "gates_passed": 25,
+      "gates_total": 25,
+      "improvement_q05_ratio": 1.24184002221614,
+      "pchip_max_relative_movement": 4.185951898705298e-05,
+      "postblur_information_geometric_mean": 1.0,
+      "postblur_transfer_q95_ratio": 0.687470374432892,
+      "usm_maximum_ratio": 1.0000000000000007
+    },
+    "m167": {
+      "A6_capability_sandbox": false,
+      "hidden_instances": 3,
+      "hidden_instances_rejected": 3
+    },
+    "reference_dominance": {
+      "charged_failure": "COMMON_MODE_BOUND",
+      "charged_status": "UNMEASURED",
+      "common_mode_clean_min_information_ratio": 1.2263478847513087,
+      "common_mode_clean_min_transfer_ratio": 1.0173128829562545,
+      "common_mode_naive_min_information_ratio": 1.3173324541738878,
+      "common_mode_naive_min_transfer_ratio": 1.2368082143939638,
+      "minimum_information_lcb": 0.046438637086850525,
+      "minimum_transfer_lcb": 0.13429736385968433,
+      "weak_cell_transfer_ratio": 0.5963717645148918,
+      "weak_family_mean_transfer_ratio": 1.1624358013119402
+    }
+  },
+  "schema": 1,
+  "sources": {
+    "archive_report": {
+      "path": "docs/research/M168-cheap-reference-feasibility.md",
+      "sha256": "F6D9763DECD321C195822656864A332C70A5C5D2DF9049924F6BB3FDA7D0B0FC"
+    },
+    "dominance_commission": {
+      "path": "experiments/M164-reference-dominance/commission.json",
+      "sha256": "962EBEBA2ACCA2BC2964577EA8AAEE1C8A4509793BF31C7FE08E6B7F117CB031"
+    },
+    "fixture": {
+      "path": "experiments/M180-detail-route/evidence/model-fixtures.json",
+      "sha256": "CCF71D4047FC3C65D743452F90EA4B1956C173FDA35ADACA9F3B1A1CE9035A61"
+    },
+    "m135_commission": {
+      "path": "experiments/M135-detail-instrument/commission.json",
+      "sha256": "6DC8CC48534387D329010657E76E8574F6AFAFF541511951725BAC79D1B00F14"
+    },
+    "m135_results": {
+      "path": "experiments/M135-detail-instrument/RESULTS.md",
+      "sha256": "43974770BA08A459CA1E9AEE2CC91210624511E39B7C5E6D3993A61A99EBEC38"
+    },
+    "m164_report": {
+      "path": "docs/research/M164-m2-repair.md",
+      "sha256": "02E4A92462314EDDFED210D6413810B4E60F9271CF85B7EC9058229F90C46DB0"
+    },
+    "m167_admission": {
+      "path": "experiments/M167-detail-battery/admission-results.json",
+      "sha256": "DAE1F3B4FFBE3C9E74B7C1C7E10C678FA091BAF404F25212F786ADA0D31D97D1"
+    },
+    "m167_preregistration": {
+      "path": "experiments/M167-detail-battery/PREREGISTRATION.md",
+      "sha256": "F5FC2E2C1C58E7F75DCEBEB099A9C43D2D9E64E909144BF138D0CE83DC3D50B9"
+    },
+    "m168_report": {
+      "path": "docs/research/M168-m2-identifiability.md",
+      "sha256": "CAAD84CAF846D977B8160826069527577D7CAC7486175E9E5F1468891A28E910"
+    },
+    "manifest_report": {
+      "path": "docs/research/M164-dominance-manifest.md",
+      "sha256": "4C589E7FA44CE387691A7E1AA227147B861E30B92346C467581D2F612B502CCB"
+    },
+    "slanted_report": {
+      "path": "docs/research/M-PHASE0-SLANTEDGE.md",
+      "sha256": "A4061EA7E1D06C3C1E2FC8BF6F095427CEB2F23F3C5170EFECD096B99928B9F8"
+    }
+  },
+  "status": "PASS",
+  "verdict": "UNDECIDED_REFERENCE_ROUTE_OPEN_PHYSICAL_UNMEASURED"
+}
