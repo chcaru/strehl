@@ -1,0 +1,32 @@
+diff --git a/crates/strehl-cli/src/merge_cmd.rs b/crates/strehl-cli/src/merge_cmd.rs
+--- a/crates/strehl-cli/src/merge_cmd.rs
++++ b/crates/strehl-cli/src/merge_cmd.rs
+@@ -5925,5 +5925,28 @@
+     let t_out = Instant::now();
+     let mut ws = Workspace::new(&sizes);
+     let planes = merge.finish(&mut ws);
++    if std::env::var_os("STREHL_M172_FLOAT_WITNESS").is_some() {
++        const FNV_OFFSET: u128 = 0x6c62272e07bb014262b821756295c58d;
++        const FNV_PRIME: u128 = 0x0000000001000000000000000000013b;
++        let mut fingerprint = FNV_OFFSET;
++        let mut samples = 0usize;
++        let mut feed = |bytes: &[u8]| {
++            for &byte in bytes {
++                fingerprint ^= u128::from(byte);
++                fingerprint = fingerprint.wrapping_mul(FNV_PRIME);
++            }
++        };
++        feed(&(planes.len() as u64).to_le_bytes());
++        for plane in &planes {
++            feed(&(plane.len() as u64).to_le_bytes());
++            for &sample in plane {
++                feed(&sample.to_bits().to_le_bytes());
++                samples += 1;
++            }
++        }
++        eprintln!(
++            "M172 f32 witness : fnv1a128={fingerprint:032X} samples={samples}"
++        );
++    }
+     drop(ws);
+     drop(merge);
