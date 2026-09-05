@@ -1,0 +1,158 @@
+{
+  "schema": "strehl.m193-cover-overlap-contract.v1",
+  "status": "ALGORITHM_PRECOMMIT_NO_SCORING_OUTPUT_EXISTS",
+  "algorithm_precommit_commit": null,
+  "scope": {
+    "constructor_inputs": "the multiset of exact common-input TIFF byte strings for one capture",
+    "forbidden_inputs": [
+      "candidate output bytes",
+      "comparator output bytes",
+      "output dimensions read after rendering",
+      "stacker alignment or crop results",
+      "file names",
+      "directory order",
+      "wall-clock state",
+      "random seed"
+    ],
+    "denominator_invariance_test": "changing any stacker output while holding the common-input TIFF bytes fixed must leave the overlap manifest byte-identical"
+  },
+  "registration": {
+    "reference_key": [
+      "SHA-256 digest bytes",
+      "byte length",
+      "exact TIFF bytes"
+    ],
+    "luminance": "(2880402*R + 7118741*G + 857*B) / 10000000, rounded ties-to-even to uint16",
+    "registration_view": "nearest-rank 1%-99% deterministic stretch to uint8",
+    "detector": {
+      "name": "OpenCV SIFT",
+      "nfeatures": 2048,
+      "nOctaveLayers": 3,
+      "contrastThreshold": 0.01,
+      "edgeThreshold": 12,
+      "sigma": 1.6,
+      "retained_features": 1024,
+      "threads": 1,
+      "opencl": false
+    },
+    "descriptor": "SIFT descriptor rounded ties-to-even and clipped to uint8",
+    "match": {
+      "rule": "mutual nearest squared-L2 descriptor match",
+      "lowe_ratio_squared": "d1*100 <= d2*64",
+      "split_order": "SHA256(M193-LANDMARK-SPLIT-V1 NUL || four signed big-endian Q8 coordinates || both descriptors)",
+      "calibration": "even ranks",
+      "holdout": "odd ranks",
+      "maximum_matches": 256
+    },
+    "fit": {
+      "model": "orientation-preserving similarity source-to-reference",
+      "hypotheses": "every calibration-landmark pair separated by at least 32 px in both images",
+      "inlier_radius_px": 2,
+      "winner": [
+        "maximum inlier count",
+        "minimum exact summed squared residual",
+        "minimum first pair index",
+        "minimum second pair index"
+      ],
+      "refit": "exact rational least squares, Q32 ties-to-even quantization, at most 8 consensus iterations",
+      "minimum_calibration_inliers": 12,
+      "minimum_holdout_inliers": 12,
+      "minimum_consensus_fraction": "1/2",
+      "maximum_heldout_rms_px": 1.0
+    },
+    "transform_encoding": "signed Q32 integers a,b,tx,ty for x'=a*x-b*y+tx; y'=b*x+a*y+ty"
+  },
+  "valid_support": {
+    "continuous_active_footprint": "[-0.5,W-0.5] x [-0.5,H-0.5] in pixel-centre coordinates",
+    "base_margin_px": "0.5, exactly the erosion from pixel-cell footprint to bilinear-valid centre domain",
+    "registration_margin": "maximum admitted held-out residual converted to source pixels and rounded upward to 1/256 px",
+    "coordinate_margin_px": "1/256 for every non-reference input; zero for the exact identity reference",
+    "comparison": "exact arbitrary-precision integer inequalities against Q32 transforms"
+  },
+  "overlap": {
+    "intersection": "integer reference-grid centres valid in every input support",
+    "rectangle": "largest axis-aligned all-valid integer rectangle",
+    "tie_break": [
+      "maximum area",
+      "minimum y",
+      "minimum x",
+      "maximum height",
+      "maximum width"
+    ],
+    "denominator": "rectangle width * height; fixed once for every arm"
+  },
+  "output_mapping": {
+    "freeze_time": "before any arm renders",
+    "inputs": [
+      "overlap manifest hash",
+      "input bundle hash",
+      "program adapter hash",
+      "program settings hash",
+      "expected native output dimensions",
+      "predeclared Q32 common-to-output similarity",
+      "input-only held-out landmark residual"
+    ],
+    "forbidden": "fitting, validating, shifting, cropping, or otherwise changing the mapping from a program output",
+    "site_map": "apply the frozen Q32 similarity to each common-frame coordinate",
+    "retained_fov": "count common-overlap integer centres inside the descriptor's valid output support divided by the one fixed denominator",
+    "post_render_check": "actual output dimensions may only confirm or fail the frozen descriptor; they never rebuild the denominator or mapping"
+  },
+  "exact_output_geometry_gates": {
+    "scale": "998001*Q32^2 <= 1000000*(a^2+b^2) <= 1002001*Q32^2",
+    "rotation": "a>0 and abs(b)*2^62 <= a*1609782167177275, the downward Q62 quantization of tan(0.02 degree)",
+    "residual": "input-only held-out RMS rounded upward in micropixels <=100000"
+  },
+  "unchanged_scorecard_thresholds": {
+    "retained_field_of_view_percent_minimum": 99.0,
+    "output_scale_disagreement_percent_maximum": 0.1,
+    "output_rotation_disagreement_degrees_maximum": 0.02,
+    "output_nontranslation_residual_rms_px_maximum": 0.1,
+    "identical_site_survival_percent_minimum": 80.0,
+    "differential_site_attrition_percentage_points_maximum": 2.0
+  },
+  "failure_mapping": [
+    {
+      "condition": "missing, malformed, compressed, oriented, differently sized, or non-RGB16 input",
+      "verdict": "UNMEASURED_INPUT_CONTRACT_INVALID"
+    },
+    {
+      "condition": "landmark extraction, consensus, or held-out registration contract fails",
+      "verdict": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE"
+    },
+    {
+      "condition": "valid supports have no non-empty common integer rectangle",
+      "verdict": "UNMEASURED_COMMON_OVERLAP_EMPTY"
+    },
+    {
+      "condition": "the frozen overlap schema, hash, or implementation contract is absent or unknown",
+      "verdict": "UNMEASURED_DENOMINATOR_UNDEFINED"
+    },
+    {
+      "condition": "an arm lacks a pre-output, output-blind grid descriptor",
+      "verdict": "UNMEASURED_OUTPUT_GRID_UNDEFINED"
+    },
+    {
+      "condition": "the pre-output map exceeds an existing scale, rotation, or non-translation residual bar",
+      "verdict": "UNMEASURED_OUTPUT_WARP_INADEQUATE"
+    },
+    {
+      "condition": "a rendered product violates its frozen dimensions or mapping contract",
+      "verdict": "FAIL_OUTPUT_GRID_CONTRACT"
+    },
+    {
+      "condition": "mapped valid support retains less than 99.0% of the fixed overlap",
+      "verdict": "FAIL_GEOMETRY_FIELD_OF_VIEW"
+    },
+    {
+      "condition": "unknown exception, unknown failure code, or bad count partition",
+      "verdict": "UNMEASURED_CHECKER_ERROR"
+    }
+  ],
+  "reference_environment": {
+    "python": "3.12.10",
+    "numpy": "2.4.4",
+    "opencv": "4.13.0",
+    "opencv_build_information_sha256": "8a55f551e40cf84d0fa7e2509bb9544da66782a8cbc017d7ce27a9de0ef9c1ac",
+    "tifffile": "2026.5.2"
+  }
+}

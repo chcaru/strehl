@@ -1,0 +1,258 @@
+{
+  "geometry": {
+    "height": 9,
+    "maximal_rectangle": {
+      "area_pixels": 56,
+      "height": 7,
+      "width": 8,
+      "x": 2,
+      "y": 1
+    },
+    "row_intervals": [
+      null,
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      null
+    ],
+    "supports": [
+      {
+        "guard_q8": 0,
+        "source_height": 9,
+        "source_width": 12,
+        "transform": {
+          "a": 4294967296,
+          "b": 0,
+          "tx": 0,
+          "ty": 0
+        }
+      },
+      {
+        "guard_q8": 128,
+        "source_height": 9,
+        "source_width": 12,
+        "transform": {
+          "a": 4294967296,
+          "b": 0,
+          "tx": 3221225472,
+          "ty": -2147483648
+        }
+      },
+      {
+        "guard_q8": 128,
+        "source_height": 9,
+        "source_width": 12,
+        "transform": {
+          "a": 4294967296,
+          "b": 0,
+          "tx": -5368709120,
+          "ty": 2147483648
+        }
+      }
+    ],
+    "width": 12
+  },
+  "mapping_round_trip": {
+    "input_xy": [
+      17,
+      23
+    ],
+    "mapped_xy_q32": [
+      78383153152,
+      95563022336
+    ],
+    "transform_q32": {
+      "a": 4294967296,
+      "b": 0,
+      "tx": 5368709120,
+      "ty": -3221225472
+    }
+  },
+  "output_retention": {
+    "cropped": {
+      "arm_id": "cropped-grid",
+      "denominator_pixels": 99918,
+      "field_of_view_verdict": "FAIL_GEOMETRY_FIELD_OF_VIEW",
+      "retained_fraction_denominator": 183,
+      "retained_fraction_numerator": 178,
+      "retained_percent": "97.267759563",
+      "retained_pixels": 97188
+    },
+    "identity": {
+      "arm_id": "identity-grid",
+      "denominator_pixels": 99918,
+      "field_of_view_verdict": "PASS",
+      "retained_fraction_denominator": 1,
+      "retained_fraction_numerator": 1,
+      "retained_percent": "100.000000000",
+      "retained_pixels": 99918
+    }
+  },
+  "schema": "strehl.m193-fixtures.v1",
+  "synthetic_inputs": {
+    "byte_lengths": [
+      663776,
+      663776,
+      663776
+    ],
+    "file_sha256": [
+      "913b0f3ca53a8e5461621fcd70e989ef6fe78c8e9a26e7025501c49160c905ee",
+      "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e",
+      "925b533a463489acc038fd61525b839a0d3ef236dd8fdefef2acf6df8ab6ff43"
+    ],
+    "order_invariant_bundle_sha256": "ea4784bb77048f3e3a44c37e151a24743167e1f9f61c4b720de95f5af9d27ce7"
+  },
+  "synthetic_overlap": {
+    "common_overlap": {
+      "area_pixels": 99918,
+      "height": 273,
+      "width": 366,
+      "x": 16,
+      "y": 2
+    },
+    "input_bundle_sha256": "ea4784bb77048f3e3a44c37e151a24743167e1f9f61c4b720de95f5af9d27ce7",
+    "input_count": 3,
+    "intersection_rule": "exact Q32 inverse-support inequalities at integer reference centres",
+    "manifest_sha256": "a1cdb836fb8806398a0c5031bdff5844b63888376542d5cc78b37d0149c77265",
+    "maximal_rectangle_tie_break": [
+      "maximum area",
+      "minimum y",
+      "minimum x",
+      "maximum height",
+      "maximum width"
+    ],
+    "native_height": 288,
+    "native_width": 384,
+    "reference_rule": "minimum (sha256_digest_bytes, byte_length, exact_bytes)",
+    "reference_source_sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e",
+    "schema": "strehl.m193-cover-overlap.v1",
+    "sources": [
+      {
+        "byte_length": 663776,
+        "multiplicity": 1,
+        "reference": true,
+        "registration": {
+          "coordinate_quantization_guard_q8": 0,
+          "heldout_max_source_px_ceil_q8": 0,
+          "heldout_rms_reference_px": "0.000000000",
+          "reference": true,
+          "valid_support_continuous_margin_q8": 128
+        },
+        "source_sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e",
+        "source_to_reference_q32": {
+          "a": 4294967296,
+          "b": 0,
+          "tx": 0,
+          "ty": 0
+        },
+        "valid_center_guard_q8": 0
+      },
+      {
+        "byte_length": 663776,
+        "multiplicity": 1,
+        "reference": false,
+        "registration": {
+          "calibration_count": 128,
+          "calibration_inlier_count": 125,
+          "coordinate_quantization_guard_q8": 1,
+          "heldout_max_source_px_ceil_q8": 107,
+          "heldout_rms_reference_px": "0.112928456",
+          "holdout_count": 128,
+          "holdout_inlier_count": 127,
+          "mutual_match_count": 256,
+          "reference": false,
+          "valid_support_continuous_margin_q8": 236
+        },
+        "source_sha256": "913b0f3ca53a8e5461621fcd70e989ef6fe78c8e9a26e7025501c49160c905ee",
+        "source_to_reference_q32": {
+          "a": 4230087616,
+          "b": -25971173,
+          "tx": 22701987882,
+          "ty": 3615191313
+        },
+        "valid_center_guard_q8": 108
+      },
+      {
+        "byte_length": 663776,
+        "multiplicity": 1,
+        "reference": false,
+        "registration": {
+          "calibration_count": 128,
+          "calibration_inlier_count": 128,
+          "coordinate_quantization_guard_q8": 1,
+          "heldout_max_source_px_ceil_q8": 156,
+          "heldout_rms_reference_px": "0.122228082",
+          "holdout_count": 128,
+          "holdout_inlier_count": 128,
+          "mutual_match_count": 256,
+          "reference": false,
+          "valid_support_continuous_margin_q8": 285
+        },
+        "source_sha256": "925b533a463489acc038fd61525b839a0d3ef236dd8fdefef2acf6df8ab6ff43",
+        "source_to_reference_q32": {
+          "a": 4155353360,
+          "b": -43431024,
+          "tx": 50916918627,
+          "ty": 5043472855
+        },
+        "valid_center_guard_q8": 157
+      }
+    ],
+    "status": "DEFINED_INPUT_ONLY",
+    "unique_input_count": 3,
+    "valid_support_rule": "active pixel-cell footprint eroded by 0.5 px to the valid-centre domain, plus held-out max residual rounded up to 1/256 source px and one 1/256-px coordinate quantum"
+  },
+  "tie_break": {
+    "expected": {
+      "area_pixels": 4,
+      "height": 2,
+      "width": 2,
+      "x": 0,
+      "y": 0
+    },
+    "rows": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      null,
+      [
+        4,
+        5
+      ],
+      [
+        4,
+        5
+      ]
+    ]
+  }
+}
