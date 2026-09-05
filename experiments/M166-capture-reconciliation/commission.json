@@ -1,0 +1,159 @@
+{
+  "caught": 25,
+  "duplicate_anchor_guard_fired": true,
+  "missing_anchor_guard_fired": true,
+  "mutations": [
+    {
+      "anchor": "RECONCILED: rehearsal 1,092, scored 1,215, total 2,307",
+      "caught": true,
+      "check": "required lead",
+      "target": "report"
+    },
+    {
+      "anchor": "\"m164_is_ancestor_of_m166\": true",
+      "caught": true,
+      "check": "M164 chronology precedes M166",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"old_three_strip_reference\": 96",
+      "caught": true,
+      "check": "M164 named M1 roles sum to 704",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"candidate_excluded_dom_sw10\": 54",
+      "caught": true,
+      "check": "current M1 named roles sum to 900",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"four_strip_reference\": 128",
+      "caught": true,
+      "check": "M164 reference is replaced not retained",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"candidate_excluded_dom_sw4\": 110",
+      "caught": true,
+      "check": "current M1 containment reaches 900",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"base_combined\": 891,\n    \"old_reference_removed\": 96,\n    \"four_strip_reference_added\": 128",
+      "caught": true,
+      "check": "combined score re-derives to 1215",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"combined_m5_m9_roles\": 315",
+      "caught": true,
+      "check": "current M1 plus M5/M9 reaches 1215",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"m164_predecessor\": 896",
+      "caught": true,
+      "check": "rehearsal predecessor changes by 196",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"dominance_kernel\": 676",
+      "caught": true,
+      "check": "rehearsal categories sum to 1092",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"two_sittings\": 2307",
+      "caught": true,
+      "check": "two sitting budget is 2307",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"including_preflight\": 2309",
+      "caught": true,
+      "check": "preflight-inclusive budget is 2309",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"conditional_m1_only_two_sittings\": 1992",
+      "caught": true,
+      "check": "conditional M1-only branch is named and consistent",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"name\": \"6b blur physical control\",\n      \"new_frames\": 96",
+      "caught": true,
+      "check": "rehearsal stage increments sum to 1092",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"cumulative_with_preflight\": 1030",
+      "caught": true,
+      "check": "stage cumulative sequence closes at 2309",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"interim_pass_allowed\": false",
+      "caught": true,
+      "check": "interim PASS is prohibited",
+      "target": "analysis"
+    },
+    {
+      "anchor": "\"dominance_interim_margin_stop_requires_m164_certificate\": true",
+      "caught": true,
+      "check": "M164 certificate question preserved",
+      "target": "analysis"
+    },
+    {
+      "anchor": "### 1.1 M164's `704` is not a literal subset of M166's `1,215`",
+      "caught": true,
+      "check": "report states role not literal containment",
+      "target": "report"
+    },
+    {
+      "anchor": "**INFERRED BY READING.** The current complete-input and combined-score\ncontracts add these named roles beyond the superseded M1-only package:",
+      "caught": true,
+      "check": "M166 additions table is evidence-labelled",
+      "target": "report"
+    },
+    {
+      "anchor": "- candidate-**excluded dominance witness**:",
+      "caught": true,
+      "check": "report distinguishes both 164-frame roles",
+      "target": "report"
+    },
+    {
+      "anchor": "`TR-FLAT-V`, `TR-DARK-V`, `TC0-FLAT-V`, and `TC0-DARK-V`",
+      "caught": true,
+      "check": "report identifies the four V groups",
+      "target": "report"
+    },
+    {
+      "anchor": "> **The capture budget is now reconciled.**",
+      "caught": true,
+      "check": "owner replacement is present",
+      "target": "report"
+    },
+    {
+      "anchor": "> **The two-frame off-ramp remains the most valuable one.**",
+      "caught": true,
+      "check": "owner text preserves two-frame off-ramp",
+      "target": "report"
+    },
+    {
+      "anchor": "> disk. Every interim look is **fail-only**: it may stop and refuse, but it may\n> never produce an early `PASS`.",
+      "caught": true,
+      "check": "owner text preserves fail-only property",
+      "target": "report"
+    },
+    {
+      "anchor": "The current M164 record is `BLOCKED`.",
+      "caught": true,
+      "check": "no wall-clock promise",
+      "target": "report"
+    }
+  ],
+  "status": "PASS",
+  "total": 25
+}

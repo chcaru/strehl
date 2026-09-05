@@ -1,0 +1,150 @@
+{
+  "headline": "RECONCILED: rehearsal 1,092, scored 1,215, total 2,307",
+  "status": "PASS",
+  "chronology": {
+    "m164_pattern_map_commit": "cdae4723",
+    "m166_rehearsal_commit": "a195bc63",
+    "m166_staging_commit": "ff99afc8",
+    "m166_disjointness_commit": "fd1f46cf",
+    "m164_is_ancestor_of_m166": true
+  },
+  "m164_m1_roles": {
+    "old_three_strip_reference": 96,
+    "tr_ab_calibration": 128,
+    "tr_v_validation": 64,
+    "tc0_candidate_inputs": 164,
+    "tc0_fixed_focus_witnesses": 60,
+    "tc0_ab_calibration": 128,
+    "tc0_v_validation": 64,
+    "total": 704
+  },
+  "current_m1_roles": {
+    "four_strip_reference": 128,
+    "tr_ab_calibration": 128,
+    "tr_v_validation": 64,
+    "tc0_candidate_inputs": 164,
+    "tc0_fixed_focus_witnesses": 60,
+    "tc0_ab_calibration": 128,
+    "tc0_v_validation": 64,
+    "candidate_excluded_dom_sw4": 110,
+    "candidate_excluded_dom_sw10": 54,
+    "total": 900
+  },
+  "score": {
+    "base_combined": 891,
+    "old_reference_removed": 96,
+    "four_strip_reference_added": 128,
+    "candidate_excluded_dominance_witness_added": 164,
+    "held_out_v_calibration_added": 128,
+    "current_m1_only": 900,
+    "combined_m5_m9_roles": 315,
+    "current_combined": 1215
+  },
+  "rehearsal": {
+    "m164_predecessor": 896,
+    "old_reference_removed": 96,
+    "four_strip_reference_added": 128,
+    "candidate_excluded_dominance_witness_added": 164,
+    "delta": 196,
+    "dominance_kernel": 676,
+    "exact_candidate_execution": 224,
+    "physical_controls": 192,
+    "current": 1092
+  },
+  "budget": {
+    "preflight": 2,
+    "rehearsal": 1092,
+    "scored": 1215,
+    "two_sittings": 2307,
+    "including_preflight": 2309,
+    "conditional_m1_only_two_sittings": 1992,
+    "conditional_m1_only_including_preflight": 1994
+  },
+  "stages": [
+    {
+      "name": "0M frozen contract and checker",
+      "new_frames": 0,
+      "cumulative_with_preflight": 0
+    },
+    {
+      "name": "0 two-frame scale/field kill test",
+      "new_frames": 2,
+      "cumulative_with_preflight": 2
+    },
+    {
+      "name": "1 converter-on A/B calibration",
+      "new_frames": 128,
+      "cumulative_with_preflight": 130
+    },
+    {
+      "name": "2a TR-S01 rows 1-2",
+      "new_frames": 32,
+      "cumulative_with_preflight": 162
+    },
+    {
+      "name": "2b TR-S02 rows 3-4",
+      "new_frames": 32,
+      "cumulative_with_preflight": 194
+    },
+    {
+      "name": "2c TR-S03 rows 5-6",
+      "new_frames": 32,
+      "cumulative_with_preflight": 226
+    },
+    {
+      "name": "2d TR-S04 rows 7-8",
+      "new_frames": 32,
+      "cumulative_with_preflight": 258
+    },
+    {
+      "name": "2e converter-on held-out V closure",
+      "new_frames": 64,
+      "cumulative_with_preflight": 322
+    },
+    {
+      "name": "3 live TC0 placement plus TC0 A/B calibration",
+      "new_frames": 128,
+      "cumulative_with_preflight": 450
+    },
+    {
+      "name": "4a TC0-DOM-sw4-A/B",
+      "new_frames": 110,
+      "cumulative_with_preflight": 560
+    },
+    {
+      "name": "4b TC0-DOM-sw10-A/B",
+      "new_frames": 54,
+      "cumulative_with_preflight": 614
+    },
+    {
+      "name": "5 exact candidate package and G0-G3 witnesses",
+      "new_frames": 224,
+      "cumulative_with_preflight": 838
+    },
+    {
+      "name": "6a sharp physical control",
+      "new_frames": 96,
+      "cumulative_with_preflight": 934
+    },
+    {
+      "name": "6b blur physical control",
+      "new_frames": 96,
+      "cumulative_with_preflight": 1030
+    },
+    {
+      "name": "6c TC0 held-out V closure and final family",
+      "new_frames": 64,
+      "cumulative_with_preflight": 1094
+    },
+    {
+      "name": "7 fresh sealed combined M1/M5/M9 score",
+      "new_frames": 1215,
+      "cumulative_with_preflight": 2309
+    }
+  ],
+  "policy": {
+    "interim_pass_allowed": false,
+    "rehearsal_acceptance_looks": 1,
+    "dominance_interim_margin_stop_requires_m164_certificate": true
+  }
+}

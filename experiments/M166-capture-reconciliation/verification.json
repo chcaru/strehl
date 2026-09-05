@@ -1,0 +1,326 @@
+{
+  "checks": [
+    {
+      "detail": "RECONCILED: rehearsal 1,092, scored 1,215, total 2,307",
+      "name": "required lead",
+      "passed": true
+    },
+    {
+      "detail": {
+        "m164_is_ancestor_of_m166": true,
+        "m164_pattern_map_commit": "cdae4723",
+        "m166_disjointness_commit": "fd1f46cf",
+        "m166_rehearsal_commit": "a195bc63",
+        "m166_staging_commit": "ff99afc8"
+      },
+      "name": "M164 chronology precedes M166",
+      "passed": true
+    },
+    {
+      "detail": {
+        "old_three_strip_reference": 96,
+        "tc0_ab_calibration": 128,
+        "tc0_candidate_inputs": 164,
+        "tc0_fixed_focus_witnesses": 60,
+        "tc0_v_validation": 64,
+        "total": 704,
+        "tr_ab_calibration": 128,
+        "tr_v_validation": 64
+      },
+      "name": "M164 named M1 roles sum to 704",
+      "passed": true
+    },
+    {
+      "detail": {
+        "candidate_excluded_dom_sw10": 54,
+        "candidate_excluded_dom_sw4": 110,
+        "four_strip_reference": 128,
+        "tc0_ab_calibration": 128,
+        "tc0_candidate_inputs": 164,
+        "tc0_fixed_focus_witnesses": 60,
+        "tc0_v_validation": 64,
+        "total": 900,
+        "tr_ab_calibration": 128,
+        "tr_v_validation": 64
+      },
+      "name": "current M1 named roles sum to 900",
+      "passed": true
+    },
+    {
+      "detail": {
+        "new_reference": 128,
+        "old_reference": 96,
+        "old_total": 704
+      },
+      "name": "M164 reference is replaced not retained",
+      "passed": true
+    },
+    {
+      "detail": {
+        "candidate_excluded_dom_sw10": 54,
+        "candidate_excluded_dom_sw4": 110,
+        "four_strip_reference": 128,
+        "tc0_ab_calibration": 128,
+        "tc0_candidate_inputs": 164,
+        "tc0_fixed_focus_witnesses": 60,
+        "tc0_v_validation": 64,
+        "total": 900,
+        "tr_ab_calibration": 128,
+        "tr_v_validation": 64
+      },
+      "name": "current M1 containment reaches 900",
+      "passed": true
+    },
+    {
+      "detail": {
+        "base_combined": 891,
+        "candidate_excluded_dominance_witness_added": 164,
+        "combined_m5_m9_roles": 315,
+        "current_combined": 1215,
+        "current_m1_only": 900,
+        "four_strip_reference_added": 128,
+        "held_out_v_calibration_added": 128,
+        "old_reference_removed": 96
+      },
+      "name": "combined score re-derives to 1215",
+      "passed": true
+    },
+    {
+      "detail": {
+        "base_combined": 891,
+        "candidate_excluded_dominance_witness_added": 164,
+        "combined_m5_m9_roles": 315,
+        "current_combined": 1215,
+        "current_m1_only": 900,
+        "four_strip_reference_added": 128,
+        "held_out_v_calibration_added": 128,
+        "old_reference_removed": 96
+      },
+      "name": "current M1 plus M5/M9 reaches 1215",
+      "passed": true
+    },
+    {
+      "detail": {
+        "candidate_excluded_dominance_witness_added": 164,
+        "current": 1092,
+        "delta": 196,
+        "dominance_kernel": 676,
+        "exact_candidate_execution": 224,
+        "four_strip_reference_added": 128,
+        "m164_predecessor": 896,
+        "old_reference_removed": 96,
+        "physical_controls": 192
+      },
+      "name": "rehearsal predecessor changes by 196",
+      "passed": true
+    },
+    {
+      "detail": {
+        "candidate_excluded_dominance_witness_added": 164,
+        "current": 1092,
+        "delta": 196,
+        "dominance_kernel": 676,
+        "exact_candidate_execution": 224,
+        "four_strip_reference_added": 128,
+        "m164_predecessor": 896,
+        "old_reference_removed": 96,
+        "physical_controls": 192
+      },
+      "name": "rehearsal categories sum to 1092",
+      "passed": true
+    },
+    {
+      "detail": {
+        "conditional_m1_only_including_preflight": 1994,
+        "conditional_m1_only_two_sittings": 1992,
+        "including_preflight": 2309,
+        "preflight": 2,
+        "rehearsal": 1092,
+        "scored": 1215,
+        "two_sittings": 2307
+      },
+      "name": "two sitting budget is 2307",
+      "passed": true
+    },
+    {
+      "detail": {
+        "conditional_m1_only_including_preflight": 1994,
+        "conditional_m1_only_two_sittings": 1992,
+        "including_preflight": 2309,
+        "preflight": 2,
+        "rehearsal": 1092,
+        "scored": 1215,
+        "two_sittings": 2307
+      },
+      "name": "preflight-inclusive budget is 2309",
+      "passed": true
+    },
+    {
+      "detail": {
+        "conditional_m1_only_including_preflight": 1994,
+        "conditional_m1_only_two_sittings": 1992,
+        "including_preflight": 2309,
+        "preflight": 2,
+        "rehearsal": 1092,
+        "scored": 1215,
+        "two_sittings": 2307
+      },
+      "name": "conditional M1-only branch is named and consistent",
+      "passed": true
+    },
+    {
+      "detail": [
+        {
+          "cumulative_with_preflight": 130,
+          "name": "1 converter-on A/B calibration",
+          "new_frames": 128
+        },
+        {
+          "cumulative_with_preflight": 162,
+          "name": "2a TR-S01 rows 1-2",
+          "new_frames": 32
+        },
+        {
+          "cumulative_with_preflight": 194,
+          "name": "2b TR-S02 rows 3-4",
+          "new_frames": 32
+        },
+        {
+          "cumulative_with_preflight": 226,
+          "name": "2c TR-S03 rows 5-6",
+          "new_frames": 32
+        },
+        {
+          "cumulative_with_preflight": 258,
+          "name": "2d TR-S04 rows 7-8",
+          "new_frames": 32
+        },
+        {
+          "cumulative_with_preflight": 322,
+          "name": "2e converter-on held-out V closure",
+          "new_frames": 64
+        },
+        {
+          "cumulative_with_preflight": 450,
+          "name": "3 live TC0 placement plus TC0 A/B calibration",
+          "new_frames": 128
+        },
+        {
+          "cumulative_with_preflight": 560,
+          "name": "4a TC0-DOM-sw4-A/B",
+          "new_frames": 110
+        },
+        {
+          "cumulative_with_preflight": 614,
+          "name": "4b TC0-DOM-sw10-A/B",
+          "new_frames": 54
+        },
+        {
+          "cumulative_with_preflight": 838,
+          "name": "5 exact candidate package and G0-G3 witnesses",
+          "new_frames": 224
+        },
+        {
+          "cumulative_with_preflight": 934,
+          "name": "6a sharp physical control",
+          "new_frames": 96
+        },
+        {
+          "cumulative_with_preflight": 1030,
+          "name": "6b blur physical control",
+          "new_frames": 96
+        },
+        {
+          "cumulative_with_preflight": 1094,
+          "name": "6c TC0 held-out V closure and final family",
+          "new_frames": 64
+        }
+      ],
+      "name": "rehearsal stage increments sum to 1092",
+      "passed": true
+    },
+    {
+      "detail": [
+        0,
+        2,
+        130,
+        162,
+        194,
+        226,
+        258,
+        322,
+        450,
+        560,
+        614,
+        838,
+        934,
+        1030,
+        1094,
+        2309
+      ],
+      "name": "stage cumulative sequence closes at 2309",
+      "passed": true
+    },
+    {
+      "detail": {
+        "dominance_interim_margin_stop_requires_m164_certificate": true,
+        "interim_pass_allowed": false,
+        "rehearsal_acceptance_looks": 1
+      },
+      "name": "interim PASS is prohibited",
+      "passed": true
+    },
+    {
+      "detail": {
+        "dominance_interim_margin_stop_requires_m164_certificate": true,
+        "interim_pass_allowed": false,
+        "rehearsal_acceptance_looks": 1
+      },
+      "name": "M164 certificate question preserved",
+      "passed": true
+    },
+    {
+      "detail": "literal-subset warning",
+      "name": "report states role not literal containment",
+      "passed": true
+    },
+    {
+      "detail": "M166 additions table label",
+      "name": "M166 additions table is evidence-labelled",
+      "passed": true
+    },
+    {
+      "detail": "two named 164-frame roles",
+      "name": "report distinguishes both 164-frame roles",
+      "passed": true
+    },
+    {
+      "detail": "four held-out V groups",
+      "name": "report identifies the four V groups",
+      "passed": true
+    },
+    {
+      "detail": "owner replacement",
+      "name": "owner replacement is present",
+      "passed": true
+    },
+    {
+      "detail": "two-frame off-ramp",
+      "name": "owner text preserves two-frame off-ramp",
+      "passed": true
+    },
+    {
+      "detail": "fail-only owner wording",
+      "name": "owner text preserves fail-only property",
+      "passed": true
+    },
+    {
+      "detail": "wall-clock tokens absent",
+      "name": "no wall-clock promise",
+      "passed": true
+    }
+  ],
+  "passed": 25,
+  "status": "PASS",
+  "total": 25
+}
