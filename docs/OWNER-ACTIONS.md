@@ -1272,6 +1272,48 @@ qualifying tiles, so there is currently nothing to commission against at all.
 `20–60 px` texture in every focus frame. These are backgrounds, not subjects —
 they should be quick, and they are independent of the 1,215-frame scored session.
 
+**Corrected — what actually failed, and why "shoot it again" would fail the same
+way.** M152's independent-predicate diagnostic (commit `cd937f3e`) supersedes the
+paragraph above on three points. Each one would otherwise have cost you a sitting.
+
+- **Coffee bubbles did not fail on exposure. It failed on flatness.** All `1,768`
+  of `1,768` tiles fail the band-power term, at a best-case ratio of `1.091006`
+  and a median of `5.279854` against a bar of `<1.0`. Signal was never the
+  problem — the worst tile still measured `11.665702σ` against a `>=10σ`
+  requirement. **So no exposure change rescues it.** Even a favourable
+  scalar-exposure model leaves only `8` feasible tiles. It needs a *different
+  target*: a genuinely featureless **transilluminated opal diffuser**, not a
+  bubble field.
+- **More frames cannot help, and this corrects something I told you.** Every
+  frame re-tests the same `1,768` spatial candidates, and each additional frame
+  can only *remove* survivors, never add one. Measured yields: medication
+  `55/1,768 = 3.11%` over `146` frames; bee `123/1,768 = 6.96%` over `299`. The
+  deficit is a **scene** deficit, not a frame count. A longer sitting of the same
+  scene returns the same zero.
+- **Foam needs about `-1.265 EV`, and may need replacing outright.** At current
+  exposure foam yields `0` of an `83` quota. Under a favourable fixed-noise
+  model, `0.416x` exposure leaves `113` sites, with `>=83` across
+  `0.374x–0.486x` — **that is plausibility, not sufficiency.** For an f/8
+  ISO-1000 retry the diagnostic starting point is `0.67–0.83 s` rather than the
+  old `1.6–2 s`. If smoother closed-cell foam is not to hand, **openly replacing
+  the foam subject is the better move**; M152 recorded that as a finding rather
+  than a failure.
+
+**Settings that make a sitting count:** flicker-free diffuse light, 200 mm, f/5.6
+preferred, ISO 50/100 — the settings medication and bee already demonstrate —
+every selected common-TIFF RGB pixel at least `512` codes clear of either rail,
+and median signal above `10σ`.
+
+**And the part to weigh before shooting anything.** Even with all three sittings
+in hand, **this does not produce an M4 pass.** M152's ruling: the retained
+`Q/g/r` component becomes scoreable, and can mathematically pass, without blocker
+`(a)` and without the Zerene licence — but **full M4 remains blocked `(a)`, `(b)`
+and `(d)`** on its detail/edge, M3-boundary and best-comparator remainders. I had
+briefed M4 to you as the program's cheapest route to a first scored axis. **That
+was wrong, and M152 said so plainly rather than letting me keep it.** These
+sittings buy a commissioned checker and a closed flat population. They do not buy
+an axis.
+
 **One choice here is genuinely yours, and I am flagging it rather than taking
 it.** The near-equal `84/83/83` split is M152's, frozen before any pixel was
 decoded. The scorecard itself asks only for `500` sites overall and `50` per

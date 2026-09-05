@@ -884,6 +884,48 @@ check("2.9.77 M4 arithmetic re-derives",
      "the M4 shortfall is printed with its addends and they sum to the total "
      "printed beside them")
 
+# ---- Ask 2c correction: M4's sittings do not buy an axis ---------------------
+#
+# This is owner-facing text that changes what he physically shoots. Two failure
+# modes are guarded: the guidance drifting back to "reshoot at a different
+# exposure" (which M152 proved cannot work), and the "this does not pass M4"
+# caveat being quietly dropped once the sittings exist.
+OWNERDOC = ROOT / "docs" / "OWNER-ACTIONS.md"
+if not OWNERDOC.exists():
+    check("m4 ask2c present", False, "MISSING %s" % OWNERDOC)
+else:
+    _own = collapse(re.sub(r"(?m)^[ \t]*>[ \t]?", "",
+                           OWNERDOC.read_text(encoding="utf-8", errors="replace")))
+    for _lbl, _q, _why in [
+        ("m4 sittings buy no axis",
+         "full M4 remains blocked `(a)`, `(b)` and `(d)`",
+         "the owner is told plainly that these three sittings do not pass M4"),
+        ("m4 axis caveat intact", "They do not buy an axis.",
+         "the sentence most likely to be dropped once the sittings are shot"),
+        ("m4 frames add no sites", "can only *remove* survivors, never add one",
+         "the finding that invalidates a frame-count reading of M4's deficit"),
+        ("m4 flatness not exposure", "So no exposure change rescues it.",
+         "stops the guidance drifting back to an exposure fix that cannot work"),
+        ("m4 foam plausibility only", "that is plausibility, not sufficiency",
+         "M152's own hedge survives into the owner document"),
+        ("m4 error stays attributed", "That was wrong, and M152 said so plainly",
+         "my own error stays on the record rather than being tidied away"),
+    ]:
+        check(_lbl, collapse(_q) in _own, _why)
+
+    _m152 = ROOT / "docs" / "research" / "M152-site-census.md"
+    if not _m152.exists():
+        check("m4 census source present", False, "MISSING M152-site-census.md")
+    else:
+        _src = collapse(_m152.read_text(encoding="utf-8", errors="replace"))
+        for _lbl, _n in [("m4 coffee band best", "1.091006"),
+                         ("m4 coffee band median", "5.279854"),
+                         ("m4 foam ev shift", "1.265"),
+                         ("m4 foam sites", "113")]:
+            check(_lbl, _n in _own and _n in _src,
+                  "owner<->M152 agree on %s; a one-sided edit fails this rather "
+                  "than passing on the untouched copy" % _n)
+
 # ---- Amendment 8: the phase-0 audit -----------------------------------------
 #
 # Two kinds of pin here, and they are not equally strong.
