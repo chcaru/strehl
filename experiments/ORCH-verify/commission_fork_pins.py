@@ -60,6 +60,22 @@ ARMS = [
      "> **Progress on the `$189` row, so you can see exactly what the money would and\n"
      "> would not still be buying.**",
      False),
+    ("G one addend drifts inside a published sum",
+     "> sittings** (`2 + 1,092 + 1,215 + 686 + 64 + 657`).",
+     "> sittings** (`2 + 1,192 + 1,215 + 686 + 64 + 657`).",
+     True),
+    ("H the not-sufficient boundary is softened",
+     "> exists, and they are **not sufficient**, and no quantity of them clears `(a)`.",
+     "> exists, and they put the full scorecard within reach once shot.",
+     True),
+    ("I the three-acquisition finding is dropped",
+     "> are three distinct acquisitions with conflicting optical states",
+     "> are the same acquisition reused across lanes",
+     True),
+    ("J INERT rewording inside the capture section",
+     "> **The order, ranked by what unblocks a scoreable axis soonest:**",
+     "> **The order, ranked by what unblocks a scoreable axis the soonest:**",
+     False),
 ]
 
 

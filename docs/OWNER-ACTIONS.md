@@ -244,6 +244,63 @@ summary of one:
 > the last comparator prerequisite that needs neither money nor the camera;
 > M165 is on it now.
 
+> ### The whole capture ask, consolidated into one number and one order
+>
+> Until now the capture demand was scattered across lanes and the totals did not
+> agree. It is now consolidated (`docs/research/M177-capture-programme.md`,
+> commit `d5d75f00`). Every figure below is re-derived arithmetically in that
+> document rather than copied, and I checked the sums at source.
+>
+> **The honest total is a floor of `3,716` specified frames across at least six
+> sittings** (`2 + 1,092 + 1,215 + 686 + 64 + 657`). Two of the asks have no
+> frame count yet, which is why it is a floor and not a grand total. Of that:
+>
+> - **`2,309` is the registered capture floor** (`2 + 1,092 + 1,215`) — the
+>   frames that feed an actual M1/M5/M9 score attempt.
+> - **`2,995` is the landed envelope** (`2 + 1,092 + 1,215 + 686`) including
+>   M167's battery.
+> - Deferring M167's battery takes the programme to **`3,030`**.
+>
+> **The order, ranked by what unblocks a scoreable axis soonest:**
+>
+> | # | Block | Frames | Why it is here |
+> |---|---|---|---|
+> | 1 | **Ask 2a** — one converter-on/converter-off pair | **2** | Tests whether the M1/M5/M9 optical route survives at all. Five minutes, no purchase. |
+> | 2 | M166 development rehearsal | 1,092 | Commissions the exact configuration and licenses a score attempt. |
+> | 3 | M166 scored session | 1,215 | Supplies the sealed M1/M5/M9 score inputs. |
+> | 4 | M2 replacement limb | 64 | Replaces a failed two-light capture. Deferred pending an instrument. |
+> | 5 | Ask 5 — future detail holdout | ≥657 | Deferred pending an exact repeat-lineage sheet. |
+> | 6 | M167 detail battery | 686 | **Sequenced out of your queue for now** — see below. |
+>
+> **Three blocks of `164` frames appear in different lanes and look
+> interchangeable. They are not.** M166-candidate, M166-dominance and M167-test
+> are three distinct acquisitions with conflicting optical states — M166's
+> dominance arm accepts `1.32x` while M167's test arm requires `M_test <= 1.30x`.
+> Merging them would have understated your shutter demand by 164 frames. They
+> cannot be shared, and no RAW is shared across the two campaigns.
+>
+> **M167's 686-frame battery is deferred, not refused on principle.** It
+> calibrates error rates for a candidate detail instrument that does not yet
+> exist. It returns to the queue the moment a candidate is admitted, or sooner if
+> it turns out the battery is a *precondition* of admission rather than a
+> calibration of it.
+>
+> **The part you should hold me to, because it is the part that is easy to sell
+> you wrongly: shooting does not buy `12 of 12`.** Blocker `(a)` is a *missing
+> admissible detail statistic* — a research problem on my side of the line, not a
+> capture. These frames are **necessary** to score M1/M5/M9 once such a statistic
+> exists, and they are **not sufficient**, and no quantity of them clears `(a)`.
+> I had this wrong in a briefing earlier tonight and corrected it; the capture
+> programme is now costed on its own merits and says so explicitly. If you ever
+> see a sentence from me implying you can shoot your way to a full scorecard,
+> that sentence is wrong.
+>
+> The plan's own nominated detail instrument, D8 split-stack self-calibration,
+> was taken to its registered gate and returned **KILL**
+> (`docs/research/M-PHASE0-SPLIT.md:3`). The proposal still described it as *"the
+> best-commissioned instrument in the corpus"*; I have recorded the kill as
+> Amendment 7 to the plan rather than leaving the contradiction in force.
+
 > ### One decision from you is worth four axes, and it costs nothing
 >
 > **Every number in the table above assumes a rule I wrote and never checked

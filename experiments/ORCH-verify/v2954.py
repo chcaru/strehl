@@ -800,6 +800,43 @@ check("fork cross-host limit retained",
      "M165's own stated limit survives into the owner document rather than "
      "being dropped on the way")
 
+# --- M177 capture programme: totals agree with the lane, boundary preserved ---
+_m177 = collapse((ROOT / "docs" / "research" /
+                  "M177-capture-programme.md").read_text(
+                      encoding="utf-8", errors="replace"))
+
+for _label, _fig in (("specified floor", "3,716"),
+                     ("registered capture floor", "2,309"),
+                     ("landed envelope", "2,995")):
+    check("%s agrees owner<->M177" % _label,
+         (_fig in _owner) and (_fig in _m177),
+         "%s is the same figure in OWNER-ACTIONS and M177-capture-programme" % _label)
+
+for _expr, _total in (("2 + 1,092 + 1,215 + 686 + 64 + 657", "3,716"),
+                      ("2 + 1,092 + 1,215", "2,309"),
+                      ("2 + 1,092 + 1,215 + 686", "2,995")):
+    _ok = _expr in _owner
+    if _ok:
+        _parts = [int(x.replace(",", "")) for x in re.findall(r"\d[\d,]*", _expr)]
+        _ok = (sum(_parts) == int(_total.replace(",", ""))) and (_total in _owner)
+    check("total %s re-derives from its own addends" % _total, _ok,
+         "the addends printed in OWNER-ACTIONS actually sum to the total "
+         "printed there; drifting any single addend fails this, which a "
+         "hardcoded arithmetic assertion could never do")
+check("capture does not clear blocker (a)",
+     collapse("they are **not sufficient**, and no quantity of them clears "
+              "`(a)`") in _owner,
+     "the owner document still states plainly that frames alone cannot clear "
+     "blocker (a); this is the claim most likely to be softened by accident")
+check("the three 164 blocks stay unmerged",
+     collapse("three distinct acquisitions") in _owner,
+     "the non-share finding survives into the owner document; merging them "
+     "would understate the shutter demand by 164 frames")
+check("D8 kill reaches the owner",
+     ("KILL" in _owner) and collapse("M-PHASE0-SPLIT.md:3") in _owner,
+     "the owner is told the plan's own nominated detail instrument was killed "
+     "at its gate, with the citation")
+
 print()
 
 print("GREEN               : %d" % green)
