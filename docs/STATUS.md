@@ -7298,12 +7298,27 @@ my own alarm.**
 
 **But the small magnitude makes the consequence worse, not better.** A quarter
 of one percent of pixels differing by one DN is invisible to inspection and
-changes a SHA-256 completely. **Every hash pin in this repository is therefore
+changes a SHA-256 completely. ~~**Every hash pin in this repository is therefore
 conditioned on a worker count that was, in most cases, never recorded** — the
 common-input byte-identity check, the dominance manifest, the shipping-default
 byte-freeze, the dust-correction "a wrong map renders byte-identical to OFF"
-downside bound. That blast radius is now assigned as M176, scoped to sizing the
+downside bound.~~ That blast radius is now assigned as M176, scoped to sizing the
 damage only; the repair belongs to M172, which owns `crates/`.
+
+> **⚠️ CORRECTED — the struck sentence above overstated the blast radius.** The
+> correction is M176's, independently re-derived from primary sources and upheld
+> by M187 (`docs/research/M187-m176-adjudication.md:44,52-109`, committed
+> `948e8720`). **Only Pyramid final-render byte/hash claims from pre-D9
+> executables — or from D9 executables not yet covered by an accepted end-to-end
+> certificate — require a common-worker condition.** M8-R and M165 stop *before*
+> that boundary, M8-O v1.5 is unmeasured, and M164 has no candidate render. The
+> shipping Scale + Catmull-Rom freeze remains a recorded `W=4` witness; V-MOTE's
+> WRONGMAP/OFF identity is conditional because its worker count was not
+> recorded. So "every hash pin" was wrong in both directions at once: it swept in
+> pins that never touched the reduction, while implying the genuinely conditional
+> ones were merely unrecorded rather than conditional on a boundary. The sentence
+> is struck rather than deleted, per this file's own rule at `:5301-5303` — *a
+> silently removed false claim leaves no trace that anyone was misled by it.*
 
 **This kills a reason I gave the owner for spending money, and I have withdrawn
 it.** `OWNER-ACTIONS.md` argued the Zerene purchase *"unblocks M11's comparator
@@ -7351,12 +7366,31 @@ waits on a capture that does not exist or a licence not yet bought. **D9, the
 fixed reduction lattice, does not.** Its verification is exact cross-worker
 hashes, needing no detail instrument, no comparator and no new frame —
 `STATUS:2009-2011` ranked it top for precisely that reason, *"because D9's
-verification survives M1"* — and M166 has ruled the fix achievable. Landing it
+verification survives M1"* — and M166 has ruled the fix achievable. ~~Landing it
 repairs one of M12's two bars and simultaneously makes every hash pin in the
-repository unconditional. I have put the ordering question to M172 rather than
+repository unconditional.~~ I have put the ordering question to M172 rather than
 imposing it, and asked it to tell me plainly if the `5.57x` memory bar is
 unreachable without a redesign, because that answer changes what the owner
 should be told about the whole speed axis.
+
+> **⚠️ CORRECTED — the struck sentence carried two independent errors.**
+>
+> **First, the bar count.** M12 is a conjunction of **four** bars, not two —
+> warm peak memory, cross-worker byte identity, the `299/33` peak ratio, and the
+> N-mod-4 per-frame spread. See §2.9.80, which documents how that miscount
+> reached an owner-facing file.
+>
+> **Second, and this is the substantive one: landing D9 does not by itself make
+> any hash pin unconditional.** Per M176 as upheld by M187
+> (`docs/research/M187-m176-adjudication.md:46,111-152`): for an affected
+> Pyramid final-render pin, the same-worker condition retires **only** for a
+> frozen executable lineage proven to contain D9 by an accepted, N7-qualified
+> end-to-end certificate covering the registered worker/N matrix with
+> complete-file *and* canonical decoded-pixel identity. **Historical pre-D9
+> hashes are not repaired retroactively**, and non-render hashes were never
+> conditioned on D9 at all. The error was treating a code landing as if it
+> settled the evidential status of measurements taken before it — a repair
+> changes what future runs do, not what past runs recorded.
 
 **The scoreboard remains `0 of 12`.** An axis moving from `UNMEASURED` to a
 defensible `FAIL` is progress in evidence, not in score, and it must not be

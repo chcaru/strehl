@@ -737,6 +737,35 @@ QUOTES = [
      "no_cross_capture_or_cross_category_substitution"),
     ("s79 burn 484", "docs/captures-needed.md",
      "484 ARW frames in three directories"),
+
+    # ---- M176's two route corrections, as upheld by M187 ----
+    # Both original sentences are STRUCK, not deleted, per this file's own rule
+    # at STATUS:5301-5303. That makes a presence check on the corrected text
+    # insufficient on its own: it would stay green if someone un-struck the
+    # original and left both standing. Each correction is therefore pinned
+    # twice -- once on the new statement, once on the strikethrough marker that
+    # withdraws the old one -- so removing the withdrawal reddens.
+    # NOTE ON ANCHOR LENGTH: collapse() here does NOT strip '>' and load() does
+    # not unquote, so a needle that spans a line break INSIDE a blockquote
+    # collapses with a stray '> ' in the middle and can never match. Both
+    # STATUS-side corrections live in blockquotes, so each needle below is kept
+    # contiguous within a single physical line. The artifact-side needles are
+    # unquoted prose and may span lines freely.
+    ("m187 route1 fix", "docs/STATUS.md",
+     "Only Pyramid final-render byte/hash claims from pre-D9"),
+    ("m187 route1 struck", "docs/STATUS.md",
+     "~~**Every hash pin in this repository is therefore"),
+    ("m187 route1 boundary", "docs/STATUS.md",
+     "M8-R and M165 stop *before*"),
+    ("m187 route2 fix", "docs/STATUS.md",
+     "hashes are not repaired retroactively"),
+    ("m187 route2 struck", "docs/STATUS.md",
+     "~~Landing it"),
+    # Cross-document: the correction claims to be M187's, so M187 must say it.
+    ("m187 artifact route1", "docs/research/M187-m176-adjudication.md",
+     "M8-R and M165 stop before that boundary"),
+    ("m187 artifact route2", "docs/research/M187-m176-adjudication.md",
+     "Historical pre-D9 hashes are not repaired retroactively"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel
@@ -749,6 +778,8 @@ for label, rel, quote in QUOTES:
         _who = "STATUS 2.9.78 / the Amendment 8 correction"
     elif label.startswith("s79 "):
         _who = "STATUS 2.9.79"
+    elif label.startswith("m187 "):
+        _who = "the M176/M187 route corrections"
     else:
         _who = "STATUS 2.9.66"
     check(label, collapse(quote) in load(p),
