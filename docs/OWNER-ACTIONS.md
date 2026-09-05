@@ -605,6 +605,103 @@ built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 > ratio that matters.** Read § *The blocking finding* if you want the full
 > reason for the stop.
 
+### The bench sheet — the literal shooting order for the rehearsal
+
+> **This discharges a promise I made you above.** Earlier on this page I wrote:
+> *"I will label them distinctly on the bench sheet so this cannot happen by
+> accident."* This is that bench sheet. **Step 7 is the block that promise was
+> about** — it is labelled candidate-excluded, and it is a *second, separate*
+> `55 + 55 + 27 + 27` from the one in step 8.
+>
+> **The text below is lane M166's, not mine, and I have left it as written.** I
+> do not author capture protocol; the lane that costed and sequenced this owns
+> it. What I did do is check its arithmetic myself rather than take it on
+> faith: `128 + 192 + 128 + 164 + 224 + 192 + 64 = 1,092`, which matches the
+> stated total.
+>
+> **Do not shoot any of this yet.** Step 1 is a stop, and it is still in force —
+> the manifest freeze failed honestly and the Zerene licence is on this
+> sequence's critical path. This is here so you can read what the evening will
+> ask of you, and so nothing about it arrives as a surprise.
+
+> ### Development rehearsal — one clean pass still needs 1,092 registered frames
+>
+> The rehearsal cannot be shortened without dropping a test that protects the
+> scored sitting. What changes is the release: you will shoot it in blocks and
+> stop as soon as a complete block proves the sitting cannot pass. A passing
+> rehearsal still contains all `1,092` registered frames.
+>
+> 1. **STOP until I release the frozen capture sheet and checker.** The target,
+>    margins, cell list, settings, block order, software and hashes must all be
+>    final. The two-frame scale/field preflight remains allowed; it does not
+>    release this rehearsal.
+>
+> 2. **Use only the development panel.** Mount
+>    `D-REHEARSAL-01 — DEVELOPMENT; NEVER SCORE`. Keep the sealed holdout
+>    covered and outside the field of view. Nothing from this rehearsal may
+>    later become a scored or comparator input.
+>
+> 3. **Prepare for the full sitting before frame 1.** Use the registered Sony
+>    body, Sony 100 mm macro, exact Viltrox, support, light, diffusers,
+>    polarizers, external power, recording media and camera settings. Take the
+>    one unregistered histogram frame. Once registered capture starts, do not
+>    power-cycle, disturb the rig, change exposure or make an unlogged pause.
+>
+> 4. **First release — 128 frames.** With the converter fitted, capture
+>    `TR-FLAT-A`, `TR-DARK-A`, `TR-FLAT-B` and `TR-DARK-B`, `32` each. Run the
+>    released checker while the rig remains locked and powered. Wrong
+>    settings, count, body, lineage, clipping, flat texture, dark light leak,
+>    temperature mismatch or failed A/B map is **STOP**. Do not take a
+>    reference strip after that failure.
+>
+> 5. **Reference release — 192 more frames.** Capture `TR-S01` through
+>    `TR-S04`, `32` frames per strip, checking each strip before the next.
+>    Then capture `TR-FLAT-V` and `TR-DARK-V`, `32` each. A failed row, guard,
+>    focus return, tone, fiducial, geometry, power cell, held-out map or
+>    common-mode check is **STOP before converter removal**.
+>
+> 6. **Converter-off calibration — 128 more frames.** Remove the converter
+>    once, move axially to the accepted `1.32x` placement, never exceed
+>    `1.33x`, and pass the live scale/field check. Capture
+>    `TC0-FLAT-A`, `TC0-DARK-A`, `TC0-FLAT-B` and `TC0-DARK-B`, `32` each.
+>    Failed scale, field, map, body, temperature, focus class or lineage is
+>    **STOP**.
+>
+> 7. **Dominance witness — 164 more frames.** Capture complete
+>    `TC0-DOM-sw4-A/B` stacks, `55+55`, check them, then complete
+>    `TC0-DOM-sw10-A/B`, `27+27`, and check them. These RAWs never enter a
+>    candidate or comparator. Missing nodes, failed focus coverage, source
+>    overlap, failed geometry or a checker-certified impossible licensed cell
+>    is **STOP**. No provisional number may produce an early pass.
+>
+> 8. **Exact candidate package — 224 more frames.** Capture the separate
+>    candidate `sw4-A/B` and `sw10-A/B` stacks plus all `60` registered
+>    reset/start/end witnesses in the frozen order. Any interruption, missing
+>    frame or failed stability, reset, endpoint, spectral-profile or node gate
+>    is **STOP**. Run the input-only M5 exit gate on these same stacks; sw4,
+>    sw10 and their physical-coordinate intersection must each retain at least
+>    `133` eligible tiles. That gate adds no frames. Any failed count is
+>    **STOP**.
+>
+> 9. **Physical controls — 192 more frames.** Capture the `96` sharp-control
+>    frames and run its frozen check; `Q05` must be strictly above `1.10`.
+>    Then capture the `96` blur-control frames; `Q95` must be strictly below
+>    `0.90`. A wrong, weak or invalid sign is **STOP**. Do not change the focus
+>    choice or blur offset after seeing a result.
+>
+> 10. **Close TC0 and decide — 64 final frames.** Capture `TC0-FLAT-V` and
+>     `TC0-DARK-V`, `32` each. Hash all `1,092` registered RAWs and run the
+>     complete frozen checker once. Any failed calibration, common-mode,
+>     geometry, focus, power, rank, conditioning, control or licensed
+>     information/transfer cell makes the rehearsal **STOP / UNMEASURED**.
+
+> **The one thing to carry out of that list.** Steps 7 and 8 both ask for
+> `55 + 55 + 27 + 27`. **They are different frames and they cannot be shared.**
+> Step 7's are witnesses and must never appear in a candidate or comparator
+> manifest; step 8's are the candidate itself. Using one set for both voids the
+> comparison, and it would not announce itself until the score run — long after
+> the evening was over.
+
 ### Two things changed on 2026-09-06, and one of them would have wasted the whole session
 
 > **Read this before you plan anything.** Neither item asks you to do something
