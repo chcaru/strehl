@@ -26,9 +26,6 @@ M139_CLOSEOUT = (
     / "closeout.json"
 )
 M139_RECORDS = M139_CLOSEOUT.with_name("records.jsonl")
-HARNESS = ROOT / "experiments" / "m12-scorecard" / "m12-harness.py"
-PROPOSAL = ROOT / "docs" / "proposals" / "2026-08-sota-path.md"
-SCORECARD = ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md"
 M172_ARTIFACTS = {
     "experiments/M172-worker-memory/measure_memory.py": (
         ROOT / "experiments" / "M172-worker-memory" / "measure_memory.py"
@@ -49,9 +46,15 @@ M172_ARTIFACTS = {
     "docs/research/M172-m12s-closure.md": (
         ROOT / "docs" / "research" / "M172-m12s-closure.md"
     ),
+    "docs/research/M172-memory-planner-handoff.md": (
+        ROOT / "docs" / "research" / "M172-memory-planner-handoff.md"
+    ),
 }
 M139_COMMIT = "8009447e059febb8f9c59fda509f141835d6abdb"
 BOUNDED_COMMIT = "a97275817c58e164f75c7cd3d80ca99444a2a145"
+PLANNER_COMMIT = "fb42b9a1c6481dba3d7ef54c8505ec5ca69b649d"
+PLANNER_PARENT = "30575dca5812d2c06efec2b0eca116f3aa05f959"
+PLANNER_LIVE_BYTES = 3_045_147_112
 BAR_BYTES = 6 << 30
 
 
@@ -70,6 +73,10 @@ def sha256_bytes(value: bytes) -> str:
 def git(*args: str, text: bool = True) -> str | bytes:
     result = subprocess.check_output(["git", "-C", str(ROOT), *args])
     return result.decode("utf-8").strip() if text else result
+
+
+def git_blob_sha256(commit: str, relative: str) -> str:
+    return sha256_bytes(git("show", f"{commit}:{relative}", text=False))
 
 
 def expected_report_lines(result: dict[str, Any]) -> dict[str, str]:
@@ -172,21 +179,54 @@ def expected_report_lines(result: dict[str, Any]) -> dict[str, str]:
         "headroom, and measures "
         f"`peak_N299/peak_N33 = {bounded['n299_over_n33_ratio']:.9f}`."
     )
+    planner = result["planner_hypothesis"]
+    w4 = planner["w4_model_cell"]
+    w2 = planner["w2_third_point"]
+    prediction = planner["bounded_prediction"]
     lines["m172-boundary"] = (
-        "**CANONICAL M172 BOUNDARY:** M172 supplied the `a9727581` bounded-memory "
-        "candidate and its M12-S and prequantization evidence; M182 "
-        "independently established the bar semantics, unrepaired failure/scaling, "
-        "allocation ledger, fresh pre-repair W1/W2/W4 peaks, `a9727581` N33/N299 "
-        "W16 memory, and meter commissioning; no unrerun M172 M12-S finding enters "
-        "this memory verdict."
+        "**CANONICAL M172 BOUNDARY:** the routed M172 planner handoff supplies the "
+        f"same `{planner['source_accounted_bytes_per_active_chunk']:,} B/chunk` "
+        "allocation ledger and reusable-worker/two-accumulator design; M182 "
+        "independently derived that ledger from frozen `8009447e` source and "
+        "tested the hypothesis against registered and fresh process-tree "
+        "measurements; no unrerun M172 M12-S finding enters this memory verdict."
+    )
+    lines["planner-estimand"] = (
+        "**CANONICAL PLANNER ESTIMAND:** at N33/W4 the payload model predicts "
+        f"`{w4['predicted_payload_bytes']:,} B`; registered peak Job memory is "
+        f"`{w4['observed_job_peak_bytes']:,} B` and sampled process-tree private "
+        f"commit is `{w4['observed_private_peak_bytes']:,} B`, differing by only "
+        f"`{w4['job_minus_private_bytes']:,} B`; Job accounting reports one "
+        "process, so the model's single-process payload and the governed "
+        "process-tree estimand coincide in this cell."
+    )
+    lines["third-worker"] = (
+        "**CANONICAL THIRD-WORKER TEST:** W2 predicts "
+        f"`{w2['predicted_payload_bytes']:,} B`; M139 registered "
+        f"`{w2['registered_job_peak_bytes']:,} B` Job and "
+        f"`{w2['registered_private_peak_bytes']:,} B` private commit, a Job "
+        f"residual of `{w2['registered_job_residual_bytes']:,} B = "
+        f"{100 * w2['registered_job_residual_fraction']:.6f}%`; M182's fresh W2 "
+        f"Job peak is `{w2['fresh_job_peak_bytes']:,} B`, residual "
+        f"`{w2['fresh_job_residual_bytes']:,} B = "
+        f"{100 * w2['fresh_job_residual_fraction']:.6f}%`; the third point does "
+        "not falsify the replicated-whole-frame-state mechanism."
+    )
+    lines["tiling-ruling"] = (
+        "**CANONICAL TILING RULING:** tiling is unnecessary to reach the 6-GiB "
+        "memory bar: bounded canonical recycling is independently measured at "
+        f"`{prediction['observed_n299_w16_job_peak_bytes']:,} B`, leaving "
+        f"`{BAR_BYTES - prediction['observed_n299_w16_job_peak_bytes']:,} B` "
+        "headroom; this is still diagnostic evidence, not a formal M12 pass."
     )
     n7 = result["n7"]
     lines["n7-ruling"] = (
-        "**CANONICAL N7 RULING:** the certifying unrepaired M139 campaign at "
-        f"`8009447e` was already RED at `{n7['unrepaired_registered_job_peak_bytes']:,} "
-        f"B > {BAR_BYTES:,} B`, and M182 independently reproduced a RED unrepaired "
-        "W4 cell; the `a9727581` readings remain diagnostic and are not cashed as "
-        "a pass before M179's certifying rerun."
+        "**CANONICAL N7 RULING:** the registered M139 process-tree gate is already "
+        f"RED on unrepaired `8009447e` at "
+        f"`{n7['unrepaired_registered_job_peak_bytes']:,} B > {BAR_BYTES:,} B`, "
+        "and M182's commissioned probe uses the same harness hash and independently "
+        "reproduces RED; `a9727581` remains diagnostic, and any changed future "
+        "certifying gate must first be shown RED on the unrepaired binary."
     )
 
     probe = result["probe_commission"]["deltas"]
@@ -212,7 +252,7 @@ def expected_report_lines(result: dict[str, Any]) -> dict[str, str]:
         "fails; M139 formally records `UNMEASURED_HOST_QUARANTINE`.”"
     )
     lines["check-commission"] = (
-        "**CANONICAL CHECK COMMISSION:** `44/44` baseline checks passed; `44/44` "
+        "**CANONICAL CHECK COMMISSION:** `49/49` baseline checks passed; `49/49` "
         "uniquely anchored planted defects were caught; `0` were missed; `2/2` "
         "inert arms survived; both allocation-up and saving-down positive controls "
         "remained discriminating."
@@ -358,13 +398,29 @@ def semantic_checks(
         source_ok and len(result["provenance"]["measured_source"]) == 5,
         "measured source hashes or unique anchors drifted",
     )
+    m139_harness_hashes = {
+        row["harness_sha256"]
+        for row in (
+            json.loads(line)
+            for line in M139_RECORDS.read_text(encoding="utf-8").splitlines()
+            if line
+        )
+        if row["accepted_for_protocol"] and row["kind"] == "scored"
+    }
     add(
         "S15-input-evidence-provenance",
         result["provenance"]["closeout_sha256"] == sha256(M139_CLOSEOUT)
         and result["provenance"]["records_sha256"] == sha256(M139_RECORDS)
-        and result["provenance"]["harness_sha256"] == sha256(HARNESS)
-        and result["provenance"]["proposal_sha256"] == sha256(PROPOSAL)
-        and result["provenance"]["scorecard_sha256"] == sha256(SCORECARD),
+        and result["provenance"]["governing_text_commit"] == PLANNER_COMMIT
+        and m139_harness_hashes == {result["provenance"]["harness_sha256"]}
+        and result["provenance"]["proposal_sha256"]
+        == git_blob_sha256(
+            PLANNER_COMMIT, "docs/proposals/2026-08-sota-path.md"
+        )
+        and result["provenance"]["scorecard_sha256"]
+        == git_blob_sha256(
+            PLANNER_COMMIT, "docs/proposals/2026-09-sota-scorecard.md"
+        ),
         "campaign, harness, or governing documents changed",
     )
 
@@ -486,10 +542,11 @@ def semantic_checks(
     boundary = result["m172_evidence_boundary"]
     n7 = result["n7"]
     m172_artifacts_ok = set(boundary["artifacts"]) == set(M172_ARTIFACTS) and all(
-        boundary["artifacts"][relative]["sha256"] == sha256(path)
-        and boundary["artifacts"][relative]["last_commit"]
-        == git("log", "-1", "--format=%H", "--", relative)
-        for relative, path in M172_ARTIFACTS.items()
+        boundary["artifacts"][relative]["sha256"]
+        == git_blob_sha256(
+            boundary["artifacts"][relative]["last_commit"], relative
+        )
+        for relative in M172_ARTIFACTS
     )
     fresh_w4 = next(
         row["fresh_job_peak_bytes"]
@@ -500,12 +557,18 @@ def semantic_checks(
         "S23-m172-boundary-and-n7",
         boundary["authored_bounded_memory_commit"] == BOUNDED_COMMIT
         and boundary["m172_answered_step4"]
-        and not boundary["m172_answered_step3"]
+        and boundary["m172_answered_step3"]
         and boundary["m172_throughput_campaign_timed_runs"] == 0
         and not boundary["unrerun_m172_claims_used_in_memory_verdict"]
         and not boundary["m12_s_acted_on"]
         and not boundary["m179_outputs_read_or_acted_on"]
         and boundary["closure_doc_is_downstream_of_m182"]
+        and boundary["planner_preservation_commit"] == PLANNER_COMMIT
+        and boundary["planner_preservation_parent"] == PLANNER_PARENT
+        and boundary["artifacts"][
+            "docs/research/M172-memory-planner-handoff.md"
+        ]["last_commit"]
+        == PLANNER_COMMIT
         and m172_artifacts_ok
         and n7["unrepaired_certifying_commit"] == M139_COMMIT
         and n7["unrepaired_registered_job_peak_bytes"]
@@ -514,8 +577,77 @@ def semantic_checks(
         and n7["fresh_unrepaired_w4_job_peak_bytes"] == fresh_w4
         and n7["fresh_unrepaired_w4_failed"]
         and not n7["repaired_result_cashed_as_formal_pass"]
-        and n7["certifying_rerun_owner"] == "M179-m12-rerun",
+        and n7["certifying_rerun_owner"] == "M179-m12-rerun"
+        and n7["same_registered_gate_observed_red"]
+        and n7["registered_gate_harness_sha256"]
+        == result["provenance"]["harness_sha256"]
+        and n7["owned_probe_harness_sha256"]
+        == result["provenance"]["harness_sha256"]
+        and n7["changed_future_gate_requires_new_unrepaired_red"]
+        and n7["rule_document_commit"] == PLANNER_COMMIT
+        and n7["rule_document_sha256"]
+        == git_blob_sha256(
+            PLANNER_COMMIT, "docs/research/ORCH-clamp-default-decision.md"
+        ),
         "M172 provenance boundary or N7 fail-before-pass record is inconsistent",
+    )
+    planner = result["planner_hypothesis"]
+    w4 = planner["w4_model_cell"]
+    w2 = planner["w2_third_point"]
+    matrix = {
+        (row["frames"], row["workers"]): row for row in result["m139"]["matrix"]
+    }
+    fresh_w2 = next(
+        row["fresh_job_peak_bytes"]
+        for row in result["reproduction"]["rows"]
+        if row["workers"] == 2
+    )
+    add(
+        "S24-planner-estimand-and-third-point",
+        planner["source_accounted_bytes_per_active_chunk"]
+        == result["allocation_accounting"][
+            "source_accounted_bytes_per_active_chunk"
+        ]
+        and w4["predicted_payload_bytes"]
+        == 4 * planner["source_accounted_bytes_per_active_chunk"]
+        and w4["observed_job_peak_bytes"]
+        == matrix[(33, 4)]["maximum_job_peak_bytes"]
+        and w4["observed_private_peak_bytes"]
+        == matrix[(33, 4)]["maximum_sampled_private_bytes"]
+        and w4["job_minus_private_bytes"] == 12_288
+        and w4["total_processes"] == 1
+        and w4["peak_process_count"] == 1
+        and w4["same_run_holds_both_maxima"]
+        and w2["predicted_payload_bytes"]
+        == 2 * planner["source_accounted_bytes_per_active_chunk"]
+        and w2["registered_job_peak_bytes"]
+        == matrix[(33, 2)]["maximum_job_peak_bytes"]
+        and w2["registered_private_peak_bytes"]
+        == matrix[(33, 2)]["maximum_sampled_private_bytes"]
+        and w2["fresh_job_peak_bytes"] == fresh_w2
+        and w2["total_processes"] == 1
+        and w2["peak_process_count"] == 1
+        and w2["same_run_holds_both_maxima"]
+        and abs(w2["registered_job_residual_fraction"])
+        <= planner["payload_only_error_limit_fraction"]
+        and abs(w2["fresh_job_residual_fraction"])
+        <= planner["payload_only_error_limit_fraction"]
+        and not planner["third_point_falsifies_mechanism"],
+        "planner model targets the wrong estimand or fails at W2",
+    )
+    prediction = planner["bounded_prediction"]
+    add(
+        "S25-tiling-ruling",
+        prediction["predicted_live_payload_bytes"] == PLANNER_LIVE_BYTES
+        and prediction["observed_n299_w16_job_peak_bytes"]
+        == result["bounded_implementation"]["n299_w16_job_peak_bytes"]
+        and prediction["residual_bytes"]
+        == prediction["observed_n299_w16_job_peak_bytes"] - PLANNER_LIVE_BYTES
+        and abs(prediction["residual_fraction"]) <= 0.01
+        and prediction["observed_under_bar"]
+        and not prediction["tiling_required_for_memory_bar"]
+        and not result["plan"]["architectural_tiling_required"],
+        "bounded recycling does not support the no-tiling ruling",
     )
     return checks
 

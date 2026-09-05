@@ -215,8 +215,8 @@ def main() -> int:
     expected_total = len(report_lines) + len(semantic)
     if baseline_failures:
         raise RuntimeError(f"baseline is RED before commissioning: {baseline_failures}")
-    if expected_total != 44:
-        raise RuntimeError(f"registered check count changed: {expected_total}, expected 44")
+    if expected_total != 49:
+        raise RuntimeError(f"registered check count changed: {expected_total}, expected 49")
     print(f"BASELINE GREEN: {expected_total}/{expected_total} checks passed")
 
     report_results = []
@@ -247,6 +247,8 @@ def main() -> int:
         "S21-product-run-witnesses",
         "S22-holdout-exclusion",
         "S23-m172-boundary-and-n7",
+        "S24-planner-estimand-and-third-point",
+        "S25-tiling-ruling",
     ]
     if [spec["id"] for spec in specs] + external_ids != semantic_ids:
         raise RuntimeError("semantic mutation specs do not match verifier order")
@@ -270,6 +272,20 @@ def main() -> int:
             ledger_line(
                 "S23-m172-boundary-and-n7",
                 ("m172_evidence_boundary", "m172_answered_step3"),
+                True,
+            ),
+            ledger_line(
+                "S24-planner-estimand-and-third-point",
+                ("planner_hypothesis", "third_point_falsifies_mechanism"),
+                False,
+            ),
+            ledger_line(
+                "S25-tiling-ruling",
+                (
+                    "planner_hypothesis",
+                    "bounded_prediction",
+                    "tiling_required_for_memory_bar",
+                ),
                 False,
             ),
         ]
@@ -299,7 +315,9 @@ def main() -> int:
     records = {
         "pre-n33-w1": verify.read_json(HERE / "pre-n33-w1.json"),
     }
-    record_anchor = ledger_lines[-3]
+    record_anchor = next(
+        line for line in ledger_lines if line.startswith("S21-product-run-witnesses\t")
+    )
     record_replacement = ledger_line(
         "S21-product-run-witnesses",
         ("external", "pre-n33-w1", "output_removed_after_hash"),
@@ -323,7 +341,9 @@ def main() -> int:
     if not caught:
         missed.append("S21-product-run-witnesses")
 
-    holdout_anchor = ledger_lines[-2]
+    holdout_anchor = next(
+        line for line in ledger_lines if line.startswith("S22-holdout-exclusion\t")
+    )
     holdout_replacement = ledger_line(
         "S22-holdout-exclusion",
         ("external", "owned_text_contains_prohibited_name"),
@@ -348,28 +368,93 @@ def main() -> int:
     if not caught:
         missed.append("S22-holdout-exclusion")
 
-    boundary_anchor = ledger_lines[-1]
+    boundary_anchor = next(
+        line for line in ledger_lines if line.startswith("S23-m172-boundary-and-n7\t")
+    )
     boundary_replacement = ledger_line(
         "S23-m172-boundary-and-n7",
         ("m172_evidence_boundary", "m172_answered_step3"),
-        True,
+        False,
     )
     replace_unique_full_line(
         ledger, boundary_anchor, boundary_replacement, "S23-m172-boundary-and-n7"
     )
     broken_boundary = deepcopy(result)
-    broken_boundary["m172_evidence_boundary"]["m172_answered_step3"] = True
+    broken_boundary["m172_evidence_boundary"]["m172_answered_step3"] = False
     caught = "S23-m172-boundary-and-n7" in failed_semantic_ids(broken_boundary)
     semantic_results.append(
         {
             "check": "S23-m172-boundary-and-n7",
-            "defect": "M172 falsely credited with independent allocation attribution",
+            "defect": "routed M172 allocation ledger falsely erased",
             "anchor_sha256": hashlib.sha256(boundary_anchor.encode("utf-8")).hexdigest().upper(),
             "caught": caught,
         }
     )
     if not caught:
         missed.append("S23-m172-boundary-and-n7")
+
+    third_anchor = next(
+        line
+        for line in ledger_lines
+        if line.startswith("S24-planner-estimand-and-third-point\t")
+    )
+    third_replacement = ledger_line(
+        "S24-planner-estimand-and-third-point",
+        ("planner_hypothesis", "third_point_falsifies_mechanism"),
+        True,
+    )
+    replace_unique_full_line(
+        ledger,
+        third_anchor,
+        third_replacement,
+        "S24-planner-estimand-and-third-point",
+    )
+    broken_third = deepcopy(result)
+    broken_third["planner_hypothesis"]["third_point_falsifies_mechanism"] = True
+    caught = "S24-planner-estimand-and-third-point" in failed_semantic_ids(
+        broken_third
+    )
+    semantic_results.append(
+        {
+            "check": "S24-planner-estimand-and-third-point",
+            "defect": "third worker count planted as falsifying the payload model",
+            "anchor_sha256": hashlib.sha256(third_anchor.encode("utf-8")).hexdigest().upper(),
+            "caught": caught,
+        }
+    )
+    if not caught:
+        missed.append("S24-planner-estimand-and-third-point")
+
+    tiling_anchor = next(
+        line for line in ledger_lines if line.startswith("S25-tiling-ruling\t")
+    )
+    tiling_replacement = ledger_line(
+        "S25-tiling-ruling",
+        (
+            "planner_hypothesis",
+            "bounded_prediction",
+            "tiling_required_for_memory_bar",
+        ),
+        True,
+    )
+    replace_unique_full_line(
+        ledger, tiling_anchor, tiling_replacement, "S25-tiling-ruling"
+    )
+    broken_tiling = deepcopy(result)
+    broken_tiling["planner_hypothesis"]["bounded_prediction"][
+        "tiling_required_for_memory_bar"
+    ] = True
+    caught = "S25-tiling-ruling" in failed_semantic_ids(broken_tiling)
+    semantic_results.append(
+        {
+            "check": "S25-tiling-ruling",
+            "defect": "tiling planted as required despite measured bounded headroom",
+            "anchor_sha256": hashlib.sha256(tiling_anchor.encode("utf-8")).hexdigest().upper(),
+            "caught": caught,
+        }
+    )
+    if not caught:
+        missed.append("S25-tiling-ruling")
 
     inert_report = replace_unique_full_line(
         report,

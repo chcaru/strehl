@@ -341,9 +341,9 @@
   "m172_evidence_boundary": {
     "authored_bounded_memory_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
     "m172_answered_step4": true,
-    "m172_answered_step3": false,
+    "m172_answered_step3": true,
     "step4_imported_conclusion": "one reusable BandWorker, two BandMerge accumulators, and spatial parallelism bound memory without tiling",
-    "step3_gap_in_m172": "the committed M172 material contains a Job Object wrapper and bounded implementation, but no ranked source allocation ledger",
+    "step3_overlap": "the routed planner handoff contains the same ranked source allocation ledger that M182 independently derived",
     "independently_verified_by_m182": [
       "bar and warm lifecycle semantics from governing documents and harness",
       "registered unrepaired M139 failure and fifteen-cell scaling law",
@@ -361,9 +361,12 @@
     "m12_s_acted_on": false,
     "m179_outputs_read_or_acted_on": false,
     "closure_doc_is_downstream_of_m182": true,
+    "planner_preservation_commit": "fb42b9a1c6481dba3d7ef54c8505ec5ca69b649d",
+    "planner_source_commit": "fc2abb499126a56302de7f21f527de5613be34e7",
+    "planner_preservation_parent": "30575dca5812d2c06efec2b0eca116f3aa05f959",
     "artifacts": {
       "experiments/M172-worker-memory/measure_memory.py": {
-        "sha256": "18DCF848885CD0AE3B34371187A36BD504A0425FC3BBF5C73AF869800D7EB9AD",
+        "sha256": "0A91D7B1C0371D10DFD08C5E9A53009719C9B2E18786F962F570A2EC3511A25D",
         "last_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145"
       },
       "experiments/M172-worker-memory/results/campaign.json": {
@@ -375,13 +378,66 @@
         "last_commit": "15b5f2f671a062dff0c0620bd5af16c7ffcead67"
       },
       "docs/research/M172-worker-invariance-control.md": {
-        "sha256": "870082D9966B618403439F5E9F772B9B266F27F7FB80672CE439D20D29BFCC60",
+        "sha256": "CC6122864B08AC350485A5C93D4EF3F306B167CE47F367F1B958D8BBB0BADBDF",
         "last_commit": "97e5ad9cd5fdb0f47cdffc7a1c7a9418d6df89a8"
       },
       "docs/research/M172-m12s-closure.md": {
-        "sha256": "3523F2185F2B8CA750B9402AC503D28BFC216A078910F58655911EF50E673846",
+        "sha256": "D2A74FD839334E5340A85A7D7FA47B1A932C7671CAF5304CE831AE09CC7FF92B",
         "last_commit": "15b5f2f671a062dff0c0620bd5af16c7ffcead67"
+      },
+      "docs/research/M172-memory-planner-handoff.md": {
+        "sha256": "BABE4E3E7B2793F9631B46B66B245472D2231830B80F2299EC94A2E5EF7475C8",
+        "last_commit": "fb42b9a1c6481dba3d7ef54c8505ec5ca69b649d"
       }
+    }
+  },
+  "planner_hypothesis": {
+    "source_accounted_bytes_per_active_chunk": 2385817108,
+    "handoff_per_chunk_line": 44,
+    "modeled_live_payload_bytes": 3045147112,
+    "handoff_live_line": 76,
+    "w4_model_cell": {
+      "frames": 33,
+      "workers": 4,
+      "active_chunks": 4,
+      "position_key": "scored:N33:W4:R4",
+      "predicted_payload_bytes": 9543268432,
+      "observed_job_peak_bytes": 9589813248,
+      "observed_private_peak_bytes": 9589800960,
+      "job_minus_private_bytes": 12288,
+      "job_residual_bytes": 46544816,
+      "job_residual_fraction": 0.004853568551995226,
+      "total_processes": 1,
+      "peak_process_count": 1,
+      "same_run_holds_both_maxima": true
+    },
+    "w2_third_point": {
+      "frames": 33,
+      "workers": 2,
+      "active_chunks": 2,
+      "position_key": "scored:N33:W2:R2",
+      "predicted_payload_bytes": 4771634216,
+      "registered_job_peak_bytes": 4804636672,
+      "registered_private_peak_bytes": 4804431872,
+      "job_minus_private_bytes": 204800,
+      "registered_job_residual_bytes": 33002456,
+      "registered_job_residual_fraction": 0.006868876515123098,
+      "fresh_job_peak_bytes": 4804800512,
+      "fresh_job_residual_bytes": 33166296,
+      "fresh_job_residual_fraction": 0.006902741522185386,
+      "total_processes": 1,
+      "peak_process_count": 1,
+      "same_run_holds_both_maxima": true
+    },
+    "payload_only_error_limit_fraction": 0.01,
+    "third_point_falsifies_mechanism": false,
+    "bounded_prediction": {
+      "predicted_live_payload_bytes": 3045147112,
+      "observed_n299_w16_job_peak_bytes": 3074797568,
+      "residual_bytes": 29650456,
+      "residual_fraction": 0.009643059532951992,
+      "observed_under_bar": true,
+      "tiling_required_for_memory_bar": false
     }
   },
   "n7": {
@@ -391,7 +447,13 @@
     "fresh_unrepaired_w4_job_peak_bytes": 9586323456,
     "fresh_unrepaired_w4_failed": true,
     "repaired_result_cashed_as_formal_pass": false,
-    "certifying_rerun_owner": "M179-m12-rerun"
+    "certifying_rerun_owner": "M179-m12-rerun",
+    "registered_gate_harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+    "owned_probe_harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+    "same_registered_gate_observed_red": true,
+    "changed_future_gate_requires_new_unrepaired_red": true,
+    "rule_document_commit": "fb42b9a1c6481dba3d7ef54c8505ec5ca69b649d",
+    "rule_document_sha256": "D2A5A486C1FFF1C563740C4CBBE4C1550FD94EE0E2134532A67BD5D58C000A01"
   },
   "probe_commission": {
     "status": "COMMISSIONED",
@@ -410,11 +472,12 @@
     }
   },
   "provenance": {
-    "closeout_sha256": "94481A3A96F246FA3CC2CCF39135163D600F385DC8CD0C9183DE517593B94D80",
+    "closeout_sha256": "F53D1D01A8B160CA86A618AE7E66F1D62B3A90B9500F8B348AB8A7EA1FAE5598",
     "records_sha256": "5D6046F5DEA1E2FD64AF25B70F26F1371C7CEEDF1B7D7B83A504B01F3D1AFF26",
     "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
-    "proposal_sha256": "CB72B2A20833FEF9C8A4E64C55C47663CBBE0DE1A6FD2ADEC59AA2D24FE71B82",
-    "scorecard_sha256": "405F3749F097104778EC11404EB432E53869EE9CFA6EF13BAB4BC2CDBDA7A696",
+    "governing_text_commit": "fb42b9a1c6481dba3d7ef54c8505ec5ca69b649d",
+    "proposal_sha256": "EA0E8A839A1C4FBEC77E7148ABA88C2271431D41FAB698759A602C6789548ECC",
+    "scorecard_sha256": "357B0FF7FC90321B6D5E4C2ABE165601CA815A02C84AECFDCEFC299AFC72070F",
     "current_merge_cmd_sha256": "DA41F88278AEB3072C02A30132AA2CD69ADE54766A0C314F8A5E4F05350FF8EB",
     "current_pyramid_sha256": "7B6376E68A1A6488F958B85E65CFDC57DFE8B8826D4612D8429D08F8743632AC",
     "current_align_cmd_sha256": "B3DE7738151A6BC0500C66DD916F9FCB20CDB9BE0BF698AD00425D3EBB397C69",

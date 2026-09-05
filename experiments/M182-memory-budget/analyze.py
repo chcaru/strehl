@@ -18,6 +18,9 @@ M172_CLOSURE = ROOT / "docs" / "research" / "M172-m12s-closure.md"
 M172_INVARIANCE = (
     ROOT / "docs" / "research" / "M172-worker-invariance-control.md"
 )
+M172_PLANNER = (
+    ROOT / "docs" / "research" / "M172-memory-planner-handoff.md"
+)
 M172_EXPERIMENT = ROOT / "experiments" / "M172-worker-memory"
 M172_MEASURE = M172_EXPERIMENT / "measure_memory.py"
 M172_CAMPAIGN = M172_EXPERIMENT / "results" / "campaign.json"
@@ -25,6 +28,7 @@ M172_NEGATIVE_SUMMARY = (
     M172_EXPERIMENT / "results" / "negative-control-summary.json"
 )
 HARNESS = ROOT / "experiments" / "m12-scorecard" / "m12-harness.py"
+N7_DOC = ROOT / "docs" / "research" / "ORCH-clamp-default-decision.md"
 M139 = (
     ROOT
     / "experiments"
@@ -74,6 +78,14 @@ MEASURED_SOURCE_ANCHORS = {
 BAR_BYTES = 6 << 30
 M139_COMMIT = "8009447e059febb8f9c59fda509f141835d6abdb"
 BOUNDED_COMMIT = "a97275817c58e164f75c7cd3d80ca99444a2a145"
+PLANNER_COMMIT = "fb42b9a1c6481dba3d7ef54c8505ec5ca69b649d"
+PLANNER_SOURCE_COMMIT = "fc2abb499126a56302de7f21f527de5613be34e7"
+PLANNER_LIVE_BYTES = 3_045_147_112
+PLANNER_PER_CHUNK_LINE = (
+    "| **Total** | **`2,385,817,108`** | "
+    "**`2,275.29 MiB / 2.222 GiB`** |"
+)
+PLANNER_LIVE_LINE = "`3,045,147,112 B = 2.836 GiB`. Allowing allocator, decoder, writer, and Rayon"
 PROPOSAL_BAR = (
     "then lands as: decode on CPU, everything after the channel on GPU, end state"
 )
@@ -102,9 +114,12 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest().upper()
 
 
-def require_unique_fragment(path: Path, fragment: str, label: str) -> int:
-    lines = path.read_text(encoding="utf-8").splitlines()
-    matches = [index + 1 for index, line in enumerate(lines) if fragment in line]
+def require_unique_fragment_in_text(text: str, fragment: str, label: str) -> int:
+    matches = [
+        index + 1
+        for index, line in enumerate(text.splitlines())
+        if fragment in line
+    ]
     if len(matches) != 1:
         raise RuntimeError(
             f"{label}: fragment matched {len(matches)} lines, expected exactly one"
@@ -112,9 +127,12 @@ def require_unique_fragment(path: Path, fragment: str, label: str) -> int:
     return matches[0]
 
 
-def require_unique_line(path: Path, line: str, label: str) -> int:
-    lines = path.read_text(encoding="utf-8").splitlines()
-    matches = [index + 1 for index, candidate in enumerate(lines) if candidate == line]
+def require_unique_line_in_text(text: str, line: str, label: str) -> int:
+    matches = [
+        index + 1
+        for index, candidate in enumerate(text.splitlines())
+        if candidate == line
+    ]
     if len(matches) != 1:
         raise RuntimeError(
             f"{label}: full line matched {len(matches)} times, expected exactly one"
@@ -226,22 +244,38 @@ def accepted_scored_records() -> list[dict[str, Any]]:
 
 
 def build() -> dict[str, Any]:
-    proposal_target_line = require_unique_fragment(
-        PROPOSAL, PROPOSAL_TARGET_FRAGMENT, "proposal memory target"
+    proposal_relative = str(PROPOSAL.relative_to(ROOT)).replace("\\", "/")
+    scorecard_relative = str(SCORECARD.relative_to(ROOT)).replace("\\", "/")
+    harness_relative = str(HARNESS.relative_to(ROOT)).replace("\\", "/")
+    planner_relative = str(M172_PLANNER.relative_to(ROOT)).replace("\\", "/")
+    n7_relative = str(N7_DOC.relative_to(ROOT)).replace("\\", "/")
+    proposal_blob = git_bytes("show", f"{PLANNER_COMMIT}:{proposal_relative}")
+    scorecard_blob = git_bytes("show", f"{PLANNER_COMMIT}:{scorecard_relative}")
+    harness_blob = git_bytes("show", f"{PLANNER_COMMIT}:{harness_relative}")
+    planner_blob = git_bytes("show", f"{PLANNER_COMMIT}:{planner_relative}")
+    n7_blob = git_bytes("show", f"{PLANNER_COMMIT}:{n7_relative}")
+    proposal_text = proposal_blob.decode("utf-8")
+    scorecard_text = scorecard_blob.decode("utf-8")
+    harness_text = harness_blob.decode("utf-8")
+    planner_text = planner_blob.decode("utf-8")
+    proposal_target_line = require_unique_fragment_in_text(
+        proposal_text, PROPOSAL_TARGET_FRAGMENT, "proposal memory target"
     )
-    scorecard_bar_line = require_unique_line(
-        SCORECARD, SCORECARD_BAR, "scorecard M12 bar"
+    scorecard_bar_line = require_unique_line_in_text(
+        scorecard_text, SCORECARD_BAR, "scorecard M12 bar"
     )
-    scorecard_warm_line = require_unique_line(
-        SCORECARD, SCORECARD_WARM, "scorecard warm protocol"
+    scorecard_warm_line = require_unique_line_in_text(
+        scorecard_text, SCORECARD_WARM, "scorecard warm protocol"
     )
     harness_lines = {
-        "spawn": require_unique_line(HARNESS, HARNESS_SPAWN, "harness spawn"),
-        "suspended": require_unique_line(
-            HARNESS, HARNESS_SUSPEND, "harness suspended creation"
+        "spawn": require_unique_line_in_text(
+            harness_text, HARNESS_SPAWN, "harness spawn"
         ),
-        "first_sample": require_unique_line(
-            HARNESS, HARNESS_START_SAMPLE, "harness first sample"
+        "suspended": require_unique_line_in_text(
+            harness_text, HARNESS_SUSPEND, "harness suspended creation"
+        ),
+        "first_sample": require_unique_line_in_text(
+            harness_text, HARNESS_START_SAMPLE, "harness first sample"
         ),
     }
 
@@ -288,6 +322,12 @@ def build() -> dict[str, Any]:
             "and first-frame allocations remain in scope"
         ),
     }
+    m139_harness_hashes = {row["harness_sha256"] for row in scored}
+    if len(m139_harness_hashes) != 1:
+        raise RuntimeError(
+            f"M139 scored rows name {len(m139_harness_hashes)} harness hashes"
+        )
+    m139_harness_sha256 = next(iter(m139_harness_hashes))
 
     reproduction = []
     for name in ("pre-n33-w1", "pre-n33-w2", "pre-n33-w4"):
@@ -317,6 +357,74 @@ def build() -> dict[str, Any]:
         formal_fit["slope_bytes_per_active_chunk"]
         - accounting["source_accounted_bytes_per_active_chunk"]
     )
+    planner_per_chunk_line = require_unique_line_in_text(
+        planner_text,
+        PLANNER_PER_CHUNK_LINE,
+        "M172 planner per-chunk total",
+    )
+    planner_live_line = require_unique_line_in_text(
+        planner_text,
+        PLANNER_LIVE_LINE,
+        "M172 planner bounded live payload",
+    )
+
+    def peak_record(
+        workers: int, key: str
+    ) -> dict[str, Any]:
+        rows = [
+            row
+            for row in scored
+            if row["limit"] == 33 and row["workers"] == workers
+        ]
+        if len(rows) != 6:
+            raise RuntimeError(
+                f"M139 N33/W{workers}: found {len(rows)} scored rows, expected six"
+            )
+        if key == "job":
+            return max(
+                rows,
+                key=lambda row: row["memory"]["kernel_job_peak_memory"][
+                    "peak_job_memory_used_bytes"
+                ],
+            )
+        if key == "private":
+            return max(
+                rows,
+                key=lambda row: row["memory"][
+                    "peak_process_tree_private_committed_bytes"
+                ],
+            )
+        raise RuntimeError(f"unsupported peak record key {key!r}")
+
+    planner_per_chunk = accounting["source_accounted_bytes_per_active_chunk"]
+    w2_job_record = peak_record(2, "job")
+    w2_private_record = peak_record(2, "private")
+    w4_job_record = peak_record(4, "job")
+    w4_private_record = peak_record(4, "private")
+
+    def memory_values(row: dict[str, Any]) -> tuple[int, int]:
+        memory = row["memory"]
+        return (
+            memory["kernel_job_peak_memory"]["peak_job_memory_used_bytes"],
+            memory["peak_process_tree_private_committed_bytes"],
+        )
+
+    w2_job_peak, w2_private_at_job_peak = memory_values(w2_job_record)
+    w2_job_at_private_peak, w2_private_peak = memory_values(w2_private_record)
+    w4_job_peak, w4_private_at_job_peak = memory_values(w4_job_record)
+    w4_job_at_private_peak, w4_private_peak = memory_values(w4_private_record)
+    if w2_job_record["position_key"] != w2_private_record["position_key"]:
+        raise RuntimeError("M139 N33/W2 Job and private maxima came from different runs")
+    if w4_job_record["position_key"] != w4_private_record["position_key"]:
+        raise RuntimeError("M139 N33/W4 Job and private maxima came from different runs")
+    if w2_job_peak != w2_job_at_private_peak or w4_job_peak != w4_job_at_private_peak:
+        raise RuntimeError("M139 peak record accounting is inconsistent")
+    fresh_w2_record = read_json(HERE / "pre-n33-w2.json")
+    fresh_w2_job = fresh_w2_record["memory"]["kernel_job_peak_memory"][
+        "peak_job_memory_used_bytes"
+    ]
+    planner_w2_prediction = 2 * planner_per_chunk
+    planner_w4_prediction = 4 * planner_per_chunk
 
     post33 = read_json(HERE / "post-n33-w16.json")
     post299 = read_json(HERE / "post-n299-w16.json")
@@ -441,11 +549,14 @@ def build() -> dict[str, Any]:
         M172_NEGATIVE_SUMMARY,
         M172_INVARIANCE,
         M172_CLOSURE,
+        M172_PLANNER,
     ):
         relative = str(path.relative_to(ROOT)).replace("\\", "/")
+        last_commit = git("log", "-1", "--format=%H", "--", relative)
+        artifact_blob = git_bytes("show", f"{last_commit}:{relative}")
         m172_artifacts[relative] = {
-            "sha256": sha256(path),
-            "last_commit": git("log", "-1", "--format=%H", "--", relative),
+            "sha256": sha256_bytes(artifact_blob),
+            "last_commit": last_commit,
         }
     fresh_w4_peak = next(
         row["fresh_job_peak_bytes"] for row in reproduction if row["workers"] == 4
@@ -503,14 +614,14 @@ def build() -> dict[str, Any]:
         "m172_evidence_boundary": {
             "authored_bounded_memory_commit": BOUNDED_COMMIT,
             "m172_answered_step4": True,
-            "m172_answered_step3": False,
+            "m172_answered_step3": True,
             "step4_imported_conclusion": (
                 "one reusable BandWorker, two BandMerge accumulators, and spatial "
                 "parallelism bound memory without tiling"
             ),
-            "step3_gap_in_m172": (
-                "the committed M172 material contains a Job Object wrapper and "
-                "bounded implementation, but no ranked source allocation ledger"
+            "step3_overlap": (
+                "the routed planner handoff contains the same ranked source allocation "
+                "ledger that M182 independently derived"
             ),
             "independently_verified_by_m182": [
                 "bar and warm lifecycle semantics from governing documents and harness",
@@ -536,7 +647,88 @@ def build() -> dict[str, Any]:
                 ]["last_commit"]
                 == "15b5f2f671a062dff0c0620bd5af16c7ffcead67"
             ),
+            "planner_preservation_commit": PLANNER_COMMIT,
+            "planner_source_commit": PLANNER_SOURCE_COMMIT,
+            "planner_preservation_parent": git(
+                "show", "-s", "--format=%P", PLANNER_COMMIT
+            ),
             "artifacts": m172_artifacts,
+        },
+        "planner_hypothesis": {
+            "source_accounted_bytes_per_active_chunk": planner_per_chunk,
+            "handoff_per_chunk_line": planner_per_chunk_line,
+            "modeled_live_payload_bytes": PLANNER_LIVE_BYTES,
+            "handoff_live_line": planner_live_line,
+            "w4_model_cell": {
+                "frames": 33,
+                "workers": 4,
+                "active_chunks": 4,
+                "position_key": w4_job_record["position_key"],
+                "predicted_payload_bytes": planner_w4_prediction,
+                "observed_job_peak_bytes": w4_job_peak,
+                "observed_private_peak_bytes": w4_private_peak,
+                "job_minus_private_bytes": w4_job_peak - w4_private_peak,
+                "job_residual_bytes": w4_job_peak - planner_w4_prediction,
+                "job_residual_fraction": (
+                    w4_job_peak - planner_w4_prediction
+                )
+                / w4_job_peak,
+                "total_processes": w4_job_record["memory"][
+                    "kernel_job_accounting"
+                ]["total_processes"],
+                "peak_process_count": w4_job_record["memory"][
+                    "peak_process_count"
+                ],
+                "same_run_holds_both_maxima": True,
+            },
+            "w2_third_point": {
+                "frames": 33,
+                "workers": 2,
+                "active_chunks": 2,
+                "position_key": w2_job_record["position_key"],
+                "predicted_payload_bytes": planner_w2_prediction,
+                "registered_job_peak_bytes": w2_job_peak,
+                "registered_private_peak_bytes": w2_private_peak,
+                "job_minus_private_bytes": w2_job_peak - w2_private_peak,
+                "registered_job_residual_bytes": (
+                    w2_job_peak - planner_w2_prediction
+                ),
+                "registered_job_residual_fraction": (
+                    w2_job_peak - planner_w2_prediction
+                )
+                / w2_job_peak,
+                "fresh_job_peak_bytes": fresh_w2_job,
+                "fresh_job_residual_bytes": (
+                    fresh_w2_job - planner_w2_prediction
+                ),
+                "fresh_job_residual_fraction": (
+                    fresh_w2_job - planner_w2_prediction
+                )
+                / fresh_w2_job,
+                "total_processes": w2_job_record["memory"][
+                    "kernel_job_accounting"
+                ]["total_processes"],
+                "peak_process_count": w2_job_record["memory"][
+                    "peak_process_count"
+                ],
+                "same_run_holds_both_maxima": True,
+            },
+            "payload_only_error_limit_fraction": 0.01,
+            "third_point_falsifies_mechanism": (
+                abs(w2_job_peak - planner_w2_prediction) / w2_job_peak
+                > 0.01
+            ),
+            "bounded_prediction": {
+                "predicted_live_payload_bytes": PLANNER_LIVE_BYTES,
+                "observed_n299_w16_job_peak_bytes": post299_peak,
+                "residual_bytes": post299_peak - PLANNER_LIVE_BYTES,
+                "residual_fraction": (
+                    post299_peak - PLANNER_LIVE_BYTES
+                )
+                / post299_peak,
+                "observed_under_bar": post299_peak <= BAR_BYTES,
+                "tiling_required_for_memory_bar": False,
+            },
         },
         "n7": {
             "unrepaired_certifying_commit": M139_COMMIT,
@@ -546,6 +738,15 @@ def build() -> dict[str, Any]:
             "fresh_unrepaired_w4_failed": fresh_w4_peak > BAR_BYTES,
             "repaired_result_cashed_as_formal_pass": False,
             "certifying_rerun_owner": "M179-m12-rerun",
+            "registered_gate_harness_sha256": m139_harness_sha256,
+            "owned_probe_harness_sha256": probe_commission["harness_sha256"],
+            "same_registered_gate_observed_red": (
+                m139_harness_sha256
+                == probe_commission["harness_sha256"]
+            ),
+            "changed_future_gate_requires_new_unrepaired_red": True,
+            "rule_document_commit": PLANNER_COMMIT,
+            "rule_document_sha256": sha256_bytes(n7_blob),
         },
         "probe_commission": {
             "status": probe_commission["status"],
@@ -556,9 +757,10 @@ def build() -> dict[str, Any]:
         "provenance": {
             "closeout_sha256": sha256(CLOSEOUT),
             "records_sha256": sha256(RECORDS),
-            "harness_sha256": sha256(HARNESS),
-            "proposal_sha256": sha256(PROPOSAL),
-            "scorecard_sha256": sha256(SCORECARD),
+            "harness_sha256": m139_harness_sha256,
+            "governing_text_commit": PLANNER_COMMIT,
+            "proposal_sha256": sha256_bytes(proposal_blob),
+            "scorecard_sha256": sha256_bytes(scorecard_blob),
             "current_merge_cmd_sha256": sha256(MEASURED_MERGE),
             "current_pyramid_sha256": sha256(MEASURED_CORE),
             "current_align_cmd_sha256": sha256(MEASURED_ALIGN),

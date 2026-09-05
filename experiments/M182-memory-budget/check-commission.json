@@ -1,7 +1,7 @@
 {
   "schema": "m182-memory-check-commission-v1",
-  "baseline_checks": 44,
-  "baseline_passed": 44,
+  "baseline_checks": 49,
+  "baseline_passed": 49,
   "report_mutations": [
     {
       "check": "R-bar-ruling",
@@ -85,12 +85,27 @@
     },
     {
       "check": "R-m172-boundary",
-      "anchor_sha256": "DA637BB5C28955D44B82611FD6D9040E274B609BC25D271C18D1BC773423BF5F",
+      "anchor_sha256": "6B0B850CD4D65484F9F02FF049CBA7BA0DF3AE4BEAC6F5BD1E409F1660E53184",
+      "caught": true
+    },
+    {
+      "check": "R-planner-estimand",
+      "anchor_sha256": "19187494662AD8B2CC073BFF42A05CA3F298B9A5DDC186CF986272047EB4BC54",
+      "caught": true
+    },
+    {
+      "check": "R-third-worker",
+      "anchor_sha256": "E895819B13B893890F19BFCA8CC3412CFFC577B7E7C1FA94A55AF5F1085EBE84",
+      "caught": true
+    },
+    {
+      "check": "R-tiling-ruling",
+      "anchor_sha256": "52F7D7DF6B22AAA9A86B43DF8A9A47A02A33E9F7AC6A9CFB71A6F0FCB92CA836",
       "caught": true
     },
     {
       "check": "R-n7-ruling",
-      "anchor_sha256": "B06F6AC0AA8524D027462C1C0A8D19A2CC786D6546E722BC159B7E3D1693C18B",
+      "anchor_sha256": "32ED028ED2F66E5BBE5DF796168075183AA38FE8CD94841DF3B274F0192CE9B3",
       "caught": true
     },
     {
@@ -105,7 +120,7 @@
     },
     {
       "check": "R-check-commission",
-      "anchor_sha256": "099B239E198E8194DBECD6820DC9B6E267664E12D5E3791CD48F62CAEF09D69D",
+      "anchor_sha256": "414AC33861A4FF0901BD551F0C140238263ECC65B9117FD5639A89AB8899C56D",
       "caught": true
     }
   ],
@@ -197,7 +212,7 @@
     {
       "check": "S15-input-evidence-provenance",
       "defect": "M139 closeout identity corrupted",
-      "anchor_sha256": "D2CCBAAFAABF633F744540A194B2C32E517EFD78EFE0FD244EAC726CF422DC6E",
+      "anchor_sha256": "597A4E98BA0CA84275A8A9F714586FC75C2EDC8681D966FBF4A43A5410FB44E8",
       "caught": true
     },
     {
@@ -244,13 +259,25 @@
     },
     {
       "check": "S23-m172-boundary-and-n7",
-      "defect": "M172 falsely credited with independent allocation attribution",
-      "anchor_sha256": "C031FA3010BAF4287E407FEB201252C1FE65961D9BB55F39AA9765F230F27E64",
+      "defect": "routed M172 allocation ledger falsely erased",
+      "anchor_sha256": "1EC6B223758F59AB2FD224B0D680E59C0C6BA1F2A0D826E5AAD86D5FEF712292",
+      "caught": true
+    },
+    {
+      "check": "S24-planner-estimand-and-third-point",
+      "defect": "third worker count planted as falsifying the payload model",
+      "anchor_sha256": "FF975279CD5F6C99715E39FB1D1C3ADA739B81147AE0F2297870819D3CA1F28C",
+      "caught": true
+    },
+    {
+      "check": "S25-tiling-ruling",
+      "defect": "tiling planted as required despite measured bounded headroom",
+      "anchor_sha256": "0E979A188C3B3F0978D3EE7DBA39BD2D63F3D1A50C8D1597BD7D2E1B4DD74881",
       "caught": true
     }
   ],
-  "planted_defects": 44,
-  "caught": 44,
+  "planted_defects": 49,
+  "caught": 49,
   "missed": [],
   "inert_arms": {
     "unmeasured_report_sentence_stayed_green": true,
