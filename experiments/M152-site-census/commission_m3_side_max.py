@@ -35,7 +35,7 @@ from census_common import (
 STUDY_DEFINITION_PATH = HERE / "side-max-commission-definition.json"
 MANIFEST_PATH = HERE / "out" / "census-manifest.json"
 NOISE_PATH = HERE / "out" / "noise-calibration.json"
-OUT_PATH = HERE / "out" / "m3-side-max-commission.json"
+OUT_PATH = HERE / "out" / "m3-side-max-commission-v2.json"
 PROFILE_OFFSETS = np.arange(-400.0, 401.0, 1.0)
 SOURCE_TRACE_OFFSETS = np.arange(-402.0, 403.0, 2.0)
 
@@ -123,8 +123,12 @@ def logistic_profile(
 
 
 def edge_patch(dark: float, step: float, width: float) -> np.ndarray:
-    _, xx = np.indices((128, 128), dtype=np.float64)
-    return logistic_profile(xx - 63.5, dark, step, width)
+    yy, xx = np.indices((128, 128), dtype=np.float64)
+    texture = 0.006 * step * (
+        np.sin(2.0 * math.pi * xx / 5.0)
+        + 0.7 * np.sin(2.0 * math.pi * yy / 6.0 + 0.3)
+    )
+    return logistic_profile(xx - 63.5, dark, step, width) + texture
 
 
 def rim_plant(
@@ -929,8 +933,9 @@ def main() -> None:
         "regressed_arm_names": regressed,
     }
     result = {
-        "schema": "m152-m3-side-max-commission-v1",
+        "schema": "m152-m3-side-max-commission-v2",
         "study_definition_sha256": study_hash,
+        "commission_source_sha256": sha256_file(HERE / "commission_m3_side_max.py"),
         "census_definition_sha256": census_definition_hash,
         "census_manifest_sha256": sha256_file(MANIFEST_PATH),
         "canonical_checker_sha256": study["authority"][
@@ -938,6 +943,18 @@ def main() -> None:
         ],
         "canonical_definition_sha256": checker_definition_hash,
         "historical_m152_v1_hashes_verified": True,
+        "fixture_repair": {
+            "supersedes_result": "out/m3-side-max-commission.json",
+            "superseded_result_sha256": (
+                "52fb035d98cd4463a4431fc7abf49b08a99e373f08238a3ecb6291f9eb0974a6"
+            ),
+            "reason": (
+                "The freeze-1 helper omitted the 0.006-step texture present in "
+                "the hash-pinned historical M152 edge_patch, leaving the rho "
+                "band nearly empty. V2 restores that pre-existing fixture; no "
+                "metric, plant, threshold, or empirical-noise rule changes."
+            ),
+        },
         "candidate_outputs_opened": 0,
         "comparator_outputs_opened": 0,
         "holdout_pixels_opened": 0,

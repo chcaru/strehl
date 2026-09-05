@@ -9,11 +9,13 @@ from commission_m3_side_max import (
     SOURCE_TRACE_OFFSETS,
     TraceLocation,
     allocate_trace_locations,
+    edge_patch,
     evaluate_side_asymmetry,
     extract_empirical_trace,
     load_canonical_checker,
     load_frozen_sites,
     load_study_definition,
+    planted_patch,
     verify_frozen_dependencies,
 )
 from census_common import load_definition
@@ -77,6 +79,16 @@ class M3SideMaxCommissionTests(unittest.TestCase):
         amended = np.maximum(negative, positive)
         self.assertTrue(np.all(amended >= legacy))
         self.assertTrue(np.all(amended <= 2.0 * legacy))
+
+    def test_original_textured_patch_preserves_improvement_coherence(self) -> None:
+        checker, definition, _ = load_canonical_checker(self.study)
+        patch = edge_patch(0.1, 0.6, 2.0)
+        improved = planted_patch(patch, 0.6, rim=0.005, veil=0.005)
+        band = definition["rho_edge"]["band_cycles_per_native_px"]
+        coherence = checker.complex_band_coherence(
+            improved, patch, low=float(band[0]), high=float(band[1])
+        )
+        self.assertGreaterEqual(coherence, definition["bars"]["median_rho_edge_min"])
 
     def test_exercise_gate_rejects_equal_sides(self) -> None:
         negative = np.full(500, 0.002)
