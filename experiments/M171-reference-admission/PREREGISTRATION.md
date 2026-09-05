@@ -382,3 +382,48 @@ history. Its SHA-256 is
 The replacement implementation and campaign may begin only after this
 amendment, the v3 contract, and the lane-local `.gitattributes` are committed
 together.
+
+## 10. Amendment 3 - common-mode upper tail and protected outputs
+
+Status: **FROZEN AFTER V3 INVALIDATION AND BEFORE V4 EXECUTION**
+
+Written: **2026-09-04**
+
+A third independent verifier found that the common-mode upper-confidence
+routine combined the lower-bound bootstrap root with an upper-bound addition.
+The v3 code used `(bootstrap - observed) / se` in both directions. That root is
+correct for a lower bound and wrong for an upper bound.
+
+The affected v3 commission SHA-256
+`C79C7E79B872EF7E6DA03778B8E158A4FFE7F93EDAFA08D5306C00DD7DAF97DF`
+and verification SHA-256
+`4F987DDFDEBC0FF3DBFFA90DBCAE4CDAFF83B95C757C62A326289DDF6C49EDA1`
+are invalidated in full. Their active labels have no evidentiary standing.
+
+The v4 confidence contract freezes distinct roots:
+
+```text
+lower-root t_b = max_f (bootstrap_f,b - observed_f) / se_f
+LCB_f = observed_f - quantile_0.975(t_b) * se_f
+
+upper-root t_b = max_f (observed_f - bootstrap_f,b) / se_f
+UCB_f = observed_f + quantile_0.975(t_b) * se_f.
+```
+
+Both use the fixed hierarchy, seed, one-sided family alpha, and NumPy
+`higher` quantile method already frozen. The correction changes no data,
+threshold, seed, cell, mutation, expected outcome, or no-compensation rule.
+For the invalidated v3 evidence the erroneous common-mode bound happened to
+be more conservative in every used cell; that accident does not commission
+the wrong general routine.
+
+The same audit found that commissioner and generator output arguments could
+resolve to hash-bound source or input files. Before replacement execution,
+every M171 CLI must reject an output that resolves to its contract,
+preregistration, `.gitattributes`, any lane Python source, or another active
+artifact input. The refusal is `HARNESS_ERROR` before opening the output.
+
+The v4 contract SHA-256 is
+`3530035E986B35118731FB2249EB95C32DEC372AA36AFD4F3B1B989F743D1DEF`.
+The replacement implementation and campaign may begin only after this
+amendment and contract are committed together.

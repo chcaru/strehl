@@ -1,5 +1,5 @@
 {
-  "schema": "m171-reference-admission-contract-v3",
+  "schema": "m171-reference-admission-contract-v4",
   "frozen_at": "2026-09-04T14:25:21.553-07:00",
   "amended_at": "2026-09-04T19:28:53.3637072-07:00",
   "amendment": {
@@ -16,6 +16,13 @@
     "invalidated_commission_sha256": "D1C862E12BCD967D9B3FB29BECA48CEB4939233B0758B84D725E4341AB1B78B1",
     "invalidated_verification_sha256": "2773F392B7C51A4930300DFE7777D8ABF328CF6AED583245FACFC2A5A0A81449"
   },
+  "statistical_amendment": {
+    "amendment": 3,
+    "reason": "Independent verification found the common-mode upper bound using the lower-bound bootstrap root.",
+    "invalidated_commission_sha256": "C79C7E79B872EF7E6DA03778B8E158A4FFE7F93EDAFA08D5306C00DD7DAF97DF",
+    "invalidated_verification_sha256": "4F987DDFDEBC0FF3DBFFA90DBCAE4CDAFF83B95C757C62A326289DDF6C49EDA1",
+    "output_protection": "All CLIs refuse outputs that resolve to frozen inputs or lane source files."
+  },
   "claim_scope": "GX_REFERENCE_CONDITIONAL",
   "capture_ruling": "ANALYSIS_ONLY",
   "source_authority": {
@@ -28,9 +35,9 @@
   },
   "schemas": {
     "evidence": "m171-reference-admission-evidence-v1",
-    "result": "m171-reference-admission-result-v3",
-    "commission": "m171-reference-admission-commission-v3",
-    "verification": "m171-reference-admission-verification-v3"
+    "result": "m171-reference-admission-result-v4",
+    "commission": "m171-reference-admission-commission-v4",
+    "verification": "m171-reference-admission-verification-v4"
   },
   "statuses": {
     "scientific": [
@@ -171,6 +178,8 @@
   "inference_contract": {
     "max_t_studentized_numerator": "bootstrap_minus_observed",
     "lower_bound": "observed_minus_critical_times_standard_error",
+    "upper_max_t_studentized_numerator": "observed_minus_bootstrap",
+    "upper_bound": "observed_plus_critical_times_standard_error",
     "g2_coordinate": "natural_log_reference_snr",
     "g2_reported_bound": "exp_coordinate_lower_bound",
     "g8_information_coordinate": "log_information_ratio_minus_log1p_delta",
