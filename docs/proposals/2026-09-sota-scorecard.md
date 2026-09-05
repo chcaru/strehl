@@ -1,11 +1,31 @@
 # strehl — pre-registered SOTA scorecard
 
-**Status: SPEC / PRE-REGISTRATION v1.10 (2026-09-04).** The v1.0 metric, bar, and
+**Status: SPEC / PRE-REGISTRATION v1.11 (2026-09-06).** The v1.0 metric, bar, and
 control protocol was written before implementation lanes reported outcomes.
 Subsequent revisions quarantine leaked evidence, classify captures before use, or
 withdraw/tighten an instrument defeated by independent commissioning; each change is
-recorded below. No v1.10 score output has been read. The competitive position remains
-**UNKNOWN**.
+recorded below. **Two axes have now been read: M8 FAIL and M12 FAIL.** The
+competitive position remains **UNKNOWN**, because neither read axis carries a
+comparator arm.
+
+**Revision 1.11 — M12 read; an unratified reverse dependency on M11 removed:**
+lane M139 completed the registered `N=33/105/299` x `1/2/4/8/16` matrix on a
+guarded host (`0c089f96`). `M12-D` **PASSES** on all 15 fixed-worker cells and is
+the first registered sub-property in this program to pass anything. `M12-S`,
+absolute memory, and N-mod-4 all **FAIL**; only `peak_N299/peak_N33` is unread, at
+`UNMEASURED_SAMPLING_COVERAGE`. Separately, lane M178 adjudicated the clause
+requiring M12-S's 16-worker output to *"simultaneously pass M11"*. That clause
+entered at `986c4653` (2026-09-02, *"Tighten scorecard anti-cheat constraints"*),
+was never present in the governing proposal — whose M12 bars are *"memory <=6 GiB
+warm; bytes invariant to worker count (D9a); the staircase gone"*
+(`2026-08-sota-path.md:1981-1982`) — and was never claimed as proposal-authored by
+the commit that introduced it. It is therefore an **unratified addition** and is
+removed. **This removal lowers the scoreboard rather than raising it**: it converts
+M12-S from a licence-withheld unknown into a measured FAIL. The legitimate
+*forward* guard is untouched and still binds at §3.3: M11's claimed
+production-speed output must be byte-identical across the worker ladder. What is
+withdrawn is only the *reverse* dependency, which withheld a measured M12 result
+behind an unpurchased licence without protecting anything.
 
 **Revision 1.10 — razor ruling and request-register closure, with no bar or verdict
 movement:** the razor remains barred from every positive M1/detail use, including an
@@ -794,7 +814,7 @@ publication verdict.
 | M9 | Acuity / `n_eff` certificate calibration | **DEFINITION BLOCKED on independent M1 acuity truth.** The registered downstream contract requires false-certification point rate and Wilson UCB95 `<=0.01`, true coverage and Wilson LCB95 `>=0.90`, nominal coverage `[0.93,0.97]`, exact `n_eff` identity with `n_eff>=1.0`, and pooled plus at least 9/10 decile variance ratios in `[0.90,1.10]`; none is presently usable as a bar. |
 | M10 | Physical depth product | **ILL-DEFINED beyond M163's uncertainty repair; non-operative pending M166.** The unchanged provisional downstream draft is valid target pixels `>=99%`; rank correlation `>=0.99`; median error `<=0.5` focus step, p95 `<=1.0` step; physical slope error `<=5%`. These numbers are not yet a usable bar. |
 | M11 | Wall-clock throughput | **DEFINED; `UNMEASURED_COMPARATOR_QUALIFICATION`; absolute timing QUARANTINED. COMMON-MERGE GATE:** `R_c>=2.00` on each of C33/C105/C299 and `R_pool>=2.00` against the fastest qualifying per-capture envelope, with retained cross-worker file and pixel identity. **PRODUCT-NATIVE REPORT:** at each N, candidate/default baseline `<=2.00`, CPU-16 `<=0.15 s/frame`, hybrid `<=0.06 s/frame`; every cold pair `<=warm+20.0 s`; all six live replays `<=10.0 s` after shutter close of frame 100. |
-| M12 | Memory, determinism, and scaling invariance | Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; every fixed-worker repeat is byte-identical and the outputs at 1/2/4/8/16 workers are mutually byte-identical while 16 workers passes M11; N-mod-4 per-frame spread `<=2%`. |
+| M12 | Memory, determinism, and scaling invariance | Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; every fixed-worker repeat is byte-identical and the outputs at 1/2/4/8/16 workers are mutually byte-identical; N-mod-4 per-frame spread `<=2%`. |
 
 M8, the M11 comparator/CPU/hybrid/cold/live targets, the M12 6-GiB bar, and byte
 invariance come directly from the proposal
@@ -828,7 +848,7 @@ and **(e)** scientifically measurable now. The archived fork output cannot clear
 | M9 | **DEFINITION BLOCKED — `DEFINITION_BLOCKED_M1_TRUTH`; (a)(c)** | No independent candidate-specific acuity-truth producer is admitted through the current M1 registry route; the balanced manifest, repeat captures/truth, calibration, and certificate product are also absent. M1 is the only currently specified and physically actionable route with an evidenced path today, not a unique mathematical anchor. The downstream contract is not presently scoreable. |
 | M10 | **DEFINITION BLOCKED beyond M163; (b)(c)** | M163 repaired uncertainty handling only. The target-valid predicate, stored depth/invalid encoding, flat-null reduction, and layer-confusion/boundary population remain undefined; no scored truth capture or compatible product exists. |
 | M11 | **DEFINED; `UNMEASURED_COMPARATOR_QUALIFICATION`; absolute timing QUARANTINED** | M1/M2 qualification, required common-input comparator outputs, the fresh hash-bound fork, frozen modes, timing harness, trace, reboot receipts, and quiet-host release are absent. STATUS §2.9.55's `93.2%` mean host CPU makes current absolute wall time inadmissible. |
-| M12 | **(e), scheduled; formal value UNMEASURED** | Hashes and process-tree RSS need no detail, comparator or holdout. Existing out-of-protocol evidence diagnoses fixed-worker determinism as holding and cross-worker scaling invariance as failing, but the registered N/worker matrix still requires the reserved quiet host. |
+| M12 | **MEASURED; `M12-D` PASS, `M12-S` FAIL, M12 overall FAIL** | Hashes and process-tree RSS need no detail, comparator or holdout, and the registered `N=33/105/299` x `1/2/4/8/16` matrix was completed on a guarded host by lane M139 (`0c089f96`). Peak Job Object memory `35.65745162963867 GiB` against the `6 GiB` bar; five distinct TIFF and five distinct pixel hashes across workers at every N; N-mod-4 spread `0.07618677189815302` against `2%`. Only `peak_N299/peak_N33` is unread, at `UNMEASURED_SAMPLING_COVERAGE` (minimum coverage `0.7957678743186919` against `0.90`); it cannot rescue two exact bar failures. Adjudicated licence-free by M178: the reverse dependency making M12-S wait on all of M11 was an unratified scorecard addition, now removed. |
 
 Thus defining M3, retained M4, and M11 does not make them adjudicable, and M9 remains
 definition-blocked. M8 is the only complete quality axis ready now. M12 is
@@ -1996,9 +2016,8 @@ non-product behaviour.
 **SCORECARD ADDITIONS** that make “flat” numeric are
 `peak_N299/peak_N33<=1.10` and N-mod-4 per-frame spread `<=2%`. M12-D requires
 exactly one distinct hash in every fixed-worker six-run cell. M12-S requires exactly
-one distinct hash across all five worker counts at every N, and the 16-worker output
-must simultaneously pass M11. A product may pass M12-D while failing M12-S; the two
-verdicts must never be conflated.
+one distinct hash across all five worker counts at every N. A product may pass M12-D
+while failing M12-S; the two verdicts must never be conflated.
 
 **Existing-evidence ruling.** The repository contains strong mechanism evidence but
 not a scorecard reading. `byte-freeze.rs` says changing
@@ -2091,7 +2110,7 @@ column.
 | M9 | Certificate calibration | **DEFINITION BLOCKED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | `truth_valid` has no admitted independent candidate-specific producer through the current M1 registry route. M1 is the only currently specified and physically actionable route with an evidenced path today, not a unique mathematical anchor. M166's downstream contract is registered but cannot be used or scored. |
 | M10 | Physical depth accuracy | **DEFINITION BLOCKED beyond uncertainty repair** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | M163 repaired uncertainty handling only; the remaining bar is ill-defined pending M166. The existing downstream draft is non-operative. |
 | M11 | Wall-clock throughput | **UNMEASURED_COMPARATOR_QUALIFICATION; absolute timing QUARANTINED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | M166 defines the campaign, but quality-qualified required comparator outputs are absent. Full-process absolute QPC timings also await a quiet host under STATUS §2.9.55; D11/D15 component PASSes are not M11 scores. |
-| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.10 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
+| M12 | Memory / determinism / scaling invariance | **FAIL** — peak `35.65745162963867 GiB` against `<=6 GiB`; five distinct TIFF and five distinct pixel hashes across workers `1/2/4/8/16` at every registered N; N-mod-4 spread `0.07618677189815302` against `<=2%`. `M12-D` **PASSES** on all 15 fixed-worker cells. `peak_N299/peak_N33` is **UNMEASURED_SAMPLING_COVERAGE**. | **UNMEASURED** | **UNMEASURED — blocker (d).** | **UNMEASURED** | **READ AND ADMITTED `0c089f96`, and it required no licence.** M139 completed the registered matrix on a guarded host. M12-D is the first registered sub-property in this program to pass anything. M178 adjudicated the scorecard's reverse M11 dependency an unratified addition absent from the governing proposal; removing it converts M12-S from withheld to a measured FAIL, which lowers this axis rather than raising it. |
 
 ## 7. Corrections and gaps in the governing proposal
 

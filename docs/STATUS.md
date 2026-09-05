@@ -42,15 +42,31 @@ marked as unmeasured.
 >   `UNMEASURED_SAMPLING_COVERAGE`, because minimum coverage was
 >   `0.7957678743186919` against a preregistered `0.90`.
 >
-> **M139 assigned no overall M12 verdict**, on the ground that `M12-S` also
-> requires the 16-worker output to pass `M11`, which is licence-blocked.
-> **That precondition is under adjudication and is not being relied on here**:
-> it appears in the scorecard but not in the governing plan, whose own bars are
+> **M12 overall is a FAIL, and it required no licence.** M139 originally
+> assigned no overall verdict, on the ground that `M12-S` also requires the
+> 16-worker output to pass `M11`, which is licence-blocked. Lane M178
+> adjudicated that precondition an **`UNRATIFIED_ADDITION`**, and I verified its
+> decisive citations at source rather than taking the report's word. The clause
+> appears in the scorecard but not in the governing plan, whose own M12 bars are
 > *"memory <=6 GiB warm; bytes invariant to worker count (D9a); the staircase
-> gone"* (`proposals/2026-08-sota-path.md:1981-1982`) and which states that
-> *"Two axes -- M8 and M12 -- are measurable today"* (`:2262-2263`). If that
-> adjudication holds, M12 is a licence-free FAIL decided today. Either way the
-> measured terms above stand, and no reading of them yields a pass.
+> gone"* (`proposals/2026-08-sota-path.md:1981-1982`), and which states that
+> *"Two axes -- M8 and M12 -- are measurable today"* (`:2262-2263`). It entered
+> exists. It entered at commit `986c46535fc082395831724f1d45c33a1d974390` and was
+> reworded at `dd957dd5f8ef36af99065db5aa52065171556adf`; neither claimed
+> proposal authority for it, and no documentary owner ratification of the
+> scorecard exists. It is withdrawn as of scorecard **Revision 1.11**.
+>
+> **That withdrawal lowers this program's board rather than raising it** — it
+> converts `M12-S` from a licence-withheld unknown into a decided FAIL — which is
+> the main reason to trust it. A rule that only ever gets relaxed in the
+> program's own favour is not a rule. The legitimate *forward* anti-cheat
+> survives untouched: M11's claimed production-speed output must still be
+> byte-identical across the worker ladder, so a fast 16-worker arm cannot be a
+> different product from the slow arms. What is withdrawn is only the *reverse*
+> dependency, which withheld a measured result behind an unpurchased licence
+> while protecting nothing. This is **not a tenth unratified instance** — M169
+> already counted it as its `R9`
+> (`research/M169-ratification-stakes.md:295-311`).
 >
 > **How long it stays `UNMEASURED` depends on a question the owner has not yet
 > ruled on.** Under the scorecard *as written*, every axis waits until licensed

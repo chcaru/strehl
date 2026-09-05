@@ -437,6 +437,14 @@ HEADER_ONLY = [
      "docs/proposals/2026-08-sota-path.md"),
     ("hdr plan measurable", "Two axes -- M8 and M12 -- are measurable today",
      "docs/proposals/2026-08-sota-path.md"),
+    ("hdr m178 verdict", "UNRATIFIED_ADDITION", R + "M178-m12s-adjudication.md"),
+    ("hdr m178 origin", "986c46535fc082395831724f1d45c33a1d974390",
+     R + "M178-m12s-adjudication.md"),
+    ("hdr m178 reword", "dd957dd5f8ef36af99065db5aa52065171556adf",
+     R + "M178-m12s-adjudication.md"),
+    ("hdr m169 r9 lines", "295-311", R + "M178-m12s-adjudication.md"),
+    ("hdr scorecard rev", "Revision 1.11",
+     "docs/proposals/2026-09-sota-scorecard.md"),
 ]
 for label, needle, rel in HEADER_ONLY:
     p = ROOT / rel

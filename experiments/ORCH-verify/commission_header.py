@@ -108,6 +108,26 @@ def run(scratch):
     return p.returncode, (p.stdout or "") + (p.stderr or "")
 
 
+def flexible_sub(text, old, new, *, label, where):
+    """Replace `old` tolerating line wrapping, requiring exactly one match.
+
+    The first version of this used a plain substring search and hard-errored
+    with 'anchor matched 0 times' on a phrase that v2954 finds without
+    difficulty. Both were right: v2954 collapses whitespace before matching,
+    and the phrase is wrapped across two lines in the governing proposal, so
+    the literal never occurs on any single line. A harness that cannot see a
+    wrapped quote would have forced me to weaken a perfectly good pin.
+    """
+    pattern = r"\s+".join(re.escape(tok) for tok in old.split())
+    hits = list(re.finditer(pattern, text))
+    if len(hits) != 1:
+        raise SystemExit(
+            "FATAL [%s]: anchor matched %d times in %s, need exactly 1: %r"
+            % (label, len(hits), where, old))
+    m = hits[0]
+    return text[:m.start()] + new + text[m.end():]
+
+
 # (label, anchor, replacement, inside_header, must_go_red, expect_regex)
 CONTROLS = [
     ("plan licence axes drift",
@@ -155,12 +175,58 @@ CONTROLS = [
      "bytes invariant to worker count (D9a)",
      "bytes invariant to worker count (D9b)",
      True, True, "hdr plan m12 bar"),
+    # The M178 adjudication pins. The two commit hashes are pinned in FULL
+    # 40-char form on purpose. The 8-char abbreviations do not work here and
+    # the reason is worth recording: `positions()` refuses a match whose
+    # neighbouring character is a digit, so `986c4653` is rejected inside
+    # `986c46535fc0...` because the next char is `5`. Its sibling `dd957dd5`
+    # was ACCEPTED inside `dd957dd5f8ef...` purely because the next char is
+    # `f`. A pin whose validity depends on whether the ninth hex digit happens
+    # to be a letter is not a pin, so both are now full-length.
+    ("hdr m178 verdict drift",
+     "an **`UNRATIFIED_ADDITION`**",
+     "an **`UNRATIFIED_OMISSION`**",
+     True, True, "hdr m178 verdict"),
+    ("hdr m178 origin drift",
+     "`986c46535fc082395831724f1d45c33a1d974390`",
+     "`986c46535fc082395831724f1d45c33a1d974391`",
+     True, True, "hdr m178 origin"),
+    ("hdr m169 r9 drift",
+     "M169-ratification-stakes.md:295-311",
+     "M169-ratification-stakes.md:295-312",
+     True, True, "hdr m169 r9 lines"),
+    ("hdr scorecard rev drift",
+     "scorecard **Revision 1.11**",
+     "scorecard **Revision 1.12**",
+     True, True, "hdr scorecard rev"),
     # INERT 1: header prose no pin covers. If this goes RED the suite is
     # reacting to any edit at all, which would make every GREEN meaningless.
     ("inert header prose",
      "The practical consequence is that",
      "The practical upshot is that",
      True, False, None),
+]
+
+# Arms that mutate the SOURCE document instead of STATUS.
+#
+# Every arm in CONTROLS edits STATUS. None of them can distinguish a pin that
+# genuinely re-reads the cited source each run from one comparing STATUS to a
+# constant baked into the verifier. These arms are the only proof that the
+# cross-document half of a header pin is alive: STATUS is left untouched and
+# the claim must still go RED because the SOURCE no longer supports it.
+#
+# (label, relative source path, anchor, replacement, expect_regex)
+SOURCE_CONTROLS = [
+    ("src m178 origin drift",
+     "docs/research/M178-m12s-adjudication.md",
+     "`986c46535fc082395831724f1d45c33a1d974390`",
+     "`986c46535fc082395831724f1d45c33a1d974391`",
+     "hdr m178 origin"),
+    ("src plan m12 bar drift",
+     "docs/proposals/2026-08-sota-path.md",
+     "bytes invariant to worker count (D9a)",
+     "bytes invariant to worker count (D9z)",
+     "hdr plan m12 bar"),
 ]
 
 
@@ -249,12 +315,48 @@ def main():
                 inert_bad += 1
         shutil.rmtree(scratch, ignore_errors=True)
 
-    planted = sum(1 for c in CONTROLS if c[4])
-    inert = len(CONTROLS) - planted
+    # Source-side arms: STATUS is left untouched.
+    for label, rel, old, new, expect in SOURCE_CONTROLS:
+        if red_has(out0, expect):
+            raise SystemExit(
+                "FATAL: claim %r is ALREADY RED before its source plant is "
+                "applied; its control would be meaningless" % expect)
+        scratch = build_scratch()
+        target = scratch / Path(rel)
+        if not target.exists():
+            raise SystemExit(
+                "FATAL [%s]: scratch is missing %s, so this arm would report a "
+                "MISS that is really a copy failure" % (label, rel))
+        text = target.read_text(encoding="utf-8", errors="replace")
+        text = flexible_sub(text, old, new, label=label, where=rel)
+        target.write_text(text, encoding="utf-8")
+        status_now = (scratch / "docs" / "STATUS.md").read_text(
+            encoding="utf-8", errors="replace")
+        if not re.search(r"\s+".join(re.escape(t) for t in old.split()),
+                         status_now):
+            raise SystemExit(
+                "FATAL [%s]: STATUS does not contain the anchor, so this arm "
+                "does not test a cross-document pin at all" % label)
+        rc, out = run(scratch)
+        hit = red_has(out, expect)
+        print("%-28s %-16s [source-side; STATUS untouched; claim %r %s]"
+              % (label, "CAUGHT" if hit else "*** MISSED ***", expect,
+                 "went RED" if hit else "STAYED GREEN"))
+        if hit:
+            caught += 1
+        else:
+            missed += 1
+        shutil.rmtree(scratch, ignore_errors=True)
+
+    planted = sum(1 for c in CONTROLS if c[4]) + len(SOURCE_CONTROLS)
+    inert = len(CONTROLS) - sum(1 for c in CONTROLS if c[4])
     print("\ncaught %d, missed %d  (of %d planted)"
           % (caught, missed, planted))
     print("inert survived %d, inert tripped %d  (of %d inert)"
           % (inert_ok, inert_bad, inert))
+    print("arms accounted  : %d of %d"
+          % (caught + missed + inert_ok + inert_bad,
+             len(CONTROLS) + len(SOURCE_CONTROLS)))
     ok = (missed == 0 and inert_bad == 0
           and caught == planted and inert_ok == inert)
     print("VERDICT: " + ("COMMISSIONED" if ok else "NOT COMMISSIONED"))
