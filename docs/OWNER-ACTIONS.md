@@ -110,7 +110,7 @@ Maintained by the orchestrator. Last updated after lane M175.
 > between them.
 >
 > **It is the only blocker on the big session that needs you rather than me.**
-> The rest of what stands in front of the 891-frame scored session is mine to
+> The rest of what stands in front of the 1,215-frame scored session is mine to
 > clear. This one is not, and nothing in the archive can substitute for it:
 > across the full inventory of **10,509** frames, every single one was shot
 > through the teleconverter. There is no bare-lens frame in the archive at all.
@@ -126,7 +126,7 @@ Maintained by the orchestrator. Last updated after lane M175.
 > These two frames settle it.
 >
 > If they come back wide, **the magnification target moves, not the bar** — and
-> learning that from two frames is enormously cheaper than learning it from 891.
+> learning that from two frames is enormously cheaper than learning it from 1,215.
 
 ---
 
@@ -908,7 +908,7 @@ here so that when it *is* shootable you are not surprised by the size of it.
 
 > **This is new, it is cheap, and it unblocks the most expensive thing on the
 > board.** It is not the session. It is two exposures of a flat target, and it
-> is the difference between the 891-frame session being shootable and being
+> is the difference between the 1,215-frame scored session being shootable and being
 > guesswork.
 
 > **Before you start:** this is one preflight attempt, normally two RAW files.
@@ -1000,7 +1000,7 @@ interpolation blur into exactly the quantity being measured. The lane that built
 it says so plainly and I agree: the synthetic pass *is not yet a commissioned
 gate*. Two real frames replace an argument with a measurement.
 
-**What it costs you if you skip it.** The session is 891 frames in one
+**What it costs you if you skip it.** The session is 1,215 frames in one
 uninterrupted sitting. If the magnification is fractionally off, nothing
 announces it at the time — reproduction ratio is not recoverable from metadata
 for any of your 68 existing stacks — and it surfaces only in analysis, after the
@@ -1048,14 +1048,14 @@ These answer the four questions that were holding the session:
 |---|---|
 | Teleconverter | **On** for the reference passes, **off** for TC0. |
 | Magnification | Retain **`1.32x`** target, **`1.33x`** ceiling — *conditional on the preflight passing.* |
-| Frame count | **891 registered frames** — this is the real number, not 448. |
+| Frame count | **1,215 registered frames** — this is the real number. It superseded `891`, which had itself superseded `448` (lane M166, `a195bc63` / `ff99afc8`). |
 | The committed 603-frame request | **Superseded.** |
 | Stabilisation | **IBIS and OSS off throughout** — consistent with finding 1 below. |
 
 **Action item on me, not you:** the protocol document
 `docs/capture-requests/2026-09-319-frame-session.md` still describes the
 superseded session. **Do not shoot from it in its current state.** I will
-reconcile it against the 891-frame design before I tell you the session is
+reconcile it against the 1,215-frame design before I tell you the session is
 ready, so that what you shoot from is a single unambiguous document.
 
 Once cleared, this session clears blocker `(c)`, which with `crop-early` reaches
@@ -1190,7 +1190,7 @@ qualifying tiles, so there is currently nothing to commission against at all.
 **How to shoot them.** Reserve broad, truly featureless background; keep each
 `128x128` tile above the ten-sigma black floor and below clipping; avoid
 `20–60 px` texture in every focus frame. These are backgrounds, not subjects —
-they should be quick, and they are independent of the 891-frame session.
+they should be quick, and they are independent of the 1,215-frame scored session.
 
 **One choice here is genuinely yours, and I am flagging it rather than taking
 it.** The near-equal `84/83/83` split is M152's, frozen before any pixel was
