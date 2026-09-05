@@ -89,6 +89,52 @@ if occurrences != 1:
 elif "are the M8-O v1.5 legitimacy ruling, not" not in dec:
     failures.append("':1573-1582' present but the retraction sentence is missing")
 
+# --- Amendment 1 / N6: the three live code facts, read from the Rust source ---
+# These are pinned against crates/ rather than against the prose, so that a
+# change to the code that invalidates N6's premise fails here rather than
+# silently leaving a stale ruling in force.
+_align = (ROOT / "crates" / "strehl-core" / "src" / "align.rs").read_text(
+    encoding="utf-8", errors="replace")
+_restore = (ROOT / "crates" / "strehl-core" / "src" / "restore.rs").read_text(
+    encoding="utf-8", errors="replace")
+
+_code_facts = [
+    ("resampler enum still has six variants",
+     all(collapse("Resampler::%s" % v) in collapse(_align)
+         for v in ("Nearest", "Bilinear", "CatmullRom", "ClampedCatmullRom",
+                   "Lanczos2", "Lanczos3"))),
+    ("bilinear tap is still non-negative",
+     collapse("Resampler::Bilinear => (1.0 - a).max(0.0),") in collapse(_restore)),
+    ("restoration still refuses only the clamped kernel",
+     collapse("!matches!(r, Resampler::ClampedCatmullRom)") in collapse(_restore)),
+]
+for _label, _ok in _code_facts:
+    checked += 1
+    if not _ok:
+        failures.append(
+            f"{_label}: FALSE. Amendment 1 / N6 rests on this code fact; if the "
+            "code changed, the ruling must be re-derived, not left standing.")
+
+# N6 and the coupling claim must both survive in the prose.
+# OWNER/decision prose puts rulings in blockquotes, so '> ' markers land
+# mid-sentence once whitespace is collapsed. Strip them for these quotes only,
+# leaving the checks above reading exactly what they read before.
+_dec_bq = collapse(re.sub(r"(?m)^[ \t]*>[ \t]?", "", DECISION.read_text(
+    encoding="utf-8", errors="replace")))
+for _label, _quote in (
+    ("N6 prohibition",
+     "No configuration change may be adopted as a route to an M8 pass while "
+     "blocker `(a)` is open, if that change buys its out-of-range rate by "
+     "altering the resampling kernel."),
+    ("M8 coupled to (a)",
+     "**M8 cannot be honestly passed before `(a)` closes.**"),
+    ("N6 states its own falsifier",
+     "it must be **qualified rather than footnoted**"),
+):
+    checked += 1
+    if collapse(_quote) not in _dec_bq:
+        failures.append(f"{_label}: missing from the decision document")
+
 print(f"checked   {checked}")
 print(f"failures  {len(failures)}")
 for f in failures:

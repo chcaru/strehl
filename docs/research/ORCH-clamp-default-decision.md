@@ -229,6 +229,78 @@ document, and recorded here so the wrong anchor is not propagated further.
   arm below currently targets it. **Recorded as the weakest point in the GO case
   before any data is taken.**
 
+### 9.1 Amendment 1 — N5 named the wrong thing, and M8 is coupled to blocker (a) (orchestrator, 2026-09-06)
+
+**N5 as written prohibits a clamped default. The reason behind it is broader
+than the clamp, and stating it as a clamp rule left a hole I have now found.**
+
+**What I verified at source, in the live tree, after writing N5:**
+
+- `crates/strehl-core/src/align.rs:2896` — `Resampler` has **six** variants, not
+  two: `Nearest`, `Bilinear`, `CatmullRom`, `ClampedCatmullRom`, `Lanczos2`,
+  `Lanczos3`. §§1-9 above were written as though the choice were Catmull-Rom
+  versus its clamped form. It never was.
+- `crates/strehl-core/src/restore.rs:157` — `tap(Resampler::Bilinear, t)` is
+  `(1.0 - |t|).max(0.0)`, support 1. **The taps are non-negative everywhere.**
+- `crates/strehl-core/src/restore.rs:128` — `restoration_supported(r)` is
+  `!matches!(r, Resampler::ClampedCatmullRom)`. **Every kernel except the
+  clamped one is restoration-supported, including `Bilinear`.**
+
+**The consequence.** A gather whose taps are non-negative and sum to one is a
+convex combination of its input samples. Its output is therefore bounded by the
+minimum and maximum of those samples, so **it cannot overshoot at all**. If that
+holds — and it is being measured rather than assumed, see below — then
+`Bilinear` drives M8-R's out-of-range rate to **exactly zero by construction of
+the kernel**, available **today, with no code change, behind an existing flag**.
+
+**This is not the defeat the scorecard pre-registered.** `:1631` registers
+*"destructive clipping can force a zero rate"*. Clipping is nonlinear,
+value-dependent, and has no invertible tap response, which is precisely why
+`restoration_supported()` refuses it. A non-negative kernel is **linear,
+shift-invariant, and restoration-supported**. The registered defeat does not
+obviously reach it, and I will not pretend it does.
+
+**So the prohibition has to rest on its real reason, which is this.** Every
+route to a zero out-of-range rate buys it by changing the resampling kernel, and
+every such change is paid for in **detail**. Detail is exactly the quantity this
+program **cannot currently measure**, because blocker `(a)` — the missing
+admissible detail statistic — is open. A change whose entire cost lands on the
+one axis the program is blind to is not a measurement; it is a wager that the
+cost is small, dressed as a result.
+
+> **N6 (generalises N5, which stands as a special case).** **No configuration
+> change may be adopted as a route to an M8 pass while blocker `(a)` is open, if
+> that change buys its out-of-range rate by altering the resampling kernel.**
+> This binds the clamped kernel, `Bilinear`, `Nearest`, and any future
+> non-negative kernel equally. The disqualifier is not that clipping is
+> destructive; it is that **the cost is paid in a currency the program cannot
+> yet count.** N5 remains correct and is now the clamp-shaped instance of N6.
+
+**The structural consequence, which is the important half and which I did not
+see before tonight: M8 is coupled to blocker `(a)`.** The route table treats
+`(a)` as gating the detail axes and treats M8 as separable from it. It is not.
+Every available route to an M8 pass either fails honestly at the shipping
+default's admitted `1.030569%`, or passes by spending unmeasurable detail. **M8
+cannot be honestly passed before `(a)` closes.** This makes `(a)` more central
+than the route table shows, and any route table that implies M8 is reachable
+without it is overstating what is purchasable.
+
+**What is measured and what is assumed.** Verified: the six variants, the
+non-negative bilinear tap, and the restoration support. **Assumed and currently
+unmeasured: that bilinear actually costs meaningful detail relative to
+Catmull-Rom, and that restoration does not cheaply recover it.** That
+assumption is textbook but it is still an assumption, and this amendment rests
+on it. Lane **M182-kernel-trade** is measuring exactly this — per-kernel MTF
+relative to Catmull-Rom, the restored bilinear MTF, and the noise amplification
+restoration costs.
+
+**What would make me wrong.** If M182 finds that restoration recovers bilinear's
+MTF across the band at an acceptable noise cost, then the trade is real, cheap
+and measurable, N6 is too strong, and it must be **qualified rather than
+footnoted** — a kernel whose loss is provably invertible is not spending an
+uncountable currency. I would rather find that out from M182's numbers than
+defend N6 because I wrote it.
+
 ## 10. Result
 
 **UNRESOLVED.** No arm has been read. Executing lanes append findings below this
