@@ -1,8 +1,10 @@
 # M152 — shared input-only M3/M4 site census
 
 **Status:** census frozen and run; M3 capture is sufficient; M4 needs new
-capture; M3 checker built but **not admitted** after a required commissioning
-arm exposed a one-sided broad-veil blind spot.
+capture. The historical pooled-mean M3 checker correctly failed commissioning;
+the amended side-max reduction now passes its full supplemental battery and
+empirical clean-noise controls. The M3 axis remains
+`UNMEASURED_COMPARATOR_QUALIFICATION`, not scored.
 
 **Pre-output census freeze:** commit `f7dde90a`, definition SHA-256
 `b2e872a6a8214d4fbe379287f52fc57b8f5e61f292aab4c30e96b11d49325879`.
@@ -289,7 +291,7 @@ clears 50 and one new protected flat session with at least 72 sites could close
 the 250-flat total. That would be a new population version chosen openly; M152
 does not rewrite its frozen quotas after seeing the result.
 
-## M3 checker and commissioning
+## Historical M3 checker and commissioning
 
 The checker definition is
 `experiments/M152-site-census/m3-checker-definition.json`, SHA-256
@@ -338,7 +340,7 @@ The improvement arm moves median `h_e` `0.119885 -> 0.009885` and median `v_e`
 `0.060000 -> 0.005000`. The statistic therefore responds in both directions;
 it is not merely a non-negative defect readout that can only stay fixed.
 
-### Commissioning failure: the registered broad veil is not admissible
+### Historical commissioning failure: the pooled broad veil was not admissible
 
 The one-sided plant occupies offsets `+33` through `+232`, exactly 200 native
 pixels. It begins outside `h_e`'s last sample at 32 px. The registered `v_e`
@@ -363,21 +365,101 @@ failed: one_sided_far_veil_detected_at_least_95pct
 This is the M3 counterpart of M145's sparse-seam lesson: a pooled reduction can
 be numerically correct and still fail to charge the spatial failure it names.
 
+## Side-max amendment and recommissioning
+
+Scorecard amendment `4b79b6dc` replaced the pooled two-side mean with
+`v_e=max(v_e_neg,v_e_pos)`. The current scorecard later adopted M161's
+versioned scorer, which also separates broad and narrow source-step
+normalization. M152's v1 checker, definition, and red artifact remain unchanged
+as historical evidence. The supplemental definition is
+`side-max-commission-definition.json`; it pins the canonical M161 scorer and
+all local and historical dependencies.
+
+The primary clean-noise arm uses the exact 500 frozen site IDs and their frozen
+`step_broad_dn` and `sigma_temporal_dn`, but opens no protected site pixels.
+It replays eleven adjacent-pair differences from the non-holdout ISO-100 dark
+session as empirical sensor-noise traces, scales them to each frozen site's
+already-registered temporal sigma, and forms a defect-free mean profile. The
+far reference is one member of that mean, preserving production-like
+covariance. A disjoint-reference arm is the conservative covariance stress;
+ISO-1000 repeats both roles as a pre-registered noise-tail morphology stress.
+Trace allocation is fixed before decode and never filters on a measured value.
+
+Artifact: `out/m3-side-max-commission-v2.json`, SHA-256
+`0df4593573b85cc611005ac112f80c6c9a47949f130ddfd377129db2dff937c4`.
+
+| clean-noise arm | legacy median / p99 | side-max median / p99 | inflation median / p95 / max | affected | Wilson UCB95 |
+|---|---:|---:|---:|---:|---:|
+| ISO-100 production covariance, **primary** | 0.003405 / 0.011209 | **0.003547 / 0.011920** | **1.0409 / 1.1290 / 1.2023** | 0/500 | 0.005382 |
+| ISO-100 disjoint reference | 0.003745 / 0.012330 | 0.003902 / 0.013111 | 1.0409 / 1.1290 / 1.2023 | 0/500 | 0.005382 |
+| ISO-1000 production covariance | 0.003032 / 0.010203 | 0.003294 / 0.010476 | 1.0515 / 1.1526 / 1.2589 | 0/500 | 0.005382 |
+| ISO-1000 disjoint reference | 0.003335 / 0.011224 | 0.003623 / 0.011524 | 1.0515 / 1.1526 / 1.2589 | 0/500 | 0.005382 |
+
+All four populations had 500/500 sites with unequal side means and both
+dominance directions represented. Their maximum amended `v_e` values were
+0.015246, 0.016771, 0.014019, and 0.015421. There were zero new-only 5%
+threshold crossings. The primary arm therefore clears the unchanged median
+0.01, p99 0.05, point-rate 1%, and Wilson-UCB 2% bars with substantial margin.
+**No threshold adjustment is indicated.**
+
+The identity arm remains exactly legacy/amended median `0/0`, p99 `0/0`, and
+affected `0/50`; it is retained only as a wiring check. Unlike that frozen
+probe, every empirical arm is nonzero and exercises side asymmetry.
+
+### Full amended battery
+
+| arm | median `h_e` | legacy median `v_e` | side-max median `v_e` | affected |
+|---|---:|---:|---:|---:|
+| synthetic identity wiring null | 0.000000 | 0.000000 | 0.000000 | 0/500 |
+| 6% rim | 0.059943 | 0.002919 | 0.002919 | 500/500 |
+| 6% opposite-sign rim | 0.059943 | 0.002919 | 0.002919 | 500/500 |
+| 6% two-sided veil | 0.059972 | 0.060000 | 0.060000 | 500/500 |
+| 6% one-sided `+33..+232` veil | 0.000000 | **0.027243** | **0.054486** | **500/500** |
+| 6% rim plus veil | 0.119885 | 0.060000 | 0.062919 | 500/500 |
+| 0.5% rim plus veil improvement | 0.009885 | 0.005000 | 0.005243 | 0/500 |
+| blur guard | 0.136315 | 0.000077 | 0.000077 | 500/500 |
+
+The one-sided plant's amended/legacy ratio was exactly `2.000000000000` at
+all 500 sites, matching the analytic limit. The improvement arm remains below
+the bar and lower than the 6% paired defect. Separate accounting is:
+
+- checks run/passed: **15/15**;
+- mutation arms planted/killed: **6/6**, 3,000/3,000 mutated sites charged;
+- inert controls run/survived: **6/6**;
+- improvement controls preserved: **1/1**; and
+- arms regressed: **0**.
+
+The first frozen supplemental run is preserved separately at
+`out/m3-side-max-commission.json`, SHA-256
+`52fb035d98cd4463a4431fc7abf49b08a99e373f08238a3ecb6291f9eb0974a6`.
+It returned red because the new helper accidentally omitted the
+already-pinned M152 patch texture, leaving the coherence band nearly empty;
+only the improvement arm's `rho_edge` check failed. Commit `5d6df895` restored
+the historical fixture exactly before the v2 rerun. No metric, plant,
+threshold, or empirical-noise rule changed, and the empirical values reproduced
+exactly.
+
+This is a reduction-level commission, not an M3 product result. The empirical
+amplitude is conditioned on M152's frozen temporal-noise model, so it cannot
+validate that calibration. Dark differences also do not represent ProPhoto
+output conversion, registration residual, or scene-dependent render error.
+Only eleven temporal pair clusters feed 500 spatial traces, so the reported
+Wilson value is the scorecard-shaped mechanical count, not a claim of 500
+independent noise captures.
+
 ## Can the bars bite?
 
 ### M3
 
-**Partly, but not enough to admit the current bar.** The input capture is
-sufficient. The checker strongly charges both rim signs, a two-sided veil and
-blur, stays quiet on its identity null, and scores a planted improvement lower.
-But the literal broad-veil reduction fails its own required one-sided 200 px
-plant. Until the scorecard adopts a per-side maximum (or another commissioned
-local guard), M3 is unfalsifiable for a substantial class of sparse one-sided
-far-field veils. The checker is correctly red, not shipped green.
+**The amended reduction can bite and remains passable on the commissioned
+clean-noise surrogate.** It charges both rim signs, two-sided and one-sided
+veils, and blur; the one-sided case is no longer diluted. The empirical tail
+does not threaten the unchanged bars.
 
-M3 also cannot yet produce a registered product score: no common-input
+M3 still cannot produce a registered product score: no common-input
 candidate/comparator outputs or external source-profile warps were supplied,
-and the scorecard still carries the separate future-M1 dependency.
+and the scorecard still requires an M1-qualified comparator envelope. Its axis
+verdict is `UNMEASURED_COMPARATOR_QUALIFICATION`, not PASS or FAIL.
 
 ### M4
 
@@ -411,17 +493,20 @@ python experiments\M152-site-census\census.py run --confirm-definition-sha256 b2
 python experiments\M152-site-census\census_commissioning.py
 python experiments\M152-site-census\test_m3_checker.py
 python experiments\M152-site-census\commission_m3.py
+python experiments\M152-site-census\test_m3_side_max_commission.py
+python experiments\M152-site-census\commission_m3_side_max.py
 python experiments\M152-site-census\verify_artifacts.py
 ```
 
-`commission_m3.py` is expected to exit 3 after writing the reproducible red
-artifact. Treating that exit as success would erase the main finding.
+`commission_m3.py` is historical and expected to exit 3 after writing the
+pooled-mean red artifact. `commission_m3_side_max.py` is expected to exit 0
+and reproduce the versioned side-max result.
 
 ## What remains undetermined
 
 1. I could not commission real external-warp robustness because no registered
    common-input warp/profile package exists. The untouched-RAW identity null
-   does not answer that question.
+   and empirical-noise surrogate do not answer that question.
 2. I could not run paired comparator p99 because no common-input comparator
    outputs were opened or supplied; doing so on holdout before the score run
    would violate the holdout rule.
