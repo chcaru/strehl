@@ -272,17 +272,22 @@ M151D = ROOT / "docs" / "research" / "M151-m5-checker.md"
 BENCH = [
     ("133 sw4", M151D,
      "at least 133 eligible tiles in the pass-averaged sw4 manifest",
-     "sw4, sw10 and their physical-coordinate intersection must each retain "
-     "at least `133` eligible tiles."),
+     "pass-averaged `sw4` `>=133` eligible tiles"),
     ("133 sw10", M151D,
      "at least 133 eligible tiles in the pass-averaged sw10 manifest",
-     "sw4, sw10 and their physical-coordinate intersection must each retain "
-     "at least `133` eligible tiles."),
+     "pass-averaged `sw10` `>=133` eligible tiles"),
     ("133 intersection", M151D,
      "at least 133 common eligible physical tiles in the intersection of "
      "those two required step-width manifests",
-     "sw4, sw10 and their physical-coordinate intersection must each retain "
-     "at least `133` eligible tiles."),
+     "their physical-coordinate intersection `>=133` eligible tiles"),
+    # The averaging ORDER is part of the registered gate, and the owner sheet
+    # omitted it. Averaging the A/B block cross-powers after best-frame
+    # election rather than before produces a different manifest and therefore
+    # a different count, so an owner could run "the M5 exit gate" faithfully
+    # and still not run the gate that was registered.
+    ("M5 gate averaging order", M151D,
+     "regularisation, best-frame election, ratios",
+     "regularisation, best-frame election, ratios"),
     # Anchored on the row label, not on the bare threshold. `q95 ratio
     # `<0.90`` occurs at three sites in M135 (pre-noise blur, added
     # independent noise, and high-band noise-only gain all share the bar), so

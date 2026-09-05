@@ -792,10 +792,13 @@ built eight axes on an unpublishable comparison. We would then re-scope `(d)`.
 >    candidate `sw4-A/B` and `sw10-A/B` stacks plus all `60` registered
 >    reset/start/end witnesses in the frozen order. Any interruption, missing
 >    frame or failed stability, reset, endpoint, spectral-profile or node gate
->    is **STOP**. Run the input-only M5 exit gate on these same stacks; sw4,
->    sw10 and their physical-coordinate intersection must each retain at least
->    `133` eligible tiles. That gate adds no frames. Any failed count is
->    **STOP**.
+>    is **STOP**. Run the input-only M5 exit gate on these same stacks: average
+>    the A and B block cross-powers **before** regularisation, best-frame
+>    election, ratios and bootstrap, independently for each step width; then
+>    require all three counts — pass-averaged `sw4` `>=133` eligible tiles,
+>    pass-averaged `sw10` `>=133` eligible tiles, and their physical-coordinate
+>    intersection `>=133` eligible tiles. That gate adds no frames. Any failed
+>    count is **STOP**.
 >
 > 9. **Physical controls — 192 more frames.** Capture the `96` sharp-control
 >    frames and run its frozen check; `Q05` must be strictly above `1.10`.

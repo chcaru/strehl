@@ -64,14 +64,24 @@ ARMS = [
      "**VERIFIED PASS**, `0.631510`", {"Q95 degradation arm"}),
     ("src 1.33x ceiling raised", REL_M135, "with a hard `1.33x` maximum",
      "with a hard `1.40x` maximum", {"1.33x ceiling"}),
-    # Owner-side. Dropping the intersection term is the specific expensive
-    # error this block exists to catch: it understates a three-way gate as
-    # two-way, so the owner could shoot a session that satisfies the printed
-    # gate and fails the registered one.
+    ("src averaging order dropped", REL_M151,
+     "regularisation, best-frame election, ratios",
+     "best-frame election, ratios", {"M5 gate averaging order"}),
+    # Owner-side. Dropping a term from the owner's shooting instruction is the
+    # specific expensive error this block exists to catch: it understates the
+    # registered gate, so the owner could shoot a session that satisfies the
+    # printed gate and fails the real one.
     ("owner drops intersection", REL_OWNER,
-     "sw4, sw10 and their physical-coordinate intersection must each retain",
-     "sw4 and sw10 must each retain",
-     {"133 sw4", "133 sw10", "133 intersection"}),
+     "their physical-coordinate intersection `>=133` eligible tiles",
+     "their physical-coordinate intersection considered separately",
+     {"133 intersection"}),
+    ("owner drops sw10 threshold", REL_OWNER,
+     "pass-averaged `sw10` `>=133` eligible tiles",
+     "pass-averaged `sw10` counted for information",
+     {"133 sw10"}),
+    ("owner drops averaging order", REL_OWNER,
+     "regularisation, best-frame election, ratios",
+     "best-frame election, ratios", {"M5 gate averaging order"}),
     ("owner Q05 threshold moved", REL_OWNER,
      "`Q05` must be strictly above `1.10`.",
      "`Q05` must be strictly above `1.05`.", {"Q05 sharp gate"}),
