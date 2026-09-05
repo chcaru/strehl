@@ -1,0 +1,178 @@
+{
+  "environment": {
+    "captures_opened": 0,
+    "numpy": "2.4.4",
+    "python": "3.12.10",
+    "scipy": "1.17.1",
+    "thread_contract": 1
+  },
+  "fixture": {
+    "base_sigma": 1.0,
+    "degraded_sigma": 1.65,
+    "gain_dn_per_e": 0.221113,
+    "improved_sigma": 0.55,
+    "oversample": 4,
+    "pairs": 16,
+    "post_blur_sigma": 1.0,
+    "read_noise_e": 1.2392,
+    "scene_band_power": {
+      "adaptive_renoise_usm": 307761.9836863334,
+      "base": 168467.99440173001,
+      "optical_degraded": 26100.846719132744,
+      "optical_improved": 487097.3054430017
+    },
+    "scene_min_max": {
+      "adaptive_renoise_usm": [
+        6653.986263789353,
+        9495.793491542605
+      ],
+      "base": [
+        6871.140728739316,
+        9158.276004496962
+      ],
+      "optical_degraded": [
+        7255.43802538899,
+        8671.314982531867
+      ],
+      "optical_improved": [
+        6117.713867203254,
+        9908.750808216082
+      ]
+    },
+    "scene_sha256": {
+      "adaptive_renoise_usm": "6ED565628DEA7E2B8BC704E78D43DBDCDDFC4594AE22824B469D73258D3A7F6A",
+      "base": "1D8DC24EA94F02C15CD1625A1D5839AF1C892F226D65FA65441A7AA57316CAD0",
+      "flat": "6D02134D913112C09362BED36DE579361B18F79F65609C559E757E091010D55E",
+      "optical_degraded": "F97AAA6D560D9284C48DF3A3385EE73057D0B3285BF8DF91964CFB4964727B70",
+      "optical_improved": "B03C26D588681DB386FD515D3BF24DDD2214046709ACE77D54124484BAF06A1E"
+    },
+    "side": 256,
+    "usm_amount": 0.75,
+    "usm_sigma": 1.0
+  },
+  "measurements": {
+    "adaptive_renoise_usm": {
+      "bin_gain_max": 1.015937214535621,
+      "bin_gain_median": 0.9948882767692802,
+      "bin_gain_min": 0.9627168482580009,
+      "licensed_modes": 15548,
+      "observed_noise_power": 1759.708162021267,
+      "populated_bins": 36,
+      "raw_coherent_power": 307795.2161851384,
+      "reference_noise_power": 1768.9834351008049,
+      "score": 306862.54630404175,
+      "weighted_noise_gain": 0.9947567213488298
+    },
+    "base": {
+      "bin_gain_max": 1.0362950218044478,
+      "bin_gain_median": 0.9949829623902853,
+      "bin_gain_min": 0.950485300496755,
+      "licensed_modes": 15548,
+      "observed_noise_power": 1763.145730101174,
+      "populated_bins": 36,
+      "raw_coherent_power": 168555.22429217942,
+      "reference_noise_power": 1768.9891653612035,
+      "score": 167493.04272249536,
+      "weighted_noise_gain": 0.9966967376768323
+    },
+    "flat": {
+      "bin_gain_max": 1.0356970793123348,
+      "bin_gain_median": 0.9947650911653433,
+      "bin_gain_min": 0.9509364058890003,
+      "licensed_modes": 15548,
+      "observed_noise_power": 1763.150514745131,
+      "populated_bins": 36,
+      "raw_coherent_power": 7.301286224377976,
+      "reference_noise_power": 1768.9891550871905,
+      "score": 7.371714885742402,
+      "weighted_noise_gain": 0.9966994481988377
+    },
+    "identity": {
+      "bin_gain_max": 1.0362950218044478,
+      "bin_gain_median": 0.9949829623902853,
+      "bin_gain_min": 0.950485300496755,
+      "licensed_modes": 15548,
+      "observed_noise_power": 1763.145730101174,
+      "populated_bins": 36,
+      "raw_coherent_power": 168555.22429217942,
+      "reference_noise_power": 1768.9891653612035,
+      "score": 167493.04272249536,
+      "weighted_noise_gain": 0.9966967376768323
+    },
+    "optical_degraded": {
+      "bin_gain_max": 1.0361711829959572,
+      "bin_gain_median": 0.9949136779054559,
+      "bin_gain_min": 0.9508020940582335,
+      "licensed_modes": 15548,
+      "observed_noise_power": 1763.1464485748622,
+      "populated_bins": 36,
+      "raw_coherent_power": 26140.30361691019,
+      "reference_noise_power": 1768.9891144008902,
+      "score": 25903.459775332558,
+      "weighted_noise_gain": 0.996697172538562
+    },
+    "optical_improved": {
+      "bin_gain_max": 1.036408967216806,
+      "bin_gain_median": 0.9948117701021222,
+      "bin_gain_min": 0.9500139348457572,
+      "licensed_modes": 15548,
+      "observed_noise_power": 1763.1175124289198,
+      "populated_bins": 36,
+      "raw_coherent_power": 487224.4006052435,
+      "reference_noise_power": 1768.9892986662433,
+      "score": 484713.1985329091,
+      "weighted_noise_gain": 0.9966807112729564
+    },
+    "post_blur": {
+      "bin_gain_max": 0.5336929151179423,
+      "bin_gain_median": 0.17251227805228217,
+      "bin_gain_min": 0.030714223939491928,
+      "licensed_modes": 15548,
+      "observed_noise_power": 317.61803307238057,
+      "populated_bins": 36,
+      "raw_coherent_power": 52577.59348069975,
+      "reference_noise_power": 1768.989165361203,
+      "score": 52577.59348069975,
+      "weighted_noise_gain": 0.1795477548939806
+    },
+    "post_usm": {
+      "bin_gain_max": 2.651449173414538,
+      "bin_gain_median": 2.062047756560518,
+      "bin_gain_min": 1.3705022945070862,
+      "licensed_modes": 15548,
+      "observed_noise_power": 3769.534703059846,
+      "populated_bins": 36,
+      "raw_coherent_power": 307917.2241164486,
+      "reference_noise_power": 1768.989165361204,
+      "score": 169396.5686527506,
+      "weighted_noise_gain": 2.130897563914789
+    }
+  },
+  "raw_coherent_ratios": {
+    "adaptive_renoise_usm": 1.8260793605043981,
+    "identity": 1.0,
+    "optical_degraded": 0.15508450554815015,
+    "optical_improved": 2.8905921050579364,
+    "post_blur": 0.3119309632880909,
+    "post_usm": 1.826803205949252
+  },
+  "schema": "m189-noise-colour-detail-v1",
+  "score_ratios": {
+    "adaptive_renoise_usm": 1.8320912995320981,
+    "identity": 1.0,
+    "optical_degraded": 0.15465394475070673,
+    "optical_improved": 2.893930342742583,
+    "post_blur": 0.31390911900628005,
+    "post_usm": 1.0113648059603826
+  },
+  "source": {
+    "git_head_before_run": "6533db2e7e30e7a163c9cf5ef8ad17b98deb2c4e",
+    "sha256": {
+      "PREREGISTRATION.md": "2E195DA0B2AA05BA9638EFAE12897B311C91289B9B83155DE3105D4583C503A9",
+      "commission.py": "7A7B2C070057B0E7237B8DB6E91052E49B13D2F5E5A8C21BB4E307DEAA2EB8E1",
+      "metric.py": "2918FDB4A7F2853D8758CD8FF1638D501380ACA6E5ACACA16C32E75E09BEBA3A",
+      "verify.py": "43BFC5412BA8568ADF51C37F46B9AA8A7457A34D30CB082861DD0F2BAD08BC0B"
+    }
+  },
+  "status": "MEASURED_SYNTHETIC"
+}

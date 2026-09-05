@@ -1,0 +1,12 @@
+M189 PTC-anchored Q synthetic commissioning
+base_score=167493.042722
+optical_improved/base=2.893930343
+optical_degraded/base=0.154653945
+post_blur/base=0.313909119
+post_usm/base=1.011364806
+post_usm_raw_coherent/base=1.826803206
+post_usm_weighted_noise_gain=2.130897564
+adaptive_renoise_usm/base=1.832091300
+adaptive_renoise_weighted_noise_gain=0.994756721
+flat_score=7.37171488574
+captures_opened=0

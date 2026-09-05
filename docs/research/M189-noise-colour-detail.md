@@ -1,31 +1,45 @@
 # M189 — PTC-referenced noise-colour detail
 
-**Status: NO-GO AS AN ADMISSIBLE DETAIL INSTRUMENT BEFORE
-IMPLEMENTATION.** The exact proposal was not previously commissioned and
-retired. Its narrow linear-filter mechanism is real: with an independently
-measured noise realization and an externally fixed covariance reference, a
-post-capture filter colours the noise while a pre-sensor optical change does
-not. A one-sided correction can therefore make ordinary common linear USM tie
-while making blur fall.
+**Status: INSTRUMENT VIABLE WITH DECLARED LIMITATION; SYNTHETIC COMMON-LSI
+COMMISSIONING GREEN.** The earlier no-build ruling in commit `af6cc9dc` was too
+broad. Its adaptive-renderer counterexample remains correct, but it was filed
+before the decisive positive control and before the governing comparator threat
+model were separated from a universal arbitrary-renderer claim.
 
-That result does **not** survive as M1. A single completed image does not expose
-its noise realization; the legitimate stack, warp, gather, demosaic, and tone
-pipeline already colours noise; and an adaptive renderer can denoise, sharpen
-the estimated signal, then synthesize fresh signal-dependent noise with the
-calibrated PTC distribution. The added noise replaces the expected sensor noise
-rather than adding an independently detectable cost. The resulting output can
-have the same calibrated noise law as a genuinely sharper optical capture.
+The held-out v2 candidate now measures:
 
-No M189 candidate, holdout reading, or capture request was run.
+- genuine pre-noise PSF narrowing: **`2.920107520x`**;
+- genuine pre-noise PSF widening: `0.153249100x`;
+- completed-image Gaussian blur: `0.322196098x`; and
+- completed-image USM: **`0.733681365x`**, despite USM raising uncorrected
+  coherent power by `1.831827134x`
+  (`experiments/M189-noise-colour-detail/V2-RESULT.md:9-41`).
+
+That is the missing result: the statistic is not merely a blur detector. It
+rises strongly for a genuine improvement while refusing to reward a common
+linear sharpening filter.
+
+The limitation is also measured, not hidden. Adaptive
+denoise/sharpen/fresh-re-noise scores `1.826782749x` while its weighted noise
+gain remains `0.999574532x`
+(`experiments/M189-noise-colour-detail/V2-RESULT.md:43-53`). A repeat-pair
+cross-statistic does not separate that construction from genuine detail
+(`experiments/M189-noise-colour-detail/REPEAT-ATTACK-RESULT.md:9-55,81-90`).
+The attack is absent by auditable construction in the scored strehl default,
+but is **unknown and not publicly evidenced** in proprietary Zerene/Helicon
+internals
+(`experiments/M189-noise-colour-detail/COMPARATOR-THREAT.md:90-104`).
+
+No capture or holdout pixels were opened.
 
 ## 0. Four-part ruling
 
 | Question | Ruling |
 |---|---|
 | Was this route already retired? | **Not exactly.** The corpus contains failed noise-subtracted detail scores, failed output-spectrum estimators, and a successful raw-CFA PTC floor, but no separately commissioned external-covariance **noise-colour veto** with the one-sided construction derived below. |
-| Does the algebra survive? | **Only under a restricted common-linear-filter contract.** External normalization retains the filter's noise transfer, and a one-sided score can make linear blur fall and linear USM not rise. It fails the broader renderer contract because sharpen-then-re-noise restores the expected covariance without undoing the sharpened deterministic estimate. |
-| Does the data exist? | **Calibration and development nulls exist; an admissible positive set does not.** M61 already supplies the PTC slope, and 110 paper flats plus 506 darks exist. A single image is insufficient. The archive has no unused matched pair of complete output lineages for the physical positive arm. |
-| What should be built? | **Nothing claim-bearing.** At most this is a pipeline-specific veto for naive post-filters. It is not an independent resolved-detail instrument, so no `experiments/M189-noise-colour-detail/` directory is justified. |
+| Does the algebra survive? | **Yes for a declared common-LSI threat model.** External normalization retains the filter's noise transfer. The conservative envelope score makes blur fall, genuine improvement rise, and USM fall. It is not robust to adaptive signal/noise separation followed by fresh calibrated re-noise. |
+| Does the data exist? | **Synthetic commissioning and calibration controls exist; a matched real optical pair does not.** M61 supplies the PTC slope, and 110 paper flats plus 506 darks exist. The archive still has no unused matched pair of complete output lineages for a real positive arm. |
+| What was built? | `experiments/M189-noise-colour-detail/` contains the failed frozen v1, the preregistered held-out v2 repair, source-hashed result artifacts, a comparator threat audit, and an executable repeat-attack witness. |
 
 ## 1. Corpus check
 
@@ -267,7 +281,62 @@ zero; it can only tie or refuse it.
 The construction nevertheless already requires an independently observable
 noise realization. It is not a single-image statistic.
 
-## 4. Why it does not become a completed-output instrument
+### 3.5 The positive control and the finite-sample repair
+
+**MEASURED SYNTHETIC.** V1 froze the pointwise-inspired local estimator before
+execution. It immediately answered the missing positive question:
+optical-improvement/base was `2.893930343x`. V1 nevertheless remained RED
+because USM/base was `1.011364806x` against the frozen `<=1.01` ceiling
+(`experiments/M189-noise-colour-detail/V1-RESULT.md:9-28`).
+
+The failure was not rounded away. Post-result diagnosis found that local
+\(\max(1,\hat G_b)\) has one-sided null bias: sampling excursions above one
+depress the base score while excursions below one are ignored. The exact
+per-frequency population USM ratio was `1.000000000000x`, and the frozen
+36-bin population ratio was `0.999863556838x`
+(`experiments/M189-noise-colour-detail/V1-RESULT.md:30-43`).
+
+Amendment 1 replaced that finite estimator with a conservative envelope:
+
+\[
+C_B=\sum_{f\in B}C(f),\qquad
+G_{\rm sup}=\max_b \frac{N_b}{N_{\rm ref}},\qquad
+Q_{\rm sup}=\frac{C_B}{\max(1,G_{\rm sup})}.
+\]
+
+For nonnegative population coherent power and a common LSI transfer,
+\(\sum_b |K_b|^2C_b\le\sup_b|K_b|^2\sum_bC_b\). The envelope may overcharge a
+filter where little scene power exists; it cannot reward its population
+amplitude gain. The repair, new latent, and four new noise streams were frozen
+before v2 execution (`experiments/M189-noise-colour-detail/AMENDMENT-1.md:7-70`).
+
+The held-out result passed every frozen predicate and every checker mutation:
+
+| arm | `Q_sup` / base |
+|---|---:|
+| genuine optical improvement | **`2.920107520x`** |
+| genuine optical degradation | `0.153249100x` |
+| completed-image blur | `0.322196098x` |
+| completed-image USM | **`0.733681365x`** |
+
+On the same held-out streams, the original local
+\(Q=C/\max(1,G)\) formula read optical improvement **`2.922975033x`**, blur
+`0.313079643x`, and USM `1.004839651x`. The positive answer therefore does not
+depend on the conservative-envelope repair; the repair addresses v1's
+finite-null USM instability
+(`experiments/M189-noise-colour-detail/V2-RESULT.md:14-21`).
+
+USM's uncorrected coherent power rose `1.831827134x`; its measured temporal-noise
+gain rose `2.144200309x`, so the external envelope charged rather than rewarded
+the intervention. The optical noise-null arms remained within `[0.97,1.03]`,
+and the independent checker was fully GREEN
+(`experiments/M189-noise-colour-detail/V2-RESULT.md:14-41,55-75`).
+
+The protection is a population identity plus a measured finite synthetic
+commission, not a theorem that every finite estimate is non-increasing.
+Confidence intervals and a powered real-data bar remain admission work.
+
+## 4. Boundary: why it is not a universal completed-output instrument
 
 ### 4.1 One image plus a PTC slope is insufficient
 
@@ -516,26 +585,123 @@ geometry, exposure/ISO or an explicitly calibrated level change, and a frozen
 renderer baseline. Matched flats/darks are additionally required to validate
 the declared baseline covariance.
 
-No such capture is requested. More repeats can improve estimation of a naive
-linear-filter veto; they cannot repair the adaptive re-noise collision.
+The successful v2 synthetic commission used **16 repeat pairs / 32 exposures
+per arm**. Two is only the algebraic minimum; 32 is the smallest support this
+lane has actually commissioned. No new M189 capture is requested. More repeats
+can improve estimation of the common-filter instrument; they cannot repair the
+adaptive re-noise collision.
 
-## 7. Decision
+## 7. Governing comparator threat model
 
-No `experiments/M189-noise-colour-detail/` candidate is created.
+The adaptive attack is real, but its presence in the scored comparison must be
+stated rather than assumed.
 
-The route produces one useful but non-claim-bearing statement:
+### 7.1 Zerene
 
-> With independently isolated temporal noise and a frozen baseline pipeline,
-> PTC-referenced noise transfer can veto an ordinary common linear sharpening
-> filter without becoming blind to common linear blur.
+The official Zerene documentation says PMax is a pyramid method that tends to
+increase noise and contrast, while DMap is smoother and less detail-preserving.
+PMax's default grit suppression sacrifices some finest-scale detail to reduce
+noise. No public material found by this lane describes fresh signal-dependent
+noise synthesis. That is evidence against claiming the attack is known
+present, not proof that proprietary internals omit it. The default grit
+suppression is close enough to adaptive denoising that licensed PMax and DMap
+outputs still require a direct test
+(`experiments/M189-noise-colour-detail/COMPARATOR-THREAT.md:12-42`).
 
-It cannot produce the required stronger statement:
+### 7.2 Helicon
 
-> A completed image whose noise matches the calibrated PTC covariance contains
-> genuine optically resolved detail rather than a sharpened deterministic
-> estimate with regenerated noise.
+Helicon publicly describes Methods A/B/C as weighted averaging, depth-map
+selection, and pyramid fusion. Its optional raw noise threshold removes noise
+at a stated fine-detail cost. The scorecard freezes built-in post-sharpening,
+denoising, and auto-adjustment off. No public material found here describes
+fresh calibrated re-noising; proprietary internals remain unknown
+(`experiments/M189-noise-colour-detail/COMPARATOR-THREAT.md:44-68`).
 
-That second statement is false under an adaptive renderer. The witness is at
-most a pipeline-specific sharpening sentinel, not an independent M1 detail
-instrument. This finding requires no change to M135's owned route and no owner
-capture action.
+### 7.3 strehl
+
+The scored strehl default is source-auditable and executable-hashable. The
+shipping path does not deconvolve, and the only reachable synthetic-noise
+generator identified in the default binary is lazy host-side calibration for a
+contributed focus operator; the default path does not construct it or draw a
+seed. The scored manifest can exclude that optional surface and experimental
+restoration paths. Adaptive re-noise is therefore absent by auditable
+construction in strehl's scored default
+(`experiments/M189-noise-colour-detail/COMPARATOR-THREAT.md:70-88`).
+
+**Threat ruling:** proprietary comparator re-noising is **UNKNOWN, NOT SHOWN
+PRESENT**; strehl re-noising is **ABSENT BY CONSTRUCTION**. The candidate may
+not claim robustness to arbitrary renderers. It may carry a declared
+limitation pending actual licensed-output testing
+(`experiments/M189-noise-colour-detail/COMPARATOR-THREAT.md:90-104`).
+
+## 8. Repeat pairs do not close the adaptive attack
+
+For completed repeats
+
+\[
+Y_1=T+\epsilon_1,\qquad Y_2=T+\epsilon_2,
+\]
+
+cross-power, repeat-difference power, and coherence depend on \(T\) and the
+noise law, not on whether \(T\) was optically delivered or produced by a
+deterministic denoise/sharpen stage. Independent re-noise cancels from
+cross-power exactly as genuine temporal shot noise does. Any repeatable
+denoiser bias, edge halo, or prior-generated texture enters the shared term and
+is credited as signal
+(`experiments/M189-noise-colour-detail/REPEAT-ATTACK-RESULT.md:9-55`).
+
+The executable witness coupled identical calibrated noise to two opposite
+provenance labels. Both repeat arrays were byte-identical; cross-power,
+difference-noise power, and coherence differed by exactly zero. The measured
+coherence was `0.998914239588`, showing why “suspiciously high” is not a safe
+rule: the genuine-labeled world has the same value
+(`experiments/M189-noise-colour-detail/REPEAT-ATTACK-RESULT.md:57-79`).
+
+A repeat-pair cross-statistic does **not** close the adaptive re-noise attack.
+Detecting it requires authenticated input-to-output noise ancestry,
+including input RAWs and a frozen renderer transfer, rather than another
+statistic of completed repeats
+(`experiments/M189-noise-colour-detail/REPEAT-ATTACK-RESULT.md:81-90`).
+
+## 9. Revised verdict
+
+**INSTRUMENT VIABLE WITH DECLARED LIMITATION.**
+
+The previous `NO-GO` is withdrawn at the candidate-viability level:
+
+1. the positive arm is not flat — genuine PSF narrowing raises the held-out
+   score **`2.920107520x`**;
+2. optical and completed-image degradation both fall;
+3. common completed-image USM cannot improve the conservative score on the
+   commissioned fixture and instead reads **`0.733681365x`**; and
+4. the independent checker and all mutations are GREEN
+   (`experiments/M189-noise-colour-detail/V2-RESULT.md:14-41,55-75`).
+
+The precise admissible claim is:
+
+> On calibrated independent-repeat observations with a frozen baseline
+> pipeline, `Q_sup` is commissioned to increase under a pre-noise Gaussian PSF
+> narrowing and not increase under the tested common LSI Gaussian blur or
+> unsharp mask.
+
+The declared limitation is:
+
+> `Q_sup` is not robust to adaptive separation of signal and noise followed by
+> fresh calibrated re-noising. That attack is absent in the source-audited
+> strehl default, unknown and not publicly evidenced in Zerene/Helicon, and not
+> detectable from completed repeat pairs alone.
+
+This is **not yet M1 admission** and does not itself change any axis. Before it
+can unblock M1/M3/M4/M5/M9, the owner-controlled program still needs:
+
+- a frozen actual-output adapter for each named comparator;
+- licensed PMax/DMap output testing under the scorecard settings;
+- PRNU/fixed-pattern, demosaic, tone, anisotropy, malformed-input, and full
+  M167 battery arms;
+- a powered interval for finite-repeat noise-transfer estimation; and
+- real matched optical transfer if the program requires physical rather than
+  synthetic positive confirmation.
+
+Those are commissioning and scope tasks for a viable candidate, not evidence
+that the positive control is blind. No new M189 capture request is filed, and
+M135's owned route is unchanged.
