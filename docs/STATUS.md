@@ -7441,6 +7441,96 @@ the replacements from the committed text.
 
 ---
 
+### 2.9.75 A licence I did not need to buy, and a failure that may already be repaired
+
+Two things closed this session that had been open for weeks, and one opened that
+could change the board more than anything else so far.
+
+**M12 is decided, and no licence was needed to decide it.** M139 completed the
+registered campaign and then declined to assign an overall verdict, because the
+scorecard said `M12-S` also required the 16-worker output to pass `M11`, which is
+licence-blocked. I did not trust my own reading that the clause was illegitimate,
+so I put lane M178 on it with instructions to prove me wrong, and I checked its
+decisive citations at source afterwards rather than accepting the report. The
+clause is an **`UNRATIFIED_ADDITION`**: it is absent from the governing plan,
+which asks only for *"memory <=6 GiB warm; bytes invariant to worker count
+(D9a); the staircase gone"*, and which states in terms that *"Two axes -- M8 and
+M12 -- are measurable today"*. It entered the scorecard at
+`986c46535fc082395831724f1d45c33a1d974390` and was reworded at
+`dd957dd5f8ef36af99065db5aa52065171556adf`; I confirmed both commits by hash,
+date and message, and neither claimed proposal authority for it. It is withdrawn
+as of scorecard **Revision 1.11**.
+
+The reason I believe that reasoning rather than merely liking its conclusion is
+that **it makes the result worse**. Removing the clause converts `M12-S` from a
+licence-withheld unknown into a decided FAIL and M12 overall from `NOT_ASSIGNED`
+into FAIL. A rule that only ever relaxes in the program's own favour is not a
+rule, and I would not have accepted this argument running the other way. The
+legitimate *forward* anti-cheat is untouched: M11's claimed production-speed
+output must still be byte-identical across the worker ladder, so a fast
+16-worker arm still cannot be a different product from the slow arms. Only the
+*reverse* dependency is gone, and it had been withholding a measured result
+behind an unpurchased licence while protecting nothing.
+
+**Then the ground moved.** Lane M176 reproduced the `M12-S` mechanism from
+first principles and named it `REDUCTION_ORDER`: the requested worker count was
+changing the logical frame partition, so the order of `f32` reductions changed
+with it. On the affected source, W=1 against W=2 moved `3,430` of `8,241,504`
+pixels, `0.041619%`, never by more than 1 DN16, and a W=1 repeat was
+byte-identical. That is floating-point non-associativity, not a structural
+disagreement about which frame wins a pixel — which is why it was fixable
+without changing what the merge decides. The repair replaces worker-sized
+`par_chunks` with a canonical `[5,5,5,4]` lattice and an ordered `absorb`.
+
+Lane M172 then bounded worker memory on top of that repair, and the preliminary
+numbers are startling. At N=299 with 16 workers — the exact cell that produced
+the published failure — the Job Object peak is `3,074,965,504` bytes, which is
+`2.863785` GiB against a 6 GiB bar that had failed at `35.65745162963867` GiB.
+That is not a marginal improvement; it is `3.136` GiB of headroom where there
+had been a `5.94x` overshoot. At N=33 all five worker counts produced **one**
+TIFF hash and **one** pixel hash.
+
+**I am not scoring any of that, and the reason is worth writing down.** The
+N=33 ladder was measured at commit `5ab8fbff` while the N=299 cell was measured
+at `e0a5b47f`. A memory ratio computed across two different binaries is not a
+measurement of anything, so the tempting `1.001664` is disqualified on
+methodology and not on its value. The six-repeat determinism cells do not exist
+on the repaired code, N=105 and N=299 have no worker ladder, and the timing bar
+is untouched. Lane **M179** is re-running the registered matrix in full at a
+single pinned commit proven by `git merge-base --is-ancestor` to contain both
+repairs.
+
+The honest statement of where M12 stands: **the published verdict is FAIL, it
+was correctly measured on the code as it stood, and there is now credible
+preliminary evidence that the repaired code would pass.** Those are compatible.
+Publishing the second as though it were the first is the error I am refusing to
+make, and it is exactly the error the scorecard exists to prevent.
+
+**Two closures worth recording.** M167 shut its own admission bypass by writing
+a deliberately cheating candidate and confirming the blinded protocol returned
+`REJECTED_BY_BLINDED_ADMISSION` — a gate that has never rejected anything is not
+known to be a gate. It also surveyed the owner's new 657-frame
+`high-res-calibration-slide-cpl` set and ruled it **development-only**: one
+burned session, stabilization on, one pass per condition, and a "flat" slide
+that is not flat. M168 found M164's identifiability argument **sound but
+overstated**, and the caveat matters for the critical path: the result is
+distribution-free, not universal, so model-conditional no-reference inference is
+*not* ruled out. That leaves a possible detail-instrument route needing neither
+the licence nor M1's truth reference.
+
+**The board.** Blocker `(b)`, the native-scale geometry gate, is **CLEARED** by
+M130's `crop-early`, which raised retained area from `64.6047%` to
+`96.22496088092659%` and hit its preregistered prediction on the digits. It
+blocked ten of twelve axes, more than any other, and clearing it alone still
+yields only `2 of 12`, because it is a necessary precondition and not a
+sufficient one. The remaining route is unchanged and the cheapest step in it is
+still free: the **bench session is 45-60 minutes of owner time and moves the
+board from `2 of 12` to `4 of 12`**, which is more than the licence buys.
+
+**The scoreboard remains `0 of 12` passed, with two axes read and both failed.**
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking

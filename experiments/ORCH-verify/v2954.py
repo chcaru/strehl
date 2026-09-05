@@ -20,7 +20,7 @@ SECTIONS = ["HEADER",
             "2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
             "2.9.66", "2.9.67", "2.9.68", "2.9.69", "2.9.70", "2.9.71",
-            "2.9.72", "2.9.73", "2.9.74"]
+            "2.9.72", "2.9.73", "2.9.74", "2.9.75"]
 
 
 def collapse(s):
@@ -351,6 +351,20 @@ CLAIMS = [
     # by earlier sections. Adding them as 2.9.73 claims would have been
     # satisfied by those pre-existing quotes, so they would have proved nothing
     # about this section while inflating the GREEN count.
+    #
+    # 2.9.75: M176's reproduction of the M12-S mechanism. These are the lane's
+    # own measured figures; the derived memory numbers are re-computed in the
+    # xdoc block instead, because they are mine and exist in no source.
+    ("m176 mechanism", "REDUCTION_ORDER", R + "M176-worker-invariance.md",
+     None, None),
+    ("m176 pixels moved", "3,430", R + "M176-worker-invariance.md",
+     "8,241,504", None),
+    ("m176 pixel total", "8,241,504", R + "M176-worker-invariance.md",
+     "3,430", None),
+    ("m176 pixel pct", "0.041619", R + "M176-worker-invariance.md",
+     None, None),
+    ("m176 lattice", "[5,5,5,4]", R + "M176-worker-invariance.md",
+     None, None),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
@@ -607,6 +621,53 @@ for label, rel, quote in QUOTES:
         continue
     check(label, collapse(quote) in load(p),
           "STATUS 2.9.66 quotes this verbatim from %s" % rel)
+
+# ---- 2.9.75: re-derive M172's memory figures instead of matching them ----
+#
+# Three of the numbers in 2.9.75 are MINE, not any lane's: the GiB conversions,
+# the ratio, and the headroom. Nothing in the corpus contains them, so a
+# presence check against a source would be either a guaranteed RED or, worse,
+# quietly repointed at some coincidental occurrence. They are re-derived here
+# from the raw Job Object byte counts in M172's run records, which ARE primary,
+# and compared against what STATUS actually says. If a lane re-runs and the
+# bytes move, this fails -- which is the whole point.
+M172R = E + "M172-worker-memory/out/candidate/records/"
+GIB = 1024.0 ** 3
+BAR_BYTES = 6442450944
+
+
+def job_peak(rel):
+    p = ROOT / rel
+    if not p.exists():
+        return None
+    try:
+        d = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+        return d["memory"]["kernel_job_peak_memory"]["peak_job_memory_used_bytes"]
+    except Exception:
+        return None
+
+
+n33 = job_peak(M172R + "measured-n33-w16.json")
+n299 = job_peak(M172R + "measured-n299-w16.json")
+if n33 is None or n299 is None:
+    check("m172 records readable", False,
+          "missing or unparseable M172 run records; 2.9.75's memory "
+          "figures cannot be re-derived and must not be trusted")
+else:
+    s75 = section_text(status_raw, "2.9.75")
+    check("m172 n299 peak bytes", "%d" % n299 in collapse(s75).replace(",", ""),
+          "2.9.75 states the N=299 Job Object peak as %d B" % n299)
+    check("m172 n299 gib", "%.6f" % (n299 / GIB) in s75,
+          "re-derived %.6f GiB from %d B" % (n299 / GIB, n299))
+    check("m172 headroom gib", "%.3f" % ((BAR_BYTES - n299) / GIB) in s75,
+          "re-derived %.3f GiB of headroom under the %d B bar"
+          % ((BAR_BYTES - n299) / GIB, BAR_BYTES))
+    check("m172 ratio", "%.6f" % (n299 / float(n33)) in s75,
+          "re-derived ratio %.6f from %d/%d (DISQUALIFIED on provenance, "
+          "not on value)" % (n299 / float(n33), n299, n33))
+    check("m172 under bar", n299 < BAR_BYTES,
+          "re-derived peak %d B is under the %d B bar; 2.9.75 must not "
+          "call this a pass, only preliminary" % (n299, BAR_BYTES))
 
 print()
 
