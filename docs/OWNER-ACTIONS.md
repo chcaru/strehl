@@ -1542,6 +1542,48 @@ its own interest, which is the reason I trust it.
 
 ## Ask 3 — buy Zerene **Professional, $289**. *Necessary either way, and the only thing on the board that unblocks an axis.*
 
+> ### ✅ BOTTOM LINE — current, and it already accounts for every correction below. You do not need to read the rest of this ask to act on it.
+>
+> **Buy Zerene Stacker Professional, `$289`. Not Prosumer, not Personal.**
+>
+> **Why, in one sentence:** blocker **(d)** — no licensed comparator — is the
+> single largest blocker on the board, gating **eight of the twelve axes**
+> (`M1`, `M2`, `M3`, `M4`, `M5`, `M6`, `M7` carry `(d)` literally; `M11` is
+> blocked by the same thing under the name `UNMEASURED_COMPARATOR_QUALIFICATION`).
+>
+> **Your own plan requires it**, independently of anything I have argued:
+> `2026-08-sota-path.md:2302` says *"`(d)` — licence a commercial comparator"*,
+> and `:2304` records that the export we need, *Save Adjusted Input Images*, *"is
+> licensed only to **Prosumer ($189)** or **Professional ($289)**"*.
+>
+> **Professional rather than the cheaper Prosumer, for a licence-terms reason,
+> not a feature one.** Prosumer's clause `2b` forbids use "in connection with any
+> other activity that produces income or other tangible reward greater than the
+> cost of a Professional Edition license" and forbids supporting "funded research
+> and documentation of scientific collections". Professional's clause `2a` alone
+> carries "no restrictions on the use of images produced". A **published
+> competitive benchmark whose entire purpose is a public comparison against
+> Zerene** belongs on Professional. The `$100` difference buys the right to
+> publish the result.
+>
+> **Three things this purchase is *not*, each of which I claimed at some point
+> and then had to withdraw:**
+>
+> - **It is not urgent, and nothing is ageing.** The purchased-licence clauses
+>   state no duration, renewal or subscription term anywhere. What ran out in
+>   June was a *trial* clock. Buying ends that class of loss; it does not restart
+>   it.
+> - **It does not unblock M12.** I claimed this twice and it is withdrawn twice
+>   (see the `⚠️ RETRACTION` and `D4` below). M12 is licence-free. Do not let M12
+>   be your reason.
+> - **It is not held up by Helicon.** Your plan says *"Helicon if obtainable"*
+>   (`2026-08-sota-path.md:1538`) — optional. The rule that made Helicon's
+>   absence void the whole verdict was manufactured by the scorecard, not by you.
+>
+> **Everything below this box is the history of how this ask changed, preserved
+> so you can audit me.** It is long because I got this ask wrong repeatedly. The
+> action has never changed: **buy Professional.**
+
 > **CORRECTION — the third time I have had to correct this ask, and this one
 > changes what it is for. Read it before the pricing table below.** Three
 > defects, each verified against a primary source, plus one dependency I had

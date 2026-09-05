@@ -435,6 +435,70 @@ for label, hay, needle, want in FOURBAR:
                  "present" if present else "absent", needle))
         red += 1
 
+# ---- Ask 3 standing bottom line ----
+# Ask 3 accumulated five layers of correction (D1-D4 plus a retraction) across
+# 317 lines for a decision that never changed. A standing bottom line was added
+# at the top so the owner does not have to reconstruct the action from its own
+# correction history. These pins keep that box true, and the cross-document
+# checks keep its three proposal quotations honest -- the box asserts what the
+# owner's own plan says, so a drift in the plan must redden here rather than
+# silently leave the owner acting on a quotation that no longer exists.
+PROPD = ROOT / "docs" / "proposals" / "2026-08-sota-path.md"
+prop_flat = collapse(PROPD.read_text(encoding="utf-8", errors="replace")) \
+    if PROPD.exists() else ""
+
+ASK3 = [
+    ("owner buys professional", owner_flat,
+     "Buy Zerene Stacker Professional, `$289`. Not Prosumer, not Personal.", True),
+    ("owner counts eight axes", owner_flat,
+     "gating **eight of the twelve axes**", True),
+    # Pinned as a full clause, not the bare code: `UNMEASURED_COMPARATOR_
+    # QUALIFICATION` occurs twice in this file, so a bare-code presence check is
+    # satisfied by the copy outside this box and can never go RED for it.
+    ("owner names m11 code", owner_flat,
+     "`M11` is blocked by the same thing under the name "
+     "`UNMEASURED_COMPARATOR_QUALIFICATION`", True),
+    ("owner withdraws m12 reason", owner_flat,
+     "It does not unblock M12.", True),
+    ("owner withdraws urgency", owner_flat,
+     "It is not urgent, and nothing is ageing.", True),
+    ("owner frees helicon", owner_flat,
+     "It is not held up by Helicon.", True),
+    ("owner says action unchanged", owner_flat,
+     "The action has never changed", True),
+    # Absence: the cheaper edition must never become the recommendation.
+    ("owner does not buy prosumer", owner_flat,
+     "Buy Zerene Stacker Prosumer", False),
+    # Cross-document: the box quotes the governing proposal three times.
+    ("proposal has blocker d", prop_flat,
+     "licence a commercial comparator", True),
+    ("proposal has the export", prop_flat,
+     "Save Adjusted Input Images", True),
+    ("proposal makes helicon optional", prop_flat,
+     "Helicon if obtainable", True),
+]
+for label, hay, needle, want in ASK3:
+    present = collapse(needle) in hay
+    ok = (present == want)
+    if ok:
+        print("GREEN ask3   %-30s" % label)
+        green += 1
+    else:
+        print("RED   ask3   %-30s expected %s, found %s: %r"
+              % (label, "present" if want else "ABSENT",
+                 "present" if present else "absent", needle))
+        red += 1
+
+# The $100 upgrade figure must re-derive from the two prices the proposal names,
+# so a typo in either price reddens rather than passing as prose.
+PRO_PRICE, PROS_PRICE = 289, 189
+if (PRO_PRICE - PROS_PRICE) == 100 and collapse("The `$100` difference") in owner_flat:
+    print("GREEN ask3   %-30s" % "upgrade delta re-derives")
+    green += 1
+else:
+    print("RED   ask3   %-30s $289-$189 != $100 or figure absent" % "upgrade delta re-derives")
+    red += 1
+
 # ---- control: a wrong total must not re-derive ----
 ctl = (2 + sum(stages) + 704) != 1603
 ctl2 = (891 + 32 + 164 + 128) != 1147  # the stale total must no longer re-derive
