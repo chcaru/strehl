@@ -19,7 +19,7 @@ STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
             "2.9.66", "2.9.67", "2.9.68", "2.9.69", "2.9.70", "2.9.71",
-            "2.9.72"]
+            "2.9.72", "2.9.73"]
 
 
 def collapse(s):
@@ -234,6 +234,57 @@ CLAIMS = [
     ("m166 not interchangeable",
      "Equal budgets do not make the files interchangeable",
      R + "M166-rehearsal-cost.md"),
+    # --- 2.9.73: M12 scored FAIL; M11 quarantined; M164 answered both asks ---
+    # M139's two independent bars. The memory numbers share a sentence, so each
+    # is pinned on its own labelled phrase rather than the bare numeral.
+    ("m139 memory peak", "Job Object peak `33.4283 GiB`",
+     R + "M139-m12-campaign.md", None, "33.4283 GiB"),
+    ("m139 sampled commit", "sampled private commit `32.6777 GiB`",
+     R + "M139-m12-campaign.md", None, "32.6777 GiB"),
+    ("m139 external busy", "accepted external busy `9.8763%`",
+     R + "M139-m12-campaign.md", None, "9.8763%"),
+    ("m139 coverage shortfall", "scored-run coverage was `79.5768%`",
+     R + "M139-m12-campaign.md", None, "79.5768%"),
+    ("m139 null plant bytes", "peaked at `80,920,576` bytes",
+     R + "M139-m12-campaign.md", None, "80,920,576"),
+    ("m139 five hashes",
+     "five distinct TIFF hashes and five distinct pixel hashes",
+     R + "M139-m12-campaign.md"),
+    # Both of M139's own guards on its reading. These are the sentences that
+    # keep an incomplete sweep from being reported as a completed one, and a
+    # negative result from being over-read.
+    ("m139 understate guard",
+     "Missing samples can understate a peak, not manufacture one above",
+     R + "M139-m12-campaign.md"),
+    ("m139 negative result guard",
+     "It does not weaken the negative result",
+     R + "M139-m12-campaign.md"),
+    # M153: the instrument is real, the number is refused. Only the host-load
+    # quarantine is pinnable here -- UNMEASURED_COMPARATOR_QUALIFICATION occurs
+    # 5x in STATUS and 3x in its source, so no mutation can flip it and a
+    # presence check on it would read as coverage while testing nothing.
+    ("m153 host quarantine", "QUARANTINED_HOST_LOAD",
+     R + "M153-m11-harness.md"),
+    ("m153 null timing", "null `0.003762750 s`",
+     R + "M153-m11-harness.md", None, "0.003762750"),
+    ("m153 plant timing", "plant recovered as `0.081845017 s`",
+     R + "M153-m11-harness.md", None, "0.081845017"),
+    ("m153 async tail", "async tail `0.1182856 s`",
+     R + "M153-m11-harness.md", None, "0.1182856"),
+    # M164's two rulings. Both are INFERRED BY READING and STATUS says so; the
+    # pins here prove the ruling text itself has not drifted.
+    ("m164 licence critical path", "LICENCE ON CRITICAL PATH",
+     R + "M164-dominance-manifest.md"),
+    ("m164 ask2a manifest input", "ASK 2A IS A MANIFEST INPUT",
+     R + "M164-dominance-manifest.md"),
+    ("m164 not side errand",
+     "a direct critical-path input, not a side errand",
+     R + "M164-dominance-manifest.md"),
+    # NOT pinned here, deliberately: M160's "reduction order changes with worker
+    # count" and M166's "Worker-independent arithmetic ..." are already asserted
+    # by earlier sections. Adding them as 2.9.73 claims would have been
+    # satisfied by those pre-existing quotes, so they would have proved nothing
+    # about this section while inflating the GREEN count.
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")

@@ -74,8 +74,16 @@ Maintained by the orchestrator. Last updated after lane M175.
 > incomplete.** Its missing inputs span several producers, and one named gap is
 > that M147 has no accepted real scale and field result — **that is Ask 2a, so
 > your two frames may sit on the critical path of the very gate that is blocking
-> the rehearsal.** I have asked M164 to confirm that precisely, and will tell you
-> either way. **This does not affect Ask 2a below: M166 is explicit that _"The
+> the rehearsal.** **CONFIRMED — M164 has now answered, and the answer is yes.**
+> Its ruling reads `ASK 2A IS A MANIFEST INPUT: it resolves the accepted
+> M_work, measured reference/scored sampling-ratio bound, common-field mapping,
+> and viable target scale/carrier geometry`, and it states plainly that *"Ask 2a
+> is consequently a direct critical-path input, not a side errand."* **Your five
+> minutes with the shutter is the highest-leverage thing on this page.** One
+> honest limit, in M164's words: it *"does not by itself freeze or fabricate the
+> final target"* — software still has to compute the geometry, generate the
+> artwork and commission the payload generator afterwards. It unblocks that
+> chain; it does not complete it. **This does not affect Ask 2a below: M166 is explicit that _"The
 > two-frame M147 preflight may still be completed; it establishes scale and
 > field only."_ Shoot the two frames. Do not start the rehearsal.**
 >
@@ -444,8 +452,40 @@ No action needed on any of these. They cost nothing and need none of your time.
 > that is right, a purchase clears fewer axes than this section claims, and some
 > axes were never blocked by it at all. I have flagged the rule rather than
 > quietly relaxing it, and I am not scoring anything under the looser reading
-> until you rule on it. **The email below costs nothing and is worth sending
-> regardless; hold the $189 until I give you the corrected number.**
+> until you rule on it.
+>
+> **⚠⚠ THE HOLD IS WITHDRAWN — and not because the audit above resolved.** It
+> has not. I previously ended this block with *"hold the $189 until I give you
+> the corrected number."* **Ignore that instruction. It was wrong twice over.**
+>
+> **First, the figure is wrong.** `$189` is Prosumer, and Ask 3's correction
+> `D3` establishes from the licence text that a published competitive benchmark
+> belongs on **Professional at `$289`**. There was never a `$189` to hold.
+>
+> **Second — and this is the substantive reversal — the purchase acquired a
+> second, independent justification tonight that does not depend on the
+> contested "8 of 12" figure at all.** Lane M164 ruled `LICENCE ON CRITICAL
+> PATH` for the `1,092`-frame rehearsal itself. Not for an axis count — for the
+> *release of the capture evening*. Its reasoning, which I have read at
+> `M164-dominance-manifest.md:16-26`, is that M166 turned the manifest into a
+> broader M1 configuration freeze, and under it *"the concealed target seed may
+> be selected only after every renderer binary/setting/hash is frozen"* —
+> Zerene's included. **So holding the purchase now holds the rehearsal, which
+> holds the scored session behind it.**
+>
+> **State of that ruling, stated honestly.** M164 tags it `INFERRED BY READING`,
+> not `VERIFIED BY RUNNING`. It is a chain of contract reading, not a
+> measurement, and I am giving it to you with its marker intact rather than
+> promoting it. But the inference is independently corroborated by your own
+> plan, which pins *"licensed Zerene (PMax **and** DMap — DMap has never
+> rendered here and is A5's true comparator)"* at `2026-08-sota-path.md:1535`
+> and rules at `:2302` that an open-source stacker *"clears **no** blocker."*
+> **The purchase is required by your plan, not merely by my scorecard.** What
+> the audit above contests is only *how many axes it clears* — which changes
+> the size of the prize, not whether the purchase is needed.
+>
+> **So: send the email first — it settles the edition and the benchmarking
+> question — then buy Professional. Do not wait on the axis-count audit.**
 
 Blocker `(d)` — the Zerene/Helicon comparison — gates **8 of the 12 axes**. The
 entire point of it is to *publish* a comparison. Lane M132 read both vendors'
@@ -1285,6 +1325,52 @@ its own interest, which is the reason I trust it.
 > else you own, and nothing you could shoot tonight, does that. Take
 > Professional over the `$189` Prosumer for the licence-terms reason in D3
 > above.
+>
+> ---
+>
+> > **D4 — added after M139 closed. One of the two reasons above died tonight,
+> > and a stronger one replaced it. I am recording both movements, including
+> > the one that costs me an argument.**
+> >
+> > **WITHDRAWN: "it unblocks M12."** The paragraph above says this purchase
+> > *"unblocks M11's comparator ratio and, through M12-S, unblocks M12 — the
+> > closest thing to a first score this program has."* **That is now false, and
+> > it is false for reasons no purchase can repair.** Lane M139 ran the
+> > registered M12 campaign to completion (commit `2ba256aa`) and returned a
+> > **formal M12 FAIL** on two bars, neither of which involves a comparator:
+> >
+> > - **Absolute memory: FAIL.** The bar is `6 GiB`. The strongest accepted
+> >   scored observation peaked at `33.4283 GiB` — **`5.57x` over the
+> >   ceiling.**
+> > - **Cross-worker determinism: FAIL.** `N=33` produced five distinct output
+> >   hashes across workers `1/2/4/8/16`, and `N=105` independently produced
+> >   five more. (Same worker count, run six times, gives one hash — so this is
+> >   a real defect, not noise.)
+> >
+> > M12 is conjunctive, so either failure alone is decisive. **A licence cannot
+> > move either number.** M12 is no longer a purchase away from a score; it is
+> > a code fix away from being re-measurable. I have that fix assigned. **Do
+> > not buy this licence expecting M12.**
+> >
+> > **REPLACED BY, and this one is worth more: the licence now gates your
+> > capture evening.** Lane M164 ruled `LICENCE ON CRITICAL PATH` for the
+> > `1,092`-frame rehearsal, because M166 turned the dominance manifest into a
+> > broader M1 configuration freeze in which *"the concealed target seed may be
+> > selected only after every renderer binary/setting/hash is frozen"* — and
+> > Zerene is one of those binaries. **Until it is bought and hash-frozen, the
+> > rehearsal cannot be released, and the scored session sits behind the
+> > rehearsal.**
+> >
+> > M164 tags that ruling `INFERRED BY READING` rather than `VERIFIED BY
+> > RUNNING`, and I am passing it to you with the marker intact. But it does
+> > not stand alone: your own plan pins *"licensed Zerene (PMax **and** DMap)"*
+> > at `2026-08-sota-path.md:1535` and rules at `:2302` that an open-source
+> > stacker *"clears **no** blocker."*
+> >
+> > **Net effect on your decision: unchanged in direction, stronger in
+> > urgency.** The purchase was previously justified by an axis count that is
+> > under audit and may shrink. It is now justified by a release gate on the
+> > one capture this program is waiting for. Buy Professional after the email.
 >
 > **One thing I need back from you, and it costs nothing.** Ratify or reject
 > this reading: *Helicon is optional, so a licensed Zerene plus the fork

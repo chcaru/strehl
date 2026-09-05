@@ -7177,6 +7177,128 @@ frozen behind a rule I wrote and never checked against his plan.
 
 ---
 
+### 2.9.73 An axis finally produced a score, and it is the second FAIL — plus the correction that a purchase can no longer buy it
+
+**M12 is scored. It FAILED.** Lane M139 ran the registered campaign to
+completion and closed it at commit `2ba256aa`. This is the second axis in the
+program's history to produce a read score, after M8, and like M8 it is a
+failure. The scoreboard stays `0 of 12`, but its character changes: the program
+now holds two hard, adjudicated negatives rather than one negative and eleven
+blanks.
+
+**The failure is on two independent bars, and I had internalised only one of
+them.** My standing note said M12 fails *on memory, not timing*. That was
+incomplete in a way that mattered:
+
+- **Absolute memory: FAIL.** Bar `6 GiB`. Strongest accepted scored
+  observation `scored:N105:W16:R2` — sampled private commit `32.6777 GiB`,
+  Job Object peak `33.4283 GiB`, accepted external busy `9.8763%`. That is
+  `5.57x` the ceiling. M139's own guard on the reading is correct and worth
+  keeping: *"Missing samples can understate a peak, not manufacture one above
+  the ceiling."*
+- **Cross-worker scaling invariance: FAIL.** `N=33` produced five distinct
+  TIFF hashes and five distinct pixel hashes across workers `1/2/4/8/16`;
+  `N=105` independently produced five of each; all six accepted repeats were
+  present in every worker cell.
+- **Fixed-worker determinism: passed.** Every completed `N=33` and `N=105`
+  cell produced one TIFF hash and one pixel hash across six runs.
+
+Read those last two together, because the pair is the finding. **Same worker
+count gives identical bytes six times; different worker count changes pixels
+five ways at two independent `N`.** The renderer's output is a function of its
+parallel decomposition.
+
+**The campaign's negative result is clean even though its descriptive sweep is
+not.** `M12-D`'s full-matrix verdict stays `UNMEASURED` because `N=299` never
+scored; the `peak_N299/peak_N33` ratio and the `N`-mod-4 spread are both
+`UNMEASURED`; and minimum scored-run coverage was `79.5768%`, under the
+execution preregistration's `90%` affirmative-result rule. M139 draws exactly
+the right line — that shortfall *"prevents a positive full-matrix memory
+claim. It does not weaken the negative result, because both the sampled lower
+bound and the independent kernel peak exceed 6 GiB by multiples."* The
+instrument was commissioned both ways: a `64 MiB` child plant peaked at
+`80,920,576` bytes and stayed under `1 GiB`, and a `7 GiB` child plant cleared
+the ceiling. A metric that only moves under sabotage has not been shown able to
+move at all; this one was shown in both directions.
+
+**I over-reacted to the invariance failure before checking our own record, and
+the correction is worth recording as a process fact.** On first reading I
+dispatched a lane to reproduce and localise it. That was redundant: the cause
+was already established at `STATUS:6701-6703` — M160 Amendment 6, cross-worker
+invariance fails *"because reduction order changes with worker count"* — and
+the magnitude was already measured at `STATUS:2009-2011` as *"`0.2573%` of
+pixels differing by at most 1 DN."* I narrowed the lane within minutes of
+sending it. **The check that caught it was reading our own file before trusting
+my own alarm.**
+
+**But the small magnitude makes the consequence worse, not better.** A quarter
+of one percent of pixels differing by one DN is invisible to inspection and
+changes a SHA-256 completely. **Every hash pin in this repository is therefore
+conditioned on a worker count that was, in most cases, never recorded** — the
+common-input byte-identity check, the dominance manifest, the shipping-default
+byte-freeze, the dust-correction "a wrong map renders byte-identical to OFF"
+downside bound. That blast radius is now assigned as M176, scoped to sizing the
+damage only; the repair belongs to M172, which owns `crates/`.
+
+**This kills a reason I gave the owner for spending money, and I have withdrawn
+it.** `OWNER-ACTIONS.md` argued the Zerene purchase *"unblocks M11's comparator
+ratio and, through M12-S, unblocks M12 — the closest thing to a first score
+this program has."* M12 has now failed on two bars that no licence can move.
+The purchase survives on other grounds; that particular argument does not, and
+it is struck rather than quietly left standing.
+
+**M11 is double-blocked, and the second block is the machine itself.** Lane
+M153 delivered a complete, commissioned timing harness — `113` checks reported,
+`112 PASS` and one explicitly quarantined, `32/32` substantive mutations killed,
+`1/1` inert mutation survived with the suite green — and then refused to quote
+a number from it. M11 stands at `UNMEASURED_COMPARATOR_QUALIFICATION`, and the
+product-native unit is separately `QUARANTINED_HOST_LOAD`. Its development
+observations are marked `MEASURED_CONTENDED_WITHDRAWN` and are not quotable:
+null `0.003762750 s`, an `80 ms` plant recovered as `0.081845017 s`, async tail
+`0.1182856 s`.
+
+**The finding underneath that refusal is a scheduling law for this program.**
+M153's conclusion is that clean absolute timing is unobtainable on this host
+while agent processes sustain `44-63%` CPU, and that *nominal lane exclusivity
+is insufficient* — a lane can hold the queue and still be measured against a
+contended machine. The consequence: **any absolute-time arm must wait for a
+genuinely quiesced, recorded window, which cannot exist while this board runs
+seventeen lanes.** Correctness arms are unaffected and may run under load, per
+M160 Amendment 6. That is the right trade and I am not reversing it — but it
+means the speed axis cannot be scored until the board drains, and that is now a
+scheduled program action rather than an assumption.
+
+**M164 answered both questions I had told the owner were open, and one reversed
+my advice.** `LICENCE ON CRITICAL PATH`: the Zerene purchase gates the
+`1,092`-frame rehearsal itself, because M166 turned the manifest into a broader
+M1 configuration freeze in which the concealed target seed may be selected only
+after every renderer binary and hash is frozen. `ASK 2A IS A MANIFEST INPUT`:
+the owner's two frames are, in M164's words, *"a direct critical-path input, not
+a side errand."* Both rulings are tagged `INFERRED BY READING`, and I have
+passed them to the owner with that marker intact rather than promoting them to
+measurements. I had told him to **hold** the purchase pending an axis-count
+audit; that instruction is withdrawn, because the audit governs how large the
+prize is, not whether the purchase is required — and his own plan requires it
+independently at `2026-08-sota-path.md:1535` and `:2302`.
+
+**What this leaves genuinely movable tonight.** Almost everything on the board
+waits on a capture that does not exist or a licence not yet bought. **D9, the
+fixed reduction lattice, does not.** Its verification is exact cross-worker
+hashes, needing no detail instrument, no comparator and no new frame —
+`STATUS:2009-2011` ranked it top for precisely that reason, *"because D9's
+verification survives M1"* — and M166 has ruled the fix achievable. Landing it
+repairs one of M12's two bars and simultaneously makes every hash pin in the
+repository unconditional. I have put the ordering question to M172 rather than
+imposing it, and asked it to tell me plainly if the `5.57x` memory bar is
+unreachable without a redesign, because that answer changes what the owner
+should be told about the whole speed axis.
+
+**The scoreboard remains `0 of 12`.** An axis moving from `UNMEASURED` to a
+defensible `FAIL` is progress in evidence, not in score, and it must not be
+reported as the latter.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking

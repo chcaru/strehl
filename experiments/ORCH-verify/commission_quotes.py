@@ -115,6 +115,27 @@ MUTATIONS = [
      "891 - 96 + 128 + 164 + 128 = 1,216"),
     ("m166 not interchangeable", "docs/STATUS.md",
      "files interchangeable", "files identical"),
+    # --- 2.9.73 ---
+    # Each anchor below is a phrase that occurs exactly once in STATUS.
+    # apply_mutation token-joins on [\s>]+, so a wrapped quotation still lands,
+    # and it hard-errors on any count other than 1 -- which is what stops a
+    # duplicated site from making the control ambiguous.
+    ("m139 five hashes", "docs/STATUS.md",
+     "TIFF hashes and five distinct pixel hashes across workers",
+     "TIFF hashes and four distinct pixel hashes across workers"),
+    ("m139 understate guard", "docs/STATUS.md",
+     "Missing samples can understate a peak, not manufacture one above",
+     "Missing samples can understate a peak, not manufacture one below"),
+    ("m139 negative result guard", "docs/STATUS.md",
+     "It does not weaken the negative result",
+     "It does not weaken the positive result"),
+    ("m153 host quarantine", "docs/STATUS.md",
+     "QUARANTINED_HOST_LOAD", "QUARANTINED_HOST_IDLE"),
+    ("m164 licence critical path", "docs/STATUS.md",
+     "LICENCE ON CRITICAL PATH", "LICENCE OFF CRITICAL PATH"),
+    ("m164 not side errand", "docs/STATUS.md",
+     "a direct critical-path input, not a side errand",
+     "a direct critical-path input, not a main errand"),
 ]
 
 
