@@ -242,7 +242,7 @@ this denominator.
 | medication pill | 55 | 84 | **29** |
 | bee background | 123 | 83 | 0 |
 | foam | 0 | 83 | **83** |
-| **total** | **178** | **250** | **112 selected sites** |
+| **total** | **178** | **250** | **112-site shortfall** |
 
 | scored edge capture | eligible | frozen quota |
 |---|---:|---:|
@@ -253,8 +253,10 @@ this denominator.
 | flower/fern | 2,226 | 50 |
 | **total** | **10,355** | **250** |
 
-Every rejected flat tile was first rejected by the temporal-band condition,
-not clipping or the ten-sigma signal floor.
+The frozen `first_failure_counts` assigned every rejected flat tile to the
+temporal-band condition because it was the first true predicate in a fixed
+priority order. That additive attribution does not establish that the other
+predicates passed; see the explicit erratum below.
 
 The commissioning-only census found:
 
@@ -290,6 +292,152 @@ scorecard's stated 50-per-capture minimum, the old medication capture already
 clears 50 and one new protected flat session with at least 72 sites could close
 the 250-flat total. That would be a new population version chosen openly; M152
 does not rewrite its frozen quotas after seeing the result.
+
+## M4 independent-predicate diagnostic, erratum and capture feasibility
+
+### Independent-predicate diagnostic
+
+**Status: MEASURED INPUT-ONLY.** The frozen flat census forms the conjunction
+of all four predicates at `experiments/M152-site-census/census.py:645-673`,
+removes a site permanently at `:693`, and assigns each rejected site exactly
+once in the fixed band, low-rail, high-rail, signal order at `:675-691`.
+Consequently, `first_failure_counts` is an additive first-cause diagnostic; it
+is not the independent incidence of every true predicate.
+
+The independent diagnostic retained the original 1,768-site denominator and,
+instead of pruning it, accumulated for every tile:
+
+```text
+band_ratio = max_over_frames(band_rms / temporal_band_threshold)
+signal_sigma = min_over_frames(tile_median / sigma_temporal(tile_median, ISO))
+low_rail = max_over_frames(fraction(tile <= 0))
+high_rail = max_over_frames(fraction(tile >= usable_range - 1))
+```
+
+It reused the frozen decoder at
+`experiments/M152-site-census/census_common.py:115-178`, temporal model at
+`:180-198`, band RMS at `:225-244`, grid extraction at `:247-259`, and
+nearest-rank percentiles at `:51-60`. The thresholds remain ratio `<1.0`,
+signal `>=10 sigma`, low rail `<=0.01`, and high rail `<=0.001`, frozen at
+`experiments/M152-site-census/census-definition.json:205-214`. The driver was
+a one-off read-only PowerShell standard-input script; the persisted kernels
+and complete reduction contract above are its reproducible provenance. It
+opened no candidate output and changed no frozen selection.
+
+| capture and evaluated frames | independent band failures; max-ratio min / median / p95 / max | independent signal failures; minimum signal | independent low-rail failures; max | independent high-rail failures; max | joint eligible |
+|---|---|---|---|---|---:|
+| coffee bubbles, 19/19 | 1,768/1,768; **1.091006 / 5.279854 / 211.877004 / 680.844818** | 0; **11.665702 sigma** | 0; 0 | **176; 0.133789** | **0** |
+| foam, decisive frames 1-2/100 | 1,768/1,768; **1.358369 / 4.123867 / 8.467059 / 22.160248** | 0; **17.417903 sigma** | 0; 0 | 0; 0 | **0** |
+
+Coffee therefore fails principally because the scene is not flat in the
+20-60 px band, not because it is underexposed. It also has localized clipping.
+Even a favorable fixed-noise scalar-exposure counterfactual leaves only eight
+coffee tiles with any band-plus-signal-feasible exposure interval, far below
+the 100-site development quota. A different target is required.
+
+### ERRATUM: priority masking in the frozen counters
+
+**The frozen census remains usable as published for eligibility, selection,
+quotas and the capture-sufficiency verdict.** The validity decision used the
+full conjunction before pruning, so priority affects only diagnostic
+attribution. The `178` eligible, `138` selected and `112` shortfall figures do
+not change.
+
+The published inference that first assignment to band power meant "not
+clipping" is withdrawn. The frozen `first_failure_counts` values remain
+numerically correct only as priority-assigned first causes and must not be
+used as independent predicate counts. In particular, the previously implied
+independent coffee high-rail count of zero was wrong: the corrected value is
+**176/1,768**, with a maximum fraction of **0.133789** against the **0.001**
+limit. Every one of those tiles had already failed band power, so coffee's
+eligible count remains zero. Foam's independently evaluated first two frames
+have zero signal or rail failures. Medication and bee were not rerun with the
+independent diagnostic, so this erratum makes no independent rail-incidence
+claim for them.
+
+### Frames do not generate sites
+
+Each frame repeats the same 1,768 spatial candidates, and a site must pass
+every frame. The survivor update at
+`experiments/M152-site-census/census.py:607-706` is therefore monotone
+non-increasing: more exposures can preserve or remove sites, never create
+them.
+
+| capture | registered frames | eligible / 1,768 | observed spatial yield | required / 1,768 |
+|---|---:|---:|---:|---:|
+| medication pill | 146 | 55 | **3.11%** | 84 = **4.75%** |
+| bee background | 299 | 123 | **6.96%** | 83 = **4.69%** |
+| foam | 100 | 0 | 0% | 83 = **4.69%** |
+| development flat | 19 | 0 | 0% | 100 = **5.66%** |
+
+These are scene yields, not sites per frame. No number of additional
+exposures of an unchanged field can close the medication, foam or development
+deficit.
+
+### Foam plausibility under a favorable fixed-noise model
+
+For an intentionally favorable diagnostic, multiply each black-subtracted
+foam tile by one common scalar `k` while holding the frozen temporal noise
+fixed. Each tile then requires
+`10/signal_sigma <= k < 1/band_ratio`. Over the first two decisive frames, the
+maximum common-exposure survivor count is **113** at approximately
+**`k=0.416` (`-1.265 EV`)**. At least 83 sites survive for
+**`0.374 <= k < 0.486`**.
+
+This is **plausibility under a favorable fixed-noise model, not sufficiency**.
+A physical reshoot changes shot noise, and the remaining 98 frames can only
+reduce the every-frame survivor count. The existing foam stack cannot be
+repaired by adding frames, but smoother foam at a preregistered lower exposure
+is plausible rather than proven sufficient.
+
+### Capture recipe
+
+- Use a genuinely featureless transilluminated opal diffuser for development,
+  medication on the same uniform background, and smoother closed-cell foam or
+  an openly replaced subject.
+- Use flicker-free diffuse illumination, 200 mm, f/5.6 and ISO 50/100. Keep
+  every selected common-TIFF RGB pixel at least 512 codes from either rail for
+  M166's integer plant, and keep median signal above `10 sigma`.
+- If retaining the original f/8, ISO-1000 foam setup, use approximately
+  **0.67-0.83 s** as the preregistered starting range instead of 1.6-2 s. This
+  is the `0.416x` plausibility result, not a guarantee.
+- Commission only on a separate development session; do not inspect a
+  protected score session to tune these conditions.
+
+### Open definitional questions
+
+1. M166's "at least 29 additional eligible medication flat tiles"
+   (`docs/research/M166-bar-definition-repairs.md:582`) conflicts with its
+   fixed 84-site medication quota and "no cross-capture substitution"
+   (`:194-199`). A replacement session must supply all **84** unless the owner
+   explicitly permits supplementation.
+2. M166 defines a `1000 by N_frames` Dirichlet matrix (`:212-219`) but no
+   minimum `N_frames`. The conservative **146 medication + 100 foam + 100
+   development = 346 frames** budget is therefore **preregistration-owed, not
+   derived**. Frame count must be frozen as an acquisition rule before
+   shooting; it does not follow from the spatial quotas.
+
+### Scorability
+
+The retained M166 `Q/g/r` component is scoreable and can mathematically pass
+without blocker `(a)` and without Zerene. Its constructive convex-source
+implementation has `Q<=1`, `g=1`, and `r=0`
+(`docs/research/M166-bar-definition-repairs.md:190-305`). Actual Strehl
+performance remains unmeasured.
+
+Full M4 remains blocked `(a)(b)(d)` by its detail-qualified common track,
+ghost/M3-boundary population and required best-comparator comparison
+(`docs/proposals/2026-09-sota-scorecard.md:809,843`). Satisfying these capture
+needs would **not** produce an M4-axis PASS.
+
+### Versioned successor manifest
+
+A versioned successor can be prepared before capture in **6-10 engineering
+hours** by retaining M152's input-only order and adding M166's exact
+common-TIFF RGB plant-headroom predicate, capture/session schema, frame-count
+rule, tests and hashes. Once captures arrive, allow **2-4 hours plus render
+time** to run the census, bind the selected sites, and materialize the
+Dirichlet matrices and plants, then produce the base/planted renders.
 
 ## Historical M3 checker and commissioning
 
