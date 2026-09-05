@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "status": "DOCUMENT_AND_SPECIFICATION_AUDIT_ONLY",
+  "pixel_files_opened": 0,
+  "score_authorized": false,
+  "source_snapshot": {
+    "plan": {
+      "path": "docs/proposals/2026-08-sota-path.md",
+      "sha256": "72f8257918e929acb3f50c4606a4a7a73a44594492f040b4fcf196072e6a0b94",
+      "lines": 2780
+    },
+    "scorecard": {
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "sha256": "eb5ed446ee06e8842c61e5f90cb1bd4a8e81ca5dfd39ef53988598ef05dcb603",
+      "lines": 2221
+    },
+    "m158_drift_audit": {
+      "path": "docs/research/M158-scorecard-drift.md",
+      "sha256": "129546e240072d79be665618b356f8a5ac3b93e5046182c47c97d09e23175ee2",
+      "lines": 800
+    },
+    "m161_m3_ratification": {
+      "path": "docs/research/M161-m3-ratification.md",
+      "sha256": "3da41f80a05a9d1f91b35f03aa72ef1dece1d7252d21da8cc0ce5313d725b58e",
+      "lines": 229
+    },
+    "m166_bar_definitions": {
+      "path": "docs/research/M166-bar-definition-repairs.md",
+      "sha256": "b66bd24d9fad69c7e9629ac0dbb187e4c08b981e2479104220671eb06fea1cfd",
+      "lines": 587
+    },
+    "m169_comparator_audit": {
+      "path": "docs/research/M169-comparator-requirement-audit.md",
+      "sha256": "71f08bf819e74d0bf5f69a3957028d36c525ddb694d6f7cdb0b9de0e973a7b38",
+      "lines": 395
+    },
+    "m169_m3_commissioning": {
+      "path": "docs/research/M169-m3-veil.md",
+      "sha256": "d83eab7a42670eef54554e0638eb3cc27df48445cd34fb93f4f51e01d3869cb1",
+      "lines": 403
+    },
+    "m175_fork_arm": {
+      "path": "docs/research/M175-fork-arm.md",
+      "sha256": "a6b86e660f8cef2e46af5864f7236fdf3e58237a9a9679d4cc85444efbb9c61c",
+      "lines": 341
+    }
+  },
+  "definitions": {
+    "loses_d": "A current literal blocker-(d) axis has no plan-required named comparator arm for that axis after the atomic portfolio is replaced by a claim-specific mapping.",
+    "scoreable_now": "The axis has an operative population, statistic, bar, commissioned checker, admissible frozen inputs, candidate output or product, and every remaining prerequisite needed to compute an honest PASS or FAIL.",
+    "material_governance_addition": "A scorecard-authored cross-axis prerequisite, arm-eligibility rule, track restriction, or publication-verdict rule that can change PASS, FAIL, UNMEASURED, DEFINITION BLOCKED, DISCLOSURE MISS, or claim scope. Ordinary numerical completion of a plan placeholder is excluded."
+  },
+  "headline": {
+    "axes_losing_d": [
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7"
+    ],
+    "axes_losing_d_count": 6,
+    "newly_scoreable": [],
+    "newly_scoreable_count": 0,
+    "axis_status_changes": [],
+    "owner_plan_paid_license_direct_axes": [
+      "M1"
+    ],
+    "owner_plan_paid_license_direct_count": 1,
+    "unratified_atomic_rule_added_paid_license_direct_axes": [
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "M11"
+    ],
+    "unratified_atomic_rule_added_paid_license_direct_count": 7,
+    "m9_is_transitive_not_direct": true
+  },
+  "axis_ledger": [
+    {
+      "axis": "M1",
+      "metric": "fine detail",
+      "current_comparator_dependency": "LITERAL_D",
+      "plan_clause": "Fine detail >= 0.15 cyc/px: section 30/32/33 captures; a licensed comparator; the D1 instrument.",
+      "plan_required_arms": [
+        "Zerene PMax",
+        "Zerene DMap"
+      ],
+      "claim_specific_result": "NARROWS",
+      "loses_d": false,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "no admitted detail instrument or operative bar",
+        "fresh matched truth and repeat captures absent",
+        "licensed Zerene common-input detail outputs absent"
+      ]
+    },
+    {
+      "axis": "M2",
+      "metric": "flat or defocused-ground noise",
+      "current_comparator_dependency": "LITERAL_D",
+      "plan_clause": "Noise: Nothing - quotable now; the end-state names the existing flat-ROI instrument, not a licensed product arm.",
+      "plan_required_arms": [],
+      "claim_specific_result": "LOSES_D",
+      "loses_d": true,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "instrument void because blur improves the registered residual",
+        "no commissioned M1-independent replacement instrument",
+        "required eligible two-light repeat unit is absent"
+      ]
+    },
+    {
+      "axis": "M3",
+      "metric": "occlusion veil",
+      "current_comparator_dependency": "LITERAL_D",
+      "plan_clause": "Occlusion veil or aura: at least 400 px clear-background captures; A2/C3; the end-state is the absolute no-veil-above-bar clause.",
+      "plan_required_arms": [],
+      "claim_specific_result": "LOSES_D",
+      "loses_d": true,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "candidate common-input output and profile packages absent",
+        "input-only warp evidence absent",
+        "separate unratified M3 comparator-envelope gate remains",
+        "separate unratified M3-to-M1 candidate prerequisite remains"
+      ]
+    },
+    {
+      "axis": "M4",
+      "metric": "non-edge artifacts",
+      "current_comparator_dependency": "LITERAL_D",
+      "plan_clause": "No clause of the owner's seven-axis end-state sentence names full M4 or a comparator arm for it.",
+      "plan_required_arms": [],
+      "claim_specific_result": "LOSES_D",
+      "loses_d": true,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "eligible medication and foam tile floors not met",
+        "separate development flat absent",
+        "Dirichlet matrices and transfer plants not materialized",
+        "base and planted renders absent"
+      ]
+    },
+    {
+      "axis": "M5",
+      "metric": "depth-of-field coverage",
+      "current_comparator_dependency": "LITERAL_D",
+      "plan_clause": "No clause of the owner's seven-axis end-state sentence names full M5 or a comparator arm for it.",
+      "plan_required_arms": [],
+      "claim_specific_result": "LOSES_D",
+      "loses_d": true,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "fresh controlled-slide holdout absent",
+        "admitted detail or transfer judgement absent",
+        "no scored dense and sparse repeat unit"
+      ]
+    },
+    {
+      "axis": "M6",
+      "metric": "highlight and shadow retention",
+      "current_comparator_dependency": "LITERAL_D",
+      "plan_clause": "Highlight retention: Wire the census; B2. No named product arm appears.",
+      "plan_required_arms": [],
+      "claim_specific_result": "LOSES_D",
+      "loses_d": true,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "fewer than 10000 recoverable samples in the registered capture set",
+        "highlight-detail retention has no admitted detail judgement"
+      ]
+    },
+    {
+      "axis": "M7",
+      "metric": "colour fidelity",
+      "current_comparator_dependency": "LITERAL_D",
+      "plan_clause": "No clause of the owner's seven-axis end-state sentence names full M7 or a comparator arm for it.",
+      "plan_required_arms": [],
+      "claim_specific_result": "LOSES_D",
+      "loses_d": true,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "traceable colour target and measured illuminant absent",
+        "qualified textured colour-seam population absent"
+      ]
+    },
+    {
+      "axis": "M8",
+      "metric": "invented values",
+      "current_comparator_dependency": "NONE",
+      "plan_clause": "Keep the zero-invented-structure hull census as an axis.",
+      "plan_required_arms": [],
+      "claim_specific_result": "NEVER_HAD_D",
+      "loses_d": false,
+      "scoreable_now": true,
+      "current_result": "FAIL_M8_R"
+    },
+    {
+      "axis": "M9",
+      "metric": "per-pixel trust",
+      "current_comparator_dependency": "TRANSITIVE_THROUGH_M1_TRUTH",
+      "plan_clause": "Per-pixel trust: A4/D2/D8; no comparator emits the claimed certificate.",
+      "plan_required_arms": [],
+      "claim_specific_result": "NEVER_HAD_D",
+      "loses_d": false,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "no admitted candidate-specific acuity-truth producer",
+        "balanced manifest, independent repeats, calibration, and certificate product absent"
+      ]
+    },
+    {
+      "axis": "M10",
+      "metric": "physical depth",
+      "current_comparator_dependency": "NONE",
+      "plan_clause": "Depth output: A5/C5; the output obligation is physical depth that no comparator emits. DMap is A5 method evidence, not an M10 acceptance input.",
+      "plan_required_arms": [],
+      "claim_specific_result": "NEVER_HAD_D",
+      "loses_d": false,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "target-valid predicate and invalid encoding undefined",
+        "flat-null and layer-confusion population undefined",
+        "no compatible product or scored truth capture"
+      ]
+    },
+    {
+      "axis": "M11",
+      "metric": "wall-clock throughput",
+      "current_comparator_dependency": "SEMANTIC_DIRECT",
+      "plan_clause": "Speed or memory: hold D5; D9 buys back the worker-cap tax; the fork is the honest speed comparator.",
+      "plan_required_arms": [
+        "fresh best-known-source fork"
+      ],
+      "claim_specific_result": "NARROWS",
+      "loses_d": false,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "M175 admitted the fork build and transfer only; no scored common-input fork campaign output exists",
+        "D5 and D9 production work remains",
+        "timing harness, frozen modes, trace, reboot receipts, and quiet-host campaign absent",
+        "separate unratified full-quality comparator qualification remains"
+      ]
+    },
+    {
+      "axis": "M12",
+      "metric": "memory and determinism",
+      "current_comparator_dependency": "NONE",
+      "plan_clause": "D9 requires bytes invariant to worker count and D15 registers memory and scaling targets; no product comparator is required.",
+      "plan_required_arms": [],
+      "claim_specific_result": "NEVER_HAD_D",
+      "loses_d": false,
+      "scoreable_now": false,
+      "remaining_blockers": [
+        "registered worker-count and N matrix not run on a quiet host",
+        "separate unratified reverse dependency makes M12-S require all of M11"
+      ]
+    }
+  ],
+  "m175_effect": {
+    "fork_revision": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+    "executable_sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac",
+    "section_1_3": {
+      "slope": 1.0000000000000002,
+      "intercept": -6.65976265006347e-18,
+      "max_residual": 2.220446049250313e-16,
+      "strictly_monotone": true,
+      "interior_clipping": false
+    },
+    "closed": [
+      "source pin",
+      "reproducible build",
+      "pre-render executable and settings freeze",
+      "exact synthetic common-input consumption",
+      "section 1.3 transfer witness"
+    ],
+    "not_closed": [
+      "scored common-input fork outputs",
+      "D5 production performance budget",
+      "D9 worker-independent reduction",
+      "registered comparative timing campaign",
+      "M11 verdict"
+    ],
+    "axis_status_moved": false
+  },
+  "ratification_register": [
+    {
+      "id": "R1",
+      "known": true,
+      "title": "Global M1 and 98-percent comparator qualification",
+      "status": "EXPLICITLY_UNRATIFIED_IN_FORCE",
+      "affected": [
+        "M2",
+        "M3",
+        "M4",
+        "M11"
+      ]
+    },
+    {
+      "id": "R2",
+      "known": true,
+      "title": "Atomic PMax plus DMap plus fork conjunction",
+      "status": "EXPLICITLY_UNRATIFIED_IN_FORCE",
+      "affected": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M11"
+      ]
+    },
+    {
+      "id": "R3",
+      "known": false,
+      "title": "M3 comparator-envelope pass condition",
+      "status": "UNLABELED_UNRATIFIED_IN_FORCE",
+      "affected": [
+        "M3"
+      ]
+    },
+    {
+      "id": "R4",
+      "known": false,
+      "title": "Independent M3-to-M1 candidate prerequisite",
+      "status": "UNLABELED_UNRATIFIED_IN_FORCE",
+      "affected": [
+        "M3"
+      ]
+    },
+    {
+      "id": "R5",
+      "known": false,
+      "title": "M11 comparator must pass M1 M2 M3 M8 and retained M4",
+      "status": "UNLABELED_UNRATIFIED_IN_FORCE",
+      "affected": [
+        "M11"
+      ]
+    },
+    {
+      "id": "R6",
+      "known": false,
+      "title": "Retained M4 flat-power and transfer veto promoted into the owner gate",
+      "status": "UNLABELED_UNRATIFIED_IN_FORCE",
+      "affected": [
+        "M1",
+        "M2",
+        "M8"
+      ]
+    },
+    {
+      "id": "R7",
+      "known": false,
+      "title": "Seven owner gates plus five mandatory disclosures plus all-twelve measurement and DISCLOSURE MISS architecture",
+      "status": "DISCLOSED_BUT_NOT_OWNER_RATIFIED_IN_FORCE",
+      "affected": [
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M12"
+      ]
+    },
+    {
+      "id": "R8",
+      "known": false,
+      "title": "Common-merge is the sole publication track",
+      "status": "UNLABELED_UNRATIFIED_IN_FORCE",
+      "affected": [
+        "M1",
+        "M2",
+        "M6",
+        "M7"
+      ]
+    },
+    {
+      "id": "R9",
+      "known": false,
+      "title": "Reverse M12-S dependency on all of M11",
+      "status": "UNLABELED_UNRATIFIED_IN_FORCE",
+      "affected": [
+        "M12"
+      ]
+    }
+  ],
+  "ratification_totals": {
+    "material_governance_families": 9,
+    "previously_known": 2,
+    "additional_found": 7,
+    "m158_findings_dispositioned": 14,
+    "ordinary_numeric_completions_excluded": true
+  },
+  "m158_disposition": {
+    "1": "FIXED_HELICON_OPTIONAL",
+    "2": "OPEN_R1",
+    "3": "OPEN_R1",
+    "4": "PARTIAL_RESIDUAL_R4_R5",
+    "5": "OPEN_R8",
+    "6": "FIXED_BY_CONDITIONAL_ADMISSION",
+    "7": "FIXED_PRODUCT_NATIVE_REPORT_ONLY",
+    "8": "PARTIAL_RESIDUAL_R9",
+    "9": "FIXED_FORK_RESTORED",
+    "10": "FIXED_OR_DEFINITION_BLOCKED",
+    "11": "FIXED_UNCERTAINTY_REMAINING_DEFINITION_BLOCKED",
+    "12": "SUPERSEDED_M8_R_FAIL_STANDS",
+    "13": "APPLIED_WITHOUT_OWNER_RATIFICATION_R7",
+    "14": "PARTIAL_STANDALONE_M2_FIXED_RETAINED_M4_RESIDUAL_R6"
+  },
+  "document_consistency_defects": [
+    {
+      "id": "C1",
+      "description": "Section 3.2 says blocker (b) is cleared, while the section 3.1 rows still print (b) on M1-M7 and M10."
+    },
+    {
+      "id": "C2",
+      "description": "The scorecard records the M175 fork rebuild as closed in its amendment but later readiness and current-position prose still says the fresh hash-bound fork build is absent."
+    }
+  ]
+}
