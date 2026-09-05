@@ -221,6 +221,29 @@ summary of one:
 > arithmetic independently checked, so treat it as a floor rather than an
 > estimate — **but do not plan either sitting around 45 minutes.**
 
+> **Progress on the `$189` row, so you can see what the money would and would
+> not still be buying.** Blocker `(d)` — the missing common-input comparator —
+> needs three arms: licensed Zerene PMax, licensed Zerene DMap, and a rebuilt
+> retained fork. **The fork arm is now closed and it cost nothing.** Lane M165
+> pinned the earliest retained source revision
+> `4bc7f95e448cf20ee2bdd758403ec43e2612a1c6`, rebuilt it, and froze the
+> `271,360`-byte executable at SHA-256
+> `691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac`
+> **before** any rendering — the ordering matters, because a hash frozen after
+> rendering proves nothing about what rendered. Two clean build paths came out
+> byte-identical, byte-identity with the common TIFF was demonstrated
+> independently on both sides, and a planted defect produced
+> `RECEIPT_INPUT_HASH_MISMATCH` with the exact repair returning to PASS
+> (`docs/research/M165-common-input.md`, commit `e3f2c841`).
+>
+> **What this changes for you: nothing you have to do, and one thing you no
+> longer have to wait for.** The `$189` still buys the two Zerene arms and
+> nothing else; the fork is no longer a reason the comparator work would stall
+> after a purchase. Cross-host reproducibility is untested and M165 said so
+> rather than claiming it. ProPhoto colour semantics remain unproved and are
+> the last comparator prerequisite that needs neither money nor the camera;
+> M165 is on it now.
+
 > ### One decision from you is worth four axes, and it costs nothing
 >
 > **Every number in the table above assumes a rule I wrote and never checked

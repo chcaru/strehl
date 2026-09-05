@@ -768,6 +768,38 @@ check("2.9.76 keeps the scoreboard honest",
      collapse("The scoreboard is unchanged at `0 of 12`.") in collapse(s76),
      "2.9.76 still states the scoreboard is 0 of 12; no axis was quietly cashed")
 
+# --- M165 fork arm: cross-document agreement, not mere presence ---------------
+# Presence on one side proves a string exists. These pin the SAME figure in the
+# owner-facing document and in the lane document that produced it, so a drift on
+# either side is RED rather than silently one-sided.
+_owner = collapse(re.sub(r"(?m)^[ \t]*>[ \t]?", "",
+                         (ROOT / "docs" / "OWNER-ACTIONS.md").read_text(
+                             encoding="utf-8", errors="replace")))
+_m165 = collapse((ROOT / "docs" / "research" / "M165-common-input.md").read_text(
+    encoding="utf-8", errors="replace"))
+
+for _label, _fig in (
+    ("fork revision", "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6"),
+    ("fork executable sha", "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"),
+):
+    check("%s agrees owner<->M165" % _label,
+         (_fig in _owner) and (_fig in _m165),
+         "%s is identical in OWNER-ACTIONS and M165-common-input; a one-sided "
+         "edit fails this rather than passing on the untouched copy" % _label)
+
+check("fork hash frozen before rendering",
+     collapse("**before** any rendering") in _owner,
+     "the owner text preserves the ordering claim; a hash frozen after "
+     "rendering would prove nothing about what rendered")
+check("fork arm does not discount the licence",
+     collapse("The `$189` still buys the two Zerene arms and nothing else")
+     in _owner,
+     "closing the fork arm is not reported as reducing the purchase")
+check("fork cross-host limit retained",
+     collapse("Cross-host reproducibility is untested") in _owner,
+     "M165's own stated limit survives into the owner document rather than "
+     "being dropped on the way")
+
 print()
 
 print("GREEN               : %d" % green)
