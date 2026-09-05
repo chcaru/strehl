@@ -196,7 +196,7 @@ No holdout output may be rendered or read.
 
 ## Capture-sufficiency finding at freeze
 
-The 891-frame scored sitting has the needed M5 payload: converter-on
+The 1,215-frame scored sitting has the needed M5 payload: converter-on
 `sw4-A/B` (55 each), `sw10-A/B` (27 each), dense checker-only `sw1` (91),
 ordered automated focus nodes, independent A/B flats and darks, fixed-focus
 witnesses, and a coplanar nonperiodic patch sized for at least 64 guarded
@@ -394,7 +394,7 @@ sample size.
 
 ## Final capture-sufficiency ruling
 
-**A — measurable on the 768-frame rehearsal as already specified; added frame
+**A — measurable on the 1,092-frame rehearsal as currently specified; added frame
 cost: zero.** The full census changes the earlier ruling. The rehearsal already
 contains the required final-patch/final-tilt input ladders:
 `TC0-sw4-A/B` at 55 frames and `TC0-sw10-A/B` at 27 frames. M5 eligibility and
@@ -414,7 +414,7 @@ Add this M5 rehearsal exit gate:
 5. require **at least 133 common eligible physical tiles in the intersection
    of those two required step-width manifests**.
 
-Failure of any one count is a stop: do not shoot the 891-frame session until
+Failure of any one count is a stop: do not shoot the 1,215-frame session until
 the target/framing/sweep is corrected in another non-holdout rehearsal. The
 intersection count is the controlled-slide capture's effective Wilson
 denominator after the frozen within-session duplicate collapse; 133/133 has
