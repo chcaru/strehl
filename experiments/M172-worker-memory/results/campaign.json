@@ -1,0 +1,900 @@
+{
+  "builds": {
+    "post": {
+      "archive_bytes": 373565440,
+      "archive_location": "out/builds/post/source.tar",
+      "archive_sha256": "727B92EB89AA68B72672A972A576E59542F25B5A6E0236E77A005DD242C3467D",
+      "arm": "post",
+      "binary_location": "out/builds/post/bin/strehl.exe",
+      "binary_sha256": "0EC15D05CCA90352101BC07088A29D75E64450DC678C5607BA90A778D0BF4E96",
+      "build_command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--package",
+        "strehl-cli",
+        "--manifest-path",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\builds\\post\\source\\Cargo.toml"
+      ],
+      "build_environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_TARGET_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\builds\\post\\target",
+        "STREHL_BUILD_ID": "a97275817c58e164f75c7cd3d80ca99444a2a145"
+      },
+      "build_log_location": "out/builds/post/build.log",
+      "build_log_sha256": "0DA2D71FEE627459CB138A7405BB06E14D8AE3E8022685EF99880D0405F1DF4A",
+      "bytes": 10043904,
+      "commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+      "completed_utc": "2026-09-05T04:32:17.334289+00:00",
+      "source_location": "out/builds/post/source",
+      "source_method": "git archive",
+      "target_binary_location": "out/builds/post/target/release/strehl.exe",
+      "target_binary_sha256": "0EC15D05CCA90352101BC07088A29D75E64450DC678C5607BA90A778D0BF4E96",
+      "target_location": "out/builds/post/target",
+      "tree_hash": "21e04c831c7dddda4ec6727b2525c729fe54b6a7",
+      "valid": true,
+      "version_output": "strehl 0.0.0 (a97275817c58e164f75c7cd3d80ca99444a2a145)",
+      "working_tree_source_used": false
+    },
+    "pre": {
+      "archive_bytes": 372910080,
+      "archive_location": "out/builds/pre/source.tar",
+      "archive_sha256": "08FF3C86226BE0BE5115CA1CF333A592A567FE9D915627B44C50D06A0EE7DF08",
+      "arm": "pre",
+      "binary_location": "out/builds/pre/bin/strehl.exe",
+      "binary_sha256": "5C87BE23B654373192B4A561C232779A870ED1614C0BDD69EF9284376D854A93",
+      "build_command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--package",
+        "strehl-cli",
+        "--manifest-path",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\builds\\pre\\source\\Cargo.toml"
+      ],
+      "build_environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_TARGET_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\builds\\pre\\target",
+        "STREHL_BUILD_ID": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71"
+      },
+      "build_log_location": "out/builds/pre/build.log",
+      "build_log_sha256": "E7E43A9565A84B27B6523446B0E4136697D1CFDE6B4FFC3DFC279F1700B838E4",
+      "bytes": 9866240,
+      "commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+      "completed_utc": "2026-09-05T04:30:53.476714+00:00",
+      "source_location": "out/builds/pre/source",
+      "source_method": "git archive",
+      "target_binary_location": "out/builds/pre/target/release/strehl.exe",
+      "target_binary_sha256": "5C87BE23B654373192B4A561C232779A870ED1614C0BDD69EF9284376D854A93",
+      "target_location": "out/builds/pre/target",
+      "tree_hash": "0d4cce57dfa10a5aa9917df863a8bb4bc8c7ea9d",
+      "valid": true,
+      "version_output": "strehl 0.0.0 (1a6fd10c94dcb4b780f6af78c46c62a156c39b71)",
+      "working_tree_source_used": false
+    }
+  },
+  "created_utc": "2026-09-05T04:29:29.020287+00:00",
+  "protocol": {
+    "alignment": {
+      "enabled": false,
+      "environment": {
+        "STREHL_ALIGN": "0"
+      }
+    },
+    "artifact_output_root": "out",
+    "automatic_retries": false,
+    "commits": {
+      "post": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+      "pre": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71"
+    },
+    "cpu_interval_seconds": 1.0,
+    "cpu_interval_tolerance_seconds": 0.25,
+    "cpu_semantics": "Windows Processor(_Total): 100 * delta(system busy time) / delta(system total time), sampled with GetSystemTimes; complete one-second samples whose endpoints fall within raw wall_seconds",
+    "flags": [
+      "--merge",
+      "pyramid",
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "implementation": {
+      "campaign": "experiments/M172-worker-memory/campaign.py",
+      "campaign_sha256": "DB7BB4DF94B734F8469AF590203CC91193229E73FCE10FB823EE67315D4AA709",
+      "harness": "experiments/m12-scorecard/m12-harness.py",
+      "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+      "process_monitor": "m12-harness.py run_once with Windows Job Object accounting",
+      "tiff_witness": "m12-harness.py run_once/tiff_witness"
+    },
+    "limit": 16,
+    "load_gating": false,
+    "ordered_run_policy": [
+      {
+        "arm": "pre",
+        "kind": "verification",
+        "repetition": null,
+        "run_id": "verification-w1-pre",
+        "sequence_index": 0,
+        "workers": 1
+      },
+      {
+        "arm": "post",
+        "kind": "verification",
+        "repetition": null,
+        "run_id": "verification-w1-post",
+        "sequence_index": 1,
+        "workers": 1
+      },
+      {
+        "arm": "pre",
+        "kind": "verification",
+        "repetition": null,
+        "run_id": "verification-w16-pre",
+        "sequence_index": 2,
+        "workers": 16
+      },
+      {
+        "arm": "post",
+        "kind": "verification",
+        "repetition": null,
+        "run_id": "verification-w16-post",
+        "sequence_index": 3,
+        "workers": 16
+      },
+      {
+        "arm": "pre",
+        "kind": "warmup",
+        "repetition": null,
+        "run_id": "warmup-w1-pre",
+        "sequence_index": 4,
+        "workers": 1
+      },
+      {
+        "arm": "post",
+        "kind": "warmup",
+        "repetition": null,
+        "run_id": "warmup-w1-post",
+        "sequence_index": 5,
+        "workers": 1
+      },
+      {
+        "arm": "pre",
+        "kind": "warmup",
+        "repetition": null,
+        "run_id": "warmup-w16-pre",
+        "sequence_index": 6,
+        "workers": 16
+      },
+      {
+        "arm": "post",
+        "kind": "warmup",
+        "repetition": null,
+        "run_id": "warmup-w16-post",
+        "sequence_index": 7,
+        "workers": 16
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 1,
+        "run_id": "timed-r01-w1-pre",
+        "sequence_index": 8,
+        "workers": 1
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 1,
+        "run_id": "timed-r01-w1-post",
+        "sequence_index": 9,
+        "workers": 1
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 1,
+        "run_id": "timed-r01-w16-pre",
+        "sequence_index": 10,
+        "workers": 16
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 1,
+        "run_id": "timed-r01-w16-post",
+        "sequence_index": 11,
+        "workers": 16
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 2,
+        "run_id": "timed-r02-w1-pre",
+        "sequence_index": 12,
+        "workers": 1
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 2,
+        "run_id": "timed-r02-w1-post",
+        "sequence_index": 13,
+        "workers": 1
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 2,
+        "run_id": "timed-r02-w16-pre",
+        "sequence_index": 14,
+        "workers": 16
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 2,
+        "run_id": "timed-r02-w16-post",
+        "sequence_index": 15,
+        "workers": 16
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 3,
+        "run_id": "timed-r03-w1-pre",
+        "sequence_index": 16,
+        "workers": 1
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 3,
+        "run_id": "timed-r03-w1-post",
+        "sequence_index": 17,
+        "workers": 1
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 3,
+        "run_id": "timed-r03-w16-pre",
+        "sequence_index": 18,
+        "workers": 16
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 3,
+        "run_id": "timed-r03-w16-post",
+        "sequence_index": 19,
+        "workers": 16
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 4,
+        "run_id": "timed-r04-w1-pre",
+        "sequence_index": 20,
+        "workers": 1
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 4,
+        "run_id": "timed-r04-w1-post",
+        "sequence_index": 21,
+        "workers": 1
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 4,
+        "run_id": "timed-r04-w16-pre",
+        "sequence_index": 22,
+        "workers": 16
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 4,
+        "run_id": "timed-r04-w16-post",
+        "sequence_index": 23,
+        "workers": 16
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 5,
+        "run_id": "timed-r05-w1-pre",
+        "sequence_index": 24,
+        "workers": 1
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 5,
+        "run_id": "timed-r05-w1-post",
+        "sequence_index": 25,
+        "workers": 1
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 5,
+        "run_id": "timed-r05-w16-pre",
+        "sequence_index": 26,
+        "workers": 16
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 5,
+        "run_id": "timed-r05-w16-post",
+        "sequence_index": 27,
+        "workers": 16
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 6,
+        "run_id": "timed-r06-w1-pre",
+        "sequence_index": 28,
+        "workers": 1
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 6,
+        "run_id": "timed-r06-w1-post",
+        "sequence_index": 29,
+        "workers": 1
+      },
+      {
+        "arm": "pre",
+        "kind": "timed",
+        "repetition": 6,
+        "run_id": "timed-r06-w16-pre",
+        "sequence_index": 30,
+        "workers": 16
+      },
+      {
+        "arm": "post",
+        "kind": "timed",
+        "repetition": 6,
+        "run_id": "timed-r06-w16-post",
+        "sequence_index": 31,
+        "workers": 16
+      }
+    ],
+    "repetitions": 6,
+    "sequence_index_base": 0,
+    "stack": {
+      "label": "bee-1-cpl",
+      "path": "D:\\personal\\macro\\bee-1-cpl"
+    },
+    "timed_pairing": "for each repetition, for each worker count in listed order, run pre then post adjacently",
+    "verification_workers": [
+      1,
+      16
+    ],
+    "wall_seconds_interpretation": "raw evidence only; this campaign makes no absolute performance claim",
+    "warmups_excluded_from_ratios": true,
+    "warmups_per_arm_worker": 1,
+    "workers": [
+      1,
+      16
+    ]
+  },
+  "schema": "M172-throughput-v1",
+  "timed_runs": [],
+  "updated_utc": "2026-09-05T04:33:08.519282+00:00",
+  "verification": [
+    {
+      "argv": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\builds\\pre\\bin\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\bee-1-cpl",
+        "--limit",
+        "16",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\runs\\verification-w1-pre.tiff",
+        "--merge",
+        "pyramid",
+        "--linear-srgb",
+        "--demosaic"
+      ],
+      "arm": "pre",
+      "binary_sha256": "5C87BE23B654373192B4A561C232779A870ED1614C0BDD69EF9284376D854A93",
+      "completed_utc": "2026-09-05T04:32:48.860944+00:00",
+      "cpu_sampler_error": null,
+      "cpu_trace": [
+        {
+          "elapsed_seconds": 1.0115909000160173,
+          "processor_total_percent": 33.7046004842615
+        },
+        {
+          "elapsed_seconds": 2.0188695000251755,
+          "processor_total_percent": 29.763627592860587
+        },
+        {
+          "elapsed_seconds": 3.0286007000831887,
+          "processor_total_percent": 30.552861299709022
+        },
+        {
+          "elapsed_seconds": 4.032912100083195,
+          "processor_total_percent": 23.627450980392158
+        }
+      ],
+      "environment": {
+        "STREHL_ALIGN": "0",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\cache\\verification\\verification-w1-pre",
+        "STREHL_PYRAMID_WORKERS": "1",
+        "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\temp\\verification-w1-pre",
+        "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\temp\\verification-w1-pre"
+      },
+      "invalid_reasons": [],
+      "kind": "verification",
+      "memory_monitor": {
+        "missed_intervals": 0,
+        "sample_count": 480,
+        "sample_interval_ms": 10.0
+      },
+      "memory_peaks": {
+        "kernel_job_peak_memory_used_bytes": 1852280832,
+        "kernel_job_peak_process_memory_used_bytes": 1852280832,
+        "peak_process_count": 1,
+        "peak_process_tree_page_fault_count": 1614453,
+        "peak_process_tree_private_committed_bytes": 1852280832,
+        "peak_process_tree_working_set_bytes": 1497067520
+      },
+      "pixel_sha256": "A197B0704EE39983D67264C2823CF50695E9DE1C44B834D32257612FC2004185",
+      "processor_total_percent_max": 33.7046004842615,
+      "processor_total_percent_mean": 29.412135089305817,
+      "processor_total_percent_min": 23.627450980392158,
+      "record_sha256": "4F19D6A0C05D7FD5BC73FB4197A5DACE2CBEAE1E65AE38C94040C62B5FE00480",
+      "repetition": null,
+      "return_code": 0,
+      "run_id": "verification-w1-pre",
+      "sequence_index": 0,
+      "source_commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+      "started_utc": "2026-09-05T04:32:44.069657+00:00",
+      "stderr_log": "out/runs/verification-w1-pre.tiff.stderr.log",
+      "stderr_log_sha256": "1E89D68364E56E55BCEE087BD2AEE6F6BC72C82743C672D878B885E9D9224F0C",
+      "stderr_witness": [
+        {
+          "line": "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)",
+          "substring": "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)"
+        },
+        {
+          "line": "alignment       : OFF -- frames are combined unregistered. M86 measured 232.7 px of drift on bee-3-cpl.",
+          "substring": "alignment       : OFF"
+        },
+        {
+          "line": "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\runs\\verification-w1-pre.tiff (7032 x 4688, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)",
+          "substring": "16-bit RGB, linear sRGB"
+        },
+        {
+          "line": "                  Full sensor resolution: every CFA site estimated, one focus",
+          "substring": "Full sensor resolution"
+        },
+        {
+          "line": "memory plan     : 1 workers x 1328 MB = 1.3 GB against a 6144 MB budget, CONSTANT in",
+          "substring": "memory plan     : 1 workers x"
+        },
+        {
+          "line": "folded          : 16 / 16 frames in 4.0 s (0.25 s per frame, 1 workers)",
+          "substring": "1 workers)"
+        }
+      ],
+      "stdout_log": "out/runs/verification-w1-pre.tiff.stdout.log",
+      "stdout_log_sha256": "38DC58C8D369D6BC3D1E2DB5CC4AFFEB19B254041CC3CA8CA7011B44D14A2AC4",
+      "tiff_bits_per_sample": 16,
+      "tiff_bytes": 197798956,
+      "tiff_dtype": "uint16",
+      "tiff_samples_per_pixel": 3,
+      "tiff_sha256": "53E5F15EB7F36508BBA2E61334C83C141475FD46D7134114532C46E5053559D4",
+      "tiff_shape": [
+        4688,
+        7032,
+        3
+      ],
+      "tiff_software": "strehl 0.0.0 (1a6fd10c94dcb4b780f6af78c46c62a156c39b71)",
+      "valid": true,
+      "wall_seconds": 4.790871700039133,
+      "workers": 1
+    },
+    {
+      "argv": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\builds\\post\\bin\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\bee-1-cpl",
+        "--limit",
+        "16",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\runs\\verification-w1-post.tiff",
+        "--merge",
+        "pyramid",
+        "--linear-srgb",
+        "--demosaic"
+      ],
+      "arm": "post",
+      "binary_sha256": "0EC15D05CCA90352101BC07088A29D75E64450DC678C5607BA90A778D0BF4E96",
+      "completed_utc": "2026-09-05T04:32:56.485274+00:00",
+      "cpu_sampler_error": null,
+      "cpu_trace": [
+        {
+          "elapsed_seconds": 1.0128339000511914,
+          "processor_total_percent": 18.653846153846153
+        },
+        {
+          "elapsed_seconds": 2.0177613000851125,
+          "processor_total_percent": 16.859344894026975
+        },
+        {
+          "elapsed_seconds": 3.025621500099078,
+          "processor_total_percent": 30.93525179856115
+        },
+        {
+          "elapsed_seconds": 4.027585800038651,
+          "processor_total_percent": 33.67396593673966
+        },
+        {
+          "elapsed_seconds": 5.027820800081827,
+          "processor_total_percent": 27.331349206349206
+        },
+        {
+          "elapsed_seconds": 6.041779400082305,
+          "processor_total_percent": 26.49450023912004
+        },
+        {
+          "elapsed_seconds": 7.055190600105561,
+          "processor_total_percent": 18.346007604562736
+        }
+      ],
+      "environment": {
+        "STREHL_ALIGN": "0",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\cache\\verification\\verification-w1-post",
+        "STREHL_PYRAMID_WORKERS": "1",
+        "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\temp\\verification-w1-post",
+        "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\temp\\verification-w1-post"
+      },
+      "invalid_reasons": [],
+      "kind": "verification",
+      "memory_monitor": {
+        "missed_intervals": 2,
+        "sample_count": 732,
+        "sample_interval_ms": 10.0
+      },
+      "memory_peaks": {
+        "kernel_job_peak_memory_used_bytes": 2503684096,
+        "kernel_job_peak_process_memory_used_bytes": 2503684096,
+        "peak_process_count": 1,
+        "peak_process_tree_page_fault_count": 1545955,
+        "peak_process_tree_private_committed_bytes": 2503634944,
+        "peak_process_tree_working_set_bytes": 2156265472
+      },
+      "pixel_sha256": "3AC49AEA332E44406703C2EBA3A3B219CF49C70DE76BA129686D81884FA98EF3",
+      "processor_total_percent_max": 33.67396593673966,
+      "processor_total_percent_mean": 24.613466547600844,
+      "processor_total_percent_min": 16.859344894026975,
+      "record_sha256": "7FBF3E19C84A7AD44716CEC77248FDCB176D3D0C82A9C6D87A60369B42B47BBC",
+      "repetition": null,
+      "return_code": 0,
+      "run_id": "verification-w1-post",
+      "sequence_index": 1,
+      "source_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+      "started_utc": "2026-09-05T04:32:49.153719+00:00",
+      "stderr_log": "out/runs/verification-w1-post.tiff.stderr.log",
+      "stderr_log_sha256": "832D45698A554B32127D73BD981CEAC56CFFCE37D358592B1519CE62BC947423",
+      "stderr_witness": [
+        {
+          "line": "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)",
+          "substring": "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)"
+        },
+        {
+          "line": "alignment       : OFF -- frames are combined unregistered. M86 measured 232.7 px of drift on bee-3-cpl.",
+          "substring": "alignment       : OFF"
+        },
+        {
+          "line": "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\runs\\verification-w1-post.tiff (7032 x 4688, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)",
+          "substring": "16-bit RGB, linear sRGB"
+        },
+        {
+          "line": "                  Full sensor resolution: every CFA site estimated, one focus",
+          "substring": "Full sensor resolution"
+        },
+        {
+          "line": "memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 1 execution threads",
+          "substring": "canonical chunks, 1 reusable frame worker"
+        },
+        {
+          "line": "memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 1 execution threads",
+          "substring": "1 retained + 1 scratch accumulator, 1 execution threads"
+        },
+        {
+          "line": "                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.",
+          "substring": "changes threads, never arithmetic."
+        },
+        {
+          "line": "folded          : 16 / 16 frames in 6.8 s (0.43 s per frame, 1 execution threads)",
+          "substring": "1 execution threads)"
+        }
+      ],
+      "stdout_log": "out/runs/verification-w1-post.tiff.stdout.log",
+      "stdout_log_sha256": "2F2917D93B07C219FED8A2393066E13B61AC9E702A2F00D38E7C00BBA2BFF655",
+      "tiff_bits_per_sample": 16,
+      "tiff_bytes": 197798956,
+      "tiff_dtype": "uint16",
+      "tiff_samples_per_pixel": 3,
+      "tiff_sha256": "D8CBDC714A5055FEBDB816D0653C6867EFA684B98E7197D6C48AAA1173E84DF3",
+      "tiff_shape": [
+        4688,
+        7032,
+        3
+      ],
+      "tiff_software": "strehl 0.0.0 (a97275817c58e164f75c7cd3d80ca99444a2a145)",
+      "valid": true,
+      "wall_seconds": 7.330546299926937,
+      "workers": 1
+    },
+    {
+      "argv": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\builds\\pre\\bin\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\bee-1-cpl",
+        "--limit",
+        "16",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\runs\\verification-w16-pre.tiff",
+        "--merge",
+        "pyramid",
+        "--linear-srgb",
+        "--demosaic"
+      ],
+      "arm": "pre",
+      "binary_sha256": "5C87BE23B654373192B4A561C232779A870ED1614C0BDD69EF9284376D854A93",
+      "completed_utc": "2026-09-05T04:33:04.581106+00:00",
+      "cpu_sampler_error": null,
+      "cpu_trace": [
+        {
+          "elapsed_seconds": 1.006257600034587,
+          "processor_total_percent": 54.001759014951624
+        },
+        {
+          "elapsed_seconds": 2.0139111999887973,
+          "processor_total_percent": 82.82828282828282
+        },
+        {
+          "elapsed_seconds": 3.029052200028673,
+          "processor_total_percent": 65.25301204819277
+        },
+        {
+          "elapsed_seconds": 4.031403900007717,
+          "processor_total_percent": 68.79259980525804
+        },
+        {
+          "elapsed_seconds": 5.0418777000159025,
+          "processor_total_percent": 83.69408369408369
+        },
+        {
+          "elapsed_seconds": 6.042347299982794,
+          "processor_total_percent": 68.45703125
+        },
+        {
+          "elapsed_seconds": 7.043921999982558,
+          "processor_total_percent": 33.79515091538842
+        }
+      ],
+      "environment": {
+        "STREHL_ALIGN": "0",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\cache\\verification\\verification-w16-pre",
+        "STREHL_PYRAMID_WORKERS": "16",
+        "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\temp\\verification-w16-pre",
+        "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\temp\\verification-w16-pre"
+      },
+      "invalid_reasons": [],
+      "kind": "verification",
+      "memory_monitor": {
+        "missed_intervals": 5,
+        "sample_count": 776,
+        "sample_interval_ms": 10.0
+      },
+      "memory_peaks": {
+        "kernel_job_peak_memory_used_bytes": 29191544832,
+        "kernel_job_peak_process_memory_used_bytes": 29191544832,
+        "peak_process_count": 1,
+        "peak_process_tree_page_fault_count": 6308738,
+        "peak_process_tree_private_committed_bytes": 29191544832,
+        "peak_process_tree_working_set_bytes": 19775569920
+      },
+      "pixel_sha256": "A197B0704EE39983D67264C2823CF50695E9DE1C44B834D32257612FC2004185",
+      "processor_total_percent_max": 83.69408369408369,
+      "processor_total_percent_mean": 65.2602742223082,
+      "processor_total_percent_min": 33.79515091538842,
+      "record_sha256": "69C7C866A5ABDE54730C591E749A0EA0B37E3088008708FECCE5AC774D7490BA",
+      "repetition": null,
+      "return_code": 0,
+      "run_id": "verification-w16-pre",
+      "sequence_index": 2,
+      "source_commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+      "started_utc": "2026-09-05T04:32:56.778999+00:00",
+      "stderr_log": "out/runs/verification-w16-pre.tiff.stderr.log",
+      "stderr_log_sha256": "14D69C8CA12A751F035BCA6B08710E3954913A0381106E0388CF364D1D2B814F",
+      "stderr_witness": [
+        {
+          "line": "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)",
+          "substring": "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)"
+        },
+        {
+          "line": "alignment       : OFF -- frames are combined unregistered. M86 measured 232.7 px of drift on bee-3-cpl.",
+          "substring": "alignment       : OFF"
+        },
+        {
+          "line": "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\runs\\verification-w16-pre.tiff (7032 x 4688, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)",
+          "substring": "16-bit RGB, linear sRGB"
+        },
+        {
+          "line": "                  Full sensor resolution: every CFA site estimated, one focus",
+          "substring": "Full sensor resolution"
+        },
+        {
+          "line": "memory plan     : 16 workers x 1328 MB = 20.7 GB against a 6144 MB budget, CONSTANT in",
+          "substring": "memory plan     : 16 workers x"
+        },
+        {
+          "line": "folded          : 16 / 16 frames in 7.0 s (0.44 s per frame, 16 workers)",
+          "substring": "16 workers)"
+        }
+      ],
+      "stdout_log": "out/runs/verification-w16-pre.tiff.stdout.log",
+      "stdout_log_sha256": "38DC58C8D369D6BC3D1E2DB5CC4AFFEB19B254041CC3CA8CA7011B44D14A2AC4",
+      "tiff_bits_per_sample": 16,
+      "tiff_bytes": 197798956,
+      "tiff_dtype": "uint16",
+      "tiff_samples_per_pixel": 3,
+      "tiff_sha256": "53E5F15EB7F36508BBA2E61334C83C141475FD46D7134114532C46E5053559D4",
+      "tiff_shape": [
+        4688,
+        7032,
+        3
+      ],
+      "tiff_software": "strehl 0.0.0 (1a6fd10c94dcb4b780f6af78c46c62a156c39b71)",
+      "valid": true,
+      "wall_seconds": 7.800458600046113,
+      "workers": 16
+    },
+    {
+      "argv": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\builds\\post\\bin\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\bee-1-cpl",
+        "--limit",
+        "16",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\runs\\verification-w16-post.tiff",
+        "--merge",
+        "pyramid",
+        "--linear-srgb",
+        "--demosaic"
+      ],
+      "arm": "post",
+      "binary_sha256": "0EC15D05CCA90352101BC07088A29D75E64450DC678C5607BA90A778D0BF4E96",
+      "completed_utc": "2026-09-05T04:33:08.214566+00:00",
+      "cpu_sampler_error": null,
+      "cpu_trace": [
+        {
+          "elapsed_seconds": 1.013392599998042,
+          "processor_total_percent": 35.22944550669216
+        },
+        {
+          "elapsed_seconds": 2.01575939997565,
+          "processor_total_percent": 46.676300578034684
+        },
+        {
+          "elapsed_seconds": 3.0266766999848187,
+          "processor_total_percent": 43.47404172731684
+        }
+      ],
+      "environment": {
+        "STREHL_ALIGN": "0",
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\cache\\verification\\verification-w16-post",
+        "STREHL_PYRAMID_WORKERS": "16",
+        "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\temp\\verification-w16-post",
+        "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\temp\\verification-w16-post"
+      },
+      "invalid_reasons": [],
+      "kind": "verification",
+      "memory_monitor": {
+        "missed_intervals": 3,
+        "sample_count": 330,
+        "sample_interval_ms": 10.0
+      },
+      "memory_peaks": {
+        "kernel_job_peak_memory_used_bytes": 2516422656,
+        "kernel_job_peak_process_memory_used_bytes": 2516422656,
+        "peak_process_count": 1,
+        "peak_process_tree_page_fault_count": 1681792,
+        "peak_process_tree_private_committed_bytes": 2516312064,
+        "peak_process_tree_working_set_bytes": 2159300608
+      },
+      "pixel_sha256": "3AC49AEA332E44406703C2EBA3A3B219CF49C70DE76BA129686D81884FA98EF3",
+      "processor_total_percent_max": 46.676300578034684,
+      "processor_total_percent_mean": 41.79326260401456,
+      "processor_total_percent_min": 35.22944550669216,
+      "record_sha256": "FE841CBC161B253FA4A9E914C053FE31D47FA4AEE8DB9A37DBEC264B61C25E73",
+      "repetition": null,
+      "return_code": 0,
+      "run_id": "verification-w16-post",
+      "sequence_index": 3,
+      "source_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+      "started_utc": "2026-09-05T04:33:04.893249+00:00",
+      "stderr_log": "out/runs/verification-w16-post.tiff.stderr.log",
+      "stderr_log_sha256": "6ED51903C6F9698FBB34D3651398333CC50508893AE9D9615EAA4D124531572D",
+      "stderr_witness": [
+        {
+          "line": "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)",
+          "substring": "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)"
+        },
+        {
+          "line": "alignment       : OFF -- frames are combined unregistered. M86 measured 232.7 px of drift on bee-3-cpl.",
+          "substring": "alignment       : OFF"
+        },
+        {
+          "line": "wrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M172-worker-memory\\out\\runs\\verification-w16-post.tiff (7032 x 4688, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), Malvar-He-Cutler demosaic)",
+          "substring": "16-bit RGB, linear sRGB"
+        },
+        {
+          "line": "                  Full sensor resolution: every CFA site estimated, one focus",
+          "substring": "Full sensor resolution"
+        },
+        {
+          "line": "memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 16 execution threads",
+          "substring": "canonical chunks, 1 reusable frame worker"
+        },
+        {
+          "line": "memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 16 execution threads",
+          "substring": "1 retained + 1 scratch accumulator, 16 execution threads"
+        },
+        {
+          "line": "                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.",
+          "substring": "changes threads, never arithmetic."
+        },
+        {
+          "line": "folded          : 16 / 16 frames in 2.8 s (0.17 s per frame, 16 execution threads)",
+          "substring": "16 execution threads)"
+        }
+      ],
+      "stdout_log": "out/runs/verification-w16-post.tiff.stdout.log",
+      "stdout_log_sha256": "2F2917D93B07C219FED8A2393066E13B61AC9E702A2F00D38E7C00BBA2BFF655",
+      "tiff_bits_per_sample": 16,
+      "tiff_bytes": 197798956,
+      "tiff_dtype": "uint16",
+      "tiff_samples_per_pixel": 3,
+      "tiff_sha256": "D8CBDC714A5055FEBDB816D0653C6867EFA684B98E7197D6C48AAA1173E84DF3",
+      "tiff_shape": [
+        4688,
+        7032,
+        3
+      ],
+      "tiff_software": "strehl 0.0.0 (a97275817c58e164f75c7cd3d80ca99444a2a145)",
+      "valid": true,
+      "wall_seconds": 3.320890499977395,
+      "workers": 16
+    }
+  ],
+  "verification_outcome": {
+    "post_pixel_hashes": {
+      "w1": "3AC49AEA332E44406703C2EBA3A3B219CF49C70DE76BA129686D81884FA98EF3",
+      "w16": "3AC49AEA332E44406703C2EBA3A3B219CF49C70DE76BA129686D81884FA98EF3"
+    },
+    "post_worker_hashes_match": true,
+    "pre_pixel_hashes": {
+      "w1": "A197B0704EE39983D67264C2823CF50695E9DE1C44B834D32257612FC2004185",
+      "w16": "A197B0704EE39983D67264C2823CF50695E9DE1C44B834D32257612FC2004185"
+    },
+    "pre_worker_hashes_differ": false,
+    "valid": false,
+    "worker_semantics_verified_in_stderr": true
+  },
+  "warmups": []
+}
