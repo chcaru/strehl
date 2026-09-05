@@ -84,6 +84,7 @@
         "missing_roles",
         "predicates",
         "violations",
+        "site_evidence",
         "j_tr_computed",
         "j_tr"
       ],
@@ -160,13 +161,17 @@
       "required": [
         "schema",
         "label",
+        "status",
         "source_tree_parent_commit",
         "preregistration",
         "existing_estimator",
         "source_files",
+        "commissioning_artifacts",
         "dependencies",
         "external_decoder_path",
-        "documented_commands"
+        "documented_commands",
+        "config_sha256",
+        "artifact_schemas_sha256"
       ],
       "terminal_statuses": [
         "FROZEN"

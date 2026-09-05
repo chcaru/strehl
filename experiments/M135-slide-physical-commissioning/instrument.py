@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import functools
 import hashlib
 import importlib
 import importlib.metadata
@@ -23,6 +24,7 @@ import stat
 import struct
 import subprocess
 import sys
+import sysconfig
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path, PureWindowsPath
@@ -37,6 +39,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 DEFAULT_CONFIG = HERE / "config.json"
 DEFAULT_SCHEMAS = HERE / "artifact-schemas.json"
+DEFAULT_FREEZE_MANIFEST = HERE / "freeze-manifest.json"
 EXISTING_INSTRUMENT = REPO / "experiments" / "M135-detail-instrument" / "instrument.py"
 CROSSCHECK_MANIFEST = HERE / "Cargo.toml"
 CROSSCHECK_SOURCE = HERE / "src" / "main.rs"
@@ -58,6 +61,11 @@ ROLE_PREDICATE_NAMES = (
     "same_geometry_for_repeats",
     "disjoint_calibration_lineages",
     "reference_sampling_ratio",
+    "same_physical_sites",
+    "site_manifest_bound",
+    "unique_site_identities",
+    "unique_site_coordinates",
+    "same_site_role_mapping",
     "minimum_sites",
     "matched_flat_evidence",
     "matched_flat_manifest",
@@ -65,6 +73,23 @@ ROLE_PREDICATE_NAMES = (
     "checker_template_forbidden",
     "source_oracle_forbidden",
 )
+SAME_SITE_ROLES = (
+    "R1",
+    "R2",
+    "sw4_Y1",
+    "sw4_Y2",
+    "sw10_Y1",
+    "sw10_Y2",
+)
+NATIVE_BINARY_SUFFIXES = (".pyd", ".dll", ".so", ".dylib")
+SEMANTIC_DISTRIBUTION_SUFFIXES = {
+    ".py",
+    ".pyi",
+    ".pyd",
+    ".dll",
+    ".so",
+    ".dylib",
+}
 
 
 class InstrumentError(RuntimeError):
@@ -203,42 +228,242 @@ def package_version(*names: str) -> str | None:
     return None
 
 
-def dependency_record() -> dict[str, Any]:
+def _is_native_binary(path: str | Path) -> bool:
+    name = str(path).casefold()
+    return name.endswith(NATIVE_BINARY_SUFFIXES) or ".so." in Path(name).name
+
+
+def semantic_file_closure(
+    paths: Iterable[Path],
+    *,
+    root: Path | None = None,
+    include_files: bool = True,
+) -> dict[str, Any]:
+    unique: dict[str, Path] = {}
+    for raw_path in paths:
+        path = raw_path.absolute()
+        unique[normalized_path(path)] = path
+    records = []
+    for path in sorted(unique.values(), key=lambda item: normalized_path(item)):
+        if not path.is_file():
+            raise InstrumentError(f"dependency closure file is missing: {path}")
+        if root is not None:
+            try:
+                display = str(path.relative_to(root.absolute())).replace("\\", "/")
+            except ValueError:
+                display = str(path)
+        else:
+            display = str(path)
+        records.append(
+            {
+                "path": display,
+                "bytes": path.stat().st_size,
+                "sha256": sha256_file(path),
+            }
+        )
+    result = {
+        "file_count": len(records),
+        "byte_count": sum(record["bytes"] for record in records),
+        "aggregate_sha256": canonical_json_sha256(records),
+        "aggregate_domain": (
+            "canonical JSON over sorted path, byte-count, and file SHA-256 records"
+        ),
+    }
+    if root is not None:
+        result["root"] = str(root.absolute())
+    if include_files:
+        result["files"] = records
+    return result
+
+
+def _distribution(
+    *names: str,
+) -> tuple[str, importlib.metadata.Distribution]:
+    for name in names:
+        try:
+            return name, importlib.metadata.distribution(name)
+        except importlib.metadata.PackageNotFoundError:
+            continue
+    raise InstrumentError(
+        "required Python distribution is absent: " + ", ".join(names)
+    )
+
+
+def _distribution_record(
+    label: str,
+    names: tuple[str, ...],
+    native_selector: Callable[[str], bool],
+) -> dict[str, Any]:
+    requested_name, distribution = _distribution(*names)
+    root = Path(distribution.locate_file("")).absolute()
+    semantic_paths = []
+    selected_native_paths = []
+    selected_native_relative = []
+    metadata_paths = []
+    for entry in distribution.files or ():
+        relative = str(entry).replace("\\", "/")
+        path = Path(distribution.locate_file(entry)).absolute()
+        suffix = Path(relative).suffix.casefold()
+        metadata_name = Path(relative).name
+        semantic = bool(
+            suffix in SEMANTIC_DISTRIBUTION_SUFFIXES
+            or _is_native_binary(relative)
+            or metadata_name in {"METADATA", "RECORD", "WHEEL"}
+        )
+        if semantic:
+            semantic_paths.append(path)
+        if metadata_name in {"METADATA", "RECORD", "WHEEL"}:
+            metadata_paths.append(path)
+        if _is_native_binary(relative) and native_selector(relative.casefold()):
+            selected_native_paths.append(path)
+            selected_native_relative.append(relative)
+    if not selected_native_paths:
+        raise InstrumentError(
+            f"{label} dependency closure selected no native binaries"
+        )
+    semantic_closure = semantic_file_closure(
+        semantic_paths, root=root, include_files=False
+    )
+    native_closure = semantic_file_closure(
+        selected_native_paths, root=root, include_files=True
+    )
+    metadata_closure = semantic_file_closure(
+        metadata_paths, root=root, include_files=True
+    )
+    native_closure["selection"] = sorted(selected_native_relative)
+    return {
+        "requested_distribution": requested_name,
+        "installed_distribution": distribution.metadata.get(
+            "Name", requested_name
+        ),
+        "version": distribution.version,
+        "root": str(root),
+        "semantic_file_closure": semantic_closure,
+        "load_bearing_native_files": native_closure,
+        "distribution_metadata_files": metadata_closure,
+    }
+
+
+def _python_runtime_record() -> dict[str, Any]:
+    executable = Path(sys.executable).absolute()
+    candidates = [executable]
+    base_executable = getattr(sys, "_base_executable", None)
+    if base_executable:
+        candidates.append(Path(base_executable).absolute())
+    library_name = sysconfig.get_config_var("LDLIBRARY")
+    if isinstance(library_name, str) and library_name:
+        for directory in {
+            executable.parent,
+            Path(sys.base_prefix).absolute(),
+            Path(sys.exec_prefix).absolute(),
+        }:
+            candidate = directory / library_name
+            if candidate.is_file():
+                candidates.append(candidate)
+    for pattern in ("python*.dll", "libpython*.so*", "libpython*.dylib"):
+        candidates.extend(executable.parent.glob(pattern))
+    closure = semantic_file_closure(candidates)
+    return {
+        "version": platform.python_version(),
+        "implementation": platform.python_implementation(),
+        "executable": str(executable),
+        "executable_sha256": sha256_file(executable),
+        "runtime_files": closure,
+    }
+
+
+@functools.lru_cache(maxsize=1)
+def _dependency_record_cached() -> dict[str, Any]:
     import rawpy
     import scipy
+    import scipy.fft
+    import scipy.ndimage
+    import scipy.optimize
+    import numpy.fft
 
-    module_paths: dict[str, str | None] = {
-        "numpy": getattr(np, "__file__", None),
-        "scipy": getattr(scipy, "__file__", None),
-        "rawpy": getattr(rawpy, "__file__", None),
-        "rawpy_extension": getattr(rawpy._rawpy, "__file__", None),
-        "opencv": getattr(cv2, "__file__", None),
+    module_objects = {
+        "numpy": np,
+        "numpy.fft": numpy.fft,
+        "scipy": scipy,
+        "scipy.fft": scipy.fft,
+        "scipy.ndimage": scipy.ndimage,
+        "scipy.optimize": scipy.optimize,
+        "rawpy": rawpy,
+        "rawpy._rawpy": rawpy._rawpy,
+        "cv2": cv2,
     }
     modules: dict[str, Any] = {}
-    for name, raw_path in module_paths.items():
+    for name, module in module_objects.items():
+        raw_path = getattr(module, "__file__", None)
         path = Path(raw_path).absolute() if raw_path else None
         modules[name] = {
             "path": str(path) if path is not None else None,
             "sha256": sha256_file(path) if path is not None and path.is_file() else None,
         }
-    return {
-        "python": {
-            "version": platform.python_version(),
-            "implementation": platform.python_implementation(),
-            "executable": str(Path(sys.executable).absolute()),
-            "executable_sha256": sha256_file(Path(sys.executable)),
-        },
-        "packages": {
-            "numpy": package_version("numpy"),
-            "scipy": package_version("scipy"),
-            "rawpy": package_version("rawpy"),
-            "opencv": package_version(
-                "opencv-python", "opencv-python-headless", "opencv-contrib-python"
-            )
-            or getattr(cv2, "__version__", None),
-        },
-        "modules": modules,
+    distributions = {
+        "numpy": _distribution_record(
+            "numpy",
+            ("numpy",),
+            lambda relative: relative.startswith(("numpy/", "numpy.libs/")),
+        ),
+        "scipy": _distribution_record(
+            "scipy",
+            ("scipy",),
+            lambda relative: relative.startswith(
+                (
+                    "scipy/fft/",
+                    "scipy/ndimage/",
+                    "scipy/optimize/",
+                    "scipy/_lib/",
+                    "scipy.libs/",
+                )
+            ),
+        ),
+        "rawpy": _distribution_record(
+            "rawpy",
+            ("rawpy",),
+            lambda relative: relative.startswith("rawpy/"),
+        ),
+        "opencv": _distribution_record(
+            "opencv",
+            (
+                "opencv-python",
+                "opencv-python-headless",
+                "opencv-contrib-python",
+                "opencv-contrib-python-headless",
+            ),
+            lambda relative: relative.startswith("cv2/"),
+        ),
     }
+    libraw_version = getattr(rawpy, "libraw_version", None)
+    return {
+        "python": _python_runtime_record(),
+        "packages": {
+            name: record["version"] for name, record in distributions.items()
+        },
+        "distributions": distributions,
+        "loaded_modules": modules,
+        "rawpy_libraw_version": (
+            ".".join(str(part) for part in libraw_version)
+            if isinstance(libraw_version, tuple)
+            else (str(libraw_version) if libraw_version is not None else None)
+        ),
+        "discovery_policy": {
+            "semantic_distribution_files": (
+                "hash every installed .py/.pyi/native binary plus "
+                "METADATA/RECORD/WHEEL into a compact aggregate"
+            ),
+            "detailed_native_files": (
+                "all NumPy, rawpy, and OpenCV native files; SciPy FFT, "
+                "ndimage, optimize, _lib, and scipy.libs native files"
+            ),
+            "probe_modules": sorted(module_objects),
+        },
+    }
+
+
+def dependency_record() -> dict[str, Any]:
+    return json.loads(json.dumps(_dependency_record_cached()))
 
 
 def invocation_record(config_path: Path, config: dict[str, Any]) -> dict[str, Any]:
@@ -330,8 +555,28 @@ def load_config(path: Path) -> dict[str, Any]:
     flat_frequencies = config["flat"]["frequencies_native_cyc_per_px"]
     if max(flat_frequencies) > 0.25:
         raise InstrumentError("flat diagnostic exceeds 0.25 cyc/native px")
-    if config["roles"]["minimum_reference_to_scored_sampling_ratio"] != 2.0:
+    flat = config["flat"]
+    if (
+        flat.get("repeatability_statistic")
+        != "maximum-pair-mean-absolute-cross-power"
+        or flat.get("null_statistic")
+        != "independent-site-carrier-phase-scramble"
+        or flat.get("null_quantile") != 0.99
+        or flat.get("structured_alpha") != 0.01
+    ):
+        raise InstrumentError("flat repeatability statistic/null contract changed")
+    roles = config["roles"]
+    if roles["minimum_reference_to_scored_sampling_ratio"] != 2.0:
         raise InstrumentError("reference/scored sampling floor changed")
+    if (
+        roles.get("minimum_sites") != 64
+        or roles.get("site_manifest_schema")
+        != "m135-physical-site-manifest-v1"
+        or roles.get("site_coordinate_system") != "normalized-slide-uv"
+        or tuple(roles.get("same_site_roles", ())) != SAME_SITE_ROLES
+        or roles.get("site_coordinate_match") != "exact"
+    ):
+        raise InstrumentError("same-physical-site evidence contract changed")
     return config
 
 
@@ -517,11 +762,20 @@ def validate_decode_semantics(
         for frame in _inventory_frames(inventory)
     }
     observed_rows = decode.get("frames")
+    contract = decode.get("decoder_contract")
     if (
         not isinstance(observed_rows, list)
         or len(observed_rows) != len(expected)
         or decode.get("proceed_to_range") is not True
-        or decode.get("decoder_contract", {}).get("crosscheck_every_frame") is not True
+        or not isinstance(contract, dict)
+        or contract.get("crosscheck_every_frame") is not True
+        or contract.get("binary_hash_bound_before_stage_b") is not True
+        or not isinstance(contract.get("freeze_manifest_sha256"), str)
+        or HEX64.fullmatch(contract["freeze_manifest_sha256"]) is None
+        or not isinstance(contract.get("frozen_binary_sha256"), str)
+        or HEX64.fullmatch(contract["frozen_binary_sha256"]) is None
+        or contract.get("binary_sha256")
+        != contract.get("frozen_binary_sha256")
     ):
         raise InstrumentError("decode PASS does not cover every inventoried frame")
     observed: set[str] = set()
@@ -549,6 +803,8 @@ def validate_decode_semantics(
             and comparison.get("payload_sha256")
             == rawpy.get("visible_mosaic_sha256")
             == comparison.get("rawpy_payload_sha256")
+            and crosscheck.get("binary_sha256")
+            == contract["frozen_binary_sha256"]
             and isinstance(rawpy.get("camera_linear_green_sha256"), str)
             and HEX64.fullmatch(rawpy["camera_linear_green_sha256"])
         ):
@@ -794,11 +1050,14 @@ def validate_roles_semantics(
     missing = roles.get("missing_roles")
     violations = roles.get("violations")
     predicates = roles.get("predicates")
+    site_evidence = roles.get("site_evidence")
     if not (
         isinstance(missing, list)
         and isinstance(violations, list)
         and isinstance(predicates, dict)
         and set(predicates) == set(ROLE_PREDICATE_NAMES)
+        and isinstance(site_evidence, dict)
+        and site_evidence.get("required_roles") == list(SAME_SITE_ROLES)
     ):
         raise InstrumentError("role artifact has malformed evidence")
     if status == "REFERENCE_ROLE_ABSENT":
@@ -848,6 +1107,50 @@ def validate_flat_semantics(flat: dict[str, Any], config: dict[str, Any]) -> Non
             for row in groups
         ):
             raise InstrumentError("flat exposure group has an invalid state")
+        for row in groups:
+            repeatability = row.get("repeatability")
+            if not isinstance(repeatability, dict):
+                raise InstrumentError(
+                    "flat exposure group lacks its repeatability statistic"
+                )
+            observed = repeatability.get("observed_repeatable_power")
+            threshold = repeatability.get("null_threshold")
+            p_upper = repeatability.get("phase_scramble_p_upper")
+            pair_values = repeatability.get("pair_repeatable_power")
+            if not (
+                repeatability.get("statistic")
+                == config["flat"]["repeatability_statistic"]
+                and repeatability.get("null_statistic")
+                == config["flat"]["null_statistic"]
+                and repeatability.get("null_quantile")
+                == config["flat"]["null_quantile"]
+                and repeatability.get("structured_alpha")
+                == config["flat"]["structured_alpha"]
+                and exact_number(observed)
+                and exact_number(threshold)
+                and exact_number(p_upper)
+                and isinstance(pair_values, list)
+                and len(pair_values) == 6
+                and all(exact_number(value) for value in pair_values)
+                and repeatability.get("phase_scramble_q99") == threshold
+            ):
+                raise InstrumentError(
+                    "flat repeatability statistic/null threshold is malformed"
+                )
+            expected_status = (
+                "STRUCTURED_FLAT"
+                if float(observed) > float(threshold)
+                and float(p_upper) <= config["flat"]["structured_alpha"]
+                else "QUIET_DIAGNOSTIC"
+            )
+            if (
+                repeatability.get("status") != expected_status
+                or row.get("status") != expected_status
+            ):
+                raise InstrumentError(
+                    "flat state does not follow the reported sign-robust "
+                    "statistic and null threshold"
+                )
     elif status == "FLAT_DIAGNOSTIC_UNDETERMINED":
         if not any(
             isinstance(row, dict) and row.get("reason")
@@ -1484,14 +1787,81 @@ def parse_rawler_dump(
     )
 
 
+def verify_frozen_crosscheck_binary(
+    binary: Path,
+    freeze_manifest_path: Path = DEFAULT_FREEZE_MANIFEST,
+) -> dict[str, Any]:
+    frozen = load_json_object(freeze_manifest_path)
+    validate_artifact(frozen)
+    if (
+        frozen.get("schema") != "m135-slide-freeze-v1"
+        or frozen.get("status") != "FROZEN"
+    ):
+        raise InstrumentError("Stage B requires a FROZEN M135 manifest")
+    executable = frozen.get("external_decoder_path", {}).get("executable")
+    if not isinstance(executable, dict):
+        raise InstrumentError(
+            "Stage B freeze manifest lacks an executable binding"
+        )
+    expected_hash = executable.get("sha256")
+    expected_bytes = executable.get("bytes")
+    if (
+        not isinstance(expected_hash, str)
+        or HEX64.fullmatch(expected_hash) is None
+        or not isinstance(expected_bytes, int)
+        or isinstance(expected_bytes, bool)
+        or expected_bytes <= 0
+    ):
+        raise InstrumentError(
+            "Stage B freeze manifest has a malformed executable binding"
+        )
+    try:
+        info = binary.lstat()
+    except OSError as error:
+        raise InstrumentError(
+            f"Stage B crosscheck executable is unreadable: {binary}: {error}"
+        ) from error
+    if (
+        not stat.S_ISREG(info.st_mode)
+        or binary.is_symlink()
+        or _is_reparse(info)
+    ):
+        raise InstrumentError(
+            "Stage B crosscheck executable must be a regular non-reparse file"
+        )
+    observed_bytes = info.st_size
+    observed_hash = sha256_file(binary)
+    if observed_bytes != expected_bytes or observed_hash != expected_hash:
+        raise InstrumentError(
+            "Stage B refused crosscheck executable: frozen "
+            f"{expected_bytes} bytes/{expected_hash}, observed "
+            f"{observed_bytes} bytes/{observed_hash}"
+        )
+    return {
+        "freeze_manifest_path": str(freeze_manifest_path.absolute()),
+        "freeze_manifest_sha256": sha256_file(freeze_manifest_path),
+        "expected_binary_bytes": expected_bytes,
+        "expected_binary_sha256": expected_hash,
+        "observed_binary_bytes": observed_bytes,
+        "observed_binary_sha256": observed_hash,
+        "matched_before_stage_b": True,
+    }
+
+
 def run_rawler_crosscheck(
     binary: Path,
     raw_path: Path,
     expected_mosaic: np.ndarray,
     config: dict[str, Any],
+    expected_binary_sha256: str,
 ) -> dict[str, Any]:
     if not binary.is_file():
         raise InstrumentError(f"missing rawler crosscheck binary: {binary}")
+    before_hash = sha256_file(binary)
+    if before_hash != expected_binary_sha256:
+        raise InstrumentError(
+            "crosscheck executable changed after the Stage B freeze check"
+        )
     command = [
         str(binary),
         str(raw_path),
@@ -1543,9 +1913,14 @@ def run_rawler_crosscheck(
     if active_height != expected_mosaic.shape[0] or active_width < expected_mosaic.shape[1]:
         raise InstrumentError("rawpy visible area is not a leading rawler active prefix")
     comparison = parse_rawler_payload(completed.stdout, expected_mosaic)
+    after_hash = sha256_file(binary)
+    if after_hash != expected_binary_sha256:
+        raise InstrumentError(
+            "crosscheck executable changed while Stage B was running"
+        )
     record.update(
         {
-            "binary_sha256": sha256_file(binary),
+            "binary_sha256": after_hash,
             "active_shape_yx": [active_height, active_width],
             "active_origin_xy": [active_x, active_y],
             "buffer_shape_yx": [int(buffer_height.group(1)), int(stride.group(1))],
@@ -1571,12 +1946,16 @@ def decode_payload(
     crosscheck_binary: Path,
     config_path: Path,
     config: dict[str, Any],
+    freeze_manifest_path: Path = DEFAULT_FREEZE_MANIFEST,
 ) -> tuple[dict[str, Any], int]:
     inventory = load_json_object(inventory_path)
     validate_artifact(inventory)
     validate_inventory_semantics(inventory, config)
     if inventory["status"] != "INVENTORY_MATCH" or not inventory["proceed_to_decode"]:
         raise InstrumentError("decode requires an INVENTORY_MATCH artifact")
+    crosscheck_binding = verify_frozen_crosscheck_binary(
+        crosscheck_binary, freeze_manifest_path
+    )
     frames_out = []
     failure: str | None = None
     for frame in _inventory_frames(inventory):
@@ -1592,6 +1971,7 @@ def decode_payload(
                 raw_path,
                 snapshot.mosaic,
                 config,
+                crosscheck_binding["expected_binary_sha256"],
             )
         except InstrumentError as error:
             failure = str(error)
@@ -1661,7 +2041,22 @@ def decode_payload(
             "crosscheck_lock_path": str(CROSSCHECK_LOCK),
             "crosscheck_lock_sha256": normalized_text_sha256(CROSSCHECK_LOCK),
             "binary_path": str(crosscheck_binary.absolute()),
-            "binary_sha256": sha256_file(crosscheck_binary),
+            "binary_sha256": crosscheck_binding["observed_binary_sha256"],
+            "freeze_manifest_path": crosscheck_binding[
+                "freeze_manifest_path"
+            ],
+            "freeze_manifest_sha256": crosscheck_binding[
+                "freeze_manifest_sha256"
+            ],
+            "frozen_binary_bytes": crosscheck_binding[
+                "expected_binary_bytes"
+            ],
+            "frozen_binary_sha256": crosscheck_binding[
+                "expected_binary_sha256"
+            ],
+            "binary_hash_bound_before_stage_b": crosscheck_binding[
+                "matched_before_stage_b"
+            ],
             "transport": (
                 "binary active-area payload on stdout; metadata on stderr; "
                 "no filesystem scratch or capture-tree write path"
@@ -2738,12 +3133,22 @@ def flat_repeatability(
         )
     pairs = [(a, b) for a in range(4) for b in range(a + 1, 4)]
 
-    def statistic(a: np.ndarray, b: np.ndarray) -> float:
+    def sign_robust_pair_statistic(a: np.ndarray, b: np.ndarray) -> float:
+        cross = np.mean(a * np.conj(b), axis=0)
+        return float(np.mean(np.abs(cross), dtype=np.float64))
+
+    def legacy_signed_pair_statistic(a: np.ndarray, b: np.ndarray) -> float:
         cross = np.mean(a * np.conj(b), axis=0)
         return float(np.mean(np.maximum(np.real(cross), 0.0)))
 
-    pair_values = [statistic(values[a], values[b]) for a, b in pairs]
-    observed = float(np.median(pair_values))
+    pair_values = [
+        sign_robust_pair_statistic(values[a], values[b]) for a, b in pairs
+    ]
+    observed = float(np.max(pair_values))
+    legacy_pair_values = [
+        legacy_signed_pair_statistic(values[a], values[b]) for a, b in pairs
+    ]
+    legacy_observed = float(np.median(legacy_pair_values))
     rng = np.random.default_rng(int(config["flat"]["phase_scramble_seed"]))
     null = []
     for _ in range(int(config["flat"]["phase_scramble_count"])):
@@ -2754,13 +3159,18 @@ def flat_repeatability(
                 * np.pi
                 * rng.random((values.shape[1], values.shape[2]))
             )
-            pair_null.append(statistic(values[a], values[b] * phase))
-        null.append(float(np.median(pair_null)))
+            pair_null.append(
+                sign_robust_pair_statistic(values[a], values[b] * phase)
+            )
+        null.append(float(np.max(pair_null)))
     null_array = np.asarray(null, dtype=np.float64)
     p_upper = float(
         (1 + np.count_nonzero(null_array >= observed)) / (1 + len(null_array))
     )
-    threshold = float(np.quantile(null_array, 0.99, method="higher"))
+    null_quantile = float(config["flat"]["null_quantile"])
+    threshold = float(
+        np.quantile(null_array, null_quantile, method="higher")
+    )
     structured = bool(
         observed > threshold
         and p_upper <= float(config["flat"]["structured_alpha"])
@@ -2768,8 +3178,19 @@ def flat_repeatability(
     auto_power = float(np.mean(np.abs(values) ** 2, dtype=np.float64))
     return {
         "status": "STRUCTURED_FLAT" if structured else "QUIET_DIAGNOSTIC",
+        "statistic": config["flat"]["repeatability_statistic"],
+        "statistic_definition": (
+            "maximum over six temporal-split pairs of the mean across "
+            "carriers of absolute site-averaged complex cross-power"
+        ),
         "observed_repeatable_power": observed,
         "pair_repeatable_power": pair_values,
+        "pair_order": [[a, b] for a, b in pairs],
+        "legacy_positive_cross_power_median": legacy_observed,
+        "legacy_positive_cross_power_pairs": legacy_pair_values,
+        "null_statistic": config["flat"]["null_statistic"],
+        "null_quantile": null_quantile,
+        "null_threshold": threshold,
         "phase_scramble_q99": threshold,
         "phase_scramble_p_upper": p_upper,
         "phase_scramble_count": len(null),
@@ -2878,6 +3299,198 @@ def _assignment_record(assignments: dict[str, Any], role: str) -> dict[str, Any]
     return row
 
 
+def _bound_manifest_path(
+    raw_path: Any, ledger_path: Path | None
+) -> Path | None:
+    if not isinstance(raw_path, str) or not raw_path:
+        return None
+    candidate = Path(raw_path)
+    if not candidate.is_absolute():
+        candidate = (
+            (ledger_path.absolute().parent if ledger_path is not None else Path.cwd())
+            / candidate
+        )
+    return candidate.absolute()
+
+
+def _physical_site_evidence(
+    ledger: dict[str, Any],
+    rows: dict[str, dict[str, Any]],
+    config: dict[str, Any],
+    ledger_path: Path | None,
+) -> tuple[dict[str, bool], list[str], dict[str, Any]]:
+    predicate_values = {
+        "site_manifest_bound": False,
+        "unique_site_identities": False,
+        "unique_site_coordinates": False,
+        "same_site_role_mapping": False,
+        "minimum_sites": False,
+    }
+    violations: list[str] = []
+    raw_hash = ledger.get("site_manifest_sha256")
+    path = _bound_manifest_path(ledger.get("site_manifest_path"), ledger_path)
+    evidence: dict[str, Any] | None = None
+    observed_hash: str | None = None
+    file_valid = False
+    if (
+        path is not None
+        and isinstance(raw_hash, str)
+        and HEX64.fullmatch(raw_hash) is not None
+    ):
+        try:
+            info = path.lstat()
+            file_valid = bool(
+                stat.S_ISREG(info.st_mode)
+                and not path.is_symlink()
+                and not _is_reparse(info)
+            )
+            if file_valid:
+                evidence, observed_hash = load_hashed_json_object(path)
+                file_valid = observed_hash == raw_hash
+        except (OSError, InstrumentError):
+            evidence = None
+            file_valid = False
+    expected_bindings = {
+        role: {
+            "capture_unit_id": rows[role].get("capture_unit_id"),
+            "parent_stack_id": rows[role].get("parent_stack_id"),
+            "source_group": rows[role].get("source_group"),
+            "source_file_ids": sorted(rows[role].get("source_file_ids", [])),
+            "geometry_id": rows[role].get("geometry_id"),
+        }
+        for role in SAME_SITE_ROLES
+    }
+    header_valid = bool(
+        file_valid
+        and isinstance(evidence, dict)
+        and evidence.get("schema") == config["roles"]["site_manifest_schema"]
+        and evidence.get("status") == "PASS"
+        and evidence.get("session_id") == ledger.get("session_id")
+        and evidence.get("coordinate_system")
+        == config["roles"]["site_coordinate_system"]
+        and evidence.get("roles") == list(SAME_SITE_ROLES)
+        and evidence.get("role_bindings") == expected_bindings
+    )
+    predicate_values["site_manifest_bound"] = header_valid
+    if not header_valid:
+        violations.append(
+            "physical site manifest is absent, malformed, hash-mismatched, "
+            "or not bound to the six R1/R2/Y1/Y2 capture roles"
+        )
+
+    sites = evidence.get("sites") if isinstance(evidence, dict) else None
+    if not isinstance(sites, list):
+        sites = []
+    identities = [site.get("site_id") for site in sites if isinstance(site, dict)]
+    identities_valid = bool(
+        header_valid
+        and len(identities) == len(sites)
+        and all(isinstance(value, str) and value for value in identities)
+        and len(set(identities)) == len(identities)
+    )
+    predicate_values["unique_site_identities"] = identities_valid
+    if not identities_valid:
+        violations.append(
+            "physical site manifest does not contain unique site identities"
+        )
+
+    coordinate_rows: list[tuple[float, float]] = []
+    coordinates_valid = header_valid
+    for site in sites:
+        coordinate = (
+            site.get("normalized_slide_uv")
+            if isinstance(site, dict)
+            else None
+        )
+        if not (
+            isinstance(coordinate, list)
+            and len(coordinate) == 2
+            and all(exact_number(value) for value in coordinate)
+            and all(0.0 <= float(value) <= 1.0 for value in coordinate)
+        ):
+            coordinates_valid = False
+            continue
+        coordinate_rows.append((float(coordinate[0]), float(coordinate[1])))
+    coordinates_valid = bool(
+        coordinates_valid
+        and len(coordinate_rows) == len(sites)
+        and len(set(coordinate_rows)) == len(coordinate_rows)
+    )
+    predicate_values["unique_site_coordinates"] = coordinates_valid
+    if not coordinates_valid:
+        violations.append(
+            "physical site manifest does not contain unique normalized coordinates"
+        )
+
+    mapping_valid = bool(header_valid and identities_valid and coordinates_valid)
+    if mapping_valid:
+        for site, coordinate in zip(sites, coordinate_rows, strict=True):
+            observations = site.get("role_observations")
+            if not (
+                isinstance(observations, dict)
+                and set(observations) == set(SAME_SITE_ROLES)
+            ):
+                mapping_valid = False
+                break
+            for role in SAME_SITE_ROLES:
+                observation = observations[role]
+                observed_coordinate = (
+                    observation.get("normalized_slide_uv")
+                    if isinstance(observation, dict)
+                    else None
+                )
+                if not (
+                    isinstance(observation, dict)
+                    and observation.get("site_id") == site["site_id"]
+                    and isinstance(observed_coordinate, list)
+                    and len(observed_coordinate) == 2
+                    and all(exact_number(value) for value in observed_coordinate)
+                    and (
+                        float(observed_coordinate[0]),
+                        float(observed_coordinate[1]),
+                    )
+                    == coordinate
+                ):
+                    mapping_valid = False
+                    break
+            if not mapping_valid:
+                break
+    predicate_values["same_site_role_mapping"] = mapping_valid
+    if not mapping_valid:
+        violations.append(
+            "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch"
+        )
+
+    ledger_site_count = ledger.get("site_count")
+    minimum_sites = bool(
+        header_valid
+        and isinstance(ledger_site_count, int)
+        and not isinstance(ledger_site_count, bool)
+        and ledger_site_count == len(sites)
+        and len(sites) >= config["roles"]["minimum_sites"]
+    )
+    predicate_values["minimum_sites"] = minimum_sites
+    if not minimum_sites:
+        violations.append(
+            "bare scalar site_count is not evidence; the bound manifest must "
+            "contain at least 64 sites and match site_count exactly"
+        )
+
+    summary = {
+        "manifest_path": path.name if path is not None else None,
+        "manifest_sha256": observed_hash if file_valid else None,
+        "coordinate_system": (
+            evidence.get("coordinate_system")
+            if isinstance(evidence, dict)
+            else None
+        ),
+        "required_roles": list(SAME_SITE_ROLES),
+        "site_count_from_manifest": len(sites) if isinstance(sites, list) else None,
+        "ledger_site_count": ledger_site_count,
+    }
+    return predicate_values, violations, summary
+
+
 def role_gate_result(
     ledger: dict[str, Any],
     inventory: dict[str, Any],
@@ -2906,6 +3519,11 @@ def role_gate_result(
         "same_geometry_for_repeats": None,
         "disjoint_calibration_lineages": None,
         "reference_sampling_ratio": None,
+        "same_physical_sites": None,
+        "site_manifest_bound": None,
+        "unique_site_identities": None,
+        "unique_site_coordinates": None,
+        "same_site_role_mapping": None,
         "minimum_sites": None,
         "matched_flat_evidence": None,
         "matched_flat_manifest": None,
@@ -2923,6 +3541,14 @@ def role_gate_result(
             "j_tr_computed": False,
             "j_tr": None,
             "score_callback_called": False,
+            "site_evidence": {
+                "manifest_path": None,
+                "manifest_sha256": None,
+                "coordinate_system": None,
+                "required_roles": list(SAME_SITE_ROLES),
+                "site_count_from_manifest": None,
+                "ledger_site_count": ledger.get("site_count"),
+            },
         }
 
     rows = {role: _assignment_record(assignments, role) for role in required}
@@ -3092,14 +3718,23 @@ def role_gate_result(
     if not predicates["reference_sampling_ratio"]:
         violations.append("reference/scored subject-sampling lower bound is below 2.0")
 
-    site_count = ledger.get("site_count")
-    predicates["minimum_sites"] = bool(
-        isinstance(site_count, int)
-        and not isinstance(site_count, bool)
-        and site_count >= config["roles"]["minimum_sites"]
+    target = ledger.get("target")
+    if not isinstance(target, dict):
+        target = {}
+    predicates["same_physical_sites"] = (
+        target.get("same_physical_sites") is True
     )
-    if not predicates["minimum_sites"]:
-        violations.append("role ledger has fewer than 64 eligible sites")
+    if not predicates["same_physical_sites"]:
+        violations.append(
+            "target.same_physical_sites must be true and backed by a site manifest"
+        )
+    (
+        site_predicates,
+        site_violations,
+        site_evidence,
+    ) = _physical_site_evidence(ledger, rows, config, ledger_path)
+    predicates.update(site_predicates)
+    violations.extend(site_violations)
 
     predicates["matched_flat_evidence"] = ledger.get("matched_flat_evidence") is True
     if not predicates["matched_flat_evidence"]:
@@ -3172,9 +3807,6 @@ def role_gate_result(
             "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
         )
 
-    target = ledger.get("target")
-    if not isinstance(target, dict):
-        target = {}
     predicates["nonperiodic_target"] = (
         target.get("kind") == config["roles"]["allowed_target_kind"]
     )
@@ -3201,6 +3833,7 @@ def role_gate_result(
             "j_tr_computed": False,
             "j_tr": None,
             "score_callback_called": False,
+            "site_evidence": site_evidence,
         }
     callback_called = False
     if score_callback is not None:
@@ -3215,6 +3848,7 @@ def role_gate_result(
         "j_tr_computed": False,
         "j_tr": None,
         "score_callback_called": callback_called,
+        "site_evidence": site_evidence,
         "note": (
             "this commissioning lane establishes identifiability only; the "
             "separately frozen M135 estimator remains the scoring implementation"
@@ -3249,6 +3883,7 @@ def roles_payload(
         "predicates": result["predicates"],
         "violations": result["violations"],
         "sampling_ratio": result.get("sampling_ratio"),
+        "site_evidence": result["site_evidence"],
         "j_tr_computed": result["j_tr_computed"],
         "j_tr": result["j_tr"],
         "score_callback_called": result["score_callback_called"],
@@ -3673,15 +4308,22 @@ def summary_payload(
             "Stage A metadata/order does not reproduce from the bound RAW files"
         )
     decoder_contract = decode.get("decoder_contract")
-    if not isinstance(decoder_contract, dict) or not isinstance(
-        decoder_contract.get("binary_path"), str
+    if (
+        not isinstance(decoder_contract, dict)
+        or not isinstance(decoder_contract.get("binary_path"), str)
+        or not isinstance(
+            decoder_contract.get("freeze_manifest_path"), str
+        )
     ):
-        raise InstrumentError("decode artifact lacks the frozen rawler binary path")
+        raise InstrumentError(
+            "decode artifact lacks its frozen rawler binary/manifest path"
+        )
     recomputed_decode, decode_exit = decode_payload(
         inventory_path,
         Path(decoder_contract["binary_path"]),
         config_path,
         config,
+        Path(decoder_contract["freeze_manifest_path"]),
     )
     if decode_exit != 0 or canonical_json_sha256(
         decode_measurement_projection(recomputed_decode)
@@ -3806,6 +4448,11 @@ def parser() -> argparse.ArgumentParser:
     decode = commands.add_parser("decode")
     decode.add_argument("--inventory", type=Path, required=True)
     decode.add_argument("--rawler-crosscheck-bin", type=Path, required=True)
+    decode.add_argument(
+        "--freeze-manifest",
+        type=Path,
+        default=DEFAULT_FREEZE_MANIFEST,
+    )
     decode.add_argument("--output", type=Path, required=True)
 
     range_command = commands.add_parser("range")
@@ -3884,6 +4531,7 @@ def main() -> int:
                 args.rawler_crosscheck_bin.absolute(),
                 args.config.absolute(),
                 config,
+                args.freeze_manifest.absolute(),
             )
         elif args.command == "range":
             payload = range_payload(

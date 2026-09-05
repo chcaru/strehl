@@ -1,5 +1,5 @@
 {
-  "artifact_schemas_sha256": "fee8129073f85c6c0aa9b04d86a8b592a0514127e5eded68249016bb55161662",
+  "artifact_schemas_sha256": "a077128a0885f82620279cdb4b685cde9ce77718f62e88deac64027bee091979",
   "commissioning_artifacts": {
     "commission-run1-failed.json": {
       "bytes": 57103,
@@ -50,17 +50,563 @@
       "path": "experiments\\M135-slide-physical-commissioning\\commission-run5-nondeterministic-before.json",
       "sha256": "55ad6996bb416296ac53a06a603111f0b57e2d96c6d8e0b0a7c6ca068e0fb03a"
     },
-    "commission.json": {
-      "bytes": 73921,
+    "commission-run6-failed.json": {
+      "bytes": 140193,
       "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "ab96d903bca9ca44c1724bb4f3d8f2588b02f6334d8bae2b7a843a2e68f55551",
+      "normalized_text_sha256": "9ffebffac21886e3b3405522debcb636dd1366e48232ea865afb58d21c1abee6",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission-run6-failed.json",
+      "sha256": "9ffebffac21886e3b3405522debcb636dd1366e48232ea865afb58d21c1abee6"
+    },
+    "commission.json": {
+      "bytes": 140808,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "b0a77b4a54bdb77ce8e1c7e9b3c5418992b44fbe1f53a54fe48d1c0abcb8b776",
       "path": "experiments\\M135-slide-physical-commissioning\\commission.json",
-      "sha256": "ab96d903bca9ca44c1724bb4f3d8f2588b02f6334d8bae2b7a843a2e68f55551"
+      "sha256": "b0a77b4a54bdb77ce8e1c7e9b3c5418992b44fbe1f53a54fe48d1c0abcb8b776"
     }
   },
   "commit_identity_rule": "the claiming commit is the commit containing this manifest; embedding its SHA would be circular",
-  "config_sha256": "edbbfbd44857ea39f331f764795deb459783711a4a5d8c1c432027141d544bfa",
+  "config_sha256": "911de7c2c6ab84c1ce820e1fa9a3ebd5b74d234de013ef68cb72873ab753f3e1",
   "dependencies": {
+    "discovery_policy": {
+      "detailed_native_files": "all NumPy, rawpy, and OpenCV native files; SciPy FFT, ndimage, optimize, _lib, and scipy.libs native files",
+      "probe_modules": [
+        "cv2",
+        "numpy",
+        "numpy.fft",
+        "rawpy",
+        "rawpy._rawpy",
+        "scipy",
+        "scipy.fft",
+        "scipy.ndimage",
+        "scipy.optimize"
+      ],
+      "semantic_distribution_files": "hash every installed .py/.pyi/native binary plus METADATA/RECORD/WHEEL into a compact aggregate"
+    },
+    "distributions": {
+      "numpy": {
+        "distribution_metadata_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "8e273c8b69f08a36557fabae4828bc5c5bf1ef2b7c5765a93bf2b7437cf5f983",
+          "byte_count": 118815,
+          "file_count": 3,
+          "files": [
+            {
+              "bytes": 6608,
+              "path": "numpy-2.4.4.dist-info/METADATA",
+              "sha256": "8f9e04338ffa930868a2d157ce44f6e4cb7ac524b968fb13d04187a6ac575282"
+            },
+            {
+              "bytes": 112122,
+              "path": "numpy-2.4.4.dist-info/RECORD",
+              "sha256": "11ef09377f4b4c6b9218c9293d399fb1cc3f06e560c608faa25852adccfc32da"
+            },
+            {
+              "bytes": 85,
+              "path": "numpy-2.4.4.dist-info/WHEEL",
+              "sha256": "e743de01ba6503a3e4234858398a1e69c07d512d51e8482ec9f3a7b1c707d165"
+            }
+          ],
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+        },
+        "installed_distribution": "numpy",
+        "load_bearing_native_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "71e84ac7c80e84a6deb820705c1ba842d95777f9607bfcf0a1a76f0e7dc66744",
+          "byte_count": 28033616,
+          "file_count": 21,
+          "files": [
+            {
+              "bytes": 20415488,
+              "path": "numpy.libs/libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+              "sha256": "63c857e738469261263c764a36be9436ebdeaa272e340a828f42047a97131080"
+            },
+            {
+              "bytes": 575056,
+              "path": "numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+              "sha256": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde"
+            },
+            {
+              "bytes": 65536,
+              "path": "numpy/_core/_multiarray_tests.cp312-win_amd64.pyd",
+              "sha256": "a37712b7a0e12fbb28b5c77873886140f7a36dc7c11d0ffb1739fb07f879ad4b"
+            },
+            {
+              "bytes": 3714560,
+              "path": "numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+              "sha256": "f4523c2dfe641a904605029ce4a5046388bd61b18afc0594d34018b5e6d848f8"
+            },
+            {
+              "bytes": 12288,
+              "path": "numpy/_core/_operand_flag_tests.cp312-win_amd64.pyd",
+              "sha256": "7e4e9738f554ccffe98ace10618d96b40784fa6dfe1313a5e73fb72dc575c736"
+            },
+            {
+              "bytes": 39936,
+              "path": "numpy/_core/_rational_tests.cp312-win_amd64.pyd",
+              "sha256": "922c3ca16dd5be1c89aab32f584272cb9a9cea32dff728b27fdd17ce9be85dd2"
+            },
+            {
+              "bytes": 832000,
+              "path": "numpy/_core/_simd.cp312-win_amd64.pyd",
+              "sha256": "5fb18573594ff25afb56359a6349f006e37dfb71e4de2c30dad8c0fb91957bf5"
+            },
+            {
+              "bytes": 14336,
+              "path": "numpy/_core/_struct_ufunc_tests.cp312-win_amd64.pyd",
+              "sha256": "9bb5da7cb16679c130025472ffb10824821a1972d375a69876745ae77ecb05a9"
+            },
+            {
+              "bytes": 33280,
+              "path": "numpy/_core/_umath_tests.cp312-win_amd64.pyd",
+              "sha256": "adb48d882bc86e2cfb31ede2316fd69a046590b67e5f29a624fe44b47795aa07"
+            },
+            {
+              "bytes": 276480,
+              "path": "numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+              "sha256": "7c009372f4f448c2d7419726b671f7122693705c905d5239df1ef2b49c30eadc"
+            },
+            {
+              "bytes": 112128,
+              "path": "numpy/linalg/_umath_linalg.cp312-win_amd64.pyd",
+              "sha256": "8732faea57c1e9750297bc5df2ed090954159e28024c66f1cdbf1d4eb798ccb8"
+            },
+            {
+              "bytes": 18944,
+              "path": "numpy/linalg/lapack_lite.cp312-win_amd64.pyd",
+              "sha256": "7d0b28de7229d533f158708676ae4661b0554badd8b4ca7befd9f573b6fddb80"
+            },
+            {
+              "bytes": 207360,
+              "path": "numpy/random/_bounded_integers.cp312-win_amd64.pyd",
+              "sha256": "dd98c61f9c78c6dfbf16b7ef5060647aba412a6ea74ab6cd80d93c34dd485d57"
+            },
+            {
+              "bytes": 167424,
+              "path": "numpy/random/_common.cp312-win_amd64.pyd",
+              "sha256": "95b8170a18ec959a6e7d5eb3c5ec62945e25ef000e7d3e079634f6a6f1025599"
+            },
+            {
+              "bytes": 585216,
+              "path": "numpy/random/_generator.cp312-win_amd64.pyd",
+              "sha256": "dd21763b7cbd0934d11e18a205b43a2f94281749cdc3ae29a8b0551d89bec069"
+            },
+            {
+              "bytes": 83968,
+              "path": "numpy/random/_mt19937.cp312-win_amd64.pyd",
+              "sha256": "dfb5422af41c2481f7284cfb24d6c22d20f7335a3b782381b965f1ae5dbbb58b"
+            },
+            {
+              "bytes": 94720,
+              "path": "numpy/random/_pcg64.cp312-win_amd64.pyd",
+              "sha256": "7233f96d62e6e908a5b8c05d944bab62484e1e8094ed7ceb67c4d039da9b03e3"
+            },
+            {
+              "bytes": 78336,
+              "path": "numpy/random/_philox.cp312-win_amd64.pyd",
+              "sha256": "a42e903341f5ab570a508c4347e838955b9d01dfb42fbe2a92716cd17c8263bf"
+            },
+            {
+              "bytes": 59904,
+              "path": "numpy/random/_sfc64.cp312-win_amd64.pyd",
+              "sha256": "a84fd4bed2bbfe54d6e0b21990e9260cf82770e80c22f58ce767917ad2d72a9b"
+            },
+            {
+              "bytes": 157696,
+              "path": "numpy/random/bit_generator.cp312-win_amd64.pyd",
+              "sha256": "13c855266daae91046fdeced52acd6ad1a39680381f11e2c9959b173f5f8b6fb"
+            },
+            {
+              "bytes": 488960,
+              "path": "numpy/random/mtrand.cp312-win_amd64.pyd",
+              "sha256": "a100e03d295811221bc317d9ba7e0ff0dbcd58a8deda7d2f734703fc7e223e6a"
+            }
+          ],
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "selection": [
+            "numpy.libs/libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+            "numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+            "numpy/_core/_multiarray_tests.cp312-win_amd64.pyd",
+            "numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+            "numpy/_core/_operand_flag_tests.cp312-win_amd64.pyd",
+            "numpy/_core/_rational_tests.cp312-win_amd64.pyd",
+            "numpy/_core/_simd.cp312-win_amd64.pyd",
+            "numpy/_core/_struct_ufunc_tests.cp312-win_amd64.pyd",
+            "numpy/_core/_umath_tests.cp312-win_amd64.pyd",
+            "numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+            "numpy/linalg/_umath_linalg.cp312-win_amd64.pyd",
+            "numpy/linalg/lapack_lite.cp312-win_amd64.pyd",
+            "numpy/random/_bounded_integers.cp312-win_amd64.pyd",
+            "numpy/random/_common.cp312-win_amd64.pyd",
+            "numpy/random/_generator.cp312-win_amd64.pyd",
+            "numpy/random/_mt19937.cp312-win_amd64.pyd",
+            "numpy/random/_pcg64.cp312-win_amd64.pyd",
+            "numpy/random/_philox.cp312-win_amd64.pyd",
+            "numpy/random/_sfc64.cp312-win_amd64.pyd",
+            "numpy/random/bit_generator.cp312-win_amd64.pyd",
+            "numpy/random/mtrand.cp312-win_amd64.pyd"
+          ]
+        },
+        "requested_distribution": "numpy",
+        "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+        "semantic_file_closure": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "2acb84661ae8c3cfe546ba8e71a28526f35bfad789674ab4b392f8b08df1d068",
+          "byte_count": 38373692,
+          "file_count": 693,
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+        },
+        "version": "2.4.4"
+      },
+      "opencv": {
+        "distribution_metadata_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "09d450f1453df30e6e3384d00871ca3d0620ca57d11121035b75a29675191ba7",
+          "byte_count": 28425,
+          "file_count": 3,
+          "files": [
+            {
+              "bytes": 20043,
+              "path": "opencv_python-4.13.0.92.dist-info/METADATA",
+              "sha256": "b7ec32edc5943818be42a7d67f3b0f2091ac537b99ab7f1c3f33c13e6fbfcb38"
+            },
+            {
+              "bytes": 8288,
+              "path": "opencv_python-4.13.0.92.dist-info/RECORD",
+              "sha256": "c89e7f5bd818b5fb7387ce09305e823b39c940d64f2dacfa9889ff94f5d9978d"
+            },
+            {
+              "bytes": 94,
+              "path": "opencv_python-4.13.0.92.dist-info/WHEEL",
+              "sha256": "f5f1b5d2f4b338a5f09a35f70a458deb63fd86a8fe186976c33c1d47139547e6"
+            }
+          ],
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+        },
+        "installed_distribution": "opencv-python",
+        "load_bearing_native_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "3f3c563475da227f0c1e18d291d830c7c7eccad8fdc2841a2a754bf2e56003f2",
+          "byte_count": 103397376,
+          "file_count": 2,
+          "files": [
+            {
+              "bytes": 74819072,
+              "path": "cv2/cv2.pyd",
+              "sha256": "78db0c836b952d9d5510140677463687c357a7166fddfa6ac7e31abb2d7d9bbd"
+            },
+            {
+              "bytes": 28578304,
+              "path": "cv2/opencv_videoio_ffmpeg4130_64.dll",
+              "sha256": "fcc614672159094a35815b7ea2819a648cbf86c30d90c57e8c6ba1432f594548"
+            }
+          ],
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "selection": [
+            "cv2/cv2.pyd",
+            "cv2/opencv_videoio_ffmpeg4130_64.dll"
+          ]
+        },
+        "requested_distribution": "opencv-python",
+        "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+        "semantic_file_closure": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "6e56d1b29cf33c16a234da9cc91b3a3f6bc2c385dce2a7635342c9ee67907d77",
+          "byte_count": 103944696,
+          "file_count": 65,
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+        },
+        "version": "4.13.0.92"
+      },
+      "rawpy": {
+        "distribution_metadata_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "cdb33b667d1af59431cafa1dff42e8d7201abae06b1002b8e77585bca5bdd020",
+          "byte_count": 11627,
+          "file_count": 3,
+          "files": [
+            {
+              "bytes": 9874,
+              "path": "rawpy-0.27.0.dist-info/METADATA",
+              "sha256": "56e3bec9c77d8a6b2bbe3586a6082d05dcddfec28eb4a1b323bfdfd71b258178"
+            },
+            {
+              "bytes": 1652,
+              "path": "rawpy-0.27.0.dist-info/RECORD",
+              "sha256": "64f7542bdabaaf2d00618cba5bac05273e6b5e818d5c8d83cc48823beb557643"
+            },
+            {
+              "bytes": 101,
+              "path": "rawpy-0.27.0.dist-info/WHEEL",
+              "sha256": "ad1e507ec59c665de6adae409920fb15dd1dcd0c59de51c2a43a3bd0891f0cae"
+            }
+          ],
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+        },
+        "installed_distribution": "rawpy",
+        "load_bearing_native_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "c883dd35ac18c830b418ffea63be07c4180cd0aecb95ff7d198144e43ab408bd",
+          "byte_count": 2325632,
+          "file_count": 3,
+          "files": [
+            {
+              "bytes": 205824,
+              "path": "rawpy/_rawpy.cp312-win_amd64.pyd",
+              "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+            },
+            {
+              "bytes": 1926656,
+              "path": "rawpy/raw_r.dll",
+              "sha256": "da20108e301a929170fe1af2acb2ef7e5de62347057f860139fda111d504fa39"
+            },
+            {
+              "bytes": 193152,
+              "path": "rawpy/vcomp140.dll",
+              "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164"
+            }
+          ],
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "selection": [
+            "rawpy/_rawpy.cp312-win_amd64.pyd",
+            "rawpy/raw_r.dll",
+            "rawpy/vcomp140.dll"
+          ]
+        },
+        "requested_distribution": "rawpy",
+        "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+        "semantic_file_closure": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "a3f5c91243bc90c8d4f695203065ddfc29ed3fbc9f12bd0ee45daafb2c14d766",
+          "byte_count": 2379213,
+          "file_count": 10,
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+        },
+        "version": "0.27.0"
+      },
+      "scipy": {
+        "distribution_metadata_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "097599e964fa4a097f5b62cfb1d18e49c8fa3be9d981097aab91fcf98ae8a9e7",
+          "byte_count": 269352,
+          "file_count": 3,
+          "files": [
+            {
+              "bytes": 60950,
+              "path": "scipy-1.17.1.dist-info/METADATA",
+              "sha256": "3a61ac02d145c9ca53f53d3f6f58d09017727a317731d0af02909730d4403e32"
+            },
+            {
+              "bytes": 208317,
+              "path": "scipy-1.17.1.dist-info/RECORD",
+              "sha256": "e4a624bea66d62c1cc330b5751fc27ba23f0b78b5e140668f330a92980c419a9"
+            },
+            {
+              "bytes": 85,
+              "path": "scipy-1.17.1.dist-info/WHEEL",
+              "sha256": "e743de01ba6503a3e4234858398a1e69c07d512d51e8482ec9f3a7b1c707d165"
+            }
+          ],
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+        },
+        "installed_distribution": "scipy",
+        "load_bearing_native_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "014ae16a1be22928ed7d8c0952ecff06b515732199be8de1d612c1e4382ee63e",
+          "byte_count": 32970240,
+          "file_count": 29,
+          "files": [
+            {
+              "bytes": 20260864,
+              "path": "scipy.libs/libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+              "sha256": "64eda39e79589aedb16f58e5547eb599f0b5855505d56b9d40022e2eee354a0b"
+            },
+            {
+              "bytes": 105472,
+              "path": "scipy/_lib/_ccallback_c.cp312-win_amd64.pyd",
+              "sha256": "509d2e681897f4253263c063ad8a2aa0c2459b85ce3d86754b401d42ab26dc9a"
+            },
+            {
+              "bytes": 15872,
+              "path": "scipy/_lib/_fpumode.cp312-win_amd64.pyd",
+              "sha256": "f00f7a238a65d40eb6939bac18ef8c407dd345cf26c7e83bb0a185ab03756814"
+            },
+            {
+              "bytes": 52224,
+              "path": "scipy/_lib/_test_ccallback.cp312-win_amd64.pyd",
+              "sha256": "57431ca6b0015ec5534f8f8419216cd76f06191a271ddbf5e750d595eaf82ff2"
+            },
+            {
+              "bytes": 33792,
+              "path": "scipy/_lib/_test_deprecation_call.cp312-win_amd64.pyd",
+              "sha256": "20f122cd55541a794a8c49308eb545a83a86a01d6a049a1ce9b66d2ba5e76286"
+            },
+            {
+              "bytes": 24576,
+              "path": "scipy/_lib/_test_deprecation_def.cp312-win_amd64.pyd",
+              "sha256": "118091bc00e030f12f820975ec605dbec71ee7a101cd594c6aec658d6d733487"
+            },
+            {
+              "bytes": 235008,
+              "path": "scipy/_lib/_uarray/_uarray.cp312-win_amd64.pyd",
+              "sha256": "2fa9cd0fca336b35fca629e2ceedde50fdeed9d6d6ea3575a2bc4889222bc2d6"
+            },
+            {
+              "bytes": 60416,
+              "path": "scipy/_lib/messagestream.cp312-win_amd64.pyd",
+              "sha256": "b4679bc7cc58c3dd7cb29689ae96ab295fff3412b1724baa7d2b7c6cf86f6c15"
+            },
+            {
+              "bytes": 1097216,
+              "path": "scipy/fft/_pocketfft/pypocketfft.cp312-win_amd64.pyd",
+              "sha256": "dd089b853dd1382b4ce73a138076efa8dda9391efa6090ee31fe607e2bdee313"
+            },
+            {
+              "bytes": 16896,
+              "path": "scipy/ndimage/_ctest.cp312-win_amd64.pyd",
+              "sha256": "5209e5ad9816fdf85c3cfba74d9cda7a51e27a3340484f2b5eaac47a61026833"
+            },
+            {
+              "bytes": 71168,
+              "path": "scipy/ndimage/_cytest.cp312-win_amd64.pyd",
+              "sha256": "3cea1263ad1fb73157c4a8b6ad2dc91786e2014159d87bb4f522397f6d2fb674"
+            },
+            {
+              "bytes": 177664,
+              "path": "scipy/ndimage/_nd_image.cp312-win_amd64.pyd",
+              "sha256": "7a5bfe894a43b761f2042f2a35c1e799aaa964b60e33b1acc55bf8062636f191"
+            },
+            {
+              "bytes": 205312,
+              "path": "scipy/ndimage/_ni_label.cp312-win_amd64.pyd",
+              "sha256": "b7dd341165d5ca1960ff96b1d6600822cdd50614f1328537d9311e219ae38d12"
+            },
+            {
+              "bytes": 124416,
+              "path": "scipy/ndimage/_rank_filter_1d.cp312-win_amd64.pyd",
+              "sha256": "eb419d67ee29fa9615f01d288b43b8c0288da67043aa494b481c93b24d92b9d9"
+            },
+            {
+              "bytes": 173568,
+              "path": "scipy/optimize/_bglu_dense.cp312-win_amd64.pyd",
+              "sha256": "3168df9f9c5a3ba0ef428c1c5ca13a6fced1a164b4d31cc4d71aca1baf58f50f"
+            },
+            {
+              "bytes": 70656,
+              "path": "scipy/optimize/_direct.cp312-win_amd64.pyd",
+              "sha256": "6ea9f33c61aa3009eb557db94bc80c74b8b25947553a9950bf4ef1e4c4cc372e"
+            },
+            {
+              "bytes": 1033216,
+              "path": "scipy/optimize/_group_columns.cp312-win_amd64.pyd",
+              "sha256": "a3ee6c6801009f84b3aa8a980c83a0b1983d33fcf944144cda3cda691ecca43b"
+            },
+            {
+              "bytes": 6443520,
+              "path": "scipy/optimize/_highspy/_core.cp312-win_amd64.pyd",
+              "sha256": "99d5c437bca5ee91c8785721fe69b235b6b348cff9c27a7436501f4cc419baad"
+            },
+            {
+              "bytes": 1278464,
+              "path": "scipy/optimize/_highspy/_highs_options.cp312-win_amd64.pyd",
+              "sha256": "98acb3f762673688fc402e893d3313d267733135f0e1c07ef508cbcdb4b2ad8f"
+            },
+            {
+              "bytes": 171520,
+              "path": "scipy/optimize/_lbfgsb.cp312-win_amd64.pyd",
+              "sha256": "9d087101aadc47b4ac09332433edcc3be64de36a135acc7c728f079c3af9ebea"
+            },
+            {
+              "bytes": 177664,
+              "path": "scipy/optimize/_lsap.cp312-win_amd64.pyd",
+              "sha256": "f8ff7561bd1ea3027c809fc804c8b1316376e589d12aef3a1ebcb2a6d2c3d18d"
+            },
+            {
+              "bytes": 70656,
+              "path": "scipy/optimize/_lsq/givens_elimination.cp312-win_amd64.pyd",
+              "sha256": "22553b97f9e3c32f5fbbc1b8b9c5c4a4e0251f441366472844a824f01ae63021"
+            },
+            {
+              "bytes": 124928,
+              "path": "scipy/optimize/_minpack.cp312-win_amd64.pyd",
+              "sha256": "95b27adf583cb4c0d660141adba5d179b9df4a42474b2ff230d598673794fab4"
+            },
+            {
+              "bytes": 145920,
+              "path": "scipy/optimize/_moduleTNC.cp312-win_amd64.pyd",
+              "sha256": "0e57c01521068abf89c818e42693ffb20612ff9319d6942d490c4fd6a48873e2"
+            },
+            {
+              "bytes": 317952,
+              "path": "scipy/optimize/_pava_pybind.cp312-win_amd64.pyd",
+              "sha256": "03cfa01ef5ed5829057e629497cc052e83eb9729a95a244e6fdbea66eb8dadd0"
+            },
+            {
+              "bytes": 172544,
+              "path": "scipy/optimize/_slsqplib.cp312-win_amd64.pyd",
+              "sha256": "0174a3e1849cb4312b17fa6d6fe55de618a02c94ec9f7d9b12199270c6faac75"
+            },
+            {
+              "bytes": 206848,
+              "path": "scipy/optimize/_trlib/_trlib.cp312-win_amd64.pyd",
+              "sha256": "ec5edbbfa97f3dc4a1f2e155bcf350ca6b25ad238e486ba72da2fef46ea42ff1"
+            },
+            {
+              "bytes": 23040,
+              "path": "scipy/optimize/_zeros.cp312-win_amd64.pyd",
+              "sha256": "001213b4192a7427197626c5a7ac86d9e2c1fd7512be56a495cb192a66bbd4ed"
+            },
+            {
+              "bytes": 78848,
+              "path": "scipy/optimize/cython_optimize/_zeros.cp312-win_amd64.pyd",
+              "sha256": "40cc706e7eec0865e3892e0b669cd99728c4b886f31c46f43085d5d21143753a"
+            }
+          ],
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "selection": [
+            "scipy.libs/libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+            "scipy/_lib/_ccallback_c.cp312-win_amd64.pyd",
+            "scipy/_lib/_fpumode.cp312-win_amd64.pyd",
+            "scipy/_lib/_test_ccallback.cp312-win_amd64.pyd",
+            "scipy/_lib/_test_deprecation_call.cp312-win_amd64.pyd",
+            "scipy/_lib/_test_deprecation_def.cp312-win_amd64.pyd",
+            "scipy/_lib/_uarray/_uarray.cp312-win_amd64.pyd",
+            "scipy/_lib/messagestream.cp312-win_amd64.pyd",
+            "scipy/fft/_pocketfft/pypocketfft.cp312-win_amd64.pyd",
+            "scipy/ndimage/_ctest.cp312-win_amd64.pyd",
+            "scipy/ndimage/_cytest.cp312-win_amd64.pyd",
+            "scipy/ndimage/_nd_image.cp312-win_amd64.pyd",
+            "scipy/ndimage/_ni_label.cp312-win_amd64.pyd",
+            "scipy/ndimage/_rank_filter_1d.cp312-win_amd64.pyd",
+            "scipy/optimize/_bglu_dense.cp312-win_amd64.pyd",
+            "scipy/optimize/_direct.cp312-win_amd64.pyd",
+            "scipy/optimize/_group_columns.cp312-win_amd64.pyd",
+            "scipy/optimize/_highspy/_core.cp312-win_amd64.pyd",
+            "scipy/optimize/_highspy/_highs_options.cp312-win_amd64.pyd",
+            "scipy/optimize/_lbfgsb.cp312-win_amd64.pyd",
+            "scipy/optimize/_lsap.cp312-win_amd64.pyd",
+            "scipy/optimize/_lsq/givens_elimination.cp312-win_amd64.pyd",
+            "scipy/optimize/_minpack.cp312-win_amd64.pyd",
+            "scipy/optimize/_moduleTNC.cp312-win_amd64.pyd",
+            "scipy/optimize/_pava_pybind.cp312-win_amd64.pyd",
+            "scipy/optimize/_slsqplib.cp312-win_amd64.pyd",
+            "scipy/optimize/_trlib/_trlib.cp312-win_amd64.pyd",
+            "scipy/optimize/_zeros.cp312-win_amd64.pyd",
+            "scipy/optimize/cython_optimize/_zeros.cp312-win_amd64.pyd"
+          ]
+        },
+        "requested_distribution": "scipy",
+        "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+        "semantic_file_closure": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "62bef94f536e5391f0665ba7feae015ef8dbdff11e23bef0de3c3997720684cd",
+          "byte_count": 99883388,
+          "file_count": 1102,
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+        },
+        "version": "1.17.1"
+      }
+    },
     "exiftool": {
       "bytes": 58368,
       "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\ExifTool\\ExifTool.exe",
@@ -71,26 +617,42 @@
         "-ver"
       ]
     },
-    "modules": {
+    "loaded_modules": {
+      "cv2": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cv2\\__init__.py",
+        "sha256": "957a91bfd98ffb07a10cd789b7c5c46806568476b61e34c7ad56a00092b981a5"
+      },
       "numpy": {
         "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\__init__.py",
         "sha256": "b16a4f347c6583c878e1973a208564e01686b79cc70911ad0157e05d8eecda37"
       },
-      "opencv": {
-        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cv2\\__init__.py",
-        "sha256": "957a91bfd98ffb07a10cd789b7c5c46806568476b61e34c7ad56a00092b981a5"
+      "numpy.fft": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\fft\\__init__.py",
+        "sha256": "1bb36beaba498203757b73e01a0804c45e848bf5adf27e7b7902177f9bedccb3"
       },
       "rawpy": {
         "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\__init__.py",
         "sha256": "24a06e984ef21c4c01569105f862c347f8a92446ec361c40835aa15dfa921eff"
       },
-      "rawpy_extension": {
+      "rawpy._rawpy": {
         "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\_rawpy.cp312-win_amd64.pyd",
         "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
       },
       "scipy": {
         "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\__init__.py",
         "sha256": "4c3ab17c56609249056db732aa2e196b3f21c923f8d4967a46cb63aa9f739b28"
+      },
+      "scipy.fft": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\fft\\__init__.py",
+        "sha256": "4a7d6aa9eb97e8c90c894ede47214c104dde92479c4794a1b7e58af9d59a3ef9"
+      },
+      "scipy.ndimage": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\ndimage\\__init__.py",
+        "sha256": "85d9426e3f36ea74ed90c05017d7b3b125d092a7842c0fbacc895c9d3b011159"
+      },
+      "scipy.optimize": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\optimize\\__init__.py",
+        "sha256": "386c0ca12008b1da344df26284cb7806d5b92f12c98bde043e464b65faa99f6c"
       }
     },
     "packages": {
@@ -103,16 +665,62 @@
       "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
       "executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
       "implementation": "CPython",
+      "runtime_files": {
+        "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+        "aggregate_sha256": "bc75623664eff45f6a41fa5535e2568f0751a3abe024e2a363aac40a487caf29",
+        "byte_count": 7120600,
+        "file_count": 3,
+        "files": [
+          {
+            "bytes": 104952,
+            "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+            "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+          },
+          {
+            "bytes": 70376,
+            "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python3.dll",
+            "sha256": "fb975a606e7fbf74f64260e3f60c3490b4f74a183c0926fd6ed1ac4c52ac7b1c"
+          },
+          {
+            "bytes": 6945272,
+            "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python312.dll",
+            "sha256": "9a0e3435aaa680d868150f87ab3e388ad2eebc22f87e036155c7b4eda8cd2120"
+          }
+        ]
+      },
       "version": "3.12.10"
     },
     "rawpy_libraw_version": "0.22.1"
   },
   "documented_commands": {
-    "commission": "python -B experiments\\M135-slide-physical-commissioning\\commission.py --config experiments\\M135-slide-physical-commissioning\\config.json --output experiments\\M135-slide-physical-commissioning\\commission.json",
+    "cargo_environment": {
+      "CARGO_BUILD_RUSTC": null,
+      "CARGO_BUILD_RUSTFLAGS": null,
+      "CARGO_BUILD_TARGET": null,
+      "CARGO_ENCODED_RUSTFLAGS": null,
+      "CARGO_HOME": null,
+      "CARGO_INCREMENTAL": null,
+      "CARGO_TARGET_DIR": null,
+      "RUSTC": null,
+      "RUSTC_WORKSPACE_WRAPPER": null,
+      "RUSTC_WRAPPER": null,
+      "RUSTFLAGS": null,
+      "RUSTUP_TOOLCHAIN": null
+    },
+    "commission": "python -B experiments\\M135-slide-physical-commissioning\\commission.py --config experiments\\M135-slide-physical-commissioning\\config.json --output experiments\\M135-slide-physical-commissioning\\commission.json --freeze-manifest experiments\\M135-slide-physical-commissioning\\freeze-manifest.json --crosscheck-bin experiments\\M135-slide-physical-commissioning\\target\\release\\m135-slide-raw-crosscheck.exe",
     "crosscheck_build": "cargo build --release --locked --manifest-path experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+    "crosscheck_build_defaults": {
+      "all_features": false,
+      "features": "default",
+      "jobs": "Cargo default",
+      "no_default_features": false,
+      "profile": "release",
+      "target": "host default",
+      "target_dir": "experiments\\M135-slide-physical-commissioning\\target"
+    },
     "data_commands": [
       "instrument.py --config config.json inventory --session-root <AUTHORIZED_SESSION_ROOT> --exiftool <EXIFTOOL> --output stage-a-inventory.json",
-      "instrument.py --config config.json decode --inventory stage-a-inventory.json --rawler-crosscheck-bin <M135_CROSSCHECK_BINARY> --output stage-b-decode.json",
+      "instrument.py --config config.json decode --inventory stage-a-inventory.json --rawler-crosscheck-bin <M135_CROSSCHECK_BINARY> --freeze-manifest freeze-manifest.json --output stage-b-decode.json",
       "instrument.py --config config.json range --inventory stage-a-inventory.json --decode stage-b-decode.json --output stage-c-range.json",
       "instrument.py --config config.json roles --inventory stage-a-inventory.json --ledger role-ledger.template.json --output stage-d-roles.json",
       "instrument.py --config config.json flat --inventory stage-a-inventory.json --decode stage-b-decode.json --roles stage-d-roles.json --ledger role-ledger.template.json --output stage-e-flat.json",
@@ -134,7 +742,8 @@
       "STREHL_WARPMAP": null,
       "VECLIB_MAXIMUM_THREADS": "1"
     },
-    "freeze_check": "python -B experiments\\M135-slide-physical-commissioning\\freeze.py check --manifest experiments\\M135-slide-physical-commissioning\\freeze-manifest.json",
+    "freeze_check": "python -B experiments\\M135-slide-physical-commissioning\\freeze.py check --manifest experiments\\M135-slide-physical-commissioning\\freeze-manifest.json --crosscheck-bin <M135_CROSSCHECK_BINARY>",
+    "freeze_create": "python -B experiments\\M135-slide-physical-commissioning\\freeze.py create --manifest experiments\\M135-slide-physical-commissioning\\freeze-manifest.json --exiftool <EXIFTOOL> --crosscheck-bin experiments\\M135-slide-physical-commissioning\\target\\release\\m135-slide-raw-crosscheck.exe",
     "prior_art": "python experiments\\ORCH-drift-check\\prior_art.py burned slide physical commissioning detail instrument"
   },
   "existing_estimator": {
@@ -148,6 +757,1305 @@
   },
   "external_decoder_path": {
     "build_command": "cargo build --release --locked --manifest-path experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+    "build_defaults": {
+      "all_features": false,
+      "features": "default",
+      "jobs": "Cargo default",
+      "no_default_features": false,
+      "profile": "release",
+      "target": "host default",
+      "target_dir": "experiments\\M135-slide-physical-commissioning\\target"
+    },
+    "build_environment": {
+      "CARGO_BUILD_RUSTC": null,
+      "CARGO_BUILD_RUSTFLAGS": null,
+      "CARGO_BUILD_TARGET": null,
+      "CARGO_ENCODED_RUSTFLAGS": null,
+      "CARGO_HOME": null,
+      "CARGO_INCREMENTAL": null,
+      "CARGO_TARGET_DIR": null,
+      "RUSTC": null,
+      "RUSTC_WORKSPACE_WRAPPER": null,
+      "RUSTC_WRAPPER": null,
+      "RUSTFLAGS": null,
+      "RUSTUP_TOOLCHAIN": null
+    },
+    "cargo_dependency_closure": {
+      "aggregate_domain": "canonical JSON over every selected local Cargo closure file record, including root/lane locks and workspace/toolchain config",
+      "aggregate_sha256": "8362084e374207556cd79c3ff91e008dbd18504910d15771a735e54311283161",
+      "byte_count": 1971977,
+      "cargo": {
+        "bytes": 12814336,
+        "path": "C:\\Users\\chris\\.cargo\\bin\\cargo.EXE",
+        "sha256": "86478e53f769379d7f0ebfa7c9aa97cb76ca92233f79aa2cc0dbee2efaac73c7",
+        "version_command": [
+          "cargo",
+          "--version",
+          "--verbose"
+        ],
+        "version_output": "cargo 1.98.0 (797e8a9bc 2026-08-05)\nrelease: 1.98.0\ncommit-hash: 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d\ncommit-date: 2026-08-05\nhost: x86_64-pc-windows-msvc\nlibgit2: 1.9.4 (sys:0.21.0 vendored)\nlibcurl: 8.21.0-DEV (sys:0.4.90+curl-8.21.0 vendored ssl:Schannel)\nos: Windows 10.0.26200 (Windows 11 Core) [64-bit]"
+      },
+      "cargo_home_config": null,
+      "file_count": 43,
+      "files": [
+        {
+          "bytes": 41082,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "6b7addd3f1c9dfab18f5703f78aa6511d24269d162a0ff0818763570d8bee002",
+          "path": "Cargo.lock",
+          "sha256": "6b7addd3f1c9dfab18f5703f78aa6511d24269d162a0ff0818763570d8bee002"
+        },
+        {
+          "bytes": 966,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "f26905593804ac61db8dcdaa1f67ea498ab9f14191a0f6978aa6a36901421cec",
+          "path": "Cargo.toml",
+          "sha256": "f26905593804ac61db8dcdaa1f67ea498ab9f14191a0f6978aa6a36901421cec"
+        },
+        {
+          "bytes": 353,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "9d8b89be8596c803e13a7abf1d246664b8e1e9560fe8484db9bcee7259793835",
+          "path": "crates\\strehl-core\\Cargo.toml",
+          "sha256": "9d8b89be8596c803e13a7abf1d246664b8e1e9560fe8484db9bcee7259793835"
+        },
+        {
+          "bytes": 3034,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "53035c43b46b0535060ae2e143fe821904f1f5bc304bc120f9cb5ea0f2429c0a",
+          "path": "crates\\strehl-core\\examples\\demosaic-plane.rs",
+          "sha256": "53035c43b46b0535060ae2e143fe821904f1f5bc304bc120f9cb5ea0f2429c0a"
+        },
+        {
+          "bytes": 6180,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997",
+          "path": "crates\\strehl-core\\examples\\focus-window-cost.rs",
+          "sha256": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997"
+        },
+        {
+          "bytes": 2968,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "2e4150938eea55badd11711323a8d9cb33da2e10fa754c7ae7c81ad1554876b5",
+          "path": "crates\\strehl-core\\examples\\restore-plane.rs",
+          "sha256": "2e4150938eea55badd11711323a8d9cb33da2e10fa754c7ae7c81ad1554876b5"
+        },
+        {
+          "bytes": 143885,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "24b6fd9303560e36205488885cbae6dcc43f9a152b7a431c864bdd91aed57449",
+          "path": "crates\\strehl-core\\src\\align.rs",
+          "sha256": "24b6fd9303560e36205488885cbae6dcc43f9a152b7a431c864bdd91aed57449"
+        },
+        {
+          "bytes": 7986,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e",
+          "path": "crates\\strehl-core\\src\\boxfilter.rs",
+          "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e"
+        },
+        {
+          "bytes": 10231,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d",
+          "path": "crates\\strehl-core\\src\\clip.rs",
+          "sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d"
+        },
+        {
+          "bytes": 82160,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "a9996dcb20adea6af27e898dc5b83a7af5e968f5b4bf8cf6626fb60c80fee5ac",
+          "path": "crates\\strehl-core\\src\\color.rs",
+          "sha256": "a9996dcb20adea6af27e898dc5b83a7af5e968f5b4bf8cf6626fb60c80fee5ac"
+        },
+        {
+          "bytes": 23797,
+          "hash_domain": "file bytes",
+          "path": "crates\\strehl-core\\src\\defect-map-ILCE-7CM2-dust.txt",
+          "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee"
+        },
+        {
+          "bytes": 171811,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "46cea9fd3074f32a00804af485d79a66769d17649bb41da771fbe7322f016439",
+          "path": "crates\\strehl-core\\src\\defect_map.rs",
+          "sha256": "46cea9fd3074f32a00804af485d79a66769d17649bb41da771fbe7322f016439"
+        },
+        {
+          "bytes": 51381,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810",
+          "path": "crates\\strehl-core\\src\\demosaic.rs",
+          "sha256": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810"
+        },
+        {
+          "bytes": 102752,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "657a247b8d4716f33f4b1582a33035531b5444b86f0c5f8c588a108cc4ccadd8",
+          "path": "crates\\strehl-core\\src\\edgeaware.rs",
+          "sha256": "657a247b8d4716f33f4b1582a33035531b5444b86f0c5f8c588a108cc4ccadd8"
+        },
+        {
+          "bytes": 13013,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "72448987eb41ca4f56e7121605138d4eaabc2438d13ff56aea3eb3c62e659916",
+          "path": "crates\\strehl-core\\src\\election_coherence.rs",
+          "sha256": "72448987eb41ca4f56e7121605138d4eaabc2438d13ff56aea3eb3c62e659916"
+        },
+        {
+          "bytes": 32764,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0",
+          "path": "crates\\strehl-core\\src\\flat_ratio.rs",
+          "sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0"
+        },
+        {
+          "bytes": 76384,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "2fba4f72178f3dcd972966fc1ff6d60ac1a3683d43cda3ed70636aba72663e2c",
+          "path": "crates\\strehl-core\\src\\focus.rs",
+          "sha256": "2fba4f72178f3dcd972966fc1ff6d60ac1a3683d43cda3ed70636aba72663e2c"
+        },
+        {
+          "bytes": 29639,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e",
+          "path": "crates\\strehl-core\\src\\highlight.rs",
+          "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e"
+        },
+        {
+          "bytes": 4223,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "fca5b646ea1ff7aedc6b29bfa8294e6a18ff4a3942b8d5f2037ea3ace14b98ec",
+          "path": "crates\\strehl-core\\src\\lib.rs",
+          "sha256": "fca5b646ea1ff7aedc6b29bfa8294e6a18ff4a3942b8d5f2037ea3ace14b98ec"
+        },
+        {
+          "bytes": 247670,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "29b7700eff69d60c68d985b4a6100b43a7ca7ee28554be3c5004a3d68a170042",
+          "path": "crates\\strehl-core\\src\\merge.rs",
+          "sha256": "29b7700eff69d60c68d985b4a6100b43a7ca7ee28554be3c5004a3d68a170042"
+        },
+        {
+          "bytes": 29071,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "76d0d234c678617431e9d477c5c1b4946c2ab19702c81ad7e9ca68c7b057f6c9",
+          "path": "crates\\strehl-core\\src\\noise.rs",
+          "sha256": "76d0d234c678617431e9d477c5c1b4946c2ab19702c81ad7e9ca68c7b057f6c9"
+        },
+        {
+          "bytes": 91795,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "38a9f5ce898bb08b29b8a0835a517213e420e735f693eb0f56fab23fb9d6832f",
+          "path": "crates\\strehl-core\\src\\optics.rs",
+          "sha256": "38a9f5ce898bb08b29b8a0835a517213e420e735f693eb0f56fab23fb9d6832f"
+        },
+        {
+          "bytes": 50005,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "17f190753f9d3865fc33f74a9883e26f8d8a21b5708237f2f8f7bd7073c92dbb",
+          "path": "crates\\strehl-core\\src\\outlier.rs",
+          "sha256": "17f190753f9d3865fc33f74a9883e26f8d8a21b5708237f2f8f7bd7073c92dbb"
+        },
+        {
+          "bytes": 81048,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "8e20a3b6d21c11768cf55350620688934c951608547f3f4aa225c20c54b9d40e",
+          "path": "crates\\strehl-core\\src\\photometric.rs",
+          "sha256": "8e20a3b6d21c11768cf55350620688934c951608547f3f4aa225c20c54b9d40e"
+        },
+        {
+          "bytes": 11235,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "c8188ec8988a1b9adfaad1fd0a0b9f26f59fb23a9f31c25a2677e2c5d93c48aa",
+          "path": "crates\\strehl-core\\src\\plane.rs",
+          "sha256": "c8188ec8988a1b9adfaad1fd0a0b9f26f59fb23a9f31c25a2677e2c5d93c48aa"
+        },
+        {
+          "bytes": 43307,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "c068b7fbe0d01bbd5b890ca63b5aee5202767ff643c9e60b933cfb9de6c6d58d",
+          "path": "crates\\strehl-core\\src\\profile.rs",
+          "sha256": "c068b7fbe0d01bbd5b890ca63b5aee5202767ff643c9e60b933cfb9de6c6d58d"
+        },
+        {
+          "bytes": 203377,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "62617c159bc75b5032acd8e07bc7d126b248bf6d341bb14bf292581c2938ef19",
+          "path": "crates\\strehl-core\\src\\pyramid.rs",
+          "sha256": "62617c159bc75b5032acd8e07bc7d126b248bf6d341bb14bf292581c2938ef19"
+        },
+        {
+          "bytes": 58624,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "e338cf128512681054f252fd201cd1b19e6ab280cda1882cae5a0a99c7f6f1bc",
+          "path": "crates\\strehl-core\\src\\restore.rs",
+          "sha256": "e338cf128512681054f252fd201cd1b19e6ab280cda1882cae5a0a99c7f6f1bc"
+        },
+        {
+          "bytes": 30505,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "f432d62217c683065bd29d5476e9f9bca75bd485aa77d6706e9b84ec83558690",
+          "path": "crates\\strehl-core\\src\\robust.rs",
+          "sha256": "f432d62217c683065bd29d5476e9f9bca75bd485aa77d6706e9b84ec83558690"
+        },
+        {
+          "bytes": 24821,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "4be4173aa8c3f46405c947702f811b8670f4bc5b03969fbfedd4884fef069069",
+          "path": "crates\\strehl-core\\src\\softgate.rs",
+          "sha256": "4be4173aa8c3f46405c947702f811b8670f4bc5b03969fbfedd4884fef069069"
+        },
+        {
+          "bytes": 20045,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "ef91f1d79417782435008d35584091d2a8722bcfb03e997dc7336c1a57e04b33",
+          "path": "crates\\strehl-core\\src\\stack.rs",
+          "sha256": "ef91f1d79417782435008d35584091d2a8722bcfb03e997dc7336c1a57e04b33"
+        },
+        {
+          "bytes": 90250,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d",
+          "path": "crates\\strehl-core\\src\\through_focus.rs",
+          "sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d"
+        },
+        {
+          "bytes": 54829,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b",
+          "path": "crates\\strehl-core\\src\\warpmap.rs",
+          "sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b"
+        },
+        {
+          "bytes": 408,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "5de3556f8b936b518a819432c3530223c1decb39e1e37949bcc0e73a63fff591",
+          "path": "crates\\strehl-raw\\Cargo.toml",
+          "sha256": "5de3556f8b936b518a819432c3530223c1decb39e1e37949bcc0e73a63fff591"
+        },
+        {
+          "bytes": 1613,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "ac0fdbc3635965c8eac4885c214976cbc13865478971b40ac12b57723995b5fc",
+          "path": "crates\\strehl-raw\\examples\\identity.rs",
+          "sha256": "ac0fdbc3635965c8eac4885c214976cbc13865478971b40ac12b57723995b5fc"
+        },
+        {
+          "bytes": 33071,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42",
+          "path": "crates\\strehl-raw\\src\\common_tiff.rs",
+          "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+        },
+        {
+          "bytes": 35913,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "6541bebcaeca948fdb56e1d3bad47ceafc35a1f5cc561ca0fe3ea28324076b49",
+          "path": "crates\\strehl-raw\\src\\identity.rs",
+          "sha256": "6541bebcaeca948fdb56e1d3bad47ceafc35a1f5cc561ca0fe3ea28324076b49"
+        },
+        {
+          "bytes": 24184,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "6691979fd89f99c3d6e2ff0f5a6434b6eac4545bfd532bc6622e353ea1f2e8f0",
+          "path": "crates\\strehl-raw\\src\\lib.rs",
+          "sha256": "6691979fd89f99c3d6e2ff0f5a6434b6eac4545bfd532bc6622e353ea1f2e8f0"
+        },
+        {
+          "bytes": 169,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "3c508b4bf4044fc85c8b71626f379b16fa71083499aa844bcff5859efc53549f",
+          "path": "experiments\\M135-slide-physical-commissioning\\build.rs",
+          "sha256": "3c508b4bf4044fc85c8b71626f379b16fa71083499aa844bcff5859efc53549f"
+        },
+        {
+          "bytes": 32798,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec",
+          "path": "experiments\\M135-slide-physical-commissioning\\Cargo.lock",
+          "sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec"
+        },
+        {
+          "bytes": 227,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "09b57dc872bf8033432dd1e2d1e06eeed34d0b24bf1a65a08b8f06803affbd98",
+          "path": "experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+          "sha256": "09b57dc872bf8033432dd1e2d1e06eeed34d0b24bf1a65a08b8f06803affbd98"
+        },
+        {
+          "bytes": 2337,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6",
+          "path": "experiments\\M135-slide-physical-commissioning\\src\\main.rs",
+          "sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6"
+        },
+        {
+          "bytes": 66,
+          "hash_domain": "UTF-8 text after universal-newline normalization",
+          "normalized_text_sha256": "a6a0bbd29ffaa8182dc22d1d9149709f1091e47df40ed96eb8a78a711c66a4ce",
+          "path": "rust-toolchain.toml",
+          "sha256": "a6a0bbd29ffaa8182dc22d1d9149709f1091e47df40ed96eb8a78a711c66a4ce"
+        }
+      ],
+      "local_packages": [
+        {
+          "manifest_path": "experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+          "name": "m135-slide-raw-crosscheck",
+          "selected_file_count": 3,
+          "targets": [
+            {
+              "kind": [
+                "bin"
+              ],
+              "name": "m135-slide-raw-crosscheck",
+              "src_path": "experiments\\M135-slide-physical-commissioning\\src\\main.rs"
+            },
+            {
+              "kind": [
+                "custom-build"
+              ],
+              "name": "build-script-build",
+              "src_path": "experiments\\M135-slide-physical-commissioning\\build.rs"
+            }
+          ],
+          "version": "0.0.0"
+        },
+        {
+          "manifest_path": "crates\\strehl-core\\Cargo.toml",
+          "name": "strehl-core",
+          "selected_file_count": 31,
+          "targets": [
+            {
+              "kind": [
+                "lib"
+              ],
+              "name": "strehl_core",
+              "src_path": "crates\\strehl-core\\src\\lib.rs"
+            },
+            {
+              "kind": [
+                "example"
+              ],
+              "name": "demosaic-plane",
+              "src_path": "crates\\strehl-core\\examples\\demosaic-plane.rs"
+            },
+            {
+              "kind": [
+                "example"
+              ],
+              "name": "focus-window-cost",
+              "src_path": "crates\\strehl-core\\examples\\focus-window-cost.rs"
+            },
+            {
+              "kind": [
+                "example"
+              ],
+              "name": "restore-plane",
+              "src_path": "crates\\strehl-core\\examples\\restore-plane.rs"
+            }
+          ],
+          "version": "0.0.0"
+        },
+        {
+          "manifest_path": "crates\\strehl-raw\\Cargo.toml",
+          "name": "strehl-raw",
+          "selected_file_count": 5,
+          "targets": [
+            {
+              "kind": [
+                "lib"
+              ],
+              "name": "strehl_raw",
+              "src_path": "crates\\strehl-raw\\src\\lib.rs"
+            },
+            {
+              "kind": [
+                "example"
+              ],
+              "name": "identity",
+              "src_path": "crates\\strehl-raw\\examples\\identity.rs"
+            }
+          ],
+          "version": "0.0.0"
+        }
+      ],
+      "metadata_command": [
+        "cargo",
+        "metadata",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "experiments\\M135-slide-physical-commissioning\\Cargo.toml"
+      ],
+      "metadata_command_line_windows": "cargo metadata --locked --format-version 1 --manifest-path experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+      "metadata_cwd": "<REPOSITORY_ROOT>",
+      "metadata_environment": {
+        "CARGO_BUILD_RUSTC": null,
+        "CARGO_BUILD_RUSTFLAGS": null,
+        "CARGO_BUILD_TARGET": null,
+        "CARGO_ENCODED_RUSTFLAGS": null,
+        "CARGO_HOME": null,
+        "CARGO_INCREMENTAL": null,
+        "CARGO_TARGET_DIR": null,
+        "RUSTC": null,
+        "RUSTC_WORKSPACE_WRAPPER": null,
+        "RUSTC_WRAPPER": null,
+        "RUSTFLAGS": null,
+        "RUSTUP_TOOLCHAIN": null
+      },
+      "resolved_packages": [
+        {
+          "checksum": null,
+          "name": "addr2line",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.25.1"
+        },
+        {
+          "checksum": null,
+          "name": "adler2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.0.1"
+        },
+        {
+          "checksum": null,
+          "name": "adler32",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.2.0"
+        },
+        {
+          "checksum": null,
+          "name": "alloc-no-stdlib",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.0.4"
+        },
+        {
+          "checksum": null,
+          "name": "alloc-stdlib",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.4"
+        },
+        {
+          "checksum": null,
+          "name": "allocator-api2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.21"
+        },
+        {
+          "checksum": null,
+          "name": "android_system_properties",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.6"
+        },
+        {
+          "checksum": null,
+          "name": "anyhow",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.104"
+        },
+        {
+          "checksum": null,
+          "name": "autocfg",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.5.1"
+        },
+        {
+          "checksum": null,
+          "name": "backtrace",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.3.76"
+        },
+        {
+          "checksum": null,
+          "name": "bitstream-io",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "4.10.0"
+        },
+        {
+          "checksum": null,
+          "name": "brotli-decompressor",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "5.0.3"
+        },
+        {
+          "checksum": null,
+          "name": "bumpalo",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "3.20.3"
+        },
+        {
+          "checksum": null,
+          "name": "bytemuck",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.25.2"
+        },
+        {
+          "checksum": null,
+          "name": "byteorder",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.5.0"
+        },
+        {
+          "checksum": null,
+          "name": "byteorder-lite",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.0"
+        },
+        {
+          "checksum": null,
+          "name": "cc",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.4.4"
+        },
+        {
+          "checksum": null,
+          "name": "cfg-if",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.4"
+        },
+        {
+          "checksum": null,
+          "name": "chrono",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.45"
+        },
+        {
+          "checksum": null,
+          "name": "core-foundation-sys",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.7"
+        },
+        {
+          "checksum": null,
+          "name": "crc32fast",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.5.1"
+        },
+        {
+          "checksum": null,
+          "name": "crossbeam-deque",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.7"
+        },
+        {
+          "checksum": null,
+          "name": "crossbeam-epoch",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.9.20"
+        },
+        {
+          "checksum": null,
+          "name": "crossbeam-utils",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.22"
+        },
+        {
+          "checksum": null,
+          "name": "dary_heap",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.3.9"
+        },
+        {
+          "checksum": null,
+          "name": "either",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.18.0"
+        },
+        {
+          "checksum": null,
+          "name": "enumn",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.14"
+        },
+        {
+          "checksum": null,
+          "name": "equivalent",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.2"
+        },
+        {
+          "checksum": null,
+          "name": "find-msvc-tools",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.11"
+        },
+        {
+          "checksum": null,
+          "name": "foldhash",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.0"
+        },
+        {
+          "checksum": null,
+          "name": "futures-core",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.3.34"
+        },
+        {
+          "checksum": null,
+          "name": "futures-task",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.3.34"
+        },
+        {
+          "checksum": null,
+          "name": "futures-util",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.3.34"
+        },
+        {
+          "checksum": null,
+          "name": "getrandom",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.3"
+        },
+        {
+          "checksum": null,
+          "name": "gimli",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.32.3"
+        },
+        {
+          "checksum": null,
+          "name": "glob",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.3.4"
+        },
+        {
+          "checksum": null,
+          "name": "hashbrown",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.16.1"
+        },
+        {
+          "checksum": null,
+          "name": "hashbrown",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.17.1"
+        },
+        {
+          "checksum": null,
+          "name": "hex",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.3"
+        },
+        {
+          "checksum": null,
+          "name": "iana-time-zone",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.65"
+        },
+        {
+          "checksum": null,
+          "name": "iana-time-zone-haiku",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.2"
+        },
+        {
+          "checksum": null,
+          "name": "image",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.25.10"
+        },
+        {
+          "checksum": null,
+          "name": "indexmap",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.14.1"
+        },
+        {
+          "checksum": null,
+          "name": "itertools",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.14.0"
+        },
+        {
+          "checksum": null,
+          "name": "js-sys",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.3.104"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-bitstream",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.1.0"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-coding",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.1"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-color",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.11.0"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-frame",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.13.3"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-grid",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.6.2"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-image",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.13.0"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-jbr",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.1"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-modular",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.11.3"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-oxide",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.12.6"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-oxide-common",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.0"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-render",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.12.4"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-threadpool",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.0"
+        },
+        {
+          "checksum": null,
+          "name": "jxl-vardct",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.11.1"
+        },
+        {
+          "checksum": null,
+          "name": "lazy_static",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.5.0"
+        },
+        {
+          "checksum": null,
+          "name": "libc",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.189"
+        },
+        {
+          "checksum": null,
+          "name": "libflate",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.3.1"
+        },
+        {
+          "checksum": null,
+          "name": "libflate_lz77",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.3.0"
+        },
+        {
+          "checksum": null,
+          "name": "log",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.34"
+        },
+        {
+          "checksum": null,
+          "name": "m135-slide-raw-crosscheck",
+          "source": null,
+          "version": "0.0.0"
+        },
+        {
+          "checksum": null,
+          "name": "md5",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.1"
+        },
+        {
+          "checksum": null,
+          "name": "memchr",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.8.3"
+        },
+        {
+          "checksum": null,
+          "name": "memmap2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.9.11"
+        },
+        {
+          "checksum": null,
+          "name": "miniz_oxide",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.9"
+        },
+        {
+          "checksum": null,
+          "name": "moxcms",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.1"
+        },
+        {
+          "checksum": null,
+          "name": "multiversion",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.0"
+        },
+        {
+          "checksum": null,
+          "name": "multiversion-macros",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.0"
+        },
+        {
+          "checksum": null,
+          "name": "no_std_io2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.9.4"
+        },
+        {
+          "checksum": null,
+          "name": "num",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.3"
+        },
+        {
+          "checksum": null,
+          "name": "num-bigint",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.8"
+        },
+        {
+          "checksum": null,
+          "name": "num-complex",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.6"
+        },
+        {
+          "checksum": null,
+          "name": "num-integer",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.47"
+        },
+        {
+          "checksum": null,
+          "name": "num-iter",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.46"
+        },
+        {
+          "checksum": null,
+          "name": "num-rational",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.2"
+        },
+        {
+          "checksum": null,
+          "name": "num-traits",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.19"
+        },
+        {
+          "checksum": null,
+          "name": "num_enum",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.7.6"
+        },
+        {
+          "checksum": null,
+          "name": "num_enum_derive",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.7.6"
+        },
+        {
+          "checksum": null,
+          "name": "object",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.37.3"
+        },
+        {
+          "checksum": null,
+          "name": "once_cell",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.21.4"
+        },
+        {
+          "checksum": null,
+          "name": "pin-project-lite",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.17"
+        },
+        {
+          "checksum": null,
+          "name": "proc-macro-crate",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "3.5.0"
+        },
+        {
+          "checksum": null,
+          "name": "proc-macro2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.107"
+        },
+        {
+          "checksum": null,
+          "name": "pxfm",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.30"
+        },
+        {
+          "checksum": null,
+          "name": "quote",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.47"
+        },
+        {
+          "checksum": null,
+          "name": "r-efi",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "6.0.0"
+        },
+        {
+          "checksum": null,
+          "name": "rawler",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.7.2"
+        },
+        {
+          "checksum": null,
+          "name": "rayon",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.12.0"
+        },
+        {
+          "checksum": null,
+          "name": "rayon-core",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.13.0"
+        },
+        {
+          "checksum": null,
+          "name": "rle-decode-fast",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.3"
+        },
+        {
+          "checksum": null,
+          "name": "rustc-demangle",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.28"
+        },
+        {
+          "checksum": null,
+          "name": "rustc_version",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.1"
+        },
+        {
+          "checksum": null,
+          "name": "rustversion",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.23"
+        },
+        {
+          "checksum": null,
+          "name": "semver",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.28"
+        },
+        {
+          "checksum": null,
+          "name": "serde",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.229"
+        },
+        {
+          "checksum": null,
+          "name": "serde_core",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.229"
+        },
+        {
+          "checksum": null,
+          "name": "serde_derive",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.229"
+        },
+        {
+          "checksum": null,
+          "name": "serde_spanned",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.6.9"
+        },
+        {
+          "checksum": null,
+          "name": "shlex",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.0.1"
+        },
+        {
+          "checksum": null,
+          "name": "slab",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.12"
+        },
+        {
+          "checksum": null,
+          "name": "strehl-core",
+          "source": null,
+          "version": "0.0.0"
+        },
+        {
+          "checksum": null,
+          "name": "strehl-raw",
+          "source": null,
+          "version": "0.0.0"
+        },
+        {
+          "checksum": null,
+          "name": "syn",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.0.119"
+        },
+        {
+          "checksum": null,
+          "name": "syn",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "3.0.4"
+        },
+        {
+          "checksum": null,
+          "name": "target-features",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.6"
+        },
+        {
+          "checksum": null,
+          "name": "thiserror",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.0.20"
+        },
+        {
+          "checksum": null,
+          "name": "thiserror-impl",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "2.0.20"
+        },
+        {
+          "checksum": null,
+          "name": "toml",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.23"
+        },
+        {
+          "checksum": null,
+          "name": "toml_datetime",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.6.11"
+        },
+        {
+          "checksum": null,
+          "name": "toml_datetime",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.1.1+spec-1.1.0"
+        },
+        {
+          "checksum": null,
+          "name": "toml_edit",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.22.27"
+        },
+        {
+          "checksum": null,
+          "name": "toml_edit",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.25.13+spec-1.1.0"
+        },
+        {
+          "checksum": null,
+          "name": "toml_parser",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.1.3+spec-1.1.0"
+        },
+        {
+          "checksum": null,
+          "name": "toml_write",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.2"
+        },
+        {
+          "checksum": null,
+          "name": "tracing",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.44"
+        },
+        {
+          "checksum": null,
+          "name": "tracing-core",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.36"
+        },
+        {
+          "checksum": null,
+          "name": "unicode-ident",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.24"
+        },
+        {
+          "checksum": null,
+          "name": "uuid",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.26.0"
+        },
+        {
+          "checksum": null,
+          "name": "wasm-bindgen",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.127"
+        },
+        {
+          "checksum": null,
+          "name": "wasm-bindgen-macro",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.127"
+        },
+        {
+          "checksum": null,
+          "name": "wasm-bindgen-macro-support",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.127"
+        },
+        {
+          "checksum": null,
+          "name": "wasm-bindgen-shared",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.127"
+        },
+        {
+          "checksum": null,
+          "name": "weezl",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.1.12"
+        },
+        {
+          "checksum": null,
+          "name": "windows-core",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.62.2"
+        },
+        {
+          "checksum": null,
+          "name": "windows-implement",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.60.2"
+        },
+        {
+          "checksum": null,
+          "name": "windows-interface",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.59.3"
+        },
+        {
+          "checksum": null,
+          "name": "windows-link",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.2.1"
+        },
+        {
+          "checksum": null,
+          "name": "windows-result",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.4.1"
+        },
+        {
+          "checksum": null,
+          "name": "windows-strings",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.5.1"
+        },
+        {
+          "checksum": null,
+          "name": "winnow",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.7.15"
+        },
+        {
+          "checksum": null,
+          "name": "winnow",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "1.0.4"
+        },
+        {
+          "checksum": null,
+          "name": "zerocopy",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.56"
+        },
+        {
+          "checksum": null,
+          "name": "zerocopy-derive",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.8.56"
+        },
+        {
+          "checksum": null,
+          "name": "zune-core",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.5.3"
+        },
+        {
+          "checksum": null,
+          "name": "zune-jpeg",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "version": "0.5.15"
+        }
+      ],
+      "rustc": {
+        "bytes": 12814336,
+        "path": "C:\\Users\\chris\\.cargo\\bin\\rustc.EXE",
+        "sha256": "86478e53f769379d7f0ebfa7c9aa97cb76ca92233f79aa2cc0dbee2efaac73c7",
+        "sysroot": "C:\\Users\\chris\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc",
+        "sysroot_command": [
+          "rustc",
+          "--print",
+          "sysroot"
+        ],
+        "version_command": [
+          "rustc",
+          "--version",
+          "--verbose"
+        ],
+        "version_output": "rustc 1.98.0 (88d9e12ae 2026-08-18)\nbinary: rustc\ncommit-hash: 88d9e12ae178fab0fb5cc050a94da85685d449ea\ncommit-date: 2026-08-18\nhost: x86_64-pc-windows-msvc\nrelease: 1.98.0\nLLVM version: 22.1.8"
+      },
+      "selection_rule": "cargo metadata local packages plus every Cargo.toml/build.rs, every Rust source, every file below src, root Cargo.toml/Cargo.lock, lane Cargo.lock, rust-toolchain, and repository .cargo config when present",
+      "workspace_root": "experiments\\M135-slide-physical-commissioning"
+    },
     "cargo_lock": {
       "bytes": 32798,
       "hash_domain": "UTF-8 text after universal-newline normalization",
@@ -156,13 +2064,20 @@
       "sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec"
     },
     "cargo_manifest": {
-      "bytes": 208,
+      "bytes": 227,
       "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "bbc63bc96f5a0d14c366c2a29115b389d9ecfade21f5c1440dd9f72b9f1a2412",
+      "normalized_text_sha256": "09b57dc872bf8033432dd1e2d1e06eeed34d0b24bf1a65a08b8f06803affbd98",
       "path": "experiments\\M135-slide-physical-commissioning\\Cargo.toml",
-      "sha256": "bbc63bc96f5a0d14c366c2a29115b389d9ecfade21f5c1440dd9f72b9f1a2412"
+      "sha256": "09b57dc872bf8033432dd1e2d1e06eeed34d0b24bf1a65a08b8f06803affbd98"
     },
     "decision": "use a lane-local executable over the existing safe strehl-raw/rawler API; no GPL/LGPL source was read",
+    "executable": {
+      "bytes": 6837248,
+      "default_check_path": "target\\release\\m135-slide-raw-crosscheck.exe",
+      "file_name": "m135-slide-raw-crosscheck.exe",
+      "hash_domain": "exact executable file bytes",
+      "sha256": "5418b561bc6b091dd5cb290fbb77d22d2d6f03c2a4a28b42b359963108770001"
+    },
     "runtime_contract": "all rawpy visible pixels in every frame must equal the leading overlap of rawler's active area bit for bit",
     "rust_source": {
       "bytes": 2337,
@@ -199,11 +2114,74 @@
       "sha256": "dcbbbd5c432f4a8e749d4c41a4b4cb2556a0cce5be2a839820f626f0c34d6b0d"
     },
     {
-      "bytes": 12990,
+      "bytes": 17491,
       "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "92bc294160011b10aaf3bba7c4f956b66687a82e4e32c7dcda1654dba2d8c325",
+      "normalized_text_sha256": "e510e1878f4a702230cd9812a66fa75c7db3e577ef8aa9bded638e12093d1480",
       "path": "experiments\\M135-slide-physical-commissioning\\README.md",
-      "sha256": "92bc294160011b10aaf3bba7c4f956b66687a82e4e32c7dcda1654dba2d8c325"
+      "sha256": "e510e1878f4a702230cd9812a66fa75c7db3e577ef8aa9bded638e12093d1480"
+    },
+    {
+      "bytes": 227,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "09b57dc872bf8033432dd1e2d1e06eeed34d0b24bf1a65a08b8f06803affbd98",
+      "path": "experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+      "sha256": "09b57dc872bf8033432dd1e2d1e06eeed34d0b24bf1a65a08b8f06803affbd98"
+    },
+    {
+      "bytes": 32798,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec",
+      "path": "experiments\\M135-slide-physical-commissioning\\Cargo.lock",
+      "sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec"
+    },
+    {
+      "bytes": 6374,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "911de7c2c6ab84c1ce820e1fa9a3ebd5b74d234de013ef68cb72873ab753f3e1",
+      "path": "experiments\\M135-slide-physical-commissioning\\config.json",
+      "sha256": "911de7c2c6ab84c1ce820e1fa9a3ebd5b74d234de013ef68cb72873ab753f3e1"
+    },
+    {
+      "bytes": 4250,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a077128a0885f82620279cdb4b685cde9ce77718f62e88deac64027bee091979",
+      "path": "experiments\\M135-slide-physical-commissioning\\artifact-schemas.json",
+      "sha256": "a077128a0885f82620279cdb4b685cde9ce77718f62e88deac64027bee091979"
+    },
+    {
+      "bytes": 1517,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a945a36328d2cbd2a5434bb2b5c46e380fce4fa26f8a864bea29b4786b8fa2c2",
+      "path": "experiments\\M135-slide-physical-commissioning\\role-ledger.template.json",
+      "sha256": "a945a36328d2cbd2a5434bb2b5c46e380fce4fa26f8a864bea29b4786b8fa2c2"
+    },
+    {
+      "bytes": 176955,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "b8a1cefe2108e44e399cb8329d916301ff3d9c65ef2d736ff707408b7f12bd1b",
+      "path": "experiments\\M135-slide-physical-commissioning\\instrument.py",
+      "sha256": "b8a1cefe2108e44e399cb8329d916301ff3d9c65ef2d736ff707408b7f12bd1b"
+    },
+    {
+      "bytes": 101891,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "96f19bb52ccf026835490b63f971d34eb886d64ce03a17047160339bfec73894",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission.py",
+      "sha256": "96f19bb52ccf026835490b63f971d34eb886d64ce03a17047160339bfec73894"
+    },
+    {
+      "bytes": 22469,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "706f0dea3e6f74a8eee3f6f2b0e8e1d257baaf5f792a5829521287b4a9b892f7",
+      "path": "experiments\\M135-slide-physical-commissioning\\freeze.py",
+      "sha256": "706f0dea3e6f74a8eee3f6f2b0e8e1d257baaf5f792a5829521287b4a9b892f7"
+    },
+    {
+      "bytes": 2337,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6",
+      "path": "experiments\\M135-slide-physical-commissioning\\src\\main.rs",
+      "sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6"
     },
     {
       "bytes": 2166,
@@ -311,69 +2289,13 @@
       "sha256": "37ac69a7386cdc372f34e3f2d338907d29840db737c4f0b0c9a762123cc1282b"
     },
     {
-      "bytes": 208,
+      "bytes": 3627,
       "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "bbc63bc96f5a0d14c366c2a29115b389d9ecfade21f5c1440dd9f72b9f1a2412",
-      "path": "experiments\\M135-slide-physical-commissioning\\Cargo.toml",
-      "sha256": "bbc63bc96f5a0d14c366c2a29115b389d9ecfade21f5c1440dd9f72b9f1a2412"
-    },
-    {
-      "bytes": 32798,
-      "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec",
-      "path": "experiments\\M135-slide-physical-commissioning\\Cargo.lock",
-      "sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec"
-    },
-    {
-      "bytes": 5935,
-      "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "edbbfbd44857ea39f331f764795deb459783711a4a5d8c1c432027141d544bfa",
-      "path": "experiments\\M135-slide-physical-commissioning\\config.json",
-      "sha256": "edbbfbd44857ea39f331f764795deb459783711a4a5d8c1c432027141d544bfa"
-    },
-    {
-      "bytes": 4112,
-      "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "fee8129073f85c6c0aa9b04d86a8b592a0514127e5eded68249016bb55161662",
-      "path": "experiments\\M135-slide-physical-commissioning\\artifact-schemas.json",
-      "sha256": "fee8129073f85c6c0aa9b04d86a8b592a0514127e5eded68249016bb55161662"
-    },
-    {
-      "bytes": 1453,
-      "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "4a5dcce9ffff6b2a26bdf9711ae7bd5060cb3aad14cbbc9016bf326e7a274c7b",
-      "path": "experiments\\M135-slide-physical-commissioning\\role-ledger.template.json",
-      "sha256": "4a5dcce9ffff6b2a26bdf9711ae7bd5060cb3aad14cbbc9016bf326e7a274c7b"
-    },
-    {
-      "bytes": 152926,
-      "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "2b9b536f6b95c513209afc3c4edcabab9b77f8986422e336b4bdf1ad4660ed2d",
-      "path": "experiments\\M135-slide-physical-commissioning\\instrument.py",
-      "sha256": "2b9b536f6b95c513209afc3c4edcabab9b77f8986422e336b4bdf1ad4660ed2d"
-    },
-    {
-      "bytes": 78248,
-      "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "d18068a5d783a553d0be3d3df61ca615a1979066838c994a66f9481ef45427ac",
-      "path": "experiments\\M135-slide-physical-commissioning\\commission.py",
-      "sha256": "d18068a5d783a553d0be3d3df61ca615a1979066838c994a66f9481ef45427ac"
-    },
-    {
-      "bytes": 11679,
-      "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "ecee286b34b0afe454bd64328ab9e6eb89f4b1847c23c02e4a85cfc344a0aebb",
-      "path": "experiments\\M135-slide-physical-commissioning\\freeze.py",
-      "sha256": "ecee286b34b0afe454bd64328ab9e6eb89f4b1847c23c02e4a85cfc344a0aebb"
-    },
-    {
-      "bytes": 2337,
-      "hash_domain": "UTF-8 text after universal-newline normalization",
-      "normalized_text_sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6",
-      "path": "experiments\\M135-slide-physical-commissioning\\src\\main.rs",
-      "sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6"
+      "normalized_text_sha256": "743b452339a20ff4c4597ee242aef26d6168b4f7c270fd90d7fc1b2084db7321",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-16.md",
+      "sha256": "743b452339a20ff4c4597ee242aef26d6168b4f7c270fd90d7fc1b2084db7321"
     }
   ],
-  "source_tree_parent_commit": "d8adb3b5351e195682f3bde4237be3e79712598f",
+  "source_tree_parent_commit": "fb42b9a1c6481dba3d7ef54c8505ec5ca69b649d",
   "status": "FROZEN"
 }

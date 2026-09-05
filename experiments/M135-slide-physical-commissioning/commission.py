@@ -14,7 +14,10 @@ import copy
 import inspect
 import json
 import math
+import shutil
 import struct
+import subprocess
+import sys
 import tempfile
 from dataclasses import replace
 from pathlib import Path, PureWindowsPath
@@ -27,6 +30,16 @@ import instrument as M
 
 
 HERE = Path(__file__).resolve().parent
+DEFAULT_CROSSCHECK_BINARY = (
+    HERE
+    / "target"
+    / "release"
+    / (
+        "m135-slide-raw-crosscheck.exe"
+        if sys.platform == "win32"
+        else "m135-slide-raw-crosscheck"
+    )
+)
 
 
 def gaussian_curve(n: int, peak: float, width: float = 0.08) -> np.ndarray:
@@ -214,6 +227,49 @@ def valid_role_fixture(
     ledger["matched_flat_manifest_sha256"] = M.sha256_file(
         matched_flat_manifest
     )
+    site_manifest = matched_flat_manifest.with_name("physical-sites.json")
+    site_role_bindings = {
+        role: {
+            "capture_unit_id": assignments[role]["capture_unit_id"],
+            "parent_stack_id": assignments[role]["parent_stack_id"],
+            "source_group": assignments[role]["source_group"],
+            "source_file_ids": sorted(assignments[role]["source_file_ids"]),
+            "geometry_id": assignments[role]["geometry_id"],
+        }
+        for role in M.SAME_SITE_ROLES
+    }
+    sites = []
+    for row in range(8):
+        for column in range(8):
+            site_id = f"site-{row:02d}-{column:02d}"
+            coordinate = [(column + 0.5) / 8.0, (row + 0.5) / 8.0]
+            sites.append(
+                {
+                    "site_id": site_id,
+                    "normalized_slide_uv": coordinate,
+                    "role_observations": {
+                        role: {
+                            "site_id": site_id,
+                            "normalized_slide_uv": coordinate,
+                        }
+                        for role in M.SAME_SITE_ROLES
+                    },
+                }
+            )
+    M.write_json(
+        site_manifest,
+        {
+            "schema": config["roles"]["site_manifest_schema"],
+            "status": "PASS",
+            "session_id": ledger["session_id"],
+            "coordinate_system": config["roles"]["site_coordinate_system"],
+            "roles": list(M.SAME_SITE_ROLES),
+            "role_bindings": site_role_bindings,
+            "sites": sites,
+        },
+    )
+    ledger["site_manifest_path"] = str(site_manifest.absolute())
+    ledger["site_manifest_sha256"] = M.sha256_file(site_manifest)
     return inventory, ledger
 
 
@@ -257,6 +313,15 @@ class Campaign:
             "rawpy-buffer-lifetime": ["rawpy_copy_inside_context_static_control"],
             "active-area-not-padding": ["active_area_padding_control"],
             "independent-decoder-prefix": ["decoder_checksum_mutation_control"],
+            "frozen-crosscheck-executable": [
+                "crosscheck_binary_mismatch_control"
+            ],
+            "cargo-local-dependency-freeze": [
+                "cargo_dependency_freeze_mutation_control"
+            ],
+            "python-native-runtime-freeze": [
+                "python_native_runtime_closure_control"
+            ],
             "decoder-stdout-no-write-transport": [
                 "stdout_transport_no_write_control"
             ],
@@ -296,6 +361,14 @@ class Campaign:
                 "flat_role_shared_calibration_control",
                 "partial_source_group_control",
                 "sampling_interval_control",
+                "same_physical_sites_false_control",
+                "bare_site_count_control",
+                "duplicate_site_identity_control",
+                "duplicate_site_coordinate_control",
+                "missing_site_control",
+                "site_coordinate_mismatch_control",
+                "site_role_binding_control",
+                "site_manifest_hash_control",
                 "matched_flat_manifest_control",
                 "matched_flat_role_binding_control",
                 "checker_oracle_control",
@@ -319,6 +392,9 @@ class Campaign:
             "flat-structure-selector": [
                 "quiet_flat_control",
                 "structured_flat_rejection_control",
+                "alternating_sign_flat_rejection_control",
+                "rotating_sign_flat_rejection_control",
+                "one_pair_only_flat_rejection_control",
             ],
             "existing-m135-core-no-detail": ["lawful_core_no_detail_control"],
             "artifact-schema": ["artifact_schema_mutation_control"],
@@ -377,7 +453,11 @@ def _round_diagnostic_floats(value: Any) -> Any:
     return value
 
 
-def commission(config_path: Path) -> dict[str, Any]:
+def commission(
+    config_path: Path,
+    freeze_manifest_path: Path,
+    crosscheck_binary: Path,
+) -> dict[str, Any]:
     config = M.load_config(config_path)
     M.require_environment(config)
     campaign = Campaign(config_path, config)
@@ -573,6 +653,20 @@ def commission(config_path: Path) -> dict[str, Any]:
             }
 
     campaign.run("decoder_checksum_mutation_control", decoder_dump_plant)
+    campaign.run(
+        "crosscheck_binary_mismatch_control",
+        lambda: _crosscheck_binary_mismatch_control(config),
+    )
+    campaign.run(
+        "cargo_dependency_freeze_mutation_control",
+        lambda: _cargo_dependency_freeze_mutation_control(
+            freeze_manifest_path, crosscheck_binary
+        ),
+    )
+    campaign.run(
+        "python_native_runtime_closure_control",
+        _python_native_runtime_closure_control,
+    )
 
     def stdout_transport_plant() -> tuple[bool, dict[str, Any]]:
         rust = M.CROSSCHECK_SOURCE.read_text(encoding="utf-8")
@@ -962,6 +1056,12 @@ def commission(config_path: Path) -> dict[str, Any]:
             result["status"] == "IDENTIFIABLE"
             and calls["count"] == 1
             and result["j_tr_computed"] is False
+            and result["predicates"]["same_physical_sites"] is True
+            and result["predicates"]["site_manifest_bound"] is True
+            and result["predicates"]["unique_site_identities"] is True
+            and result["predicates"]["unique_site_coordinates"] is True
+            and result["predicates"]["same_site_role_mapping"] is True
+            and result["site_evidence"]["site_count_from_manifest"] == 64
         ), {"result": result, "callback_count": calls["count"]}
 
     campaign.run("valid_role_fixture_passability", valid_roles)
@@ -1105,6 +1205,96 @@ def commission(config_path: Path) -> dict[str, Any]:
         ),
     )
     campaign.run(
+        "same_physical_sites_false_control",
+        lambda: _role_mutation(
+            valid_ledger,
+            inventory_fixture,
+            config,
+            lambda ledger: ledger["target"].update(
+                {"same_physical_sites": False}
+            ),
+            "same_physical_sites",
+        ),
+    )
+    campaign.run(
+        "bare_site_count_control",
+        lambda: _role_mutation(
+            valid_ledger,
+            inventory_fixture,
+            config,
+            lambda ledger: ledger.update(
+                {
+                    "site_count": 64,
+                    "site_manifest_path": None,
+                    "site_manifest_sha256": None,
+                }
+            ),
+            "site manifest",
+        ),
+    )
+    campaign.run(
+        "duplicate_site_identity_control",
+        lambda: _site_manifest_mutation(
+            valid_ledger,
+            inventory_fixture,
+            config,
+            _duplicate_site_identity,
+            "unique site identities",
+        ),
+    )
+    campaign.run(
+        "duplicate_site_coordinate_control",
+        lambda: _site_manifest_mutation(
+            valid_ledger,
+            inventory_fixture,
+            config,
+            _duplicate_site_coordinate,
+            "unique normalized coordinates",
+        ),
+    )
+    campaign.run(
+        "missing_site_control",
+        lambda: _site_manifest_mutation(
+            valid_ledger,
+            inventory_fixture,
+            config,
+            _remove_site,
+            "at least 64",
+        ),
+    )
+    campaign.run(
+        "site_coordinate_mismatch_control",
+        lambda: _site_manifest_mutation(
+            valid_ledger,
+            inventory_fixture,
+            config,
+            _mismatch_site_coordinate,
+            "coordinates mismatch",
+        ),
+    )
+    campaign.run(
+        "site_role_binding_control",
+        lambda: _site_manifest_mutation(
+            valid_ledger,
+            inventory_fixture,
+            config,
+            _mismatch_site_role_binding,
+            "six R1/R2/Y1/Y2 capture roles",
+        ),
+    )
+    campaign.run(
+        "site_manifest_hash_control",
+        lambda: _role_mutation(
+            valid_ledger,
+            inventory_fixture,
+            config,
+            lambda ledger: ledger.update(
+                {"site_manifest_sha256": "0" * 64}
+            ),
+            "site manifest",
+        ),
+    )
+    campaign.run(
         "matched_flat_manifest_control",
         lambda: _role_mutation(
             valid_ledger,
@@ -1200,6 +1390,70 @@ def commission(config_path: Path) -> dict[str, Any]:
 
     campaign.run("structured_flat_rejection_control", structured_flat)
 
+    def alternating_sign_flat() -> tuple[bool, dict[str, Any]]:
+        plant = np.full((64, 16), 100.0 + 0.0j, dtype=np.complex128)
+        values = np.stack([plant, -plant, plant, -plant], axis=0)
+        result = M.flat_repeatability(values, config)
+        return bool(
+            result["status"] == "STRUCTURED_FLAT"
+            and result["mean_split_power"] == 10000.0
+            and result["legacy_positive_cross_power_median"] == 0.0
+            and result["observed_repeatable_power"]
+            > result["null_threshold"]
+        ), result
+
+    campaign.run(
+        "alternating_sign_flat_rejection_control",
+        alternating_sign_flat,
+    )
+
+    def rotating_sign_flat() -> tuple[bool, dict[str, Any]]:
+        plant = np.full((64, 16), 100.0 + 0.0j, dtype=np.complex128)
+        values = np.stack(
+            [plant, 1j * plant, -plant, -1j * plant],
+            axis=0,
+        )
+        result = M.flat_repeatability(values, config)
+        return bool(
+            result["status"] == "STRUCTURED_FLAT"
+            and result["mean_split_power"] == 10000.0
+            and result["observed_repeatable_power"]
+            > result["null_threshold"]
+        ), result
+
+    campaign.run(
+        "rotating_sign_flat_rejection_control",
+        rotating_sign_flat,
+    )
+
+    def one_pair_only_flat() -> tuple[bool, dict[str, Any]]:
+        local_rng = np.random.default_rng(135044)
+        values = 0.05 * (
+            local_rng.standard_normal((4, 64, 16))
+            + 1j * local_rng.standard_normal((4, 64, 16))
+        )
+        plant = np.full((64, 16), 100.0 + 0.0j, dtype=np.complex128)
+        values[0] += plant
+        values[1] += plant
+        result = M.flat_repeatability(values, config)
+        dominant_pair = int(np.argmax(result["pair_repeatable_power"]))
+        return bool(
+            result["status"] == "STRUCTURED_FLAT"
+            and dominant_pair == 0
+            and result["pair_order"][dominant_pair] == [0, 1]
+            and result["observed_repeatable_power"]
+            > result["null_threshold"]
+        ), {
+            **result,
+            "planted_structured_pair": [0, 1],
+            "detected_maximum_pair": result["pair_order"][dominant_pair],
+        }
+
+    campaign.run(
+        "one_pair_only_flat_rejection_control",
+        one_pair_only_flat,
+    )
+
     def core_no_detail() -> tuple[bool, dict[str, Any]]:
         local_rng = np.random.default_rng(135043)
         values = 0.1 * (
@@ -1249,6 +1503,9 @@ def commission(config_path: Path) -> dict[str, Any]:
             "missing_roles": ["R1"],
             "predicates": {"all_required_roles_present": False},
             "violations": [],
+            "site_evidence": {
+                "required_roles": list(M.SAME_SITE_ROLES)
+            },
             "j_tr_computed": False,
             "j_tr": None,
         }
@@ -1314,6 +1571,280 @@ def _expect_instrument_error(function: Callable[[], Any]) -> tuple[bool, dict[st
     except M.InstrumentError as error:
         return True, {"caught": True, "message": str(error)}
     return False, {"caught": False}
+
+
+def _crosscheck_binary_mismatch_control(
+    config: dict[str, Any],
+) -> tuple[bool, dict[str, Any]]:
+    with tempfile.TemporaryDirectory(dir=HERE) as raw_temp:
+        root = Path(raw_temp)
+        paths = _minimal_artifacts(root, config)
+        expected_bytes = b"m135-frozen-crosscheck-executable"
+        wrong_bytes = b"m135-wrong-crosscheck-executable"
+        expected = root / "expected-crosscheck.exe"
+        wrong = root / "wrong-crosscheck.exe"
+        expected.write_bytes(expected_bytes)
+        wrong.write_bytes(wrong_bytes)
+        freeze_manifest = root / "freeze.json"
+        M.write_json(
+            freeze_manifest,
+            {
+                "schema": "m135-slide-freeze-v1",
+                "label": M.LABEL,
+                "status": "FROZEN",
+                "source_tree_parent_commit": "synthetic",
+                "preregistration": {},
+                "existing_estimator": {},
+                "source_files": [],
+                "commissioning_artifacts": {},
+                "dependencies": {},
+                "external_decoder_path": {
+                    "executable": {
+                        "bytes": len(expected_bytes),
+                        "sha256": M.sha256_bytes(expected_bytes),
+                    }
+                },
+                "documented_commands": {},
+                "config_sha256": M.config_sha256(HERE / "config.json"),
+                "artifact_schemas_sha256": M.normalized_text_sha256(
+                    HERE / "artifact-schemas.json"
+                ),
+            },
+        )
+        caught = False
+        message = None
+        try:
+            M.decode_payload(
+                paths["inventory"],
+                wrong,
+                HERE / "config.json",
+                config,
+                freeze_manifest,
+            )
+        except M.InstrumentError as error:
+            caught = True
+            message = str(error)
+        passed = bool(
+            caught
+            and message is not None
+            and "Stage B refused crosscheck executable" in message
+        )
+        return passed, {
+            "stage": "B",
+            "expected_input_bytes_hex": expected_bytes.hex(),
+            "wrong_input_bytes_hex": wrong_bytes.hex(),
+            "expected_sha256": M.sha256_file(expected),
+            "wrong_sha256": M.sha256_file(wrong),
+            "refused": caught,
+            "message": message,
+        }
+
+
+def _copy_freeze_check_tree(destination: Path) -> Path:
+    destination.mkdir(parents=True, exist_ok=True)
+    for relative in (
+        "Cargo.toml",
+        "Cargo.lock",
+        "rust-toolchain",
+        "rust-toolchain.toml",
+    ):
+        source = M.REPO / relative
+        if source.is_file():
+            target = destination / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
+    cargo_config = M.REPO / ".cargo"
+    if cargo_config.is_dir():
+        shutil.copytree(
+            cargo_config,
+            destination / ".cargo",
+            dirs_exist_ok=True,
+            ignore=shutil.ignore_patterns("target", "__pycache__"),
+        )
+    shutil.copytree(
+        M.REPO / "crates",
+        destination / "crates",
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns("target", "__pycache__"),
+    )
+    existing_target = destination / M.EXISTING_INSTRUMENT.relative_to(M.REPO)
+    existing_target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(M.EXISTING_INSTRUMENT, existing_target)
+    lane_target = destination / HERE.relative_to(M.REPO)
+    shutil.copytree(
+        HERE,
+        lane_target,
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns(
+            "target",
+            "author-target-*",
+            "out",
+            "__pycache__",
+            "tmp*",
+        ),
+    )
+    return lane_target
+
+
+def _freeze_check_process(
+    lane: Path,
+    crosscheck_binary: Path,
+) -> tuple[int, dict[str, Any]]:
+    command = [
+        str(Path(sys.executable).absolute()),
+        "-B",
+        str(lane / "freeze.py"),
+        "check",
+        "--manifest",
+        str(lane / "freeze-manifest.json"),
+        "--crosscheck-bin",
+        str(crosscheck_binary.absolute()),
+    ]
+    completed = subprocess.run(
+        command,
+        cwd=lane.parents[1],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="strict",
+        check=False,
+    )
+    output = completed.stdout if completed.returncode == 0 else completed.stderr
+    try:
+        payload = json.loads(output.strip().splitlines()[-1])
+    except (json.JSONDecodeError, IndexError) as error:
+        return completed.returncode, {
+            "status": "UNPARSEABLE",
+            "error": str(error),
+        }
+    return completed.returncode, {
+        "status": payload.get("status"),
+        "error_type": payload.get("error_type"),
+        "error": payload.get("error"),
+        "source_file_count": payload.get("source_file_count"),
+    }
+
+
+def _cargo_dependency_freeze_mutation_control(
+    freeze_manifest_path: Path,
+    crosscheck_binary: Path,
+) -> tuple[bool, dict[str, Any]]:
+    if not freeze_manifest_path.is_file():
+        return False, {"error": "freeze manifest is missing"}
+    with tempfile.TemporaryDirectory() as raw_temp:
+        root = Path(raw_temp) / "strehl"
+        lane = _copy_freeze_check_tree(root)
+        shutil.copy2(freeze_manifest_path, lane / "freeze-manifest.json")
+        baseline_code, baseline = _freeze_check_process(
+            lane, crosscheck_binary
+        )
+        dependency = root / "crates" / "strehl-raw" / "src" / "lib.rs"
+        before = dependency.read_text(encoding="utf-8")
+        old = (
+            "let start = (self.active.y + y) * self.stride + self.active.x;"
+        )
+        new = (
+            "let start = (self.active.y + y) * self.stride "
+            "+ self.active.x + 1;"
+        )
+        if before.count(old) != 1:
+            return False, {
+                "error": "active_row mutation anchor count was not one",
+                "anchor_count": before.count(old),
+            }
+        dependency.write_text(before.replace(old, new, 1), encoding="utf-8")
+        after_hash = M.normalized_text_sha256(dependency)
+        mutation_code, mutation = _freeze_check_process(
+            lane, crosscheck_binary
+        )
+        passed = bool(
+            baseline_code == 0
+            and baseline.get("status") == "PASS"
+            and mutation_code != 0
+            and mutation.get("status") == "FAIL"
+            and "external_decoder_path" in str(mutation.get("error"))
+        )
+        return passed, {
+            "copy_kind": "temporary repository-layout copy",
+            "mutated_relative_path": "crates/strehl-raw/src/lib.rs",
+            "symbol": "Frame::active_row",
+            "exact_old": old,
+            "exact_new": new,
+            "before_sha256": M.sha256_bytes(before.encode("utf-8")),
+            "after_sha256": after_hash,
+            "baseline_exit_code": baseline_code,
+            "baseline": baseline,
+            "mutation_exit_code": mutation_code,
+            "mutation": mutation,
+        }
+
+
+def _python_native_runtime_closure_control() -> tuple[bool, dict[str, Any]]:
+    record = M.dependency_record()
+    distributions = record["distributions"]
+    selections = {
+        name: distribution["load_bearing_native_files"]["selection"]
+        for name, distribution in distributions.items()
+    }
+    runtime_paths = {
+        M.normalized_path(row["path"])
+        for row in record["python"]["runtime_files"]["files"]
+    }
+    executable_bound = M.normalized_path(Path(sys.executable)) in runtime_paths
+    required = {
+        "numpy_core": any("numpy/_core/" in path for path in selections["numpy"]),
+        "numpy_fft": any("numpy/fft/" in path for path in selections["numpy"]),
+        "scipy_fft": any("scipy/fft/" in path for path in selections["scipy"]),
+        "scipy_ndimage": any(
+            "scipy/ndimage/" in path for path in selections["scipy"]
+        ),
+        "scipy_optimize": any(
+            "scipy/optimize/" in path for path in selections["scipy"]
+        ),
+        "cv2_loaded_binary": any(
+            path.casefold().endswith(("cv2/cv2.pyd", "cv2/cv2.so"))
+            for path in selections["opencv"]
+        ),
+    }
+    selected = next(
+        path for path in selections["numpy"] if "numpy/fft/" in path
+    )
+    original = (
+        Path(distributions["numpy"]["root"])
+        / Path(*selected.split("/"))
+    )
+    with tempfile.TemporaryDirectory(dir=HERE) as raw_temp:
+        root = Path(raw_temp)
+        copied = root / original.name
+        shutil.copy2(original, copied)
+        before = M.semantic_file_closure([copied], root=root)
+        payload = bytearray(copied.read_bytes())
+        payload[-1] ^= 1
+        copied.write_bytes(payload)
+        after = M.semantic_file_closure([copied], root=root)
+    mutation_detected = (
+        before["aggregate_sha256"] != after["aggregate_sha256"]
+    )
+    return bool(
+        executable_bound
+        and all(required.values())
+        and mutation_detected
+    ), {
+        "sys_executable_bound": executable_bound,
+        "required_native_scopes": required,
+        "native_file_counts": {
+            name: distribution["load_bearing_native_files"]["file_count"]
+            for name, distribution in distributions.items()
+        },
+        "semantic_file_counts": {
+            name: distribution["semantic_file_closure"]["file_count"]
+            for name, distribution in distributions.items()
+        },
+        "mutation_relative_file": selected,
+        "mutation_before_aggregate_sha256": before["aggregate_sha256"],
+        "mutation_after_aggregate_sha256": after["aggregate_sha256"],
+        "semantic_replacement_detected": mutation_detected,
+    }
 
 
 def _range_expectation(
@@ -1397,6 +1928,109 @@ def _role_mutation(
         and not result["j_tr_computed"]
         and result["j_tr"] is None
     ), result
+
+
+def _site_manifest_mutation(
+    ledger: dict[str, Any],
+    inventory: dict[str, Any],
+    config: dict[str, Any],
+    mutation: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]],
+    expected_word: str,
+) -> tuple[bool, dict[str, Any]]:
+    changed = copy.deepcopy(ledger)
+    source_manifest = Path(changed["site_manifest_path"])
+    evidence = M.load_json_object(source_manifest)
+    mutation_detail = mutation(evidence, changed)
+    with tempfile.TemporaryDirectory(dir=HERE) as raw_temp:
+        manifest = Path(raw_temp) / "mutated-physical-sites.json"
+        M.write_json(manifest, evidence)
+        changed["site_manifest_path"] = str(manifest.absolute())
+        changed["site_manifest_sha256"] = M.sha256_file(manifest)
+        result = M.role_gate_result(changed, inventory, config)
+    text = " ".join(result["violations"]).casefold()
+    return bool(
+        result["status"] == "ROLE_LEDGER_INVALID"
+        and expected_word.casefold() in text
+        and result["j_tr_computed"] is False
+        and result["j_tr"] is None
+    ), {
+        "mutation": mutation_detail,
+        "result": result,
+    }
+
+
+def _duplicate_site_identity(
+    evidence: dict[str, Any], ledger: dict[str, Any]
+) -> dict[str, Any]:
+    source = evidence["sites"][0]["site_id"]
+    replaced = evidence["sites"][1]["site_id"]
+    evidence["sites"][1]["site_id"] = source
+    for observation in evidence["sites"][1]["role_observations"].values():
+        observation["site_id"] = source
+    return {
+        "site_index": 1,
+        "old_site_id": replaced,
+        "new_site_id": source,
+    }
+
+
+def _duplicate_site_coordinate(
+    evidence: dict[str, Any], ledger: dict[str, Any]
+) -> dict[str, Any]:
+    coordinate = list(evidence["sites"][0]["normalized_slide_uv"])
+    previous = list(evidence["sites"][1]["normalized_slide_uv"])
+    evidence["sites"][1]["normalized_slide_uv"] = coordinate
+    for observation in evidence["sites"][1]["role_observations"].values():
+        observation["normalized_slide_uv"] = coordinate
+    return {
+        "site_index": 1,
+        "old_coordinate": previous,
+        "new_coordinate": coordinate,
+    }
+
+
+def _remove_site(
+    evidence: dict[str, Any], ledger: dict[str, Any]
+) -> dict[str, Any]:
+    removed = evidence["sites"].pop()
+    ledger["site_count"] = len(evidence["sites"])
+    return {
+        "removed_site_id": removed["site_id"],
+        "remaining_site_count": len(evidence["sites"]),
+    }
+
+
+def _mismatch_site_coordinate(
+    evidence: dict[str, Any], ledger: dict[str, Any]
+) -> dict[str, Any]:
+    observation = evidence["sites"][0]["role_observations"]["R2"]
+    previous = list(observation["normalized_slide_uv"])
+    observation["normalized_slide_uv"] = [
+        previous[0] + 0.001,
+        previous[1],
+    ]
+    return {
+        "site_id": evidence["sites"][0]["site_id"],
+        "role": "R2",
+        "manifest_coordinate": evidence["sites"][0][
+            "normalized_slide_uv"
+        ],
+        "mismatched_role_coordinate": observation["normalized_slide_uv"],
+    }
+
+
+def _mismatch_site_role_binding(
+    evidence: dict[str, Any], ledger: dict[str, Any]
+) -> dict[str, Any]:
+    previous = evidence["role_bindings"]["R2"]["capture_unit_id"]
+    evidence["role_bindings"]["R2"][
+        "capture_unit_id"
+    ] = "wrong-site-capture-unit"
+    return {
+        "role": "R2",
+        "old_capture_unit_id": previous,
+        "new_capture_unit_id": "wrong-site-capture-unit",
+    }
 
 
 def _partial_source_group_control(
@@ -1530,6 +2164,8 @@ def _minimal_artifacts(
     inventory_hash = M.sha256_file(inventory_path)
 
     decode_path = root / "decode.json"
+    synthetic_binary_hash = M.sha256_bytes(b"synthetic-crosscheck")
+    synthetic_freeze_hash = M.sha256_bytes(b"synthetic-freeze")
     decode = {
         "schema": "m135-slide-decode-v1",
         "label": M.LABEL,
@@ -1541,6 +2177,14 @@ def _minimal_artifacts(
         "decoder_contract": {
             "crosscheck_every_frame": True,
             "binary_path": str((root / "synthetic-crosscheck.exe").absolute()),
+            "binary_sha256": synthetic_binary_hash,
+            "freeze_manifest_path": str(
+                (root / "synthetic-freeze.json").absolute()
+            ),
+            "freeze_manifest_sha256": synthetic_freeze_hash,
+            "frozen_binary_bytes": len(b"synthetic-crosscheck"),
+            "frozen_binary_sha256": synthetic_binary_hash,
+            "binary_hash_bound_before_stage_b": True,
         },
         "frames": [
             {
@@ -1556,6 +2200,7 @@ def _minimal_artifacts(
                     ),
                 },
                 "rawler_crosscheck": {
+                    "binary_sha256": synthetic_binary_hash,
                     "comparison": {
                         "payload_matches_rawpy": True,
                         "payload_sha256": M.sha256_bytes(
@@ -1642,6 +2287,7 @@ def _minimal_artifacts(
         "predicates": role_result["predicates"],
         "violations": role_result["violations"],
         "sampling_ratio": role_result.get("sampling_ratio"),
+        "site_evidence": role_result["site_evidence"],
         "j_tr_computed": role_result["j_tr_computed"],
         "j_tr": role_result["j_tr"],
         "score_callback_called": role_result["score_callback_called"],
@@ -1666,7 +2312,22 @@ def _minimal_artifacts(
         },
         "sensor_coordinate_lattice": {},
         "exposure_groups": [
-            {"status": "QUIET_DIAGNOSTIC", "exposure_seconds": value}
+            {
+                "status": "QUIET_DIAGNOSTIC",
+                "exposure_seconds": value,
+                "repeatability": {
+                    "status": "QUIET_DIAGNOSTIC",
+                    "statistic": config["flat"]["repeatability_statistic"],
+                    "null_statistic": config["flat"]["null_statistic"],
+                    "null_quantile": config["flat"]["null_quantile"],
+                    "observed_repeatable_power": 0.0,
+                    "pair_repeatable_power": [0.0] * 6,
+                    "null_threshold": 1.0,
+                    "phase_scramble_q99": 1.0,
+                    "phase_scramble_p_upper": 1.0,
+                    "structured_alpha": config["flat"]["structured_alpha"],
+                },
+            }
             for value in (1.0, 2.5, 6.0)
         ],
         "core_probe": {"invoked": False},
@@ -2158,13 +2819,27 @@ def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser()
     root.add_argument("--config", type=Path, default=HERE / "config.json")
     root.add_argument("--output", type=Path, default=HERE / "commission.json")
+    root.add_argument(
+        "--freeze-manifest",
+        type=Path,
+        default=HERE / "freeze-manifest.json",
+    )
+    root.add_argument(
+        "--crosscheck-bin",
+        type=Path,
+        default=DEFAULT_CROSSCHECK_BINARY,
+    )
     return root
 
 
 def main() -> int:
     args = parser().parse_args()
     try:
-        payload = commission(args.config.absolute())
+        payload = commission(
+            args.config.absolute(),
+            args.freeze_manifest.absolute(),
+            args.crosscheck_bin.absolute(),
+        )
         M.write_json(args.output.absolute(), payload)
         print(
             json.dumps(

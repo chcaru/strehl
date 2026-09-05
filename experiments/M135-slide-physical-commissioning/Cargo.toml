@@ -3,6 +3,7 @@ name = "m135-slide-raw-crosscheck"
 version = "0.0.0"
 edition = "2024"
 publish = false
+build = "build.rs"
 
 [workspace]
 

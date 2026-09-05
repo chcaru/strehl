@@ -1,0 +1,4762 @@
+{
+  "checks": {
+    "above_band_distractor_control": true,
+    "active_area_padding_control": true,
+    "all_axis_repeat_control": true,
+    "alternating_sign_flat_rejection_control": true,
+    "artifact_schema_mutation_control": false,
+    "bad_offset_control": true,
+    "bad_residual_control": true,
+    "bad_slope_control": true,
+    "bare_site_count_control": true,
+    "cargo_dependency_freeze_mutation_control": true,
+    "checker_oracle_control": true,
+    "clipping_refusal_control": true,
+    "crosscheck_binary_mismatch_control": true,
+    "decode_recompute_binding_control": true,
+    "decoder_checksum_mutation_control": true,
+    "duplicate_site_coordinate_control": true,
+    "duplicate_site_identity_control": true,
+    "empty_focus_histogram_control": true,
+    "endpoint_peak_control": true,
+    "flat_ledger_binding_control": true,
+    "flat_recompute_binding_control": true,
+    "flat_role_capture_unit_control": true,
+    "flat_role_shared_calibration_control": true,
+    "focus_histogram_missing_value_control": true,
+    "forged_coarse_encoder_control": true,
+    "forged_identifiable_predicate_control": true,
+    "forged_physical_binding_control": true,
+    "forged_range_predicate_control": true,
+    "identity_range_control": true,
+    "invented_source_file_control": true,
+    "inventory_absolute_path_binding_control": true,
+    "inventory_hidden_file_and_sort_mutation": true,
+    "inventory_recompute_binding_control": true,
+    "inventory_unexpected_arw_control": true,
+    "lattice_mutation_control": true,
+    "lawful_core_no_detail_control": true,
+    "lowpass_registration_motion_control": true,
+    "matched_flat_manifest_control": true,
+    "matched_flat_role_binding_control": true,
+    "missing_roles_no_jtr_control": true,
+    "missing_site_control": true,
+    "nonconverged_fit_control": true,
+    "nonfinite_refusal_control": true,
+    "normalized_text_hash_control": true,
+    "odd_even_independence_control": true,
+    "one_pair_only_flat_rejection_control": true,
+    "partial_source_group_control": true,
+    "python_native_runtime_closure_control": true,
+    "quadrilateral_ambiguity_control": true,
+    "quadrilateral_identity_and_corner_mutation": true,
+    "quiet_flat_control": true,
+    "range_recompute_binding_control": true,
+    "rawpy_copy_inside_context_static_control": true,
+    "registration_stopband_control": true,
+    "rotating_sign_flat_rejection_control": true,
+    "same_physical_sites_false_control": true,
+    "sampling_interval_control": true,
+    "selector_coverage_complete": false,
+    "shared_calibration_control": true,
+    "shared_source_file_control": true,
+    "site_coordinate_mismatch_control": true,
+    "site_manifest_hash_control": true,
+    "site_role_binding_control": true,
+    "stdout_transport_no_write_control": true,
+    "structured_flat_rejection_control": true,
+    "summary_chain_splice_control": true,
+    "sw4_as_truth_control": true,
+    "temporal_split_mutation_control": true,
+    "three_exposure_group_control": true,
+    "too_few_eligible_sites_control": true,
+    "valid_role_fixture_passability": true
+  },
+  "claim_scope": "author commissioning only; no authorized-session path opened and no independent verification claimed",
+  "config_sha256": "911de7c2c6ab84c1ce820e1fa9a3ebd5b74d234de013ef68cb72873ab753f3e1",
+  "invocation": {
+    "argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "experiments\\M135-slide-physical-commissioning\\commission.py",
+      "--config",
+      "experiments\\M135-slide-physical-commissioning\\config.json",
+      "--output",
+      "experiments\\M135-slide-physical-commissioning\\commission.json",
+      "--freeze-manifest",
+      "experiments\\M135-slide-physical-commissioning\\freeze-manifest.json",
+      "--crosscheck-bin",
+      "experiments\\M135-slide-physical-commissioning\\target\\release\\m135-slide-raw-crosscheck.exe"
+    ],
+    "command_line_windows": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe experiments\\M135-slide-physical-commissioning\\commission.py --config experiments\\M135-slide-physical-commissioning\\config.json --output experiments\\M135-slide-physical-commissioning\\commission.json --freeze-manifest experiments\\M135-slide-physical-commissioning\\freeze-manifest.json --crosscheck-bin experiments\\M135-slide-physical-commissioning\\target\\release\\m135-slide-raw-crosscheck.exe",
+    "config_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\config.json",
+    "config_sha256": "911de7c2c6ab84c1ce820e1fa9a3ebd5b74d234de013ef68cb72873ab753f3e1",
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "dependencies": {
+      "discovery_policy": {
+        "detailed_native_files": "all NumPy, rawpy, and OpenCV native files; SciPy FFT, ndimage, optimize, _lib, and scipy.libs native files",
+        "probe_modules": [
+          "cv2",
+          "numpy",
+          "numpy.fft",
+          "rawpy",
+          "rawpy._rawpy",
+          "scipy",
+          "scipy.fft",
+          "scipy.ndimage",
+          "scipy.optimize"
+        ],
+        "semantic_distribution_files": "hash every installed .py/.pyi/native binary plus METADATA/RECORD/WHEEL into a compact aggregate"
+      },
+      "distributions": {
+        "numpy": {
+          "distribution_metadata_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "8e273c8b69f08a36557fabae4828bc5c5bf1ef2b7c5765a93bf2b7437cf5f983",
+            "byte_count": 118815,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 6608,
+                "path": "numpy-2.4.4.dist-info/METADATA",
+                "sha256": "8f9e04338ffa930868a2d157ce44f6e4cb7ac524b968fb13d04187a6ac575282"
+              },
+              {
+                "bytes": 112122,
+                "path": "numpy-2.4.4.dist-info/RECORD",
+                "sha256": "11ef09377f4b4c6b9218c9293d399fb1cc3f06e560c608faa25852adccfc32da"
+              },
+              {
+                "bytes": 85,
+                "path": "numpy-2.4.4.dist-info/WHEEL",
+                "sha256": "e743de01ba6503a3e4234858398a1e69c07d512d51e8482ec9f3a7b1c707d165"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "installed_distribution": "numpy",
+          "load_bearing_native_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "71e84ac7c80e84a6deb820705c1ba842d95777f9607bfcf0a1a76f0e7dc66744",
+            "byte_count": 28033616,
+            "file_count": 21,
+            "files": [
+              {
+                "bytes": 20415488,
+                "path": "numpy.libs/libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+                "sha256": "63c857e738469261263c764a36be9436ebdeaa272e340a828f42047a97131080"
+              },
+              {
+                "bytes": 575056,
+                "path": "numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+                "sha256": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde"
+              },
+              {
+                "bytes": 65536,
+                "path": "numpy/_core/_multiarray_tests.cp312-win_amd64.pyd",
+                "sha256": "a37712b7a0e12fbb28b5c77873886140f7a36dc7c11d0ffb1739fb07f879ad4b"
+              },
+              {
+                "bytes": 3714560,
+                "path": "numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+                "sha256": "f4523c2dfe641a904605029ce4a5046388bd61b18afc0594d34018b5e6d848f8"
+              },
+              {
+                "bytes": 12288,
+                "path": "numpy/_core/_operand_flag_tests.cp312-win_amd64.pyd",
+                "sha256": "7e4e9738f554ccffe98ace10618d96b40784fa6dfe1313a5e73fb72dc575c736"
+              },
+              {
+                "bytes": 39936,
+                "path": "numpy/_core/_rational_tests.cp312-win_amd64.pyd",
+                "sha256": "922c3ca16dd5be1c89aab32f584272cb9a9cea32dff728b27fdd17ce9be85dd2"
+              },
+              {
+                "bytes": 832000,
+                "path": "numpy/_core/_simd.cp312-win_amd64.pyd",
+                "sha256": "5fb18573594ff25afb56359a6349f006e37dfb71e4de2c30dad8c0fb91957bf5"
+              },
+              {
+                "bytes": 14336,
+                "path": "numpy/_core/_struct_ufunc_tests.cp312-win_amd64.pyd",
+                "sha256": "9bb5da7cb16679c130025472ffb10824821a1972d375a69876745ae77ecb05a9"
+              },
+              {
+                "bytes": 33280,
+                "path": "numpy/_core/_umath_tests.cp312-win_amd64.pyd",
+                "sha256": "adb48d882bc86e2cfb31ede2316fd69a046590b67e5f29a624fe44b47795aa07"
+              },
+              {
+                "bytes": 276480,
+                "path": "numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+                "sha256": "7c009372f4f448c2d7419726b671f7122693705c905d5239df1ef2b49c30eadc"
+              },
+              {
+                "bytes": 112128,
+                "path": "numpy/linalg/_umath_linalg.cp312-win_amd64.pyd",
+                "sha256": "8732faea57c1e9750297bc5df2ed090954159e28024c66f1cdbf1d4eb798ccb8"
+              },
+              {
+                "bytes": 18944,
+                "path": "numpy/linalg/lapack_lite.cp312-win_amd64.pyd",
+                "sha256": "7d0b28de7229d533f158708676ae4661b0554badd8b4ca7befd9f573b6fddb80"
+              },
+              {
+                "bytes": 207360,
+                "path": "numpy/random/_bounded_integers.cp312-win_amd64.pyd",
+                "sha256": "dd98c61f9c78c6dfbf16b7ef5060647aba412a6ea74ab6cd80d93c34dd485d57"
+              },
+              {
+                "bytes": 167424,
+                "path": "numpy/random/_common.cp312-win_amd64.pyd",
+                "sha256": "95b8170a18ec959a6e7d5eb3c5ec62945e25ef000e7d3e079634f6a6f1025599"
+              },
+              {
+                "bytes": 585216,
+                "path": "numpy/random/_generator.cp312-win_amd64.pyd",
+                "sha256": "dd21763b7cbd0934d11e18a205b43a2f94281749cdc3ae29a8b0551d89bec069"
+              },
+              {
+                "bytes": 83968,
+                "path": "numpy/random/_mt19937.cp312-win_amd64.pyd",
+                "sha256": "dfb5422af41c2481f7284cfb24d6c22d20f7335a3b782381b965f1ae5dbbb58b"
+              },
+              {
+                "bytes": 94720,
+                "path": "numpy/random/_pcg64.cp312-win_amd64.pyd",
+                "sha256": "7233f96d62e6e908a5b8c05d944bab62484e1e8094ed7ceb67c4d039da9b03e3"
+              },
+              {
+                "bytes": 78336,
+                "path": "numpy/random/_philox.cp312-win_amd64.pyd",
+                "sha256": "a42e903341f5ab570a508c4347e838955b9d01dfb42fbe2a92716cd17c8263bf"
+              },
+              {
+                "bytes": 59904,
+                "path": "numpy/random/_sfc64.cp312-win_amd64.pyd",
+                "sha256": "a84fd4bed2bbfe54d6e0b21990e9260cf82770e80c22f58ce767917ad2d72a9b"
+              },
+              {
+                "bytes": 157696,
+                "path": "numpy/random/bit_generator.cp312-win_amd64.pyd",
+                "sha256": "13c855266daae91046fdeced52acd6ad1a39680381f11e2c9959b173f5f8b6fb"
+              },
+              {
+                "bytes": 488960,
+                "path": "numpy/random/mtrand.cp312-win_amd64.pyd",
+                "sha256": "a100e03d295811221bc317d9ba7e0ff0dbcd58a8deda7d2f734703fc7e223e6a"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+            "selection": [
+              "numpy.libs/libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+              "numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+              "numpy/_core/_multiarray_tests.cp312-win_amd64.pyd",
+              "numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+              "numpy/_core/_operand_flag_tests.cp312-win_amd64.pyd",
+              "numpy/_core/_rational_tests.cp312-win_amd64.pyd",
+              "numpy/_core/_simd.cp312-win_amd64.pyd",
+              "numpy/_core/_struct_ufunc_tests.cp312-win_amd64.pyd",
+              "numpy/_core/_umath_tests.cp312-win_amd64.pyd",
+              "numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+              "numpy/linalg/_umath_linalg.cp312-win_amd64.pyd",
+              "numpy/linalg/lapack_lite.cp312-win_amd64.pyd",
+              "numpy/random/_bounded_integers.cp312-win_amd64.pyd",
+              "numpy/random/_common.cp312-win_amd64.pyd",
+              "numpy/random/_generator.cp312-win_amd64.pyd",
+              "numpy/random/_mt19937.cp312-win_amd64.pyd",
+              "numpy/random/_pcg64.cp312-win_amd64.pyd",
+              "numpy/random/_philox.cp312-win_amd64.pyd",
+              "numpy/random/_sfc64.cp312-win_amd64.pyd",
+              "numpy/random/bit_generator.cp312-win_amd64.pyd",
+              "numpy/random/mtrand.cp312-win_amd64.pyd"
+            ]
+          },
+          "requested_distribution": "numpy",
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "semantic_file_closure": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "2acb84661ae8c3cfe546ba8e71a28526f35bfad789674ab4b392f8b08df1d068",
+            "byte_count": 38373692,
+            "file_count": 693,
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "version": "2.4.4"
+        },
+        "opencv": {
+          "distribution_metadata_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "09d450f1453df30e6e3384d00871ca3d0620ca57d11121035b75a29675191ba7",
+            "byte_count": 28425,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 20043,
+                "path": "opencv_python-4.13.0.92.dist-info/METADATA",
+                "sha256": "b7ec32edc5943818be42a7d67f3b0f2091ac537b99ab7f1c3f33c13e6fbfcb38"
+              },
+              {
+                "bytes": 8288,
+                "path": "opencv_python-4.13.0.92.dist-info/RECORD",
+                "sha256": "c89e7f5bd818b5fb7387ce09305e823b39c940d64f2dacfa9889ff94f5d9978d"
+              },
+              {
+                "bytes": 94,
+                "path": "opencv_python-4.13.0.92.dist-info/WHEEL",
+                "sha256": "f5f1b5d2f4b338a5f09a35f70a458deb63fd86a8fe186976c33c1d47139547e6"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "installed_distribution": "opencv-python",
+          "load_bearing_native_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "3f3c563475da227f0c1e18d291d830c7c7eccad8fdc2841a2a754bf2e56003f2",
+            "byte_count": 103397376,
+            "file_count": 2,
+            "files": [
+              {
+                "bytes": 74819072,
+                "path": "cv2/cv2.pyd",
+                "sha256": "78db0c836b952d9d5510140677463687c357a7166fddfa6ac7e31abb2d7d9bbd"
+              },
+              {
+                "bytes": 28578304,
+                "path": "cv2/opencv_videoio_ffmpeg4130_64.dll",
+                "sha256": "fcc614672159094a35815b7ea2819a648cbf86c30d90c57e8c6ba1432f594548"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+            "selection": [
+              "cv2/cv2.pyd",
+              "cv2/opencv_videoio_ffmpeg4130_64.dll"
+            ]
+          },
+          "requested_distribution": "opencv-python",
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "semantic_file_closure": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "6e56d1b29cf33c16a234da9cc91b3a3f6bc2c385dce2a7635342c9ee67907d77",
+            "byte_count": 103944696,
+            "file_count": 65,
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "version": "4.13.0.92"
+        },
+        "rawpy": {
+          "distribution_metadata_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "cdb33b667d1af59431cafa1dff42e8d7201abae06b1002b8e77585bca5bdd020",
+            "byte_count": 11627,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 9874,
+                "path": "rawpy-0.27.0.dist-info/METADATA",
+                "sha256": "56e3bec9c77d8a6b2bbe3586a6082d05dcddfec28eb4a1b323bfdfd71b258178"
+              },
+              {
+                "bytes": 1652,
+                "path": "rawpy-0.27.0.dist-info/RECORD",
+                "sha256": "64f7542bdabaaf2d00618cba5bac05273e6b5e818d5c8d83cc48823beb557643"
+              },
+              {
+                "bytes": 101,
+                "path": "rawpy-0.27.0.dist-info/WHEEL",
+                "sha256": "ad1e507ec59c665de6adae409920fb15dd1dcd0c59de51c2a43a3bd0891f0cae"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "installed_distribution": "rawpy",
+          "load_bearing_native_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "c883dd35ac18c830b418ffea63be07c4180cd0aecb95ff7d198144e43ab408bd",
+            "byte_count": 2325632,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 205824,
+                "path": "rawpy/_rawpy.cp312-win_amd64.pyd",
+                "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+              },
+              {
+                "bytes": 1926656,
+                "path": "rawpy/raw_r.dll",
+                "sha256": "da20108e301a929170fe1af2acb2ef7e5de62347057f860139fda111d504fa39"
+              },
+              {
+                "bytes": 193152,
+                "path": "rawpy/vcomp140.dll",
+                "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+            "selection": [
+              "rawpy/_rawpy.cp312-win_amd64.pyd",
+              "rawpy/raw_r.dll",
+              "rawpy/vcomp140.dll"
+            ]
+          },
+          "requested_distribution": "rawpy",
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "semantic_file_closure": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "a3f5c91243bc90c8d4f695203065ddfc29ed3fbc9f12bd0ee45daafb2c14d766",
+            "byte_count": 2379213,
+            "file_count": 10,
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "version": "0.27.0"
+        },
+        "scipy": {
+          "distribution_metadata_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "097599e964fa4a097f5b62cfb1d18e49c8fa3be9d981097aab91fcf98ae8a9e7",
+            "byte_count": 269352,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 60950,
+                "path": "scipy-1.17.1.dist-info/METADATA",
+                "sha256": "3a61ac02d145c9ca53f53d3f6f58d09017727a317731d0af02909730d4403e32"
+              },
+              {
+                "bytes": 208317,
+                "path": "scipy-1.17.1.dist-info/RECORD",
+                "sha256": "e4a624bea66d62c1cc330b5751fc27ba23f0b78b5e140668f330a92980c419a9"
+              },
+              {
+                "bytes": 85,
+                "path": "scipy-1.17.1.dist-info/WHEEL",
+                "sha256": "e743de01ba6503a3e4234858398a1e69c07d512d51e8482ec9f3a7b1c707d165"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "installed_distribution": "scipy",
+          "load_bearing_native_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "014ae16a1be22928ed7d8c0952ecff06b515732199be8de1d612c1e4382ee63e",
+            "byte_count": 32970240,
+            "file_count": 29,
+            "files": [
+              {
+                "bytes": 20260864,
+                "path": "scipy.libs/libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+                "sha256": "64eda39e79589aedb16f58e5547eb599f0b5855505d56b9d40022e2eee354a0b"
+              },
+              {
+                "bytes": 105472,
+                "path": "scipy/_lib/_ccallback_c.cp312-win_amd64.pyd",
+                "sha256": "509d2e681897f4253263c063ad8a2aa0c2459b85ce3d86754b401d42ab26dc9a"
+              },
+              {
+                "bytes": 15872,
+                "path": "scipy/_lib/_fpumode.cp312-win_amd64.pyd",
+                "sha256": "f00f7a238a65d40eb6939bac18ef8c407dd345cf26c7e83bb0a185ab03756814"
+              },
+              {
+                "bytes": 52224,
+                "path": "scipy/_lib/_test_ccallback.cp312-win_amd64.pyd",
+                "sha256": "57431ca6b0015ec5534f8f8419216cd76f06191a271ddbf5e750d595eaf82ff2"
+              },
+              {
+                "bytes": 33792,
+                "path": "scipy/_lib/_test_deprecation_call.cp312-win_amd64.pyd",
+                "sha256": "20f122cd55541a794a8c49308eb545a83a86a01d6a049a1ce9b66d2ba5e76286"
+              },
+              {
+                "bytes": 24576,
+                "path": "scipy/_lib/_test_deprecation_def.cp312-win_amd64.pyd",
+                "sha256": "118091bc00e030f12f820975ec605dbec71ee7a101cd594c6aec658d6d733487"
+              },
+              {
+                "bytes": 235008,
+                "path": "scipy/_lib/_uarray/_uarray.cp312-win_amd64.pyd",
+                "sha256": "2fa9cd0fca336b35fca629e2ceedde50fdeed9d6d6ea3575a2bc4889222bc2d6"
+              },
+              {
+                "bytes": 60416,
+                "path": "scipy/_lib/messagestream.cp312-win_amd64.pyd",
+                "sha256": "b4679bc7cc58c3dd7cb29689ae96ab295fff3412b1724baa7d2b7c6cf86f6c15"
+              },
+              {
+                "bytes": 1097216,
+                "path": "scipy/fft/_pocketfft/pypocketfft.cp312-win_amd64.pyd",
+                "sha256": "dd089b853dd1382b4ce73a138076efa8dda9391efa6090ee31fe607e2bdee313"
+              },
+              {
+                "bytes": 16896,
+                "path": "scipy/ndimage/_ctest.cp312-win_amd64.pyd",
+                "sha256": "5209e5ad9816fdf85c3cfba74d9cda7a51e27a3340484f2b5eaac47a61026833"
+              },
+              {
+                "bytes": 71168,
+                "path": "scipy/ndimage/_cytest.cp312-win_amd64.pyd",
+                "sha256": "3cea1263ad1fb73157c4a8b6ad2dc91786e2014159d87bb4f522397f6d2fb674"
+              },
+              {
+                "bytes": 177664,
+                "path": "scipy/ndimage/_nd_image.cp312-win_amd64.pyd",
+                "sha256": "7a5bfe894a43b761f2042f2a35c1e799aaa964b60e33b1acc55bf8062636f191"
+              },
+              {
+                "bytes": 205312,
+                "path": "scipy/ndimage/_ni_label.cp312-win_amd64.pyd",
+                "sha256": "b7dd341165d5ca1960ff96b1d6600822cdd50614f1328537d9311e219ae38d12"
+              },
+              {
+                "bytes": 124416,
+                "path": "scipy/ndimage/_rank_filter_1d.cp312-win_amd64.pyd",
+                "sha256": "eb419d67ee29fa9615f01d288b43b8c0288da67043aa494b481c93b24d92b9d9"
+              },
+              {
+                "bytes": 173568,
+                "path": "scipy/optimize/_bglu_dense.cp312-win_amd64.pyd",
+                "sha256": "3168df9f9c5a3ba0ef428c1c5ca13a6fced1a164b4d31cc4d71aca1baf58f50f"
+              },
+              {
+                "bytes": 70656,
+                "path": "scipy/optimize/_direct.cp312-win_amd64.pyd",
+                "sha256": "6ea9f33c61aa3009eb557db94bc80c74b8b25947553a9950bf4ef1e4c4cc372e"
+              },
+              {
+                "bytes": 1033216,
+                "path": "scipy/optimize/_group_columns.cp312-win_amd64.pyd",
+                "sha256": "a3ee6c6801009f84b3aa8a980c83a0b1983d33fcf944144cda3cda691ecca43b"
+              },
+              {
+                "bytes": 6443520,
+                "path": "scipy/optimize/_highspy/_core.cp312-win_amd64.pyd",
+                "sha256": "99d5c437bca5ee91c8785721fe69b235b6b348cff9c27a7436501f4cc419baad"
+              },
+              {
+                "bytes": 1278464,
+                "path": "scipy/optimize/_highspy/_highs_options.cp312-win_amd64.pyd",
+                "sha256": "98acb3f762673688fc402e893d3313d267733135f0e1c07ef508cbcdb4b2ad8f"
+              },
+              {
+                "bytes": 171520,
+                "path": "scipy/optimize/_lbfgsb.cp312-win_amd64.pyd",
+                "sha256": "9d087101aadc47b4ac09332433edcc3be64de36a135acc7c728f079c3af9ebea"
+              },
+              {
+                "bytes": 177664,
+                "path": "scipy/optimize/_lsap.cp312-win_amd64.pyd",
+                "sha256": "f8ff7561bd1ea3027c809fc804c8b1316376e589d12aef3a1ebcb2a6d2c3d18d"
+              },
+              {
+                "bytes": 70656,
+                "path": "scipy/optimize/_lsq/givens_elimination.cp312-win_amd64.pyd",
+                "sha256": "22553b97f9e3c32f5fbbc1b8b9c5c4a4e0251f441366472844a824f01ae63021"
+              },
+              {
+                "bytes": 124928,
+                "path": "scipy/optimize/_minpack.cp312-win_amd64.pyd",
+                "sha256": "95b27adf583cb4c0d660141adba5d179b9df4a42474b2ff230d598673794fab4"
+              },
+              {
+                "bytes": 145920,
+                "path": "scipy/optimize/_moduleTNC.cp312-win_amd64.pyd",
+                "sha256": "0e57c01521068abf89c818e42693ffb20612ff9319d6942d490c4fd6a48873e2"
+              },
+              {
+                "bytes": 317952,
+                "path": "scipy/optimize/_pava_pybind.cp312-win_amd64.pyd",
+                "sha256": "03cfa01ef5ed5829057e629497cc052e83eb9729a95a244e6fdbea66eb8dadd0"
+              },
+              {
+                "bytes": 172544,
+                "path": "scipy/optimize/_slsqplib.cp312-win_amd64.pyd",
+                "sha256": "0174a3e1849cb4312b17fa6d6fe55de618a02c94ec9f7d9b12199270c6faac75"
+              },
+              {
+                "bytes": 206848,
+                "path": "scipy/optimize/_trlib/_trlib.cp312-win_amd64.pyd",
+                "sha256": "ec5edbbfa97f3dc4a1f2e155bcf350ca6b25ad238e486ba72da2fef46ea42ff1"
+              },
+              {
+                "bytes": 23040,
+                "path": "scipy/optimize/_zeros.cp312-win_amd64.pyd",
+                "sha256": "001213b4192a7427197626c5a7ac86d9e2c1fd7512be56a495cb192a66bbd4ed"
+              },
+              {
+                "bytes": 78848,
+                "path": "scipy/optimize/cython_optimize/_zeros.cp312-win_amd64.pyd",
+                "sha256": "40cc706e7eec0865e3892e0b669cd99728c4b886f31c46f43085d5d21143753a"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+            "selection": [
+              "scipy.libs/libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+              "scipy/_lib/_ccallback_c.cp312-win_amd64.pyd",
+              "scipy/_lib/_fpumode.cp312-win_amd64.pyd",
+              "scipy/_lib/_test_ccallback.cp312-win_amd64.pyd",
+              "scipy/_lib/_test_deprecation_call.cp312-win_amd64.pyd",
+              "scipy/_lib/_test_deprecation_def.cp312-win_amd64.pyd",
+              "scipy/_lib/_uarray/_uarray.cp312-win_amd64.pyd",
+              "scipy/_lib/messagestream.cp312-win_amd64.pyd",
+              "scipy/fft/_pocketfft/pypocketfft.cp312-win_amd64.pyd",
+              "scipy/ndimage/_ctest.cp312-win_amd64.pyd",
+              "scipy/ndimage/_cytest.cp312-win_amd64.pyd",
+              "scipy/ndimage/_nd_image.cp312-win_amd64.pyd",
+              "scipy/ndimage/_ni_label.cp312-win_amd64.pyd",
+              "scipy/ndimage/_rank_filter_1d.cp312-win_amd64.pyd",
+              "scipy/optimize/_bglu_dense.cp312-win_amd64.pyd",
+              "scipy/optimize/_direct.cp312-win_amd64.pyd",
+              "scipy/optimize/_group_columns.cp312-win_amd64.pyd",
+              "scipy/optimize/_highspy/_core.cp312-win_amd64.pyd",
+              "scipy/optimize/_highspy/_highs_options.cp312-win_amd64.pyd",
+              "scipy/optimize/_lbfgsb.cp312-win_amd64.pyd",
+              "scipy/optimize/_lsap.cp312-win_amd64.pyd",
+              "scipy/optimize/_lsq/givens_elimination.cp312-win_amd64.pyd",
+              "scipy/optimize/_minpack.cp312-win_amd64.pyd",
+              "scipy/optimize/_moduleTNC.cp312-win_amd64.pyd",
+              "scipy/optimize/_pava_pybind.cp312-win_amd64.pyd",
+              "scipy/optimize/_slsqplib.cp312-win_amd64.pyd",
+              "scipy/optimize/_trlib/_trlib.cp312-win_amd64.pyd",
+              "scipy/optimize/_zeros.cp312-win_amd64.pyd",
+              "scipy/optimize/cython_optimize/_zeros.cp312-win_amd64.pyd"
+            ]
+          },
+          "requested_distribution": "scipy",
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "semantic_file_closure": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "62bef94f536e5391f0665ba7feae015ef8dbdff11e23bef0de3c3997720684cd",
+            "byte_count": 99883388,
+            "file_count": 1102,
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "version": "1.17.1"
+        }
+      },
+      "loaded_modules": {
+        "cv2": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cv2\\__init__.py",
+          "sha256": "957a91bfd98ffb07a10cd789b7c5c46806568476b61e34c7ad56a00092b981a5"
+        },
+        "numpy": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\__init__.py",
+          "sha256": "b16a4f347c6583c878e1973a208564e01686b79cc70911ad0157e05d8eecda37"
+        },
+        "numpy.fft": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\fft\\__init__.py",
+          "sha256": "1bb36beaba498203757b73e01a0804c45e848bf5adf27e7b7902177f9bedccb3"
+        },
+        "rawpy": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\__init__.py",
+          "sha256": "24a06e984ef21c4c01569105f862c347f8a92446ec361c40835aa15dfa921eff"
+        },
+        "rawpy._rawpy": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\_rawpy.cp312-win_amd64.pyd",
+          "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+        },
+        "scipy": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\__init__.py",
+          "sha256": "4c3ab17c56609249056db732aa2e196b3f21c923f8d4967a46cb63aa9f739b28"
+        },
+        "scipy.fft": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\fft\\__init__.py",
+          "sha256": "4a7d6aa9eb97e8c90c894ede47214c104dde92479c4794a1b7e58af9d59a3ef9"
+        },
+        "scipy.ndimage": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\ndimage\\__init__.py",
+          "sha256": "85d9426e3f36ea74ed90c05017d7b3b125d092a7842c0fbacc895c9d3b011159"
+        },
+        "scipy.optimize": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\optimize\\__init__.py",
+          "sha256": "386c0ca12008b1da344df26284cb7806d5b92f12c98bde043e464b65faa99f6c"
+        }
+      },
+      "packages": {
+        "numpy": "2.4.4",
+        "opencv": "4.13.0.92",
+        "rawpy": "0.27.0",
+        "scipy": "1.17.1"
+      },
+      "python": {
+        "implementation": "CPython",
+        "runtime_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "2ad53154ce4cec97b4904de9b0f456119d506d9678fe1c56bc29895c7affffe8",
+          "byte_count": 104952,
+          "file_count": 1,
+          "files": [
+            {
+              "bytes": 104952,
+              "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+              "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+            }
+          ]
+        },
+        "version": "3.12.10"
+      },
+      "rawpy_libraw_version": "0.22.1"
+    },
+    "environment": {
+      "BLIS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONHASHSEED": "0",
+      "RAYON_NUM_THREADS": null,
+      "STREHL_ALIGN": null,
+      "STREHL_COVER": null,
+      "STREHL_FIX_HALO": null,
+      "STREHL_RESAMPLER": null,
+      "STREHL_WARPMAP": null,
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "opencv_threads": 1,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\instrument.py",
+    "source_sha256": "45553fea7dda32b31c7b71db9b16b80d2ffe186481e725ac01ab93936c02ceb2"
+  },
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "plants": {
+    "above_band_distractor_control": {
+      "bandlimited_peak_delta": 0.0,
+      "clean_peak_u": 0.7,
+      "distracted_peak_u": 0.7,
+      "distractor_native_frequency": 0.234375,
+      "focus_cap_native_frequency": 0.2,
+      "unfiltered_peak_index": 6
+    },
+    "active_area_padding_control": {
+      "active_mean": 543.5,
+      "green_shape": [
+        4,
+        4
+      ],
+      "padded_mean_wrong_path": 347.84
+    },
+    "all_axis_repeat_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": false,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": false,
+        "same_physical_sites": true,
+        "same_site_role_mapping": false,
+        "site_manifest_bound": false,
+        "source_files_bound_to_inventory": false,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": false,
+        "unique_site_identities": false
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "sw10_Y2: capture_unit_id is not inventoried under very-tilted-all-axis-sw10-cpl",
+        "all-axis/different-geometry capture was used as a repeat",
+        "physical site manifest is absent, malformed, hash-mismatched, or not bound to the six R1/R2/Y1/Y2 capture roles",
+        "physical site manifest does not contain unique site identities",
+        "physical site manifest does not contain unique normalized coordinates",
+        "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch",
+        "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "alternating_sign_flat_rejection_control": {
+      "legacy_positive_cross_power_median": 0.0,
+      "legacy_positive_cross_power_pairs": [
+        0.0,
+        10000.0,
+        0.0,
+        0.0,
+        10000.0,
+        0.0
+      ],
+      "mean_split_power": 10000.0,
+      "null_quantile": 0.99,
+      "null_statistic": "independent-site-carrier-phase-scramble",
+      "null_threshold": 1555.54478693,
+      "observed_repeatable_power": 10000.0,
+      "pair_order": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "pair_repeatable_power": [
+        10000.0,
+        10000.0,
+        10000.0,
+        10000.0,
+        10000.0,
+        10000.0
+      ],
+      "phase_scramble_count": 255,
+      "phase_scramble_p_upper": 0.00390625,
+      "phase_scramble_q99": 1555.54478693,
+      "repeatable_to_total_power_ratio": 1.0,
+      "statistic": "maximum-pair-mean-absolute-cross-power",
+      "statistic_definition": "maximum over six temporal-split pairs of the mean across carriers of absolute site-averaged complex cross-power",
+      "status": "STRUCTURED_FLAT",
+      "structured_alpha": 0.01
+    },
+    "artifact_schema_mutation_control": {
+      "error": "m135-slide-role-gate-v1: missing required fields ['site_evidence']",
+      "error_type": "InstrumentError"
+    },
+    "bad_offset_control": {
+      "equivalence_bars": {
+        "maximum_abs_intercept": 0.02,
+        "maximum_abs_slope_error": 0.04,
+        "maximum_q95_abs_residual": 0.03,
+        "minimum_joint_eligible_sites": 48,
+        "predicates": {
+          "fit_converged": true,
+          "maximum_abs_intercept": false,
+          "maximum_abs_slope_error": true,
+          "maximum_q95_abs_residual": true,
+          "minimum_joint_eligible_sites": true,
+          "positive_slope": true
+        }
+      },
+      "joint_eligible_count": 64,
+      "joint_eligible_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "node_density": {
+        "common_interval_u4": [
+          0.16,
+          0.84
+        ],
+        "definition": "frame-node counts per common u4-equivalent interval; interval width cancels from the reported ratio",
+        "interval_width_u4": 0.68,
+        "ratio_sw4_over_sw10": 1.97058824,
+        "status": "OK",
+        "sw10_nodes": 34,
+        "sw4_nodes": 67
+      },
+      "robust_fit": {
+        "converged": true,
+        "intercept": 0.045,
+        "iterations": 1,
+        "q95_abs_residual": 0.0,
+        "residuals": [
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0
+        ],
+        "slope": 1.0,
+        "weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "status": "IMAGE_RANGE_NOT_EQUIVALENT",
+      "u10": [
+        0.205,
+        0.21579365,
+        0.2265873,
+        0.23738095,
+        0.2481746,
+        0.25896825,
+        0.2697619,
+        0.28055556,
+        0.29134921,
+        0.30214286,
+        0.31293651,
+        0.32373016,
+        0.33452381,
+        0.34531746,
+        0.35611111,
+        0.36690476,
+        0.37769841,
+        0.38849206,
+        0.39928571,
+        0.41007937,
+        0.42087302,
+        0.43166667,
+        0.44246032,
+        0.45325397,
+        0.46404762,
+        0.47484127,
+        0.48563492,
+        0.49642857,
+        0.50722222,
+        0.51801587,
+        0.52880952,
+        0.53960317,
+        0.55039683,
+        0.56119048,
+        0.57198413,
+        0.58277778,
+        0.59357143,
+        0.60436508,
+        0.61515873,
+        0.62595238,
+        0.63674603,
+        0.64753968,
+        0.65833333,
+        0.66912698,
+        0.67992063,
+        0.69071429,
+        0.70150794,
+        0.71230159,
+        0.72309524,
+        0.73388889,
+        0.74468254,
+        0.75547619,
+        0.76626984,
+        0.77706349,
+        0.78785714,
+        0.79865079,
+        0.80944444,
+        0.8202381,
+        0.83103175,
+        0.8418254,
+        0.85261905,
+        0.8634127,
+        0.87420635,
+        0.885
+      ],
+      "u4": [
+        0.16,
+        0.17079365,
+        0.1815873,
+        0.19238095,
+        0.2031746,
+        0.21396825,
+        0.2247619,
+        0.23555556,
+        0.24634921,
+        0.25714286,
+        0.26793651,
+        0.27873016,
+        0.28952381,
+        0.30031746,
+        0.31111111,
+        0.32190476,
+        0.33269841,
+        0.34349206,
+        0.35428571,
+        0.36507937,
+        0.37587302,
+        0.38666667,
+        0.39746032,
+        0.40825397,
+        0.41904762,
+        0.42984127,
+        0.44063492,
+        0.45142857,
+        0.46222222,
+        0.47301587,
+        0.48380952,
+        0.49460317,
+        0.50539683,
+        0.51619048,
+        0.52698413,
+        0.53777778,
+        0.54857143,
+        0.55936508,
+        0.57015873,
+        0.58095238,
+        0.59174603,
+        0.60253968,
+        0.61333333,
+        0.62412698,
+        0.63492063,
+        0.64571429,
+        0.65650794,
+        0.66730159,
+        0.67809524,
+        0.68888889,
+        0.69968254,
+        0.71047619,
+        0.72126984,
+        0.73206349,
+        0.74285714,
+        0.75365079,
+        0.76444444,
+        0.7752381,
+        0.78603175,
+        0.7968254,
+        0.80761905,
+        0.8184127,
+        0.82920635,
+        0.84
+      ]
+    },
+    "bad_residual_control": {
+      "equivalence_bars": {
+        "maximum_abs_intercept": 0.02,
+        "maximum_abs_slope_error": 0.04,
+        "maximum_q95_abs_residual": 0.03,
+        "minimum_joint_eligible_sites": 48,
+        "predicates": {
+          "fit_converged": true,
+          "maximum_abs_intercept": true,
+          "maximum_abs_slope_error": true,
+          "maximum_q95_abs_residual": false,
+          "minimum_joint_eligible_sites": true,
+          "positive_slope": true
+        }
+      },
+      "joint_eligible_count": 64,
+      "joint_eligible_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "node_density": {
+        "common_interval_u4": [
+          0.16,
+          0.84
+        ],
+        "definition": "frame-node counts per common u4-equivalent interval; interval width cancels from the reported ratio",
+        "interval_width_u4": 0.68,
+        "ratio_sw4_over_sw10": 1.94285714,
+        "status": "OK",
+        "sw10_nodes": 35,
+        "sw4_nodes": 68
+      },
+      "robust_fit": {
+        "converged": true,
+        "intercept": -0.00373303,
+        "iterations": 1,
+        "q95_abs_residual": 0.0572967,
+        "residuals": [
+          -0.05246154,
+          0.05745788,
+          -0.05262271,
+          0.0572967,
+          -0.05278388,
+          0.05713553,
+          -0.05294505,
+          0.05697436,
+          -0.05310623,
+          0.05681319,
+          -0.0532674,
+          0.05665201,
+          -0.05342857,
+          0.05649084,
+          -0.05358974,
+          0.05632967,
+          -0.05375092,
+          0.0561685,
+          -0.05391209,
+          0.05600733,
+          -0.05407326,
+          0.05584615,
+          -0.05423443,
+          0.05568498,
+          -0.0543956,
+          0.05552381,
+          -0.05455678,
+          0.05536264,
+          -0.05471795,
+          0.05520147,
+          -0.05487912,
+          0.05504029,
+          -0.05504029,
+          0.05487912,
+          -0.05520147,
+          0.05471795,
+          -0.05536264,
+          0.05455678,
+          -0.05552381,
+          0.0543956,
+          -0.05568498,
+          0.05423443,
+          -0.05584615,
+          0.05407326,
+          -0.05600733,
+          0.05391209,
+          -0.0561685,
+          0.05375092,
+          -0.05632967,
+          0.05358974,
+          -0.05649084,
+          0.05342857,
+          -0.05665201,
+          0.0532674,
+          -0.05681319,
+          0.05310623,
+          -0.05697436,
+          0.05294505,
+          -0.05713553,
+          0.05278388,
+          -0.0572967,
+          0.05262271,
+          -0.05745788,
+          0.05246154
+        ],
+        "slope": 1.00746606,
+        "weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "status": "IMAGE_RANGE_NOT_EQUIVALENT",
+      "u10": [
+        0.105,
+        0.22579365,
+        0.1265873,
+        0.24738095,
+        0.1481746,
+        0.26896825,
+        0.1697619,
+        0.29055556,
+        0.19134921,
+        0.31214286,
+        0.21293651,
+        0.33373016,
+        0.23452381,
+        0.35531746,
+        0.25611111,
+        0.37690476,
+        0.27769841,
+        0.39849206,
+        0.29928571,
+        0.42007937,
+        0.32087302,
+        0.44166667,
+        0.34246032,
+        0.46325397,
+        0.36404762,
+        0.48484127,
+        0.38563492,
+        0.50642857,
+        0.40722222,
+        0.52801587,
+        0.42880952,
+        0.54960317,
+        0.45039683,
+        0.57119048,
+        0.47198413,
+        0.59277778,
+        0.49357143,
+        0.61436508,
+        0.51515873,
+        0.63595238,
+        0.53674603,
+        0.65753968,
+        0.55833333,
+        0.67912698,
+        0.57992063,
+        0.70071429,
+        0.60150794,
+        0.72230159,
+        0.62309524,
+        0.74388889,
+        0.64468254,
+        0.76547619,
+        0.66626984,
+        0.78706349,
+        0.68785714,
+        0.80865079,
+        0.70944444,
+        0.8302381,
+        0.73103175,
+        0.8518254,
+        0.75261905,
+        0.8734127,
+        0.77420635,
+        0.895
+      ],
+      "u4": [
+        0.16,
+        0.17079365,
+        0.1815873,
+        0.19238095,
+        0.2031746,
+        0.21396825,
+        0.2247619,
+        0.23555556,
+        0.24634921,
+        0.25714286,
+        0.26793651,
+        0.27873016,
+        0.28952381,
+        0.30031746,
+        0.31111111,
+        0.32190476,
+        0.33269841,
+        0.34349206,
+        0.35428571,
+        0.36507937,
+        0.37587302,
+        0.38666667,
+        0.39746032,
+        0.40825397,
+        0.41904762,
+        0.42984127,
+        0.44063492,
+        0.45142857,
+        0.46222222,
+        0.47301587,
+        0.48380952,
+        0.49460317,
+        0.50539683,
+        0.51619048,
+        0.52698413,
+        0.53777778,
+        0.54857143,
+        0.55936508,
+        0.57015873,
+        0.58095238,
+        0.59174603,
+        0.60253968,
+        0.61333333,
+        0.62412698,
+        0.63492063,
+        0.64571429,
+        0.65650794,
+        0.66730159,
+        0.67809524,
+        0.68888889,
+        0.69968254,
+        0.71047619,
+        0.72126984,
+        0.73206349,
+        0.74285714,
+        0.75365079,
+        0.76444444,
+        0.7752381,
+        0.78603175,
+        0.7968254,
+        0.80761905,
+        0.8184127,
+        0.82920635,
+        0.84
+      ]
+    },
+    "bad_slope_control": {
+      "equivalence_bars": {
+        "maximum_abs_intercept": 0.02,
+        "maximum_abs_slope_error": 0.04,
+        "maximum_q95_abs_residual": 0.03,
+        "minimum_joint_eligible_sites": 48,
+        "predicates": {
+          "fit_converged": true,
+          "maximum_abs_intercept": false,
+          "maximum_abs_slope_error": false,
+          "maximum_q95_abs_residual": true,
+          "minimum_joint_eligible_sites": true,
+          "positive_slope": true
+        }
+      },
+      "joint_eligible_count": 64,
+      "joint_eligible_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "node_density": {
+        "common_interval_u4": [
+          0.16,
+          0.84
+        ],
+        "definition": "frame-node counts per common u4-equivalent interval; interval width cancels from the reported ratio",
+        "interval_width_u4": 0.68,
+        "ratio_sw4_over_sw10": 1.83783784,
+        "status": "OK",
+        "sw10_nodes": 37,
+        "sw4_nodes": 68
+      },
+      "robust_fit": {
+        "converged": true,
+        "intercept": -0.045,
+        "iterations": 1,
+        "q95_abs_residual": 0.0,
+        "residuals": [
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0
+        ],
+        "slope": 1.09,
+        "weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "status": "IMAGE_RANGE_NOT_EQUIVALENT",
+      "u10": [
+        0.1294,
+        0.14116508,
+        0.15293016,
+        0.16469524,
+        0.17646032,
+        0.1882254,
+        0.19999048,
+        0.21175556,
+        0.22352063,
+        0.23528571,
+        0.24705079,
+        0.25881587,
+        0.27058095,
+        0.28234603,
+        0.29411111,
+        0.30587619,
+        0.31764127,
+        0.32940635,
+        0.34117143,
+        0.35293651,
+        0.36470159,
+        0.37646667,
+        0.38823175,
+        0.39999683,
+        0.4117619,
+        0.42352698,
+        0.43529206,
+        0.44705714,
+        0.45882222,
+        0.4705873,
+        0.48235238,
+        0.49411746,
+        0.50588254,
+        0.51764762,
+        0.5294127,
+        0.54117778,
+        0.55294286,
+        0.56470794,
+        0.57647302,
+        0.5882381,
+        0.60000317,
+        0.61176825,
+        0.62353333,
+        0.63529841,
+        0.64706349,
+        0.65882857,
+        0.67059365,
+        0.68235873,
+        0.69412381,
+        0.70588889,
+        0.71765397,
+        0.72941905,
+        0.74118413,
+        0.75294921,
+        0.76471429,
+        0.77647937,
+        0.78824444,
+        0.80000952,
+        0.8117746,
+        0.82353968,
+        0.83530476,
+        0.84706984,
+        0.85883492,
+        0.8706
+      ],
+      "u4": [
+        0.16,
+        0.17079365,
+        0.1815873,
+        0.19238095,
+        0.2031746,
+        0.21396825,
+        0.2247619,
+        0.23555556,
+        0.24634921,
+        0.25714286,
+        0.26793651,
+        0.27873016,
+        0.28952381,
+        0.30031746,
+        0.31111111,
+        0.32190476,
+        0.33269841,
+        0.34349206,
+        0.35428571,
+        0.36507937,
+        0.37587302,
+        0.38666667,
+        0.39746032,
+        0.40825397,
+        0.41904762,
+        0.42984127,
+        0.44063492,
+        0.45142857,
+        0.46222222,
+        0.47301587,
+        0.48380952,
+        0.49460317,
+        0.50539683,
+        0.51619048,
+        0.52698413,
+        0.53777778,
+        0.54857143,
+        0.55936508,
+        0.57015873,
+        0.58095238,
+        0.59174603,
+        0.60253968,
+        0.61333333,
+        0.62412698,
+        0.63492063,
+        0.64571429,
+        0.65650794,
+        0.66730159,
+        0.67809524,
+        0.68888889,
+        0.69968254,
+        0.71047619,
+        0.72126984,
+        0.73206349,
+        0.74285714,
+        0.75365079,
+        0.76444444,
+        0.7752381,
+        0.78603175,
+        0.7968254,
+        0.80761905,
+        0.8184127,
+        0.82920635,
+        0.84
+      ]
+    },
+    "bare_site_count_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": true,
+        "minimum_sites": false,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": false,
+        "site_manifest_bound": false,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": false,
+        "unique_site_identities": false
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": null,
+        "ledger_site_count": 64,
+        "manifest_path": null,
+        "manifest_sha256": null,
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 0
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "physical site manifest is absent, malformed, hash-mismatched, or not bound to the six R1/R2/Y1/Y2 capture roles",
+        "physical site manifest does not contain unique site identities",
+        "physical site manifest does not contain unique normalized coordinates",
+        "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch",
+        "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly"
+      ]
+    },
+    "cargo_dependency_freeze_mutation_control": {
+      "after_sha256": "7c13728bd91dc1674a6dbd66b8ba54e7fcb9599272e9763e70dc4c482a844156",
+      "baseline": {
+        "error": null,
+        "error_type": null,
+        "source_file_count": 28,
+        "status": "PASS"
+      },
+      "baseline_exit_code": 0,
+      "before_sha256": "6691979fd89f99c3d6e2ff0f5a6434b6eac4545bfd532bc6622e353ea1f2e8f0",
+      "copy_kind": "temporary repository-layout copy",
+      "exact_new": "let start = (self.active.y + y) * self.stride + self.active.x + 1;",
+      "exact_old": "let start = (self.active.y + y) * self.stride + self.active.x;",
+      "mutated_relative_path": "crates/strehl-raw/src/lib.rs",
+      "mutation": {
+        "error": "freeze drift in top-level fields: external_decoder_path",
+        "error_type": "InstrumentError",
+        "source_file_count": null,
+        "status": "FAIL"
+      },
+      "mutation_exit_code": 1,
+      "symbol": "Frame::active_row"
+    },
+    "checker_oracle_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": false,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": true,
+        "minimum_sites": true,
+        "nonperiodic_target": false,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": false,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "public/periodic target cannot be a truth source",
+        "checker template is available to the truth path",
+        "source/template oracle was used"
+      ]
+    },
+    "clipping_refusal_control": {
+      "identity_fraction": 0.0,
+      "maximum": 0.001,
+      "planted_fraction": 0.0011
+    },
+    "crosscheck_binary_mismatch_control": {
+      "expected_input_bytes_hex": "6d3133352d66726f7a656e2d63726f7373636865636b2d65786563757461626c65",
+      "expected_sha256": "3955e792442727ab0873d5e66c85399b862bd4363af9ed3c6c5cbb7a6673352e",
+      "message": "Stage B refused crosscheck executable: frozen 33 bytes/3955e792442727ab0873d5e66c85399b862bd4363af9ed3c6c5cbb7a6673352e, observed 32 bytes/793d1d588bb70e61a3cb0ed2d004ee1558fcac5ef3b52f278ee19ffbb36c4567",
+      "refused": true,
+      "stage": "B",
+      "wrong_input_bytes_hex": "6d3133352d77726f6e672d63726f7373636865636b2d65786563757461626c65",
+      "wrong_sha256": "793d1d588bb70e61a3cb0ed2d004ee1558fcac5ef3b52f278ee19ffbb36c4567"
+    },
+    "decode_recompute_binding_control": {
+      "caught": true,
+      "message": "Stage B decode/checksum does not reproduce from the bound RAW files"
+    },
+    "decoder_checksum_mutation_control": {
+      "identity": {
+        "header_y_x_h_w": [
+          0,
+          0,
+          6,
+          8
+        ],
+        "payload_matches_rawpy": true,
+        "payload_sha256": "03ce6321ae65c3c6b1204faade3a17c83ee854d08f9965f970f792727491c5cd",
+        "rawpy_payload_sha256": "03ce6321ae65c3c6b1204faade3a17c83ee854d08f9965f970f792727491c5cd"
+      },
+      "mutation_caught": true,
+      "mutation_message": "rawpy/rawler pixel mismatch at (4,3): 28 != 29"
+    },
+    "duplicate_site_coordinate_control": {
+      "mutation": {
+        "new_coordinate": [
+          0.0625,
+          0.0625
+        ],
+        "old_coordinate": [
+          0.1875,
+          0.0625
+        ],
+        "site_index": 1
+      },
+      "result": {
+        "j_tr": null,
+        "j_tr_computed": false,
+        "missing_roles": [],
+        "predicates": {
+          "all_required_roles_present": true,
+          "checker_template_forbidden": true,
+          "disjoint_calibration_lineages": true,
+          "disjoint_source_files": true,
+          "independent_capture_units": true,
+          "independent_parent_stacks": true,
+          "matched_flat_evidence": true,
+          "matched_flat_manifest": true,
+          "minimum_sites": true,
+          "nonperiodic_target": true,
+          "odd_even_not_independent": true,
+          "reference_sampling_ratio": true,
+          "same_geometry_for_repeats": true,
+          "same_physical_sites": true,
+          "same_site_role_mapping": false,
+          "site_manifest_bound": true,
+          "source_files_bound_to_inventory": true,
+          "source_oracle_forbidden": true,
+          "sw4_never_truth": true,
+          "unique_site_coordinates": false,
+          "unique_site_identities": true
+        },
+        "sampling_ratio": 2.1,
+        "score_callback_called": false,
+        "site_evidence": {
+          "coordinate_system": "normalized-slide-uv",
+          "ledger_site_count": 64,
+          "manifest_path": "mutated-physical-sites.json",
+          "manifest_sha256": "ac500acc68ab85736cd27e0ebf400d3db4f620caed339f94b245158a4ffc6794",
+          "required_roles": [
+            "R1",
+            "R2",
+            "sw4_Y1",
+            "sw4_Y2",
+            "sw10_Y1",
+            "sw10_Y2"
+          ],
+          "site_count_from_manifest": 64
+        },
+        "status": "ROLE_LEDGER_INVALID",
+        "violations": [
+          "physical site manifest does not contain unique normalized coordinates",
+          "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch"
+        ]
+      }
+    },
+    "duplicate_site_identity_control": {
+      "mutation": {
+        "new_site_id": "site-00-00",
+        "old_site_id": "site-00-01",
+        "site_index": 1
+      },
+      "result": {
+        "j_tr": null,
+        "j_tr_computed": false,
+        "missing_roles": [],
+        "predicates": {
+          "all_required_roles_present": true,
+          "checker_template_forbidden": true,
+          "disjoint_calibration_lineages": true,
+          "disjoint_source_files": true,
+          "independent_capture_units": true,
+          "independent_parent_stacks": true,
+          "matched_flat_evidence": true,
+          "matched_flat_manifest": true,
+          "minimum_sites": true,
+          "nonperiodic_target": true,
+          "odd_even_not_independent": true,
+          "reference_sampling_ratio": true,
+          "same_geometry_for_repeats": true,
+          "same_physical_sites": true,
+          "same_site_role_mapping": false,
+          "site_manifest_bound": true,
+          "source_files_bound_to_inventory": true,
+          "source_oracle_forbidden": true,
+          "sw4_never_truth": true,
+          "unique_site_coordinates": true,
+          "unique_site_identities": false
+        },
+        "sampling_ratio": 2.1,
+        "score_callback_called": false,
+        "site_evidence": {
+          "coordinate_system": "normalized-slide-uv",
+          "ledger_site_count": 64,
+          "manifest_path": "mutated-physical-sites.json",
+          "manifest_sha256": "6265e8c08084803b19426bf1f2819b949c9dc999a4353c8de430688690da9f36",
+          "required_roles": [
+            "R1",
+            "R2",
+            "sw4_Y1",
+            "sw4_Y2",
+            "sw10_Y1",
+            "sw10_Y2"
+          ],
+          "site_count_from_manifest": 64
+        },
+        "status": "ROLE_LEDGER_INVALID",
+        "violations": [
+          "physical site manifest does not contain unique site identities",
+          "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch"
+        ]
+      }
+    },
+    "empty_focus_histogram_control": {
+      "histogram": [],
+      "maximum": null,
+      "minimum": null,
+      "missing_count": 0,
+      "status": "MISSING_FOCUS_POSITION_2"
+    },
+    "endpoint_peak_control": {
+      "endpoint": {
+        "argmax_index": 0,
+        "eligible": false,
+        "log_prominence": null,
+        "quadratic_coefficients": null,
+        "status": "ENDPOINT_PEAK",
+        "u": null
+      },
+      "interior": {
+        "argmax_index": 25,
+        "eligible": true,
+        "log_prominence": 18.13597455,
+        "quadratic_coefficients": [
+          -78.12499916,
+          78.12499916,
+          -19.53124978
+        ],
+        "status": "INTERIOR_PEAK",
+        "u": 0.5
+      }
+    },
+    "flat_ledger_binding_control": {
+      "caught": true,
+      "message": "flat ledger differs from the Stage D ledger"
+    },
+    "flat_recompute_binding_control": {
+      "caught": true,
+      "message": "Stage E flat diagnostic does not reproduce from the bound inputs"
+    },
+    "flat_role_capture_unit_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": false,
+        "independent_capture_units": false,
+        "independent_parent_stacks": false,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": true,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "required roles reuse a capture_unit_id",
+        "required roles reuse a parent_stack_id",
+        "required roles reuse source files",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "flat_role_shared_calibration_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": false,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": true,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "required output/reference roles share calibration lineages",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "focus_histogram_missing_value_control": {
+      "histogram": [],
+      "maximum": null,
+      "minimum": null,
+      "missing_count": 1,
+      "status": "MISSING_FOCUS_POSITION_2"
+    },
+    "forged_coarse_encoder_control": {
+      "caught": true,
+      "message": "coarse encoder status/histograms do not reproduce from frame metadata"
+    },
+    "forged_identifiable_predicate_control": {
+      "caught": true,
+      "message": "role artifact has malformed evidence"
+    },
+    "forged_physical_binding_control": {
+      "caught": true,
+      "message": "burned-slide flat schema cannot emit a sufficient physical certificate"
+    },
+    "forged_range_predicate_control": {
+      "caught": true,
+      "message": "range fit/bars do not reproduce from the recorded site peaks"
+    },
+    "identity_range_control": {
+      "equivalence_bars": {
+        "maximum_abs_intercept": 0.02,
+        "maximum_abs_slope_error": 0.04,
+        "maximum_q95_abs_residual": 0.03,
+        "minimum_joint_eligible_sites": 48,
+        "predicates": {
+          "fit_converged": true,
+          "maximum_abs_intercept": true,
+          "maximum_abs_slope_error": true,
+          "maximum_q95_abs_residual": true,
+          "minimum_joint_eligible_sites": true,
+          "positive_slope": true
+        }
+      },
+      "joint_eligible_count": 64,
+      "joint_eligible_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "node_density": {
+        "common_interval_u4": [
+          0.16,
+          0.84
+        ],
+        "definition": "frame-node counts per common u4-equivalent interval; interval width cancels from the reported ratio",
+        "interval_width_u4": 0.68,
+        "ratio_sw4_over_sw10": 2.06060606,
+        "status": "OK",
+        "sw10_nodes": 33,
+        "sw4_nodes": 68
+      },
+      "robust_fit": {
+        "converged": true,
+        "intercept": 0.0,
+        "iterations": 1,
+        "q95_abs_residual": 0.0,
+        "residuals": [
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "slope": 1.0,
+        "weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "status": "IMAGE_RANGE_EQUIVALENT",
+      "u10": [
+        0.16,
+        0.17079365,
+        0.1815873,
+        0.19238095,
+        0.2031746,
+        0.21396825,
+        0.2247619,
+        0.23555556,
+        0.24634921,
+        0.25714286,
+        0.26793651,
+        0.27873016,
+        0.28952381,
+        0.30031746,
+        0.31111111,
+        0.32190476,
+        0.33269841,
+        0.34349206,
+        0.35428571,
+        0.36507937,
+        0.37587302,
+        0.38666667,
+        0.39746032,
+        0.40825397,
+        0.41904762,
+        0.42984127,
+        0.44063492,
+        0.45142857,
+        0.46222222,
+        0.47301587,
+        0.48380952,
+        0.49460317,
+        0.50539683,
+        0.51619048,
+        0.52698413,
+        0.53777778,
+        0.54857143,
+        0.55936508,
+        0.57015873,
+        0.58095238,
+        0.59174603,
+        0.60253968,
+        0.61333333,
+        0.62412698,
+        0.63492063,
+        0.64571429,
+        0.65650794,
+        0.66730159,
+        0.67809524,
+        0.68888889,
+        0.69968254,
+        0.71047619,
+        0.72126984,
+        0.73206349,
+        0.74285714,
+        0.75365079,
+        0.76444444,
+        0.7752381,
+        0.78603175,
+        0.7968254,
+        0.80761905,
+        0.8184127,
+        0.82920635,
+        0.84
+      ],
+      "u4": [
+        0.16,
+        0.17079365,
+        0.1815873,
+        0.19238095,
+        0.2031746,
+        0.21396825,
+        0.2247619,
+        0.23555556,
+        0.24634921,
+        0.25714286,
+        0.26793651,
+        0.27873016,
+        0.28952381,
+        0.30031746,
+        0.31111111,
+        0.32190476,
+        0.33269841,
+        0.34349206,
+        0.35428571,
+        0.36507937,
+        0.37587302,
+        0.38666667,
+        0.39746032,
+        0.40825397,
+        0.41904762,
+        0.42984127,
+        0.44063492,
+        0.45142857,
+        0.46222222,
+        0.47301587,
+        0.48380952,
+        0.49460317,
+        0.50539683,
+        0.51619048,
+        0.52698413,
+        0.53777778,
+        0.54857143,
+        0.55936508,
+        0.57015873,
+        0.58095238,
+        0.59174603,
+        0.60253968,
+        0.61333333,
+        0.62412698,
+        0.63492063,
+        0.64571429,
+        0.65650794,
+        0.66730159,
+        0.67809524,
+        0.68888889,
+        0.69968254,
+        0.71047619,
+        0.72126984,
+        0.73206349,
+        0.74285714,
+        0.75365079,
+        0.76444444,
+        0.7752381,
+        0.78603175,
+        0.7968254,
+        0.80761905,
+        0.8184127,
+        0.82920635,
+        0.84
+      ]
+    },
+    "invented_source_file_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": false,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": false,
+        "site_manifest_bound": false,
+        "source_files_bound_to_inventory": false,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": false,
+        "unique_site_identities": false
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "R1: source_file_ids do not exactly consume flat-sw4-cpl\\unit-00",
+        "physical site manifest is absent, malformed, hash-mismatched, or not bound to the six R1/R2/Y1/Y2 capture roles",
+        "physical site manifest does not contain unique site identities",
+        "physical site manifest does not contain unique normalized coordinates",
+        "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch",
+        "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "inventory_absolute_path_binding_control": {
+      "caught": true,
+      "message": "inventory tilted-sw4-cpl absolute_path is not source_root/relative_path"
+    },
+    "inventory_hidden_file_and_sort_mutation": {
+      "filename_only_mutation": [
+        ".hidden.ARW",
+        "a.ARW",
+        "z.ARW"
+      ],
+      "timestamp_then_filename": [
+        ".hidden.ARW",
+        "z.ARW",
+        "a.ARW"
+      ]
+    },
+    "inventory_recompute_binding_control": {
+      "caught": true,
+      "message": "Stage A metadata/order does not reproduce from the bound RAW files"
+    },
+    "inventory_unexpected_arw_control": {
+      "unexpected": [
+        "outside.ARW"
+      ]
+    },
+    "lattice_mutation_control": {
+      "lattice_sha256": "327f93409b1a56ef2605264be00f6f6960b10f67a1b751a2205a6973b728c7be",
+      "mutation_caught": true
+    },
+    "lawful_core_no_detail_control": {
+      "core": {
+        "existing_instrument_normalized_sha256": "b2243292d92b8edc386b11b68e01740d0365bc4d633d728771d421be0732bbf1",
+        "existing_instrument_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-detail-instrument\\instrument.py",
+        "existing_instrument_sha256": "264d035331ffbb7e982449b675d88724c566b2f88cd251b08d215dcca2c6823c",
+        "invoked": true,
+        "result": {
+          "flat_control": {
+            "bars": {
+              "maximum_information_ratio": 0.1,
+              "maximum_output_repeatable_power_ratio": 0.1,
+              "maximum_reference_repeatable_power_ratio": 0.25
+            },
+            "detail_output_repeatable_power": 0.00020475,
+            "detail_reference_repeatable_power": 0.00071644,
+            "flat_to_detail_information_ratio": null,
+            "flat_to_detail_output_repeatable_power_ratio": 1.0,
+            "flat_to_detail_reference_repeatable_power_ratio": 1.0,
+            "information_bits_per_site": 0.0,
+            "output_repeatable_power": 0.00020475,
+            "passes": false,
+            "reference": {
+              "condition": 26.19373463,
+              "dimension": 32,
+              "median_repeat_coherence": 0.11265343,
+              "minimum_repeat_coherence": 0.01728407,
+              "rank": 32
+            },
+            "reference_repeatable_power": 0.00071644,
+            "status": "NO_DETAIL"
+          },
+          "reference": {
+            "condition": 26.19373463,
+            "dimension": 32,
+            "median_repeat_coherence": 0.11265343,
+            "minimum_repeat_coherence": 0.01728407,
+            "rank": 32
+          },
+          "status": "NO_DETAIL"
+        },
+        "status": "NO_DETAIL"
+      },
+      "duplicate_capture_mutation_lawful": false,
+      "duplicate_capture_mutation_reason": "flat core capture_unit_ids must contain four distinct strings",
+      "role_contract_lawful": true,
+      "role_contract_reason": null
+    },
+    "lowpass_registration_motion_control": {
+      "distractor_report": {
+        "affine_reference_to_input_downsampled": [
+          [
+            1.01517236,
+            0.00810744,
+            1.04705715
+          ],
+          [
+            -0.00571994,
+            1.01597834,
+            -0.93605959
+          ]
+        ],
+        "ecc_correlation": 0.99998867,
+        "phase_seed_response": 1.27167898,
+        "phase_seed_shift_xy_downsampled": [
+          1.84260814,
+          0.06378721
+        ]
+      },
+      "fitted_affine": [
+        [
+          1.01517749,
+          0.0081143,
+          4.18594456
+        ],
+        [
+          -0.00572302,
+          1.01596797,
+          -3.74140501
+        ]
+      ],
+      "lowpass_distractor_affine_delta": 0.00070834,
+      "lowpass_distractor_max_mapped_displacement_native_px": 0.0057503,
+      "point_rmse_px": 0.07506882,
+      "registration_report": {
+        "affine_reference_to_input_downsampled": [
+          [
+            1.01517749,
+            0.0081143,
+            1.04648614
+          ],
+          [
+            -0.00572302,
+            1.01596797,
+            -0.93535125
+          ]
+        ],
+        "ecc_correlation": 0.99998863,
+        "phase_seed_response": 1.27161282,
+        "phase_seed_shift_xy_downsampled": [
+          1.84274619,
+          0.06390669
+        ]
+      },
+      "truth_affine": [
+        [
+          1.01499999,
+          0.008,
+          4.25
+        ],
+        [
+          -0.006,
+          1.01499999,
+          -3.5
+        ]
+      ]
+    },
+    "matched_flat_manifest_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": true,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "matched_flat_role_binding_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": true,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": false,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "flat_R1: parent_stack_id must equal the inventoried capture_unit_id",
+        "flat_R1: capture_unit_id is not inventoried under flat-sw4-cpl",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "missing_roles_no_jtr_control": {
+      "callback_count": 0,
+      "result": {
+        "j_tr": null,
+        "j_tr_computed": false,
+        "missing_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2",
+          "flat_R1",
+          "flat_R2",
+          "sw4_flat_Y1",
+          "sw4_flat_Y2",
+          "sw10_flat_Y1",
+          "sw10_flat_Y2"
+        ],
+        "predicates": {
+          "all_required_roles_present": false,
+          "checker_template_forbidden": null,
+          "disjoint_calibration_lineages": null,
+          "disjoint_source_files": null,
+          "independent_capture_units": null,
+          "independent_parent_stacks": null,
+          "matched_flat_evidence": null,
+          "matched_flat_manifest": null,
+          "minimum_sites": null,
+          "nonperiodic_target": null,
+          "odd_even_not_independent": null,
+          "reference_sampling_ratio": null,
+          "same_geometry_for_repeats": null,
+          "same_physical_sites": null,
+          "same_site_role_mapping": null,
+          "site_manifest_bound": null,
+          "source_files_bound_to_inventory": null,
+          "source_oracle_forbidden": null,
+          "sw4_never_truth": null,
+          "unique_site_coordinates": null,
+          "unique_site_identities": null
+        },
+        "score_callback_called": false,
+        "site_evidence": {
+          "coordinate_system": null,
+          "ledger_site_count": 64,
+          "manifest_path": null,
+          "manifest_sha256": null,
+          "required_roles": [
+            "R1",
+            "R2",
+            "sw4_Y1",
+            "sw4_Y2",
+            "sw10_Y1",
+            "sw10_Y2"
+          ],
+          "site_count_from_manifest": null
+        },
+        "status": "REFERENCE_ROLE_ABSENT",
+        "violations": []
+      }
+    },
+    "missing_site_control": {
+      "mutation": {
+        "remaining_site_count": 63,
+        "removed_site_id": "site-07-07"
+      },
+      "result": {
+        "j_tr": null,
+        "j_tr_computed": false,
+        "missing_roles": [],
+        "predicates": {
+          "all_required_roles_present": true,
+          "checker_template_forbidden": true,
+          "disjoint_calibration_lineages": true,
+          "disjoint_source_files": true,
+          "independent_capture_units": true,
+          "independent_parent_stacks": true,
+          "matched_flat_evidence": true,
+          "matched_flat_manifest": true,
+          "minimum_sites": false,
+          "nonperiodic_target": true,
+          "odd_even_not_independent": true,
+          "reference_sampling_ratio": true,
+          "same_geometry_for_repeats": true,
+          "same_physical_sites": true,
+          "same_site_role_mapping": true,
+          "site_manifest_bound": true,
+          "source_files_bound_to_inventory": true,
+          "source_oracle_forbidden": true,
+          "sw4_never_truth": true,
+          "unique_site_coordinates": true,
+          "unique_site_identities": true
+        },
+        "sampling_ratio": 2.1,
+        "score_callback_called": false,
+        "site_evidence": {
+          "coordinate_system": "normalized-slide-uv",
+          "ledger_site_count": 63,
+          "manifest_path": "mutated-physical-sites.json",
+          "manifest_sha256": "cf7beb2bd85cf661e62a3e3520be97379b92135b755e0d7481a2626fce865570",
+          "required_roles": [
+            "R1",
+            "R2",
+            "sw4_Y1",
+            "sw4_Y2",
+            "sw10_Y1",
+            "sw10_Y2"
+          ],
+          "site_count_from_manifest": 63
+        },
+        "status": "ROLE_LEDGER_INVALID",
+        "violations": [
+          "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly"
+        ]
+      }
+    },
+    "nonconverged_fit_control": {
+      "equivalence_bars": {
+        "maximum_abs_intercept": 0.02,
+        "maximum_abs_slope_error": 0.04,
+        "maximum_q95_abs_residual": 0.03,
+        "minimum_joint_eligible_sites": 48,
+        "predicates": {
+          "fit_converged": false,
+          "maximum_abs_intercept": true,
+          "maximum_abs_slope_error": true,
+          "maximum_q95_abs_residual": true,
+          "minimum_joint_eligible_sites": true,
+          "positive_slope": true
+        }
+      },
+      "joint_eligible_count": 64,
+      "joint_eligible_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "node_density": {
+        "common_interval_u4": [
+          0.16,
+          0.84
+        ],
+        "definition": "frame-node counts per common u4-equivalent interval; interval width cancels from the reported ratio",
+        "interval_width_u4": 0.68,
+        "ratio_sw4_over_sw10": 2.06060606,
+        "status": "OK",
+        "sw10_nodes": 33,
+        "sw4_nodes": 68
+      },
+      "robust_fit": {
+        "converged": false,
+        "intercept": 0.0,
+        "iterations": 0,
+        "q95_abs_residual": 0.0,
+        "residuals": [
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "slope": 1.0,
+        "weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "status": "IMAGE_RANGE_NOT_EQUIVALENT",
+      "u10": [
+        0.16,
+        0.17079365,
+        0.1815873,
+        0.19238095,
+        0.2031746,
+        0.21396825,
+        0.2247619,
+        0.23555556,
+        0.24634921,
+        0.25714286,
+        0.26793651,
+        0.27873016,
+        0.28952381,
+        0.30031746,
+        0.31111111,
+        0.32190476,
+        0.33269841,
+        0.34349206,
+        0.35428571,
+        0.36507937,
+        0.37587302,
+        0.38666667,
+        0.39746032,
+        0.40825397,
+        0.41904762,
+        0.42984127,
+        0.44063492,
+        0.45142857,
+        0.46222222,
+        0.47301587,
+        0.48380952,
+        0.49460317,
+        0.50539683,
+        0.51619048,
+        0.52698413,
+        0.53777778,
+        0.54857143,
+        0.55936508,
+        0.57015873,
+        0.58095238,
+        0.59174603,
+        0.60253968,
+        0.61333333,
+        0.62412698,
+        0.63492063,
+        0.64571429,
+        0.65650794,
+        0.66730159,
+        0.67809524,
+        0.68888889,
+        0.69968254,
+        0.71047619,
+        0.72126984,
+        0.73206349,
+        0.74285714,
+        0.75365079,
+        0.76444444,
+        0.7752381,
+        0.78603175,
+        0.7968254,
+        0.80761905,
+        0.8184127,
+        0.82920635,
+        0.84
+      ],
+      "u4": [
+        0.16,
+        0.17079365,
+        0.1815873,
+        0.19238095,
+        0.2031746,
+        0.21396825,
+        0.2247619,
+        0.23555556,
+        0.24634921,
+        0.25714286,
+        0.26793651,
+        0.27873016,
+        0.28952381,
+        0.30031746,
+        0.31111111,
+        0.32190476,
+        0.33269841,
+        0.34349206,
+        0.35428571,
+        0.36507937,
+        0.37587302,
+        0.38666667,
+        0.39746032,
+        0.40825397,
+        0.41904762,
+        0.42984127,
+        0.44063492,
+        0.45142857,
+        0.46222222,
+        0.47301587,
+        0.48380952,
+        0.49460317,
+        0.50539683,
+        0.51619048,
+        0.52698413,
+        0.53777778,
+        0.54857143,
+        0.55936508,
+        0.57015873,
+        0.58095238,
+        0.59174603,
+        0.60253968,
+        0.61333333,
+        0.62412698,
+        0.63492063,
+        0.64571429,
+        0.65650794,
+        0.66730159,
+        0.67809524,
+        0.68888889,
+        0.69968254,
+        0.71047619,
+        0.72126984,
+        0.73206349,
+        0.74285714,
+        0.75365079,
+        0.76444444,
+        0.7752381,
+        0.78603175,
+        0.7968254,
+        0.80761905,
+        0.8184127,
+        0.82920635,
+        0.84
+      ]
+    },
+    "nonfinite_refusal_control": {
+      "caught": true,
+      "message": "spectral input is non-finite"
+    },
+    "normalized_text_hash_control": {
+      "normalized_crlf": "e49c81e2d2f84e259d40e2fb8192f3bcd198b355184845d76d8f58807d0d78ee",
+      "normalized_lf": "e49c81e2d2f84e259d40e2fb8192f3bcd198b355184845d76d8f58807d0d78ee",
+      "raw_crlf": "98ab4d3aeab1e120560e942e2df6a0db1147bf94bafcf1590000ffb3c2b6fc80",
+      "raw_lf": "e49c81e2d2f84e259d40e2fb8192f3bcd198b355184845d76d8f58807d0d78ee"
+    },
+    "odd_even_independence_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": false,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": false,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": false,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": false,
+        "site_manifest_bound": false,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": false,
+        "unique_site_identities": false
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "sw4_Y2: parent_stack_id must equal the inventoried capture_unit_id",
+        "required roles reuse a parent_stack_id",
+        "odd/even/interleaved subsets are not independent captures",
+        "physical site manifest is absent, malformed, hash-mismatched, or not bound to the six R1/R2/Y1/Y2 capture roles",
+        "physical site manifest does not contain unique site identities",
+        "physical site manifest does not contain unique normalized coordinates",
+        "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch",
+        "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "one_pair_only_flat_rejection_control": {
+      "detected_maximum_pair": [
+        0,
+        1
+      ],
+      "legacy_positive_cross_power_median": 0.28095781,
+      "legacy_positive_cross_power_pairs": [
+        9999.74405558,
+        0.36533765,
+        0.19667161,
+        0.36524401,
+        0.19644342,
+        0.00028627
+      ],
+      "mean_split_power": 4999.87729229,
+      "null_quantile": 0.99,
+      "null_statistic": "independent-site-carrier-phase-scramble",
+      "null_threshold": 1501.62869718,
+      "observed_repeatable_power": 9999.74409799,
+      "pair_order": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "pair_repeatable_power": [
+        9999.74409799,
+        0.9182384,
+        0.74821161,
+        0.91803957,
+        0.74808936,
+        0.00065472
+      ],
+      "phase_scramble_count": 255,
+      "phase_scramble_p_upper": 0.00390625,
+      "phase_scramble_q99": 1501.62869718,
+      "planted_structured_pair": [
+        0,
+        1
+      ],
+      "repeatable_to_total_power_ratio": 1.9999979,
+      "statistic": "maximum-pair-mean-absolute-cross-power",
+      "statistic_definition": "maximum over six temporal-split pairs of the mean across carriers of absolute site-averaged complex cross-power",
+      "status": "STRUCTURED_FLAT",
+      "structured_alpha": 0.01
+    },
+    "partial_source_group_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": true,
+        "minimum_sites": true,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": false,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "R1: source_file_ids do not exactly consume flat-sw4-cpl\\unit-00"
+      ]
+    },
+    "python_native_runtime_closure_control": {
+      "mutation_after_aggregate_sha256": "5e8e5de7d18a726106fe70a78da4328dfe1b0e35637d89acc196ee5c375fa060",
+      "mutation_before_aggregate_sha256": "e1c02a4582acaa29070b5f37bb8c46ebe542eae85840316b53c94dbfe808d9f1",
+      "mutation_relative_file": "numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+      "native_file_counts": {
+        "numpy": 21,
+        "opencv": 2,
+        "rawpy": 3,
+        "scipy": 29
+      },
+      "required_native_scopes": {
+        "cv2_loaded_binary": true,
+        "numpy_core": true,
+        "numpy_fft": true,
+        "scipy_fft": true,
+        "scipy_ndimage": true,
+        "scipy_optimize": true
+      },
+      "semantic_file_counts": {
+        "numpy": 693,
+        "opencv": 65,
+        "rawpy": 10,
+        "scipy": 1102
+      },
+      "semantic_replacement_detected": true,
+      "sys_executable_bound": true
+    },
+    "quadrilateral_ambiguity_control": {
+      "caught": true,
+      "message": "quadrilateral selector is ambiguous: best/second=1.000000"
+    },
+    "quadrilateral_identity_and_corner_mutation": {
+      "corner_rmse_px": 1.6955825,
+      "crossed_corner_mutation_caught": true,
+      "detected": [
+        [
+          50.0,
+          41.0
+        ],
+        [
+          349.0,
+          53.0
+        ],
+        [
+          332.0,
+          279.0
+        ],
+        [
+          64.0,
+          266.0
+        ]
+      ],
+      "selector": {
+        "area_fraction": 0.49959375,
+        "best_score": 0.8134778,
+        "best_to_second_score_ratio": 1.08284134,
+        "candidate_count": 2,
+        "edge_support": 0.62827858,
+        "input_domain": "raised-cosine low-pass with exact zero at and above the registered stop frequency",
+        "points_downsampled_xy": [
+          [
+            50.0,
+            41.0
+          ],
+          [
+            349.0,
+            53.0
+          ],
+          [
+            332.0,
+            279.0
+          ],
+          [
+            64.0,
+            266.0
+          ]
+        ],
+        "second_score": 0.75124376
+      },
+      "truth": [
+        [
+          52.0,
+          42.0
+        ],
+        [
+          348.0,
+          55.0
+        ],
+        [
+          330.0,
+          278.0
+        ],
+        [
+          66.0,
+          264.0
+        ]
+      ]
+    },
+    "quiet_flat_control": {
+      "legacy_positive_cross_power_median": 0.03625871,
+      "legacy_positive_cross_power_pairs": [
+        0.04111786,
+        0.02984433,
+        0.03139957,
+        0.02395255,
+        0.05820605,
+        0.06577127
+      ],
+      "mean_split_power": 0.99778333,
+      "null_quantile": 0.99,
+      "null_statistic": "independent-site-carrier-phase-scramble",
+      "null_threshold": 0.1591109,
+      "observed_repeatable_power": 0.14432338,
+      "pair_order": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "pair_repeatable_power": [
+        0.14432338,
+        0.10679996,
+        0.11041361,
+        0.11472979,
+        0.13257559,
+        0.13744604
+      ],
+      "phase_scramble_count": 255,
+      "phase_scramble_p_upper": 0.08984375,
+      "phase_scramble_q99": 0.1591109,
+      "repeatable_to_total_power_ratio": 0.14464401,
+      "statistic": "maximum-pair-mean-absolute-cross-power",
+      "statistic_definition": "maximum over six temporal-split pairs of the mean across carriers of absolute site-averaged complex cross-power",
+      "status": "QUIET_DIAGNOSTIC",
+      "structured_alpha": 0.01
+    },
+    "range_recompute_binding_control": {
+      "caught": true,
+      "message": "Stage C measurement does not reproduce from the bound RAW/decode inputs"
+    },
+    "rawpy_copy_inside_context_static_control": {
+      "mosaic_copy_inside_context": true,
+      "np_array_copy_true_calls": 4,
+      "with_nodes": 1
+    },
+    "registration_stopband_control": {
+      "low_frequency_reconstruction_relative_rms": 1.49e-05,
+      "report": {
+        "focus_hard_cap_native_cyc_per_px": 0.2,
+        "focus_mask_max_frequency_native_cyc_per_px": 0.19999275,
+        "frequency_conversion": "f_native=f_green_plane/2",
+        "green_plane_native_pitch_px": 2.0,
+        "registration_downsample_green_plane": 4,
+        "registration_mask_max_above_stop": 0.0,
+        "registration_pass_native_cyc_per_px": 0.04,
+        "registration_stop_native_cyc_per_px": 0.06
+      }
+    },
+    "rotating_sign_flat_rejection_control": {
+      "legacy_positive_cross_power_median": 0.0,
+      "legacy_positive_cross_power_pairs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_split_power": 10000.0,
+      "null_quantile": 0.99,
+      "null_statistic": "independent-site-carrier-phase-scramble",
+      "null_threshold": 1555.54478693,
+      "observed_repeatable_power": 10000.0,
+      "pair_order": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "pair_repeatable_power": [
+        10000.0,
+        10000.0,
+        10000.0,
+        10000.0,
+        10000.0,
+        10000.0
+      ],
+      "phase_scramble_count": 255,
+      "phase_scramble_p_upper": 0.00390625,
+      "phase_scramble_q99": 1555.54478693,
+      "repeatable_to_total_power_ratio": 1.0,
+      "statistic": "maximum-pair-mean-absolute-cross-power",
+      "statistic_definition": "maximum over six temporal-split pairs of the mean across carriers of absolute site-averaged complex cross-power",
+      "status": "STRUCTURED_FLAT",
+      "structured_alpha": 0.01
+    },
+    "same_physical_sites_false_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": true,
+        "minimum_sites": true,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": false,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "target.same_physical_sites must be true and backed by a site manifest"
+      ]
+    },
+    "sampling_interval_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": true,
+        "minimum_sites": true,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": false,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 1.8,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "reference/scored subject-sampling lower bound is below 2.0"
+      ]
+    },
+    "selector_coverage_complete": {
+      "missing_plants": [],
+      "selectors": {
+        "active-area-not-padding": true,
+        "artifact-chain-binding": true,
+        "artifact-schema": false,
+        "cargo-local-dependency-freeze": true,
+        "decoder-stdout-no-write-transport": true,
+        "existing-m135-core-no-detail": true,
+        "fixed-normalized-lattice": true,
+        "flat-exposure-and-temporal-splits": true,
+        "flat-ledger-binding": true,
+        "flat-structure-selector": true,
+        "focus-band-cap": true,
+        "focusposition2-completeness-and-histogram": true,
+        "frozen-crosscheck-executable": true,
+        "independent-decoder-prefix": true,
+        "interior-peak-selector": true,
+        "inventory-file-population-and-sort": true,
+        "joint-site-count": true,
+        "nonfinite-and-clipping-refusal": true,
+        "normalized-text-hash-domain": true,
+        "python-native-runtime-freeze": true,
+        "quadrilateral-choice-and-order": true,
+        "rawpy-buffer-lifetime": true,
+        "registration-lowpass-band": true,
+        "robust-range-fit-bars": true,
+        "role-ledger-identifiability": true
+      }
+    },
+    "shared_calibration_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": false,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": true,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": true,
+        "site_manifest_bound": true,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": true,
+        "unique_site_identities": true
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "required output/reference roles share calibration lineages",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "shared_source_file_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": false,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": false,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": false,
+        "site_manifest_bound": false,
+        "source_files_bound_to_inventory": false,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": false,
+        "unique_site_identities": false
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "R2: source_file_ids do not exactly consume flat-sw4-cpl\\unit-01",
+        "required roles reuse source files",
+        "physical site manifest is absent, malformed, hash-mismatched, or not bound to the six R1/R2/Y1/Y2 capture roles",
+        "physical site manifest does not contain unique site identities",
+        "physical site manifest does not contain unique normalized coordinates",
+        "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch",
+        "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "site_coordinate_mismatch_control": {
+      "mutation": {
+        "manifest_coordinate": [
+          0.0625,
+          0.0625
+        ],
+        "mismatched_role_coordinate": [
+          0.0635,
+          0.0625
+        ],
+        "role": "R2",
+        "site_id": "site-00-00"
+      },
+      "result": {
+        "j_tr": null,
+        "j_tr_computed": false,
+        "missing_roles": [],
+        "predicates": {
+          "all_required_roles_present": true,
+          "checker_template_forbidden": true,
+          "disjoint_calibration_lineages": true,
+          "disjoint_source_files": true,
+          "independent_capture_units": true,
+          "independent_parent_stacks": true,
+          "matched_flat_evidence": true,
+          "matched_flat_manifest": true,
+          "minimum_sites": true,
+          "nonperiodic_target": true,
+          "odd_even_not_independent": true,
+          "reference_sampling_ratio": true,
+          "same_geometry_for_repeats": true,
+          "same_physical_sites": true,
+          "same_site_role_mapping": false,
+          "site_manifest_bound": true,
+          "source_files_bound_to_inventory": true,
+          "source_oracle_forbidden": true,
+          "sw4_never_truth": true,
+          "unique_site_coordinates": true,
+          "unique_site_identities": true
+        },
+        "sampling_ratio": 2.1,
+        "score_callback_called": false,
+        "site_evidence": {
+          "coordinate_system": "normalized-slide-uv",
+          "ledger_site_count": 64,
+          "manifest_path": "mutated-physical-sites.json",
+          "manifest_sha256": "00bf65b21cc940ff3c45813555fcff26367be8ee4bfd9843f5f9796daa4bd79c",
+          "required_roles": [
+            "R1",
+            "R2",
+            "sw4_Y1",
+            "sw4_Y2",
+            "sw10_Y1",
+            "sw10_Y2"
+          ],
+          "site_count_from_manifest": 64
+        },
+        "status": "ROLE_LEDGER_INVALID",
+        "violations": [
+          "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch"
+        ]
+      }
+    },
+    "site_manifest_hash_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": true,
+        "minimum_sites": false,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": false,
+        "site_manifest_bound": false,
+        "source_files_bound_to_inventory": true,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": true,
+        "unique_site_coordinates": false,
+        "unique_site_identities": false
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": null,
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "physical site manifest is absent, malformed, hash-mismatched, or not bound to the six R1/R2/Y1/Y2 capture roles",
+        "physical site manifest does not contain unique site identities",
+        "physical site manifest does not contain unique normalized coordinates",
+        "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch",
+        "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly"
+      ]
+    },
+    "site_role_binding_control": {
+      "mutation": {
+        "new_capture_unit_id": "wrong-site-capture-unit",
+        "old_capture_unit_id": "flat-sw4-cpl\\unit-01",
+        "role": "R2"
+      },
+      "result": {
+        "j_tr": null,
+        "j_tr_computed": false,
+        "missing_roles": [],
+        "predicates": {
+          "all_required_roles_present": true,
+          "checker_template_forbidden": true,
+          "disjoint_calibration_lineages": true,
+          "disjoint_source_files": true,
+          "independent_capture_units": true,
+          "independent_parent_stacks": true,
+          "matched_flat_evidence": true,
+          "matched_flat_manifest": true,
+          "minimum_sites": false,
+          "nonperiodic_target": true,
+          "odd_even_not_independent": true,
+          "reference_sampling_ratio": true,
+          "same_geometry_for_repeats": true,
+          "same_physical_sites": true,
+          "same_site_role_mapping": false,
+          "site_manifest_bound": false,
+          "source_files_bound_to_inventory": true,
+          "source_oracle_forbidden": true,
+          "sw4_never_truth": true,
+          "unique_site_coordinates": false,
+          "unique_site_identities": false
+        },
+        "sampling_ratio": 2.1,
+        "score_callback_called": false,
+        "site_evidence": {
+          "coordinate_system": "normalized-slide-uv",
+          "ledger_site_count": 64,
+          "manifest_path": "mutated-physical-sites.json",
+          "manifest_sha256": "cb74eeb90983fe46171baab5ea48e4951a4ef406aa125d49d75807444dae4f24",
+          "required_roles": [
+            "R1",
+            "R2",
+            "sw4_Y1",
+            "sw4_Y2",
+            "sw10_Y1",
+            "sw10_Y2"
+          ],
+          "site_count_from_manifest": 64
+        },
+        "status": "ROLE_LEDGER_INVALID",
+        "violations": [
+          "physical site manifest is absent, malformed, hash-mismatched, or not bound to the six R1/R2/Y1/Y2 capture roles",
+          "physical site manifest does not contain unique site identities",
+          "physical site manifest does not contain unique normalized coordinates",
+          "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch",
+          "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly"
+        ]
+      }
+    },
+    "stdout_transport_no_write_control": {
+      "python_binary_capture": true,
+      "python_direct_payload_parse": true,
+      "rust_directory_create_absent": true,
+      "rust_file_create_absent": true,
+      "rust_stdout_stream": true
+    },
+    "structured_flat_rejection_control": {
+      "legacy_positive_cross_power_median": 1.91639506,
+      "legacy_positive_cross_power_pairs": [
+        1.91559654,
+        1.91412562,
+        1.91677037,
+        1.91601974,
+        1.91821045,
+        1.91699663
+      ],
+      "mean_split_power": 1.92137891,
+      "null_quantile": 0.99,
+      "null_statistic": "independent-site-carrier-phase-scramble",
+      "null_threshold": 0.4432517,
+      "observed_repeatable_power": 1.91823492,
+      "pair_order": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "pair_repeatable_power": [
+        1.9156262,
+        1.91414485,
+        1.9168183,
+        1.91604712,
+        1.91823492,
+        1.91703323
+      ],
+      "phase_scramble_count": 255,
+      "phase_scramble_p_upper": 0.00390625,
+      "phase_scramble_q99": 0.4432517,
+      "repeatable_to_total_power_ratio": 0.99836368,
+      "statistic": "maximum-pair-mean-absolute-cross-power",
+      "statistic_definition": "maximum over six temporal-split pairs of the mean across carriers of absolute site-averaged complex cross-power",
+      "status": "STRUCTURED_FLAT",
+      "structured_alpha": 0.01
+    },
+    "summary_chain_splice_control": {
+      "baseline_physical_binding": "UNBOUND",
+      "message": "artifact chain mismatch: {\"decode_to_inventory\": false, \"flat_to_decode\": false, \"flat_to_inventory\": true, \"flat_to_role_ledger\": true, \"flat_to_roles\": true, \"range_to_decode\": false, \"range_to_inventory\": true, \"roles_to_inventory\": true}",
+      "spliced_chain_caught": true
+    },
+    "sw4_as_truth_control": {
+      "j_tr": null,
+      "j_tr_computed": false,
+      "missing_roles": [],
+      "predicates": {
+        "all_required_roles_present": true,
+        "checker_template_forbidden": true,
+        "disjoint_calibration_lineages": true,
+        "disjoint_source_files": true,
+        "independent_capture_units": true,
+        "independent_parent_stacks": true,
+        "matched_flat_evidence": true,
+        "matched_flat_manifest": false,
+        "minimum_sites": false,
+        "nonperiodic_target": true,
+        "odd_even_not_independent": true,
+        "reference_sampling_ratio": true,
+        "same_geometry_for_repeats": true,
+        "same_physical_sites": true,
+        "same_site_role_mapping": false,
+        "site_manifest_bound": false,
+        "source_files_bound_to_inventory": false,
+        "source_oracle_forbidden": true,
+        "sw4_never_truth": false,
+        "unique_site_coordinates": false,
+        "unique_site_identities": false
+      },
+      "sampling_ratio": 2.1,
+      "score_callback_called": false,
+      "site_evidence": {
+        "coordinate_system": "normalized-slide-uv",
+        "ledger_site_count": 64,
+        "manifest_path": "physical-sites.json",
+        "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+        "required_roles": [
+          "R1",
+          "R2",
+          "sw4_Y1",
+          "sw4_Y2",
+          "sw10_Y1",
+          "sw10_Y2"
+        ],
+        "site_count_from_manifest": 64
+      },
+      "status": "ROLE_LEDGER_INVALID",
+      "violations": [
+        "R1: capture_unit_id is not inventoried under tilted-sw4-cpl",
+        "sw4/sw10/all-axis focus ladders cannot be truth roles",
+        "physical site manifest is absent, malformed, hash-mismatched, or not bound to the six R1/R2/Y1/Y2 capture roles",
+        "physical site manifest does not contain unique site identities",
+        "physical site manifest does not contain unique normalized coordinates",
+        "R1/R2/sw4-Y1/Y2/sw10-Y1/Y2 site identities or coordinates mismatch",
+        "bare scalar site_count is not evidence; the bound manifest must contain at least 64 sites and match site_count exactly",
+        "matched flat manifest is absent, malformed, unreadable, or hash-mismatched"
+      ]
+    },
+    "temporal_split_mutation_control": {
+      "contiguous_mutation": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          3,
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ]
+      ],
+      "observed": [
+        [
+          0,
+          4,
+          8
+        ],
+        [
+          1,
+          5,
+          9
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          7
+        ]
+      ]
+    },
+    "three_exposure_group_control": {
+      "groups": [
+        "1",
+        "2.5",
+        "6"
+      ],
+      "merged_group_mutation_caught": true
+    },
+    "too_few_eligible_sites_control": {
+      "equivalence_bars": {
+        "maximum_abs_intercept": 0.02,
+        "maximum_abs_slope_error": 0.04,
+        "maximum_q95_abs_residual": 0.03,
+        "minimum_joint_eligible_sites": 48
+      },
+      "joint_eligible_count": 20,
+      "joint_eligible_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "node_density": null,
+      "robust_fit": null,
+      "status": "IMAGE_RANGE_UNDETERMINED"
+    },
+    "valid_role_fixture_passability": {
+      "callback_count": 1,
+      "result": {
+        "j_tr": null,
+        "j_tr_computed": false,
+        "missing_roles": [],
+        "note": "this commissioning lane establishes identifiability only; the separately frozen M135 estimator remains the scoring implementation",
+        "predicates": {
+          "all_required_roles_present": true,
+          "checker_template_forbidden": true,
+          "disjoint_calibration_lineages": true,
+          "disjoint_source_files": true,
+          "independent_capture_units": true,
+          "independent_parent_stacks": true,
+          "matched_flat_evidence": true,
+          "matched_flat_manifest": true,
+          "minimum_sites": true,
+          "nonperiodic_target": true,
+          "odd_even_not_independent": true,
+          "reference_sampling_ratio": true,
+          "same_geometry_for_repeats": true,
+          "same_physical_sites": true,
+          "same_site_role_mapping": true,
+          "site_manifest_bound": true,
+          "source_files_bound_to_inventory": true,
+          "source_oracle_forbidden": true,
+          "sw4_never_truth": true,
+          "unique_site_coordinates": true,
+          "unique_site_identities": true
+        },
+        "sampling_ratio": 2.1,
+        "score_callback_called": true,
+        "site_evidence": {
+          "coordinate_system": "normalized-slide-uv",
+          "ledger_site_count": 64,
+          "manifest_path": "physical-sites.json",
+          "manifest_sha256": "0b1319fd777dc2ba8c5dd0a7d436d6651d206b54ffc23c10251a332f600e1996",
+          "required_roles": [
+            "R1",
+            "R2",
+            "sw4_Y1",
+            "sw4_Y2",
+            "sw10_Y1",
+            "sw10_Y2"
+          ],
+          "site_count_from_manifest": 64
+        },
+        "status": "IDENTIFIABLE",
+        "violations": []
+      }
+    }
+  },
+  "schema": "m135-slide-commission-v1",
+  "selector_coverage": {
+    "active-area-not-padding": [
+      "active_area_padding_control"
+    ],
+    "artifact-chain-binding": [
+      "summary_chain_splice_control",
+      "forged_physical_binding_control",
+      "forged_range_predicate_control",
+      "forged_identifiable_predicate_control",
+      "inventory_recompute_binding_control",
+      "decode_recompute_binding_control",
+      "range_recompute_binding_control",
+      "flat_recompute_binding_control"
+    ],
+    "artifact-schema": [
+      "artifact_schema_mutation_control"
+    ],
+    "cargo-local-dependency-freeze": [
+      "cargo_dependency_freeze_mutation_control"
+    ],
+    "decoder-stdout-no-write-transport": [
+      "stdout_transport_no_write_control"
+    ],
+    "existing-m135-core-no-detail": [
+      "lawful_core_no_detail_control"
+    ],
+    "fixed-normalized-lattice": [
+      "lattice_mutation_control"
+    ],
+    "flat-exposure-and-temporal-splits": [
+      "three_exposure_group_control",
+      "temporal_split_mutation_control"
+    ],
+    "flat-ledger-binding": [
+      "flat_ledger_binding_control"
+    ],
+    "flat-structure-selector": [
+      "quiet_flat_control",
+      "structured_flat_rejection_control",
+      "alternating_sign_flat_rejection_control",
+      "rotating_sign_flat_rejection_control",
+      "one_pair_only_flat_rejection_control"
+    ],
+    "focus-band-cap": [
+      "above_band_distractor_control"
+    ],
+    "focusposition2-completeness-and-histogram": [
+      "focus_histogram_missing_value_control",
+      "empty_focus_histogram_control"
+    ],
+    "frozen-crosscheck-executable": [
+      "crosscheck_binary_mismatch_control"
+    ],
+    "independent-decoder-prefix": [
+      "decoder_checksum_mutation_control"
+    ],
+    "interior-peak-selector": [
+      "endpoint_peak_control"
+    ],
+    "inventory-file-population-and-sort": [
+      "inventory_hidden_file_and_sort_mutation",
+      "inventory_unexpected_arw_control",
+      "inventory_absolute_path_binding_control",
+      "forged_coarse_encoder_control"
+    ],
+    "joint-site-count": [
+      "too_few_eligible_sites_control"
+    ],
+    "nonfinite-and-clipping-refusal": [
+      "nonfinite_refusal_control",
+      "clipping_refusal_control"
+    ],
+    "normalized-text-hash-domain": [
+      "normalized_text_hash_control"
+    ],
+    "python-native-runtime-freeze": [
+      "python_native_runtime_closure_control"
+    ],
+    "quadrilateral-choice-and-order": [
+      "quadrilateral_identity_and_corner_mutation",
+      "quadrilateral_ambiguity_control"
+    ],
+    "rawpy-buffer-lifetime": [
+      "rawpy_copy_inside_context_static_control"
+    ],
+    "registration-lowpass-band": [
+      "registration_stopband_control",
+      "lowpass_registration_motion_control"
+    ],
+    "robust-range-fit-bars": [
+      "identity_range_control",
+      "bad_offset_control",
+      "bad_slope_control",
+      "bad_residual_control",
+      "nonconverged_fit_control"
+    ],
+    "role-ledger-identifiability": [
+      "valid_role_fixture_passability",
+      "missing_roles_no_jtr_control",
+      "sw4_as_truth_control",
+      "odd_even_independence_control",
+      "all_axis_repeat_control",
+      "shared_calibration_control",
+      "shared_source_file_control",
+      "invented_source_file_control",
+      "flat_role_capture_unit_control",
+      "flat_role_shared_calibration_control",
+      "partial_source_group_control",
+      "sampling_interval_control",
+      "same_physical_sites_false_control",
+      "bare_site_count_control",
+      "duplicate_site_identity_control",
+      "duplicate_site_coordinate_control",
+      "missing_site_control",
+      "site_coordinate_mismatch_control",
+      "site_role_binding_control",
+      "site_manifest_hash_control",
+      "matched_flat_manifest_control",
+      "matched_flat_role_binding_control",
+      "checker_oracle_control"
+    ]
+  },
+  "status": "NOT_COMMISSIONED"
+}

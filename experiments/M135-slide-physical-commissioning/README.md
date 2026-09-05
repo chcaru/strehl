@@ -46,8 +46,10 @@ generic mechanics and the bars already frozen in `PREREGISTRATION.md`.
    crosscheck against a lane-local executable using the existing safe
    `strehl-raw`/rawler API.  The binary payload travels on stdout, so the
    decoder creates no scratch file or other writable capture-adjacent path.
-   The rawler full buffer and trailing active columns are recorded but never
-   included in a statistic.
+   Before decoding any frame, Stage B requires the executable's exact byte
+   count and SHA-256 to match `freeze-manifest.json`; the hash is checked again
+   around every invocation.  The rawler full buffer and trailing active
+   columns are recorded but never included in a statistic.
 3. **`range` (C)** — a registration image whose Fourier mask is exactly zero
    at and above `0.06 cyc/native px`, a low-pass-only quadrilateral and affine
    registration, the fixed normalized 8x8 lattice, focus input hard-capped at
@@ -59,15 +61,22 @@ generic mechanics and the bars already frozen in `PREREGISTRATION.md`.
    source or calibration lineage, any source SHA absent from its declared
    inventory group, point-estimate sampling in place of
    reference-LCB/scored-UCB, a missing/hash-mismatched matched-flat manifest,
-   a public checker template, and a source oracle.  Missing roles return
+   a public checker template, and a source oracle.  Identifiability additionally
+   requires `target.same_physical_sites=true` and a hash-bound site manifest
+   with at least 64 unique identities and normalized coordinates mapped
+   exactly across `R1/R2`, both sw4 outputs and both sw10 outputs.  A scalar
+   `site_count` without that evidence is refused.  Missing roles return
    `REFERENCE_ROLE_ABSENT`, `j_tr_computed=false`, and `j_tr=null`.
 5. **`flat` (E)** — the three exposure groups separately, fixed
    ordered-index-modulo-4 temporal splits, coefficients no higher than
    `0.25 cyc/native px`, one fixed sensor-coordinate lattice, and a
-   phase-scramble repeatability null.  The four modulo splits are never passed
-   to the existing M135 core as pseudo-captures.  That core's lawful
-   `NO_DETAIL` branch is commissioned separately on four independent synthetic
-   streams.
+   phase-scramble repeatability null.  Repeatability is the maximum over the
+   six split pairs of mean absolute site-averaged complex cross-power, so
+   anti-correlated, rotating-sign and one-pair-only structure cannot cancel.
+   The artifact reports that statistic and the same-statistic phase-scramble
+   `q99` threshold explicitly.  The four modulo splits are never passed to the
+   existing M135 core as pseudo-captures.  That core's lawful `NO_DETAIL`
+   branch is commissioned separately on four independent synthetic streams.
 
 `summarize` keeps inventory, coarse range, image range, role
 identifiability, optical-arm presence, flat state, and physical binding as
@@ -98,8 +107,13 @@ no NaN/Infinity and exactly one terminal newline.
 
 Every artifact records the complete Python command, resolved config hash,
 module/binary hashes, numeric-thread environment, unset/set `STREHL_*`
-environment, and input artifact hashes.  ExifTool and rawler child invocations
-are recorded without a truncating pipeline.
+environment, and input artifact hashes.  The freeze derives the local Rust
+dependency closure with locked Cargo metadata, binds its root workspace and
+lock/toolchain inputs, applies MSVC `/Brepro`, and freezes the exact
+byte-reproducible crosscheck executable.  Python dependencies carry compact
+distribution-wide semantic hashes plus explicit runtime/native binaries for
+NumPy, SciPy, rawpy and OpenCV.  ExifTool and rawler child invocations are
+recorded without a truncating pipeline.
 
 ## Author commissioning only
 
@@ -115,6 +129,9 @@ The first two plant runs are preserved:
 - `commission-run5-nondeterministic-before.json` and
   `commission-run5-nondeterministic-after.json` — the ten-decimal repair still
   retained a `1e-10` diagnostic alternation.
+- `commission-run6-failed.json` — the first SEND BACK repair run had the new
+  site-evidence schema field absent from the schema-mutation fixture; 69 of 71
+  direct checks were green and selector coverage correctly stayed red.
 
 `AMENDMENT-1.md` and `AMENDMENT-2.md` describe the repairs before replacement
 runs.  `AMENDMENT-3.md` records a pre-freeze fail-closed audit,
@@ -130,13 +147,17 @@ for ExifTool metadata and chronological order, and `AMENDMENT-13.md` freezes
 deterministic serialization of OpenCV diagnostics.  `AMENDMENT-14.md` tightens
 that diagnostic-only quantization after the ten-decimal attempt remained
 non-deterministic.  `AMENDMENT-15.md` closes the final self-consistent decode
-artifact path by recomputing all stages at summary time.  The final
-`commission.json` covers identity, bad offset, bad slope, bad residual,
-non-convergence, too few eligible sites, endpoint peaks, low-pass
-registration motion, an above-band distractor, structured-flat rejection,
-missing roles, every forbidden role alias, and at least one negative control
-for every declared load-bearing selector.  These are the author's
-commissioning runs, not independent verification.
+artifact path by recomputing all stages at summary time.  `AMENDMENT-16.md`
+records the independent SEND BACK and the pre-data repairs to the Cargo/native
+freeze, exact crosscheck executable binding, physical-site evidence gate and
+sign-robust flat statistic.  The final `commission.json` covers identity, bad
+offset, bad slope, bad residual, non-convergence, too few eligible sites,
+endpoint peaks, low-pass registration motion, an above-band distractor,
+constant/alternating/rotating/one-pair flat structure, missing roles, every
+forbidden role alias, every site-manifest bypass, a semantic
+`Frame::active_row` mutation, a wrong crosscheck executable, and at least one
+negative control for every declared load-bearing selector.  These are the
+author's commissioning runs, not independent verification.
 
 ## Exact commissioning and freeze commands
 
@@ -157,16 +178,53 @@ Remove-Item Env:STREHL_FIX_HALO -ErrorAction SilentlyContinue
 Remove-Item Env:STREHL_COVER -ErrorAction SilentlyContinue
 Remove-Item Env:STREHL_RESAMPLER -ErrorAction SilentlyContinue
 Remove-Item Env:RAYON_NUM_THREADS -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_HOME -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_TARGET_DIR -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_BUILD_TARGET -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_BUILD_RUSTC -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_BUILD_RUSTFLAGS -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_ENCODED_RUSTFLAGS -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_INCREMENTAL -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTC -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTC_WRAPPER -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTC_WORKSPACE_WRAPPER -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTFLAGS -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTUP_TOOLCHAIN -ErrorAction SilentlyContinue
 
-$out = & python -B experiments\M135-slide-physical-commissioning\commission.py `
-  --config experiments\M135-slide-physical-commissioning\config.json `
-  --output experiments\M135-slide-physical-commissioning\commission.json 2>&1
+$lane = 'experiments\M135-slide-physical-commissioning'
+$exiftool = 'C:\Users\chris\AppData\Local\Programs\ExifTool\ExifTool.exe'
+
+$out = & cargo build --release --locked --manifest-path $lane\Cargo.toml 2>&1
+$code = $LASTEXITCODE
+$out
+if ($code -ne 0) { throw "crosscheck build failed with exact exit $code" }
+$crosscheck = Join-Path $lane 'target\release\m135-slide-raw-crosscheck.exe'
+
+$out = & python -B $lane\freeze.py create `
+  --manifest $lane\freeze-manifest.json --exiftool $exiftool `
+  --crosscheck-bin $crosscheck 2>&1
+$code = $LASTEXITCODE
+$out
+if ($code -ne 0) { throw "freeze create failed with exact exit $code" }
+
+$out = & python -B $lane\commission.py `
+  --config $lane\config.json --output $lane\commission.json `
+  --freeze-manifest $lane\freeze-manifest.json `
+  --crosscheck-bin $crosscheck 2>&1
 $code = $LASTEXITCODE
 $out
 if ($code -ne 0) { throw "commissioning failed with exact exit $code" }
 
-$out = & python -B experiments\M135-slide-physical-commissioning\freeze.py check `
-  --manifest experiments\M135-slide-physical-commissioning\freeze-manifest.json 2>&1
+$out = & python -B $lane\freeze.py create `
+  --manifest $lane\freeze-manifest.json --exiftool $exiftool `
+  --crosscheck-bin $crosscheck 2>&1
+$code = $LASTEXITCODE
+$out
+if ($code -ne 0) { throw "final freeze create failed with exact exit $code" }
+
+$out = & python -B $lane\freeze.py check `
+  --manifest $lane\freeze-manifest.json `
+  --crosscheck-bin $crosscheck 2>&1
 $code = $LASTEXITCODE
 $out
 if ($code -ne 0) { throw "freeze check failed with exact exit $code" }
@@ -184,7 +242,6 @@ $lane = 'C:\dev\blog\death-of-software\projects\strehl\experiments\M135-slide-ph
 $session = 'D:\personal\macro\requests\misc-diagnostic\high-res-calibration-slide-cpl'
 $exiftool = 'C:\Users\chris\AppData\Local\Programs\ExifTool\ExifTool.exe'
 $run = Join-Path $lane 'out'
-$env:CARGO_TARGET_DIR = Join-Path $run 'cargo-target'
 
 $env:OMP_NUM_THREADS='1'
 $env:OPENBLAS_NUM_THREADS='1'
@@ -200,13 +257,32 @@ Remove-Item Env:STREHL_FIX_HALO -ErrorAction SilentlyContinue
 Remove-Item Env:STREHL_COVER -ErrorAction SilentlyContinue
 Remove-Item Env:STREHL_RESAMPLER -ErrorAction SilentlyContinue
 Remove-Item Env:RAYON_NUM_THREADS -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_HOME -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_TARGET_DIR -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_BUILD_TARGET -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_BUILD_RUSTC -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_BUILD_RUSTFLAGS -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_ENCODED_RUSTFLAGS -ErrorAction SilentlyContinue
+Remove-Item Env:CARGO_INCREMENTAL -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTC -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTC_WRAPPER -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTC_WORKSPACE_WRAPPER -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTFLAGS -ErrorAction SilentlyContinue
+Remove-Item Env:RUSTUP_TOOLCHAIN -ErrorAction SilentlyContinue
 
 $build = & cargo build --release --locked `
   --manifest-path $lane\Cargo.toml 2>&1
 $buildCode = $LASTEXITCODE
 $build
 if ($buildCode -ne 0) { throw "crosscheck build failed with exact exit $buildCode" }
-$crosscheck = Join-Path $env:CARGO_TARGET_DIR 'release\m135-slide-raw-crosscheck.exe'
+$crosscheck = Join-Path $lane 'target\release\m135-slide-raw-crosscheck.exe'
+
+$freeze = & python -B $lane\freeze.py check `
+  --manifest $lane\freeze-manifest.json `
+  --crosscheck-bin $crosscheck 2>&1
+$freezeCode = $LASTEXITCODE
+$freeze
+if ($freezeCode -ne 0) { throw "pre-data freeze check failed with exact exit $freezeCode" }
 
 $a = & python -B $lane\instrument.py --config $lane\config.json inventory `
   --session-root $session --exiftool $exiftool `
@@ -218,6 +294,7 @@ if ($aCode -ne 0) { throw "stage A failed with exact exit $aCode" }
 $b = & python -B $lane\instrument.py --config $lane\config.json decode `
   --inventory $run\stage-a-inventory.json `
   --rawler-crosscheck-bin $crosscheck `
+  --freeze-manifest $lane\freeze-manifest.json `
   --output $run\stage-b-decode.json 2>&1
 $bCode = $LASTEXITCODE
 $b
@@ -262,9 +339,13 @@ all-axis stack, or the public checker as truth is a commissioned failure path,
 not a route to a score.  A future identifiable ledger must use each
 inventory row's RAW SHA-256 as `source_file_ids` and point to an actual
 `m135-matched-flat-evidence-v1` JSON whose byte hash and complete calibration
-lineage and per-role capture/source bindings match the ledger.  Each required
-role consumes one complete, unique leaf capture unit recorded by Stage A;
-partitioning one flat directory into pseudo-repeats is rejected.
+lineage and per-role capture/source bindings match the ledger.  It must also
+point to a hash-bound `m135-physical-site-manifest-v1` with at least 64 unique
+normalized slide sites and exact per-site identity/coordinate mappings across
+`R1`, `R2`, `sw4_Y1`, `sw4_Y2`, `sw10_Y1`, and `sw10_Y2`; `site_count` alone
+is refused.  Each required role consumes one complete, unique leaf capture
+unit recorded by Stage A; partitioning one flat directory into pseudo-repeats
+is rejected.
 
 ## Known unresolved execution risk
 

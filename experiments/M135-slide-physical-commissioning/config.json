@@ -182,6 +182,9 @@
       45.0,
       67.5
     ],
+    "repeatability_statistic": "maximum-pair-mean-absolute-cross-power",
+    "null_statistic": "independent-site-carrier-phase-scramble",
+    "null_quantile": 0.99,
     "phase_scramble_count": 255,
     "phase_scramble_seed": 20260904135,
     "structured_alpha": 0.01
@@ -202,6 +205,17 @@
       "sw10_flat_Y2"
     ],
     "minimum_sites": 64,
+    "site_manifest_schema": "m135-physical-site-manifest-v1",
+    "site_coordinate_system": "normalized-slide-uv",
+    "site_coordinate_match": "exact",
+    "same_site_roles": [
+      "R1",
+      "R2",
+      "sw4_Y1",
+      "sw4_Y2",
+      "sw10_Y1",
+      "sw10_Y2"
+    ],
     "minimum_reference_to_scored_sampling_ratio": 2.0,
     "forbidden_reference_source_groups": [
       "tilted-sw4-cpl",
