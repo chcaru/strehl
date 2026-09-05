@@ -1,0 +1,601 @@
+{
+  "consumer_partition": {
+    "counts": {
+      "DIVERGES": 1,
+      "HONORS_FROZEN_SAMPLE_SEMANTICS": 1,
+      "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE": 2
+    },
+    "expected": {
+      "expected_counts": {
+        "DIVERGES": 1,
+        "HONORS_FROZEN_SAMPLE_SEMANTICS": 1,
+        "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE": 2
+      },
+      "required_count": 4
+    },
+    "optional": [
+      {
+        "consumer_id": "helicon",
+        "required": false,
+        "status": "ABSENT_UNASSESSED"
+      }
+    ],
+    "required_total": 4,
+    "sum": 4,
+    "sum_matches_total": true
+  },
+  "determinism": {
+    "baseline_result_sha256": "94032be73acdfde6ef30f26f7987d168312c7874cb36524912cda2ea8932fb81",
+    "byte_identical": true,
+    "repeat_result_sha256": "94032be73acdfde6ef30f26f7987d168312c7874cb36524912cda2ea8932fb81",
+    "same_input_baseline_run_count": 2
+  },
+  "fixture": {
+    "audited_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+    "audited_tiff_origin": "development-common",
+    "fork_input_gamma18": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma18.tiff",
+    "fork_input_linear": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma1.tiff",
+    "fork_input_shifted": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-pixel-shift.tiff",
+    "gamma18_profile_sha256": "00694da00a8f266032e43468cb2c5eafc771b04660f024eecdc530460ba653fe",
+    "identical_input_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+    "linear_profile_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+    "shifted_input_pixel_sha256": "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a"
+  },
+  "headline_verdict": "PROPHOTO_DISPROVED",
+  "movement": {
+    "baseline_to_degraded": {
+      "pass_delta": -1,
+      "red_delta": 1
+    },
+    "degraded_to_planted_improvement": {
+      "pass_delta": 1,
+      "red_delta": -1,
+      "returned_to_baseline_partition": true
+    }
+  },
+  "mutation": {
+    "baseline_line": "    \"linear_neutral_128_srgb8\": 188,",
+    "baseline_reference_sha256": "3ee5ca0d616717f870cff6627ff77946b23f4c2d1585dff9b33db5b81e185dc1",
+    "degraded_line": "    \"linear_neutral_128_srgb8\": 180,",
+    "degraded_reference_sha256": "c0813af4dadfa7916399b8f92f1a3f499ee74265a153c7be501be5cf4ab4a83d",
+    "kind": "unique-full-line-reference-mutation",
+    "label": "PLANTED_IMPROVEMENT",
+    "repair_bytes_equal_baseline": true,
+    "repaired_reference_sha256": "3ee5ca0d616717f870cff6627ff77946b23f4c2d1585dff9b33db5b81e185dc1",
+    "target_count": 1
+  },
+  "phase_partition": {
+    "counts": {
+      "BASELINE_PASS": 1,
+      "BASELINE_REPEAT_BYTE_IDENTICAL": 1,
+      "PLANTED_DEGRADATION_RED": 1,
+      "PLANTED_IMPROVEMENT_PASS": 1
+    },
+    "sum": 4,
+    "sum_matches_total": true,
+    "total": 4
+  },
+  "planted_failure_class": "PROFILE_NUMERIC_NEUTRAL_MISMATCH",
+  "runs": {
+    "baseline": {
+      "arm_partition": [
+        {
+          "PASS": 16,
+          "RED": 0,
+          "arm": "ARTIFACT_IDENTITY",
+          "sum": 16,
+          "sum_matches_total": true,
+          "total": 16
+        },
+        {
+          "PASS": 4,
+          "RED": 0,
+          "arm": "CONSUMER_FORK_RUNTIME",
+          "sum": 4,
+          "sum_matches_total": true,
+          "total": 4
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "CONSUMER_FORK_SOURCE",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "CONSUMER_PARTITION",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "CONSUMER_ZERENE",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 6,
+          "RED": 0,
+          "arm": "EXTERNAL_REFERENCES",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "PRODUCER_DECLARATION",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 6,
+          "RED": 0,
+          "arm": "PRODUCER_SEMANTICS",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "PROFILE_DECLARATION",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 6,
+          "RED": 0,
+          "arm": "PROFILE_NUMERIC",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "READ_AUDIT",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 5,
+          "RED": 0,
+          "arm": "RUNTIME_IDENTITY",
+          "sum": 5,
+          "sum_matches_total": true,
+          "total": 5
+        },
+        {
+          "PASS": 13,
+          "RED": 0,
+          "arm": "SOURCE_ANCHORS",
+          "sum": 13,
+          "sum_matches_total": true,
+          "total": 13
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "TIFF_STORAGE",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "VERDICT",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        }
+      ],
+      "check_partition": {
+        "PASS": 68,
+        "RED": 0,
+        "sum": 68,
+        "sum_matches_total": true,
+        "total": 68
+      },
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\prophoto_gate.py",
+        "--reference",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\reference.json",
+        "--witnesses",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\witnesses.json",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\results\\baseline.json",
+        "--run-label",
+        "baseline",
+        "--libraw-source",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\postprocessing_utils_dcrdefs-0.22.1.cpp",
+        "--libraw-colorconst",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\colorconst-0.22.1.cpp",
+        "--romm-registry",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\romm-registry.html",
+        "--zerene-doc",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\zerene-color-management.html",
+        "--tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+        "--tiff-origin",
+        "development-common",
+        "--fork-input-linear",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma1.tiff",
+        "--fork-input-gamma18",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma18.tiff",
+        "--fork-input-shifted",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-pixel-shift.tiff",
+        "--out-root",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out"
+      ],
+      "exit_code": 0,
+      "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\results\\baseline.json"
+    },
+    "degraded": {
+      "arm_partition": [
+        {
+          "PASS": 16,
+          "RED": 0,
+          "arm": "ARTIFACT_IDENTITY",
+          "sum": 16,
+          "sum_matches_total": true,
+          "total": 16
+        },
+        {
+          "PASS": 4,
+          "RED": 0,
+          "arm": "CONSUMER_FORK_RUNTIME",
+          "sum": 4,
+          "sum_matches_total": true,
+          "total": 4
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "CONSUMER_FORK_SOURCE",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "CONSUMER_PARTITION",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "CONSUMER_ZERENE",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 6,
+          "RED": 0,
+          "arm": "EXTERNAL_REFERENCES",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "PRODUCER_DECLARATION",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 6,
+          "RED": 0,
+          "arm": "PRODUCER_SEMANTICS",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "PROFILE_DECLARATION",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 5,
+          "RED": 1,
+          "arm": "PROFILE_NUMERIC",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "READ_AUDIT",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 5,
+          "RED": 0,
+          "arm": "RUNTIME_IDENTITY",
+          "sum": 5,
+          "sum_matches_total": true,
+          "total": 5
+        },
+        {
+          "PASS": 13,
+          "RED": 0,
+          "arm": "SOURCE_ANCHORS",
+          "sum": 13,
+          "sum_matches_total": true,
+          "total": 13
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "TIFF_STORAGE",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "VERDICT",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        }
+      ],
+      "check_partition": {
+        "PASS": 67,
+        "RED": 1,
+        "sum": 68,
+        "sum_matches_total": true,
+        "total": 68
+      },
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\prophoto_gate.py",
+        "--reference",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\mutated-reference.json",
+        "--witnesses",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\witnesses.json",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\results\\degraded.json",
+        "--run-label",
+        "planted-degradation",
+        "--libraw-source",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\postprocessing_utils_dcrdefs-0.22.1.cpp",
+        "--libraw-colorconst",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\colorconst-0.22.1.cpp",
+        "--romm-registry",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\romm-registry.html",
+        "--zerene-doc",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\zerene-color-management.html",
+        "--tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+        "--tiff-origin",
+        "development-common",
+        "--fork-input-linear",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma1.tiff",
+        "--fork-input-gamma18",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma18.tiff",
+        "--fork-input-shifted",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-pixel-shift.tiff",
+        "--out-root",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out"
+      ],
+      "exit_code": 1,
+      "red_checks": [
+        {
+          "arm": "PROFILE_NUMERIC",
+          "evidence": {
+            "colour_science": 188,
+            "expected": 180,
+            "littlecms": 188
+          },
+          "failure_class": "PROFILE_NUMERIC_NEUTRAL_MISMATCH",
+          "id": "PROFILE_NUMERIC_NEUTRAL",
+          "status": "RED",
+          "summary": "linearized ProPhoto neutral 128 maps to the pinned sRGB code"
+        }
+      ],
+      "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\results\\degraded.json",
+      "unrelated_tiff_storage_arm": {
+        "PASS": 1,
+        "RED": 0,
+        "arm": "TIFF_STORAGE",
+        "sum": 1,
+        "sum_matches_total": true,
+        "total": 1
+      }
+    },
+    "improvement": {
+      "arm_partition": [
+        {
+          "PASS": 16,
+          "RED": 0,
+          "arm": "ARTIFACT_IDENTITY",
+          "sum": 16,
+          "sum_matches_total": true,
+          "total": 16
+        },
+        {
+          "PASS": 4,
+          "RED": 0,
+          "arm": "CONSUMER_FORK_RUNTIME",
+          "sum": 4,
+          "sum_matches_total": true,
+          "total": 4
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "CONSUMER_FORK_SOURCE",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "CONSUMER_PARTITION",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "CONSUMER_ZERENE",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 6,
+          "RED": 0,
+          "arm": "EXTERNAL_REFERENCES",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "PRODUCER_DECLARATION",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 6,
+          "RED": 0,
+          "arm": "PRODUCER_SEMANTICS",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "PROFILE_DECLARATION",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 6,
+          "RED": 0,
+          "arm": "PROFILE_NUMERIC",
+          "sum": 6,
+          "sum_matches_total": true,
+          "total": 6
+        },
+        {
+          "PASS": 2,
+          "RED": 0,
+          "arm": "READ_AUDIT",
+          "sum": 2,
+          "sum_matches_total": true,
+          "total": 2
+        },
+        {
+          "PASS": 5,
+          "RED": 0,
+          "arm": "RUNTIME_IDENTITY",
+          "sum": 5,
+          "sum_matches_total": true,
+          "total": 5
+        },
+        {
+          "PASS": 13,
+          "RED": 0,
+          "arm": "SOURCE_ANCHORS",
+          "sum": 13,
+          "sum_matches_total": true,
+          "total": 13
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "TIFF_STORAGE",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        },
+        {
+          "PASS": 1,
+          "RED": 0,
+          "arm": "VERDICT",
+          "sum": 1,
+          "sum_matches_total": true,
+          "total": 1
+        }
+      ],
+      "check_partition": {
+        "PASS": 68,
+        "RED": 0,
+        "sum": 68,
+        "sum_matches_total": true,
+        "total": 68
+      },
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\prophoto_gate.py",
+        "--reference",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\repaired-reference.json",
+        "--witnesses",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\witnesses.json",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\results\\improvement.json",
+        "--run-label",
+        "planted-improvement",
+        "--libraw-source",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\postprocessing_utils_dcrdefs-0.22.1.cpp",
+        "--libraw-colorconst",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\colorconst-0.22.1.cpp",
+        "--romm-registry",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\romm-registry.html",
+        "--zerene-doc",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\zerene-color-management.html",
+        "--tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+        "--tiff-origin",
+        "development-common",
+        "--fork-input-linear",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma1.tiff",
+        "--fork-input-gamma18",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma18.tiff",
+        "--fork-input-shifted",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-pixel-shift.tiff",
+        "--out-root",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out"
+      ],
+      "exit_code": 0,
+      "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\results\\improvement.json"
+    }
+  },
+  "schema": "m165-prophoto-semantics-commission-v1",
+  "scope": "input-contract-only-not-quality-comparison",
+  "status": "PASS"
+}

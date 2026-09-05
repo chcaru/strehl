@@ -1,0 +1,102 @@
+{
+  "schema": "m165-prophoto-semantics-witnesses-v1",
+  "consumer_interpretations": {
+    "focus-stack-fork": {
+      "classification": "DIVERGES",
+      "claim_basis": [
+        "verified by running",
+        "inferred by reading"
+      ],
+      "reason": "Pinned uint16 path returns samples unchanged, ignores embedded ICC, and assumes output-colorspace semantics whose default is sRGB."
+    },
+    "strehl": {
+      "classification": "HONORS_FROZEN_SAMPLE_SEMANTICS",
+      "claim_basis": [
+        "verified by running",
+        "inferred by reading"
+      ],
+      "limitation": "It enforces the frozen ICC identity and presents the exact unscaled u16 samples at the merge boundary."
+    },
+    "zerene-dmap": {
+      "classification": "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE",
+      "claim_basis": [
+        "inferred by reading"
+      ]
+    },
+    "zerene-pmax": {
+      "classification": "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE",
+      "claim_basis": [
+        "inferred by reading"
+      ]
+    }
+  },
+  "libraw_generated_profile": {
+    "base64": "AAAB8AAAAAACEAAAbW50clJHQiBYWVogAAAAAAAAAAAAAAAAYWNzcAAAAAAAAAAAbm9uZQAAAAAAAAAAAAAAAAAAAAAAAPbWAAEAAAAA0y0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKY3BydAAAAPwAAAAkZGVzYwAAASAAAAA8d3RwdAAAAVwAAAAUYmtwdAAAAXAAAAAUclRSQwAAAYQAAAAOZ1RSQwAAAZQAAAAOYlRSQwAAAaQAAAAOclhZWgAAAbQAAAAUZ1hZWgAAAcgAAAAUYlhZWgAAAdwAAAAUdGV4dAAAAABhdXRvLWdlbmVyYXRlZCBieSBkY3JhdwAAAAAAZGVzYwAAAAAAAAAiUHJvUGhvdG8gRDY1IGdhbW1hIDEgdG9lIHNsb3BlIDEAAAAAAAAAAAAAAAAAAAAAWFlaIAAAAAAAAPNRAAEAAAABFsxYWVogAAAAAAAAAAAAAAAAAAAAAGN1cnYAAAAAAAAAAQEAAABjdXJ2AAAAAAAAAAEBAAAAY3VydgAAAAAAAAABAQAAAFhZWiAAAAAAAADMOQAASb8AAAAAWFlaIAAAAAAAACKbAAC2PQAAAAJYWVogAAAAAAAACAQAAAAEAADTNQ==",
+    "bytes": 496,
+    "claim_basis": [
+      "verified by running"
+    ],
+    "description": "ProPhoto D65 gamma 1 toe slope 1",
+    "matrix_xyz": {
+      "bXYZ": [
+        0.03131103515625,
+        0.00006103515625,
+        0.8250274658203125
+      ],
+      "gXYZ": [
+        0.1351776123046875,
+        0.7118682861328125,
+        0.000030517578125
+      ],
+      "rXYZ": [
+        0.7977447509765625,
+        0.2880706787109375,
+        0.0
+      ],
+      "wtpt": [
+        0.9504547119140625,
+        1.0,
+        1.08905029296875
+      ]
+    },
+    "provenance": {
+      "dcraw_emu_sha256": "6e99ba87597d065ef54737cf244f18abb0770539cfee4f1e07f963ce69c9221d",
+      "invocation": [
+        "dcraw_emu.exe",
+        "-w",
+        "-q",
+        "3",
+        "-o",
+        "4",
+        "-6",
+        "-W",
+        "-g",
+        "1",
+        "1",
+        "-T",
+        "-t",
+        "0"
+      ],
+      "libraw_sha256": "5a571bb44524fad63017b38353a46455df42412dfc49023f452a52e97a7eaa5e",
+      "output_tiff_bytes": 197685456,
+      "output_tiff_sha256": "6ba60c78bcca542ecd5996bb25b7460b5e5b4cbaca32394af1447c91342f1133",
+      "source_sha256": "1b9ad0bac914f017aee35dc36ccec9a69d3f8c8284c604ff9bce0cc9bcd2d38a"
+    },
+    "sha256": "a1792592ee42de0e22b292797094cecbdd120bea07d2dd00a82ebdb7aa2cfbe4"
+  },
+  "optional_consumers": [
+    {
+      "consumer_id": "helicon",
+      "required": false,
+      "status": "ABSENT_UNASSESSED"
+    }
+  ],
+  "producer_claims": {
+    "claim_basis": [
+      "verified by running",
+      "inferred by reading"
+    ],
+    "embedded_profile_declaration": "PROVED",
+    "libraw_pixel_to_embedded_profile_semantics": "D50_COMPATIBLE_EXACT_PROFILE_BYTE_IDENTITY_NOT_CLAIMED"
+  }
+}

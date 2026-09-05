@@ -1,0 +1,3678 @@
+{
+  "arm_partition": [
+    {
+      "PASS": 16,
+      "RED": 0,
+      "arm": "ARTIFACT_IDENTITY",
+      "sum": 16,
+      "sum_matches_total": true,
+      "total": 16
+    },
+    {
+      "PASS": 4,
+      "RED": 0,
+      "arm": "CONSUMER_FORK_RUNTIME",
+      "sum": 4,
+      "sum_matches_total": true,
+      "total": 4
+    },
+    {
+      "PASS": 2,
+      "RED": 0,
+      "arm": "CONSUMER_FORK_SOURCE",
+      "sum": 2,
+      "sum_matches_total": true,
+      "total": 2
+    },
+    {
+      "PASS": 2,
+      "RED": 0,
+      "arm": "CONSUMER_PARTITION",
+      "sum": 2,
+      "sum_matches_total": true,
+      "total": 2
+    },
+    {
+      "PASS": 1,
+      "RED": 0,
+      "arm": "CONSUMER_ZERENE",
+      "sum": 1,
+      "sum_matches_total": true,
+      "total": 1
+    },
+    {
+      "PASS": 6,
+      "RED": 0,
+      "arm": "EXTERNAL_REFERENCES",
+      "sum": 6,
+      "sum_matches_total": true,
+      "total": 6
+    },
+    {
+      "PASS": 1,
+      "RED": 0,
+      "arm": "PRODUCER_DECLARATION",
+      "sum": 1,
+      "sum_matches_total": true,
+      "total": 1
+    },
+    {
+      "PASS": 6,
+      "RED": 0,
+      "arm": "PRODUCER_SEMANTICS",
+      "sum": 6,
+      "sum_matches_total": true,
+      "total": 6
+    },
+    {
+      "PASS": 2,
+      "RED": 0,
+      "arm": "PROFILE_DECLARATION",
+      "sum": 2,
+      "sum_matches_total": true,
+      "total": 2
+    },
+    {
+      "PASS": 5,
+      "RED": 1,
+      "arm": "PROFILE_NUMERIC",
+      "sum": 6,
+      "sum_matches_total": true,
+      "total": 6
+    },
+    {
+      "PASS": 2,
+      "RED": 0,
+      "arm": "READ_AUDIT",
+      "sum": 2,
+      "sum_matches_total": true,
+      "total": 2
+    },
+    {
+      "PASS": 5,
+      "RED": 0,
+      "arm": "RUNTIME_IDENTITY",
+      "sum": 5,
+      "sum_matches_total": true,
+      "total": 5
+    },
+    {
+      "PASS": 13,
+      "RED": 0,
+      "arm": "SOURCE_ANCHORS",
+      "sum": 13,
+      "sum_matches_total": true,
+      "total": 13
+    },
+    {
+      "PASS": 1,
+      "RED": 0,
+      "arm": "TIFF_STORAGE",
+      "sum": 1,
+      "sum_matches_total": true,
+      "total": 1
+    },
+    {
+      "PASS": 1,
+      "RED": 0,
+      "arm": "VERDICT",
+      "sum": 1,
+      "sum_matches_total": true,
+      "total": 1
+    }
+  ],
+  "check_partition": {
+    "PASS": 67,
+    "RED": 1,
+    "sum": 68,
+    "sum_matches_total": true,
+    "total": 68
+  },
+  "checks": [
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "reference": "m165-prophoto-semantics-reference-v1",
+        "witnesses": "m165-prophoto-semantics-witnesses-v1"
+      },
+      "failure_class": null,
+      "id": "REFERENCE_SCHEMAS",
+      "status": "PASS",
+      "summary": "reference and witness schemas are pinned"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 93394,
+          "sha256": "a515a39895c3d1d27adebaecc07fab529f3aa7b3c1ef0dcb12cf417b5367a481"
+        },
+        "expected": {
+          "bytes": 93394,
+          "path": "experiments/M165-common-input/converter.py",
+          "sha256": "a515a39895c3d1d27adebaecc07fab529f3aa7b3c1ef0dcb12cf417b5367a481"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_CONVERTER",
+      "status": "PASS",
+      "summary": "converter byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 271360,
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        },
+        "expected": {
+          "bytes": 271360,
+          "path": "experiments/M165-fork-rebuild/bin/focus-stack.exe",
+          "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_FORK_EXECUTABLE",
+      "status": "PASS",
+      "summary": "fork_executable byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 19592,
+          "sha256": "3519e8b20dd8fd779ae419abe262fb67dc6f6e4c23fbafaa55267d0492b76f79"
+        },
+        "expected": {
+          "bytes": 19592,
+          "path": "experiments/M165-fork-rebuild/fork_consumer.py",
+          "sha256": "3519e8b20dd8fd779ae419abe262fb67dc6f6e4c23fbafaa55267d0492b76f79"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_FORK_CONSUMER_ADAPTER",
+      "status": "PASS",
+      "summary": "fork_consumer_adapter byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 67995648,
+          "sha256": "d6ad6fcc7908e8e90625fa8614d0480b111d7cc887054ed01a3ed2ad5f872d79"
+        },
+        "expected": {
+          "bytes": 67995648,
+          "path": "experiments/M165-fork-rebuild/bin/opencv_world4130.dll",
+          "sha256": "d6ad6fcc7908e8e90625fa8614d0480b111d7cc887054ed01a3ed2ad5f872d79"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_FORK_OPENCV",
+      "status": "PASS",
+      "summary": "fork_opencv byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 548,
+          "sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef"
+        },
+        "expected": {
+          "bytes": 548,
+          "path": "experiments/M165-common-input/linear-prophoto-d50-v1.icc",
+          "sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_LINEAR_PROFILE",
+      "status": "PASS",
+      "summary": "linear_profile byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 29124,
+          "sha256": "f883a1c80d83fec83f3ada3381b9cc07acfe4d8b2e2cb2a0b7b07915f1bb7577"
+        },
+        "expected": {
+          "bytes": 29124,
+          "path": "experiments/M165-fork-rebuild/source-pin.json",
+          "sha256": "f883a1c80d83fec83f3ada3381b9cc07acfe4d8b2e2cb2a0b7b07915f1bb7577"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_SOURCE_PIN",
+      "status": "PASS",
+      "summary": "source_pin byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 2294,
+          "sha256": "dcce8eda23287d19aaf9992782f8d3f845726773edcae67de53a9d4e962d930a"
+        },
+        "expected": {
+          "bytes": 2294,
+          "path": "experiments/M165-common-input/settings-v1.json",
+          "sha256": "dcce8eda23287d19aaf9992782f8d3f845726773edcae67de53a9d4e962d930a"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_SETTINGS",
+      "status": "PASS",
+      "summary": "settings byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 7369,
+          "sha256": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f"
+        },
+        "expected": {
+          "bytes": 7369,
+          "path": "crates/strehl-cli/src/bin/strehl-common-input.rs",
+          "sha256": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_STREHL_CLI",
+      "status": "PASS",
+      "summary": "strehl_cli byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 33071,
+          "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+        },
+        "expected": {
+          "bytes": 33071,
+          "path": "crates/strehl-raw/src/common_tiff.rs",
+          "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+        }
+      },
+      "failure_class": null,
+      "id": "ARTIFACT_STREHL_COMMON_TIFF",
+      "status": "PASS",
+      "summary": "strehl_common_tiff byte identity"
+    },
+    {
+      "arm": "PRODUCER_DECLARATION",
+      "evidence": {
+        "adjust_maximum_thr": 0.0,
+        "auto_bright_thr": null,
+        "bad_pixels_path": null,
+        "bright": 1.0,
+        "chromatic_aberration": null,
+        "dcb_enhance": false,
+        "dcb_iterations": 0,
+        "demosaic_algorithm": "AHD",
+        "exp_preserve_highlights": 0.0,
+        "exp_shift": null,
+        "fbdd_noise_reduction": "Off",
+        "four_color_rgb": false,
+        "gamma": [
+          1.0,
+          1.0
+        ],
+        "half_size": false,
+        "highlight_mode": "Clip",
+        "median_filter_passes": 0,
+        "no_auto_bright": true,
+        "no_auto_scale": false,
+        "noise_thr": null,
+        "output_bps": 16,
+        "output_color": "ProPhoto",
+        "use_auto_wb": false,
+        "use_camera_wb": true,
+        "user_black": 0,
+        "user_cblack": "LibRaw per-channel camera metadata",
+        "user_flip": 0,
+        "user_sat": "LibRaw camera white level",
+        "user_wb": null
+      },
+      "failure_class": null,
+      "id": "SETTINGS_DECLARATION",
+      "status": "PASS",
+      "summary": "settings declare 16-bit linear ProPhoto RGB D50"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": [
+        {
+          "count": 1,
+          "id": "converter-profile-colorants",
+          "lines": [
+            "        (b\"bXYZ\", icc_xyz(0.0313534, 0.0000857, 0.8252100)),",
+            "        (b\"cprt\", icc_text(\"CC0-1.0; generated deterministically by M165\")),",
+            "        (b\"desc\", icc_description(\"M165 Linear ProPhoto RGB D50 v1\")),",
+            "        (b\"gTRC\", icc_curve(1.0)),",
+            "        (b\"gXYZ\", icc_xyz(0.1351917, 0.7118741, 0.0000000)),",
+            "        (b\"rTRC\", icc_curve(1.0)),",
+            "        (b\"rXYZ\", icc_xyz(0.7976749, 0.2880402, 0.0000000)),",
+            "        (b\"wtpt\", icc_xyz(0.9642200, 1.0000000, 0.8252100)),"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "converter-postprocess-prophoto-linear",
+          "lines": [
+            "        \"output_color\": rawpy.ColorSpace.ProPhoto,",
+            "        \"output_bps\": 16,",
+            "        \"user_flip\": 0,"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "converter-postprocess-gamma",
+          "lines": [
+            "        \"gamma\": (1.0, 1.0),",
+            "        \"chromatic_aberration\": None,"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "converter-tiff-storage",
+          "lines": [
+            "        _tiff_entry(TIFF_TAGS[\"compression\"], 3, 1, struct.pack(\"<H\", 1)),",
+            "        _tiff_entry(TIFF_TAGS[\"photometric\"], 3, 1, struct.pack(\"<H\", 2)),",
+            "        _tiff_entry(TIFF_TAGS[\"description\"], 2, len(description), description_at),",
+            "        _tiff_entry(TIFF_TAGS[\"strip_offsets\"], 4, 1, pixels_at),",
+            "        _tiff_entry(TIFF_TAGS[\"samples_per_pixel\"], 3, 1, struct.pack(\"<H\", 3)),",
+            "        _tiff_entry(TIFF_TAGS[\"rows_per_strip\"], 4, 1, height),",
+            "        _tiff_entry(TIFF_TAGS[\"strip_byte_counts\"], 4, 1, pixel_bytes),",
+            "        _tiff_entry(TIFF_TAGS[\"planar\"], 3, 1, struct.pack(\"<H\", 1)),",
+            "        _tiff_entry(TIFF_TAGS[\"sample_format\"], 3, 3, sample_format_at),",
+            "        _tiff_entry(TIFF_TAGS[\"icc\"], 7, len(icc), icc_at),"
+          ]
+        }
+      ],
+      "failure_class": null,
+      "id": "SOURCE_ANCHORS_CONVERTER",
+      "status": "PASS",
+      "summary": "SOURCE_ANCHORS_CONVERTER exact full-line anchors are unique"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": [
+        {
+          "count": 1,
+          "id": "strehl-requires-icc-tag",
+          "lines": [
+            "        let icc_entry = entry(&entries, TAG_ICC_PROFILE)?;",
+            "        if icc_entry.kind != TYPE_UNDEFINED && icc_entry.kind != TYPE_BYTE {"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "strehl-checks-icc-hash",
+          "lines": [
+            "        compare_hash(",
+            "            \"ICC profile\",",
+            "            &self.icc_sha256,",
+            "            expected.icc_sha256.as_deref(),",
+            "        )?;"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "strehl-u16-to-f32-unscaled",
+          "lines": [
+            "            planes[0].push(f32::from(rgb[0]));",
+            "            planes[1].push(f32::from(rgb[1]));",
+            "            planes[2].push(f32::from(rgb[2]));"
+          ]
+        }
+      ],
+      "failure_class": null,
+      "id": "SOURCE_ANCHORS_STREHL_COMMON_TIFF",
+      "status": "PASS",
+      "summary": "SOURCE_ANCHORS_STREHL_COMMON_TIFF exact full-line anchors are unique"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": [
+        {
+          "count": 1,
+          "id": "strehl-cli-merge-facing-hash",
+          "lines": [
+            "    let planes = frame.merge_planes();",
+            "    let merge_hash = CommonTiffFrame::hash_merge_planes(&planes).map_err(|e| e.to_string())?;",
+            "    if merge_hash != frame.pixel_payload_sha256 {"
+          ]
+        }
+      ],
+      "failure_class": null,
+      "id": "SOURCE_ANCHORS_STREHL_CLI",
+      "status": "PASS",
+      "summary": "SOURCE_ANCHORS_STREHL_CLI exact full-line anchors are unique"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "failure_class": null,
+      "id": "FORK_SOURCE_PIN_CONTENTS",
+      "status": "PASS",
+      "summary": "source pin names the exact commit and relevant blobs"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": {
+        "expected": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6",
+        "resolved": "4bc7f95e448cf20ee2bdd758403ec43e2612a1c6"
+      },
+      "failure_class": null,
+      "id": "FORK_COMMIT_AVAILABLE",
+      "status": "PASS",
+      "summary": "pinned fork commit is available"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": {
+        "actual": {
+          "bytes": 9977,
+          "git_blob_sha1": "e89bb270f2c768df4765368b4c0d0f20ade8b551",
+          "sha256": "45c2b93c5c0c54c76a9c3398f376dd50682c2a30f3e3c8c75ca064ab6496db46"
+        },
+        "expected": {
+          "bytes": 9977,
+          "git_blob_sha1": "e89bb270f2c768df4765368b4c0d0f20ade8b551",
+          "sha256": "45c2b93c5c0c54c76a9c3398f376dd50682c2a30f3e3c8c75ca064ab6496db46"
+        }
+      },
+      "failure_class": null,
+      "id": "FORK_BLOB_COLORMGMT",
+      "status": "PASS",
+      "summary": "focus-stack/src/colormgmt.cc blob identity"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": [
+        {
+          "count": 1,
+          "id": "fork-input-modes-no-prophoto",
+          "lines": [
+            "InputColorSpace parse_input_colorspace(const std::string &name)",
+            "{",
+            "  if (name == \"\" || name == \"auto\")          return InputColorSpace::Auto;",
+            "  if (name == \"none\" || name == \"raw\")       return InputColorSpace::None;",
+            "  if (name == \"linear-rec2020\")              return InputColorSpace::LinearRec2020;",
+            "  if (name == \"linear-srgb\" || name == \"linear-rec709\") return InputColorSpace::LinearSRGB;",
+            "  if (name == \"srgb\")                        return InputColorSpace::SRGB;",
+            "  // Unknown: fall back to auto to keep things robust.",
+            "  return InputColorSpace::Auto;",
+            "}"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "fork-integer-bypass",
+          "lines": [
+            "  // 8-bit and 16-bit pass through unchanged. They are assumed to already be",
+            "  // in the output_cs primaries with the appropriate encoding (the pipeline",
+            "  // does not mix encoded and float-source frames in a single stack).",
+            "  if (depth == CV_8U || depth == CV_16U)",
+            "  {",
+            "    return raw;",
+            "  }"
+          ]
+        }
+      ],
+      "failure_class": null,
+      "id": "FORK_ANCHORS_COLORMGMT",
+      "status": "PASS",
+      "summary": "FORK_ANCHORS_COLORMGMT exact full-line anchors are unique"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": {
+        "actual": {
+          "bytes": 5695,
+          "git_blob_sha1": "8f1feeb5eed0169711b8d6a9d0100b5cfa8fe0cb",
+          "sha256": "fd88382402e03015af3c2d19bcb492d4874ae9288f9f2638be5e1886ce2c6fa9"
+        },
+        "expected": {
+          "bytes": 5695,
+          "git_blob_sha1": "8f1feeb5eed0169711b8d6a9d0100b5cfa8fe0cb",
+          "sha256": "fd88382402e03015af3c2d19bcb492d4874ae9288f9f2638be5e1886ce2c6fa9"
+        }
+      },
+      "failure_class": null,
+      "id": "FORK_BLOB_COLORMGMT",
+      "status": "PASS",
+      "summary": "focus-stack/src/colormgmt.hh blob identity"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": [
+        {
+          "count": 1,
+          "id": "fork-internal-srgb-oetf-contract",
+          "lines": [
+            "// The internal pipeline operates in 16-bit unsigned, sRGB-OETF-encoded data",
+            "// (perceptual amplitude scale, which the wavelet fusion needs), but its",
+            "// *primaries* are determined by `output_cs`:"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "fork-integer-assumed-output-space",
+          "lines": [
+            "// 8-bit and 16-bit inputs are assumed to already be in `output_cs` primaries",
+            "// (the pipeline does not currently mix encoded and float inputs)."
+          ]
+        }
+      ],
+      "failure_class": null,
+      "id": "FORK_ANCHORS_COLORMGMT",
+      "status": "PASS",
+      "summary": "FORK_ANCHORS_COLORMGMT exact full-line anchors are unique"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": {
+        "actual": {
+          "bytes": 4099,
+          "git_blob_sha1": "e5b511cdd21c4e50869fd5e7a8c0c25d7a3711e0",
+          "sha256": "510096801a3a21aba9a8b696cb65df4201de68865f249782e244c1dccda0c054"
+        },
+        "expected": {
+          "bytes": 4099,
+          "git_blob_sha1": "e5b511cdd21c4e50869fd5e7a8c0c25d7a3711e0",
+          "sha256": "510096801a3a21aba9a8b696cb65df4201de68865f249782e244c1dccda0c054"
+        }
+      },
+      "failure_class": null,
+      "id": "FORK_BLOB_TASK_LOADIMG",
+      "status": "PASS",
+      "summary": "focus-stack/src/task_loadimg.cc blob identity"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": [
+        {
+          "count": 1,
+          "id": "fork-imread-unchanged",
+          "lines": [
+            "  // IMREAD_UNCHANGED preserves bit depth and channel layout. Required to",
+            "  // accept 16-bit and 32-bit float TIFFs without OpenCV silently casting to",
+            "  // 8-bit (the IMREAD_ANYCOLOR default) or rejecting via the legacy",
+            "  // TIFFRGBAImage path that cannot decode 32-bit float samples.",
+            "  if (!m_result.data)",
+            "  {",
+            "    cv::Mat raw;",
+            "    {",
+            "      std::lock_guard<std::mutex> lock(g_imread_mutex);",
+            "      raw = cv::imread(m_filename, cv::IMREAD_UNCHANGED);"
+          ]
+        }
+      ],
+      "failure_class": null,
+      "id": "FORK_ANCHORS_TASK_LOADIMG",
+      "status": "PASS",
+      "summary": "FORK_ANCHORS_TASK_LOADIMG exact full-line anchors are unique"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": {
+        "actual": {
+          "bytes": 10376,
+          "git_blob_sha1": "cc699f8133da1cba5f2a2f217e10d788f0d3651a",
+          "sha256": "d515176145bd4ae050bd0c78661a1ee975b6e571b52f6f364452ca500b5e1d1a"
+        },
+        "expected": {
+          "bytes": 10376,
+          "git_blob_sha1": "cc699f8133da1cba5f2a2f217e10d788f0d3651a",
+          "sha256": "d515176145bd4ae050bd0c78661a1ee975b6e571b52f6f364452ca500b5e1d1a"
+        }
+      },
+      "failure_class": null,
+      "id": "FORK_BLOB_MAIN",
+      "status": "PASS",
+      "summary": "focus-stack/src/main.cc blob identity"
+    },
+    {
+      "arm": "SOURCE_ANCHORS",
+      "evidence": [
+        {
+          "count": 1,
+          "id": "fork-main-default-output-srgb",
+          "lines": [
+            "    std::string ocs = options.get_arg(\"--output-colorspace\", \"srgb\");",
+            "    stack.set_output_colorspace(static_cast<int>(focusstack::parse_output_colorspace(ocs)));"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "fork-main-advertised-input-modes",
+          "lines": [
+            "                 \"  --input-colorspace=auto       Input float colorspace: auto (linear-rec2020),\\n\"",
+            "                 \"                                linear-rec2020, linear-srgb, srgb, none\\n\";"
+          ]
+        }
+      ],
+      "failure_class": null,
+      "id": "FORK_ANCHORS_MAIN",
+      "status": "PASS",
+      "summary": "FORK_ANCHORS_MAIN exact full-line anchors are unique"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 25088,
+          "sha256": "6e99ba87597d065ef54737cf244f18abb0770539cfee4f1e07f963ce69c9221d"
+        },
+        "expected": {
+          "bytes": 25088,
+          "path": "C:\\dev\\macro\\deps\\libraw\\bin\\dcraw_emu.exe",
+          "sha256": "6e99ba87597d065ef54737cf244f18abb0770539cfee4f1e07f963ce69c9221d"
+        }
+      },
+      "failure_class": null,
+      "id": "LIBRAW_DCRAW_EMU",
+      "status": "PASS",
+      "summary": "LibRaw dcraw_emu byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 1151488,
+          "sha256": "5a571bb44524fad63017b38353a46455df42412dfc49023f452a52e97a7eaa5e"
+        },
+        "expected": {
+          "bytes": 1151488,
+          "path": "C:\\dev\\macro\\deps\\libraw\\bin\\libraw.dll",
+          "sha256": "5a571bb44524fad63017b38353a46455df42412dfc49023f452a52e97a7eaa5e"
+        }
+      },
+      "failure_class": null,
+      "id": "LIBRAW_LIBRARY",
+      "status": "PASS",
+      "summary": "LibRaw library byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 2467,
+          "sha256": "2dab90cece6f7c98781cc0e06da417c365fd6c78abbc735a66fba659210503d0"
+        },
+        "expected": {
+          "bytes": 2467,
+          "path": "C:\\dev\\macro\\deps\\libraw\\libraw\\libraw_version.h",
+          "sha256": "2dab90cece6f7c98781cc0e06da417c365fd6c78abbc735a66fba659210503d0"
+        }
+      },
+      "failure_class": null,
+      "id": "LIBRAW_VERSION_HEADER",
+      "status": "PASS",
+      "summary": "LibRaw version_header byte identity"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 66361,
+          "sha256": "984848d3cf86e59638b20a9f6ca9b60db10ea835461562969b2b9d69c145eb57"
+        },
+        "expected": {
+          "bytes": 66361,
+          "forbidden_anchors": [
+            "ICC",
+            "TIFFTAG_ICCPROFILE"
+          ],
+          "path": "C:\\dev\\macro\\deps\\opencv\\sources\\modules\\imgcodecs\\src\\grfmt_tiff.cpp",
+          "sha256": "984848d3cf86e59638b20a9f6ca9b60db10ea835461562969b2b9d69c145eb57"
+        }
+      },
+      "failure_class": null,
+      "id": "OPENCV_TIFF_SOURCE_IDENTITY",
+      "status": "PASS",
+      "summary": "OpenCV TIFF source byte identity"
+    },
+    {
+      "arm": "CONSUMER_FORK_SOURCE",
+      "evidence": {
+        "ICC": 0,
+        "TIFFTAG_ICCPROFILE": 0
+      },
+      "failure_class": null,
+      "id": "OPENCV_TIFF_NO_ICC_HANDLING",
+      "status": "PASS",
+      "summary": "pinned OpenCV TIFF codec source has no ICC profile handling anchor"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 10888,
+          "sha256": "335761c5d3ce3c6150e09e7114dd9669323112c792651a7d70b34586bf4876ea"
+        },
+        "expected": {
+          "bytes": 10888,
+          "sha256": "335761c5d3ce3c6150e09e7114dd9669323112c792651a7d70b34586bf4876ea",
+          "text_anchors": [
+            "      LibRaw_constants::wide_rgb, LibRaw_constants::prophoto_rgb,",
+            "                               \"WideGamut D65\", \"ProPhoto D65\",",
+            "  static const unsigned pwhite[] = {0xf351, 0x10000, 0x116cc};"
+          ],
+          "url": "https://raw.githubusercontent.com/LibRaw/LibRaw/0.22.1/src/postprocessing/postprocessing_utils_dcrdefs.cpp"
+        }
+      },
+      "failure_class": null,
+      "id": "EXTERNAL_LIBRAW_POSTPROCESSING",
+      "status": "PASS",
+      "summary": "libraw_postprocessing byte identity"
+    },
+    {
+      "arm": "EXTERNAL_REFERENCES",
+      "evidence": {
+        "                               \"WideGamut D65\", \"ProPhoto D65\",": 1,
+        "      LibRaw_constants::wide_rgb, LibRaw_constants::prophoto_rgb,": 1,
+        "  static const unsigned pwhite[] = {0xf351, 0x10000, 0x116cc};": 1
+      },
+      "failure_class": null,
+      "id": "EXTERNAL_ANCHORS_LIBRAW_POSTPROCESSING",
+      "status": "PASS",
+      "summary": "libraw_postprocessing exact source anchors are unique"
+    },
+    {
+      "arm": "ARTIFACT_IDENTITY",
+      "evidence": {
+        "actual": {
+          "bytes": 2199,
+          "sha256": "cad6b9a6661400e70de73fe0c0f9eae501ed58d98c8ecad7afae54275798609b"
+        },
+        "expected": {
+          "bytes": 2199,
+          "sha256": "cad6b9a6661400e70de73fe0c0f9eae501ed58d98c8ecad7afae54275798609b",
+          "text_anchors": [
+            "const double LibRaw_constants::xyzd50_srgb[3][3] = {",
+            "const double LibRaw_constants::prophoto_rgb[3][3] = {",
+            "    {0.529317, 0.330092, 0.140588},"
+          ],
+          "url": "https://raw.githubusercontent.com/LibRaw/LibRaw/0.22.1/src/tables/colorconst.cpp"
+        }
+      },
+      "failure_class": null,
+      "id": "EXTERNAL_LIBRAW_COLORCONST",
+      "status": "PASS",
+      "summary": "libraw_colorconst byte identity"
+    },
+    {
+      "arm": "EXTERNAL_REFERENCES",
+      "evidence": {
+        "    {0.529317, 0.330092, 0.140588},": 1,
+        "const double LibRaw_constants::prophoto_rgb[3][3] = {": 1,
+        "const double LibRaw_constants::xyzd50_srgb[3][3] = {": 1
+      },
+      "failure_class": null,
+      "id": "EXTERNAL_ANCHORS_LIBRAW_COLORCONST",
+      "status": "PASS",
+      "summary": "libraw_colorconst exact source anchors are unique"
+    },
+    {
+      "arm": "EXTERNAL_REFERENCES",
+      "evidence": {
+        "identity_mode": "live-content-anchor-gated",
+        "non_empty": true
+      },
+      "failure_class": null,
+      "id": "EXTERNAL_ROMM_REGISTRY",
+      "status": "PASS",
+      "summary": "romm_registry live source is non-empty and anchor-gated"
+    },
+    {
+      "arm": "EXTERNAL_REFERENCES",
+      "evidence": {
+        "Bit depth: 8, 12, 16": 1,
+        "ISO 22028-2:2013": 2,
+        "White point chromaticity: x = 0.3457, y = 0.3585 (D50)": 2
+      },
+      "failure_class": null,
+      "id": "EXTERNAL_ANCHORS_ROMM_REGISTRY",
+      "status": "PASS",
+      "summary": "romm_registry semantic anchors are present"
+    },
+    {
+      "arm": "EXTERNAL_REFERENCES",
+      "evidence": {
+        "identity_mode": "live-content-anchor-gated",
+        "non_empty": true
+      },
+      "failure_class": null,
+      "id": "EXTERNAL_ZERENE_COLOR_MANAGEMENT",
+      "status": "PASS",
+      "summary": "zerene_color_management live source is non-empty and anchor-gated"
+    },
+    {
+      "arm": "EXTERNAL_REFERENCES",
+      "evidence": {
+        "assume either sRGB or Adobe RGB": 1,
+        "copy the color profile from input": 1,
+        "such as ProPhoto RGB or a linear profile": 1
+      },
+      "failure_class": null,
+      "id": "EXTERNAL_ANCHORS_ZERENE_COLOR_MANAGEMENT",
+      "status": "PASS",
+      "summary": "zerene_color_management semantic anchors are present"
+    },
+    {
+      "arm": "CONSUMER_ZERENE",
+      "evidence": {
+        "DMap": 0,
+        "PMax": 0
+      },
+      "failure_class": null,
+      "id": "ZERENE_INTERNAL_PIPELINE_NOT_DOCUMENTED",
+      "status": "PASS",
+      "summary": "vendor color-management page contains no PMax or DMap pipeline statement"
+    },
+    {
+      "arm": "RUNTIME_IDENTITY",
+      "evidence": {
+        "bytes": 104952,
+        "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+        "version": "3.12.10"
+      },
+      "failure_class": null,
+      "id": "RUNTIME_PYTHON",
+      "status": "PASS",
+      "summary": "Python executable version and hash are pinned"
+    },
+    {
+      "arm": "RUNTIME_IDENTITY",
+      "evidence": {
+        "bytes": 269824,
+        "littlecms": "2.18",
+        "pillow": "12.2.0",
+        "sha256": "46c59cf197b74954dfa01036d97938291573fa9ec339cd34f90fc7c870001cac"
+      },
+      "failure_class": null,
+      "id": "RUNTIME_PILLOW_LCMS",
+      "status": "PASS",
+      "summary": "Pillow and LittleCMS versions and extension hash are pinned"
+    },
+    {
+      "arm": "RUNTIME_IDENTITY",
+      "evidence": {
+        "sources": {
+          "dataset_source": {
+            "bytes": 6882,
+            "sha256": "c5cc25e4b5ab9bc2929753301c984e5949a6fb767714c3d51e29415825d4ca38"
+          },
+          "transfer_source": {
+            "bytes": 15054,
+            "sha256": "fe5d336ea9783e4a7b48cd8ca3933b5937582fd74f107f7fdf183ba17f211541"
+          }
+        },
+        "version": "0.4.7"
+      },
+      "failure_class": null,
+      "id": "RUNTIME_COLOUR_SCIENCE",
+      "status": "PASS",
+      "summary": "colour-science version and ProPhoto sources are pinned"
+    },
+    {
+      "arm": "RUNTIME_IDENTITY",
+      "evidence": {
+        "bytes": 205824,
+        "libraw": [
+          0,
+          22,
+          1
+        ],
+        "params_output_color": 4,
+        "rawpy": "0.27.0",
+        "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+      },
+      "failure_class": null,
+      "id": "RUNTIME_RAWPY_LIBRAW",
+      "status": "PASS",
+      "summary": "rawpy/LibRaw version, enum mapping, and extension hash are pinned"
+    },
+    {
+      "arm": "RUNTIME_IDENTITY",
+      "evidence": {
+        "cv2": "4.13.0",
+        "numpy": "2.4.4",
+        "tifffile": "2026.5.2"
+      },
+      "failure_class": null,
+      "id": "RUNTIME_NUMERIC_TIFF",
+      "status": "PASS",
+      "summary": "NumPy, tifffile, and cv2 versions are pinned"
+    },
+    {
+      "arm": "PROFILE_DECLARATION",
+      "evidence": {
+        "bytes": 548,
+        "class": "mntr",
+        "color_space": "RGB ",
+        "description": "M165 Linear ProPhoto RGB D50 v1",
+        "gamma": {
+          "bTRC": 1.0,
+          "gTRC": 1.0,
+          "rTRC": 1.0
+        },
+        "header_illuminant_xyz": [
+          0.964202880859375,
+          1.0,
+          0.8249053955078125
+        ],
+        "matrix_xyz": {
+          "bXYZ": [
+            0.0313568115234375,
+            9.1552734375e-05,
+            0.8252105712890625
+          ],
+          "gXYZ": [
+            0.13519287109375,
+            0.7118682861328125,
+            0.0
+          ],
+          "rXYZ": [
+            0.79766845703125,
+            0.2880401611328125,
+            0.0
+          ],
+          "wtpt": [
+            0.9642181396484375,
+            1.0,
+            0.8252105712890625
+          ]
+        },
+        "pcs": "XYZ ",
+        "sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+        "tag_ranges": [
+          {
+            "bytes": 16,
+            "offset": 240,
+            "signature": "bTRC"
+          },
+          {
+            "bytes": 20,
+            "offset": 256,
+            "signature": "bXYZ"
+          },
+          {
+            "bytes": 53,
+            "offset": 276,
+            "signature": "cprt"
+          },
+          {
+            "bytes": 122,
+            "offset": 332,
+            "signature": "desc"
+          },
+          {
+            "bytes": 16,
+            "offset": 456,
+            "signature": "gTRC"
+          },
+          {
+            "bytes": 20,
+            "offset": 472,
+            "signature": "gXYZ"
+          },
+          {
+            "bytes": 16,
+            "offset": 492,
+            "signature": "rTRC"
+          },
+          {
+            "bytes": 20,
+            "offset": 508,
+            "signature": "rXYZ"
+          },
+          {
+            "bytes": 20,
+            "offset": 528,
+            "signature": "wtpt"
+          }
+        ],
+        "version": 2.1
+      },
+      "failure_class": null,
+      "id": "PROFILE_ICC_STRUCTURE",
+      "status": "PASS",
+      "summary": "M165 profile is ICC v2.1 monitor RGB-to-XYZ with frozen description"
+    },
+    {
+      "arm": "PROFILE_DECLARATION",
+      "evidence": {
+        "bTRC": 1.0,
+        "gTRC": 1.0,
+        "rTRC": 1.0
+      },
+      "failure_class": null,
+      "id": "PROFILE_LINEAR_TRC",
+      "status": "PASS",
+      "summary": "M165 profile has gamma-1 TRCs"
+    },
+    {
+      "arm": "PROFILE_NUMERIC",
+      "evidence": {
+        "header_illuminant_max_abs_difference": 5.3955078125333955e-06,
+        "tag_max_abs_differences": {
+          "bXYZ": 5.852734375000004e-06,
+          "gXYZ": 5.813867187454136e-06,
+          "rXYZ": 6.442968749964528e-06,
+          "wtpt": 1.8603515624660005e-06
+        },
+        "tolerance": 2e-05
+      },
+      "failure_class": null,
+      "id": "PROFILE_XYZ_NUMERICS",
+      "status": "PASS",
+      "summary": "M165 profile colorants, whitepoint, and header illuminant match reference"
+    },
+    {
+      "arm": "PROFILE_NUMERIC",
+      "evidence": {
+        "class": "mntr",
+        "color_space": "RGB ",
+        "description": "M165 Linear ProPhoto RGB D50 v1",
+        "pcs": "XYZ ",
+        "primaries_xy": [
+          [
+            0.7346984733368174,
+            0.26530152666318263
+          ],
+          [
+            0.1596022515357145,
+            0.8403977484642854
+          ],
+          [
+            0.036603611082672884,
+            0.00010687186273041829
+          ]
+        ],
+        "version": 2.1,
+        "whitepoint_xy": [
+          0.34566867970767146,
+          0.35849634589295876
+        ],
+        "whitepoint_xyz": [
+          0.9642181396484375,
+          1.0,
+          0.8252105712890625
+        ]
+      },
+      "failure_class": null,
+      "id": "PROFILE_LITTLECMS_METADATA",
+      "status": "PASS",
+      "summary": "LittleCMS independently parses D50 ProPhoto primaries and profile class"
+    },
+    {
+      "arm": "PROFILE_NUMERIC",
+      "evidence": {
+        "decoding_function": "cctf_decoding_ROMMRGB",
+        "encoding_function": "cctf_encoding_ROMMRGB",
+        "name": "ProPhoto RGB",
+        "primaries_xy": [
+          [
+            0.7347,
+            0.2653
+          ],
+          [
+            0.1596,
+            0.8404
+          ],
+          [
+            0.0366,
+            0.0001
+          ]
+        ],
+        "whitepoint_xy": [
+          0.3457,
+          0.3585
+        ]
+      },
+      "failure_class": null,
+      "id": "PROFILE_COLOUR_SCIENCE_DATASET",
+      "status": "PASS",
+      "summary": "colour-science identifies ProPhoto as standard nonlinear ROMM RGB"
+    },
+    {
+      "arm": "CONSUMER_FORK_SOURCE",
+      "evidence": {
+        "fork_srgb_decoded_linear": 0.2140482022981852,
+        "linear_difference": 0.28595942721276313,
+        "m165_linear_normalized": 0.5000076295109483,
+        "minimum": 0.28,
+        "uint16_code": 32768
+      },
+      "failure_class": null,
+      "id": "FORK_UINT16_MIDPOINT_SEMANTIC_DIVERGENCE",
+      "status": "PASS",
+      "summary": "the fork's sRGB-OETF assumption gives a different linear meaning to uint16 midpoint"
+    },
+    {
+      "arm": "PROFILE_NUMERIC",
+      "evidence": {
+        "maximum_code_difference": 0,
+        "tolerance": 1
+      },
+      "failure_class": null,
+      "id": "PROFILE_PATCH_LCMS_COLOUR_AGREEMENT",
+      "status": "PASS",
+      "summary": "LittleCMS and colour-science linear-ProPhoto transforms agree"
+    },
+    {
+      "arm": "PROFILE_NUMERIC",
+      "evidence": {
+        "colour_science": 188,
+        "expected": 180,
+        "littlecms": 188
+      },
+      "failure_class": "PROFILE_NUMERIC_NEUTRAL_MISMATCH",
+      "id": "PROFILE_NUMERIC_NEUTRAL",
+      "status": "RED",
+      "summary": "linearized ProPhoto neutral 128 maps to the pinned sRGB code"
+    },
+    {
+      "arm": "PROFILE_NUMERIC",
+      "evidence": {
+        "linear_neutral": 188,
+        "minimum_neutral_separation": 30,
+        "patches": {
+          "colour_linear_prophoto_to_srgb8": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              99,
+              99,
+              99
+            ],
+            [
+              137,
+              137,
+              137
+            ],
+            [
+              188,
+              188,
+              188
+            ],
+            [
+              225,
+              225,
+              225
+            ],
+            [
+              255,
+              255,
+              255
+            ],
+            [
+              231,
+              122,
+              90
+            ],
+            [
+              0,
+              201,
+              235
+            ],
+            [
+              255,
+              149,
+              225
+            ],
+            [
+              125,
+              210,
+              131
+            ]
+          ],
+          "colour_standard_romm_to_srgb8": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              43,
+              43,
+              43
+            ],
+            [
+              81,
+              81,
+              81
+            ],
+            [
+              146,
+              146,
+              146
+            ],
+            [
+              203,
+              203,
+              203
+            ],
+            [
+              255,
+              255,
+              255
+            ],
+            [
+              191,
+              53,
+              29
+            ],
+            [
+              0,
+              159,
+              219
+            ],
+            [
+              255,
+              80,
+              201
+            ],
+            [
+              7,
+              177,
+              65
+            ]
+          ],
+          "input_rgb8": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              32,
+              32,
+              32
+            ],
+            [
+              64,
+              64,
+              64
+            ],
+            [
+              128,
+              128,
+              128
+            ],
+            [
+              192,
+              192,
+              192
+            ],
+            [
+              255,
+              255,
+              255
+            ],
+            [
+              128,
+              64,
+              32
+            ],
+            [
+              32,
+              128,
+              200
+            ],
+            [
+              200,
+              100,
+              180
+            ],
+            [
+              90,
+              150,
+              70
+            ]
+          ],
+          "littlecms_linear_profile_to_srgb8": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              99,
+              99,
+              99
+            ],
+            [
+              137,
+              137,
+              137
+            ],
+            [
+              188,
+              188,
+              188
+            ],
+            [
+              225,
+              225,
+              225
+            ],
+            [
+              255,
+              255,
+              255
+            ],
+            [
+              231,
+              122,
+              90
+            ],
+            [
+              0,
+              201,
+              235
+            ],
+            [
+              255,
+              149,
+              225
+            ],
+            [
+              125,
+              210,
+              131
+            ]
+          ],
+          "maximum_lcms_colour_code_difference": 0,
+          "nonlinear_alternative_differences": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              56,
+              56,
+              56
+            ],
+            [
+              56,
+              56,
+              56
+            ],
+            [
+              42,
+              42,
+              42
+            ],
+            [
+              22,
+              22,
+              22
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              40,
+              69,
+              61
+            ],
+            [
+              0,
+              42,
+              16
+            ],
+            [
+              0,
+              69,
+              24
+            ],
+            [
+              118,
+              33,
+              66
+            ]
+          ]
+        },
+        "standard_romm_neutral": 146
+      },
+      "failure_class": null,
+      "id": "PROFILE_LINEAR_VS_STANDARD_ROMM_SEPARATION",
+      "status": "PASS",
+      "summary": "multiple neutral/colored patches reject standard nonlinear ROMM semantics"
+    },
+    {
+      "arm": "PRODUCER_SEMANTICS",
+      "evidence": {
+        "bytes": 496,
+        "provenance": {
+          "dcraw_emu_sha256": "6e99ba87597d065ef54737cf244f18abb0770539cfee4f1e07f963ce69c9221d",
+          "invocation": [
+            "dcraw_emu.exe",
+            "-w",
+            "-q",
+            "3",
+            "-o",
+            "4",
+            "-6",
+            "-W",
+            "-g",
+            "1",
+            "1",
+            "-T",
+            "-t",
+            "0"
+          ],
+          "libraw_sha256": "5a571bb44524fad63017b38353a46455df42412dfc49023f452a52e97a7eaa5e",
+          "output_tiff_bytes": 197685456,
+          "output_tiff_sha256": "6ba60c78bcca542ecd5996bb25b7460b5e5b4cbaca32394af1447c91342f1133",
+          "source_sha256": "1b9ad0bac914f017aee35dc36ccec9a69d3f8c8284c604ff9bce0cc9bcd2d38a"
+        },
+        "sha256": "a1792592ee42de0e22b292797094cecbdd120bea07d2dd00a82ebdb7aa2cfbe4"
+      },
+      "failure_class": null,
+      "id": "LIBRAW_GENERATED_PROFILE_IDENTITY",
+      "status": "PASS",
+      "summary": "embedded LibRaw generated-profile witness decodes to pinned bytes"
+    },
+    {
+      "arm": "PRODUCER_SEMANTICS",
+      "evidence": {
+        "numeric_differences": {
+          "bXYZ": 0.0,
+          "gXYZ": 0.0,
+          "rXYZ": 0.0,
+          "wtpt": 0.0
+        },
+        "profile": {
+          "bytes": 496,
+          "class": "mntr",
+          "color_space": "RGB ",
+          "description": "ProPhoto D65 gamma 1 toe slope 1",
+          "gamma": {
+            "bTRC": 1.0,
+            "gTRC": 1.0,
+            "rTRC": 1.0
+          },
+          "header_illuminant_xyz": [
+            0.964202880859375,
+            1.0,
+            0.8249053955078125
+          ],
+          "matrix_xyz": {
+            "bXYZ": [
+              0.03131103515625,
+              6.103515625e-05,
+              0.8250274658203125
+            ],
+            "gXYZ": [
+              0.1351776123046875,
+              0.7118682861328125,
+              3.0517578125e-05
+            ],
+            "rXYZ": [
+              0.7977447509765625,
+              0.2880706787109375,
+              0.0
+            ],
+            "wtpt": [
+              0.9504547119140625,
+              1.0,
+              1.08905029296875
+            ]
+          },
+          "pcs": "XYZ ",
+          "sha256": "a1792592ee42de0e22b292797094cecbdd120bea07d2dd00a82ebdb7aa2cfbe4",
+          "tag_ranges": [
+            {
+              "bytes": 36,
+              "offset": 252,
+              "signature": "cprt"
+            },
+            {
+              "bytes": 60,
+              "offset": 288,
+              "signature": "desc"
+            },
+            {
+              "bytes": 20,
+              "offset": 348,
+              "signature": "wtpt"
+            },
+            {
+              "bytes": 20,
+              "offset": 368,
+              "signature": "bkpt"
+            },
+            {
+              "bytes": 14,
+              "offset": 388,
+              "signature": "rTRC"
+            },
+            {
+              "bytes": 14,
+              "offset": 404,
+              "signature": "gTRC"
+            },
+            {
+              "bytes": 14,
+              "offset": 420,
+              "signature": "bTRC"
+            },
+            {
+              "bytes": 20,
+              "offset": 436,
+              "signature": "rXYZ"
+            },
+            {
+              "bytes": 20,
+              "offset": 456,
+              "signature": "gXYZ"
+            },
+            {
+              "bytes": 20,
+              "offset": 476,
+              "signature": "bXYZ"
+            }
+          ],
+          "version": 2.1
+        }
+      },
+      "failure_class": null,
+      "id": "LIBRAW_GENERATED_PROFILE_PARSE",
+      "status": "PASS",
+      "summary": "LibRaw witness independently parses as ProPhoto D65 gamma 1"
+    },
+    {
+      "arm": "PRODUCER_SEMANTICS",
+      "evidence": {
+        "rawpy_params_output_color": 4,
+        "source_anchor_counts": {
+          "                               \"WideGamut D65\", \"ProPhoto D65\",": 1,
+          "      LibRaw_constants::wide_rgb, LibRaw_constants::prophoto_rgb,": 1,
+          "  static const unsigned pwhite[] = {0xf351, 0x10000, 0x116cc};": 1
+        }
+      },
+      "failure_class": null,
+      "id": "LIBRAW_OUTPUT_COLOR_4_MAPPING",
+      "status": "PASS",
+      "summary": "rawpy output_color 4 maps to LibRaw prophoto_rgb and its companion profile metadata"
+    },
+    {
+      "arm": "PRODUCER_SEMANTICS",
+      "evidence": {
+        "independent_bradford_srgb_to_prophoto": [
+          [
+            0.5293884707117271,
+            0.330231217729904,
+            0.1406271677633327
+          ],
+          [
+            0.09830508851443757,
+            0.8734839012381028,
+            0.028146056090101387
+          ],
+          [
+            0.01685106380765967,
+            0.1176968437423846,
+            0.8656732685656675
+          ]
+        ],
+        "independent_unadapted_srgb_to_prophoto": [
+          [
+            0.49976361,
+            0.29243336,
+            0.17592813000000002
+          ],
+          [
+            0.09644593000000001,
+            0.88635928,
+            0.03007699000000001
+          ],
+          [
+            0.02339739,
+            0.14450616,
+            1.15229115
+          ]
+        ],
+        "libraw_prophoto_rgb": [
+          [
+            0.529317,
+            0.330092,
+            0.140588
+          ],
+          [
+            0.098368,
+            0.873465,
+            0.028169
+          ],
+          [
+            0.016879,
+            0.117663,
+            0.865457
+          ]
+        ],
+        "maximum_abs_difference_to_bradford": 0.00021626856566747676,
+        "maximum_abs_difference_to_unadapted": 0.2868341499999999,
+        "tolerances": {
+          "maximum_to_bradford": 0.001,
+          "minimum_to_unadapted": 0.1
+        }
+      },
+      "failure_class": null,
+      "id": "LIBRAW_PROPHOTO_MATRIX_D50_COMPATIBLE",
+      "status": "PASS",
+      "summary": "LibRaw prophoto_rgb matches an independent Bradford D50-adapted transform"
+    },
+    {
+      "arm": "PRODUCER_SEMANTICS",
+      "evidence": {
+        "maximum_code_difference": 0,
+        "profile_bytes_identical": false,
+        "tolerance": 0
+      },
+      "failure_class": null,
+      "id": "LIBRAW_GENERATED_PROFILE_OPERATIONAL_EQUIVALENCE",
+      "status": "PASS",
+      "summary": "LibRaw and M165 gamma-1 profiles transform frozen patches identically"
+    },
+    {
+      "arm": "PRODUCER_SEMANTICS",
+      "evidence": {
+        "assumption_under_test": "rawpy/LibRaw output-color 4 with gamma 1 emits linear D50-adapted ProPhoto samples operationally described by the embedded M165 profile",
+        "claim_basis": [
+          "verified by running",
+          "inferred by reading"
+        ],
+        "colorant_xyz_deltas_libraw_minus_m165": {
+          "bXYZ": [
+            -4.57763671875e-05,
+            -3.0517578125e-05,
+            -0.00018310546875
+          ],
+          "gXYZ": [
+            -1.52587890625e-05,
+            0.0,
+            3.0517578125e-05
+          ],
+          "rXYZ": [
+            7.62939453125e-05,
+            3.0517578125e-05,
+            0.0
+          ]
+        },
+        "embedded_profile_declaration": "PROVED",
+        "generated_profile_bytes_identical": false,
+        "generated_profile_patch_maximum_code_difference": 0,
+        "generated_profile_whitepoint_is_metadata_not_pixel_space_proof": true,
+        "libraw_generated_profile_sha256": "a1792592ee42de0e22b292797094cecbdd120bea07d2dd00a82ebdb7aa2cfbe4",
+        "libraw_matrix_maximum_abs_difference_to_bradford": 0.00021626856566747676,
+        "libraw_matrix_maximum_abs_difference_to_unadapted": 0.2868341499999999,
+        "libraw_pixel_to_embedded_profile_semantics": "D50_COMPATIBLE_EXACT_PROFILE_BYTE_IDENTITY_NOT_CLAIMED",
+        "m165_profile_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+        "maximum_abs_colorant_xyz_delta": 0.00018310546875,
+        "media_white_xy_delta_libraw_minus_m165": [
+          -0.03296818723037509,
+          -0.02949540712380061
+        ],
+        "media_white_xyz_delta_libraw_minus_m165": [
+          -0.013763427734375,
+          0.0,
+          0.2638397216796875
+        ]
+      },
+      "failure_class": null,
+      "id": "PRODUCER_PIXEL_PROFILE_COMPATIBILITY",
+      "status": "PASS",
+      "summary": "producer transform is consistent with the embedded linear D50 ProPhoto semantics"
+    },
+    {
+      "arm": "TIFF_STORAGE",
+      "evidence": {
+        "bits_per_sample": 16,
+        "compression": 1,
+        "decoded_pixel_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+        "dtype": "uint16",
+        "file_bytes": 75040,
+        "file_range": {
+          "bytes": 75040,
+          "end": 75040,
+          "sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+          "start": 0
+        },
+        "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+        "hash_algorithm": "SHA-256",
+        "icc_range": {
+          "bytes": 548,
+          "end": 1312,
+          "sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+          "start": 764
+        },
+        "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+        "origin": "development-common",
+        "photometric": 2,
+        "pixel_payload_ranges": [
+          {
+            "bytes": 73728,
+            "end": 75040,
+            "start": 1312
+          }
+        ],
+        "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+        "pixel_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+        "planar_configuration": 1,
+        "rows_per_strip": 96,
+        "shape": [
+          96,
+          128,
+          3
+        ],
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          284,
+          339,
+          34675
+        ]
+      },
+      "failure_class": null,
+      "id": "TIFF_STORAGE",
+      "status": "PASS",
+      "summary": "audited TIFF is uncompressed chunky unsigned RGB16 with frozen ICC"
+    },
+    {
+      "arm": "CONSUMER_FORK_RUNTIME",
+      "evidence": {
+        "gamma1": {
+          "bits_per_sample": 16,
+          "compression": 1,
+          "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+          "dtype": "uint16",
+          "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+          "photometric": 2,
+          "planar_configuration": 1,
+          "shape": [
+            96,
+            128,
+            3
+          ]
+        },
+        "gamma18": {
+          "bits_per_sample": 16,
+          "compression": 1,
+          "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+          "dtype": "uint16",
+          "icc_sha256": "00694da00a8f266032e43468cb2c5eafc771b04660f024eecdc530460ba653fe",
+          "photometric": 2,
+          "planar_configuration": 1,
+          "shape": [
+            96,
+            128,
+            3
+          ]
+        },
+        "pixel_shift": {
+          "bits_per_sample": 16,
+          "compression": 1,
+          "decoded_pixel_sha256": "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a",
+          "dtype": "uint16",
+          "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+          "photometric": 2,
+          "planar_configuration": 1,
+          "shape": [
+            96,
+            128,
+            3
+          ]
+        }
+      },
+      "failure_class": null,
+      "id": "FORK_PROFILE_FIXTURE_CONTRAST",
+      "status": "PASS",
+      "summary": "locked fork fixtures have exact uint16 pixels and distinct valid ICC TRCs"
+    },
+    {
+      "arm": "CONSUMER_FORK_RUNTIME",
+      "evidence": {
+        "gamma": {
+          "bTRC": 1.80078125,
+          "gTRC": 1.80078125,
+          "rTRC": 1.80078125
+        },
+        "littlecms_description": "M165 Linear ProPhoto RGB D50 v1"
+      },
+      "failure_class": null,
+      "id": "FORK_PROFILE_FIXTURE_TRC",
+      "status": "PASS",
+      "summary": "contrast fixture is accepted by LittleCMS with gamma-1.8 TRCs"
+    },
+    {
+      "arm": "CONSUMER_FORK_RUNTIME",
+      "evidence": {
+        "input_colorspaces": [
+          "auto",
+          "srgb",
+          "linear-srgb",
+          "linear-rec2020",
+          "none"
+        ],
+        "input_pixels_equal": true,
+        "input_profiles_differ": true,
+        "movable_null_run_count": 1,
+        "output_dtypes": [
+          "uint16"
+        ],
+        "output_icc_hashes": [
+          "ABSENT"
+        ],
+        "output_shapes": [
+          [
+            96,
+            128,
+            3
+          ]
+        ],
+        "profile_invariance_output_decoded_pixel_hashes": [
+          "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad"
+        ],
+        "profile_invariance_run_count": 10,
+        "run_count": 11,
+        "runs": [
+          {
+            "case_id": "gamma1-auto",
+            "exit_code": 0,
+            "input_colorspace": "auto",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma1",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma1-srgb",
+            "exit_code": 0,
+            "input_colorspace": "srgb",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma1",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma1-linear-srgb",
+            "exit_code": 0,
+            "input_colorspace": "linear-srgb",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma1",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma1-linear-rec2020",
+            "exit_code": 0,
+            "input_colorspace": "linear-rec2020",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma1",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma1-none",
+            "exit_code": 0,
+            "input_colorspace": "none",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma1",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma18-auto",
+            "exit_code": 0,
+            "input_colorspace": "auto",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma18",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma18-srgb",
+            "exit_code": 0,
+            "input_colorspace": "srgb",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma18",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma18-linear-srgb",
+            "exit_code": 0,
+            "input_colorspace": "linear-srgb",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma18",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma18-linear-rec2020",
+            "exit_code": 0,
+            "input_colorspace": "linear-rec2020",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma18",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "gamma18-none",
+            "exit_code": 0,
+            "input_colorspace": "none",
+            "input_path_occurrences": 2,
+            "input_profile": "gamma18",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "pixel-shift-auto",
+            "exit_code": 0,
+            "input_colorspace": "auto",
+            "input_path_occurrences": 2,
+            "input_profile": "pixel-shift",
+            "output": {
+              "bits_per_sample": 16,
+              "compression": 5,
+              "decoded_pixel_sha256": "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a",
+              "dtype": "uint16",
+              "icc_sha256": null,
+              "photometric": 2,
+              "planar_configuration": 1,
+              "shape": [
+                96,
+                128,
+                3
+              ]
+            }
+          }
+        ],
+        "shifted_input_decoded_pixel_sha256": "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a",
+        "shifted_output_decoded_pixel_hashes": [
+          "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a"
+        ]
+      },
+      "failure_class": null,
+      "id": "FORK_RUNTIME_UINT16_ICC_INERT",
+      "status": "PASS",
+      "summary": "frozen fork uint16 outputs are ICC/profile/flag-inert and omit ICC"
+    },
+    {
+      "arm": "CONSUMER_FORK_RUNTIME",
+      "evidence": {
+        "baseline_input": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+        "baseline_outputs": [
+          "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad"
+        ],
+        "shifted_input": "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a",
+        "shifted_outputs": [
+          "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a"
+        ]
+      },
+      "failure_class": null,
+      "id": "FORK_RUNTIME_PIXEL_NULL_MOVES",
+      "status": "PASS",
+      "summary": "fork output changes when the uint16 pixel payload changes"
+    },
+    {
+      "arm": "READ_AUDIT",
+      "evidence": {
+        "api": "CreateFileW",
+        "consumer_path_opens_expected": true,
+        "desired_access": "GENERIC_READ",
+        "hash_and_parse_same_memory": true,
+        "held_through_consumer_exit": true,
+        "inputs": [
+          {
+            "bytes": 74480,
+            "label": "fork-input-gamma1",
+            "sha256": "7d54c57cf5f5fc4da41a504c653b00606fad4ab01ab32ab9fb7f21fa5c746d26"
+          },
+          {
+            "bytes": 74480,
+            "label": "fork-input-gamma18",
+            "sha256": "f581c987abab2c991e5eff1e9b94006960b679448862b752e6ce0e1edcd64e71"
+          },
+          {
+            "bytes": 74480,
+            "label": "fork-input-pixel-shift",
+            "sha256": "5c02fb2a7b26544c51605dda92bcaea35b8d9c31d9751ec302aeead004cf65dc"
+          }
+        ],
+        "locked_input_count": 3,
+        "metadata_unchanged": true,
+        "share_mode": "FILE_SHARE_READ"
+      },
+      "failure_class": null,
+      "id": "FORK_LOCKED_INPUT_HANDOFF",
+      "status": "PASS",
+      "summary": "one verifier read stayed locked through every consumer exit"
+    },
+    {
+      "arm": "CONSUMER_PARTITION",
+      "evidence": [
+        {
+          "claim_basis": [
+            "verified by running",
+            "inferred by reading"
+          ],
+          "classification": "HONORS_FROZEN_SAMPLE_SEMANTICS",
+          "consumer_id": "strehl",
+          "limitation": "It enforces the frozen ICC identity and presents the exact unscaled u16 samples at the merge boundary.",
+          "required": true
+        },
+        {
+          "claim_basis": [
+            "verified by running",
+            "inferred by reading"
+          ],
+          "classification": "DIVERGES",
+          "consumer_id": "focus-stack-fork",
+          "reason": "Pinned uint16 path returns samples unchanged, ignores embedded ICC, and assumes output-colorspace semantics whose default is sRGB.",
+          "required": true
+        },
+        {
+          "claim_basis": [
+            "inferred by reading"
+          ],
+          "classification": "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE",
+          "consumer_id": "zerene-pmax",
+          "required": true
+        },
+        {
+          "claim_basis": [
+            "inferred by reading"
+          ],
+          "classification": "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE",
+          "consumer_id": "zerene-dmap",
+          "required": true
+        }
+      ],
+      "failure_class": null,
+      "id": "CONSUMER_CLASSIFICATIONS",
+      "status": "PASS",
+      "summary": "consumer classifications match source/runtime evidence"
+    },
+    {
+      "arm": "CONSUMER_PARTITION",
+      "evidence": {
+        "counts": {
+          "DIVERGES": 1,
+          "HONORS_FROZEN_SAMPLE_SEMANTICS": 1,
+          "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE": 2
+        },
+        "expected": {
+          "expected_counts": {
+            "DIVERGES": 1,
+            "HONORS_FROZEN_SAMPLE_SEMANTICS": 1,
+            "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE": 2
+          },
+          "required_count": 4
+        },
+        "optional": [
+          {
+            "consumer_id": "helicon",
+            "required": false,
+            "status": "ABSENT_UNASSESSED"
+          }
+        ],
+        "required_total": 4,
+        "sum": 4,
+        "sum_matches_total": true
+      },
+      "failure_class": null,
+      "id": "CONSUMER_REQUIRED_PARTITION",
+      "status": "PASS",
+      "summary": "required consumer partition is exhaustive and totals four"
+    },
+    {
+      "arm": "VERDICT",
+      "evidence": {
+        "fork_diverges": true,
+        "producer_d50_compatible": true,
+        "zerene_unprovable": true
+      },
+      "failure_class": null,
+      "id": "HEADLINE_VERDICT",
+      "status": "PASS",
+      "summary": "required fork divergence forces PROPHOTO_DISPROVED despite producer compatibility"
+    },
+    {
+      "arm": "READ_AUDIT",
+      "evidence": {
+        "consumer_reopens_are_locked": true,
+        "maximum_read_count": 1,
+        "path_count": 39
+      },
+      "failure_class": null,
+      "id": "PATH_READ_COUNTS",
+      "status": "PASS",
+      "summary": "every verifier path artifact was read at most once"
+    }
+  ],
+  "evidence": {
+    "colour_science_profile": {
+      "decoding_function": "cctf_decoding_ROMMRGB",
+      "encoding_function": "cctf_encoding_ROMMRGB",
+      "name": "ProPhoto RGB",
+      "primaries_xy": [
+        [
+          0.7347,
+          0.2653
+        ],
+        [
+          0.1596,
+          0.8404
+        ],
+        [
+          0.0366,
+          0.0001
+        ]
+      ],
+      "whitepoint_xy": [
+        0.3457,
+        0.3585
+      ]
+    },
+    "consumer_partition": {
+      "counts": {
+        "DIVERGES": 1,
+        "HONORS_FROZEN_SAMPLE_SEMANTICS": 1,
+        "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE": 2
+      },
+      "expected": {
+        "expected_counts": {
+          "DIVERGES": 1,
+          "HONORS_FROZEN_SAMPLE_SEMANTICS": 1,
+          "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE": 2
+        },
+        "required_count": 4
+      },
+      "optional": [
+        {
+          "consumer_id": "helicon",
+          "required": false,
+          "status": "ABSENT_UNASSESSED"
+        }
+      ],
+      "required_total": 4,
+      "sum": 4,
+      "sum_matches_total": true
+    },
+    "consumers": [
+      {
+        "claim_basis": [
+          "verified by running",
+          "inferred by reading"
+        ],
+        "classification": "HONORS_FROZEN_SAMPLE_SEMANTICS",
+        "consumer_id": "strehl",
+        "limitation": "It enforces the frozen ICC identity and presents the exact unscaled u16 samples at the merge boundary.",
+        "required": true
+      },
+      {
+        "claim_basis": [
+          "verified by running",
+          "inferred by reading"
+        ],
+        "classification": "DIVERGES",
+        "consumer_id": "focus-stack-fork",
+        "reason": "Pinned uint16 path returns samples unchanged, ignores embedded ICC, and assumes output-colorspace semantics whose default is sRGB.",
+        "required": true
+      },
+      {
+        "claim_basis": [
+          "inferred by reading"
+        ],
+        "classification": "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE",
+        "consumer_id": "zerene-pmax",
+        "required": true
+      },
+      {
+        "claim_basis": [
+          "inferred by reading"
+        ],
+        "classification": "PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE",
+        "consumer_id": "zerene-dmap",
+        "required": true
+      }
+    ],
+    "fork_runtime": {
+      "input_colorspaces": [
+        "auto",
+        "srgb",
+        "linear-srgb",
+        "linear-rec2020",
+        "none"
+      ],
+      "input_pixels_equal": true,
+      "input_profiles_differ": true,
+      "movable_null_run_count": 1,
+      "output_dtypes": [
+        "uint16"
+      ],
+      "output_icc_hashes": [
+        "ABSENT"
+      ],
+      "output_shapes": [
+        [
+          96,
+          128,
+          3
+        ]
+      ],
+      "profile_invariance_output_decoded_pixel_hashes": [
+        "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad"
+      ],
+      "profile_invariance_run_count": 10,
+      "run_count": 11,
+      "runs": [
+        {
+          "case_id": "gamma1-auto",
+          "exit_code": 0,
+          "input_colorspace": "auto",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma1",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma1-srgb",
+          "exit_code": 0,
+          "input_colorspace": "srgb",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma1",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma1-linear-srgb",
+          "exit_code": 0,
+          "input_colorspace": "linear-srgb",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma1",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma1-linear-rec2020",
+          "exit_code": 0,
+          "input_colorspace": "linear-rec2020",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma1",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma1-none",
+          "exit_code": 0,
+          "input_colorspace": "none",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma1",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma18-auto",
+          "exit_code": 0,
+          "input_colorspace": "auto",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma18",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma18-srgb",
+          "exit_code": 0,
+          "input_colorspace": "srgb",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma18",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma18-linear-srgb",
+          "exit_code": 0,
+          "input_colorspace": "linear-srgb",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma18",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma18-linear-rec2020",
+          "exit_code": 0,
+          "input_colorspace": "linear-rec2020",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma18",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "gamma18-none",
+          "exit_code": 0,
+          "input_colorspace": "none",
+          "input_path_occurrences": 2,
+          "input_profile": "gamma18",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        },
+        {
+          "case_id": "pixel-shift-auto",
+          "exit_code": 0,
+          "input_colorspace": "auto",
+          "input_path_occurrences": 2,
+          "input_profile": "pixel-shift",
+          "output": {
+            "bits_per_sample": 16,
+            "compression": 5,
+            "decoded_pixel_sha256": "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a",
+            "dtype": "uint16",
+            "icc_sha256": null,
+            "photometric": 2,
+            "planar_configuration": 1,
+            "shape": [
+              96,
+              128,
+              3
+            ]
+          }
+        }
+      ],
+      "shifted_input_decoded_pixel_sha256": "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a",
+      "shifted_output_decoded_pixel_hashes": [
+        "b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a"
+      ]
+    },
+    "git_object_audit": [
+      {
+        "anchors": [
+          {
+            "count": 1,
+            "id": "fork-input-modes-no-prophoto",
+            "lines": [
+              "InputColorSpace parse_input_colorspace(const std::string &name)",
+              "{",
+              "  if (name == \"\" || name == \"auto\")          return InputColorSpace::Auto;",
+              "  if (name == \"none\" || name == \"raw\")       return InputColorSpace::None;",
+              "  if (name == \"linear-rec2020\")              return InputColorSpace::LinearRec2020;",
+              "  if (name == \"linear-srgb\" || name == \"linear-rec709\") return InputColorSpace::LinearSRGB;",
+              "  if (name == \"srgb\")                        return InputColorSpace::SRGB;",
+              "  // Unknown: fall back to auto to keep things robust.",
+              "  return InputColorSpace::Auto;",
+              "}"
+            ]
+          },
+          {
+            "count": 1,
+            "id": "fork-integer-bypass",
+            "lines": [
+              "  // 8-bit and 16-bit pass through unchanged. They are assumed to already be",
+              "  // in the output_cs primaries with the appropriate encoding (the pipeline",
+              "  // does not mix encoded and float-source frames in a single stack).",
+              "  if (depth == CV_8U || depth == CV_16U)",
+              "  {",
+              "    return raw;",
+              "  }"
+            ]
+          }
+        ],
+        "bytes": 9977,
+        "git_blob_sha1": "e89bb270f2c768df4765368b4c0d0f20ade8b551",
+        "path": "focus-stack/src/colormgmt.cc",
+        "read_count": 1,
+        "sha256": "45c2b93c5c0c54c76a9c3398f376dd50682c2a30f3e3c8c75ca064ab6496db46"
+      },
+      {
+        "anchors": [
+          {
+            "count": 1,
+            "id": "fork-internal-srgb-oetf-contract",
+            "lines": [
+              "// The internal pipeline operates in 16-bit unsigned, sRGB-OETF-encoded data",
+              "// (perceptual amplitude scale, which the wavelet fusion needs), but its",
+              "// *primaries* are determined by `output_cs`:"
+            ]
+          },
+          {
+            "count": 1,
+            "id": "fork-integer-assumed-output-space",
+            "lines": [
+              "// 8-bit and 16-bit inputs are assumed to already be in `output_cs` primaries",
+              "// (the pipeline does not currently mix encoded and float inputs)."
+            ]
+          }
+        ],
+        "bytes": 5695,
+        "git_blob_sha1": "8f1feeb5eed0169711b8d6a9d0100b5cfa8fe0cb",
+        "path": "focus-stack/src/colormgmt.hh",
+        "read_count": 1,
+        "sha256": "fd88382402e03015af3c2d19bcb492d4874ae9288f9f2638be5e1886ce2c6fa9"
+      },
+      {
+        "anchors": [
+          {
+            "count": 1,
+            "id": "fork-imread-unchanged",
+            "lines": [
+              "  // IMREAD_UNCHANGED preserves bit depth and channel layout. Required to",
+              "  // accept 16-bit and 32-bit float TIFFs without OpenCV silently casting to",
+              "  // 8-bit (the IMREAD_ANYCOLOR default) or rejecting via the legacy",
+              "  // TIFFRGBAImage path that cannot decode 32-bit float samples.",
+              "  if (!m_result.data)",
+              "  {",
+              "    cv::Mat raw;",
+              "    {",
+              "      std::lock_guard<std::mutex> lock(g_imread_mutex);",
+              "      raw = cv::imread(m_filename, cv::IMREAD_UNCHANGED);"
+            ]
+          }
+        ],
+        "bytes": 4099,
+        "git_blob_sha1": "e5b511cdd21c4e50869fd5e7a8c0c25d7a3711e0",
+        "path": "focus-stack/src/task_loadimg.cc",
+        "read_count": 1,
+        "sha256": "510096801a3a21aba9a8b696cb65df4201de68865f249782e244c1dccda0c054"
+      },
+      {
+        "anchors": [
+          {
+            "count": 1,
+            "id": "fork-main-default-output-srgb",
+            "lines": [
+              "    std::string ocs = options.get_arg(\"--output-colorspace\", \"srgb\");",
+              "    stack.set_output_colorspace(static_cast<int>(focusstack::parse_output_colorspace(ocs)));"
+            ]
+          },
+          {
+            "count": 1,
+            "id": "fork-main-advertised-input-modes",
+            "lines": [
+              "                 \"  --input-colorspace=auto       Input float colorspace: auto (linear-rec2020),\\n\"",
+              "                 \"                                linear-rec2020, linear-srgb, srgb, none\\n\";"
+            ]
+          }
+        ],
+        "bytes": 10376,
+        "git_blob_sha1": "cc699f8133da1cba5f2a2f217e10d788f0d3651a",
+        "path": "focus-stack/src/main.cc",
+        "read_count": 1,
+        "sha256": "d515176145bd4ae050bd0c78661a1ee975b6e571b52f6f364452ca500b5e1d1a"
+      }
+    ],
+    "libraw_generated_profile": {
+      "bytes": 496,
+      "class": "mntr",
+      "color_space": "RGB ",
+      "description": "ProPhoto D65 gamma 1 toe slope 1",
+      "gamma": {
+        "bTRC": 1.0,
+        "gTRC": 1.0,
+        "rTRC": 1.0
+      },
+      "header_illuminant_xyz": [
+        0.964202880859375,
+        1.0,
+        0.8249053955078125
+      ],
+      "matrix_xyz": {
+        "bXYZ": [
+          0.03131103515625,
+          6.103515625e-05,
+          0.8250274658203125
+        ],
+        "gXYZ": [
+          0.1351776123046875,
+          0.7118682861328125,
+          3.0517578125e-05
+        ],
+        "rXYZ": [
+          0.7977447509765625,
+          0.2880706787109375,
+          0.0
+        ],
+        "wtpt": [
+          0.9504547119140625,
+          1.0,
+          1.08905029296875
+        ]
+      },
+      "pcs": "XYZ ",
+      "sha256": "a1792592ee42de0e22b292797094cecbdd120bea07d2dd00a82ebdb7aa2cfbe4",
+      "tag_ranges": [
+        {
+          "bytes": 36,
+          "offset": 252,
+          "signature": "cprt"
+        },
+        {
+          "bytes": 60,
+          "offset": 288,
+          "signature": "desc"
+        },
+        {
+          "bytes": 20,
+          "offset": 348,
+          "signature": "wtpt"
+        },
+        {
+          "bytes": 20,
+          "offset": 368,
+          "signature": "bkpt"
+        },
+        {
+          "bytes": 14,
+          "offset": 388,
+          "signature": "rTRC"
+        },
+        {
+          "bytes": 14,
+          "offset": 404,
+          "signature": "gTRC"
+        },
+        {
+          "bytes": 14,
+          "offset": 420,
+          "signature": "bTRC"
+        },
+        {
+          "bytes": 20,
+          "offset": 436,
+          "signature": "rXYZ"
+        },
+        {
+          "bytes": 20,
+          "offset": 456,
+          "signature": "gXYZ"
+        },
+        {
+          "bytes": 20,
+          "offset": 476,
+          "signature": "bXYZ"
+        }
+      ],
+      "version": 2.1
+    },
+    "littlecms_profile": {
+      "class": "mntr",
+      "color_space": "RGB ",
+      "description": "M165 Linear ProPhoto RGB D50 v1",
+      "pcs": "XYZ ",
+      "primaries_xy": [
+        [
+          0.7346984733368174,
+          0.26530152666318263
+        ],
+        [
+          0.1596022515357145,
+          0.8403977484642854
+        ],
+        [
+          0.036603611082672884,
+          0.00010687186273041829
+        ]
+      ],
+      "version": 2.1,
+      "whitepoint_xy": [
+        0.34566867970767146,
+        0.35849634589295876
+      ],
+      "whitepoint_xyz": [
+        0.9642181396484375,
+        1.0,
+        0.8252105712890625
+      ]
+    },
+    "m165_profile": {
+      "bytes": 548,
+      "class": "mntr",
+      "color_space": "RGB ",
+      "description": "M165 Linear ProPhoto RGB D50 v1",
+      "gamma": {
+        "bTRC": 1.0,
+        "gTRC": 1.0,
+        "rTRC": 1.0
+      },
+      "header_illuminant_xyz": [
+        0.964202880859375,
+        1.0,
+        0.8249053955078125
+      ],
+      "matrix_xyz": {
+        "bXYZ": [
+          0.0313568115234375,
+          9.1552734375e-05,
+          0.8252105712890625
+        ],
+        "gXYZ": [
+          0.13519287109375,
+          0.7118682861328125,
+          0.0
+        ],
+        "rXYZ": [
+          0.79766845703125,
+          0.2880401611328125,
+          0.0
+        ],
+        "wtpt": [
+          0.9642181396484375,
+          1.0,
+          0.8252105712890625
+        ]
+      },
+      "pcs": "XYZ ",
+      "sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "tag_ranges": [
+        {
+          "bytes": 16,
+          "offset": 240,
+          "signature": "bTRC"
+        },
+        {
+          "bytes": 20,
+          "offset": 256,
+          "signature": "bXYZ"
+        },
+        {
+          "bytes": 53,
+          "offset": 276,
+          "signature": "cprt"
+        },
+        {
+          "bytes": 122,
+          "offset": 332,
+          "signature": "desc"
+        },
+        {
+          "bytes": 16,
+          "offset": 456,
+          "signature": "gTRC"
+        },
+        {
+          "bytes": 20,
+          "offset": 472,
+          "signature": "gXYZ"
+        },
+        {
+          "bytes": 16,
+          "offset": 492,
+          "signature": "rTRC"
+        },
+        {
+          "bytes": 20,
+          "offset": 508,
+          "signature": "rXYZ"
+        },
+        {
+          "bytes": 20,
+          "offset": 528,
+          "signature": "wtpt"
+        }
+      ],
+      "version": 2.1
+    },
+    "path_read_audit": [
+      {
+        "label": "reference",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\mutated-reference.json",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "witnesses",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\witnesses.json",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "converter",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\converter.py",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork_executable",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\focus-stack.exe",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork_consumer_adapter",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\fork_consumer.py",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork_opencv",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\bin\\opencv_world4130.dll",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "linear_profile",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\linear-prophoto-d50-v1.icc",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "source_pin",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\source-pin.json",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "settings",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-common-input\\settings-v1.json",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "strehl_cli",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\bin\\strehl-common-input.rs",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "strehl_common_tiff",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-raw\\src\\common_tiff.rs",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "libraw-dcraw_emu",
+        "path": "C:\\dev\\macro\\deps\\libraw\\bin\\dcraw_emu.exe",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "libraw-library",
+        "path": "C:\\dev\\macro\\deps\\libraw\\bin\\libraw.dll",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "libraw-version_header",
+        "path": "C:\\dev\\macro\\deps\\libraw\\libraw\\libraw_version.h",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "opencv-tiff-source",
+        "path": "C:\\dev\\macro\\deps\\opencv\\sources\\modules\\imgcodecs\\src\\grfmt_tiff.cpp",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "libraw_postprocessing",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\postprocessing_utils_dcrdefs-0.22.1.cpp",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "libraw_colorconst",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\colorconst-0.22.1.cpp",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "romm_registry",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\romm-registry.html",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "zerene_color_management",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\sources\\zerene-color-management.html",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "python-executable",
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "pillow-imagingcms",
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PIL\\_imagingcms.cp312-win_amd64.pyd",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "colour-dataset_source",
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\colour\\models\\rgb\\datasets\\rimm_romm_rgb.py",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "colour-transfer_source",
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\colour\\models\\rgb\\transfer_functions\\rimm_romm_rgb.py",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "rawpy-extension",
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\_rawpy.cp312-win_amd64.pyd",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "audited-common-tiff",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-fork-rebuild\\commissioning\\full\\input\\development-common.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-input-gamma1",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma1.tiff",
+        "read_count": 1,
+        "read_method": "CreateFileW-held-handle"
+      },
+      {
+        "label": "fork-input-gamma18",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-gamma18.tiff",
+        "read_count": 1,
+        "read_method": "CreateFileW-held-handle"
+      },
+      {
+        "label": "fork-input-pixel-shift",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fixtures\\fork-input-pixel-shift.tiff",
+        "read_count": 1,
+        "read_method": "CreateFileW-held-handle"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma1-auto",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma1-auto.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma1-srgb",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma1-srgb.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma1-linear-srgb",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma1-linear-srgb.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma1-linear-rec2020",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma1-linear-rec2020.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma1-none",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma1-none.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma18-auto",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma18-auto.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma18-srgb",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma18-srgb.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma18-linear-srgb",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma18-linear-srgb.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma18-linear-rec2020",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma18-linear-rec2020.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-gamma18-none",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\gamma18-none.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      },
+      {
+        "label": "fork-output-planted-degradation-pixel-shift-auto",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M165-prophoto-semantics\\out\\fork-runs\\planted-degradation\\pixel-shift-auto.tiff",
+        "read_count": 1,
+        "read_method": "Path.read_bytes"
+      }
+    ],
+    "producer_semantics": {
+      "assumption_under_test": "rawpy/LibRaw output-color 4 with gamma 1 emits linear D50-adapted ProPhoto samples operationally described by the embedded M165 profile",
+      "claim_basis": [
+        "verified by running",
+        "inferred by reading"
+      ],
+      "colorant_xyz_deltas_libraw_minus_m165": {
+        "bXYZ": [
+          -4.57763671875e-05,
+          -3.0517578125e-05,
+          -0.00018310546875
+        ],
+        "gXYZ": [
+          -1.52587890625e-05,
+          0.0,
+          3.0517578125e-05
+        ],
+        "rXYZ": [
+          7.62939453125e-05,
+          3.0517578125e-05,
+          0.0
+        ]
+      },
+      "embedded_profile_declaration": "PROVED",
+      "generated_profile_bytes_identical": false,
+      "generated_profile_patch_maximum_code_difference": 0,
+      "generated_profile_whitepoint_is_metadata_not_pixel_space_proof": true,
+      "libraw_generated_profile_sha256": "a1792592ee42de0e22b292797094cecbdd120bea07d2dd00a82ebdb7aa2cfbe4",
+      "libraw_matrix_maximum_abs_difference_to_bradford": 0.00021626856566747676,
+      "libraw_matrix_maximum_abs_difference_to_unadapted": 0.2868341499999999,
+      "libraw_pixel_to_embedded_profile_semantics": "D50_COMPATIBLE_EXACT_PROFILE_BYTE_IDENTITY_NOT_CLAIMED",
+      "m165_profile_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "maximum_abs_colorant_xyz_delta": 0.00018310546875,
+      "media_white_xy_delta_libraw_minus_m165": [
+        -0.03296818723037509,
+        -0.02949540712380061
+      ],
+      "media_white_xyz_delta_libraw_minus_m165": [
+        -0.013763427734375,
+        0.0,
+        0.2638397216796875
+      ]
+    },
+    "profile_patch_witness": {
+      "colour_linear_prophoto_to_srgb8": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          99,
+          99,
+          99
+        ],
+        [
+          137,
+          137,
+          137
+        ],
+        [
+          188,
+          188,
+          188
+        ],
+        [
+          225,
+          225,
+          225
+        ],
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          231,
+          122,
+          90
+        ],
+        [
+          0,
+          201,
+          235
+        ],
+        [
+          255,
+          149,
+          225
+        ],
+        [
+          125,
+          210,
+          131
+        ]
+      ],
+      "colour_standard_romm_to_srgb8": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          43,
+          43,
+          43
+        ],
+        [
+          81,
+          81,
+          81
+        ],
+        [
+          146,
+          146,
+          146
+        ],
+        [
+          203,
+          203,
+          203
+        ],
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          191,
+          53,
+          29
+        ],
+        [
+          0,
+          159,
+          219
+        ],
+        [
+          255,
+          80,
+          201
+        ],
+        [
+          7,
+          177,
+          65
+        ]
+      ],
+      "input_rgb8": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          32,
+          32,
+          32
+        ],
+        [
+          64,
+          64,
+          64
+        ],
+        [
+          128,
+          128,
+          128
+        ],
+        [
+          192,
+          192,
+          192
+        ],
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          128,
+          64,
+          32
+        ],
+        [
+          32,
+          128,
+          200
+        ],
+        [
+          200,
+          100,
+          180
+        ],
+        [
+          90,
+          150,
+          70
+        ]
+      ],
+      "littlecms_linear_profile_to_srgb8": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          99,
+          99,
+          99
+        ],
+        [
+          137,
+          137,
+          137
+        ],
+        [
+          188,
+          188,
+          188
+        ],
+        [
+          225,
+          225,
+          225
+        ],
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          231,
+          122,
+          90
+        ],
+        [
+          0,
+          201,
+          235
+        ],
+        [
+          255,
+          149,
+          225
+        ],
+        [
+          125,
+          210,
+          131
+        ]
+      ],
+      "maximum_lcms_colour_code_difference": 0,
+      "nonlinear_alternative_differences": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          56,
+          56,
+          56
+        ],
+        [
+          56,
+          56,
+          56
+        ],
+        [
+          42,
+          42,
+          42
+        ],
+        [
+          22,
+          22,
+          22
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          40,
+          69,
+          61
+        ],
+        [
+          0,
+          42,
+          16
+        ],
+        [
+          0,
+          69,
+          24
+        ],
+        [
+          118,
+          33,
+          66
+        ]
+      ]
+    },
+    "reference_sha256": "c0813af4dadfa7916399b8f92f1a3f499ee74265a153c7be501be5cf4ab4a83d",
+    "source_anchors": {
+      "converter": [
+        {
+          "count": 1,
+          "id": "converter-profile-colorants",
+          "lines": [
+            "        (b\"bXYZ\", icc_xyz(0.0313534, 0.0000857, 0.8252100)),",
+            "        (b\"cprt\", icc_text(\"CC0-1.0; generated deterministically by M165\")),",
+            "        (b\"desc\", icc_description(\"M165 Linear ProPhoto RGB D50 v1\")),",
+            "        (b\"gTRC\", icc_curve(1.0)),",
+            "        (b\"gXYZ\", icc_xyz(0.1351917, 0.7118741, 0.0000000)),",
+            "        (b\"rTRC\", icc_curve(1.0)),",
+            "        (b\"rXYZ\", icc_xyz(0.7976749, 0.2880402, 0.0000000)),",
+            "        (b\"wtpt\", icc_xyz(0.9642200, 1.0000000, 0.8252100)),"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "converter-postprocess-prophoto-linear",
+          "lines": [
+            "        \"output_color\": rawpy.ColorSpace.ProPhoto,",
+            "        \"output_bps\": 16,",
+            "        \"user_flip\": 0,"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "converter-postprocess-gamma",
+          "lines": [
+            "        \"gamma\": (1.0, 1.0),",
+            "        \"chromatic_aberration\": None,"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "converter-tiff-storage",
+          "lines": [
+            "        _tiff_entry(TIFF_TAGS[\"compression\"], 3, 1, struct.pack(\"<H\", 1)),",
+            "        _tiff_entry(TIFF_TAGS[\"photometric\"], 3, 1, struct.pack(\"<H\", 2)),",
+            "        _tiff_entry(TIFF_TAGS[\"description\"], 2, len(description), description_at),",
+            "        _tiff_entry(TIFF_TAGS[\"strip_offsets\"], 4, 1, pixels_at),",
+            "        _tiff_entry(TIFF_TAGS[\"samples_per_pixel\"], 3, 1, struct.pack(\"<H\", 3)),",
+            "        _tiff_entry(TIFF_TAGS[\"rows_per_strip\"], 4, 1, height),",
+            "        _tiff_entry(TIFF_TAGS[\"strip_byte_counts\"], 4, 1, pixel_bytes),",
+            "        _tiff_entry(TIFF_TAGS[\"planar\"], 3, 1, struct.pack(\"<H\", 1)),",
+            "        _tiff_entry(TIFF_TAGS[\"sample_format\"], 3, 3, sample_format_at),",
+            "        _tiff_entry(TIFF_TAGS[\"icc\"], 7, len(icc), icc_at),"
+          ]
+        }
+      ],
+      "strehl_cli": [
+        {
+          "count": 1,
+          "id": "strehl-cli-merge-facing-hash",
+          "lines": [
+            "    let planes = frame.merge_planes();",
+            "    let merge_hash = CommonTiffFrame::hash_merge_planes(&planes).map_err(|e| e.to_string())?;",
+            "    if merge_hash != frame.pixel_payload_sha256 {"
+          ]
+        }
+      ],
+      "strehl_common_tiff": [
+        {
+          "count": 1,
+          "id": "strehl-requires-icc-tag",
+          "lines": [
+            "        let icc_entry = entry(&entries, TAG_ICC_PROFILE)?;",
+            "        if icc_entry.kind != TYPE_UNDEFINED && icc_entry.kind != TYPE_BYTE {"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "strehl-checks-icc-hash",
+          "lines": [
+            "        compare_hash(",
+            "            \"ICC profile\",",
+            "            &self.icc_sha256,",
+            "            expected.icc_sha256.as_deref(),",
+            "        )?;"
+          ]
+        },
+        {
+          "count": 1,
+          "id": "strehl-u16-to-f32-unscaled",
+          "lines": [
+            "            planes[0].push(f32::from(rgb[0]));",
+            "            planes[1].push(f32::from(rgb[1]));",
+            "            planes[2].push(f32::from(rgb[2]));"
+          ]
+        }
+      ]
+    },
+    "tiff_audit": {
+      "bits_per_sample": 16,
+      "compression": 1,
+      "decoded_pixel_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+      "dtype": "uint16",
+      "file_bytes": 75040,
+      "file_range": {
+        "bytes": 75040,
+        "end": 75040,
+        "sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+        "start": 0
+      },
+      "file_sha256": "b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b",
+      "hash_algorithm": "SHA-256",
+      "icc_range": {
+        "bytes": 548,
+        "end": 1312,
+        "sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+        "start": 764
+      },
+      "icc_sha256": "16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef",
+      "origin": "development-common",
+      "photometric": 2,
+      "pixel_payload_ranges": [
+        {
+          "bytes": 73728,
+          "end": 75040,
+          "start": 1312
+        }
+      ],
+      "pixel_payload_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+      "pixel_sha256": "fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15",
+      "planar_configuration": 1,
+      "rows_per_strip": 96,
+      "shape": [
+        96,
+        128,
+        3
+      ],
+      "tag_codes": [
+        256,
+        257,
+        258,
+        259,
+        262,
+        270,
+        273,
+        277,
+        278,
+        279,
+        284,
+        339,
+        34675
+      ]
+    },
+    "witnesses_sha256": "7731694811102c91a7ff16d360cef354aad0c1582794564859d890f5c6c37ee5"
+  },
+  "failure_classes": [
+    "PROFILE_NUMERIC_NEUTRAL_MISMATCH"
+  ],
+  "fatal_failure": null,
+  "headline_verdict": "INDETERMINATE",
+  "run_label": "planted-degradation",
+  "schema": "m165-prophoto-semantics-result-v1",
+  "scope": "input-contract-only-not-quality-comparison",
+  "status": "FAIL"
+}

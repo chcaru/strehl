@@ -1,0 +1,50 @@
+{
+  "headline_verdict": "PROPHOTO_DISPROVED",
+  "results": [
+    {
+      "bytes": 107798,
+      "path": "results/baseline.json",
+      "sha256": "94032be73acdfde6ef30f26f7987d168312c7874cb36524912cda2ea8932fb81"
+    },
+    {
+      "bytes": 108130,
+      "path": "results/degraded.json",
+      "sha256": "0c9aaa76789f4c98b6a07c385b49de434225c32b03c9905d1b13815bc83e52cb"
+    },
+    {
+      "bytes": 108065,
+      "path": "results/improvement.json",
+      "sha256": "e2e7f8fb6b68a4dc50b485034f7991b978b8021ef789f0649ce41fbd1e0028d5"
+    },
+    {
+      "bytes": 19901,
+      "path": "results/commission.json",
+      "sha256": "b38ec7fa4594f93a3cffa40f294b8d3a3277be44d8be157f293aaac8018d6f24"
+    }
+  ],
+  "schema": "m165-prophoto-semantics-freeze-v1",
+  "scope": "input-contract-only-not-quality-comparison",
+  "sources": [
+    {
+      "bytes": 78082,
+      "path": "prophoto_gate.py",
+      "sha256": "92972001d402b1973ecd4c347acb26b1e301ee4a71b731c5c1447ecd5c0da1eb"
+    },
+    {
+      "bytes": 20920,
+      "path": "commission.py",
+      "sha256": "0a8e163ac786013ba8175f7e40173004120dd7cfd92039fbcaaa437903ff4fe0"
+    },
+    {
+      "bytes": 16065,
+      "path": "reference.json",
+      "sha256": "3ee5ca0d616717f870cff6627ff77946b23f4c2d1585dff9b33db5b81e185dc1"
+    },
+    {
+      "bytes": 3551,
+      "path": "witnesses.json",
+      "sha256": "7731694811102c91a7ff16d360cef354aad0c1582794564859d890f5c6c37ee5"
+    }
+  ],
+  "status": "FROZEN"
+}

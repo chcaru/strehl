@@ -2,25 +2,40 @@
 
 ## Verdict
 
-**Stage 0M is closed in software. The Stage 0C consumer-boundary gate is
-commissioned in software, and the fresh retained-source fork arm now passes
-development common-input admission. The real competitive package is still
-`UNMEASURED`.**
+**Stage 0M is closed in software. The Stage 0C exact-byte boundary and retained
+fork byte-admission arm are commissioned, but the color-semantic contract is
+now `PROPHOTO_DISPROVED`. The real competitive package remains `UNMEASURED`.**
 
 M165 now provides:
 
 - a frozen LibRaw common-merge converter;
-- a deterministic uncompressed linear ProPhoto D50 TIFF writer;
+- a deterministic uncompressed RGB16 TIFF writer and frozen embedded
+  linearized-ProPhoto D50 profile;
 - a strict Strehl TIFF adapter and pre-merge byte-identity verifier;
 - a frozen A/B dark/flat estimator with a never-fitted V validation block;
 - enforceable two-class-per-sitting cardinality;
 - external physical-body, temperature, focus-schedule, and flat-field-state
-  provenance; and
+  provenance;
 - a frozen, fail-closed consumer-boundary gate that independently hashes and
   parses one in-memory read of every TIFF, validates consumer-side receipts,
-  and partitions every input and consumer/input pair into counted outcomes; and
+  and partitions every input and consumer/input pair into counted outcomes;
 - a source-pinned, host-locally bit-reproducible rebuild of the retained
-  `focus-stack` fork plus a locked one-read consumer adapter.
+  `focus-stack` fork plus a locked one-read consumer adapter; and
+- a fail-closed ProPhoto semantics gate that separates the embedded profile
+  declaration, producer pixel semantics, and each consumer's interpretation.
+
+**VERIFIED BY RUNNING.** The embedded 548-byte ICC is a valid linear,
+ProPhoto/ROMM-primaries, D50 profile. LibRaw output color `4` uses a
+`prophoto_rgb` matrix within `0.000216269` maximum absolute coefficient error
+of an independently derived Bradford D50-adapted sRGB-to-ProPhoto transform,
+while it is `0.286834150` from the unadapted transform. LittleCMS also rendered
+the frozen LibRaw-generated gamma-1 profile and the M165 profile identically
+for all ten witness patches. The producer is therefore D50-compatible at the
+tested operational boundary; exact ICC byte identity is not claimed. The
+required retained fork independently ignores the embedded ICC and treats
+16-bit input under its sRGB-OETF/output-space contract. That required-consumer
+divergence alone forces `PROPHOTO_DISPROVED`; exact-byte identity remains true
+but is not color-semantic identity.
 
 No eligible real calibration capture exists. Therefore no real pattern map, no
 campaign common-merge TIFF, and no campaign consumer-identity result exists.
@@ -59,8 +74,9 @@ The required common-merge consumers are:
 2. licensed Zerene PMax;
 3. licensed Zerene DMap; and
 4. a fresh rebuild of the retained fork source, commit-pinned and
-   executable-hash frozen. This arm is now satisfied on development input by
-   the rebuild documented below.
+   executable-hash frozen. Its exact-byte admission arm is satisfied on
+   development input by the rebuild documented below; its color-semantic arm
+   is disproved below.
 
 Helicon is additional **when obtainable**. Its absence is counted and reported
 but is not fatal. Omitting the required fork while treating Helicon as required
@@ -411,7 +427,8 @@ The measured output contract remains:
 |---|---|
 | 16-bit | `BitsPerSample=[16,16,16]`, unsigned |
 | Linear | ICC RGB TRCs all `1.0`; LibRaw `gamma=(1,1)` |
-| ProPhoto D50 | ICC RGB/XYZ matrix and D50 media/header white inspected |
+| Embedded profile | ICC RGB/XYZ matrix, D50 media/header white, and gamma-1 TRCs independently parsed |
+| Producer/profile match | **D50-compatible; exact ICC byte identity not claimed:** LibRaw's matrix matches independent Bradford D50 adaptation and both gamma-1 profiles render the witness patches identically |
 | Uncompressed | TIFF `Compression=1` |
 | Native dimensions | burned one-frame probe produced `[4688,7028,3]` from a `7028 x 4688` active image |
 | Development tags | strict allowlist; an unlisted tag is a Rust test refusal |
@@ -420,6 +437,185 @@ The one-frame development probe remains
 `DEVELOPMENT_ONLY_NONCONTRACT`, applied no map, emitted no TIFF, and used only
 the burned calibration-slide source. Its output byte hash remained
 `27dbd01c5fcfd15ebbf89b059faca9e015b6aaea06b75ae30210cbea3c4179cf`.
+
+## ProPhoto semantics audit
+
+### Exact assumption under test
+
+**INFERRED BY READING.** The current producer assumes that LibRaw's
+`ColorSpace.ProPhoto` output is linear, D50-adapted ProPhoto RGB and that the
+hard-coded ICC operationally describes those samples. The operative source is:
+
+```python
+(b"bXYZ", icc_xyz(0.0313534, 0.0000857, 0.8252100)),
+(b"gXYZ", icc_xyz(0.1351917, 0.7118741, 0.0000000)),
+(b"rXYZ", icc_xyz(0.7976749, 0.2880402, 0.0000000)),
+(b"wtpt", icc_xyz(0.9642200, 1.0000000, 0.8252100)),
+```
+
+and:
+
+```python
+"output_color": rawpy.ColorSpace.ProPhoto,
+"output_bps": 16,
+"gamma": (1.0, 1.0),
+```
+
+The TIFF writer stores unsigned, interleaved, uncompressed RGB16 and embeds
+those exact profile bytes in TIFF tag `34675`. The profile is therefore
+embedded, not merely assumed. It is ICC v2.1, display class `mntr`, RGB data
+space, XYZ PCS, with gamma-1 TRCs. Because standard ROMM/ProPhoto uses its
+piecewise approximately 1.8 encoding curve, the accurate name for the M165
+artifact is a **custom linearized ProPhoto/ROMM-primaries profile**, not the
+standard encoded ProPhoto representation.
+
+### Independent profile witness
+
+**VERIFIED BY RUNNING.** Pillow 12.2.0 with LittleCMS 2.18 independently
+accepted the profile and measured:
+
+| Field | Result |
+|---|---|
+| Description | `M165 Linear ProPhoto RGB D50 v1` |
+| Version / class / spaces | `2.1` / `mntr` / `RGB` -> `XYZ` |
+| White chromaticity | `(0.34566868, 0.35849635)`, within `0.00005` of registry D50 |
+| Red primary | `(0.73469847, 0.26530153)` |
+| Green primary | `(0.15960225, 0.84039775)` |
+| Blue primary | `(0.03660361, 0.00010687)` |
+| RGB TRCs | `1.0`, `1.0`, `1.0` |
+
+The independent `colour-science` 0.4.7 ROMM/ProPhoto dataset supplied the
+published primaries `R(.7347,.2653)`, `G(.1596,.8404)`,
+`B(.0366,.0001)` and D50 `(.3457,.3585)`. Ten known RGB patches transformed
+through LittleCMS agreed with independent `colour-science` linear-ProPhoto to
+sRGB calculations within zero 8-bit codes in this battery. Neutral code
+`128` mapped to sRGB code `188`; treating the same code as standard nonlinear
+ROMM mapped it to `146`, a 42-code separation. The embedded profile declaration
+is therefore **PROVED** and the probe distinguishes linear from standard
+encoded ROMM.
+
+**VERIFIED BY RUNNING.** The audited development common TIFF was read once
+into immutable memory; SHA-256 and parsing used those same bytes:
+
+| Covered bytes | SHA-256 |
+|---|---|
+| Whole TIFF `[0,75040)` | `b2872db41b4b8fa0f02b504f7f7440e142c8701f92031b56939768688b82442b` |
+| Embedded ICC `[764,1312)` | `16c8cad1299737e912d72ad83e959a9f879519a5fd2aaddb82ce103ebeca08ef` |
+| Uncompressed pixel strip `[1312,75040)` | `fb66e83a8ff7c310fee1de0a201895761b0f6840ac4de51affff3c63999f2f15` |
+
+The strip hash also equalled the independently decoded RGB16 byte hash.
+
+### Producer semantic compatibility
+
+**VERIFIED BY RUNNING.** rawpy `0.27.0` reported LibRaw `0.22.1`; constructing
+its actual parameters with `ColorSpace.ProPhoto`, 16 bits, and gamma `(1,1)`
+produced `output_color=4`. A separate LibRaw 0.22.1 `dcraw_emu` development
+decode with `-o 4 -6 -W -g 1 1 -T` emitted a 496-byte ICC with SHA-256
+`a1792592ee42de0e22b292797094cecbdd120bea07d2dd00a82ebdb7aa2cfbe4`.
+LittleCMS parsed it as:
+
+```text
+ProPhoto D65 gamma 1 toe slope 1
+media white XYZ = (0.9504547119, 1.0, 1.0890502930)
+```
+
+The generated profile is not byte-identical to M165's profile. Its media white
+is D65 while M165's is D50, and the maximum colorant XYZ delta is
+`0.000183106`. That difference is profile metadata, not by itself evidence
+that LibRaw's pixel values are D65-relative.
+
+**VERIFIED BY RUNNING** and **INFERRED BY READING.** The primary pixel-space
+witness is LibRaw 0.22.1's exact `colorconst.cpp`, SHA-256
+`cad6b9a6661400e70de73fe0c0f9eae501ed58d98c8ecad7afae54275798609b`.
+Its `prophoto_rgb` matrix differs from independent `colour-science` Bradford
+D50 adaptation by `0.000216269`, versus `0.286834150` without chromatic
+adaptation. Independently, LittleCMS produced zero differing 8-bit codes
+between the LibRaw-generated and M165 gamma-1 profiles for the ten frozen
+patches. The defensible producer result is therefore
+`D50_COMPATIBLE_EXACT_PROFILE_BYTE_IDENTITY_NOT_CLAIMED`. LibRaw's D65
+`pwhite` and description remain recorded, but are not used as pixel-space
+proof.
+
+### Consumer interpretations
+
+| Required consumer | Evidence basis | Result |
+|---|---|---|
+| Strehl | **VERIFIED BY RUNNING** byte boundary; **INFERRED BY READING** adapter source | `HONORS_FROZEN_SAMPLE_SEMANTICS`: requires the ICC hash and presents exact unscaled `u16` values to merge |
+| Retained fork | **VERIFIED BY RUNNING** and **INFERRED BY READING** pinned source | `DIVERGES`: no ProPhoto mode; 16-bit input bypasses conversion under assumed output-space semantics, default sRGB |
+| Zerene PMax | **INFERRED BY READING** vendor documentation | `PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE` |
+| Zerene DMap | **INFERRED BY READING** vendor documentation | same |
+
+**VERIFIED BY RUNNING.** The exact frozen fork executable consumed ten
+synthetic RGB16 cases spanning gamma-1 versus gamma-1.8 ICCs and all five
+advertised input-color modes. Every decoded output had SHA-256
+`14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad`
+and no ICC tag. The null is movable: changing the actual pixel payload changed
+both input and fork output to
+`b64c1a930a0ce101abfdd4f0263c0d7961cfa508a58d350dc29ac742d1b7789a`.
+The probe is therefore responsive to pixels while specifically insensitive to
+ICC transfer semantics.
+
+The verifier read each 74,480-byte fixture once, hashed and parsed those same
+immutable bytes, and held a Win32 `CreateFileW` handle with `FILE_SHARE_READ`
+through every child exit. The consumer's two expected path opens per run were
+therefore allowed while replacement or mutation was denied; file identity,
+size, and last-write metadata remained unchanged. For the gamma-1 fixture,
+SHA-256 over whole-file `[0,74480)` was
+`7d54c57cf5f5fc4da41a504c653b00606fad4ab01ab32ab9fb7f21fa5c746d26`;
+the uncompressed RGB16 payload and every fork output decoded to
+`14323867654d3781278c6713fa4a5213858ce3f14d6b0627cdc138fbcfedabad`.
+
+The semantic consequence is measurable: common-input code `32768` means
+linear `0.50000763`, while the fork's documented sRGB-OETF interpretation
+decodes to `0.21404820`, a `0.28595943` linear-light difference.
+
+**INFERRED BY READING.** Zerene's vendor page says embedded profiles are read
+for screen display, can be copied to output, and explicitly mentions both
+ProPhoto RGB and linear profiles. It contains no PMax or DMap pipeline
+statement. That does not establish whether either stack method transforms
+through the embedded TRC before computation. A licensed controlled run or a
+vendor statement on the internal pixel pipeline remains required.
+
+The required-consumer partition is exhaustive:
+
+```text
+1 HONORS_FROZEN_SAMPLE_SEMANTICS
++ 1 DIVERGES
++ 2 PROPHOTO_UNPROVABLE_WITHOUT_LICENSED_CONTROLLED_RUN_OR_VENDOR_STATEMENT_ON_INTERNAL_PIXEL_PIPELINE
+= 4 required consumers
+```
+
+### Commissioning and verdict
+
+**VERIFIED BY RUNNING.** The baseline completed with
+`68 PASS + 0 RED = 68`. A unique full-line mutation changed only the expected
+linear neutral from `188` to `180`; the gate returned exit `1` with exactly
+`67 PASS + 1 RED = 68` and
+`PROFILE_NUMERIC_NEUTRAL_MISMATCH`. The unrelated `TIFF_STORAGE` arm remained
+`1 PASS + 0 RED = 1`. Exact byte restoration was the planted improvement and
+returned to `68 PASS + 0 RED = 68`; the repaired reference hash equalled the
+baseline hash.
+
+The gate read 39 verifier path artifacts once each at most, while Git blobs
+were read once directly from their pinned object IDs and the fork input paths
+remained locked through consumer exit. Two complete same-input baseline runs
+produced byte-identical result JSON at SHA-256
+`94032be73acdfde6ef30f26f7987d168312c7874cb36524912cda2ea8932fb81`.
+Its committed evidence lives in
+`experiments/M165-prophoto-semantics/`. The gate source SHA-256 is
+`92972001d402b1973ecd4c347acb26b1e301ee4a71b731c5c1447ecd5c0da1eb`;
+the commission result is
+`b38ec7fa4594f93a3cffa40f294b8d3a3277be44d8be157f293aaac8018d6f24`;
+and the deterministic freeze manifest is
+`24211d045e48621387727db3037f6e665e5b990bcd1b0c85c9cb5f4bb9121db7`.
+
+**FORMAL VERDICT: `PROPHOTO_DISPROVED`.** The file contains a valid embedded
+linearized-ProPhoto D50 ICC and the current LibRaw producer is operationally
+D50-compatible under the independent matrix and patch witnesses. The required
+retained fork nevertheless interprets the 16-bit values under incompatible
+sRGB-OETF/output-space semantics and omits the ICC. Zerene's internal
+interpretation remains separately unproved. This is an input-contract result,
+not a quality comparison.
 
 ## Strehl byte identity
 
@@ -696,15 +892,18 @@ commission report is `PASS`, SHA-256
 **STREHL BYTE IDENTITY IMPACT: NONE.** The fork is an additional registered
 consumer; it does not change Strehl's already commissioned internal boundary.
 
-**CURRENT REAL STAGE 0C VERDICT: BLOCKED.** The fork engineering blocker is
-closed. The remaining blockers are licensed Zerene PMax and DMap plus an
-eligible calibrated campaign capture.
+**CURRENT REAL STAGE 0C VERDICT: BLOCKED.** The fork executable and exact-byte
+admission blocker is closed. Remaining prerequisites are a corrected and
+re-frozen fork consumer path that honors the frozen color semantics, licensed
+Zerene PMax and DMap, and an eligible calibrated campaign capture. The producer
+D50-semantic question is closed as compatible by the audit above.
 
-**Residual color limitation.** The pinned fork has no ProPhoto input mode.
+**Color-semantic result.** The pinned fork has no ProPhoto input mode.
 Its 16-bit integer TIFF path passes decoded samples through without input-color
 conversion and does not interpret the embedded ICC. Exact file-byte admission
-is proven; color-semantic equivalence and output-transfer suitability are not.
-This is inferred directly from the pinned `src/colormgmt.cc`:
+is proven; color-semantic equivalence is **disproved**, not merely unproved.
+This is inferred directly from the pinned `src/colormgmt.cc` and verified by
+the 11-run semantic battery above:
 `parse_input_colorspace` admits only auto/none/linear-Rec.2020/linear-sRGB/sRGB,
 and `normalise_loaded_image` returns `CV_16U` input unchanged.
 
@@ -772,12 +971,26 @@ class or its near/far V block rejects focus portability, the result is STOP /
 - Fork-arm exact repair: **PASS**, exactly `1/1` pair passed.
 - Fork adapter wrong-executable-hash probe: exit `1`, persisted
   `FAIL / EXECUTABLE_HASH_MISMATCH`, no output.
+- ProPhoto semantic-gate baseline: `68 PASS + 0 RED = 68`; formal evidence
+  verdict `PROPHOTO_DISPROVED`.
+- ProPhoto unique-line mutation: exit `1`,
+  `PROFILE_NUMERIC_NEUTRAL_MISMATCH`, exactly `67 PASS + 1 RED = 68`;
+  unrelated `TIFF_STORAGE` stayed green.
+- ProPhoto exact repair/planted improvement: `68 PASS + 0 RED = 68`.
+- Fork semantic battery: ten ICC/mode variants produced one decoded pixel
+  hash and no ICC; a distinct pixel input produced a distinct output hash.
+- Fork semantic handoff: one verifier read per fixture; locked child opens;
+  identity/size/last-write metadata unchanged through every consumer exit.
+- ProPhoto one-read audit: 39 verifier path artifacts, maximum read count one.
+- ProPhoto repeatability: two full commissioning reruns produced byte-identical
+  baseline, degraded, improvement, commission, and freeze artifacts.
 
-**Blocked on compute: NO.** No bulk decode was launched. The only real RAW work
-remains the one-frame burned-development probe. Under the standing host policy,
-deterministic fitting/rendering may proceed under load when inputs exist;
-absolute timing remains quarantined. The present blockers are missing physical
-inputs and licensed Zerene modes, not host scheduling or the fork build.
+**Blocked on compute: NO.** No bulk decode was launched. Real RAW work was
+limited to one-frame burned-development probing. Under the standing host
+policy, deterministic fitting/rendering may proceed under load when inputs
+exist; absolute timing remains quarantined. The present blockers are fork
+color semantics, missing physical inputs, and licensed Zerene modes, not host
+scheduling.
 
 ## Residual doubt
 
@@ -796,11 +1009,14 @@ inputs and licensed Zerene modes, not host scheduling or the fork build.
    work.
 6. The fork executable is reproducible across two clean paths on this host;
    cross-host bit reproducibility is not yet measured.
-7. The pinned fork's 16-bit input path ignores the embedded ProPhoto ICC. The
-   byte contract passes, but color-semantic equivalence remains unproved.
-8. The Stage 0C standard attestation now has a real fork locked-handoff result,
+7. The producer is D50-compatible at the tested operational boundary, but the
+   M165 and LibRaw-generated ICC files are not byte-identical. The generated
+   profile's D65 metadata is recorded and is not treated as pixel-space proof.
+8. The pinned fork's 16-bit input path ignores the embedded ProPhoto ICC. The
+   byte contract passes, but color-semantic equivalence is disproved.
+9. The Stage 0C standard attestation now has a real fork locked-handoff result,
    but no Zerene or Helicon receipt. The gate refuses their absence; it does
    not infer consumption from an output file.
-9. Stage 0C proves exact-byte admission at the locked file boundary, not that
-   an opaque consumer uses every admitted sample internally. That stronger
-   semantic claim would require instrumentation the fork does not expose.
+10. Zerene documentation proves profile-aware display/output handling, not
+    PMax or DMap's internal stack math. That semantic claim still requires a
+    licensed controlled run or a vendor statement.
