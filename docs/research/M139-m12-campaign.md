@@ -1,10 +1,8 @@
 # M139 — registered M12 scorecard campaign
 
-**Status:** the registered campaign is complete. **M12-D PASS.** The measured
-M12-S byte property is **FAIL**, while M12-S's required M11 precondition is
-**BLOCKED-BY-LICENCE**. The absolute-memory bar is **FAIL**, so overall M12 is
-**FAIL** on non-timing evidence regardless of the blocked M11 term. The
-observed N=299/N=33 memory ratio misses its numeric bar but is formally
+**Status:** the registered campaign is complete. **M12-D PASS. M12-S FAIL.
+M12 overall FAIL.** The absolute-memory bar is **FAIL**. The observed
+N=299/N=33 memory ratio misses its numeric bar but is formally
 **UNMEASURED_SAMPLING_COVERAGE**. The N-mod-4 observation numerically misses
 its bar but is formally **UNMEASURED_HOST_QUARANTINE** under the later
 program-wide timing policy. **HOST RELEASED.**
@@ -15,6 +13,15 @@ cross-worker invariance, and timing. That value is preserved as
 the wall-clock arm from formal scoring, but it does not reverse the verdict:
 memory and cross-worker invariance are correctness measurements and each
 independently fails.
+
+The former formal M12-S label **BLOCKED-BY-LICENCE** is withdrawn. The frozen
+scorecard did contain a reverse dependency on M11, so this report continues to
+quote it as registration provenance. M178 subsequently established that the
+dependency was an **UNRATIFIED_ADDITION** absent from the governing plan
+(`docs/research/M178-m12s-adjudication.md:1-16`). Under plan precedence it does
+not withhold the measured M12-S failure. This revision confirms, rather than
+withdraws, the overall M12 **FAIL**; it corrects the former reason for
+withholding M12-S.
 
 **Measured source:** `8009447e059febb8f9c59fda509f141835d6abdb`. This was the
 exact repository `HEAD` frozen at dispatch and contains crop-early commit
@@ -57,10 +64,25 @@ The governing section registers:
 - Success bars of warm peak `<=6 GiB`, ratio `<=1.10`, one fixed-worker hash
   per cell, one cross-worker hash per N, and N-mod-4 per-frame spread `<=2%`
   (`:1064-1069`).
-- A joint M11 condition: the 16-worker output must pass M11 while reproducing
-  at fixed width and matching the 1/2/4/8-worker outputs
+- The frozen scorecard's added M11 condition: the 16-worker output must pass
+  M11 while reproducing at fixed width and matching the 1/2/4/8-worker outputs
   (`docs/proposals/2026-09-sota-scorecard.md@8009447e059febb8f9c59fda509f141835d6abdb:122`,
   `:1068-1070`).
+
+The last clause is faithfully retained because it was in the registration at
+the measured commit. It is not, however, a plan-level M12 requirement. The
+governing plan registers:
+
+> memory <=6 GiB warm; bytes invariant to worker count (D9a); the staircase
+> gone (per-frame cost flat in N mod 4).
+
+Source: `docs/proposals/2026-08-sota-path.md:1973-1985`. M178 traced the reverse
+M11 dependency to a later scorecard edit, classified it
+**UNRATIFIED_ADDITION**, and retained only the forward anti-cheat rule: an M11
+production-speed output must match the worker ladder
+(`docs/research/M178-m12s-adjudication.md:1-16,20-45`). The current scorecard
+records the same correction at
+`docs/proposals/2026-09-sota-scorecard.md:11-24`.
 
 A **scored run** is one of the six post-warm-up repetitions at a registered
 cell. Warm-ups and commissioning/smoke runs are not scored. The older N=20
@@ -92,8 +114,9 @@ It was incomplete in two ways:
    worker=`16` timing arm.
 
 M12 does not have a general throughput-ratio bar of its own. Its direct
-clock-dependent quantity is the N-mod-4 spread. M12-S additionally depends on
-M11, whose scorecard bar does include comparator throughput.
+clock-dependent quantity is the N-mod-4 spread. The frozen scorecard added a
+reverse M11 dependency to M12-S, but the plan-precedence adjudication above
+rules that addition inapplicable to the formal M12-S verdict.
 
 ## 2. Timing dependence and host validity
 
@@ -238,7 +261,10 @@ queries that process-tree membership, and samples private committed bytes every
 | Null | 67,108,864 B | 80,920,576 B | 80,928,768 B | 2 | stayed below 6 GiB |
 | 7-GiB plant | 7,516,192,768 B | 7,544,352,768 B | 7,544,406,016 B | 2 | exceeded 6 GiB |
 
-The positive plant therefore made the gate fire, while the null stayed quiet.
+The 64-MiB null peaked at `80,920,576` bytes in the sampled process-tree
+measurement. The positive plant therefore made the gate fire, while the null
+stayed quiet.
+
 Evidence:
 `experiments/m12-scorecard/out/campaign-8009447e-m139/memory-commission.json`.
 
@@ -279,6 +305,16 @@ commit `8009447e059febb8f9c59fda509f141835d6abdb`. `Hashes` is the number of
 distinct TIFF/pixel hashes in the six-run cell. Full 64-hex hashes for every
 cell are in `closeout.json`.
 
+### Registered-bar decomposition
+
+| Registered bar | Acceptance | Measured value | Verdict |
+|:--|:--|:--|:--|
+| Absolute memory | warm process-tree peak `<=6 GiB` | sampled private commit `35.65724182128906 GiB`; Job Object peak `35.65745162963867 GiB` | **FAIL** |
+| N=299/N=33 memory ratio | `<=1.10` | `1.4615654159027742` sampled; `1.461570587793803` kernel; minimum coverage `0.7957678743186919` (`79.5768%`) | **UNMEASURED_SAMPLING_COVERAGE** |
+| M12-D fixed-worker determinism | one TIFF hash and one pixel hash across six repeats in every fixed `(N, workers)` cell | one of each in all 15 cells | **PASS** |
+| M12-S cross-worker invariance | one TIFF hash and one pixel hash across workers 1/2/4/8/16 at every N | five of each at N=33, 105, and 299 | **FAIL** |
+| N-mod-4 per-frame spread | `<=2%` | `0.07618677189815302` (`7.618677%`) | observed **FAIL**; formal **UNMEASURED_HOST_QUARANTINE** |
+
 | N | Workers | Scored runs | Hashes | Sampled peak GiB | Job peak GiB | Memory `<=6 GiB` |
 |---:|---:|---:|:--:|---:|---:|:--|
 | 33 | 1 | 6 | 1 / 1 | 2.246288 | 2.246288 | PASS |
@@ -297,12 +333,23 @@ cell are in `closeout.json`.
 | 299 | 8 | 6 | 1 / 1 | 17.836506 | 17.836559 | **FAIL** |
 | 299 | 16 | 6 | 1 / 1 | 35.657242 | 35.657452 | **FAIL** |
 
+The earlier four-decimal per-cell pins were not withdrawn. They are the same
+Job Object peaks above, rounded: N33/W2 `4.4747`, N33/W16 `24.3967`,
+N105/W1 `2.2461`, N105/W2 `4.4758`, N105/W8 `17.8372`, and N105/W16
+`33.4283` GiB.
+
 ### M12-D: PASS
 
 All 15 fixed-worker cells have six accepted repetitions, one TIFF hash, and
-one pixel hash. **M12-D PASS.**
+one pixel hash. **M12-D PASS.** This is the first registered sub-property in
+the program to pass anything
+(`docs/proposals/2026-09-sota-scorecard.md:11-15`). It is not an axis PASS, a
+cross-worker claim, or a claim about any later binary. It is pinned to measured
+commit `8009447e059febb8f9c59fda509f141835d6abdb`; the D9 reduction-lattice
+change modifies the measured code path, so M12-D must be reverified on the
+post-D9 build rather than inherited.
 
-### M12-S byte property: FAIL; M11 precondition: BLOCKED-BY-LICENCE
+### M12-S: FAIL
 
 | N | Distinct TIFF hashes across workers | Distinct pixel hashes across workers | Byte property |
 |---:|---:|---:|:--|
@@ -310,45 +357,52 @@ one pixel hash. **M12-D PASS.**
 | 105 | 5 | 5 | **FAIL** |
 | 299 | 5 | 5 | **FAIL** |
 
-The cross-worker byte property therefore fails independently at every
-registered N.
+At three independent `N` values, the campaign found five distinct TIFF hashes
+and five distinct pixel hashes across workers 1/2/4/8/16. The cross-worker byte
+property therefore fails independently at every registered N.
 
-M12-S also requires the 16-worker output to pass M11. **INHERITED** machine
-evidence records Zerene's exact licence line as
-`License category = TRIAL`, expiring `Sat Jun 06 20:13:34 PDT 2026`
-(`docs/research/M132-blocker-d-routes.md:160-175`), and records the vendor rule
-that after trial expiry saving images and projects is disabled
-(`docs/research/M132-blocker-d-routes.md:176-182`). The same investigation found
-“zero Helicon-named installation, state, log, licence, key, or registry
-matches” (`docs/research/M132-blocker-d-routes.md:195-205`).
-`docs/OWNER-ACTIONS.md:1560-1562` records that the installed Zerene trial is
-consumed and expired and “currently cannot save output at all.”
+The frozen registration additionally said that the 16-worker output must pass
+M11. The governing plan does not contain that reverse dependency; it names
+memory, worker-count byte invariance, and the N-mod-4 staircase as coequal M12
+systems bars (`docs/proposals/2026-08-sota-path.md:1973-1985`). M178 therefore
+classified the reverse dependency as **UNRATIFIED_ADDITION**
+(`docs/research/M178-m12s-adjudication.md:1-16`). The installed comparator's
+licence status remains **BLOCKED-BY-LICENCE** for M11, but it is not an M12-S
+eligibility or validity precondition.
 
 Accordingly:
 
-- measured M12-S byte property: **FAIL**;
-- M12-S M11 precondition: **BLOCKED-BY-LICENCE**;
-- formal M12-S status: **BLOCKED-BY-LICENCE**, not manufactured as PASS or
-  FAIL;
-- overall M12 verdict: **FAIL**, independently established by the non-timing
-  absolute-memory failure.
+- measured and formal M12-S status: **FAIL**;
+- M11 comparator status: **BLOCKED-BY-LICENCE**, but not applicable to the
+  M12-S verdict;
+- overall M12 verdict: **FAIL**, independently established by both the
+  non-timing absolute-memory and cross-worker-invariance failures.
 
-Even if a future licensed M11 run passes, the cross-worker byte property at
-this measured commit remains a measured failure.
+Even if a future licensed M11 run passes, it cannot change the cross-worker
+byte failure at this measured commit.
 
 For completeness, the frozen harness's generic conjunctive rule mechanically
 records M12 **FAIL** because cross-worker invariance, absolute memory, and the
 observed N-mod-4 result are hard failures. `summary.json` and `closeout.json`
-preserve that pre-quarantine mechanical value. The current formal FAIL rests
-only on the non-timing memory and byte-invariance evidence.
+preserve that pre-quarantine mechanical value. The current formal M12 **FAIL**
+rests on the non-timing memory and byte-invariance evidence. Earlier commit
+messages saying “formal M12 FAIL” remain accurate; this correction removes only
+the erroneous licence-withheld disposition of M12-S.
 
 ### Absolute memory: FAIL
 
-The maximum sampled process-tree private committed value was
-`38,286,671,872` bytes (`35.65724182128906 GiB`) at
-`scored:N299:W16:R3`. The corresponding maximum Job Object peak for the cell
-was `35.65745162963867 GiB`. Both exceed the `6 GiB` bar. **Absolute memory
-FAIL.**
+The maximum sampled private commit `35.65724182128906 GiB`
+(`38,286,671,872` bytes) occurred at `scored:N299:W16:R3`. The corresponding
+Job Object peak `35.65745162963867 GiB` also exceeds the `6 GiB` bar.
+**Absolute memory FAIL.**
+
+The partial-campaign close at `2ba256aa` remains a valid observation, but it is
+no longer the campaign maximum: `scored:N105:W16:R2` had sampled private commit
+`32.6777 GiB`, Job Object peak `33.4283 GiB`, and accepted external busy
+`9.8763%`. Completing N=299 superseded its role as the strongest observation
+with the N299/W16 values above. The accepted-run campaign-wide external-busy
+maximum is `0.0991197` (`9.91197%`). None of the earlier numbers was
+contradicted or withdrawn.
 
 ### N=299/N=33 memory ratio
 
@@ -360,15 +414,17 @@ FAIL.**
 | 8 | 1.142606 | 1.142526 | **FAIL** |
 | 16 | 1.461565 | 1.461571 | **FAIL** |
 
-The observed maximum is `1.4615654159027742`; the independent Job Object
-maximum is `1.461570587793803`. Both miss the `1.10` numeric bar.
+The observed maxima are `1.4615654159027742` sampled and
+`1.461570587793803` kernel. Both miss the `1.10` numeric bar.
 
 The frozen execution adjudication requires every scored run to meet at least
 `0.90` sampling coverage before assigning this ratio a formal PASS or FAIL.
-Minimum coverage was `0.7957678743186919`; maximum sample gap was
-`60.85830001393333 ms`, within the `100 ms` gap limit. The observed miss is
-reported, but the formal ratio verdict is
-**UNMEASURED_SAMPLING_COVERAGE**.
+Minimum coverage was `0.7957678743186919` (`79.5768%`); maximum sample gap was
+`60.85830001393333 ms`, within the `100 ms` gap limit. This prevents a positive
+full-matrix memory-scaling claim. It does not weaken the negative
+absolute-memory result, because both the sampled lower bound and independent
+kernel peak exceed 6 GiB by multiples. The observed ratio miss is reported,
+but the formal ratio verdict is **UNMEASURED_SAMPLING_COVERAGE**.
 
 ### N-mod-4 timing: observed FAIL, formally UNMEASURED_HOST_QUARANTINE
 
@@ -465,7 +521,8 @@ Reproduction and adjudication helpers are in `experiments/m12-scorecard/`:
    ratios are reported, but minimum sampling coverage missed the frozen 90%
    adjudication threshold.
 3. **M11 comparator throughput.** The installed Zerene trial cannot save the
-   required output, and no Helicon installation is available.
+   required output, and no Helicon installation is available. This does not
+   withhold the formal M12-S verdict under the plan-precedence adjudication.
 4. **True unsampled instantaneous memory peak.** Sampling can miss a higher
    instantaneous value. It cannot manufacture the observed above-6-GiB
    failure.

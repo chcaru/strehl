@@ -19,6 +19,9 @@ LOCAL_ONLY_ROOT_LOGS = {
     "commission-build-planted.log",
     "commission-build-restored.log",
 }
+M12_S_REVERSE_DEPENDENCY_ADJUDICATION = "UNRATIFIED_ADDITION"
+M12_S_ADJUDICATION_SOURCE = "docs/research/M178-m12s-adjudication.md:1-16"
+M12_S_ADJUDICATION_COMMIT = "ef0a4b892861c35caa87d87a8faebf8199a27e7b"
 
 
 def sha256(path: Path) -> str:
@@ -530,12 +533,18 @@ def main() -> int:
     summary["records"]["accepted_rows_later_invalidated"] = accepted_invalidated
     summary["records"]["sha256"] = sha256(paths["records"])
     summary["m12_s_byte_property"]["m11_joint_requirement"] = (
-        "BLOCKED-BY-LICENCE"
+        "UNRATIFIED_ADDITION_NOT_APPLICABLE"
     )
     summary["m12_s"] = {
         "byte_property_verdict": "FAIL",
-        "m11_precondition": "BLOCKED-BY-LICENCE",
-        "formal_verdict": "BLOCKED-BY-LICENCE",
+        "m11_precondition": "NOT_APPLICABLE_UNRATIFIED_ADDITION",
+        "m11_comparator_status": "BLOCKED-BY-LICENCE",
+        "formal_verdict": "FAIL",
+        "reverse_dependency_adjudication": (
+            M12_S_REVERSE_DEPENDENCY_ADJUDICATION
+        ),
+        "adjudication_source": M12_S_ADJUDICATION_SOURCE,
+        "adjudication_source_commit": M12_S_ADJUDICATION_COMMIT,
     }
     summary["modulo"]["mechanical_scorecard_verdict"] = (
         mechanical_modulo_verdict
@@ -615,16 +624,25 @@ def main() -> int:
             },
             "m12_s": {
                 "evidence_tag": "VERIFIED",
-                "formal_verdict": "BLOCKED-BY-LICENCE",
+                "formal_verdict": "FAIL",
                 "byte_property_verdict": "FAIL",
                 "byte_property_by_n": cross_worker,
                 "m11_precondition": {
                     "evidence_tag": "INHERITED",
-                    "verdict": "BLOCKED-BY-LICENCE",
+                    "verdict": "NOT_APPLICABLE_UNRATIFIED_ADDITION",
+                    "comparator_status": "BLOCKED-BY-LICENCE",
+                    "applies_to_formal_m12_s_verdict": False,
+                    "scorecard_clause_adjudication": (
+                        M12_S_REVERSE_DEPENDENCY_ADJUDICATION
+                    ),
+                    "adjudication_source": M12_S_ADJUDICATION_SOURCE,
+                    "adjudication_source_commit": M12_S_ADJUDICATION_COMMIT,
                     "reason": (
                         "The installed Zerene trial is expired and cannot save "
                         "the required comparator output; no Helicon installation "
-                        "was found."
+                        "was found. That status applies to M11. The scorecard's "
+                        "reverse dependency withholding M12-S behind M11 was "
+                        "an unratified addition absent from the governing plan."
                     ),
                     "sources": [
                         {
@@ -663,8 +681,9 @@ def main() -> int:
                 "reporting_basis": "NON_TIMING_HARD_FAILURES",
                 "reason": (
                     "Absolute process-tree memory and cross-worker byte "
-                    "invariance fail independently of the quarantined timing arm "
-                    "and the blocked M11 precondition."
+                    "invariance fail independently of the quarantined timing "
+                    "arm. The reverse M11 dependency was an unratified addition "
+                    "and does not withhold M12-S."
                 ),
             },
         },
@@ -933,7 +952,8 @@ def main() -> int:
                 "item": "M11 comparator throughput",
                 "reason": (
                     "The installed Zerene trial is expired and cannot save the "
-                    "required output; no Helicon installation is available."
+                    "required output; no Helicon installation is available. "
+                    "This does not withhold M12-S under plan precedence."
                 ),
             },
             {
@@ -1028,6 +1048,9 @@ def main() -> int:
                 "m12_s_precondition": closeout["verdicts"]["m12_s"][
                     "m11_precondition"
                 ]["verdict"],
+                "m12_s_formal": closeout["verdicts"]["m12_s"][
+                    "formal_verdict"
+                ],
                 "memory": closeout["absolute_bars"]["memory_ceiling"]["verdict"],
                 "memory_ratio_formal": closeout["absolute_bars"][
                     "memory_scaling"

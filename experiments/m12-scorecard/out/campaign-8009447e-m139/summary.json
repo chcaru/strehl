@@ -447,9 +447,13 @@
     "verdict": "PASS"
   },
   "m12_s": {
+    "adjudication_source": "docs/research/M178-m12s-adjudication.md:1-16",
+    "adjudication_source_commit": "ef0a4b892861c35caa87d87a8faebf8199a27e7b",
     "byte_property_verdict": "FAIL",
-    "formal_verdict": "BLOCKED-BY-LICENCE",
-    "m11_precondition": "BLOCKED-BY-LICENCE"
+    "formal_verdict": "FAIL",
+    "m11_comparator_status": "BLOCKED-BY-LICENCE",
+    "m11_precondition": "NOT_APPLICABLE_UNRATIFIED_ADDITION",
+    "reverse_dependency_adjudication": "UNRATIFIED_ADDITION"
   },
   "m12_s_byte_property": {
     "by_n": {
@@ -511,7 +515,7 @@
         ]
       }
     },
-    "m11_joint_requirement": "BLOCKED-BY-LICENCE",
+    "m11_joint_requirement": "UNRATIFIED_ADDITION_NOT_APPLICABLE",
     "pass": false,
     "verdict": "FAIL"
   },

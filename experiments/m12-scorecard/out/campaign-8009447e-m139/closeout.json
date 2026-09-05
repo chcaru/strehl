@@ -501,7 +501,7 @@
     },
     {
       "item": "M11 comparator throughput",
-      "reason": "The installed Zerene trial is expired and cannot save the required output; no Helicon installation is available."
+      "reason": "The installed Zerene trial is expired and cannot save the required output; no Helicon installation is available. This does not withhold M12-S under plan precedence."
     },
     {
       "item": "true unsampled instantaneous memory peak",
@@ -678,9 +678,9 @@
     },
     "helpers": {
       "finalizer": {
-        "bytes": 43902,
+        "bytes": 45321,
         "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m139-finalize.py",
-        "sha256": "5DD3EC2E9B22DE259A8BB4915D85C35059837B0814B77DF1D76BF0F76A2ED717"
+        "sha256": "E3B304321D2F890F3AED5A23F09D343DF9C392C6E8789FC99052595459F6F316"
       },
       "modulo_window_invalidator": {
         "bytes": 5720,
@@ -729,9 +729,9 @@
       "sha256": "282E2FE10CD8D2835A8763D71C82C062FF2D0AD68FCEF6CB70B247CD3A7A4BC7"
     },
     "summary": {
-      "bytes": 22409,
+      "bytes": 22693,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\summary.json",
-      "sha256": "8031908BB38B0D103829467DEC48CE1416AA7E698D0A4FD57AAF201A01756839"
+      "sha256": "C756399E10393DECA3ECEFC358C57422ECDFA61EA516603896F672DBCEFF9759"
     }
   },
   "read_only_input_trees": {
@@ -921,10 +921,15 @@
       },
       "byte_property_verdict": "FAIL",
       "evidence_tag": "VERIFIED",
-      "formal_verdict": "BLOCKED-BY-LICENCE",
+      "formal_verdict": "FAIL",
       "m11_precondition": {
+        "adjudication_source": "docs/research/M178-m12s-adjudication.md:1-16",
+        "adjudication_source_commit": "ef0a4b892861c35caa87d87a8faebf8199a27e7b",
+        "applies_to_formal_m12_s_verdict": false,
+        "comparator_status": "BLOCKED-BY-LICENCE",
         "evidence_tag": "INHERITED",
-        "reason": "The installed Zerene trial is expired and cannot save the required comparator output; no Helicon installation was found.",
+        "reason": "The installed Zerene trial is expired and cannot save the required comparator output; no Helicon installation was found. That status applies to M11. The scorecard's reverse dependency withholding M12-S behind M11 was an unratified addition absent from the governing plan.",
+        "scorecard_clause_adjudication": "UNRATIFIED_ADDITION",
         "sources": [
           {
             "lines": "160-197",
@@ -941,12 +946,12 @@
             "quote": "Zerene is already installed here at 1.04T2026-05-04-0750, but its trial is consumed and expired (License category = TRIAL, expired 2026-06-06), so it currently cannot save output at all."
           }
         ],
-        "verdict": "BLOCKED-BY-LICENCE"
+        "verdict": "NOT_APPLICABLE_UNRATIFIED_ADDITION"
       }
     },
     "overall_m12": {
       "evidence_tag": "VERIFIED",
-      "reason": "Absolute process-tree memory and cross-worker byte invariance fail independently of the quarantined timing arm and the blocked M11 precondition.",
+      "reason": "Absolute process-tree memory and cross-worker byte invariance fail independently of the quarantined timing arm. The reverse M11 dependency was an unratified addition and does not withhold M12-S.",
       "reporting_basis": "NON_TIMING_HARD_FAILURES",
       "verdict": "FAIL"
     }
