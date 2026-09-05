@@ -1622,8 +1622,8 @@ its own interest, which is the reason I trust it.
 > M12 does not sit behind your wallet. It never did.
 >
 > **And the correction runs the other way from the one you would expect.** Since
-> I wrote that paragraph, **both of M12's registered failures have acquired
-> measured repairs, and neither needed a licence, a purchase, or a frame from
+> I wrote that paragraph, **two of M12's four bars have acquired measured
+> repairs, and neither repair needed a licence, a purchase, or a frame from
 > you.**
 >
 > - **Determinism.** The five distinct hashes across worker counts were
@@ -1640,13 +1640,32 @@ its own interest, which is the reason I trust it.
 >   `38,286,897,152 B` is exactly `35.65745162963867 GiB`, the number in the
 >   scorecard's M12 row. The control fired on the real defect.
 >
-> **What that does and does not mean.** It does **not** mean M12 is scored. The
-> determinism certificate is currently empirical at the smallest stack size only;
-> a lane is re-running the full `N=33/105/299` x `1/2/4/8/16` matrix at one
-> pinned commit to certify it. Until that lands, M12 is repaired-but-uncertified,
-> which is not a pass. **But it is now the one axis on the board with a credible
-> path to becoming this program's first scored axis, and that path needs nothing
-> from you.**
+> **What that does and does not mean — and I got this wrong once already, so
+> read it carefully.** M12 is a conjunction of **four** bars, not two. I
+> originally wrote this passage as though repairing two of them left M12 one
+> certification from passing. **It does not.** The full position:
+>
+> | M12 bar | State | Repaired? |
+> |---|---|---|
+> | Warm peak memory `<=6 GiB` | was `5.94x` over | **yes**, measured |
+> | Byte identity across workers | five distinct hashes | **yes**, measured |
+> | `299/33` peak memory ratio `<=1.10` | `1.46`, and formally unread for sampling coverage | **no** |
+> | N-mod-4 per-frame timing spread `<=2%` | `7.62%`, and formally void because the host was at `93.2%` CPU | **no** |
+>
+> **Neither unrepaired bar is a purchase and neither is a photograph.** The
+> timing bar needs a *quiet machine* — no other work running — which is a
+> scheduling problem on my side, not a spend. The ratio bar needs a run with
+> better sampling coverage, which the same re-run should supply. On top of that,
+> the determinism repair is so far certified empirically only at the smallest
+> stack size; a lane is re-running the full `N=33/105/299` x `1/2/4/8/16` matrix
+> at one pinned commit to settle the ratio and the certificate together.
+>
+> **So M12 is repaired-but-uncertified on two bars and untouched on two more.
+> That is not a pass and I am not going to present it as one.** What is fairly
+> claimable is narrower and still worth saying: **M12 is the only axis on the
+> board whose remaining obstacles are all mine rather than yours.** No detail
+> instrument, no comparator licence, no holdout, no capture campaign and no
+> shutter actuation stands between here and an M12 verdict.
 >
 > **What still genuinely needs the purchase.** The comparator-dependent axes.
 > Blocker **(d)** is carried by **M1, M2, M3, M4, M5, M6 and M7**; **M11** is

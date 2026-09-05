@@ -7751,7 +7751,15 @@ plainly: **`M12  (e) none`**.
 - **`M12-D` fixed-worker determinism — PASS**, all 15 cells, one TIFF hash each.
   It remains *"the first registered sub-property in this program to pass
   anything."*
-- **N-mod-4 per-frame spread — passes**, `0.07618677189815302` against a `2%` bar.
+- **N-mod-4 per-frame spread — FAILS**, `0.07618677189815302` against a `2%`
+  bar. **CORRECTED in §2.9.80: this line previously read "passes".** The value
+  is the raw `(max-min)/min` *fraction*, not a percent, so it is
+  `7.618677189815302%` and misses the `0.02` bar by roughly `3.8x`
+  (`docs/research/M172-m12s-closure.md:149`). Line `:7275` of this same document
+  already had it right, so STATUS contradicted itself for as long as both lines
+  stood. M139 records the formal verdict as `UNMEASURED_HOST_QUARANTINE` — the
+  host was at `93.2%` mean CPU — so the observed failure is inadmissible rather
+  than scored (`docs/research/M139-m12-campaign.md:304`).
 - `peak_N299/peak_N33` is `UNMEASURED_SAMPLING_COVERAGE` (minimum coverage
   `0.7957678743186919` against `0.90`) and cannot rescue two exact bar failures.
 
@@ -7950,13 +7958,22 @@ worse than a wasted one.
 > rather than a hold. The caution recorded above was still the correct posture
 > at the time — it cost one adjudication cycle and prevented a wrong retraction.
 
-### 2.9.79 Both of M12's failures now have measured repairs, and neither is a score
+### 2.9.79 Two of M12's four bars now have measured repairs, and that is not a score
+
+> **⚠️ CORRECTED BY §2.9.80.** This section was first written under the heading
+> *"Both of M12's failures now have measured repairs"* and described M12 as
+> failing **two** bars. That was an overstatement by omission: M12 has **four**
+> bars, and the two I did not discuss — the `299/33` peak ratio and the N-mod-4
+> per-frame spread — are **not** repaired. The heading and the paragraph below
+> are corrected; §2.9.80 records how the error happened and where it
+> propagated. Nothing else in this section is withdrawn: the memory and
+> cross-worker repairs stand exactly as measured.
 
 **The headline: the only unblocked axis in the program has, for the first time,
-a measured repair for each of the two bars it fails.** That is a real change in
-the program's shape. It is *not* a change in the scoreboard, which remains
-`0 of 12`, and the distance between those two sentences is the whole content of
-this section.
+a measured repair for two of the four bars it must clear.** That is a real
+change in the program's shape. It is *not* a change in the scoreboard, which
+remains `0 of 12`, and the distance between those two sentences is the whole
+content of this section. **The other two bars are untouched** — see §2.9.80.
 
 **Memory. The bar is process-tree, and the question is finally settled.** M182
 was asked to rule before designing anything, because a bounded-memory design
@@ -8090,6 +8107,70 @@ practice of adjudicating routed text at its primary source rather than applying
 it has paid for itself every single time, and it is cheap. Applying a lane's
 words because the lane was right about the underlying problem is a different act
 from applying words that are themselves correct.
+
+### 2.9.80 M12 fails four bars, not two, and I published the wrong count
+
+**This section exists because I got the previous one wrong, and the error
+reached an owner-facing document before I caught it.**
+
+**What I claimed.** §2.9.79 was published under the heading *"Both of M12's
+failures now have measured repairs"* and described the axis as failing **two**
+bars, both now repaired. I then carried that framing into `docs/OWNER-ACTIONS.md`
+as part of retracting Ask 3's purchase argument, where it read as though M12
+were one certification away from passing.
+
+**What is actually true.** The scorecard's M12 bar (`:817`) is a conjunction of
+**four** requirements, and the axis fails or has not read **four** of them:
+
+| M12 bar | Registered state | Repair? |
+|---|---|---|
+| Warm peak process-tree memory `<=6 GiB` | **FAIL**, `35.65745162963867 GiB`, `5.94x` over | **YES** — M182 measures `3,074,797,568 B` |
+| Fixed-worker and cross-worker byte identity | `M12-D` **PASS** all 15 cells; `M12-S` **FAIL**, five distinct hashes | **YES** — M172 collapses to one hash across `1/2/4/8/16` |
+| `299/33` peak ratio `<=1.10` | `1.4615654159027742` sampled / `1.461570587793803` kernel, *"both far past the `1.10` bar"*; formal verdict `UNMEASURED_SAMPLING_COVERAGE` (coverage `0.7957678743186919` vs `0.90`) | **NO** |
+| N-mod-4 per-frame spread `<=2%` | **FAIL**, `0.07618677189815302` = `7.618677189815302%`, ~`3.8x` over; formal verdict `UNMEASURED_HOST_QUARANTINE` at `93.2%` mean host CPU | **NO** |
+
+**So the honest count is two repaired, two untouched.** Neither untouched bar is
+a code-determinism problem of the kind M172 and M182 solved. The N-mod-4 bar is
+a **timing** bar and needs a quiet host — the same thing M11's quarantined
+absolute timing needs. The peak-ratio bar needs sampling coverage `>=0.90`,
+which the registered campaign did not reach.
+
+**One of them may already be repaired, and I must not assume it.** If bounded
+canonical recycling really does cap peak near `3,074,797,568 B` largely
+independently of `N`, the `299/33` ratio should collapse toward `1.0` on its
+own. That is a plausible consequence, not a measurement: I do not hold repaired
+peaks at `N=33` and `N=299` at a common worker count. **M179's re-run of the
+full `N=33/105/299` x `W=1/2/4/8/16` matrix at one pinned commit is what would
+settle it**, and until it lands the ratio stays unrepaired in this record.
+
+**How the error happened, because the mechanism matters more than the fact.**
+STATUS **contradicted itself**, and I read the wrong line. `:7275` states the
+N-mod-4 spread is *"a measured **FAIL** at `0.07618677189815302`
+(`7.618677%`)"*. A later bullet, at what is now `:7754`, stated the same value
+*"passes"*. Both lines stood in the same document. `0.07618677189815302` is the
+raw `(max-min)/min` **fraction**, not a percent — lane M172 had already ruled
+exactly this (`docs/research/M172-m12s-closure.md:149`), and lane M182 had
+already caught me repeating the wrong version in a lane briefing and returned
+exact correction text while noting it changed no repository file
+(`docs/research/M182-memory-budget.md:173-176`). **Two independent lanes flagged
+this before I published it and I still published it.** The false bullet is now
+corrected in place rather than deleted.
+
+**The rule this earns.** *A number that appears twice in one document with two
+different verdicts is not a citation, it is a coin flip.* Quoting one instance
+of a figure is not verification when the same document states the opposite
+elsewhere. **Before treating a value in my own record as established, grep the
+whole document for that value and reconcile every occurrence.** This is the
+same failure shape as the duplicate-anchor problem that pin pre-flight exists to
+catch — a presence check satisfied by one of several conflicting copies — except
+here the conflicting copies were verdicts rather than anchors, and the reader
+being fooled was me.
+
+**Where it propagated, and the repair.** `docs/OWNER-ACTIONS.md`'s Ask 3
+retraction has been corrected to state the four-bar count, to name both
+unrepaired bars, and to say plainly that M12 is not one certification away from
+passing. The scorecard's M12 rows already stated the true position and needed no
+change; the defect was mine and downstream of them.
 
 
 

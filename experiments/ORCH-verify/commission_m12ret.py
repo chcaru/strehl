@@ -38,6 +38,7 @@ REAL = Path(__file__).resolve().parents[2]
 VNAME = "vowner0906.py"
 
 OWNER_REL = "docs/OWNER-ACTIONS.md"
+STATUS_REL = "docs/STATUS.md"
 V_REL = "experiments/ORCH-verify/" + VNAME
 
 # (check label, relative path to mutate, exact text, replacement)
@@ -72,6 +73,36 @@ ARMS = [
     ("headroom GiB quoted", V_REL, '"3.1364"', '"3.1365"'),
     ("peak is under bar", V_REL, "PEAK < BAR", "PEAK > BAR"),
     ("unrepaired is over bar", V_REL, "UNREPAIRED > BAR", "UNREPAIRED < BAR"),
+
+    # ---- four-bar arms ----
+    # Two of these are ABSENCE checks: they guard against the wrong text coming
+    # BACK. Their defect is therefore an insertion, not a deletion, so the
+    # mutation appends the forbidden string to a unique neighbouring line.
+    ("status nmod4 not passes", STATUS_REL,
+     "- **N-mod-4 per-frame spread — FAILS**",
+     "- N-mod-4 per-frame spread — passes\n- **N-mod-4 per-frame spread — FAILS**"),
+    ("owner drops the two-bar claim", OWNER_REL,
+     "> **And the correction runs the other way from the one you would expect.**",
+     "> **And the correction runs the other way.** both of M12's registered failures"),
+    ("status nmod4 fails", STATUS_REL,
+     "**N-mod-4 per-frame spread — FAILS**",
+     "**N-mod-4 per-frame spread — FAILED**"),
+    ("status 2.9.80 exists", STATUS_REL,
+     "M12 fails four bars, not two", "M12 fails several bars"),
+    ("status nmod4 true percent", STATUS_REL,
+     "7.618677189815302%", "7.618677189815303%"),
+    ("status ratio unrepaired", STATUS_REL,
+     "1.4615654159027742", "1.4615654159027743"),
+    ("owner says four bars", OWNER_REL,
+     "M12 is a conjunction of **four** bars, not two",
+     "M12 is a conjunction of several bars"),
+    ("owner names nmod4 unrepaired", OWNER_REL,
+     "N-mod-4 per-frame timing spread", "per-frame timing variation"),
+    ("owner names ratio unrepaired", OWNER_REL,
+     "peak memory ratio", "peak memory quotient"),
+    ("owner refuses to call it a pass", OWNER_REL,
+     "That is not a pass and I am not going to present it as one",
+     "That is not yet a pass"),
 ]
 
 # Must change nothing. If this reddens a check, the checks are keyed on
@@ -88,7 +119,7 @@ def run(root):
                        capture_output=True, text=True)
     reds = set()
     for line in p.stdout.splitlines():
-        m = re.match(r"^RED\s+m12(?:ret|der)\s+(.+)$", line)
+        m = re.match(r"^RED\s+(?:m12(?:ret|der)|4bar)\s+(.+)$", line)
         if m:
             lab = m.group(1).strip()
             # The verifier appends a diagnostic after the label. With a label
@@ -99,7 +130,8 @@ def run(root):
             for suffix in (" ABSENT", " DID NOT RE-DERIVE"):
                 if lab.endswith(suffix):
                     lab = lab[:-len(suffix)]
-            lab = re.split(r"\s{2,}|\s+source=|\s+SOURCE MISSING", lab)[0]
+            lab = re.split(r"\s{2,}|\s+source=|\s+SOURCE MISSING|\s+expected ",
+                           lab)[0]
             reds.add(lab.strip())
         elif line.startswith("CTLFAIL"):
             reds.add("CTL:" + line[8:60].strip())

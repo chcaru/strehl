@@ -393,6 +393,48 @@ for label, needle in (("retraction present", "RETRACTION"),
     else:
         red += 1
 
+# ---- M12 four-bar count: the defect that caused all of this ----
+# STATUS contained the N-mod-4 spread as both a FAIL (:7275) and a "passes"
+# (:7754) simultaneously, and I read the wrong one, publishing a two-bar count
+# into an owner-facing file. These checks make that specific regression loud.
+STATUSD = ROOT / "docs" / "STATUS.md"
+status_flat = collapse(STATUSD.read_text(encoding="utf-8", errors="replace")) \
+    if STATUSD.exists() else ""
+
+FOURBAR = [
+    ("status nmod4 not passes", status_flat,
+     "N-mod-4 per-frame spread — passes", False),
+    ("status nmod4 fails", status_flat,
+     "N-mod-4 per-frame spread — FAILS", True),
+    ("status 2.9.80 exists", status_flat,
+     "M12 fails four bars, not two", True),
+    ("status nmod4 true percent", status_flat,
+     "7.618677189815302%", True),
+    ("status ratio unrepaired", status_flat,
+     "1.4615654159027742", True),
+    ("owner says four bars", owner_flat,
+     "M12 is a conjunction of **four** bars, not two", True),
+    ("owner names nmod4 unrepaired", owner_flat,
+     "N-mod-4 per-frame timing spread", True),
+    ("owner names ratio unrepaired", owner_flat,
+     "peak memory ratio", True),
+    ("owner refuses to call it a pass", owner_flat,
+     "That is not a pass and I am not going to present it as one", True),
+    ("owner drops the two-bar claim", owner_flat,
+     "both of M12's registered failures", False),
+]
+for label, hay, needle, want in FOURBAR:
+    present = collapse(needle) in hay
+    ok = (present == want)
+    if ok:
+        print("GREEN 4bar   %-30s" % label)
+        green += 1
+    else:
+        print("RED   4bar   %-30s expected %s, found %s: %r"
+              % (label, "present" if want else "ABSENT",
+                 "present" if present else "absent", needle))
+        red += 1
+
 # ---- control: a wrong total must not re-derive ----
 ctl = (2 + sum(stages) + 704) != 1603
 ctl2 = (891 + 32 + 164 + 128) != 1147  # the stale total must no longer re-derive
