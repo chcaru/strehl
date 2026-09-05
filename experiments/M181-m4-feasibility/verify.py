@@ -5,7 +5,13 @@ import json
 from pathlib import Path
 from typing import Any
 
-from probe_flats import EXPECTED_HASHES, PROHIBITED_ROOT, summarize
+from probe_flats import (
+    EXPECTED_HASHES,
+    M152,
+    PROHIBITED_ROOT,
+    sha256_file,
+    summarize,
+)
 
 
 HERE = Path(__file__).resolve().parent
@@ -33,9 +39,7 @@ def check_source_freeze(probe: dict[str, Any]) -> None:
     )
 
 
-def check_prohibited_path(
-    inventory: dict[str, Any], probe: dict[str, Any]
-) -> None:
+def check_prohibited_path(inventory: dict[str, Any], probe: dict[str, Any]) -> None:
     banned = str(PROHIBITED_ROOT).lower().replace("/", "\\")
     require(
         inventory["prohibited_root_descended"] is False,
@@ -81,9 +85,7 @@ def check_inventory_integrity(inventory: dict[str, Any]) -> None:
         )
 
 
-def check_rig_audit(
-    inventory: dict[str, Any], rig: dict[str, Any]
-) -> None:
+def check_rig_audit(inventory: dict[str, Any], rig: dict[str, Any]) -> None:
     require(rig["schema"] == "m181-allowed-rig-audit-v1", "bad rig-audit schema")
     require(rig["complete"] is True, "rig audit is incomplete")
     require(
@@ -118,6 +120,149 @@ def check_rig_audit(
     require(
         int(rig["unexpected_frame_count"]) == len(rig["unexpected_frames"]) == 0,
         "rig audit contains an unexpected or bare-lens frame",
+    )
+
+
+def check_development_resolution(development: dict[str, Any]) -> None:
+    require(
+        development["schema"] == "m181-development-flat-resolution-v1",
+        "bad development-resolution schema",
+    )
+    method = development["method"]
+    require(
+        method["authoritative_callable"] == "M152 census.census_flat_capture",
+        "development result did not use the M152 predicate",
+    )
+    require(
+        method["predicate_source_modified"] is False,
+        "development result says the M152 predicate was modified",
+    )
+    for name, digest in method["m152_source_sha256"].items():
+        require(
+            sha256_file(M152 / name) == digest,
+            f"development result is stale against M152 {name}",
+        )
+    noise_path = Path(method["m152_noise_path"])
+    require(
+        sha256_file(noise_path) == method["m152_noise_file_sha256"],
+        "development result is stale against M152 noise calibration",
+    )
+
+    capture = development["capture"]
+    expected_files = [f"DSC{index:05d}.ARW" for index in range(103, 123)]
+    require(
+        capture["path"] == r"D:\personal\macro\flat-fields\flat-fields",
+        "unexpected development capture path",
+    )
+    require(
+        int(capture["frame_count"])
+        == int(capture["decoded_input_count"])
+        == len(capture["decoded_inputs"])
+        == 20,
+        "development capture does not contain exactly 20 decoded inputs",
+    )
+    require(
+        [row["file"] for row in capture["decoded_inputs"]] == expected_files,
+        "development capture file population differs",
+    )
+    require(
+        capture["first_file"] == expected_files[0]
+        and capture["last_file"] == expected_files[-1],
+        "development capture endpoints differ",
+    )
+
+    coffee = development["m152_coffee_reference"]
+    require(
+        coffee["path"] == r"D:\personal\macro\coffee-bubbles",
+        "unexpected M152 coffee reference path",
+    )
+    require(
+        int(coffee["frame_count"]) == 19
+        and int(coffee["eligible_tile_count"]) == 0
+        and coffee["same_capture"] is False,
+        "development burst was conflated with M152 coffee",
+    )
+
+    thresholds = development["thresholds"]
+    require(
+        thresholds
+        == {
+            "band_ratio_strict_maximum": 1.0,
+            "minimum_signal_sigma": 10.0,
+            "maximum_low_rail_fraction": 0.01,
+            "maximum_high_rail_fraction": 0.001,
+        },
+        "development predicate thresholds differ",
+    )
+    candidate_count = int(development["initial_candidate_count"])
+    eligible_count = int(development["eligible_tile_count"])
+    require(
+        candidate_count == eligible_count == 1768, "development joint count differs"
+    )
+    require(
+        int(development["development_quota"]) == 100
+        and development["reaches_development_quota"] is True,
+        "development burst does not clear the 100-tile quota",
+    )
+    require(
+        development["all_frames_evaluated"] is True
+        and development["first_failure_counts"] == {},
+        "development predicate did not retain every tile through every frame",
+    )
+    trajectory = development["survivor_trajectory"]
+    require(len(trajectory) == 20, "development trajectory is not 20 frames")
+    require(
+        [row["file"] for row in trajectory] == expected_files
+        and all(int(row["survivors"]) == candidate_count for row in trajectory),
+        "development trajectory loses a tile or changes files",
+    )
+
+    terms = development["term_results"]
+    band = terms["band_20_60_native_px_over_temporal_noise_p99"]
+    signal = terms["median_signal_over_temporal_sigma"]
+    low = terms["low_rail_fraction"]
+    high = terms["high_rail_fraction"]
+    for name, term in terms.items():
+        require(
+            int(term["failure_count"]) == 0
+            and int(term["survivor_count"]) == candidate_count,
+            f"development {name} term does not retain all tiles",
+        )
+    require(
+        0.0
+        <= float(band["max_over_frame_ratio_min"])
+        <= float(band["max_over_frame_ratio_median_nearest_rank"])
+        <= float(band["max_over_frame_ratio_p95_nearest_rank"])
+        <= float(band["max_over_frame_ratio_max"])
+        < thresholds["band_ratio_strict_maximum"],
+        "development band-power term fails",
+    )
+    require(
+        float(signal["minimum_over_frames_and_tiles_sigma"])
+        >= thresholds["minimum_signal_sigma"],
+        "development signal term fails",
+    )
+    require(
+        float(low["maximum_over_frames_and_tiles"])
+        <= thresholds["maximum_low_rail_fraction"],
+        "development low-rail term fails",
+    )
+    require(
+        float(high["maximum_over_frames_and_tiles"])
+        <= thresholds["maximum_high_rail_fraction"],
+        "development high-rail term fails",
+    )
+    require(
+        development["trace_band_distribution_exactly_matches_predicate_output"] is True,
+        "development line trace differs from predicate output",
+    )
+    require(
+        development["prohibited_root_opened"] is False,
+        "development run says the prohibited root was opened",
+    )
+    require(
+        development["verdict"] == "DEVELOPMENT_FLAT_ELIGIBLE",
+        "unexpected development verdict",
     )
 
 
@@ -200,13 +345,20 @@ def check_verdict_reduction(probe: dict[str, Any]) -> None:
 
 
 def verify_values(
-    inventory: dict[str, Any], probe: dict[str, Any], rig: dict[str, Any]
+    inventory: dict[str, Any],
+    probe: dict[str, Any],
+    rig: dict[str, Any],
+    development: dict[str, Any],
 ) -> list[str]:
     checks = [
         ("source-freeze", lambda: check_source_freeze(probe)),
         ("prohibited-path", lambda: check_prohibited_path(inventory, probe)),
         ("inventory-integrity", lambda: check_inventory_integrity(inventory)),
         ("rig-audit", lambda: check_rig_audit(inventory, rig)),
+        (
+            "development-resolution",
+            lambda: check_development_resolution(development),
+        ),
         ("probe-accounting", lambda: check_probe_accounting(probe)),
         ("verdict-reduction", lambda: check_verdict_reduction(probe)),
     ]
@@ -217,16 +369,21 @@ def verify_values(
     return passed
 
 
-def load_values() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+def load_values() -> tuple[
+    dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]
+]:
     inventory = json.loads((OUT / "inventory.json").read_text(encoding="ascii"))
     probe = json.loads((OUT / "flat-probe.json").read_text(encoding="ascii"))
     rig = json.loads((OUT / "rig-audit.json").read_text(encoding="ascii"))
-    return inventory, probe, rig
+    development = json.loads(
+        (OUT / "development-flat-resolution.json").read_text(encoding="ascii")
+    )
+    return inventory, probe, rig, development
 
 
 def main() -> int:
-    inventory, probe, rig = load_values()
-    passed = verify_values(inventory, probe, rig)
+    inventory, probe, rig, development = load_values()
+    passed = verify_values(inventory, probe, rig, development)
     print(f"GREEN: {len(passed)} checks: {', '.join(passed)}")
     return 0
 

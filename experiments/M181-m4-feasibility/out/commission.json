@@ -1,5 +1,5 @@
 {
-  "accounted": 7,
+  "accounted": 15,
   "arms": [
     {
       "arm": "source-freeze",
@@ -32,6 +32,46 @@
       "status": "KILLED"
     },
     {
+      "arm": "development-source",
+      "reason": "development result is stale against M152 census.py",
+      "status": "KILLED"
+    },
+    {
+      "arm": "development-identity",
+      "reason": "development burst was conflated with M152 coffee",
+      "status": "KILLED"
+    },
+    {
+      "arm": "development-band",
+      "reason": "development band-power term fails",
+      "status": "KILLED"
+    },
+    {
+      "arm": "development-signal",
+      "reason": "development signal term fails",
+      "status": "KILLED"
+    },
+    {
+      "arm": "development-low-rail",
+      "reason": "development low-rail term fails",
+      "status": "KILLED"
+    },
+    {
+      "arm": "development-high-rail",
+      "reason": "development high-rail term fails",
+      "status": "KILLED"
+    },
+    {
+      "arm": "development-joint",
+      "reason": "development joint count differs",
+      "status": "KILLED"
+    },
+    {
+      "arm": "development-prohibited",
+      "reason": "development run says the prohibited root was opened",
+      "status": "KILLED"
+    },
+    {
       "arm": "inert",
       "reason": null,
       "status": "INERT_GREEN"
@@ -42,15 +82,16 @@
     "prohibited-path",
     "inventory-integrity",
     "rig-audit",
+    "development-resolution",
     "probe-accounting",
     "verdict-reduction"
   ],
-  "expected_total": 7,
+  "expected_total": 15,
   "inert_arms_green": 1,
   "inert_arms_run": 1,
-  "mutation_arms_killed": 6,
+  "mutation_arms_killed": 14,
   "mutation_arms_missed": 0,
-  "mutation_arms_planted": 6,
+  "mutation_arms_planted": 14,
   "schema": "m181-verifier-commission-v1",
   "verdict": "COMMISSIONED"
 }

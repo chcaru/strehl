@@ -1,0 +1,259 @@
+{
+  "all_frames_evaluated": true,
+  "capture": {
+    "decoded_input_count": 20,
+    "decoded_inputs": [
+      {
+        "decoded_green_sha256": "31ad7125dd5e3d8ed4c9925d5f7a6250f39f319b330fb9e866dc64cb6df21c6f",
+        "file": "DSC00103.ARW"
+      },
+      {
+        "decoded_green_sha256": "8606f45c753febe0faf88d08c5337e23afed1ab03b4c631205609ad9e01a0baa",
+        "file": "DSC00104.ARW"
+      },
+      {
+        "decoded_green_sha256": "6afdf616c5cee23af3890be49d6d8de0b3741ff55d5adbe378d05420bd90c756",
+        "file": "DSC00105.ARW"
+      },
+      {
+        "decoded_green_sha256": "b4412098a071ebdce7cd6b384c2b5165315f839de2f766562a0b061423818eb8",
+        "file": "DSC00106.ARW"
+      },
+      {
+        "decoded_green_sha256": "e5b41dc0d7e0285084f9caec0f378e97f6d979af3d2a28582cfb78d5be1b4403",
+        "file": "DSC00107.ARW"
+      },
+      {
+        "decoded_green_sha256": "dbe194035da4cb77b817c841d9af3d9ac6030e0c8144fd0aa1986230c7c48a2a",
+        "file": "DSC00108.ARW"
+      },
+      {
+        "decoded_green_sha256": "1e953be1f6d235ace22bc24ee5a02d11ba215c2fbb962e99620c41f04a842d1c",
+        "file": "DSC00109.ARW"
+      },
+      {
+        "decoded_green_sha256": "9f83abc755f9b0ca1c04e354fdb8648a3457709ca3fda8fffd5b0259cc77817a",
+        "file": "DSC00110.ARW"
+      },
+      {
+        "decoded_green_sha256": "8cd518c6f6095c392989a9513229a6eab1832cb5a284aa05868bf1f93a30b9f1",
+        "file": "DSC00111.ARW"
+      },
+      {
+        "decoded_green_sha256": "5ba3ea50c5a3869e358bfbdf89db62e59960eb05399805af589522b1bbfc9b9b",
+        "file": "DSC00112.ARW"
+      },
+      {
+        "decoded_green_sha256": "bd0d0fdc4c5123650be6b15e7318ce60111f97d2ca08fdb7ac3aa3239fc4f6d4",
+        "file": "DSC00113.ARW"
+      },
+      {
+        "decoded_green_sha256": "1d88d5abeaef4681ba83490bd89de649ca9add08e35941377569388dd574ed3f",
+        "file": "DSC00114.ARW"
+      },
+      {
+        "decoded_green_sha256": "4524f09203102402aaa197d534956d80a461244408bae29b5624872c2f36eee9",
+        "file": "DSC00115.ARW"
+      },
+      {
+        "decoded_green_sha256": "aeb8ff815954642bda9b42074336a24e5ea0d078a0722b6cef102a8aa6e1b5bb",
+        "file": "DSC00116.ARW"
+      },
+      {
+        "decoded_green_sha256": "34b8d9f5cc585188d35c7d751d9a0e52e8bf8fff75d1203632cca37ae1985438",
+        "file": "DSC00117.ARW"
+      },
+      {
+        "decoded_green_sha256": "d970545694248bf0df9bc0ba9e044d58796b95c2c7a51544f50763f17ace6460",
+        "file": "DSC00118.ARW"
+      },
+      {
+        "decoded_green_sha256": "298229ea80823584e4c31f2270246b76b029810a0840ff0a53e808e1293d6d81",
+        "file": "DSC00119.ARW"
+      },
+      {
+        "decoded_green_sha256": "73efcd09477b3b74e77e63988cca6b5978937238797505d8f685cd030790d62c",
+        "file": "DSC00120.ARW"
+      },
+      {
+        "decoded_green_sha256": "04e6fece4088961c9b81d462c5266b9297e37640666be4677ae5271f5aa83239",
+        "file": "DSC00121.ARW"
+      },
+      {
+        "decoded_green_sha256": "038dee36f55912b0092424c42d20770b893d6364f77a22c1739706aac51d86ac",
+        "file": "DSC00122.ARW"
+      }
+    ],
+    "first_file": "DSC00103.ARW",
+    "frame_count": 20,
+    "last_file": "DSC00122.ARW",
+    "path": "D:\\personal\\macro\\flat-fields\\flat-fields"
+  },
+  "development_quota": 100,
+  "eligible_tile_count": 1768,
+  "first_failure_counts": {},
+  "initial_candidate_count": 1768,
+  "m152_coffee_reference": {
+    "eligible_tile_count": 0,
+    "frame_count": 19,
+    "path": "D:\\personal\\macro\\coffee-bubbles",
+    "same_capture": false
+  },
+  "method": {
+    "authoritative_callable": "M152 census.census_flat_capture",
+    "input_adapter_only": "capture_files bound to the explicit DSC00103--DSC00122 list",
+    "line_trace_semantics": "read-only observation of exact predicate locals; return values and control flow unchanged",
+    "m152_definition_sha256": "b2e872a6a8214d4fbe379287f52fc57b8f5e61f292aab4c30e96b11d49325879",
+    "m152_noise_content_sha256": "47eaf0235c0492ffeabcd0098581f52f22a8d4b8a7241f743c61754476f06566",
+    "m152_noise_file_sha256": "ed8e2467911316e049198dc485542263744ce715e89f293b153c16f8d3dad9c1",
+    "m152_noise_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M152-site-census\\out\\noise-calibration.json",
+    "m152_source_sha256": {
+      "census-definition.json": "b2e872a6a8214d4fbe379287f52fc57b8f5e61f292aab4c30e96b11d49325879",
+      "census.py": "640a9b1433d2f6d0c5eee208cc69398abafd103688451ce3e7f4e4a74d3e0539",
+      "census_common.py": "3e36a18d8c7b675f224f4fbe694ef2d16297e3e038df18e61cdb4dead219a680"
+    },
+    "predicate_source_modified": false
+  },
+  "prohibited_root_opened": false,
+  "reaches_development_quota": true,
+  "schema": "m181-development-flat-resolution-v1",
+  "survivor_trajectory": [
+    {
+      "file": "DSC00103.ARW",
+      "frame_index_zero_based": 0,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00104.ARW",
+      "frame_index_zero_based": 1,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00105.ARW",
+      "frame_index_zero_based": 2,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00106.ARW",
+      "frame_index_zero_based": 3,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00107.ARW",
+      "frame_index_zero_based": 4,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00108.ARW",
+      "frame_index_zero_based": 5,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00109.ARW",
+      "frame_index_zero_based": 6,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00110.ARW",
+      "frame_index_zero_based": 7,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00111.ARW",
+      "frame_index_zero_based": 8,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00112.ARW",
+      "frame_index_zero_based": 9,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00113.ARW",
+      "frame_index_zero_based": 10,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00114.ARW",
+      "frame_index_zero_based": 11,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00115.ARW",
+      "frame_index_zero_based": 12,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00116.ARW",
+      "frame_index_zero_based": 13,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00117.ARW",
+      "frame_index_zero_based": 14,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00118.ARW",
+      "frame_index_zero_based": 15,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00119.ARW",
+      "frame_index_zero_based": 16,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00120.ARW",
+      "frame_index_zero_based": 17,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00121.ARW",
+      "frame_index_zero_based": 18,
+      "survivors": 1768
+    },
+    {
+      "file": "DSC00122.ARW",
+      "frame_index_zero_based": 19,
+      "survivors": 1768
+    }
+  ],
+  "term_results": {
+    "band_20_60_native_px_over_temporal_noise_p99": {
+      "failure_count": 0,
+      "max_over_frame_ratio_max": 0.9568778555092059,
+      "max_over_frame_ratio_median_nearest_rank": 0.7463259922333734,
+      "max_over_frame_ratio_min": 0.6294321657972741,
+      "max_over_frame_ratio_p95_nearest_rank": 0.8338545563950307,
+      "survivor_count": 1768,
+      "threshold": "<1.0"
+    },
+    "high_rail_fraction": {
+      "failure_count": 0,
+      "maximum_over_frames_and_tiles": 0.0,
+      "survivor_count": 1768,
+      "threshold": "<=0.001"
+    },
+    "low_rail_fraction": {
+      "failure_count": 0,
+      "maximum_over_frames_and_tiles": 0.0,
+      "survivor_count": 1768,
+      "threshold": "<=0.01"
+    },
+    "median_signal_over_temporal_sigma": {
+      "failure_count": 0,
+      "minimum_over_frames_and_tiles_sigma": 62.12129326470703,
+      "survivor_count": 1768,
+      "threshold": ">=10.0"
+    }
+  },
+  "thresholds": {
+    "band_ratio_strict_maximum": 1.0,
+    "maximum_high_rail_fraction": 0.001,
+    "maximum_low_rail_fraction": 0.01,
+    "minimum_signal_sigma": 10.0
+  },
+  "trace_band_distribution_exactly_matches_predicate_output": true,
+  "verdict": "DEVELOPMENT_FLAT_ELIGIBLE"
+}
