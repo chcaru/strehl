@@ -38,15 +38,13 @@ SOURCE_PATHS = {
     "m160": ROOT / "docs" / "research" / "M160-amendment6-reachability.md",
     "m144": ROOT / "docs" / "research" / "M144-reference-uncertainty.md",
     "m169": ROOT / "docs" / "research" / "M169-ratification-stakes.md",
-    "m171": ROOT / "docs" / "research" / "M171-reference-admission.md",
     "m171_prereg": ROOT
     / "experiments"
     / "M171-reference-admission"
     / "PREREGISTRATION.md",
     "m173": ROOT / "docs" / "research" / "M173-ask2a-audit.md",
-    "m164_manifest": ROOT / "docs" / "research" / "M164-dominance-manifest.md",
+    "split": ROOT / "docs" / "research" / "M-PHASE0-SPLIT.md",
     "plan": ROOT / "docs" / "proposals" / "2026-08-sota-path.md",
-    "status": ROOT / "docs" / "STATUS.md",
     "owner": ROOT / "docs" / "OWNER-ACTIONS.md",
     "capture": ROOT
     / "docs"
@@ -344,20 +342,6 @@ def audit(
         return [Check("source.derivation", False, str(exc))]
 
     owner_flat = re.sub(r"\s+", " ", sources["owner"])
-    report_flat = re.sub(r"\s+", " ", report)
-    critical_path_markers = (
-        "| 0 | Execute the repaired, released Ask 2a",
-        "| 1 | Freeze the production route",
-        "| 2 | Capture the M166 exact-configuration rehearsal",
-        "| 3 | Instantiate and run production M171 G1–G8",
-        "| 4 | Build, freeze, commission and independently admit the detail instrument",
-        "| 5 | Clear blocker `(a)` for the admitted instrument, then capture the sealed M166 score",
-        "| 6 | Run admitted instruments and axis-specific checkers",
-    )
-    critical_path_positions = [report.find(marker) for marker in critical_path_markers]
-    critical_path_in_order = all(
-        position >= 0 for position in critical_path_positions
-    ) and critical_path_positions == sorted(critical_path_positions)
 
     add(
         "arithmetic.rehearsal",
@@ -428,10 +412,15 @@ def audit(
         str(facts["specified_floor"]),
     )
     add(
-        "arithmetic.score-path",
+        "arithmetic.capture-input-floor",
         facts["score_path"] == 2309
         and contains_once(
-            report, "CHECK[score-path] 2 + 1,092 + 1,215 = 2,309"
+            report, "CHECK[capture-subtotal] 2 + 1,092 + 1,215 = 2,309"
+        )
+        and contains_once(
+            report,
+            "CHECK[capture-input-floor] 2 + 1,092 + 1,215 = 2,309 "
+            "registered frames",
         ),
         str(facts["score_path"]),
     )
@@ -584,46 +573,59 @@ def audit(
         in sources["m171_prereg"]
         and "Sequence all 686 M167 frames out of the owner queue" in report
         and "The reason is contingent sequencing" in report
+        and "no candidate detail instrument\nexists to calibrate" in report
+        and "Blocker `(a)` is the unsolved statistic upstream of this\nbattery"
+        in report
         and "Restore the battery to the queue immediately" in report
-        and "686 frames sequenced out pending detail-candidate admission"
+        and "686 frames sequenced out pending an admissible instrument candidate"
         in report.splitlines()[0],
-        "M167 is deferred until candidate admission, not rejected permanently",
+        "M167 is deferred because no instrument candidate exists, not rejected permanently",
     )
     add(
-        "path.blocker-a-order",
-        "reads no real capture, supplies NO CI for real capture, cannot emit M1 admission"
-        in sources["m171"]
-        and "cannot emit a real-candidate admission" in sources["m167"]
+        "path.blocker-a-boundary",
+        "missing admissible detail instrument" in sources["owner"]
+        and "a **statistic**, not a capture" in sources["owner"]
+        and "critical path is not your wallet and not your time" in owner_flat
         and contains_once(
             report,
-            "CHECK[critical-path] 2 + 1,092 + 1,215 = 2,309 registered frames",
+            "The owner's frames are a precondition for scoring\nM1/M5/M9 once "
+            "an admissible detail instrument exists",
         )
-        and critical_path_in_order
-        and "Real reference and instrument admission must succeed\n"
-        "on non-holdout evidence before the score is exposed" in report,
-        "admission precedes the sealed score",
+        and contains_once(
+            report,
+            "They are **not** a route\nto blocker `(a)`, and no quantity of "
+            "owner frames clears it",
+        )
+        and "There are therefore two dependency classes, not one\n"
+        "capture-to-admission chain" in report
+        and "reference admission does not create or admit the missing detail\n"
+        "   statistic" in report,
+        "owner capture is a scoring input, never the missing statistic",
     )
     add(
-        "path.non-capture-gates",
-        "buy the admitted Zerene licence" in sources["m164_manifest"]
-        and "enumerate the complete Cartesian family" in sources["m164_manifest"]
-        and "production must refuse admission until a versioned authority resolves"
-        in sources["m171"]
-        and "No amount of shooting produces it." in sources["status"]
-        and "Owner frames alone cannot clear blocker `(a)`." in report
-        and "evaluator-controlled OS-strength A6 sandbox" in report,
-        "manifest, authority, implementation, sandbox and admission remain",
+        "path.d8-kill",
+        "The best-commissioned instrument in the corpus" in sources["plan"]
+        and "**Verdict: KILL — STOP/REMOVE RUST; retain the split instrument offline.**"
+        in sources["split"]
+        and "controls do not transfer" in sources["split"]
+        and "perfect coherence and zero half-difference while losing **29.6%**"
+        in sources["split"]
+        and "D8's registered\ngate returned **KILL**" in report
+        and "can score perfect coherence while\nlosing `29.6%`" in report,
+        "the nominated D8 instrument failed its registered transfer gate",
     )
     add(
-        "path.reachability",
-        "| \\+ Zerene `$189` | `b+c+d` | **`4 of 12`** |" in sources["status"]
-        and "| \\+ a detail instrument | `a` | `12 of 12` | all |"
-        in sources["status"]
-        and "if blockers `(b)`, `(c)`, `(d)` and the axis-specific prerequisites "
-        "are already clear" in report_flat
-        and "measurement ceiling from `4 of 12` to `12 of 12`" in report
-        and "That is reachability, not a\nclaim of twelve passing results" in report,
-        "working instrument has 4-to-12 reach only after the other blockers",
+        "path.no-shoot-to-scorecard",
+        "12 of 12" not in report
+        and "Verified critical path to blocker" not in report
+        and "Clear blocker `(a)`" not in report
+        and "capture and admission programme" not in report
+        and "complete currently specified M1/M5/M9 path" not in report
+        and "Those frames are\n   scoring preconditions, not a route to the instrument"
+        in report
+        and "No arrow runs from these 2,309 shutter releases to\n"
+        "the research result in item 1" in report,
+        "the report never sells shutter releases as a blocker or scorecard route",
     )
     add(
         "rig.impossible-paired-node",
@@ -776,22 +778,23 @@ def commissioned(
         "The reason is permanent zero-axis value",
     )
     report_mutation(
-        "critical-path-order-reversed",
-        "Real reference and instrument admission must succeed\n"
-        "on non-holdout evidence before the score is exposed",
-        "The score must be exposed before real reference and instrument admission",
+        "blocker-made-capture-route",
+        "They are **not** a route\nto blocker `(a)`, and no quantity of owner "
+        "frames clears it",
+        "They are a direct route\nto blocker `(a)`, and enough owner frames "
+        "clear it",
+    )
+    source_mutation(
+        "d8-kill-reversed",
+        "split",
+        "**Verdict: KILL — STOP/REMOVE RUST; retain the split instrument offline.**",
+        "**Verdict: GO — retain and deploy the split instrument.**",
     )
     report_mutation(
-        "critical-freeze-rehearsal-order-reversed",
-        "| 1 | Freeze the production route |",
-        "| 3 | Freeze the production route |",
-    )
-    report_mutation(
-        "reachability-prerequisites-removed",
-        "if blockers `(b)`, `(c)`, `(d)` and the axis-specific prerequisites\n"
-        "are already clear",
-        "even if blockers `(b)`, `(c)`, `(d)` and the axis-specific prerequisites\n"
-        "remain uncleared",
+        "shoot-to-full-scorecard",
+        "No arrow runs from these 2,309 shutter releases to\n"
+        "the research result in item 1",
+        "These 2,309 shutter releases buy the owner 12 of 12",
     )
     source_mutation(
         "m169-zero-axis-source",

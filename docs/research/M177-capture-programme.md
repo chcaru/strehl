@@ -1,4 +1,4 @@
-CAPTURE PROGRAMME: at least 3,716 specified frames in at least 6 sittings; minimum viable nominally 2 frames; 686 frames sequenced out pending detail-candidate admission. **INFERRED BY READING.**
+CAPTURE PROGRAMME: at least 3,716 specified frames in at least 6 sittings; minimum viable nominally 2 frames; 686 frames sequenced out pending an admissible instrument candidate. **INFERRED BY READING.**
 
 # M177 — one capture programme
 
@@ -12,8 +12,10 @@ numerical preflight PASS still does not release either long sitting.  The M166
 rehearsal and score remain stopped at zero frames; M167, M2 and the
 replacement-slide ask are sequenced later; and four further asks are not yet
 countable.  This document arbitrates shutter priority; it does not remove any
-source protocol's STOP.
-Sources: `docs/OWNER-ACTIONS.md:8-11,907-1019`;
+source protocol's STOP.  It also does not offer capture as a solution to
+blocker `(a)`: that blocker is a missing statistic, and no quantity of owner
+frames clears it.
+Sources: `docs/OWNER-ACTIONS.md:8-11,133-140,277-314,907-1019`;
 `docs/research/M173-ask2a-audit.md:7-15,293-324`;
 `docs/research/M166-capture-reconciliation.md:1-39`;
 `docs/research/M167-detail-battery.md:518-522`.
@@ -34,10 +36,13 @@ The audit found three further sized obligations: Ask 2a, the M2 two-light
 replacement, and the deferred replacement-slide sitting.  Four other current
 asks omit a frame count, so 3,716 is a floor, not a finite grand total.
 
-**VERIFIED BY RUNNING.** `CHECK[score-path] 2 + 1,092 + 1,215 = 2,309`.
-This is the complete currently specified M1/M5/M9 path, including the
-two-frame scale/field preflight but excluding setup histogram releases and
-retries (`docs/research/M166-capture-reconciliation.md:30-39,163-167`).
+**VERIFIED BY RUNNING.** `CHECK[capture-subtotal] 2 + 1,092 + 1,215 = 2,309`.
+This is the complete currently specified **capture-input floor** for M1/M5/M9,
+including the two-frame scale/field preflight but excluding setup histogram
+releases and retries.  It is not a complete route to a score: the unsolved
+detail statistic is outside this arithmetic
+(`docs/research/M166-capture-reconciliation.md:30-39,163-167`;
+`docs/OWNER-ACTIONS.md:133-140,277-314`).
 
 **VERIFIED BY RUNNING.** `CHECK[after-m167-defer] 3,716 - 686 = 3,030`.
 Sequencing M167 later leaves a 3,030-frame specified queue.  This is a
@@ -56,11 +61,11 @@ makes zero axes newly scoreable, because other blockers remain conjunctive
 | Rank | Request and state | Source | Re-derived frames | What the photographs license | Axes advanced / newly scoreable now | Evidence |
 |---:|---|---|---:|---|---|---|
 | 1 | **Ask 2a scale/field preflight — RELEASED** | `docs/OWNER-ACTIONS.md:8-11,907-1019`; `docs/research/M173-ask2a-audit.md:293-324` | nominal accepted attempt `1 + 1 = 2`; fresh pairs after refusal are outside the floor | A real converter-on/converter-off sampling-ratio and common-field kill gate; no score and no dominance result | M1/M5/M9 path: `3`; now: `0` | **INFERRED BY READING.** |
-| 2 | **M166 development rehearsal — STOP** | `docs/research/M166-capture-reconciliation.md:125-155` | `896-96+128+164 = 1,092` | Exact-configuration physical commissioning, the candidate execution path, both physical directions, and permission to attempt the score | M1/M5/M9 path: `3`; now: `0` | **VERIFIED BY RUNNING.** |
-| 3 | **M166 sealed combined score — STOP** | `docs/research/M166-capture-reconciliation.md:85-122,163-181` | current M1-only `900` + M5/M9 `315` = `1,215` | Fresh holdout inputs for the combined M1/M5/M9 adjudication; it cannot borrow a rehearsal RAW or result | M1/M5/M9: `3`; now: `0` | **VERIFIED BY RUNNING.** |
+| 2 | **M166 development rehearsal — STOP** | `docs/research/M166-capture-reconciliation.md:125-155` | `896-96+128+164 = 1,092` | Exact-configuration physical commissioning, the candidate execution path, both physical directions, and permission to attempt the score once an independent detail instrument exists; it does not create that statistic | M1/M5/M9 input path: `3`; now: `0` | **VERIFIED BY RUNNING.** |
+| 3 | **M166 sealed combined score — STOP** | `docs/research/M166-capture-reconciliation.md:85-122,163-181` | current M1-only `900` + M5/M9 `315` = `1,215` | Fresh holdout inputs for the combined M1/M5/M9 adjudication; it cannot borrow a rehearsal RAW or result and cannot supply the missing instrument | M1/M5/M9 inputs: `3`; now: `0` | **VERIFIED BY RUNNING.** |
 | 4 | **M2 replacement two-light unit — DEFER** | `docs/research/M146-unlock-audit.md:23,74-79,159-160` | `2 x 32 = 64` | Replaces the ineligible second-light unit for a future M2 instrument; the present M2 statistic is void | M2 input: `1`; now: `0` | **VERIFIED BY RUNNING.** |
 | 5 | **Ask 5 fresh slide equivalent — DEFER** | `docs/OWNER-ACTIONS.md:1329-1368` | `182+92+186+197 = 657`; the `186` is `65+61+60` | A stated lower bound for a future scoring holdout; the same section says the four-stack design lacks independent repeat lineages, so it licenses no score as written | Detail-holdout path: M1/M5/M9; now: `0` | **VERIFIED BY RUNNING.** |
-| 6 | **M167 physical false-rate battery — SEQUENCE OUT, CONTINGENT** | `docs/research/M167-detail-battery.md:518-620` | `96+110+54+60+110+128+128 = 686` | Panel- and intervention-conditioned flat, USM, blur, and—only with an admitted reference reader—physical-improvement rates for a frozen candidate | Scorecard axes: `0`; now: `0` | **VERIFIED BY RUNNING.** |
+| 6 | **M167 physical false-rate battery — SEQUENCE OUT, CONTINGENT** | `docs/research/M167-detail-battery.md:518-620` | `96+110+54+60+110+128+128 = 686` | Panel- and intervention-conditioned flat, USM, blur, and—only with an admitted reference reader—physical-improvement rates for a frozen instrument candidate; no such candidate currently exists | Scorecard axes: `0`; now: `0` | **VERIFIED BY RUNNING.** |
 
 **VERIFIED BY RUNNING.** `CHECK[rehearsal] 896 - 96 + 128 + 164 = 1,092`.
 This verifies the committed M166 bridge from the predecessor rehearsal: replace
@@ -230,67 +235,56 @@ M169's exact result is zero, not “a blocker disappeared, therefore an axis can
 run” (`docs/research/M169-ratification-stakes.md:228-242`).  The same
 discipline applies below: every row advances zero axis verdicts *now*, even
 when it clears a useful capture input.  That zero is not the ranking rule:
-dependency order is.  A long-pole instrument step is deferred only while its
-inputs or candidate do not yet exist, never because its eventual reach is
-large.
+dependency order is.  Every ranked item below supplies photographs, not the
+missing detail statistic.  Blocker `(a)` is an upstream research problem
+outside this shutter-value ranking.
 
 | Order | Block | Value per frame | What it unblocks | Axis verdicts that move on capture alone | Decision | Evidence |
 |---:|---|---|---|---:|---|---|
 | 1 | Ask 2a, nominally `2` | Three capture paths tested by one accepted pair | It can kill or preserve the entire M1/M5/M9 optical design before a long sitting | `0` | **Shoot first; wait for explicit release after any numerical PASS** | `docs/OWNER-ACTIONS.md:907-1019`; `docs/research/M173-ask2a-audit.md:284-324` — **INFERRED BY READING.** |
-| 2 | M166 rehearsal, `1,092` | Three-axis score attempt gated by one development sitting | Real reference/witness/calibration inputs for production G1–G8, physical controls, candidate execution, and eventual score permission | `0` | **Next only after every zero-frame release gate** | `docs/research/M166-rehearsal-cost.md:1-40,412-477`; `experiments/M171-reference-admission/PREREGISTRATION.md:14-21` — **INFERRED BY READING.** |
-| 3 | M166 score, `1,215` | Three registered axes receive one sealed input unit | M1/M5/M9 score inputs, conditional on rehearsal, real-reference admission, detail-instrument admission, and all other prerequisites | `0` | **Only after those admissions PASS** | `docs/research/M166-capture-reconciliation.md:203-228`; `docs/research/M171-reference-admission.md:3-9` — **INFERRED BY READING.** |
+| 2 | M166 rehearsal, `1,092` | Three-axis score attempt gated by one development sitting | Real reference/witness/calibration inputs for production G1–G8, physical controls, candidate execution, and eventual score permission; no statistic | `0` | **Next only after every zero-frame release gate** | `docs/research/M166-rehearsal-cost.md:1-40,412-477`; `experiments/M171-reference-admission/PREREGISTRATION.md:14-21` — **INFERRED BY READING.** |
+| 3 | M166 score, `1,215` | Three registered axes receive one sealed input unit | M1/M5/M9 score inputs, conditional on rehearsal, reference admission, an independently solved and admitted detail instrument, and all other prerequisites | `0` | **Only after those prerequisites PASS** | `docs/research/M166-capture-reconciliation.md:203-228`; `docs/research/M171-reference-admission.md:3-9` — **INFERRED BY READING.** |
 | 4 | M2 replacement, `64` | One future-axis capture limb at low frame cost | The failed two-light geometry/input limb, but not the missing instrument | `0` | **Defer until an M2 instrument exists** | `docs/research/M146-unlock-audit.md:150-160`; `docs/research/M167-detail-battery.md:118-186` — **INFERRED BY READING.** |
 | 5 | M4/M10/M6/M7 unsized asks | Value per frame cannot be calculated | Each clears one named capture or truth limb | `0` | **Return for exact sheets; do not improvise** | Sources in §1.1 — **INFERRED BY READING.** |
 | 6 | Ask 5, at least `657` | Future detail holdout, but only after commissioning | A replacement for a deliberately spent development unit; the registered exact list is still missing | `0` | **Defer** | `docs/OWNER-ACTIONS.md:1329-1368` — **INFERRED BY READING.** |
-| 7 | M167, `686` | Value becomes decision-relevant only after a candidate exists | Conditional error-rate calibration for a frozen candidate; it is not a prerequisite of M171 reference admission | `0` | **Sequence out now; restore immediately after candidate admission or contrary dependency proof** | `docs/research/M167-detail-battery.md:497-525`; `experiments/M171-reference-admission/PREREGISTRATION.md:14-21` — **INFERRED BY READING.** |
+| 7 | M167, `686` | Value becomes decision-relevant only after an instrument candidate exists | Conditional error-rate calibration for a frozen candidate; it is not a prerequisite of M171 reference admission and does not invent the statistic | `0` | **Sequence out now; restore immediately after candidate admission or contrary dependency proof** | `docs/research/M167-detail-battery.md:497-525`; `experiments/M171-reference-admission/PREREGISTRATION.md:14-21` — **INFERRED BY READING.** |
 
-### 4.1 Verified critical path to blocker `(a)`
+### 4.1 Blocker `(a)` is research; capture is a scoring precondition
 
-**INFERRED BY READING.** The proposed order “score, then G1–G8, then admit an
-instrument” is reversed.  The 1,215-frame sitting is a sealed score, not
-commissioning material.  Real reference and instrument admission must succeed
-on non-holdout evidence before the score is exposed
-(`docs/research/M166-capture-reconciliation.md:200-228`;
-`docs/research/M171-reference-admission.md:3-9`).
+**INFERRED BY READING.** The owner's frames are a precondition for scoring
+M1/M5/M9 once an admissible detail instrument exists.  They are **not** a route
+to blocker `(a)`, and no quantity of owner frames clears it.  Blocker `(a)` is
+the missing admissible detail statistic: an unsolved research problem on the
+program side of the owner/program boundary
+(`docs/OWNER-ACTIONS.md:133-140,277-314`).
 
-| Order | Required event | Registered frame cost | What must be true before the next event | Evidence |
-|---:|---|---:|---|---|
-| 0 | Execute the repaired, released Ask 2a and obtain one accepted pair | nominally `2`; every refused/repositioned attempt is another complete pair outside the floor | Numerical scale/field/frequency feasibility is accepted; a console result alone is not a session release | `docs/OWNER-ACTIONS.md:907-1019`; `docs/research/M173-ask2a-audit.md:284-324` — **INFERRED BY READING.** |
-| 1 | Freeze the production route | `0` registered frames; engineering, procurement and fabrication are unsized | Complete production manifest/cells/margins; target and support; admitted comparator licence and pinned binaries; geometry, calibration, resampler, seed, checker and candidate/detail contract are frozen | `docs/research/M164-dominance-manifest.md:64-110,162-175,302-326` — **INFERRED BY READING.** |
-| 2 | Capture the M166 exact-configuration rehearsal | `1,092` | The non-holdout reference, complete scored-path witnesses, disjoint calibration, candidate inputs and physical controls arrive intact | `docs/research/M166-capture-reconciliation.md:125-167`; `docs/research/M166-reference-dominance-rehearsal.md:230-302` — **INFERRED BY READING.** |
-| 3 | Instantiate and run production M171 G1–G8 on the real rehearsal | `0` new registered frames if the planned M166 evidence and external calibration provenance suffice | All eight gates pass; the reference is admitted only in its supported reduction subspace | `docs/research/M171-reference-admission.md:3-32,72-85`; `experiments/M171-reference-admission/PREREGISTRATION.md:14-21,107-220` — **INFERRED BY READING.** |
-| 4 | Build, freeze, commission and independently admit the detail instrument | `0` currently registered owner frames; engineering is unsized | The candidate passes P1–P7 and A1–A6, including an evaluator-controlled OS-strength A6 sandbox; the current harness cannot emit real-candidate admission without it | `docs/research/M167-detail-battery.md:274-307,414-435`; `docs/proposals/2026-09-truth-referenced-detail.md:1210-1242,1291-1308,1377-1417` — **INFERRED BY READING.** |
-| 5 | Clear blocker `(a)` for the admitted instrument, then capture the sealed M166 score | `1,215` | The rehearsal and admissions passed; the independent holdout remains sealed and unpatched | `docs/research/M166-capture-reconciliation.md:200-228` — **INFERRED BY READING.** |
-| 6 | Run admitted instruments and axis-specific checkers | `0` additional frames in this M166 path; other axes retain their own sized or unsized asks | M1/M5/M9 can receive reads; reaching up to `12 of 12` measurable still requires every other blocker and axis-specific prerequisite, and is not twelve PASSes | `docs/proposals/2026-08-sota-path.md:164-170,2254-2292`; `docs/STATUS.md:3668-3690` — **INFERRED BY READING.** |
+**INFERRED BY READING.** The plan's nominated D8 split-stack
+self-calibration cannot fill that gap.  Although the plan calls its M115
+antecedent “the best-commissioned instrument in the corpus,” D8's registered
+gate returned **KILL**: its controls do not transfer, common filtering cancels
+algebraically from ideal FRC, and `(A+B)/2` can score perfect coherence while
+losing `29.6%` of delivered band power
+(`docs/proposals/2026-08-sota-path.md:1694-1700`;
+`docs/research/M-PHASE0-SPLIT.md:1-10,39-54,270-274`).
 
-**INFERRED BY READING.** The route table's leverage claim is preserved, not
-dismissed: if blockers `(b)`, `(c)`, `(d)` and the axis-specific prerequisites
-are already clear, adding a working admitted detail instrument can raise the
-measurement ceiling from `4 of 12` to `12 of 12`.  That is reachability, not a
-claim of twelve passing results (`docs/STATUS.md:3668-3690`).
+**INFERRED BY READING.** There are therefore two dependency classes, not one
+capture-to-admission chain:
 
-**VERIFIED BY RUNNING.** `CHECK[critical-path] 2 + 1,092 + 1,215 = 2,309 registered frames`.
-The arithmetic is complete; the path is not.  Ask 2a retries, failed-rehearsal
-replacement sittings, and any production calibration that cannot be supplied
-by already frozen provenance remain outside or unsized.
+1. The program must invent, preregister, commission, independently audit and
+   admit a detail statistic that survives the D8 failures.  That work has zero
+   registered owner frames and an unsized research cost.
+2. Separately, after an admissible instrument exists and every source STOP is
+   explicitly released, the owner-supplied scoring inputs are the nominal
+   two-frame Ask 2a preflight, the 1,092-frame M166 rehearsal, and the fresh
+   1,215-frame M166 score.  M171 may adjudicate whether a captured reference is
+   admissible; reference admission does not create or admit the missing detail
+   statistic.
 
-**INFERRED BY READING.** Owner frames alone cannot clear blocker `(a)`.
-M171 commissioned synthetic logic only; production still needs a sealed
-calibration manifest, a versioned ruling on the `0.5` versus `0.25`
-noise estimands, and independent known-input provenance.  `DIGITAL_K` remains
-uncommissioned.  The candidate also needs implementation, preregistration,
-independent audit/admission and the absent A6 sandbox
-(`docs/research/M171-reference-admission.md:7-16,62-85`;
-`experiments/M171-reference-admission/PREREGISTRATION.md:29-52`;
-`docs/research/M167-detail-battery.md:302-307,414-435`).
-
-**INFERRED BY READING.** M171 expressly requests no new magnification,
-optical-state or calibration exposure for its present gate
-(`experiments/M171-reference-admission/PREREGISTRATION.md:14-21`).  Therefore
-M167's 686-frame battery is **not** an admission prerequisite.  If production
-G4 or another gate later proves that existing known-input provenance is
-insufficient, the additional physical calibration is an unsized new request;
-it must not be silently equated with M167.
+**VERIFIED BY RUNNING.** `CHECK[capture-input-floor] 2 + 1,092 + 1,215 = 2,309 registered frames`.
+This is a capture-input floor, not a blocker-clearance price.  Ask 2a retries,
+failed-rehearsal replacement sittings, and any newly required calibration
+remain outside or unsized.  No arrow runs from these 2,309 shutter releases to
+the research result in item 1.
 
 ## 5. Executable sitting envelopes
 
@@ -411,13 +405,15 @@ outside the nominal floor.
 
 **INFERRED BY READING.** Sequence all 686 M167 frames out of the owner queue
 **for now**.  The reason is contingent sequencing: M167 calibrates conditional
-rates for a frozen candidate and reader, while no real detail candidate is
-currently admitted and M171 does not require this battery to admit the
-reference.  Restore the battery to the queue immediately when a detail
-candidate is admitted, or immediately if M167 demonstrates that these frames
-are a prerequisite of admission rather than post-admission calibration
+rates for a frozen candidate and reader, but no candidate detail instrument
+exists to calibrate.  Blocker `(a)` is the unsolved statistic upstream of this
+battery, while M171 does not require the battery to admit a reference.
+Restore the battery to the queue immediately when a detail candidate is
+admitted, or immediately if M167 demonstrates that these frames are a
+prerequisite of candidate admission rather than post-admission calibration
 (`docs/research/M167-detail-battery.md:497-525`;
-`experiments/M171-reference-admission/PREREGISTRATION.md:14-21`).
+`experiments/M171-reference-admission/PREREGISTRATION.md:14-21`;
+`docs/OWNER-ACTIONS.md:133-140,277-314`).
 
 **INFERRED BY READING.** Do not cut inside a released M166 sitting.  In
 particular, the rejected `676`, `868`, `900`, and `928` rehearsal variants
@@ -465,16 +461,16 @@ them.  The orchestrator should apply or reject these exact replacements.
 critical-path item with:
 
 ```text
-3. **`(a)`+`(c)` -- the current capture and admission programme.** After
-   M173's corrected Ask 2a yields an accepted two-frame scale/field preflight,
-   freeze the production manifest, target, licence, binaries, calibration,
-   resampler, seed, checker and detail-candidate contract. Then acquire the
-   1,092-frame exact-configuration development rehearsal. Before exposing a
-   holdout, run production M171 G1-G8 on its real reference and independently
-   commission/admit the detail instrument, including the A6 capability
-   sandbox. Only a clean rehearsal and admitted instrument license the fresh
-   1,215-frame combined M1/M5/M9 score. The registered capture floor is 2,309
-   frames including one accepted preflight pair; retries, engineering,
+3. **`(a)` -- unsolved detail-instrument research, separate from capture.**
+   Blocker `(a)` is a missing admissible statistic, not a capture. The plan's
+   nominated D8 split-stack instrument reached its registered gate and returned
+   KILL: its controls do not transfer and a render average can score perfectly
+   while losing 29.6% of delivered band power. No quantity of owner frames
+   clears this blocker. Separately, once an independently commissioned and
+   admitted replacement instrument exists, the currently specified M1/M5/M9
+   capture-input floor is 2,309 frames: one accepted two-frame Ask 2a pair, the
+   1,092-frame rehearsal and the fresh 1,215-frame score. Those frames are
+   scoring preconditions, not a route to the instrument; retries, research,
    procurement and any newly required calibration remain outside or unsized.
 ```
 
@@ -516,16 +512,18 @@ final scoring-session total.
 re-derives the M166, M167, M2, Ask 5, grand-total, stack-structure, and
 sequencing arithmetic from the cited source text; repeats the exact-subtree 657-file
 inventory and ExifTool header census; checks the no-merge and physical-rig
-clauses; verifies the contingent M167 sequencing and blocker-`(a)` ordering;
-and never enumerates the forbidden sibling.
+clauses; verifies the contingent M167 sequencing, D8 KILL evidence and the
+research/capture boundary around blocker `(a)`; and never enumerates the
+forbidden sibling.
 
 **VERIFIED BY RUNNING.** `CHECK[commission] planted defects caught = 20; missed = 0; inert edits passed = 1 of 1`.
 The commissioned mutations cover report arithmetic, source arithmetic,
 cross-role deduplication, the M166/M167 optical-state distinction, M167
 configuration, Ask 2a's complete repair and non-release outcome, permanent-
-versus-contingent refusal, critical-path ordering and reachability
-prerequisites, the zero-axis statement, and the whole-pass substitute.  An
-appended non-semantic comment is the inert edit.
+versus-contingent refusal, the detail-statistic/capture boundary, D8's KILL,
+the prohibition on selling capture as a route to the full scorecard, the
+zero-axis statement, and the whole-pass substitute.  An appended non-semantic
+comment is the inert edit.
 
 **VERIFIED BY RUNNING.** An independent read-only verifier reran both modes,
 recomputed every core sum separately, repeated the exact-subtree file and
