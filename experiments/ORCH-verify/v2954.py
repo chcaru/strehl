@@ -697,6 +697,46 @@ QUOTES = [
      "0.0055165 / 0.0001809 = 30.49x"),
     ("m183 falsifies a8 survive", "docs/research/M183-rho-convention.md",
      "It says the measured interval contains **SURVIVE**"),
+    # --- 2.9.79: every cross-document number in that section, pinned at its
+    # source. M182 and M186 are live lanes that may still revise their files.
+    # Anchors are deliberately long: the bare figures 3,074,797,568 /
+    # 3,367,653,376 / 4,804,800,512 / 38,286,897,152 each occur 2-3 times in
+    # M182's document, so a presence check on the number alone is satisfied by
+    # a duplicate after the claim it guards has drifted.
+    ("s79 mem bar ruling", "docs/research/M182-memory-budget.md",
+     "not 6 GiB per process or per worker"),
+    ("s79 mem estimand gap", "docs/research/M182-memory-budget.md", "12,288 B"),
+    ("s79 mem w2 predict", "docs/research/M182-memory-budget.md", "4,771,634,216"),
+    ("s79 mem w2 fresh", "docs/research/M182-memory-budget.md",
+     "M182's fresh W2 Job peak is `4,804,800,512 B`"),
+    ("s79 mem w2 residual", "docs/research/M182-memory-budget.md", "0.690274%"),
+    ("s79 mem bounded meas", "docs/research/M182-memory-budget.md",
+     "bounded canonical recycling is independently measured at `3,074,797,568 B`"),
+    ("s79 mem headroom", "docs/research/M182-memory-budget.md",
+     "leaving `3,367,653,376 B` headroom"),
+    # The lane's own refusal to call this a pass. If M182 ever deletes this
+    # clause, 2.9.79's central caveat has lost its source and must go red.
+    ("s79 tiling not a pass", "docs/research/M182-memory-budget.md",
+     "this is still diagnostic evidence, not a formal M12 pass"),
+    ("s79 mem n7 red", "docs/research/M182-memory-budget.md",
+     "already RED on unrepaired `8009447e` at"),
+    # M186's byte-order probe. 2.9.79 first quoted the lane's CHAT form
+    # (['00000003',...]); the filed artifact writes it as x=03,05,07. Pinning
+    # the artifact is what caught the discrepancy -- same class as m183 above.
+    ("s79 m186 byte order", "docs/research/M186-m10-definition-audit.md",
+     "a probe selected x=`03,05,07` big-endian versus `02,00,07` little-endian"),
+    # Blocker (a): the aperture route's death certificate.
+    ("s79 m171 usm reward", "docs/research/M164-aperture-identifiability.md",
+     "1.409469446x"),
+    ("s79 m171 airy match", "docs/research/M164-aperture-identifiability.md",
+     "1.11e-15"),
+    ("s79 m171 kill", "docs/research/M164-aperture-identifiability.md",
+     "KILL the claim that the three-point aperture ordering alone unblocks the detail axis"),
+    # The struck item 3: the two facts that justify the retraction to the owner.
+    ("s79 flat freeze rule", "experiments/M152-site-census/m4-freeze.json",
+     "no_cross_capture_or_cross_category_substitution"),
+    ("s79 burn 484", "docs/captures-needed.md",
+     "484 ARW frames in three directories"),
 ]
 for label, rel, quote in QUOTES:
     p = ROOT / rel
@@ -707,6 +747,8 @@ for label, rel, quote in QUOTES:
         _who = "Amendment 8"
     elif label.startswith("m183 "):
         _who = "STATUS 2.9.78 / the Amendment 8 correction"
+    elif label.startswith("s79 "):
+        _who = "STATUS 2.9.79"
     else:
         _who = "STATUS 2.9.66"
     check(label, collapse(quote) in load(p),

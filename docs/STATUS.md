@@ -7943,7 +7943,155 @@ yet** notice rather than a retraction, because the asymmetry favours caution —
 wrongly retracted ask costs a capture session that has already passed, which is
 worse than a wasted one.
 
-## 3. Gaps, ranked by what stands between here and print-worthy
+> **RESOLVED — see §2.9.79.** M152 ruled and verifier M185 confirmed
+> independently. The development role *does* accept a uniform field: the checker
+> injects its own known signal, so texture is neither required nor desirable.
+> **Item 3 is struck** and the owner document now carries a full retraction
+> rather than a hold. The caution recorded above was still the correct posture
+> at the time — it cost one adjudication cycle and prevented a wrong retraction.
+
+### 2.9.79 Both of M12's failures now have measured repairs, and neither is a score
+
+**The headline: the only unblocked axis in the program has, for the first time,
+a measured repair for each of the two bars it fails.** That is a real change in
+the program's shape. It is *not* a change in the scoreboard, which remains
+`0 of 12`, and the distance between those two sentences is the whole content of
+this section.
+
+**Memory. The bar is process-tree, and the question is finally settled.** M182
+was asked to rule before designing anything, because a bounded-memory design
+aimed at the wrong estimand is wasted work. Both governing documents agree and
+say so in compatible words — the proposal's *"all sixteen cores inside the same
+six gigabytes"* and the scorecard's *"Warm peak process-tree memory `<=6 GiB`"*
+(`docs/research/M182-memory-budget.md:24`). It is one `6 GiB` budget for the
+whole tree **including** the 16-worker cell, not `6 GiB` per process or per
+worker. *"Warm"* excludes only the dedicated warm-up invocation, not the
+allocations at the start of every scored invocation.
+
+**The mechanism survived the falsification test I asked for.** The planner's
+model — roughly `2.222 GiB` of replicated whole-frame state per active chunk —
+was fitted to two worker counts, which is exactly the shape of a model that
+fits because it was drawn through its own points. I required a third. At
+N33/W2 the payload model predicts `4,771,634,216 B`; M139's registered Job peak
+is `4,804,636,672 B`, a residual of `33,002,456 B` or `0.686888%`, and M182's
+own **fresh, independently run** W2 Job peak is `4,804,800,512 B`, a residual of
+`33,166,296 B` or `0.690274%` (`:149`). Two independently obtained numbers
+agreeing with a prediction to within seven parts in a thousand is not a curve
+fitted through its own points. **Replicated whole-frame state is the
+mechanism.**
+
+**The estimand reconciliation matters as much as the residual.** At N33/W4 the
+Job peak is `9,589,813,248 B` and the sampled process-tree private commit is
+`9,589,800,960 B` — `12,288 B` apart — because Job accounting recorded a single
+process, so the model's single-process payload and the governed process-tree
+quantity **coincide in that cell** (`:143`). Without that step the agreement
+could have been two different quantities happening to land near each other.
+
+**"Tiling is unnecessary" is accepted, but only on the measurement and only for
+this bar.** I flagged that conclusion as structurally suspect: the planner
+concluded that its own preferred remedy sufficed and the invasive one did not.
+M182 did not ratify it from the model. It measured a bounded canonical
+recycling implementation at **`3,074,797,568 B` at N299/W16** — the exact cell
+that produced the published failure — leaving `3,367,653,376 B` of headroom
+under the `6,442,450,944 B` bar, and sitting `0.964306%` above the model's
+predicted live payload (`:156`).
+
+**This is not the figure I withdrew in §2.9.78 item 3, and it must not be read
+as its reinstatement.** That one was `3,074,965,504 B`; this one is
+`3,074,797,568 B`. They differ by `167,936 B` and, far more importantly, they
+differ in standing. **The withdrawal was correct and stands.** I withdrew the
+earlier number because its estimand had never been established, not because its
+value was implausible; M182 has now established the estimand independently and
+measured against it. A number that was ungrounded when I circulated it does not
+become grounded retroactively because a different number later landed nearby.
+
+**N7 is satisfied on both bars, which is the part I care about most.** The rule
+says a repair may not be cashed on the sub-property it repairs until the
+certifying test has been seen to go **red** on the unrepaired artifact, because
+a gate that has only ever been observed green is a claim about the gate.
+
+- **Memory:** the registered process-tree gate is red on unrepaired `8009447e`
+  at `38,286,897,152 B > 6,442,450,944 B`, and M182's commissioned probe uses
+  the same harness hash and independently reproduces that red (`:162`).
+- **Determinism:** M172 showed the same registered N33 aligned cross-worker gate
+  failing on the unrepaired binary with **five distinct hashes** and passing
+  post-D9 with **one**,
+  `6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89` across
+  W1/2/4/8/16. It then closed the obvious alternative explanation: the
+  pre-quantization hashes also differ before D9 and converge after, so
+  quantization is not the cause.
+
+**Why none of this is a score, stated plainly because the temptation is real.**
+M182 labels its own result *"still diagnostic evidence, not a formal M12 pass"*
+(`:156`), and M172 volunteered the matching limit unprompted: D9's *construction*
+covers all of N33/N105/N299 because N fixes the canonical chunk lattice while
+worker count only sizes the Rayon pool, but its **empirical** certificate covers
+N33 only. There is no repaired six-repeat matrix. **M179 remains the certifying
+owner**, and until it completes W1/2/4/8/16 at N105 and N299 on a single pinned
+commit, M12 is an axis with two credible repairs and no pass. A lane reporting
+its own limit without being asked is the behaviour that makes the rest of its
+report worth trusting.
+
+**The keystone lost one of its two attacks, cleanly.** M171 returned a negative
+on the aperture-referenced route and it is the most useful result of the night
+after M182's. Aperture metadata cannot serve as external truth: a physically
+valid aberrated pupil consistent with the same EXIF **reverses f/5.6 and f/8**,
+so the monotonicity premise is not established but assumed. Worse, the formal
+witness **rewards a common unsharp mask by `1.409469446x`** while preserving
+both aperture order and the relative Airy attenuation to `1.11e-15`
+(`docs/research/M164-aperture-identifiability.md:52-74`) — the route is not
+merely weak, it is an instrument that scores a sharpened image higher, which is
+the precise failure blocker (a) describes. M164 §5 rules it: *"KILL the claim
+that the three-point aperture ordering alone unblocks the detail axis."* It is
+neither compute-bound nor capture-bound but **identification-blocked**: no
+quantity of frames can repair it. **M135 is now the sole live attack on
+blocker (a)**, and it is running the first *real optical* improvement arm this
+program has had, against the owner's calibration slides, rather than a planted
+one.
+
+**Two corrections to my own records, both routed from lanes and both adjudicated
+rather than pasted.**
+
+- **M10 is not reachable and M166 overstated its own closure.** Audit M186 found
+  three of the four allegedly closed pieces are descriptions rather than
+  operative definitions, and produced the decisive example: the quota selection
+  hashes to an unspecified SHA-256 integer byte order, and the two orders select
+  **different tiles** — its filed probe records `x=03,05,07` big-endian against
+  `02,00,07` little-endian (`docs/research/M186-m10-definition-audit.md:23`).
+  Two faithful implementers
+  would score different populations. M166 also proposed relabelling M10 as
+  blocker `(e)`, which `:834` defines as *scientifically measurable now* — while
+  M166's own reply states M10 has no product, no integrated checker and needs
+  capture truth. Applying it would have made the scorecard contradict itself.
+  `(b)(c)` stands; the four sites now read `PARTIALLY DEFINED; DEFINITION
+  BLOCKED` and the stale *"pending M166"* pointer is gone.
+- **The provisional note ending §2.9.78 is now resolved, and item 3 is struck.**
+  The role question is answered: the development flat commissions the checker's
+  flat-power null and planted-transfer response, the checker injects its own
+  known signal, so a uniform field is correct rather than a compromise.
+  Verifier M185 reproduced `ELIGIBLE=1768/1768` independently and quoted the
+  committed artifact rather than the lane's message. I did **not** paste M152's
+  prescribed wording: M185 found four defects in it, two material — plant
+  headroom alone cannot admit the checker, and a side manifest cannot override
+  the frozen `coffee-bubbles` quota, since `m4-freeze.json` carries
+  `"no_cross_capture_or_cross_category_substitution": true`. Its *"reopen if
+  **either** check fails"* clause listed three conditions, so a failed condition
+  could have passed unnoticed. The published retraction states the burn scope
+  honestly at **484 frames** rather than 20 — the holdout unit is subject plus
+  uninterrupted sitting, and `docs/captures-needed.md:1258-1268` records
+  `360 + 62 + 62` on one sheet of paper from `16:31:55` to `16:51:56` — and
+  notes that M71 already read all of it, so the session was spent before I asked
+  the owner for anything.
+
+**That is now three times this session that a lane's prescribed correction text
+carried a defect of its own** — M151's dropped "input-only" clause, M152's
+off-by-one reopen condition, M166's self-contradictory blocker letter. The
+practice of adjudicating routed text at its primary source rather than applying
+it has paid for itself every single time, and it is cheap. Applying a lane's
+words because the lane was right about the underlying problem is a different act
+from applying words that are themselves correct.
+
+
 
 ### 3.1 Blocking
 
