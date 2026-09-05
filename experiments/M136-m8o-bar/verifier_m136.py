@@ -28,6 +28,7 @@ import argparse
 import ast
 import ctypes
 import hashlib
+import io
 import json
 import math
 import mmap
@@ -38,6 +39,7 @@ import shutil
 import struct
 import subprocess
 import sys
+import tokenize
 from contextlib import ExitStack
 from ctypes import wintypes
 from dataclasses import dataclass
@@ -112,6 +114,32 @@ APPROVED_SOURCE_PATCH_PATHS = {
     "crates/strehl-cli/src/merge_cmd.rs",
 }
 VERIFIER_PROTOCOL = "M136 independent verifier v1"
+LAUNCH_RECEIPT_SCHEMA = "m136-launch-verifier-receipt-v1"
+LAUNCHER_CONTRACT = "M136 launch-verifier.ps1 retained-handle contract v1"
+LAUNCHER_BOOTSTRAP_CONTRACT = "M136 Python argv bootstrap exact-byte exec v1"
+WINDOWS_ERROR_SHARING_VIOLATION = 32
+LAUNCHER_BOOTSTRAP_LINES = (
+    "import hashlib, sys",
+    "bootstrap_source, path, expected, contract, *verifier_args = sys.argv[1:]",
+    "bootstrap_sha256 = hashlib.sha256(bootstrap_source.encode('utf-8')).hexdigest().upper()",
+    "handle = open(path, 'rb')",
+    "try:",
+    "    raw = handle.read()",
+    "finally:",
+    "    handle.close()",
+    "observed = hashlib.sha256(raw).hexdigest().upper()",
+    "if observed != expected:",
+    "    raise SystemExit('M136 verifier digest mismatch')",
+    "sys.argv = [path, *verifier_args]",
+    "__name__ = '__main__'",
+    "__file__ = path",
+    "__package__ = None",
+    "__spec__ = None",
+    "__cached__ = None",
+    "_M136_PINNED_SOURCE = {'path': path, 'raw': raw, 'sha256': observed, 'bootstrap_sha256': bootstrap_sha256, 'contract': contract}",
+    "exec(compile(raw, path, 'exec'), globals(), globals())",
+)
+LAUNCHER_BOOTSTRAP_SOURCE = "\n".join(LAUNCHER_BOOTSTRAP_LINES)
 TRACE_MAGIC = b"M8SITE03"
 TRACE_VERSION = 3
 ARITHMETIC_CONTRACT = 1
@@ -722,6 +750,63 @@ def sha256_file(path: Path) -> str:
 
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().upper()
+
+
+def launcher_bootstrap_sha256() -> str:
+    return sha256_bytes(LAUNCHER_BOOTSTRAP_SOURCE.encode("utf-8"))
+
+
+def decode_python_source(data: bytes, label: str) -> str:
+    try:
+        encoding, _ = tokenize.detect_encoding(io.BytesIO(data).readline)
+        return data.decode(encoding)
+    except (SyntaxError, UnicodeDecodeError) as error:
+        raise Unmeasured(f"{label}: source encoding is invalid") from error
+
+
+def executed_source() -> tuple[FrozenFile, bytes, str]:
+    pinned = globals().get("_M136_PINNED_SOURCE")
+    expected_fields = {
+        "path",
+        "raw",
+        "sha256",
+        "bootstrap_sha256",
+        "contract",
+    }
+    if not isinstance(pinned, Mapping) or set(pinned) != expected_fields:
+        raise Unmeasured(
+            "verifier source is not launcher-pinned with the exact M136 contract"
+        )
+    raw_path = pinned.get("path")
+    raw = pinned.get("raw")
+    digest = pinned.get("sha256")
+    bootstrap_digest = pinned.get("bootstrap_sha256")
+    contract = pinned.get("contract")
+    if not isinstance(raw_path, str) or not Path(raw_path).is_absolute():
+        raise Unmeasured("launcher-pinned verifier path is not absolute")
+    if not isinstance(raw, bytes):
+        raise Unmeasured("launcher-pinned verifier source is not one byte array")
+    if (
+        not isinstance(digest, str)
+        or re.fullmatch(r"[0-9A-F]{64}", digest) is None
+        or sha256_bytes(raw) != digest
+    ):
+        raise Unmeasured("launcher-pinned verifier source SHA-256 is wrong")
+    runtime_path = globals().get("__file__")
+    if (
+        not isinstance(runtime_path, str)
+        or os.path.normcase(os.path.abspath(raw_path))
+        != os.path.normcase(os.path.abspath(runtime_path))
+        or os.path.normcase(os.path.abspath(sys.argv[0]))
+        != os.path.normcase(os.path.abspath(raw_path))
+    ):
+        raise Unmeasured("launcher-pinned verifier path does not match execution")
+    if contract != LAUNCHER_BOOTSTRAP_CONTRACT:
+        raise Unmeasured("launcher bootstrap contract identity is wrong")
+    if bootstrap_digest != launcher_bootstrap_sha256():
+        raise Unmeasured("launcher bootstrap source SHA-256 is wrong")
+    source = decode_python_source(raw, "launcher-pinned verifier")
+    return FrozenFile(Path(raw_path), digest, len(raw), None), raw, source
 
 
 def canonical_text_sha256(data: bytes, label: str) -> str:
@@ -2954,8 +3039,9 @@ def parse_instruments(raw: Any) -> dict[str, FrozenFile]:
     return files
 
 
-def verify_independence(verifier: FrozenFile) -> dict[str, Any]:
-    source = read_frozen_text(verifier, "verifier source")
+def verify_independence(
+    verifier: FrozenFile, source: str
+) -> dict[str, Any]:
     tree = ast.parse(source, filename=str(verifier.path))
     imports: list[str] = []
     for node in ast.walk(tree):
@@ -2998,6 +3084,186 @@ def validate_commission_report(
         raise Unmeasured(
             "verifier commissioning was produced by different verifier bytes"
         )
+    bootstrap_identity = report.get("bootstrap_execution_identity", {})
+    expected_bootstrap_identity = {
+        "launcher_contract": LAUNCHER_CONTRACT,
+        "bootstrap_contract": LAUNCHER_BOOTSTRAP_CONTRACT,
+        "bootstrap_sha256": launcher_bootstrap_sha256(),
+        "verifier_sha256": report.get("verifier", {}).get("sha256"),
+        "source_path_matches": True,
+        "source_sha256_matches": True,
+        "status": "PASS",
+    }
+    if bootstrap_identity != expected_bootstrap_identity:
+        raise Unmeasured("verifier bootstrap execution identity is incomplete")
+
+    bootstrap_control = report.get("verifier_bootstrap_substitution", {})
+    if (
+        not isinstance(bootstrap_control, Mapping)
+        or set(bootstrap_control)
+        != {"cases", "direct_unpinned", "direct_pinned", "status"}
+        or bootstrap_control.get("status") != "PASS"
+    ):
+        raise Unmeasured("verifier bootstrap substitution commissioning is absent")
+    bootstrap_cases = bootstrap_control.get("cases")
+    expected_bootstrap_cases = {
+        "allow_to_deny": ("ALLOW", "DENY"),
+        "deny_to_allow": ("DENY", "ALLOW"),
+    }
+    if (
+        not isinstance(bootstrap_cases, Mapping)
+        or set(bootstrap_cases) != set(expected_bootstrap_cases)
+    ):
+        raise Unmeasured(
+            "verifier bootstrap substitution directions are incomplete"
+        )
+    for name, (accepted, substitute) in expected_bootstrap_cases.items():
+        case = bootstrap_cases[name]
+        if (
+            not isinstance(case, Mapping)
+            or set(case)
+            != {
+                "accepted_sentinel",
+                "substitute_sentinel",
+                "accepted_sha256",
+                "substitute_sha256",
+                "vulnerable",
+                "defended",
+            }
+            or case.get("accepted_sentinel") != accepted
+            or case.get("substitute_sentinel") != substitute
+        ):
+            raise Unmeasured(
+                f"verifier bootstrap substitution case is malformed at {name}"
+            )
+        accepted_sha256 = str(case.get("accepted_sha256", ""))
+        substitute_sha256 = str(case.get("substitute_sha256", ""))
+        if (
+            re.fullmatch(r"[0-9A-F]{64}", accepted_sha256) is None
+            or re.fullmatch(r"[0-9A-F]{64}", substitute_sha256) is None
+            or accepted_sha256 == substitute_sha256
+        ):
+            raise Unmeasured(
+                f"verifier bootstrap substitution bytes do not differ at {name}"
+            )
+        vulnerable = case.get("vulnerable")
+        if (
+            not isinstance(vulnerable, Mapping)
+            or set(vulnerable)
+            != {
+                "recorded_sha256",
+                "child_sha256",
+                "final_sha256",
+                "sentinel",
+                "exit_code",
+                "attack_landed",
+                "restoration_succeeded",
+                "executes_substitute",
+            }
+            or vulnerable.get("recorded_sha256") != accepted_sha256
+            or vulnerable.get("child_sha256") != substitute_sha256
+            or vulnerable.get("final_sha256") != accepted_sha256
+            or vulnerable.get("sentinel") != substitute
+            or vulnerable.get("exit_code") != 0
+            or vulnerable.get("attack_landed") is not True
+            or vulnerable.get("restoration_succeeded") is not True
+            or vulnerable.get("executes_substitute") is not True
+        ):
+            raise Unmeasured(
+                f"vulnerable verifier bootstrap witness is wrong at {name}"
+            )
+        defended = case.get("defended")
+        if (
+            not isinstance(defended, Mapping)
+            or set(defended)
+            != {
+                "parent_sha256",
+                "child_sha256",
+                "report_sha256",
+                "final_sha256",
+                "sentinel",
+                "exit_code",
+                "attack_landed",
+                "attack_hresult_low_word",
+                "restored_or_unchanged",
+                "expected_verifier_source",
+                "launcher_contract",
+                "bootstrap_contract",
+                "bootstrap_sha256",
+            }
+            or any(
+                defended.get(field) != accepted_sha256
+                for field in (
+                    "parent_sha256",
+                    "child_sha256",
+                    "report_sha256",
+                    "final_sha256",
+                )
+            )
+            or defended.get("sentinel") != accepted
+            or defended.get("exit_code") != 0
+            or defended.get("attack_landed") is not False
+            or defended.get("attack_hresult_low_word")
+            != WINDOWS_ERROR_SHARING_VIOLATION
+            or defended.get("restored_or_unchanged") is not True
+            or defended.get("expected_verifier_source") != "retained_handle"
+            or defended.get("launcher_contract") != LAUNCHER_CONTRACT
+            or defended.get("bootstrap_contract")
+            != LAUNCHER_BOOTSTRAP_CONTRACT
+            or defended.get("bootstrap_sha256")
+            != launcher_bootstrap_sha256()
+        ):
+            raise Unmeasured(
+                f"defended verifier bootstrap witness is wrong at {name}"
+            )
+    if (
+        bootstrap_cases["allow_to_deny"]["accepted_sha256"]
+        != bootstrap_cases["deny_to_allow"]["substitute_sha256"]
+        or bootstrap_cases["allow_to_deny"]["substitute_sha256"]
+        != bootstrap_cases["deny_to_allow"]["accepted_sha256"]
+    ):
+        raise Unmeasured(
+            "verifier bootstrap substitution directions do not cross-discriminate"
+        )
+    direct_unpinned = bootstrap_control.get("direct_unpinned")
+    if direct_unpinned != {"status": "UNMEASURED", "exit_code": 2}:
+        raise Unmeasured("direct unpinned bootstrap control did not fail closed")
+    direct_pinned = bootstrap_control.get("direct_pinned")
+    if (
+        not isinstance(direct_pinned, Mapping)
+        or set(direct_pinned)
+        != {
+            "status",
+            "exit_code",
+            "parent_sha256",
+            "child_sha256",
+            "report_sha256",
+            "final_sha256",
+            "attack_landed",
+            "expected_verifier_source",
+            "launcher_contract",
+            "bootstrap_contract",
+            "bootstrap_sha256",
+        }
+        or direct_pinned.get("status") != "PINNED"
+        or direct_pinned.get("exit_code") != 0
+        or direct_pinned.get("attack_landed") is not False
+        or direct_pinned.get("expected_verifier_source") != "retained_handle"
+        or direct_pinned.get("launcher_contract") != LAUNCHER_CONTRACT
+        or direct_pinned.get("bootstrap_contract")
+        != LAUNCHER_BOOTSTRAP_CONTRACT
+        or direct_pinned.get("bootstrap_sha256")
+        != launcher_bootstrap_sha256()
+        or re.fullmatch(
+            r"[0-9A-F]{64}", str(direct_pinned.get("parent_sha256", ""))
+        )
+        is None
+        or any(
+            direct_pinned.get(field) != direct_pinned.get("parent_sha256")
+            for field in ("child_sha256", "report_sha256", "final_sha256")
+        )
+    ):
+        raise Unmeasured("direct pinned bootstrap control is incomplete")
     json_substitution = report.get("transient_json_substitution", {})
     if not isinstance(json_substitution, Mapping):
         raise Unmeasured("transient JSON substitution commissioning is malformed")
@@ -4860,9 +5126,11 @@ def validate_render_provenance(
 def verify_manifest(
     manifest_path: Path, report_path: Path, chunk_rows: int
 ) -> tuple[int, dict[str, Any]]:
-    repository = Path(__file__).resolve().parents[2]
+    verifier, verifier_bytes, verifier_source = executed_source()
+    verifier_path = verifier.path
+    repository = verifier_path.parents[2]
     allowed_output_roots = (
-        Path(__file__).with_name("out").resolve(),
+        verifier_path.with_name("out").resolve(),
         (repository / "experiments" / "M142-m8o-execute" / "out").resolve(),
     )
     matching_roots = [
@@ -4903,9 +5171,9 @@ def verify_manifest(
     prereg_canonical_hash = canonical_text_sha256(
         prereg_bytes, "preregistration"
     )
-    frozen_prereg = (
-        Path(__file__).with_name("clamped-m8o-preregistration.json").resolve()
-    )
+    frozen_prereg = verifier_path.with_name(
+        "clamped-m8o-preregistration.json"
+    ).resolve()
     if prereg_file != frozen_prereg:
         raise Unmeasured(
             f"preregistration must be the frozen repository file {frozen_prereg}"
@@ -4928,9 +5196,9 @@ def verify_manifest(
         raise Unmeasured(
             "preregistration decision rule is not the frozen exact-zero rule"
         )
-    interpretation_path = (
-        Path(__file__).with_name("prospective-interpretations.md").resolve()
-    )
+    interpretation_path = verifier_path.with_name(
+        "prospective-interpretations.md"
+    ).resolve()
     if not interpretation_path.is_file():
         raise Unmeasured(f"prospective interpretation is absent: {interpretation_path}")
     interpretation, interpretation_bytes = capture_file(
@@ -4944,14 +5212,12 @@ def verify_manifest(
         raise Unmeasured(
             "prospective interpretation bytes differ from the pre-target ruling"
         )
-    verifier_path = Path(__file__).resolve()
-    verifier, verifier_bytes = capture_file(verifier_path, "verifier")
     verifier_hash = verifier.sha256
     verifier_canonical_hash = canonical_text_sha256(verifier_bytes, "verifier")
     commission_file = frozen_file(
         manifest.get("commission_report", {}), "verifier commissioning report"
     )
-    expected_commission_path = verifier_path.with_name("verifier-commission.json")
+    expected_commission_path = verifier_path.with_name("verifier-commission.json").resolve()
     if commission_file.path != expected_commission_path:
         raise Unmeasured(
             f"commission report must be the frozen repository artifact "
@@ -5556,7 +5822,7 @@ def verify_manifest(
             name: {"path": str(file.path), "sha256": file.sha256}
             for name, file in instruments.items()
         },
-        "independence": verify_independence(verifier),
+        "independence": verify_independence(verifier, verifier_source),
         "captures": capture_results,
         "aggregate": {
             "m8_r": {
@@ -6829,7 +7095,402 @@ def transient_trace_body_control(
     }
 
 
+def single_json_stream(raw: str, label: str) -> Mapping[str, Any]:
+    lines = [line for line in raw.splitlines() if line.strip()]
+    if len(lines) != 1:
+        raise RuntimeError(
+            f"{label}: expected one JSON line, observed {len(lines)}"
+        )
+    try:
+        document = json.loads(lines[0])
+    except json.JSONDecodeError as error:
+        raise RuntimeError(f"{label}: output is not JSON") from error
+    if not isinstance(document, Mapping):
+        raise RuntimeError(f"{label}: JSON output is not an object")
+    return document
+
+
+def commissioning_powershell() -> str:
+    inherited = os.environ.get("M136_RECOMMISSION_POWERSHELL", "")
+    if inherited:
+        path = Path(inherited)
+        if not path.is_absolute() or not path.is_file():
+            raise RuntimeError(
+                "M136_RECOMMISSION_POWERSHELL is not an absolute executable"
+            )
+        return str(path)
+    discovered = shutil.which("pwsh.exe") or shutil.which("pwsh")
+    if discovered is None:
+        raise RuntimeError("PowerShell Core is unavailable for launcher commissioning")
+    return str(Path(discovered).resolve())
+
+
+def invoke_actual_launcher(
+    launcher: Path,
+    verifier: Path,
+    verifier_arguments: Sequence[str],
+    receipt_path: Path,
+    attack_backup: Path | None = None,
+) -> tuple[subprocess.CompletedProcess[str], Mapping[str, Any]]:
+    command = [
+        commissioning_powershell(),
+        "-NoLogo",
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(launcher),
+        "-Python",
+        sys.executable,
+        "-Verifier",
+        str(verifier),
+        "-Receipt",
+        str(receipt_path),
+    ]
+    if attack_backup is not None:
+        command.extend(["-CommissioningAttackBackup", str(attack_backup)])
+    command.extend(
+        [
+            "-VerifierArgumentsJson",
+            json.dumps(list(verifier_arguments), separators=(",", ":")),
+        ]
+    )
+    completed = subprocess.run(
+        command,
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=120,
+    )
+    if not receipt_path.is_file():
+        raise RuntimeError("actual launcher did not write its deterministic receipt")
+    _, receipt_bytes = capture_file(receipt_path, "commissioning launcher receipt")
+    try:
+        receipt = json.loads(receipt_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise RuntimeError("actual launcher receipt is invalid JSON") from error
+    if not isinstance(receipt, Mapping):
+        raise RuntimeError("actual launcher receipt is not an object")
+    return completed, receipt
+
+
+def require_successful_launcher_receipt(
+    receipt: Mapping[str, Any],
+    expected_verifier_sha256: str,
+    *,
+    attack_requested: bool,
+) -> None:
+    if set(receipt) != {
+        "schema",
+        "schema_version",
+        "status",
+        "launcher_contract",
+        "bootstrap_contract",
+        "bootstrap_sha256",
+        "verifier_sha256",
+        "expected_verifier_sha256",
+        "expected_verifier_source",
+        "verifier_sha256_after_child",
+        "attack",
+        "child",
+        "error_type",
+    }:
+        raise RuntimeError("actual launcher receipt fields are not deterministic")
+    attack = receipt.get("attack")
+    child = receipt.get("child")
+    if (
+        receipt.get("schema") != LAUNCH_RECEIPT_SCHEMA
+        or receipt.get("schema_version") != 1
+        or receipt.get("status") != "CHILD_EXIT"
+        or receipt.get("launcher_contract") != LAUNCHER_CONTRACT
+        or receipt.get("bootstrap_contract") != LAUNCHER_BOOTSTRAP_CONTRACT
+        or receipt.get("bootstrap_sha256") != launcher_bootstrap_sha256()
+        or receipt.get("verifier_sha256") != expected_verifier_sha256
+        or receipt.get("expected_verifier_sha256") != expected_verifier_sha256
+        or receipt.get("expected_verifier_source") != "retained_handle"
+        or receipt.get("verifier_sha256_after_child")
+        != expected_verifier_sha256
+        or receipt.get("error_type") is not None
+        or not isinstance(attack, Mapping)
+        or set(attack)
+        != {
+            "requested",
+            "landed",
+            "hresult_low_word",
+            "restored_or_unchanged",
+        }
+        or attack.get("requested") is not attack_requested
+        or attack.get("landed") is not False
+        or attack.get("restored_or_unchanged") is not True
+        or not isinstance(child, Mapping)
+        or set(child) != {"started", "exit_code"}
+        or child.get("started") is not True
+        or child.get("exit_code") != 0
+    ):
+        raise RuntimeError("actual launcher receipt does not prove pinned execution")
+    expected_error = (
+        WINDOWS_ERROR_SHARING_VIOLATION if attack_requested else None
+    )
+    if attack.get("hresult_low_word") != expected_error:
+        raise RuntimeError("actual launcher recorded the wrong sharing result")
+
+
+def bootstrap_sentinel_source(sentinel: str) -> bytes:
+    return (
+        "import hashlib, json\n"
+        f"SENTINEL = {sentinel!r}\n"
+        "pin = globals().get('_M136_PINNED_SOURCE')\n"
+        "if pin is None:\n"
+        "    handle = open(__file__, 'rb')\n"
+        "    try:\n"
+        "        raw = handle.read()\n"
+        "    finally:\n"
+        "        handle.close()\n"
+        "    bootstrap_sha256 = None\n"
+        "    bootstrap_contract = None\n"
+        "else:\n"
+        "    raw = pin['raw']\n"
+        "    bootstrap_sha256 = pin['bootstrap_sha256']\n"
+        "    bootstrap_contract = pin['contract']\n"
+        "print(json.dumps({'bootstrap_contract': bootstrap_contract, "
+        "'bootstrap_sha256': bootstrap_sha256, 'sentinel': SENTINEL, "
+        "'source_sha256': hashlib.sha256(raw).hexdigest().upper()}, "
+        "sort_keys=True))\n"
+    ).encode("utf-8")
+
+
+def pinned_required_source() -> bytes:
+    return (
+        "import hashlib, json, sys\n"
+        "pin = globals().get('_M136_PINNED_SOURCE')\n"
+        "if pin is None:\n"
+        "    print(json.dumps({'status': 'UNMEASURED'}, sort_keys=True), "
+        "file=sys.stderr)\n"
+        "    raise SystemExit(2)\n"
+        "print(json.dumps({'bootstrap_contract': pin['contract'], "
+        "'bootstrap_sha256': pin['bootstrap_sha256'], "
+        "'source_sha256': hashlib.sha256(pin['raw']).hexdigest().upper(), "
+        "'status': 'PINNED'}, sort_keys=True))\n"
+    ).encode("utf-8")
+
+
+def verifier_bootstrap_substitution_control(work_dir: Path) -> dict[str, Any]:
+    launcher = Path(__file__).with_name("launch-verifier.ps1")
+    if not launcher.is_file():
+        raise RuntimeError("actual M136 launcher is absent")
+    cases: dict[str, Any] = {}
+    for name, accepted, substitute in (
+        ("allow_to_deny", "ALLOW", "DENY"),
+        ("deny_to_allow", "DENY", "ALLOW"),
+    ):
+        root = work_dir / f"bootstrap-{name}"
+        root.mkdir()
+        target = root / "probe.py"
+        substitute_path = root / "substitute.py"
+        accepted_bytes = bootstrap_sentinel_source(accepted)
+        substitute_bytes = bootstrap_sentinel_source(substitute)
+        target.write_bytes(accepted_bytes)
+        substitute_path.write_bytes(substitute_bytes)
+        accepted_sha256 = sha256_file(target)
+        substitute_sha256 = sha256_file(substitute_path)
+        if (
+            accepted_bytes == substitute_bytes
+            or accepted_sha256 == substitute_sha256
+        ):
+            raise RuntimeError("bootstrap substitution did not change source bytes")
+
+        with TransientPathReplacement(target, substitute_bytes) as attack:
+            vulnerable_run = subprocess.run(
+                [sys.executable, "-I", "-B", str(target)],
+                check=False,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=30,
+            )
+            vulnerable_output = single_json_stream(
+                vulnerable_run.stdout, f"{name} vulnerable bootstrap"
+            )
+            if (
+                vulnerable_run.returncode != 0
+                or vulnerable_output.get("sentinel") != substitute
+                or vulnerable_output.get("source_sha256") != substitute_sha256
+            ):
+                raise RuntimeError(
+                    f"{name}: vulnerable path reopen did not execute substitute"
+                )
+        vulnerable_final_sha256 = sha256_file(target)
+        if (
+            not attack.attack_landed
+            or not attack.restoration_succeeded
+            or attack.original_sha256 != accepted_sha256
+            or attack.substitute_sha256 != substitute_sha256
+            or vulnerable_final_sha256 != accepted_sha256
+        ):
+            raise RuntimeError(
+                f"{name}: vulnerable substitution did not land and restore"
+            )
+
+        receipt_path = root / "defended-receipt.json"
+        attack_backup = root / "accepted-backup.py"
+        defended_run, defended_receipt = invoke_actual_launcher(
+            launcher,
+            target,
+            (),
+            receipt_path,
+            attack_backup,
+        )
+        require_successful_launcher_receipt(
+            defended_receipt,
+            accepted_sha256,
+            attack_requested=True,
+        )
+        defended_output = single_json_stream(
+            defended_run.stdout, f"{name} defended bootstrap"
+        )
+        defended_final_sha256 = sha256_file(target)
+        if (
+            defended_run.returncode != 0
+            or defended_output.get("sentinel") != accepted
+            or defended_output.get("source_sha256") != accepted_sha256
+            or defended_output.get("bootstrap_contract")
+            != LAUNCHER_BOOTSTRAP_CONTRACT
+            or defended_output.get("bootstrap_sha256")
+            != launcher_bootstrap_sha256()
+            or defended_final_sha256 != accepted_sha256
+            or attack_backup.exists()
+        ):
+            raise RuntimeError(
+                f"{name}: defended launcher did not preserve accepted source"
+            )
+        defended_attack = defended_receipt["attack"]
+        cases[name] = {
+            "accepted_sentinel": accepted,
+            "substitute_sentinel": substitute,
+            "accepted_sha256": accepted_sha256,
+            "substitute_sha256": substitute_sha256,
+            "vulnerable": {
+                "recorded_sha256": accepted_sha256,
+                "child_sha256": str(vulnerable_output["source_sha256"]),
+                "final_sha256": vulnerable_final_sha256,
+                "sentinel": str(vulnerable_output["sentinel"]),
+                "exit_code": vulnerable_run.returncode,
+                "attack_landed": attack.attack_landed,
+                "restoration_succeeded": attack.restoration_succeeded,
+                "executes_substitute": (
+                    vulnerable_output.get("source_sha256")
+                    == substitute_sha256
+                    and vulnerable_output.get("sentinel") == substitute
+                ),
+            },
+            "defended": {
+                "parent_sha256": accepted_sha256,
+                "child_sha256": str(defended_output["source_sha256"]),
+                "report_sha256": str(defended_receipt["verifier_sha256"]),
+                "final_sha256": defended_final_sha256,
+                "sentinel": str(defended_output["sentinel"]),
+                "exit_code": defended_run.returncode,
+                "attack_landed": bool(defended_attack["landed"]),
+                "attack_hresult_low_word": int(
+                    defended_attack["hresult_low_word"]
+                ),
+                "restored_or_unchanged": bool(
+                    defended_attack["restored_or_unchanged"]
+                ),
+                "expected_verifier_source": str(
+                    defended_receipt["expected_verifier_source"]
+                ),
+                "launcher_contract": str(
+                    defended_receipt["launcher_contract"]
+                ),
+                "bootstrap_contract": str(
+                    defended_receipt["bootstrap_contract"]
+                ),
+                "bootstrap_sha256": str(
+                    defended_receipt["bootstrap_sha256"]
+                ),
+            },
+        }
+
+    direct_root = work_dir / "bootstrap-direct"
+    direct_root.mkdir()
+    direct_source = direct_root / "pin-required.py"
+    direct_source.write_bytes(pinned_required_source())
+    direct_sha256 = sha256_file(direct_source)
+    direct_run = subprocess.run(
+        [sys.executable, "-I", "-B", str(direct_source)],
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=30,
+    )
+    direct_output = single_json_stream(
+        direct_run.stderr, "direct unpinned bootstrap"
+    )
+    if direct_run.returncode != 2 or direct_output.get("status") != "UNMEASURED":
+        raise RuntimeError("direct unpinned bootstrap did not fail closed")
+
+    direct_receipt_path = direct_root / "pinned-receipt.json"
+    pinned_run, pinned_receipt = invoke_actual_launcher(
+        launcher,
+        direct_source,
+        (),
+        direct_receipt_path,
+    )
+    require_successful_launcher_receipt(
+        pinned_receipt,
+        direct_sha256,
+        attack_requested=False,
+    )
+    pinned_output = single_json_stream(
+        pinned_run.stdout, "direct pinned bootstrap"
+    )
+    direct_final_sha256 = sha256_file(direct_source)
+    if (
+        pinned_run.returncode != 0
+        or pinned_output.get("status") != "PINNED"
+        or pinned_output.get("source_sha256") != direct_sha256
+        or pinned_output.get("bootstrap_contract")
+        != LAUNCHER_BOOTSTRAP_CONTRACT
+        or pinned_output.get("bootstrap_sha256")
+        != launcher_bootstrap_sha256()
+        or direct_final_sha256 != direct_sha256
+    ):
+        raise RuntimeError("direct pinned bootstrap did not execute accepted bytes")
+
+    return {
+        "cases": cases,
+        "direct_unpinned": {
+            "status": str(direct_output["status"]),
+            "exit_code": direct_run.returncode,
+        },
+        "direct_pinned": {
+            "status": str(pinned_output["status"]),
+            "exit_code": pinned_run.returncode,
+            "parent_sha256": direct_sha256,
+            "child_sha256": str(pinned_output["source_sha256"]),
+            "report_sha256": str(pinned_receipt["verifier_sha256"]),
+            "final_sha256": direct_final_sha256,
+            "attack_landed": bool(pinned_receipt["attack"]["landed"]),
+            "expected_verifier_source": str(
+                pinned_receipt["expected_verifier_source"]
+            ),
+            "launcher_contract": str(pinned_receipt["launcher_contract"]),
+            "bootstrap_contract": str(pinned_receipt["bootstrap_contract"]),
+            "bootstrap_sha256": str(pinned_receipt["bootstrap_sha256"]),
+        },
+        "status": "PASS",
+    }
+
+
 def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str, Any]:
+    verifier, verifier_bytes, verifier_source = executed_source()
     if report_path.exists():
         raise RuntimeError(f"refusing to overwrite commissioning report: {report_path}")
     if work_dir.exists():
@@ -6851,7 +7512,7 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         raise RuntimeError(
             "commissioning preregistration differs from the frozen bytes"
         )
-    interpretation_path = Path(__file__).with_name("prospective-interpretations.md")
+    interpretation_path = verifier.path.with_name("prospective-interpretations.md")
     interpretation, interpretation_bytes = capture_file(
         interpretation_path, "commissioning prospective interpretation"
     )
@@ -6862,9 +7523,6 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         raise RuntimeError(
             "commissioning interpretation differs from the pre-target ruling"
         )
-    verifier, verifier_bytes = capture_file(
-        Path(__file__).resolve(), "commissioning verifier"
-    )
     report: dict[str, Any] = {
         "protocol": VERIFIER_PROTOCOL,
         "commissioning": "both directions",
@@ -6886,7 +7544,16 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
             "canonical_sha256": interpretation_canonical,
             "commit": INTERPRETATION_COMMIT,
         },
-        "independence": verify_independence(verifier),
+        "bootstrap_execution_identity": {
+            "launcher_contract": LAUNCHER_CONTRACT,
+            "bootstrap_contract": LAUNCHER_BOOTSTRAP_CONTRACT,
+            "bootstrap_sha256": launcher_bootstrap_sha256(),
+            "verifier_sha256": verifier.sha256,
+            "source_path_matches": True,
+            "source_sha256_matches": True,
+            "status": "PASS",
+        },
+        "independence": verify_independence(verifier, verifier_source),
         "numeric_cases": direct_numeric_controls(prereg),
         "quantizer_case": quantizer_control(prereg),
         "green_pairing_case": green_pairing_control(),
@@ -6896,6 +7563,9 @@ def commission(prereg_path: Path, report_path: Path, work_dir: Path) -> dict[str
         "interval_containment": interval_containment_control(),
     }
     try:
+        report["verifier_bootstrap_substitution"] = (
+            verifier_bootstrap_substitution_control(work_dir)
+        )
         report["transient_json_substitution"] = (
             transient_json_substitution_control(work_dir)
         )

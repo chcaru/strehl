@@ -6,7 +6,7 @@ same-support clamp makes M8-R integer zero a mathematical consequence, but
 promoting that opt-in nonlinear limiter to the shipping default solely to turn
 the failed axis green is not licensed by the available product-quality evidence.
 M8 also lacks a scoreable M8-O v1.5 target census, a scoreable identity result,
-and a scored campaign through the now-repaired single-read verifier.
+and a scored campaign through the now-commissioned same-bytes verifier.
 
 **INFERRED BY READING — scope:** This is a ruling about the evidence now
 available. It does not say that a
@@ -384,76 +384,96 @@ the landed M172 implementation.
 
 ### 5.7 Commissioning status
 
-**VERIFIED BY RUNNING — SUPERSEDING CORRECTION TO THE SCORECARD:** The earlier
-crop-corrected verifier recommission at `9dbfedbd` is now historical. The
-single-read repair was independently commissioned through
-`recommission-verifier.ps1` and reproduced byte-identically by three further
-full runs. The final verifier has raw SHA-256
-`EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB`,
-canonical SHA-256
-`03E3BCD41FA01D161D6077994E042B0BB9B6DA73CCAE767CA59AFA28D6686C9C`,
-and its `PASS` report has SHA-256
+**VERIFIED BY RUNNING — SECOND SUPERSEDING CORRECTION:** M142's integration
+audit correctly found that the `f77a8bd2` repair bound evidence reads only
+after Python had already loaded the verifier. Its raw verifier SHA-256
+`EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB`
+and report SHA-256
 `E60B699113D5896E735F85EA791C28747CFA6CCC57EF50BA17F9A3749CDF11E4`
-(`experiments/M136-m8o-bar/verifier-commission.json`, `verifier` and
-`transient_*` objects).
+remain valid historical evidence-read commissioning identities, but they do
+not prove which verifier bytes Python compiled.
 
-**VERIFIED BY RUNNING — invocation record:** The approved report was produced
-with Python 3.12.10, NumPy 2.4.4, tifffile 2026.5.2 and PowerShell 7.6.5:
+The execution-bound replacement was pre-registered before any run at
+`a901c689` (`experiments/M136-m8o-bar/bootstrap-contract-preregistration.md`).
+The final identities are:
 
-```powershell
-pwsh -NoProfile -NonInteractive -File C:\dev\blog\death-of-software\projects\strehl\experiments\M136-m8o-bar\recommission-verifier.ps1 `
-  -CommissionReport C:\Users\chris\.copilot\session-state\841ddf83-8ef0-40bd-a341-d2c66d487731\files\m136-equal-control\verifier-commission.json `
-  -Result C:\Users\chris\.copilot\session-state\841ddf83-8ef0-40bd-a341-d2c66d487731\files\m136-equal-control\verifier-recommission-result.json `
-  -Log C:\Users\chris\.copilot\session-state\841ddf83-8ef0-40bd-a341-d2c66d487731\files\m136-equal-control\verifier-recommission.log `
-  -Work C:\m136eq\w1
-```
+| Artifact | SHA-256 |
+|---|---|
+| `verifier_m136.py` | `ADE65AC317934521381674E096CF91BCF580502B4901984FB69D0E9AF25EB710` |
+| verifier canonical source | `19F6932CDB95A1231B4BA87C31E1CB19115AB94FCBD197A84028C6863752BA24` |
+| `launch-verifier.ps1` | `E456A6527480F417D1798C1993FCC9EEB6BE7CACB6C5D7868BA8B119A239FC32` |
+| `recommission-verifier.ps1` | `8307E0F44E9DF91A625303326EA510D900E57DD189E448FE3949C3E4C9EBDEC6` |
+| argv bootstrap source | `33DB496738E40ADCC9BE3357357C7C44AFB5FC5693B34035DB33DEAAB806F051` |
+| `verifier-commission.json` | `CF038646C6B984CBF59009BCAD4D869EE4C9C58D7E91CEC7D3E5D9E7F3B3AB0D` |
 
-The wrapper set `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`,
-`MKL_NUM_THREADS`, and `NUMEXPR_NUM_THREADS` to `1`; `-Python` and `-Root`
-used the script's explicit defaults. A direct run with those thread variables
-unset produced the same 18,585 report bytes.
+**VERIFIED BY RUNNING — invocation record:** An independent verifier parsed
+both PowerShell scripts, compiled and AST-parsed the Python verifier, exercised
+the actual launcher, and ran three full recommissions under PowerShell 7.6.5.
+All three 23,516-byte commissioning reports were byte-identical. The wrapper
+read exact child exit codes and set `OMP_NUM_THREADS`,
+`OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`, and `NUMEXPR_NUM_THREADS` to `1`.
+On this Windows host, commissioning work paths must remain short because the
+pre-existing 165-character synthetic trace basename exceeds legacy `MAX_PATH`
+when the work root is longer than 81 characters.
 
-**INFERRED BY READING:** This correction does not create a target score. M142
-must update its stale `636d3f57` verifier/report pins, regenerate the
-source/build/freeze evidence, commission its checker/fixture, and run the
-target. The repaired verifier closes one instrument gate; it does not repair
-the private candidate's configuration mismatch or create the missing scored
-population.
+**INFERRED BY READING:** This correction still creates no target score.
+M142's path-scoped `6fa6002c` pin commit correctly identified the now-historical
+`f77a8bd2` bytes, but it neither used a same-bytes launcher nor authorized
+target execution. M142 must integrate the launcher contract, pin the new
+identities, and separately close its candidate executable, compiler-source,
+RAW, warpmap, and verdict-metadata use bindings before any target bytes are
+admissible.
 
-### 5.8 Single-read / TOCTOU — closed for the verifier
+### 5.8 Same-byte reads and bootstrap — closed inside the M136 trust boundary
 
-**INFERRED BY READING:** `PinnedFile` opens a retained Windows read handle with
-write sharing denied, hashes that handle, and keeps path replacement harmless
-because parsing remains attached to the accepted file object
-(`experiments/M136-m8o-bar/verifier_m136.py`, `PinnedFile`). Bounded text and
-JSON are parsed from the captured bytes. `PinnedNpy` and `AcceptedTrace` map the
-same accepted handle, and `verify_capture` admits only one frame's four CFA
-blocks at a time before closing mappings and handles
-(`verifier_m136.py`, `PinnedNpy`, `AcceptedTrace`, and `verify_capture`).
-TIFF decoding likewise receives the pinned stream. Postflight path rehashing
-remains as defense in depth, not as the byte-identity mechanism.
+**INFERRED BY READING — CORRECTION:** The former heading “closed for the
+verifier” was too broad. `f77a8bd2` did close the evidence-read substitution
+identified there, but the wrapper still hashed one pathname and Python later
+opened it again. A verifier cannot authenticate its own already-executed source
+by hashing `Path(__file__)` after startup.
 
-**VERIFIED BY RUNNING:** Commissioning landed and restored substitutions in
-both JSON trust directions: a vulnerable path reopen saw the substitute while
-the verifier retained the accepted sentinel. The trace-header control retained
-kernel `2` while the vulnerable reopen saw kernel `0`; the trace-body control
-retained exactly `2` planted M8-R violations while the vulnerable reopen saw
-`0`. The equal-bytes recovery control preserves the original path and digest,
-leaves no `.a`, `.n`, or `.s` scratch, and is mutation-tested: removing either
-hash-inequality guard makes commissioning red
-(`experiments/M136-m8o-bar/verifier-commission.json`,
-`transient_json_substitution`, `transient_trace_header_substitution`, and
-`transient_trace_body_substitution`).
+**INFERRED BY READING — evidence reads:** `PinnedFile` opens a retained Windows
+read handle with write sharing denied, hashes that handle, and keeps parsing
+attached to the accepted file object. Bounded text and JSON use the captured
+bytes; `PinnedNpy`, `AcceptedTrace`, and TIFF decoding use the same accepted
+handle. `verify_capture` admits only one frame's four CFA traces at once before
+closing mappings and handles. Postflight path hashing is defense in depth, not
+the identity mechanism.
 
-**VERIFIED BY RUNNING:** The same commissioning measured at most four live
-trace handles and four live mappings, mapping-before-handle closure, NPY parity
-for C, Fortran, structured, empty and non-native-endian arrays, the corrected
-`100*y+x` crop fixture, and freeze-then-source trace order. No accepted
-evidence path was reparsed outside a digest-checked retained handle.
+**INFERRED BY READING — verifier execution:** The operator-invoked
+`recommission-verifier.ps1` process is the declared trust root. It opens
+`launch-verifier.ps1` with `FileShare.Read`, hashes that retained stream, and
+keeps it open through the launcher process. The launcher applies the same
+write/delete-denying pin to `verifier_m136.py`. Its argv-borne Python bootstrap
+reads the verifier once, hashes that byte array, compares it with the parent
+digest, and passes the same array to `compile()`. The injected
+`_M136_PINNED_SOURCE` is the verifier's only self-source identity; direct
+unpinned `commission` and `verify` refuse `UNMEASURED` with exit code `2`.
 
-**INFERRED BY READING — RESIDUAL LIMIT:** The full `verify --manifest` path has
-not run because no target evidence exists. That is now a target-campaign gate,
-not evidence that the commissioned single-read primitive remains defective.
+**VERIFIED BY RUNNING — powered execution attack:** In both `ALLOW→DENY` and
+`DENY→ALLOW` directions, the vulnerable hash-close-reopen witness executed the
+substitute while retaining the accepted digest. The actual launcher denied the
+same first rename step with Windows error `32`, executed the accepted bytes,
+and produced equal parent, child, receipt, report, and final-path digests. A
+separate direct-unpinned probe returned `UNMEASURED`/`2`; the pinned arm returned
+`PINNED`/`0`. Thirty-three report mutations and fourteen injected-source
+mutations were independently rejected.
+
+**VERIFIED BY RUNNING — retained earlier controls:** JSON, trace-header, and
+trace-body substitutions still distinguish vulnerable reopens from retained
+accepted objects in both trust directions. The equal-bytes recovery control,
+four-handle/four-mapping bound, NPY parity, corrected `100*y+x` crop fixture,
+and freeze-then-source trace order remain green in the new byte-identical
+commissioning report.
+
+**INFERRED BY READING — EXACT LIMIT:** This PASS trusts the operator-invoked
+wrapper bytes, the current PowerShell and Python runtimes and dependencies,
+Windows share-mode semantics, and the kernel/filesystem implementing them. It
+does not authenticate those roots. It also says nothing about the bytes the
+candidate OS loader executes, the bytes Cargo compiles, or the RAW, warpmap,
+trace, TIFF, manifest, or verdict metadata consumed upstream. The full target
+`verify --manifest` path has not run because no admissible target evidence
+exists.
 
 ## 6. Complete path to a defensible M8 PASS
 
@@ -470,9 +490,9 @@ not evidence that the commissioned single-read primitive remains defective.
 3. **Exact source/build binding.** Freeze the full scored commit, source tree,
    lockfile/toolchain, deterministic environment, instrumentation-only patch,
    reproducible build, candidate executable, maps, and capture identities.
-4. **Single-read verifier — satisfied.** Preserve the final verifier and
-   commission hashes from §5.7, and bind those exact bytes before target
-   evidence is opened.
+4. **Same-bytes verifier — satisfied inside its declared trust boundary.**
+   Preserve the verifier, launcher, bootstrap, and commission hashes from
+   §5.7; invoke the verifier only through the retained-handle launcher.
 5. **Live commissioning.** Require Catmull and explicit high/low defects to go
    red; copy, clamped-copy, convex bilinear, and correct-rail cases to go green;
    widened-clamp and one-code-off-rail plants to go red. Every source mutation
@@ -505,7 +525,7 @@ not evidence that the commissioned single-read primitive remains defective.
 all scored captures: V_R = 0 and V_O = 0
 aggregate:           V_R = 0 and V_O = 0
 identity arm:        V = 0
-all provenance, population, commissioning and single-read gates: PASS
+all provenance, population, commissioning and same-bytes gates: PASS
 ```
 
 ## 7. Who must run what
@@ -529,9 +549,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\experiments\M142-m8o-execu
 **INFERRED BY READING:** Those commands are not ready to run as written today:
 the runner rejects commits other than `248178b9`, targets a private patched
 candidate, uses a non-default configuration, and covers only the development
-flat set. It also pins the pre-crop-fix `636d3f57` verifier and report rather
-than the final §5.7 identities. Running it now would create no admissible M8
-score.
+flat set. Commit `6fa6002c` pins the historical `f77a8bd2` verifier/report pair
+but still invokes the verifier by pathname and has no approved binding for the
+candidate executable, compiler inputs, RAW files, warpmap, or verdict-bearing
+metadata. Running it now would create no admissible M8 score.
 
 ## 8. Exact owner-facing scorecard correction
 
@@ -539,16 +560,20 @@ score.
 `docs/proposals/2026-09-sota-scorecard.md:1548-1557` with:
 
 > **Status: `UNMEASURED` for M8-O v1.5; the M8 axis remains `FAIL` on
-> M8-R.** The single-read M136 verifier has raw SHA-256
-> `EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB`
-> and was independently recommissioned `PASS`; `verifier-commission.json` has
-> SHA-256
-> `E60B699113D5896E735F85EA791C28747CFA6CCC57EF50BA17F9A3749CDF11E4`.
-> Its planted JSON, trace-header, and trace-body substitutions all landed,
-> distinguished a vulnerable reopen, retained the accepted bytes, and restored
-> the original path. No frozen target v1.5 census exists. M142 has not completed
-> a Prepare→Commission→Freeze→Census→Verify→Summarize campaign for a scored
-> shipping-default commit and still pins the superseded `636d3f57` verifier.
+> M8-R.** The same-bytes M136 verifier has raw SHA-256
+> `ADE65AC317934521381674E096CF91BCF580502B4901984FB69D0E9AF25EB710`;
+> its retained-handle launcher has SHA-256
+> `E456A6527480F417D1798C1993FCC9EEB6BE7CACB6C5D7868BA8B119A239FC32`;
+> and `verifier-commission.json` has SHA-256
+> `CF038646C6B984CBF59009BCAD4D869EE4C9C58D7E91CEC7D3E5D9E7F3B3AB0D`.
+> Both execute-substitution directions made the vulnerable path execute the
+> substitute and made the defended launcher retain and execute the accepted
+> bytes; direct unpinned execution refuses `UNMEASURED`. This licenses verifier
+> execution identity only inside the declared wrapper/runtime trust boundary.
+> No frozen target v1.5 census exists. M142 has not completed a
+> Prepare→Commission→Freeze→Census→Verify→Summarize campaign for a scored
+> shipping-default commit, and its current `6fa6002c` pins predate this repair
+> and do not bind the candidate executable or its compiler/RAW/warpmap inputs.
 > The admitted M8-R result remains
 > `63,191,176 / 6,131,678,976 = 1.030569%`; it is the governing score but not a
 > fresh measurement of M172.

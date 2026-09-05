@@ -505,50 +505,53 @@ as untrustworthy or narrower than claimed if any item below is not discharged.
 | **32-bit aggregation.** | Use at least 64-bit integer counts: the historical M8-R denominator `6,131,678,976` exceeds `2^32`. Assert per-block, per-capture and aggregate sums. |
 | **Producer-supplied hull, mask or verdict.** | Ignore all such fields and regenerate coordinates, support, validity, intervals and comparisons from source planes, placement and actual outputs (`docs/proposals/2026-09-sota-scorecard.md:1330-1338`, M8-R source/support rule; `experiments/M136-m8o-bar/clamped-m8o-preregistration.json:218-225`). |
 | **Artifact consistency mistaken for re-derivation.** | Recompute from source-plane and gathered/TIFF bytes. Stored `m8-r.json`, `L/H` arrays or a second summation of the producer's verdict are cross-checks only. |
-| **Hash/parse time-of-check gap.** | Read each sealed metadata artifact once, hash those bytes, and parse those same bytes; for large traces, bind parsing to the same sealed file handle/snapshot. Hashing a path and reopening it is insufficient. |
+| **Hash/use time-of-check gap.** | Read each sealed artifact once and bind the accepted bytes to the operation that consumes them: parse metadata from the hashed byte string, map large evidence through the retained handle, and compile or load executable source from the accepted bytes. Hashing a path and reopening it for parse, compile, or execution is insufficient. |
 | **Mixed source, binary, map, trace or TIFF.** | Require one frozen source commit/build and one run identity to bind the binary, map, trace, crop, final TIFF and checker before reading the verdict (`experiments/M136-m8o-bar/clamped-m8o-preregistration.json:56-63`; `experiments/M136-m8o-bar/clamped-m8o-preregistration.json:105-121`). |
 | **A mutation that did not land.** | Anchor every plant on one exact full line, require exactly one occurrence, hash before/after, and hard-error otherwise. The existing verifier's `replace_unique_line` implements that discipline (`experiments/M136-m8o-bar/verifier_m136.py:4997-5008`). |
 | **One-direction-only commissioning.** | Require both a degradation and an improvement. In the commissioned M136 fixture, Catmull hard step is `28/252` (`14` low, `14` high), clamped is `0/252`, widened-clamp sabotage is `28/252`, explicit plant is `2/252` (`1+1`), copy and clamped-copy are each `0/252`, and the independently supported bilinear null is `0/300` (`experiments/M136-m8o-bar/verifier-commission.json:186-230`; `experiments/M136-m8o-bar/verifier_m136.py:5260-5362`). The improvement mutation must make a known-red production-path case green; the reverse/widened mutation must restore red. |
 | **M8-O rail deletion.** | Keep rails in `N`; project support through `[0,1]`; require correct-rail green and one-code-off-rail red in both directions (`experiments/M136-m8o-bar/clamped-m8o-preregistration.json:134-225`). |
 | **Whole-axis overclaim.** | A clean M8-R is not a clean M8 axis. Require exact M8-O zero and crop/reference identity zero in the same candidate evidence (`experiments/M136-m8o-bar/clamped-m8o-preregistration.json:88-104`). |
 
-**VERIFIED BY RUNNING — repaired verifier identity:** The present
+**VERIFIED BY RUNNING — execution-bound verifier identity:** The present
 `verifier_m136.py` has raw SHA-256
-`EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB`
+`ADE65AC317934521381674E096CF91BCF580502B4901984FB69D0E9AF25EB710`
 and canonical SHA-256
-`03E3BCD41FA01D161D6077994E042B0BB9B6DA73CCAE767CA59AFA28D6686C9C`.
-The independently reproduced `PASS` commissioning report has SHA-256
-`E60B699113D5896E735F85EA791C28747CFA6CCC57EF50BA17F9A3749CDF11E4`.
+`19F6932CDB95A1231B4BA87C31E1CB19115AB94FCBD197A84028C6863752BA24`.
+The retained-handle launcher has SHA-256
+`E456A6527480F417D1798C1993FCC9EEB6BE7CACB6C5D7868BA8B119A239FC32`;
+the argv bootstrap has SHA-256
+`33DB496738E40ADCC9BE3357357C7C44AFB5FC5693B34035DB33DEAAB806F051`;
+and the independently reproduced `PASS` report has SHA-256
+`CF038646C6B984CBF59009BCAD4D869EE4C9C58D7E91CEC7D3E5D9E7F3B3AB0D`.
+The contract was pre-registered at `a901c689` before any bootstrap run.
 
-**INFERRED BY READING — single-read requirement satisfied:** `PinnedFile`
-retains a Windows read handle with write sharing denied and hashes that file
-object; bounded metadata is parsed from the captured bytes, while `PinnedNpy`,
-`AcceptedTrace`, and TIFF decoding consume the same digest-checked handle
-(`experiments/M136-m8o-bar/verifier_m136.py`, `PinnedFile`, `PinnedNpy`,
-`AcceptedTrace`, and `load_tiff`). `verify_capture` processes one frame's four
-CFA traces within one `ExitStack`, then closes mappings before handles. A
-pathname replacement can therefore land without changing the bytes consumed
-by the verifier, and an in-place writer cannot open the accepted file while it
-is pinned. End-of-run path rehashing remains a persistent-mutation alarm rather
-than the identity mechanism.
+**INFERRED BY READING — same-byte requirement satisfied inside its declared
+trust boundary:** `PinnedFile`, `PinnedNpy`, `AcceptedTrace`, and TIFF decoding
+still bind evidence parsing to accepted handles. For the verifier itself, the
+operator-invoked recommission wrapper is the trust root: it pins the launcher,
+which pins the verifier, while the Python bootstrap hashes and compiles one
+byte array. `_M136_PINNED_SOURCE` is the only accepted self-source identity;
+direct unpinned `commission` and `verify` return `UNMEASURED` with exit `2`.
 
-**VERIFIED BY RUNNING — commissioned attack:** Both JSON trust-direction
-substitutions, a trace-header kernel `2`→`0` substitution, and a trace-body
-`2`→`0` violation substitution landed at the pathname. Deliberately vulnerable
-reopens saw every substitute; the verifier retained every accepted value and
-restored every original digest. The equal-bytes recovery case reports exactly
-`transient substitution did not change the bytes`, preserves the original
-path/digest, and leaves no scratch; deleting either inequality guard makes that
-control red
-(`experiments/M136-m8o-bar/verifier-commission.json`,
-`transient_json_substitution`, `transient_trace_header_substitution`, and
-`transient_trace_body_substitution`).
+**VERIFIED BY RUNNING — commissioned attacks:** JSON, trace-header, and
+trace-body path substitutions still make vulnerable reopens diverge while
+retained handles preserve accepted values. In addition, both verifier-source
+directions made a vulnerable hash-close-reopen execute the substitute while
+recording the accepted digest. The actual launcher denied the same rename with
+Windows error `32`, executed the accepted bytes, and produced equal parent,
+child, receipt, report, and final-path digests. The direct unpinned arm failed;
+the pinned arm passed. Three complete commissioning runs produced the same
+23,516 report bytes, and mutation batteries rejected malformed report and
+injected-source identities.
 
-**INFERRED BY READING — remaining boundary:** No target `verify --manifest`
-campaign has run. M142 must replace its superseded `636d3f57` pins with the
-identities above and regenerate the source/build/freeze chain before target
-bytes are admissible. That is a campaign/provenance blocker, not an open
-single-read defect.
+**INFERRED BY READING — remaining boundary:** The execution-identity PASS
+trusts the operator-invoked wrapper, PowerShell and Python runtimes and
+dependencies, Windows share semantics, and the implementing kernel/filesystem.
+It does not bind M142's candidate executable to the OS loader, source manifest
+to compiler reads, or RAW/warpmap/trace/TIFF/manifest/verdict metadata to their
+consumers. M142's `6fa6002c` pin-only commit identifies the historical
+`f77a8bd2` pair and may remain as history, but it cannot authorize execution.
+No target `verify --manifest` campaign has run.
 
 **INFERRED BY READING — discrimination versus quality:** A destructive in-hull
 operator can earn a truthful M8-R zero. That is not an artifact in M8-R; it is

@@ -6,6 +6,15 @@
     "status": "PASS",
     "violations": []
   },
+  "bootstrap_execution_identity": {
+    "bootstrap_contract": "M136 Python argv bootstrap exact-byte exec v1",
+    "bootstrap_sha256": "33DB496738E40ADCC9BE3357357C7C44AFB5FC5693B34035DB33DEAAB806F051",
+    "launcher_contract": "M136 launch-verifier.ps1 retained-handle contract v1",
+    "source_path_matches": true,
+    "source_sha256_matches": true,
+    "status": "PASS",
+    "verifier_sha256": "ADE65AC317934521381674E096CF91BCF580502B4901984FB69D0E9AF25EB710"
+  },
   "commissioning": "both directions",
   "crop_origin_case": {
     "compact_shape": [
@@ -142,6 +151,7 @@
       "ctypes",
       "dataclasses",
       "hashlib",
+      "io",
       "json",
       "math",
       "mmap",
@@ -155,6 +165,7 @@
       "subprocess",
       "sys",
       "tifffile",
+      "tokenize",
       "typing"
     ]
   },
@@ -565,8 +576,92 @@
     "vulnerable_witness_differs": true
   },
   "verifier": {
-    "canonical_sha256": "03E3BCD41FA01D161D6077994E042B0BB9B6DA73CCAE767CA59AFA28D6686C9C",
+    "canonical_sha256": "19F6932CDB95A1231B4BA87C31E1CB19115AB94FCBD197A84028C6863752BA24",
     "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M136-m8o-bar\\verifier_m136.py",
-    "sha256": "EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB"
+    "sha256": "ADE65AC317934521381674E096CF91BCF580502B4901984FB69D0E9AF25EB710"
+  },
+  "verifier_bootstrap_substitution": {
+    "cases": {
+      "allow_to_deny": {
+        "accepted_sentinel": "ALLOW",
+        "accepted_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+        "defended": {
+          "attack_hresult_low_word": 32,
+          "attack_landed": false,
+          "bootstrap_contract": "M136 Python argv bootstrap exact-byte exec v1",
+          "bootstrap_sha256": "33DB496738E40ADCC9BE3357357C7C44AFB5FC5693B34035DB33DEAAB806F051",
+          "child_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+          "exit_code": 0,
+          "expected_verifier_source": "retained_handle",
+          "final_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+          "launcher_contract": "M136 launch-verifier.ps1 retained-handle contract v1",
+          "parent_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+          "report_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+          "restored_or_unchanged": true,
+          "sentinel": "ALLOW"
+        },
+        "substitute_sentinel": "DENY",
+        "substitute_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+        "vulnerable": {
+          "attack_landed": true,
+          "child_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+          "executes_substitute": true,
+          "exit_code": 0,
+          "final_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+          "recorded_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+          "restoration_succeeded": true,
+          "sentinel": "DENY"
+        }
+      },
+      "deny_to_allow": {
+        "accepted_sentinel": "DENY",
+        "accepted_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+        "defended": {
+          "attack_hresult_low_word": 32,
+          "attack_landed": false,
+          "bootstrap_contract": "M136 Python argv bootstrap exact-byte exec v1",
+          "bootstrap_sha256": "33DB496738E40ADCC9BE3357357C7C44AFB5FC5693B34035DB33DEAAB806F051",
+          "child_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+          "exit_code": 0,
+          "expected_verifier_source": "retained_handle",
+          "final_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+          "launcher_contract": "M136 launch-verifier.ps1 retained-handle contract v1",
+          "parent_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+          "report_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+          "restored_or_unchanged": true,
+          "sentinel": "DENY"
+        },
+        "substitute_sentinel": "ALLOW",
+        "substitute_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+        "vulnerable": {
+          "attack_landed": true,
+          "child_sha256": "65DE7C8547A36426A7B2A3F5A468634A8A39878BBAAB6B0C911B510DCE0AA8A4",
+          "executes_substitute": true,
+          "exit_code": 0,
+          "final_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+          "recorded_sha256": "9EA9FEAD1EF9E3398962E1EB63F08E63D60EEEA3B43EEAAB539586791B20C922",
+          "restoration_succeeded": true,
+          "sentinel": "ALLOW"
+        }
+      }
+    },
+    "direct_pinned": {
+      "attack_landed": false,
+      "bootstrap_contract": "M136 Python argv bootstrap exact-byte exec v1",
+      "bootstrap_sha256": "33DB496738E40ADCC9BE3357357C7C44AFB5FC5693B34035DB33DEAAB806F051",
+      "child_sha256": "5A4301B03ABA957DC446E8FCA72A5E1F654F7F2F81CBD14C48825F5EA3C9787A",
+      "exit_code": 0,
+      "expected_verifier_source": "retained_handle",
+      "final_sha256": "5A4301B03ABA957DC446E8FCA72A5E1F654F7F2F81CBD14C48825F5EA3C9787A",
+      "launcher_contract": "M136 launch-verifier.ps1 retained-handle contract v1",
+      "parent_sha256": "5A4301B03ABA957DC446E8FCA72A5E1F654F7F2F81CBD14C48825F5EA3C9787A",
+      "report_sha256": "5A4301B03ABA957DC446E8FCA72A5E1F654F7F2F81CBD14C48825F5EA3C9787A",
+      "status": "PINNED"
+    },
+    "direct_unpinned": {
+      "exit_code": 2,
+      "status": "UNMEASURED"
+    },
+    "status": "PASS"
   }
 }
