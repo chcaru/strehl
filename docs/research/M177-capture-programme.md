@@ -13,8 +13,16 @@ Sources: `docs/OWNER-ACTIONS.md:8-11,629-668,1329-1359`;
 `docs/research/M166-capture-reconciliation.md:1-39`;
 `docs/research/M167-detail-battery.md:518-522`.
 
+**VERIFIED BY RUNNING.** Commit `2a0a39b4` is an ancestor of the current
+branch, and its committed reconciliation is the controlling M166 accounting
+source.  M177 uses its `896-96+128+164` rehearsal bridge and `900+315`
+combined-score bridge rather than reconstructing a competing campaign total.
+
 **VERIFIED BY RUNNING.** `CHECK[core-three] 1,092 + 1,215 + 686 = 2,993`.
 The three requests named in the brief do total 2,993 frames.
+
+**VERIFIED BY RUNNING.** `CHECK[landed-campaigns] 2 + 1,092 + 1,215 + 686 = 2,995`.
+This is the complete newly reconciled M166/M167 envelope including Ask 2a.
 
 **VERIFIED BY RUNNING.** `CHECK[specified-floor] 2 + 1,092 + 1,215 + 686 + 64 + 657 = 3,716`.
 The audit found three further sized obligations: Ask 2a, the M2 two-light
@@ -42,20 +50,21 @@ makes zero axes newly scoreable, because other blockers remain conjunctive
 | Rank | Request and state | Source | Re-derived frames | What the photographs license | Axes advanced / newly scoreable now | Evidence |
 |---:|---|---|---:|---|---|---|
 | 1 | **Ask 2a scale/field preflight — RELEASED** | `docs/OWNER-ACTIONS.md:907-959`; `docs/research/M166-capture-reconciliation.md:30-39` | `1 + 1 = 2` | A real converter-on/converter-off sampling-ratio and common-field kill gate; no score and no dominance result | M1/M5/M9 path: `3`; now: `0` | **INFERRED BY READING.** |
-| 2 | **M166 development rehearsal — STOP** | `docs/research/M166-rehearsal-cost.md:423-469` | `128+192+128+164+224+192+64 = 1,092` | Exact-configuration physical commissioning, the candidate execution path, both physical directions, and permission to attempt the score | M1/M5/M9 path: `3`; now: `0` | **VERIFIED BY RUNNING.** |
-| 3 | **M166 sealed combined score — STOP** | `docs/research/M166-rehearsal-cost.md:87-127`; `docs/research/M166-capture-reconciliation.md:163-167` | `891-96+128+164+128 = 1,215` | Fresh holdout inputs for the combined M1/M5/M9 adjudication; it cannot borrow a rehearsal RAW or result | M1/M5/M9: `3`; now: `0` | **VERIFIED BY RUNNING.** |
+| 2 | **M166 development rehearsal — STOP** | `docs/research/M166-capture-reconciliation.md:125-155` | `896-96+128+164 = 1,092` | Exact-configuration physical commissioning, the candidate execution path, both physical directions, and permission to attempt the score | M1/M5/M9 path: `3`; now: `0` | **VERIFIED BY RUNNING.** |
+| 3 | **M166 sealed combined score — STOP** | `docs/research/M166-capture-reconciliation.md:85-122,163-181` | current M1-only `900` + M5/M9 `315` = `1,215` | Fresh holdout inputs for the combined M1/M5/M9 adjudication; it cannot borrow a rehearsal RAW or result | M1/M5/M9: `3`; now: `0` | **VERIFIED BY RUNNING.** |
 | 4 | **M2 replacement two-light unit — DEFER** | `docs/research/M146-unlock-audit.md:23,74-79,159-160` | `2 x 32 = 64` | Replaces the ineligible second-light unit for a future M2 instrument; the present M2 statistic is void | M2 input: `1`; now: `0` | **VERIFIED BY RUNNING.** |
 | 5 | **Ask 5 fresh slide equivalent — DEFER** | `docs/OWNER-ACTIONS.md:1329-1368` | `182+92+186+197 = 657`; the `186` is `65+61+60` | A stated lower bound for a future scoring holdout; the same section says the four-stack design lacks independent repeat lineages, so it licenses no score as written | Detail-holdout path: M1/M5/M9; now: `0` | **VERIFIED BY RUNNING.** |
 | 6 | **M167 physical false-rate battery — CUT** | `docs/research/M167-detail-battery.md:518-620` | `96+110+54+60+110+128+128 = 686` | Panel- and intervention-conditioned flat, USM, blur, and—only with an admitted reference reader—physical-improvement rates | Scorecard axes: `0`; now: `0` | **VERIFIED BY RUNNING.** |
 
-**VERIFIED BY RUNNING.** `CHECK[rehearsal] 128 + 192 + 128 + 164 + 224 + 192 + 64 = 1,092`.
-This recomputes the seven owner-facing M166 releases rather than copying their
-printed total (`docs/research/M166-rehearsal-cost.md:423-469`).
+**VERIFIED BY RUNNING.** `CHECK[rehearsal] 896 - 96 + 128 + 164 = 1,092`.
+This verifies the committed M166 bridge from the predecessor rehearsal: replace
+the three-strip reference and add the source-disjoint dominance witness
+(`docs/research/M166-capture-reconciliation.md:125-155`).
 
-**VERIFIED BY RUNNING.** `CHECK[score] 891 - 96 + 128 + 164 + 128 = 1,215`.
-This replaces the obsolete three-strip reference and adds the disjoint
-dominance and held-out-validation blocks
-(`docs/research/M166-rehearsal-cost.md:87-127`).
+**VERIFIED BY RUNNING.** `CHECK[score] 900 + 315 = 1,215`.
+The reconciled current M1-only score is 900; the registered converter-on
+M5/M9 package adds 315
+(`docs/research/M166-capture-reconciliation.md:163-181,251-254`).
 
 **VERIFIED BY RUNNING.** `CHECK[m167] 96 + 110 + 54 + 60 + 110 + 128 + 128 = 686`.
 This recomputes M167 from its seven acquisition rows
@@ -184,7 +193,7 @@ the current frozen texts.  The reuse above is internal to a request.
 |---|---|---|---|
 | M166 dominance `164` with M166 candidate `164` | Both are `55+55+27+27` | DOM RAWs are candidate-excluded witnesses; candidate RAWs are renderer inputs. One set in both roles makes the witness identical to what it is meant to test | `docs/research/M166-rehearsal-cost.md:102-127` — **INFERRED BY READING.** |
 | M166 rehearsal with M166 score | Roles and budgets are analogous | Development and sealed holdout must use independent subject/session, RAW, calibration, site, render, and fitted-value lineages | `docs/research/M166-capture-reconciliation.md:163-167`; `docs/research/M166-rehearsal-cost.md:126-129` — **INFERRED BY READING.** |
-| M167 `TEST-*` with M166 candidate stacks | Both total `164` and use widths 4/10 | M167 fixes `M_test <= 1.30x` and ABBA ordering; M166 binds the accepted `1.32x` target, four-strip construction, and literal table order. Those are different acquisition laws | `docs/research/M167-detail-battery.md:529-566`; `docs/research/M166-reference-dominance-rehearsal.md:117-145,290-296` — **INFERRED BY READING.** |
+| M167 `TEST-*` with either M166 candidate or M166 DOM stacks | Every package totals `164 = 55+55+27+27`, uses widths 4/10, and is converter-off | M167 fixes `M_test <= 1.30x`, ABBA order, and intervention-rate candidate inputs; M166 fixes the accepted `1.32x` placement and literal order, while its DOM copy is candidate-excluded. Magnification, order, role, session, target, manifest, and calibration lineage all differ | `docs/research/M167-detail-battery.md:529-566`; `docs/research/M166-reference-dominance-rehearsal.md:242-296` — **INFERRED BY READING.** |
 | M167 reference bursts with M166 reference strips | Both are converter-on fixed-focus groups | M167 requires three near/middle/far zones with a `21/21/22` site allocation; M166 requires four row-pair strips, disjoint A/B halves, and a different target contract | `docs/research/M167-detail-battery.md:527-557`; `docs/research/M166-reference-dominance-rehearsal.md:130-141,272-289` — **INFERRED BY READING.** |
 | M167 calibration with M166 calibration | Names and `128`-frame budgets recur | Calibration is session-, optical-state-, focus-, temperature-, and lineage-local. The two protocols cannot currently be one literal uninterrupted order | `docs/research/M166-reference-dominance-rehearsal.md:117-166,290-303`; `docs/research/M167-detail-battery.md:544-577` — **INFERRED BY READING.** |
 | M167 `NULL-sw4-A/B` with any flat masters | Both use a diffuser-like field | Null stacks are focus-bracket evidence for a no-scene rate; flats are fixed-focus calibration maps and must not become scored null observations | `docs/research/M167-detail-battery.md:555-557` — **INFERRED BY READING.** |
@@ -198,6 +207,15 @@ the same blocks” sentence is conditional, not a finding of identity
 specifications fail that condition on magnification, target partition, order,
 and session-local calibration.  A future registrar may harmonise them before
 either is shot; M177 may not silently do so after the fact.
+
+**VERIFIED BY RUNNING.** The committed source does **not** support the shorthand
+that M166 DOM is converter-on.  M166 registers both `TC0-DOM` blocks as
+**converter off** (`docs/research/M166-reference-dominance-rehearsal.md:242-243`),
+just as M167 removes the converter for `TEST-*`
+(`docs/research/M167-detail-battery.md:552-553`).  They still cannot be shared:
+M166's accepted `1.32x` state conflicts with M167's `M_test <= 1.30x`, and the
+candidate-excluded dominance role conflicts with M167's candidate test role.
+No 164-frame merge is credited.
 
 ## 4. Ranking by shutter value
 
@@ -427,10 +445,11 @@ arithmetic from the cited source text; repeats the exact-subtree 657-file
 inventory and ExifTool header census; checks the no-merge and physical-rig
 clauses; and never enumerates the forbidden sibling.
 
-**VERIFIED BY RUNNING.** `CHECK[commission] planted defects caught = 12; missed = 0; inert edits passed = 1 of 1`.
+**VERIFIED BY RUNNING.** `CHECK[commission] planted defects caught = 13; missed = 0; inert edits passed = 1 of 1`.
 The commissioned mutations cover report arithmetic, source arithmetic,
-cross-role deduplication, M167 configuration, the zero-axis statement, and the
-whole-pass substitute.  An appended non-semantic comment is the inert edit.
+cross-role deduplication, the M166/M167 optical-state distinction, M167
+configuration, the zero-axis statement, and the whole-pass substitute.  An
+appended non-semantic comment is the inert edit.
 
 **VERIFIED BY RUNNING.** An independent read-only verifier reran both modes,
 recomputed every core sum separately, repeated the exact-subtree file and

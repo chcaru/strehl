@@ -162,33 +162,47 @@ def survey_allowed_capture() -> Survey:
 
 
 def derive(sources: dict[str, str]) -> dict[str, object]:
-    cost = sources["m166_cost"]
-    rehearsal_patterns = (
-        r"> 4\. \*\*First release — ([\d,]+) frames\.\*\*",
-        r"> 5\. \*\*Reference release — ([\d,]+) more frames\.\*\*",
-        r"> 6\. \*\*Converter-off calibration — ([\d,]+) more frames\.\*\*",
-        r"> 7\. \*\*Dominance witness — ([\d,]+) more frames\.\*\*",
-        r"> 8\. \*\*Exact candidate package — ([\d,]+) more frames\.\*\*",
-        r"> 9\. \*\*Physical controls — ([\d,]+) more frames\.\*\*",
-        r"> 10\. \*\*Close TC0 and decide — ([\d,]+) final frames\.\*\*",
+    reconcile = sources["m166_reconcile"]
+    rehearsal_match = unique_match(
+        r"(?m)^([\d,]+) - ([\d,]+) \+ ([\d,]+) \+ ([\d,]+) = ([\d,]+)$",
+        reconcile,
+        "reconciled rehearsal bridge",
     )
-    rehearsal_parts = [
-        unique_int(pattern, cost, f"rehearsal part {index}")
-        for index, pattern in enumerate(rehearsal_patterns, start=1)
-    ]
+    rehearsal_bridge = [comma_int(group) for group in rehearsal_match.groups()]
+    rehearsal_parts = rehearsal_bridge[:4]
+    rehearsal_total = (
+        rehearsal_parts[0]
+        - rehearsal_parts[1]
+        + rehearsal_parts[2]
+        + rehearsal_parts[3]
+    )
+    if rehearsal_total != rehearsal_bridge[4]:
+        raise ValueError(
+            "reconciled rehearsal bridge arithmetic disagrees with its stated total"
+        )
 
-    score_patterns = (
-        r"base scored plan\s+([\d,]+)",
-        r"remove superseded three-strip reference\s+-\s*([\d,]+)",
-        r"install four-strip reference\s+\+([\d,]+)",
-        r"add candidate-excluded TC0-DOM sw4/sw10 A/B\s+\+([\d,]+)",
-        r"add TR-V and TC0-V flat/dark validation\s+\+([\d,]+)",
+    m1_score = unique_int(
+        r"current M1-only scored sitting\s+([\d,]+)",
+        reconcile,
+        "reconciled M1-only score",
     )
-    score_parts = [
-        unique_int(pattern, cost, f"score part {index}")
-        for index, pattern in enumerate(score_patterns, start=1)
-    ]
-    score_total = score_parts[0] - score_parts[1] + sum(score_parts[2:])
+    m5_m9 = unique_int(
+        r"named decision: defer the ([\d,]+)-frame M5/M9 converter-on package",
+        reconcile,
+        "reconciled M5/M9 package",
+    )
+    score_parts = [m1_score, m5_m9]
+    score_total = sum(score_parts)
+    headline = unique_match(
+        r"RECONCILED: rehearsal ([\d,]+), scored ([\d,]+), total ([\d,]+)",
+        reconcile,
+        "reconciliation headline",
+    )
+    headline_totals = [comma_int(group) for group in headline.groups()]
+    if headline_totals != [rehearsal_total, score_total, rehearsal_total + score_total]:
+        raise ValueError(
+            f"reconciliation headline disagrees with bridges: {headline_totals}"
+        )
 
     m167 = sources["m167"]
     m167_patterns = (
@@ -247,7 +261,6 @@ def derive(sources: dict[str, str]) -> dict[str, object]:
         "M169 zero axes",
     )
 
-    rehearsal_total = sum(rehearsal_parts)
     m167_total = sum(m167_parts)
     m2_total = 2 * m2_group
     ask5_total = sum(ask5_parts)
@@ -269,6 +282,7 @@ def derive(sources: dict[str, str]) -> dict[str, object]:
         "diagnostic_total": sum(diagnostic_parts),
         "preflight": preflight,
         "core_three": rehearsal_total + score_total + m167_total,
+        "landed_campaigns": preflight + rehearsal_total + score_total + m167_total,
         "score_path": preflight + rehearsal_total + score_total,
         "specified_floor": specified_floor,
         "post_cut": specified_floor - m167_total,
@@ -325,7 +339,7 @@ def audit(
         facts["rehearsal_total"] == 1092
         and contains_once(
             report,
-            "CHECK[rehearsal] 128 + 192 + 128 + 164 + 224 + 192 + 64 = 1,092",
+            "CHECK[rehearsal] 896 - 96 + 128 + 164 = 1,092",
         ),
         str(facts["rehearsal_parts"]),
     )
@@ -334,7 +348,7 @@ def audit(
         facts["score_total"] == 1215
         and contains_once(
             report,
-            "CHECK[score] 891 - 96 + 128 + 164 + 128 = 1,215",
+            "CHECK[score] 900 + 315 = 1,215",
         ),
         str(facts["score_parts"]),
     )
@@ -345,6 +359,15 @@ def audit(
             report, "CHECK[core-three] 1,092 + 1,215 + 686 = 2,993"
         ),
         str(facts["core_three"]),
+    )
+    add(
+        "arithmetic.landed-campaigns",
+        facts["landed_campaigns"] == 2995
+        and contains_once(
+            report,
+            "CHECK[landed-campaigns] 2 + 1,092 + 1,215 + 686 = 2,995",
+        ),
+        str(facts["landed_campaigns"]),
     )
     add(
         "arithmetic.m167",
@@ -485,9 +508,18 @@ def audit(
         "dedup.m167-condition",
         "Do not duplicate it if the already planned M1 non-holdout rehearsal"
         in sources["m167"]
-        and "`M_test <= 1.30x` and ABBA ordering" in report
-        and "accepted `1.32x` target" in report,
+        and "M167 fixes `M_test <= 1.30x`, ABBA order" in report
+        and "M166 fixes the accepted `1.32x` placement" in report,
         "conditional same-block clause checked against acquisition laws",
+    )
+    add(
+        "dedup.optical-state-correction",
+        "| `TC0-DOM-sw4-A/B` | converter off |" in sources["m166_rehearsal"]
+        and "| `TC0-DOM-sw10-A/B` | converter off |" in sources["m166_rehearsal"]
+        and "| `TEST-sw4-A/B` | teleconverter removed," in sources["m167"]
+        and "M166 registers both `TC0-DOM` blocks as\n**converter off**" in report
+        and "No 164-frame merge is credited." in report,
+        "both packages are converter-off but differ in magnification and role",
     )
     add(
         "axes.zero-newly-scoreable",
@@ -538,7 +570,7 @@ def audit(
         "report.commission-record",
         contains_once(
             report,
-            "CHECK[commission] planted defects caught = 12; missed = 0; "
+            "CHECK[commission] planted defects caught = 13; missed = 0; "
             "inert edits passed = 1 of 1",
         ),
         "commission record anchor",
@@ -585,15 +617,15 @@ def commissioned(
     )
     source_mutation(
         "m166-rehearsal-source",
-        "m166_cost",
-        "> 4. **First release — 128 frames.**",
-        "> 4. **First release — 127 frames.**",
+        "m166_reconcile",
+        "896 - 96 + 128 + 164 = 1,092",
+        "895 - 96 + 128 + 164 = 1,092",
     )
     source_mutation(
         "m166-score-source",
-        "m166_cost",
-        "add TR-V and TC0-V flat/dark validation              +128",
-        "add TR-V and TC0-V flat/dark validation              +127",
+        "m166_reconcile",
+        "named decision: defer the 315-frame M5/M9 converter-on package",
+        "named decision: defer the 314-frame M5/M9 converter-on package",
     )
     source_mutation(
         "m167-null-source",
@@ -625,8 +657,13 @@ def commissioned(
     )
     report_mutation(
         "m167-magnification-collapse",
-        "`M_test <= 1.30x` and ABBA ordering",
-        "`M_test <= 1.32x` and any ordering",
+        "M167 fixes `M_test <= 1.30x`, ABBA order",
+        "M167 fixes `M_test <= 1.32x`, any order",
+    )
+    report_mutation(
+        "m166-dom-optical-state-collapse",
+        "M166 registers both `TC0-DOM` blocks as\n**converter off**",
+        "M166 registers both `TC0-DOM` blocks as\n**converter on**",
     )
     source_mutation(
         "m169-zero-axis-source",
@@ -711,7 +748,7 @@ def main() -> int:
         f"COMMISSIONED: {caught} caught, {missed} missed; "
         f"inert {inert_passed}/{inert_total} passed"
     )
-    return 0 if caught == 12 and missed == 0 and inert_passed == inert_total else 1
+    return 0 if caught == 13 and missed == 0 and inert_passed == inert_total else 1
 
 
 if __name__ == "__main__":
