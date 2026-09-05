@@ -7,6 +7,7 @@ import copy
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,7 @@ REPORT_PATH = ROOT / "docs/research/M169-ratification-stakes.md"
 SOURCE_PATHS = {
     "plan": ROOT / "docs/proposals/2026-08-sota-path.md",
     "scorecard": ROOT / "docs/proposals/2026-09-sota-scorecard.md",
+    "m139_m12_campaign": ROOT / "docs/research/M139-m12-campaign.md",
     "m158_drift_audit": ROOT / "docs/research/M158-scorecard-drift.md",
     "m161_m3_ratification": ROOT / "docs/research/M161-m3-ratification.md",
     "m166_bar_definitions": ROOT / "docs/research/M166-bar-definition-repairs.md",
@@ -28,14 +30,22 @@ SOURCE_PATHS = {
     "m175_fork_arm": ROOT / "docs/research/M175-fork-arm.md",
 }
 
+PINNED_GIT_SOURCES = {
+    "m139_m12_campaign": "2ba256aa8c511ec83b4c0a99c5b988ad0752afc1",
+}
+
 EXPECTED_SOURCES = {
     "plan": (
         "72f8257918e929acb3f50c4606a4a7a73a44594492f040b4fcf196072e6a0b94",
         2780,
     ),
     "scorecard": (
-        "eb5ed446ee06e8842c61e5f90cb1bd4a8e81ca5dfd39ef53988598ef05dcb603",
-        2221,
+        "405f3749f097104778ec11404eb432e53869ee9cfa6ef13bab4bc2cdbda7a696",
+        2240,
+    ),
+    "m139_m12_campaign": (
+        "9cff5b17c0129d8246b859689b30bf20747f67bae68b0217a9f3641378af0df7",
+        268,
     ),
     "m158_drift_audit": (
         "129546e240072d79be665618b356f8a5ac3b93e5046182c47c97d09e23175ee2",
@@ -104,8 +114,8 @@ SCORECARD_ANCHORS = (
     "For the owner's overall gate, the same output must pass the retained M4 component",
     "Common-merge track — sole publication track.",
     "they cannot establish a competitive detail, noise, clipping, or colour win",
-    "M12-S requires exactly one distinct hash across all five worker counts at "
-    "every N, and the 16-worker output must simultaneously pass M11.",
+    "M178 adjudicated the scorecard's reverse M11 dependency an unratified addition",
+    "M12 | Memory / determinism / scaling invariance | **FAIL**",
     "Blocker `(b)`, the scorecard native-scale geometry gate, is now **CLEARED**.",
     "rebuild prerequisite is now **closed**",
     "the fresh hash-bound fork, frozen modes, timing harness",
@@ -118,6 +128,15 @@ M158_ANCHORS = (
     "Competitive quality is restricted to one already-demosaiced RGB-TIFF boundary",
     "M12-S's 16-worker output must pass **all of M11**",
     "A SOTA verdict requires all 12 primary axes",
+)
+
+M139_ANCHORS = (
+    "**Absolute memory: FAIL.** The bar is 6 GiB.",
+    "`scored:N105:W16:R2`: sampled private commit",
+    "`32.6777 GiB`, Job Object peak `33.4283 GiB`",
+    "N=33 has five distinct TIFF hashes",
+    "N=105 independently has five of each",
+    "**Formal M12 verdict: FAIL.** M12 is conjunctive.",
 )
 
 EXPECTED_AXES = [f"M{i}" for i in range(1, 13)]
@@ -137,7 +156,7 @@ EXPECTED_AXIS_FINGERPRINTS = {
     "M9": "f28fcc2e979480e5ed50678b2c6b4a84684e9ac99c340436b75efcf228395d76",
     "M10": "8894a3af05307c7a3d4204e2f9716fe8e1fa97c612c674ec8c66cb04c7c5a112",
     "M11": "e6db50f49a6794bd4b60e8b4c9e5fb29abdcf555069d5c9edaa9409d0f7fe076",
-    "M12": "5b10788505f7875fc2cc8cc701eed842162c35902025a54192a904b933d217b9",
+    "M12": "09430c4e6768e2a058c5beb71479e18487e7f7deeffa93842a8af61e1be06035",
 }
 EXPECTED_REGISTER_FINGERPRINTS = {
     "R1": "886d290e960bf8ba6a1dfe952f743ce77d1c585a38c4806b26e74316c0421dbd",
@@ -148,14 +167,15 @@ EXPECTED_REGISTER_FINGERPRINTS = {
     "R6": "62419d819983fbe6c1b09308380b46139de02a0f8d4d1bde55145a29f505f661",
     "R7": "231eb99269db332cd370f655b5107ee88d3390609860866ac5b10ed783365df7",
     "R8": "bef8617f03406a7f799f32aa86eb9063f6d78f04d085d0d89aa90fcda76986d0",
-    "R9": "01dd8592e9365041ca7660048f45f5fe6a647519e12e2824e8dfa1277d9911b8",
+    "R9": "4532c49531d7db38779bfdf4827322a31160a697cbf5f40fac11aa48775fb149",
 }
 EXPECTED_OBJECT_FINGERPRINTS = {
     "headline": "6afa18fa7df29c242a07db723efb50331c1f774fbc8a861e874c3db5355add09",
     "m175_effect": "7b15c62d2a7def33ebe45e71353e923d54937fdd4a6b84d98ebdbd31da2a044a",
-    "ratification_totals": "8a104d1bcbde1e713c8df946b698ca62f8bf691dd87f3336b2ef733fabb4372e",
-    "m158_disposition": "c9c3a48799a8bdfd0891c012c3964f3f8f5145d73e1ad08d011f2c92963eeced",
-    "document_consistency_defects": "75d09ca4fbb02ddf2df060c06182f801a7528e0248469cd6aaec09d6fedbbbe2",
+    "ratification_totals": "049f9080f2a30cf10649fd52189d66db3650ac8e09e59f6360d143b439c6fe83",
+    "m158_disposition": "3006773287e75f982a74b5894baaa7eac9397d1d2e23bb15f9e0ecd4cc54ffbb",
+    "document_consistency_defects": "214335b20769183abe7e0727149bedbb8fcd7456fc7a1763129c7f0a54a4fe17",
+    "m12_disposition": "df7cb9fc90af31e044b46ad2b95acfc061c372f5894bd04fd21f1acc6c34fca1",
 }
 
 
@@ -183,8 +203,19 @@ def normalize(text: str) -> str:
     return " ".join("\n".join(lines).split())
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def source_bytes(key: str, path: Path) -> bytes:
+    if key not in PINNED_GIT_SOURCES:
+        return path.read_bytes()
+    revision = PINNED_GIT_SOURCES[key]
+    relative = path.relative_to(ROOT).as_posix()
+    return subprocess.check_output(
+        ["git", "show", f"{revision}:{relative}"],
+        cwd=ROOT,
+    )
+
+
+def source_text(key: str, path: Path) -> str:
+    return source_bytes(key, path).decode("utf-8")
 
 
 def semantic_fingerprint(value: Any) -> str:
@@ -197,8 +228,8 @@ def semantic_fingerprint(value: Any) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def line_count(path: Path) -> int:
-    return len(path.read_text(encoding="utf-8").splitlines())
+def source_line_count(key: str, path: Path) -> int:
+    return len(source_text(key, path).splitlines())
 
 
 def readiness_rows(scorecard: str) -> dict[str, str]:
@@ -246,12 +277,26 @@ def validate(
         )
         checks.require(snapshot["sha256"] == expected_hash, f"{key} JSON hash drift")
         checks.require(snapshot["lines"] == expected_lines, f"{key} JSON line drift")
+        if key in PINNED_GIT_SOURCES:
+            checks.require(
+                snapshot["revision"] == PINNED_GIT_SOURCES[key],
+                f"{key} JSON revision drift",
+            )
+        else:
+            checks.require("revision" not in snapshot, f"{key} unexpected revision pin")
         if check_disk:
-            checks.require(sha256(path) == expected_hash, f"{key} source hash drift")
-            checks.require(line_count(path) == expected_lines, f"{key} source line drift")
+            checks.require(
+                hashlib.sha256(source_bytes(key, path)).hexdigest() == expected_hash,
+                f"{key} source hash drift",
+            )
+            checks.require(
+                source_line_count(key, path) == expected_lines,
+                f"{key} source line drift",
+            )
 
     plan = normalize(texts["plan"])
     scorecard = normalize(texts["scorecard"])
+    m139 = normalize(texts["m139_m12_campaign"])
     m158 = normalize(texts["m158_drift_audit"])
     m161 = normalize(texts["m161_m3_ratification"])
     m166 = normalize(texts["m166_bar_definitions"])
@@ -268,6 +313,8 @@ def validate(
         )
     for anchor in M158_ANCHORS:
         checks.require(normalize(anchor) in m158, f"missing M158 anchor: {anchor}")
+    for anchor in M139_ANCHORS:
+        checks.require(normalize(anchor) in m139, f"missing M139 anchor: {anchor}")
 
     checks.require(
         "The p99, rate, Wilson, comparator, width, and coherence summaries remain "
@@ -347,6 +394,8 @@ def validate(
         == "TRANSITIVE_THROUGH_M1_TRUTH",
         "M9 direct/transitive distinction drift",
     )
+    checks.require(by_axis["M12"]["scoreable_now"] is True, "M12 read status drift")
+    checks.require(by_axis["M12"]["remaining_blockers"] == [], "M12 has stale blockers")
 
     headline = audit["headline"]
     checks.require(
@@ -405,8 +454,9 @@ def validate(
         "new-addition count drift",
     )
     checks.require(
-        next(row for row in register if row["id"] == "R9")["affected"] == ["M12"],
-        "reverse M12 dependency scope drift",
+        next(row for row in register if row["id"] == "R9")["status"]
+        == "WITHDRAWN_SCORECARD_V1_11",
+        "withdrawn reverse M12 dependency was reactivated",
     )
     totals = audit["ratification_totals"]
     checks.require(
@@ -414,9 +464,18 @@ def validate(
         == EXPECTED_OBJECT_FINGERPRINTS["ratification_totals"],
         "complete ratification totals drift",
     )
-    checks.require(totals["material_governance_families"] == 9, "family count drift")
+    checks.require(
+        totals["historical_material_governance_families"] == 9,
+        "historical family count drift",
+    )
+    checks.require(
+        totals["active_material_governance_families"] == 8,
+        "active family count drift",
+    )
     checks.require(totals["previously_known"] == 2, "known family count drift")
     checks.require(totals["additional_found"] == 7, "new family count drift")
+    checks.require(totals["active_additional_found"] == 6, "active new family count drift")
+    checks.require(totals["withdrawn"] == 1, "withdrawn family count drift")
     checks.require(totals["m158_findings_dispositioned"] == 14, "M158 count drift")
     checks.require(
         set(audit["m158_disposition"]) == {str(i) for i in range(1, 15)},
@@ -428,13 +487,28 @@ def validate(
         "complete M158 disposition drift",
     )
     checks.require(
-        len(audit["document_consistency_defects"]) == 2,
+        len(audit["document_consistency_defects"]) == 3,
         "consistency-defect count drift",
     )
     checks.require(
         semantic_fingerprint(audit["document_consistency_defects"])
         == EXPECTED_OBJECT_FINGERPRINTS["document_consistency_defects"],
         "complete consistency-defect ledger drift",
+    )
+    checks.require(
+        semantic_fingerprint(audit["m12_disposition"])
+        == EXPECTED_OBJECT_FINGERPRINTS["m12_disposition"],
+        "complete M12 disposition drift",
+    )
+    m12 = audit["m12_disposition"]
+    checks.require(m12["overall"] == "FAIL", "M12 overall status drift")
+    checks.require(m12["m12_d"] == "PASS", "M12-D status drift")
+    checks.require(m12["m12_s_cross_worker"] == "FAIL", "M12-S status drift")
+    checks.require(m12["absolute_memory"] == "FAIL", "M12 memory status drift")
+    checks.require(m12["n_mod_4"] == "FAIL", "M12 modulo status drift")
+    checks.require(
+        m12["peak_ratio"] == "UNMEASURED_SAMPLING_COVERAGE",
+        "M12 ratio status drift",
     )
 
     lead = "**AXES FREED: 6 of which 0 become scoreable.**"
@@ -464,8 +538,43 @@ def validate(
         "numeric-completion exclusion missing",
     )
     checks.require(
-        "The scoreboard remains `0 of 12`." in report,
+        "The scoreboard remains `0 of 12` PASS." in report,
         "scoreboard boundary missing",
+    )
+    checks.require(
+        "FAIL:                M8 M12" in report,
+        "corrected M12 status block missing",
+    )
+    checks.require(
+        "| `docs/research/M139-m12-campaign.md@"
+        "2ba256aa8c511ec83b4c0a99c5b988ad0752afc1` | 268 | "
+        "`9cff5b17c0129d8246b859689b30bf20747f67bae68b0217a9f3641378af0df7` |"
+        in report,
+        "M139 report snapshot row drift",
+    )
+    for value in (
+        "33.4283",
+        "2ba256aa8c511ec83b4c0a99c5b988ad0752afc1",
+        "M12-D passes all 15",
+        "UNMEASURED_SAMPLING_COVERAGE",
+    ):
+        checks.require(value in report, f"M12 report value missing: {value}")
+    checks.require(
+        "**R9 — new; withdrawn in v1.11**" in report,
+        "withdrawn R9 report row missing",
+    )
+    checks.require(
+        "leaving eight\n  active families total and six active additions beyond R1/R2"
+        in report,
+        "active governance count prose drift",
+    )
+    checks.require(
+        "`M12` awaits its registered run" not in report,
+        "stale M12 pending-run prose remains",
+    )
+    checks.require(
+        "reverse dependency remains R9" not in report,
+        "stale active R9 prose remains",
     )
 
     return checks.count
@@ -486,7 +595,7 @@ def expect_rejected(
 
 def main() -> int:
     texts = {
-        key: path.read_text(encoding="utf-8") for key, path in SOURCE_PATHS.items()
+        key: source_text(key, path) for key, path in SOURCE_PATHS.items()
     }
     audit = json.loads(AUDIT_PATH.read_text(encoding="utf-8"))
     report = REPORT_PATH.read_text(encoding="utf-8")
@@ -533,13 +642,37 @@ def main() -> int:
     ] = ["Zerene DMap"]
     expect_rejected("DMap promoted into M10 gate", texts, false_m10, report)
 
-    bad_m12 = dict(texts)
-    bad_m12["scorecard"] = re.sub(
-        r"and the 16-worker output\s+must simultaneously pass M11\.",
-        "and the 16-worker output is reported beside M11.",
-        texts["scorecard"],
+    reactivated_m12 = copy.deepcopy(audit)
+    next(
+        row
+        for row in reactivated_m12["ratification_register"]
+        if row["id"] == "R9"
+    )["status"] = "UNLABELED_UNRATIFIED_IN_FORCE"
+    expect_rejected("reverse M12 clause reactivated", texts, reactivated_m12, report)
+
+    false_m12 = copy.deepcopy(audit)
+    false_m12["m12_disposition"]["overall"] = "UNMEASURED"
+    expect_rejected("false M12 overall status", texts, false_m12, report)
+
+    false_report_peak = report.replace("33.4283", "3.34283", 1)
+    expect_rejected(
+        "false M12 report peak",
+        texts,
+        audit,
+        false_report_peak,
     )
-    expect_rejected("reverse M12 clause removed", bad_m12, audit, report)
+
+    reactivated_report_r9 = report.replace(
+        "**R9 — new; withdrawn in v1.11**",
+        "**R9 — new; active**",
+        1,
+    )
+    expect_rejected(
+        "reactivated R9 report row",
+        texts,
+        audit,
+        reactivated_report_r9,
+    )
 
     stale_snapshot = copy.deepcopy(audit)
     stale_snapshot["source_snapshot"]["scorecard"]["sha256"] = "0" * 64
@@ -579,7 +712,7 @@ def main() -> int:
     expect_rejected("unexpected source snapshot entry", texts, extra_source, report)
 
     print(f"PASS: {positive}/{positive} positive assertions")
-    print("PASS: 14/14 negative controls rejected")
+    print("PASS: 17/17 negative controls rejected")
     print("PASS: text-only audit; opened 0 pixel files")
     return 0
 

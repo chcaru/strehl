@@ -11,8 +11,14 @@
     },
     "scorecard": {
       "path": "docs/proposals/2026-09-sota-scorecard.md",
-      "sha256": "eb5ed446ee06e8842c61e5f90cb1bd4a8e81ca5dfd39ef53988598ef05dcb603",
-      "lines": 2221
+      "sha256": "405f3749f097104778ec11404eb432e53869ee9cfa6ef13bab4bc2cdbda7a696",
+      "lines": 2240
+    },
+    "m139_m12_campaign": {
+      "path": "docs/research/M139-m12-campaign.md",
+      "revision": "2ba256aa8c511ec83b4c0a99c5b988ad0752afc1",
+      "sha256": "9cff5b17c0129d8246b859689b30bf20747f67bae68b0217a9f3641378af0df7",
+      "lines": 268
     },
     "m158_drift_audit": {
       "path": "docs/research/M158-scorecard-drift.md",
@@ -254,11 +260,8 @@
       "plan_required_arms": [],
       "claim_specific_result": "NEVER_HAD_D",
       "loses_d": false,
-      "scoreable_now": false,
-      "remaining_blockers": [
-        "registered worker-count and N matrix not run on a quiet host",
-        "separate unratified reverse dependency makes M12-S require all of M11"
-      ]
+      "scoreable_now": true,
+      "remaining_blockers": []
     }
   ],
   "m175_effect": {
@@ -383,16 +386,19 @@
       "id": "R9",
       "known": false,
       "title": "Reverse M12-S dependency on all of M11",
-      "status": "UNLABELED_UNRATIFIED_IN_FORCE",
+      "status": "WITHDRAWN_SCORECARD_V1_11",
       "affected": [
         "M12"
       ]
     }
   ],
   "ratification_totals": {
-    "material_governance_families": 9,
+    "historical_material_governance_families": 9,
+    "active_material_governance_families": 8,
     "previously_known": 2,
     "additional_found": 7,
+    "active_additional_found": 6,
+    "withdrawn": 1,
     "m158_findings_dispositioned": 14,
     "ordinary_numeric_completions_excluded": true
   },
@@ -404,7 +410,7 @@
     "5": "OPEN_R8",
     "6": "FIXED_BY_CONDITIONAL_ADMISSION",
     "7": "FIXED_PRODUCT_NATIVE_REPORT_ONLY",
-    "8": "PARTIAL_RESIDUAL_R9",
+    "8": "FIXED_REVERSE_DEPENDENCY_REMOVED_V1_11",
     "9": "FIXED_FORK_RESTORED",
     "10": "FIXED_OR_DEFINITION_BLOCKED",
     "11": "FIXED_UNCERTAINTY_REMAINING_DEFINITION_BLOCKED",
@@ -420,6 +426,36 @@
     {
       "id": "C2",
       "description": "The scorecard records the M175 fork rebuild as closed in its amendment but later readiness and current-position prose still says the fresh hash-bound fork build is absent."
+    },
+    {
+      "id": "C3",
+      "description": "The M12 metric body retains pre-campaign remaining-run and UNMEASURED prose after revision 1.11 and the current-position row admit M12 FAIL."
     }
-  ]
+  ],
+  "m12_disposition": {
+    "scorecard_revision": "1.11",
+    "overall": "FAIL",
+    "m12_d": "PASS",
+    "m12_s_cross_worker": "FAIL",
+    "absolute_memory": "FAIL",
+    "n_mod_4": "FAIL",
+    "peak_ratio": "UNMEASURED_SAMPLING_COVERAGE",
+    "n105_w16_job_peak_gib": 33.4283,
+    "memory_bar_gib": 6,
+    "distinct_tiff_hashes_each_completed_n": 5,
+    "distinct_pixel_hashes_each_completed_n": 5,
+    "completed_n_at_adjudication": [
+      33,
+      105
+    ],
+    "registered_workers": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "m139_adjudication_commit_overall": "FAIL",
+    "formal_status_source": "M139_COMMIT_2BA256AA_AND_SCORECARD_V1_11"
+  }
 }

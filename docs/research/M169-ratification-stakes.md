@@ -22,8 +22,13 @@ authoritative plan. It does not mean measured, passing, or ready to run.
   current M1 truth route and is not a ninth direct licence axis.
 - **INFERRED BY READING:** the rest-of-scorecard sweep found **seven additional
   material governance families** beyond the two already labelled unratified.
-  They are listed in §6. Ordinary numerical completion of a plan `[bar]` is not
-  counted as a governance invention.
+  Scorecard v1.11 has since withdrawn one of them, the reverse M12-S dependency
+  on M11. Six remain active and one remains visible as withdrawn in §6. Ordinary
+  numerical completion of a plan `[bar]` is not counted as a governance invention.
+- **INFERRED BY READING:** M12 is now an adjudicated **FAIL**, not
+  `UNMEASURED`. M12-D passed all 15 fixed-worker cells, while cross-worker
+  invariance, absolute memory, and N-mod-4 failed. This changes no comparator
+  count and creates no PASS.
 
 This is a document/specification audit. It authorizes **NO SCORE**, changes no
 gate, opens no pixel, and applies none of the counterfactual readings. The current
@@ -38,7 +43,8 @@ scorecard remains in force until the owner rules.
 | Source | Lines | SHA-256 |
 |---|---:|---|
 | `docs/proposals/2026-08-sota-path.md` | 2,780 | `72f8257918e929acb3f50c4606a4a7a73a44594492f040b4fcf196072e6a0b94` |
-| `docs/proposals/2026-09-sota-scorecard.md` | 2,221 | `eb5ed446ee06e8842c61e5f90cb1bd4a8e81ca5dfd39ef53988598ef05dcb603` |
+| `docs/proposals/2026-09-sota-scorecard.md` | 2,240 | `405f3749f097104778ec11404eb432e53869ee9cfa6ef13bab4bc2cdbda7a696` |
+| `docs/research/M139-m12-campaign.md@2ba256aa8c511ec83b4c0a99c5b988ad0752afc1` | 268 | `9cff5b17c0129d8246b859689b30bf20747f67bae68b0217a9f3641378af0df7` |
 | `docs/research/M158-scorecard-drift.md` | 800 | `129546e240072d79be665618b356f8a5ac3b93e5046182c47c97d09e23175ee2` |
 | `docs/research/M161-m3-ratification.md` | 229 | `3da41f80a05a9d1f91b35f03aa72ef1dece1d7252d21da8cc0ce5313d725b58e` |
 | `docs/research/M166-bar-definition-repairs.md` | 587 | `b66bd24d9fad69c7e9629ac0dbb187e4c08b981e2479104220671eb06fea1cfd` |
@@ -105,7 +111,7 @@ M10 acceptance bar:
 - A5's acceptance uses twin truth, planted defects, plateau collapse, and depth
   step displacement, not a DMap result (`:657-671`); and
 - the scorecard consistently treats M10 as an output obligation rather than a
-  comparator capability (`2026-09-sota-scorecard.md:530-531`).
+  comparator capability (`2026-09-sota-scorecard.md:550-551`).
 
 DMap still matters to A5 development and remains required through M1's explicit
 PMax-plus-DMap detail claim. It does not add M10 to the paid-licence axis count.
@@ -127,11 +133,11 @@ PMax-plus-DMap detail claim. It does not add M10 to the paid-licence axis count.
 | **M9 trust** | A4/D2/D8 output obligation; no comparator emits it. | No direct `(d)`; currently transitive through M1 truth. |
 | **M10 depth** | A5/C5 physical-output obligation; DMap is A5 method evidence, not an M10 score input. | Never had `(d)`. |
 | **M11 speed** | The fork is explicitly the honest speed comparison. | **NARROWS** to the fork. Does not lose comparator dependence. |
-| **M12 memory/determinism** | D9/D15 systems obligations; no product comparator. | Never had `(d)`. |
+| **M12 memory/determinism** | D9/D15 systems obligations; no product comparator. | Never had `(d)`; scorecard v1.11 now records **FAIL**. |
 
 **VERIFIED BY RUNNING.** The current §3.1 table carries literal `(d)` on exactly
 `M1`–`M7`; M11 carries the same direct dependency in prose without the glyph
-(`2026-09-sota-scorecard.md:806-834`). Therefore the counterfactual result is:
+(`2026-09-sota-scorecard.md:826-854`). Therefore the counterfactual result is:
 
 ```text
 literal (d) axes now:       M1 M2 M3 M4 M5 M6 M7
@@ -147,19 +153,19 @@ atomic comparator rule:
 
 | Axis freed from `(d)` | Remaining blockers | Scoreable? |
 |---|---|---|
-| **M2** | The instrument is void because blur improves its residual to `0.571215x`; no independently commissioned M1-independent replacement exists; the required eligible two-light repeat unit is absent. (`scorecard:1021-1088`; M158 `:90-160`) | **NO** |
-| **M3** | Candidate common-input output/profile packages and input-only warp evidence are absent. The separate M3 comparator-envelope and candidate-M1 prerequisites remain in force unless separately rejected. (`scorecard:1091-1213`; M169 M3 `:7-24,316-356`) | **NO** |
-| **M4** | Eligible medication/foam tile floors, a separate development flat, materialized Dirichlet matrices/plants, and base/planted renders are absent. (`scorecard:1215-1343`) | **NO** |
-| **M5** | A replacement controlled-slide holdout and scored dense/sparse repeat unit are absent; its resolution/transfer judgement is not admitted. (`scorecard:1345-1392`) | **NO** |
-| **M6** | The registered set has fewer than 10,000 recoverable samples and highlight-detail retention has no admitted detail judgement. (`scorecard:1394-1427`) | **NO** |
-| **M7** | The traceable colour target, measured illuminant, and qualified textured colour-seam population do not exist. (`scorecard:1429-1489`) | **NO** |
+| **M2** | The instrument is void because blur improves its residual to `0.571215x`; no independently commissioned M1-independent replacement exists; the required eligible two-light repeat unit is absent. (`scorecard:1041-1108`; M158 `:90-160`) | **NO** |
+| **M3** | Candidate common-input output/profile packages and input-only warp evidence are absent. The separate M3 comparator-envelope and candidate-M1 prerequisites remain in force unless separately rejected. (`scorecard:1111-1233`; M169 M3 `:7-24,316-356`) | **NO** |
+| **M4** | Eligible medication/foam tile floors, a separate development flat, materialized Dirichlet matrices/plants, and base/planted renders are absent. (`scorecard:1235-1363`) | **NO** |
+| **M5** | A replacement controlled-slide holdout and scored dense/sparse repeat unit are absent; its resolution/transfer judgement is not admitted. (`scorecard:1365-1412`) | **NO** |
+| **M6** | The registered set has fewer than 10,000 recoverable samples and highlight-detail retention has no admitted detail judgement. (`scorecard:1414-1447`) | **NO** |
+| **M7** | The traceable colour target, measured illuminant, and qualified textured colour-seam population do not exist. (`scorecard:1449-1509`) | **NO** |
 
 **VERIFIED BY RUNNING — ledger defect.** The §3.1 rows still print blocker `(b)`
 on `M1`–`M7` and `M10`, but §3.2 says:
 
 > Blocker `(b)`, the scorecard native-scale geometry gate, is now **CLEARED**.
 
-(`scorecard:856`)
+(`scorecard:876`)
 
 This report therefore does not count the stale `(b)` glyph as a live remaining
 blocker. M3's missing input-only warp package is a separate metric-specific
@@ -218,9 +224,9 @@ are absent. Under the claim-specific plan reading, it moves one **sub-arm** of M
 from unbuilt to admitted, but the **axis remains unscoreable**.
 
 **VERIFIED BY RUNNING — second ledger defect.** The scorecard amendment records
-the rebuild prerequisite as closed (`scorecard:168-184`), while the later M11
+the rebuild prerequisite as closed (`scorecard:188-204`), while the later M11
 readiness/card prose still says the fresh hash-bound fork build is absent
-(`:830,1823-1826`). The remaining absence is a scored fork campaign output, not
+(`:850,1843-1846`). The remaining absence is a scored fork campaign output, not
 the build or §1.3 witness.
 
 ## 4. The honest total
@@ -239,7 +245,7 @@ the build or §1.3 witness.
 
 `M9` is omitted from the direct counts: the current M1 route stalls its truth
 producer, but the scorecard says M1 is not the unique mathematical anchor
-(`scorecard:1624-1640`). M10 is also omitted: DMap is A5's development/method
+(`scorecard:1644-1660`). M10 is also omitted: DMap is A5's development/method
 comparator, not a physical-depth score input.
 
 The sentence “the board is frozen behind a purchase” is therefore materially
@@ -259,8 +265,9 @@ axes. The exact correction is:
   prerequisites.
 - `M11` has plan-authored D5/D9/campaign work and an unratified full-quality
   comparator qualifier.
-- `M12` awaits its registered run and also carries an unratified reverse
-  dependency on M11.
+- `M12` is no longer blocked or awaiting its registered run. It has an admitted
+  `FAIL`; scorecard v1.11 withdrew the reverse M11 dependency before assigning
+  that verdict.
 - `M8` is not blocked at all; it has an admitted `FAIL`.
 - `M9` and `M10` are definition-blocked, not licence-blocked.
 
@@ -272,9 +279,9 @@ twelve would double-count mixed axes and misclassify M8.
 The current status distribution remains unchanged:
 
 ```text
-FAIL:                M8
+FAIL:                M8 M12
 DEFINITION BLOCKED:  M9 M10
-UNMEASURED:          M1 M2 M3 M4 M5 M6 M7 M11 M12
+UNMEASURED:          M1 M2 M3 M4 M5 M6 M7 M11
 PASS:                none
 ```
 
@@ -292,7 +299,7 @@ This does not make DMap irrelevant. It is method evidence for A5 and remains a
 named M1 detail arm. It simply does not raise the plan-authored paid-licence
 count from one axis to two.
 
-### 5.2 Only one direction of the M11/M12 coupling is plan-authored
+### 5.2 The unratified reverse M11/M12 coupling is withdrawn
 
 **INFERRED BY READING.**
 
@@ -300,15 +307,24 @@ count from one axis to two.
   worker counts. D9 makes worker-independent bytes the condition for reclaiming
   parallel speed, and D15 registers byte invariance inside the speed program
   (`plan:1749-1766,1973-1985`).
-- **Not plan-authored:** M12-S itself may not be made contingent on all of M11.
-  The scorecard still says the 16-worker output must “simultaneously pass M11”
-  (`scorecard:796-798,1996-2001`). The plan never makes a valid invariance result
-  depend on commercial-comparator qualification or the rest of the throughput
-  campaign. M158 finding 8 reached the same result
+- **Withdrawn as unratified:** scorecard v1.11 removes the clause that made
+  M12-S contingent on all of M11, while retaining the forward M11 identity
+  guard (`scorecard:7-25`). M158 finding 8 had identified the same drift
   (`docs/research/M158-scorecard-drift.md:580-604`).
 
-The forward anti-cheat belongs in M11. The reverse full-axis dependency is a
-separate unratified addition affecting M12's formal disclosure verdict.
+**VERIFIED BY RUNNING; STATUS INFERRED BY READING.** At the orchestrator-cited
+commit `2ba256aa8c511ec83b4c0a99c5b988ad0752afc1`, M139 assigns the formal
+M12 verdict `FAIL` because either registered hard failure is sufficient
+(`docs/research/M139-m12-campaign.md@2ba256aa:219-222`). The accepted
+`scored:N105:W16:R2` observation has a `33.4283 GiB` Job Object peak against
+the `6 GiB` bar (`:189,199-203`). Every completed fixed-worker cell has one
+TIFF and one pixel hash across six runs, while both N=33 and N=105 have five
+of each across workers (`:204-210`). That commit had not completed N=299 or
+the modulo arm, so it must not be cited for their later results. Current
+scorecard v1.11 separately records the completed matrix: M12-D passes all 15
+cells; M12-S, absolute memory, and N-mod-4 fail; the peak ratio remains
+`UNMEASURED_SAMPLING_COVERAGE` (`scorecard:7-18,2113`). The sources and
+campaign stages are not conflated.
 
 ## 6. Full scorecard provenance sweep
 
@@ -320,12 +336,13 @@ fingerprint, and rejects a planted disposition mutation. The machine-readable
 record is `experiments/M169-ratification-stakes/audit.json`.
 
 **INFERRED BY READING.** Re-reading M158's full-scorecard 58-block provenance
-pass and the material clauses added or rewritten through current v1.10 gives
-**nine material governance families** in the current scorecard:
+pass and the material clauses added or rewritten through current v1.11 gives
+**nine material governance families** across the audited scorecard history:
 
 - two already labelled `SCORECARD ADDITION — UNRATIFIED`; and
 - **seven further families** whose owner-ratification status is not carried at
-  their operative clauses.
+  their operative clauses. Scorecard v1.11 has now withdrawn R9, leaving eight
+  active families total and six active additions beyond R1/R2.
 
 They are distinct from ordinary scorecard-owned numeric completion.
 
@@ -333,15 +350,15 @@ They are distinct from ordinary scorecard-owned numeric completion.
 
 | ID | Material rule | Plan relationship | Current consequence |
 |---|---|---|---|
-| **R1 — known** | A comparator mode must retain 98% of the best M1 information result; M1 qualification propagates outward. (`scorecard:216-273`) | The plan expressly calls this the scorecard author's invention (`plan:2399-2413`). | Adds `(a)`-style qualification to M2/M3/M4/M11; explicitly unratified and in force. |
-| **R2 — known** | PMax, DMap, and the fork form one fatal required set. (`scorecard:488-519`) | The plan names the portfolio but assigns it by claim. | Adds the paid arms to seven direct axes beyond M1; explicitly unratified and in force. |
-| **R3 — new** | M3 must beat the M1-qualified comparator envelope in every scope. (`scorecard:788,1191-1205`) | The plan's M3 clause is absolute. M161 says the comparator summary is an addition, not an owner quotation (`M161:20-36,70-88`). | Independently keeps M3 comparative even if R2 is rejected. |
-| **R4 — new** | The candidate build must also pass M1 before M3 can pass. (`scorecard:334`) | Plan Amendment 1 preserves veil as a live instrument independent of dead detail; plan Amendment 4 says M3 is not intrinsically M1-dependent (`plan:2208-2210,2529-2538`). | Independently keeps M3 blocked on detail even if R1/R2 are rejected. |
-| **R5 — new** | An M11 comparator must pass M1, M2, M3, M8, and retained M4 under one fingerprint. (`scorecard:526-532,1909-1919`) | D15 requires matched output and identical timing protocol, not passage of the whole quality scorecard (`plan:1973-1985`). | M175's admitted fork cannot enter the speed denominator until unrelated quality axes pass. |
-| **R6 — new** | Retained M4 flat-power/transfer becomes a veto inside the owner M1/M2/M8 gate. (`scorecard:333,1215-1221,2178-2200`) | No owner end-state clause names `Q_flat`, its transfer plant, or M4 as a separate licensing condition. | A retained-M4 miss can fail the owner claim even when full M4 is nominally only disclosure. |
-| **R7 — new** | Seven owner gates, five mandatory disclosures, all twelve measured, and `DISCLOSURE MISS` as a third publication state. (`scorecard:128-143,193-207,2173-2205`) | Mapping the owner's sentence to seven axes is faithful. Demoting five axes and inventing the all-twelve/disclosure-verdict machinery is a scorecard governance choice, not an owner ruling. | It both loosens terminal failure for five axes and still lets any missing disclosure hold the whole report at `UNMEASURED`. |
-| **R8 — new** | Common-merge is the sole publication track; product-native output cannot establish a competitive detail/noise/clipping/colour win. (`scorecard:101-120,372-425,2216-2221`) | The plan requires common inputs for fair comparison but C1's defining mechanism consumes photosites before demosaic (`plan:900-930,1000-1035`). M158 finding 5 calls the exclusive demosaiced boundary contradictory. | Native C1/product evidence is categorically barred from M1/M2/M6/M7 owner-gate credit. |
-| **R9 — new** | M12-S requires its 16-worker output to pass all of M11. (`scorecard:796-798,1996-2001`) | D9/D15 require byte invariance for the speed arm, not the reverse full-axis dependency. | Can withhold a formal M12-S result for a non-M12 failure. |
+| **R1 — known** | A comparator mode must retain 98% of the best M1 information result; M1 qualification propagates outward. (`scorecard:236-293`) | The plan expressly calls this the scorecard author's invention (`plan:2399-2413`). | Adds `(a)`-style qualification to M2/M3/M4/M11; explicitly unratified and in force. |
+| **R2 — known** | PMax, DMap, and the fork form one fatal required set. (`scorecard:508-539`) | The plan names the portfolio but assigns it by claim. | Adds the paid arms to seven direct axes beyond M1; explicitly unratified and in force. |
+| **R3 — new** | M3 must beat the M1-qualified comparator envelope in every scope. (`scorecard:808,1211-1225`) | The plan's M3 clause is absolute. M161 says the comparator summary is an addition, not an owner quotation (`M161:20-36,70-88`). | Independently keeps M3 comparative even if R2 is rejected. |
+| **R4 — new** | The candidate build must also pass M1 before M3 can pass. (`scorecard:354`) | Plan Amendment 1 preserves veil as a live instrument independent of dead detail; plan Amendment 4 says M3 is not intrinsically M1-dependent (`plan:2208-2210,2529-2538`). | Independently keeps M3 blocked on detail even if R1/R2 are rejected. |
+| **R5 — new** | An M11 comparator must pass M1, M2, M3, M8, and retained M4 under one fingerprint. (`scorecard:546-552,1929-1939`) | D15 requires matched output and identical timing protocol, not passage of the whole quality scorecard (`plan:1973-1985`). | M175's admitted fork cannot enter the speed denominator until unrelated quality axes pass. |
+| **R6 — new** | Retained M4 flat-power/transfer becomes a veto inside the owner M1/M2/M8 gate. (`scorecard:353,1235-1241,2197-2219`) | No owner end-state clause names `Q_flat`, its transfer plant, or M4 as a separate licensing condition. | A retained-M4 miss can fail the owner claim even when full M4 is nominally only disclosure. |
+| **R7 — new** | Seven owner gates, five mandatory disclosures, all twelve measured, and `DISCLOSURE MISS` as a third publication state. (`scorecard:148-163,213-227,2192-2224`) | Mapping the owner's sentence to seven axes is faithful. Demoting five axes and inventing the all-twelve/disclosure-verdict machinery is a scorecard governance choice, not an owner ruling. | It both loosens terminal failure for five axes and still lets any missing disclosure hold the whole report at `UNMEASURED`. |
+| **R8 — new** | Common-merge is the sole publication track; product-native output cannot establish a competitive detail/noise/clipping/colour win. (`scorecard:121-140,392-445,2235-2240`) | The plan requires common inputs for fair comparison but C1's defining mechanism consumes photosites before demosaic (`plan:900-930,1000-1035`). M158 finding 5 calls the exclusive demosaiced boundary contradictory. | Native C1/product evidence is categorically barred from M1/M2/M6/M7 owner-gate credit. |
+| **R9 — new; withdrawn in v1.11** | M12-S required its 16-worker output to pass all of M11. (superseded clause; current ruling at `scorecard:7-25`) | D9/D15 require byte invariance for the speed arm, not the reverse full-axis dependency. | **No current blocker.** Withdrawal exposed M12's measured `FAIL`; retaining this row preserves the audit trail. |
 
 ### 6.3 What was not promoted into this register
 
@@ -359,8 +376,8 @@ They are distinct from ordinary scorecard-owned numeric completion.
   as a new scope veto.
 - Razor exclusion and fresh capture/metrology details are evidence-driven
   eligibility repairs, not owner-plan claims manufactured by the scorecard.
-- M11 requiring worker-invariant bytes is plan-authored. Only the reverse M12
-  dependency is R9.
+- M11 requiring worker-invariant bytes is plan-authored. The reverse M12
+  dependency was R9 and is now withdrawn.
 
 ### 6.4 M158 disposition
 
@@ -374,7 +391,7 @@ They are distinct from ordinary scorecard-owned numeric completion.
 | 5 sole demosaiced publication boundary | **Open as R8.** |
 | 6 permanent >0.25 prohibition | **Fixed:** replaced by conditional admission. |
 | 7 optional hybrid made fatal | **Fixed:** product-native report, not common-merge publication veto. |
-| 8 M12 imports all M11 | **Partly fixed:** forward M11 identity guard is valid; reverse dependency remains R9. |
+| 8 M12 imports all M11 | **Fixed in v1.11:** forward M11 identity guard remains; reverse dependency R9 is withdrawn. |
 | 9 fork omitted | **Fixed; M175 has now admitted its build/transfer sub-arm.** |
 | 10 M9 trust product under-scoped | **Repaired/definition-blocked; no false green is available.** |
 | 11 M10 uncertainty omitted | **Repaired; remaining definition still blocked.** |
@@ -387,12 +404,12 @@ No M158 finding remains unclassified.
 ## 7. Text routed to the scorecard owner
 
 **INFERRED BY READING — proposed annotation only; not applied.** One block can put
-all seven newly identified families before the owner without weakening any of
-them:
+all six still-active newly identified families before the owner without weakening
+any of them:
 
 > **SCORECARD ADDITIONS — UNRATIFIED; IN FORCE PENDING OWNER RULING.** In
 > addition to decision rule 4 and the universal comparator conjunction already
-> marked above, this scorecard currently imposes seven material governance
+> marked above, this scorecard currently imposes six material governance
 > families not traceable to the authoritative plan as owner requirements:
 >
 > 1. M3 must beat an M1-qualified comparator envelope.
@@ -403,8 +420,6 @@ them:
 >    required measurements and `DISCLOSURE MISS` becomes a publication state.
 > 6. Common-merge is made the sole publication track and product-native output
 >    is barred from competitive owner-gate credit.
-> 7. M12-S is made contingent on all of M11 rather than only requiring
->    worker-invariant bytes for the production-speed output.
 >
 > These clauses remain in force. This annotation neither deletes nor narrows a
 > gate, changes no score, and authorizes no result under a looser reading. The
@@ -415,8 +430,9 @@ them:
 Two clarifying sentences should accompany it:
 
 > The plan-faithful forward M11/M12 rule is retained: the production-speed M11
-> output must be byte-identical across worker counts. The unratified rule is the
-> reverse dependency that makes M12-S require all of M11.
+> output must be byte-identical across worker counts. Scorecard v1.11 has
+> withdrawn the unratified reverse dependency that made M12-S require all of
+> M11; it is not part of the pending ratification list.
 
 > DMap remains required for M1 detail and is A5's method comparator, but M10's
 > physical-depth acceptance is an output/truth obligation and does not itself
@@ -427,14 +443,14 @@ Two clarifying sentences should accompany it:
 **VERIFIED BY RUNNING.**
 
 - No candidate, comparator, capture, or holdout pixel was opened.
-- The verifier reads only the eight pinned Markdown sources, this report, and its
+- The verifier reads only the nine pinned Markdown sources, this report, and its
   JSON ledger.
 - No fork was rebuilt or executed; M175's measured transfer result was read from
   its committed report.
 - No proposal, STATUS, OWNER-ACTIONS, crate, M175 artifact, or other lane path
   was edited.
 
-**INFERRED BY READING.** Two consistency repairs are safe to route separately
+**INFERRED BY READING.** Three consistency repairs are safe to route separately
 because they change no policy:
 
 1. §3.1 still prints `(b)` after §3.2 declares `(b)` cleared. Re-derive the row
@@ -442,5 +458,9 @@ because they change no policy:
 2. M11 prose still says the fresh fork build is absent after the M175 amendment
    declares the rebuild/§1.3 prerequisite closed. Replace “fresh hash-bound fork
    build absent” with “scored common-input fork campaign output absent.”
+3. M12's metric body still contains pre-campaign “remaining registered run” and
+   `UNMEASURED` prose even though revision 1.11 and the current-position row
+   record M12 `FAIL`. Mark that prose superseded or replace it with the admitted
+   M139 result.
 
-Neither repair makes an axis scoreable. The scoreboard remains `0 of 12`.
+None of these repairs creates a PASS. The scoreboard remains `0 of 12` PASS.
