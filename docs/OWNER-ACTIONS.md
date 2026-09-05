@@ -1262,31 +1262,62 @@ missing flat population.
 1. A fresh, untouched **medication-pill** flat/background session supplying at
    least `84` qualifying tiles.
 2. A fresh, untouched **foam** flat/background session supplying at least `83`.
-3. A **separate, deliberately non-holdout development** flat session supplying
-   at least `100` tiles, for commissioning the checker.
+3. ~~A **separate, deliberately non-holdout development** flat session supplying
+   at least `100` tiles, for commissioning the checker.~~ **STRUCK 2026-09-07 —
+   do not shoot. A qualifying 20-frame flat already exists on your disk; see the
+   resolution note below.**
 
 **Item 3 is not padding and it cannot be folded into items 1 and 2.**
 Commissioning an instrument on a protected capture burns that capture for
 scoring. Coffee bubbles and every existing flat-slide stack supply zero
 qualifying tiles, so there is currently nothing to commission against at all.
 
-> **UPDATE — DO NOT SHOOT ITEM 3 YET. The paragraph immediately above is under
-> active correction and is probably wrong.** Lane M181 has run the site census
-> predicate — **unmodified**, hash-pinned at source SHA-256 `640a9b...e0539` —
-> against `D:\personal\macro\flat-fields\flat-fields\DSC00103.ARW`–`DSC00122.ARW`
-> (**20 frames**) and measured **`1,768` of `1,768` tiles eligible**, with every
-> term passing by a wide margin: median signal `62.121293265` sigma against a
-> `>=10` bar, worst band-power ratio `0.956877856` against `<1.0`, and **zero**
-> low-rail and high-rail failures. That capture is **not** coffee bubbles, which
-> genuinely does stay at `0/1,768`; the shared `1,768` is only the fixed grid
-> denominator, which is what misled me.
+> **RESOLVED 2026-09-07 — ITEM 3 IS STRUCK. DO NOT SHOOT A DEVELOPMENT FLAT.**
+> **The paragraph immediately above is withdrawn as wrong.** It said there was
+> "nothing to commission against at all." There is.
 >
-> **If this holds, a qualifying flat already exists on your disk and item 3 does
-> not need shooting at all.** I am confirming one remaining point with the lane
-> that owns the census — whether the development role accepts a pure flat field
-> or requires scene structure a flat field by construction lacks — and I will
-> either strike this item or restore it with reasons when that answer arrives.
-> **Until then, do not spend a sitting on item 3.**
+> Lane M181 ran the site-census predicate — **unmodified**, hash-pinned at source
+> SHA-256 `640a9b...e0539` — against
+> `D:\personal\macro\flat-fields\flat-fields\DSC00103.ARW`–`DSC00122.ARW`
+> (**20 frames**) and measured **`1,768` of `1,768` tiles eligible**: median
+> signal `62.121293265` sigma against a `>=10` bar, worst band-power ratio
+> `0.956877856` against `<1.0`, and **zero** low-rail and high-rail failures.
+> Verifier M185 independently re-ran the resolver and reproduced
+> `ELIGIBLE=1768/1768`, quoting the committed artifact
+> `experiments/M181-m4-feasibility/out/development-flat-resolution.json`
+> (`"eligible_tile_count": 1768`) rather than any lane's summary. That capture is
+> **not** coffee bubbles, which genuinely stays at `0/1,768` on a median band
+> ratio of `5.279854`; the shared `1,768` is only the fixed grid denominator,
+> which is what misled me.
+>
+> **The role question is answered: a pure flat field is correct here, not a
+> compromise.** The development flat exists to commission the checker's
+> flat-power null and planted-transfer response. The checker injects its own
+> known two-carrier signal, so texture is neither required nor desirable — and
+> the predicate selects *for* flatness, which is exactly what rejects coffee.
+>
+> **What this costs you: nothing, because the session is already spent.** The
+> holdout unit here is subject plus uninterrupted sitting, which is all
+> **484 frames** at `D:\personal\macro\flat-fields` — `360` exposure frames plus
+> two `62`-frame sweeps, one sheet of paper, `16:31:55`–`16:51:56`
+> (`docs/captures-needed.md:1258-1268`). Lane M71 already read all 484, so it is
+> **de facto burned** and formal development-only classification protects nothing
+> that is still protectable. M164 has separately disqualified it as M1 truth.
+>
+> **Three things must happen before it is used, and none of them needs you.**
+> Classify the whole 484-frame sitting development-only/non-holdout; adopt a
+> **versioned successor** to the M152 census freeze that expressly replaces
+> `coffee-bubbles` and names the exact 20 files — a side manifest cannot do this,
+> because `experiments/M152-site-census/m4-freeze.json` carries
+> `"no_cross_capture_or_cross_category_substitution": true` against a frozen
+> `coffee-bubbles: 100` quota; then retain at least `100` sites that pass M166's
+> all-frame, all-RGB plant-headroom gate on the exact campaign common TIFFs
+> **and** the registered flat controls. Passing headroom alone does not admit it.
+>
+> **The single condition that would put this ask back on your list:** no existing
+> burst supplies `100` usable sites after the pre-registered fallback order is
+> tried. **Software, manifest, or classification failures are not reasons to
+> reshoot** — those are mine to fix, not yours to photograph.
 
 **How to shoot them.** Reserve broad, truly featureless background; keep each
 `128x128` tile above the ten-sigma black floor and below clipping; avoid
