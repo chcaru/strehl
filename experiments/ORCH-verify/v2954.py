@@ -837,9 +837,37 @@ check("D8 kill reaches the owner",
      "the owner is told the plan's own nominated detail instrument was killed "
      "at its gate, with the citation")
 
-print()
+s77 = section_text(status_raw, "2.9.77")
+check("2.9.77 present", bool(s77.strip()),
+     "STATUS 2.9.77 exists and is non-empty")
+_s77 = collapse(s77)
+for _label, _quote in (
+    ("2.9.77 keeps the scoreboard honest",
+     "**The scoreboard is unchanged at `0 of 12`.**"),
+    ("2.9.77 carries the D8 kill verbatim",
+     'reads **"Verdict: KILL — STOP/REMOVE RUST; retain the split instrument '
+     'offline."**'),
+    ("2.9.77 states the M8 coupling",
+     "**The structural consequence: M8 cannot be honestly passed before "
+     "`(a)` closes.**"),
+    ("2.9.77 flags N6's assumption rather than hiding it",
+     "**This rests on an assumption I have flagged rather than hidden**"),
+    ("2.9.77 keeps the M4 count attributed",
+     "`178` is an **M152**-eligible count, not an M166-eligible one"),
+    ("2.9.77 keeps the self-correction",
+     "no quantity of them clears `(a)`"),
+):
+    check(_label, collapse(_quote) in _s77,
+         "2.9.77 still carries this claim; each is a place where the record "
+         "would quietly improve if it drifted")
 
-print("GREEN               : %d" % green)
+check("2.9.77 M4 arithmetic re-derives",
+     ("29" in _s77 and "83" in _s77 and "112" in _s77
+      and 29 + 83 == 112 and collapse("`29` medication + `83` foam = `112`") in _s77),
+     "the M4 shortfall is printed with its addends and they sum to the total "
+     "printed beside them")
+
+print()
 print("RED                 : %d" % red)
 print("not asserted (RED)  : %d  %s" % (len(missing_in_status), missing_in_status))
 print("controls pass       : %d" % ctl_pass)

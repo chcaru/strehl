@@ -7625,6 +7625,106 @@ be barred by a clause written before anyone thought to take it.
 
 ---
 
+### 2.9.77 The plan's own gate had already killed one of its instruments, and M8 turns out to be coupled to blocker (a)
+
+Three findings tonight change the shape of the program rather than its
+scoreboard. **The scoreboard is unchanged at `0 of 12`.**
+
+**1. The plan had been falsified by its own gate and nobody had recorded it.**
+`docs/proposals/2026-08-sota-path.md` §9 front-loads roughly sixteen zero-capture
+phase-0 lanes and calls each a go/no-go. One of them fired.
+`docs/research/M-PHASE0-SPLIT.md:3` reads **"Verdict: KILL — STOP/REMOVE RUST;
+retain the split instrument offline."** The plan nonetheless still read as though
+D8 were alive in eleven passages, including `:252` *"D8 now promotes into the
+product itself"*, `:1530` *"D8 productises it"*, `:1696` *"the best-commissioned
+instrument in the corpus"*, and `:2065`, which still scheduled D8's go/no-go as
+pending **after the gate had already returned KILL**. I verified all eleven
+verbatim and recorded the kill as **Amendment 7** (§17, commit `136addc9`),
+amending rather than deleting per the forward anti-cheat discipline.
+
+The kill's scope is narrower than the word suggests and the amendment says so:
+the Rust product path is removed, the split instrument is **retained offline**,
+and the measured numbers (`0.400367` c/qpx, bootstrap median `0.399986`, 95%
+interval `[0.381916, 0.408871]`) are **not retracted**. What was refused is the
+inference from the number to a product. The consequential half is that **D2's
+certified-acuity map at `:1569` has lost a named empirical input**, and I have
+recorded that as an open hole rather than filling it by assertion.
+
+**2. N6 — the M8 prohibition is about the kernel, not the clamp, and M8 is
+coupled to blocker `(a)`.** §2.9.76 registered N5, prohibiting a *clamped*
+shipping default as a route to an M8 pass. Checking the code showed N5 named the
+wrong thing:
+
+- `crates/strehl-core/src/align.rs:2896` — `Resampler` has **six** variants, not
+  two: `Nearest`, `Bilinear`, `CatmullRom`, `ClampedCatmullRom`, `Lanczos2`,
+  `Lanczos3`.
+- `crates/strehl-core/src/restore.rs:157` — `tap(Resampler::Bilinear, t)` is
+  `(1.0 - a).max(0.0)`, **non-negative everywhere**.
+- `crates/strehl-core/src/restore.rs:128` — `restoration_supported` refuses
+  **only** the clamped kernel, so **Bilinear is restoration-supported**.
+
+A gather with non-negative taps summing to one is a convex combination and
+**cannot overshoot**. So a zero out-of-range rate is reachable **today, with no
+code change, behind an existing flag**, by a *linear, shift-invariant,
+restoration-supported* kernel — which the scorecard's registered defeat at
+`:1631` (*"destructive clipping can force a zero rate"*) does not obviously
+reach. **N6** therefore rests on the real ground: every route to a zero rate
+buys it by altering the kernel, every such change is paid for in **detail**, and
+detail is exactly what blocker `(a)` leaves unmeasurable
+(`docs/research/ORCH-clamp-default-decision.md` §9.1, commit `94b2f80c`).
+
+**The structural consequence: M8 cannot be honestly passed before `(a)` closes.**
+Every available route either fails at the shipping default's admitted
+`1.030569%` or passes by spending an uncountable currency. `(a)` therefore gates
+more than the route table shows. **This rests on an assumption I have flagged
+rather than hidden** — that bilinear actually costs meaningful detail and that
+restoration does not cheaply recover it. Lane **M182-kernel-trade** is measuring
+it, and a contrary result **qualifies N6 rather than footnoting it**.
+
+**3. M4's four missing inputs collapse to two capture needs, and the rest is
+compute.** The scorecard records M4 at `:809`/`:843` as `RETAINED COMPONENT
+DEFINED; UNMEASURED_CAPTURE_INADEQUATE`, naming four absent inputs. Lane M152,
+which owns the frozen M3/M4 site census, reports that **only two are
+capture-bound** — qualified medication/foam sites, and a `>=100`-tile
+development flat. Dirichlet matrices, M4 plants, and base/planted twins are
+**deterministic computed artifacts**. Measured: **`178` M152-eligible tiles**
+(medication `55`, bee `123`, foam `0`); fixed quotas select `138/250`; the
+corpus is short **`29` medication + `83` foam = `112` quota sites**;
+`coffee-bubbles` is properly registered `DEVELOPMENT_NOT_HOLDOUT` but yields
+**`0`** eligible tiles.
+
+M152 was careful in the way that matters: `178` is an **M152**-eligible count,
+not an M166-eligible one, because M166 adds a plant-margin predicate M152 never
+evaluated. It reported the M166 count as **undetermined, not zero**. I have
+asked it to cost the two capture needs in frames, and — the deciding question —
+whether M4 can be scored **without** blocker `(a)` and **without** the Zerene
+licence. If the answer is yes, M4 is the only axis in the program independent of
+both, and it becomes the cheapest realistic route to a first pass.
+
+**Also landed.** M165 closed the **fork arm of blocker `(d)` at zero cost**
+(rev `4bc7f95e`, executable SHA frozen *before* rendering, byte-identical across
+two clean builds, commit `e3f2c841`); the `$189` still buys both Zerene arms.
+M177 consolidated **all** capture demand into one programme — a floor of
+**`3,716`** specified frames, registered capture floor **`2,309`** — and
+established that three `164`-frame blocks across lanes are **three distinct
+acquisitions**, not one shared block (commit `d5d75f00`). M130 returned
+**CLOSED** with retained area `0.9622496088092659` and no defect in any document
+I own.
+
+**A correction against myself, on the record.** I briefed a lane that the
+owner's frames were a route to blocker `(a)`. **They are not.** `(a)` is a
+missing admissible detail *statistic* — research, not capture. Frames are
+necessary to *score* M1/M5/M9 once such a statistic exists and are **not
+sufficient**, and no quantity of them clears `(a)`. The owner document now says
+so explicitly.
+
+**Fleet state, because it is now a real constraint.** All **32** concurrent
+agent slots are in use and three lanes are **idle holding answers I cannot
+wake**. Twenty-five direct lanes are open, several past twenty hours, and much
+of the load is verification recursion — lanes running six to ten verifier
+subagents while `0 of 12` axes pass. I have issued stop-and-report orders,
+capped further verifier spawning, and begun closing lanes.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
