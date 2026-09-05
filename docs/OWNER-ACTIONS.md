@@ -1599,6 +1599,65 @@ its own interest, which is the reason I trust it.
 > today without your shutter or your wallet is the **M12-D sub-bar**, and a
 > sub-bar is not an axis.
 >
+> ---
+>
+> **⚠️ RETRACTION — the four bullets and the paragraph immediately above are
+> withdrawn. Do not act on them. They are left standing rather than deleted so
+> that the record shows what I told you and why it was wrong.**
+>
+> **What was wrong.** The chain depended on the scorecard clause requiring
+> M12-S's 16-worker output to *"simultaneously pass M11"*. **That clause no
+> longer exists.** Lane M178 traced it to commit `986c4653` (2026-09-02,
+> *"Tighten scorecard anti-cheat constraints"*), showed it was never present in
+> your governing proposal — whose M12 bars read *"memory <=6 GiB warm; bytes
+> invariant to worker count (D9a); the staircase gone"*
+> (`2026-08-sota-path.md:1981-1982`) — and showed the commit that introduced it
+> never claimed proposal authority. It was an **unratified addition** and it has
+> been removed. The scorecard now records M12 as **licence-free**
+> (`2026-09-sota-scorecard.md:11-28` and `:851`). The legitimate *forward* guard
+> is untouched: M11's claimed production-speed output must still be
+> byte-identical across the worker ladder.
+>
+> **So the first link of my argument is broken, and with it the whole chain.**
+> M12 does not sit behind your wallet. It never did.
+>
+> **And the correction runs the other way from the one you would expect.** Since
+> I wrote that paragraph, **both of M12's registered failures have acquired
+> measured repairs, and neither needed a licence, a purchase, or a frame from
+> you.**
+>
+> - **Determinism.** The five distinct hashes across worker counts were
+>   floating-point non-associativity in worker-sized chunking. A canonical
+>   `[5,5,5,4]` lattice with an ordered reduction collapses them to **one hash
+>   across all of 1/2/4/8/16 workers**. The negative control fired: the same
+>   test on the unrepaired build still reports five.
+> - **Memory.** The `35.65745162963867 GiB` peak against a `6 GiB` bar is
+>   repaired to a measured **`3,074,797,568 B` at the largest stack and
+>   16 workers** — `2.8636 GiB`, leaving `3,367,653,376 B` (`3.1364 GiB`) of
+>   headroom under the `6,442,450,944 B` bar. That too was checked against an
+>   unrepaired build, which is still RED at `38,286,897,152 B`. **That RED figure
+>   is the registered failure itself, not a different build**:
+>   `38,286,897,152 B` is exactly `35.65745162963867 GiB`, the number in the
+>   scorecard's M12 row. The control fired on the real defect.
+>
+> **What that does and does not mean.** It does **not** mean M12 is scored. The
+> determinism certificate is currently empirical at the smallest stack size only;
+> a lane is re-running the full `N=33/105/299` x `1/2/4/8/16` matrix at one
+> pinned commit to certify it. Until that lands, M12 is repaired-but-uncertified,
+> which is not a pass. **But it is now the one axis on the board with a credible
+> path to becoming this program's first scored axis, and that path needs nothing
+> from you.**
+>
+> **What still genuinely needs the purchase.** The comparator-dependent axes.
+> Blocker **(d)** is carried by **M1, M2, M3, M4, M5, M6 and M7**; **M11** is
+> not coded `(d)` but is blocked by the same thing under the name
+> `UNMEASURED_COMPARATOR_QUALIFICATION`, needing licensed common-input
+> comparator outputs it cannot get from an expired trial. The case for buying is
+> unchanged for those eight and is argued below on its own merits. **What I am
+> withdrawing is only the false urgency I attached to it via M12**, and the claim
+> that a sub-bar was the sole thing finishable. Please read the rest of this ask,
+> including the Helicon problem immediately below, before spending anything.
+>
 > **AND NOW THE PART THAT CHANGES YOUR ANSWER.** I was one paragraph away from
 > telling you this purchase might buy nothing. The thing that corrected me is
 > your own plan. The scorecard demands the newest stable build of **both**

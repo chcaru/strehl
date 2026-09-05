@@ -324,13 +324,87 @@ for label, path, src_needle, own_needle in BENCH:
               % (label, in_src, in_own))
         red += 1
 
+# ---- M12 retraction block: the money-decision figures ----
+# Added when Ask 3's "M12 sits behind this purchase" chain was retracted. These
+# numbers now sit in an owner-facing file next to a $289 decision, so each is
+# checked in BOTH directions: it must occur in the lane document it came from,
+# AND the derived quantities must re-derive arithmetically. A presence check
+# alone would be satisfied by any copy of the value elsewhere in the tree.
+M182D = ROOT / "docs" / "research" / "M182-memory-budget.md"
+SCARD = ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md"
+
+PEAK, HEADROOM, BAR, UNREPAIRED = (
+    3074797568, 3367653376, 6442450944, 38286897152)
+GIB = 1 << 30
+
+M12RET = [
+    ("m12 repaired peak", M182D, "3,074,797,568 B"),
+    ("m12 headroom", M182D, "3,367,653,376 B"),
+    ("m12 unrepaired red", M182D, "38,286,897,152 B"),
+    ("m12 scorecard peak", SCARD, "35.65745162963867 GiB"),
+    ("m12 clause unratified", SCARD, "unratified addition"),
+    ("m12 clause commit", SCARD, "986c4653"),
+]
+for label, path, needle in M12RET:
+    if not path.exists():
+        print("RED   m12ret %-22s SOURCE MISSING %s" % (label, path.name))
+        red += 1
+        continue
+    src_txt = collapse(path.read_text(encoding="utf-8", errors="replace"))
+    in_src = collapse(needle) in src_txt
+    in_own = collapse(needle) in owner_flat
+    if in_src and in_own:
+        print("GREEN m12ret %-22s %s" % (label, path.name))
+        green += 1
+    else:
+        print("RED   m12ret %-22s source=%s owner=%s needle=%r"
+              % (label, in_src, in_own, needle))
+        red += 1
+
+# Derivations. Each is the arithmetic the owner sheet asserts, recomputed.
+M12DER = [
+    ("headroom re-derives", PEAK + HEADROOM == BAR),
+    ("unrepaired GiB identity",
+     "%.14f" % (UNREPAIRED / GIB) == "35.65745162963867"),
+    ("peak GiB quoted", "%.4f" % (PEAK / GIB) == "2.8636"),
+    ("headroom GiB quoted", "%.4f" % (HEADROOM / GIB) == "3.1364"),
+    ("peak is under bar", PEAK < BAR),
+    ("unrepaired is over bar", UNREPAIRED > BAR),
+]
+for label, ok in M12DER:
+    print(("GREEN m12der %-30s" % label) if ok
+          else ("RED   m12der %-30s DID NOT RE-DERIVE" % label))
+    if ok:
+        green += 1
+    else:
+        red += 1
+
+# The owner sheet must say the chain is withdrawn, not merely stop asserting it.
+# A silent deletion is the exact defect ruled against for M176.
+for label, needle in (("retraction present", "RETRACTION"),
+                      ("retraction names M178", "M178"),
+                      ("original claim left standing",
+                       "So M12-S sits behind this purchase")):
+    ok = collapse(needle) in owner_flat
+    print(("GREEN m12ret %-30s" % label) if ok
+          else ("RED   m12ret %-30s ABSENT" % label))
+    if ok:
+        green += 1
+    else:
+        red += 1
+
 # ---- control: a wrong total must not re-derive ----
 ctl = (2 + sum(stages) + 704) != 1603
 ctl2 = (891 + 32 + 164 + 128) != 1147  # the stale total must no longer re-derive
+# A wrong headroom must not re-derive: this proves the derivation controls above
+# are arithmetic rather than tautologies that pass on any input.
+ctl3 = (PEAK + 3367653377) != BAR
+print(("CTLPASS" if ctl3 else "CTLFAIL")
+      + " decoy headroom 3,367,653,377 does not re-derive to the 6 GiB bar")
 print(("CTLPASS" if ctl else "CTLFAIL") + " decoy total 1,603 does not re-derive")
 print(("CTLPASS" if ctl2 else "CTLFAIL")
       + " superseded total 1,147 does not re-derive from the corrected parts")
-ctl = ctl and ctl2
+ctl = ctl and ctl2 and ctl3
 
 print()
 print("GREEN: %d  RED: %d" % (green, red))
