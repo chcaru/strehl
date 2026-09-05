@@ -140,8 +140,17 @@
         }
       },
       "evidence_tag": "VERIFIED",
+      "formal_verdict": "UNMEASURED_HOST_QUARANTINE",
+      "observed_verdict": "FAIL",
+      "quarantine": {
+        "evidence_tag": "INHERITED",
+        "future_precondition": "Repeat the registered arm in an uninterrupted 120-minute window on a physically quiesced host with the agent fleet stopped, while retaining the registered <=15% preload and <=10% during-run external-load gates.",
+        "reason": "The later standing program policy quarantines absolute and cross-run wall-clock timing on this host. The measured spread is retained as diagnostic evidence only.",
+        "source": "docs/STATUS.md:6234-6256"
+      },
+      "scorecard_admissible": false,
       "spread": 0.07618677189815302,
-      "verdict": "FAIL"
+      "verdict": "UNMEASURED_HOST_QUARANTINE"
     }
   },
   "adjudicated_evidence_cutoff_utc": "2026-09-05T01:58:49.867621+00:00",
@@ -483,6 +492,10 @@
   },
   "could_not_determine": [
     {
+      "item": "formal N-mod-4 timing verdict",
+      "reason": "The completed wall-time observations are retained, but the later program-wide host policy quarantines absolute and cross-run timing until quiet-host reproduction."
+    },
+    {
       "item": "formal peak_N299/peak_N33 verdict",
       "reason": "Minimum sampling coverage was below the frozen 90% adjudication threshold. The observed sampled and kernel Job Object ratios are still reported."
     },
@@ -582,6 +595,24 @@
       "schema": 1
     },
     "maximum_accepted_external_busy_fraction": 0.09911974767219173,
+    "n299_w16_rejected_window": {
+      "attempts": 14,
+      "evidence_tag": "VERIFIED",
+      "minimum_external_busy_fraction": 0.10108949790738624,
+      "minimum_external_busy_percent": 10.108949790738624,
+      "result_role": "gate evidence, not a timing result"
+    },
+    "post_campaign_timing_policy": {
+      "disposition": "ABSOLUTE_TIMING_QUARANTINED",
+      "evidence_tag": "INHERITED",
+      "host_sample_mean_percent": 93.2,
+      "host_samples_percent": [
+        88.6,
+        97.0,
+        94.1
+      ],
+      "source": "docs/STATUS.md:6234-6256"
+    },
     "registered_120_minute_window": {
       "reason": "Other lanes repeatedly launched compiler, byte-freeze, and Strehl workloads. Every affected row was retained and invalidated rather than adjusted.",
       "reserved": true,
@@ -647,9 +678,9 @@
     },
     "helpers": {
       "finalizer": {
-        "bytes": 39938,
+        "bytes": 43902,
         "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m139-finalize.py",
-        "sha256": "450D9663322529EA02188EA54EBF14F8A86D09659FA40758CE62815B049F1AC2"
+        "sha256": "5DD3EC2E9B22DE259A8BB4915D85C35059837B0814B77DF1D76BF0F76A2ED717"
       },
       "modulo_window_invalidator": {
         "bytes": 5720,
@@ -698,9 +729,9 @@
       "sha256": "282E2FE10CD8D2835A8763D71C82C062FF2D0AD68FCEF6CB70B247CD3A7A4BC7"
     },
     "summary": {
-      "bytes": 21737,
+      "bytes": 22409,
       "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\summary.json",
-      "sha256": "A4E316A9E2F872840A3D6FA0994D0C8458A31B2A97DBE6AA1E344D6EFE86B1B9"
+      "sha256": "8031908BB38B0D103829467DEC48CE1416AA7E698D0A4FD57AAF201A01756839"
     }
   },
   "read_only_input_trees": {
@@ -810,7 +841,7 @@
   "schema": 2,
   "verdicts": {
     "frozen_registration_mechanical_result": {
-      "disposition": "Preserved as mechanical provenance. The program orchestrator subsequently required split M12-D/M12-S reporting and directed that no overall M12 verdict be assigned while the M11 term is blocked by licensing.",
+      "disposition": "Preserved as pre-quarantine mechanical provenance. Its timing failure is diagnostic only under the later host policy; the formal M12 failure remains supported by the non-timing memory and byte-invariance failures.",
       "evidence_tag": "VERIFIED",
       "hard_failures": [
         "absolute-memory",
@@ -915,9 +946,9 @@
     },
     "overall_m12": {
       "evidence_tag": "VERIFIED",
-      "reason": "The registered sub-verdicts are not conflated, and the M11 precondition for M12-S is blocked by comparator licensing.",
-      "reporting_basis": "ORCHESTRATOR_DIRECTIVE",
-      "verdict": "NOT_ASSIGNED"
+      "reason": "Absolute process-tree memory and cross-worker byte invariance fail independently of the quarantined timing arm and the blocked M11 precondition.",
+      "reporting_basis": "NON_TIMING_HARD_FAILURES",
+      "verdict": "FAIL"
     }
   }
 }

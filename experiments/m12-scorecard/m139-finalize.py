@@ -453,6 +453,20 @@ def main() -> int:
     load_only_rows = [
         row for row in excluded if row.get("external_invalidation") is None
     ]
+    n299_w16_rejections = [
+        row
+        for row in rows
+        if row.get("position_key") == "warmup:N299:W16:R0"
+        and row.get("load_gate_valid") is False
+    ]
+    if len(n299_w16_rejections) != 14:
+        raise RuntimeError("unexpected N299/W16 rejected-attempt count")
+    n299_w16_minimum_external_busy = min(
+        row["host_load_during_run"][
+            "external_busy_fraction_of_wall_capacity"
+        ]
+        for row in n299_w16_rejections
+    )
     invalidation_results = [
         validated_invalidation(artifact_value)
         for artifact_value in (
@@ -491,6 +505,10 @@ def main() -> int:
         )
 
     mechanical_formal = summary.get("mechanical_formal_m12", summary["formal_m12"])
+    mechanical_modulo_verdict = summary["modulo"].get(
+        "mechanical_scorecard_verdict",
+        summary["modulo"]["scorecard_verdict"],
+    )
     mechanical_nonaccepted = summary["host_load"].get(
         "mechanical_nonaccepted_valid_count",
         summary["host_load"]["rejected_run_count"],
@@ -519,12 +537,35 @@ def main() -> int:
         "m11_precondition": "BLOCKED-BY-LICENCE",
         "formal_verdict": "BLOCKED-BY-LICENCE",
     }
+    summary["modulo"]["mechanical_scorecard_verdict"] = (
+        mechanical_modulo_verdict
+    )
+    summary["modulo"]["observed_verdict"] = "FAIL"
+    summary["modulo"]["scorecard_verdict"] = "UNMEASURED_HOST_QUARANTINE"
+    summary["modulo"]["formal_verdict"] = "UNMEASURED_HOST_QUARANTINE"
+    summary["timing_quarantine"] = {
+        "evidence_tag": "INHERITED",
+        "source": "docs/STATUS.md:6234-6256",
+        "host_samples_percent": [88.6, 97.0, 94.1],
+        "host_sample_mean_percent": 93.2,
+        "ruling": (
+            "Absolute timing is quarantined until reproduced on a genuinely "
+            "quiet host or restated as a within-run ratio in which host load "
+            "cancels."
+        ),
+        "observed_modulo_spread_retained_as_diagnostic": summary["modulo"][
+            "spread"
+        ],
+    }
     summary["formal_m12"] = {
-        "verdict": "NOT_ASSIGNED",
+        "verdict": "FAIL",
+        "hard_failures": [
+            "absolute-memory",
+            "cross-worker-scaling-invariance",
+        ],
         "reason": (
-            "M12-D and M12-S are separately reported. M12-S has a "
-            "BLOCKED-BY-LICENCE M11 precondition; no overall M12 verdict is "
-            "manufactured."
+            "The timing arm is quarantined, but the non-timing absolute-memory "
+            "and cross-worker byte-invariance bars independently fail."
         ),
     }
     write_json(paths["summary"], summary)
@@ -560,10 +601,10 @@ def main() -> int:
                 "verdict": mechanical_formal["verdict"],
                 "hard_failures": mechanical_formal.get("hard_failures", []),
                 "disposition": (
-                    "Preserved as mechanical provenance. The program "
-                    "orchestrator subsequently required split M12-D/M12-S "
-                    "reporting and directed that no overall M12 verdict be "
-                    "assigned while the M11 term is blocked by licensing."
+                    "Preserved as pre-quarantine mechanical provenance. Its "
+                    "timing failure is diagnostic only under the later host "
+                    "policy; the formal M12 failure remains supported by the "
+                    "non-timing memory and byte-invariance failures."
                 ),
             },
             "m12_d": {
@@ -618,11 +659,12 @@ def main() -> int:
             },
             "overall_m12": {
                 "evidence_tag": "VERIFIED",
-                "verdict": "NOT_ASSIGNED",
-                "reporting_basis": "ORCHESTRATOR_DIRECTIVE",
+                "verdict": "FAIL",
+                "reporting_basis": "NON_TIMING_HARD_FAILURES",
                 "reason": (
-                    "The registered sub-verdicts are not conflated, and the M11 "
-                    "precondition for M12-S is blocked by comparator licensing."
+                    "Absolute process-tree memory and cross-worker byte "
+                    "invariance fail independently of the quarantined timing arm "
+                    "and the blocked M11 precondition."
                 ),
             },
         },
@@ -672,9 +714,27 @@ def main() -> int:
                 "evidence_tag": "VERIFIED",
                 "bar": 0.02,
                 "spread": modulo_spread,
-                "verdict": "FAIL",
+                "observed_verdict": "FAIL",
+                "verdict": "UNMEASURED_HOST_QUARANTINE",
+                "formal_verdict": "UNMEASURED_HOST_QUARANTINE",
+                "scorecard_admissible": False,
                 "by_n": modulo,
                 "all_scoring_minima_within_runtime_quiesce": True,
+                "quarantine": {
+                    "evidence_tag": "INHERITED",
+                    "source": "docs/STATUS.md:6234-6256",
+                    "reason": (
+                        "The later standing program policy quarantines absolute "
+                        "and cross-run wall-clock timing on this host. The "
+                        "measured spread is retained as diagnostic evidence only."
+                    ),
+                    "future_precondition": (
+                        "Repeat the registered arm in an uninterrupted "
+                        "120-minute window on a physically quiesced host with "
+                        "the agent fleet stopped, while retaining the registered "
+                        "<=15% preload and <=10% during-run external-load gates."
+                    ),
+                },
             },
         },
         "commissioning": {
@@ -806,6 +866,24 @@ def main() -> int:
             "maximum_accepted_external_busy_fraction": summary["host_load"][
                 "maximum_accepted_external_busy_fraction"
             ],
+            "n299_w16_rejected_window": {
+                "evidence_tag": "VERIFIED",
+                "attempts": len(n299_w16_rejections),
+                "minimum_external_busy_fraction": (
+                    n299_w16_minimum_external_busy
+                ),
+                "minimum_external_busy_percent": (
+                    n299_w16_minimum_external_busy * 100.0
+                ),
+                "result_role": "gate evidence, not a timing result",
+            },
+            "post_campaign_timing_policy": {
+                "evidence_tag": "INHERITED",
+                "source": "docs/STATUS.md:6234-6256",
+                "host_samples_percent": [88.6, 97.0, 94.1],
+                "host_sample_mean_percent": 93.2,
+                "disposition": "ABSOLUTE_TIMING_QUARANTINED",
+            },
         },
         "record_accounting": {
             "evidence_tag": "VERIFIED",
@@ -835,6 +913,14 @@ def main() -> int:
             },
         },
         "could_not_determine": [
+            {
+                "item": "formal N-mod-4 timing verdict",
+                "reason": (
+                    "The completed wall-time observations are retained, but the "
+                    "later program-wide host policy quarantines absolute and "
+                    "cross-run timing until quiet-host reproduction."
+                ),
+            },
             {
                 "item": "formal peak_N299/peak_N33 verdict",
                 "reason": (
@@ -912,6 +998,7 @@ def main() -> int:
             "m12_s_byte_property_complete": True,
             "modulo_complete": True,
             "modulo_minima_runtime_quiesced": True,
+            "modulo_score_admissible": False,
             "memory_probe_commissioned": (
                 memory_commission["status"] == "COMMISSIONED"
             ),
@@ -945,7 +1032,9 @@ def main() -> int:
                 "memory_ratio_formal": closeout["absolute_bars"][
                     "memory_scaling"
                 ]["formal_verdict"],
-                "modulo": closeout["absolute_bars"]["n_mod_4"]["verdict"],
+                "modulo": closeout["absolute_bars"]["n_mod_4"][
+                    "formal_verdict"
+                ],
                 "overall_m12": closeout["verdicts"]["overall_m12"]["verdict"],
             },
             indent=2,

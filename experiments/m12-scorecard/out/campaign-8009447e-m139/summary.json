@@ -2,8 +2,12 @@
   "adjudicated_evidence_cutoff_utc": "2026-09-05T01:58:49.867621+00:00",
   "evidence_tag": "VERIFIED",
   "formal_m12": {
-    "reason": "M12-D and M12-S are separately reported. M12-S has a BLOCKED-BY-LICENCE M11 precondition; no overall M12 verdict is manufactured.",
-    "verdict": "NOT_ASSIGNED"
+    "hard_failures": [
+      "absolute-memory",
+      "cross-worker-scaling-invariance"
+    ],
+    "reason": "The timing arm is quarantined, but the non-timing absolute-memory and cross-worker byte-invariance bars independently fail.",
+    "verdict": "FAIL"
   },
   "generated_utc": "2026-09-05T01:59:36.961934+00:00",
   "host_load": {
@@ -697,11 +701,14 @@
         ]
       }
     },
+    "formal_verdict": "UNMEASURED_HOST_QUARANTINE",
     "load_gate_verified": true,
+    "mechanical_scorecard_verdict": "FAIL",
     "observed_pass_without_load_gate": false,
+    "observed_verdict": "FAIL",
     "pass": false,
     "rejected_run_count": 1,
-    "scorecard_verdict": "FAIL",
+    "scorecard_verdict": "UNMEASURED_HOST_QUARANTINE",
     "spread": 0.07618677189815302
   },
   "records": {
@@ -714,5 +721,17 @@
     "sha256": "5D6046F5DEA1E2FD64AF25B70F26F1371C7CEEDF1B7D7B83A504B01F3D1AFF26",
     "total": 294
   },
-  "schema": 2
+  "schema": 2,
+  "timing_quarantine": {
+    "evidence_tag": "INHERITED",
+    "host_sample_mean_percent": 93.2,
+    "host_samples_percent": [
+      88.6,
+      97.0,
+      94.1
+    ],
+    "observed_modulo_spread_retained_as_diagnostic": 0.07618677189815302,
+    "ruling": "Absolute timing is quarantined until reproduced on a genuinely quiet host or restated as a within-run ratio in which host load cancels.",
+    "source": "docs/STATUS.md:6234-6256"
+  }
 }

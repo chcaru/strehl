@@ -2,20 +2,19 @@
 
 **Status:** the registered campaign is complete. **M12-D PASS.** The measured
 M12-S byte property is **FAIL**, while M12-S's required M11 precondition is
-**BLOCKED-BY-LICENCE**. Those sub-results are not conflated, and no overall M12
-verdict is assigned. The absolute-memory bar is **FAIL**, the observed
-N=299/N=33 memory ratio misses its numeric bar but is formally
-**UNMEASURED_SAMPLING_COVERAGE**, and the N-mod-4 timing bar is **FAIL**.
-**HOST RELEASED.**
+**BLOCKED-BY-LICENCE**. The absolute-memory bar is **FAIL**, so overall M12 is
+**FAIL** on non-timing evidence regardless of the blocked M11 term. The
+observed N=299/N=33 memory ratio misses its numeric bar but is formally
+**UNMEASURED_SAMPLING_COVERAGE**. The N-mod-4 observation numerically misses
+its bar but is formally **UNMEASURED_HOST_QUARANTINE** under the later
+program-wide timing policy. **HOST RELEASED.**
 
-The frozen harness's conjunctive adjudication mechanically yields **M12 FAIL**
-from the measured hard failures. That value is preserved in the machine
-artifacts as `frozen_registration_mechanical_result`. The later binding
-orchestrator instruction requires the lane handoff to keep M12-D, the M12-S
-byte property, and the blocked M11 term separate and to assign no overall M12
-verdict while that term is licence-blocked. The reported overall disposition
-is therefore **NOT_ASSIGNED**, with the mechanical **FAIL** retained rather
-than erased.
+The frozen harness's conjunctive adjudication yielded **M12 FAIL** from memory,
+cross-worker invariance, and timing. That value is preserved as
+`frozen_registration_mechanical_result`. The later timing quarantine removes
+the wall-clock arm from formal scoring, but it does not reverse the verdict:
+memory and cross-worker invariance are correctness measurements and each
+independently fails.
 
 **Measured source:** `8009447e059febb8f9c59fda509f141835d6abdb`. This was the
 exact repository `HEAD` frozen at dispatch and contains crop-early commit
@@ -108,6 +107,14 @@ Host contention is therefore a validity threat to the modulo arm. It is not a
 validity threat to direct byte hashes, and it cannot manufacture a sampled
 private-commit value above the memory ceiling.
 
+**INHERITED POST-CAMPAIGN POLICY:** `docs/STATUS.md:6234-6256` records three
+whole-host samples of `88.6%`, `97.0%`, and `94.1%`, mean `93.2%`, and places
+absolute wall-clock timing under a standing quarantine until it is reproduced
+on a genuinely quiet host or restated as a within-run ratio in which host load
+cancels. The M12 modulo statistic compares wall times across separate runs, so
+its completed observation is retained as diagnostic evidence but is not a
+formal score under that later policy.
+
 **VERIFIED:** the registered host gates were never relaxed:
 
 - five-second preload whole-host busy fraction `<=0.15`;
@@ -138,13 +145,22 @@ excluded, then rerun:
 - `0` invalid process outputs;
 - no duplicate accepted position.
 
-The final score-driving timing minima were produced while the shared runtime
-was suspended. `runtime-quiesce-final.json` records runtime PID `11336`,
-harness PID `7956`, successful suspend/resume status `0`, and a guarded
-interval from `2026-09-05T01:52:08.8526539Z` through
+The final observed timing minima were produced while the shared runtime was
+suspended. `runtime-quiesce-final.json` records runtime PID `11336`, harness
+PID `7956`, successful suspend/resume status `0`, and a guarded interval from
+`2026-09-05T01:52:08.8526539Z` through
 `2026-09-05T01:58:50.7554668Z`. All four selected minima start and complete
-inside that interval. Their measured external-busy fractions were
-`0.0248361` to `0.0299663`.
+inside that interval, with measured external-busy fractions of `0.0248361` to
+`0.0299663`. These facts make the observation useful diagnostics; they do not
+override the later program-wide quarantine.
+
+An earlier stalled N=299/W16 window produced 14 consecutive load-gate
+rejections. The minimum external-busy fraction was
+`0.10108949790738624` (`10.10895%`) against the registered `10%` limit. These
+are gate-behavior measurements, not timing results. Later accepted runs prove
+that this episode does not establish that the gate was mathematically
+unsatisfiable; it establishes that indefinite waiting was not a schedulable
+protocol.
 
 The campaign boundary samples were `0.0411771` whole-host wall capacity at
 start and `0.0204439` at end. The maximum external-busy fraction among all
@@ -157,6 +173,13 @@ alternating sweeps reduce monotone drift, and the actual four minima came from
 the contender-free runtime-suspended interval. Residual thermal, turbo, and
 cache state was not directly instrumented and remains in the could-not-
 determine list.
+
+The concrete precondition for a formal rerun is the registered uninterrupted
+120-minute window on a **physically quiesced host**, not a nominal lane lock:
+stop the agent fleet and unrelated editors/processes, record the boundary and
+during-run host telemetry, retain the `<=15%` preload and `<=10%` external-busy
+gates, and rerun all four warm-ups plus 24 scored modulo positions. M139 needs
+no additional capture, hardware, or product build for that rerun.
 
 ### Admission-gate ruling and replacement protocol
 
@@ -307,16 +330,17 @@ Accordingly:
 - M12-S M11 precondition: **BLOCKED-BY-LICENCE**;
 - formal M12-S status: **BLOCKED-BY-LICENCE**, not manufactured as PASS or
   FAIL;
-- overall M12 verdict: **NOT_ASSIGNED**.
+- overall M12 verdict: **FAIL**, independently established by the non-timing
+  absolute-memory failure.
 
 Even if a future licensed M11 run passes, the cross-worker byte property at
 this measured commit remains a measured failure.
 
 For completeness, the frozen harness's generic conjunctive rule mechanically
-records M12 **FAIL** because cross-worker invariance, absolute memory, and
-N-mod-4 timing are hard failures. `summary.json` and `closeout.json` preserve
-that mechanical value separately from the orchestrator-directed
-`NOT_ASSIGNED` program disposition.
+records M12 **FAIL** because cross-worker invariance, absolute memory, and the
+observed N-mod-4 result are hard failures. `summary.json` and `closeout.json`
+preserve that pre-quarantine mechanical value. The current formal FAIL rests
+only on the non-timing memory and byte-invariance evidence.
 
 ### Absolute memory: FAIL
 
@@ -346,7 +370,7 @@ Minimum coverage was `0.7957678743186919`; maximum sample gap was
 reported, but the formal ratio verdict is
 **UNMEASURED_SAMPLING_COVERAGE**.
 
-### N-mod-4 timing: FAIL
+### N-mod-4 timing: observed FAIL, formally UNMEASURED_HOST_QUARANTINE
 
 The registered statistic uses the minimum warm wall time at each N, divides by
 N, then computes `(max-min)/min`.
@@ -359,8 +383,10 @@ N, then computes `(max-min)/min`.
 | 99 | 27.260427500 | 0.275357854 | 0.0299663 | yes |
 
 The spread is `0.07618677189815302` (`7.618677%`) against a `0.02` (`2%`)
-bar. **N-mod-4 FAIL.** Every N also retained one TIFF hash and one pixel hash
-across its six accepted timing repetitions.
+bar. The numerical observation is **FAIL**, but the formal timing verdict is
+**UNMEASURED_HOST_QUARANTINE** under `docs/STATUS.md:6234-6256`. Every N also
+retained one TIFF hash and one pixel hash across its six accepted timing
+repetitions.
 
 ## 5. Input provenance and read-only guarantee
 
@@ -432,20 +458,23 @@ Reproduction and adjudication helpers are in `experiments/m12-scorecard/`:
 
 ## 7. Could not determine
 
-1. **Formal N=299/N=33 memory-ratio verdict.** The numeric sampled and kernel
+1. **Formal N-mod-4 timing verdict.** The completed observations are retained,
+   but the later host policy requires quiet-host reproduction before they can
+   enter the scorecard.
+2. **Formal N=299/N=33 memory-ratio verdict.** The numeric sampled and kernel
    ratios are reported, but minimum sampling coverage missed the frozen 90%
    adjudication threshold.
-2. **M11 comparator throughput.** The installed Zerene trial cannot save the
+3. **M11 comparator throughput.** The installed Zerene trial cannot save the
    required output, and no Helicon installation is available.
-3. **True unsampled instantaneous memory peak.** Sampling can miss a higher
+4. **True unsampled instantaneous memory peak.** Sampling can miss a higher
    instantaneous value. It cannot manufacture the observed above-6-GiB
    failure.
-4. **Complete process-tree read/write byte totals.** The instrument records
+5. **Complete process-tree read/write byte totals.** The instrument records
    temp bytes, page faults, CPU, hashes, and memory, but not complete
    process-tree I/O totals.
-5. **Calibrated residual thermal, turbo, and cache state.** Those variables
+6. **Calibrated residual thermal, turbo, and cache state.** Those variables
    were not directly instrumented. Alternating sweeps and the guarded
    scoring-minimum interval mitigate them.
-6. **Exact lane attribution for every historical host-load rejection.** Named
+7. **Exact lane attribution for every historical host-load rejection.** Named
    contamination incidents were pinned where observed, but not every rejected
    CPU interval can be assigned to one lane.
