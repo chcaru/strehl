@@ -16,14 +16,26 @@ from pathlib import Path
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
-SECTIONS = ["2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
+SECTIONS = ["HEADER",
+            "2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
             "2.9.60", "2.9.61", "2.9.62", "2.9.63", "2.9.64", "2.9.65",
             "2.9.66", "2.9.67", "2.9.68", "2.9.69", "2.9.70", "2.9.71",
-            "2.9.72", "2.9.73"]
+            "2.9.72", "2.9.73", "2.9.74"]
 
 
 def collapse(s):
     return re.sub(r"\s+", " ", s)
+
+
+def unquote(block):
+    """Strip leading markdown blockquote markers, one level, per line.
+
+    The STATUS HEADER is entirely a '>' blockquote, so any needle that wraps
+    across a line inside it would otherwise collapse to '...paid > arms...' and
+    never match. Only a LEADING marker is removed, so mid-line '>' characters
+    in needles such as '>=2.00x' or 'Q05 > 1.10' are untouched.
+    """
+    return "\n".join(re.sub(r"^\s*>\s?", "", ln) for ln in block.splitlines())
 
 
 def load(p):
@@ -32,6 +44,16 @@ def load(p):
 
 def section_text(status_raw, sec):
     lines = status_raw.splitlines()
+    # "HEADER" is the standing summary above section 1 -- the most owner-facing
+    # prose in the file, and until now the only part of STATUS no pin could
+    # reach. It is delimited by the top of the file and the first "## 1." rule.
+    if sec == "HEADER":
+        for j, ln in enumerate(lines):
+            if ln.startswith("## 1."):
+                if j == 0:
+                    raise SystemExit("FATAL: HEADER is empty")
+                return "\n".join(lines[:j])
+        raise SystemExit("FATAL: '## 1.' not found; HEADER bound is undefined")
     start = None
     for i, ln in enumerate(lines):
         if ln.startswith("### " + sec + " "):
@@ -217,6 +239,28 @@ CLAIMS = [
     # plan's own words, so a drifting paraphrase in STATUS fails loudly.
     ("m169 lead verdict", "SCORECARD EXCEEDS PLAN",
      R + "M169-comparator-requirement-audit.md"),
+    # --- header (STATUS:26-40): what the licence is actually worth ---
+    # These four are the numbers the OWNER acts on, so each is pinned to the
+    # exact cell of M169 section 4.1 that produced it. The STATUS needle and the
+    # source literal deliberately differ in wording ("7 more" vs "7 of 12"): the
+    # needle proves MY prose still says it, srclit proves the SOURCE still does.
+    # If M169 revises its table, these go RED rather than drifting silently.
+    ("m169 plan licence axes", "prerequisite for **1 of 12** axes",
+     R + "M169-ratification-stakes.md", None, "**1 of 12**"),
+    ("m169 propagated axes", "propagates the absent paid arms to **7** more",
+     R + "M169-ratification-stakes.md", None, "**7 of 12**"),
+    ("m169 axes shedding d", "**6** axes shed blocker `(d)`",
+     R + "M169-ratification-stakes.md", None, "**6 of 12**"),
+    ("m169 newly scoreable", "**0 of 12** newly scoreable",
+     R + "M169-ratification-stakes.md", None, "**0 of 12**"),
+    # The headline. Pinned to the scorecard clause that establishes there are
+    # twelve axes and that a verdict needs all of them; the "0 passed" half is
+    # the orchestrator's own adjudication and is proved instead by the planted
+    # control in commission_header.py, which mutates it and requires a RED.
+    ("header scored axis count",
+     "**Current position against that bar: 0 of 12 axes passed.**",
+     "docs/proposals/2026-09-sota-scorecard.md", None,
+     "A verdict requires measurements for all twelve axes"),
     ("plan noise quotable now", "Nothing — quotable now",
      "docs/proposals/2026-08-sota-path.md"),
     ("plan speed hold the line",
@@ -288,7 +332,7 @@ CLAIMS = [
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
-sec = collapse("\n".join(section_text(status_raw, s) for s in SECTIONS))
+sec = collapse(unquote("\n".join(section_text(status_raw, s) for s in SECTIONS)))
 
 # Claims may carry a 4th element: a context literal that must occur within
 # WINDOW characters of the value in the source. Presence alone is not enough

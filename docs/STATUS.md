@@ -22,10 +22,35 @@ marked as unmeasured.
 > comparators — **Zerene PMax, Zerene DMap, and Helicon Methods A, B and C** —
 > across twelve axes, conjunctively. `enfuse` is not one of them.
 >
-> **Current position against that bar: 0 of 12 axes passed.** One axis has ever
-> produced a read score, M8, and it **FAILED**. The overall verdict is
-> `UNMEASURED`, and it stays `UNMEASURED` until licensed comparators consume the
-> same bytes as a capture that does not yet exist.
+> **Current position against that bar: 0 of 12 axes passed.** **Two** axes have
+> produced a read score. **M8** (fine detail) **FAILED**. **M12** (memory,
+> determinism and cross-worker invariance) has **no settled overall verdict as
+> of this writing**: lane M139's committed report (`2ba256aa`) recorded a flat
+> `M12 FAIL` against an incomplete matrix, and M139 is now rewriting it after
+> completing the registered matrix. **That revision is uncommitted and is
+> therefore not quotable here.** The one finding stable across both the
+> committed report and the in-flight revision is that **M12's absolute
+> peak-memory bar FAILED**. Every specific memory figure this header previously
+> carried has been withdrawn pending M139's commit — see §2.9.74. The overall
+> verdict is `UNMEASURED`.
+>
+> **How long it stays `UNMEASURED` depends on a question the owner has not yet
+> ruled on.** Under the scorecard *as written*, every axis waits until licensed
+> comparators consume the same bytes as a capture that does not yet exist.
+> **Under the plan, that overstates the licence's reach.** M169's audit
+> (`research/M169-ratification-stakes.md` §4.1, commit `188245e8`) re-derived it
+> from source: the owner's plan makes a paid licensed comparator a direct score
+> prerequisite for **1 of 12** axes (`M1`); the scorecard's all-arms-always
+> conjunction — a `SCORECARD ADDITION — UNRATIFIED` — propagates the absent paid
+> arms to **7** more (`M2`-`M7`, `M11`). Removing that propagation would make
+> **6** axes shed blocker `(d)` and **0 of 12** newly scoreable, because each
+> retains other blockers. **The scorecard remains in force until the owner
+> rules, and no axis is scored under the loosened reading.**
+>
+> The practical consequence is that "the board is frozen behind a purchase" is
+> materially wrong *as a reason to buy*, while the purchase is still required —
+> for `M1`, and independently because no registered frame of the planned
+> rehearsal is licensed (`research/M164-dominance-manifest.md:159-160`).
 >
 > Speed is a case worth being precise about, because it is the strongest thing
 > the project has. **`22.58x enfuse` is real and it is not the axis.** The speed
@@ -7296,6 +7321,83 @@ should be told about the whole speed axis.
 **The scoreboard remains `0 of 12`.** An axis moving from `UNMEASURED` to a
 defensible `FAIL` is progress in evidence, not in score, and it must not be
 reported as the latter.
+
+---
+
+### 2.9.74 The drift alarm fired on a live document, and it was right
+
+**What happened.** Section 2.9.73 above, and the standing header of this file,
+were written against lane M139's committed report at `2ba256aa`. While I was in
+the middle of adding pins for those numbers, `v2954.py` went from `GREEN 103/0`
+to `RED` with **13** failures, every one of the form
+`<value> NOT IN docs/research/M139-m12-campaign.md`.
+
+**It was not a verifier defect.** Measured, not assumed:
+
+- `git status --porcelain` on that file reports ` M` — modified, unstaged.
+- `git diff --stat` reports `373` insertions and `250` deletions.
+- The committed blob is `14,087` characters; the working-tree file is
+  `18,311` bytes.
+- The strings `33.4283`, `79.5768` and `9.8763` **no longer occur** anywhere in
+  the working-tree file, though all three are present in the committed version.
+
+M139 completed the registered matrix and is rewriting its report. Its new
+status paragraph decomposes what had been a flat verdict: `M12-D` **PASS**, the
+measured `M12-S` byte property **FAIL** with its M11 precondition
+**`BLOCKED-BY-LICENCE`**, the absolute memory bar **FAIL**, the `N=299/N=33`
+ratio **`UNMEASURED_SAMPLING_COVERAGE`**, the N-mod-4 timing bar **FAIL**, and
+explicitly **no overall M12 verdict assigned**.
+
+**Three consequences, in order of importance.**
+
+1. **The header I was about to commit was wrong.** It said two axes had scored
+   and *both FAILED*. M139 has withdrawn the composite M12 verdict, so the
+   second half of that sentence asserted something its own source no longer
+   claims. The header now asserts only what is stable across **both** the
+   committed report and the in-flight revision — that M12's absolute
+   peak-memory bar FAILED — and records that the composite verdict is under
+   revision and not quotable. **A number is not safe merely because it was true
+   when it was written down.**
+
+2. **Uncommitted text is not a source.** The revision is better work than what
+   it replaces, and none of it is quotable here until M139 commits it. I have
+   asked for the commit SHA, the five-bar decomposition, and an explicit
+   accounting of what happened to each withdrawn figure. **I will not guess a
+   replacement value for a pin.**
+
+3. **`BLOCKED-BY-LICENCE` on M12-S is a new claim that may not survive.**
+   Section 2.9.72 and M169's audit establish that the plan makes a paid
+   comparator a direct prerequisite for exactly **one** axis, `M1`, and that
+   the scorecard's all-arms-always conjunction propagates it to seven more as
+   an unratified addition. M12-S's licence dependency must be checked against
+   that finding before it is believed. If it is the same unratified
+   propagation, M12-S is not licence-blocked at all.
+
+**What this changes about how the record is kept.** Until this session no pin
+could reach the standing header above `## 1.` — `v2954.py`'s `SECTIONS` list
+covered only `2.9.54`-`2.9.73`. **The most owner-facing prose in the program was
+the least checked prose in the program.** A `HEADER` pseudo-section and a
+blockquote-aware `unquote()` now make it reachable, and
+`experiments/ORCH-verify/commission_header.py` proves the header pins fire:
+`5 of 5` planted defects caught by exact claim name, `1 of 1` inert edit
+survived.
+
+Two things that harness had to be taught, both of which cost a wrong answer
+first. Its label parser split the verifier's output into whitespace columns,
+so a claim label long enough to consume the pad width was followed by a single
+space and went unparsed — **a genuine catch was reported as `MISSED`, which
+invites "repairing" a pin that was never broken**. And its baseline arm
+originally demanded a GREEN unmutated run, which is unobtainable in a shared
+tree while another lane has a revision in flight; the criterion is now that a
+plant must turn **its own named claim** red while that claim is green in the
+baseline. That is strictly harder to satisfy, because a plant can no longer
+take credit for a failure something else caused.
+
+**The 13 ambient failures are not suppressed and are not resolved.** They are
+the alarm doing its job and they stay RED until M139 commits and I transcribe
+the replacements from the committed text.
+
+**The scoreboard remains `0 of 12`.**
 
 ---
 
