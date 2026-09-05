@@ -1,0 +1,18 @@
+[
+  {
+    "lane": "M176",
+    "path": "docs/research/M176-worker-invariance.md",
+    "adjudicated_by": "M184",
+    "head_commit": "5270e0ee",
+    "observed": "HEAD blob 32,085 bytes; working tree 9,999 bytes",
+    "lane_statement": "The prior reproduction/localization deliverables were dropped in full.",
+    "why_registered": "M176 withdrew five measured findings in an uncommitted rewrite. The figures are the lane's reproduction of the M12-S mechanism, and M12 is the only axis in the program with blocker set (e) none, so this touches the critical path. Deleting the pins would erase the findings from the record; reading the working tree would adopt an unadjudicated retraction as agreement. The claims stay pinned to the committed blob until M184 rules on whether this is a retraction, a supersession, or a silent drop.",
+    "withdrawn": [
+      "REDUCTION_ORDER",
+      "3,430",
+      "8,241,504",
+      "0.041619",
+      "[5,5,5,4]"
+    ]
+  }
+]

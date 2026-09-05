@@ -7783,10 +7783,32 @@ photographic. I corrected the lane within minutes and redirected it to the
 question that actually governs — what M166 owes, and whether that work is
 compute-bound or capture-bound.
 
-**A defect this surfaced in a document I own.** `:849` attributes M10 blockers
-`(b)(c)`, while the readiness table at `:2111` shows M10's comparator column as
-`UNMEASURED — blocker (d)`. Those lines disagree about whether M10 carries `(d)`.
-It is logged for repair rather than silently reconciled.
+**A defect this surfaced in a document I own — and the defect turned out to be
+mine, not the document's.** `:849` attributes M10 blockers `(b)(c)`, while the
+readiness table at `:2111` shows M10's comparator column as
+`UNMEASURED — blocker (d)`. I logged this as a contradiction to be repaired.
+
+> *Superseded wording, preserved:* "Those lines disagree about whether M10
+> carries `(d)`. It is logged for repair rather than silently reconciled."
+
+**Correction — there is no contradiction, and the scorecard is right.** The
+`:2111` entry sits in the column headed **`Fork (commit-pinned best-known-source
+common-merge rebuild)`** (`:2100`), and that column reads
+`UNMEASURED — blocker (d)` **uniformly across all twelve rows** (`:2102`–`:2113`),
+including M12, whose own blocker set is `(e) none`. The column is therefore
+recording why *the fork comparator* has no value on any axis — the missing
+licensed comparator — and says nothing whatever about the blocker set of the
+axis on that row. `:849`'s `(b)(c)` remains M10's blocker set, unchallenged.
+
+**The general failure, worth naming because I nearly wrote a repair for a
+correct document.** *A uniform per-column annotation read as a per-row attribute
+manufactures a contradiction that is not there.* The tell was available and I
+walked past it: I described the entry as M10's "comparator column" in the same
+sentence in which I concluded it disagreed about M10's blockers. The check that
+settles it is cheap and should be the reflex — read the table header, then read
+the same column on a row whose answer is already known. M12 was that row: had
+`(d)` been an axis attribute, M12 could not simultaneously read `(e) none` at
+`:851` and `blocker (d)` at `:2113`.
 
 **3. A correction against myself, on the record.** I had been carrying a
 `3074965504`-byte peak (`2.863` GiB) against the `6442450944`-byte bar as a

@@ -11,10 +11,15 @@ whitespace-collapsed so a phrase spanning a line break still resolves.
 """
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2]
+# Git always resolves against the real repository, never a tree under test.
+# `HEAD:` names this repository's committed record, which is not a property of
+# whichever document tree ROOT happens to point at during commissioning.
+GIT_ROOT = Path(__file__).resolve().parents[2]
 STATUS = ROOT / "docs" / "STATUS.md"
 SECTIONS = ["HEADER",
             "2.9.54", "2.9.55", "2.9.56", "2.9.57", "2.9.58", "2.9.59",
@@ -39,7 +44,44 @@ def unquote(block):
 
 
 def load(p):
+    p = str(p)
+    if p.startswith("HEAD:"):
+        # Pin to the committed record rather than the working tree.
+        #
+        # Used where a lane has withdrawn evidence in an edit that is not yet
+        # committed. Neither obvious option is honest: deleting the pin erases
+        # a finding from the record, and reading the working tree silently
+        # adopts an unadjudicated retraction as though it had been agreed.
+        # Reading the blob keeps the finding pinned to what was actually
+        # committed, and leaves the retraction to be adjudicated on its merits.
+        #
+        # Read as bytes via subprocess. On Windows `git show HEAD:path > tmp`
+        # re-encodes the stream and has already produced false failures here.
+        out = subprocess.run(["git", "show", p], capture_output=True,
+                             cwd=str(GIT_ROOT))
+        if out.returncode != 0:
+            raise SystemExit("FATAL: cannot read blob %s: %s"
+                             % (p, out.stderr.decode("utf-8", "replace")))
+        return collapse(out.stdout.decode("utf-8", "replace"))
     return collapse(Path(p).read_text(encoding="utf-8", errors="replace"))
+
+
+def src_ref(rel):
+    """Resolve a claim source to something load() accepts.
+
+    A `HEAD:` prefix selects the committed blob instead of the working tree.
+    """
+    rel = str(rel)
+    return rel if rel.startswith("HEAD:") else ROOT / rel
+
+
+def src_exists(ref):
+    ref = str(ref)
+    if ref.startswith("HEAD:"):
+        return subprocess.run(["git", "cat-file", "-e", ref],
+                              capture_output=True,
+                              cwd=str(GIT_ROOT)).returncode == 0
+    return Path(ref).exists()
 
 
 def section_text(status_raw, sec):
@@ -355,16 +397,25 @@ CLAIMS = [
     # 2.9.75: M176's reproduction of the M12-S mechanism. These are the lane's
     # own measured figures; the derived memory numbers are re-computed in the
     # xdoc block instead, because they are mine and exist in no source.
-    ("m176 mechanism", "REDUCTION_ORDER", R + "M176-worker-invariance.md",
-     None, None),
-    ("m176 pixels moved", "3,430", R + "M176-worker-invariance.md",
-     "8,241,504", None),
-    ("m176 pixel total", "8,241,504", R + "M176-worker-invariance.md",
-     "3,430", None),
-    ("m176 pixel pct", "0.041619", R + "M176-worker-invariance.md",
-     None, None),
-    ("m176 lattice", "[5,5,5,4]", R + "M176-worker-invariance.md",
-     None, None),
+    #
+    # PINNED TO HEAD, DELIBERATELY. M176 has rewritten this document in the
+    # working tree (32,085 -> 9,999 bytes) and states "The prior
+    # reproduction/localization deliverables were dropped in full", removing
+    # all five figures below. That withdrawal is uncommitted and unadjudicated,
+    # and it touches the only axis in the program with no blockers, so it is
+    # routed to lane M184 rather than absorbed. Until it is ruled on, these
+    # stay pinned to the committed blob; the pending-withdrawal check further
+    # down asserts the divergence out loud so this cannot read as agreement.
+    ("m176 mechanism @HEAD", "REDUCTION_ORDER",
+     "HEAD:" + R + "M176-worker-invariance.md", None, None),
+    ("m176 pixels moved @HEAD", "3,430",
+     "HEAD:" + R + "M176-worker-invariance.md", "8,241,504", None),
+    ("m176 pixel total @HEAD", "8,241,504",
+     "HEAD:" + R + "M176-worker-invariance.md", "3,430", None),
+    ("m176 pixel pct @HEAD", "0.041619",
+     "HEAD:" + R + "M176-worker-invariance.md", None, None),
+    ("m176 lattice @HEAD", "[5,5,5,4]",
+     "HEAD:" + R + "M176-worker-invariance.md", None, None),
 ]
 
 status_raw = STATUS.read_text(encoding="utf-8", errors="replace")
@@ -479,8 +530,8 @@ for label, needle, rel in HEADER_ONLY:
         green += 1
 
 for label, needle, rel, ctx, srclit in CLAIMS:
-    p = ROOT / rel
-    if not p.exists():
+    p = src_ref(rel)
+    if not src_exists(p):
         print("RED   %-24s SOURCE MISSING %s" % (label, rel))
         red += 1
         continue
@@ -725,7 +776,7 @@ V15_ANCHORS = ("final serialized source-support certificate",
 def git_blob(sha):
     """Return blob bytes, or None. Bytes, not a redirected stream: on Windows
     `git show ... > file` re-encodes and silently corrupts the comparison."""
-    p = subprocess.run(["git", "cat-file", "-p", sha], cwd=str(ROOT),
+    p = subprocess.run(["git", "cat-file", "-p", sha], cwd=str(GIT_ROOT),
                        stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     return p.stdout if p.returncode == 0 else None
 
@@ -1018,8 +1069,91 @@ check("a8 makernote/tether unrun", not _gate_hits,
       "Amendment 8 section 18.3 says neither gate has a tracked result; "
       "found %s" % (_gate_hits if _gate_hits else "none, as asserted"))
 
+# ---- 2.9.78 item 2: the "M10 blocker conflict" was mine, not the document's --
+# I logged `:849` (M10 = (b)(c)) against `:2111` (M10 = blocker (d)) as a
+# contradiction in a document I own, and nearly wrote a repair for correct text.
+# The `(d)` sits in the FORK COMPARATOR column, which reads the same on every
+# row -- it records why that comparator has no value on any axis, not the
+# blocker set of the axis on that row. Two checks below: the structural fact
+# that makes the reading unambiguous, and a pin on the correction itself.
+#
+# The structural check is the one that would have caught me, so it is the one
+# worth owning permanently: read the header, then read the same column on a row
+# whose answer is already known.
+_score = (ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md").read_text(
+    encoding="utf-8", errors="replace").splitlines()
+_hdr = next((i for i, l in enumerate(_score)
+             if l.startswith("| ID | Metric | strehl |")), None)
+_fork_col, _rows, _bad = None, [], []
+if _hdr is not None:
+    _cells = _score[_hdr].split("|")
+    _fork_col = next((j for j, c in enumerate(_cells) if "Fork (" in c), None)
+    for l in _score[_hdr + 2:]:
+        if not l.startswith("| M"):
+            break
+        parts = l.split("|")
+        # A cell containing a literal pipe would silently shift every column
+        # to its right, so a wrong width is a RED with its own message rather
+        # than an index error or, worse, a quietly misread cell.
+        if len(parts) != len(_cells):
+            _bad.append("%s width %d != header %d"
+                        % (parts[1].strip(), len(parts), len(_cells)))
+            continue
+        _rows.append((parts[1].strip(), parts[_fork_col]))
+check("m10 readiness table parses",
+      _hdr is not None and _fork_col is not None and not _bad,
+      "readiness table header/Fork column/row widths: hdr=%s fork_col=%s bad=%s"
+      % (_hdr, _fork_col, _bad or "none"))
+_off = [rid for rid, cell in _rows if "blocker (d)" not in cell]
+check("m10 fork column is uniform, not per-axis",
+      len(_rows) == 12 and not _off,
+      "the Fork comparator column must read 'blocker (d)' on all 12 rows -- "
+      "that uniformity is what proves it is not an axis blocker set; "
+      "rows=%d off=%s" % (len(_rows), _off or "none"))
+# M12 is the row that settles it: its own blocker set is `(e) none`, so if the
+# Fork column were an axis attribute M12 could not carry `(d)` here at all.
+check("m12 is the disambiguating row",
+      any(rid == "M12" and "blocker (d)" in cell for rid, cell in _rows),
+      "M12 must show 'blocker (d)' in the Fork column while its axis blocker "
+      "set is `(e) none`; that pair is the proof the column is not per-axis")
+_st = (ROOT / "docs" / "STATUS.md").read_text(encoding="utf-8", errors="replace")
+check("2.9.78 records the correction, not the false conflict",
+      "there is no contradiction, and the scorecard is right" in _st
+      and "uniform per-column annotation read as a per-row attribute" in _st,
+      "STATUS 2.9.78 item 2 must carry the correction and the named failure "
+      "mode; reverting it to the 'those lines disagree' claim must go RED")
+
+# ---- pending withdrawals: evidence a lane has retracted but not committed ----
+# A HEAD-pinned claim is only defensible while the divergence it stands on is
+# real and on somebody's docket. Left unattended it becomes a standing excuse
+# for ignoring the working tree. This block requires each pinned withdrawal to
+# be registered with the lane adjudicating it, and -- deliberately -- goes RED
+# once the divergence ENDS, so the entry must be retired rather than rot.
+_pw = ROOT / "experiments" / "ORCH-verify" / "pending-withdrawals.json"
+_pending = json.loads(_pw.read_text(encoding="utf-8")) if _pw.exists() else []
+_pinned_heads = {str(rel).split(":", 1)[1] for _, _, rel, _, _ in CLAIMS
+                 if str(rel).startswith("HEAD:")}
+_registered = {e["path"] for e in _pending}
+check("every HEAD-pinned source is registered",
+      _pinned_heads <= _registered,
+      "these sources are pinned to HEAD with no pending-withdrawal entry, so "
+      "nothing records why the working tree is being ignored: %s"
+      % (sorted(_pinned_heads - _registered) or "none"))
+for _e in _pending:
+    _f = ROOT / _e["path"]
+    _work = collapse(_f.read_text(encoding="utf-8", errors="replace")) \
+        if _f.exists() else ""
+    _gone = [t for t in _e["withdrawn"] if collapse(t) not in _work]
+    _back = [t for t in _e["withdrawn"] if collapse(t) in _work]
+    check("withdrawal pending: %s -> %s" % (_e["lane"], _e["adjudicated_by"]),
+          bool(_gone) and not _back,
+          "%d of %d withdrawn items absent from the working tree, %d restored "
+          "(%s). While items are absent the HEAD pin is doing real work. Once "
+          "they are all restored, or the withdrawal is committed and ruled on, "
+          "retire this entry and re-point or retract the claims."
+          % (len(_gone), len(_e["withdrawn"]), len(_back), _back or "none"))
+
 print()
-print("RED                 : %d" % red)
 print("not asserted (RED)  : %d  %s" % (len(missing_in_status), missing_in_status))
 print("controls pass       : %d" % ctl_pass)
 print("controls fail       : %d" % ctl_fail)
