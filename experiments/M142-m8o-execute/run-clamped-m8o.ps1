@@ -19,10 +19,10 @@ $Protocol = "M136 clamped-Catmull-Rom representable-domain M8-O v1"
 $VerifierProtocol = "M136 independent verifier v1"
 $SourceCommit = $SourceCommit.ToLowerInvariant()
 $RequiredCommit = "248178b921f98ec1f13ea4c07d30fa68ace787a0"
-$RequiredVerifierCommit = "e5489d64"
-$RequiredVerifierCommissionCommit = "9dbfedbd"
-$RequiredVerifierSha256 = "2AA3789060D9885A63EC9DF16CC8933492466185EF549241F69BA852A85CC9F7"
-$RequiredVerifierCommissionSha256 = "5FEC854466CC31C215458C16C9868EBFDE6A46E05D1839EE85FB3BD15EDA9865"
+$RequiredVerifierCommit = "f77a8bd2"
+$RequiredVerifierCommissionCommit = "f77a8bd2"
+$RequiredVerifierSha256 = "EBC780597CCC72E48DC73A6FA72CD14329BAA806CDF066484595FD1A03F520FB"
+$RequiredVerifierCommissionSha256 = "E60B699113D5896E735F85EA791C28747CFA6CCC57EF50BA17F9A3749CDF11E4"
 
 $Experiment = [IO.Path]::GetFullPath($PSScriptRoot)
 $Repo = [IO.Path]::GetFullPath((Join-Path $Experiment "..\.."))
