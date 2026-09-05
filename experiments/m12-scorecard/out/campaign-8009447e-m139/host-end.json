@@ -1,92 +1,67 @@
 {
-  "schema": 1,
   "evidence_tag": "VERIFIED",
+  "generated_utc": "2026-09-05T01:58:49.867621+00:00",
   "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
-  "generated_utc": "2026-09-04T20:39:39.889905+00:00",
+  "phase": "campaign-end",
+  "record_count": 294,
+  "records_sha256": "777B9917048ABB27B01C0184918870FAEE199E13BAEA3DD4917FB9E2C204F1F2",
   "sample": {
-    "started_utc": "2026-09-04T20:39:39.889905+00:00",
-    "completed_utc": "2026-09-04T20:39:44.901989+00:00",
-    "requested_seconds": 5.0,
-    "elapsed_seconds": 5.01956289994996,
+    "completed_utc": "2026-09-05T01:58:49.867621+00:00",
+    "elapsed_seconds": 5.015628499910235,
     "logical_processors": 32,
-    "whole_host_busy_cpu_seconds": 26.0625,
-    "whole_host_busy_fraction": 0.16335324649887376,
-    "whole_host_busy_fraction_of_wall_capacity": 0.16225578625742876,
-    "memory_start": {
-      "memory_load_percent": 42,
-      "total_physical_bytes": 66094223360,
-      "available_physical_bytes": 37842935808,
-      "total_page_file_bytes": 117633830912,
-      "available_page_file_bytes": 73673699328,
-      "total_virtual_bytes": 140737488224256,
-      "available_virtual_bytes": 140732202598400
-    },
     "memory_end": {
-      "memory_load_percent": 42,
-      "total_physical_bytes": 66094223360,
-      "available_physical_bytes": 37847957504,
+      "available_page_file_bytes": 73936957440,
+      "available_physical_bytes": 39177641984,
+      "available_virtual_bytes": 140732188966912,
+      "memory_load_percent": 40,
       "total_page_file_bytes": 117633830912,
-      "available_page_file_bytes": 73679020032,
-      "total_virtual_bytes": 140737488224256,
-      "available_virtual_bytes": 140732202598400
+      "total_physical_bytes": 66094223360,
+      "total_virtual_bytes": 140737488224256
     },
+    "memory_start": {
+      "available_page_file_bytes": 73897299968,
+      "available_physical_bytes": 39104684032,
+      "available_virtual_bytes": 140732188966912,
+      "memory_load_percent": 40,
+      "total_page_file_bytes": 117633830912,
+      "total_physical_bytes": 66094223360,
+      "total_virtual_bytes": 140737488224256
+    },
+    "requested_seconds": 5.0,
+    "started_utc": "2026-09-05T01:58:44.850711+00:00",
     "top_process_cpu": [
       {
-        "pid": 11336,
-        "parent_pid": 36064,
-        "name": "copilot.exe",
-        "cpu_seconds": 23.6875,
-        "capacity_fraction": 0.14746988726994123
-      },
-      {
-        "pid": 10812,
+        "capacity_fraction": 0.00223909501076505,
+        "cpu_seconds": 0.359375,
+        "name": "Code.exe",
         "parent_pid": 6972,
-        "name": "Code.exe",
-        "cpu_seconds": 0.390625,
-        "capacity_fraction": 0.0024318912808367617
+        "pid": 37952
       },
       {
-        "pid": 6972,
-        "parent_pid": 12952,
+        "capacity_fraction": 0.0012655754408672022,
+        "cpu_seconds": 0.203125,
         "name": "Code.exe",
-        "cpu_seconds": 0.171875,
-        "capacity_fraction": 0.0010700321635681751
-      },
-      {
-        "pid": 37952,
         "parent_pid": 6972,
-        "name": "Code.exe",
-        "cpu_seconds": 0.0625,
-        "capacity_fraction": 0.0003891026049338819
+        "pid": 10812
       },
       {
-        "pid": 9784,
-        "parent_pid": 6972,
-        "name": "Code.exe",
+        "capacity_fraction": 0.00019470391397956955,
         "cpu_seconds": 0.03125,
-        "capacity_fraction": 0.00019455130246694095
-      },
-      {
-        "pid": 43516,
-        "parent_pid": 6972,
         "name": "Code.exe",
-        "cpu_seconds": 0.015625,
-        "capacity_fraction": 9.727565123347048e-05
+        "parent_pid": 6972,
+        "pid": 45428
       },
       {
-        "pid": 32516,
-        "parent_pid": 11336,
-        "name": "copilot.exe",
+        "capacity_fraction": 9.735195698978478e-05,
         "cpu_seconds": 0.015625,
-        "capacity_fraction": 9.727565123347048e-05
-      },
-      {
-        "pid": 41232,
-        "parent_pid": 30456,
-        "name": "python.exe",
-        "cpu_seconds": 0.015625,
-        "capacity_fraction": 9.727565123347048e-05
+        "name": "Code.exe",
+        "parent_pid": 6972,
+        "pid": 25068
       }
-    ]
-  }
+    ],
+    "whole_host_busy_cpu_seconds": 3.28125,
+    "whole_host_busy_fraction": 0.02118003025718608,
+    "whole_host_busy_fraction_of_wall_capacity": 0.020443910967854802
+  },
+  "schema": 1
 }

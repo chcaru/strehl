@@ -1,0 +1,967 @@
+{
+  "schema": 1,
+  "evidence_tag": "VERIFIED",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "generated_utc": "2026-09-05T01:16:14.4013608Z",
+  "criterion": "six samples five seconds apart with no cargo, rustc, strehl, or ExifTool process before the unchanged registered per-run gates",
+  "complete": false,
+  "runtime_affinity": 4294967295,
+  "runtime_priority": "Normal",
+  "samples": [
+    {
+      "sampled_utc": "2026-09-05T01:15:49.0516115Z",
+      "named_contenders": [
+        {
+          "Id": 25652,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3057814-07:00"
+        },
+        {
+          "Id": 38288,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3305829-07:00"
+        },
+        {
+          "Id": 6868,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6166842-07:00"
+        },
+        {
+          "Id": 8984,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6283332-07:00"
+        },
+        {
+          "Id": 12320,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6725952-07:00"
+        },
+        {
+          "Id": 12612,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7085985-07:00"
+        },
+        {
+          "Id": 14792,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6687525-07:00"
+        },
+        {
+          "Id": 15388,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7167703-07:00"
+        },
+        {
+          "Id": 18368,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6608289-07:00"
+        },
+        {
+          "Id": 22020,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6648323-07:00"
+        },
+        {
+          "Id": 23404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6367782-07:00"
+        },
+        {
+          "Id": 24348,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6340308-07:00"
+        },
+        {
+          "Id": 28924,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6919051-07:00"
+        },
+        {
+          "Id": 28936,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7043989-07:00"
+        },
+        {
+          "Id": 30404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7210884-07:00"
+        },
+        {
+          "Id": 30412,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6879449-07:00"
+        },
+        {
+          "Id": 30956,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6134912-07:00"
+        },
+        {
+          "Id": 31384,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.624887-07:00"
+        },
+        {
+          "Id": 32020,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6470982-07:00"
+        },
+        {
+          "Id": 34064,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6193572-07:00"
+        },
+        {
+          "Id": 34332,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7271221-07:00"
+        },
+        {
+          "Id": 37196,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7126316-07:00"
+        },
+        {
+          "Id": 37800,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6567641-07:00"
+        },
+        {
+          "Id": 37812,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6219384-07:00"
+        },
+        {
+          "Id": 37848,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6843292-07:00"
+        },
+        {
+          "Id": 40216,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6397073-07:00"
+        },
+        {
+          "Id": 40516,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6960928-07:00"
+        },
+        {
+          "Id": 41548,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6498996-07:00"
+        },
+        {
+          "Id": 42040,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6311925-07:00"
+        },
+        {
+          "Id": 44320,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.676599-07:00"
+        },
+        {
+          "Id": 45828,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6536609-07:00"
+        },
+        {
+          "Id": 46620,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6434673-07:00"
+        },
+        {
+          "Id": 46744,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7003154-07:00"
+        }
+      ]
+    },
+    {
+      "sampled_utc": "2026-09-05T01:15:54.1190171Z",
+      "named_contenders": [
+        {
+          "Id": 25652,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3057814-07:00"
+        },
+        {
+          "Id": 38288,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3305829-07:00"
+        },
+        {
+          "Id": 6868,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6166842-07:00"
+        },
+        {
+          "Id": 8984,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6283332-07:00"
+        },
+        {
+          "Id": 9224,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.0135242-07:00"
+        },
+        {
+          "Id": 12320,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6725952-07:00"
+        },
+        {
+          "Id": 12612,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7085985-07:00"
+        },
+        {
+          "Id": 14584,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.1140997-07:00"
+        },
+        {
+          "Id": 14792,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6687525-07:00"
+        },
+        {
+          "Id": 15388,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7167703-07:00"
+        },
+        {
+          "Id": 18368,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6608289-07:00"
+        },
+        {
+          "Id": 23404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6367782-07:00"
+        },
+        {
+          "Id": 23528,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:51.0461973-07:00"
+        },
+        {
+          "Id": 24348,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6340308-07:00"
+        },
+        {
+          "Id": 28924,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6919051-07:00"
+        },
+        {
+          "Id": 28936,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7043989-07:00"
+        },
+        {
+          "Id": 30404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7210884-07:00"
+        },
+        {
+          "Id": 30956,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6134912-07:00"
+        },
+        {
+          "Id": 31384,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.624887-07:00"
+        },
+        {
+          "Id": 32020,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6470982-07:00"
+        },
+        {
+          "Id": 33732,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.9949016-07:00"
+        },
+        {
+          "Id": 34064,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6193572-07:00"
+        },
+        {
+          "Id": 34332,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7271221-07:00"
+        },
+        {
+          "Id": 34916,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.5107984-07:00"
+        },
+        {
+          "Id": 37196,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7126316-07:00"
+        },
+        {
+          "Id": 37800,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6567641-07:00"
+        },
+        {
+          "Id": 37812,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6219384-07:00"
+        },
+        {
+          "Id": 37848,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6843292-07:00"
+        },
+        {
+          "Id": 40216,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6397073-07:00"
+        },
+        {
+          "Id": 40516,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6960928-07:00"
+        },
+        {
+          "Id": 41548,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6498996-07:00"
+        },
+        {
+          "Id": 45828,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6536609-07:00"
+        },
+        {
+          "Id": 46620,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6434673-07:00"
+        },
+        {
+          "Id": 46744,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7003154-07:00"
+        }
+      ]
+    },
+    {
+      "sampled_utc": "2026-09-05T01:15:59.2181992Z",
+      "named_contenders": [
+        {
+          "Id": 25652,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3057814-07:00"
+        },
+        {
+          "Id": 38288,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3305829-07:00"
+        },
+        {
+          "Id": 6868,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6166842-07:00"
+        },
+        {
+          "Id": 8984,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6283332-07:00"
+        },
+        {
+          "Id": 9224,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.0135242-07:00"
+        },
+        {
+          "Id": 12320,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6725952-07:00"
+        },
+        {
+          "Id": 12612,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7085985-07:00"
+        },
+        {
+          "Id": 14584,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.1140997-07:00"
+        },
+        {
+          "Id": 14792,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6687525-07:00"
+        },
+        {
+          "Id": 18368,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6608289-07:00"
+        },
+        {
+          "Id": 23404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6367782-07:00"
+        },
+        {
+          "Id": 23528,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:51.0461973-07:00"
+        },
+        {
+          "Id": 28924,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6919051-07:00"
+        },
+        {
+          "Id": 28936,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7043989-07:00"
+        },
+        {
+          "Id": 30404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7210884-07:00"
+        },
+        {
+          "Id": 30956,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6134912-07:00"
+        },
+        {
+          "Id": 31384,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.624887-07:00"
+        },
+        {
+          "Id": 32020,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6470982-07:00"
+        },
+        {
+          "Id": 33732,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.9949016-07:00"
+        },
+        {
+          "Id": 34064,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6193572-07:00"
+        },
+        {
+          "Id": 34332,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7271221-07:00"
+        },
+        {
+          "Id": 34916,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.5107984-07:00"
+        },
+        {
+          "Id": 37196,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7126316-07:00"
+        },
+        {
+          "Id": 37800,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6567641-07:00"
+        },
+        {
+          "Id": 37812,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6219384-07:00"
+        },
+        {
+          "Id": 37848,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6843292-07:00"
+        },
+        {
+          "Id": 40216,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6397073-07:00"
+        },
+        {
+          "Id": 40516,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6960928-07:00"
+        },
+        {
+          "Id": 41548,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6498996-07:00"
+        },
+        {
+          "Id": 45828,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6536609-07:00"
+        },
+        {
+          "Id": 46620,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6434673-07:00"
+        },
+        {
+          "Id": 46744,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7003154-07:00"
+        }
+      ]
+    },
+    {
+      "sampled_utc": "2026-09-05T01:16:04.2956666Z",
+      "named_contenders": [
+        {
+          "Id": 25652,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3057814-07:00"
+        },
+        {
+          "Id": 38288,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3305829-07:00"
+        },
+        {
+          "Id": 6868,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6166842-07:00"
+        },
+        {
+          "Id": 8984,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6283332-07:00"
+        },
+        {
+          "Id": 9224,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.0135242-07:00"
+        },
+        {
+          "Id": 12320,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6725952-07:00"
+        },
+        {
+          "Id": 12612,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7085985-07:00"
+        },
+        {
+          "Id": 14584,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.1140997-07:00"
+        },
+        {
+          "Id": 14792,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6687525-07:00"
+        },
+        {
+          "Id": 18368,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6608289-07:00"
+        },
+        {
+          "Id": 23404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6367782-07:00"
+        },
+        {
+          "Id": 23528,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:51.0461973-07:00"
+        },
+        {
+          "Id": 28924,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6919051-07:00"
+        },
+        {
+          "Id": 28936,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7043989-07:00"
+        },
+        {
+          "Id": 30404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7210884-07:00"
+        },
+        {
+          "Id": 30956,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6134912-07:00"
+        },
+        {
+          "Id": 32020,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6470982-07:00"
+        },
+        {
+          "Id": 33732,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.9949016-07:00"
+        },
+        {
+          "Id": 34332,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7271221-07:00"
+        },
+        {
+          "Id": 34916,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.5107984-07:00"
+        },
+        {
+          "Id": 37196,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7126316-07:00"
+        },
+        {
+          "Id": 37800,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6567641-07:00"
+        },
+        {
+          "Id": 37812,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6219384-07:00"
+        },
+        {
+          "Id": 37848,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6843292-07:00"
+        },
+        {
+          "Id": 40216,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6397073-07:00"
+        },
+        {
+          "Id": 40516,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6960928-07:00"
+        },
+        {
+          "Id": 41548,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6498996-07:00"
+        },
+        {
+          "Id": 45828,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6536609-07:00"
+        },
+        {
+          "Id": 46620,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6434673-07:00"
+        },
+        {
+          "Id": 46744,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7003154-07:00"
+        }
+      ]
+    },
+    {
+      "sampled_utc": "2026-09-05T01:16:09.3555460Z",
+      "named_contenders": [
+        {
+          "Id": 25652,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3057814-07:00"
+        },
+        {
+          "Id": 38288,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3305829-07:00"
+        },
+        {
+          "Id": 6868,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6166842-07:00"
+        },
+        {
+          "Id": 8984,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6283332-07:00"
+        },
+        {
+          "Id": 9224,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.0135242-07:00"
+        },
+        {
+          "Id": 12320,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6725952-07:00"
+        },
+        {
+          "Id": 12612,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7085985-07:00"
+        },
+        {
+          "Id": 14584,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.1140997-07:00"
+        },
+        {
+          "Id": 14792,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6687525-07:00"
+        },
+        {
+          "Id": 18368,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6608289-07:00"
+        },
+        {
+          "Id": 23404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6367782-07:00"
+        },
+        {
+          "Id": 23528,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:51.0461973-07:00"
+        },
+        {
+          "Id": 28924,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6919051-07:00"
+        },
+        {
+          "Id": 28936,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7043989-07:00"
+        },
+        {
+          "Id": 30404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7210884-07:00"
+        },
+        {
+          "Id": 30956,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6134912-07:00"
+        },
+        {
+          "Id": 32020,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6470982-07:00"
+        },
+        {
+          "Id": 33732,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.9949016-07:00"
+        },
+        {
+          "Id": 34332,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7271221-07:00"
+        },
+        {
+          "Id": 34916,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.5107984-07:00"
+        },
+        {
+          "Id": 37800,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6567641-07:00"
+        },
+        {
+          "Id": 37812,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6219384-07:00"
+        },
+        {
+          "Id": 37848,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6843292-07:00"
+        },
+        {
+          "Id": 40516,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6960928-07:00"
+        },
+        {
+          "Id": 41548,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6498996-07:00"
+        },
+        {
+          "Id": 45828,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6536609-07:00"
+        },
+        {
+          "Id": 46620,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6434673-07:00"
+        },
+        {
+          "Id": 46744,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7003154-07:00"
+        }
+      ]
+    },
+    {
+      "sampled_utc": "2026-09-05T01:16:14.3982787Z",
+      "named_contenders": [
+        {
+          "Id": 25652,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3057814-07:00"
+        },
+        {
+          "Id": 38288,
+          "ProcessName": "cargo",
+          "StartTime": "2026-09-04T18:15:44.3305829-07:00"
+        },
+        {
+          "Id": 6868,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6166842-07:00"
+        },
+        {
+          "Id": 8984,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6283332-07:00"
+        },
+        {
+          "Id": 9224,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.0135242-07:00"
+        },
+        {
+          "Id": 12320,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6725952-07:00"
+        },
+        {
+          "Id": 12612,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7085985-07:00"
+        },
+        {
+          "Id": 14584,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.1140997-07:00"
+        },
+        {
+          "Id": 14792,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6687525-07:00"
+        },
+        {
+          "Id": 18368,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6608289-07:00"
+        },
+        {
+          "Id": 23404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6367782-07:00"
+        },
+        {
+          "Id": 23528,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:51.0461973-07:00"
+        },
+        {
+          "Id": 28924,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6919051-07:00"
+        },
+        {
+          "Id": 28936,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7043989-07:00"
+        },
+        {
+          "Id": 30404,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7210884-07:00"
+        },
+        {
+          "Id": 30956,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6134912-07:00"
+        },
+        {
+          "Id": 32020,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6470982-07:00"
+        },
+        {
+          "Id": 33732,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:49.9949016-07:00"
+        },
+        {
+          "Id": 34332,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7271221-07:00"
+        },
+        {
+          "Id": 34916,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:50.5107984-07:00"
+        },
+        {
+          "Id": 37800,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6567641-07:00"
+        },
+        {
+          "Id": 37812,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6219384-07:00"
+        },
+        {
+          "Id": 37848,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6843292-07:00"
+        },
+        {
+          "Id": 40516,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6960928-07:00"
+        },
+        {
+          "Id": 41548,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6498996-07:00"
+        },
+        {
+          "Id": 45828,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6536609-07:00"
+        },
+        {
+          "Id": 46620,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.6434673-07:00"
+        },
+        {
+          "Id": 46744,
+          "ProcessName": "rustc",
+          "StartTime": "2026-09-04T18:15:44.7003154-07:00"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "contaminant": {
+    "child_pid": 34780,
+    "lane": "M172-worker-memory",
+    "observed_child_command": "target\\release\\strehl.exe stack D:\\personal\\macro\\bee-1-cpl --limit 299 --out experiments\\M172-worker-memory\\out\\candidate\\runs\\warmup-n299-w16.tiff --linear-srgb --demosaic",
+    "observed_root_command": "python.exe experiments\\M172-worker-memory\\measure_memory.py --exe target\\release\\strehl.exe --output-root experiments\\M172-worker-memory\\out\\candidate --stack bee-1-cpl --limit 299 --workers 16 --kind warmup",
+    "root_pid": 44580,
+    "started_utc": "2026-09-04T16:02:18.199324-07:00"
+  },
+  "decision": {
+    "action": "Retain, mark non-protocol, and rerun every overlapping position.",
+    "affected_rule": "N-mod-4 per-frame spread uses wall time.",
+    "reason": "The concurrent run consumed the same RAW input, memory subsystem, and storage path. Passing the CPU-only external-load gate does not establish an uncontended timing observation. The first rerun was separately invalid because its target inherited a one-CPU affinity mask from the agent-runtime throttle."
+  },
+  "evidence_tag": "VERIFIED",
+  "generated_utc": "2026-09-04T17:53:02.519120-07:00",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "reconciliation": {
+    "initial_backup_rows_annotated": 22,
+    "later_rows_annotated": 2,
+    "method": "Recover original acceptance from the immutable pre-invalidation backup; retain later affected record identities from the prior artifact."
+  },
+  "records": {
+    "accepted_rows_invalidated": 22,
+    "affected": [
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:02:22.212019+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N99:W16:R1",
+        "started_utc": "2026-09-04T23:01:53.333324+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:02:56.802992+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N99:W16:R2",
+        "started_utc": "2026-09-04T23:02:27.501689+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:03:32.293693+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N98:W16:R2",
+        "started_utc": "2026-09-04T23:03:02.080595+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:04:07.934752+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N97:W16:R2",
+        "started_utc": "2026-09-04T23:03:37.578713+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:05:05.635559+00:00",
+        "original_accepted_for_protocol": false,
+        "position_key": "modulo-scored:N96:W16:R2",
+        "started_utc": "2026-09-04T23:04:13.225250+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-04T23:06:10.676663+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N96:W16:R2",
+        "started_utc": "2026-09-04T23:05:40.951425+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:06:43.726351+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N96:W16:R3",
+        "started_utc": "2026-09-04T23:06:15.955750+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:07:16.065424+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N97:W16:R3",
+        "started_utc": "2026-09-04T23:06:48.996567+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:07:49.335770+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N98:W16:R3",
+        "started_utc": "2026-09-04T23:07:21.380173+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:08:23.615337+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N99:W16:R3",
+        "started_utc": "2026-09-04T23:07:54.631030+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:08:57.062169+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N99:W16:R4",
+        "started_utc": "2026-09-04T23:08:28.903235+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:09:30.341319+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N98:W16:R4",
+        "started_utc": "2026-09-04T23:09:02.341679+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:10:04.183291+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N97:W16:R4",
+        "started_utc": "2026-09-04T23:09:35.659651+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:10:38.284788+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N96:W16:R4",
+        "started_utc": "2026-09-04T23:10:09.457590+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:11:10.809702+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N96:W16:R5",
+        "started_utc": "2026-09-04T23:10:43.589563+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:11:43.620851+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N97:W16:R5",
+        "started_utc": "2026-09-04T23:11:16.111033+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:12:16.912862+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N98:W16:R5",
+        "started_utc": "2026-09-04T23:11:48.971569+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:12:50.005959+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N99:W16:R5",
+        "started_utc": "2026-09-04T23:12:22.190949+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:13:23.804207+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N99:W16:R6",
+        "started_utc": "2026-09-04T23:12:55.283026+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:13:56.405232+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N98:W16:R6",
+        "started_utc": "2026-09-04T23:13:29.117995+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:14:29.884508+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N97:W16:R6",
+        "started_utc": "2026-09-04T23:14:01.684172+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:15:03.003924+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N96:W16:R6",
+        "started_utc": "2026-09-04T23:14:35.172451+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-04T23:44:11.304807+00:00",
+        "original_accepted_for_protocol": false,
+        "position_key": "modulo-scored:N99:W16:R1",
+        "started_utc": "2026-09-04T23:37:26.739379+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T00:50:08.313474+00:00",
+        "original_accepted_for_protocol": true,
+        "position_key": "modulo-scored:N99:W16:R1",
+        "started_utc": "2026-09-05T00:43:56.385930+00:00"
+      }
+    ],
+    "backup_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records-before-m172-invalidation.jsonl",
+    "backup_sha256": "8DECABB089D0F63777D5C9A9F8FE088251F4EEE882DFF75F420DAF9317E6E910",
+    "originally_rejected_rows_annotated": 2,
+    "reconciled_records_sha256": "5D6046F5DEA1E2FD64AF25B70F26F1371C7CEEDF1B7D7B83A504B01F3D1AFF26",
+    "rewritten_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records.jsonl",
+    "rewritten_sha256_before_rerun": "F8D441AADCED47DD7872F64AAA67F9A2B98D8B19495AEC32F10BAB5AEADE13EE",
+    "rows_annotated": 24
+  },
+  "schema": 1
+}

@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "evidence_tag": "VERIFIED",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "generated_utc": "2026-09-05T01:23:25.1141607Z",
+  "criterion": "six samples five seconds apart with no cargo, rustc, strehl, or ExifTool process before the unchanged registered per-run gates",
+  "complete": true,
+  "runtime_affinity": 4294967295,
+  "runtime_priority": "Normal",
+  "samples": [
+    {
+      "sampled_utc": "2026-09-05T01:22:59.9906761Z",
+      "named_contenders": []
+    },
+    {
+      "sampled_utc": "2026-09-05T01:23:05.0376523Z",
+      "named_contenders": []
+    },
+    {
+      "sampled_utc": "2026-09-05T01:23:10.0556010Z",
+      "named_contenders": []
+    },
+    {
+      "sampled_utc": "2026-09-05T01:23:15.0788585Z",
+      "named_contenders": []
+    },
+    {
+      "sampled_utc": "2026-09-05T01:23:20.0973442Z",
+      "named_contenders": []
+    },
+    {
+      "sampled_utc": "2026-09-05T01:23:25.1123099Z",
+      "named_contenders": []
+    }
+  ]
+}

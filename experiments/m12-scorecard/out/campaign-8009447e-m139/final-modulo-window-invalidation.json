@@ -1,0 +1,426 @@
+{
+  "decision": {
+    "action": "Retain every prior row, mark the accepted modulo window non-protocol, and rerun all four warm-ups and 24 scored positions under an enforced named-contender hold.",
+    "affected_rule": "N-mod-4 per-frame spread uses wall time.",
+    "reason": "Post-run inspection found external Strehl processes before the first scored sweep and compiler/linker processes during the tail. The CPU gates accepted several rows because the named contenders were below the CPU thresholds, but those gates cannot bound their memory, I/O, cache-state, or thermal effects.",
+    "registered_gates_unchanged": {
+      "during_run_external_busy_fraction_max": 0.1,
+      "preload_whole_host_busy_fraction_max": 0.15
+    }
+  },
+  "evidence_tag": "VERIFIED",
+  "generated_utc": "2026-09-05T01:14:02.430965+00:00",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "records": {
+    "accepted_rows_invalidated": 28,
+    "affected": [
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T22:57:53.261092+00:00",
+        "kind": "modulo-warmup",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.0310508546526401,
+            "name": "strehl.exe",
+            "pid": 9768
+          },
+          {
+            "capacity_fraction": 0.0193702823695153,
+            "name": "strehl.exe",
+            "pid": 44448
+          }
+        ],
+        "position_key": "modulo-warmup:N96:W16:R0",
+        "started_utc": "2026-09-04T22:57:13.318904+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T22:58:37.065954+00:00",
+        "kind": "modulo-warmup",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.030956750865812913,
+            "name": "strehl.exe",
+            "pid": 9768
+          },
+          {
+            "capacity_fraction": 0.01742534089616513,
+            "name": "strehl.exe",
+            "pid": 44448
+          }
+        ],
+        "position_key": "modulo-warmup:N97:W16:R0",
+        "started_utc": "2026-09-04T22:57:58.572009+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T22:59:20.321281+00:00",
+        "kind": "modulo-warmup",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.031102871598232155,
+            "name": "strehl.exe",
+            "pid": 9768
+          },
+          {
+            "capacity_fraction": 0.017689758221494538,
+            "name": "strehl.exe",
+            "pid": 44448
+          }
+        ],
+        "position_key": "modulo-warmup:N98:W16:R0",
+        "started_utc": "2026-09-04T22:58:42.361274+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:00:04.772842+00:00",
+        "kind": "modulo-warmup",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.031149278807350776,
+            "name": "strehl.exe",
+            "pid": 9768
+          },
+          {
+            "capacity_fraction": 0.026087521001156275,
+            "name": "strehl.exe",
+            "pid": 44448
+          }
+        ],
+        "position_key": "modulo-warmup:N99:W16:R0",
+        "started_utc": "2026-09-04T22:59:25.671849+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:00:39.745667+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.031152661018534335,
+            "name": "strehl.exe",
+            "pid": 9768
+          },
+          {
+            "capacity_fraction": 0.0196651172679498,
+            "name": "strehl.exe",
+            "pid": 44448
+          }
+        ],
+        "position_key": "modulo-scored:N96:W16:R1",
+        "started_utc": "2026-09-04T23:00:10.050628+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:01:13.698907+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.031245925765056484,
+            "name": "strehl.exe",
+            "pid": 9768
+          },
+          {
+            "capacity_fraction": 0.013919524562003356,
+            "name": "strehl.exe",
+            "pid": 44448
+          }
+        ],
+        "position_key": "modulo-scored:N97:W16:R1",
+        "started_utc": "2026-09-04T23:00:45.022234+00:00"
+      },
+      {
+        "attempt": 1,
+        "completed_utc": "2026-09-04T23:01:48.052326+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.031247993898216374,
+            "name": "strehl.exe",
+            "pid": 9768
+          },
+          {
+            "capacity_fraction": 0.014601866307577744,
+            "name": "strehl.exe",
+            "pid": 44448
+          }
+        ],
+        "position_key": "modulo-scored:N98:W16:R1",
+        "started_utc": "2026-09-04T23:01:18.975783+00:00"
+      },
+      {
+        "attempt": 4,
+        "completed_utc": "2026-09-05T00:54:19.199473+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N99:W16:R1",
+        "started_utc": "2026-09-05T00:53:49.860901+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T00:55:28.285986+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N99:W16:R2",
+        "started_utc": "2026-09-05T00:54:59.496002+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T00:56:01.875814+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N98:W16:R2",
+        "started_utc": "2026-09-05T00:55:33.564136+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T00:56:35.376773+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N97:W16:R2",
+        "started_utc": "2026-09-05T00:56:07.186335+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T00:57:09.603912+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N96:W16:R2",
+        "started_utc": "2026-09-05T00:56:40.661835+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T00:57:42.831117+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N96:W16:R3",
+        "started_utc": "2026-09-05T00:57:14.871564+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T00:58:16.378964+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N97:W16:R3",
+        "started_utc": "2026-09-05T00:57:48.104187+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T00:58:49.058635+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N98:W16:R3",
+        "started_utc": "2026-09-05T00:58:21.657851+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T00:59:23.046609+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N99:W16:R3",
+        "started_utc": "2026-09-05T00:58:54.353606+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T00:59:56.780394+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N99:W16:R4",
+        "started_utc": "2026-09-05T00:59:28.330216+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:00:30.245706+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N98:W16:R4",
+        "started_utc": "2026-09-05T01:00:02.055695+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:01:04.137957+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.001168197933472889,
+            "name": "rustc.exe",
+            "pid": 44352
+          }
+        ],
+        "position_key": "modulo-scored:N97:W16:R4",
+        "started_utc": "2026-09-05T01:00:35.549165+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:01:37.796401+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.00603325965427339,
+            "name": "rustc.exe",
+            "pid": 44352
+          },
+          {
+            "capacity_fraction": 0.005838638375103281,
+            "name": "rustc.exe",
+            "pid": 39604
+          }
+        ],
+        "position_key": "modulo-scored:N96:W16:R4",
+        "started_utc": "2026-09-05T01:01:09.417307+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:02:10.960611+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.004769489716322403,
+            "name": "rustc.exe",
+            "pid": 44352
+          },
+          {
+            "capacity_fraction": 0.004672153191499497,
+            "name": "rustc.exe",
+            "pid": 39604
+          }
+        ],
+        "position_key": "modulo-scored:N96:W16:R5",
+        "started_utc": "2026-09-05T01:01:43.067886+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:02:43.829853+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.008469303986504619,
+            "name": "rustc.exe",
+            "pid": 39684
+          },
+          {
+            "capacity_fraction": 0.00778786573471689,
+            "name": "rustc.exe",
+            "pid": 18124
+          },
+          {
+            "capacity_fraction": 0.00515946104924994,
+            "name": "rustc.exe",
+            "pid": 39604
+          },
+          {
+            "capacity_fraction": 0.00428332615409429,
+            "name": "rustc.exe",
+            "pid": 15332
+          },
+          {
+            "capacity_fraction": 9.734832168396113e-05,
+            "name": "cargo.exe",
+            "pid": 43120
+          }
+        ],
+        "position_key": "modulo-scored:N97:W16:R5",
+        "started_utc": "2026-09-05T01:02:16.235895+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:03:17.662953+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.007593692009447225,
+            "name": "rustc.exe",
+            "pid": 39604
+          }
+        ],
+        "position_key": "modulo-scored:N98:W16:R5",
+        "started_utc": "2026-09-05T01:02:49.112458+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:03:51.399997+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.01586974693705176,
+            "name": "rustc.exe",
+            "pid": 39604
+          }
+        ],
+        "position_key": "modulo-scored:N99:W16:R5",
+        "started_utc": "2026-09-05T01:03:22.959944+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:04:25.327860+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.018204961142809267,
+            "name": "rustc.exe",
+            "pid": 39604
+          }
+        ],
+        "position_key": "modulo-scored:N99:W16:R6",
+        "started_utc": "2026-09-05T01:03:56.688761+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:04:58.468177+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.014584834204753495,
+            "name": "rustc.exe",
+            "pid": 39604
+          }
+        ],
+        "position_key": "modulo-scored:N98:W16:R6",
+        "started_utc": "2026-09-05T01:04:30.618211+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:05:32.294845+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.004571431942119425,
+            "name": "rustc.exe",
+            "pid": 39604
+          },
+          {
+            "capacity_fraction": 0.0004863225470339814,
+            "name": "link.exe",
+            "pid": 14620
+          }
+        ],
+        "position_key": "modulo-scored:N97:W16:R6",
+        "started_utc": "2026-09-05T01:05:03.774734+00:00"
+      },
+      {
+        "attempt": 2,
+        "completed_utc": "2026-09-05T01:06:05.822331+00:00",
+        "kind": "modulo-scored",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.0007789010835757849,
+            "name": "cargo.exe",
+            "pid": 15852
+          },
+          {
+            "capacity_fraction": 9.736263544697311e-05,
+            "name": "cargo.exe",
+            "pid": 3052
+          }
+        ],
+        "position_key": "modulo-scored:N96:W16:R6",
+        "started_utc": "2026-09-05T01:05:37.569230+00:00"
+      }
+    ],
+    "backup_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records-before-final-modulo-rerun.jsonl",
+    "backup_sha256": "6D5E108888485B79615E2D5CF07DDE3EC65A5CB901CE0520D8240B7944A61928",
+    "rewritten_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records.jsonl",
+    "rewritten_sha256_before_rerun": "9E8D8103615072E85B29AF96146B4AE86FD6C102B3C29193F00B2DDABF19A132",
+    "rows_with_named_contenders_in_final_preload_sample": 17
+  },
+  "schema": 1
+}

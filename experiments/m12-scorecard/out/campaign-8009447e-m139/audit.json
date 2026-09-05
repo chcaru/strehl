@@ -1,427 +1,543 @@
 {
-  "commissioning": {
-    "determinism": {
-      "hash_gate": {
-        "baseline_sha256": "790570CF966ADDF883D1E1BF8CE093A0978676540EAB447D3CFA159A5EE8B8CC",
-        "lsb_after": 6576,
-        "lsb_before": 6577,
-        "lsb_coordinate": [
-          2344,
-          3516,
-          1
-        ],
-        "lsb_sha256": "15098E47164E77BC1C70D7E2F373631B74537DB999CADCE72E3C9AE250190061",
-        "one_output_lsb_went_red": true,
-        "plant_pixels_went_red": true,
-        "plant_went_red": true,
-        "planted_sha256": "8701BB33D55BBFF13878F1C488970429CDB7BE1D73D72A768640AA3AB7BE1CDD",
-        "provenance_stayed_green": true,
-        "restore_pixels_returned_green": true,
-        "restore_returned_green": true,
-        "restored_sha256": "790570CF966ADDF883D1E1BF8CE093A0978676540EAB447D3CFA159A5EE8B8CC"
+  "absolute_bars": {
+    "memory_ceiling": {
+      "bar_bytes": 6442450944,
+      "bar_gib": 6.0,
+      "evidence_tag": "VERIFIED",
+      "maximum_position_key": "scored:N299:W16:R3",
+      "maximum_sampled_process_tree_private_committed_bytes": 38286671872,
+      "maximum_sampled_process_tree_private_committed_gib": 35.65724182128906,
+      "verdict": "FAIL"
+    },
+    "memory_scaling": {
+      "bar": 1.1,
+      "evidence_tag": "VERIFIED",
+      "formal_verdict": "UNMEASURED_SAMPLING_COVERAGE",
+      "kernel_job_maximum": 1.461570587793803,
+      "kernel_job_peak_n299_over_n33_by_worker": {
+        "1": 1.0000084911123528,
+        "16": 1.461570587793803,
+        "2": 1.0003614641685856,
+        "4": 1.0004514657259778,
+        "8": 1.1425258371177274
       },
-      "status": "COMMISSIONED"
-    },
-    "memory": {
-      "status": "COMMISSIONED",
-      "verdict": {
-        "null_peak_private_committed_bytes": 80920576,
-        "null_stayed_below_one_gib": true,
-        "plant_peak_private_committed_bytes": 7544352768,
-        "plant_peak_process_count": 2,
-        "seven_gib_child_exceeded_six_gib_bar": true
+      "numeric_bar_met": false,
+      "reason": "The observed maximum misses the bar, and independent kernel Job Object peaks agree, but the frozen adjudication requires every scored run to meet the 90% sampling-coverage rule before assigning the ratio a formal PASS or FAIL.",
+      "sampled_maximum": 1.4615654159027742,
+      "sampled_peak_n299_over_n33_by_worker": {
+        "1": 1.0000084911123528,
+        "16": 1.4615654159027742,
+        "2": 1.0004041068854186,
+        "4": 1.0004527476657867,
+        "8": 1.1426058962417458
+      },
+      "sampling_quality": {
+        "coverage_requirement": 0.9,
+        "maximum_gap_ms": 60.85830001393333,
+        "maximum_gap_requirement_ms": 100.0,
+        "minimum_coverage": 0.7957678743186919
       }
     },
-    "smoke": {
-      "status": "PASS",
-      "verdict": {
-        "all_runs_valid": true,
-        "repeat_byte_identical": true,
-        "repeat_count": 2,
-        "repeat_output_hashes": [
-          "0D1CC91E7715B2723193B7B70EC2E43CB3990C6EA8290C9EAE8FF469DA4875D4"
-        ],
-        "repeat_pixel_hashes": [
-          "1E8DB3888022EE7A4CC55C0966E30264C860068A5CBCE2E8E520774CF60F5AFD"
-        ]
-      }
+    "n_mod_4": {
+      "all_scoring_minima_within_runtime_quiesce": true,
+      "bar": 0.02,
+      "by_n": {
+        "96": {
+          "accepted_scored_runs": 6,
+          "distinct_output_sha256": 1,
+          "distinct_pixel_sha256": 1,
+          "evidence_tag": "VERIFIED",
+          "minimum": {
+            "attempt": 4,
+            "completed_utc": "2026-09-05T01:57:40.741940+00:00",
+            "external_busy_fraction": 0.026959789110869298,
+            "position_key": "modulo-scored:N96:W16:R5",
+            "started_utc": "2026-09-05T01:57:13.317326+00:00",
+            "wall_seconds": 27.420756499981508,
+            "wall_seconds_per_frame": 0.2856328802081407,
+            "within_runtime_quiesce": true
+          },
+          "wall_seconds": [
+            28.88052769994829,
+            27.830803800025024,
+            28.040678200079128,
+            28.11043979995884,
+            27.420756499981508,
+            28.310435999999754
+          ]
+        },
+        "97": {
+          "accepted_scored_runs": 6,
+          "distinct_output_sha256": 1,
+          "distinct_pixel_sha256": 1,
+          "evidence_tag": "VERIFIED",
+          "minimum": {
+            "attempt": 4,
+            "completed_utc": "2026-09-05T01:58:13.318063+00:00",
+            "external_busy_fraction": 0.027195404208513067,
+            "position_key": "modulo-scored:N97:W16:R5",
+            "started_utc": "2026-09-05T01:57:46.019039+00:00",
+            "wall_seconds": 27.290916300029494,
+            "wall_seconds_per_frame": 0.2813496525776236,
+            "within_runtime_quiesce": true
+          },
+          "wall_seconds": [
+            28.290460500051267,
+            27.66037400008645,
+            28.000412399997003,
+            28.01030730002094,
+            27.290916300029494,
+            28.880557700060308
+          ]
+        },
+        "98": {
+          "accepted_scored_runs": 6,
+          "distinct_output_sha256": 1,
+          "distinct_pixel_sha256": 1,
+          "evidence_tag": "VERIFIED",
+          "minimum": {
+            "attempt": 4,
+            "completed_utc": "2026-09-05T01:58:44.603829+00:00",
+            "external_busy_fraction": 0.024836092381049345,
+            "position_key": "modulo-scored:N98:W16:R5",
+            "started_utc": "2026-09-05T01:58:18.592896+00:00",
+            "wall_seconds": 26.010375699959695,
+            "wall_seconds_per_frame": 0.26541199693836426,
+            "within_runtime_quiesce": true
+          },
+          "wall_seconds": [
+            29.10041870002169,
+            29.410682800109498,
+            27.510653299978003,
+            28.06066279998049,
+            26.010375699959695,
+            27.26029199990444
+          ]
+        },
+        "99": {
+          "accepted_scored_runs": 6,
+          "distinct_output_sha256": 1,
+          "distinct_pixel_sha256": 1,
+          "evidence_tag": "VERIFIED",
+          "minimum": {
+            "attempt": 4,
+            "completed_utc": "2026-09-05T01:55:28.023665+00:00",
+            "external_busy_fraction": 0.02996631403707274,
+            "position_key": "modulo-scored:N99:W16:R4",
+            "started_utc": "2026-09-05T01:55:00.761915+00:00",
+            "wall_seconds": 27.26042750000488,
+            "wall_seconds_per_frame": 0.2753578535354028,
+            "within_runtime_quiesce": true
+          },
+          "wall_seconds": [
+            29.690305699943565,
+            29.02041650004685,
+            28.180415100068785,
+            27.26042750000488,
+            28.22038439998869,
+            29.720367600093596
+          ]
+        }
+      },
+      "evidence_tag": "VERIFIED",
+      "spread": 0.07618677189815302,
+      "verdict": "FAIL"
+    }
+  },
+  "adjudicated_evidence_cutoff_utc": "2026-09-05T01:58:49.867621+00:00",
+  "artifacts": {
+    ".gitattributes": {
+      "bytes": 41,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\.gitattributes",
+      "sha256": "3F57416EE0E59D479E1E035FB43363F04A7814FCDEFB3DB06629DBE84081F90D"
+    },
+    "RUN-MANIFEST.json": {
+      "bytes": 7934,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\RUN-MANIFEST.json",
+      "sha256": "BFFFF91C0FB01854E30C0C34481E99FEA524E9BF314EFA8FC198D0B623238DB5"
+    },
+    "build-archive.log": {
+      "bytes": 295,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\build-archive.log",
+      "sha256": "1997A80C3B9312154E16E750EB0CEDD8840F2C1E3354B6E87129A19269DC378B"
+    },
+    "build-release.log": {
+      "bytes": 5479,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\build-release.log",
+      "sha256": "B4165B2ABBAC998B6D59DB91C8B65968708357013C9FCDEB754056C3DB42E337"
+    },
+    "build.json": {
+      "bytes": 1086,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\build.json",
+      "sha256": "C5C0F075A8EA9B524133DEE91E298E1229B31D2010ED5F075C1B2F37A51D8155"
+    },
+    "closeout.json": {
+      "bytes": 38280,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\closeout.json",
+      "sha256": "41ED78BF2EA2748883D69AD17299782E739DE53909387CD886EF3B6BED044DD9"
+    },
+    "commission-archive.log": {
+      "bytes": 307,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\commission-archive.log",
+      "sha256": "FCCC61C025E63D83F502B5A025DC48DE4E72E0C8E15B58AB404C861373A26476"
+    },
+    "commission-build-initial.log": {
+      "bytes": 5551,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\commission-build-initial.log",
+      "sha256": "A69CD1A924B8F7469BC46884D0337A6B0C8C1BA01208CC7A334527DF0602783D"
+    },
+    "commission-build-planted.log": {
+      "bytes": 1134,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\commission-build-planted.log",
+      "sha256": "AFAB82E4228906C5716CF002D189452CA715CB59D847682F571604B260589E65"
+    },
+    "commission-build-restored.log": {
+      "bytes": 1134,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\commission-build-restored.log",
+      "sha256": "C803DFC98EED107E537CC746482BD5BA7F8A6375CECFE9011347A91F9BF1A8AE"
+    },
+    "determinism-commission.json": {
+      "bytes": 22232,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\determinism-commission.json",
+      "sha256": "C0A31ADDF58904FF844161734D717704E6F1FBD302C87E3988C576E3D8956DCF"
+    },
+    "diagnostic-monitor-v1-host-start.json": {
+      "bytes": 21121,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\diagnostic-monitor-v1-host-start.json",
+      "sha256": "0B8DAB6F3377A7604819602F076552870E78E1A5E12220E0BF265F7407481C46"
+    },
+    "diagnostic-monitor-v1-records.jsonl": {
+      "bytes": 157586,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\diagnostic-monitor-v1-records.jsonl",
+      "sha256": "125AA32B50AD1F524E6F6CF2AA2D840407822957C83AFE6F8DDC34265FC4D5C2"
+    },
+    "diagnostic-monitor-v1-resume-wait.json": {
+      "bytes": 23858,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\diagnostic-monitor-v1-resume-wait.json",
+      "sha256": "717099C06AB05B9C59A249E40105789F7145DB6793570DF64EBED280A5F72D6B"
+    },
+    "final-modulo-window-invalidation.json": {
+      "bytes": 14477,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-modulo-window-invalidation.json",
+      "sha256": "E1ACC56108E02C90782D8929671192FE0AE21291BC00D7429997E64965385896"
+    },
+    "final-window-start-r2.json": {
+      "bytes": 27311,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-start-r2.json",
+      "sha256": "E87B31A23ACD747635DB63D6CDB89A061D10A398D32F2E47C27EEC673317DBDE"
+    },
+    "final-window-start-r3.json": {
+      "bytes": 1019,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-start-r3.json",
+      "sha256": "EC10B2A0D2E841A686EF22879B81633F9F88C46F1B4F934C5111EA806644A088"
+    },
+    "final-window-start-r4.json": {
+      "bytes": 1019,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-start-r4.json",
+      "sha256": "6E12E7AA963FCE0BB71029839A9B7565581E61B6D18157F3A72FF38DB26AC517"
+    },
+    "final-window-start.json": {
+      "bytes": 25290,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-start.json",
+      "sha256": "3137E25BF9F4036E730204FBEE5C8EB214FE9E99211984716B8DF0791C1E535F"
+    },
+    "final-window-tail-invalidation.json": {
+      "bytes": 7449,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\final-window-tail-invalidation.json",
+      "sha256": "A7A12B1E3364666BF7671D96A243C31D8F4C182E84EF66A5D9ED5BFBECD711C3"
+    },
+    "host-end.json": {
+      "bytes": 2129,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\host-end.json",
+      "sha256": "E9D42B901A87E9E21D6AED1F15490BEDDAED5AE571C5EE24F30C99AC7CD67C8E"
+    },
+    "host-start.json": {
+      "bytes": 3846,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\host-start.json",
+      "sha256": "DB5299F261725563D536EEE6E25668255CE1FE8AC53CA7786CA246A712154E62"
+    },
+    "input-exif.json": {
+      "bytes": 3719829,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\input-exif.json",
+      "sha256": "88BF2EC3297F0FB962C78021740F2C59FA6E2C4D3DBA60D144D98F53ABCFA4F5"
+    },
+    "input-manifest.json": {
+      "bytes": 123598,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\input-manifest.json",
+      "sha256": "42532FB4BD17D626E7328636F7EB50F7FEF1F5E1AE25663D5042BD825A626F99"
+    },
+    "m172-overlap-invalidation.json": {
+      "bytes": 8488,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\m172-overlap-invalidation.json",
+      "sha256": "18C2B1A9CEA4B4CA650419686099079CC4A65979CD5FFEF5AEA3FC20B7AF9CE7"
+    },
+    "memory-commission.json": {
+      "bytes": 7943,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\memory-commission.json",
+      "sha256": "DB2572CAE5E1C39CA6FC3DE9BC6A2F65ABE22CD29A05F47647E4E3A99BAA6FAF"
+    },
+    "monitor-amendment.json": {
+      "bytes": 4225,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\monitor-amendment.json",
+      "sha256": "EFE69AC7E6FC3E505285C07F4EEC59DD1CD46E375AFB712963A0880BD3AC1B24"
+    },
+    "preflight.json": {
+      "bytes": 4751,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\preflight.json",
+      "sha256": "31E16D38DA95C92ED03F8975D17912DF326E8CF2CCD1DF4B0529BB0945CE84B3"
+    },
+    "read-only-after.json": {
+      "bytes": 797,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-after.json",
+      "sha256": "F6769178BE3F9486D38ED6C0CB8E268FA0B1F2A4C2818A5760016BEA34656C2D"
+    },
+    "read-only-before.json": {
+      "bytes": 798,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-before.json",
+      "sha256": "6F8396AE2A54B9C515EACEE5DC3A2C6757244ADE8EE8CCA51F922FDC76838E88"
+    },
+    "records-before-final-modulo-rerun.jsonl": {
+      "bytes": 2181540,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records-before-final-modulo-rerun.jsonl",
+      "sha256": "6D5E108888485B79615E2D5CF07DDE3EC65A5CB901CE0520D8240B7944A61928"
+    },
+    "records-before-final-tail-rerun.jsonl": {
+      "bytes": 2443772,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records-before-final-tail-rerun.jsonl",
+      "sha256": "2F2C3247AB458BDD1ADE08B409B22DA2585CB98655D9B89C7EBCC6E47BFED372"
+    },
+    "records-before-m172-invalidation.jsonl": {
+      "bytes": 2076939,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records-before-m172-invalidation.jsonl",
+      "sha256": "8DECABB089D0F63777D5C9A9F8FE088251F4EEE882DFF75F420DAF9317E6E910"
+    },
+    "records.jsonl": {
+      "bytes": 2531036,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records.jsonl",
+      "sha256": "5D6046F5DEA1E2FD64AF25B70F26F1371C7CEEDF1B7D7B83A504B01F3D1AFF26"
+    },
+    "registration.json": {
+      "bytes": 10920,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\registration.json",
+      "sha256": "282E2FE10CD8D2835A8763D71C82C062FF2D0AD68FCEF6CB70B247CD3A7A4BC7"
+    },
+    "resume-wait-r3.json": {
+      "bytes": 208928,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r3.json",
+      "sha256": "57E8040FD4D7EEE3466EF2E8C3D0BC9CEFB17E280E2B48ED65A4A909D372B5B3"
+    },
+    "resume-wait-r4.json": {
+      "bytes": 495113,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r4.json",
+      "sha256": "1123E8B883A7DE957AB88BC34AE710E662B791CBBE52C6D39D555B7702B33D2B"
+    },
+    "resume-wait-r5.json": {
+      "bytes": 119234,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r5.json",
+      "sha256": "9BCEF965DB83F9A382861DA709147F6E73FC97DCAF44B16D80A05FB3E78E12BC"
+    },
+    "resume-wait-r6.json": {
+      "bytes": 25545,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r6.json",
+      "sha256": "842E817FC53A169424E223AB930286C5FA8AA20D5B61EF0CDCB4E490AEBDE2F3"
+    },
+    "resume-wait-r7.json": {
+      "bytes": 104561,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r7.json",
+      "sha256": "82E7A99211E0DA4E9345CD8C06AC1C818DA2A8562549E1BF79115B6582C266B8"
+    },
+    "resume-wait-r8.json": {
+      "bytes": 55260,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r8.json",
+      "sha256": "A539AD6152D9375AF176623260B3F2E19ADB2ECC8FD9180DCEBEA48D8552AF15"
+    },
+    "resume-wait-r9.json": {
+      "bytes": 550554,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\resume-wait-r9.json",
+      "sha256": "ACE042E14EF31461A6E0F8AC079E6BF66788B8A122D350493F0F833BFA96A7D4"
+    },
+    "runtime-quiesce-final.json": {
+      "bytes": 510,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\runtime-quiesce-final.json",
+      "sha256": "E238BD25617C83A0400474C3A22DA671D1B59F718BE325B73F1D8D67CC50ABB9"
+    },
+    "smoke.json": {
+      "bytes": 21155,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\smoke.json",
+      "sha256": "A38FB3AC38018E0A7463C57BF983AB19136D42F67766926BFB4C51A6D99B6C54"
+    },
+    "summary.json": {
+      "bytes": 21737,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\summary.json",
+      "sha256": "A4E316A9E2F872840A3D6FA0994D0C8458A31B2A97DBE6AA1E344D6EFE86B1B9"
     }
   },
   "could_not_determine": [
     {
-      "item": "M11 joint requirement",
-      "reason": "M11 remains UNMEASURED; M12 can nevertheless close FAIL if an independent M12 hard bar fails."
+      "item": "formal peak_N299/peak_N33 verdict",
+      "reason": "Minimum sampling coverage was below the frozen 90% adjudication threshold. The observed sampled and kernel Job Object ratios are still reported."
     },
     {
-      "item": "comparative common-TIFF memory",
-      "reason": "No registered common-TIFF product/comparator arm exists; the M12 absolute bars apply to the native product arm."
+      "item": "M11 comparator throughput",
+      "reason": "The installed Zerene trial is expired and cannot save the required output; no Helicon installation is available."
     },
     {
       "item": "true unsampled instantaneous memory peak",
-      "reason": "A sampled monitor reports an observed lower bound. Any sampling gaps can hide a higher peak but cannot manufacture an observed above-bar allocation."
+      "reason": "A sampled monitor can miss a higher instantaneous peak. It cannot manufacture the observed above-6-GiB failure."
+    },
+    {
+      "item": "complete process-tree I/O byte totals",
+      "reason": "The instrument records temp bytes, page faults, CPU, hashes, and memory, but not complete process-tree read/write totals."
+    },
+    {
+      "item": "calibrated residual thermal, turbo, and cache state",
+      "reason": "The registered CPU gates and named-contender exclusion do not instrument those state variables directly. Alternating sweeps and the guarded scoring-minimum interval mitigate them without converting them into measured quantities."
+    },
+    {
+      "item": "exact lane attribution for every host-load rejection",
+      "reason": "Named contamination incidents were pinned where observed; not every historical CPU interval can be assigned to one lane."
     }
   ],
   "evidence_tag": "VERIFIED",
-  "formal_m12": {
-    "hard_failures": [
-      "absolute-memory"
-    ],
-    "m11_joint_verdict": "UNMEASURED",
-    "reason_if_unmeasured": null,
-    "verdict": "FAIL"
-  },
-  "generated_utc": "2026-09-04T20:39:45.111808+00:00",
-  "host_conditions": {
-    "campaign": {
-      "accepted_runs_all_passed": true,
-      "maximum_accepted_external_busy_fraction": 0.09911974767219173,
-      "rejected_run_count": 97,
-      "total_preload_rejected_samples": 5,
-      "total_wait_seconds": 1032.9528889995418
-    },
-    "end": {
-      "evidence_tag": "VERIFIED",
-      "generated_utc": "2026-09-04T20:39:39.889905+00:00",
-      "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
-      "sample": {
-        "completed_utc": "2026-09-04T20:39:44.901989+00:00",
-        "elapsed_seconds": 5.01956289994996,
-        "logical_processors": 32,
-        "memory_end": {
-          "available_page_file_bytes": 73679020032,
-          "available_physical_bytes": 37847957504,
-          "available_virtual_bytes": 140732202598400,
-          "memory_load_percent": 42,
-          "total_page_file_bytes": 117633830912,
-          "total_physical_bytes": 66094223360,
-          "total_virtual_bytes": 140737488224256
-        },
-        "memory_start": {
-          "available_page_file_bytes": 73673699328,
-          "available_physical_bytes": 37842935808,
-          "available_virtual_bytes": 140732202598400,
-          "memory_load_percent": 42,
-          "total_page_file_bytes": 117633830912,
-          "total_physical_bytes": 66094223360,
-          "total_virtual_bytes": 140737488224256
-        },
-        "requested_seconds": 5.0,
-        "started_utc": "2026-09-04T20:39:39.889905+00:00",
-        "top_process_cpu": [
-          {
-            "capacity_fraction": 0.14746988726994123,
-            "cpu_seconds": 23.6875,
-            "name": "copilot.exe",
-            "parent_pid": 36064,
-            "pid": 11336
-          },
-          {
-            "capacity_fraction": 0.0024318912808367617,
-            "cpu_seconds": 0.390625,
-            "name": "Code.exe",
-            "parent_pid": 6972,
-            "pid": 10812
-          },
-          {
-            "capacity_fraction": 0.0010700321635681751,
-            "cpu_seconds": 0.171875,
-            "name": "Code.exe",
-            "parent_pid": 12952,
-            "pid": 6972
-          },
-          {
-            "capacity_fraction": 0.0003891026049338819,
-            "cpu_seconds": 0.0625,
-            "name": "Code.exe",
-            "parent_pid": 6972,
-            "pid": 37952
-          },
-          {
-            "capacity_fraction": 0.00019455130246694095,
-            "cpu_seconds": 0.03125,
-            "name": "Code.exe",
-            "parent_pid": 6972,
-            "pid": 9784
-          },
-          {
-            "capacity_fraction": 9.727565123347048e-05,
-            "cpu_seconds": 0.015625,
-            "name": "Code.exe",
-            "parent_pid": 6972,
-            "pid": 43516
-          },
-          {
-            "capacity_fraction": 9.727565123347048e-05,
-            "cpu_seconds": 0.015625,
-            "name": "copilot.exe",
-            "parent_pid": 11336,
-            "pid": 32516
-          },
-          {
-            "capacity_fraction": 9.727565123347048e-05,
-            "cpu_seconds": 0.015625,
-            "name": "python.exe",
-            "parent_pid": 30456,
-            "pid": 41232
-          }
-        ],
-        "whole_host_busy_cpu_seconds": 26.0625,
-        "whole_host_busy_fraction": 0.16335324649887376,
-        "whole_host_busy_fraction_of_wall_capacity": 0.16225578625742876
-      },
-      "schema": 1
-    },
-    "start": {
-      "evidence_tag": "VERIFIED",
-      "gate": {
-        "attempts": [
-          {
-            "accepted": true,
-            "completed_utc": "2026-09-04T11:00:09.064950+00:00",
-            "elapsed_seconds": 5.015970399952494,
-            "logical_processors": 32,
-            "memory_end": {
-              "available_page_file_bytes": 86374576128,
-              "available_physical_bytes": 47792947200,
-              "available_virtual_bytes": 140732206792704,
-              "memory_load_percent": 27,
-              "total_page_file_bytes": 117633830912,
-              "total_physical_bytes": 66094223360,
-              "total_virtual_bytes": 140737488224256
-            },
-            "memory_start": {
-              "available_page_file_bytes": 86257057792,
-              "available_physical_bytes": 47668408320,
-              "available_virtual_bytes": 140732206792704,
-              "memory_load_percent": 27,
-              "total_page_file_bytes": 117633830912,
-              "total_physical_bytes": 66094223360,
-              "total_virtual_bytes": 140737488224256
-            },
-            "requested_seconds": 5.0,
-            "started_utc": "2026-09-04T11:00:04.048016+00:00",
-            "top_process_cpu": [
-              {
-                "capacity_fraction": 0.02161066131909922,
-                "cpu_seconds": 3.46875,
-                "name": "copilot.exe",
-                "parent_pid": 36064,
-                "pid": 11336
-              },
-              {
-                "capacity_fraction": 0.00447788477783137,
-                "cpu_seconds": 0.71875,
-                "name": "Code.exe",
-                "parent_pid": 6972,
-                "pid": 10812
-              },
-              {
-                "capacity_fraction": 0.0010707985338292406,
-                "cpu_seconds": 0.171875,
-                "name": "Code.exe",
-                "parent_pid": 6972,
-                "pid": 43516
-              },
-              {
-                "capacity_fraction": 0.0004867266062860185,
-                "cpu_seconds": 0.078125,
-                "name": "Code.exe",
-                "parent_pid": 12952,
-                "pid": 6972
-              },
-              {
-                "capacity_fraction": 9.73453212572037e-05,
-                "cpu_seconds": 0.015625,
-                "name": "Code.exe",
-                "parent_pid": 6972,
-                "pid": 9784
-              },
-              {
-                "capacity_fraction": 9.73453212572037e-05,
-                "cpu_seconds": 0.015625,
-                "name": "Code.exe",
-                "parent_pid": 6972,
-                "pid": 37952
-              },
-              {
-                "capacity_fraction": 9.73453212572037e-05,
-                "cpu_seconds": 0.015625,
-                "name": "Code.exe",
-                "parent_pid": 6972,
-                "pid": 45428
-              },
-              {
-                "capacity_fraction": 9.73453212572037e-05,
-                "cpu_seconds": 0.015625,
-                "name": "python.exe",
-                "parent_pid": 45592,
-                "pid": 26036
-              }
-            ],
-            "whole_host_busy_cpu_seconds": 6.609375,
-            "whole_host_busy_fraction": 0.04126024190401873,
-            "whole_host_busy_fraction_of_wall_capacity": 0.04117707089179716
-          }
-        ],
-        "rejected_sample_count": 0,
-        "retry_seconds": 30.0,
-        "sample_seconds": 5.0,
-        "threshold": 0.15,
-        "wait_seconds": 5.016066400043201
-      },
-      "generated_utc": "2026-09-04T11:00:09.064950+00:00",
-      "host": {
-        "logical_processors": 32,
-        "memory": {
-          "available_page_file_bytes": 86364880896,
-          "available_physical_bytes": 47771389952,
-          "available_virtual_bytes": 140732196388864,
-          "memory_load_percent": 27,
-          "total_page_file_bytes": 117633830912,
-          "total_physical_bytes": 66094223360,
-          "total_virtual_bytes": 140737488224256
-        },
-        "node": "Chris",
-        "platform": "Windows-11-10.0.26200-SP0",
-        "workspace_drive": {
-          "free": 908999405568,
-          "total": 1999270572032,
-          "used": 1090271166464
-        }
-      },
-      "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
-      "phase": "campaign-start",
-      "schema": 1
-    }
-  },
   "integrity": {
-    "artifacts": {
-      "build": {
-        "bytes": 1086,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\build.json",
-        "sha256": "C5C0F075A8EA9B524133DEE91E298E1229B31D2010ED5F075C1B2F37A51D8155"
-      },
-      "determinism_commission": {
-        "bytes": 22232,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\determinism-commission.json",
-        "sha256": "C0A31ADDF58904FF844161734D717704E6F1FBD302C87E3988C576E3D8956DCF"
-      },
-      "host_end": {
-        "bytes": 2712,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\host-end.json",
-        "sha256": "61957340F73451794B8F1522BF8C182F585CC8B59F8D34A61DAABD87FCFB3722"
-      },
-      "host_start": {
-        "bytes": 3846,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\host-start.json",
-        "sha256": "DB5299F261725563D536EEE6E25668255CE1FE8AC53CA7786CA246A712154E62"
-      },
-      "input_exif": {
-        "bytes": 3719829,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\input-exif.json",
-        "sha256": "88BF2EC3297F0FB962C78021740F2C59FA6E2C4D3DBA60D144D98F53ABCFA4F5"
-      },
-      "input_manifest": {
-        "bytes": 123598,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\input-manifest.json",
-        "sha256": "42532FB4BD17D626E7328636F7EB50F7FEF1F5E1AE25663D5042BD825A626F99"
-      },
-      "memory_commission": {
-        "bytes": 7943,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\memory-commission.json",
-        "sha256": "DB2572CAE5E1C39CA6FC3DE9BC6A2F65ABE22CD29A05F47647E4E3A99BAA6FAF"
-      },
-      "preflight": {
-        "bytes": 4751,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\preflight.json",
-        "sha256": "31E16D38DA95C92ED03F8975D17912DF326E8CF2CCD1DF4B0529BB0945CE84B3"
-      },
-      "read_only_after": {
-        "bytes": 797,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-after.json",
-        "sha256": "D5577CE12103A5DD7649AD4C9766472E6A844E6D0157595BB8B337AB520DC92F"
-      },
-      "read_only_before": {
-        "bytes": 798,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\read-only-before.json",
-        "sha256": "6F8396AE2A54B9C515EACEE5DC3A2C6757244ADE8EE8CCA51F922FDC76838E88"
-      },
-      "records": {
-        "bytes": 1481270,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records.jsonl",
-        "sha256": "563E40F7B5CEBACC4BDA0AA175159F2F614886A2C6C1A148EB45049F6C05F06B"
-      },
-      "registration": {
-        "bytes": 10920,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\registration.json",
-        "sha256": "282E2FE10CD8D2835A8763D71C82C062FF2D0AD68FCEF6CB70B247CD3A7A4BC7"
-      },
-      "run_manifest": {
-        "bytes": 7934,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\RUN-MANIFEST.json",
-        "sha256": "BFFFF91C0FB01854E30C0C34481E99FEA524E9BF314EFA8FC198D0B623238DB5"
-      },
-      "smoke": {
-        "bytes": 21155,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\smoke.json",
-        "sha256": "A38FB3AC38018E0A7463C57BF983AB19136D42F67766926BFB4C51A6D99B6C54"
-      },
-      "summary": {
-        "bytes": 15784,
-        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\summary.json",
-        "sha256": "785945ED1895FD159D38635604AA3F9CE22E3EE883878BF52C534F28108981C7"
-      }
-    },
-    "mismatched_measured_commits": {},
+    "accepted_positions_are_unique": true,
+    "determinism_probe_commissioned": true,
+    "m12_d_complete": true,
+    "m12_s_byte_property_complete": true,
+    "memory_probe_commissioned": true,
+    "modulo_complete": true,
+    "modulo_minima_runtime_quiesced": true,
     "pass": true,
-    "record_count": 171,
+    "protected_trees_unchanged": true,
     "record_measured_commits": [
       "8009447e059febb8f9c59fda509f141835d6abdb"
-    ]
+    ],
+    "registered_campaign_complete": true,
+    "smoke_passed": true
   },
   "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
-  "read_only_inputs": {
-    "comparison": {
-      "D:\\edited\\macro": {
-        "after": {
-          "bytes": 141333902406,
-          "directory_count": 5,
-          "file_count": 387,
-          "item_count": 392,
-          "metadata_sha256": "40003B9F15D0AE552AD2947E22C29122664E0BDCD7E690D53FE02341DCA12FD1",
-          "path": "D:\\edited\\macro"
+  "record_accounting": {
+    "accepted": 133,
+    "accepted_positions_are_unique": true,
+    "accepted_rows_later_invalidated": 62,
+    "evidence_tag": "VERIFIED",
+    "invalid_process_outputs": 0,
+    "load_rejected_without_external_invalidation": 97,
+    "non_protocol_valid": 161,
+    "rows_with_external_invalidation_metadata": 64,
+    "total": 294
+  },
+  "schema": 2,
+  "verdicts": {
+    "frozen_registration_mechanical_result": {
+      "disposition": "Preserved as mechanical provenance. The program orchestrator subsequently required split M12-D/M12-S reporting and directed that no overall M12 verdict be assigned while the M11 term is blocked by licensing.",
+      "evidence_tag": "VERIFIED",
+      "hard_failures": [
+        "absolute-memory",
+        "cross-worker-scaling-invariance",
+        "n-mod-4-spread"
+      ],
+      "verdict": "FAIL"
+    },
+    "m12_d": {
+      "complete_fixed_worker_cells": 15,
+      "evidence_tag": "VERIFIED",
+      "required_complete_fixed_worker_cells": 15,
+      "verdict": "PASS"
+    },
+    "m12_s": {
+      "byte_property_by_n": {
+        "105": {
+          "byte_invariance_verdict": "FAIL",
+          "distinct_output_sha256": 5,
+          "distinct_pixel_sha256": 5,
+          "evidence_tag": "VERIFIED",
+          "output_sha256": [
+            "189E9E7DD03D31E7E86E5FC8F75B486DE677C7B0D7844AAAFAD3FC243315180B",
+            "9E678339C3ABBFA602F7A9800E769E92C0CC1DD5859E6467C19E6F6462223758",
+            "BFAEAD84A8567E92C27C229090B279850D6EB6C62BD24A17562035070AFE6A1F",
+            "C521C9A20AA8B1B1CCA54CC231351F109BC29AAC83D7FCC8324ED0024BF241E9",
+            "ED1774FBC8A03BEDD67A614CC8C883E562E5FEAC59B1CFE6AAEBA2FEECCEC9CE"
+          ],
+          "pixel_sha256": [
+            "018B674A3DC5082EC50F15AFC74C112DDE85971B1D1651C34B66F9941F054481",
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9",
+            "394879B0A0F9236CA0D874E0036567D840F2AFB53C370D688EAB67AAB32ECB18",
+            "C9EA803BC5FC70F1D028BDDF057AB08E181E4D1C6977EC736823C78F267499A1",
+            "CDCDB21783F0657A1656BE72452EB40388B1A40F6B7A588890861023413C6D1B"
+          ]
         },
-        "before": {
-          "bytes": 141333902406,
-          "directory_count": 5,
-          "file_count": 387,
-          "item_count": 392,
-          "metadata_sha256": "40003B9F15D0AE552AD2947E22C29122664E0BDCD7E690D53FE02341DCA12FD1",
-          "path": "D:\\edited\\macro"
+        "299": {
+          "byte_invariance_verdict": "FAIL",
+          "distinct_output_sha256": 5,
+          "distinct_pixel_sha256": 5,
+          "evidence_tag": "VERIFIED",
+          "output_sha256": [
+            "0FA7FF3A0B6074B00706DD014B665FBD75CAAE8BB16DD5D75BD8C78CDB4E41EA",
+            "4AF8220A0BD9C34F47D9C0388DE7C7099009094A0E5CF7D51626E653F26838AB",
+            "4F5FF62B31040AFDCCF9A0BC72DCC62DF3DB83A96D436E95AB5C0E553D2938A3",
+            "5B9B64E83C2BD0C773A198BC9A068EDDA1C4BB3313BCB670F000CFF907BD6BD1",
+            "AC580FFE19A4834E3696BCBCD8CFA50E619E1EEC601DE92DF92FCB5CD0DED725"
+          ],
+          "pixel_sha256": [
+            "4672440180468013F366BDD7E9641AC40F6B418B33DCB39C9C5A24C35FEC8EFD",
+            "53BCA67414C3480B944923504662CD0AB811CFDA4E0D1E729E7DDEC681C80A6F",
+            "88CCEF0BF25C9722ED5E6008855962EB18F284A291FF30DF3824F20DAC762EFE",
+            "EADDF4FB432D50FA4468D790F58B9AC273E1BFE0F222E662D9CEA58037574D77",
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ]
         },
-        "unchanged": true
+        "33": {
+          "byte_invariance_verdict": "FAIL",
+          "distinct_output_sha256": 5,
+          "distinct_pixel_sha256": 5,
+          "evidence_tag": "VERIFIED",
+          "output_sha256": [
+            "545B10BC143BF5CDFCD737BBB0FD7E5FE64A1F0002E1A2B45780C55EB0DF9A55",
+            "5D5FD76C5141E59BE2EC8949AC59817A3FD94797F1C1D349542D8646B4B50676",
+            "914AAA852A555729BFEA710EEF5880D45B35B9392D89CB313F698258BC7B8985",
+            "E36EE6FDC9B6CF542059793847C09B79626E7F87C85732BD261E9EC6A36395C3",
+            "F3E54ADE7C64A3DB231CC3E183B3F15D5F9002750BF77530A4539F2A4FD654C2"
+          ],
+          "pixel_sha256": [
+            "2E397E4DD5D5BC1ECD0AC652C446D4700DAE872F55FF50C99694B8392CC9EF8F",
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89",
+            "78D78FC0A8C284C343EAB7472B34A3990BC3D8E18D21DDCFEF70A39E3BCBBB45",
+            "A9913288AE46442E553E598347150026AD503E94F5EB5DDD8EA2375E6FE9C88D",
+            "D42D0552A5FB5710BA4AE33C305721F8E98C695B11C89CDFB34859B7982B9F1D"
+          ]
+        }
       },
-      "D:\\personal\\macro": {
-        "after": {
-          "bytes": 487169829957,
-          "directory_count": 82,
-          "file_count": 10724,
-          "item_count": 10806,
-          "metadata_sha256": "46CD6FE5C018AE4ACEC946170EEEC760DBF5B0C8954CA561368F92B9184A5C42",
-          "path": "D:\\personal\\macro"
-        },
-        "before": {
-          "bytes": 487169829957,
-          "directory_count": 82,
-          "file_count": 10724,
-          "item_count": 10806,
-          "metadata_sha256": "46CD6FE5C018AE4ACEC946170EEEC760DBF5B0C8954CA561368F92B9184A5C42",
-          "path": "D:\\personal\\macro"
-        },
-        "unchanged": true
+      "byte_property_verdict": "FAIL",
+      "evidence_tag": "VERIFIED",
+      "formal_verdict": "BLOCKED-BY-LICENCE",
+      "m11_precondition": {
+        "evidence_tag": "INHERITED",
+        "reason": "The installed Zerene trial is expired and cannot save the required comparator output; no Helicon installation was found.",
+        "sources": [
+          {
+            "lines": "160-197",
+            "path": "docs/research/M132-blocker-d-routes.md",
+            "quotes": [
+              "line 71: 0.448: license 83ced522295099724b84c81abbb79f3199726fd7 expires on Sat Jun 06 20:13:34 PDT 2026",
+              "line 75: 0.450: License category = TRIAL",
+              "They found zero Helicon-named installation, state, log, licence, key, or registry matches."
+            ]
+          },
+          {
+            "lines": "1560-1562",
+            "path": "docs/OWNER-ACTIONS.md",
+            "quote": "Zerene is already installed here at 1.04T2026-05-04-0750, but its trial is consumed and expired (License category = TRIAL, expired 2026-06-06), so it currently cannot save output at all."
+          }
+        ],
+        "verdict": "BLOCKED-BY-LICENCE"
       }
     },
-    "unchanged": true
-  },
-  "schema": 1
+    "overall_m12": {
+      "evidence_tag": "VERIFIED",
+      "reason": "The registered sub-verdicts are not conflated, and the M11 precondition for M12-S is blocked by comparator licensing.",
+      "reporting_basis": "ORCHESTRATOR_DIRECTIVE",
+      "verdict": "NOT_ASSIGNED"
+    }
+  }
 }

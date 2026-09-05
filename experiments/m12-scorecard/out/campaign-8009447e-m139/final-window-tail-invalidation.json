@@ -1,0 +1,219 @@
+{
+  "contamination": {
+    "interval_utc": {
+      "end_conservative": "2026-09-05T01:36:59.801403+00:00",
+      "start": "2026-09-05T01:30:30.987550+00:00"
+    },
+    "observed_cargo": {
+      "child_pid": 38192,
+      "command": "cargo test --release -p strehl-cli --test byte-freeze the_frozen_renders_still_produce_their_recorded_bytes -- --exact",
+      "root_pid": 7676,
+      "started_utc": "2026-09-05T01:30:30.987550+00:00"
+    },
+    "subsequent_evidence": "Later final-preload samples retained rustc.exe and link.exe processes through the N98/R5 position."
+  },
+  "decision": {
+    "action": "Retain and mark non-protocol every scored row overlapping the conservative interval, then rerun only those 12 positions.",
+    "affected_rule": "N-mod-4 per-frame spread uses wall time.",
+    "registered_gates_unchanged": {
+      "during_run_external_busy_fraction_max": 0.1,
+      "preload_whole_host_busy_fraction_max": 0.15
+    }
+  },
+  "evidence_tag": "VERIFIED",
+  "generated_utc": "2026-09-05T01:44:12.492795+00:00",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "records": {
+    "accepted_rows_invalidated": 12,
+    "affected": [
+      {
+        "attempt": 4,
+        "completed_utc": "2026-09-05T01:30:52.306567+00:00",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N96:W16:R2",
+        "started_utc": "2026-09-05T01:30:24.151925+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:31:25.275750+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 9.733313707893143e-05,
+            "name": "cargo.exe",
+            "pid": 38192
+          }
+        ],
+        "position_key": "modulo-scored:N96:W16:R3",
+        "started_utc": "2026-09-05T01:30:57.585591+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:31:57.814234+00:00",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N97:W16:R3",
+        "started_utc": "2026-09-05T01:31:30.554928+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:32:31.046785+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.00048671610728323735,
+            "name": "cargo.exe",
+            "pid": 38192
+          }
+        ],
+        "position_key": "modulo-scored:N98:W16:R3",
+        "started_utc": "2026-09-05T01:32:03.117157+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:33:05.145412+00:00",
+        "named_contenders_in_final_preload_sample": [],
+        "position_key": "modulo-scored:N99:W16:R3",
+        "started_utc": "2026-09-05T01:32:36.349969+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:33:39.633006+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.004574837185987053,
+            "name": "rustc.exe",
+            "pid": 11064
+          },
+          {
+            "capacity_fraction": 0.0023360870736955164,
+            "name": "rustc.exe",
+            "pid": 20572
+          },
+          {
+            "capacity_fraction": 0.002141413150887557,
+            "name": "rustc.exe",
+            "pid": 38928
+          }
+        ],
+        "position_key": "modulo-scored:N99:W16:R4",
+        "started_utc": "2026-09-05T01:33:10.427963+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:34:12.592539+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.014501211757874785,
+            "name": "rustc.exe",
+            "pid": 38928
+          },
+          {
+            "capacity_fraction": 0.004476884166860672,
+            "name": "rustc.exe",
+            "pid": 11064
+          },
+          {
+            "capacity_fraction": 0.003017030634188714,
+            "name": "rustc.exe",
+            "pid": 20572
+          }
+        ],
+        "position_key": "modulo-scored:N98:W16:R4",
+        "started_utc": "2026-09-05T01:33:44.904167+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:34:46.231816+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.005450912542914456,
+            "name": "rustc.exe",
+            "pid": 11064
+          },
+          {
+            "capacity_fraction": 0.004574873027088918,
+            "name": "rustc.exe",
+            "pid": 20572
+          },
+          {
+            "capacity_fraction": 0.0003893508959224611,
+            "name": "rustc.exe",
+            "pid": 38928
+          }
+        ],
+        "position_key": "modulo-scored:N97:W16:R4",
+        "started_utc": "2026-09-05T01:34:17.864377+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:35:19.712034+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.005839566955259837,
+            "name": "rustc.exe",
+            "pid": 20572
+          },
+          {
+            "capacity_fraction": 9.732611592099728e-05,
+            "name": "link.exe",
+            "pid": 28768
+          }
+        ],
+        "position_key": "modulo-scored:N96:W16:R4",
+        "started_utc": "2026-09-05T01:34:51.594613+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:35:52.122303+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.017326226085141967,
+            "name": "rustc.exe",
+            "pid": 20572
+          },
+          {
+            "capacity_fraction": 0.0001946766975858648,
+            "name": "link.exe",
+            "pid": 28768
+          },
+          {
+            "capacity_fraction": 9.73383487929324e-05,
+            "name": "link.exe",
+            "pid": 8368
+          }
+        ],
+        "position_key": "modulo-scored:N96:W16:R5",
+        "started_utc": "2026-09-05T01:35:24.991343+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:36:25.791664+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.025110337110549066,
+            "name": "rustc.exe",
+            "pid": 20572
+          }
+        ],
+        "position_key": "modulo-scored:N97:W16:R5",
+        "started_utc": "2026-09-05T01:35:57.407758+00:00"
+      },
+      {
+        "attempt": 3,
+        "completed_utc": "2026-09-05T01:36:59.801403+00:00",
+        "named_contenders_in_final_preload_sample": [
+          {
+            "capacity_fraction": 0.01820082352661321,
+            "name": "rustc.exe",
+            "pid": 20572
+          }
+        ],
+        "position_key": "modulo-scored:N98:W16:R5",
+        "started_utc": "2026-09-05T01:36:31.067714+00:00"
+      }
+    ],
+    "backup_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records-before-final-tail-rerun.jsonl",
+    "backup_sha256": "2F2C3247AB458BDD1ADE08B409B22DA2585CB98655D9B89C7EBCC6E47BFED372",
+    "rewritten_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\out\\campaign-8009447e-m139\\records.jsonl",
+    "rewritten_sha256_before_rerun": "293122D32BA37F5A1912FB3BE38E46EDD12927DB408DDF1394D37CC1637042A8"
+  },
+  "schema": 1
+}

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "evidence_tag": "VERIFIED",
+  "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "generated_utc": "2026-09-05T01:52:00.6788727Z",
+  "runtime_pid": 11336,
+  "harness_pid": 7956,
+  "delay_seconds": 8,
+  "max_seconds": 1200,
+  "suspended_utc": "2026-09-05T01:52:08.8526539Z",
+  "harness_completed_utc": "2026-09-05T01:58:50.7554668Z",
+  "resumed_utc": "2026-09-05T01:58:50.7582653Z",
+  "disposition": "HARNESS_EXITED",
+  "suspend_status": 0,
+  "resume_status": 0
+}
