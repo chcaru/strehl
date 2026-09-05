@@ -1,0 +1,242 @@
+{
+  "affine_certificate": {
+    "instance": 0,
+    "result": {
+      "minimum_abs_second_difference_steps": 6,
+      "population_size": 2000,
+      "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+      "required_triple_count": 101,
+      "strict_q95_lower_bound_steps": 1,
+      "triple_count": 101
+    },
+    "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  },
+  "failure_partition": {
+    "expected_counts": {
+      "CANDIDATE_FAIL": 1,
+      "CHECKER_ERROR": 1,
+      "PASS": 1,
+      "PRODUCT_UNMEASURED": 1,
+      "TRUTH_UNMEASURED": 1,
+      "total_examined": 5
+    },
+    "records": [
+      {
+        "code": "OK",
+        "outcome": "PASS"
+      },
+      {
+        "code": "PRODUCT_FILE_HASH_MISMATCH",
+        "outcome": "CANDIDATE_FAIL"
+      },
+      {
+        "code": "CANDIDATE_PRODUCT_NOT_AVAILABLE",
+        "outcome": "PRODUCT_UNMEASURED"
+      },
+      {
+        "code": "SYNTH_CERTIFICATE_INVALID",
+        "outcome": "TRUTH_UNMEASURED"
+      },
+      {
+        "code": "UNRECOGNIZED_FAILURE_CODE",
+        "outcome": "CHECKER_ERROR"
+      }
+    ]
+  },
+  "manifest_shape": {
+    "bindings": {
+      "candidate_executable": {
+        "byte_length": 20,
+        "sha256": "66ef1dcbc30244eba7b3c437fc472f0f1520cc9e9e627b74f3cb80b61c9d91fb"
+      },
+      "capture_manifest": {
+        "byte_length": 16,
+        "sha256": "7564cf4967db479cf55207a8345d3e4b5bd86e9dc993991720ac298892044874"
+      },
+      "common_input_manifest": {
+        "byte_length": 21,
+        "sha256": "e5047c4988fab344438280a2165fa49fb0ffe18c650dad823ed0dda4441c44b5"
+      },
+      "field_curvature_profile": {
+        "byte_length": 23,
+        "sha256": "81678e087d33f8e63ab3ccd44f93043c777e44c5a6e80d9b34a7bc5f1df033cc"
+      },
+      "focus_axis_map": {
+        "byte_length": 14,
+        "sha256": "94cb84a4eb0ffefe3372c5750e138b0de1ceaddf59d50c0f042b1569f88bdd88"
+      },
+      "gear_profile": {
+        "byte_length": 12,
+        "sha256": "bcd25073b9dcae0f6b39957524cc09576943edf75024928a245e3e42ad425701"
+      },
+      "output_grid_descriptor": {
+        "byte_length": 22,
+        "sha256": "6009925348b34d5c224f864395a16889dd97820f76deb0c5483c304fafec10c3"
+      },
+      "settings": {
+        "byte_length": 8,
+        "sha256": "cde0fb0dec1400c54a0f7e7eafa73624c53e4da258bbd34b3380a0defeba95c1"
+      }
+    },
+    "capture_id": "fixture-capture-01",
+    "files": {
+      "depth_sigma_um": {
+        "byte_length": 5,
+        "name": "depth-sigma-um.tif",
+        "sha256": "38de90475bb334fb3dea5d54f250500aba60fe2c6158115d342b06bcb46e39bf"
+      },
+      "depth_um": {
+        "byte_length": 5,
+        "name": "depth-um.tif",
+        "sha256": "ded32129b05bfc16ce501e654a169960583352cbc974824ed16ce94855904386"
+      },
+      "depth_valid": {
+        "byte_length": 5,
+        "name": "depth-valid.tif",
+        "sha256": "ec654fac9599f62e79e2706abef23dfb7c07c08185aa86db4d8695f0b718d1b3"
+      },
+      "rgb": {
+        "byte_length": 3,
+        "name": "rgb.tif",
+        "sha256": "89d41a198cfce73a918461760aa6ec5a52bee3db03f26e88325716c2823c32d2"
+      }
+    },
+    "grid": {
+      "height": 48,
+      "origin": "top-left",
+      "pixel_center": "integer-column-row-centres",
+      "width": 64,
+      "x_direction": "right",
+      "y_direction": "down"
+    },
+    "hash_contract": "sha256-raw-bytes-lowerhex-v1",
+    "mode": "common-merge-shipping-default",
+    "schema": "strehl.m10-depth-product-manifest.v1",
+    "semantics": {
+      "depth_axis": "camera-optical-axis-distance",
+      "depth_origin": "one-arbitrary-additive-constant-per-capture",
+      "depth_positive": "away-from-sensor",
+      "depth_units": "micrometre",
+      "field_curvature_applied": true,
+      "invalid_float32_bits": "7fc00000",
+      "invalid_mask_value": 0,
+      "uncertainty": "candidate-only-one-standard-deviation-micrometres",
+      "valid_mask_value": 1
+    }
+  },
+  "origin_fit": {
+    "candidate_valid": [
+      true,
+      true,
+      false,
+      true
+    ],
+    "expected": {
+      "N": 3,
+      "candidate_worst": false,
+      "origin_binary64_hex": "4002aaaaaaaaaaab",
+      "residual_binary64_hex": [
+        "bff5555555555556",
+        "bfd5555555555558",
+        "3ffaaaaaaaaaaaaa"
+      ],
+      "sum_binary64_hex": "401c000000000000"
+    },
+    "meaning": "N is the count of candidate-valid truth targets, so the origin is their unweighted arithmetic-mean residual.",
+    "raw_step_binary64_hex": [
+      "3ff0000000000000",
+      "4000000000000000",
+      "4058c00000000000",
+      "4010000000000000"
+    ]
+  },
+  "quota_hash": {
+    "cell_id": "ruler|capture-01|strip-07|00000123|00000456",
+    "digest_sha256_lowerhex": "e0dc8a1fe8bb66b1e6e22eb0de1c5cd969bd18d8fde53f6e6a5280f47071a4ef",
+    "ordering_key": {
+      "digest_bytes_hex": "e0dc8a1fe8bb66b1e6e22eb0de1c5cd969bd18d8fde53f6e6a5280f47071a4ef",
+      "then_cell_id_utf8_hex": "72756c65727c636170747572652d30317c73747269702d30377c30303030303132337c3030303030343536",
+      "then_x": 291,
+      "then_y": 1110
+    },
+    "preimage_utf8_hex": "4d31302d504f502d56317c72756c65727c636170747572652d30317c73747269702d30377c30303030303132337c3030303030343536",
+    "unsigned_256_big_endian_decimal": "101707737738166663357154239799626950601313803761331969497607860115891805070575",
+    "x": 291,
+    "y": 1110
+  },
+  "raw_artifact_hash": {
+    "byte_length": 7,
+    "input_hex": "00ff0a4d313930",
+    "sha256_lowerhex": "a88b7727323b709011d7d67069c7ab4462660cf49842925709ea816f3303ad6f"
+  },
+  "renderer_probe": {
+    "expected_bytes_hex": "7871ce77c86e626d0c753968c36cc672426e2c73996e9670",
+    "expected_sha256_lowerhex": "ab9bc1314d52f68ace7837883212570781ce1e4e2f2552e7d084db5f9607ab5b",
+    "layout": "Probe order; within each probe R,G,B; each sample unsigned 16-bit little-endian.",
+    "probes": [
+      {
+        "frame_step": 12,
+        "instance": 0,
+        "local_x": 50,
+        "local_y": 24
+      },
+      {
+        "frame_step": 24,
+        "instance": 0,
+        "local_x": 128,
+        "local_y": 96
+      },
+      {
+        "frame_step": 20,
+        "instance": 7,
+        "local_x": 130,
+        "local_y": 111
+      },
+      {
+        "frame_step": 35,
+        "instance": 19,
+        "local_x": 200,
+        "local_y": 200
+      }
+    ],
+    "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  },
+  "schema": "strehl.m10-definition-fixtures.v1",
+  "seed_commitment": {
+    "digest_sha256_lowerhex": "a6dfe0b37db8a9c95de23d979f9f26fcd130ee0430ace2753a81e3649e3d21be",
+    "preimage_hex": "4d31302d53594e54482d534545442d434f4d4d49542d563100000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  },
+  "synthetic_prf": {
+    "instance_zero_parameters": {
+      "base_steps": 15,
+      "boundary_column": 131,
+      "far_phase_y": 2,
+      "phase_x": 4,
+      "phase_y": 5,
+      "separation_steps": 13
+    },
+    "parameter_block": {
+      "digest_sha256_lowerhex": "cf449d6ac395e87a74b9c682a14b12a09d31022aba31b9f019aad5001751808a",
+      "label_ascii": "PARAM",
+      "payload_hex": "00000000",
+      "preimage_hex": "4d31302d53594e54482d5052462d563100000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f05504152414d00000000",
+      "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+    },
+    "texture_block": {
+      "digest_sha256_lowerhex": "3a79a37eacc4678e5033736f5fea68d962e354d08c4701acf1fb0ce071c4ab4e",
+      "label_ascii": "TEX",
+      "payload_hex": "0000000701020082006f",
+      "preimage_hex": "4d31302d53594e54482d5052462d563100000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f035445580000000701020082006f",
+      "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+    },
+    "texture_value": {
+      "channel": 2,
+      "instance": 7,
+      "layer": 1,
+      "local_x": 130,
+      "local_y": 111,
+      "u16": 23161
+    }
+  }
+}

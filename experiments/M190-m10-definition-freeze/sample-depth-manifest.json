@@ -1,0 +1,81 @@
+{
+  "bindings": {
+    "candidate_executable": {
+      "byte_length": 20,
+      "sha256": "66ef1dcbc30244eba7b3c437fc472f0f1520cc9e9e627b74f3cb80b61c9d91fb"
+    },
+    "capture_manifest": {
+      "byte_length": 16,
+      "sha256": "7564cf4967db479cf55207a8345d3e4b5bd86e9dc993991720ac298892044874"
+    },
+    "common_input_manifest": {
+      "byte_length": 21,
+      "sha256": "e5047c4988fab344438280a2165fa49fb0ffe18c650dad823ed0dda4441c44b5"
+    },
+    "field_curvature_profile": {
+      "byte_length": 23,
+      "sha256": "81678e087d33f8e63ab3ccd44f93043c777e44c5a6e80d9b34a7bc5f1df033cc"
+    },
+    "focus_axis_map": {
+      "byte_length": 14,
+      "sha256": "94cb84a4eb0ffefe3372c5750e138b0de1ceaddf59d50c0f042b1569f88bdd88"
+    },
+    "gear_profile": {
+      "byte_length": 12,
+      "sha256": "bcd25073b9dcae0f6b39957524cc09576943edf75024928a245e3e42ad425701"
+    },
+    "output_grid_descriptor": {
+      "byte_length": 22,
+      "sha256": "6009925348b34d5c224f864395a16889dd97820f76deb0c5483c304fafec10c3"
+    },
+    "settings": {
+      "byte_length": 8,
+      "sha256": "cde0fb0dec1400c54a0f7e7eafa73624c53e4da258bbd34b3380a0defeba95c1"
+    }
+  },
+  "capture_id": "fixture-capture-01",
+  "files": {
+    "depth_sigma_um": {
+      "byte_length": 5,
+      "name": "depth-sigma-um.tif",
+      "sha256": "38de90475bb334fb3dea5d54f250500aba60fe2c6158115d342b06bcb46e39bf"
+    },
+    "depth_um": {
+      "byte_length": 5,
+      "name": "depth-um.tif",
+      "sha256": "ded32129b05bfc16ce501e654a169960583352cbc974824ed16ce94855904386"
+    },
+    "depth_valid": {
+      "byte_length": 5,
+      "name": "depth-valid.tif",
+      "sha256": "ec654fac9599f62e79e2706abef23dfb7c07c08185aa86db4d8695f0b718d1b3"
+    },
+    "rgb": {
+      "byte_length": 3,
+      "name": "rgb.tif",
+      "sha256": "89d41a198cfce73a918461760aa6ec5a52bee3db03f26e88325716c2823c32d2"
+    }
+  },
+  "grid": {
+    "height": 48,
+    "origin": "top-left",
+    "pixel_center": "integer-column-row-centres",
+    "width": 64,
+    "x_direction": "right",
+    "y_direction": "down"
+  },
+  "hash_contract": "sha256-raw-bytes-lowerhex-v1",
+  "mode": "common-merge-shipping-default",
+  "schema": "strehl.m10-depth-product-manifest.v1",
+  "semantics": {
+    "depth_axis": "camera-optical-axis-distance",
+    "depth_origin": "one-arbitrary-additive-constant-per-capture",
+    "depth_positive": "away-from-sensor",
+    "depth_units": "micrometre",
+    "field_curvature_applied": true,
+    "invalid_float32_bits": "7fc00000",
+    "invalid_mask_value": 0,
+    "uncertainty": "candidate-only-one-standard-deviation-micrometres",
+    "valid_mask_value": 1
+  }
+}

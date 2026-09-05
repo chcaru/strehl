@@ -1,0 +1,372 @@
+{
+  "schema": "strehl.m10-definition-freeze.v1",
+  "status": "ALGORITHM_PRECOMMIT_PENDING_SCORED_SEED_DRAW",
+  "normative_precedence": [
+    "docs/research/M163-m10-uncertainty.md at commit 736e905a71742fef800efeb55c7549679abd9129",
+    "docs/research/M166-m10-definition-repair.md at commit 832a2e8561352037be5e2a180034e00b09131cf5",
+    "This contract overrides M166 only where M186 identified an unresolved choice: quota ordering, origin N, product-manifest encoding/failure mapping, and the synthetic instrument."
+  ],
+  "hash_contracts": {
+    "raw_artifact": {
+      "name": "sha256-raw-bytes-lowerhex-v1",
+      "algorithm": "SHA-256",
+      "preimage": "the exact file bytes, with no text decoding, newline normalization, container decoding, or length prefix",
+      "encoding": "64 lowercase hexadecimal ASCII characters"
+    },
+    "quota": {
+      "algorithm": "SHA-256",
+      "preimage": "UTF8(\"M10-POP-V1|\" + cell_id)",
+      "digest_order": "the 32 digest bytes compared lexicographically, equivalent to one unsigned 256-bit big-endian integer"
+    },
+    "synthetic_seed_commitment": {
+      "algorithm": "SHA-256",
+      "preimage": "ASCII(\"M10-SYNTH-SEED-COMMIT-V1\") || 0x00 || seed[32]",
+      "encoding": "64 lowercase hexadecimal ASCII characters"
+    },
+    "synthetic_prf": {
+      "algorithm": "SHA-256",
+      "preimage": "ASCII(\"M10-SYNTH-PRF-V1\") || 0x00 || seed[32] || uint8(len(label)) || ASCII(label) || payload",
+      "encoding": "32 raw digest bytes; every integer in payload is unsigned big-endian"
+    }
+  },
+  "contracts": {
+    "quota_selection": {
+      "cell_id": "UTF8 arm|capture_id|site_id|xxxxxxxx|yyyyyyyy, x/y zero-padded lowercase unsigned 32-bit hexadecimal",
+      "preimage": "UTF8(\"M10-POP-V1|\" + cell_id)",
+      "digest": "SHA-256",
+      "unsigned_interpretation": "big-endian",
+      "sort_key": [
+        "digest_bytes_lexicographic",
+        "y",
+        "x",
+        "cell_id_utf8_bytes"
+      ],
+      "selection": "retain the first quota entries under the total sort key",
+      "duplicate_rule": "duplicate cell_id is truth-package invalidity before sorting"
+    },
+    "origin_fit": {
+      "population": "all fixed truth-target rows in one capture and one admitted truth realization; never a site, class, or bootstrap subset",
+      "included_rows": "candidate_valid && truth_target",
+      "N": "count(candidate_valid && truth_target) in the full unresampled capture population",
+      "sum": "exact real sum of the included binary64 raw_step values, rounded once to binary64",
+      "origin_step": "sum / N in binary64 round-to-nearest ties-to-even",
+      "meaning": "the unweighted arithmetic-mean residual of the finite candidate estimates, hence the least-squares additive translation on the values that exist",
+      "invalid_targets": "remain in every validity denominator and are not imputed as zero residuals",
+      "bootstrap": "refit once on the full capture after the frozen reference perturbation, then hold fixed while site clusters are resampled",
+      "zero_case": "candidate-worst for every origin-dependent metric"
+    },
+    "depth_product": {
+      "package_files": [
+        "rgb.tif",
+        "depth-um.tif",
+        "depth-sigma-um.tif",
+        "depth-valid.tif",
+        "depth-manifest.json"
+      ],
+      "manifest_schema": "depth-manifest.schema.json",
+      "manifest_json": "UTF-8 without BOM; RFC 8259 JSON; duplicate keys, NaN, Infinity, and unrecognized properties are invalid",
+      "hash_contract": "sha256-raw-bytes-lowerhex-v1",
+      "required_binding_comparison": "every binding sha256 and byte_length must equal the independently frozen campaign value",
+      "float_tiff": {
+        "byte_order": "little-endian",
+        "container": "BigTIFF version 43",
+        "compression": 1,
+        "photometric_interpretation": 1,
+        "sample_format": 3,
+        "bits_per_sample": 32,
+        "samples_per_pixel": 1,
+        "planar_configuration": 1,
+        "orientation": 1,
+        "predictor": 1,
+        "extra_samples": "absent",
+        "decoded_order": "row-major y then x",
+        "depth_values": "IEEE-754 binary32 micrometres",
+        "uncertainty_values": "IEEE-754 binary32 candidate-only one-standard-deviation micrometres"
+      },
+      "valid_tiff": {
+        "byte_order": "little-endian",
+        "container": "BigTIFF version 43",
+        "compression": 1,
+        "photometric_interpretation": 1,
+        "sample_format": 1,
+        "bits_per_sample": 8,
+        "samples_per_pixel": 1,
+        "planar_configuration": 1,
+        "orientation": 1,
+        "predictor": 1,
+        "extra_samples": "absent",
+        "decoded_order": "row-major y then x",
+        "allowed_values": [
+          0,
+          1
+        ]
+      },
+      "invalid_float32_bits": "7fc00000",
+      "valid_pixel": "mask=1; depth finite; sigma finite; sigma sign bit zero",
+      "invalid_pixel": "mask=0; depth bits=0x7fc00000; sigma bits=0x7fc00000",
+      "grid": "all four TIFFs have the campaign width/height; the three product planes and rgb.tif share integer pixel centres, top-left origin, x right, y down; no checker resampling",
+      "depth_axis": "camera optical-axis distance in micrometres, increasing away from the sensor, after the frozen field-curvature correction",
+      "allowed_fit": "one arbitrary additive origin per capture, removed only by the checker; no sign, scale, slope, plane, field-curvature, or nonlinear candidate fit",
+      "scoring_mode_absence": "FAIL_PRODUCT_CONTRACT",
+      "availability_mode_absence": "UNMEASURED_PRODUCT_ABSENT"
+    },
+    "synthetic_instrument": {
+      "width": 1280,
+      "height": 1024,
+      "layout": "twenty independent 256x256 tiles in row-major 5x4 order; no kernel crosses a tile boundary",
+      "instance_count": 20,
+      "focus_step_um": 8,
+      "frame_steps": [
+        0,
+        41
+      ],
+      "frame_count": 42,
+      "truth_uncertainty_um": 0,
+      "sensor_noise": "none",
+      "seed_bytes": 32,
+      "scored_seed_commitment_sha256": null,
+      "seed_disclosure_gate": [
+        "candidate executable hash frozen",
+        "candidate settings hash frozen",
+        "common-input manifest hash frozen",
+        "campaign manifest committed",
+        "then decrypt and verify the one precommitted seed",
+        "render frames while withholding seed and truth from the candidate process",
+        "freeze candidate product hashes before releasing latent labels or truth"
+      ],
+      "seed_failure": "a missing seed, commitment mismatch, second draw, or pre-freeze disclosure is UNMEASURED_SYNTHETIC_TRUTH; no replacement seed is permitted",
+      "prf": "SHA256(ASCII(\"M10-SYNTH-PRF-V1\") || 0x00 || seed[32] || uint8(label_length) || ASCII(label) || payload), with unsigned big-endian payload integers",
+      "parameter_payload": "label PARAM; payload uint32(instance)",
+      "parameters": {
+        "boundary_column": "124 + digest[0] mod 8",
+        "phase_x": "digest[1] mod 8",
+        "phase_y": "digest[2] mod 8",
+        "far_phase_y": "digest[3] mod 8",
+        "base_steps": "12 + digest[4] mod 4",
+        "separation_steps": "12 + digest[5] mod 4"
+      },
+      "tent8": "tent8(t) = 4 - abs((t mod 8) - 4), where mod returns 0..7",
+      "near_surface_steps": "base_steps + 3*(tent8(x+phase_x)-2) + (tent8(y+phase_y)-2)",
+      "far_surface_steps": "near_surface_steps + separation_steps + (tent8(y+far_phase_y)-2)",
+      "truth_depth_um": "8 * selected_surface_steps; exact integer arithmetic before binary64 serialization",
+      "boundary": "vertical continuous line x=boundary_column+0.5 in each tile; signed distance is x-(boundary_column+0.5), negative near and positive far",
+      "visibility": "near layer visible at integer columns x<=boundary_column; far layer exists everywhere",
+      "texture_payload": "label TEX; payload uint32(instance)||uint8(layer near=0/far=1)||uint8(channel R=0/G=1/B=2)||uint16(x)||uint16(y)",
+      "texture_u16": "8192 + uint16_be(digest[0:2]) mod 49152",
+      "blur_radius": "min(12, abs(surface_steps(x,y)-frame_step))",
+      "renderer": [
+        "For each output pixel, layer, and channel, intersect the square radius-r window with its 256x256 tile.",
+        "near_sum is the sum of near texture over visible-near samples in the near window; near_count is their count; near_area is the full near-window area.",
+        "far_sum is the sum of far texture over the full far window; far_area is its area.",
+        "sample = round_ties_even((near_sum*far_area + (near_area-near_count)*far_sum)/(near_area*far_area)).",
+        "Store samples as interleaved R,G,B unsigned 16-bit little-endian, row-major y then x. The materialized decoded byte arrays, not a container library, are normative."
+      ],
+      "input_adapter": "any TIFF/DNG wrapper is admissible only if an independent decode reproduces the normative RGB16LE frame bytes exactly; otherwise UNMEASURED_SYNTHETIC_TRUTH",
+      "targets_per_class": 500,
+      "targets_per_instance": 2000,
+      "target_classes": [
+        "near interior: signed distance < -32 px",
+        "far interior: signed distance > +32 px",
+        "near boundary: -32 <= signed distance < 0 px",
+        "far boundary: 0 < signed distance <= +32 px"
+      ],
+      "target_selection": [
+        "Near-interior target mask contains 101 disjoint horizontal witness triples centred at the first x in 40..47 with (x+phase_x) mod 8=4, on y=24+2*i for i=0..100, plus the 197 lowest TARGET-PRF keys among the remaining geometrically eligible cells.",
+        "Each other class contains the 500 lowest TARGET-PRF keys among its geometrically eligible cells.",
+        "TARGET PRF payload is uint32(instance)||uint8(class_code 0..3 in listed class order)||uint16(x)||uint16(y); ties use y then x.",
+        "These four 500-cell sets are the truth-only eligible masks. The general M10 quota rule sees exactly quota cells and retains all of them."
+      ],
+      "affine_certificate": {
+        "population": "the 2000 scored targets in one instance",
+        "required_disjoint_triples": 101,
+        "triple_geometry": "p0+p2=2*p1 componentwise",
+        "acceptance": "all triple points are distinct scored targets and abs(z0-2*z1+z2)>4 focus steps",
+        "proof": "for residual to any affine plane, the affine second difference is zero; if all three absolute residuals were <=1 step then the residual second difference would be <=4 steps. Each disjoint triple therefore forces one distinct residual >1. With 101 such residuals among N=2000, nearest-rank q0.95 is strictly >1 step.",
+        "failure": "UNMEASURED_SYNTHETIC_TRUTH"
+      },
+      "commissioning_mutations": [
+        "exact serialized truth map with all-valid mask and zero candidate sigma passes",
+        "z_pred=C-z_true gives Spearman rho=-1 and fails",
+        "any affine plane is rejected by the accepted certificate and p95 bar",
+        "replace every boundary prediction by the midpoint of its two local surfaces; minimum error is five steps and both boundary vetoes fail",
+        "universal invalidity fails fixed-denominator validity and synthetic-interior confusion"
+      ]
+    }
+  },
+  "failure_mapping": {
+    "checker_modes": {
+      "availability": "reports UNMEASURED_PRODUCT_ABSENT when no candidate package exists; cannot emit an M10 PASS or FAIL",
+      "score": "requires a committed campaign manifest and a candidate package; missing or malformed candidate artifacts are candidate failures"
+    },
+    "stage_order": [
+      "checker_contract",
+      "truth_preflight",
+      "product_availability",
+      "candidate_product_contract",
+      "metric_decision"
+    ],
+    "candidate_output_open_rule": "candidate output bytes are not opened unless checker-contract and truth-preflight stages are completely PASS",
+    "known_failures": [
+      {
+        "code": "CHECKER_SCHEMA_UNKNOWN",
+        "record_outcome": "CHECKER_ERROR",
+        "overall_verdict": "UNMEASURED_CHECKER_ERROR"
+      },
+      {
+        "code": "CHECKER_INTERNAL_ERROR",
+        "record_outcome": "CHECKER_ERROR",
+        "overall_verdict": "UNMEASURED_CHECKER_ERROR"
+      },
+      {
+        "code": "TRUTH_MANIFEST_MISSING",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_TRUTH_PACKAGE"
+      },
+      {
+        "code": "TRUTH_MANIFEST_SCHEMA_INVALID",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_TRUTH_PACKAGE"
+      },
+      {
+        "code": "TRUTH_FILE_LENGTH_OR_HASH_MISMATCH",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_TRUTH_PACKAGE"
+      },
+      {
+        "code": "TRUTH_QUOTA_UNFILLABLE",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_CAPTURE_INADEQUATE"
+      },
+      {
+        "code": "TRUTH_COORDINATE_OR_ID_INVALID",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_TRUTH_PACKAGE"
+      },
+      {
+        "code": "TRUTH_VALUE_OR_SIGMA_INVALID",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_TRUTH_PACKAGE"
+      },
+      {
+        "code": "RULER_CERTIFICATE_MISSING_OR_INVALID",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_PHYSICAL_TRUTH"
+      },
+      {
+        "code": "FOCUS_SCALE_MISSING_OR_INVALID",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_FOCUS_SCALE"
+      },
+      {
+        "code": "FLAT_CERTIFICATE_MISSING_OR_INVALID",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_FLAT_TRUTH"
+      },
+      {
+        "code": "LOCAL_REPEAT_UNCERTAINTY_MISSING_OR_INVALID",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_UNCERTAINTY_TRUTH"
+      },
+      {
+        "code": "TRUTH_ENVELOPE_INCOMPLETE",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_TRUTH_ENVELOPE"
+      },
+      {
+        "code": "SYNTH_SEED_UNAVAILABLE_OR_DISCLOSED_EARLY",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_SYNTHETIC_TRUTH"
+      },
+      {
+        "code": "SYNTH_SEED_COMMITMENT_MISMATCH",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_SYNTHETIC_TRUTH"
+      },
+      {
+        "code": "SYNTH_RENDER_OR_DECODE_MISMATCH",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_SYNTHETIC_TRUTH"
+      },
+      {
+        "code": "SYNTH_CERTIFICATE_INVALID",
+        "record_outcome": "TRUTH_UNMEASURED",
+        "overall_verdict": "UNMEASURED_SYNTHETIC_TRUTH"
+      },
+      {
+        "code": "CANDIDATE_PRODUCT_NOT_AVAILABLE",
+        "record_outcome": "PRODUCT_UNMEASURED",
+        "overall_verdict": "UNMEASURED_PRODUCT_ABSENT"
+      },
+      {
+        "code": "PRODUCT_MANIFEST_MISSING_OR_JSON_INVALID",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_MANIFEST_SCHEMA_INVALID",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_BINDING_MISMATCH",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_FILE_MISSING",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_FILE_LENGTH_MISMATCH",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_FILE_HASH_MISMATCH",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_TIFF_TAG_OR_DECODE_INVALID",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_GRID_MISMATCH",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_MASK_CODE_INVALID",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_VALID_VALUE_INVALID",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      },
+      {
+        "code": "PRODUCT_INVALID_SENTINEL_MISMATCH",
+        "record_outcome": "CANDIDATE_FAIL",
+        "overall_verdict": "FAIL_PRODUCT_CONTRACT"
+      }
+    ],
+    "unknown_failure": {
+      "code": "*",
+      "record_outcome": "CHECKER_ERROR",
+      "overall_verdict": "UNMEASURED_CHECKER_ERROR",
+      "rule": "an unmapped condition is emitted and counted as CHECKER_ERROR; it may never be ignored, skipped, or treated as PASS"
+    },
+    "blocked_child_rule": "every required child record blocked by a failed parent receives the parent's attribution with a DEPENDENCY_BLOCKED reason; SKIP is not an outcome",
+    "summary_equation": "total_examined = PASS + CANDIDATE_FAIL + PRODUCT_UNMEASURED + TRUTH_UNMEASURED + CHECKER_ERROR",
+    "summary_assertion": "the five counts are non-negative integers and their sum must equal total_examined or the checker returns UNMEASURED_CHECKER_ERROR",
+    "metric_decision": {
+      "all_admitted_realizations_pass": "PASS",
+      "all_admitted_realizations_fail": "FAIL",
+      "mixed_pass_fail_realizations": "UNMEASURED_TRUTH_ENVELOPE",
+      "nonfinite_candidate_derived_value": "map to the candidate-worst value specified by M166; never omit the row"
+    }
+  }
+}

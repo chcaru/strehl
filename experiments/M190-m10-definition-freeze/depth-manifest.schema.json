@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://carusos-conjecture.net/strehl/m10/depth-manifest-v1.schema.json",
+  "title": "Strehl M10 depth product manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "capture_id",
+    "mode",
+    "hash_contract",
+    "grid",
+    "semantics",
+    "bindings",
+    "files"
+  ],
+  "properties": {
+    "schema": {
+      "const": "strehl.m10-depth-product-manifest.v1"
+    },
+    "capture_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "mode": {
+      "const": "common-merge-shipping-default"
+    },
+    "hash_contract": {
+      "const": "sha256-raw-bytes-lowerhex-v1"
+    },
+    "grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "pixel_center",
+        "origin",
+        "x_direction",
+        "y_direction"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pixel_center": {
+          "const": "integer-column-row-centres"
+        },
+        "origin": {
+          "const": "top-left"
+        },
+        "x_direction": {
+          "const": "right"
+        },
+        "y_direction": {
+          "const": "down"
+        }
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "depth_units",
+        "depth_axis",
+        "depth_positive",
+        "depth_origin",
+        "uncertainty",
+        "invalid_mask_value",
+        "valid_mask_value",
+        "invalid_float32_bits",
+        "field_curvature_applied"
+      ],
+      "properties": {
+        "depth_units": {
+          "const": "micrometre"
+        },
+        "depth_axis": {
+          "const": "camera-optical-axis-distance"
+        },
+        "depth_positive": {
+          "const": "away-from-sensor"
+        },
+        "depth_origin": {
+          "const": "one-arbitrary-additive-constant-per-capture"
+        },
+        "uncertainty": {
+          "const": "candidate-only-one-standard-deviation-micrometres"
+        },
+        "invalid_mask_value": {
+          "const": 0
+        },
+        "valid_mask_value": {
+          "const": 1
+        },
+        "invalid_float32_bits": {
+          "const": "7fc00000"
+        },
+        "field_curvature_applied": {
+          "const": true
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "common_input_manifest",
+        "capture_manifest",
+        "focus_axis_map",
+        "field_curvature_profile",
+        "gear_profile",
+        "candidate_executable",
+        "settings",
+        "output_grid_descriptor"
+      ],
+      "properties": {
+        "common_input_manifest": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "capture_manifest": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "focus_axis_map": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "field_curvature_profile": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "gear_profile": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "candidate_executable": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "settings": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "output_grid_descriptor": {
+          "$ref": "#/$defs/artifactRef"
+        }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rgb",
+        "depth_um",
+        "depth_sigma_um",
+        "depth_valid"
+      ],
+      "properties": {
+        "rgb": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/fileRef"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "rgb.tif"
+                }
+              }
+            }
+          ]
+        },
+        "depth_um": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/fileRef"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "depth-um.tif"
+                }
+              }
+            }
+          ]
+        },
+        "depth_sigma_um": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/fileRef"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "depth-sigma-um.tif"
+                }
+              }
+            }
+          ]
+        },
+        "depth_valid": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/fileRef"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "depth-valid.tif"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "byte_length"
+      ],
+      "properties": {
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "fileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "sha256",
+        "byte_length"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

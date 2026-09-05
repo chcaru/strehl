@@ -1,0 +1,356 @@
+{
+  "boundary_target_count": 20000,
+  "focus_frame_max_step": 41,
+  "focus_frame_min_step": 0,
+  "height": 1024,
+  "instances": [
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 0,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 1,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 2,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 3,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 4,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 5,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 6,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 7,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 8,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 9,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 10,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 11,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 12,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 13,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 14,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 15,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 16,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 17,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 18,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    },
+    {
+      "certificate": {
+        "minimum_abs_second_difference_steps": 6,
+        "population_size": 2000,
+        "proof": "Each affine residual triple has the same second difference as truth. |r0-2r1+r2|<=4t if all three |r|<=t; therefore every certified triple forces one distinct residual >t. With floor(N/20)+1 disjoint triples, nearest-rank q0.95 is strictly >t.",
+        "required_triple_count": 101,
+        "strict_q95_lower_bound_steps": 1,
+        "triple_count": 101
+      },
+      "instance": 19,
+      "target_counts": {
+        "far_boundary": 500,
+        "far_interior": 500,
+        "near_boundary": 500,
+        "near_interior": 500
+      }
+    }
+  ],
+  "interior_target_count": 20000,
+  "maximum_truth_depth_steps": 38,
+  "minimum_layer_separation_steps": 10,
+  "minimum_truth_depth_steps": 4,
+  "schema": "strehl.m10-synthetic-development-summary.v1",
+  "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "total_target_count": 40000,
+  "width": 1280
+}
