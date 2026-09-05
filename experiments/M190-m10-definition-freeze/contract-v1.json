@@ -1,6 +1,6 @@
 {
   "schema": "strehl.m10-definition-freeze.v1",
-  "status": "ALGORITHM_PRECOMMIT_PENDING_SCORED_SEED_DRAW",
+  "status": "FROZEN_PRE_CANDIDATE",
   "normative_precedence": [
     "docs/research/M163-m10-uncertainty.md at commit 736e905a71742fef800efeb55c7549679abd9129",
     "docs/research/M166-m10-definition-repair.md at commit 832a2e8561352037be5e2a180034e00b09131cf5",
@@ -124,7 +124,9 @@
       "truth_uncertainty_um": 0,
       "sensor_noise": "none",
       "seed_bytes": 32,
-      "scored_seed_commitment_sha256": null,
+      "algorithm_precommit_commit": "1fb63317b147280956e2b3ba827eeb60644ea530",
+      "scored_seed_commitment_file": "scored-seed-commitment.json",
+      "scored_seed_commitment_sha256": "063f5e250148c211517f538e78595064e43b5042ec779ae59396229993c0e87e",
       "seed_disclosure_gate": [
         "candidate executable hash frozen",
         "candidate settings hash frozen",
@@ -359,6 +361,14 @@
       "overall_verdict": "UNMEASURED_CHECKER_ERROR",
       "rule": "an unmapped condition is emitted and counted as CHECKER_ERROR; it may never be ignored, skipped, or treated as PASS"
     },
+    "verdict_projection": {
+      "PASS": "PASS",
+      "CANDIDATE_FAIL": "FAIL",
+      "PRODUCT_UNMEASURED": "UNMEASURED",
+      "TRUTH_UNMEASURED": "UNMEASURED",
+      "CHECKER_ERROR": "UNMEASURED"
+    },
+    "multiple_failure_rule": "collect every failure code, sort first by stage_order and then by its order in known_failures, report the whole list, and use the first code as primary_disposition; all non-PASS truth/product/checker outcomes project to the single verdict UNMEASURED, while any candidate-product failure after passed truth preflight projects to the single verdict FAIL",
     "blocked_child_rule": "every required child record blocked by a failed parent receives the parent's attribution with a DEPENDENCY_BLOCKED reason; SKIP is not an outcome",
     "summary_equation": "total_examined = PASS + CANDIDATE_FAIL + PRODUCT_UNMEASURED + TRUTH_UNMEASURED + CHECKER_ERROR",
     "summary_assertion": "the five counts are non-negative integers and their sum must equal total_examined or the checker returns UNMEASURED_CHECKER_ERROR",

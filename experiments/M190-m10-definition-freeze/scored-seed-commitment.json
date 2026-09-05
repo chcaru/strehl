@@ -1,0 +1,23 @@
+{
+  "schema": "strehl.m10-scored-seed-commitment.v1",
+  "algorithm_precommit": "1fb63317b147280956e2b3ba827eeb60644ea530",
+  "draw_count": 1,
+  "seed_bytes": 32,
+  "draw_source": "System.Security.Cryptography.RandomNumberGenerator.Fill",
+  "commitment_algorithm": "SHA256(ASCII('M10-SYNTH-SEED-COMMIT-V1') || 0x00 || seed[32])",
+  "commitment_sha256": "063f5e250148c211517f538e78595064e43b5042ec779ae59396229993c0e87e",
+  "escrow": {
+    "relative_path": "private/scored-seed.dpapi",
+    "format": "Windows DPAPI CurrentUser with fixed M190 entropy",
+    "ciphertext_byte_length": 262,
+    "ciphertext_sha256": "eeddacc49ae8daf580c03a1d99aefeef95828bc0f7f1daab7299df4750fdbf0f"
+  },
+  "disclosure_gate": [
+    "candidate executable hash frozen",
+    "candidate settings hash frozen",
+    "common-input manifest hash frozen",
+    "campaign manifest committed",
+    "candidate process receives rendered frames but not the seed or truth",
+    "latent truth is released only after candidate product hashes are frozen"
+  ]
+}

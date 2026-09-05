@@ -121,8 +121,13 @@ def verify_contract(contract: dict[str, Any], allow_pending_seed: bool) -> None:
     )
     commitment = synthetic["scored_seed_commitment_sha256"]
     if commitment is None:
+        require(
+            contract["status"] == "ALGORITHM_PRECOMMIT_PENDING_SCORED_SEED_DRAW",
+            "pending contract status",
+        )
         require(allow_pending_seed, "pending seed allowed only for algorithm precommit")
     else:
+        require(contract["status"] == "FROZEN_PRE_CANDIDATE", "frozen contract status")
         require(
             isinstance(commitment, str)
             and len(commitment) == 64
@@ -157,6 +162,22 @@ def verify_contract(contract: dict[str, Any], allow_pending_seed: bool) -> None:
     require(
         failure["unknown_failure"]["record_outcome"] == "CHECKER_ERROR",
         "unknown failures fail closed",
+    )
+    require(
+        failure["verdict_projection"]
+        == {
+            "PASS": "PASS",
+            "CANDIDATE_FAIL": "FAIL",
+            "PRODUCT_UNMEASURED": "UNMEASURED",
+            "TRUTH_UNMEASURED": "UNMEASURED",
+            "CHECKER_ERROR": "UNMEASURED",
+        },
+        "record outcomes project to one verdict",
+    )
+    require(
+        "use the first code as primary_disposition"
+        in failure["multiple_failure_rule"],
+        "multiple failures have deterministic primary disposition",
     )
     require(
         failure["summary_equation"]
@@ -263,6 +284,11 @@ def verify_scored_seed(contract: dict[str, Any]) -> None:
         summary["minimum_layer_separation_steps"] >= 8,
         "scored seed layer separation",
     )
+    require(
+        summary["minimum_truth_depth_steps"] > min(SYNTH_FRAME_STEPS)
+        and summary["maximum_truth_depth_steps"] < max(SYNTH_FRAME_STEPS),
+        "scored seed truth lies strictly inside focus bracket",
+    )
 
 
 def main() -> None:
@@ -275,8 +301,26 @@ def main() -> None:
     fixtures = load_json_strict(ROOT / "fixtures.json")
     manifest = load_json_strict(ROOT / "sample-depth-manifest.json")
     development = load_json_strict(ROOT / "development-synthetic-summary.json")
+    seed_public_path = ROOT / "scored-seed-commitment.json"
 
     verify_contract(contract, args.allow_pending_seed)
+    commitment = contract["contracts"]["synthetic_instrument"][
+        "scored_seed_commitment_sha256"
+    ]
+    if commitment is not None:
+        seed_public = load_json_strict(seed_public_path)
+        require(
+            seed_public["algorithm_precommit"]
+            == contract["contracts"]["synthetic_instrument"][
+                "algorithm_precommit_commit"
+            ],
+            "seed ceremony algorithm precommit",
+        )
+        require(
+            seed_public["commitment_sha256"] == commitment,
+            "public scored-seed commitment",
+        )
+        require(seed_public["draw_count"] == 1, "one scored-seed draw")
     require(
         schema["$id"] == "https://carusos-conjecture.net/strehl/m10/depth-manifest-v1.schema.json",
         "JSON Schema identifier",
