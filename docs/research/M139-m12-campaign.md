@@ -73,7 +73,7 @@ The last clause is faithfully retained because it was in the registration at
 the measured commit. It is not, however, a plan-level M12 requirement. The
 governing plan registers:
 
-> memory <=6 GiB warm; bytes invariant to worker count (D9a); the staircase
+> memory ≤6 GiB warm; bytes invariant to worker count (D9a); the staircase
 > gone (per-frame cost flat in N mod 4).
 
 Source: `docs/proposals/2026-08-sota-path.md:1973-1985`. M178 traced the reverse
