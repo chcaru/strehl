@@ -341,3 +341,44 @@ The v2 contract also freezes:
 
 The replacement implementation and campaign may begin only after this
 amendment and the v2 contract are committed together.
+
+## 9. Amendment 2 - checkout-stable seals
+
+Status: **FROZEN AFTER V2 INVALIDATION AND BEFORE V3 EXECUTION**
+
+Written: **2026-09-04**
+
+A second independent verifier found that the v2 source and contract seals
+were computed over CRLF worktree bytes while generated JSON artifacts used
+LF. No Git attribute fixed either representation, so no clean checkout could
+reproduce all active hashes under both LF and CRLF checkout settings.
+
+The affected v2 commission SHA-256
+`D1C862E12BCD967D9B3FB29BECA48CEB4939233B0758B84D725E4341AB1B78B1`
+and verification SHA-256
+`2773F392B7C51A4930300DFE7777D8ABF328CF6AED583245FACFC2A5A0A81449`
+are invalidated in full. Their `COMMISSIONED` and `PASS` labels have no active
+evidentiary standing.
+
+Before replacement execution, the experiment now freezes:
+
+```text
+experiments/M171-reference-admission/.gitattributes
+* text eol=lf
+```
+
+Every text source, contract, preregistration, and generated JSON artifact in
+the experiment is stored and checked out as UTF-8 without BOM and LF line
+endings. Source hashes and artifact hashes are computed over those exact LF
+bytes. Verification must compare each worktree hash to the corresponding Git
+blob from a clean, attribute-normalized index and must fail on any mismatch.
+
+The v3 contract changes no scientific threshold, seed, cell, fixture,
+mutation, estimator, pass predicate, or expected outcome from v2. It changes
+only schema identities, explicit line-ending provenance, and invalidation
+history. Its SHA-256 is
+`6916517B7098BBD2EF7A4F9DF2B02E3D1DA22890F125CD3A4B4C5E444CD023CF`.
+
+The replacement implementation and campaign may begin only after this
+amendment, the v3 contract, and the lane-local `.gitattributes` are committed
+together.

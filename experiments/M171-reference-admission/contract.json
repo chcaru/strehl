@@ -1,5 +1,5 @@
 {
-  "schema": "m171-reference-admission-contract-v2",
+  "schema": "m171-reference-admission-contract-v3",
   "frozen_at": "2026-09-04T14:25:21.553-07:00",
   "amended_at": "2026-09-04T19:28:53.3637072-07:00",
   "amendment": {
@@ -7,6 +7,14 @@
     "reason": "Independent verification found the max-t numerator reversed and DIGITAL_K under-specified.",
     "invalidated_commission_sha256": "2B9A6A2DD1D1321C63F202FA8615BB466CD255D3BC52BAD2140ACBD71A24132E",
     "invalidated_verification_sha256": "7627BDC0D42E3DDD011DEE2EF06CDD6BDA72471630919F02ABE96F282D0F68FE"
+  },
+  "integrity_amendment": {
+    "amendment": 2,
+    "reason": "Independent verification found mixed CRLF and LF seals that a clean checkout could not reproduce.",
+    "line_ending_policy": "LF",
+    "gitattributes": "experiments/M171-reference-admission/.gitattributes",
+    "invalidated_commission_sha256": "D1C862E12BCD967D9B3FB29BECA48CEB4939233B0758B84D725E4341AB1B78B1",
+    "invalidated_verification_sha256": "2773F392B7C51A4930300DFE7777D8ABF328CF6AED583245FACFC2A5A0A81449"
   },
   "claim_scope": "GX_REFERENCE_CONDITIONAL",
   "capture_ruling": "ANALYSIS_ONLY",
@@ -20,9 +28,9 @@
   },
   "schemas": {
     "evidence": "m171-reference-admission-evidence-v1",
-    "result": "m171-reference-admission-result-v2",
-    "commission": "m171-reference-admission-commission-v2",
-    "verification": "m171-reference-admission-verification-v2"
+    "result": "m171-reference-admission-result-v3",
+    "commission": "m171-reference-admission-commission-v3",
+    "verification": "m171-reference-admission-verification-v3"
   },
   "statuses": {
     "scientific": [
