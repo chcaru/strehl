@@ -12,7 +12,8 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".")
+ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else \
+    Path(__file__).resolve().parents[2]
 OWNER = ROOT / "docs" / "OWNER-ACTIONS.md"
 SRC = ROOT / "docs" / "research" / "M164-m1-staged-capture.md"
 HEADING = "### Two things changed on 2026-09-06"
