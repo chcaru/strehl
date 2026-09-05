@@ -8448,7 +8448,105 @@ write unless both held.
    M10's blockage is *not* comparator dependence — remains true: M10 is `(b)(c)`,
    never `(d)`. **This section supersedes their label only.**
 
+### 2.9.84 No single blocker unblocks anything, and the board's third axis is free
+
+Two things landed tonight that change how this program should be prioritised. The
+first is a ruling I owed. The second is an arithmetic I had been getting wrong all
+session by describing blockers instead of axes.
+
+#### The M8 population ruling — mine, prospective, and made against my own interest
+
+`2026-09-sota-scorecard.md` §5 requires that *"Before a score run, the scorecard
+owner must make one prospective, explicit ruling"* registering which capture units
+remain fresh. Lane M191 produced the evidence
+(`docs/research/M191-holdout-reconciliation.md`, `e67a05b1`) and correctly refused
+to make the ruling itself. Its partition of the literal holdouts is
+**5 `BURNED` / 1 `CLEAN` / 7 `INDETERMINATE`**, and the seven turn on a single
+question the scorecard never answers: whether a pre-existing-unrelated-master
+exception immunises seven named subject/session units from the later session-burn
+rule.
+
+The two branches were costed. Grandfathering the seven yields **8 clean units and
+1,456 frames**, which is sufficient and costs the owner nothing. Refusing them
+leaves **1 unconditionally clean unit**, which is not sufficient alone, and puts a
+fresh 299-frame capture on the owner's sheet.
+
+**I rule the seven units BURNED for scoring purposes.** They remain fully usable
+for development, commissioning and apparatus work; that is what burned means and
+it is not a quarantine. Three reasons, in the order that decided it:
+
+1. **The holdout rule exists for external credibility, not internal tidiness.** A
+   reader who asks whether the data was ever looked at, and is told that masters
+   were developed from it but that this was ruled not to count, discounts the
+   result — correctly. Silence in the scorecard is a gap, not a licence, and a gap
+   resolved in my own favour is worth nothing to a reviewer.
+2. **The convenient answer and the correct answer point opposite ways here**,
+   which is exactly the circumstance in which I should distrust my own reasoning.
+3. **Ruling conservatively costs nothing today.** M136 already ruled that *"There
+   is no scoreable M8-O movement executable now"*
+   (`M136-m8-v15-execution-assessment.md:10`). A clean population cannot be scored
+   today even if I had one, so the strict ruling forfeits nothing real while the
+   permissive one would spend credibility on something unusable. That asymmetry
+   made this easy, and I want it on the record that it was easy.
+
+The fresh capture therefore goes on the owner's sheet as **queued and
+non-urgent**, to be shot at leisure so it is ready when the apparatus is.
+
+#### The arithmetic I had wrong: gating is not unblocking
+
+I have been describing this board by blocker prevalence — *"(d) gates eight of
+twelve axes"* — and that framing, though true, is close to useless for deciding
+what to do next. Re-derived mechanically from the readiness table by
+`experiments/ORCH-verify/board_critical_path.py`:
+
+| Blocker | Axes gated |
+|---|---|
+| **(b)** `cover=scale` geometry | **8** |
+| **(c)** capture | 7 |
+| **(d)** licensed comparator | 7 literal, plus M11 by name |
+| **(a)** detail instrument | 6 |
+
+And then the result that actually matters:
+
+**No single blocker, cleared alone, fully unblocks any axis on this board.** Not
+`(a)`, not `(b)`, not `(c)`, not `(d)`. Clearing `(b)` or `(c)` leaves exactly one
+blocker on M10 and changes nothing else. Clearing `(a)` or `(d)` leaves no axis
+within one step of scoreable.
+
+The only axes carrying **no** listed blocker are **M12 and M8** — which is not a
+coincidence and not good news. They are the two axes already measured and already
+admitted `FAIL`. An axis with no blockers is simply an axis whose verdict depends
+on work rather than on a purchase, a capture, or a missing instrument.
+
+#### What this makes the near-term board
+
+1. **M12** — zero blockers. Lane M192 is running a preregistered four-bar
+   certificate (`744a5c10`). This is the program's first realistic pass.
+2. **M8** — zero blockers, but no executable scoring route until the common-merge
+   apparatus is frozen. Its population question is now ruled, above.
+3. **M10** — `(b)(c)`, and in practice the shallowest multi-blocker axis on the
+   board. M11 ties it on raw count at two, but M11's are
+   `comparator-qual` and `timing-quarantine`, and its comparator qualification is
+   transitive on M1 and M2 — both four-blocker axes — so M11 is far deeper than
+   its count suggests. M10's two are not transitive on anything. `(b)` is free,
+   is mine as registrar, and is assigned tonight to lane M193. `(c)` is one
+   tilted-ruler capture already written up as Ask 2d.
+
+Everything else needs three or four blockers cleared.
+
+#### The consequence for the owner sheet, which is counterintuitive
+
+**Ask 2d — one free tilted-ruler capture — is worth more to the near-term board
+than Ask 3's `$289`.** M10 is reachable in two steps and one of them is free;
+no `(d)`-carrying axis is reachable in fewer than three. This does not make the
+purchase wrong — it is genuinely necessary for eight axes and it has no deadline —
+but it does mean the money is not what is holding the scoreboard still. Ask 3's
+title claimed it was *"the only thing on the board that unblocks an axis"*; that
+claim is withdrawn and corrected in `0ad7df2d`, because **the purchase unblocks
+zero axes on its own and so does everything else.**
+
 ### 3.1 Blocking
+
 
 **0. The headline clause of the SOTA claim has no instrument, and this outranks
 every numbered item below.** The items in this list are build work. This one is

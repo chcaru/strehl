@@ -830,6 +830,29 @@ QUOTES = [
      "`DEFINITION BLOCKED` (M9), nine `UNMEASURED`**, summing to twelve."),
     ("s83 supersedes label", "docs/STATUS.md",
      "**This section supersedes their label only.**"),
+    # --- 2.9.84: the M8 population ruling and the critical-path derivation ----
+    # The ruling is prospective and went against my own interest, so pin the
+    # verdict word itself: a later edit softening BURNED to a hedge would leave
+    # the surrounding reasoning intact and read as unchanged.
+    ("s84 ruling burned", "docs/STATUS.md",
+     "**I rule the seven units BURNED for scoring purposes.** They remain fully usable"),
+    ("s84 partition", "docs/STATUS.md",
+     "**5 `BURNED` / 1 `CLEAN` / 7 `INDETERMINATE`**, and the seven turn on a single"),
+    ("s84 grandfather cost", "docs/STATUS.md",
+     "The two branches were costed. Grandfathering the seven yields **8 clean units and"),
+    # The derivation that reprioritised the program. If this sentence ever goes
+    # missing the whole section reverts to the blocker-prevalence framing it
+    # exists to correct.
+    ("s84 none unblocks", "docs/STATUS.md",
+     "**No single blocker, cleared alone, fully unblocks any axis on this board.** Not"),
+    ("s84 zero blocker axes", "docs/STATUS.md",
+     "The only axes carrying **no** listed blocker are **M12 and M8** — which is not a"),
+    ("s84 b gates eight", "docs/STATUS.md",
+     "| **(b)** `cover=scale` geometry | **8** |"),
+    ("s84 ask2d over ask3", "docs/STATUS.md",
+     "**Ask 2d — one free tilted-ruler capture — is worth more to the near-term board"),
+    ("s84 purchase unblocks zero", "docs/STATUS.md",
+     "zero axes on its own and so does everything else.**"),
     # Cross-document into the live scorecard: 2.9.83 claims these rows were
     # applied, so the scorecard must actually carry them.
     ("s83 scorecard 815", "docs/proposals/2026-09-sota-scorecard.md",
@@ -864,6 +887,8 @@ for label, rel, quote in QUOTES:
         _who = "the STATUS 2.9.82 (e)-coding correction"
     elif label.startswith("s83 "):
         _who = "STATUS 2.9.83"
+    elif label.startswith("s84 "):
+        _who = "STATUS 2.9.84"
     else:
         _who = "STATUS 2.9.66"
     check(label, collapse(quote) in load(p),
