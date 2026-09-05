@@ -251,6 +251,74 @@ else:
             print("GREEN ratify %-26s both say %s of 12" % (label, a))
             green += 1
 
+# ---- bench sheet: the owner's shooting gates must match the lanes that own them ----
+# Steps 8-9 of the owner sheet tell the owner to STOP on a numeric threshold.
+# Those thresholds are not the owner file's to define: the `133` three-way tile
+# gate belongs to M151 and the Q05/Q95 sign gates belong to M135, and both lanes
+# are still live and free to revise them. Nothing else re-reads the lane files,
+# so a lane could tighten a bar and the owner would shoot against the old one.
+# The failure is silent and expensive in exactly one direction: the owner
+# satisfies the printed gate, and the real gate is stricter.
+#
+# Each row pins BOTH sides. A src needle alone would not notice the owner file
+# dropping a term, and an owner needle alone would not notice the lane moving
+# the bar. The three `133` rows deliberately carry three DISTINCT src needles
+# against one owner sentence, because that sentence's whole content is that the
+# gate is three-way -- pinning it once would let the sw10 or intersection term
+# be dropped from the registered source without any check going red.
+print()
+M135D = ROOT / "docs" / "research" / "M135-detail-instrument.md"
+M151D = ROOT / "docs" / "research" / "M151-m5-checker.md"
+BENCH = [
+    ("133 sw4", M151D,
+     "at least 133 eligible tiles in the pass-averaged sw4 manifest",
+     "sw4, sw10 and their physical-coordinate intersection must each retain "
+     "at least `133` eligible tiles."),
+    ("133 sw10", M151D,
+     "at least 133 eligible tiles in the pass-averaged sw10 manifest",
+     "sw4, sw10 and their physical-coordinate intersection must each retain "
+     "at least `133` eligible tiles."),
+    ("133 intersection", M151D,
+     "at least 133 common eligible physical tiles in the intersection of "
+     "those two required step-width manifests",
+     "sw4, sw10 and their physical-coordinate intersection must each retain "
+     "at least `133` eligible tiles."),
+    # Anchored on the row label, not on the bare threshold. `q95 ratio
+    # `<0.90`` occurs at three sites in M135 (pre-noise blur, added
+    # independent noise, and high-band noise-only gain all share the bar), so
+    # a bare needle is satisfied by any of them and would stay green if the
+    # blur-control row alone were changed. The owner's bench gate is the
+    # blur control specifically.
+    ("Q05 sharp gate", M135D,
+     "| Genuine optical improvement | up | q05 ratio `>1.10`",
+     "`Q05` must be strictly above `1.10`."),
+    ("Q95 blur gate", M135D,
+     "| Pre-noise blur | down | q95 ratio `<0.90`",
+     "`Q95` must be strictly below `0.90`."),
+    # The two measured values are the improvement and degradation arms of
+    # M135's own commissioning. They are pinned source-side only: the owner
+    # sheet states the bar, not the evidence behind it.
+    ("Q05 improvement arm", M135D, "**VERIFIED PASS**, `1.241840`", None),
+    ("Q95 degradation arm", M135D, "**VERIFIED PASS**, `0.631511`", None),
+    ("1.33x ceiling", M135D, "with a hard `1.33x` maximum",
+     "`1.33x`, and pass the live scale/field check"),
+]
+for label, path, src_needle, own_needle in BENCH:
+    if not path.exists():
+        print("RED   bench  %-22s SOURCE MISSING %s" % (label, path.name))
+        red += 1
+        continue
+    src_txt = collapse(path.read_text(encoding="utf-8", errors="replace"))
+    in_src = collapse(src_needle) in src_txt
+    in_own = True if own_needle is None else collapse(own_needle) in owner_flat
+    if in_src and in_own:
+        print("GREEN bench  %-22s %s" % (label, path.name))
+        green += 1
+    else:
+        print("RED   bench  %-22s source=%s owner=%s"
+              % (label, in_src, in_own))
+        red += 1
+
 # ---- control: a wrong total must not re-derive ----
 ctl = (2 + sum(stages) + 704) != 1603
 ctl2 = (891 + 32 + 164 + 128) != 1147  # the stale total must no longer re-derive
