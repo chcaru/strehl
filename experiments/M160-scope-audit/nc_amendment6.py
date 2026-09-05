@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Commission the Amendment 6 verifier with targeted negative controls.
 
-Scratch copies live under this lane's experiment directory and are removed in a
-``finally`` block. No system temporary directory is used.
+Every arm runs from a minimal copied tree under this lane's experiment
+directory. Mutations never touch the shared working files, and the copied trees
+are removed in a ``finally`` block. No system temporary directory is used.
 """
 from __future__ import annotations
 
@@ -16,10 +17,26 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-VERIFIER = Path(__file__).with_name("verify_amendment6.py")
-SCORECARD = ROOT / "docs/proposals/2026-09-sota-scorecard.md"
-REPORT = ROOT / "docs/research/M160-amendment6-reachability.md"
+VERIFIER_REL = Path("experiments/M160-scope-audit/verify_amendment6.py")
+SCORECARD_REL = Path("docs/proposals/2026-09-sota-scorecard.md")
+REPORT_REL = Path("docs/research/M160-amendment6-reachability.md")
+SCORECARD = ROOT / SCORECARD_REL
+REPORT = ROOT / REPORT_REL
 WORK = Path(__file__).with_name(".amendment6-controls")
+TREE_FILES = (
+    VERIFIER_REL,
+    SCORECARD_REL,
+    REPORT_REL,
+    Path("docs/research/M152-site-census.md"),
+    Path("docs/research/M164-m2-repair.md"),
+    Path("docs/research/M166-m10-definition-repair.md"),
+    Path("docs/research/M167-detail-battery.md"),
+    Path("experiments/M167-detail-battery/ADMISSION-PREREGISTRATION.md"),
+    Path("docs/research/M168-cheap-reference-feasibility.md"),
+    Path("docs/STATUS.md"),
+    Path("docs/capture-requests/2026-09-319-frame-session.md"),
+    Path("docs/OWNER-ACTIONS.md"),
+)
 
 
 @dataclass(frozen=True)
@@ -30,6 +47,17 @@ class Control:
     replacement: str
     expected_fail: tuple[str, ...] = ()
     benign: bool = False
+
+
+@dataclass(frozen=True)
+class VerifierRun:
+    code: int
+    output: str
+    failed: set[str]
+    total: int
+    passed: int
+    fail: int
+    skip: int
 
 
 def emit(message: str) -> None:
@@ -53,6 +81,18 @@ def mutate(source: str, control: Control) -> str:
     return candidate
 
 
+def replace_once(source: str, old: str, new: str, name: str) -> str:
+    count = source.count(old)
+    if count != 1:
+        raise RuntimeError(
+            f"{name}: expected one replacement token, found {count}: {old!r}"
+        )
+    candidate = source.replace(old, new, 1)
+    if candidate == source:
+        raise RuntimeError(f"{name}: replacement did not land")
+    return candidate
+
+
 def line_with_prefix(text: str, prefix: str) -> str:
     matches = [line for line in text.splitlines() if line.startswith(prefix)]
     if len(matches) != 1:
@@ -60,25 +100,52 @@ def line_with_prefix(text: str, prefix: str) -> str:
     return matches[0]
 
 
-def run_verifier(scorecard: Path, report: Path) -> tuple[int, str, set[str]]:
+def build_tree(tree: Path, scorecard_source: str, report_source: str) -> None:
+    for relative in TREE_FILES:
+        source = ROOT / relative
+        destination = tree / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
+    (tree / SCORECARD_REL).write_bytes(scorecard_source.encode("utf-8"))
+    (tree / REPORT_REL).write_bytes(report_source.encode("utf-8"))
+
+
+def run_verifier(tree: Path) -> VerifierRun:
     completed = subprocess.run(
         [
             sys.executable,
             "-B",
-            str(VERIFIER),
-            "--scorecard",
-            str(scorecard),
-            "--report",
-            str(report),
+            str(tree / VERIFIER_REL),
         ],
-        cwd=ROOT,
+        cwd=tree,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         check=False,
     )
     output = completed.stdout.decode("utf-8", errors="replace")
     failed = set(re.findall(r"^FAIL ([^:]+):", output, flags=re.MULTILINE))
-    return completed.returncode, output, failed
+    summary = re.search(
+        r"^SUMMARY total=(\d+) pass=(\d+) fail=(\d+) skip=(\d+)$",
+        output,
+        flags=re.MULTILINE,
+    )
+    if not summary:
+        raise RuntimeError(f"verifier emitted no parseable summary:\n{output}")
+    total, passed, fail, skip = map(int, summary.groups())
+    if passed + fail + skip != total:
+        raise RuntimeError(
+            f"verifier partition mismatch: total={total} pass={passed} "
+            f"fail={fail} skip={skip}"
+        )
+    return VerifierRun(
+        completed.returncode,
+        output,
+        failed,
+        total,
+        passed,
+        fail,
+        skip,
+    )
 
 
 def main() -> int:
@@ -90,8 +157,59 @@ def main() -> int:
     scorecard_source = read_utf8(args.scorecard.resolve())
     report_source = read_utf8(args.report.resolve())
     m12_row = line_with_prefix(report_source, "| 11 | M12 |")
+    m10_bar_row = line_with_prefix(
+        scorecard_source, "| M10 | Physical depth product |"
+    )
+    m12_bar_row = line_with_prefix(
+        scorecard_source,
+        "| M12 | Memory, determinism, and scaling invariance |",
+    )
+    status_anchor = (
+        "# strehl — pre-registered SOTA scorecard\n\n"
+        "**Status: SPEC / PRE-REGISTRATION v1.11 (2026-09-06).**"
+    )
+    m12_revision_reflow = (
+        "*forward* guard is untouched and still binds at §3.3: M11's claimed\n"
+        "production-speed output must be byte-identical across the worker ladder."
+    )
 
     controls = (
+        Control(
+            "advance-current-version",
+            "scorecard",
+            status_anchor,
+            replace_once(
+                status_anchor,
+                "v1.11",
+                "v1.12",
+                "advance-current-version",
+            ),
+            ("scorecard.version",),
+        ),
+        Control(
+            "declare-m10-fully-defined",
+            "scorecard",
+            m10_bar_row,
+            replace_once(
+                m10_bar_row,
+                "**PARTIALLY DEFINED; DEFINITION BLOCKED.**",
+                "**DEFINED.**",
+                "declare-m10-fully-defined",
+            ),
+            ("bars.M10",),
+        ),
+        Control(
+            "restore-m12-reverse-m11-dependency",
+            "scorecard",
+            m12_bar_row,
+            replace_once(
+                m12_bar_row,
+                "mutually byte-identical;",
+                "mutually byte-identical while 16 workers passes M11;",
+                "restore-m12-reverse-m11-dependency",
+            ),
+            ("bars.M12",),
+        ),
         Control(
             "drop-load-bearing-hedge",
             "scorecard",
@@ -158,14 +276,24 @@ def main() -> int:
             "report",
             m12_row,
             "",
-            ("report.twelve-rows", "report.ranks", "report.one-class-each"),
+            (
+                "report.twelve-rows",
+                "report.ranks",
+                "report.one-class-each",
+                "report.labels",
+            ),
         ),
         Control(
             "give-m8-two-classes",
             "report",
             "| 1 | M8 | **(e)** |",
             "| 1 | M8 | **(e)(f)** |",
-            ("report.twelve-rows", "report.ranks", "report.one-class-each"),
+            (
+                "report.twelve-rows",
+                "report.ranks",
+                "report.one-class-each",
+                "report.labels",
+            ),
         ),
         Control(
             "replace-top-pick",
@@ -195,71 +323,111 @@ def main() -> int:
             "The operative limitation is that rendered outputs do not\nby themselves identify",
             benign=True,
         ),
+        Control(
+            "m12-revision-reflow-benign",
+            "scorecard",
+            m12_revision_reflow,
+            "*forward* guard is untouched and still binds at §3.3:\n"
+            "M11's claimed production-speed output must be byte-identical across "
+            "the worker ladder.",
+            benign=True,
+        ),
     )
 
     if WORK.exists():
         shutil.rmtree(WORK)
     WORK.mkdir()
-    rows: list[tuple[str, int, str, str]] = []
-    passed_controls = 0
+    rows: list[tuple[str, int, str, str, str]] = []
+    caught = 0
+    missed = 0
+    inert = 0
     try:
-        baseline_scorecard = WORK / "baseline-scorecard.md"
-        baseline_report = WORK / "baseline-report.md"
-        baseline_scorecard.write_bytes(scorecard_source.encode("utf-8"))
-        baseline_report.write_bytes(report_source.encode("utf-8"))
-        base_code, base_output, base_failed = run_verifier(
-            baseline_scorecard, baseline_report
+        baseline_tree = WORK / "00-baseline" / "tree"
+        build_tree(baseline_tree, scorecard_source, report_source)
+        baseline = run_verifier(baseline_tree)
+        if (
+            baseline.code != 0
+            or baseline.failed
+            or baseline.fail != 0
+            or baseline.skip != 0
+            or "VERDICT GREEN" not in baseline.output
+        ):
+            emit(baseline.output)
+            raise RuntimeError(
+                f"unexpected baseline verifier exit={baseline.code}"
+            )
+        emit(
+            "BASE "
+            f"total={baseline.total} pass={baseline.passed} "
+            f"fail={baseline.fail} skip={baseline.skip} "
+            f"accounted={baseline.passed + baseline.fail + baseline.skip} "
+            "verdict=GREEN"
         )
-        if base_code != 0 or base_failed or "VERDICT GREEN" not in base_output:
-            emit(base_output)
-            raise RuntimeError(f"unexpected baseline verifier exit={base_code}")
-        base_passes = len(
-            re.findall(r"^PASS [^:]+:", base_output, flags=re.MULTILINE)
-        )
-        emit(f"BASE exit=0 checks={base_passes} verdict=GREEN")
 
         for index, control in enumerate(controls, 1):
-            scorecard = scorecard_source
-            report = report_source
+            control_tree = WORK / f"{index:02d}-{control.name}" / "tree"
+            shutil.copytree(baseline_tree, control_tree)
             if control.target == "scorecard":
-                scorecard = mutate(scorecard, control)
+                target = control_tree / SCORECARD_REL
             elif control.target == "report":
-                report = mutate(report, control)
+                target = control_tree / REPORT_REL
             else:
                 raise RuntimeError(f"unknown target {control.target}")
-
-            control_dir = WORK / f"{index:02d}-{control.name}"
-            control_dir.mkdir()
-            scorecard_path = control_dir / "scorecard.md"
-            report_path = control_dir / "report.md"
-            scorecard_path.write_bytes(scorecard.encode("utf-8"))
-            report_path.write_bytes(report.encode("utf-8"))
-            code, output, failed = run_verifier(scorecard_path, report_path)
+            source = read_utf8(target)
+            target.write_bytes(mutate(source, control).encode("utf-8"))
+            run = run_verifier(control_tree)
 
             if control.benign:
-                ok = code == 0 and not failed and "VERDICT GREEN" in output
+                ok = (
+                    run.code == 0
+                    and not run.failed
+                    and run.fail == 0
+                    and run.skip == 0
+                    and "VERDICT GREEN" in run.output
+                )
                 expected = "GREEN (benign)"
+                outcome = "INERT" if ok else "MISSED"
             else:
-                ok = code == 1 and all(
-                    check_id in failed for check_id in control.expected_fail
+                expected_fail = set(control.expected_fail)
+                ok = (
+                    run.code == 1
+                    and run.failed == expected_fail
+                    and run.fail == len(expected_fail)
+                    and run.skip == 0
                 )
                 expected = "RED " + ",".join(control.expected_fail)
-            passed_controls += int(ok)
+                outcome = "CAUGHT" if ok else "MISSED"
+            if outcome == "CAUGHT":
+                caught += 1
+            elif outcome == "INERT":
+                inert += 1
+            else:
+                missed += 1
+            observed = (
+                "GREEN"
+                if not run.failed
+                else "RED " + ",".join(sorted(run.failed))
+            )
             rows.append(
-                (control.name, code, expected, "PASS" if ok else "FAIL")
+                (control.name, run.code, expected, observed, outcome)
             )
             if not ok:
-                emit(f"\nCONTROL FAILURE {control.name}\n{output}")
+                emit(f"\nCONTROL FAILURE {control.name}\n{run.output}")
     finally:
         if WORK.exists():
             shutil.rmtree(WORK)
 
-    emit("| control | exit | expected | verdict |")
-    emit("| --- | ---: | --- | --- |")
-    for name, code, expected, verdict in rows:
-        emit(f"| {name} | {code} | {expected} | {verdict} |")
-    emit(f"CONTROL_SUMMARY passed={passed_controls}/{len(controls)}")
-    return 0 if passed_controls == len(controls) else 1
+    accounted = caught + missed + inert
+    emit("| control | exit | expected | observed | outcome |")
+    emit("| --- | ---: | --- | --- | --- |")
+    for name, code, expected, observed, outcome in rows:
+        emit(f"| {name} | {code} | {expected} | {observed} | {outcome} |")
+    emit(
+        "COMMISSION_SUMMARY "
+        f"ARMS={len(controls)} CAUGHT={caught} MISSED={missed} INERT={inert} "
+        f"ACCOUNTED={accounted}"
+    )
+    return 0 if missed == 0 and accounted == len(controls) else 1
 
 
 if __name__ == "__main__":

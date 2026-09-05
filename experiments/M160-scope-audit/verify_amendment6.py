@@ -5,7 +5,9 @@ Human quotations are compared after stripping Markdown blockquote prefixes from
 each physical line and then collapsing whitespace. This preserves multiline
 quotations and avoids the known bug where stripping ``>`` only after joining
 leaves false mismatches. Bar preservation is checked against the committed
-v1.8 scorecard blob, and every metric row is required to have one unique anchor.
+v1.8 scorecard blob except where later adjudications legitimately changed M10
+and M12; those rows are pinned to their adjudication commits and must remain
+unique.
 """
 from __future__ import annotations
 
@@ -28,6 +30,16 @@ SCORECARD_PATH = "docs/proposals/2026-09-sota-scorecard.md"
 PLAN_REV = "d839c402"
 BASE_REV = "1549df47"
 PLAN_SHA256 = "1E075C8BECEC35BC67231868781E614DC0748989F14E2F172C777E3964CEB443"
+CURRENT_STATUS_ANCHOR = (
+    "# strehl — pre-registered SOTA scorecard\n\n"
+    "**Status: SPEC / PRE-REGISTRATION v1.11 (2026-09-06).**"
+)
+# These rows changed after M160 for adjudicated reasons. Pin their exact
+# replacement commits instead of weakening the checks to generic presence.
+BAR_BASE_REVS = {
+    "M10": "615a02cbcb2f15404d608f259213ee9cf17eab3d",
+    "M12": "52f5de145c932450ad3427a3580192ed2eb83ba1",
+}
 EVIDENCE_PATHS = {
     "m152": ROOT / "docs/research/M152-site-census.md",
     "m164_m2": ROOT / "docs/research/M164-m2-repair.md",
@@ -138,6 +150,7 @@ def run_checks(
     scorecard: str,
     report: str,
     base: str,
+    current_bar_bases: dict[str, str],
     plan_bytes: bytes,
     evidence: dict[str, str],
 ) -> list[Check]:
@@ -311,11 +324,9 @@ def run_checks(
     scorecard_checks = (
         (
             "scorecard.version",
-            scorecard.startswith(
-                "# strehl — pre-registered SOTA scorecard\n\n"
-                "**Status: SPEC / PRE-REGISTRATION v1.10"
-            ),
-            "v1.10 status",
+            scorecard.startswith(CURRENT_STATUS_ANCHOR)
+            and scorecard.count(CURRENT_STATUS_ANCHOR) == 1,
+            f"v1.11 status anchors={scorecard.count(CURRENT_STATUS_ANCHOR)}",
         ),
         (
             "scorecard.revision",
@@ -467,16 +478,35 @@ def run_checks(
 
     for metric_number in range(1, 13):
         metric = f"M{metric_number}"
-        before_rows = metric_rows(top_section(base, 3), metric)
+        bar_base = current_bar_bases.get(metric, base)
+        before_rows = metric_rows(top_section(bar_base, 3), metric)
         after_rows = metric_rows(top_section(scorecard, 3), metric)
         before = before_rows[0] if before_rows else ""
         after = after_rows[0] if after_rows else ""
+        if metric in BAR_BASE_REVS:
+            source_count = bar_base.count(before) if before else 0
+            current_count = scorecard.count(before) if before else 0
+            passed = (
+                bool(before_rows)
+                and bool(after_rows)
+                and source_count == 1
+                and current_count == 1
+                and after == before
+            )
+            detail = (
+                f"unique at-a-glance success row matches "
+                f"{BAR_BASE_REVS[metric][:8]}; "
+                f"source_anchors={source_count} current_anchors={current_count}"
+            )
+        else:
+            passed = bool(before) and after == before
+            detail = "at-a-glance success row byte-identical to v1.8"
         add(
             checks,
             "bars",
             f"bars.{metric}",
-            bool(before) and after == before,
-            "at-a-glance success row byte-identical to v1.8",
+            passed,
+            detail,
         )
 
     add(
@@ -700,8 +730,20 @@ def main() -> int:
     scorecard = read_utf8(args.scorecard.resolve())
     report = read_utf8(args.report.resolve())
     base = git_blob(args.base_rev, SCORECARD_PATH)
+    current_bar_bases = {
+        metric: git_blob(revision, SCORECARD_PATH)
+        for metric, revision in BAR_BASE_REVS.items()
+    }
     evidence = {name: read_utf8(path) for name, path in EVIDENCE_PATHS.items()}
-    checks = run_checks(plan, scorecard, report, base, plan_bytes, evidence)
+    checks = run_checks(
+        plan,
+        scorecard,
+        report,
+        base,
+        current_bar_bases,
+        plan_bytes,
+        evidence,
+    )
 
     for check in checks:
         status = "PASS" if check.passed else "FAIL"
