@@ -81,6 +81,46 @@ def check_inventory_integrity(inventory: dict[str, Any]) -> None:
         )
 
 
+def check_rig_audit(
+    inventory: dict[str, Any], rig: dict[str, Any]
+) -> None:
+    require(rig["schema"] == "m181-allowed-rig-audit-v1", "bad rig-audit schema")
+    require(rig["complete"] is True, "rig audit is incomplete")
+    require(
+        rig["prohibited_root_opened"] is False,
+        "rig audit says the prohibited root was opened",
+    )
+    frame_count = int(rig["frame_count_excluding_prohibited"])
+    require(
+        frame_count == int(inventory["arw_frame_count_excluding_prohibited"]),
+        "rig-audit frame denominator differs from inventory",
+    )
+    expected = {
+        "Model": "ILCE-7CM2",
+        "LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+        "FocalLength": 200,
+        "ImageStabilization": 1,
+    }
+    for key, value in expected.items():
+        rows = rig["settings"][key]
+        require(len(rows) == 1, f"rig audit has multiple {key} populations")
+        require(rows[0]["value"] == value, f"rig audit unexpected {key}")
+        require(
+            int(rows[0]["frame_count"]) == frame_count,
+            f"rig audit {key} denominator mismatch",
+        )
+    require(rig["universal_a7c_ii"] is True, "camera model is not universal")
+    require(rig["universal_200mm"] is True, "200 mm is not universal")
+    require(
+        rig["universal_2x_teleconverter"] is True,
+        "2x teleconverter is not universal",
+    )
+    require(
+        int(rig["unexpected_frame_count"]) == len(rig["unexpected_frames"]) == 0,
+        "rig audit contains an unexpected or bare-lens frame",
+    )
+
+
 def check_probe_accounting(probe: dict[str, Any]) -> None:
     require(probe["schema"] == "m181-m4-flat-probe-v1", "bad probe schema")
     require(probe["complete"] is True, "probe is incomplete")
@@ -160,12 +200,13 @@ def check_verdict_reduction(probe: dict[str, Any]) -> None:
 
 
 def verify_values(
-    inventory: dict[str, Any], probe: dict[str, Any]
+    inventory: dict[str, Any], probe: dict[str, Any], rig: dict[str, Any]
 ) -> list[str]:
     checks = [
         ("source-freeze", lambda: check_source_freeze(probe)),
         ("prohibited-path", lambda: check_prohibited_path(inventory, probe)),
         ("inventory-integrity", lambda: check_inventory_integrity(inventory)),
+        ("rig-audit", lambda: check_rig_audit(inventory, rig)),
         ("probe-accounting", lambda: check_probe_accounting(probe)),
         ("verdict-reduction", lambda: check_verdict_reduction(probe)),
     ]
@@ -176,15 +217,16 @@ def verify_values(
     return passed
 
 
-def load_values() -> tuple[dict[str, Any], dict[str, Any]]:
+def load_values() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     inventory = json.loads((OUT / "inventory.json").read_text(encoding="ascii"))
     probe = json.loads((OUT / "flat-probe.json").read_text(encoding="ascii"))
-    return inventory, probe
+    rig = json.loads((OUT / "rig-audit.json").read_text(encoding="ascii"))
+    return inventory, probe, rig
 
 
 def main() -> int:
-    inventory, probe = load_values()
-    passed = verify_values(inventory, probe)
+    inventory, probe, rig = load_values()
+    passed = verify_values(inventory, probe, rig)
     print(f"GREEN: {len(passed)} checks: {', '.join(passed)}")
     return 0
 

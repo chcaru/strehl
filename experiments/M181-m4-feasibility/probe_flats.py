@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import shutil
 import statistics
@@ -340,6 +341,28 @@ def enumerate_stacks() -> list[dict[str, Any]]:
     return sorted(rows, key=lambda row: row["stack_id"].lower())
 
 
+def enumerate_arw_files() -> list[Path]:
+    pending = [CAPTURE_ROOT]
+    files: list[Path] = []
+    while pending:
+        directory = require_allowed(pending.pop())
+        entries = list(os.scandir(directory))
+        files.extend(
+            Path(entry.path).resolve()
+            for entry in entries
+            if entry.is_file(follow_symlinks=False)
+            and entry.name.lower().endswith(".arw")
+        )
+        for entry in entries:
+            if not entry.is_dir(follow_symlinks=False):
+                continue
+            child = Path(entry.path).resolve()
+            if is_prohibited(child):
+                continue
+            pending.append(child)
+    return sorted(files, key=lambda value: str(value).lower())
+
+
 def exif_rows(directory: Path) -> list[dict[str, Any]]:
     directory = require_allowed(directory)
     tool = shutil.which("exiftool")
@@ -361,6 +384,110 @@ def exif_rows(directory: Path) -> list[dict[str, Any]]:
     if not rows:
         raise RuntimeError(f"no ARWs found in {directory}")
     return rows
+
+
+def rig_audit() -> dict[str, Any]:
+    started = time.perf_counter()
+    files = enumerate_arw_files()
+    tool = shutil.which("exiftool")
+    if tool is None:
+        raise RuntimeError("exiftool is not available")
+    argument_file = OUT / "rig-audit-files.args"
+    argument_file.parent.mkdir(parents=True, exist_ok=True)
+    argument_file.write_text(
+        "".join(f"{path}\n" for path in files),
+        encoding="utf-8",
+    )
+    try:
+        completed = subprocess.run(
+            [
+                tool,
+                "-json",
+                "-n",
+                "-charset",
+                "filename=UTF8",
+                "-Model",
+                "-LensModel",
+                "-FocalLength",
+                "-ImageStabilization",
+                "-@",
+                str(argument_file),
+            ],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+        )
+    finally:
+        argument_file.unlink(missing_ok=True)
+    rows = json.loads(completed.stdout)
+    if len(rows) != len(files):
+        raise RuntimeError(
+            f"ExifTool returned {len(rows)} rows for {len(files)} allowed ARWs"
+        )
+    expected = Counter(str(path).lower() for path in files)
+    observed = Counter(
+        str(require_allowed(Path(row["SourceFile"]))).lower() for row in rows
+    )
+    if observed != expected:
+        raise RuntimeError("ExifTool source-file population differs from inventory")
+
+    unexpected = []
+    for row in rows:
+        converter_on = (
+            float(row.get("FocalLength", math.nan)) == 200.0
+            and "2x teleconverter" in str(row.get("LensModel", "")).lower()
+        )
+        if (
+            row.get("Model") != "ILCE-7CM2"
+            or not converter_on
+        ):
+            unexpected.append(
+                {
+                    "path": str(Path(row["SourceFile"]).resolve()),
+                    "Model": row.get("Model"),
+                    "LensModel": row.get("LensModel"),
+                    "FocalLength": row.get("FocalLength"),
+                }
+            )
+    artifact = {
+        "schema": "m181-allowed-rig-audit-v1",
+        "capture_root": str(CAPTURE_ROOT),
+        "prohibited_root": str(PROHIBITED_ROOT),
+        "prohibited_root_opened": False,
+        "frame_count_excluding_prohibited": len(rows),
+        "settings": {
+            key: value_counts(rows, key)
+            for key in (
+                "Model",
+                "LensModel",
+                "FocalLength",
+                "ImageStabilization",
+            )
+        },
+        "universal_a7c_ii": all(
+            row.get("Model") == "ILCE-7CM2" for row in rows
+        ),
+        "universal_200mm": all(
+            float(row.get("FocalLength", math.nan)) == 200.0 for row in rows
+        ),
+        "universal_2x_teleconverter": all(
+            "2x teleconverter" in str(row.get("LensModel", "")).lower()
+            for row in rows
+        ),
+        "unexpected_frame_count": len(unexpected),
+        "unexpected_frames": unexpected,
+        "elapsed_seconds": time.perf_counter() - started,
+        "complete": True,
+    }
+    write_json(OUT / "rig-audit.json", artifact)
+    print(
+        "rig audit: "
+        f"{artifact['frame_count_excluding_prohibited']} frames, "
+        f"{artifact['unexpected_frame_count']} unexpected"
+    )
+    return artifact
 
 
 def value_counts(rows: Iterable[dict[str, Any]], key: str) -> list[dict[str, Any]]:
@@ -800,7 +927,7 @@ def probe() -> dict[str, Any]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=("inventory", "probe", "all"))
+    parser.add_argument("command", choices=("inventory", "rig", "probe", "all"))
     return parser.parse_args()
 
 
@@ -808,6 +935,8 @@ def main() -> int:
     args = parse_args()
     if args.command in {"inventory", "all"}:
         inventory()
+    if args.command in {"rig", "all"}:
+        rig_audit()
     if args.command in {"probe", "all"}:
         probe()
     return 0

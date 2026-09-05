@@ -1,0 +1,40 @@
+{
+  "capture_root": "D:\\personal\\macro",
+  "complete": true,
+  "elapsed_seconds": 194.18912719993386,
+  "frame_count_excluding_prohibited": 9886,
+  "prohibited_root": "D:\\personal\\macro\\requests\\7-aperture-pairs",
+  "prohibited_root_opened": false,
+  "schema": "m181-allowed-rig-audit-v1",
+  "settings": {
+    "FocalLength": [
+      {
+        "frame_count": 9886,
+        "value": 200
+      }
+    ],
+    "ImageStabilization": [
+      {
+        "frame_count": 9886,
+        "value": 1
+      }
+    ],
+    "LensModel": [
+      {
+        "frame_count": 9886,
+        "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      }
+    ],
+    "Model": [
+      {
+        "frame_count": 9886,
+        "value": "ILCE-7CM2"
+      }
+    ]
+  },
+  "unexpected_frame_count": 0,
+  "unexpected_frames": [],
+  "universal_200mm": true,
+  "universal_2x_teleconverter": true,
+  "universal_a7c_ii": true
+}

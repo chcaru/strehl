@@ -23,6 +23,12 @@ the scored-capture verdict. Its three fronto-parallel runs return zero eligible
 raw flat sites at 1 s, 2.5 s, and 6 s. They reach zero after 36/60, 13/61, and
 8/65 decoded frames respectively.
 
+**VERIFIED BY RUNNING.** Every one of the `9,886` allowed ARWs reports the
+ILCE-7CM2, `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter`, and 200 mm. M181
+found no bare-lens contradiction to M147 in the allowed corpus. The prohibited
+holdout was not opened, so M147 remains the source for the larger all-archive
+denominator.
+
 **VERIFIED BY RUNNING.** Computational blockers remain after capture. A tracked
 source search found no implementation containing either the normative
 `M4-TRANSFER-V1` domain separator or the normative random seed
@@ -41,6 +47,29 @@ directory. The prohibited subtree was never enumerated, decoded, rendered, or
 measured. The allowed inventory contains `63` ARW-bearing directories and
 `9,886` ARWs. See
 `experiments/M181-m4-feasibility/out/inventory.json`.
+
+**VERIFIED BY RUNNING.** ExifTool then read the model, lens, focal length, and
+stabilization tags from all `9,886` explicitly enumerated allowed files. The
+population is exactly:
+
+```text
+Model:              ILCE-7CM2 x 9,886
+LensModel:          FE 100mm F2.8 Macro GM OSS + 2X Teleconverter x 9,886
+FocalLength:        200 mm x 9,886
+ImageStabilization: On x 9,886
+unexpected frames:  0
+```
+
+The machine-readable result is
+`experiments/M181-m4-feasibility/out/rig-audit.json`. Paths were supplied to
+ExifTool from the already-pruned allowlist; ExifTool was never asked to recurse
+the capture root.
+
+**INFERRED BY READING.** Converter-on is not an M4 disqualifier. M166 freezes
+the named medication, bee, and foam populations and contains no bare-lens
+eligibility condition. The universal converter state matters to shared
+common-input calibration, but it does not remove an otherwise eligible M4
+site.
 
 **INFERRED BY READING.** M181 reused M152's canonical implementation rather
 than recreating the statistic. Before import, the runner requires these exact
@@ -166,6 +195,24 @@ git grep -n -- 15240420260904 -- '*.py' '*.rs' '*.ps1' '*.js' '*.ts'
 
 Both returned no tracked implementation match. The seed and transfer domain
 separator occur only in prose/freeze artifacts.
+
+**INFERRED BY READING — DECONFLICTION WITH M152.** M152's reported `15/15`
+checks, `6/6` killed mutation arms, and `3,000/3,000` charged sites are real,
+but they belong to the **M3 side-max commissioning battery**, not retained M4.
+The producer loads `manifest["m3"]["sufficiency"]["selected_sites"]`, applies
+one-dimensional rim/veil profile plants, and writes schema
+`m152-m3-side-max-commission-v2`
+(`experiments/M152-site-census/commission_m3_side_max.py:99,161,922,936`).
+The M152 report likewise labels the result “reduction-level” M3 commissioning
+(`docs/research/M152-site-census.md:407-444`).
+
+**VERIFIED BY RUNNING.** M152 contains no tracked implementation match for
+`M4-TRANSFER-V1`. Its only code-adjacent occurrence of seed
+`15240420260904` is the declarative `m4-freeze.json`; no M152 source consumes
+that seed to materialize matrices. Therefore M152 directly confirms that
+plants are computational artifacts, but it is **not** the exact producer of
+M4's two-carrier integer plants, Dirichlet matrices, common-TIFF twins, or
+`Q,g,r` result. This is a scope distinction, not a contradiction in the bar.
 
 **INFERRED BY READING.** A fifth computational absence is implicit: there is
 no checker that consumes the materialized inputs and renders to report the four
@@ -448,6 +495,7 @@ Replace the M4 row in the comparison table with:
 
 ```powershell
 python experiments\M181-m4-feasibility\probe_flats.py inventory
+python experiments\M181-m4-feasibility\probe_flats.py rig
 python experiments\M181-m4-feasibility\probe_flats.py probe
 python experiments\M152-site-census\test_census.py
 python experiments\M181-m4-feasibility\verify.py
@@ -457,24 +505,25 @@ python experiments\M181-m4-feasibility\commission_verify.py
 **VERIFIED BY RUNNING.** Results:
 
 - M152 targeted tests: `16` passed;
-- M181 verifier: `5/5` checks green;
-- commissioning: `5/5` exact planted defects killed;
+- M181 verifier: `6/6` checks green;
+- commissioning: `6/6` exact planted defects killed;
 - inert arm: `1/1` remained green;
 - commissioning verdict: `COMMISSIONED`.
 
 **INFERRED BY READING.** Every mutation targets one verifier class:
 source-freeze mismatch, prohibited-path injection, inventory denominator
-mismatch, probe partition mismatch, and stored-verdict mismatch. Each mutation
-uses an anchor required to resolve exactly once. The inert arm changes only
-unconsumed notes.
+mismatch, a planted 100-mm rig population, probe partition mismatch, and
+stored-verdict mismatch. Each mutation uses an anchor required to resolve
+exactly once. The inert arm changes only unconsumed notes.
 
 **VERIFIED BY RUNNING.** Evidence hashes:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| `probe_flats.py` | `0dd6a4c2afa48f8d3f1340bb1ed63b83d3159eac9ec8e78d47b4906442b311f6` |
-| `verify.py` | `f2c6b16f3ff35cf36f913f3145275fd2425b6b726f89db99d71355e08f14f63b` |
-| `commission_verify.py` | `9babe158b87e78034d5c1fb7054e55be8f82933f46621332b8a100d037b0beff` |
+| `probe_flats.py` | `f4548c73828a0190300fe2aea2cf3069bc080f460f5ff595904cf17da6b79acf` |
+| `verify.py` | `c6e214901c0f1b5f96c81d219a235ebac87d37a29b8455db3e9d21d279051066` |
+| `commission_verify.py` | `933ec47b633104313b19bdd7f7d814a2c7571269b7c2525ba3a0458a50f7baa9` |
 | `out/inventory.json` | `cb2320647448825520c301d223fdd3f02d77eeed1bd018df7e1b01d66f0a151e` |
+| `out/rig-audit.json` | `9427dade51b76c022b9b31cf78742b4a96de8e7fee5f867e14204651d10b9c25` |
 | `out/flat-probe.json` | `f0833fd14f8fe09324c20c0571d701c7a01aa4993b64782ac12f80146f7aed38` |
-| `out/commission.json` | `b9f37e8fa8354957169eea0d1e2e6ba24613b328e65590fc79ad14cf8993ab20` |
+| `out/commission.json` | `99eaa36ed8c1166d5737b287c86b5d42546c4a15d7af02d9aff49e34ab806627` |

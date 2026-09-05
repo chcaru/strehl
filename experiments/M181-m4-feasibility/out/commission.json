@@ -1,5 +1,5 @@
 {
-  "accounted": 6,
+  "accounted": 7,
   "arms": [
     {
       "arm": "source-freeze",
@@ -14,6 +14,11 @@
     {
       "arm": "inventory-integrity",
       "reason": "inventory ARW denominator mismatch",
+      "status": "KILLED"
+    },
+    {
+      "arm": "rig-audit",
+      "reason": "rig audit unexpected FocalLength",
       "status": "KILLED"
     },
     {
@@ -36,15 +41,16 @@
     "source-freeze",
     "prohibited-path",
     "inventory-integrity",
+    "rig-audit",
     "probe-accounting",
     "verdict-reduction"
   ],
-  "expected_total": 6,
+  "expected_total": 7,
   "inert_arms_green": 1,
   "inert_arms_run": 1,
-  "mutation_arms_killed": 5,
+  "mutation_arms_killed": 6,
   "mutation_arms_missed": 0,
-  "mutation_arms_planted": 5,
+  "mutation_arms_planted": 6,
   "schema": "m181-verifier-commission-v1",
   "verdict": "COMMISSIONED"
 }
