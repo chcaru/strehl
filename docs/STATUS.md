@@ -6887,13 +6887,13 @@ against an explicit `<= 6 GiB` bar.
 
 The measured table is unambiguous, and its shape is the finding:
 
-| workers | peak GiB, N=33 | peak GiB, N=105 |
-| --- | --- | --- |
-| 1 | `2.2463` | `2.2461` |
-| 2 | `4.4747` | `4.4758` |
-| 4 | `8.9312` | `8.9329` |
-| 8 | `15.6115` | `17.8372` |
-| 16 | `24.3967` | `33.4283` |
+| workers | Job peak GiB, N=33 | Job peak GiB, N=105 | Job peak GiB, N=299 |
+| --- | --- | --- | --- |
+| 1 | `2.246288` | `2.246090` | `2.246307` |
+| 2 | `4.474667` | `4.475765` | `4.476284` |
+| 4 | `8.931210` | `8.932907` | `8.935242` |
+| 8 | `15.611515` | `17.837166` | `17.836559` |
+| 16 | `24.396667` | `33.428261` | `35.657452` |
 
 **Memory is roughly `2.23 GiB` per worker and nearly independent of stack
 depth.** The bar is breached at four workers on a 33-frame stack. Holding 16
@@ -7216,31 +7216,37 @@ them.** My standing note said M12 fails *on memory, not timing*. That was
 incomplete in a way that mattered:
 
 - **Absolute memory: FAIL.** Bar `6 GiB`. Strongest accepted scored
-  observation `scored:N105:W16:R2` — sampled private commit `32.6777 GiB`,
-  Job Object peak `33.4283 GiB`, accepted external busy `9.8763%`. That is
-  `5.57x` the ceiling. M139's own guard on the reading is correct and worth
-  keeping: *"Missing samples can understate a peak, not manufacture one above
-  the ceiling."*
-- **Cross-worker scaling invariance: FAIL.** `N=33` produced five distinct
-  TIFF hashes and five distinct pixel hashes across workers `1/2/4/8/16`;
-  `N=105` independently produced five of each; all six accepted repeats were
-  present in every worker cell.
-- **Fixed-worker determinism: passed.** Every completed `N=33` and `N=105`
-  cell produced one TIFF hash and one pixel hash across six runs.
+  observation `scored:N299:W16:R3` — sampled private commit
+  `35.65724182128906 GiB` (`38,286,671,872` bytes), Job Object peak
+  `35.65745162963867 GiB`. That is `5.94x` the ceiling, and the maximum
+  external-busy fraction among all accepted runs was `0.0991197`, below the
+  registered `0.10` bar. M139's own guard on the reading is correct and worth
+  keeping: *"Sampling can miss a higher instantaneous value. It cannot
+  manufacture the observed above-6-GiB failure."*
+- **Cross-worker scaling invariance: FAIL.** Each of `N=33`, `N=105` and
+  `N=299` produced five distinct TIFF hashes and five distinct pixel hashes
+  across workers `1/2/4/8/16`; all six accepted repeats were present in every
+  worker cell.
+- **Fixed-worker determinism: PASS.** All 15 fixed-worker cells produced one
+  TIFF hash and one pixel hash across six runs.
 
 Read those last two together, because the pair is the finding. **Same worker
 count gives identical bytes six times; different worker count changes pixels
-five ways at two independent `N`.** The renderer's output is a function of its
+five ways at three independent `N`.** The renderer's output is a function of its
 parallel decomposition.
 
-**The campaign's negative result is clean even though its descriptive sweep is
-not.** `M12-D`'s full-matrix verdict stays `UNMEASURED` because `N=299` never
-scored; the `peak_N299/peak_N33` ratio and the `N`-mod-4 spread are both
-`UNMEASURED`; and minimum scored-run coverage was `79.5768%`, under the
-execution preregistration's `90%` affirmative-result rule. M139 draws exactly
-the right line — that shortfall *"prevents a positive full-matrix memory
-claim. It does not weaken the negative result, because both the sampled lower
-bound and the independent kernel peak exceed 6 GiB by multiples."* The
+**The completed campaign closes the descriptive sweep that the first pass left
+open.** `N=299` now scores, so `M12-D` reads **PASS** across all 15
+fixed-worker cells rather than `UNMEASURED`, and the `N`-mod-4 spread is a
+measured **FAIL** at `0.07618677189815302` (`7.618677%`) against the `0.02`
+(`2%`) bar. Only one registered term stayed unread: minimum scored-run
+coverage was `0.7957678743186919`, under the execution preregistration's `0.90`
+rule, so the `peak_N299/peak_N33` ratio is reported numerically
+(`1.4615654159027742` sampled, `1.461570587793803` kernel, both far past the
+`1.10` bar) but carries the formal verdict `UNMEASURED_SAMPLING_COVERAGE`. The
+maximum sample gap was `60.85830001393333 ms`, inside the `100 ms` limit. That
+shortfall cannot rescue the axis: the one term it withholds is a *ratio*, and
+the axis already fails on an absolute bar by a factor of `5.94x`. The
 instrument was commissioned both ways: a `64 MiB` child plant peaked at
 `80,920,576` bytes and stayed under `1 GiB`, and a `7 GiB` child plant cleared
 the ceiling. A metric that only moves under sabotage has not been shown able to

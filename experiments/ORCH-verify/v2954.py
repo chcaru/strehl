@@ -197,16 +197,16 @@ CLAIMS = [
     ("m3 gate crossing per component", "0.477804796",
      R + "M174-m3-improvement-assertion.md"),
     # --- M139: M12 peak memory, the column the FAIL actually rests on ---
-    ("m12 mem w1 n33", "2.2463", R + "M139-m12-campaign.md"),
-    ("m12 mem w2 n33", "4.4747", R + "M139-m12-campaign.md"),
-    ("m12 mem w4 n33", "8.9312", R + "M139-m12-campaign.md"),
-    ("m12 mem w8 n33", "15.6115", R + "M139-m12-campaign.md"),
-    ("m12 mem w16 n33", "24.3967", R + "M139-m12-campaign.md"),
-    ("m12 mem w1 n105", "2.2461", R + "M139-m12-campaign.md"),
-    ("m12 mem w2 n105", "4.4758", R + "M139-m12-campaign.md"),
-    ("m12 mem w4 n105", "8.9329", R + "M139-m12-campaign.md"),
-    ("m12 mem w8 n105", "17.8372", R + "M139-m12-campaign.md"),
-    ("m12 mem w16 n105", "33.4283", R + "M139-m12-campaign.md"),
+    ("m12 mem w1 n33", "2.246288", R + "M139-m12-campaign.md"),
+    ("m12 mem w2 n33", "4.474667", R + "M139-m12-campaign.md"),
+    ("m12 mem w4 n33", "8.931210", R + "M139-m12-campaign.md"),
+    ("m12 mem w8 n33", "15.611515", R + "M139-m12-campaign.md"),
+    ("m12 mem w16 n33", "24.396667", R + "M139-m12-campaign.md"),
+    ("m12 mem w1 n105", "2.246090", R + "M139-m12-campaign.md"),
+    ("m12 mem w2 n105", "4.475765", R + "M139-m12-campaign.md"),
+    ("m12 mem w4 n105", "8.932907", R + "M139-m12-campaign.md"),
+    ("m12 mem w8 n105", "17.837166", R + "M139-m12-campaign.md"),
+    ("m12 mem w16 n105", "33.428261", R + "M139-m12-campaign.md"),
     # --- M175: the free comparator arm, rebuilt and passed ---
     ("m175 sentinel intercept", "-6.6597626500634704e-18",
      R + "M175-fork-arm.md"),
@@ -281,28 +281,50 @@ CLAIMS = [
     # --- 2.9.73: M12 scored FAIL; M11 quarantined; M164 answered both asks ---
     # M139's two independent bars. The memory numbers share a sentence, so each
     # is pinned on its own labelled phrase rather than the bare numeral.
-    ("m139 memory peak", "Job Object peak `33.4283 GiB`",
-     R + "M139-m12-campaign.md", None, "33.4283 GiB"),
-    ("m139 sampled commit", "sampled private commit `32.6777 GiB`",
-     R + "M139-m12-campaign.md", None, "32.6777 GiB"),
-    ("m139 external busy", "accepted external busy `9.8763%`",
-     R + "M139-m12-campaign.md", None, "9.8763%"),
-    ("m139 coverage shortfall", "scored-run coverage was `79.5768%`",
-     R + "M139-m12-campaign.md", None, "79.5768%"),
+    ("m139 memory peak", "Job Object peak `35.65745162963867 GiB`",
+     R + "M139-m12-campaign.md", None, "35.65745162963867 GiB"),
+    ("m139 sampled commit", "sampled private commit `35.65724182128906 GiB`",
+     R + "M139-m12-campaign.md", None, "35.65724182128906 GiB"),
+    ("m139 sampled bytes", "`38,286,671,872` bytes",
+     R + "M139-m12-campaign.md", None, "38,286,671,872"),
+    ("m139 external busy",
+     "external-busy fraction among all accepted runs was `0.0991197`",
+     R + "M139-m12-campaign.md", None, "0.0991197"),
+    ("m139 coverage shortfall", "coverage was `0.7957678743186919`",
+     R + "M139-m12-campaign.md", None, "0.7957678743186919"),
+    ("m139 sample gap", "`60.85830001393333 ms`",
+     R + "M139-m12-campaign.md", None, "60.85830001393333"),
     ("m139 null plant bytes", "peaked at `80,920,576` bytes",
      R + "M139-m12-campaign.md", None, "80,920,576"),
+    # The byte property. STATUS states it in prose; M139 now states it as a
+    # table, so the pin quotes STATUS's sentence but proves it against the
+    # table ROW, which is the thing that would actually change if the result
+    # changed.
     ("m139 five hashes",
      "five distinct TIFF hashes and five distinct pixel hashes",
-     R + "M139-m12-campaign.md"),
-    # Both of M139's own guards on its reading. These are the sentences that
-    # keep an incomplete sweep from being reported as a completed one, and a
-    # negative result from being over-read.
+     R + "M139-m12-campaign.md", None, "| 33 | 5 | 5 | **FAIL** |"),
+    ("m139 five hashes n299", "at three independent `N`",
+     R + "M139-m12-campaign.md", None, "| 299 | 5 | 5 | **FAIL** |"),
+    # M139's guard on the memory reading. This is the sentence that stops an
+    # under-sampled peak from being read as an over-claim: sampling error can
+    # only hide a failure here, never invent one.
     ("m139 understate guard",
-     "Missing samples can understate a peak, not manufacture one above",
+     "It cannot manufacture the observed above-6-GiB failure",
      R + "M139-m12-campaign.md"),
-    ("m139 negative result guard",
-     "It does not weaken the negative result",
-     R + "M139-m12-campaign.md"),
+    # The two terms the completed campaign added. The modulo spread is a
+    # measured FAIL; the ratio is the one registered term that stayed unread.
+    ("m139 modulo spread", "`0.07618677189815302` (`7.618677%`)",
+     R + "M139-m12-campaign.md", None, "0.07618677189815302"),
+    ("m139 ratio sampled", "`1.4615654159027742` sampled",
+     R + "M139-m12-campaign.md", None, "1.4615654159027742"),
+    ("m139 ratio kernel", "`1.461570587793803` kernel",
+     R + "M139-m12-campaign.md", None, "1.461570587793803"),
+    # N=299 finally scored, which is what turns M12-D from UNMEASURED to PASS.
+    ("m12 mem w1 n299", "2.246307", R + "M139-m12-campaign.md"),
+    ("m12 mem w2 n299", "4.476284", R + "M139-m12-campaign.md"),
+    ("m12 mem w4 n299", "8.935242", R + "M139-m12-campaign.md"),
+    ("m12 mem w8 n299", "17.836559", R + "M139-m12-campaign.md"),
+    ("m12 mem w16 n299", "35.657452", R + "M139-m12-campaign.md"),
     # M153: the instrument is real, the number is refused. Only the host-load
     # quarantine is pinnable here -- UNMEASURED_COMPARATOR_QUALIFICATION occurs
     # 5x in STATUS and 3x in its source, so no mutation can flip it and a
