@@ -1,0 +1,418 @@
+{
+  "schema": "m182-memory-budget-v1",
+  "bar": {
+    "bytes": 6442450944,
+    "proposal_quote": "memory \u22646 GiB warm",
+    "proposal_line": 1981,
+    "proposal_context_heading": "D13. Scaling \u2014 all sixteen cores inside the same six gigabytes",
+    "scorecard_quote": "Warm peak process-tree memory `<=6 GiB`",
+    "scorecard_line": 817,
+    "scorecard_warm_protocol_line": 2004,
+    "documents_disagree": false,
+    "intended_at_16_workers": true,
+    "warm_semantics": {
+      "accepted_warmup_invocations": 15,
+      "accepted_scored_invocations": 90,
+      "warmup_and_scored_are_separate_processes": true,
+      "interpretation": "warm excludes the dedicated warm-up invocation; each scored process is sampled from suspended creation through process-tree exit, so its startup and first-frame allocations remain in scope"
+    },
+    "harness_source_lines": {
+      "spawn": 934,
+      "suspended": 941,
+      "first_sample": 944
+    }
+  },
+  "m139": {
+    "measured_commit": "8009447e059febb8f9c59fda509f141835d6abdb",
+    "maximum_position_key": "scored:N299:W16:R3",
+    "maximum_job_peak_bytes": 38286897152,
+    "maximum_sampled_private_bytes": 38286671872,
+    "matrix": [
+      {
+        "frames": 33,
+        "workers": 1,
+        "active_chunks": 1,
+        "maximum_job_peak_bytes": 2411933696,
+        "maximum_sampled_private_bytes": 2411933696
+      },
+      {
+        "frames": 33,
+        "workers": 2,
+        "active_chunks": 2,
+        "maximum_job_peak_bytes": 4804636672,
+        "maximum_sampled_private_bytes": 4804431872
+      },
+      {
+        "frames": 33,
+        "workers": 4,
+        "active_chunks": 4,
+        "maximum_job_peak_bytes": 9589813248,
+        "maximum_sampled_private_bytes": 9589800960
+      },
+      {
+        "frames": 33,
+        "workers": 8,
+        "active_chunks": 7,
+        "maximum_job_peak_bytes": 16762736640,
+        "maximum_sampled_private_bytes": 16761511936
+      },
+      {
+        "frames": 33,
+        "workers": 16,
+        "active_chunks": 11,
+        "maximum_job_peak_bytes": 26195722240,
+        "maximum_sampled_private_bytes": 26195660800
+      },
+      {
+        "frames": 105,
+        "workers": 1,
+        "active_chunks": 1,
+        "maximum_job_peak_bytes": 2411720704,
+        "maximum_sampled_private_bytes": 2411720704
+      },
+      {
+        "frames": 105,
+        "workers": 2,
+        "active_chunks": 2,
+        "maximum_job_peak_bytes": 4805816320,
+        "maximum_sampled_private_bytes": 4805816320
+      },
+      {
+        "frames": 105,
+        "workers": 4,
+        "active_chunks": 4,
+        "maximum_job_peak_bytes": 9591635968,
+        "maximum_sampled_private_bytes": 9591635968
+      },
+      {
+        "frames": 105,
+        "workers": 8,
+        "active_chunks": 8,
+        "maximum_job_peak_bytes": 19152510976,
+        "maximum_sampled_private_bytes": 19152465920
+      },
+      {
+        "frames": 105,
+        "workers": 16,
+        "active_chunks": 15,
+        "maximum_job_peak_bytes": 35893321728,
+        "maximum_sampled_private_bytes": 35628167168
+      },
+      {
+        "frames": 299,
+        "workers": 1,
+        "active_chunks": 1,
+        "maximum_job_peak_bytes": 2411954176,
+        "maximum_sampled_private_bytes": 2411954176
+      },
+      {
+        "frames": 299,
+        "workers": 2,
+        "active_chunks": 2,
+        "maximum_job_peak_bytes": 4806373376,
+        "maximum_sampled_private_bytes": 4806373376
+      },
+      {
+        "frames": 299,
+        "workers": 4,
+        "active_chunks": 4,
+        "maximum_job_peak_bytes": 9594142720,
+        "maximum_sampled_private_bytes": 9594142720
+      },
+      {
+        "frames": 299,
+        "workers": 8,
+        "active_chunks": 8,
+        "maximum_job_peak_bytes": 19151859712,
+        "maximum_sampled_private_bytes": 19151802368
+      },
+      {
+        "frames": 299,
+        "workers": 16,
+        "active_chunks": 16,
+        "maximum_job_peak_bytes": 38286897152,
+        "maximum_sampled_private_bytes": 38286671872
+      }
+    ],
+    "active_chunk_fit": {
+      "intercept_bytes": 25181904.36071968,
+      "slope_bytes_per_active_chunk": 2389457520.4952235,
+      "r_squared": 0.9999923918878955,
+      "maximum_absolute_residual_bytes": 113492389.80818176
+    }
+  },
+  "reproduction": {
+    "rows": [
+      {
+        "name": "pre-n33-w1",
+        "frames": 33,
+        "workers": 1,
+        "fresh_job_peak_bytes": 2411413504,
+        "canonical_n33_max_job_peak_bytes": 2411933696,
+        "relative_delta": -0.00021567425375856875,
+        "binary_sha256": "DD5C98C2FF091DFFBF08A580E41C5C5F2C2F6E6996BB831CFC499ED833996A24",
+        "valid": true
+      },
+      {
+        "name": "pre-n33-w2",
+        "frames": 33,
+        "workers": 2,
+        "fresh_job_peak_bytes": 4804800512,
+        "canonical_n33_max_job_peak_bytes": 4804636672,
+        "relative_delta": 3.410039326268155e-05,
+        "binary_sha256": "DD5C98C2FF091DFFBF08A580E41C5C5F2C2F6E6996BB831CFC499ED833996A24",
+        "valid": true
+      },
+      {
+        "name": "pre-n33-w4",
+        "frames": 33,
+        "workers": 4,
+        "fresh_job_peak_bytes": 9586323456,
+        "canonical_n33_max_job_peak_bytes": 9589813248,
+        "relative_delta": -0.00036390614809189703,
+        "binary_sha256": "DD5C98C2FF091DFFBF08A580E41C5C5F2C2F6E6996BB831CFC499ED833996A24",
+        "valid": true
+      }
+    ],
+    "worker_fit": {
+      "intercept_bytes": 20652032.0,
+      "slope_bytes_per_active_chunk": 2391511625.142857,
+      "r_squared": 0.9999999262068405,
+      "maximum_absolute_residual_bytes": 1125229.7142858505
+    }
+  },
+  "allocation_accounting": {
+    "geometry": {
+      "plane_width": 3516,
+      "plane_height": 2344,
+      "plane_pixels": 8241504,
+      "full_pixels": 32966016,
+      "pyramid_levels": [
+        {
+          "width": 3516,
+          "height": 2344,
+          "pixels": 8241504
+        },
+        {
+          "width": 1758,
+          "height": 1172,
+          "pixels": 2060376
+        },
+        {
+          "width": 879,
+          "height": 586,
+          "pixels": 515094
+        },
+        {
+          "width": 440,
+          "height": 293,
+          "pixels": 128920
+        },
+        {
+          "width": 220,
+          "height": 147,
+          "pixels": 32340
+        },
+        {
+          "width": 110,
+          "height": 74,
+          "pixels": 8140
+        },
+        {
+          "width": 55,
+          "height": 37,
+          "pixels": 2035
+        },
+        {
+          "width": 28,
+          "height": 19,
+          "pixels": 532
+        }
+      ],
+      "pyramid_pixels": 10988941
+    },
+    "consumers_bytes_per_active_chunk": {
+      "band_merge": 659330004,
+      "frame_workspace": 571460668,
+      "fullres_gather_transient": 527456256,
+      "gate_floor_probe": 208799908,
+      "planes_luma_variance": 197796096,
+      "warp_scratch": 74173536,
+      "two_decoded_frames": 146800640
+    },
+    "top_three": [
+      {
+        "name": "band_merge",
+        "bytes_per_active_chunk": 659330004
+      },
+      {
+        "name": "frame_workspace",
+        "bytes_per_active_chunk": 571460668
+      },
+      {
+        "name": "fullres_gather_transient",
+        "bytes_per_active_chunk": 527456256
+      }
+    ],
+    "source_accounted_bytes_per_active_chunk": 2385817108,
+    "fit_minus_accounting_bytes_per_active_chunk": 3640412.495223522,
+    "fraction_of_fitted_slope_accounted": 0.9984764690462172,
+    "n299_w16_top_three": [
+      {
+        "name": "band_merge",
+        "bytes_per_active_chunk": 659330004,
+        "bytes_at_16_active_chunks": 10549280064
+      },
+      {
+        "name": "frame_workspace",
+        "bytes_per_active_chunk": 571460668,
+        "bytes_at_16_active_chunks": 9143370688
+      },
+      {
+        "name": "fullres_gather_transient",
+        "bytes_per_active_chunk": 527456256,
+        "bytes_at_16_active_chunks": 8439300096
+      }
+    ]
+  },
+  "bounded_implementation": {
+    "commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+    "current_memory_files_last_commit": {
+      "merge_cmd": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+      "pyramid": "a97275817c58e164f75c7cd3d80ca99444a2a145"
+    },
+    "n33_w16_job_peak_bytes": 3074424832,
+    "n299_w16_job_peak_bytes": 3074797568,
+    "n299_over_n33_ratio": 1.0001212376364257,
+    "n299_w16_under_bar": true,
+    "headroom_bytes": 3367653376,
+    "saving_from_m139_peak_bytes": 35212099584,
+    "reduction_factor": 12.451843188136671,
+    "n33_valid": true,
+    "n299_valid": true,
+    "binary_sha256": "0EC15D05CCA90352101BC07088A29D75E64450DC678C5607BA90A778D0BF4E96",
+    "diagnostic_not_formal_scorecard_rerun": true
+  },
+  "plan": {
+    "bounded_change_reachable": true,
+    "architectural_tiling_required": false,
+    "reason": "the frame fold was already streaming; the defect was coupling execution threads to simultaneously resident whole-frame workers",
+    "steps": [
+      {
+        "files": [
+          "crates/strehl-cli/src/merge_cmd.rs"
+        ],
+        "functions": [
+          "run_pyramid",
+          "BandWorker::reset_chunk"
+        ],
+        "change": "run canonical arithmetic chunks serially through one reusable BandWorker while a fixed Rayon pool parallelizes spatial work",
+        "estimated_saving_bytes": 25897306560,
+        "saving_scope": "N299/W16; removes 15 duplicate non-accumulator worker bundles"
+      },
+      {
+        "files": [
+          "crates/strehl-core/src/pyramid.rs"
+        ],
+        "functions": [
+          "BandMerge::reset_for_reuse"
+        ],
+        "change": "zero and reuse one scratch partial, retaining only the accumulated result; preserve canonical chunk boundaries and absorb order",
+        "estimated_saving_bytes": 9230620056,
+        "saving_scope": "N299/W16; reduces 16 simultaneous accumulators to two"
+      },
+      {
+        "files": [
+          "crates/strehl-core/src/pyramid.rs",
+          "crates/strehl-cli/src/merge_cmd.rs"
+        ],
+        "functions": [
+          "pyramid spatial operators",
+          "extract_planes",
+          "load_frame"
+        ],
+        "change": "parallelize disjoint rows/planes inside the reusable worker so 16 threads do not require 16 whole-frame states",
+        "estimated_saving_bytes": 0,
+        "saving_scope": "enabler; its benefit is retained parallel execution"
+      }
+    ],
+    "already_landed_concurrently_at": "a97275817c58e164f75c7cd3d80ca99444a2a145"
+  },
+  "probe_commission": {
+    "status": "COMMISSIONED",
+    "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+    "deltas": {
+      "allocation_plant_minus_baseline_bytes": 268922880,
+      "baseline_minus_saving_plant_bytes": 201674752,
+      "absolute_inert_minus_baseline_bytes": 163840
+    },
+    "checks": {
+      "allocation_plant_raised_peak_by_at_least_192_mib": true,
+      "saving_plant_lowered_peak_by_at_least_128_mib": true,
+      "inert_arm_within_16_mib": true,
+      "all_arms_observed_parent_and_child": true,
+      "all_arms_exited_zero": true
+    }
+  },
+  "provenance": {
+    "closeout_sha256": "94481A3A96F246FA3CC2CCF39135163D600F385DC8CD0C9183DE517593B94D80",
+    "records_sha256": "5D6046F5DEA1E2FD64AF25B70F26F1371C7CEEDF1B7D7B83A504B01F3D1AFF26",
+    "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+    "proposal_sha256": "CB72B2A20833FEF9C8A4E64C55C47663CBBE0DE1A6FD2ADEC59AA2D24FE71B82",
+    "scorecard_sha256": "405F3749F097104778EC11404EB432E53869EE9CFA6EF13BAB4BC2CDBDA7A696",
+    "current_merge_cmd_sha256": "DA41F88278AEB3072C02A30132AA2CD69ADE54766A0C314F8A5E4F05350FF8EB",
+    "current_pyramid_sha256": "7B6376E68A1A6488F958B85E65CFDC57DFE8B8826D4612D8429D08F8743632AC",
+    "current_align_cmd_sha256": "B3DE7738151A6BC0500C66DD916F9FCB20CDB9BE0BF698AD00425D3EBB397C69",
+    "measured_source": {
+      "crates/strehl-cli/src/merge_cmd.rs": {
+        "sha256": "ADA666711B0CD562799E446299294CC2C4C2D35169EB9B046AA2FCEBD5179574",
+        "bytes": 417865,
+        "anchors": {
+          "    let parts: Vec<Result<FoldPart>> = indexed": 1,
+          "        .par_chunks(per_chunk)": 1,
+          "            fws: FrameWorkspace::new(&sizes, BAND_PLANES),": 1
+        }
+      },
+      "crates/strehl-cli/src/merge_cmd/gatefloor.rs": {
+        "sha256": "94F3DA48AFDD301151F69C4B9FAFB1B09BB5C803703A14E365EA4F059BFAE3E4",
+        "bytes": 20410,
+        "anchors": {
+          "        let mut probe = template.clone();": 1,
+          "            planes: (0..2).map(|_| vec![0.0f32; px]).collect(),": 1,
+          "            pyr: Pyramid::zeros(&sizes),": 1
+        }
+      },
+      "crates/strehl-cli/src/align_cmd.rs": {
+        "sha256": "2531323ECFA1AE0B8FFBDC72485995EEACFA8A551616350AD3C50199C3BFC7C7",
+        "bytes": 119087,
+        "anchors": {
+          "    let mut mos = vec![0f32; fw * fh];": 1,
+          "    let mut rp = vec![0f32; fw * fh];": 1,
+          "    let mut gp = vec![0f32; fw * fh];": 1,
+          "    let mut bp = vec![0f32; fw * fh];": 1
+        }
+      },
+      "crates/strehl-core/src/pyramid.rs": {
+        "sha256": "C5D07506469E37424BB99FFD4C70BF2A32A0FDF121ECA0A083B06CD70BF90130",
+        "bytes": 190505,
+        "anchors": {
+          "    pub fn accumulator_floats(&self) -> usize {": 1,
+          "pub struct FrameWorkspace {": 1,
+          "            ghull: Pyramid::zeros(sizes),": 1,
+          "            plane: PlaneCache::new(sizes, planes),": 1
+        }
+      },
+      "crates/strehl-raw/src/lib.rs": {
+        "sha256": "971DC4880FB7E0D8899DAEEC1B9EF518853253AAC919041B1F8A676A63AE9602",
+        "bytes": 24163,
+        "anchors": {
+          "        assert_eq!(allocated, 73_400_320);": 1
+        }
+      }
+    }
+  },
+  "briefing_correction": {
+    "given": "N-mod-4 per-frame spread passes at 0.07618677189815302% against <=2%",
+    "correct": "the registered fraction is 0.07618677189815302 = 7.618677%, so the numeric bar fails; M139 formally quarantines the timing verdict"
+  }
+}

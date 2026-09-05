@@ -1,0 +1,382 @@
+{
+  "schema": "m182-memory-probe-commission-v1",
+  "harness_path": "experiments/m12-scorecard/m12-harness.py",
+  "harness_sha256": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+  "mutation_anchors": {
+    "allocation": "ALLOCATION_BYTES = 268435456",
+    "allocation_match_count": 1,
+    "inert": "LABEL = \"baseline\"",
+    "inert_match_count": 1
+  },
+  "arms": {
+    "baseline": {
+      "requested_allocation_bytes": 268435456,
+      "source_sha256": "34ADD52AA615C35455B660A1CD3715C531A1EC0AB0E8934C8EC2B6E21D0BE4E0",
+      "stdout": "baseline:268435456",
+      "started_utc": "2026-09-05T05:35:35.870409+00:00",
+      "completed_utc": "2026-09-05T05:35:37.490759+00:00",
+      "returncode": 0,
+      "wall_seconds": 1.6203914999496192,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M182-memory-budget\\work\\commission\\baseline.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M182-memory-budget\\work\\commission\\baseline.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 163,
+        "missed_intervals": 0,
+        "max_lateness_ms": 7.839399971999228,
+        "max_gap_ms": 10.398300015367568,
+        "median_gap_ms": 10.019049979746342,
+        "peak_process_tree_private_committed_bytes": 282451968,
+        "peak_process_tree_working_set_bytes": 292188160,
+        "peak_process_tree_page_fault_count": 71795,
+        "peak_process_count": 2,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 274882560,
+          "peak_job_memory_used_bytes": 282509312
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 625000,
+          "total_kernel_100ns": 312500,
+          "total_cpu_100ns": 937500,
+          "total_page_fault_count": 71795,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 36244,
+            "created": 134330601358744617,
+            "parent_pid": 17324,
+            "name": "python.exe",
+            "first_seen_s": 0.007760199951007962,
+            "last_seen_s": 1.600340300006792,
+            "samples": 161,
+            "max_cpu_100ns": 312500
+          },
+          {
+            "pid": 39388,
+            "created": 134330601359123682,
+            "parent_pid": 36244,
+            "name": "python.exe",
+            "first_seen_s": 0.050434499979019165,
+            "last_seen_s": 1.5903301000362262,
+            "samples": 155,
+            "max_cpu_100ns": 468750
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 52.0,
+        "system_busy_cpu_seconds": 20.84375,
+        "process_tree_cpu_seconds": 0.09375,
+        "external_busy_cpu_seconds": 20.75,
+        "external_busy_fraction_of_wall_capacity": 0.4001733531804882,
+        "external_busy_max": 0.1,
+        "pass": false,
+        "memory_start": {
+          "memory_load_percent": 58,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 27462234112,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 56168505344,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        },
+        "memory_end": {
+          "memory_load_percent": 58,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 27196674048,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 56258392064,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        }
+      }
+    },
+    "allocation_plant": {
+      "requested_allocation_bytes": 536870912,
+      "source_sha256": "A70D2BF257DFEAE993512CE15379484002ECE05453595A5C532761199C10BCB5",
+      "stdout": "baseline:536870912",
+      "started_utc": "2026-09-05T05:35:37.497271+00:00",
+      "completed_utc": "2026-09-05T05:35:39.157749+00:00",
+      "returncode": 0,
+      "wall_seconds": 1.6607891999883577,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M182-memory-budget\\work\\commission\\allocation_plant.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M182-memory-budget\\work\\commission\\allocation_plant.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 167,
+        "missed_intervals": 0,
+        "max_lateness_ms": 5.348399979993701,
+        "max_gap_ms": 12.592399958521128,
+        "median_gap_ms": 10.023700073361397,
+        "peak_process_tree_private_committed_bytes": 551424000,
+        "peak_process_tree_working_set_bytes": 560631808,
+        "peak_process_tree_page_fault_count": 137462,
+        "peak_process_count": 2,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 543825920,
+          "peak_job_memory_used_bytes": 551432192
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 1093750,
+          "total_kernel_100ns": 312500,
+          "total_cpu_100ns": 1406250,
+          "total_page_fault_count": 137462,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 12660,
+            "created": 134330601375310514,
+            "parent_pid": 13732,
+            "name": "python.exe",
+            "first_seen_s": 0.040337500046007335,
+            "last_seen_s": 1.6404184000566602,
+            "samples": 161,
+            "max_cpu_100ns": 937500
+          },
+          {
+            "pid": 13732,
+            "created": 134330601374990650,
+            "parent_pid": 17324,
+            "name": "python.exe",
+            "first_seen_s": 0.005348399979993701,
+            "last_seen_s": 1.6404184000566602,
+            "samples": 165,
+            "max_cpu_100ns": 312500
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 53.296875,
+        "system_busy_cpu_seconds": 23.828125,
+        "process_tree_cpu_seconds": 0.140625,
+        "external_busy_cpu_seconds": 23.6875,
+        "external_busy_fraction_of_wall_capacity": 0.4457124209413146,
+        "external_busy_max": 0.1,
+        "pass": false,
+        "memory_start": {
+          "memory_load_percent": 58,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 27196211200,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 56256163840,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        },
+        "memory_end": {
+          "memory_load_percent": 58,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 27123474432,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 55944847360,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        }
+      }
+    },
+    "saving_plant": {
+      "requested_allocation_bytes": 67108864,
+      "source_sha256": "39AE155B1A5AE3A6824061854A7E352E398595AD4AE6F49854B1FCB921A6AA6D",
+      "stdout": "baseline:67108864",
+      "started_utc": "2026-09-05T05:35:39.164346+00:00",
+      "completed_utc": "2026-09-05T05:35:40.764683+00:00",
+      "returncode": 0,
+      "wall_seconds": 1.600645300000906,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M182-memory-budget\\work\\commission\\saving_plant.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M182-memory-budget\\work\\commission\\saving_plant.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 161,
+        "missed_intervals": 0,
+        "max_lateness_ms": 9.245699970051646,
+        "max_gap_ms": 12.718199985101819,
+        "median_gap_ms": 10.022200003731996,
+        "peak_process_tree_private_committed_bytes": 80830464,
+        "peak_process_tree_working_set_bytes": 90963968,
+        "peak_process_tree_page_fault_count": 22551,
+        "peak_process_count": 2,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 73129984,
+          "peak_job_memory_used_bytes": 80834560
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 312500,
+          "total_kernel_100ns": 156250,
+          "total_cpu_100ns": 468750,
+          "total_page_fault_count": 22551,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 25048,
+            "created": 134330601392045619,
+            "parent_pid": 35736,
+            "name": "python.exe",
+            "first_seen_s": 0.04038859996944666,
+            "last_seen_s": 1.5801629999186844,
+            "samples": 155,
+            "max_cpu_100ns": 156250
+          },
+          {
+            "pid": 35736,
+            "created": 134330601391663944,
+            "parent_pid": 17324,
+            "name": "python.exe",
+            "first_seen_s": 0.006527499994263053,
+            "last_seen_s": 1.5801629999186844,
+            "samples": 159,
+            "max_cpu_100ns": 312500
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 51.453125,
+        "system_busy_cpu_seconds": 25.8125,
+        "process_tree_cpu_seconds": 0.046875,
+        "external_busy_cpu_seconds": 25.765625,
+        "external_busy_fraction_of_wall_capacity": 0.50303198419384,
+        "external_busy_max": 0.1,
+        "pass": false,
+        "memory_start": {
+          "memory_load_percent": 59,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 27089485824,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 55941578752,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        },
+        "memory_end": {
+          "memory_load_percent": 58,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 27422040064,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 56392224768,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        }
+      }
+    },
+    "inert": {
+      "requested_allocation_bytes": 268435456,
+      "source_sha256": "8C8562E6C5EE4C8663C09307FC3DFB2BCACCD9B8DEF2F37ADFB0B718B53FE1EF",
+      "stdout": "inert:268435456",
+      "started_utc": "2026-09-05T05:35:40.771193+00:00",
+      "completed_utc": "2026-09-05T05:35:42.392383+00:00",
+      "returncode": 0,
+      "wall_seconds": 1.620540300034918,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M182-memory-budget\\work\\commission\\inert.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M182-memory-budget\\work\\commission\\inert.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 163,
+        "missed_intervals": 0,
+        "max_lateness_ms": 8.57860001269728,
+        "max_gap_ms": 12.915000086650252,
+        "median_gap_ms": 10.015699954237789,
+        "peak_process_tree_private_committed_bytes": 282660864,
+        "peak_process_tree_working_set_bytes": 292392960,
+        "peak_process_tree_page_fault_count": 71846,
+        "peak_process_count": 2,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 274862080,
+          "peak_job_memory_used_bytes": 282673152
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 625000,
+          "total_kernel_100ns": 156250,
+          "total_cpu_100ns": 781250,
+          "total_page_fault_count": 71846,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 6796,
+            "created": 134330601408066667,
+            "parent_pid": 23396,
+            "name": "python.exe",
+            "first_seen_s": 0.040513799991458654,
+            "last_seen_s": 1.5903425000142306,
+            "samples": 156,
+            "max_cpu_100ns": 468750
+          },
+          {
+            "pid": 23396,
+            "created": 134330601407732631,
+            "parent_pid": 17324,
+            "name": "python.exe",
+            "first_seen_s": 0.005663599935360253,
+            "last_seen_s": 1.6003669999772683,
+            "samples": 161,
+            "max_cpu_100ns": 156250
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 52.046875,
+        "system_busy_cpu_seconds": 19.890625,
+        "process_tree_cpu_seconds": 0.078125,
+        "external_busy_cpu_seconds": 19.8125,
+        "external_busy_fraction_of_wall_capacity": 0.3820581475120732,
+        "external_busy_max": 0.1,
+        "pass": false,
+        "memory_start": {
+          "memory_load_percent": 58,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 27447078912,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 56418742272,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        },
+        "memory_end": {
+          "memory_load_percent": 58,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 27384631296,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 56369008640,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732207841280
+        }
+      }
+    }
+  },
+  "deltas": {
+    "allocation_plant_minus_baseline_bytes": 268922880,
+    "baseline_minus_saving_plant_bytes": 201674752,
+    "absolute_inert_minus_baseline_bytes": 163840
+  },
+  "checks": {
+    "allocation_plant_raised_peak_by_at_least_192_mib": true,
+    "saving_plant_lowered_peak_by_at_least_128_mib": true,
+    "inert_arm_within_16_mib": true,
+    "all_arms_observed_parent_and_child": true,
+    "all_arms_exited_zero": true
+  },
+  "status": "COMMISSIONED"
+}

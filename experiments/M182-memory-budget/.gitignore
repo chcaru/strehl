@@ -1,0 +1,7 @@
+work/
+runs/
+cache/
+temp/
+*.tiff
+*.log
+__pycache__/

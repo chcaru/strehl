@@ -1,0 +1,492 @@
+"""Verify M182 memory evidence, attribution, controls, and canonical report rows."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+RESULTS = HERE / "results.json"
+REPORT = ROOT / "docs" / "research" / "M182-memory-budget.md"
+COMMISSION = HERE / "probe-commission.json"
+M139_CLOSEOUT = (
+    ROOT
+    / "experiments"
+    / "m12-scorecard"
+    / "out"
+    / "campaign-8009447e-m139"
+    / "closeout.json"
+)
+M139_RECORDS = M139_CLOSEOUT.with_name("records.jsonl")
+HARNESS = ROOT / "experiments" / "m12-scorecard" / "m12-harness.py"
+PROPOSAL = ROOT / "docs" / "proposals" / "2026-08-sota-path.md"
+SCORECARD = ROOT / "docs" / "proposals" / "2026-09-sota-scorecard.md"
+M139_COMMIT = "8009447e059febb8f9c59fda509f141835d6abdb"
+BOUNDED_COMMIT = "a97275817c58e164f75c7cd3d80ca99444a2a145"
+BAR_BYTES = 6 << 30
+
+
+def read_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest().upper()
+
+
+def sha256_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest().upper()
+
+
+def git(*args: str, text: bool = True) -> str | bytes:
+    result = subprocess.check_output(["git", "-C", str(ROOT), *args])
+    return result.decode("utf-8").strip() if text else result
+
+
+def expected_report_lines(result: dict[str, Any]) -> dict[str, str]:
+    lines: dict[str, str] = {
+        "bar-ruling": (
+            "**CANONICAL BAR RULING:** The documents do not disagree: this is one "
+            "6-GiB process-tree budget, including the 16-worker cell, not 6 GiB per "
+            "process or per worker."
+        ),
+        "m139-peak": (
+            "**CANONICAL M139 PEAK:** At N299/W16, sampled private commit reached "
+            f"`{result['m139']['maximum_sampled_private_bytes']:,} B = "
+            f"{result['m139']['maximum_sampled_private_bytes'] / 2**30:.9f} GiB` "
+            f"(`{result['m139']['maximum_position_key']}`); the cell's independent "
+            f"kernel Job peak was `{result['m139']['maximum_job_peak_bytes']:,} B = "
+            f"{result['m139']['maximum_job_peak_bytes'] / 2**30:.9f} GiB`, only "
+            f"`{result['m139']['maximum_job_peak_bytes'] - result['m139']['maximum_sampled_private_bytes']:,} B` higher."
+        ),
+    }
+
+    for row in result["reproduction"]["rows"]:
+        lines[f"reproduction-w{row['workers']}"] = (
+            f"| {row['workers']} | `{row['fresh_job_peak_bytes']:,} B` | "
+            f"`{row['canonical_n33_max_job_peak_bytes']:,} B` | "
+            f"`{100 * row['relative_delta']:+.6f}%` |"
+        )
+
+    fit = result["m139"]["active_chunk_fit"]
+    lines["scaling-law"] = (
+        "**CANONICAL SCALING LAW:** "
+        f"`peak = {fit['intercept_bytes']:,.0f} B + "
+        f"{fit['slope_bytes_per_active_chunk']:,.3f} B * active_chunks`, "
+        f"with `R²={fit['r_squared']:.9f}` across all 15 M139 cells."
+    )
+
+    descriptions = {
+        "band_merge": "`BandMerge`: 9 pyramids plus 8 level-0 input-hull planes",
+        "frame_workspace": (
+            "`FrameWorkspace`: two operator workspaces, seven pyramids, four "
+            "level-0 fields"
+        ),
+        "fullres_gather_transient": (
+            "full-resolution gather: mosaic plus R/G/B f32 planes"
+        ),
+    }
+    for index, row in enumerate(
+        result["allocation_accounting"]["n299_w16_top_three"], start=1
+    ):
+        lines[f"consumer-{index}"] = (
+            f"| {index} | {descriptions[row['name']]} | "
+            f"`{row['bytes_per_active_chunk']:,} B "
+            f"({row['bytes_per_active_chunk'] / 2**20:.3f} MiB)` | "
+            f"`{row['bytes_at_16_active_chunks']:,} B "
+            f"({row['bytes_at_16_active_chunks'] / 2**30:.3f} GiB)` |"
+        )
+
+    accounting = result["allocation_accounting"]
+    slope = fit["slope_bytes_per_active_chunk"]
+    lines["attribution"] = (
+        "**CANONICAL ATTRIBUTION CHECK:** Source accounting totals "
+        f"`{accounting['source_accounted_bytes_per_active_chunk']:,} B = "
+        f"{accounting['source_accounted_bytes_per_active_chunk'] / 2**30:.9f} GiB` "
+        f"per active chunk, `{100 * accounting['fraction_of_fitted_slope_accounted']:.6f}%` "
+        f"of the fitted `{slope / 2**30:.9f} GiB` slope; the unexplained remainder "
+        f"is `{accounting['fit_minus_accounting_bytes_per_active_chunk']:,.0f} B` per chunk."
+    )
+
+    steps = result["plan"]["steps"]
+    lines["plan-1"] = (
+        "| 1 | `merge_cmd.rs::run_pyramid`, `BandWorker::reset_chunk` | run "
+        "canonical chunks serially through one reusable frame worker; keep a "
+        "16-thread pool for spatial work | "
+        f"`{steps[0]['estimated_saving_bytes']:,} B "
+        f"({steps[0]['estimated_saving_bytes'] / 2**30:.3f} GiB)` from 15 "
+        "duplicate non-accumulator bundles |"
+    )
+    lines["plan-2"] = (
+        "| 2 | `pyramid.rs::BandMerge::reset_for_reuse` | retain the result plus "
+        "one resettable scratch accumulator instead of 16 partials, preserving "
+        "chunk boundaries and absorb order | "
+        f"`{steps[1]['estimated_saving_bytes']:,} B "
+        f"({steps[1]['estimated_saving_bytes'] / 2**30:.3f} GiB)` from 14 accumulators |"
+    )
+    lines["plan-3"] = (
+        "| 3 | pyramid row operators plus `extract_planes`/`load_frame` | "
+        "parallelise disjoint rows and planes inside that one worker | no direct "
+        "byte saving; this preserves 16-thread execution without restoring the allocations |"
+    )
+
+    bounded = result["bounded_implementation"]
+    for frames in (33, 299):
+        peak = bounded[f"n{frames}_w16_job_peak_bytes"]
+        lines[f"bounded-n{frames}"] = (
+            f"| N{frames}/W16 | `{peak:,} B = {peak / 2**30:.9f} GiB` | pass |"
+        )
+    lines["bounded-verdict"] = (
+        "**CANONICAL BOUNDED VERDICT:** The current memory implementation is "
+        f"`{bounded['reduction_factor']:.6f}x` below M139's N299/W16 peak, leaves "
+        f"`{bounded['headroom_bytes']:,} B = {bounded['headroom_bytes'] / 2**30:.9f} GiB` "
+        "headroom, and measures "
+        f"`peak_N299/peak_N33 = {bounded['n299_over_n33_ratio']:.9f}`."
+    )
+
+    probe = result["probe_commission"]["deltas"]
+    raw_probe = read_json(COMMISSION)
+    peaks = {
+        name: arm["memory"]["kernel_job_peak_memory"]["peak_job_memory_used_bytes"]
+        for name, arm in raw_probe["arms"].items()
+    }
+    lines["probe-commission"] = (
+        "**CANONICAL PROBE COMMISSION:** "
+        f"baseline `{peaks['baseline']:,} B`; planted allocation "
+        f"`{peaks['allocation_plant']:,} B` "
+        f"(`+{probe['allocation_plant_minus_baseline_bytes']:,} B`); planted saving "
+        f"`{peaks['saving_plant']:,} B` "
+        f"(`-{probe['baseline_minus_saving_plant_bytes']:,} B`); inert label-only arm "
+        f"`{peaks['inert']:,} B` "
+        f"(`|delta|={probe['absolute_inert_minus_baseline_bytes']:,} B`); all five gates passed."
+    )
+    lines["briefing-correction"] = (
+        "**CANONICAL BRIEFING CORRECTION:** Replace “N-mod-4 per-frame spread "
+        "passes at `0.07618677189815302%` against `<=2%`” with “the fraction is "
+        "`0.07618677189815302`, i.e. `7.618677189815302%`, so the numeric bar "
+        "fails; M139 formally records `UNMEASURED_HOST_QUARANTINE`.”"
+    )
+    lines["check-commission"] = (
+        "**CANONICAL CHECK COMMISSION:** `41/41` baseline checks passed; `41/41` "
+        "uniquely anchored planted defects were caught; `0` were missed; `2/2` "
+        "inert arms survived; both allocation-up and saving-down positive controls "
+        "remained discriminating."
+    )
+    return lines
+
+
+def semantic_checks(
+    result: dict[str, Any],
+    *,
+    record_overrides: dict[str, dict[str, Any]] | None = None,
+    own_text_override: str | None = None,
+) -> list[tuple[str, bool, str]]:
+    checks: list[tuple[str, bool, str]] = []
+
+    def add(check_id: str, condition: bool, message: str) -> None:
+        checks.append((check_id, condition, message))
+
+    bar = result["bar"]
+    add("S01-schema", result["schema"] == "m182-memory-budget-v1", "wrong schema")
+    add(
+        "S02-bar-definition",
+        bar["bytes"] == BAR_BYTES
+        and not bar["documents_disagree"]
+        and bar["intended_at_16_workers"],
+        "bar is not one six-GiB budget including W16",
+    )
+    add(
+        "S03-warm-lifecycle",
+        bar["warm_semantics"]["accepted_warmup_invocations"] == 15
+        and bar["warm_semantics"]["accepted_scored_invocations"] == 90
+        and bar["warm_semantics"]["warmup_and_scored_are_separate_processes"]
+        and "first-frame allocations remain in scope"
+        in bar["warm_semantics"]["interpretation"],
+        "warm semantics or process counts drifted",
+    )
+    add(
+        "S04-harness-lifecycle-anchors",
+        bar["harness_source_lines"] == {
+            "spawn": 934,
+            "suspended": 941,
+            "first_sample": 944,
+        },
+        "monitor no longer starts at suspended process creation",
+    )
+
+    closeout = read_json(M139_CLOSEOUT)
+    add(
+        "S05-m139-peak",
+        result["m139"]["maximum_job_peak_bytes"]
+        == closeout["cells"]["N299-W16"]["maximum_kernel_job_peak_memory_bytes"]
+        and result["m139"]["maximum_sampled_private_bytes"]
+        == closeout["absolute_bars"]["memory_ceiling"][
+            "maximum_sampled_process_tree_private_committed_bytes"
+        ]
+        and result["m139"]["maximum_position_key"]
+        == closeout["absolute_bars"]["memory_ceiling"]["maximum_position_key"],
+        "M139 maximum was not reproduced from closeout",
+    )
+    add(
+        "S06-independent-counters",
+        0
+        <= result["m139"]["maximum_job_peak_bytes"]
+        - result["m139"]["maximum_sampled_private_bytes"]
+        < 1 << 20,
+        "sampled and kernel peaks disagree by at least one MiB",
+    )
+    add(
+        "S07-active-chunk-model",
+        all(
+            row["active_chunks"]
+            == math.ceil(row["frames"] / math.ceil(row["frames"] / row["workers"]))
+            for row in result["m139"]["matrix"]
+        )
+        and len(result["m139"]["matrix"]) == 15,
+        "active chunk count is wrong",
+    )
+    fit = result["m139"]["active_chunk_fit"]
+    add(
+        "S08-scaling-fit",
+        fit["r_squared"] > 0.9999
+        and 2.20 * 2**30
+        < fit["slope_bytes_per_active_chunk"]
+        < 2.25 * 2**30,
+        "matrix no longer has the claimed whole-worker slope",
+    )
+    reproduction = result["reproduction"]
+    add(
+        "S09-fresh-reproduction",
+        reproduction["worker_fit"]["r_squared"] > 0.99999
+        and all(row["valid"] and abs(row["relative_delta"]) < 0.001 for row in reproduction["rows"])
+        and {row["workers"] for row in reproduction["rows"]} == {1, 2, 4},
+        "fresh reduced-scale runs do not reproduce M139",
+    )
+    geometry = result["allocation_accounting"]["geometry"]
+    add(
+        "S10-geometry",
+        geometry["plane_width"] == 3516
+        and geometry["plane_height"] == 2344
+        and geometry["plane_pixels"] == 8_241_504
+        and geometry["pyramid_pixels"] == 10_988_941,
+        "allocation geometry changed",
+    )
+    consumers = result["allocation_accounting"]["consumers_bytes_per_active_chunk"]
+    add(
+        "S11-consumer-arithmetic",
+        consumers
+        == {
+            "band_merge": 659_330_004,
+            "frame_workspace": 571_460_668,
+            "fullres_gather_transient": 527_456_256,
+            "gate_floor_probe": 208_799_908,
+            "planes_luma_variance": 197_796_096,
+            "warp_scratch": 74_173_536,
+            "two_decoded_frames": 146_800_640,
+        },
+        "source allocation arithmetic changed",
+    )
+    add(
+        "S12-top-three-order",
+        [row["name"] for row in result["allocation_accounting"]["top_three"]]
+        == ["band_merge", "frame_workspace", "fullres_gather_transient"],
+        "top-three ordering is wrong",
+    )
+    accounted = result["allocation_accounting"]
+    add(
+        "S13-attribution-closure",
+        accounted["source_accounted_bytes_per_active_chunk"] == sum(consumers.values())
+        and accounted["fraction_of_fitted_slope_accounted"] > 0.998
+        and abs(accounted["fit_minus_accounting_bytes_per_active_chunk"]) < 4 << 20,
+        "source accounting does not close against empirical slope",
+    )
+
+    source_ok = True
+    for path, recorded in result["provenance"]["measured_source"].items():
+        data = git("show", f"{M139_COMMIT}:{path}", text=False)
+        assert isinstance(data, bytes)
+        source_ok &= sha256_bytes(data) == recorded["sha256"]
+        text = data.decode("utf-8").splitlines()
+        source_ok &= all(text.count(anchor) == 1 for anchor in recorded["anchors"])
+    add(
+        "S14-measured-source-provenance",
+        source_ok and len(result["provenance"]["measured_source"]) == 5,
+        "measured source hashes or unique anchors drifted",
+    )
+    add(
+        "S15-input-evidence-provenance",
+        result["provenance"]["closeout_sha256"] == sha256(M139_CLOSEOUT)
+        and result["provenance"]["records_sha256"] == sha256(M139_RECORDS)
+        and result["provenance"]["harness_sha256"] == sha256(HARNESS)
+        and result["provenance"]["proposal_sha256"] == sha256(PROPOSAL)
+        and result["provenance"]["scorecard_sha256"] == sha256(SCORECARD),
+        "campaign, harness, or governing documents changed",
+    )
+
+    bounded = result["bounded_implementation"]
+    current_source_clean = (
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(ROOT),
+                "diff",
+                "--quiet",
+                "--",
+                "crates/strehl-cli/src/merge_cmd.rs",
+                "crates/strehl-core/src/pyramid.rs",
+            ],
+            check=False,
+        ).returncode
+        == 0
+    )
+    add(
+        "S16-current-memory-revision",
+        bounded["commit"] == BOUNDED_COMMIT
+        and set(bounded["current_memory_files_last_commit"].values())
+        == {BOUNDED_COMMIT}
+        and current_source_clean,
+        "current memory-owning source is not clean at a9727581",
+    )
+    add(
+        "S17-bounded-memory-result",
+        bounded["n33_valid"]
+        and bounded["n299_valid"]
+        and bounded["n299_w16_job_peak_bytes"] <= BAR_BYTES
+        and bounded["n299_over_n33_ratio"] <= 1.10,
+        "bounded implementation misses memory or ratio bar",
+    )
+    add(
+        "S18-saving-arithmetic",
+        bounded["saving_from_m139_peak_bytes"]
+        == result["m139"]["maximum_job_peak_bytes"]
+        - bounded["n299_w16_job_peak_bytes"]
+        and bounded["headroom_bytes"] == BAR_BYTES - bounded["n299_w16_job_peak_bytes"]
+        and abs(
+            bounded["reduction_factor"]
+            - result["m139"]["maximum_job_peak_bytes"]
+            / bounded["n299_w16_job_peak_bytes"]
+        )
+        < 1e-12,
+        "bounded saving arithmetic is inconsistent",
+    )
+    plan = result["plan"]
+    add(
+        "S19-plan-reaches-bar",
+        plan["bounded_change_reachable"]
+        and not plan["architectural_tiling_required"]
+        and plan["already_landed_concurrently_at"] == BOUNDED_COMMIT
+        and abs(
+            sum(step["estimated_saving_bytes"] for step in plan["steps"])
+            - bounded["saving_from_m139_peak_bytes"]
+        )
+        < 256 * (1 << 20),
+        "plan is not concrete or does not price the observed saving",
+    )
+    probe = result["probe_commission"]
+    add(
+        "S20-probe-directions",
+        probe["status"] == "COMMISSIONED"
+        and all(probe["checks"].values())
+        and probe["deltas"]["allocation_plant_minus_baseline_bytes"] >= 192 * (1 << 20)
+        and probe["deltas"]["baseline_minus_saving_plant_bytes"] >= 128 * (1 << 20)
+        and probe["deltas"]["absolute_inert_minus_baseline_bytes"] <= 16 * (1 << 20),
+        "memory meter did not respond in both directions or inert arm moved",
+    )
+    records_ok = True
+    for name in (
+        "pre-n33-w1",
+        "pre-n33-w2",
+        "pre-n33-w4",
+        "post-n33-w16",
+        "post-n299-w16",
+    ):
+        record = (
+            record_overrides[name]
+            if record_overrides is not None and name in record_overrides
+            else read_json(HERE / f"{name}.json")
+        )
+        records_ok &= (
+            record["valid"]
+            and record["returncode"] == 0
+            and record["probe"]["output_removed_after_hash"]
+            and not (HERE / "runs" / f"{name}.tiff").exists()
+            and record["output_sha256"] is not None
+            and record["pixel_sha256"] is not None
+        )
+    add(
+        "S21-product-run-witnesses",
+        records_ok,
+        "a product reproduction is invalid or lacks a removed hashed TIFF witness",
+    )
+    own_text = (
+        own_text_override
+        if own_text_override is not None
+        else "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in [
+                REPORT,
+                HERE / "probe.py",
+                HERE / "analyze.py",
+                HERE / "verify.py",
+            ]
+        )
+    )
+    prohibited_name = "7-" + "aperture" + "-pairs"
+    add(
+        "S22-holdout-exclusion",
+        prohibited_name not in own_text,
+        "owned artifacts name the prohibited holdout",
+    )
+    return checks
+
+
+def audit(result: dict[str, Any], report: str) -> tuple[list[str], dict[str, str]]:
+    failures: list[str] = []
+    for check_id, passed, message in semantic_checks(result):
+        if not passed:
+            failures.append(f"{check_id}: {message}")
+    lines = expected_report_lines(result)
+    report_lines = report.splitlines()
+    for line_id, line in lines.items():
+        count = report_lines.count(line)
+        if count != 1:
+            failures.append(
+                f"R-{line_id}: canonical full line occurs {count} times, expected one"
+            )
+    return failures, lines
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--json", action="store_true")
+    args = parser.parse_args()
+    result = read_json(RESULTS)
+    report = REPORT.read_text(encoding="utf-8")
+    failures, report_lines = audit(result, report)
+    total = len(semantic_checks(result)) + len(report_lines)
+    payload = {
+        "status": "PASS" if not failures else "FAIL",
+        "checks": total,
+        "passed": total - len(failures),
+        "failures": failures,
+    }
+    if args.json:
+        print(json.dumps(payload, indent=2))
+    else:
+        print(f"{payload['status']}: {payload['passed']}/{total} checks passed")
+        for failure in failures:
+            print(f"  {failure}")
+    return 0 if not failures else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

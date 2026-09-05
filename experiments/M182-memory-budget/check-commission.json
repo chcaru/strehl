@@ -1,0 +1,249 @@
+{
+  "schema": "m182-memory-check-commission-v1",
+  "baseline_checks": 41,
+  "baseline_passed": 41,
+  "report_mutations": [
+    {
+      "check": "R-bar-ruling",
+      "anchor_sha256": "32F4ADB51237D91FF3BC8B8968503489A58D7F99674C121C3937CFD6956D8C8D",
+      "caught": true
+    },
+    {
+      "check": "R-m139-peak",
+      "anchor_sha256": "2CBEBB1887D1487BA54CAE0CCA5087460E24AF4B98825CA52F65D07F08D10038",
+      "caught": true
+    },
+    {
+      "check": "R-reproduction-w1",
+      "anchor_sha256": "1942D458AA6635BF24514D9EA197194AD05E0D1F589E79F3F408047E00E13593",
+      "caught": true
+    },
+    {
+      "check": "R-reproduction-w2",
+      "anchor_sha256": "90A8DAA52BDDAAC8C40D9C81651695FD0C1329291E7A537B0A51A5FA814458E5",
+      "caught": true
+    },
+    {
+      "check": "R-reproduction-w4",
+      "anchor_sha256": "78EB6ADD85E55C0DA969740D45F6877846617995DE52998406CC84C0757F3ED4",
+      "caught": true
+    },
+    {
+      "check": "R-scaling-law",
+      "anchor_sha256": "3C4E8803ECDEC1EA7AE9E45EFBA3F936BEDFDD97FEFC6B93CC36F29C6FEE02BB",
+      "caught": true
+    },
+    {
+      "check": "R-consumer-1",
+      "anchor_sha256": "80323070D30E8E6F0C653339606264900D3630DE4C566E67D335A100FD1B4BE2",
+      "caught": true
+    },
+    {
+      "check": "R-consumer-2",
+      "anchor_sha256": "B8CE52E402533D165CB242331192BC27C0501923CB4E0B5D6C931EB225095DC5",
+      "caught": true
+    },
+    {
+      "check": "R-consumer-3",
+      "anchor_sha256": "C59275E1F46623697327C120260D434C39C9C040CAB4F6381BA5C502F73934A8",
+      "caught": true
+    },
+    {
+      "check": "R-attribution",
+      "anchor_sha256": "35446970876F74B7649BC22B9E802DDB76288EA2E1B226668EA2D7B3F02EFB23",
+      "caught": true
+    },
+    {
+      "check": "R-plan-1",
+      "anchor_sha256": "4AB64EBE14C4E9E3D2C43B98EB301787F49CC12ACFF0AE9A0F87723BAD9F6B8F",
+      "caught": true
+    },
+    {
+      "check": "R-plan-2",
+      "anchor_sha256": "180862BA9F680ADE2C1505CB795810B5DA201FE52A38565607E016615F5F0110",
+      "caught": true
+    },
+    {
+      "check": "R-plan-3",
+      "anchor_sha256": "E5F2D94360035D79C0F7E0083A7ADD9058FFC9CBED0BB00AB6367B8B92291D9C",
+      "caught": true
+    },
+    {
+      "check": "R-bounded-n33",
+      "anchor_sha256": "76FDE41AB511B71D905C5709DFF8B10AF2FF926EAE68D2477487A186AC791857",
+      "caught": true
+    },
+    {
+      "check": "R-bounded-n299",
+      "anchor_sha256": "2484806080AFBE3C08F14C5B26EAF5A01613F4FD974E85390B22FC7F94162D0A",
+      "caught": true
+    },
+    {
+      "check": "R-bounded-verdict",
+      "anchor_sha256": "6A185C305B5DB60FF1559993E482594AD69978BC1DA2E85B8AE3723F1B25561B",
+      "caught": true
+    },
+    {
+      "check": "R-probe-commission",
+      "anchor_sha256": "CA2F2E8ED6AC340CF26A005627AFE9A81E5CB93A476C71D023097B2E93FCEB8F",
+      "caught": true
+    },
+    {
+      "check": "R-briefing-correction",
+      "anchor_sha256": "3B08DEE601918C1B1BC4F60EB79F0F97CB07AB04230767A09A72F69C150485F4",
+      "caught": true
+    },
+    {
+      "check": "R-check-commission",
+      "anchor_sha256": "0FB443A2F7753BAF888D6C11E20092BAEBDBDDF05BF1C7F74E76692A79EA3D2A",
+      "caught": true
+    }
+  ],
+  "semantic_mutations": [
+    {
+      "check": "S01-schema",
+      "defect": "wrong result schema",
+      "anchor_sha256": "76DE2EC912C7050E2FECB9113A4DBABD5361E09A823B795340C1491944B7D74E",
+      "caught": true
+    },
+    {
+      "check": "S02-bar-definition",
+      "defect": "six-GiB documents falsely declared conflicting",
+      "anchor_sha256": "467637425BCC804910BED87708B8E7304CBA22688EFE599680615BCDF568C13D",
+      "caught": true
+    },
+    {
+      "check": "S03-warm-lifecycle",
+      "defect": "warm-up process population erased",
+      "anchor_sha256": "EDF95F31586E2FCCFA259A457C4CDCA835F3D5D975FFF7C069EC530B2EC04140",
+      "caught": true
+    },
+    {
+      "check": "S04-harness-lifecycle-anchors",
+      "defect": "monitor start anchor moved",
+      "anchor_sha256": "CC14907B9522737E09A47424C8F44B02301E500ADF579B5264D01CB76C37B95B",
+      "caught": true
+    },
+    {
+      "check": "S05-m139-peak",
+      "defect": "canonical Job peak corrupted",
+      "anchor_sha256": "EB48E05FFDE8512BA7E97A51438D8602D0DCA8B44A457D3AB60A86DE285FB65C",
+      "caught": true
+    },
+    {
+      "check": "S06-independent-counters",
+      "defect": "sampled peak no longer agrees with Job peak",
+      "anchor_sha256": "ADF1F70F50E15EE1F0DC9C2FB71FCBF7E0AC49C4CA87E7EF0C0C072F09A1ED8C",
+      "caught": true
+    },
+    {
+      "check": "S07-active-chunk-model",
+      "defect": "active chunk count no longer follows partition formula",
+      "anchor_sha256": "00B2FE068476A8047D20056EFEAF6116C0C674FE7BD82398B4440DC86EE029DA",
+      "caught": true
+    },
+    {
+      "check": "S08-scaling-fit",
+      "defect": "whole-worker fit has no explanatory power",
+      "anchor_sha256": "4F7A8859DE7E3619C31CB528442C3B7D72971D7DC2440A6412383ABA74965EA1",
+      "caught": true
+    },
+    {
+      "check": "S09-fresh-reproduction",
+      "defect": "fresh reproduction is 100 percent off",
+      "anchor_sha256": "E48764932FA4DBFAD054D0681842634BB72EF0414898A2DC854DAEC2BD61610E",
+      "caught": true
+    },
+    {
+      "check": "S10-geometry",
+      "defect": "allocation geometry corrupted",
+      "anchor_sha256": "47066C3026FB2CDE019237AEF9B7D15DA465A02B3342D819B924886F830A2BEE",
+      "caught": true
+    },
+    {
+      "check": "S11-consumer-arithmetic",
+      "defect": "largest source allocation erased",
+      "anchor_sha256": "67EBA0482BDD9CBFCAA074328A70D0CAE5DA97F597CC74ACFA187132F5B3D0F8",
+      "caught": true
+    },
+    {
+      "check": "S12-top-three-order",
+      "defect": "consumer rank order corrupted",
+      "anchor_sha256": "6DEB1DFC14DF44D207888E3BB7DB333B9E0586A4E67C8ADB8C3A46E2461B7998",
+      "caught": true
+    },
+    {
+      "check": "S13-attribution-closure",
+      "defect": "source attribution no longer closes",
+      "anchor_sha256": "BD58F9A9A400502417CD1F513312BE1F572F62FA325423B0AE2DF714F9887A7E",
+      "caught": true
+    },
+    {
+      "check": "S14-measured-source-provenance",
+      "defect": "measured source blob identity corrupted",
+      "anchor_sha256": "0B9D9527F774DE4C20A72CF59166DD25126D6EF26FD9CD40F0E0921385050F27",
+      "caught": true
+    },
+    {
+      "check": "S15-input-evidence-provenance",
+      "defect": "M139 closeout identity corrupted",
+      "anchor_sha256": "D2CCBAAFAABF633F744540A194B2C32E517EFD78EFE0FD244EAC726CF422DC6E",
+      "caught": true
+    },
+    {
+      "check": "S16-current-memory-revision",
+      "defect": "current memory-owning revision changed",
+      "anchor_sha256": "96F456330ACC7FE6ED9DF05F61CEB1E5E16C9BBBDBEE2C3AD7A199E00C667CC4",
+      "caught": true
+    },
+    {
+      "check": "S17-bounded-memory-result",
+      "defect": "bounded implementation planted above the bar",
+      "anchor_sha256": "98374319F1748AB720F3982DFB6E2E990EED4FCA79B52247B5C6DDBF3AA47A22",
+      "caught": true
+    },
+    {
+      "check": "S18-saving-arithmetic",
+      "defect": "observed saving arithmetic corrupted",
+      "anchor_sha256": "346FEBB86E573601EB769610EA72F9D97F28800DFF926597E85904BE4E1C57AE",
+      "caught": true
+    },
+    {
+      "check": "S19-plan-reaches-bar",
+      "defect": "plan falsely marked unreachable",
+      "anchor_sha256": "19BF9DEF1C9682E0A6B69045C54B8F2AC5E9D497306129DBD4155D758CF05AD4",
+      "caught": true
+    },
+    {
+      "check": "S20-probe-directions",
+      "defect": "bidirectional meter commissioning failed",
+      "anchor_sha256": "DE632AAB544929C26946ADF8DA4287393FF51725AEB54382F5958451FFB6B56C",
+      "caught": true
+    },
+    {
+      "check": "S21-product-run-witnesses",
+      "defect": "hashed TIFF removal witness planted false",
+      "anchor_sha256": "03215C370C2F829B8AD63B745BA67181A78921DBF89CFA77C3EE11AE383A7E15",
+      "caught": true
+    },
+    {
+      "check": "S22-holdout-exclusion",
+      "defect": "prohibited holdout name planted into owned-text view",
+      "anchor_sha256": "C6604EF90923638174A64E19C67F7C6FF47837070DCF1E22A369E86F1C62D0CB",
+      "caught": true
+    }
+  ],
+  "planted_defects": 41,
+  "caught": 41,
+  "missed": [],
+  "inert_arms": {
+    "unmeasured_report_sentence_stayed_green": true,
+    "unread_result_metadata_stayed_green": true
+  },
+  "positive_controls": {
+    "allocation_up_preserved": true,
+    "saving_down_preserved": true,
+    "inert_meter_arm_preserved": true
+  },
+  "status": "COMMISSIONED"
+}
