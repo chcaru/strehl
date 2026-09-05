@@ -1,0 +1,171 @@
+{
+  "schema": "m192-m12-protocol-v1",
+  "frozen_before_measurement": true,
+  "goal": "One uninterrupted, one-binary certificate of all four registered M12 bars.",
+  "lineage": {
+    "measured_commit": "e93f0bde695961d53cbd66587a060a41552b4a63",
+    "measured_tree": "27055ece0a5c9ad1d7b0c8bee380669ddf720cfe",
+    "unrepaired_control_commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+    "d9_repair_commit": "fc2abb499126a56302de7f21f527de5613be34e7",
+    "bounded_memory_repair_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+    "required_ancestry": [
+      "fc2abb499126a56302de7f21f527de5613be34e7",
+      "a97275817c58e164f75c7cd3d80ca99444a2a145"
+    ],
+    "repair_owned_paths": [
+      "crates/strehl-cli/src/merge_cmd.rs",
+      "crates/strehl-core/src/pyramid.rs"
+    ],
+    "required_diff_from_bounded_repair_to_measured": "empty"
+  },
+  "governing_sources": {
+    "scorecard": {
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "git_blob_oid_lf": "908b21d8d01554c205b68711c80fe855466f0924",
+      "git_blob_sha256_lf": "BD115DB6E80EEC7CBA72C3FCC8562F17BC01132BE5F0D704425FA4FA8EAE45FA",
+      "checkout_sha256_crlf": "D6877FFA16950EB63CBAE5EAAD5B12CB03EF4AFE67A198187B41BBD5FA4FFF8F"
+    },
+    "proposal": {
+      "path": "docs/proposals/2026-08-sota-path.md",
+      "git_blob_oid_lf": "066d7338fc8ae4fdea853cf8eae246466adaa046",
+      "git_blob_sha256_lf": "EA0E8A839A1C4FBEC77E7148ABA88C2271431D41FAB698759A602C6789548ECC",
+      "checkout_sha256_crlf": "CB72B2A20833FEF9C8A4E64C55C47663CBBE0DE1A6FD2ADEC59AA2D24FE71B82"
+    },
+    "inherited_monitor": {
+      "path": "experiments/m12-scorecard/m12-harness.py",
+      "git_blob_oid_lf": "a27688956e4c0f5cd079e12c8e25639911cc1b50",
+      "git_blob_sha256_lf": "1E701A80C02400E539264254476DD9A7C38E5A9FC9FEFC9D5407F904F6CEB7EE",
+      "checkout_sha256_crlf": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+      "sample_interval_ms": 10.0,
+      "process_tree_membership": "Windows Job Object"
+    }
+  },
+  "registered_matrix": {
+    "native": {
+      "frame_counts": [
+        33,
+        105,
+        299
+      ],
+      "workers": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "warmups_per_cell": 1,
+      "scored_repetitions_per_cell": 6,
+      "order": "odd repetitions ascending workers; even repetitions descending workers"
+    },
+    "modulo": {
+      "frame_counts": [
+        96,
+        97,
+        98,
+        99
+      ],
+      "workers": 16,
+      "warmup_sweeps": 1,
+      "scored_sweeps": 6,
+      "order": "odd sweeps ascending N; even sweeps descending N"
+    }
+  },
+  "inputs": {
+    "33": "D:\\personal\\macro\\bee-1-cpl",
+    "105": "D:\\personal\\macro\\coffee-bean",
+    "299": "D:\\personal\\macro\\bee-1-cpl",
+    "96": "D:\\personal\\macro\\bee-1-cpl",
+    "97": "D:\\personal\\macro\\bee-1-cpl",
+    "98": "D:\\personal\\macro\\bee-1-cpl",
+    "99": "D:\\personal\\macro\\bee-1-cpl",
+    "sealed_holdout_access": false,
+    "read_only_rule": "Hash every selected ARW before and after the uninterrupted campaign; require exact equality."
+  },
+  "sidecars": {
+    "source": "Byte-for-byte copies of M139's registered, N-isolated sidecars. Every scored invocation revalidates its stack identity and frame count; the M192 terminal witness requires alignment ON (sidecar-override) and N placed / 0 refused.",
+    "33": {
+      "path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n33/bee-1-cpl-1e602b3b331cbbea.warpmap.txt",
+      "sha256": "A4B99B954EF98C0065FC35A36203545AEEF9A50997BC6B53F68BF859D9CE79DF"
+    },
+    "105": {
+      "path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n105/coffee-bean-7f42aff657c4458b.warpmap.txt",
+      "sha256": "B21B247944C257AB0FD3C767C879B9ABF4A5FB1112DDED97C87990A7D537274C"
+    },
+    "299": {
+      "path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n299/bee-1-cpl-dc827948b70fc943.warpmap.txt",
+      "sha256": "FCF607CC9381A10A29DB62F07223BA6B85E14498AA56C213212E55AD0BE2AE7F"
+    },
+    "96": {
+      "path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n96/bee-1-cpl-bd55f708c61373be.warpmap.txt",
+      "sha256": "D75F34686AAF5B60595582F9B05BEDFF6B8A1FA03F56C3A53DDD4B5AEA741643"
+    },
+    "97": {
+      "path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n97/bee-1-cpl-bd55f708c61373be.warpmap.txt",
+      "sha256": "885B2E273A08F3B12ECC199EA7286CED40D03364BA46472B0FE4ED38698D81B6"
+    },
+    "98": {
+      "path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n98/bee-1-cpl-69ba470a1f472c0d.warpmap.txt",
+      "sha256": "DAAC4C1803F6FE65F336CFE21D73C75FD82DEF91A81867B2360DB54C038E9AD6"
+    },
+    "99": {
+      "path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n99/bee-1-cpl-69ba470a1f472c0d.warpmap.txt",
+      "sha256": "2DAC7220B56EF459C2C0013BE247A5AC0A7F0AD838D0A5E5F814B9EC9ACCE64B"
+    }
+  },
+  "configuration": {
+    "arguments_after_output": [
+      "--merge",
+      "pyramid",
+      "--pyramid-gate",
+      "2.0",
+      "--resampler",
+      "catmull-rom",
+      "--cover",
+      "scale",
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "alignment": "on through a hash-pinned STREHL_WARPMAP outside the capture tree; the product reports sidecar-override",
+    "worker_control": "STREHL_PYRAMID_WORKERS",
+    "cache": "M192-local and N-isolated",
+    "temp": "M192-local and invocation-isolated",
+    "output": "uncompressed full-sensor 16-bit linear-sRGB TIFF",
+    "environment": "All STREHL_ and thread-control variables are cleared before the recorded worker, cache, temp, and sidecar variables are set."
+  },
+  "bars": {
+    "warm_peak_process_tree_bytes_max": 6442450944,
+    "peak_n299_over_peak_n33_max": 1.1,
+    "identity": "Exactly one complete-file SHA-256 and one canonical decoded-pixel SHA-256 in every fixed-worker six-run cell and across all five workers at each N.",
+    "modulo_per_frame_spread_max": 0.02
+  },
+  "memory_admission": {
+    "coverage_min": 0.9,
+    "maximum_sample_gap_ms": 100.0,
+    "primary_peak": "Maximum Windows Job Object peak over all 90 scored native runs.",
+    "reported_cross_check": "Maximum sampled process-tree private committed bytes over the same runs.",
+    "ratio": "At each worker, maximum N299 scored peak divided by maximum N33 scored peak; report the maximum worker ratio for both Job and sampled counters."
+  },
+  "timing_admission_without_a_scheduled_quiet_window": {
+    "decision": "Use the registered raw-minimum statistic, but admit it only through a stronger reversal-pair envelope.",
+    "registered_statistic": "For each N, minimum wall time among six scored sweeps divided by N; spread=(max-min)/min.",
+    "drift_cancellation": "Pair each ascending sweep with the immediately following descending sweep. For each N compute both arithmetic and geometric means of per-frame time across the mirrored pair.",
+    "contention_envelope": "For each pair take the larger arithmetic/geometric spread. The minimum and maximum across all three pairs are the empirical lower and upper bounds.",
+    "pass_rule": "Registered spread <=0.02 and the paired-envelope upper bound <=0.02.",
+    "fail_rule": "Registered spread >0.02 and the paired-envelope lower bound >0.02.",
+    "otherwise": "UNMEASURED_HOST_CONTENTION",
+    "host_cpu": "Sample whole-host CPU every second around every warm-up and scored sweep; report mean and peak for each sweep, plus per-invocation process-tree CPU and mean external busy fraction.",
+    "why_this_is_preferred": "The reversal pairs cancel first-order monotone drift and the three-pair envelope exposes nonrepeatable contention. No peer pause, lock, process termination, or scheduled quiet window is used."
+  },
+  "commissioning": {
+    "unrepaired_product": "The same full-output gate must show both W1/W2 identity divergence at N33 and >6 GiB at N33/W4 on the unrepaired commit.",
+    "memory_plant": "A 7-GiB child allocation must cross the process-tree memory bar while a 64-MiB null stays below 1 GiB.",
+    "hash_plant": "Flip one decoded uint16 output sample and require both complete-file and canonical decoded-pixel hashes to change.",
+    "verifier_mutations": "The independent verifier self-test must catch missing records, broken chains, hash divergence, memory failure, ratio failure, coverage failure, timing failure, and missing CPU telemetry while an inert label mutation remains green."
+  },
+  "interruption_policy": {
+    "resume": false,
+    "requirement": "All commissioning and all 133 registered invocations execute under one top-level campaign process. Any interruption invalidates the entire campaign directory; delete it and restart from zero.",
+    "terminal_record": "A certificate is valid only with an exact 133-record hash chain, matching input-after manifest, certificate.json, and campaign-complete.json."
+  }
+}
