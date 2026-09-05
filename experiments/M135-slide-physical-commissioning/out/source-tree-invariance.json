@@ -1,0 +1,19 @@
+{
+  "schema": "m135-source-tree-invariance-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "before_snapshot": "source-tree-before.json",
+  "after_snapshot": "source-tree-after.json",
+  "before_execution_head": "2b14eb0399bbe682b4b83910f941ca5c63cf2a0d",
+  "after_execution_head": "e93f0bde695961d53cbd66587a060a41552b4a63",
+  "before_aggregate_sha256": "e59643fcb11f35896cb19457bdc47f294c64d2cae7a227fecbc932ca22009f19",
+  "after_aggregate_sha256": "e59643fcb11f35896cb19457bdc47f294c64d2cae7a227fecbc932ca22009f19",
+  "checks": {
+    "file_count_equal": true,
+    "aggregate_sha256_equal": true,
+    "exact_file_records_equal": true,
+    "missing_file_count_zero": true,
+    "authorized_commit_diff_empty": true,
+    "tracked_status_empty": true
+  },
+  "unchanged": true
+}

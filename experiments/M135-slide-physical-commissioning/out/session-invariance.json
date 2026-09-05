@@ -1,0 +1,25 @@
+{
+  "after_listing_sha256": "260f05d3342141f7e8698efe684151dfb3a904097c4d678b710912c1c1d5bfee",
+  "after_regular_file_bytes": 26156716032,
+  "after_regular_file_count": 657,
+  "after_snapshot": "session-snapshot-after.json",
+  "authorized_session_root": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl",
+  "before_listing_sha256": "260f05d3342141f7e8698efe684151dfb3a904097c4d678b710912c1c1d5bfee",
+  "before_regular_file_bytes": 26156716032,
+  "before_regular_file_count": 657,
+  "before_snapshot": "session-snapshot-before.json",
+  "checks": {
+    "exact_record_sequence_equal": true,
+    "listing_sha256_equal": true,
+    "regular_file_bytes_equal": true,
+    "regular_file_count_equal": true,
+    "reparse_file_count_equal": true,
+    "reparse_file_sequence_equal": true
+  },
+  "comparison_implementation": "Python JSON structural equality over the two already-captured Get-ChildItem -Force snapshots; no D:\\ re-enumeration",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "schema": "m135-authorized-session-invariance-v1",
+  "supersedes": "session-invariance-powershell-false-negative.json",
+  "supersession_reason": "PowerShell reconstruction check emitted a false negative despite identical stored listing SHA-256 values; direct structural comparison found all 657 records identical.",
+  "unchanged": true
+}

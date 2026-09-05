@@ -1,0 +1,17 @@
+{
+  "schema": "m135-command-record-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "stage": "summary",
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "command": "python -B C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\instrument.py --config C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\config.json summarize --inventory C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-a-inventory.json --decode C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-b-decode.json --range C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-c-range.json --roles C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-d-roles.json --flat C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-e-flat.json --output C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\summary.json",
+  "started_at_utc": "2026-09-05T07:16:21.3425416Z",
+  "ended_at_utc": "2026-09-05T07:35:19.7553450Z",
+  "duration_seconds": 1138.428533,
+  "exit_code": 0,
+  "stdout_stderr_file": "summary.log",
+  "artifact": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\summary.json",
+    "bytes": 34901,
+    "sha256": "a37fdb26e72b576f9a2ccc89e5a15913957495710a840bb0d06d6bbd23b6f79c"
+  }
+}

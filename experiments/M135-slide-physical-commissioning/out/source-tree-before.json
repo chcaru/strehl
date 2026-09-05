@@ -1,0 +1,406 @@
+{
+  "schema": "m135-source-tree-snapshot-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "captured_at_utc": "2026-09-05T06:56:37.9070089Z",
+  "repository": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "execution_head": "2b14eb0399bbe682b4b83910f941ca5c63cf2a0d",
+  "independently_authorized_commit": "0511594d3e31a3f2ef4f204ce1ddf88ac6f147da",
+  "authorized_commit_diff_exit_code": 0,
+  "authorized_commit_diff_lines": [],
+  "path_status_exit_code": 0,
+  "path_status_lines": [],
+  "aggregate_sha256": "e59643fcb11f35896cb19457bdc47f294c64d2cae7a227fecbc932ca22009f19",
+  "file_count": 78,
+  "files": [
+    {
+      "path": "Cargo.lock",
+      "bytes": 41082,
+      "sha256": "6b7addd3f1c9dfab18f5703f78aa6511d24269d162a0ff0818763570d8bee002"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 1009,
+      "sha256": "732c5d4d874594cccbfd896ae688afa01e91290f0b1c8fd0331fa8b06f914984"
+    },
+    {
+      "path": "crates/strehl-core/Cargo.toml",
+      "bytes": 367,
+      "sha256": "25bdef9c60ef30849ba184116f2b5aa202b07baf55da22ca311f725ab56bde16"
+    },
+    {
+      "path": "crates/strehl-core/examples/demosaic-plane.rs",
+      "bytes": 3109,
+      "sha256": "d40278227e647f195be75e1c199eab04132cdc21c7ae07648cf29bbb410d2f8c"
+    },
+    {
+      "path": "crates/strehl-core/examples/focus-window-cost.rs",
+      "bytes": 6180,
+      "sha256": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997"
+    },
+    {
+      "path": "crates/strehl-core/examples/restore-plane.rs",
+      "bytes": 3047,
+      "sha256": "5707ab9a2a66333968936d704ea8888fa7535dc6e0b7c73c1a3f815fd2c1a0d1"
+    },
+    {
+      "path": "crates/strehl-core/src/align.rs",
+      "bytes": 147932,
+      "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+    },
+    {
+      "path": "crates/strehl-core/src/boxfilter.rs",
+      "bytes": 7986,
+      "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e"
+    },
+    {
+      "path": "crates/strehl-core/src/clip.rs",
+      "bytes": 10231,
+      "sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d"
+    },
+    {
+      "path": "crates/strehl-core/src/color.rs",
+      "bytes": 83992,
+      "sha256": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e"
+    },
+    {
+      "path": "crates/strehl-core/src/defect_map.rs",
+      "bytes": 176181,
+      "sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14"
+    },
+    {
+      "path": "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt",
+      "bytes": 23797,
+      "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee"
+    },
+    {
+      "path": "crates/strehl-core/src/demosaic.rs",
+      "bytes": 51381,
+      "sha256": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810"
+    },
+    {
+      "path": "crates/strehl-core/src/edgeaware.rs",
+      "bytes": 105131,
+      "sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b"
+    },
+    {
+      "path": "crates/strehl-core/src/election_coherence.rs",
+      "bytes": 13331,
+      "sha256": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e"
+    },
+    {
+      "path": "crates/strehl-core/src/flat_ratio.rs",
+      "bytes": 32764,
+      "sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0"
+    },
+    {
+      "path": "crates/strehl-core/src/focus.rs",
+      "bytes": 78172,
+      "sha256": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e"
+    },
+    {
+      "path": "crates/strehl-core/src/highlight.rs",
+      "bytes": 29639,
+      "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e"
+    },
+    {
+      "path": "crates/strehl-core/src/lib.rs",
+      "bytes": 4356,
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022"
+    },
+    {
+      "path": "crates/strehl-core/src/merge.rs",
+      "bytes": 253103,
+      "sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef"
+    },
+    {
+      "path": "crates/strehl-core/src/noise.rs",
+      "bytes": 29746,
+      "sha256": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc"
+    },
+    {
+      "path": "crates/strehl-core/src/optics.rs",
+      "bytes": 93722,
+      "sha256": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524"
+    },
+    {
+      "path": "crates/strehl-core/src/outlier.rs",
+      "bytes": 51153,
+      "sha256": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d"
+    },
+    {
+      "path": "crates/strehl-core/src/photometric.rs",
+      "bytes": 83028,
+      "sha256": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b"
+    },
+    {
+      "path": "crates/strehl-core/src/plane.rs",
+      "bytes": 11536,
+      "sha256": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4"
+    },
+    {
+      "path": "crates/strehl-core/src/profile.rs",
+      "bytes": 44194,
+      "sha256": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1"
+    },
+    {
+      "path": "crates/strehl-core/src/pyramid.rs",
+      "bytes": 207839,
+      "sha256": "7b6376e68a1a6488f958b85e65cfdc57dfe8b8826d4612d8429d08f8743632ac"
+    },
+    {
+      "path": "crates/strehl-core/src/restore.rs",
+      "bytes": 60029,
+      "sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd"
+    },
+    {
+      "path": "crates/strehl-core/src/robust.rs",
+      "bytes": 31317,
+      "sha256": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004"
+    },
+    {
+      "path": "crates/strehl-core/src/softgate.rs",
+      "bytes": 25418,
+      "sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d"
+    },
+    {
+      "path": "crates/strehl-core/src/stack.rs",
+      "bytes": 20542,
+      "sha256": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337"
+    },
+    {
+      "path": "crates/strehl-core/src/through_focus.rs",
+      "bytes": 90250,
+      "sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d"
+    },
+    {
+      "path": "crates/strehl-core/src/warpmap.rs",
+      "bytes": 54829,
+      "sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b"
+    },
+    {
+      "path": "crates/strehl-raw/Cargo.toml",
+      "bytes": 424,
+      "sha256": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9"
+    },
+    {
+      "path": "crates/strehl-raw/examples/identity.rs",
+      "bytes": 1657,
+      "sha256": "78cdc478590b5bfd46bf3bcbed46cb0d74f5d788b08d38a5fd98636d46443668"
+    },
+    {
+      "path": "crates/strehl-raw/src/common_tiff.rs",
+      "bytes": 33071,
+      "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+    },
+    {
+      "path": "crates/strehl-raw/src/identity.rs",
+      "bytes": 36796,
+      "sha256": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe"
+    },
+    {
+      "path": "crates/strehl-raw/src/lib.rs",
+      "bytes": 24809,
+      "sha256": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/.gitattributes",
+      "bytes": 15,
+      "sha256": "ba3d4e0a92188305f7cb5ff36e521d8e5df81a0cf5bc64028d9c86834e5096c0"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-1.md",
+      "bytes": 2206,
+      "sha256": "770bde0240ba60dad4b1fc724f4d95f8cc062b24e658d07f816ef3a7bb61d330"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-10.md",
+      "bytes": 961,
+      "sha256": "86215c08841ade1cd28b4e8548f46c3cf6bb66e60444357bee7e20c9d9df3d73"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-11.md",
+      "bytes": 962,
+      "sha256": "a0ade388090e6a9844ccf7dc5912317a1f567f5a0cdedfbfd54e38b1535c02c0"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-12.md",
+      "bytes": 812,
+      "sha256": "6d52cc1c3c6cde3450921ec0cbf1ae561f3b58bd5e9773c1e2993d196d2b28f5"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-13.md",
+      "bytes": 934,
+      "sha256": "68dd762e6a5841968e25540f6b006591c2ad28bf3f81ab22242be140d31fdfe0"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-14.md",
+      "bytes": 691,
+      "sha256": "5db7116ba8ebfd335146756251ff548d98cf91dc8bbd80549856df7f2c7917bd"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-15.md",
+      "bytes": 958,
+      "sha256": "6af9cfc610e8c3623bce9712b7341ef5449386886e7c819ee69ba80fdfc84910"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-16.md",
+      "bytes": 3688,
+      "sha256": "409613ff6d22d4b1b5c9be30a8191a66f6b4a83785e7f91f902e37affa93f734"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-2.md",
+      "bytes": 1405,
+      "sha256": "8de5ee5990ed6a5fbca24ce029fd673fb834526e083915be388b03169482aa3f"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-3.md",
+      "bytes": 1315,
+      "sha256": "fcbe7314a63ce0eef853bb510786aa768fb583ddf604f2eaefd100b50d2597ed"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-4.md",
+      "bytes": 920,
+      "sha256": "808a0f4c939e858daedc4cadd855bd23f76cbf220d6a5d913c251e62c92ed11b"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-5.md",
+      "bytes": 1299,
+      "sha256": "9e4ac243ecf72f87e269a58ab7d9f80c04946c322d4f796040a61e3a39d8f927"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-6.md",
+      "bytes": 1012,
+      "sha256": "b1e72eaa1acf9070157b274c54f133f0b3717b4bd1379b88253b31891aa3d363"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-7.md",
+      "bytes": 1235,
+      "sha256": "d01b96322280d062101938b704ada72801401c37da7f9854597026bf53222dca"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-8.md",
+      "bytes": 583,
+      "sha256": "890215f53763fc61956976b7ccfcbbfcde86d3402c6bbde2f6d2022e6d1be656"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/AMENDMENT-9.md",
+      "bytes": 830,
+      "sha256": "6ec54256c8045010dcd764a949c794f7885c60b92601ff1585023030abbbf122"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/artifact-schemas.json",
+      "bytes": 4436,
+      "sha256": "9cb1bd15f4ac235f7191b1a58e72444f216a79aef49a7bb24c8ad7298ec76a4d"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/build.rs",
+      "bytes": 174,
+      "sha256": "42c25f0126c184b06334427116a2fe7420191d2a7ad0e27f5fabfab55abb13fc"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/Cargo.lock",
+      "bytes": 32798,
+      "sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/Cargo.toml",
+      "bytes": 241,
+      "sha256": "ab4f3fc6dad11205e06ee40a125e290a00784a6f273287e34ac3e8823fd892f0"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission-run1-failed.json",
+      "bytes": 57103,
+      "sha256": "1e0e5f034d0153fa582f251b761731bd08ce32355bc976d8c8dd6675858ac26c"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission-run2-failed.json",
+      "bytes": 60551,
+      "sha256": "c42b4d64d3162a700fdcf389368871b18ae3b7c4d8aace03b9dc8874648fe7a0"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission-run3-failed.json",
+      "bytes": 83614,
+      "sha256": "ab78eaa81b803543486571337914cfd7edd991163f7c5401d66fe08e720b6086"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission-run4-nondeterministic-after.json",
+      "bytes": 85345,
+      "sha256": "8e0334d3512671f01254a271150771f43dbb1dec8cda0edb7de312e748b4872e"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission-run4-nondeterministic-before.json",
+      "bytes": 85345,
+      "sha256": "a08898d507b4778bcaab7547b03963bc57d6e5d1ca1ff56dcca1231441dab469"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission-run5-nondeterministic-after.json",
+      "bytes": 74985,
+      "sha256": "d41eaa250a255fd82b4a17c45bb57ee27b764d959338b05ba5de0bf9f1692872"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission-run5-nondeterministic-before.json",
+      "bytes": 74985,
+      "sha256": "55ad6996bb416296ac53a06a603111f0b57e2d96c6d8e0b0a7c6ca068e0fb03a"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission-run6-failed.json",
+      "bytes": 140193,
+      "sha256": "9ffebffac21886e3b3405522debcb636dd1366e48232ea865afb58d21c1abee6"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission.json",
+      "bytes": 140808,
+      "sha256": "b0a77b4a54bdb77ce8e1c7e9b3c5418992b44fbe1f53a54fe48d1c0abcb8b776"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/commission.py",
+      "bytes": 104762,
+      "sha256": "6601597174f1d53797d0d899fa54c050f6e7b56e50c191f2096a05240bc14e3f"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/config.json",
+      "bytes": 6636,
+      "sha256": "6d8be87f6c93db99aa13143258547e52f15934aaabb939f19abb2f5ef211c605"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/freeze-manifest.json",
+      "bytes": 98014,
+      "sha256": "aeb758622066bf00ff9e4fedd529ba6c5b0e02be6574b29988481343e3877950"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/freeze.py",
+      "bytes": 23117,
+      "sha256": "0e62e60dc25ebc606ec8ece8881b037536bf16125c4ebc8e13793179be142ed6"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/instrument.py",
+      "bytes": 181551,
+      "sha256": "6764c726d9740075e1582f09485acba4b92bb6aa6fcfb585e772c24bcee21ca6"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/PREREGISTRATION.md",
+      "bytes": 7667,
+      "sha256": "767ff2ba497d06f7ddbaee90a4af5ba24465c1f6c77dd518ea2dc2fcdb4eb2b5"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/README.md",
+      "bytes": 17849,
+      "sha256": "eeb888475c4481c6d0988b34973f4241adae8cb97e1a624d09e05a59c76f0006"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/role-ledger.template.json",
+      "bytes": 1563,
+      "sha256": "b03e3e67464800a32f5c336ace0e88b91e9f3b4a92a5e3b6126c3202b9b55cd8"
+    },
+    {
+      "path": "experiments/M135-slide-physical-commissioning/src/main.rs",
+      "bytes": 2407,
+      "sha256": "1cbf3f4060073da93c9d4fe893398226034f7b2bc5bfa8a78ac040fbf9160a0e"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "bytes": 69,
+      "sha256": "2c6c06daae576901d5ae1824046862ed1aa59615827de79d9c5e72f5a282183e"
+    }
+  ]
+}

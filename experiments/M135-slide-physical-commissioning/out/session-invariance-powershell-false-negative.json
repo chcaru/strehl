@@ -1,0 +1,16 @@
+{
+  "schema": "m135-authorized-session-invariance-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "authorized_session_root": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl",
+  "before_snapshot": "session-snapshot-before.json",
+  "after_snapshot": "session-snapshot-after.json",
+  "before_regular_file_count": 657,
+  "after_regular_file_count": 657,
+  "before_regular_file_bytes": 26156716032,
+  "after_regular_file_bytes": 26156716032,
+  "before_listing_sha256": "260f05d3342141f7e8698efe684151dfb3a904097c4d678b710912c1c1d5bfee",
+  "after_listing_sha256": "260f05d3342141f7e8698efe684151dfb3a904097c4d678b710912c1c1d5bfee",
+  "exact_record_sequence_equal": false,
+  "reparse_file_count_equal": true,
+  "unchanged": false
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "m135-command-record-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "stage": "stage-c-range",
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "command": "python -B C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\instrument.py --config C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\config.json range --inventory C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-a-inventory.json --decode C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-b-decode.json --output C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-c-range.json",
+  "started_at_utc": "2026-09-05T07:12:17.8218240Z",
+  "ended_at_utc": "2026-09-05T07:12:38.1341740Z",
+  "duration_seconds": 20.311192,
+  "exit_code": 0,
+  "stdout_stderr_file": "stage-c.log",
+  "artifact": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-c-range.json",
+    "bytes": 37078,
+    "sha256": "5088bf6f4a94066ac64dd10c4e59c25a54f26de553a04559e6bb5132f26e6dcf"
+  }
+}

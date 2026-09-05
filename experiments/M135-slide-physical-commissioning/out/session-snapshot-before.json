@@ -1,0 +1,4615 @@
+{
+  "schema": "m135-authorized-session-snapshot-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "phase": "before-stage-a",
+  "command": "Get-ChildItem -LiteralPath D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl -Recurse -Force -File",
+  "authorized_session_root": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl",
+  "captured_at_utc": "2026-09-05T06:57:26.4120553Z",
+  "regular_file_definition": "-File entries without FileAttributes.ReparsePoint",
+  "regular_file_count": 657,
+  "regular_file_bytes": 26156716032,
+  "regular_file_listing_sha256": "260f05d3342141f7e8698efe684151dfb3a904097c4d678b710912c1c1d5bfee",
+  "reparse_file_count": 0,
+  "reparse_files": [],
+  "files": [
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00016.ARW",
+      "bytes": 38002688,
+      "creation_time_utc": "2026-09-03T06:42:25.4116114Z",
+      "last_write_time_utc": "2026-09-03T03:28:39.5000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00017.ARW",
+      "bytes": 38031360,
+      "creation_time_utc": "2026-09-03T06:42:26.3646935Z",
+      "last_write_time_utc": "2026-09-03T03:28:40.9600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00018.ARW",
+      "bytes": 38060032,
+      "creation_time_utc": "2026-09-03T06:42:27.3023612Z",
+      "last_write_time_utc": "2026-09-03T03:28:42.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00019.ARW",
+      "bytes": 38088704,
+      "creation_time_utc": "2026-09-03T06:42:28.2308461Z",
+      "last_write_time_utc": "2026-09-03T03:28:43.8600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00020.ARW",
+      "bytes": 38117376,
+      "creation_time_utc": "2026-09-03T06:42:29.1741956Z",
+      "last_write_time_utc": "2026-09-03T03:28:45.3400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00021.ARW",
+      "bytes": 38133760,
+      "creation_time_utc": "2026-09-03T06:42:30.1306780Z",
+      "last_write_time_utc": "2026-09-03T03:28:46.8100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00022.ARW",
+      "bytes": 38162432,
+      "creation_time_utc": "2026-09-03T06:42:31.0543054Z",
+      "last_write_time_utc": "2026-09-03T03:28:48.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00023.ARW",
+      "bytes": 38191104,
+      "creation_time_utc": "2026-09-03T06:42:31.9976392Z",
+      "last_write_time_utc": "2026-09-03T03:28:49.7300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00024.ARW",
+      "bytes": 38223872,
+      "creation_time_utc": "2026-09-03T06:42:32.9347968Z",
+      "last_write_time_utc": "2026-09-03T03:28:51.1500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00025.ARW",
+      "bytes": 38256640,
+      "creation_time_utc": "2026-09-03T06:42:33.8817869Z",
+      "last_write_time_utc": "2026-09-03T03:28:52.5900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00026.ARW",
+      "bytes": 38293504,
+      "creation_time_utc": "2026-09-03T06:42:34.8305262Z",
+      "last_write_time_utc": "2026-09-03T03:28:54.0500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00027.ARW",
+      "bytes": 38326272,
+      "creation_time_utc": "2026-09-03T06:42:35.7639256Z",
+      "last_write_time_utc": "2026-09-03T03:28:55.4700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00028.ARW",
+      "bytes": 38367232,
+      "creation_time_utc": "2026-09-03T06:42:36.7160320Z",
+      "last_write_time_utc": "2026-09-03T03:28:56.9300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00029.ARW",
+      "bytes": 38412288,
+      "creation_time_utc": "2026-09-03T06:42:37.6619823Z",
+      "last_write_time_utc": "2026-09-03T03:28:58.4000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00030.ARW",
+      "bytes": 38449152,
+      "creation_time_utc": "2026-09-03T06:42:38.5991839Z",
+      "last_write_time_utc": "2026-09-03T03:28:59.8600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00031.ARW",
+      "bytes": 38490112,
+      "creation_time_utc": "2026-09-03T06:42:39.5439343Z",
+      "last_write_time_utc": "2026-09-03T03:29:01.3200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00032.ARW",
+      "bytes": 38539264,
+      "creation_time_utc": "2026-09-03T06:42:40.5027494Z",
+      "last_write_time_utc": "2026-09-03T03:29:02.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00033.ARW",
+      "bytes": 38592512,
+      "creation_time_utc": "2026-09-03T06:42:41.4592199Z",
+      "last_write_time_utc": "2026-09-03T03:29:04.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00034.ARW",
+      "bytes": 38649856,
+      "creation_time_utc": "2026-09-03T06:42:42.3995255Z",
+      "last_write_time_utc": "2026-09-03T03:29:05.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00035.ARW",
+      "bytes": 38711296,
+      "creation_time_utc": "2026-09-03T06:42:43.3504994Z",
+      "last_write_time_utc": "2026-09-03T03:29:07.1700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00036.ARW",
+      "bytes": 38772736,
+      "creation_time_utc": "2026-09-03T06:42:44.3102321Z",
+      "last_write_time_utc": "2026-09-03T03:29:08.6100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00037.ARW",
+      "bytes": 38825984,
+      "creation_time_utc": "2026-09-03T06:42:45.2650868Z",
+      "last_write_time_utc": "2026-09-03T03:29:10.0700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00038.ARW",
+      "bytes": 38883328,
+      "creation_time_utc": "2026-09-03T06:42:46.2191286Z",
+      "last_write_time_utc": "2026-09-03T03:29:11.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00039.ARW",
+      "bytes": 38928384,
+      "creation_time_utc": "2026-09-03T06:42:47.1732329Z",
+      "last_write_time_utc": "2026-09-03T03:29:13.0100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00040.ARW",
+      "bytes": 38944768,
+      "creation_time_utc": "2026-09-03T06:42:48.1394967Z",
+      "last_write_time_utc": "2026-09-03T03:29:14.4700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00041.ARW",
+      "bytes": 38973440,
+      "creation_time_utc": "2026-09-03T06:42:49.0992976Z",
+      "last_write_time_utc": "2026-09-03T03:29:15.9100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00042.ARW",
+      "bytes": 38969344,
+      "creation_time_utc": "2026-09-03T06:42:50.0582143Z",
+      "last_write_time_utc": "2026-09-03T03:29:17.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00043.ARW",
+      "bytes": 38952960,
+      "creation_time_utc": "2026-09-03T06:42:51.0213426Z",
+      "last_write_time_utc": "2026-09-03T03:29:18.8100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00044.ARW",
+      "bytes": 38932480,
+      "creation_time_utc": "2026-09-03T06:42:51.9743072Z",
+      "last_write_time_utc": "2026-09-03T03:29:20.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00045.ARW",
+      "bytes": 38899712,
+      "creation_time_utc": "2026-09-03T06:42:52.9414129Z",
+      "last_write_time_utc": "2026-09-03T03:29:21.7000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00046.ARW",
+      "bytes": 38871040,
+      "creation_time_utc": "2026-09-03T06:42:53.8968619Z",
+      "last_write_time_utc": "2026-09-03T03:29:23.1700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00047.ARW",
+      "bytes": 38830080,
+      "creation_time_utc": "2026-09-03T06:42:54.8586687Z",
+      "last_write_time_utc": "2026-09-03T03:29:24.6400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00048.ARW",
+      "bytes": 38793216,
+      "creation_time_utc": "2026-09-03T06:42:55.8127512Z",
+      "last_write_time_utc": "2026-09-03T03:29:26.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00049.ARW",
+      "bytes": 38764544,
+      "creation_time_utc": "2026-09-03T06:42:56.7566029Z",
+      "last_write_time_utc": "2026-09-03T03:29:27.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00050.ARW",
+      "bytes": 38731776,
+      "creation_time_utc": "2026-09-03T06:42:57.7109033Z",
+      "last_write_time_utc": "2026-09-03T03:29:28.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00051.ARW",
+      "bytes": 38686720,
+      "creation_time_utc": "2026-09-03T06:42:58.6541851Z",
+      "last_write_time_utc": "2026-09-03T03:29:30.4300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00052.ARW",
+      "bytes": 38645760,
+      "creation_time_utc": "2026-09-03T06:42:59.6026074Z",
+      "last_write_time_utc": "2026-09-03T03:29:31.8800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00053.ARW",
+      "bytes": 38604800,
+      "creation_time_utc": "2026-09-03T06:43:00.5624146Z",
+      "last_write_time_utc": "2026-09-03T03:29:33.3200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00054.ARW",
+      "bytes": 38572032,
+      "creation_time_utc": "2026-09-03T06:43:01.5195026Z",
+      "last_write_time_utc": "2026-09-03T03:29:34.7800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00055.ARW",
+      "bytes": 38535168,
+      "creation_time_utc": "2026-09-03T06:43:02.4611169Z",
+      "last_write_time_utc": "2026-09-03T03:29:36.2400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00056.ARW",
+      "bytes": 38498304,
+      "creation_time_utc": "2026-09-03T06:43:03.4081603Z",
+      "last_write_time_utc": "2026-09-03T03:29:37.7000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00057.ARW",
+      "bytes": 38469632,
+      "creation_time_utc": "2026-09-03T06:43:04.3638447Z",
+      "last_write_time_utc": "2026-09-03T03:29:39.1600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00058.ARW",
+      "bytes": 38440960,
+      "creation_time_utc": "2026-09-03T06:43:05.3042899Z",
+      "last_write_time_utc": "2026-09-03T03:29:40.6200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00059.ARW",
+      "bytes": 38416384,
+      "creation_time_utc": "2026-09-03T06:43:06.2525629Z",
+      "last_write_time_utc": "2026-09-03T03:29:42.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00060.ARW",
+      "bytes": 38387712,
+      "creation_time_utc": "2026-09-03T06:43:07.1961933Z",
+      "last_write_time_utc": "2026-09-03T03:29:43.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00061.ARW",
+      "bytes": 38363136,
+      "creation_time_utc": "2026-09-03T06:43:08.1492481Z",
+      "last_write_time_utc": "2026-09-03T03:29:45.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00062.ARW",
+      "bytes": 38342656,
+      "creation_time_utc": "2026-09-03T06:43:09.0906793Z",
+      "last_write_time_utc": "2026-09-03T03:29:46.4600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00063.ARW",
+      "bytes": 38318080,
+      "creation_time_utc": "2026-09-03T06:43:10.0338732Z",
+      "last_write_time_utc": "2026-09-03T03:29:47.9300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00064.ARW",
+      "bytes": 38297600,
+      "creation_time_utc": "2026-09-03T06:43:10.9669134Z",
+      "last_write_time_utc": "2026-09-03T03:29:49.3900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00065.ARW",
+      "bytes": 38273024,
+      "creation_time_utc": "2026-09-03T06:43:11.9260675Z",
+      "last_write_time_utc": "2026-09-03T03:29:50.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00066.ARW",
+      "bytes": 38252544,
+      "creation_time_utc": "2026-09-03T06:43:12.8512110Z",
+      "last_write_time_utc": "2026-09-03T03:29:52.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00067.ARW",
+      "bytes": 38227968,
+      "creation_time_utc": "2026-09-03T06:43:13.8045104Z",
+      "last_write_time_utc": "2026-09-03T03:29:53.7600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00068.ARW",
+      "bytes": 38199296,
+      "creation_time_utc": "2026-09-03T06:43:14.7421062Z",
+      "last_write_time_utc": "2026-09-03T03:29:55.2200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00069.ARW",
+      "bytes": 38178816,
+      "creation_time_utc": "2026-09-03T06:43:15.6839137Z",
+      "last_write_time_utc": "2026-09-03T03:29:56.6800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00070.ARW",
+      "bytes": 38150144,
+      "creation_time_utc": "2026-09-03T06:43:16.6108933Z",
+      "last_write_time_utc": "2026-09-03T03:29:58.1400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00071.ARW",
+      "bytes": 38129664,
+      "creation_time_utc": "2026-09-03T06:43:17.5532836Z",
+      "last_write_time_utc": "2026-09-03T03:29:59.6000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00072.ARW",
+      "bytes": 38105088,
+      "creation_time_utc": "2026-09-03T06:43:18.4837961Z",
+      "last_write_time_utc": "2026-09-03T03:30:01.0400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00073.ARW",
+      "bytes": 38084608,
+      "creation_time_utc": "2026-09-03T06:43:19.4272674Z",
+      "last_write_time_utc": "2026-09-03T03:30:02.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00074.ARW",
+      "bytes": 38060032,
+      "creation_time_utc": "2026-09-03T06:43:20.3614690Z",
+      "last_write_time_utc": "2026-09-03T03:30:03.9400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et1s-sw4-cpl/DSC00075.ARW",
+      "bytes": 38027264,
+      "creation_time_utc": "2026-09-03T06:43:21.2943117Z",
+      "last_write_time_utc": "2026-09-03T03:30:05.3900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00020.ARW",
+      "bytes": 39784448,
+      "creation_time_utc": "2026-09-03T06:40:58.3622227Z",
+      "last_write_time_utc": "2026-09-03T03:24:07.9900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00021.ARW",
+      "bytes": 39825408,
+      "creation_time_utc": "2026-09-03T06:40:59.3211404Z",
+      "last_write_time_utc": "2026-09-03T03:24:10.9600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00022.ARW",
+      "bytes": 39874560,
+      "creation_time_utc": "2026-09-03T06:41:00.2950692Z",
+      "last_write_time_utc": "2026-09-03T03:24:13.9400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00023.ARW",
+      "bytes": 39915520,
+      "creation_time_utc": "2026-09-03T06:41:01.2919280Z",
+      "last_write_time_utc": "2026-09-03T03:24:16.9200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00024.ARW",
+      "bytes": 39960576,
+      "creation_time_utc": "2026-09-03T06:41:02.2594000Z",
+      "last_write_time_utc": "2026-09-03T03:24:19.9000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00025.ARW",
+      "bytes": 40001536,
+      "creation_time_utc": "2026-09-03T06:41:03.2347963Z",
+      "last_write_time_utc": "2026-09-03T03:24:22.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00026.ARW",
+      "bytes": 40042496,
+      "creation_time_utc": "2026-09-03T06:41:04.2052903Z",
+      "last_write_time_utc": "2026-09-03T03:24:25.8500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00027.ARW",
+      "bytes": 40079360,
+      "creation_time_utc": "2026-09-03T06:41:05.2066944Z",
+      "last_write_time_utc": "2026-09-03T03:24:28.8300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00028.ARW",
+      "bytes": 40124416,
+      "creation_time_utc": "2026-09-03T06:41:06.1975203Z",
+      "last_write_time_utc": "2026-09-03T03:24:31.8100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00029.ARW",
+      "bytes": 40173568,
+      "creation_time_utc": "2026-09-03T06:41:07.1696737Z",
+      "last_write_time_utc": "2026-09-03T03:24:34.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00030.ARW",
+      "bytes": 40214528,
+      "creation_time_utc": "2026-09-03T06:41:08.1512446Z",
+      "last_write_time_utc": "2026-09-03T03:24:37.7800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00031.ARW",
+      "bytes": 40263680,
+      "creation_time_utc": "2026-09-03T06:41:09.1463697Z",
+      "last_write_time_utc": "2026-09-03T03:24:40.7600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00032.ARW",
+      "bytes": 40308736,
+      "creation_time_utc": "2026-09-03T06:41:10.1317103Z",
+      "last_write_time_utc": "2026-09-03T03:24:43.7400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00033.ARW",
+      "bytes": 40353792,
+      "creation_time_utc": "2026-09-03T06:41:11.1290302Z",
+      "last_write_time_utc": "2026-09-03T03:24:46.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00034.ARW",
+      "bytes": 40402944,
+      "creation_time_utc": "2026-09-03T06:41:12.1088058Z",
+      "last_write_time_utc": "2026-09-03T03:24:49.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00035.ARW",
+      "bytes": 40452096,
+      "creation_time_utc": "2026-09-03T06:41:13.1111355Z",
+      "last_write_time_utc": "2026-09-03T03:24:52.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00036.ARW",
+      "bytes": 40513536,
+      "creation_time_utc": "2026-09-03T06:41:14.0930947Z",
+      "last_write_time_utc": "2026-09-03T03:24:55.6200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00037.ARW",
+      "bytes": 40579072,
+      "creation_time_utc": "2026-09-03T06:41:15.0935980Z",
+      "last_write_time_utc": "2026-09-03T03:24:58.6000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00038.ARW",
+      "bytes": 40656896,
+      "creation_time_utc": "2026-09-03T06:41:16.0924375Z",
+      "last_write_time_utc": "2026-09-03T03:25:01.5700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00039.ARW",
+      "bytes": 40742912,
+      "creation_time_utc": "2026-09-03T06:41:17.0889559Z",
+      "last_write_time_utc": "2026-09-03T03:25:04.5500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00040.ARW",
+      "bytes": 40837120,
+      "creation_time_utc": "2026-09-03T06:41:18.0914818Z",
+      "last_write_time_utc": "2026-09-03T03:25:07.5300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00041.ARW",
+      "bytes": 40935424,
+      "creation_time_utc": "2026-09-03T06:41:19.0887465Z",
+      "last_write_time_utc": "2026-09-03T03:25:10.5100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00042.ARW",
+      "bytes": 41029632,
+      "creation_time_utc": "2026-09-03T06:41:20.0822986Z",
+      "last_write_time_utc": "2026-09-03T03:25:13.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00043.ARW",
+      "bytes": 41127936,
+      "creation_time_utc": "2026-09-03T06:41:21.1132263Z",
+      "last_write_time_utc": "2026-09-03T03:25:16.4500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00044.ARW",
+      "bytes": 41193472,
+      "creation_time_utc": "2026-09-03T06:41:22.1223280Z",
+      "last_write_time_utc": "2026-09-03T03:25:19.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00045.ARW",
+      "bytes": 41254912,
+      "creation_time_utc": "2026-09-03T06:41:23.1291918Z",
+      "last_write_time_utc": "2026-09-03T03:25:22.4000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00046.ARW",
+      "bytes": 41287680,
+      "creation_time_utc": "2026-09-03T06:41:24.1428646Z",
+      "last_write_time_utc": "2026-09-03T03:25:25.3900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00047.ARW",
+      "bytes": 41291776,
+      "creation_time_utc": "2026-09-03T06:41:25.1635651Z",
+      "last_write_time_utc": "2026-09-03T03:25:28.3700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00048.ARW",
+      "bytes": 41271296,
+      "creation_time_utc": "2026-09-03T06:41:26.1775665Z",
+      "last_write_time_utc": "2026-09-03T03:25:31.3500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00049.ARW",
+      "bytes": 41238528,
+      "creation_time_utc": "2026-09-03T06:41:27.1753658Z",
+      "last_write_time_utc": "2026-09-03T03:25:34.3100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00050.ARW",
+      "bytes": 41185280,
+      "creation_time_utc": "2026-09-03T06:41:28.2024656Z",
+      "last_write_time_utc": "2026-09-03T03:25:37.2900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00051.ARW",
+      "bytes": 41123840,
+      "creation_time_utc": "2026-09-03T06:41:29.2224219Z",
+      "last_write_time_utc": "2026-09-03T03:25:40.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00052.ARW",
+      "bytes": 41062400,
+      "creation_time_utc": "2026-09-03T06:41:30.2299548Z",
+      "last_write_time_utc": "2026-09-03T03:25:43.2000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00053.ARW",
+      "bytes": 40996864,
+      "creation_time_utc": "2026-09-03T06:41:31.2307509Z",
+      "last_write_time_utc": "2026-09-03T03:25:46.1800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00054.ARW",
+      "bytes": 40955904,
+      "creation_time_utc": "2026-09-03T06:41:32.2360857Z",
+      "last_write_time_utc": "2026-09-03T03:25:49.1600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00055.ARW",
+      "bytes": 40890368,
+      "creation_time_utc": "2026-09-03T06:41:33.2568006Z",
+      "last_write_time_utc": "2026-09-03T03:25:52.1400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00056.ARW",
+      "bytes": 40833024,
+      "creation_time_utc": "2026-09-03T06:41:34.2478464Z",
+      "last_write_time_utc": "2026-09-03T03:25:55.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00057.ARW",
+      "bytes": 40779776,
+      "creation_time_utc": "2026-09-03T06:41:35.2499301Z",
+      "last_write_time_utc": "2026-09-03T03:25:58.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00058.ARW",
+      "bytes": 40730624,
+      "creation_time_utc": "2026-09-03T06:41:36.2582652Z",
+      "last_write_time_utc": "2026-09-03T03:26:01.0200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00059.ARW",
+      "bytes": 40677376,
+      "creation_time_utc": "2026-09-03T06:41:37.2668519Z",
+      "last_write_time_utc": "2026-09-03T03:26:03.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00060.ARW",
+      "bytes": 40624128,
+      "creation_time_utc": "2026-09-03T06:41:38.2624081Z",
+      "last_write_time_utc": "2026-09-03T03:26:06.9700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00061.ARW",
+      "bytes": 40558592,
+      "creation_time_utc": "2026-09-03T06:41:39.2455368Z",
+      "last_write_time_utc": "2026-09-03T03:26:09.9500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00062.ARW",
+      "bytes": 40521728,
+      "creation_time_utc": "2026-09-03T06:41:40.2518742Z",
+      "last_write_time_utc": "2026-09-03T03:26:12.9300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00063.ARW",
+      "bytes": 40480768,
+      "creation_time_utc": "2026-09-03T06:41:41.2554251Z",
+      "last_write_time_utc": "2026-09-03T03:26:15.9100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00064.ARW",
+      "bytes": 40448000,
+      "creation_time_utc": "2026-09-03T06:41:42.2472391Z",
+      "last_write_time_utc": "2026-09-03T03:26:18.8900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00065.ARW",
+      "bytes": 40415232,
+      "creation_time_utc": "2026-09-03T06:41:43.2286578Z",
+      "last_write_time_utc": "2026-09-03T03:26:21.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00066.ARW",
+      "bytes": 40386560,
+      "creation_time_utc": "2026-09-03T06:41:44.2296170Z",
+      "last_write_time_utc": "2026-09-03T03:26:24.8200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00067.ARW",
+      "bytes": 40353792,
+      "creation_time_utc": "2026-09-03T06:41:45.2287856Z",
+      "last_write_time_utc": "2026-09-03T03:26:27.7800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00068.ARW",
+      "bytes": 40316928,
+      "creation_time_utc": "2026-09-03T06:41:46.2163380Z",
+      "last_write_time_utc": "2026-09-03T03:26:30.7600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00069.ARW",
+      "bytes": 40288256,
+      "creation_time_utc": "2026-09-03T06:41:47.1904316Z",
+      "last_write_time_utc": "2026-09-03T03:26:33.7400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00070.ARW",
+      "bytes": 40255488,
+      "creation_time_utc": "2026-09-03T06:41:48.1707609Z",
+      "last_write_time_utc": "2026-09-03T03:26:36.7200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00071.ARW",
+      "bytes": 40230912,
+      "creation_time_utc": "2026-09-03T06:41:49.1876505Z",
+      "last_write_time_utc": "2026-09-03T03:26:39.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00072.ARW",
+      "bytes": 40202240,
+      "creation_time_utc": "2026-09-03T06:41:50.1648492Z",
+      "last_write_time_utc": "2026-09-03T03:26:42.6700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00073.ARW",
+      "bytes": 40169472,
+      "creation_time_utc": "2026-09-03T06:41:51.1450162Z",
+      "last_write_time_utc": "2026-09-03T03:26:45.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00074.ARW",
+      "bytes": 40136704,
+      "creation_time_utc": "2026-09-03T06:41:52.1249048Z",
+      "last_write_time_utc": "2026-09-03T03:26:48.6300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00075.ARW",
+      "bytes": 40103936,
+      "creation_time_utc": "2026-09-03T06:41:53.1117777Z",
+      "last_write_time_utc": "2026-09-03T03:26:51.6100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00076.ARW",
+      "bytes": 40067072,
+      "creation_time_utc": "2026-09-03T06:41:54.0952103Z",
+      "last_write_time_utc": "2026-09-03T03:26:54.5900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00077.ARW",
+      "bytes": 40030208,
+      "creation_time_utc": "2026-09-03T06:41:55.0878711Z",
+      "last_write_time_utc": "2026-09-03T03:26:57.5500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00078.ARW",
+      "bytes": 39989248,
+      "creation_time_utc": "2026-09-03T06:41:56.0613121Z",
+      "last_write_time_utc": "2026-09-03T03:27:00.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00079.ARW",
+      "bytes": 39948288,
+      "creation_time_utc": "2026-09-03T06:41:57.0350607Z",
+      "last_write_time_utc": "2026-09-03T03:27:03.4600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et2.5s-sw4-cpl/DSC00080.ARW",
+      "bytes": 39907328,
+      "creation_time_utc": "2026-09-03T06:41:58.0092165Z",
+      "last_write_time_utc": "2026-09-03T03:27:06.4300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00015.ARW",
+      "bytes": 42033152,
+      "creation_time_utc": "2026-09-03T06:53:27.9412440Z",
+      "last_write_time_utc": "2026-09-03T03:13:04.4600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00016.ARW",
+      "bytes": 42090496,
+      "creation_time_utc": "2026-09-03T06:53:28.9883927Z",
+      "last_write_time_utc": "2026-09-03T03:13:11.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00017.ARW",
+      "bytes": 42143744,
+      "creation_time_utc": "2026-09-03T06:53:30.0107109Z",
+      "last_write_time_utc": "2026-09-03T03:13:18.0400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00018.ARW",
+      "bytes": 42196992,
+      "creation_time_utc": "2026-09-03T06:53:31.0521424Z",
+      "last_write_time_utc": "2026-09-03T03:13:24.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00019.ARW",
+      "bytes": 42250240,
+      "creation_time_utc": "2026-09-03T06:53:32.0937314Z",
+      "last_write_time_utc": "2026-09-03T03:13:31.6200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00020.ARW",
+      "bytes": 42299392,
+      "creation_time_utc": "2026-09-03T06:53:33.1195747Z",
+      "last_write_time_utc": "2026-09-03T03:13:38.4100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00021.ARW",
+      "bytes": 42344448,
+      "creation_time_utc": "2026-09-03T06:53:34.1635078Z",
+      "last_write_time_utc": "2026-09-03T03:13:45.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00022.ARW",
+      "bytes": 42389504,
+      "creation_time_utc": "2026-09-03T06:53:35.2007314Z",
+      "last_write_time_utc": "2026-09-03T03:13:51.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00023.ARW",
+      "bytes": 42430464,
+      "creation_time_utc": "2026-09-03T06:53:36.2304982Z",
+      "last_write_time_utc": "2026-09-03T03:13:58.7700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00024.ARW",
+      "bytes": 42467328,
+      "creation_time_utc": "2026-09-03T06:53:37.2691542Z",
+      "last_write_time_utc": "2026-09-03T03:14:05.5800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00025.ARW",
+      "bytes": 42508288,
+      "creation_time_utc": "2026-09-03T06:53:38.3119379Z",
+      "last_write_time_utc": "2026-09-03T03:14:12.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00026.ARW",
+      "bytes": 42541056,
+      "creation_time_utc": "2026-09-03T06:53:39.3682162Z",
+      "last_write_time_utc": "2026-09-03T03:14:19.1600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00027.ARW",
+      "bytes": 42569728,
+      "creation_time_utc": "2026-09-03T06:53:40.4064743Z",
+      "last_write_time_utc": "2026-09-03T03:14:25.9400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00028.ARW",
+      "bytes": 42602496,
+      "creation_time_utc": "2026-09-03T06:53:41.4333538Z",
+      "last_write_time_utc": "2026-09-03T03:14:32.7300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00029.ARW",
+      "bytes": 42631168,
+      "creation_time_utc": "2026-09-03T06:53:42.4836052Z",
+      "last_write_time_utc": "2026-09-03T03:14:39.5100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00030.ARW",
+      "bytes": 42663936,
+      "creation_time_utc": "2026-09-03T06:53:43.5332209Z",
+      "last_write_time_utc": "2026-09-03T03:14:46.3100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00031.ARW",
+      "bytes": 42713088,
+      "creation_time_utc": "2026-09-03T06:53:44.5688499Z",
+      "last_write_time_utc": "2026-09-03T03:14:53.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00032.ARW",
+      "bytes": 42766336,
+      "creation_time_utc": "2026-09-03T06:53:45.6285331Z",
+      "last_write_time_utc": "2026-09-03T03:14:59.8800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00033.ARW",
+      "bytes": 42831872,
+      "creation_time_utc": "2026-09-03T06:53:46.6718572Z",
+      "last_write_time_utc": "2026-09-03T03:15:06.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00034.ARW",
+      "bytes": 42909696,
+      "creation_time_utc": "2026-09-03T06:53:47.7627914Z",
+      "last_write_time_utc": "2026-09-03T03:15:13.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00035.ARW",
+      "bytes": 43003904,
+      "creation_time_utc": "2026-09-03T06:53:48.8631299Z",
+      "last_write_time_utc": "2026-09-03T03:15:20.2900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00036.ARW",
+      "bytes": 43134976,
+      "creation_time_utc": "2026-09-03T06:53:49.9481061Z",
+      "last_write_time_utc": "2026-09-03T03:15:27.0700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00037.ARW",
+      "bytes": 43278336,
+      "creation_time_utc": "2026-09-03T06:53:51.0210303Z",
+      "last_write_time_utc": "2026-09-03T03:15:33.8200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00038.ARW",
+      "bytes": 43438080,
+      "creation_time_utc": "2026-09-03T06:53:52.1202136Z",
+      "last_write_time_utc": "2026-09-03T03:15:40.6000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00039.ARW",
+      "bytes": 43593728,
+      "creation_time_utc": "2026-09-03T06:53:53.3581945Z",
+      "last_write_time_utc": "2026-09-03T03:15:47.4000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00040.ARW",
+      "bytes": 43732992,
+      "creation_time_utc": "2026-09-03T06:53:54.4821650Z",
+      "last_write_time_utc": "2026-09-03T03:15:54.2000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00041.ARW",
+      "bytes": 43843584,
+      "creation_time_utc": "2026-09-03T06:53:55.5852409Z",
+      "last_write_time_utc": "2026-09-03T03:16:01.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00042.ARW",
+      "bytes": 43921408,
+      "creation_time_utc": "2026-09-03T06:53:56.7350533Z",
+      "last_write_time_utc": "2026-09-03T03:16:07.8000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00043.ARW",
+      "bytes": 43958272,
+      "creation_time_utc": "2026-09-03T06:53:57.8384852Z",
+      "last_write_time_utc": "2026-09-03T03:16:14.6000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00044.ARW",
+      "bytes": 43937792,
+      "creation_time_utc": "2026-09-03T06:53:58.9937178Z",
+      "last_write_time_utc": "2026-09-03T03:16:21.3900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00045.ARW",
+      "bytes": 43888640,
+      "creation_time_utc": "2026-09-03T06:54:00.1064861Z",
+      "last_write_time_utc": "2026-09-03T03:16:28.2000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00046.ARW",
+      "bytes": 43806720,
+      "creation_time_utc": "2026-09-03T06:54:01.2356775Z",
+      "last_write_time_utc": "2026-09-03T03:16:35.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00047.ARW",
+      "bytes": 43704320,
+      "creation_time_utc": "2026-09-03T06:54:02.3542260Z",
+      "last_write_time_utc": "2026-09-03T03:16:41.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00048.ARW",
+      "bytes": 43601920,
+      "creation_time_utc": "2026-09-03T06:54:03.4739936Z",
+      "last_write_time_utc": "2026-09-03T03:16:48.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00049.ARW",
+      "bytes": 43491328,
+      "creation_time_utc": "2026-09-03T06:54:04.5559817Z",
+      "last_write_time_utc": "2026-09-03T03:16:55.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00050.ARW",
+      "bytes": 43433984,
+      "creation_time_utc": "2026-09-03T06:54:05.6668647Z",
+      "last_write_time_utc": "2026-09-03T03:17:02.1600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00051.ARW",
+      "bytes": 43339776,
+      "creation_time_utc": "2026-09-03T06:54:06.7882002Z",
+      "last_write_time_utc": "2026-09-03T03:17:08.9600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00052.ARW",
+      "bytes": 43253760,
+      "creation_time_utc": "2026-09-03T06:54:07.8854126Z",
+      "last_write_time_utc": "2026-09-03T03:17:15.7500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00053.ARW",
+      "bytes": 43159552,
+      "creation_time_utc": "2026-09-03T06:54:08.9645176Z",
+      "last_write_time_utc": "2026-09-03T03:17:22.5500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00054.ARW",
+      "bytes": 43077632,
+      "creation_time_utc": "2026-09-03T06:54:10.0242636Z",
+      "last_write_time_utc": "2026-09-03T03:17:29.3500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00055.ARW",
+      "bytes": 42999808,
+      "creation_time_utc": "2026-09-03T06:54:11.0700270Z",
+      "last_write_time_utc": "2026-09-03T03:17:36.1300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00056.ARW",
+      "bytes": 42930176,
+      "creation_time_utc": "2026-09-03T06:54:12.1179148Z",
+      "last_write_time_utc": "2026-09-03T03:17:42.9200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00057.ARW",
+      "bytes": 42860544,
+      "creation_time_utc": "2026-09-03T06:54:13.1663148Z",
+      "last_write_time_utc": "2026-09-03T03:17:49.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00058.ARW",
+      "bytes": 42795008,
+      "creation_time_utc": "2026-09-03T06:54:14.2175472Z",
+      "last_write_time_utc": "2026-09-03T03:17:56.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00059.ARW",
+      "bytes": 42745856,
+      "creation_time_utc": "2026-09-03T06:54:15.2605591Z",
+      "last_write_time_utc": "2026-09-03T03:18:03.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00060.ARW",
+      "bytes": 42704896,
+      "creation_time_utc": "2026-09-03T06:54:16.3127752Z",
+      "last_write_time_utc": "2026-09-03T03:18:10.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00061.ARW",
+      "bytes": 42680320,
+      "creation_time_utc": "2026-09-03T06:54:17.3490160Z",
+      "last_write_time_utc": "2026-09-03T03:18:16.9100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00062.ARW",
+      "bytes": 42659840,
+      "creation_time_utc": "2026-09-03T06:54:18.4130838Z",
+      "last_write_time_utc": "2026-09-03T03:18:23.7200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00063.ARW",
+      "bytes": 42643456,
+      "creation_time_utc": "2026-09-03T06:54:19.4482541Z",
+      "last_write_time_utc": "2026-09-03T03:18:30.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00064.ARW",
+      "bytes": 42631168,
+      "creation_time_utc": "2026-09-03T06:54:20.4903751Z",
+      "last_write_time_utc": "2026-09-03T03:18:37.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00065.ARW",
+      "bytes": 42618880,
+      "creation_time_utc": "2026-09-03T06:54:21.5371352Z",
+      "last_write_time_utc": "2026-09-03T03:18:44.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00066.ARW",
+      "bytes": 42598400,
+      "creation_time_utc": "2026-09-03T06:54:22.5954561Z",
+      "last_write_time_utc": "2026-09-03T03:18:50.8900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00067.ARW",
+      "bytes": 42582016,
+      "creation_time_utc": "2026-09-03T06:54:23.6369546Z",
+      "last_write_time_utc": "2026-09-03T03:18:57.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00068.ARW",
+      "bytes": 42561536,
+      "creation_time_utc": "2026-09-03T06:54:24.6797855Z",
+      "last_write_time_utc": "2026-09-03T03:19:04.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00069.ARW",
+      "bytes": 42536960,
+      "creation_time_utc": "2026-09-03T06:54:25.7237750Z",
+      "last_write_time_utc": "2026-09-03T03:19:11.2900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00070.ARW",
+      "bytes": 42512384,
+      "creation_time_utc": "2026-09-03T06:54:26.7731484Z",
+      "last_write_time_utc": "2026-09-03T03:19:18.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00071.ARW",
+      "bytes": 42487808,
+      "creation_time_utc": "2026-09-03T06:54:27.8118065Z",
+      "last_write_time_utc": "2026-09-03T03:19:24.9000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00072.ARW",
+      "bytes": 42455040,
+      "creation_time_utc": "2026-09-03T06:54:28.8533329Z",
+      "last_write_time_utc": "2026-09-03T03:19:31.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00073.ARW",
+      "bytes": 42418176,
+      "creation_time_utc": "2026-09-03T06:54:29.8810461Z",
+      "last_write_time_utc": "2026-09-03T03:19:38.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00074.ARW",
+      "bytes": 42377216,
+      "creation_time_utc": "2026-09-03T06:54:30.9373690Z",
+      "last_write_time_utc": "2026-09-03T03:19:45.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00075.ARW",
+      "bytes": 42328064,
+      "creation_time_utc": "2026-09-03T06:54:31.9644062Z",
+      "last_write_time_utc": "2026-09-03T03:19:52.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00076.ARW",
+      "bytes": 42283008,
+      "creation_time_utc": "2026-09-03T06:54:33.0103627Z",
+      "last_write_time_utc": "2026-09-03T03:19:58.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00077.ARW",
+      "bytes": 42225664,
+      "creation_time_utc": "2026-09-03T06:54:34.0438795Z",
+      "last_write_time_utc": "2026-09-03T03:20:05.6300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00078.ARW",
+      "bytes": 42168320,
+      "creation_time_utc": "2026-09-03T06:54:35.0705342Z",
+      "last_write_time_utc": "2026-09-03T03:20:12.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "flat-sw4-cpl/flat-et6s-sw4-cpl/DSC00079.ARW",
+      "bytes": 42106880,
+      "creation_time_utc": "2026-09-03T06:54:36.1278219Z",
+      "last_write_time_utc": "2026-09-03T03:20:19.2000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00016.ARW",
+      "bytes": 38371328,
+      "creation_time_utc": "2026-09-03T06:47:42.4244685Z",
+      "last_write_time_utc": "2026-09-03T03:52:52.1600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00017.ARW",
+      "bytes": 38404096,
+      "creation_time_utc": "2026-09-03T06:47:43.3839636Z",
+      "last_write_time_utc": "2026-09-03T03:52:53.6100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00018.ARW",
+      "bytes": 38436864,
+      "creation_time_utc": "2026-09-03T06:47:44.3652716Z",
+      "last_write_time_utc": "2026-09-03T03:52:55.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00019.ARW",
+      "bytes": 38469632,
+      "creation_time_utc": "2026-09-03T06:47:45.3096166Z",
+      "last_write_time_utc": "2026-09-03T03:52:56.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00020.ARW",
+      "bytes": 38506496,
+      "creation_time_utc": "2026-09-03T06:47:46.2758930Z",
+      "last_write_time_utc": "2026-09-03T03:52:58.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00021.ARW",
+      "bytes": 38539264,
+      "creation_time_utc": "2026-09-03T06:47:47.2551911Z",
+      "last_write_time_utc": "2026-09-03T03:52:59.4500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00022.ARW",
+      "bytes": 38580224,
+      "creation_time_utc": "2026-09-03T06:47:48.2189948Z",
+      "last_write_time_utc": "2026-09-03T03:53:00.9100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00023.ARW",
+      "bytes": 38612992,
+      "creation_time_utc": "2026-09-03T06:47:49.2475705Z",
+      "last_write_time_utc": "2026-09-03T03:53:02.3700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00024.ARW",
+      "bytes": 38649856,
+      "creation_time_utc": "2026-09-03T06:47:50.3393779Z",
+      "last_write_time_utc": "2026-09-03T03:53:03.8100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00025.ARW",
+      "bytes": 38686720,
+      "creation_time_utc": "2026-09-03T06:47:51.9340475Z",
+      "last_write_time_utc": "2026-09-03T03:53:05.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00026.ARW",
+      "bytes": 38723584,
+      "creation_time_utc": "2026-09-03T06:47:53.4882784Z",
+      "last_write_time_utc": "2026-09-03T03:53:06.7300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00027.ARW",
+      "bytes": 38772736,
+      "creation_time_utc": "2026-09-03T06:47:54.9656834Z",
+      "last_write_time_utc": "2026-09-03T03:53:08.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00028.ARW",
+      "bytes": 38813696,
+      "creation_time_utc": "2026-09-03T06:47:56.2418039Z",
+      "last_write_time_utc": "2026-09-03T03:53:09.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00029.ARW",
+      "bytes": 38866944,
+      "creation_time_utc": "2026-09-03T06:47:57.4009787Z",
+      "last_write_time_utc": "2026-09-03T03:53:11.1100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00030.ARW",
+      "bytes": 38916096,
+      "creation_time_utc": "2026-09-03T06:47:59.3844779Z",
+      "last_write_time_utc": "2026-09-03T03:53:12.5700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00031.ARW",
+      "bytes": 38961152,
+      "creation_time_utc": "2026-09-03T06:48:00.7798549Z",
+      "last_write_time_utc": "2026-09-03T03:53:14.0300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00032.ARW",
+      "bytes": 38993920,
+      "creation_time_utc": "2026-09-03T06:48:01.7707558Z",
+      "last_write_time_utc": "2026-09-03T03:53:15.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00033.ARW",
+      "bytes": 39026688,
+      "creation_time_utc": "2026-09-03T06:48:02.7704382Z",
+      "last_write_time_utc": "2026-09-03T03:53:16.9400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00034.ARW",
+      "bytes": 39063552,
+      "creation_time_utc": "2026-09-03T06:48:03.7641999Z",
+      "last_write_time_utc": "2026-09-03T03:53:18.4000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00035.ARW",
+      "bytes": 39104512,
+      "creation_time_utc": "2026-09-03T06:48:04.7407400Z",
+      "last_write_time_utc": "2026-09-03T03:53:19.8600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00036.ARW",
+      "bytes": 39137280,
+      "creation_time_utc": "2026-09-03T06:48:05.7332784Z",
+      "last_write_time_utc": "2026-09-03T03:53:21.2900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00037.ARW",
+      "bytes": 39186432,
+      "creation_time_utc": "2026-09-03T06:48:06.7013748Z",
+      "last_write_time_utc": "2026-09-03T03:53:22.7400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00038.ARW",
+      "bytes": 39239680,
+      "creation_time_utc": "2026-09-03T06:48:09.3382237Z",
+      "last_write_time_utc": "2026-09-03T03:53:24.1800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00039.ARW",
+      "bytes": 39305216,
+      "creation_time_utc": "2026-09-03T06:48:11.3680090Z",
+      "last_write_time_utc": "2026-09-03T03:53:25.6200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00040.ARW",
+      "bytes": 39370752,
+      "creation_time_utc": "2026-09-03T06:48:12.9177450Z",
+      "last_write_time_utc": "2026-09-03T03:53:27.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00041.ARW",
+      "bytes": 39440384,
+      "creation_time_utc": "2026-09-03T06:48:14.9732151Z",
+      "last_write_time_utc": "2026-09-03T03:53:28.5000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00042.ARW",
+      "bytes": 39510016,
+      "creation_time_utc": "2026-09-03T06:48:16.5074364Z",
+      "last_write_time_utc": "2026-09-03T03:53:29.9700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00043.ARW",
+      "bytes": 39587840,
+      "creation_time_utc": "2026-09-03T06:48:21.2796856Z",
+      "last_write_time_utc": "2026-09-03T03:53:31.4400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00044.ARW",
+      "bytes": 39661568,
+      "creation_time_utc": "2026-09-03T06:48:22.7276259Z",
+      "last_write_time_utc": "2026-09-03T03:53:32.9100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00045.ARW",
+      "bytes": 39747584,
+      "creation_time_utc": "2026-09-03T06:48:23.7632293Z",
+      "last_write_time_utc": "2026-09-03T03:53:34.3700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00046.ARW",
+      "bytes": 39833600,
+      "creation_time_utc": "2026-09-03T06:48:25.3278673Z",
+      "last_write_time_utc": "2026-09-03T03:53:35.8300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00047.ARW",
+      "bytes": 39919616,
+      "creation_time_utc": "2026-09-03T06:48:26.3129267Z",
+      "last_write_time_utc": "2026-09-03T03:53:37.2800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00048.ARW",
+      "bytes": 40001536,
+      "creation_time_utc": "2026-09-03T06:48:27.4448454Z",
+      "last_write_time_utc": "2026-09-03T03:53:38.7400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00049.ARW",
+      "bytes": 40067072,
+      "creation_time_utc": "2026-09-03T06:48:28.5452068Z",
+      "last_write_time_utc": "2026-09-03T03:53:40.2000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00050.ARW",
+      "bytes": 40132608,
+      "creation_time_utc": "2026-09-03T06:48:30.0466730Z",
+      "last_write_time_utc": "2026-09-03T03:53:41.6600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00051.ARW",
+      "bytes": 40194048,
+      "creation_time_utc": "2026-09-03T06:48:31.1212482Z",
+      "last_write_time_utc": "2026-09-03T03:53:43.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00052.ARW",
+      "bytes": 40251392,
+      "creation_time_utc": "2026-09-03T06:48:32.1175361Z",
+      "last_write_time_utc": "2026-09-03T03:53:44.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00053.ARW",
+      "bytes": 40300544,
+      "creation_time_utc": "2026-09-03T06:48:33.2291625Z",
+      "last_write_time_utc": "2026-09-03T03:53:46.0200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00054.ARW",
+      "bytes": 40345600,
+      "creation_time_utc": "2026-09-03T06:48:34.2261653Z",
+      "last_write_time_utc": "2026-09-03T03:53:47.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00055.ARW",
+      "bytes": 40390656,
+      "creation_time_utc": "2026-09-03T06:48:35.4206967Z",
+      "last_write_time_utc": "2026-09-03T03:53:48.9500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00056.ARW",
+      "bytes": 40431616,
+      "creation_time_utc": "2026-09-03T06:48:36.4895867Z",
+      "last_write_time_utc": "2026-09-03T03:53:50.4100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00057.ARW",
+      "bytes": 40472576,
+      "creation_time_utc": "2026-09-03T06:48:37.4847936Z",
+      "last_write_time_utc": "2026-09-03T03:53:51.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00058.ARW",
+      "bytes": 40505344,
+      "creation_time_utc": "2026-09-03T06:48:38.6751648Z",
+      "last_write_time_utc": "2026-09-03T03:53:53.3300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00059.ARW",
+      "bytes": 40534016,
+      "creation_time_utc": "2026-09-03T06:48:39.7413099Z",
+      "last_write_time_utc": "2026-09-03T03:53:54.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00060.ARW",
+      "bytes": 40558592,
+      "creation_time_utc": "2026-09-03T06:48:40.8492078Z",
+      "last_write_time_utc": "2026-09-03T03:53:56.2800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00061.ARW",
+      "bytes": 40570880,
+      "creation_time_utc": "2026-09-03T06:48:41.9914737Z",
+      "last_write_time_utc": "2026-09-03T03:53:57.7400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00062.ARW",
+      "bytes": 40591360,
+      "creation_time_utc": "2026-09-03T06:48:43.0054423Z",
+      "last_write_time_utc": "2026-09-03T03:53:59.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00063.ARW",
+      "bytes": 40603648,
+      "creation_time_utc": "2026-09-03T06:48:44.0044038Z",
+      "last_write_time_utc": "2026-09-03T03:54:00.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00064.ARW",
+      "bytes": 40615936,
+      "creation_time_utc": "2026-09-03T06:48:45.0104355Z",
+      "last_write_time_utc": "2026-09-03T03:54:02.0900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00065.ARW",
+      "bytes": 40628224,
+      "creation_time_utc": "2026-09-03T06:48:46.0261557Z",
+      "last_write_time_utc": "2026-09-03T03:54:03.5500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00066.ARW",
+      "bytes": 40636416,
+      "creation_time_utc": "2026-09-03T06:48:47.0305207Z",
+      "last_write_time_utc": "2026-09-03T03:54:05.0100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00067.ARW",
+      "bytes": 40640512,
+      "creation_time_utc": "2026-09-03T06:48:48.0256468Z",
+      "last_write_time_utc": "2026-09-03T03:54:06.4700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00068.ARW",
+      "bytes": 40640512,
+      "creation_time_utc": "2026-09-03T06:48:49.0296020Z",
+      "last_write_time_utc": "2026-09-03T03:54:07.9100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00069.ARW",
+      "bytes": 40644608,
+      "creation_time_utc": "2026-09-03T06:48:50.0420845Z",
+      "last_write_time_utc": "2026-09-03T03:54:09.3500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00070.ARW",
+      "bytes": 40648704,
+      "creation_time_utc": "2026-09-03T06:48:51.0169066Z",
+      "last_write_time_utc": "2026-09-03T03:54:10.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00071.ARW",
+      "bytes": 40652800,
+      "creation_time_utc": "2026-09-03T06:48:52.0168897Z",
+      "last_write_time_utc": "2026-09-03T03:54:12.2300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00072.ARW",
+      "bytes": 40656896,
+      "creation_time_utc": "2026-09-03T06:48:53.0245220Z",
+      "last_write_time_utc": "2026-09-03T03:54:13.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00073.ARW",
+      "bytes": 40652800,
+      "creation_time_utc": "2026-09-03T06:48:54.0204611Z",
+      "last_write_time_utc": "2026-09-03T03:54:15.1700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00074.ARW",
+      "bytes": 40648704,
+      "creation_time_utc": "2026-09-03T06:48:55.0274539Z",
+      "last_write_time_utc": "2026-09-03T03:54:16.6300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00075.ARW",
+      "bytes": 40648704,
+      "creation_time_utc": "2026-09-03T06:48:56.0288610Z",
+      "last_write_time_utc": "2026-09-03T03:54:18.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00076.ARW",
+      "bytes": 40640512,
+      "creation_time_utc": "2026-09-03T06:48:57.0162007Z",
+      "last_write_time_utc": "2026-09-03T03:54:19.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00077.ARW",
+      "bytes": 40632320,
+      "creation_time_utc": "2026-09-03T06:48:58.0107357Z",
+      "last_write_time_utc": "2026-09-03T03:54:21.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00078.ARW",
+      "bytes": 40624128,
+      "creation_time_utc": "2026-09-03T06:48:59.0136043Z",
+      "last_write_time_utc": "2026-09-03T03:54:22.4400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00079.ARW",
+      "bytes": 40615936,
+      "creation_time_utc": "2026-09-03T06:49:00.0114946Z",
+      "last_write_time_utc": "2026-09-03T03:54:23.8800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00080.ARW",
+      "bytes": 40611840,
+      "creation_time_utc": "2026-09-03T06:49:01.0280608Z",
+      "last_write_time_utc": "2026-09-03T03:54:25.3400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00081.ARW",
+      "bytes": 40599552,
+      "creation_time_utc": "2026-09-03T06:49:02.0326294Z",
+      "last_write_time_utc": "2026-09-03T03:54:26.8000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00082.ARW",
+      "bytes": 40591360,
+      "creation_time_utc": "2026-09-03T06:49:03.0528094Z",
+      "last_write_time_utc": "2026-09-03T03:54:28.2600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00083.ARW",
+      "bytes": 40583168,
+      "creation_time_utc": "2026-09-03T06:49:04.0441790Z",
+      "last_write_time_utc": "2026-09-03T03:54:29.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00084.ARW",
+      "bytes": 40579072,
+      "creation_time_utc": "2026-09-03T06:49:05.0807642Z",
+      "last_write_time_utc": "2026-09-03T03:54:31.1700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00085.ARW",
+      "bytes": 40570880,
+      "creation_time_utc": "2026-09-03T06:49:06.1118905Z",
+      "last_write_time_utc": "2026-09-03T03:54:32.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00086.ARW",
+      "bytes": 40562688,
+      "creation_time_utc": "2026-09-03T06:49:07.1832294Z",
+      "last_write_time_utc": "2026-09-03T03:54:34.0900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00087.ARW",
+      "bytes": 40538112,
+      "creation_time_utc": "2026-09-03T06:49:08.2565956Z",
+      "last_write_time_utc": "2026-09-03T03:54:35.5500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00088.ARW",
+      "bytes": 40509440,
+      "creation_time_utc": "2026-09-03T06:49:09.3175415Z",
+      "last_write_time_utc": "2026-09-03T03:54:37.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00089.ARW",
+      "bytes": 40456192,
+      "creation_time_utc": "2026-09-03T06:49:10.4170951Z",
+      "last_write_time_utc": "2026-09-03T03:54:38.4500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00090.ARW",
+      "bytes": 40394752,
+      "creation_time_utc": "2026-09-03T06:49:11.8744796Z",
+      "last_write_time_utc": "2026-09-03T03:54:39.9000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00091.ARW",
+      "bytes": 40316928,
+      "creation_time_utc": "2026-09-03T06:49:13.4900054Z",
+      "last_write_time_utc": "2026-09-03T03:54:41.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00092.ARW",
+      "bytes": 40214528,
+      "creation_time_utc": "2026-09-03T06:49:15.9895704Z",
+      "last_write_time_utc": "2026-09-03T03:54:42.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00093.ARW",
+      "bytes": 40112128,
+      "creation_time_utc": "2026-09-03T06:49:17.6840149Z",
+      "last_write_time_utc": "2026-09-03T03:54:44.2300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00094.ARW",
+      "bytes": 40001536,
+      "creation_time_utc": "2026-09-03T06:49:19.0944912Z",
+      "last_write_time_utc": "2026-09-03T03:54:45.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00095.ARW",
+      "bytes": 39890944,
+      "creation_time_utc": "2026-09-03T06:49:20.5614731Z",
+      "last_write_time_utc": "2026-09-03T03:54:47.1600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00096.ARW",
+      "bytes": 39780352,
+      "creation_time_utc": "2026-09-03T06:49:21.5945843Z",
+      "last_write_time_utc": "2026-09-03T03:54:48.6100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00097.ARW",
+      "bytes": 39682048,
+      "creation_time_utc": "2026-09-03T06:49:22.6371069Z",
+      "last_write_time_utc": "2026-09-03T03:54:50.0700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00098.ARW",
+      "bytes": 39575552,
+      "creation_time_utc": "2026-09-03T06:49:23.7635258Z",
+      "last_write_time_utc": "2026-09-03T03:54:51.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00099.ARW",
+      "bytes": 39477248,
+      "creation_time_utc": "2026-09-03T06:49:24.8668466Z",
+      "last_write_time_utc": "2026-09-03T03:54:52.9900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00100.ARW",
+      "bytes": 39370752,
+      "creation_time_utc": "2026-09-03T06:49:25.8970998Z",
+      "last_write_time_utc": "2026-09-03T03:54:54.4500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00101.ARW",
+      "bytes": 39280640,
+      "creation_time_utc": "2026-09-03T06:49:26.9193846Z",
+      "last_write_time_utc": "2026-09-03T03:54:55.8900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00102.ARW",
+      "bytes": 39190528,
+      "creation_time_utc": "2026-09-03T06:49:28.0225653Z",
+      "last_write_time_utc": "2026-09-03T03:54:57.3200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00103.ARW",
+      "bytes": 39104512,
+      "creation_time_utc": "2026-09-03T06:49:30.4885324Z",
+      "last_write_time_utc": "2026-09-03T03:54:58.7700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00104.ARW",
+      "bytes": 39022592,
+      "creation_time_utc": "2026-09-03T06:49:33.6143284Z",
+      "last_write_time_utc": "2026-09-03T03:55:00.2200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00105.ARW",
+      "bytes": 38948864,
+      "creation_time_utc": "2026-09-03T06:49:35.9751259Z",
+      "last_write_time_utc": "2026-09-03T03:55:01.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00106.ARW",
+      "bytes": 38879232,
+      "creation_time_utc": "2026-09-03T06:49:37.4542681Z",
+      "last_write_time_utc": "2026-09-03T03:55:03.1300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw10-cpl/DSC00107.ARW",
+      "bytes": 38805504,
+      "creation_time_utc": "2026-09-03T06:49:38.5914690Z",
+      "last_write_time_utc": "2026-09-03T03:55:04.6200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00031.ARW",
+      "bytes": 38363136,
+      "creation_time_utc": "2026-09-03T06:44:00.7405206Z",
+      "last_write_time_utc": "2026-09-03T03:46:50.0700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00032.ARW",
+      "bytes": 38379520,
+      "creation_time_utc": "2026-09-03T06:44:01.6712680Z",
+      "last_write_time_utc": "2026-09-03T03:46:51.5000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00033.ARW",
+      "bytes": 38400000,
+      "creation_time_utc": "2026-09-03T06:44:02.6214746Z",
+      "last_write_time_utc": "2026-09-03T03:46:52.9600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00034.ARW",
+      "bytes": 38416384,
+      "creation_time_utc": "2026-09-03T06:44:03.5753225Z",
+      "last_write_time_utc": "2026-09-03T03:46:54.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00035.ARW",
+      "bytes": 38432768,
+      "creation_time_utc": "2026-09-03T06:44:04.5075454Z",
+      "last_write_time_utc": "2026-09-03T03:46:55.8800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00036.ARW",
+      "bytes": 38449152,
+      "creation_time_utc": "2026-09-03T06:44:05.4543109Z",
+      "last_write_time_utc": "2026-09-03T03:46:57.3400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00037.ARW",
+      "bytes": 38469632,
+      "creation_time_utc": "2026-09-03T06:44:06.3966418Z",
+      "last_write_time_utc": "2026-09-03T03:46:58.8000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00038.ARW",
+      "bytes": 38481920,
+      "creation_time_utc": "2026-09-03T06:44:07.3644058Z",
+      "last_write_time_utc": "2026-09-03T03:47:00.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00039.ARW",
+      "bytes": 38502400,
+      "creation_time_utc": "2026-09-03T06:44:08.3041174Z",
+      "last_write_time_utc": "2026-09-03T03:47:01.7300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00040.ARW",
+      "bytes": 38522880,
+      "creation_time_utc": "2026-09-03T06:44:09.2406184Z",
+      "last_write_time_utc": "2026-09-03T03:47:03.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00041.ARW",
+      "bytes": 38535168,
+      "creation_time_utc": "2026-09-03T06:44:10.2028285Z",
+      "last_write_time_utc": "2026-09-03T03:47:04.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00042.ARW",
+      "bytes": 38551552,
+      "creation_time_utc": "2026-09-03T06:44:11.1490587Z",
+      "last_write_time_utc": "2026-09-03T03:47:06.1100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00043.ARW",
+      "bytes": 38572032,
+      "creation_time_utc": "2026-09-03T06:44:12.0870447Z",
+      "last_write_time_utc": "2026-09-03T03:47:07.5800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00044.ARW",
+      "bytes": 38588416,
+      "creation_time_utc": "2026-09-03T06:44:13.0294208Z",
+      "last_write_time_utc": "2026-09-03T03:47:09.0300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00045.ARW",
+      "bytes": 38612992,
+      "creation_time_utc": "2026-09-03T06:44:13.9818653Z",
+      "last_write_time_utc": "2026-09-03T03:47:10.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00046.ARW",
+      "bytes": 38629376,
+      "creation_time_utc": "2026-09-03T06:44:14.9356672Z",
+      "last_write_time_utc": "2026-09-03T03:47:11.9300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00047.ARW",
+      "bytes": 38645760,
+      "creation_time_utc": "2026-09-03T06:44:15.8830678Z",
+      "last_write_time_utc": "2026-09-03T03:47:13.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00048.ARW",
+      "bytes": 38666240,
+      "creation_time_utc": "2026-09-03T06:44:16.8285845Z",
+      "last_write_time_utc": "2026-09-03T03:47:14.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00049.ARW",
+      "bytes": 38682624,
+      "creation_time_utc": "2026-09-03T06:44:17.7709766Z",
+      "last_write_time_utc": "2026-09-03T03:47:16.3200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00050.ARW",
+      "bytes": 38699008,
+      "creation_time_utc": "2026-09-03T06:44:18.7404076Z",
+      "last_write_time_utc": "2026-09-03T03:47:17.7700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00051.ARW",
+      "bytes": 38723584,
+      "creation_time_utc": "2026-09-03T06:44:19.6892771Z",
+      "last_write_time_utc": "2026-09-03T03:47:19.2300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00052.ARW",
+      "bytes": 38739968,
+      "creation_time_utc": "2026-09-03T06:44:20.6485395Z",
+      "last_write_time_utc": "2026-09-03T03:47:20.7000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00053.ARW",
+      "bytes": 38764544,
+      "creation_time_utc": "2026-09-03T06:44:21.5810356Z",
+      "last_write_time_utc": "2026-09-03T03:47:22.1400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00054.ARW",
+      "bytes": 38789120,
+      "creation_time_utc": "2026-09-03T06:44:22.5467685Z",
+      "last_write_time_utc": "2026-09-03T03:47:23.5900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00055.ARW",
+      "bytes": 38809600,
+      "creation_time_utc": "2026-09-03T06:44:23.4774192Z",
+      "last_write_time_utc": "2026-09-03T03:47:25.0500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00056.ARW",
+      "bytes": 38838272,
+      "creation_time_utc": "2026-09-03T06:44:24.4300634Z",
+      "last_write_time_utc": "2026-09-03T03:47:26.5000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00057.ARW",
+      "bytes": 38858752,
+      "creation_time_utc": "2026-09-03T06:44:25.3647853Z",
+      "last_write_time_utc": "2026-09-03T03:47:27.9200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00058.ARW",
+      "bytes": 38887424,
+      "creation_time_utc": "2026-09-03T06:44:26.3305011Z",
+      "last_write_time_utc": "2026-09-03T03:47:29.3700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00059.ARW",
+      "bytes": 38912000,
+      "creation_time_utc": "2026-09-03T06:44:27.2722083Z",
+      "last_write_time_utc": "2026-09-03T03:47:30.8300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00060.ARW",
+      "bytes": 38932480,
+      "creation_time_utc": "2026-09-03T06:44:28.2139679Z",
+      "last_write_time_utc": "2026-09-03T03:47:32.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00061.ARW",
+      "bytes": 38957056,
+      "creation_time_utc": "2026-09-03T06:44:29.1617904Z",
+      "last_write_time_utc": "2026-09-03T03:47:33.7500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00062.ARW",
+      "bytes": 38973440,
+      "creation_time_utc": "2026-09-03T06:44:30.1287551Z",
+      "last_write_time_utc": "2026-09-03T03:47:35.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00063.ARW",
+      "bytes": 38993920,
+      "creation_time_utc": "2026-09-03T06:44:31.0821204Z",
+      "last_write_time_utc": "2026-09-03T03:47:36.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00064.ARW",
+      "bytes": 39010304,
+      "creation_time_utc": "2026-09-03T06:44:32.0355643Z",
+      "last_write_time_utc": "2026-09-03T03:47:38.1100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00065.ARW",
+      "bytes": 39022592,
+      "creation_time_utc": "2026-09-03T06:44:33.0087816Z",
+      "last_write_time_utc": "2026-09-03T03:47:39.5700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00066.ARW",
+      "bytes": 39047168,
+      "creation_time_utc": "2026-09-03T06:44:33.9536736Z",
+      "last_write_time_utc": "2026-09-03T03:47:41.0400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00067.ARW",
+      "bytes": 39059456,
+      "creation_time_utc": "2026-09-03T06:44:34.9189731Z",
+      "last_write_time_utc": "2026-09-03T03:47:42.5000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00068.ARW",
+      "bytes": 39079936,
+      "creation_time_utc": "2026-09-03T06:44:35.8731608Z",
+      "last_write_time_utc": "2026-09-03T03:47:43.9600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00069.ARW",
+      "bytes": 39100416,
+      "creation_time_utc": "2026-09-03T06:44:36.8324214Z",
+      "last_write_time_utc": "2026-09-03T03:47:45.3800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00070.ARW",
+      "bytes": 39112704,
+      "creation_time_utc": "2026-09-03T06:44:37.7898869Z",
+      "last_write_time_utc": "2026-09-03T03:47:46.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00071.ARW",
+      "bytes": 39133184,
+      "creation_time_utc": "2026-09-03T06:44:38.7570745Z",
+      "last_write_time_utc": "2026-09-03T03:47:48.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00072.ARW",
+      "bytes": 39157760,
+      "creation_time_utc": "2026-09-03T06:44:39.7038570Z",
+      "last_write_time_utc": "2026-09-03T03:47:49.7600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00073.ARW",
+      "bytes": 39182336,
+      "creation_time_utc": "2026-09-03T06:44:40.6746177Z",
+      "last_write_time_utc": "2026-09-03T03:47:51.2600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00074.ARW",
+      "bytes": 39211008,
+      "creation_time_utc": "2026-09-03T06:44:41.6358647Z",
+      "last_write_time_utc": "2026-09-03T03:47:52.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00075.ARW",
+      "bytes": 39235584,
+      "creation_time_utc": "2026-09-03T06:44:42.6096083Z",
+      "last_write_time_utc": "2026-09-03T03:47:54.1800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00076.ARW",
+      "bytes": 39260160,
+      "creation_time_utc": "2026-09-03T06:44:43.5705505Z",
+      "last_write_time_utc": "2026-09-03T03:47:55.6300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00077.ARW",
+      "bytes": 39301120,
+      "creation_time_utc": "2026-09-03T06:44:44.5278332Z",
+      "last_write_time_utc": "2026-09-03T03:47:57.0900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00078.ARW",
+      "bytes": 39329792,
+      "creation_time_utc": "2026-09-03T06:44:45.4954467Z",
+      "last_write_time_utc": "2026-09-03T03:47:58.5500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00079.ARW",
+      "bytes": 39366656,
+      "creation_time_utc": "2026-09-03T06:44:46.4701299Z",
+      "last_write_time_utc": "2026-09-03T03:48:00.0100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00080.ARW",
+      "bytes": 39395328,
+      "creation_time_utc": "2026-09-03T06:44:47.4179014Z",
+      "last_write_time_utc": "2026-09-03T03:48:01.4500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00081.ARW",
+      "bytes": 39432192,
+      "creation_time_utc": "2026-09-03T06:44:48.3976788Z",
+      "last_write_time_utc": "2026-09-03T03:48:02.9000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00082.ARW",
+      "bytes": 39460864,
+      "creation_time_utc": "2026-09-03T06:44:49.3573234Z",
+      "last_write_time_utc": "2026-09-03T03:48:04.3500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00083.ARW",
+      "bytes": 39501824,
+      "creation_time_utc": "2026-09-03T06:44:50.3420755Z",
+      "last_write_time_utc": "2026-09-03T03:48:05.8100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00084.ARW",
+      "bytes": 39538688,
+      "creation_time_utc": "2026-09-03T06:44:51.3033412Z",
+      "last_write_time_utc": "2026-09-03T03:48:07.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00085.ARW",
+      "bytes": 39579648,
+      "creation_time_utc": "2026-09-03T06:44:52.2693936Z",
+      "last_write_time_utc": "2026-09-03T03:48:08.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00086.ARW",
+      "bytes": 39624704,
+      "creation_time_utc": "2026-09-03T06:44:53.2514221Z",
+      "last_write_time_utc": "2026-09-03T03:48:10.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00087.ARW",
+      "bytes": 39657472,
+      "creation_time_utc": "2026-09-03T06:44:54.2225093Z",
+      "last_write_time_utc": "2026-09-03T03:48:11.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00088.ARW",
+      "bytes": 39698432,
+      "creation_time_utc": "2026-09-03T06:44:55.1956085Z",
+      "last_write_time_utc": "2026-09-03T03:48:13.1100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00089.ARW",
+      "bytes": 39735296,
+      "creation_time_utc": "2026-09-03T06:44:56.1747252Z",
+      "last_write_time_utc": "2026-09-03T03:48:14.5700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00090.ARW",
+      "bytes": 39784448,
+      "creation_time_utc": "2026-09-03T06:44:57.1347737Z",
+      "last_write_time_utc": "2026-09-03T03:48:16.0300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00091.ARW",
+      "bytes": 39833600,
+      "creation_time_utc": "2026-09-03T06:44:58.1116382Z",
+      "last_write_time_utc": "2026-09-03T03:48:17.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00092.ARW",
+      "bytes": 39870464,
+      "creation_time_utc": "2026-09-03T06:44:59.0928821Z",
+      "last_write_time_utc": "2026-09-03T03:48:18.9300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00093.ARW",
+      "bytes": 39915520,
+      "creation_time_utc": "2026-09-03T06:45:00.0911652Z",
+      "last_write_time_utc": "2026-09-03T03:48:20.3900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00094.ARW",
+      "bytes": 39956480,
+      "creation_time_utc": "2026-09-03T06:45:01.0571365Z",
+      "last_write_time_utc": "2026-09-03T03:48:21.8300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00095.ARW",
+      "bytes": 39997440,
+      "creation_time_utc": "2026-09-03T06:45:02.0490176Z",
+      "last_write_time_utc": "2026-09-03T03:48:23.2900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00096.ARW",
+      "bytes": 40030208,
+      "creation_time_utc": "2026-09-03T06:45:03.0276707Z",
+      "last_write_time_utc": "2026-09-03T03:48:24.7500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00097.ARW",
+      "bytes": 40062976,
+      "creation_time_utc": "2026-09-03T06:45:04.0140513Z",
+      "last_write_time_utc": "2026-09-03T03:48:26.2100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00098.ARW",
+      "bytes": 40099840,
+      "creation_time_utc": "2026-09-03T06:45:04.9879405Z",
+      "last_write_time_utc": "2026-09-03T03:48:27.6700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00099.ARW",
+      "bytes": 40128512,
+      "creation_time_utc": "2026-09-03T06:45:05.9757591Z",
+      "last_write_time_utc": "2026-09-03T03:48:29.1200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00100.ARW",
+      "bytes": 40157184,
+      "creation_time_utc": "2026-09-03T06:45:06.9602623Z",
+      "last_write_time_utc": "2026-09-03T03:48:30.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00101.ARW",
+      "bytes": 40189952,
+      "creation_time_utc": "2026-09-03T06:45:07.8649183Z",
+      "last_write_time_utc": "2026-09-03T03:48:32.0200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00102.ARW",
+      "bytes": 40218624,
+      "creation_time_utc": "2026-09-03T06:45:08.8530871Z",
+      "last_write_time_utc": "2026-09-03T03:48:33.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00103.ARW",
+      "bytes": 40239104,
+      "creation_time_utc": "2026-09-03T06:45:09.8480701Z",
+      "last_write_time_utc": "2026-09-03T03:48:34.9400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00104.ARW",
+      "bytes": 40267776,
+      "creation_time_utc": "2026-09-03T06:45:10.8318973Z",
+      "last_write_time_utc": "2026-09-03T03:48:36.4000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00105.ARW",
+      "bytes": 40296448,
+      "creation_time_utc": "2026-09-03T06:45:11.8024012Z",
+      "last_write_time_utc": "2026-09-03T03:48:37.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00106.ARW",
+      "bytes": 40316928,
+      "creation_time_utc": "2026-09-03T06:45:12.8053489Z",
+      "last_write_time_utc": "2026-09-03T03:48:39.3300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00107.ARW",
+      "bytes": 40341504,
+      "creation_time_utc": "2026-09-03T06:45:13.8007863Z",
+      "last_write_time_utc": "2026-09-03T03:48:40.7800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00108.ARW",
+      "bytes": 40366080,
+      "creation_time_utc": "2026-09-03T06:45:14.7805263Z",
+      "last_write_time_utc": "2026-09-03T03:48:42.2400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00109.ARW",
+      "bytes": 40390656,
+      "creation_time_utc": "2026-09-03T06:45:15.7574889Z",
+      "last_write_time_utc": "2026-09-03T03:48:43.6800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00110.ARW",
+      "bytes": 40411136,
+      "creation_time_utc": "2026-09-03T06:45:16.7585271Z",
+      "last_write_time_utc": "2026-09-03T03:48:45.1300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00111.ARW",
+      "bytes": 40439808,
+      "creation_time_utc": "2026-09-03T06:45:17.7582451Z",
+      "last_write_time_utc": "2026-09-03T03:48:46.5800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00112.ARW",
+      "bytes": 40456192,
+      "creation_time_utc": "2026-09-03T06:45:18.7464245Z",
+      "last_write_time_utc": "2026-09-03T03:48:48.0200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00113.ARW",
+      "bytes": 40476672,
+      "creation_time_utc": "2026-09-03T06:45:19.7367896Z",
+      "last_write_time_utc": "2026-09-03T03:48:49.4000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00114.ARW",
+      "bytes": 40493056,
+      "creation_time_utc": "2026-09-03T06:45:20.7341482Z",
+      "last_write_time_utc": "2026-09-03T03:48:50.8600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00115.ARW",
+      "bytes": 40501248,
+      "creation_time_utc": "2026-09-03T06:45:21.7368190Z",
+      "last_write_time_utc": "2026-09-03T03:48:52.2800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00116.ARW",
+      "bytes": 40521728,
+      "creation_time_utc": "2026-09-03T06:45:22.7158516Z",
+      "last_write_time_utc": "2026-09-03T03:48:53.7400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00117.ARW",
+      "bytes": 40538112,
+      "creation_time_utc": "2026-09-03T06:45:23.7220719Z",
+      "last_write_time_utc": "2026-09-03T03:48:55.2100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00118.ARW",
+      "bytes": 40542208,
+      "creation_time_utc": "2026-09-03T06:45:24.7066706Z",
+      "last_write_time_utc": "2026-09-03T03:48:56.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00119.ARW",
+      "bytes": 40554496,
+      "creation_time_utc": "2026-09-03T06:45:25.7185213Z",
+      "last_write_time_utc": "2026-09-03T03:48:58.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00120.ARW",
+      "bytes": 40566784,
+      "creation_time_utc": "2026-09-03T06:45:26.7099836Z",
+      "last_write_time_utc": "2026-09-03T03:48:59.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00121.ARW",
+      "bytes": 40574976,
+      "creation_time_utc": "2026-09-03T06:45:27.7003540Z",
+      "last_write_time_utc": "2026-09-03T03:49:01.0200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00122.ARW",
+      "bytes": 40579072,
+      "creation_time_utc": "2026-09-03T06:45:28.6999773Z",
+      "last_write_time_utc": "2026-09-03T03:49:02.5100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00123.ARW",
+      "bytes": 40587264,
+      "creation_time_utc": "2026-09-03T06:45:29.7009966Z",
+      "last_write_time_utc": "2026-09-03T03:49:03.9600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00124.ARW",
+      "bytes": 40599552,
+      "creation_time_utc": "2026-09-03T06:45:30.6920809Z",
+      "last_write_time_utc": "2026-09-03T03:49:05.4100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00125.ARW",
+      "bytes": 40603648,
+      "creation_time_utc": "2026-09-03T06:45:31.6820078Z",
+      "last_write_time_utc": "2026-09-03T03:49:06.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00126.ARW",
+      "bytes": 40611840,
+      "creation_time_utc": "2026-09-03T06:45:32.6745905Z",
+      "last_write_time_utc": "2026-09-03T03:49:08.3300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00127.ARW",
+      "bytes": 40620032,
+      "creation_time_utc": "2026-09-03T06:45:33.6648617Z",
+      "last_write_time_utc": "2026-09-03T03:49:09.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00128.ARW",
+      "bytes": 40620032,
+      "creation_time_utc": "2026-09-03T06:45:34.6537060Z",
+      "last_write_time_utc": "2026-09-03T03:49:11.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00129.ARW",
+      "bytes": 40624128,
+      "creation_time_utc": "2026-09-03T06:45:35.6300460Z",
+      "last_write_time_utc": "2026-09-03T03:49:12.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00130.ARW",
+      "bytes": 40632320,
+      "creation_time_utc": "2026-09-03T06:45:36.6265699Z",
+      "last_write_time_utc": "2026-09-03T03:49:14.1700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00131.ARW",
+      "bytes": 40636416,
+      "creation_time_utc": "2026-09-03T06:45:37.6211858Z",
+      "last_write_time_utc": "2026-09-03T03:49:15.6300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00132.ARW",
+      "bytes": 40636416,
+      "creation_time_utc": "2026-09-03T06:45:38.6076348Z",
+      "last_write_time_utc": "2026-09-03T03:49:17.0900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00133.ARW",
+      "bytes": 40640512,
+      "creation_time_utc": "2026-09-03T06:45:39.6033530Z",
+      "last_write_time_utc": "2026-09-03T03:49:18.5500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00134.ARW",
+      "bytes": 40636416,
+      "creation_time_utc": "2026-09-03T06:45:40.5866537Z",
+      "last_write_time_utc": "2026-09-03T03:49:20.0100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00135.ARW",
+      "bytes": 40640512,
+      "creation_time_utc": "2026-09-03T06:45:41.5839593Z",
+      "last_write_time_utc": "2026-09-03T03:49:21.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00136.ARW",
+      "bytes": 40644608,
+      "creation_time_utc": "2026-09-03T06:45:42.5797933Z",
+      "last_write_time_utc": "2026-09-03T03:49:22.9200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00137.ARW",
+      "bytes": 40644608,
+      "creation_time_utc": "2026-09-03T06:45:43.5788330Z",
+      "last_write_time_utc": "2026-09-03T03:49:24.3800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00138.ARW",
+      "bytes": 40648704,
+      "creation_time_utc": "2026-09-03T06:45:44.5796765Z",
+      "last_write_time_utc": "2026-09-03T03:49:25.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00139.ARW",
+      "bytes": 40648704,
+      "creation_time_utc": "2026-09-03T06:45:45.5900840Z",
+      "last_write_time_utc": "2026-09-03T03:49:27.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00140.ARW",
+      "bytes": 40644608,
+      "creation_time_utc": "2026-09-03T06:45:46.5816533Z",
+      "last_write_time_utc": "2026-09-03T03:49:28.7600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00141.ARW",
+      "bytes": 40648704,
+      "creation_time_utc": "2026-09-03T06:45:47.5749320Z",
+      "last_write_time_utc": "2026-09-03T03:49:30.2200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00142.ARW",
+      "bytes": 40652800,
+      "creation_time_utc": "2026-09-03T06:45:48.5809925Z",
+      "last_write_time_utc": "2026-09-03T03:49:31.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00143.ARW",
+      "bytes": 40652800,
+      "creation_time_utc": "2026-09-03T06:45:49.5868662Z",
+      "last_write_time_utc": "2026-09-03T03:49:33.1500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00144.ARW",
+      "bytes": 40652800,
+      "creation_time_utc": "2026-09-03T06:45:50.5866804Z",
+      "last_write_time_utc": "2026-09-03T03:49:34.6100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00145.ARW",
+      "bytes": 40648704,
+      "creation_time_utc": "2026-09-03T06:45:51.5801157Z",
+      "last_write_time_utc": "2026-09-03T03:49:36.0500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00146.ARW",
+      "bytes": 40648704,
+      "creation_time_utc": "2026-09-03T06:45:52.6024580Z",
+      "last_write_time_utc": "2026-09-03T03:49:37.5000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00147.ARW",
+      "bytes": 40644608,
+      "creation_time_utc": "2026-09-03T06:45:53.5984841Z",
+      "last_write_time_utc": "2026-09-03T03:49:39.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00148.ARW",
+      "bytes": 40644608,
+      "creation_time_utc": "2026-09-03T06:45:54.5906900Z",
+      "last_write_time_utc": "2026-09-03T03:49:40.4600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00149.ARW",
+      "bytes": 40644608,
+      "creation_time_utc": "2026-09-03T06:45:55.6404185Z",
+      "last_write_time_utc": "2026-09-03T03:49:41.9300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00150.ARW",
+      "bytes": 40640512,
+      "creation_time_utc": "2026-09-03T06:45:56.6250629Z",
+      "last_write_time_utc": "2026-09-03T03:49:43.3900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00151.ARW",
+      "bytes": 40636416,
+      "creation_time_utc": "2026-09-03T06:45:57.6485319Z",
+      "last_write_time_utc": "2026-09-03T03:49:44.8500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00152.ARW",
+      "bytes": 40632320,
+      "creation_time_utc": "2026-09-03T06:45:58.6550186Z",
+      "last_write_time_utc": "2026-09-03T03:49:46.3100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00153.ARW",
+      "bytes": 40628224,
+      "creation_time_utc": "2026-09-03T06:45:59.6491344Z",
+      "last_write_time_utc": "2026-09-03T03:49:47.7700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00154.ARW",
+      "bytes": 40624128,
+      "creation_time_utc": "2026-09-03T06:46:00.6437835Z",
+      "last_write_time_utc": "2026-09-03T03:49:49.2300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00155.ARW",
+      "bytes": 40615936,
+      "creation_time_utc": "2026-09-03T06:46:01.6398081Z",
+      "last_write_time_utc": "2026-09-03T03:49:50.6700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00156.ARW",
+      "bytes": 40615936,
+      "creation_time_utc": "2026-09-03T06:46:02.6366182Z",
+      "last_write_time_utc": "2026-09-03T03:49:52.1200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00157.ARW",
+      "bytes": 40611840,
+      "creation_time_utc": "2026-09-03T06:46:03.6315107Z",
+      "last_write_time_utc": "2026-09-03T03:49:53.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00158.ARW",
+      "bytes": 40607744,
+      "creation_time_utc": "2026-09-03T06:46:04.6229626Z",
+      "last_write_time_utc": "2026-09-03T03:49:55.0100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00159.ARW",
+      "bytes": 40607744,
+      "creation_time_utc": "2026-09-03T06:46:05.6421486Z",
+      "last_write_time_utc": "2026-09-03T03:49:56.4700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00160.ARW",
+      "bytes": 40603648,
+      "creation_time_utc": "2026-09-03T06:46:06.6320470Z",
+      "last_write_time_utc": "2026-09-03T03:49:57.9100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00161.ARW",
+      "bytes": 40595456,
+      "creation_time_utc": "2026-09-03T06:46:07.6180342Z",
+      "last_write_time_utc": "2026-09-03T03:49:59.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00162.ARW",
+      "bytes": 40587264,
+      "creation_time_utc": "2026-09-03T06:46:08.6253577Z",
+      "last_write_time_utc": "2026-09-03T03:50:00.8200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00163.ARW",
+      "bytes": 40591360,
+      "creation_time_utc": "2026-09-03T06:46:09.6347863Z",
+      "last_write_time_utc": "2026-09-03T03:50:02.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00164.ARW",
+      "bytes": 40587264,
+      "creation_time_utc": "2026-09-03T06:46:10.6169378Z",
+      "last_write_time_utc": "2026-09-03T03:50:03.7500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00165.ARW",
+      "bytes": 40579072,
+      "creation_time_utc": "2026-09-03T06:46:11.6278627Z",
+      "last_write_time_utc": "2026-09-03T03:50:05.2100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00166.ARW",
+      "bytes": 40574976,
+      "creation_time_utc": "2026-09-03T06:46:12.6197408Z",
+      "last_write_time_utc": "2026-09-03T03:50:06.6700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00167.ARW",
+      "bytes": 40574976,
+      "creation_time_utc": "2026-09-03T06:46:13.6263789Z",
+      "last_write_time_utc": "2026-09-03T03:50:08.1300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00168.ARW",
+      "bytes": 40570880,
+      "creation_time_utc": "2026-09-03T06:46:14.6155796Z",
+      "last_write_time_utc": "2026-09-03T03:50:09.5900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00169.ARW",
+      "bytes": 40562688,
+      "creation_time_utc": "2026-09-03T06:46:15.6463354Z",
+      "last_write_time_utc": "2026-09-03T03:50:11.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00170.ARW",
+      "bytes": 40562688,
+      "creation_time_utc": "2026-09-03T06:46:16.6512771Z",
+      "last_write_time_utc": "2026-09-03T03:50:12.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00171.ARW",
+      "bytes": 40558592,
+      "creation_time_utc": "2026-09-03T06:46:17.6537926Z",
+      "last_write_time_utc": "2026-09-03T03:50:13.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00172.ARW",
+      "bytes": 40542208,
+      "creation_time_utc": "2026-09-03T06:46:18.6560702Z",
+      "last_write_time_utc": "2026-09-03T03:50:15.4500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00173.ARW",
+      "bytes": 40534016,
+      "creation_time_utc": "2026-09-03T06:46:19.6494475Z",
+      "last_write_time_utc": "2026-09-03T03:50:16.8900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00174.ARW",
+      "bytes": 40513536,
+      "creation_time_utc": "2026-09-03T06:46:20.6422321Z",
+      "last_write_time_utc": "2026-09-03T03:50:18.3500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00175.ARW",
+      "bytes": 40497152,
+      "creation_time_utc": "2026-09-03T06:46:21.6575570Z",
+      "last_write_time_utc": "2026-09-03T03:50:19.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00176.ARW",
+      "bytes": 40476672,
+      "creation_time_utc": "2026-09-03T06:46:22.6481834Z",
+      "last_write_time_utc": "2026-09-03T03:50:21.2400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00177.ARW",
+      "bytes": 40448000,
+      "creation_time_utc": "2026-09-03T06:46:23.6366540Z",
+      "last_write_time_utc": "2026-09-03T03:50:22.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00178.ARW",
+      "bytes": 40419328,
+      "creation_time_utc": "2026-09-03T06:46:24.6319317Z",
+      "last_write_time_utc": "2026-09-03T03:50:24.1600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00179.ARW",
+      "bytes": 40390656,
+      "creation_time_utc": "2026-09-03T06:46:25.6448857Z",
+      "last_write_time_utc": "2026-09-03T03:50:25.5800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00180.ARW",
+      "bytes": 40349696,
+      "creation_time_utc": "2026-09-03T06:46:26.6300882Z",
+      "last_write_time_utc": "2026-09-03T03:50:27.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00181.ARW",
+      "bytes": 40304640,
+      "creation_time_utc": "2026-09-03T06:46:27.6085522Z",
+      "last_write_time_utc": "2026-09-03T03:50:28.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00182.ARW",
+      "bytes": 40255488,
+      "creation_time_utc": "2026-09-03T06:46:28.5950856Z",
+      "last_write_time_utc": "2026-09-03T03:50:29.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00183.ARW",
+      "bytes": 40202240,
+      "creation_time_utc": "2026-09-03T06:46:29.5879875Z",
+      "last_write_time_utc": "2026-09-03T03:50:31.4400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00184.ARW",
+      "bytes": 40157184,
+      "creation_time_utc": "2026-09-03T06:46:30.5784440Z",
+      "last_write_time_utc": "2026-09-03T03:50:32.9000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00185.ARW",
+      "bytes": 40108032,
+      "creation_time_utc": "2026-09-03T06:46:31.5573183Z",
+      "last_write_time_utc": "2026-09-03T03:50:34.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00186.ARW",
+      "bytes": 40054784,
+      "creation_time_utc": "2026-09-03T06:46:32.5512771Z",
+      "last_write_time_utc": "2026-09-03T03:50:35.8200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00187.ARW",
+      "bytes": 39997440,
+      "creation_time_utc": "2026-09-03T06:46:33.5546188Z",
+      "last_write_time_utc": "2026-09-03T03:50:37.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00188.ARW",
+      "bytes": 39944192,
+      "creation_time_utc": "2026-09-03T06:46:34.5355668Z",
+      "last_write_time_utc": "2026-09-03T03:50:38.7200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00189.ARW",
+      "bytes": 39886848,
+      "creation_time_utc": "2026-09-03T06:46:35.5254981Z",
+      "last_write_time_utc": "2026-09-03T03:50:40.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00190.ARW",
+      "bytes": 39833600,
+      "creation_time_utc": "2026-09-03T06:46:36.4863542Z",
+      "last_write_time_utc": "2026-09-03T03:50:41.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00191.ARW",
+      "bytes": 39780352,
+      "creation_time_utc": "2026-09-03T06:46:37.4854923Z",
+      "last_write_time_utc": "2026-09-03T03:50:43.1300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00192.ARW",
+      "bytes": 39727104,
+      "creation_time_utc": "2026-09-03T06:46:38.4450154Z",
+      "last_write_time_utc": "2026-09-03T03:50:44.5800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00193.ARW",
+      "bytes": 39673856,
+      "creation_time_utc": "2026-09-03T06:46:39.4195017Z",
+      "last_write_time_utc": "2026-09-03T03:50:46.0500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00194.ARW",
+      "bytes": 39620608,
+      "creation_time_utc": "2026-09-03T06:46:40.4012514Z",
+      "last_write_time_utc": "2026-09-03T03:50:47.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00195.ARW",
+      "bytes": 39567360,
+      "creation_time_utc": "2026-09-03T06:46:41.4542467Z",
+      "last_write_time_utc": "2026-09-03T03:50:48.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00196.ARW",
+      "bytes": 39518208,
+      "creation_time_utc": "2026-09-03T06:46:42.6152313Z",
+      "last_write_time_utc": "2026-09-03T03:50:50.4400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00197.ARW",
+      "bytes": 39469056,
+      "creation_time_utc": "2026-09-03T06:46:43.6163017Z",
+      "last_write_time_utc": "2026-09-03T03:50:51.8900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00198.ARW",
+      "bytes": 39415808,
+      "creation_time_utc": "2026-09-03T06:46:44.7263320Z",
+      "last_write_time_utc": "2026-09-03T03:50:53.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00199.ARW",
+      "bytes": 39366656,
+      "creation_time_utc": "2026-09-03T06:46:45.7986566Z",
+      "last_write_time_utc": "2026-09-03T03:50:54.8200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00200.ARW",
+      "bytes": 39317504,
+      "creation_time_utc": "2026-09-03T06:46:46.9697307Z",
+      "last_write_time_utc": "2026-09-03T03:50:56.2900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00201.ARW",
+      "bytes": 39276544,
+      "creation_time_utc": "2026-09-03T06:46:48.0762790Z",
+      "last_write_time_utc": "2026-09-03T03:50:57.7300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00202.ARW",
+      "bytes": 39231488,
+      "creation_time_utc": "2026-09-03T06:46:49.0685810Z",
+      "last_write_time_utc": "2026-09-03T03:50:59.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00203.ARW",
+      "bytes": 39182336,
+      "creation_time_utc": "2026-09-03T06:46:50.0149896Z",
+      "last_write_time_utc": "2026-09-03T03:51:00.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00204.ARW",
+      "bytes": 39145472,
+      "creation_time_utc": "2026-09-03T06:46:50.9983488Z",
+      "last_write_time_utc": "2026-09-03T03:51:02.1100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00205.ARW",
+      "bytes": 39104512,
+      "creation_time_utc": "2026-09-03T06:46:51.9820517Z",
+      "last_write_time_utc": "2026-09-03T03:51:03.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00206.ARW",
+      "bytes": 39059456,
+      "creation_time_utc": "2026-09-03T06:46:52.9581609Z",
+      "last_write_time_utc": "2026-09-03T03:51:05.0200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00207.ARW",
+      "bytes": 39022592,
+      "creation_time_utc": "2026-09-03T06:46:53.9494534Z",
+      "last_write_time_utc": "2026-09-03T03:51:06.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00208.ARW",
+      "bytes": 38981632,
+      "creation_time_utc": "2026-09-03T06:46:54.9131903Z",
+      "last_write_time_utc": "2026-09-03T03:51:07.9500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00209.ARW",
+      "bytes": 38944768,
+      "creation_time_utc": "2026-09-03T06:46:55.8606034Z",
+      "last_write_time_utc": "2026-09-03T03:51:09.3900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00210.ARW",
+      "bytes": 38907904,
+      "creation_time_utc": "2026-09-03T06:46:56.8469797Z",
+      "last_write_time_utc": "2026-09-03T03:51:10.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00211.ARW",
+      "bytes": 38871040,
+      "creation_time_utc": "2026-09-03T06:46:57.8307807Z",
+      "last_write_time_utc": "2026-09-03T03:51:12.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "tilted-sw4-cpl/DSC00212.ARW",
+      "bytes": 38842368,
+      "creation_time_utc": "2026-09-03T06:46:58.7953967Z",
+      "last_write_time_utc": "2026-09-03T03:51:13.7600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00004.ARW",
+      "bytes": 37863424,
+      "creation_time_utc": "2026-09-03T06:49:51.1504192Z",
+      "last_write_time_utc": "2026-09-03T03:57:12.4100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00005.ARW",
+      "bytes": 37879808,
+      "creation_time_utc": "2026-09-03T06:49:52.0818849Z",
+      "last_write_time_utc": "2026-09-03T03:57:13.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00006.ARW",
+      "bytes": 37892096,
+      "creation_time_utc": "2026-09-03T06:49:53.0196173Z",
+      "last_write_time_utc": "2026-09-03T03:57:15.3400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00007.ARW",
+      "bytes": 37904384,
+      "creation_time_utc": "2026-09-03T06:49:53.9471387Z",
+      "last_write_time_utc": "2026-09-03T03:57:16.8000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00008.ARW",
+      "bytes": 37916672,
+      "creation_time_utc": "2026-09-03T06:49:54.8599850Z",
+      "last_write_time_utc": "2026-09-03T03:57:18.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00009.ARW",
+      "bytes": 37928960,
+      "creation_time_utc": "2026-09-03T06:49:55.8026010Z",
+      "last_write_time_utc": "2026-09-03T03:57:19.7300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00010.ARW",
+      "bytes": 37949440,
+      "creation_time_utc": "2026-09-03T06:49:56.7677748Z",
+      "last_write_time_utc": "2026-09-03T03:57:21.2100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00011.ARW",
+      "bytes": 37961728,
+      "creation_time_utc": "2026-09-03T06:49:57.7133227Z",
+      "last_write_time_utc": "2026-09-03T03:57:22.6400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00012.ARW",
+      "bytes": 37974016,
+      "creation_time_utc": "2026-09-03T06:49:58.6590908Z",
+      "last_write_time_utc": "2026-09-03T03:57:24.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00013.ARW",
+      "bytes": 37986304,
+      "creation_time_utc": "2026-09-03T06:49:59.5812302Z",
+      "last_write_time_utc": "2026-09-03T03:57:25.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00014.ARW",
+      "bytes": 38006784,
+      "creation_time_utc": "2026-09-03T06:50:00.5094806Z",
+      "last_write_time_utc": "2026-09-03T03:57:27.0200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00015.ARW",
+      "bytes": 38023168,
+      "creation_time_utc": "2026-09-03T06:50:01.4549204Z",
+      "last_write_time_utc": "2026-09-03T03:57:28.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00016.ARW",
+      "bytes": 38035456,
+      "creation_time_utc": "2026-09-03T06:50:02.3872485Z",
+      "last_write_time_utc": "2026-09-03T03:57:29.9700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00017.ARW",
+      "bytes": 38047744,
+      "creation_time_utc": "2026-09-03T06:50:03.3236912Z",
+      "last_write_time_utc": "2026-09-03T03:57:31.4100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00018.ARW",
+      "bytes": 38068224,
+      "creation_time_utc": "2026-09-03T06:50:04.2416129Z",
+      "last_write_time_utc": "2026-09-03T03:57:32.8600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00019.ARW",
+      "bytes": 38080512,
+      "creation_time_utc": "2026-09-03T06:50:05.1916887Z",
+      "last_write_time_utc": "2026-09-03T03:57:34.3200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00020.ARW",
+      "bytes": 38100992,
+      "creation_time_utc": "2026-09-03T06:50:06.1277121Z",
+      "last_write_time_utc": "2026-09-03T03:57:35.7800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00021.ARW",
+      "bytes": 38113280,
+      "creation_time_utc": "2026-09-03T06:50:07.0571986Z",
+      "last_write_time_utc": "2026-09-03T03:57:37.2300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00022.ARW",
+      "bytes": 38129664,
+      "creation_time_utc": "2026-09-03T06:50:07.9771134Z",
+      "last_write_time_utc": "2026-09-03T03:57:38.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00023.ARW",
+      "bytes": 38141952,
+      "creation_time_utc": "2026-09-03T06:50:08.9470237Z",
+      "last_write_time_utc": "2026-09-03T03:57:40.1600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00024.ARW",
+      "bytes": 38158336,
+      "creation_time_utc": "2026-09-03T06:50:09.9136222Z",
+      "last_write_time_utc": "2026-09-03T03:57:41.6200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00025.ARW",
+      "bytes": 38174720,
+      "creation_time_utc": "2026-09-03T06:50:10.8611707Z",
+      "last_write_time_utc": "2026-09-03T03:57:43.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00026.ARW",
+      "bytes": 38182912,
+      "creation_time_utc": "2026-09-03T06:50:11.8205924Z",
+      "last_write_time_utc": "2026-09-03T03:57:44.5700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00027.ARW",
+      "bytes": 38199296,
+      "creation_time_utc": "2026-09-03T06:50:12.7859819Z",
+      "last_write_time_utc": "2026-09-03T03:57:46.0300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00028.ARW",
+      "bytes": 38215680,
+      "creation_time_utc": "2026-09-03T06:50:13.7537451Z",
+      "last_write_time_utc": "2026-09-03T03:57:47.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00029.ARW",
+      "bytes": 38227968,
+      "creation_time_utc": "2026-09-03T06:50:14.7193981Z",
+      "last_write_time_utc": "2026-09-03T03:57:48.9500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00030.ARW",
+      "bytes": 38244352,
+      "creation_time_utc": "2026-09-03T06:50:15.6720230Z",
+      "last_write_time_utc": "2026-09-03T03:57:50.4500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00031.ARW",
+      "bytes": 38256640,
+      "creation_time_utc": "2026-09-03T06:50:16.6707770Z",
+      "last_write_time_utc": "2026-09-03T03:57:51.9000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00032.ARW",
+      "bytes": 38277120,
+      "creation_time_utc": "2026-09-03T06:50:17.6678769Z",
+      "last_write_time_utc": "2026-09-03T03:57:53.3400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00033.ARW",
+      "bytes": 38293504,
+      "creation_time_utc": "2026-09-03T06:50:18.6383235Z",
+      "last_write_time_utc": "2026-09-03T03:57:54.8000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00034.ARW",
+      "bytes": 38305792,
+      "creation_time_utc": "2026-09-03T06:50:19.6379979Z",
+      "last_write_time_utc": "2026-09-03T03:57:56.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00035.ARW",
+      "bytes": 38330368,
+      "creation_time_utc": "2026-09-03T06:50:20.6212008Z",
+      "last_write_time_utc": "2026-09-03T03:57:57.7200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00036.ARW",
+      "bytes": 38342656,
+      "creation_time_utc": "2026-09-03T06:50:21.5866780Z",
+      "last_write_time_utc": "2026-09-03T03:57:59.1800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00037.ARW",
+      "bytes": 38363136,
+      "creation_time_utc": "2026-09-03T06:50:22.5581272Z",
+      "last_write_time_utc": "2026-09-03T03:58:00.6200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00038.ARW",
+      "bytes": 38383616,
+      "creation_time_utc": "2026-09-03T06:50:23.5456351Z",
+      "last_write_time_utc": "2026-09-03T03:58:02.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00039.ARW",
+      "bytes": 38404096,
+      "creation_time_utc": "2026-09-03T06:50:24.5051552Z",
+      "last_write_time_utc": "2026-09-03T03:58:03.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00040.ARW",
+      "bytes": 38424576,
+      "creation_time_utc": "2026-09-03T06:50:25.4624498Z",
+      "last_write_time_utc": "2026-09-03T03:58:05.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00041.ARW",
+      "bytes": 38445056,
+      "creation_time_utc": "2026-09-03T06:50:26.4211892Z",
+      "last_write_time_utc": "2026-09-03T03:58:06.4600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00042.ARW",
+      "bytes": 38465536,
+      "creation_time_utc": "2026-09-03T06:50:27.3748411Z",
+      "last_write_time_utc": "2026-09-03T03:58:07.9300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00043.ARW",
+      "bytes": 38481920,
+      "creation_time_utc": "2026-09-03T06:50:28.3412842Z",
+      "last_write_time_utc": "2026-09-03T03:58:09.3800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00044.ARW",
+      "bytes": 38506496,
+      "creation_time_utc": "2026-09-03T06:50:29.2816678Z",
+      "last_write_time_utc": "2026-09-03T03:58:10.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00045.ARW",
+      "bytes": 38526976,
+      "creation_time_utc": "2026-09-03T06:50:30.2182427Z",
+      "last_write_time_utc": "2026-09-03T03:58:12.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00046.ARW",
+      "bytes": 38543360,
+      "creation_time_utc": "2026-09-03T06:50:31.1764590Z",
+      "last_write_time_utc": "2026-09-03T03:58:13.7500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00047.ARW",
+      "bytes": 38567936,
+      "creation_time_utc": "2026-09-03T06:50:32.1278091Z",
+      "last_write_time_utc": "2026-09-03T03:58:15.2100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00048.ARW",
+      "bytes": 38588416,
+      "creation_time_utc": "2026-09-03T06:50:33.0739061Z",
+      "last_write_time_utc": "2026-09-03T03:58:16.6800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00049.ARW",
+      "bytes": 38608896,
+      "creation_time_utc": "2026-09-03T06:50:34.0136578Z",
+      "last_write_time_utc": "2026-09-03T03:58:18.1300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00050.ARW",
+      "bytes": 38629376,
+      "creation_time_utc": "2026-09-03T06:50:34.9431141Z",
+      "last_write_time_utc": "2026-09-03T03:58:19.6000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00051.ARW",
+      "bytes": 38653952,
+      "creation_time_utc": "2026-09-03T06:50:35.8995591Z",
+      "last_write_time_utc": "2026-09-03T03:58:21.0100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00052.ARW",
+      "bytes": 38674432,
+      "creation_time_utc": "2026-09-03T06:50:36.8318375Z",
+      "last_write_time_utc": "2026-09-03T03:58:22.4600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00053.ARW",
+      "bytes": 38694912,
+      "creation_time_utc": "2026-09-03T06:50:37.7691704Z",
+      "last_write_time_utc": "2026-09-03T03:58:23.9300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00054.ARW",
+      "bytes": 38707200,
+      "creation_time_utc": "2026-09-03T06:50:38.7077713Z",
+      "last_write_time_utc": "2026-09-03T03:58:25.3800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00055.ARW",
+      "bytes": 38731776,
+      "creation_time_utc": "2026-09-03T06:50:39.6541191Z",
+      "last_write_time_utc": "2026-09-03T03:58:26.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00056.ARW",
+      "bytes": 38748160,
+      "creation_time_utc": "2026-09-03T06:50:40.6098888Z",
+      "last_write_time_utc": "2026-09-03T03:58:28.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00057.ARW",
+      "bytes": 38764544,
+      "creation_time_utc": "2026-09-03T06:50:41.5734028Z",
+      "last_write_time_utc": "2026-09-03T03:58:29.7600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00058.ARW",
+      "bytes": 38785024,
+      "creation_time_utc": "2026-09-03T06:50:42.5354790Z",
+      "last_write_time_utc": "2026-09-03T03:58:31.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00059.ARW",
+      "bytes": 38801408,
+      "creation_time_utc": "2026-09-03T06:50:43.5651718Z",
+      "last_write_time_utc": "2026-09-03T03:58:32.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00060.ARW",
+      "bytes": 38817792,
+      "creation_time_utc": "2026-09-03T06:50:44.5298396Z",
+      "last_write_time_utc": "2026-09-03T03:58:34.1700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00061.ARW",
+      "bytes": 38834176,
+      "creation_time_utc": "2026-09-03T06:50:45.7098290Z",
+      "last_write_time_utc": "2026-09-03T03:58:35.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00062.ARW",
+      "bytes": 38850560,
+      "creation_time_utc": "2026-09-03T06:50:46.6800959Z",
+      "last_write_time_utc": "2026-09-03T03:58:37.1100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00063.ARW",
+      "bytes": 38866944,
+      "creation_time_utc": "2026-09-03T06:50:47.6799136Z",
+      "last_write_time_utc": "2026-09-03T03:58:38.5700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00064.ARW",
+      "bytes": 38875136,
+      "creation_time_utc": "2026-09-03T06:50:48.6746043Z",
+      "last_write_time_utc": "2026-09-03T03:58:40.0500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00065.ARW",
+      "bytes": 38891520,
+      "creation_time_utc": "2026-09-03T06:50:49.6547343Z",
+      "last_write_time_utc": "2026-09-03T03:58:41.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00066.ARW",
+      "bytes": 38907904,
+      "creation_time_utc": "2026-09-03T06:50:50.6259085Z",
+      "last_write_time_utc": "2026-09-03T03:58:42.9600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00067.ARW",
+      "bytes": 38920192,
+      "creation_time_utc": "2026-09-03T06:50:51.6423899Z",
+      "last_write_time_utc": "2026-09-03T03:58:44.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00068.ARW",
+      "bytes": 38928384,
+      "creation_time_utc": "2026-09-03T06:50:52.6055216Z",
+      "last_write_time_utc": "2026-09-03T03:58:45.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00069.ARW",
+      "bytes": 38948864,
+      "creation_time_utc": "2026-09-03T06:50:53.5852708Z",
+      "last_write_time_utc": "2026-09-03T03:58:47.3300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00070.ARW",
+      "bytes": 38957056,
+      "creation_time_utc": "2026-09-03T06:50:54.5366386Z",
+      "last_write_time_utc": "2026-09-03T03:58:48.7800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00071.ARW",
+      "bytes": 38973440,
+      "creation_time_utc": "2026-09-03T06:50:55.5463342Z",
+      "last_write_time_utc": "2026-09-03T03:58:50.2200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00072.ARW",
+      "bytes": 38989824,
+      "creation_time_utc": "2026-09-03T06:50:56.5473719Z",
+      "last_write_time_utc": "2026-09-03T03:58:51.6700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00073.ARW",
+      "bytes": 39002112,
+      "creation_time_utc": "2026-09-03T06:50:57.5290114Z",
+      "last_write_time_utc": "2026-09-03T03:58:53.1300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00074.ARW",
+      "bytes": 39022592,
+      "creation_time_utc": "2026-09-03T06:50:58.4793680Z",
+      "last_write_time_utc": "2026-09-03T03:58:54.5900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00075.ARW",
+      "bytes": 39047168,
+      "creation_time_utc": "2026-09-03T06:50:59.4882066Z",
+      "last_write_time_utc": "2026-09-03T03:58:56.0500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00076.ARW",
+      "bytes": 39071744,
+      "creation_time_utc": "2026-09-03T06:51:00.4907700Z",
+      "last_write_time_utc": "2026-09-03T03:58:57.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00077.ARW",
+      "bytes": 39096320,
+      "creation_time_utc": "2026-09-03T06:51:01.4530905Z",
+      "last_write_time_utc": "2026-09-03T03:58:58.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00078.ARW",
+      "bytes": 39120896,
+      "creation_time_utc": "2026-09-03T06:51:02.4065710Z",
+      "last_write_time_utc": "2026-09-03T03:59:00.4300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00079.ARW",
+      "bytes": 39149568,
+      "creation_time_utc": "2026-09-03T06:51:03.3914566Z",
+      "last_write_time_utc": "2026-09-03T03:59:01.9000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00080.ARW",
+      "bytes": 39174144,
+      "creation_time_utc": "2026-09-03T06:51:04.3417843Z",
+      "last_write_time_utc": "2026-09-03T03:59:03.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00081.ARW",
+      "bytes": 39198720,
+      "creation_time_utc": "2026-09-03T06:51:05.3019017Z",
+      "last_write_time_utc": "2026-09-03T03:59:04.8300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00082.ARW",
+      "bytes": 39223296,
+      "creation_time_utc": "2026-09-03T06:51:06.2586177Z",
+      "last_write_time_utc": "2026-09-03T03:59:06.2900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00083.ARW",
+      "bytes": 39251968,
+      "creation_time_utc": "2026-09-03T06:51:07.2313520Z",
+      "last_write_time_utc": "2026-09-03T03:59:07.7500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00084.ARW",
+      "bytes": 39276544,
+      "creation_time_utc": "2026-09-03T06:51:08.1920177Z",
+      "last_write_time_utc": "2026-09-03T03:59:09.2100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00085.ARW",
+      "bytes": 39313408,
+      "creation_time_utc": "2026-09-03T06:51:09.1563458Z",
+      "last_write_time_utc": "2026-09-03T03:59:10.6700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00086.ARW",
+      "bytes": 39337984,
+      "creation_time_utc": "2026-09-03T06:51:10.1377504Z",
+      "last_write_time_utc": "2026-09-03T03:59:12.1400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00087.ARW",
+      "bytes": 39374848,
+      "creation_time_utc": "2026-09-03T06:51:11.1044935Z",
+      "last_write_time_utc": "2026-09-03T03:59:13.5900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00088.ARW",
+      "bytes": 39407616,
+      "creation_time_utc": "2026-09-03T06:51:12.0608646Z",
+      "last_write_time_utc": "2026-09-03T03:59:15.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00089.ARW",
+      "bytes": 39436288,
+      "creation_time_utc": "2026-09-03T06:51:13.0290030Z",
+      "last_write_time_utc": "2026-09-03T03:59:16.5100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00090.ARW",
+      "bytes": 39473152,
+      "creation_time_utc": "2026-09-03T06:51:14.0100445Z",
+      "last_write_time_utc": "2026-09-03T03:59:17.9700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00091.ARW",
+      "bytes": 39501824,
+      "creation_time_utc": "2026-09-03T06:51:14.9652733Z",
+      "last_write_time_utc": "2026-09-03T03:59:19.4300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00092.ARW",
+      "bytes": 39534592,
+      "creation_time_utc": "2026-09-03T06:51:15.9382075Z",
+      "last_write_time_utc": "2026-09-03T03:59:20.8800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00093.ARW",
+      "bytes": 39571456,
+      "creation_time_utc": "2026-09-03T06:51:16.9106305Z",
+      "last_write_time_utc": "2026-09-03T03:59:22.3200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00094.ARW",
+      "bytes": 39604224,
+      "creation_time_utc": "2026-09-03T06:51:17.8762378Z",
+      "last_write_time_utc": "2026-09-03T03:59:23.7800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00095.ARW",
+      "bytes": 39628800,
+      "creation_time_utc": "2026-09-03T06:51:18.8463814Z",
+      "last_write_time_utc": "2026-09-03T03:59:25.2400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00096.ARW",
+      "bytes": 39665664,
+      "creation_time_utc": "2026-09-03T06:51:19.8570314Z",
+      "last_write_time_utc": "2026-09-03T03:59:26.7000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00097.ARW",
+      "bytes": 39690240,
+      "creation_time_utc": "2026-09-03T06:51:20.8188361Z",
+      "last_write_time_utc": "2026-09-03T03:59:28.1700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00098.ARW",
+      "bytes": 39723008,
+      "creation_time_utc": "2026-09-03T06:51:21.7888503Z",
+      "last_write_time_utc": "2026-09-03T03:59:29.6100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00099.ARW",
+      "bytes": 39747584,
+      "creation_time_utc": "2026-09-03T06:51:22.7676308Z",
+      "last_write_time_utc": "2026-09-03T03:59:31.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00100.ARW",
+      "bytes": 39772160,
+      "creation_time_utc": "2026-09-03T06:51:23.7489467Z",
+      "last_write_time_utc": "2026-09-03T03:59:32.5300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00101.ARW",
+      "bytes": 39809024,
+      "creation_time_utc": "2026-09-03T06:51:24.7129447Z",
+      "last_write_time_utc": "2026-09-03T03:59:34.0000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00102.ARW",
+      "bytes": 39825408,
+      "creation_time_utc": "2026-09-03T06:51:25.6949508Z",
+      "last_write_time_utc": "2026-09-03T03:59:35.4600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00103.ARW",
+      "bytes": 39845888,
+      "creation_time_utc": "2026-09-03T06:51:26.6919497Z",
+      "last_write_time_utc": "2026-09-03T03:59:36.9200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00104.ARW",
+      "bytes": 39870464,
+      "creation_time_utc": "2026-09-03T06:51:27.6615250Z",
+      "last_write_time_utc": "2026-09-03T03:59:38.3800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00105.ARW",
+      "bytes": 39886848,
+      "creation_time_utc": "2026-09-03T06:51:28.6266546Z",
+      "last_write_time_utc": "2026-09-03T03:59:39.8400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00106.ARW",
+      "bytes": 39911424,
+      "creation_time_utc": "2026-09-03T06:51:29.6081320Z",
+      "last_write_time_utc": "2026-09-03T03:59:41.3000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00107.ARW",
+      "bytes": 39923712,
+      "creation_time_utc": "2026-09-03T06:51:30.5998442Z",
+      "last_write_time_utc": "2026-09-03T03:59:42.7600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00108.ARW",
+      "bytes": 39948288,
+      "creation_time_utc": "2026-09-03T06:51:31.5889814Z",
+      "last_write_time_utc": "2026-09-03T03:59:44.2000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00109.ARW",
+      "bytes": 39960576,
+      "creation_time_utc": "2026-09-03T06:51:32.5641720Z",
+      "last_write_time_utc": "2026-09-03T03:59:45.6600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00110.ARW",
+      "bytes": 39972864,
+      "creation_time_utc": "2026-09-03T06:51:33.5430323Z",
+      "last_write_time_utc": "2026-09-03T03:59:47.1200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00111.ARW",
+      "bytes": 39976960,
+      "creation_time_utc": "2026-09-03T06:51:34.5145099Z",
+      "last_write_time_utc": "2026-09-03T03:59:48.5800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00112.ARW",
+      "bytes": 39993344,
+      "creation_time_utc": "2026-09-03T06:51:35.5109074Z",
+      "last_write_time_utc": "2026-09-03T03:59:50.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00113.ARW",
+      "bytes": 39997440,
+      "creation_time_utc": "2026-09-03T06:51:36.4864779Z",
+      "last_write_time_utc": "2026-09-03T03:59:51.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00114.ARW",
+      "bytes": 40005632,
+      "creation_time_utc": "2026-09-03T06:51:37.4694715Z",
+      "last_write_time_utc": "2026-09-03T03:59:52.9500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00115.ARW",
+      "bytes": 40013824,
+      "creation_time_utc": "2026-09-03T06:51:38.4474186Z",
+      "last_write_time_utc": "2026-09-03T03:59:54.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00116.ARW",
+      "bytes": 40022016,
+      "creation_time_utc": "2026-09-03T06:51:39.4245950Z",
+      "last_write_time_utc": "2026-09-03T03:59:55.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00117.ARW",
+      "bytes": 40030208,
+      "creation_time_utc": "2026-09-03T06:51:40.4377843Z",
+      "last_write_time_utc": "2026-09-03T03:59:57.3400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00118.ARW",
+      "bytes": 40038400,
+      "creation_time_utc": "2026-09-03T06:51:41.4139806Z",
+      "last_write_time_utc": "2026-09-03T03:59:58.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00119.ARW",
+      "bytes": 40042496,
+      "creation_time_utc": "2026-09-03T06:51:42.4082165Z",
+      "last_write_time_utc": "2026-09-03T04:00:00.2600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00120.ARW",
+      "bytes": 40054784,
+      "creation_time_utc": "2026-09-03T06:51:43.3750724Z",
+      "last_write_time_utc": "2026-09-03T04:00:01.7400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00121.ARW",
+      "bytes": 40054784,
+      "creation_time_utc": "2026-09-03T06:51:44.3645353Z",
+      "last_write_time_utc": "2026-09-03T04:00:03.1800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00122.ARW",
+      "bytes": 40054784,
+      "creation_time_utc": "2026-09-03T06:51:45.3480590Z",
+      "last_write_time_utc": "2026-09-03T04:00:04.6400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00123.ARW",
+      "bytes": 40058880,
+      "creation_time_utc": "2026-09-03T06:51:46.3336187Z",
+      "last_write_time_utc": "2026-09-03T04:00:06.0800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00124.ARW",
+      "bytes": 40062976,
+      "creation_time_utc": "2026-09-03T06:51:47.3062371Z",
+      "last_write_time_utc": "2026-09-03T04:00:07.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00125.ARW",
+      "bytes": 40067072,
+      "creation_time_utc": "2026-09-03T06:51:48.2987002Z",
+      "last_write_time_utc": "2026-09-03T04:00:09.0300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00126.ARW",
+      "bytes": 40062976,
+      "creation_time_utc": "2026-09-03T06:51:49.2857226Z",
+      "last_write_time_utc": "2026-09-03T04:00:10.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00127.ARW",
+      "bytes": 40062976,
+      "creation_time_utc": "2026-09-03T06:51:50.2761794Z",
+      "last_write_time_utc": "2026-09-03T04:00:11.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00128.ARW",
+      "bytes": 40058880,
+      "creation_time_utc": "2026-09-03T06:51:51.2553314Z",
+      "last_write_time_utc": "2026-09-03T04:00:13.4500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00129.ARW",
+      "bytes": 40050688,
+      "creation_time_utc": "2026-09-03T06:51:52.2600437Z",
+      "last_write_time_utc": "2026-09-03T04:00:14.8900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00130.ARW",
+      "bytes": 40042496,
+      "creation_time_utc": "2026-09-03T06:51:53.2588310Z",
+      "last_write_time_utc": "2026-09-03T04:00:16.3500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00131.ARW",
+      "bytes": 40030208,
+      "creation_time_utc": "2026-09-03T06:51:54.2569612Z",
+      "last_write_time_utc": "2026-09-03T04:00:17.8200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00132.ARW",
+      "bytes": 40017920,
+      "creation_time_utc": "2026-09-03T06:51:55.2380236Z",
+      "last_write_time_utc": "2026-09-03T04:00:19.2800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00133.ARW",
+      "bytes": 39997440,
+      "creation_time_utc": "2026-09-03T06:51:56.2412615Z",
+      "last_write_time_utc": "2026-09-03T04:00:20.7400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00134.ARW",
+      "bytes": 39985152,
+      "creation_time_utc": "2026-09-03T06:51:57.2113338Z",
+      "last_write_time_utc": "2026-09-03T04:00:22.2000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00135.ARW",
+      "bytes": 39972864,
+      "creation_time_utc": "2026-09-03T06:51:58.2023468Z",
+      "last_write_time_utc": "2026-09-03T04:00:23.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00136.ARW",
+      "bytes": 39952384,
+      "creation_time_utc": "2026-09-03T06:51:59.1838377Z",
+      "last_write_time_utc": "2026-09-03T04:00:25.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00137.ARW",
+      "bytes": 39936000,
+      "creation_time_utc": "2026-09-03T06:52:00.1790610Z",
+      "last_write_time_utc": "2026-09-03T04:00:26.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00138.ARW",
+      "bytes": 39923712,
+      "creation_time_utc": "2026-09-03T06:52:01.1629241Z",
+      "last_write_time_utc": "2026-09-03T04:00:28.0300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00139.ARW",
+      "bytes": 39907328,
+      "creation_time_utc": "2026-09-03T06:52:02.1421426Z",
+      "last_write_time_utc": "2026-09-03T04:00:29.4900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00140.ARW",
+      "bytes": 39890944,
+      "creation_time_utc": "2026-09-03T06:52:03.1486219Z",
+      "last_write_time_utc": "2026-09-03T04:00:30.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00141.ARW",
+      "bytes": 39878656,
+      "creation_time_utc": "2026-09-03T06:52:04.1032104Z",
+      "last_write_time_utc": "2026-09-03T04:00:32.3500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00142.ARW",
+      "bytes": 39866368,
+      "creation_time_utc": "2026-09-03T06:52:05.0887326Z",
+      "last_write_time_utc": "2026-09-03T04:00:33.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00143.ARW",
+      "bytes": 39858176,
+      "creation_time_utc": "2026-09-03T06:52:06.0885119Z",
+      "last_write_time_utc": "2026-09-03T04:00:35.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00144.ARW",
+      "bytes": 39845888,
+      "creation_time_utc": "2026-09-03T06:52:07.0537143Z",
+      "last_write_time_utc": "2026-09-03T04:00:36.6900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00145.ARW",
+      "bytes": 39841792,
+      "creation_time_utc": "2026-09-03T06:52:08.0200029Z",
+      "last_write_time_utc": "2026-09-03T04:00:38.1500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00146.ARW",
+      "bytes": 39829504,
+      "creation_time_utc": "2026-09-03T06:52:09.0053960Z",
+      "last_write_time_utc": "2026-09-03T04:00:39.6100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00147.ARW",
+      "bytes": 39821312,
+      "creation_time_utc": "2026-09-03T06:52:09.9998093Z",
+      "last_write_time_utc": "2026-09-03T04:00:41.0700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00148.ARW",
+      "bytes": 39813120,
+      "creation_time_utc": "2026-09-03T06:52:10.9577041Z",
+      "last_write_time_utc": "2026-09-03T04:00:42.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00149.ARW",
+      "bytes": 39800832,
+      "creation_time_utc": "2026-09-03T06:52:11.9388187Z",
+      "last_write_time_utc": "2026-09-03T04:00:43.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00150.ARW",
+      "bytes": 39780352,
+      "creation_time_utc": "2026-09-03T06:52:12.9227297Z",
+      "last_write_time_utc": "2026-09-03T04:00:45.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00151.ARW",
+      "bytes": 39755776,
+      "creation_time_utc": "2026-09-03T06:52:13.8905766Z",
+      "last_write_time_utc": "2026-09-03T04:00:46.8900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00152.ARW",
+      "bytes": 39714816,
+      "creation_time_utc": "2026-09-03T06:52:14.8625426Z",
+      "last_write_time_utc": "2026-09-03T04:00:48.3800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00153.ARW",
+      "bytes": 39661568,
+      "creation_time_utc": "2026-09-03T06:52:15.8346219Z",
+      "last_write_time_utc": "2026-09-03T04:00:49.8200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00154.ARW",
+      "bytes": 39600128,
+      "creation_time_utc": "2026-09-03T06:52:16.8065795Z",
+      "last_write_time_utc": "2026-09-03T04:00:51.2900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00155.ARW",
+      "bytes": 39542784,
+      "creation_time_utc": "2026-09-03T06:52:17.7862683Z",
+      "last_write_time_utc": "2026-09-03T04:00:52.7500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00156.ARW",
+      "bytes": 39485440,
+      "creation_time_utc": "2026-09-03T06:52:18.7385464Z",
+      "last_write_time_utc": "2026-09-03T04:00:54.1900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00157.ARW",
+      "bytes": 39424000,
+      "creation_time_utc": "2026-09-03T06:52:19.7112881Z",
+      "last_write_time_utc": "2026-09-03T04:00:55.6300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00158.ARW",
+      "bytes": 39370752,
+      "creation_time_utc": "2026-09-03T06:52:20.6855051Z",
+      "last_write_time_utc": "2026-09-03T04:00:57.0900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00159.ARW",
+      "bytes": 39313408,
+      "creation_time_utc": "2026-09-03T06:52:21.6573928Z",
+      "last_write_time_utc": "2026-09-03T04:00:58.5600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00160.ARW",
+      "bytes": 39260160,
+      "creation_time_utc": "2026-09-03T06:52:22.6173323Z",
+      "last_write_time_utc": "2026-09-03T04:01:00.0200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00161.ARW",
+      "bytes": 39211008,
+      "creation_time_utc": "2026-09-03T06:52:23.5674450Z",
+      "last_write_time_utc": "2026-09-03T04:01:01.4800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00162.ARW",
+      "bytes": 39165952,
+      "creation_time_utc": "2026-09-03T06:52:24.5188392Z",
+      "last_write_time_utc": "2026-09-03T04:01:02.9400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00163.ARW",
+      "bytes": 39112704,
+      "creation_time_utc": "2026-09-03T06:52:25.4992616Z",
+      "last_write_time_utc": "2026-09-03T04:01:04.4000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00164.ARW",
+      "bytes": 39067648,
+      "creation_time_utc": "2026-09-03T06:52:26.4831296Z",
+      "last_write_time_utc": "2026-09-03T04:01:05.8600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00165.ARW",
+      "bytes": 39018496,
+      "creation_time_utc": "2026-09-03T06:52:27.4385161Z",
+      "last_write_time_utc": "2026-09-03T04:01:07.3300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00166.ARW",
+      "bytes": 38977536,
+      "creation_time_utc": "2026-09-03T06:52:28.3918185Z",
+      "last_write_time_utc": "2026-09-03T04:01:08.7800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00167.ARW",
+      "bytes": 38936576,
+      "creation_time_utc": "2026-09-03T06:52:29.3827135Z",
+      "last_write_time_utc": "2026-09-03T04:01:10.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00168.ARW",
+      "bytes": 38891520,
+      "creation_time_utc": "2026-09-03T06:52:30.3416976Z",
+      "last_write_time_utc": "2026-09-03T04:01:11.7200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00169.ARW",
+      "bytes": 38854656,
+      "creation_time_utc": "2026-09-03T06:52:31.2878248Z",
+      "last_write_time_utc": "2026-09-03T04:01:13.1800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00170.ARW",
+      "bytes": 38813696,
+      "creation_time_utc": "2026-09-03T06:52:32.2939618Z",
+      "last_write_time_utc": "2026-09-03T04:01:14.6500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00171.ARW",
+      "bytes": 38772736,
+      "creation_time_utc": "2026-09-03T06:52:33.2682173Z",
+      "last_write_time_utc": "2026-09-03T04:01:16.1200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00172.ARW",
+      "bytes": 38727680,
+      "creation_time_utc": "2026-09-03T06:52:34.2438822Z",
+      "last_write_time_utc": "2026-09-03T04:01:17.5800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00173.ARW",
+      "bytes": 38694912,
+      "creation_time_utc": "2026-09-03T06:52:35.2090377Z",
+      "last_write_time_utc": "2026-09-03T04:01:19.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00174.ARW",
+      "bytes": 38653952,
+      "creation_time_utc": "2026-09-03T06:52:36.1855133Z",
+      "last_write_time_utc": "2026-09-03T04:01:20.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00175.ARW",
+      "bytes": 38617088,
+      "creation_time_utc": "2026-09-03T06:52:37.1561379Z",
+      "last_write_time_utc": "2026-09-03T04:01:21.9600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00176.ARW",
+      "bytes": 38584320,
+      "creation_time_utc": "2026-09-03T06:52:38.1269450Z",
+      "last_write_time_utc": "2026-09-03T04:01:23.4200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00177.ARW",
+      "bytes": 38547456,
+      "creation_time_utc": "2026-09-03T06:52:39.0953325Z",
+      "last_write_time_utc": "2026-09-03T04:01:24.9000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00178.ARW",
+      "bytes": 38510592,
+      "creation_time_utc": "2026-09-03T06:52:40.0575445Z",
+      "last_write_time_utc": "2026-09-03T04:01:26.3600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00179.ARW",
+      "bytes": 38486016,
+      "creation_time_utc": "2026-09-03T06:52:41.0150511Z",
+      "last_write_time_utc": "2026-09-03T04:01:27.8200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00180.ARW",
+      "bytes": 38449152,
+      "creation_time_utc": "2026-09-03T06:52:41.9628471Z",
+      "last_write_time_utc": "2026-09-03T04:01:29.2700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00181.ARW",
+      "bytes": 38424576,
+      "creation_time_utc": "2026-09-03T06:52:42.9217171Z",
+      "last_write_time_utc": "2026-09-03T04:01:30.7100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00182.ARW",
+      "bytes": 38391808,
+      "creation_time_utc": "2026-09-03T06:52:43.8812943Z",
+      "last_write_time_utc": "2026-09-03T04:01:32.1700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00183.ARW",
+      "bytes": 38371328,
+      "creation_time_utc": "2026-09-03T06:52:44.8276634Z",
+      "last_write_time_utc": "2026-09-03T04:01:33.6400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00184.ARW",
+      "bytes": 38342656,
+      "creation_time_utc": "2026-09-03T06:52:45.7719814Z",
+      "last_write_time_utc": "2026-09-03T04:01:35.1000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00185.ARW",
+      "bytes": 38326272,
+      "creation_time_utc": "2026-09-03T06:52:46.7011080Z",
+      "last_write_time_utc": "2026-09-03T04:01:36.5400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00186.ARW",
+      "bytes": 38305792,
+      "creation_time_utc": "2026-09-03T06:52:47.6463363Z",
+      "last_write_time_utc": "2026-09-03T04:01:38.0100000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00187.ARW",
+      "bytes": 38281216,
+      "creation_time_utc": "2026-09-03T06:52:48.5937325Z",
+      "last_write_time_utc": "2026-09-03T04:01:39.4700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00188.ARW",
+      "bytes": 38260736,
+      "creation_time_utc": "2026-09-03T06:52:49.5279994Z",
+      "last_write_time_utc": "2026-09-03T04:01:40.9200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00189.ARW",
+      "bytes": 38240256,
+      "creation_time_utc": "2026-09-03T06:52:50.4781654Z",
+      "last_write_time_utc": "2026-09-03T04:01:42.3900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00190.ARW",
+      "bytes": 38227968,
+      "creation_time_utc": "2026-09-03T06:52:51.4064545Z",
+      "last_write_time_utc": "2026-09-03T04:01:43.8700000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00191.ARW",
+      "bytes": 38207488,
+      "creation_time_utc": "2026-09-03T06:52:52.3608961Z",
+      "last_write_time_utc": "2026-09-03T04:01:45.3300000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00192.ARW",
+      "bytes": 38187008,
+      "creation_time_utc": "2026-09-03T06:52:53.3314299Z",
+      "last_write_time_utc": "2026-09-03T04:01:46.7900000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00193.ARW",
+      "bytes": 38170624,
+      "creation_time_utc": "2026-09-03T06:52:54.2913018Z",
+      "last_write_time_utc": "2026-09-03T04:01:48.2500000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00194.ARW",
+      "bytes": 38154240,
+      "creation_time_utc": "2026-09-03T06:52:55.2343203Z",
+      "last_write_time_utc": "2026-09-03T04:01:49.7000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00195.ARW",
+      "bytes": 38137856,
+      "creation_time_utc": "2026-09-03T06:52:56.1806064Z",
+      "last_write_time_utc": "2026-09-03T04:01:51.1400000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00196.ARW",
+      "bytes": 38125568,
+      "creation_time_utc": "2026-09-03T06:52:57.1608437Z",
+      "last_write_time_utc": "2026-09-03T04:01:52.6000000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00197.ARW",
+      "bytes": 38109184,
+      "creation_time_utc": "2026-09-03T06:52:58.1152636Z",
+      "last_write_time_utc": "2026-09-03T04:01:54.0600000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00198.ARW",
+      "bytes": 38096896,
+      "creation_time_utc": "2026-09-03T06:52:59.0790461Z",
+      "last_write_time_utc": "2026-09-03T04:01:55.5200000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00199.ARW",
+      "bytes": 38084608,
+      "creation_time_utc": "2026-09-03T06:53:00.0278023Z",
+      "last_write_time_utc": "2026-09-03T04:01:56.9800000Z",
+      "attributes": "Archive"
+    },
+    {
+      "relative_path": "very-tilted-all-axis-sw10-cpl/DSC00200.ARW",
+      "bytes": 38076416,
+      "creation_time_utc": "2026-09-03T06:53:00.9652380Z",
+      "last_write_time_utc": "2026-09-03T04:01:58.4400000Z",
+      "attributes": "Archive"
+    }
+  ]
+}

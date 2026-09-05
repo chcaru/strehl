@@ -1,0 +1,2667 @@
+{
+  "coarse_encoder": {
+    "predicate": "complete FocusPosition2 in both stacks and equal minima/maxima",
+    "status": "COARSE_ENCODER_RANGE_EQUAL",
+    "tilted_sw10": {
+      "histogram": [
+        {
+          "frame_count": 38,
+          "value": 57
+        },
+        {
+          "frame_count": 40,
+          "value": 58
+        },
+        {
+          "frame_count": 14,
+          "value": 59
+        }
+      ],
+      "maximum": 59,
+      "minimum": 57,
+      "missing_count": 0,
+      "status": "COMPLETE"
+    },
+    "tilted_sw4": {
+      "histogram": [
+        {
+          "frame_count": 76,
+          "value": 57
+        },
+        {
+          "frame_count": 80,
+          "value": 58
+        },
+        {
+          "frame_count": 26,
+          "value": 59
+        }
+      ],
+      "maximum": 59,
+      "minimum": 57,
+      "missing_count": 0,
+      "status": "COMPLETE"
+    }
+  },
+  "decode": {
+    "checks": {
+      "binary_hash_matches_every_frame": true,
+      "canonical_overlap_shapes": [
+        [
+          4688,
+          7028
+        ]
+      ],
+      "crosscheck_returncode_zero_count": 657,
+      "frame_count": 657,
+      "group_counts": {
+        "flat-sw4-cpl": 186,
+        "tilted-sw10-cpl": 92,
+        "tilted-sw4-cpl": 182,
+        "very-tilted-all-axis-sw10-cpl": 197
+      },
+      "path_population_equal_to_inventory": true,
+      "payload_matches_rawpy_count": 657,
+      "raw_sha256_matches_inventory_every_frame": true,
+      "rawler_active_shapes": [
+        [
+          4688,
+          7032
+        ]
+      ],
+      "rawler_buffer_shapes": [
+        [
+          5120,
+          7168
+        ]
+      ],
+      "rawpy_visible_shapes": [
+        [
+          4688,
+          7028
+        ]
+      ],
+      "status_pass_count": 657,
+      "trailing_active_columns_not_scored": [
+        4
+      ]
+    },
+    "decoder_contract": {
+      "binary_hash_bound_before_stage_b": true,
+      "binary_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\target\\release\\m135-slide-raw-crosscheck.exe",
+      "binary_sha256": "5418b561bc6b091dd5cb290fbb77d22d2d6f03c2a4a28b42b359963108770001",
+      "canonical_overlap": "rawpy-visible-leading-prefix-of-rawler-active",
+      "crosscheck_every_frame": true,
+      "crosscheck_lock_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\Cargo.lock",
+      "crosscheck_lock_sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec",
+      "crosscheck_manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+      "crosscheck_manifest_sha256": "09b57dc872bf8033432dd1e2d1e06eeed34d0b24bf1a65a08b8f06803affbd98",
+      "crosscheck_source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\src\\main.rs",
+      "crosscheck_source_sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6",
+      "failure": null,
+      "freeze_manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\freeze-manifest.json",
+      "freeze_manifest_sha256": "aeb758622066bf00ff9e4fedd529ba6c5b0e02be6574b29988481343e3877950",
+      "frozen_binary_bytes": 6837248,
+      "frozen_binary_sha256": "5418b561bc6b091dd5cb290fbb77d22d2d6f03c2a4a28b42b359963108770001",
+      "primary": "rawpy/LibRaw raw_image_visible copied inside context",
+      "secondary": "lane-local executable using the existing strehl-raw/rawler API",
+      "transport": "binary active-area payload on stdout; metadata on stderr; no filesystem scratch or capture-tree write path"
+    },
+    "status": "DECODE_CROSSCHECK_PASS"
+  },
+  "flat": {
+    "certificate_sufficient": false,
+    "core_probe": {
+      "existing_instrument_normalized_sha256": "b2243292d92b8edc386b11b68e01740d0365bc4d633d728771d421be0732bbf1",
+      "existing_instrument_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-detail-instrument\\instrument.py",
+      "existing_instrument_sha256": "264d035331ffbb7e982449b675d88724c566b2f88cd251b08d215dcca2c6823c",
+      "invoked": false,
+      "reason": "the four temporal splits come from one flat-sw4 focus ladder; odd/even/modulo subsets are not independent capture or calibration roles",
+      "status": "NOT_EVALUATED_REFERENCE_ROLE_ABSENT"
+    },
+    "exposure_groups": [
+      {
+        "exposure_seconds": 1.0,
+        "frame_count": 60,
+        "frequency_power": [
+          {
+            "frequency_native_cyc_per_px": 0.1,
+            "mean_power": 0.0004222455344353578
+          },
+          {
+            "frequency_native_cyc_per_px": 0.15,
+            "mean_power": 6.495762773434249e-05
+          },
+          {
+            "frequency_native_cyc_per_px": 0.2,
+            "mean_power": 2.8412183067536592e-05
+          },
+          {
+            "frequency_native_cyc_per_px": 0.25,
+            "mean_power": 5.051465621235492e-05
+          }
+        ],
+        "null_statistic": "independent-site-carrier-phase-scramble",
+        "observed_statistic": 0.00012439594192773353,
+        "pair_repeatable_power": [
+          0.00011651630184859265,
+          0.00011995144300673498,
+          0.0001183190304476507,
+          0.00012439594192773353,
+          0.00011902468704745963,
+          0.00012035054743136087
+        ],
+        "phase_scramble_count": 255,
+        "phase_scramble_p_upper": 0.00390625,
+        "phase_scramble_q99": 6.567461939761921e-05,
+        "repeatable_to_total_power_ratio": 0.8789213898519013,
+        "split_frame_counts": [
+          15,
+          15,
+          15,
+          15
+        ],
+        "statistic": "maximum-pair-mean-absolute-cross-power",
+        "statistic_definition": "maximum over six temporal-split pairs of the mean across carriers of absolute site-averaged complex cross-power",
+        "status": "STRUCTURED_FLAT",
+        "structured_alpha": 0.01,
+        "temporal_split_rule": "ordered-index-modulo-4"
+      },
+      {
+        "exposure_seconds": 2.5,
+        "frame_count": 61,
+        "frequency_power": [
+          {
+            "frequency_native_cyc_per_px": 0.1,
+            "mean_power": 0.0004287681619981531
+          },
+          {
+            "frequency_native_cyc_per_px": 0.15,
+            "mean_power": 5.536442040398428e-05
+          },
+          {
+            "frequency_native_cyc_per_px": 0.2,
+            "mean_power": 2.019236585756765e-05
+          },
+          {
+            "frequency_native_cyc_per_px": 0.25,
+            "mean_power": 3.878025256769838e-05
+          }
+        ],
+        "null_statistic": "independent-site-carrier-phase-scramble",
+        "observed_statistic": 0.00013712247035281376,
+        "pair_repeatable_power": [
+          0.0001180664079265656,
+          0.00012140015078868888,
+          0.00011649786517728636,
+          0.00013712247035281376,
+          0.00013161200090353088,
+          0.00013253285678097642
+        ],
+        "phase_scramble_count": 255,
+        "phase_scramble_p_upper": 0.00390625,
+        "phase_scramble_q99": 7.046743126431681e-05,
+        "repeatable_to_total_power_ratio": 1.0099146179702354,
+        "split_frame_counts": [
+          16,
+          15,
+          15,
+          15
+        ],
+        "statistic": "maximum-pair-mean-absolute-cross-power",
+        "statistic_definition": "maximum over six temporal-split pairs of the mean across carriers of absolute site-averaged complex cross-power",
+        "status": "STRUCTURED_FLAT",
+        "structured_alpha": 0.01,
+        "temporal_split_rule": "ordered-index-modulo-4"
+      },
+      {
+        "exposure_seconds": 6.0,
+        "frame_count": 65,
+        "frequency_power": null,
+        "null_statistic": null,
+        "observed_statistic": null,
+        "phase_scramble_count": null,
+        "phase_scramble_p_upper": null,
+        "phase_scramble_q99": null,
+        "reason": "exposure 6: clipping refusal in 65 frames",
+        "status": "FLAT_DIAGNOSTIC_UNDETERMINED"
+      }
+    ],
+    "frequency_contract": {
+      "cells": [
+        {
+          "angle_deg": 0.0,
+          "frequency_green_plane_cyc_per_px": 0.2,
+          "frequency_native_cyc_per_px": 0.1
+        },
+        {
+          "angle_deg": 22.5,
+          "frequency_green_plane_cyc_per_px": 0.2,
+          "frequency_native_cyc_per_px": 0.1
+        },
+        {
+          "angle_deg": 45.0,
+          "frequency_green_plane_cyc_per_px": 0.2,
+          "frequency_native_cyc_per_px": 0.1
+        },
+        {
+          "angle_deg": 67.5,
+          "frequency_green_plane_cyc_per_px": 0.2,
+          "frequency_native_cyc_per_px": 0.1
+        },
+        {
+          "angle_deg": 0.0,
+          "frequency_green_plane_cyc_per_px": 0.3,
+          "frequency_native_cyc_per_px": 0.15
+        },
+        {
+          "angle_deg": 22.5,
+          "frequency_green_plane_cyc_per_px": 0.3,
+          "frequency_native_cyc_per_px": 0.15
+        },
+        {
+          "angle_deg": 45.0,
+          "frequency_green_plane_cyc_per_px": 0.3,
+          "frequency_native_cyc_per_px": 0.15
+        },
+        {
+          "angle_deg": 67.5,
+          "frequency_green_plane_cyc_per_px": 0.3,
+          "frequency_native_cyc_per_px": 0.15
+        },
+        {
+          "angle_deg": 0.0,
+          "frequency_green_plane_cyc_per_px": 0.4,
+          "frequency_native_cyc_per_px": 0.2
+        },
+        {
+          "angle_deg": 22.5,
+          "frequency_green_plane_cyc_per_px": 0.4,
+          "frequency_native_cyc_per_px": 0.2
+        },
+        {
+          "angle_deg": 45.0,
+          "frequency_green_plane_cyc_per_px": 0.4,
+          "frequency_native_cyc_per_px": 0.2
+        },
+        {
+          "angle_deg": 67.5,
+          "frequency_green_plane_cyc_per_px": 0.4,
+          "frequency_native_cyc_per_px": 0.2
+        },
+        {
+          "angle_deg": 0.0,
+          "frequency_green_plane_cyc_per_px": 0.5,
+          "frequency_native_cyc_per_px": 0.25
+        },
+        {
+          "angle_deg": 22.5,
+          "frequency_green_plane_cyc_per_px": 0.5,
+          "frequency_native_cyc_per_px": 0.25
+        },
+        {
+          "angle_deg": 45.0,
+          "frequency_green_plane_cyc_per_px": 0.5,
+          "frequency_native_cyc_per_px": 0.25
+        },
+        {
+          "angle_deg": 67.5,
+          "frequency_green_plane_cyc_per_px": 0.5,
+          "frequency_native_cyc_per_px": 0.25
+        }
+      ],
+      "conversion": "f_native=f_green_plane/2",
+      "green_plane_native_pitch_px": 2.0,
+      "maximum_frequency_native_cyc_per_px": 0.25
+    },
+    "insufficiency_reason": "quiet diagnostics are necessary but calibration/reference roles are absent",
+    "status": "FLAT_DIAGNOSTIC_UNDETERMINED"
+  },
+  "image_range": {
+    "equivalence_bars": {
+      "maximum_abs_intercept": 0.02,
+      "maximum_abs_slope_error": 0.04,
+      "maximum_q95_abs_residual": 0.03,
+      "minimum_joint_eligible_sites": 48
+    },
+    "frequency_contract": {
+      "conversion": "f_native=f_green_plane/2",
+      "focus_band_native_cyc_per_px": [
+        0.06,
+        0.2
+      ],
+      "focus_lowpass_cap_native_cyc_per_px": 0.2,
+      "green_plane_native_pitch_px": 2.0,
+      "registration_stop_native_cyc_per_px": 0.06
+    },
+    "joint_sites": {
+      "eligible_count": 0,
+      "eligible_indices": [],
+      "u10": null,
+      "u4": null
+    },
+    "lattice_columns": 8,
+    "lattice_coordinate_count": 64,
+    "lattice_coordinates": [
+      [
+        0.0625,
+        0.0625
+      ],
+      [
+        0.1875,
+        0.0625
+      ],
+      [
+        0.3125,
+        0.0625
+      ],
+      [
+        0.4375,
+        0.0625
+      ],
+      [
+        0.5625,
+        0.0625
+      ],
+      [
+        0.6875,
+        0.0625
+      ],
+      [
+        0.8125,
+        0.0625
+      ],
+      [
+        0.9375,
+        0.0625
+      ],
+      [
+        0.0625,
+        0.1875
+      ],
+      [
+        0.1875,
+        0.1875
+      ],
+      [
+        0.3125,
+        0.1875
+      ],
+      [
+        0.4375,
+        0.1875
+      ],
+      [
+        0.5625,
+        0.1875
+      ],
+      [
+        0.6875,
+        0.1875
+      ],
+      [
+        0.8125,
+        0.1875
+      ],
+      [
+        0.9375,
+        0.1875
+      ],
+      [
+        0.0625,
+        0.3125
+      ],
+      [
+        0.1875,
+        0.3125
+      ],
+      [
+        0.3125,
+        0.3125
+      ],
+      [
+        0.4375,
+        0.3125
+      ],
+      [
+        0.5625,
+        0.3125
+      ],
+      [
+        0.6875,
+        0.3125
+      ],
+      [
+        0.8125,
+        0.3125
+      ],
+      [
+        0.9375,
+        0.3125
+      ],
+      [
+        0.0625,
+        0.4375
+      ],
+      [
+        0.1875,
+        0.4375
+      ],
+      [
+        0.3125,
+        0.4375
+      ],
+      [
+        0.4375,
+        0.4375
+      ],
+      [
+        0.5625,
+        0.4375
+      ],
+      [
+        0.6875,
+        0.4375
+      ],
+      [
+        0.8125,
+        0.4375
+      ],
+      [
+        0.9375,
+        0.4375
+      ],
+      [
+        0.0625,
+        0.5625
+      ],
+      [
+        0.1875,
+        0.5625
+      ],
+      [
+        0.3125,
+        0.5625
+      ],
+      [
+        0.4375,
+        0.5625
+      ],
+      [
+        0.5625,
+        0.5625
+      ],
+      [
+        0.6875,
+        0.5625
+      ],
+      [
+        0.8125,
+        0.5625
+      ],
+      [
+        0.9375,
+        0.5625
+      ],
+      [
+        0.0625,
+        0.6875
+      ],
+      [
+        0.1875,
+        0.6875
+      ],
+      [
+        0.3125,
+        0.6875
+      ],
+      [
+        0.4375,
+        0.6875
+      ],
+      [
+        0.5625,
+        0.6875
+      ],
+      [
+        0.6875,
+        0.6875
+      ],
+      [
+        0.8125,
+        0.6875
+      ],
+      [
+        0.9375,
+        0.6875
+      ],
+      [
+        0.0625,
+        0.8125
+      ],
+      [
+        0.1875,
+        0.8125
+      ],
+      [
+        0.3125,
+        0.8125
+      ],
+      [
+        0.4375,
+        0.8125
+      ],
+      [
+        0.5625,
+        0.8125
+      ],
+      [
+        0.6875,
+        0.8125
+      ],
+      [
+        0.8125,
+        0.8125
+      ],
+      [
+        0.9375,
+        0.8125
+      ],
+      [
+        0.0625,
+        0.9375
+      ],
+      [
+        0.1875,
+        0.9375
+      ],
+      [
+        0.3125,
+        0.9375
+      ],
+      [
+        0.4375,
+        0.9375
+      ],
+      [
+        0.5625,
+        0.9375
+      ],
+      [
+        0.6875,
+        0.9375
+      ],
+      [
+        0.8125,
+        0.9375
+      ],
+      [
+        0.9375,
+        0.9375
+      ]
+    ],
+    "lattice_rows": 8,
+    "node_density": null,
+    "robust_fit": null,
+    "stack_results": {
+      "tilted-sw10-cpl": {
+        "reason": "no low-pass quadrilateral satisfied the frozen selector",
+        "site_curve_count": 0,
+        "site_curves": [],
+        "status": "IMAGE_RANGE_UNDETERMINED"
+      },
+      "tilted-sw4-cpl": {
+        "reason": "no low-pass quadrilateral satisfied the frozen selector",
+        "site_curve_count": 0,
+        "site_curves": [],
+        "status": "IMAGE_RANGE_UNDETERMINED"
+      }
+    },
+    "status": "IMAGE_RANGE_UNDETERMINED"
+  },
+  "inventory": {
+    "filesystem_equals_inventory_bytes": true,
+    "filesystem_equals_inventory_population": true,
+    "filesystem_population": {
+      "listing_sha256": "260f05d3342141f7e8698efe684151dfb3a904097c4d678b710912c1c1d5bfee",
+      "regular_file_bytes": 26156716032,
+      "regular_file_count": 657,
+      "reparse_file_count": 0
+    },
+    "source_snapshot": {
+      "after": {
+        "file_count": 657,
+        "stat_digest_sha256": "1c86099ab7ab8902032d9ff2b6bc179caab5ae11881ccefabad350460f3ab652",
+        "total_bytes": 26156716032
+      },
+      "before": {
+        "file_count": 657,
+        "stat_digest_sha256": "1c86099ab7ab8902032d9ff2b6bc179caab5ae11881ccefabad350460f3ab652",
+        "total_bytes": 26156716032
+      },
+      "unchanged": true
+    },
+    "stacks": {
+      "flat-sw4-cpl": {
+        "bytes": 7561744384,
+        "capture_units": [
+          {
+            "capture_unit_id": "flat-sw4-cpl\\flat-et1s-sw4-cpl",
+            "frame_count": 60,
+            "parent_stack_id": "flat-sw4-cpl\\flat-et1s-sw4-cpl",
+            "source_file_ids": [
+              "0a4f8199d02de31b37e6c745d50588897a5fd0c9401cd4f63b7547b020d78f34",
+              "1264cc16d2347e993fe2f49c4d28d62428129e67488654730a81c55be9e8f884",
+              "16b5a2f679bcfe757acf7786c6202c2e529bb642ec152852cb66ed9537a19698",
+              "1c74975f7836a86d4cff2089db15ebd3314102c1daea3744a1c9c0f7d7450adf",
+              "1c87fc6000f524fac55ef8be98ece398afb85e74a04133ff7f62cc53b3c623a1",
+              "1f1194ffaf441fbff25c752237d6249472e6e3c50565340140fdf4db57c0241f",
+              "20ad838948fc8a2fe4b08e90246a98e6d0306dac284c8cdad36e7d57b02210cc",
+              "279774561743620fe45fd7ba4c2e2fcc694e1d3d5dfe05db8b2dd575bb0fa9f3",
+              "2900b8a0912faafbcaea197d2001de7105a46fabc0fc2839f27a895cbd7d7e65",
+              "2c679f50d8e6b2839b8544e1a78a3cc3bae04a0ee8cab4283655662b4d98962a",
+              "2e8a53b731bacbdbd5b936eb3db4e694839e405571eeb42a6090ef5669975f9d",
+              "2edcd51ca2dd54da23451f45c418ad887b6719b4e4496fe64963baedbc4d8b3c",
+              "300e5e8942df806f1a85415493886f4b7c2461c89f0d01e975147db8ac5dfa9b",
+              "31533b55f1b268fc5c79657bced3b05e508a5305974d506e5d6c0bf7ce73e2fd",
+              "352a57cfbb5c169580b043903893d563138c7958a6b990b3bf1fcf7638d0a9d8",
+              "35958ef2c24e788a1a5a6f5d84506d89b9a7f85a4583f67a73fa2c8be2868023",
+              "36349bc608afe466dfcf988201893b286c2a90584086ef7d686dcda1a73d0867",
+              "38b183d9bec996dc766f126e911078c0ab7fa4cad0aca427de3529e7d9b7b8d2",
+              "391f1a3dccb6b576db1e6bab8235573662828aea583a4996d040400304c18b2e",
+              "3a5fc6993d0ec24468fd24684aabe7783fe06d3d85eec040584330af0153a03b",
+              "3ebb8561d43b476dd2ca76a1cfddf798faa648a312fedd806123e53cbb999d7a",
+              "4522d14214877567b42d25755627f79aab65f61e4003c91705081b422fc8824a",
+              "46940299056b91a790b21895ca96d49b6e26c4df3447e7f7d7bebb76c52d9201",
+              "49d0763bbbcdccd4477190814999be4d9020f8ba06aaa0ccfa4d16e20a64e4a3",
+              "50ffba98b92130cd75a344baf6105878bccec43f9a963b86f658f795fa939721",
+              "5a0aaf7ae445c73061a23ca3dd7a7933238818d2ee8c1edcb5435be301518a65",
+              "5fd69759d0ab8d412e02fe092ad9261e683774fdf3b422677811b3cb9c814093",
+              "62fbbc6d790002eea4cf16bd33baf8fb35de191651ed9e2104155b3fda22a5e9",
+              "68447f895aacef5da54af828792c92ce8b22949e90d701646929194f91f63367",
+              "690179375c692815bdef40720565cfe0009c3194affe5f221cd10549cd163ea0",
+              "69c3741b6828f83b35b89f8e442a3d672946f4aafdd696e80cf506e62795b2f1",
+              "6abef5b4c52f483eb3ebf3ec9898663c2df4096f153e81c3c8d5b271881ad78e",
+              "6aeb21db1df191d5b177841e36582a5e0dfb17ec1cf995b362ac206ab517e44b",
+              "6b05c8165ac9614ede62354f7536981da5f50455858e2bda6d533f1394239f45",
+              "6dfd64d17c177296a7adf10b973d302e8d590e10a6233f0de671e0bb4e640da8",
+              "75754218e59bd3fd1f0a4c158f6da82a71d78d2c1970c1081caabbcc8b2efe13",
+              "78aabff1f9c01a1235bf433b0a398aa6c73ec5879d3eba4415280dcb0de78536",
+              "7f300f19bb75a5f4f70d497a307776cef3cb1676c680ad2a3f1187c744e57760",
+              "814abfe9fff23fe9a2f86a77248d1bb97b9147eaccbab2860478239542fca534",
+              "874179c991448142754fb2e4c164c07e2cf2f74f10cef28ab877138e809764fd",
+              "87b309b85b97ec70af33ae3314796684b36667c01b2eeede88f7ea276ddff159",
+              "8b18a2af55dc5d1233c6c7d08cd716bab3b71935ed2fa59cd37f08ac23a707d6",
+              "91583c323db51d9a4bb7aa9a54a23f1411a25675a7a6ce9ba41bd88647d89805",
+              "9494c1faf6c87fe7285f24734d1890ce2efce5383c3ea50debdfc3050af003c0",
+              "96f45b836208e666626dc4a06a975ce0f6adc7bde73e3ec1536f1326f6ae4234",
+              "a10f31c6b86df199e1d4ed94ded72119b8d79f9608d7053df388895a367a9185",
+              "a15916331c27aa88333dd688f790c3ff5a584465646705c455e0d84447c0a032",
+              "a57131691b5fe37b1f621aefe8785c82b3355e828a5cb1164c380a695defe057",
+              "a761a92ad7dd9be1995e329ef8d1b6e8e2bbf93cc397d01ea0bd2e1845509fc3",
+              "ad3561a8964f766624419acea5eb55ef3a5bcc1280183a55d8dfbf6ff9223dda",
+              "b689f26abb1b8a95688cf9d259734bb8ef74b9ed9f9feb43f3ea75368aeafc6f",
+              "b908e8950a1fae94a6fc2bf5c9f810f8077cdb2a0e60e84c02ed669bc2fe52fa",
+              "c89074209f33a27d5a7e2630266e94f46d38718d009318cef8f47297c9967b18",
+              "cd2d3e61d7fc60371d3844137534bc442d9dd0bd00cd401fe7b747e36dad9235",
+              "d0c500dfe80e5279a470b7abd90a7f07da7c8882ce0e1a507be54626db904bd8",
+              "d68148f65f0ddd2c221ae25bfac122e6a610abe5b2b2ecab1e847c58f1097bac",
+              "e4e99e8cdb1a3159985323b04f71e21df5679ac89e3ad8a41aa6f509ddce4ad4",
+              "e701971e3f923b76d781121f116526ad1418230ddd090f519a74157b2a8884e2",
+              "ebeb47cc10b3d0ff4ee6a48f12a641a8a18ffdefe6b57e8c436847fd06f76dc3",
+              "f2804eb4a3d32c378d71a81b45281b1181a807e44e15d18319996e64eabc1d9e"
+            ]
+          },
+          {
+            "capture_unit_id": "flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+            "frame_count": 61,
+            "parent_stack_id": "flat-sw4-cpl\\flat-et2.5s-sw4-cpl",
+            "source_file_ids": [
+              "01ffdfae00b924def3930ecd30a1ee0a4a852f5d579ce570fafc1ab355cd9a5b",
+              "0252ea2cf7ae6095ee4463536c4527a01077bf755a675e2adb955e3ae5945771",
+              "061ca5d053a43ccd867908950f99c1a4a7a6deba8727916a7c43706619679137",
+              "09909b486e85617eb6632a4c7eae8ff75afca04432895297d06fae43e3610ace",
+              "0e6093a2874f0bdb4f1ac7bfe0c3c86704bc6fd89060c017331723873abde7c1",
+              "0ed92649b584dfef810f5f47eb6c5cbd524419d8d8e880f174962ef2aafc8667",
+              "111d059d02c82eac8c9090233859a85249416057267b7d08bbbe7df185489b9b",
+              "16a8ffc546a4d2aa1157533b692a486e0bdb5abbf5f5f836e312dad5bb8b7100",
+              "1b832daaecac960a8de166ae7e2a5cfb22790419fd4ec7f1fa0c5f2a86245538",
+              "222c8168fc4d9811860a37a4c95dc26fe15ec1696c7066bb5103089d764505cd",
+              "23583959538151ae9021279e31b3d046b7e53cd5c7d09657289904a5ce27a4e4",
+              "276b5738bb02a6c88f836eaec6c1d222347c61dd2b141f568853da44cccc369b",
+              "2cedbc29454f3a79887f98da61adf4390c837d94df02a6c4f756ae9328229b7b",
+              "38ce7b6c3d54702f2db4bfd10b72736114eb3ef548e32da2704818a7534dfb70",
+              "3df5b7ff650a9af01a0178846ccd410f268404dfbb48fecdef14c3805ba42361",
+              "3f868cb83d7981a8413e9655a015cc3c1da794ced4c8ca2105068875b03ccca1",
+              "4119929c4d3619548d9882e46fa84c9bff9c3be591c7f18d6d7da801f6c77074",
+              "4239b99a53d34c563ba4f33ab335b709ba55d13db975f41f3f942b37983190a3",
+              "4ef38a49a3ebe1f8ad5074d443ef8dd608abc9496642057c87e2e72d94693cfc",
+              "511001e39e1d948ff7f54a17065fc471de4fbcbeafa927b9e18ed0e7fce14348",
+              "537403682a23d71aa5e5eef9b5a5d5178354117ad96911e7aafb4869a6b8d675",
+              "615c91cbfe79009212c634f1d8f35789ffc08a4c39ceda857d599ed853d3e015",
+              "647a812dcdfea5dd41114ef77aabb63fc874c6dbc32f29ed17c08113cc71e755",
+              "669115cde76daf8009004b597f88962474bb01a9986c307cf8c34a28a1139a43",
+              "66931f4a56f9c297a1e3ca77d7cee1eabd45bbf7d11ba8fafe79bed171e05d48",
+              "6b3cc5c5b1d49e2897d1b93f33685ac58b19a838ceb9cae23f8a7b85271f714c",
+              "7e52554c8993c287e1172ccae68308c2812d060d105121882b490d9d97785d02",
+              "8abc91692ee8bfbe030075be9e63db0d971c8c3597d1f21143930f1aef0c1d55",
+              "8dce63cb3547f3b4ce16e7c51c256662ba09ac866ac34634cb658a8c89a55308",
+              "8eced4ea41377d651b8f9d2943ff43b6ab7369f5f2949d79aa4511b4722c798d",
+              "97da09f095686ca616ef5ee248915e1647390c6f58246f9a06716b2912c2ce53",
+              "9a1b030930525f680477cb16ce73dda825f90a2244fc3d1f1c3d97d51a434ecc",
+              "9a68d8c5dc849415d0ba562cb1dcd0381d77d4d4a25825be6ffd3f9392fde443",
+              "9ca53f48818ab4ef6a3d22cf59913637b4387954b18f0c4772316d25634bf3c4",
+              "9fb1cc9c323d13d72467411f9ffe607f20c6d088eaea374f4f0ab9c56098535d",
+              "9fb29cc1ac565d3dcba24f91c544f2d71a28521d61bb8ec1c4586cbe3d9b6d33",
+              "a4681e7cb11307591f2c3fcfc29c618fb98a6d8c4a8f14934fcf78ca8c56a16c",
+              "a74bb4c5ce2733765c717a2ed80916f5d8977a01488704467e2e0351f3a8b6be",
+              "a8bc36b525323d4e2bd29d5fc683b5a80e4e657f51db0686a3d89465730d6d4f",
+              "acb4b07782656f8c88e200b74bd7025ec6a58aeaff3ab3482a22038308207618",
+              "ae400b2c2e0c41881ebf9d847adf959ac07d8ab521897040bd623807beb5ee35",
+              "b03e3cad015ff68c1012e8e3b39d4766aa6663a2250690dc19b5571c7beca9e2",
+              "b16c7764e72ca7939c2e747f239da99d671c4cdbd8889df98e3751641cd03ca3",
+              "b6dfd77bc6d3799a6c2a043830f20a09862aa42fcabaabd2289d56bbd7850278",
+              "b7083f9428c72a2e79888656287cac8c4ab435fd3c8b19ab579e80590c539208",
+              "bdd40bfcb355673c378555f1409d122ac13e9dd55ebec1d9be168f0480efddee",
+              "c8dc160654c829e366d83c75331435f39ec71d44f746c6b4b76c428c24a89215",
+              "cca0b44ecc97870de40fdd8e1d5cf30781a5118496d9b0a5f59b13472f93b679",
+              "d39eb8f6eee2363241aaafec9e4def7d9cba7c268a848aa5e93ba46330285c43",
+              "d518fb94ee52f851148a5580aa4e2cd5bce5e350c8aa225ad2486305f2e360f5",
+              "d522af375d06d8fab8f22e173a3ec8fe5c447a59f55a9a89dab744296810269b",
+              "d9521deb46977688f77a6e1b3c71928f176f1d0d677643591dbadcf35f6ddd8d",
+              "dff2d2157a4c80119271f05a0754dd9b297d050b06c280a1fb9a744f582f65e9",
+              "e59a9b4929a8941c23c78557d07adca8525bed176375ada9a2354b5b7233d9e9",
+              "e8b3faf138dab7c6b673fc0c64d22a25c687dbedd59d080d61e6ff6ce9451e79",
+              "ef61f522495904ae9e64291dfd9bd2c959c94649832ea1f011de84496e314ad6",
+              "f1a3f1db7299fe590c374b075a1e3874d6532ca79107dc0d6a1a55001a1b4451",
+              "f8d74d3b0310f27e1561d2782dc229b3c7bbd04d87d2fd9c519ba43ce7b8393d",
+              "f911bed91770a9c96e9c3449c19f475dc836393d54dc8918367b75d46ec2c344",
+              "f9ac0458bdb3521fdf18f26a5a0f76053ae803fd004700443df3f9b37c6a3cfb",
+              "fe8deb65f01a2388308da87fb0636740045ac08adb135d6194cfa562bfc8c51d"
+            ]
+          },
+          {
+            "capture_unit_id": "flat-sw4-cpl\\flat-et6s-sw4-cpl",
+            "frame_count": 65,
+            "parent_stack_id": "flat-sw4-cpl\\flat-et6s-sw4-cpl",
+            "source_file_ids": [
+              "00edb3524611b389199551249f37ac3c22177e4fe2e570de8cfd0b3aae666dd9",
+              "100bdbc5068fc31eadf1a46cb9919b21cbae9bfdfdc010927866e3c3e82933a6",
+              "1485bcb68b5df51bf18e291b1fdf835b2b99785f56053588338d1d22e2a34f5c",
+              "1dbc96b8d73683d98ea217962aa682c071eea6fbdcf0a62e92e89f613a0c8354",
+              "23a4655cd94cddeed4b9f4fb1aa5de0aff68fa78487816597c36e8fd1d604950",
+              "259f112689fee07ef93ec2d1e665c79ff0791654c7c0c434320b145fa493907c",
+              "279217ed3cae52f31f13cf376bf1a551f9c8e22988d68150e77a997386adb42f",
+              "2de08e9cb0132d052c7bb1da9c1deefdb84dce18152c223dfa75192c6a1cf3a3",
+              "2efa4090fb3282a75d59b429190a70b669c522eee162d5f256d47f58c8c27f0e",
+              "2f24def0be3f318abe2f9e49184bc3ba5ab1f6655e7469bea98e7bbd07d5e7cf",
+              "38ed46340fd132622b8a0fb2f25e013cc482ca48561675611acba1bfe208181e",
+              "391facdc2c246550898b8c5b98f4eaeb456bb31aee289fb32f674cec69f78e7d",
+              "40a78efec6daa06f7d69e823616970327300b40b86478a6daaa6b082bcb65451",
+              "475307736b78d6c583f1fa3b2dacbdefba4a9515d8ae1dddfbb3e82e344dd463",
+              "4769fe97ded0bebb34ebb704ad2704f46284bf82bd0f8505f8c10bf940f9216a",
+              "4874cdf385d3d2350bc281fc2e1ad0b2f9d82fa4ac4386cc15dcb9db2ec8f06c",
+              "501214bbf2a9607f0c95328c09f41b799b65ae3d2e8575a46e9de80240d3c7ec",
+              "523f2b8d1c0930f100c1bbade147dbfe9919aaa896b5475a896cfb26adac5f68",
+              "53eb828d005ec9131775264088445d2b0034aa2e79e3c813c27cbb11248ee999",
+              "54fab22810b1d6823cfd189bd4bd781d59f3269f789e6323038ab8b8d8c4d20e",
+              "553775f6a0234d861f7d1fb716204725805b9150b8ccd9114e37e59779c5cffa",
+              "563c4d388e30e8ae89b7c1adceb2a7598d420e1767497d5b83561108b737af7c",
+              "56ef5ee157354bf42e116757fa91325da1f5f7bcd47a66a48fd3ddde83d31d39",
+              "57a4988b96de3aedafe3db20d3a6999dbbd060ae56734e74509834acb8c4f92b",
+              "5886878080168c309b4a1bce34fa37b7bb179cca9416de6fa4175ba0324f8f69",
+              "5b7db973a5ddf54be06eff706ff422673d41c26ef886be7d05a197539599417e",
+              "60ab175b07a710682e0a0410e78989edaa916534fef94b9700ae20f35d945a7b",
+              "627c765ba866dacee9f1c7c52a70cac3dab81b3a59468969a2e25d761667ed27",
+              "62d62231e5aa08999147c230ee537e3c7313606db8d9e77a8654d84082f6e715",
+              "68f633570b240b5d7312da3b6249ce8a3cde4f335b59856e33a27adcf2da29ed",
+              "739cbb38d87828466de49efe18377b627ea9d35b1e449c71d70ca4dcb64451f9",
+              "762b72881bc69968710bc9ecbe1d01e7cdc6d4bd1971d310afe37123c7c99cf9",
+              "7b28552cd82a43f9abf97900996400f6c39042f47c5ba9436d5bfa40aa09c228",
+              "7d162363aa835928d1a0639c73eb772eea761320564df6354a42388c5e4bd83f",
+              "7f2cb2dbda6d83ffa207357233887586dbaf4a9b22ab2441acbb3054634ba996",
+              "85cdedd0a5b379c047161ffa465c1737138c755542d48c28c62c9eede38d656c",
+              "882ba74beccd6f730f453dc8eb17584580c3c9d58d5c46a87e26c40d0068c490",
+              "8942539e5259701f341fa3b013b529d662c0cc794c2e2c8f2d3bf7811a2da546",
+              "8d3e85a89f0e725955b2ac45b5bd9fdd9a946ca3ea36950f073e8369b1c0d97b",
+              "94924471b7e8f63faacf72c0754d086a9e9e9c8eef85d9a7c889c2a71989ef34",
+              "9d6668b6d279ae79eebe9a9c8c7dc97547e3523a24dc0b810185d6902cc8f343",
+              "9d89f0586098ac0c66d6abc59b927e168b65b3a98ae9f19367412c78d94e2771",
+              "a5225aef221dad3d6eb850940be527e48a99548ef3cf23990ae4d09ea5b5a146",
+              "a68882700b5f1c3eb4a71acc2753bc4ef04cb3a8ebf30cd0c7a1d22c84bdad1d",
+              "a6a545745ad663b243d05091c0da60a29b438fcb31862c1e0085f27bade4aa17",
+              "a75ac3c16bd384283a303bca46ee6aa07f477efb2a7219f5ffa7eb33474e312c",
+              "ac8a9049c444f96149693e296bbe94c3e471113c4f58a6f69eadc2c819bc59ed",
+              "b04cd96e120f1113ec9b8c7efe56cfaddead6ace143631adcb990fcfbc276899",
+              "b0fb909c8890c9a37fa23dfd8200ef3316fd7564b4173c3f06028b6a7afa5b6d",
+              "b19eb52cacd8188fed610dc2e5ca7a21261ec48470c7a1941bc3dd340cfe95b5",
+              "b1a324c63ac0b46a20774591b469be2c84b073911b29758f8feb16457dcae231",
+              "b36a4ea2b697bd1e44d06e00df975ff28dd1fdccedb84c90ac1a07c32b9a2eaa",
+              "b44feb837fdfa3adf1fd312b759ddc5c66b3facd047583adbd2e906bdd386ff6",
+              "b73b3e0f62a157875bdb98c0c28b437d8dba77ac920103aa43acb92cbb50b703",
+              "b9537bb7a1dd56a1f72cfad02e6b96068b9594fda014d3e019a70cf3ec85e18b",
+              "bcb39511047959a92b25c44f87b7700393a7e0e399e5450dab044f388ceada16",
+              "bf0f9a80252750dd9878818112e087f3e90475b4b52bde9e7bea7f6c6858fd09",
+              "c0d5a1ec6a8cc3ca7bedf731910f68326a4a94720cb0a515ab0e875576b0db8e",
+              "c2e2ebbe7c96943e505a32da690da0a041cef0328e47e6821f853dee834c95dc",
+              "c4fb374f095522d74f7e00a25b0a42eacab669e001dae8924b72946802c547dd",
+              "ccaf69ef7497fa0b6f7e5d88859a861478bd9b471813fb0f8b26d01f4d3c2f86",
+              "d284788a2f4ce7b127ebe999e24ec07e8c36a5dc2b69fc4aa26a379d0f82a6fe",
+              "dc029fbb0f622e37fa8f2bcb054de6170f16339ada12490def54c9611998dff1",
+              "e0da8b574be526b9641e5a62e87e02b8b02980571cf2afe52a36273ecbd9e002",
+              "f35f9d8a9c1ab2c2af145078e3a2883707bdc53b28026c9b04222630ffd5197a"
+            ]
+          }
+        ],
+        "count_matches": true,
+        "exiftool_formatted_frames": 186,
+        "exiftool_numeric_frames": 186,
+        "expected_frames": 186,
+        "exposure_time_histogram": [
+          {
+            "frame_count": 60,
+            "value": "1"
+          },
+          {
+            "frame_count": 61,
+            "value": "2.5"
+          },
+          {
+            "frame_count": 65,
+            "value": "6"
+          }
+        ],
+        "filesystem_frames": 186,
+        "first_capture_time": "2026:09:02 20:13:04.463-07:00",
+        "focus_tags": {
+          "FocusDistance": {
+            "histogram": [],
+            "missing_count": 186
+          },
+          "FocusDistance2": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 0.273841307296975
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocusPosition": {
+            "histogram": [],
+            "missing_count": 186
+          },
+          "FocusPosition2": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 57
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocusPosition3": {
+            "histogram": [],
+            "missing_count": 186
+          }
+        },
+        "formatted_settings": {
+          "formatted_CameraOrientation": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "Horizontal (normal)"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_ImageStabilization": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "On"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_LensModel": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_LensType3": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "Sony FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_Model": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "ILCE-7CM2"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_Orientation": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "Horizontal (normal)"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_ReleaseMode": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "Exposure Bracketing"
+              }
+            ],
+            "missing_count": 0
+          }
+        },
+        "last_capture_time": "2026:09:02 20:30:05.390-07:00",
+        "observed_frames": 186,
+        "role": "flat-source-diagnostic",
+        "settings": {
+          "CameraOrientation": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExifImageHeight": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 4672
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExifImageWidth": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 7008
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExposureTime": {
+            "histogram": [
+              {
+                "frame_count": 61,
+                "value": 2.5
+              },
+              {
+                "frame_count": 60,
+                "value": 1
+              },
+              {
+                "frame_count": 65,
+                "value": 6
+              }
+            ],
+            "missing_count": 0
+          },
+          "FNumber": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 5.6
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocalLength": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 200
+              }
+            ],
+            "missing_count": 0
+          },
+          "ISO": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 100
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageHeight": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 5120
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageStabilization": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageWidth": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 7168
+              }
+            ],
+            "missing_count": 0
+          },
+          "LensModel": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "LensType3": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 33094
+              }
+            ],
+            "missing_count": 0
+          },
+          "Make": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "SONY"
+              }
+            ],
+            "missing_count": 0
+          },
+          "Model": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": "ILCE-7CM2"
+              }
+            ],
+            "missing_count": 0
+          },
+          "Orientation": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ReleaseMode": {
+            "histogram": [
+              {
+                "frame_count": 186,
+                "value": 5
+              }
+            ],
+            "missing_count": 0
+          }
+        }
+      },
+      "tilted-sw10-cpl": {
+        "bytes": 3662270464,
+        "capture_units": [
+          {
+            "capture_unit_id": "tilted-sw10-cpl",
+            "frame_count": 92,
+            "parent_stack_id": "tilted-sw10-cpl",
+            "source_file_ids": [
+              "007ea88a22163ff415248bdf73bc22941c93d4930cd3352ae0e5bd84e790aa8e",
+              "02f2ada7defa83d190396abc98f8e1b9728351215fb6ad31448b6e90bec78307",
+              "04828012172f195f576f77c9bd6c04787072ece8f261320abb0649426c8a24fe",
+              "04851935138b1af96ab670ca7f97f0898f80357f7dc7d0a0f25a23aa85334873",
+              "09589fff4c7c083ab1520e5955f8b92c8eeb112170887c0a6a86a9a6cbcee917",
+              "0bdbe0f8008ff3777458631e65fa820ead9ba43154cc1927fa1ccdf3486285fc",
+              "13471d452a95a125ad655666ffa926720d4fe05326aa808845b87cc28b832c7c",
+              "14408c397522a80655f9f298bbaa92c8ddb7cffa977d90800ef4e4c5dc3f6dd3",
+              "15536fa502709997adc3709eed31a0d12304961fbdceb74255f57d55d87082fe",
+              "1731513b9ddccebdc75574e21e338eaf2b27c0f508bc4cc2e4cc9e287969dce6",
+              "1bdf27cd13cd1bd37019b76589d18fb6ddda72e0cc601b0f8cc2e2e6d142c32d",
+              "21550a30206633afa2f994cd03b19b00492d050e6ec8bc9e2fc4ff06f22d2cc5",
+              "24484bdc7f92000dd778e0a6376e6b18ac7719a86398fea499a492037320f29b",
+              "24636292057fd1a2f5de8aff455731e37ec97c7324c33881797127c8fc45230c",
+              "2664db19a8d7d6cb5ee2e42cd8957509a1164874cc24ee3aa70425de6aba92b1",
+              "28864a8f825a6f105d46e794bfe329268d115f1daf91fc118f2beb64fbd9c759",
+              "31451244914c77a3094fcc07ce983998aa0004a8fcb3e53009812e0e0e4f8b2e",
+              "328a3783658a8a178e16104e4d1094af21f5f88adba8c694e645d7a28eb0e461",
+              "34a213895f9e4a83b34cb1b22bdd1641c3f757bce4b2a45cd8f0740869faf116",
+              "38b278835ea7b6f361963c7e02fc53597fea541f6a414a6fe4fe139fa3040a84",
+              "39cf93cf1383c369ebc56ac7f447ebbabef816c8f7c3f397199a440fa4cec018",
+              "3adec256b78444e5a2496febfecb3d62a84cfc7d062c23650aa12d0f9ec1de06",
+              "3c387e9124ea19c94be1c2764bc2c02ffc7bef10bc89cef43f7bb1fb0f527f16",
+              "3dc1416c916506d485a6899da38265160b21b4847ca220fce69203fca2bb3823",
+              "3f2a81c67f86d33cf9f4e043a9d22d9486e961e13c8b2c53f966c52fc350242a",
+              "40b66b0a900d7f202e9f32c8e602526b5ed94c13fdd947063fe5639d88572698",
+              "4703dbd1218c3746eca0b964500f7303f57c8ca8ac4adc09f4cbfc6adb45d2ee",
+              "4a3a3aaa0e06a6a497b828479b5d28eb9ccb39ef76f24a18405e7ea3a99158c7",
+              "4cb00782e5a3c730a2fec87e1ee78103336613e0ad9b1101b42caec102ff1740",
+              "51998d8b306af4d7168a4d3a7fb602b7dca11fe54c20e4e489507ec6ce770c85",
+              "59d24116754264a4f4ca5f2204b1e50efb74b12cff89a98c0ccf4e45f8619c66",
+              "5d251f4693227563d810c4f653d2bbfe34f113a246eb6370b81dafda78319bd8",
+              "5d59bf65eb70c7b0a6d06771e7621e397226f3c953d017e8eb0334e8d6e2338c",
+              "5fb23e7d122448e0bf0b4d93cce353e15f02cdffe1f3bd22c760db9910af91d6",
+              "600dc4cf772cdb0ca53a33dded80c29b440be092e1405294fdd313a777efb4f3",
+              "61641aa13e99a11e0fc65aa7dac11044e54bdc41d727daa9b5ae062ee675654b",
+              "622daba9b9c94f18c2ac890a0768d5647335b9b1c05ee7d9f4223f3205c94ed6",
+              "62a772300f7c0dab65968636b9e3aafd99b2409a1b144596f2a580a69727c679",
+              "674695c84f3d29f950c9d2b7363d27eaf7bf328ff65c90a03bd641f82f06e8ac",
+              "6d97daacc771a03a731522324e3bc67931bbb142ea3110e60ae0638137531757",
+              "6e1793d4d7527ea2c469dc68fff1543b692be6b109cf97688148f9b3905892de",
+              "73420cdd02b3bfac0d5c11ba593111840b3814fd818a16e525f4f904ee38eb02",
+              "795e986ee350ad743f98e57c4581aab3ebd5ad9c48f18dc9539e343d2772e0c2",
+              "7da988b30870c9eaf58e1f2794eeca2f89d1f70ef3d9f172298bcf3c0386dcfd",
+              "802c1d7903a8fff6a06bb1c13d23f73425bdb80e74c6d704543ceee46cbd3706",
+              "887b265d0f283a7b86515b364346278a4f7a17abfcb91c8b277bffc6e3637a6c",
+              "896b611322916db1225aa855946249a8c81c7cbb6748f00332ab0e723a2ce0b6",
+              "9366b5b911e7a3c4a15c95176d11048f08cb392d6a497eb2a655dcdb0cc42baa",
+              "9716c020fc620da6924747be0267002e26fa544fbf34ecdea45995503c2bad35",
+              "9749124f4872c59d5d7abefa7f3db161fbe7920a2507fad53f683627abaddbe3",
+              "9952f77799d9395f4ac2e4b0930a2003e1cac6e574b4d6a00fcdf22f8b512885",
+              "9beb29d94b7285f1b822164940a69953db6dc875ced3fde7a3bf9695953f43b9",
+              "a0c700dce1bfc4440fe4dbb47b37ebfed0049583bb6d409c2d2e465ec2b5b5e3",
+              "a285e494e5724e21c5fe128d986ab5632506ade914612cb78d379bf3f36b550d",
+              "a406f50087596620f4e9778b02cc51e2e26ec6b412b8cc4a76fd9eb255e13df1",
+              "a4c01e406ce4e0795d291b7855d635de4a13ade4bdda5bae194eb3fe95ecc2c8",
+              "a50bdf8b377d26318d1e2ed42c6e8ef26a62f1297dbae7f76998150c9b63d616",
+              "a55a8eaf7584a8f9bbf5dc5dd7ca47b3702cdca9d0fbd6c40efb6dcd329a7110",
+              "a588534db2cecd1f354d44cc79a363b9d75eeec1d87e4929787d3127439e3584",
+              "a67e9512b36f25929cd2c3962c680731ea3ea5e4d8fc05a6afc8d87308b72bad",
+              "a926de509620d6a92a43fe1593e63766ff44137c1412d9a777ee460f80d626df",
+              "ad208d2df21c835ceb6bf03c7acb242d4a8e1728a4e2a6a5c8f579a06ee3ec5c",
+              "ae99126c45eacb2c3825c5b164e76bfdc54abc0e79fb33d50d857649be5b55b7",
+              "b0215c4a4d576dd64f374f6d38008ffdd21b72f4705b71e5d22bba06673a7cbd",
+              "b0594f245ded56c67d30adf82fc4d8b1be35953cd4d72cbdbd4534b9affd1688",
+              "b2728639c353895c9398c881e1019a62548b4a24f5679d90546e2adc56b0d90a",
+              "b336a29e48945fee2ca1e47589a91a93199b43fb3ef5349de41503ac3e9d3d7f",
+              "b63a6750ad2494d67d2070763d1968eed016556ba105bcf034cbd5bc50037595",
+              "ba58b7d71cf39733859964c8d4d34f9145ba2483cf659159da3e51d6a3b3391f",
+              "ba6f64f522749c4da60461e85ee4666246305753f398dd20a5fa24cdc2d6cf68",
+              "bb81af1eced7b3e63d4971a325e7408437a300f10b3a167a75a4d0bf81a0e648",
+              "bf4e076fc126e8c037223ab3048a6d781a47e77d6aaa50fe41997ad5c941bc24",
+              "c373c1ef72f256f548af8e0351b3baa4784e25f9647e186ccaf0e5c7f0390f1b",
+              "c5390f6758ce9c0025b3cbb5631397414f2670015b56a9d230506f7634bf1bf2",
+              "c629c07443a5470a7008c989dbfaa049e161df87b6f402f3748841112eb20ccc",
+              "c704f0ecf92e1cb9a4383ea1f631c75b0376e5bd6f907a5a6e4da68345a8b3b2",
+              "c861e86b9a1aa514973609db8d8d20b03117b28e7ebe2bfdecd02ad7b5fa10e2",
+              "ca08c1725cd06230a118899faf37da955d37575527501c5213c3ae0addb68d63",
+              "cdf0f2ca8026b1fc70baa7095d62ea147f6a5545d78dcd56deece5eaba58812c",
+              "cf373f14366d1308c586bbcebb61c5c5785210ce337b449205f070bbe32f52f2",
+              "d1a18f99fb8098aeab9c99ca7acb50e103719361e6dae7387197f0d4e3ce6105",
+              "d1deddd0ee8bd26594556566730891014e3e482346e2e3e94a81cb964456bc35",
+              "df88a88c84184b64a50b6a33911998909b2d0341dc16d18e68e21b69673ce46a",
+              "e3cfd63bb8b887cc3d14e29ac393d0bba93605e9c5d3a26353ffca03f2914859",
+              "e4bc010aab17774af5dae8b9cdbabe8432b42d219a48f8b94d511567b65b07a2",
+              "eb08952621d418748a6cd66d074cf652d594215e5d17b2b4b33f67bd1a099c46",
+              "edb5e905eeac97142274589db2cf4f205b1bd945c0a3c07f8499ba0188c1d2ee",
+              "eff4d9229954ac0b0b5323abb8cef50e6ad8617dba9c17707dca915694a74d19",
+              "f8092aace7f0e3e86c312fc3ecd4a5e400c38daecaadba160419a22b9d26df1b",
+              "f967f85985308da155286878819627a3ea7a40eb9d3fcfa972485af1764e14f8",
+              "f9eb232fb03fc2f8f430917d03f6d3dbfd7516898d54d4019e1eb068e2a53d89",
+              "fd8494447668b46848a4bf472f3834354ad1aa74ce4db9791e1f7e6d844144b6"
+            ]
+          }
+        ],
+        "count_matches": true,
+        "exiftool_formatted_frames": 92,
+        "exiftool_numeric_frames": 92,
+        "expected_frames": 92,
+        "exposure_time_histogram": [
+          {
+            "frame_count": 92,
+            "value": "1"
+          }
+        ],
+        "filesystem_frames": 92,
+        "first_capture_time": "2026:09:02 20:52:52.160-07:00",
+        "focus_tags": {
+          "FocusDistance": {
+            "histogram": [],
+            "missing_count": 92
+          },
+          "FocusDistance2": {
+            "histogram": [
+              {
+                "frame_count": 38,
+                "value": 0.273841307296975
+              },
+              {
+                "frame_count": 40,
+                "value": 0.277110541270397
+              },
+              {
+                "frame_count": 14,
+                "value": 0.280524516597463
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocusPosition": {
+            "histogram": [],
+            "missing_count": 92
+          },
+          "FocusPosition2": {
+            "histogram": [
+              {
+                "frame_count": 38,
+                "value": 57
+              },
+              {
+                "frame_count": 40,
+                "value": 58
+              },
+              {
+                "frame_count": 14,
+                "value": 59
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocusPosition3": {
+            "histogram": [],
+            "missing_count": 92
+          }
+        },
+        "formatted_settings": {
+          "formatted_CameraOrientation": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "Horizontal (normal)"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_ImageStabilization": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "On"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_LensModel": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_LensType3": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "Sony FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_Model": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "ILCE-7CM2"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_Orientation": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "Horizontal (normal)"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_ReleaseMode": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "Exposure Bracketing"
+              }
+            ],
+            "missing_count": 0
+          }
+        },
+        "last_capture_time": "2026:09:02 20:55:04.626-07:00",
+        "observed_frames": 92,
+        "role": "coarser-focus-sampling-arm",
+        "settings": {
+          "CameraOrientation": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExifImageHeight": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 4672
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExifImageWidth": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 7008
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExposureTime": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "FNumber": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 5.6
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocalLength": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 200
+              }
+            ],
+            "missing_count": 0
+          },
+          "ISO": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 100
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageHeight": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 5120
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageStabilization": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageWidth": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 7168
+              }
+            ],
+            "missing_count": 0
+          },
+          "LensModel": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "LensType3": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 33094
+              }
+            ],
+            "missing_count": 0
+          },
+          "Make": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "SONY"
+              }
+            ],
+            "missing_count": 0
+          },
+          "Model": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": "ILCE-7CM2"
+              }
+            ],
+            "missing_count": 0
+          },
+          "Orientation": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ReleaseMode": {
+            "histogram": [
+              {
+                "frame_count": 92,
+                "value": 5
+              }
+            ],
+            "missing_count": 0
+          }
+        }
+      },
+      "tilted-sw4-cpl": {
+        "bytes": 7246405632,
+        "capture_units": [
+          {
+            "capture_unit_id": "tilted-sw4-cpl",
+            "frame_count": 182,
+            "parent_stack_id": "tilted-sw4-cpl",
+            "source_file_ids": [
+              "010cbd1f1b6bff3917cb13e1343e780e6e5bd8c355dc412280e71ca3488b1d62",
+              "03ed1972b3335a8ff44c3bd237450053f58da417fdccec6dd43eb636cc044e45",
+              "0430cd21c19ae2910d42e248386275f967363ca37e5b5a118521f3cd84491ebc",
+              "04362e89a3a1af31605c1c2cf030a12a005798a4516b5d9df9362024f398cc26",
+              "046d1529a6f3c895fd508e80947c27aafbf79fc8a40028a27a0e1248b082c8e4",
+              "05007d104782217700df3ef47c43d5105a12851c9b43156c2d1e680c7ec96c3f",
+              "069d1f76e574bfb56d469976f7e2c147a02202390ca9eaf11f42c9218c499487",
+              "085b8e954f8da5fd417029b955c990c2988c0ea6ab22efd415d872a5b24011fc",
+              "09bca50ec46ab80dac8bdd20891661ee9de8453bc9143836f1b7d447b9b3a2e8",
+              "0b4e144f6cccf2761b49b36c5a21923e79e27714317754b6ea79b1b6a94249b7",
+              "0dba8372fc1b026e3ec60d192eb98934f34590c2d59023a87c33ead71ce0f08d",
+              "0eb655b2b537a997637e0b7ec005f21205cf0801efa7e46fccb781512450c0ee",
+              "1384d78d43da332bd6054b07aee5582e32f2cf676084c2d78322adc8dda20cc9",
+              "13939d611ac566e5543d376c8af52d9e24a08ebc5861589a55d505909dfb7799",
+              "13d830dcb018b0c4666c227bb54b9a0b53e33534f2e44a3c21e4b37e4cc9096b",
+              "156c8ff6d129edc793d9ad56b31c42e892b6f39dc2a097e2c932becf7a4930d0",
+              "163ce5a16964074672ede5cc40b49dbc98a8352f5788ffa359571e371ea07cbf",
+              "16cae32702cd42d9fb8e77b820e3514243b3773ccc5c4691c9301ed66e761641",
+              "17ddefb8e44bf7b41654e55a987c9a71ed76ebe3c5d54927dcbf68f9feb4b583",
+              "1a6a5c1c4091c018c07a6de7a323f223015398b40057e8ab2a3d1e0d63bd4156",
+              "1aba43b529e74460ac3a07e62106cc273db673fa831cc32a462aca268a3dbdab",
+              "1add61e13c2d926ea2006def5e1139be82f7adcc438376ef571c395a1f0505a7",
+              "1b46686ec9395031877d915d4c7438659c531aa80e48e78bac5745bdc04c90f3",
+              "1b9ad0bac914f017aee35dc36ccec9a69d3f8c8284c604ff9bce0cc9bcd2d38a",
+              "1d4e46dc10335e400f8d54a0479db75ccb6a7f02571e34ef9491d6a8b11f3524",
+              "1e6182e2c084f0b03508fab35d5af23314c1647eba281bb203726a8d06024feb",
+              "1e6c0bc76bd06d851d3f12e59db22e646eb4ca790701b66303dcadbf37dea69a",
+              "20899379644c577c433bc2f3bf8913353f50caef67b943c12ad242f6966d41cb",
+              "21e22a6aad546d9eb31eb1b07fb55c88e61cda1ef7d48fbfec1f5cc0c3ca01e7",
+              "21fc2f2a9a0716076f71b441cd5e2c6bdd632438dbe3c9c8db062932ff4384d8",
+              "232410fbca098b96ab03550d1096629729051eaf3c15a596088d856c95111a2e",
+              "234d4f0fc4d68840f5234cad663f56833b0e0a56379454467ee8412cf1ad3978",
+              "23ea7e771080d5f70c5a0722ae48962952601af74066ded6a1d2961c25ba8a9a",
+              "26cd4c208441f7de0452aecc50ce1e4ea404667a51123f641cb6661477f24948",
+              "27f55f07bbd1a847072603ebb6b73fa70fd8e99411fc89fa859776f0fa420f1b",
+              "280c3773cc52e13bce0b58ddb60fbf7d3782599e40d7b802b66a9edd88fff9ea",
+              "2aaf8c2a6cf7046f62aaa34ca0356901c642b90972d88efcdda0961f14c11d57",
+              "2c21e56d25e05d0cb040fbda4f456dd93bed04254af7cbf4cd36a57d434b4029",
+              "2d69c3f479771e7be1344c2c764d613a3074446124a26263a7fd69ffd9594d44",
+              "2d735db7a14a3b6286c88ca3d5b9815eb573b68b928f104b6b994a0b4a4838ae",
+              "2d78b59f58a481078e8fcde713b9c6317ca0ab6fac709f597f05b44f95f36eef",
+              "308a43cf6f46213f411f9c42bb7a2361c899ef184d02e3d4830044d5dfe12de0",
+              "3123305793bee554093615aa7971dc63cfc86463556ecccb5af4df9cd2323bbc",
+              "319d5041004e8f81c900788d386bd01c2f9473997f2caf247e9d0732185047ff",
+              "3247e420a8f21ca067c3e442385b952aaadc025267062c31bdecb174d4a8ff43",
+              "32837aa9c5297287832d6e78ac1a855e5d48d4f8ef58f1f88dc79ee62f8ed0dc",
+              "341adaf147c07676cc237e1ffc88311930d7d816d7e5fb6717bea3fb6dc4c671",
+              "350caabdfebc8644ee92365914f7b19c98c07ba73c44898404736c499cc98a89",
+              "37ee4c70363ed946e9e88f3ae41ac72bd4d8e08d139708bbf64f554ded99df72",
+              "385193769c3b06b7608660cc56539dd4211c2db88d221327f7504d74fcadbf3d",
+              "39216c2b95bac3007d5fed20a8799d1176fcd30c88512f8942a1fa88afe1af7a",
+              "3b7d9c8b2926cc8ab6dab7592720af7925d8c4afd9ee271532eeed4bd2a113a9",
+              "3c50944bc8b6ae32f675cee2273f00b93332c4af9cb14689b3e91eeaf753f2cf",
+              "3d92bedd73e89474e9e4a051a1af491d1b22e003a6ea37f646c799c9550252dc",
+              "3fbb0d8ff1c4e4b087145642de7272fdd02d99000f1aa3511ad028e388f817f7",
+              "4083cea923d7976b3f27ec59d6d4b6efeda7027e528c7f78329dcbba6507b145",
+              "40b78a186c05171f3596c70fc35cd446640603cce248bf6a5c83ae9fa4dac8fd",
+              "41446edb90469b0c135ef038a474e4e3184ba58f3c5f80c6242d088d2615c12d",
+              "41b4122d5c86f079c85ee1245f61665d39784f5606ecb209c15c54d73f8e3afa",
+              "429987b97172ef7e51d9ad7bb1abf5a3717038edda819d0abcac0ae3782e28c3",
+              "46bf13fe12473be86bed7f3500ad8693818506b328765702b2c9fb909940e9be",
+              "46ef68535df4b78905c307b17830b1f2943ea4f6ebc00ee7fe699e230f7e738c",
+              "48b2e46699c7c59e4d20838fdfb18dfb4cd6557559244cf1d6309a325b3f7883",
+              "4afb238aad5a89ba38c9a119f02ffd5cffeb29a7fecc0528b795814a1486dddc",
+              "4ce3d0d0c2ca879e72a62f5dc3bdbca66feeb8d196f1773aedd3fc3fc9599ab9",
+              "5012b47a0aa98f665f4a9268a86fa7d03a41948f8c2825d5d51b61ae5cb27ea2",
+              "502a929e2b2deedba44531dbeffdc4ae7571b4e46aa0830f3ca106af8640c1d5",
+              "518d6ac000c06c404198f5293d1162d1a9169ada6a0fe225062be5fb3302c625",
+              "5216bce2ae310212d17f61aa98a4822a9cb8b18e3619e0cb49ee902cc71e2e50",
+              "52c47c889efe4dab7cd23aae8e1cd9b35b824e59345f3eb7d735492f5b29ca0a",
+              "53efee49b029dc5eaecfaad2e17dc7dc4e995dc7fe885f84ba6bf7b43be4087f",
+              "5489b956c538d4d91ac0f7a7f9d3be2799dbfb21fe97435592ce2cec999cb34d",
+              "551bf2eac7716b752901686411896517d7585121a6e31357042359ca352fab5c",
+              "552312d318c96d98640f62bfdcf096007bcfa7e03e5220a6f79b164637d574aa",
+              "571a0d62bc329a596ad02b7d5c9b140128012dd81182108b31501d3e09a4cd32",
+              "5943ea17b162f0c69dcb37b6cda7ef5193147ec562a3c691377fde5a8ca7d3ce",
+              "5ada96d1b36ae06e9095e96904aae64916f70737acd18caf290f253ed2bf42cc",
+              "5d6bbdaf0d88214e3ebc7d5b33c86c75f82bfd353160fffd9e3dce7a5ee6bb69",
+              "5f543c76e8720841528ec89884451613885f86b70a8c84f3e435cbc7ec7395c2",
+              "606fbdfaa6ad712fe36c061f78594ca74208f425a80044ecd0637ee1b23804ba",
+              "6142a0bab5e6beda7e9df6b629597ed3ccd2f3871a692dc8c75bb4a4d4d8fe03",
+              "62ecee9feb2697b0caefa4b96fd59d97dc1613f52cb38ec6765e1213c94b1560",
+              "6637f927c4a8a4b330ee3649fe4e6390fae5e8be342c332546c33436d48ac8a4",
+              "67356c0c25f54050c9c4658620ce9b7e32e3857295b0f02a5d5381b701a043b3",
+              "680ffc38b796bba714e048247248590fe6755358141759df556ab70d0f00aa19",
+              "6833af4526eb516e05d6dccd4df2fe61ba55d503540ea0fb5e08a224f00bcd88",
+              "6c396b673e651183032fb9b84b36d0553bc5207fb7671bab921b42e1e509e3ca",
+              "6f20b1ad773e5e7405a2121102f60e6b0eb289fefc850b0dc936d8a99506a678",
+              "70c00b1b32c0f00ca5d50004cf83598ac1a9d6eb893dd4cd1f2d76c1b8f82bae",
+              "71367f11839ad42ce498e374d1733e8e4a511d538489632c48f774930331fb7d",
+              "75212f181e49a4da5f8a567dddbcd7a4d956db35adb577203a9026d0cffd7f0b",
+              "761113aa5b0002b8c5da9f9138826744c6785ad80e5150fd0b24dcfb6ed3dab9",
+              "78a6d2a08d9c39c0ea1140af0a3f69355b9903e1fe13fe37a293df664dd7202c",
+              "7a910f6976dac60d0bfe5b2123e36d4a599d7ba807460c81dc157422f3bee926",
+              "7d9385f43620b2b981b158c905293623c722d8577da1d645ebe8a656402ab722",
+              "7dd3eafa46616fe3f582834e323d70ecf72effe7406925653c7d86f79b24b293",
+              "7eeceb2bf16029a883c531e433ee0001f1493cd1a015b52af8210648df5890ca",
+              "80b76e4c8d59ec9ff1aab7c62ca539604095153a008e64d2da26e097a7d127f1",
+              "80bc7e6956ec4a7115c1ca3a5c77db9a1d760b7f2fa4a085c4076af0ab927194",
+              "80c873d9b6615e30c5ad15fd32b8e16052deb4b7af4b5aef44f56b1d99303e98",
+              "81a0855e6dd975b1e21bf13ddc4ffe05ef9c2ae98ad0cda047a8256d427dad2c",
+              "84c4b2f80298ec848173ed20932fda68841af93a9ea5f6e911e1f8ec04361cf9",
+              "863bd22aaa8f623daa96cd38dd634544c72170c52ce582e925aff1ce172e6538",
+              "88f9187f60f33c5046b524bea520b9c7b018f7a9ce2140bed85bcfc50671ef49",
+              "89284cb1a67ae0b3efd86825b73d28e7a7a4d893db02719eba94de0c463f5bfc",
+              "89c53f525f919c837f0fb213fa84ccbe58a774ec9493bcc37b81c87540d7e6cd",
+              "8aa9f0093fea6b6f392801d314e0b17a0bb89affeabea515b53b5c92ebbd6d12",
+              "8beeb0f2a84fad061ac22f42e76b492aeb5f592f8291306341f1b7decf9290d6",
+              "8c67b209401d0f0cc7244ecb249f0fadb7cc03f00aae564bec85cc532394f83b",
+              "8e77a3391984fe65188852c5ca93d5682a285d5173a676575d75bafe8b86729f",
+              "90913268803a545645587b74ed39d8464921282cceda4d7c1afc6cd6aee849d6",
+              "91b0a477ee12081984ea6d1a2a324be751306eae877a423b10e6f76724dffb5a",
+              "93b0c655309afcf64608a6a8929294caa44dfe6cd964dc5c732dfeffdb3656c2",
+              "93f9c5de308688d3d000519831e8072655b88adbe30681726f8978cc2dd287b8",
+              "947aa985f64455e6cf8dfae4c4dbef4513aa44d9853c490f47ad241e97a61ba8",
+              "958788597dc7e2bf5c4b1fe73d524e18ca71aa568213f9b48139b30c856e4a03",
+              "9595d53c561805e2fed5fe80e0605230a439fedc8215730b16d1ec6c558b062f",
+              "96dae93f569ce06c395682ae04ad8ed2608aebdbdafe301a467314133cb49466",
+              "98f0a19125012c0ac750cb9e3519ffbd70e79f8cd1ae82c67eb61daec1cd2808",
+              "99f98ba389f7a329433d891d3b0273f5b71825a81238e7a5d16c2511903a91dc",
+              "9b2550edbd3931f4cf12522820028f22145e57ca87e6218a6fb6dd25aac3b4e3",
+              "9b9f4e51d6ed4c3261f7d2c16c7068ec4b8982928aced62bbf7afefc39487650",
+              "9e4d3cad5914987f55bc772ea0bebf4fe04cf4363799bd64e3f887697ad35ef7",
+              "9ed46503c1aa2b2970ddfb62d1580588cda0b75f03aa246db9b6603272147534",
+              "9f1a13ef2a9c9a41ea673db6baca1f223de4d80b308f5972fbdeff0ec2604a89",
+              "a0abf40be2529a6d5c375f9f4b9b307ddf78e2ab89be35c80be87e13a025fa54",
+              "a0ee839fbda032ea02465b74375de30ccc029415bc177dc6666c45044a4012d5",
+              "a2d44862f7fb8170870631134ca54c4b307f70bc6a672091ad9dbf88983ce5dc",
+              "a364cbec9383fa7de4bb633cd0dfdc059c8875b81dfa1ab41cbf9a542d4bd481",
+              "a414ef6bfd02f5213f45494b526786a3f8d81d9c101b8279bd49a7333006d4da",
+              "a41f4fd3502c1406f6e5df24d2438d2c449763a05bd46fb4d5bce966821f21d7",
+              "a4308c74899938375bff60af91a66dce8e9e0205d60612011a3618f6d599a9af",
+              "ab4a3e018b854f71fee82d6e00140d3374f52e5f567c3c3497a64c2442b06f7f",
+              "abb5f8e0f662020ec67e7e3822319d88b7b01b9062178a681a41cca7ab7a631d",
+              "ac4b9ae808412442a3878f46f7f62898d3eadfbf2b287a1ca1ed935db9de01ef",
+              "ad437ea10c2206ca27b8ee6eb7d1897ae9aeee310b8fe0c8c97d3dadb47e2ace",
+              "ae9c25d4f6a0af9a403a25c370fe42b32c7d1b89595f7f42f8879f13ef9a16e0",
+              "afd4751a597a675985b62a7b41b5886b6e843d4aa50d025e1bc5465c9a682a97",
+              "b04d78ec9861be90c31c90d46cea7cacce948196a021a782520d91fd9a2623bc",
+              "b057ac7d99f540cb17867e17db56cdc966bd25508fe16c25123b21252e75eb52",
+              "b09f40eb6c7f2cd0958d0021dc5e742815cf2f45d4a155ba6571b3df81c0cac8",
+              "b39ddf436f48ebfeaa0e93958c94af35c1679ea4651c7b12046e93b478e70a15",
+              "b3a69a07e2745be2aec6b2b738b459b8bd3b5dfaaccc50c5d56947cce5c82c15",
+              "b7908ca082506e765ada21dffcb3aa6e65a0fe97ebb9c05ba8c51c21de8aba2d",
+              "c24b01077d08cca3a8f5c57f5577e36ceaef0f7b667990fc23c2e9efabbeecec",
+              "c52bcdf4896f6978c126be772d46885ec0eca346c2d434517316d9eac2346de1",
+              "c5d1cb4d268f6b89d2225e78455a2e0b43aa5c39f3f070b75c5297506828b50d",
+              "c5e09780c7eb720be692645decf8c8965ee2c3632ae50931957e1070d6b27802",
+              "c697c97d8de1b54872a5d5a2cd710fe97f36dcdbeacc0b54f074ff333fb8cd03",
+              "c6bf25730421e9063b4810cd8d7a412d4f32c4e2ef0727e01b0ca6cfd0b5fb6b",
+              "c9ef7e1c9eb5fc3633101cd259276bcbbb6663def2228da1a06ac5fd36ab996a",
+              "ca361f95e274c44e4017924ae608f27b714aa14ad35d71cf261d9285f2eeb469",
+              "cb25b79d2cc794307e3f4ad14ae71727a9755f3f0ca3d84a1ef5db7ccdb8a55e",
+              "cd58044bdab6569359f4b61ff1269ab779b3c1e7ab0d31e20a9d1b288fb6b7c2",
+              "ce42ac49df4f2f5b0aa4d3951676b1b03995b09c30b3c00823828bb0271b10b3",
+              "ce781fea4c13b5d57d651fe804fc392028981a4820ef12ccea3c4030062bf7e5",
+              "d35b58f2c579233c7cfb4dc0d83cea4e899c59d6e4bf8b0c4465793bdee8054b",
+              "d78ae12d26dda3bfe02f192214bfa6646b0a0430d859ba22cd9e1546245a495f",
+              "d801340c30ba42dc907cb747a543f60c869f59f4c909c06d2d7d459a0c025da9",
+              "d8967f5c2a6b59e58b11e11a4a5dc4e9946b6b6c9b67cbb20f384e00a8bc8e0d",
+              "d9cdbc28b76a19c88d4a6fd357d60fd816967f3a9453505e2b7e289262ef8fc8",
+              "dc17e066b4a9fc721fbbbc61e191c808e551145e3ea4286eff12908fd5b84161",
+              "dcfbf1a04ce0d3adfa4e851492b19967bb8e08bcdc81d43ba8bc03d4f0d30f34",
+              "dd39241f1ee312370cd5650e2fd311ad65c1837fd154403b080966a669a10474",
+              "de0b4354bd9641d1f2e3e6c3686625bf90ad3f34921367734081ad3482c1f28d",
+              "e00b71405114b639307acf4f6e4434ec49899f3d90226723ffb30b719f0b884e",
+              "e1f396131a406636888e4df7363ae02655b77a79bec0c6f959de1d0ca60c12cd",
+              "e8496400c183027cc4aab2e8cc875e40a6ff985182e9340b7efab6008fc0b267",
+              "e954690226d9a9c2dcae7dd8ea6a4d6c964b473bb88c5a272059fc95e45dff24",
+              "ead939f1b882ef6becb14a83f537aff50d53c31187999f18a16ec5da78da2b32",
+              "ed0f1d734c5d09d07bb5e1187b08f149c1dfe73d0fc4b6e8233604014c4bcb63",
+              "ee021ddc0f3551179881c9da417dbfdccccd705d427c3094bd4893fa61e6a3c8",
+              "efd6a438cadd87725ee37fc2c0de3ea144c64f44f34a253954531f1e86f6c152",
+              "f1f5c9329e0d79be5046c958e06a0c918c1782c3b91fd3df12ccb64c02a6626e",
+              "f48cc02c74ddd8f562e69538af20a8dcd65e391f5b0c26142d45241454105719",
+              "f5f9ec5fa748060ac047a4eb428381502ac7d0156e966bf637fd41854b918185",
+              "f6576b660b7015d5b7741508d78c2ca797fbce36adf289ebca257961f850bbce",
+              "f678775cc46d825b8d5bdbf44b926a630ab5cd94fa34eaadaf20629a30f8d2ea",
+              "f91bc837e08397d32c097ef9768ab9cf95f8ec308c3fff0683e40355c3b65efb",
+              "fafb60cf249a0f7255966fad9903016c7bfa0d782af206dac09ae70a8ad288aa",
+              "fc9075686d27dd8e30f4795925213f6383dc86aa05d183f324736ba8651941cd",
+              "ff0a45a6cfe334cad783f71ad5c5887cfec8fe401096f65527edcf7b6901dd5b"
+            ]
+          }
+        ],
+        "count_matches": true,
+        "exiftool_formatted_frames": 182,
+        "exiftool_numeric_frames": 182,
+        "expected_frames": 182,
+        "exposure_time_histogram": [
+          {
+            "frame_count": 182,
+            "value": "1"
+          }
+        ],
+        "filesystem_frames": 182,
+        "first_capture_time": "2026:09:02 20:46:50.071-07:00",
+        "focus_tags": {
+          "FocusDistance": {
+            "histogram": [],
+            "missing_count": 182
+          },
+          "FocusDistance2": {
+            "histogram": [
+              {
+                "frame_count": 76,
+                "value": 0.273841307296975
+              },
+              {
+                "frame_count": 80,
+                "value": 0.277110541270397
+              },
+              {
+                "frame_count": 26,
+                "value": 0.280524516597463
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocusPosition": {
+            "histogram": [],
+            "missing_count": 182
+          },
+          "FocusPosition2": {
+            "histogram": [
+              {
+                "frame_count": 76,
+                "value": 57
+              },
+              {
+                "frame_count": 80,
+                "value": 58
+              },
+              {
+                "frame_count": 26,
+                "value": 59
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocusPosition3": {
+            "histogram": [],
+            "missing_count": 182
+          }
+        },
+        "formatted_settings": {
+          "formatted_CameraOrientation": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "Horizontal (normal)"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_ImageStabilization": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "On"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_LensModel": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_LensType3": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "Sony FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_Model": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "ILCE-7CM2"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_Orientation": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "Horizontal (normal)"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_ReleaseMode": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "Exposure Bracketing"
+              }
+            ],
+            "missing_count": 0
+          }
+        },
+        "last_capture_time": "2026:09:02 20:51:13.767-07:00",
+        "observed_frames": 182,
+        "role": "finer-focus-sampling-arm",
+        "settings": {
+          "CameraOrientation": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExifImageHeight": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 4672
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExifImageWidth": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 7008
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExposureTime": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "FNumber": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 5.6
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocalLength": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 200
+              }
+            ],
+            "missing_count": 0
+          },
+          "ISO": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 100
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageHeight": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 5120
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageStabilization": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageWidth": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 7168
+              }
+            ],
+            "missing_count": 0
+          },
+          "LensModel": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "LensType3": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 33094
+              }
+            ],
+            "missing_count": 0
+          },
+          "Make": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "SONY"
+              }
+            ],
+            "missing_count": 0
+          },
+          "Model": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": "ILCE-7CM2"
+              }
+            ],
+            "missing_count": 0
+          },
+          "Orientation": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ReleaseMode": {
+            "histogram": [
+              {
+                "frame_count": 182,
+                "value": 5
+              }
+            ],
+            "missing_count": 0
+          }
+        }
+      },
+      "very-tilted-all-axis-sw10-cpl": {
+        "bytes": 7686295552,
+        "capture_units": [
+          {
+            "capture_unit_id": "very-tilted-all-axis-sw10-cpl",
+            "frame_count": 197,
+            "parent_stack_id": "very-tilted-all-axis-sw10-cpl",
+            "source_file_ids": [
+              "00dda984de5ff7386dcde44213bca6c831d3619788d9f6e8f26a868aa9f7a09d",
+              "00ecc20de6cb3bbc7bda0fb1b6a0881c68ea5e0d4bf6fbbf1dc7a8aae7fea2be",
+              "018cadaa6f9a1aa05f214527066288fce1cb38d7f01b7cff2d1744bd1a654df3",
+              "029673236001c4bc03ef94e7082c6885cd0bb2a6a2273ace3022c2c2b889636d",
+              "0514f2b34fd0ca5f7e2e936be1451d2fe1ebe5365b63cc688a9bb544bdc83d18",
+              "05e6fcff1a53c5e70550815e22b65b1c5e180dc68e943c5c7d502101d789caf0",
+              "07d11eef66efdc10e33bbe59a4a2c47d25c711c916b4b119cbf7fb3572693e10",
+              "0a9765a9362029bbaadc3e4f608f1f9ea22132ac8708bedeac79747ad91928ce",
+              "0c2d3faf96c152862f7c3de67ea3add1bdca84b27da4b655a421dbbbc236f83d",
+              "0d0c565f572d140c743a4daeef55153f112f2ffce6938a2d5121adec872a551c",
+              "0d587f9e6160622f226f0fdfcf18973348775227b65ddbd2389114a58eb4739c",
+              "0e9d90e9427fa38ca26c1c633311e9dac02e03a5ba630c867e30618426384807",
+              "0edf521fafff3b74edd67f1eb5fc13492c07329794beddaf2b72ca8081533b14",
+              "0fa558bbef8d9c07d2f85ea9a95648ede5ba705498d241802a9dd953ff65ba61",
+              "100258bb704e02860dcf3732d382979cabe87693ce618537630de40fa3cd9ef6",
+              "10ddce5e4907b4ccf4735cf9f8cc05bb839d699d4fb656e577b4bd67540c8ee5",
+              "12e48f97612230fb1fe7c3793e3d873f61a0b9fee06e72dfc887cc3089912d93",
+              "15633adc05bde33914046740695fb3006be95a373a967b93cd294306cdc74d41",
+              "1660c72236e3f163d6874cc201c0efba1dd9345b3c82be88eef5cd53a80c49bd",
+              "17562de0479307e5186509e5643fd0257d4cc3909275c91af79091d7bf8ffcf5",
+              "18ecf7c6a9ae1c16be6c83d38fe9c514c939600142d6cbd4fd4e5facf13db5f4",
+              "1a031a96773f5ecd196bddcd4995138a73f6c40a542fba45f6e2c13ee9e8e7b5",
+              "1a4c148d165463d3bbb44b08b6836b52b8c1bb1cf588b6b2c9f666fe9092952e",
+              "1acd3f14395d5fc1a72e7c5b017f01847e9fc8749512557ee1cf05bc2db1b47f",
+              "1c0f6d5db045590f3d55a3d033a3e0b58b0c1037bfcdad2b47aaa81782501b19",
+              "1d050512382d64407fb2e4d881882f79c0a18c85d53a1fe1d42f2f4f1182bba3",
+              "1f3e65d504031066473f67e0d6392f307bbf006646d13f0bf5eedef829a84021",
+              "2601372b0755c7f5be2a349bd2a5abff98beaa3d232f870b05a38615aaf5a8c8",
+              "264304fde20e6a8336bca82bcdb37102040ea9c910f3c26c5b70b507f958f647",
+              "2660f35f7c704c477acdc68d6b18e1acf9286ebf65ec1446180b3d8567493b5d",
+              "28257b56db109915ce599708d0446fde33f8ea2434c3695cbc51f6af2fea37d7",
+              "2c77c73240b509d94b594027525da69a33df8d3b367748ddc2e28a4b1c2912be",
+              "31bc487a022eb232607085eb63c4743c165bb8498dbe07d51d6405ac0af0deea",
+              "31ebbe1ad62a106b4c7775628c1a414abdc43a52122f3ebdd171bab6fe61f435",
+              "326a47167157e9405ab6648d6c500f82821a2b8649206fcb3dc0061237691582",
+              "32c3e01d2a4cee55a3d13adf6a91c0074c389dce1c767cb68409cbe229fdd217",
+              "33ac2ae018dd2088ca72bd55401c5d7ffd65bd1ed801a43d01db5784e3c6a190",
+              "345288c5ac1a4db35943ab6ecbf3982b16c770532895f16210891bdb0e7abb58",
+              "35b1eaff5441af1033df5e7d1487e6cb637b97051725351a33624136bbc15974",
+              "3adb48e6ed04344ff0cc6d052e742b2b829c288bc554570b71f78268a4ad64e3",
+              "3ae66f5319b2d3aa5faa05b700d346c8d55be80652ba4920c45a997850497d98",
+              "3be67ba041738a055b9eb31bca18b058d74d2aa35f4f7add58d85692204ac247",
+              "3dd4a3c422535202f7064bb5e5586b11a792aef36f052367928a2469b1adaef8",
+              "3e20c2155dd8ce78846585b41e223c7c5ab337c20b4c9de61a856f89feaf0dcf",
+              "3e2810e387fdc35a1787580d734d84482340acc7bf35917c084a34fabfe47aae",
+              "40c02baa76d0d213d310c8ba7e305d86a36c18080d18c52c9b0756efee792757",
+              "40c9f276d47602351cc5546195458a3a52cb749f47e0513842298fe302a5bec0",
+              "412f149e58e4364c018ac54366007f7e2a9683d1b5b49dc0d93691cc80e15381",
+              "4152c696128da6b16c023cb5201d613a00519b6d6dea621e84145fa0dd3a2622",
+              "431122617205258ffd33b1e1eca9c627cf740331a1c4bf7ec45bb62bfc86b6ba",
+              "43ae565311d0e1572d145090117e2600f406c838310162875fcd0b832ac07274",
+              "4484ec8821e7f5801cd8d7fbfc22bed53eda8fe737c4466f9386f4e42538e59b",
+              "4531e9c374b60e945e250a41d4b776b5a4a84ec94b07a5f414d602492749ffea",
+              "45934a86d834b1bad767cf771c9f2bc0e1dbba5f75daeaffbf64b06089482855",
+              "4676cd109327c58511bdb896ecad2374bf1297d35db9111790f8690dbd157fe4",
+              "49737a8420b574181cbbece21825388853986576761ddae7fb047397f90c4644",
+              "4a7a742aa44b86f4dc5e3b28c37485e6d7f05f329dcf9617abb4366118344695",
+              "4df06579d50542c7519f334047bfc1f048df9f19a19c78e668508ce67b231d42",
+              "4f20b1c6d10a48eb269626f307e702baed074703164938ef92e2e705ad7c5f2b",
+              "4f89d0ddfb599420ea497704c038e8d5572496318ea973cdedec94785dd37040",
+              "4fcdbc63c42c1ad1ba76b993ae943f7dfce53103c63015defacb34ebabf2b764",
+              "50869ba933efaec57016240b29a316eacaecaa25cdf1a9f5e8bc0cc20b865e77",
+              "577dc9fde9709a0adb347979a3c961a6ebfb58faecbe6c195c48495fb8c54e90",
+              "57809a551766882ccfa3dda463c7e68805923fb28f59300ad9193861f48ab656",
+              "58575fd8e788d9ec059bd3e7fd2bf56da338c7c3906e443bdbbc638db6382965",
+              "5b2af41171c1da2ce7e2d07e98bdfe6fae6b475534e99fde25325c96cdd922a8",
+              "5d98cfeca93e1292aaa0ddebaafb880724e5f181f23ae011a4dedc2e177de7d5",
+              "5e1d9c758ec364d7610bfc66fad14470911b666c380ca7ac0f2513081292ce13",
+              "607c47f3f62ae9e565b32e19763876e265680844eedaf64d8d4954fc2fa63d15",
+              "613ecc63313794f8b98d16e70fc3555705e12e5cec77ba7d1f0f338cd5e2c866",
+              "63d1da62362bae647de2d8602fcbc6dced6a415c0cfe6f637f4a36c91c99dbb6",
+              "64e0b10b1fcf440bcfad57ee7920d5e6706d25a6395daca92a687f0ed9efb98b",
+              "653400efc4b2bd0b9658a74bafe8a508120275df56cfb0913bce2e43891302b9",
+              "67994f21ebd85d79d7e30dadd825eea2ef359994839fcf9038be57a6f3b9f17a",
+              "68e3dd552406260c9272fb5639a3346fb0df84d850ded780f341c4fe555469cb",
+              "6a62897aa83d3cd2bcaed447621d0f34a1227c87f25c7f4c308663a9f87033fa",
+              "6bec2b8ef970b20727878fb342e391f74dfffcecf70ce447014a9b8fe68ab93a",
+              "6cb03fbc0508f3fa3644d8bb587a44e3e9ea56af126b6f43297a94b8d43767a2",
+              "6cb6b7757fd22e80247a1b007af6f995334222e98bf60a7c5189da3f6936e8be",
+              "6dc2fa6a0a63d0a13b3af1ff698ea959b4ae61bb72eebd9b1d9b3ada9f671596",
+              "7016fcdf129abbc0f00420ec5dbf94e43e8a0cc1f51e5bff459a880816f73db5",
+              "70363959006f977eec772e415a0b4aa9072fdbfa1baf49a8d8eea712d7e31755",
+              "7329dca531ca0be6dbd745e639bf6586c199953c44f23d57e1281c781798f336",
+              "75bf62f0de579dc95f11c6a0c4810d9cbe3b0fc2718509e85a743141f3db260a",
+              "75d3498906a4b41fa59a792a132f85728db8cf4bd466f5334260997a6809234f",
+              "79c83f30ddc3998b229f0c26d47b663a0669e01d95fbd5bf354619c2fa682a87",
+              "7a8f8b53496b37825282260380ba73f607586999cb1db3366c1fea6d4e549acb",
+              "7c5407fd8afb4b7889c79c07fae51da67789304741fa7de38cd9b5777c3de9d7",
+              "7f0a2098afbfac51ec7f9a0704283f2d5b4e21182beb5c2a6f5c97bb80046ae7",
+              "7f0c0ceae6b3c191ab6be1e098aaab6c35219996eb5fa2ec524d198b5f2e2612",
+              "83a4791ec6fe50bd1a03804860b3eacf46e655549bf830359c599a290e743487",
+              "8504332601aa38cae4f9486b004b3ccc7f726c90dcc9fa6d6b6a072320aeaf06",
+              "862e447abedb51e097fa2bdb683d893a48501080f38bfda961428c1f563deb0a",
+              "86f5d759e716e11ddd4fd5c95a12668484bc978227c95dd47b2ac22c363972c7",
+              "87304c213a3cbcfafd39183f4295aa706f232fb8447209a0cf9b565e762e8fca",
+              "87700871db5aa845d5cf3bc35c341d921643ec48b2d0ee1d7633185671c88994",
+              "88949c8f43b61560999a8bbc4b9faa4eaa4b04b02c0e55ed3954ad3331c89d9f",
+              "8980ae95ebddfdd8ac3b64aae449e67a6b9b71fc4682763371392d8e11f86392",
+              "89c741de09fb26d819e8f3b1cac044397b7808f9e096c011310a87837c23537a",
+              "8a94a80b7d591b2ce2f253cba4f2dee5ff9822804cbdd803c2f593ce6a2dfb71",
+              "8d56ebbb6ddc92a6cb85011265af8e46a59cf44da424a7b1103954e5cbaf71fb",
+              "8da4655d8bc6ba3126c44752c98f95adf800e9e67269f1171dbdc8a53703d34c",
+              "99795645012799fe6b81b274e62d665955fd368c025f1e966ff0cd129dc65701",
+              "99fd0253deecf970e9cddb2dbcf1b2a594afffb6761c5a8d24964e7569bbd239",
+              "9b687b82ec9183c3b1da5f803940083b1ef505a8695ec6c2b9a89740406a80e6",
+              "9b6d6045cddec56e4f2e794f7b7b7a10b3d1e83b4456abb66dcf1675e1a3b8e3",
+              "9c72d4ae50b1eeefe60c82a4f9239ff830018f6a6f4bb282c3ed4968414d1332",
+              "9cb19bcd09ef90bf8f2685cc8e70f7f6386a37db13d6d7d81662fe03eacaa57e",
+              "9d64dacd1b95b052afaa7ea7e9a6e09dbc18e9504cbf1221d0541fb623bb84c6",
+              "9de24ada590c726147a1d90de4b94ca9b37acf9c0cc0e4b03c906088d5966757",
+              "9eaae2606900326979d1ccdcfcc3a2271a943cddc983ca4b71c69de967b15899",
+              "a0ce9175e9d211810354bc892a1b3c157e083c36d56d1165433a838e24aaa3b4",
+              "a14aaa9bb53661d6928cd93d21ae653f39a54580bf1a24313852b7598027c08e",
+              "a2516cf130894eb7e49c5692326a86826ca9f2e29f0648cb09488885d5061f8f",
+              "a4a02b65f77cb8197427441a9367a04ccd4b8451019754cbf0530e797eac8624",
+              "a746a9532d488de1482d01c812b11fb42929fcc8eec0accd5b05da3a31dd4e75",
+              "aabae30f7b66da2c202903938b6dfd2550fabf46742d5482c6df07151808a4a8",
+              "abce2c764a3f1934c6747ea46633d8cb4a7499880cdcbf06b29ac91d7914c3b7",
+              "af678e6b35d4958d0225af7f7bd6efdc61759103e633305efd32a723d6be509c",
+              "af6c3c5d5676cba2d6e330152adc5a56a579d2d641328e90b8e7043e91ff114b",
+              "b196a688cc3e5a3561982284019628ed5aa80dff747220cb8e96ed10382a5d4f",
+              "b1c1900972951d2459b93e270d9caaf41ce4e44443e6cb2c111a903d322a5674",
+              "b3662a7d4a6f9c845c7d39cc21a24049cdda93acea16ba0f5f0b50ac330c2f46",
+              "b4bc21df4e08607e6482e17df5d5b9d2ac63e3376a35401804e60b5554c33167",
+              "b50ecafdf3784c9ea35f605e5d7cdb3f1df8b411e863ac6b389a3a8be4ca58ed",
+              "b83d3aa2a9c6b6e5829c10c15342540d64545ee60a52a9092a680b89b203d835",
+              "b9b4fb21429ba86363bd21efde5c6d859bea96f9ca1b43ca30b855ac30aaa967",
+              "ba93691e6993192ed32ffb1c5c765080885b54f5670f3499e8371655202a38f4",
+              "ba9a7a3971bfcf91943f82e2b367694b81790bccbba82c73016e4c158aa24f88",
+              "baad514a8138bf3f6e3fd00d499b5f9ff093be3d3d44ea33ba19b4fd598990b8",
+              "baba638c70fb9faadbff86e0aa3def99c59a35f6e1afb9fbfc5a0edeaf5a1e69",
+              "bae3dbedb9d1fe104d64a94ba0ebd9c13b902a2fd8adf17715ee775f37dc0e31",
+              "bae5c464e8b54de589abda5b69573eea22e5536e4d5b98ef4f57b9de187fe879",
+              "bbd60c1a0d37d8d7787da75025c03522a17ea5e92f0fe7277485c1ab163a1c1e",
+              "bc1f46c9ccc693db5bc9f2f2ac6737fc5952177721f0fbd751817909284f928a",
+              "bc2a3846b835c148bf938ceaab3deba9851606cb7cf4b5b786d74601916013bb",
+              "bc56a2e617dd99f5ddbbe7382931691d2d4902025aad4427d17c42184112508f",
+              "bc98d4a00b91490e6fbc1539f1fb80f08aa0a80e3199e00bb604bf015dbad723",
+              "bd2440447d54e26407b5096936d573a58ae08104c9be864234809e259eb9162e",
+              "bddfa184a28b373b019a53420bcb2d9807c4b1defaf21a57f979679796266b34",
+              "be33139262b77646c6daf25221fb100752f4b13bd4526211b96bb12c774fca65",
+              "bf16ac88717d74ca6b524c1e6563f8a7ba3935dee9467a235062c9755b370ef7",
+              "bf4f5ed46859623c91e72abba5568c740e522675a79e51e4d6c8cf37cdbd0c43",
+              "bfc9528d8e1c394aaf98745507f3a5e5e90ef03fd6e8cf4e613dc762b5c56318",
+              "bffc17da196c37bf6e581d1c99ccec86ae545ce7c25a04f0eb8d2518bea855e0",
+              "c02b251bd1fd1e80b71200f3b190fe112b0f79c32aa453bd832b52841058b295",
+              "c1ff457b192eab1755aaf6a77bd345c34ca81dd3c2e6b24d7bf21192e673da6a",
+              "c555296a57f3f1b26df044999550355c6ede542589fb13e3b231e4f885b415e8",
+              "c717a5ce20ca5ac9d623077b554bbff3fcabe78a369701cb97e4bdc4b31d417d",
+              "ca4bcfdf3fd1392bcdd1979b59c43a970edc26d84675ba9b87c5a16bae99f895",
+              "cb69bb7edfa66e05d7e9fb48e7f801e063c1652fc61c5d26905199001dab824c",
+              "cc471034beddd9a4b181914f8576440be2407774a32f95780ab613ab87a0cca8",
+              "cd3e5adcbd0721f54cca92c366f3bd69b27ef921e7030b32c2249e56b95a78ef",
+              "cddbba7c0c32ff723f5280cc536e857c54d94ec927f2966661fbadfdcb53b813",
+              "d0d7b4795946a908e50559694b0f09eecc679fd98b4d4130331700419ea3d395",
+              "d0f39d6dea6be23f1fc387f0636f42ffb884a5e7da3740ad3e551d09ac6d53be",
+              "d123ee50819066543a543965bdccad7317e3ef1cb2212f69bccf365807f8cea4",
+              "d451fe27262e3716e8b5b9c587e27e4a0473ea90a00146a8b0ef1131f062af3b",
+              "d71579c77673cb47061bf6bcc29686f4c37814dbf8ef44398118625c55ae5e23",
+              "d8e9112ace977e9615516acc6d987d56b86920281f6db78c0b4312f0abaed0d4",
+              "d9cecddc2899579a0bafe6923fe1da53c35e434c9822f97c13c1b4188eb21c0b",
+              "daf429be467c4b89fdcaac59537be6595f613da59fe11106f42a8441b6680d61",
+              "db5b79ae3c5203069145da3d5fda917e0bd78742944eb1db3cd82e0e4dd69e7b",
+              "dca9e6bf904275db790d4bdad0beeb49e14e3573f3d9417e96a88c8f7ad1cfb7",
+              "dd225a877f9ff35d386c847ec53e3235cfe62a452112b3970095a15be0500323",
+              "df8781c381f0403c07851cd42f1dab57fe3f198c7022f866bec6395fc1a7a369",
+              "e1032cd3620453817bcf395fb81f382443dcd1965b4b1e991f91d81c54f4c763",
+              "e1509dddd906894247f1a6390778e35bf39eea865929c7e34b205cd599a971af",
+              "e225aad8819c34bb98bfafc872dbd5c63676b6809d4b8be26909b3088c566a3b",
+              "e2dd1aced49067f71dfae4a9b4f1c64284340ec0f044f786725821060f4bce39",
+              "e458950a55747756b48c35bef21a30ca9693a853c5e4714eefa046655b1d832a",
+              "e4a0f4322ed0d2ac18f8187a7ae9e2024c2692b2a6ad0fbd55d6fc9d050b4291",
+              "e4b656c67d7c2d2121c9f75808dea1e3cea0c692860f09930ff8506dab9f8ea8",
+              "e6174d83b1b810e07b8b51ba60f83b2531cd404850d6d8adf089336cac5d045f",
+              "e6bab98c25dee681527ef9afefa8a86258326fde1845d9ebdd3f65a43fbc9e47",
+              "e79fc20267cd03c6a8ff1f01fa53eebed3118ce3119540dc7acb1ce327d3cf72",
+              "e8406b4c841021705d36b67793237969d20477b179df1bb0b19dea2e8fa561ed",
+              "ec7aea23e808d53655e45fbfd0fe81719684e5bf8928153a0e8a2e472c0a63cc",
+              "edc57032b67bbb3c9ae97495f3b19a16432c0b55c7cdf4104092d26904dff9dc",
+              "edfecf739dfcffa601379d00538d6c76432c89005a1c30bc24aa3658dcda1b7f",
+              "eecce83c591341169620bb4790d96cf4ab021ed6df2dc277cdd5234a30fcb6d6",
+              "eecd03904a81f54418975623f037e4e0ed571d3001fbb9ddc3c3bb608e44ce78",
+              "ef191d3738271e0b8c220c6757733c14281cda0572742d9ca0bcdc0f18b98c3e",
+              "ef44a3cf1e3753be7eae4577c1e5c3f0a7f4e6ffbdff804efa71c03da1d18e93",
+              "f04fa97ea006d38c5fcde7847540873ce7e28a385baaceeb8505036f3da529db",
+              "f0cf82ea5acfab300226c35eeea60fa21911bb40c6c4ea5529b84897499b9e41",
+              "f17871dbe69ee8ceecb0f1322ddec95c1cf03dafa7e1b3b5b13dacb6157ca12a",
+              "f25db4212beb516d35d8e383df1a57844b477bf81c6910dc3e4b3024f4977892",
+              "f49f01261cc8e2c3f6c28c3d0fed9d90296fc966d39e8b68346eb0a708a29b6a",
+              "f76c12ff649631a854ecad89b0017f2823e3852b6938eedc50f972845a849651",
+              "f98b3db4cb23f95caaee56d1c775eb3084592456c2ca2f394f7c1b8d1f0840fe",
+              "f9f4f43248b1364f9324a9f0c20abdf1d936fe827b63114a896674d8b0f13610",
+              "fa22c7a23d43150c0780a203ece48c67ceca9f1d25715561417e1742162e0dd9",
+              "faed6b08327080b0b7c05130d061ceb7eaed92a78f9b289059cf2c3eb6cabf50",
+              "fc7dc51e42eed1b33090b8f22e10cf429c90014f7c57bbdfcf7efc58866f3ec3",
+              "fcc5ecf9452462614f49321cfa4e936054f6c0789c051feac6e259351299b1de",
+              "fd32234c43dafbfb6a969dcef6b24b29ea93c4c3ad3dfdeb534daee8ba78fa1c"
+            ]
+          }
+        ],
+        "count_matches": true,
+        "exiftool_formatted_frames": 197,
+        "exiftool_numeric_frames": 197,
+        "expected_frames": 197,
+        "exposure_time_histogram": [
+          {
+            "frame_count": 197,
+            "value": "1"
+          }
+        ],
+        "filesystem_frames": 197,
+        "first_capture_time": "2026:09:02 20:57:12.415-07:00",
+        "focus_tags": {
+          "FocusDistance": {
+            "histogram": [],
+            "missing_count": 197
+          },
+          "FocusDistance2": {
+            "histogram": [
+              {
+                "frame_count": 10,
+                "value": 0.270710678118655
+              },
+              {
+                "frame_count": 40,
+                "value": 0.273841307296975
+              },
+              {
+                "frame_count": 40,
+                "value": 0.277110541270397
+              },
+              {
+                "frame_count": 41,
+                "value": 0.280524516597463
+              },
+              {
+                "frame_count": 40,
+                "value": 0.284089641525371
+              },
+              {
+                "frame_count": 26,
+                "value": 0.287812608018665
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocusPosition": {
+            "histogram": [],
+            "missing_count": 197
+          },
+          "FocusPosition2": {
+            "histogram": [
+              {
+                "frame_count": 10,
+                "value": 56
+              },
+              {
+                "frame_count": 40,
+                "value": 57
+              },
+              {
+                "frame_count": 40,
+                "value": 58
+              },
+              {
+                "frame_count": 41,
+                "value": 59
+              },
+              {
+                "frame_count": 40,
+                "value": 60
+              },
+              {
+                "frame_count": 26,
+                "value": 61
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocusPosition3": {
+            "histogram": [],
+            "missing_count": 197
+          }
+        },
+        "formatted_settings": {
+          "formatted_CameraOrientation": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "Horizontal (normal)"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_ImageStabilization": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "On"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_LensModel": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_LensType3": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "Sony FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_Model": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "ILCE-7CM2"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_Orientation": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "Horizontal (normal)"
+              }
+            ],
+            "missing_count": 0
+          },
+          "formatted_ReleaseMode": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "Exposure Bracketing"
+              }
+            ],
+            "missing_count": 0
+          }
+        },
+        "last_capture_time": "2026:09:02 21:01:58.443-07:00",
+        "observed_frames": 197,
+        "role": "geometry-stress-not-repeat",
+        "settings": {
+          "CameraOrientation": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExifImageHeight": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 4672
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExifImageWidth": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 7008
+              }
+            ],
+            "missing_count": 0
+          },
+          "ExposureTime": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "FNumber": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 5.6
+              }
+            ],
+            "missing_count": 0
+          },
+          "FocalLength": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 200
+              }
+            ],
+            "missing_count": 0
+          },
+          "ISO": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 100
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageHeight": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 5120
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageStabilization": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ImageWidth": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 7168
+              }
+            ],
+            "missing_count": 0
+          },
+          "LensModel": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+              }
+            ],
+            "missing_count": 0
+          },
+          "LensType3": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 33094
+              }
+            ],
+            "missing_count": 0
+          },
+          "Make": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "SONY"
+              }
+            ],
+            "missing_count": 0
+          },
+          "Model": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": "ILCE-7CM2"
+              }
+            ],
+            "missing_count": 0
+          },
+          "Orientation": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 1
+              }
+            ],
+            "missing_count": 0
+          },
+          "ReleaseMode": {
+            "histogram": [
+              {
+                "frame_count": 197,
+                "value": 5
+              }
+            ],
+            "missing_count": 0
+          }
+        }
+      }
+    },
+    "status": "INVENTORY_MATCH",
+    "unexpected_arw": []
+  },
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "not_independent_verification": true,
+  "roles": {
+    "j_tr": null,
+    "j_tr_computed": false,
+    "missing_roles": [
+      "R1",
+      "R2",
+      "sw4_Y1",
+      "sw4_Y2",
+      "sw10_Y1",
+      "sw10_Y2",
+      "flat_R1",
+      "flat_R2",
+      "sw4_flat_Y1",
+      "sw4_flat_Y2",
+      "sw10_flat_Y1",
+      "sw10_flat_Y2"
+    ],
+    "predicates": {
+      "all_required_roles_present": false,
+      "checker_template_forbidden": null,
+      "disjoint_calibration_lineages": null,
+      "disjoint_source_files": null,
+      "independent_capture_units": null,
+      "independent_parent_stacks": null,
+      "matched_flat_evidence": null,
+      "matched_flat_manifest": null,
+      "minimum_sites": null,
+      "nonperiodic_target": null,
+      "odd_even_not_independent": null,
+      "reference_sampling_ratio": null,
+      "same_geometry_for_repeats": null,
+      "same_physical_sites": null,
+      "same_site_role_mapping": null,
+      "site_manifest_bound": null,
+      "source_files_bound_to_inventory": null,
+      "source_oracle_forbidden": null,
+      "sw4_never_truth": null,
+      "unique_site_coordinates": null,
+      "unique_site_identities": null
+    },
+    "role_ledger_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\role-ledger.template.json",
+    "role_ledger_sha256": "b03e3e67464800a32f5c336ace0e88b91e9f3b4a92a5e3b6126c3202b9b55cd8",
+    "sampling_ratio": null,
+    "score_callback_called": false,
+    "site_evidence": {
+      "coordinate_system": null,
+      "ledger_site_count": null,
+      "manifest_path": null,
+      "manifest_sha256": null,
+      "required_roles": [
+        "R1",
+        "R2",
+        "sw4_Y1",
+        "sw4_Y2",
+        "sw10_Y1",
+        "sw10_Y2"
+      ],
+      "site_count_from_manifest": null
+    },
+    "status": "REFERENCE_ROLE_ABSENT",
+    "violations": []
+  },
+  "schema": "m135-executor-evidence-v1",
+  "scientific_artifacts": {
+    "stage_a_inventory": {
+      "bytes": 1407536,
+      "path": "out\\stage-a-inventory.json",
+      "sha256": "ba0dd56c7ea74ce66b300127f1d61f401687374909a7707523c2752d542e40d5"
+    },
+    "stage_b_decode": {
+      "bytes": 2572539,
+      "path": "out\\stage-b-decode.json",
+      "sha256": "9519a14cae0297388e21f45d3d79b67e1d54d563e6bceed57eb7cbe4c93f1c21"
+    },
+    "stage_c_range": {
+      "bytes": 37078,
+      "path": "out\\stage-c-range.json",
+      "sha256": "5088bf6f4a94066ac64dd10c4e59c25a54f26de553a04559e6bb5132f26e6dcf"
+    },
+    "stage_d_roles": {
+      "bytes": 34462,
+      "path": "out\\stage-d-roles.json",
+      "sha256": "096404f6ec48dc7afaca77e256a6b25a99237641a4b6b8933c6fdf0dd865b621"
+    },
+    "stage_e_flat": {
+      "bytes": 59972,
+      "path": "out\\stage-e-flat.json",
+      "sha256": "e5a2235b9fd46c87822ccb4e99ecdeabd4636d8d0ad87d33fd81b76aa418f092"
+    },
+    "summary": {
+      "bytes": 34901,
+      "path": "out\\summary.json",
+      "sha256": "a37fdb26e72b576f9a2ccc89e5a15913957495710a840bb0d06d6bbd23b6f79c"
+    }
+  },
+  "session_invariance": {
+    "after_listing_sha256": "260f05d3342141f7e8698efe684151dfb3a904097c4d678b710912c1c1d5bfee",
+    "after_regular_file_bytes": 26156716032,
+    "after_regular_file_count": 657,
+    "after_snapshot": "session-snapshot-after.json",
+    "authorized_session_root": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl",
+    "before_listing_sha256": "260f05d3342141f7e8698efe684151dfb3a904097c4d678b710912c1c1d5bfee",
+    "before_regular_file_bytes": 26156716032,
+    "before_regular_file_count": 657,
+    "before_snapshot": "session-snapshot-before.json",
+    "checks": {
+      "exact_record_sequence_equal": true,
+      "listing_sha256_equal": true,
+      "regular_file_bytes_equal": true,
+      "regular_file_count_equal": true,
+      "reparse_file_count_equal": true,
+      "reparse_file_sequence_equal": true
+    },
+    "comparison_implementation": "Python JSON structural equality over the two already-captured Get-ChildItem -Force snapshots; no D:\\ re-enumeration",
+    "label": "DEVELOPMENT — NEVER A SCORE",
+    "schema": "m135-authorized-session-invariance-v1",
+    "supersedes": "session-invariance-powershell-false-negative.json",
+    "supersession_reason": "PowerShell reconstruction check emitted a false negative despite identical stored listing SHA-256 values; direct structural comparison found all 657 records identical.",
+    "unchanged": true
+  },
+  "source_invariance": {
+    "after_aggregate_sha256": "e59643fcb11f35896cb19457bdc47f294c64d2cae7a227fecbc932ca22009f19",
+    "after_execution_head": "e93f0bde695961d53cbd66587a060a41552b4a63",
+    "after_snapshot": "source-tree-after.json",
+    "before_aggregate_sha256": "e59643fcb11f35896cb19457bdc47f294c64d2cae7a227fecbc932ca22009f19",
+    "before_execution_head": "2b14eb0399bbe682b4b83910f941ca5c63cf2a0d",
+    "before_snapshot": "source-tree-before.json",
+    "checks": {
+      "aggregate_sha256_equal": true,
+      "authorized_commit_diff_empty": true,
+      "exact_file_records_equal": true,
+      "file_count_equal": true,
+      "missing_file_count_zero": true,
+      "tracked_status_empty": true
+    },
+    "label": "DEVELOPMENT — NEVER A SCORE",
+    "schema": "m135-source-tree-invariance-v1",
+    "unchanged": true
+  },
+  "summary": {
+    "artifact_hashes": {
+      "decode_sha256": "9519a14cae0297388e21f45d3d79b67e1d54d563e6bceed57eb7cbe4c93f1c21",
+      "flat_sha256": "e5a2235b9fd46c87822ccb4e99ecdeabd4636d8d0ad87d33fd81b76aa418f092",
+      "inventory_sha256": "ba0dd56c7ea74ce66b300127f1d61f401687374909a7707523c2752d542e40d5",
+      "range_sha256": "5088bf6f4a94066ac64dd10c4e59c25a54f26de553a04559e6bb5132f26e6dcf",
+      "roles_sha256": "096404f6ec48dc7afaca77e256a6b25a99237641a4b6b8933c6fdf0dd865b621"
+    },
+    "artifact_link_checks": {
+      "decode_to_inventory": true,
+      "flat_to_decode": true,
+      "flat_to_inventory": true,
+      "flat_to_role_ledger": true,
+      "flat_to_roles": true,
+      "range_to_decode": true,
+      "range_to_inventory": true,
+      "roles_to_inventory": true
+    },
+    "coarse_encoder": "COARSE_ENCODER_RANGE_EQUAL",
+    "config_sha256": "911de7c2c6ab84c1ce820e1fa9a3ebd5b74d234de013ef68cb72873ab753f3e1",
+    "decode_recomputed_from_bound_inputs": true,
+    "flat_diagnostic": "FLAT_DIAGNOSTIC_UNDETERMINED",
+    "flat_recomputed_from_bound_inputs": true,
+    "identifiability": "REFERENCE_ROLE_ABSENT",
+    "image_range": "IMAGE_RANGE_UNDETERMINED",
+    "inventory": "INVENTORY_MATCH",
+    "inventory_recomputed_from_bound_inputs": true,
+    "j_tr": null,
+    "j_tr_computed": false,
+    "label": "DEVELOPMENT — NEVER A SCORE",
+    "physical_binding": "UNBOUND",
+    "quiet_flat_is_necessary_not_sufficient": true,
+    "range_recomputed_from_bound_inputs": true,
+    "real_optical_intervention": "REAL_OPTICAL_ARM_NOT_ESTABLISHED",
+    "schema": "m135-slide-summary-v1",
+    "stage": "summary",
+    "status": "DEVELOPMENT_COMPLETE"
+  }
+}

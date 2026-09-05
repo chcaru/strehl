@@ -1,0 +1,17 @@
+{
+  "schema": "m135-command-record-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "stage": "stage-a-inventory",
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "command": "python -B C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\instrument.py --config C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\config.json inventory --session-root D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl --exiftool C:\\Users\\chris\\AppData\\Local\\Programs\\ExifTool\\ExifTool.exe --output C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-a-inventory.json",
+  "started_at_utc": "2026-09-05T06:57:37.4517574Z",
+  "ended_at_utc": "2026-09-05T06:58:37.0053646Z",
+  "duration_seconds": 59.552812,
+  "exit_code": 0,
+  "stdout_stderr_file": "stage-a.log",
+  "artifact": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-a-inventory.json",
+    "bytes": 1407536,
+    "sha256": "ba0dd56c7ea74ce66b300127f1d61f401687374909a7707523c2752d542e40d5"
+  }
+}

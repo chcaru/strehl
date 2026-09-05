@@ -1,0 +1,17 @@
+{
+  "schema": "m135-command-record-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "stage": "stage-d-roles",
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "command": "python -B C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\instrument.py --config C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\config.json roles --inventory C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-a-inventory.json --ledger C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\role-ledger.template.json --output C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-d-roles.json",
+  "started_at_utc": "2026-09-05T07:12:46.6159876Z",
+  "ended_at_utc": "2026-09-05T07:13:04.3279487Z",
+  "duration_seconds": 17.71077,
+  "exit_code": 0,
+  "stdout_stderr_file": "stage-d.log",
+  "artifact": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-d-roles.json",
+    "bytes": 34462,
+    "sha256": "096404f6ec48dc7afaca77e256a6b25a99237641a4b6b8933c6fdf0dd865b621"
+  }
+}

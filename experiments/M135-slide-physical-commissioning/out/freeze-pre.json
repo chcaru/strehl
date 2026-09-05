@@ -1,0 +1,17 @@
+{
+  "schema": "m135-command-record-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "stage": "pre-data-freeze-check",
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "command": "python -B C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\freeze.py check --manifest C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\freeze-manifest.json --crosscheck-bin C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\target\\release\\m135-slide-raw-crosscheck.exe",
+  "started_at_utc": "2026-09-05T06:57:11.4405334Z",
+  "ended_at_utc": "2026-09-05T06:57:13.6340779Z",
+  "duration_seconds": 2.19205,
+  "exit_code": 0,
+  "stdout_stderr_file": "freeze-pre.log",
+  "crosscheck": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\target\\release\\m135-slide-raw-crosscheck.exe",
+    "bytes": 6837248,
+    "sha256": "5418b561bc6b091dd5cb290fbb77d22d2d6f03c2a4a28b42b359963108770001"
+  }
+}

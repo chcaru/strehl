@@ -1,0 +1,721 @@
+{
+  "config_sha256": "911de7c2c6ab84c1ce820e1fa9a3ebd5b74d234de013ef68cb72873ab753f3e1",
+  "inventory_sha256": "ba0dd56c7ea74ce66b300127f1d61f401687374909a7707523c2752d542e40d5",
+  "invocation": {
+    "argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\instrument.py",
+      "--config",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\config.json",
+      "roles",
+      "--inventory",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-a-inventory.json",
+      "--ledger",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\role-ledger.template.json",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-d-roles.json"
+    ],
+    "command_line_windows": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\instrument.py --config C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\config.json roles --inventory C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-a-inventory.json --ledger C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\role-ledger.template.json --output C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\out\\stage-d-roles.json",
+    "config_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\config.json",
+    "config_sha256": "911de7c2c6ab84c1ce820e1fa9a3ebd5b74d234de013ef68cb72873ab753f3e1",
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "dependencies": {
+      "discovery_policy": {
+        "detailed_native_files": "all NumPy, rawpy, and OpenCV native files; SciPy FFT, ndimage, optimize, _lib, and scipy.libs native files",
+        "probe_modules": [
+          "cv2",
+          "numpy",
+          "numpy.fft",
+          "rawpy",
+          "rawpy._rawpy",
+          "scipy",
+          "scipy.fft",
+          "scipy.ndimage",
+          "scipy.optimize"
+        ],
+        "semantic_distribution_files": "hash every installed .py/.pyi/native binary plus METADATA/RECORD/WHEEL into a compact aggregate"
+      },
+      "distributions": {
+        "numpy": {
+          "distribution_metadata_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "8e273c8b69f08a36557fabae4828bc5c5bf1ef2b7c5765a93bf2b7437cf5f983",
+            "byte_count": 118815,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 6608,
+                "path": "numpy-2.4.4.dist-info/METADATA",
+                "sha256": "8f9e04338ffa930868a2d157ce44f6e4cb7ac524b968fb13d04187a6ac575282"
+              },
+              {
+                "bytes": 112122,
+                "path": "numpy-2.4.4.dist-info/RECORD",
+                "sha256": "11ef09377f4b4c6b9218c9293d399fb1cc3f06e560c608faa25852adccfc32da"
+              },
+              {
+                "bytes": 85,
+                "path": "numpy-2.4.4.dist-info/WHEEL",
+                "sha256": "e743de01ba6503a3e4234858398a1e69c07d512d51e8482ec9f3a7b1c707d165"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "installed_distribution": "numpy",
+          "load_bearing_native_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "71e84ac7c80e84a6deb820705c1ba842d95777f9607bfcf0a1a76f0e7dc66744",
+            "byte_count": 28033616,
+            "file_count": 21,
+            "files": [
+              {
+                "bytes": 20415488,
+                "path": "numpy.libs/libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+                "sha256": "63c857e738469261263c764a36be9436ebdeaa272e340a828f42047a97131080"
+              },
+              {
+                "bytes": 575056,
+                "path": "numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+                "sha256": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde"
+              },
+              {
+                "bytes": 65536,
+                "path": "numpy/_core/_multiarray_tests.cp312-win_amd64.pyd",
+                "sha256": "a37712b7a0e12fbb28b5c77873886140f7a36dc7c11d0ffb1739fb07f879ad4b"
+              },
+              {
+                "bytes": 3714560,
+                "path": "numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+                "sha256": "f4523c2dfe641a904605029ce4a5046388bd61b18afc0594d34018b5e6d848f8"
+              },
+              {
+                "bytes": 12288,
+                "path": "numpy/_core/_operand_flag_tests.cp312-win_amd64.pyd",
+                "sha256": "7e4e9738f554ccffe98ace10618d96b40784fa6dfe1313a5e73fb72dc575c736"
+              },
+              {
+                "bytes": 39936,
+                "path": "numpy/_core/_rational_tests.cp312-win_amd64.pyd",
+                "sha256": "922c3ca16dd5be1c89aab32f584272cb9a9cea32dff728b27fdd17ce9be85dd2"
+              },
+              {
+                "bytes": 832000,
+                "path": "numpy/_core/_simd.cp312-win_amd64.pyd",
+                "sha256": "5fb18573594ff25afb56359a6349f006e37dfb71e4de2c30dad8c0fb91957bf5"
+              },
+              {
+                "bytes": 14336,
+                "path": "numpy/_core/_struct_ufunc_tests.cp312-win_amd64.pyd",
+                "sha256": "9bb5da7cb16679c130025472ffb10824821a1972d375a69876745ae77ecb05a9"
+              },
+              {
+                "bytes": 33280,
+                "path": "numpy/_core/_umath_tests.cp312-win_amd64.pyd",
+                "sha256": "adb48d882bc86e2cfb31ede2316fd69a046590b67e5f29a624fe44b47795aa07"
+              },
+              {
+                "bytes": 276480,
+                "path": "numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+                "sha256": "7c009372f4f448c2d7419726b671f7122693705c905d5239df1ef2b49c30eadc"
+              },
+              {
+                "bytes": 112128,
+                "path": "numpy/linalg/_umath_linalg.cp312-win_amd64.pyd",
+                "sha256": "8732faea57c1e9750297bc5df2ed090954159e28024c66f1cdbf1d4eb798ccb8"
+              },
+              {
+                "bytes": 18944,
+                "path": "numpy/linalg/lapack_lite.cp312-win_amd64.pyd",
+                "sha256": "7d0b28de7229d533f158708676ae4661b0554badd8b4ca7befd9f573b6fddb80"
+              },
+              {
+                "bytes": 207360,
+                "path": "numpy/random/_bounded_integers.cp312-win_amd64.pyd",
+                "sha256": "dd98c61f9c78c6dfbf16b7ef5060647aba412a6ea74ab6cd80d93c34dd485d57"
+              },
+              {
+                "bytes": 167424,
+                "path": "numpy/random/_common.cp312-win_amd64.pyd",
+                "sha256": "95b8170a18ec959a6e7d5eb3c5ec62945e25ef000e7d3e079634f6a6f1025599"
+              },
+              {
+                "bytes": 585216,
+                "path": "numpy/random/_generator.cp312-win_amd64.pyd",
+                "sha256": "dd21763b7cbd0934d11e18a205b43a2f94281749cdc3ae29a8b0551d89bec069"
+              },
+              {
+                "bytes": 83968,
+                "path": "numpy/random/_mt19937.cp312-win_amd64.pyd",
+                "sha256": "dfb5422af41c2481f7284cfb24d6c22d20f7335a3b782381b965f1ae5dbbb58b"
+              },
+              {
+                "bytes": 94720,
+                "path": "numpy/random/_pcg64.cp312-win_amd64.pyd",
+                "sha256": "7233f96d62e6e908a5b8c05d944bab62484e1e8094ed7ceb67c4d039da9b03e3"
+              },
+              {
+                "bytes": 78336,
+                "path": "numpy/random/_philox.cp312-win_amd64.pyd",
+                "sha256": "a42e903341f5ab570a508c4347e838955b9d01dfb42fbe2a92716cd17c8263bf"
+              },
+              {
+                "bytes": 59904,
+                "path": "numpy/random/_sfc64.cp312-win_amd64.pyd",
+                "sha256": "a84fd4bed2bbfe54d6e0b21990e9260cf82770e80c22f58ce767917ad2d72a9b"
+              },
+              {
+                "bytes": 157696,
+                "path": "numpy/random/bit_generator.cp312-win_amd64.pyd",
+                "sha256": "13c855266daae91046fdeced52acd6ad1a39680381f11e2c9959b173f5f8b6fb"
+              },
+              {
+                "bytes": 488960,
+                "path": "numpy/random/mtrand.cp312-win_amd64.pyd",
+                "sha256": "a100e03d295811221bc317d9ba7e0ff0dbcd58a8deda7d2f734703fc7e223e6a"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+            "selection": [
+              "numpy.libs/libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+              "numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+              "numpy/_core/_multiarray_tests.cp312-win_amd64.pyd",
+              "numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+              "numpy/_core/_operand_flag_tests.cp312-win_amd64.pyd",
+              "numpy/_core/_rational_tests.cp312-win_amd64.pyd",
+              "numpy/_core/_simd.cp312-win_amd64.pyd",
+              "numpy/_core/_struct_ufunc_tests.cp312-win_amd64.pyd",
+              "numpy/_core/_umath_tests.cp312-win_amd64.pyd",
+              "numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+              "numpy/linalg/_umath_linalg.cp312-win_amd64.pyd",
+              "numpy/linalg/lapack_lite.cp312-win_amd64.pyd",
+              "numpy/random/_bounded_integers.cp312-win_amd64.pyd",
+              "numpy/random/_common.cp312-win_amd64.pyd",
+              "numpy/random/_generator.cp312-win_amd64.pyd",
+              "numpy/random/_mt19937.cp312-win_amd64.pyd",
+              "numpy/random/_pcg64.cp312-win_amd64.pyd",
+              "numpy/random/_philox.cp312-win_amd64.pyd",
+              "numpy/random/_sfc64.cp312-win_amd64.pyd",
+              "numpy/random/bit_generator.cp312-win_amd64.pyd",
+              "numpy/random/mtrand.cp312-win_amd64.pyd"
+            ]
+          },
+          "requested_distribution": "numpy",
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "semantic_file_closure": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "2acb84661ae8c3cfe546ba8e71a28526f35bfad789674ab4b392f8b08df1d068",
+            "byte_count": 38373692,
+            "file_count": 693,
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "version": "2.4.4"
+        },
+        "opencv": {
+          "distribution_metadata_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "09d450f1453df30e6e3384d00871ca3d0620ca57d11121035b75a29675191ba7",
+            "byte_count": 28425,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 20043,
+                "path": "opencv_python-4.13.0.92.dist-info/METADATA",
+                "sha256": "b7ec32edc5943818be42a7d67f3b0f2091ac537b99ab7f1c3f33c13e6fbfcb38"
+              },
+              {
+                "bytes": 8288,
+                "path": "opencv_python-4.13.0.92.dist-info/RECORD",
+                "sha256": "c89e7f5bd818b5fb7387ce09305e823b39c940d64f2dacfa9889ff94f5d9978d"
+              },
+              {
+                "bytes": 94,
+                "path": "opencv_python-4.13.0.92.dist-info/WHEEL",
+                "sha256": "f5f1b5d2f4b338a5f09a35f70a458deb63fd86a8fe186976c33c1d47139547e6"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "installed_distribution": "opencv-python",
+          "load_bearing_native_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "3f3c563475da227f0c1e18d291d830c7c7eccad8fdc2841a2a754bf2e56003f2",
+            "byte_count": 103397376,
+            "file_count": 2,
+            "files": [
+              {
+                "bytes": 74819072,
+                "path": "cv2/cv2.pyd",
+                "sha256": "78db0c836b952d9d5510140677463687c357a7166fddfa6ac7e31abb2d7d9bbd"
+              },
+              {
+                "bytes": 28578304,
+                "path": "cv2/opencv_videoio_ffmpeg4130_64.dll",
+                "sha256": "fcc614672159094a35815b7ea2819a648cbf86c30d90c57e8c6ba1432f594548"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+            "selection": [
+              "cv2/cv2.pyd",
+              "cv2/opencv_videoio_ffmpeg4130_64.dll"
+            ]
+          },
+          "requested_distribution": "opencv-python",
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "semantic_file_closure": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "6e56d1b29cf33c16a234da9cc91b3a3f6bc2c385dce2a7635342c9ee67907d77",
+            "byte_count": 103944696,
+            "file_count": 65,
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "version": "4.13.0.92"
+        },
+        "rawpy": {
+          "distribution_metadata_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "cdb33b667d1af59431cafa1dff42e8d7201abae06b1002b8e77585bca5bdd020",
+            "byte_count": 11627,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 9874,
+                "path": "rawpy-0.27.0.dist-info/METADATA",
+                "sha256": "56e3bec9c77d8a6b2bbe3586a6082d05dcddfec28eb4a1b323bfdfd71b258178"
+              },
+              {
+                "bytes": 1652,
+                "path": "rawpy-0.27.0.dist-info/RECORD",
+                "sha256": "64f7542bdabaaf2d00618cba5bac05273e6b5e818d5c8d83cc48823beb557643"
+              },
+              {
+                "bytes": 101,
+                "path": "rawpy-0.27.0.dist-info/WHEEL",
+                "sha256": "ad1e507ec59c665de6adae409920fb15dd1dcd0c59de51c2a43a3bd0891f0cae"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "installed_distribution": "rawpy",
+          "load_bearing_native_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "c883dd35ac18c830b418ffea63be07c4180cd0aecb95ff7d198144e43ab408bd",
+            "byte_count": 2325632,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 205824,
+                "path": "rawpy/_rawpy.cp312-win_amd64.pyd",
+                "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+              },
+              {
+                "bytes": 1926656,
+                "path": "rawpy/raw_r.dll",
+                "sha256": "da20108e301a929170fe1af2acb2ef7e5de62347057f860139fda111d504fa39"
+              },
+              {
+                "bytes": 193152,
+                "path": "rawpy/vcomp140.dll",
+                "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+            "selection": [
+              "rawpy/_rawpy.cp312-win_amd64.pyd",
+              "rawpy/raw_r.dll",
+              "rawpy/vcomp140.dll"
+            ]
+          },
+          "requested_distribution": "rawpy",
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "semantic_file_closure": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "a3f5c91243bc90c8d4f695203065ddfc29ed3fbc9f12bd0ee45daafb2c14d766",
+            "byte_count": 2379213,
+            "file_count": 10,
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "version": "0.27.0"
+        },
+        "scipy": {
+          "distribution_metadata_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "097599e964fa4a097f5b62cfb1d18e49c8fa3be9d981097aab91fcf98ae8a9e7",
+            "byte_count": 269352,
+            "file_count": 3,
+            "files": [
+              {
+                "bytes": 60950,
+                "path": "scipy-1.17.1.dist-info/METADATA",
+                "sha256": "3a61ac02d145c9ca53f53d3f6f58d09017727a317731d0af02909730d4403e32"
+              },
+              {
+                "bytes": 208317,
+                "path": "scipy-1.17.1.dist-info/RECORD",
+                "sha256": "e4a624bea66d62c1cc330b5751fc27ba23f0b78b5e140668f330a92980c419a9"
+              },
+              {
+                "bytes": 85,
+                "path": "scipy-1.17.1.dist-info/WHEEL",
+                "sha256": "e743de01ba6503a3e4234858398a1e69c07d512d51e8482ec9f3a7b1c707d165"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "installed_distribution": "scipy",
+          "load_bearing_native_files": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "014ae16a1be22928ed7d8c0952ecff06b515732199be8de1d612c1e4382ee63e",
+            "byte_count": 32970240,
+            "file_count": 29,
+            "files": [
+              {
+                "bytes": 20260864,
+                "path": "scipy.libs/libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+                "sha256": "64eda39e79589aedb16f58e5547eb599f0b5855505d56b9d40022e2eee354a0b"
+              },
+              {
+                "bytes": 105472,
+                "path": "scipy/_lib/_ccallback_c.cp312-win_amd64.pyd",
+                "sha256": "509d2e681897f4253263c063ad8a2aa0c2459b85ce3d86754b401d42ab26dc9a"
+              },
+              {
+                "bytes": 15872,
+                "path": "scipy/_lib/_fpumode.cp312-win_amd64.pyd",
+                "sha256": "f00f7a238a65d40eb6939bac18ef8c407dd345cf26c7e83bb0a185ab03756814"
+              },
+              {
+                "bytes": 52224,
+                "path": "scipy/_lib/_test_ccallback.cp312-win_amd64.pyd",
+                "sha256": "57431ca6b0015ec5534f8f8419216cd76f06191a271ddbf5e750d595eaf82ff2"
+              },
+              {
+                "bytes": 33792,
+                "path": "scipy/_lib/_test_deprecation_call.cp312-win_amd64.pyd",
+                "sha256": "20f122cd55541a794a8c49308eb545a83a86a01d6a049a1ce9b66d2ba5e76286"
+              },
+              {
+                "bytes": 24576,
+                "path": "scipy/_lib/_test_deprecation_def.cp312-win_amd64.pyd",
+                "sha256": "118091bc00e030f12f820975ec605dbec71ee7a101cd594c6aec658d6d733487"
+              },
+              {
+                "bytes": 235008,
+                "path": "scipy/_lib/_uarray/_uarray.cp312-win_amd64.pyd",
+                "sha256": "2fa9cd0fca336b35fca629e2ceedde50fdeed9d6d6ea3575a2bc4889222bc2d6"
+              },
+              {
+                "bytes": 60416,
+                "path": "scipy/_lib/messagestream.cp312-win_amd64.pyd",
+                "sha256": "b4679bc7cc58c3dd7cb29689ae96ab295fff3412b1724baa7d2b7c6cf86f6c15"
+              },
+              {
+                "bytes": 1097216,
+                "path": "scipy/fft/_pocketfft/pypocketfft.cp312-win_amd64.pyd",
+                "sha256": "dd089b853dd1382b4ce73a138076efa8dda9391efa6090ee31fe607e2bdee313"
+              },
+              {
+                "bytes": 16896,
+                "path": "scipy/ndimage/_ctest.cp312-win_amd64.pyd",
+                "sha256": "5209e5ad9816fdf85c3cfba74d9cda7a51e27a3340484f2b5eaac47a61026833"
+              },
+              {
+                "bytes": 71168,
+                "path": "scipy/ndimage/_cytest.cp312-win_amd64.pyd",
+                "sha256": "3cea1263ad1fb73157c4a8b6ad2dc91786e2014159d87bb4f522397f6d2fb674"
+              },
+              {
+                "bytes": 177664,
+                "path": "scipy/ndimage/_nd_image.cp312-win_amd64.pyd",
+                "sha256": "7a5bfe894a43b761f2042f2a35c1e799aaa964b60e33b1acc55bf8062636f191"
+              },
+              {
+                "bytes": 205312,
+                "path": "scipy/ndimage/_ni_label.cp312-win_amd64.pyd",
+                "sha256": "b7dd341165d5ca1960ff96b1d6600822cdd50614f1328537d9311e219ae38d12"
+              },
+              {
+                "bytes": 124416,
+                "path": "scipy/ndimage/_rank_filter_1d.cp312-win_amd64.pyd",
+                "sha256": "eb419d67ee29fa9615f01d288b43b8c0288da67043aa494b481c93b24d92b9d9"
+              },
+              {
+                "bytes": 173568,
+                "path": "scipy/optimize/_bglu_dense.cp312-win_amd64.pyd",
+                "sha256": "3168df9f9c5a3ba0ef428c1c5ca13a6fced1a164b4d31cc4d71aca1baf58f50f"
+              },
+              {
+                "bytes": 70656,
+                "path": "scipy/optimize/_direct.cp312-win_amd64.pyd",
+                "sha256": "6ea9f33c61aa3009eb557db94bc80c74b8b25947553a9950bf4ef1e4c4cc372e"
+              },
+              {
+                "bytes": 1033216,
+                "path": "scipy/optimize/_group_columns.cp312-win_amd64.pyd",
+                "sha256": "a3ee6c6801009f84b3aa8a980c83a0b1983d33fcf944144cda3cda691ecca43b"
+              },
+              {
+                "bytes": 6443520,
+                "path": "scipy/optimize/_highspy/_core.cp312-win_amd64.pyd",
+                "sha256": "99d5c437bca5ee91c8785721fe69b235b6b348cff9c27a7436501f4cc419baad"
+              },
+              {
+                "bytes": 1278464,
+                "path": "scipy/optimize/_highspy/_highs_options.cp312-win_amd64.pyd",
+                "sha256": "98acb3f762673688fc402e893d3313d267733135f0e1c07ef508cbcdb4b2ad8f"
+              },
+              {
+                "bytes": 171520,
+                "path": "scipy/optimize/_lbfgsb.cp312-win_amd64.pyd",
+                "sha256": "9d087101aadc47b4ac09332433edcc3be64de36a135acc7c728f079c3af9ebea"
+              },
+              {
+                "bytes": 177664,
+                "path": "scipy/optimize/_lsap.cp312-win_amd64.pyd",
+                "sha256": "f8ff7561bd1ea3027c809fc804c8b1316376e589d12aef3a1ebcb2a6d2c3d18d"
+              },
+              {
+                "bytes": 70656,
+                "path": "scipy/optimize/_lsq/givens_elimination.cp312-win_amd64.pyd",
+                "sha256": "22553b97f9e3c32f5fbbc1b8b9c5c4a4e0251f441366472844a824f01ae63021"
+              },
+              {
+                "bytes": 124928,
+                "path": "scipy/optimize/_minpack.cp312-win_amd64.pyd",
+                "sha256": "95b27adf583cb4c0d660141adba5d179b9df4a42474b2ff230d598673794fab4"
+              },
+              {
+                "bytes": 145920,
+                "path": "scipy/optimize/_moduleTNC.cp312-win_amd64.pyd",
+                "sha256": "0e57c01521068abf89c818e42693ffb20612ff9319d6942d490c4fd6a48873e2"
+              },
+              {
+                "bytes": 317952,
+                "path": "scipy/optimize/_pava_pybind.cp312-win_amd64.pyd",
+                "sha256": "03cfa01ef5ed5829057e629497cc052e83eb9729a95a244e6fdbea66eb8dadd0"
+              },
+              {
+                "bytes": 172544,
+                "path": "scipy/optimize/_slsqplib.cp312-win_amd64.pyd",
+                "sha256": "0174a3e1849cb4312b17fa6d6fe55de618a02c94ec9f7d9b12199270c6faac75"
+              },
+              {
+                "bytes": 206848,
+                "path": "scipy/optimize/_trlib/_trlib.cp312-win_amd64.pyd",
+                "sha256": "ec5edbbfa97f3dc4a1f2e155bcf350ca6b25ad238e486ba72da2fef46ea42ff1"
+              },
+              {
+                "bytes": 23040,
+                "path": "scipy/optimize/_zeros.cp312-win_amd64.pyd",
+                "sha256": "001213b4192a7427197626c5a7ac86d9e2c1fd7512be56a495cb192a66bbd4ed"
+              },
+              {
+                "bytes": 78848,
+                "path": "scipy/optimize/cython_optimize/_zeros.cp312-win_amd64.pyd",
+                "sha256": "40cc706e7eec0865e3892e0b669cd99728c4b886f31c46f43085d5d21143753a"
+              }
+            ],
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+            "selection": [
+              "scipy.libs/libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll",
+              "scipy/_lib/_ccallback_c.cp312-win_amd64.pyd",
+              "scipy/_lib/_fpumode.cp312-win_amd64.pyd",
+              "scipy/_lib/_test_ccallback.cp312-win_amd64.pyd",
+              "scipy/_lib/_test_deprecation_call.cp312-win_amd64.pyd",
+              "scipy/_lib/_test_deprecation_def.cp312-win_amd64.pyd",
+              "scipy/_lib/_uarray/_uarray.cp312-win_amd64.pyd",
+              "scipy/_lib/messagestream.cp312-win_amd64.pyd",
+              "scipy/fft/_pocketfft/pypocketfft.cp312-win_amd64.pyd",
+              "scipy/ndimage/_ctest.cp312-win_amd64.pyd",
+              "scipy/ndimage/_cytest.cp312-win_amd64.pyd",
+              "scipy/ndimage/_nd_image.cp312-win_amd64.pyd",
+              "scipy/ndimage/_ni_label.cp312-win_amd64.pyd",
+              "scipy/ndimage/_rank_filter_1d.cp312-win_amd64.pyd",
+              "scipy/optimize/_bglu_dense.cp312-win_amd64.pyd",
+              "scipy/optimize/_direct.cp312-win_amd64.pyd",
+              "scipy/optimize/_group_columns.cp312-win_amd64.pyd",
+              "scipy/optimize/_highspy/_core.cp312-win_amd64.pyd",
+              "scipy/optimize/_highspy/_highs_options.cp312-win_amd64.pyd",
+              "scipy/optimize/_lbfgsb.cp312-win_amd64.pyd",
+              "scipy/optimize/_lsap.cp312-win_amd64.pyd",
+              "scipy/optimize/_lsq/givens_elimination.cp312-win_amd64.pyd",
+              "scipy/optimize/_minpack.cp312-win_amd64.pyd",
+              "scipy/optimize/_moduleTNC.cp312-win_amd64.pyd",
+              "scipy/optimize/_pava_pybind.cp312-win_amd64.pyd",
+              "scipy/optimize/_slsqplib.cp312-win_amd64.pyd",
+              "scipy/optimize/_trlib/_trlib.cp312-win_amd64.pyd",
+              "scipy/optimize/_zeros.cp312-win_amd64.pyd",
+              "scipy/optimize/cython_optimize/_zeros.cp312-win_amd64.pyd"
+            ]
+          },
+          "requested_distribution": "scipy",
+          "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages",
+          "semantic_file_closure": {
+            "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+            "aggregate_sha256": "62bef94f536e5391f0665ba7feae015ef8dbdff11e23bef0de3c3997720684cd",
+            "byte_count": 99883388,
+            "file_count": 1102,
+            "root": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+          },
+          "version": "1.17.1"
+        }
+      },
+      "loaded_modules": {
+        "cv2": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cv2\\__init__.py",
+          "sha256": "957a91bfd98ffb07a10cd789b7c5c46806568476b61e34c7ad56a00092b981a5"
+        },
+        "numpy": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\__init__.py",
+          "sha256": "b16a4f347c6583c878e1973a208564e01686b79cc70911ad0157e05d8eecda37"
+        },
+        "numpy.fft": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\fft\\__init__.py",
+          "sha256": "1bb36beaba498203757b73e01a0804c45e848bf5adf27e7b7902177f9bedccb3"
+        },
+        "rawpy": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\__init__.py",
+          "sha256": "24a06e984ef21c4c01569105f862c347f8a92446ec361c40835aa15dfa921eff"
+        },
+        "rawpy._rawpy": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\_rawpy.cp312-win_amd64.pyd",
+          "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+        },
+        "scipy": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\__init__.py",
+          "sha256": "4c3ab17c56609249056db732aa2e196b3f21c923f8d4967a46cb63aa9f739b28"
+        },
+        "scipy.fft": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\fft\\__init__.py",
+          "sha256": "4a7d6aa9eb97e8c90c894ede47214c104dde92479c4794a1b7e58af9d59a3ef9"
+        },
+        "scipy.ndimage": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\ndimage\\__init__.py",
+          "sha256": "85d9426e3f36ea74ed90c05017d7b3b125d092a7842c0fbacc895c9d3b011159"
+        },
+        "scipy.optimize": {
+          "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\optimize\\__init__.py",
+          "sha256": "386c0ca12008b1da344df26284cb7806d5b92f12c98bde043e464b65faa99f6c"
+        }
+      },
+      "packages": {
+        "numpy": "2.4.4",
+        "opencv": "4.13.0.92",
+        "rawpy": "0.27.0",
+        "scipy": "1.17.1"
+      },
+      "python": {
+        "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+        "implementation": "CPython",
+        "runtime_files": {
+          "aggregate_domain": "canonical JSON over sorted path, byte-count, and file SHA-256 records",
+          "aggregate_sha256": "bc75623664eff45f6a41fa5535e2568f0751a3abe024e2a363aac40a487caf29",
+          "byte_count": 7120600,
+          "file_count": 3,
+          "files": [
+            {
+              "bytes": 104952,
+              "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+              "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+            },
+            {
+              "bytes": 70376,
+              "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python3.dll",
+              "sha256": "fb975a606e7fbf74f64260e3f60c3490b4f74a183c0926fd6ed1ac4c52ac7b1c"
+            },
+            {
+              "bytes": 6945272,
+              "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python312.dll",
+              "sha256": "9a0e3435aaa680d868150f87ab3e388ad2eebc22f87e036155c7b4eda8cd2120"
+            }
+          ]
+        },
+        "version": "3.12.10"
+      },
+      "rawpy_libraw_version": "0.22.1"
+    },
+    "environment": {
+      "BLIS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONHASHSEED": "0",
+      "RAYON_NUM_THREADS": null,
+      "STREHL_ALIGN": null,
+      "STREHL_COVER": null,
+      "STREHL_FIX_HALO": null,
+      "STREHL_RESAMPLER": null,
+      "STREHL_WARPMAP": null,
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "opencv_threads": 1,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\instrument.py",
+    "source_sha256": "b8a1cefe2108e44e399cb8329d916301ff3d9c65ef2d736ff707408b7f12bd1b"
+  },
+  "j_tr": null,
+  "j_tr_computed": false,
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "missing_roles": [
+    "R1",
+    "R2",
+    "sw4_Y1",
+    "sw4_Y2",
+    "sw10_Y1",
+    "sw10_Y2",
+    "flat_R1",
+    "flat_R2",
+    "sw4_flat_Y1",
+    "sw4_flat_Y2",
+    "sw10_flat_Y1",
+    "sw10_flat_Y2"
+  ],
+  "predicates": {
+    "all_required_roles_present": false,
+    "checker_template_forbidden": null,
+    "disjoint_calibration_lineages": null,
+    "disjoint_source_files": null,
+    "independent_capture_units": null,
+    "independent_parent_stacks": null,
+    "matched_flat_evidence": null,
+    "matched_flat_manifest": null,
+    "minimum_sites": null,
+    "nonperiodic_target": null,
+    "odd_even_not_independent": null,
+    "reference_sampling_ratio": null,
+    "same_geometry_for_repeats": null,
+    "same_physical_sites": null,
+    "same_site_role_mapping": null,
+    "site_manifest_bound": null,
+    "source_files_bound_to_inventory": null,
+    "source_oracle_forbidden": null,
+    "sw4_never_truth": null,
+    "unique_site_coordinates": null,
+    "unique_site_identities": null
+  },
+  "role_ledger_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M135-slide-physical-commissioning\\role-ledger.template.json",
+  "role_ledger_sha256": "b03e3e67464800a32f5c336ace0e88b91e9f3b4a92a5e3b6126c3202b9b55cd8",
+  "sampling_ratio": null,
+  "schema": "m135-slide-role-gate-v1",
+  "score_callback_called": false,
+  "site_evidence": {
+    "coordinate_system": null,
+    "ledger_site_count": null,
+    "manifest_path": null,
+    "manifest_sha256": null,
+    "required_roles": [
+      "R1",
+      "R2",
+      "sw4_Y1",
+      "sw4_Y2",
+      "sw10_Y1",
+      "sw10_Y2"
+    ],
+    "site_count_from_manifest": null
+  },
+  "stage": "D",
+  "status": "REFERENCE_ROLE_ABSENT",
+  "violations": []
+}
