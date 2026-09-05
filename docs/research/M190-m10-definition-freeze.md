@@ -7,8 +7,8 @@ adopts M166's value populations and reductions, leaves M186's grade-(A) flat-nul
 definition unchanged, and closes the four choices M186 found still capable of making
 two honest implementations disagree.
 
-**Normative freeze commit:** `PENDING_FREEZE_COMMIT` (filled by a provenance-only
-follow-up after the freeze commit exists).
+**Normative freeze commit:**
+`a9753219dc52e2b8667927edafe47b63151a5f58`.
 
 **Algorithm precommit, before the scored seed was drawn:**
 `1fb63317b147280956e2b3ba827eeb60644ea530`.
@@ -438,12 +438,17 @@ not by a checker-specific optimizer or tolerance.
 
 | Artifact | Role | SHA-256 at freeze |
 |---|---|---|
-| `experiments/M190-m10-definition-freeze/contract-v1.json` | Four normative contracts and total failure map | `a873779e28fee08dd5d51aa500a39fab556a92f7d4be7027b7baa311df8d314b` |
-| `experiments/M190-m10-definition-freeze/depth-manifest.schema.json` | Strict manifest JSON Schema | `737755e055bbbd67c83e4b6acb4b8e82f171700ba54f18cab00685eae518b1e8` |
+| `experiments/M190-m10-definition-freeze/contract-v1.json` | Four normative contracts and total failure map | `0e2a075f0ebbd57520594603244cd9d8d803a6fc1b55093c6d7c932f37d2d9ca` |
+| `experiments/M190-m10-definition-freeze/depth-manifest.schema.json` | Strict manifest JSON Schema | `f659bc0a73179865c95ddf8401f98184d7fedadb20e9962251b5a56209b2ea81` |
 | `experiments/M190-m10-definition-freeze/fixtures.json` | Hash/origin/renderer/certificate round trips | `594e37ff5a90ecd917599aba659ba122c3a32818f33f1df11234f5edb02b819a` |
 | `experiments/M190-m10-definition-freeze/reference.py` | Executable reference semantics | frozen in the normative commit |
 | `experiments/M190-m10-definition-freeze/verify_hash_fixtures.ps1` | Independent hash/order reimplementation | frozen in the normative commit |
-| `experiments/M190-m10-definition-freeze/scored-seed-commitment.json` | One-draw public seed receipt | frozen in the normative commit |
+| `experiments/M190-m10-definition-freeze/scored-seed-commitment.json` | One-draw public seed receipt | `3b92bcfcef138ab718c4f559b177cf00422aad6b0d0d93615e64f0870e55b0bd` |
+
+Those are SHA-256 values of the committed Git blobs, read byte-for-byte with
+`subprocess.run(["git","show","a9753219:path"]).stdout`. They are authoritative.
+The verifier's checkout-byte hash lines can differ on a Windows `core.autocrlf`
+checkout and are not provenance pins.
 
 Commands run from the repository root:
 

@@ -5,6 +5,9 @@ in [`docs/research/M190-m10-definition-freeze.md`](../../docs/research/M190-m10-
 
 Machine contract: `contract-v1.json`.
 
+Normative freeze commit:
+`a9753219dc52e2b8667927edafe47b63151a5f58`.
+
 Algorithm precommit before the one scored-seed draw:
 `1fb63317b147280956e2b3ba827eeb60644ea530`.
 
