@@ -1,0 +1,181 @@
+{
+  "schema": "m135-slide-artifact-schemas-v1",
+  "canonical_encoding": {
+    "format": "UTF-8 JSON",
+    "key_order": "lexicographic",
+    "indent": 2,
+    "allow_nan": false,
+    "terminal_newline": true
+  },
+  "artifacts": {
+    "m135-slide-inventory-v1": {
+      "required": [
+        "schema",
+        "label",
+        "stage",
+        "status",
+        "config_sha256",
+        "invocation",
+        "source_root",
+        "source_snapshot",
+        "stacks",
+        "unexpected_arw",
+        "coarse_encoder",
+        "proceed_to_decode"
+      ],
+      "terminal_statuses": [
+        "INVENTORY_MATCH",
+        "INVENTORY_MISMATCH"
+      ]
+    },
+    "m135-slide-decode-v1": {
+      "required": [
+        "schema",
+        "label",
+        "stage",
+        "status",
+        "config_sha256",
+        "inventory_sha256",
+        "invocation",
+        "decoder_contract",
+        "frames",
+        "proceed_to_range"
+      ],
+      "terminal_statuses": [
+        "DECODE_CROSSCHECK_PASS",
+        "DECODE_CROSSCHECK_FAILED"
+      ]
+    },
+    "m135-slide-range-v1": {
+      "required": [
+        "schema",
+        "label",
+        "stage",
+        "status",
+        "config_sha256",
+        "inventory_sha256",
+        "decode_sha256",
+        "invocation",
+        "frequency_contract",
+        "lattice",
+        "stacks",
+        "joint_sites",
+        "robust_fit",
+        "equivalence_bars",
+        "node_density"
+      ],
+      "terminal_statuses": [
+        "IMAGE_RANGE_EQUIVALENT",
+        "IMAGE_RANGE_NOT_EQUIVALENT",
+        "IMAGE_RANGE_UNDETERMINED"
+      ]
+    },
+    "m135-slide-role-gate-v1": {
+      "required": [
+        "schema",
+        "label",
+        "stage",
+        "status",
+        "config_sha256",
+        "inventory_sha256",
+        "role_ledger_path",
+        "role_ledger_sha256",
+        "invocation",
+        "missing_roles",
+        "predicates",
+        "violations",
+        "j_tr_computed",
+        "j_tr"
+      ],
+      "terminal_statuses": [
+        "IDENTIFIABLE",
+        "REFERENCE_ROLE_ABSENT",
+        "ROLE_LEDGER_INVALID"
+      ]
+    },
+    "m135-slide-flat-v1": {
+      "required": [
+        "schema",
+        "label",
+        "stage",
+        "status",
+        "config_sha256",
+        "inventory_sha256",
+        "decode_sha256",
+        "role_gate_sha256",
+        "role_ledger_sha256",
+        "invocation",
+        "frequency_contract",
+        "sensor_coordinate_lattice",
+        "exposure_groups",
+        "core_probe",
+        "certificate_sufficient"
+      ],
+      "terminal_statuses": [
+        "QUIET_DIAGNOSTIC",
+        "STRUCTURED_FLAT",
+        "FLAT_DIAGNOSTIC_UNDETERMINED"
+      ]
+    },
+    "m135-slide-summary-v1": {
+      "required": [
+        "schema",
+        "label",
+        "stage",
+        "status",
+        "config_sha256",
+        "invocation",
+        "inventory",
+        "coarse_encoder",
+        "image_range",
+        "identifiability",
+        "real_optical_intervention",
+        "flat_diagnostic",
+        "physical_binding",
+        "j_tr_computed",
+        "j_tr"
+      ],
+      "terminal_statuses": [
+        "DEVELOPMENT_COMPLETE",
+        "DEVELOPMENT_BLOCKED"
+      ]
+    },
+    "m135-slide-commission-v1": {
+      "required": [
+        "schema",
+        "label",
+        "status",
+        "config_sha256",
+        "invocation",
+        "checks",
+        "plants",
+        "selector_coverage"
+      ],
+      "terminal_statuses": [
+        "COMMISSIONED",
+        "NOT_COMMISSIONED"
+      ]
+    },
+    "m135-slide-freeze-v1": {
+      "required": [
+        "schema",
+        "label",
+        "source_tree_parent_commit",
+        "preregistration",
+        "existing_estimator",
+        "source_files",
+        "dependencies",
+        "external_decoder_path",
+        "documented_commands"
+      ],
+      "terminal_statuses": [
+        "FROZEN"
+      ]
+    }
+  },
+  "exit_codes": {
+    "0": "well-formed terminal outcome, including scientific negative or typed role absence",
+    "1": "commissioning or decoder crosscheck failed",
+    "2": "malformed invocation, input, config, schema, or numerical refusal"
+  }
+}

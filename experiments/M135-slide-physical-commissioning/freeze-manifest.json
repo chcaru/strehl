@@ -1,0 +1,379 @@
+{
+  "artifact_schemas_sha256": "fee8129073f85c6c0aa9b04d86a8b592a0514127e5eded68249016bb55161662",
+  "commissioning_artifacts": {
+    "commission-run1-failed.json": {
+      "bytes": 57103,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "1e0e5f034d0153fa582f251b761731bd08ce32355bc976d8c8dd6675858ac26c",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission-run1-failed.json",
+      "sha256": "1e0e5f034d0153fa582f251b761731bd08ce32355bc976d8c8dd6675858ac26c"
+    },
+    "commission-run2-failed.json": {
+      "bytes": 60551,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "c42b4d64d3162a700fdcf389368871b18ae3b7c4d8aace03b9dc8874648fe7a0",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission-run2-failed.json",
+      "sha256": "c42b4d64d3162a700fdcf389368871b18ae3b7c4d8aace03b9dc8874648fe7a0"
+    },
+    "commission-run3-failed.json": {
+      "bytes": 83614,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "ab78eaa81b803543486571337914cfd7edd991163f7c5401d66fe08e720b6086",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission-run3-failed.json",
+      "sha256": "ab78eaa81b803543486571337914cfd7edd991163f7c5401d66fe08e720b6086"
+    },
+    "commission-run4-nondeterministic-after.json": {
+      "bytes": 85345,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "8e0334d3512671f01254a271150771f43dbb1dec8cda0edb7de312e748b4872e",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission-run4-nondeterministic-after.json",
+      "sha256": "8e0334d3512671f01254a271150771f43dbb1dec8cda0edb7de312e748b4872e"
+    },
+    "commission-run4-nondeterministic-before.json": {
+      "bytes": 85345,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a08898d507b4778bcaab7547b03963bc57d6e5d1ca1ff56dcca1231441dab469",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission-run4-nondeterministic-before.json",
+      "sha256": "a08898d507b4778bcaab7547b03963bc57d6e5d1ca1ff56dcca1231441dab469"
+    },
+    "commission-run5-nondeterministic-after.json": {
+      "bytes": 74985,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "d41eaa250a255fd82b4a17c45bb57ee27b764d959338b05ba5de0bf9f1692872",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission-run5-nondeterministic-after.json",
+      "sha256": "d41eaa250a255fd82b4a17c45bb57ee27b764d959338b05ba5de0bf9f1692872"
+    },
+    "commission-run5-nondeterministic-before.json": {
+      "bytes": 74985,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "55ad6996bb416296ac53a06a603111f0b57e2d96c6d8e0b0a7c6ca068e0fb03a",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission-run5-nondeterministic-before.json",
+      "sha256": "55ad6996bb416296ac53a06a603111f0b57e2d96c6d8e0b0a7c6ca068e0fb03a"
+    },
+    "commission.json": {
+      "bytes": 73921,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "ab96d903bca9ca44c1724bb4f3d8f2588b02f6334d8bae2b7a843a2e68f55551",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission.json",
+      "sha256": "ab96d903bca9ca44c1724bb4f3d8f2588b02f6334d8bae2b7a843a2e68f55551"
+    }
+  },
+  "commit_identity_rule": "the claiming commit is the commit containing this manifest; embedding its SHA would be circular",
+  "config_sha256": "edbbfbd44857ea39f331f764795deb459783711a4a5d8c1c432027141d544bfa",
+  "dependencies": {
+    "exiftool": {
+      "bytes": 58368,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\ExifTool\\ExifTool.exe",
+      "sha256": "ce389bf0eff9f2e2aae21eb7d85e1f255d243bb9a2ddfed8da65f106ccba87e6",
+      "version": "13.58",
+      "version_command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\ExifTool\\ExifTool.exe",
+        "-ver"
+      ]
+    },
+    "modules": {
+      "numpy": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\__init__.py",
+        "sha256": "b16a4f347c6583c878e1973a208564e01686b79cc70911ad0157e05d8eecda37"
+      },
+      "opencv": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cv2\\__init__.py",
+        "sha256": "957a91bfd98ffb07a10cd789b7c5c46806568476b61e34c7ad56a00092b981a5"
+      },
+      "rawpy": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\__init__.py",
+        "sha256": "24a06e984ef21c4c01569105f862c347f8a92446ec361c40835aa15dfa921eff"
+      },
+      "rawpy_extension": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\_rawpy.cp312-win_amd64.pyd",
+        "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+      },
+      "scipy": {
+        "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\scipy\\__init__.py",
+        "sha256": "4c3ab17c56609249056db732aa2e196b3f21c923f8d4967a46cb63aa9f739b28"
+      }
+    },
+    "packages": {
+      "numpy": "2.4.4",
+      "opencv": "4.13.0.92",
+      "rawpy": "0.27.0",
+      "scipy": "1.17.1"
+    },
+    "python": {
+      "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "executable_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "implementation": "CPython",
+      "version": "3.12.10"
+    },
+    "rawpy_libraw_version": "0.22.1"
+  },
+  "documented_commands": {
+    "commission": "python -B experiments\\M135-slide-physical-commissioning\\commission.py --config experiments\\M135-slide-physical-commissioning\\config.json --output experiments\\M135-slide-physical-commissioning\\commission.json",
+    "crosscheck_build": "cargo build --release --locked --manifest-path experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+    "data_commands": [
+      "instrument.py --config config.json inventory --session-root <AUTHORIZED_SESSION_ROOT> --exiftool <EXIFTOOL> --output stage-a-inventory.json",
+      "instrument.py --config config.json decode --inventory stage-a-inventory.json --rawler-crosscheck-bin <M135_CROSSCHECK_BINARY> --output stage-b-decode.json",
+      "instrument.py --config config.json range --inventory stage-a-inventory.json --decode stage-b-decode.json --output stage-c-range.json",
+      "instrument.py --config config.json roles --inventory stage-a-inventory.json --ledger role-ledger.template.json --output stage-d-roles.json",
+      "instrument.py --config config.json flat --inventory stage-a-inventory.json --decode stage-b-decode.json --roles stage-d-roles.json --ledger role-ledger.template.json --output stage-e-flat.json",
+      "instrument.py --config config.json summarize --inventory stage-a-inventory.json --decode stage-b-decode.json --range stage-c-range.json --roles stage-d-roles.json --flat stage-e-flat.json --output summary.json"
+    ],
+    "environment": {
+      "BLIS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONHASHSEED": "0",
+      "RAYON_NUM_THREADS": null,
+      "STREHL_ALIGN": null,
+      "STREHL_COVER": null,
+      "STREHL_FIX_HALO": null,
+      "STREHL_RESAMPLER": null,
+      "STREHL_WARPMAP": null,
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "freeze_check": "python -B experiments\\M135-slide-physical-commissioning\\freeze.py check --manifest experiments\\M135-slide-physical-commissioning\\freeze-manifest.json",
+    "prior_art": "python experiments\\ORCH-drift-check\\prior_art.py burned slide physical commissioning detail instrument"
+  },
+  "existing_estimator": {
+    "bytes": 14082,
+    "git_commit": "6a5b524d24b5b6e0a31b85bd624fbdf825c85221",
+    "hash_domain": "UTF-8 text after universal-newline normalization",
+    "normalized_hash_expected_by_comparison_contract": "b2243292d92b8edc386b11b68e01740d0365bc4d633d728771d421be0732bbf1",
+    "normalized_text_sha256": "b2243292d92b8edc386b11b68e01740d0365bc4d633d728771d421be0732bbf1",
+    "path": "experiments\\M135-detail-instrument\\instrument.py",
+    "sha256": "b2243292d92b8edc386b11b68e01740d0365bc4d633d728771d421be0732bbf1"
+  },
+  "external_decoder_path": {
+    "build_command": "cargo build --release --locked --manifest-path experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+    "cargo_lock": {
+      "bytes": 32798,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec",
+      "path": "experiments\\M135-slide-physical-commissioning\\Cargo.lock",
+      "sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec"
+    },
+    "cargo_manifest": {
+      "bytes": 208,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "bbc63bc96f5a0d14c366c2a29115b389d9ecfade21f5c1440dd9f72b9f1a2412",
+      "path": "experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+      "sha256": "bbc63bc96f5a0d14c366c2a29115b389d9ecfade21f5c1440dd9f72b9f1a2412"
+    },
+    "decision": "use a lane-local executable over the existing safe strehl-raw/rawler API; no GPL/LGPL source was read",
+    "runtime_contract": "all rawpy visible pixels in every frame must equal the leading overlap of rawler's active area bit for bit",
+    "rust_source": {
+      "bytes": 2337,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6",
+      "path": "experiments\\M135-slide-physical-commissioning\\src\\main.rs",
+      "sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6"
+    }
+  },
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "preregistration": {
+    "bytes": 7479,
+    "git_commit": "0d672863f3d23bbc36fd9f7521f4da0134b558b8",
+    "hash_domain": "UTF-8 text after universal-newline normalization",
+    "must_remain_unmodified": true,
+    "normalized_text_sha256": "dcbbbd5c432f4a8e749d4c41a4b4cb2556a0cce5be2a839820f626f0c34d6b0d",
+    "path": "experiments\\M135-slide-physical-commissioning\\PREREGISTRATION.md",
+    "sha256": "dcbbbd5c432f4a8e749d4c41a4b4cb2556a0cce5be2a839820f626f0c34d6b0d"
+  },
+  "schema": "m135-slide-freeze-v1",
+  "source_files": [
+    {
+      "bytes": 14,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+      "path": "experiments\\M135-slide-physical-commissioning\\.gitattributes",
+      "sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9"
+    },
+    {
+      "bytes": 7479,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "dcbbbd5c432f4a8e749d4c41a4b4cb2556a0cce5be2a839820f626f0c34d6b0d",
+      "path": "experiments\\M135-slide-physical-commissioning\\PREREGISTRATION.md",
+      "sha256": "dcbbbd5c432f4a8e749d4c41a4b4cb2556a0cce5be2a839820f626f0c34d6b0d"
+    },
+    {
+      "bytes": 12990,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "92bc294160011b10aaf3bba7c4f956b66687a82e4e32c7dcda1654dba2d8c325",
+      "path": "experiments\\M135-slide-physical-commissioning\\README.md",
+      "sha256": "92bc294160011b10aaf3bba7c4f956b66687a82e4e32c7dcda1654dba2d8c325"
+    },
+    {
+      "bytes": 2166,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "4e10b17de7dd0181cb6ff93fc13ab0bf143e303d70f7ed33d817c5407648945a",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-1.md",
+      "sha256": "4e10b17de7dd0181cb6ff93fc13ab0bf143e303d70f7ed33d817c5407648945a"
+    },
+    {
+      "bytes": 1378,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "ffda393666be3ee25a28573ccd36bfddd79a80d736d62780af2e36cbfa7f7010",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-2.md",
+      "sha256": "ffda393666be3ee25a28573ccd36bfddd79a80d736d62780af2e36cbfa7f7010"
+    },
+    {
+      "bytes": 1290,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "6ab5c95185349d157e322bed698449645d4767619676782c7de350fe221cc9d6",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-3.md",
+      "sha256": "6ab5c95185349d157e322bed698449645d4767619676782c7de350fe221cc9d6"
+    },
+    {
+      "bytes": 902,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a8e56abdc80f57f5c6f67ff3930a1ff8c5c1206b5d7cee5ae457ef687eff2826",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-4.md",
+      "sha256": "a8e56abdc80f57f5c6f67ff3930a1ff8c5c1206b5d7cee5ae457ef687eff2826"
+    },
+    {
+      "bytes": 1274,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "0f49741cfc853ba18f31216513d273717b074d30f315aab4c75dfa1b3b37b204",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-5.md",
+      "sha256": "0f49741cfc853ba18f31216513d273717b074d30f315aab4c75dfa1b3b37b204"
+    },
+    {
+      "bytes": 991,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "2eaf15665a21917cd344d2263bf4c2abbe07a0edb67bd7b8370f7061c99be4aa",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-6.md",
+      "sha256": "2eaf15665a21917cd344d2263bf4c2abbe07a0edb67bd7b8370f7061c99be4aa"
+    },
+    {
+      "bytes": 1211,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "8b440dc0e19423946ecd970d22f533846f0008d977f91144d5106b541e3851fc",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-7.md",
+      "sha256": "8b440dc0e19423946ecd970d22f533846f0008d977f91144d5106b541e3851fc"
+    },
+    {
+      "bytes": 570,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "bcdb869bc63f4395b6755984be8eec1da0b53f423a545abf5a7a389a59310359",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-8.md",
+      "sha256": "bcdb869bc63f4395b6755984be8eec1da0b53f423a545abf5a7a389a59310359"
+    },
+    {
+      "bytes": 813,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "06d0015145b6a4edf825b1796abaedf8a4b2cb6598f73128b4ad78c344b5521d",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-9.md",
+      "sha256": "06d0015145b6a4edf825b1796abaedf8a4b2cb6598f73128b4ad78c344b5521d"
+    },
+    {
+      "bytes": 941,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "5a77bd39bbcfd8b3b546f15c7f3d74e6a57dc53e105c45d73dbde270a6373b58",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-10.md",
+      "sha256": "5a77bd39bbcfd8b3b546f15c7f3d74e6a57dc53e105c45d73dbde270a6373b58"
+    },
+    {
+      "bytes": 941,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "704052f445472219381665e39c335c4e0c00b630cce80975aebb5e6360e2bb6e",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-11.md",
+      "sha256": "704052f445472219381665e39c335c4e0c00b630cce80975aebb5e6360e2bb6e"
+    },
+    {
+      "bytes": 796,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a140b06a0ee1257056f8f83b6c801b77b57d34dd435934343ac843a644b0eb4a",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-12.md",
+      "sha256": "a140b06a0ee1257056f8f83b6c801b77b57d34dd435934343ac843a644b0eb4a"
+    },
+    {
+      "bytes": 914,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "fb86bca2742289934f1dfa4f0f5c8b63ede8a0d74b16af47ea6328691d24d38e",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-13.md",
+      "sha256": "fb86bca2742289934f1dfa4f0f5c8b63ede8a0d74b16af47ea6328691d24d38e"
+    },
+    {
+      "bytes": 676,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "7205a13fde8b574c7ec992a0b02cdcd835e87d54e1ef875a378970251e440859",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-14.md",
+      "sha256": "7205a13fde8b574c7ec992a0b02cdcd835e87d54e1ef875a378970251e440859"
+    },
+    {
+      "bytes": 937,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "37ac69a7386cdc372f34e3f2d338907d29840db737c4f0b0c9a762123cc1282b",
+      "path": "experiments\\M135-slide-physical-commissioning\\AMENDMENT-15.md",
+      "sha256": "37ac69a7386cdc372f34e3f2d338907d29840db737c4f0b0c9a762123cc1282b"
+    },
+    {
+      "bytes": 208,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "bbc63bc96f5a0d14c366c2a29115b389d9ecfade21f5c1440dd9f72b9f1a2412",
+      "path": "experiments\\M135-slide-physical-commissioning\\Cargo.toml",
+      "sha256": "bbc63bc96f5a0d14c366c2a29115b389d9ecfade21f5c1440dd9f72b9f1a2412"
+    },
+    {
+      "bytes": 32798,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec",
+      "path": "experiments\\M135-slide-physical-commissioning\\Cargo.lock",
+      "sha256": "bcfaae2125e9a15887bfb5e73e1709c25a11f9c03aba23fbf382fba19f444eec"
+    },
+    {
+      "bytes": 5935,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "edbbfbd44857ea39f331f764795deb459783711a4a5d8c1c432027141d544bfa",
+      "path": "experiments\\M135-slide-physical-commissioning\\config.json",
+      "sha256": "edbbfbd44857ea39f331f764795deb459783711a4a5d8c1c432027141d544bfa"
+    },
+    {
+      "bytes": 4112,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "fee8129073f85c6c0aa9b04d86a8b592a0514127e5eded68249016bb55161662",
+      "path": "experiments\\M135-slide-physical-commissioning\\artifact-schemas.json",
+      "sha256": "fee8129073f85c6c0aa9b04d86a8b592a0514127e5eded68249016bb55161662"
+    },
+    {
+      "bytes": 1453,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "4a5dcce9ffff6b2a26bdf9711ae7bd5060cb3aad14cbbc9016bf326e7a274c7b",
+      "path": "experiments\\M135-slide-physical-commissioning\\role-ledger.template.json",
+      "sha256": "4a5dcce9ffff6b2a26bdf9711ae7bd5060cb3aad14cbbc9016bf326e7a274c7b"
+    },
+    {
+      "bytes": 152926,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "2b9b536f6b95c513209afc3c4edcabab9b77f8986422e336b4bdf1ad4660ed2d",
+      "path": "experiments\\M135-slide-physical-commissioning\\instrument.py",
+      "sha256": "2b9b536f6b95c513209afc3c4edcabab9b77f8986422e336b4bdf1ad4660ed2d"
+    },
+    {
+      "bytes": 78248,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "d18068a5d783a553d0be3d3df61ca615a1979066838c994a66f9481ef45427ac",
+      "path": "experiments\\M135-slide-physical-commissioning\\commission.py",
+      "sha256": "d18068a5d783a553d0be3d3df61ca615a1979066838c994a66f9481ef45427ac"
+    },
+    {
+      "bytes": 11679,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "ecee286b34b0afe454bd64328ab9e6eb89f4b1847c23c02e4a85cfc344a0aebb",
+      "path": "experiments\\M135-slide-physical-commissioning\\freeze.py",
+      "sha256": "ecee286b34b0afe454bd64328ab9e6eb89f4b1847c23c02e4a85cfc344a0aebb"
+    },
+    {
+      "bytes": 2337,
+      "hash_domain": "UTF-8 text after universal-newline normalization",
+      "normalized_text_sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6",
+      "path": "experiments\\M135-slide-physical-commissioning\\src\\main.rs",
+      "sha256": "a6a4afb32e6dd6de36286c6828bae530c1f708708f59a6d9e9217a71b58969d6"
+    }
+  ],
+  "source_tree_parent_commit": "d8adb3b5351e195682f3bde4237be3e79712598f",
+  "status": "FROZEN"
+}

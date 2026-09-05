@@ -1,0 +1,44 @@
+{
+  "schema": "m135-slide-role-ledger-v1",
+  "label": "DEVELOPMENT — NEVER A SCORE",
+  "session_id": "high-res-calibration-slide-cpl-2026-09-02",
+  "target": {
+    "kind": "public-periodic-slide",
+    "checker_template_available": true,
+    "source_oracle_used": false,
+    "same_physical_sites": true
+  },
+  "observed_groups": {
+    "tilted-sw4-cpl": {
+      "declared_use": "finer-focus-sampling optical arm",
+      "geometry_id": "tilted"
+    },
+    "tilted-sw10-cpl": {
+      "declared_use": "coarser-focus-sampling optical arm",
+      "geometry_id": "tilted"
+    },
+    "flat-sw4-cpl": {
+      "declared_use": "flat/source diagnostic only; not a calibration lineage",
+      "geometry_id": "flat"
+    },
+    "very-tilted-all-axis-sw10-cpl": {
+      "declared_use": "geometry stress only; explicitly not a repeat",
+      "geometry_id": "very-tilted-all-axis"
+    }
+  },
+  "site_count": 64,
+  "matched_flat_evidence": false,
+  "matched_flat_manifest_path": null,
+  "matched_flat_manifest_sha256": null,
+  "assignments": {},
+  "flat_core_eligibility": {
+    "lawful": false,
+    "reason": "one focus ladder split four ways is not four independent capture/calibration roles"
+  },
+  "notes": [
+    "tilted-sw4-cpl is never a truth/reference role",
+    "odd/even or modulo splits are diagnostics, never independent captures",
+    "very-tilted-all-axis-sw10-cpl is never a same-geometry repeat",
+    "the checker template is never a source oracle"
+  ]
+}
