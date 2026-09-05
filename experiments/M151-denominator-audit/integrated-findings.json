@@ -1,0 +1,2328 @@
+{
+  "schema": "m151-denominator-integrated-findings-v1",
+  "schema_version": 1,
+  "scope": {
+    "canonical_rule": "Count only non-M151 decision or headline changes caused by denominator caps or unstated populations after collapsing repeated prose and root analyses. Preserve non-denominator corrections as rejected proposed YES records.",
+    "prohibited_path_accessed": false,
+    "heavy_render_run": false
+  },
+  "inputs": {
+    "summaries": [
+      {
+        "path": "experiments/M151-denominator-audit/summary-01.json",
+        "sha256": "9280a516a007695ec2e19a89b0b5f7cd85f941269f7326005f34b4680161e8e0",
+        "normalized_group_count": 16,
+        "group_classification_counts": {
+          "cap": 15,
+          "unstated": 1
+        },
+        "ledger_occurrences_represented": 28
+      },
+      {
+        "path": "experiments/M151-denominator-audit/summary-02.json",
+        "sha256": "be00f4350f7eca9ec272881841177a6d98e9246547faf32332279d9bbf4a9d3c",
+        "normalized_group_count": 13,
+        "group_classification_counts": {
+          "cap": 13
+        },
+        "ledger_occurrences_represented": 190
+      },
+      {
+        "path": "experiments/M151-denominator-audit/summary-03.json",
+        "sha256": "013cb8df58feae79881d042fc0a776a92dcf99e1cf42b18052439350275ebe3c",
+        "normalized_group_count": 155,
+        "group_classification_counts": {
+          "cap": 151,
+          "unstated": 4
+        },
+        "ledger_occurrences_represented": 189
+      },
+      {
+        "path": "experiments/M151-denominator-audit/summary-04.json",
+        "sha256": "87f9d8fb63752968170dffdc3e52f01326849514840182bf42a970f86765773e",
+        "normalized_group_count": 65,
+        "group_classification_counts": {
+          "cap": 63,
+          "unstated": 2
+        },
+        "ledger_occurrences_represented": 119
+      },
+      {
+        "path": "experiments/M151-denominator-audit/summary-05.json",
+        "sha256": "96f336df4feae5bc829ba34f1d90794a99acb950e9578a1d7ed5381602c98828",
+        "normalized_group_count": 27,
+        "group_classification_counts": {
+          "cap": 12,
+          "unstated": 15
+        },
+        "ledger_occurrences_represented": 546
+      },
+      {
+        "path": "experiments/M151-denominator-audit/summary-06.json",
+        "sha256": "8b4c45845877e22b5b5132cd8547dcc97874062c1d209b74109226b4f33bc331",
+        "normalized_group_count": 72,
+        "group_classification_counts": {
+          "cap": 64,
+          "unstated": 8
+        },
+        "ledger_occurrences_represented": 105
+      },
+      {
+        "path": "experiments/M151-denominator-audit/summary-07.json",
+        "sha256": "7752552ffee57f3205828bbe62616b47ff9feaf59f42e34ce930d7c7dc326d00",
+        "normalized_group_count": 11,
+        "group_classification_counts": {
+          "cap": 8,
+          "unstated": 3
+        },
+        "ledger_occurrences_represented": 34
+      },
+      {
+        "path": "experiments/M151-denominator-audit/summary-08.json",
+        "sha256": "fb46e7e9f74792746f51ccf1b3b7fea81fb68c59e218873591877c21dba150f7",
+        "normalized_group_count": 274,
+        "group_classification_counts": {
+          "cap": 47,
+          "unstated": 227
+        },
+        "ledger_occurrences_represented": 440
+      }
+    ],
+    "adjudications": [
+      {
+        "path": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "sha256": "05e7f5e8e06683188d9be2b083f3b1d43801cacb7f639e487b36cbef2aeacf67",
+        "finding_count": 44
+      },
+      {
+        "path": "experiments/M151-denominator-audit/adjudication-04-06.json",
+        "sha256": "81dea8e177353e0f9b9b8c399831c3170714e37a7e766bd3d4872d67968419fc",
+        "finding_count": 65
+      },
+      {
+        "path": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "sha256": "a56465d761ffd42d347fc689bfa70ae3493cbb0c9cc28a78671bbb054b803a54",
+        "finding_count": 41
+      }
+    ],
+    "ledger": {
+      "path": "experiments/M151-denominator-audit/audit-ledger.jsonl",
+      "sha256": "ad400d1f94178b0d7489df825688faf03234ac5c1d0f603ccaa7a015b1d773a0"
+    },
+    "ledger_validation": {
+      "path": "experiments/M151-denominator-audit/ledger-validation.json",
+      "sha256": "779ef4f7587482c5ee42e9ff234f8c3beb31ef093e0ce362714ae3ac7c0a34ac"
+    },
+    "candidates": {
+      "path": "experiments/M151-denominator-audit/out/candidates.jsonl",
+      "sha256": "928e995d949c8e37b20462bc16e2c800ba1ae095af89ebe3edf1bd32c48f5817"
+    }
+  },
+  "source_document_hashes": [
+    {
+      "path": "docs/proposals/2026-08-sota-path.md",
+      "sha256": "72f8257918e929acb3f50c4606a4a7a73a44594492f040b4fcf196072e6a0b94",
+      "bytes": 193734,
+      "lines": 2780
+    },
+    {
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "sha256": "405f3749f097104778ec11404eb432e53869ee9cfa6ef13bab4bc2cdbda7a696",
+      "bytes": 165917,
+      "lines": 2240
+    },
+    {
+      "path": "docs/research/BUILD-CROP.md",
+      "sha256": "e5b617c2d3b3590183925b2de6e97aaa16ee43192fe8775ce1faceeba218f8b1",
+      "bytes": 87665,
+      "lines": 1705
+    },
+    {
+      "path": "docs/research/BUILD-ELECT.md",
+      "sha256": "1c8f7ebd7ce6d4158de8fb144e7222d6abfca85414018c36c20e50ee7ee53a3c",
+      "bytes": 196986,
+      "lines": 3536
+    },
+    {
+      "path": "docs/research/BUILD-PYRNOISE-ADJUDICATION.md",
+      "sha256": "1ff93169df88f3c2e5f7b341821f417e2839e663bc6d2a8b9644d2872daa72f9",
+      "bytes": 25115,
+      "lines": 501
+    },
+    {
+      "path": "docs/research/M-COVER-NATIVE.md",
+      "sha256": "cae2102496fe23d716e31c6a2238e169d6d0b06fbdfbf0ce0bb4905df3ea27a3",
+      "bytes": 42537,
+      "lines": 727
+    },
+    {
+      "path": "docs/research/M-PHASE0-PIPE.md",
+      "sha256": "a51b1af8e2693a36f8d2ee24c3058171e3a09f8ec80185fe1fa296d0dea81ba5",
+      "bytes": 14584,
+      "lines": 264
+    },
+    {
+      "path": "docs/research/M-PHASE0-ZFIELD.md",
+      "sha256": "2a2c4f885ad474612fccdfe57bf536489b32c8b3d29970fca76db9ae9c05a5e7",
+      "bytes": 16379,
+      "lines": 267
+    },
+    {
+      "path": "docs/research/M1-decode-measured.md",
+      "sha256": "e5e8fa87e54b5dd5bf9f7ae90dbe9e9e2796d7e49a19b9734b139231e4390bfe",
+      "bytes": 5096,
+      "lines": 110
+    },
+    {
+      "path": "docs/research/M107b-lateral-correction.md",
+      "sha256": "505e618762f20a95970478a70b90d6d7482b5fda5e033997aa9e948cd825f6a0",
+      "bytes": 130252,
+      "lines": 2362
+    },
+    {
+      "path": "docs/research/M109-highlights.md",
+      "sha256": "c717061746ce6fc385057e25629289236385d3fc56b075c1c34908e38dc991d3",
+      "bytes": 52123,
+      "lines": 952
+    },
+    {
+      "path": "docs/research/M116-promotion.md",
+      "sha256": "8afc7326a71fdfd66c80fecd4abf96cf9edc64b21c9106bafadcd545bda67673",
+      "bytes": 166669,
+      "lines": 2751
+    },
+    {
+      "path": "docs/research/M120-patchwork.md",
+      "sha256": "0797f0986b08e4bdb6f417ecd6665be41802fc5024006634db101be6d574155f",
+      "bytes": 88528,
+      "lines": 1462
+    },
+    {
+      "path": "docs/research/M126-default-audit.md",
+      "sha256": "8a70c3c753113048e375511b3ec92a14b868177834250c758a227d9995358b5c",
+      "bytes": 86168,
+      "lines": 1478
+    },
+    {
+      "path": "docs/research/M151-m5-checker.md",
+      "sha256": "32287694814568fe342a571e90f175040499459fa7691657a07fc05b1234de5d",
+      "bytes": 26181,
+      "lines": 474
+    },
+    {
+      "path": "docs/research/M173-ask2a-audit.md",
+      "sha256": "7ad346aa6eba39bb35099b58ce5efd6894773dd1b206fc3aeafae91954ab5fc9",
+      "bytes": 34880,
+      "lines": 323
+    },
+    {
+      "path": "docs/research/M20-VERIFICATION.md",
+      "sha256": "adc4367cc7e42aa6a081cea147ebb13a33767aa9ad682b2a88388223b2ca9ac2",
+      "bytes": 42638,
+      "lines": 691
+    },
+    {
+      "path": "docs/research/M21-occlusion-bimodality-measured.md",
+      "sha256": "06d9c71129ea3f0a4541928835c5e1f880ef61cbd9f4369a540cf3111a39f8fc",
+      "bytes": 11021,
+      "lines": 215
+    },
+    {
+      "path": "docs/research/M26-colour-clipping-measured.md",
+      "sha256": "c1c25158b30c057db7369a50391ae12791e12625110f977bbfcdf61c6db2f5e2",
+      "bytes": 10616,
+      "lines": 230
+    },
+    {
+      "path": "docs/research/M30-hdr-cobracket-measured.md",
+      "sha256": "74f16a16f00ba3ce79585a817bf38f443c36a792fab0767be366239e7824913a",
+      "bytes": 9935,
+      "lines": 177
+    },
+    {
+      "path": "docs/research/M5-diffraction-measured.md",
+      "sha256": "449a31b229776a9dff78d2b78d07655c7de996f1709cb2722320c4262753ff78",
+      "bytes": 48840,
+      "lines": 809
+    },
+    {
+      "path": "docs/research/M63-bimodality.md",
+      "sha256": "0d3de21b949aca66018e81e74196bac0ea8e1904159daef4872976dd17b43aa6",
+      "bytes": 122688,
+      "lines": 2056
+    },
+    {
+      "path": "docs/research/M89-robustness-mask.md",
+      "sha256": "319b8c317f205e70d120f724d691ba23e4a6b3c69e2cf246e13507251fcb0eb4",
+      "bytes": 76040,
+      "lines": 1352
+    },
+    {
+      "path": "docs/research/M90-prnu-noise-model.md",
+      "sha256": "e538d4dbe9d36d17fe80f3cdd826f835e69221231d6161610ee97aa4359e947b",
+      "bytes": 58068,
+      "lines": 1020
+    },
+    {
+      "path": "docs/research/M95-election-quality.md",
+      "sha256": "e4de8a698dc3a450d0e6dacf8b9445734e7d678774850415c168c87c3e61e36f",
+      "bytes": 50302,
+      "lines": 983
+    },
+    {
+      "path": "docs/research/ORCH-veiling.md",
+      "sha256": "f873a12dd9f79b02b6ce9171c3c04275c966398891d08fec680437dbf6486721",
+      "bytes": 773722,
+      "lines": 14449
+    },
+    {
+      "path": "docs/research/SYNTHESIS.md",
+      "sha256": "e0448cc278635067dccd004cd8e469a73ad2a2df7bd1232b80a3cf4ccde9e6b0",
+      "bytes": 2213785,
+      "lines": 5225
+    },
+    {
+      "path": "docs/research/V-EYES.md",
+      "sha256": "44e466662b15cb38cfa9989f557aed07c66b65a13983eacf1775f1973de4eeee",
+      "bytes": 96535,
+      "lines": 1742
+    },
+    {
+      "path": "docs/research/V-GATHER.md",
+      "sha256": "30be677fff4108554322076723fa33f2f2a4dcf75b03072598d3c1d16aee715f",
+      "bytes": 137911,
+      "lines": 2614
+    },
+    {
+      "path": "docs/research/V-HEADTOHEAD2.md",
+      "sha256": "5758ead2a313c5f04788cb73c37ad7ba7b38ef4ee0b44dfa76a67065b665eab4",
+      "bytes": 196948,
+      "lines": 3545
+    },
+    {
+      "path": "docs/research/V-ORACLE.md",
+      "sha256": "5819cb65b354dbb6be7021bcc2e978b1f99e23e82ade8aece57fd0632b71a2cc",
+      "bytes": 37140,
+      "lines": 657
+    },
+    {
+      "path": "docs/research/V-SOFTCHECK-bandqual.md",
+      "sha256": "a4c99dc25e349fa06b7d52611be33c476393767fa442e11b182eec27e805a1f9",
+      "bytes": 29073,
+      "lines": 493
+    },
+    {
+      "path": "docs/research/V-bestframe.md",
+      "sha256": "39218ff1f47f0da3294912fa3a4f20d96920ccef3acdb457478f8c017990405f",
+      "bytes": 49871,
+      "lines": 911
+    },
+    {
+      "path": "docs/research/V-hull.md",
+      "sha256": "64ff6c713a00fc5bb4c23e8d6a6dd04cae83c6a2ccf36038c45c65347ca73d78",
+      "bytes": 45846,
+      "lines": 880
+    },
+    {
+      "path": "experiments/M-PHASE0-ZFIELD/out/z1-census.json",
+      "sha256": "dab4e0c60da67e7b5fffa16f172235cdf6f25d5e39185f21855e7591563f64b6",
+      "bytes": 246268,
+      "lines": 8634
+    },
+    {
+      "path": "experiments/M-PHASE0-ZFIELD/src/z1_census.py",
+      "sha256": "59b2eb0afd9774beb492f1a1d506710643c12b37a707206ddd8dc1364a97ffb5",
+      "bytes": 8383,
+      "lines": 204
+    },
+    {
+      "path": "experiments/M109-highlights/src/dilution.py",
+      "sha256": "54f49d99cdce0fc0b27a8ea5eff2ffdf89826016c86d50bd20d036d9e409ca1a",
+      "bytes": 4357,
+      "lines": 113
+    },
+    {
+      "path": "experiments/M116-promotion/pick_single.py",
+      "sha256": "27124b2b2f5c643b2a8d7a7c3e033cb63d66542ab3e4209101e81814fcfaa4b0",
+      "bytes": 2025,
+      "lines": 63
+    },
+    {
+      "path": "experiments/M95-oracle/out/o4_b1.json",
+      "sha256": "c44c6c4bcb78cdf909b12cef44f8100ef435225d1bc6d536a5a5da449c8aaa8f",
+      "bytes": 1131,
+      "lines": 67
+    },
+    {
+      "path": "experiments/M95-oracle/src/o4_b1.py",
+      "sha256": "9e58661eb8442a0132aa97ef7037c4a7f402555a9fbfa352339ed3f32a680486",
+      "bytes": 8181,
+      "lines": 191
+    },
+    {
+      "path": "experiments/V-ORACLE/data/rank-corpus.txt",
+      "sha256": "32b18edc4ed47b4fa5bdda754145f3f1694e66271e01a398cf55a364d1a4e1ef",
+      "bytes": 6619,
+      "lines": 97
+    }
+  ],
+  "audit_snapshot": {
+    "result": "valid_frozen_snapshot_with_live_drift",
+    "frozen_snapshot_valid": true,
+    "live_corpus_fresh_at_validation": false,
+    "frozen_files": 360,
+    "frozen_candidates": 42404,
+    "ledger_records": 42764,
+    "ledger_dispositions": 42404,
+    "ledger_file_attestations": 360,
+    "cap_dispositions": 1155,
+    "unstated_dispositions": 496,
+    "normalized_summary_groups": 633,
+    "all_summary_groups_preserved_in": "experiments/M151-denominator-audit/cap-unstated-index.json"
+  },
+  "canonical_adjudication": {
+    "raw_adjudication_yes_records": 20,
+    "excluded_known_m151_corrections": 1,
+    "collapsed_repeated_root_analyses": 1,
+    "rejected_proposed_yes_overclaims": 11,
+    "non_m151_denominator_caused_decision_flips": 7,
+    "count_reconciliation": "20 raw YES - 1 known M151 correction - 1 duplicate M116 P9 root analysis collapsed into V-EYES - 11 rejected non-denominator proposed YES records = 7.",
+    "currently_live_wrong_overclaims": {
+      "count": 3,
+      "findings": [
+        {
+          "id": "flip-live-01-m109-causal-exclusivity",
+          "category": "CURRENTLY_LIVE_WRONG_OVERCLAIM",
+          "canonical_lifecycle_status": "LIVE_WRONG_OVERCLAIM",
+          "source_finding_ids": [
+            "m151-s02-m109-contributing-frames"
+          ],
+          "source_adjudications": [
+            "experiments/M151-denominator-audit/adjudication-01-03.json"
+          ],
+          "classification": "cap",
+          "source_locations": [
+            {
+              "file": "docs/research/M109-highlights.md",
+              "lines": [
+                872,
+                875,
+                880,
+                884,
+                885,
+                900,
+                901,
+                903,
+                907,
+                909,
+                910,
+                912,
+                929
+              ]
+            },
+            {
+              "file": "experiments/M109-highlights/src/dilution.py",
+              "lines": [
+                1,
+                38,
+                39,
+                62,
+                71,
+                72
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "299-frame dry-erase capture",
+            "stride-4 sample: 75 frames",
+            "sensels pinned at least once in sampled frames",
+            "f over all sampled frames",
+            "merge output formed from an unknown per-pixel focus-gated contributing set",
+            "21.02% versus 74.7% causal bar"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion": "H-merge is a mechanism, not the only mechanism, because 21.02% is far below the predicted 74.7%.",
+          "resolved_verdict": "UNMEASURED",
+          "load_bearing_consequence": "Do not promote 21.02% as evidence that another mechanism is required. The structural warning about post-merge equality remains a hypothesis supported by partial clipping, not a quantified causal share.",
+          "source_lifecycle_statuses": [
+            "LIVE"
+          ],
+          "true_population": [
+            "For each output pixel, all actual focus-gated contributing frames from the complete 299-frame capture."
+          ],
+          "exact_missing_input": [
+            "Export each pixel's contributing-frame membership and clip state for all 299 frames; recompute f only over contributors, then compare the correctly matched causal quantity with the registered bar."
+          ],
+          "evidence_labels": [
+            "INFERRED_BY_READING"
+          ],
+          "exact_replacement_text": "B15 is UNMEASURED for causal exclusivity. The reported 21.02% uses 75 of 299 frames and divides by all sampled frames, while the merge uses each pixel's unknown focus-gated contributing set. Recompute clip persistence over those contributors before comparing it with 74.7%; no numerator may be inferred from the capped rate."
+        },
+        {
+          "id": "flip-live-02-build-elect-all-299-h4",
+          "category": "CURRENTLY_LIVE_WRONG_OVERCLAIM",
+          "canonical_lifecycle_status": "LIVE_WRONG_OVERCLAIM",
+          "source_finding_ids": [
+            "adj-05-build-elect-49"
+          ],
+          "source_adjudications": [
+            "experiments/M151-denominator-audit/adjudication-04-06.json"
+          ],
+          "classification": "cap",
+          "source_locations": [
+            {
+              "file": "docs/research/BUILD-ELECT.md",
+              "lines": [
+                49,
+                121,
+                265,
+                332,
+                391,
+                406,
+                408,
+                454,
+                455,
+                623,
+                624,
+                625,
+                633,
+                669,
+                670,
+                671,
+                672,
+                673,
+                678,
+                695,
+                706,
+                721,
+                722,
+                733,
+                739,
+                745,
+                778,
+                807,
+                919,
+                1528,
+                1766
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "205-frame flower and 299-frame bee brackets",
+            "21- and 26-rung rendered ladders",
+            "selected ROIs and pixels",
+            "focus, coverage, abstention, and remedy conclusions"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion": "Selected bee ROIs have no texture peak anywhere in all 299 frames, while the flower simulation and remedy results characterize full-bracket behavior.",
+          "resolved_verdict": "UNMEASURED between 26 rendered rungs",
+          "load_bearing_consequence": "DOWNGRADE_TO_UNMEASURED",
+          "source_lifecycle_statuses": [
+            "SUPERSEDED"
+          ],
+          "true_population": [
+            "All 205 and 299 frames at the frozen ROIs for every-frame coverage claims; only the rendered 21 and 26 rungs for the reported ladder observations."
+          ],
+          "exact_missing_input": [
+            "The source admits that a peak narrower than the roughly 8-12-frame rung spacing could be invisible. Therefore a flat rendered ladder cannot prove no peak in every frame. Later sections supersede the proposed election remedy with the pyramid blend path, but the every-frame historical H4 wording still requires downgrade."
+          ],
+          "evidence_labels": [
+            "INFERRED_BY_READING"
+          ],
+          "exact_replacement_text": "BUILD-ELECT found no qualifying texture peak on the 21 flower or 26 bee ladder rungs. It did not test every bracket frame, so every-frame H4 acceptance is UNMEASURED; the later pyramid path supersedes the proposed election remedy."
+        },
+        {
+          "id": "flip-live-03-v-bestframe-capture-limited-h1",
+          "category": "CURRENTLY_LIVE_WRONG_OVERCLAIM",
+          "canonical_lifecycle_status": "LIVE_WRONG_OVERCLAIM",
+          "source_finding_ids": [
+            "adj-04-v-bestframe-5"
+          ],
+          "source_adjudications": [
+            "experiments/M151-denominator-audit/adjudication-04-06.json"
+          ],
+          "classification": "cap",
+          "source_locations": [
+            {
+              "file": "docs/research/V-bestframe.md",
+              "lines": [
+                5,
+                6,
+                13,
+                29,
+                63,
+                152,
+                153,
+                183,
+                184,
+                185,
+                186,
+                196,
+                204,
+                219,
+                323,
+                340,
+                341,
+                342,
+                343,
+                344,
+                345,
+                405,
+                406,
+                445,
+                534,
+                535,
+                536,
+                537,
+                538,
+                539,
+                540,
+                541,
+                542,
+                543,
+                544,
+                545,
+                546,
+                547,
+                548,
+                549,
+                550,
+                551,
+                552,
+                553,
+                554,
+                555,
+                556,
+                572,
+                589,
+                590,
+                591,
+                858
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "complete subject brackets of 19 to 299 frames",
+            "generally 12 registration-qualified frames from a first-20 adjacent-pair design",
+            "352 fixed whole-frame tiles",
+            "best observed frame within the bounded set",
+            "capture-limited and merge-versus-best conclusions"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion": "H1: flowers-cpl is capture-limited rather than software-limited; the 24-subject screen supports a SHIP-V1 merge-versus-best blocker.",
+          "resolved_verdict": "UNMEASURED_FULL_CAPTURE",
+          "load_bearing_consequence": "DOWNGRADE_TO_UNMEASURED",
+          "source_lifecycle_statuses": [
+            "LIVE"
+          ],
+          "true_population": [
+            "Every usable source frame in each complete bracket, crossed with the 352 frozen tiles, for any claim that no input frame contains recoverable detail."
+          ],
+          "exact_missing_input": [
+            "The instrument takes maxima over sampled frames. An omitted frame can only introduce a previously unseen detail peak, so first-12/20 data cannot establish that the full capture lacks detail. The file itself calls the 24-subject extension a screen, but its headline still promotes full-capture H1. Complete-frame measurements or an outcome-independent depth-covering design with uncertainty are missing. No sampled numerator is extrapolated."
+          ],
+          "evidence_labels": [
+            "INFERRED_BY_READING"
+          ],
+          "exact_replacement_text": "V-bestframe measures the selected first-12/20 frame sets, not the complete brackets. The bounded results flag merge deficits, but H1 capture-limited is UNMEASURED until every usable frame or a preregistered depth-covering sample is evaluated."
+        }
+      ]
+    },
+    "historical_or_corrected": {
+      "count": 4,
+      "findings": [
+        {
+          "id": "flip-historical-01-m126-halo-exception",
+          "category": "HISTORICAL_OR_CORRECTED",
+          "canonical_lifecycle_status": "HISTORICAL_OR_CORRECTED",
+          "source_finding_ids": [
+            "m151-s02-m126-first100"
+          ],
+          "source_adjudications": [
+            "experiments/M151-denominator-audit/adjudication-01-03.json"
+          ],
+          "classification": "cap",
+          "source_locations": [
+            {
+              "file": "docs/research/M126-default-audit.md",
+              "lines": [
+                77,
+                80,
+                159,
+                259,
+                287,
+                340,
+                354,
+                369,
+                382,
+                389,
+                393,
+                485,
+                502,
+                503,
+                522,
+                565,
+                592,
+                603,
+                605,
+                606,
+                648,
+                657,
+                659,
+                665,
+                1433,
+                1453,
+                1454,
+                1460,
+                1465,
+                1474,
+                1475
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "299-frame bee-3-cpl capture",
+            "first-100 prefix",
+            "endpoint frame 99 wins 31.6%",
+            "halo tile metrics and three promotion bars",
+            "favorable exception",
+            "later full-299 pixel inspection and dose evidence"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion": "Bee-3-cpl was the only halo cell clearing all three bars, although the overall verdict was KEEP OFF.",
+          "resolved_verdict": "KEEP OFF; favorable halo exception withdrawn",
+          "load_bearing_consequence": "No halo promotion; overall KEEP OFF is strengthened.",
+          "source_lifecycle_statuses": [
+            "SUPERSEDED"
+          ],
+          "true_population": [
+            "All 299 bee-3-cpl frames with full-focus-range masks and a fidelity-sensitive metric."
+          ],
+          "exact_missing_input": [
+            null
+          ],
+          "evidence_labels": [
+            "INFERRED_BY_READING"
+          ],
+          "exact_replacement_text": "The first-100 bee halo exception is superseded. On all 299 frames the correction changes 12.772% of pixels and visibly erases wing microtexture into plateaus; the favorable three-bar exception is withdrawn and KEEP OFF stands."
+        },
+        {
+          "id": "flip-historical-02-m116-never-harms",
+          "category": "HISTORICAL_OR_CORRECTED",
+          "canonical_lifecycle_status": "HISTORICAL_OR_CORRECTED",
+          "source_finding_ids": [
+            "m151-s03-m116-main-prefix"
+          ],
+          "source_adjudications": [
+            "experiments/M151-denominator-audit/adjudication-01-03.json"
+          ],
+          "classification": "cap",
+          "source_locations": [
+            {
+              "file": "docs/research/M116-promotion.md",
+              "lines": [
+                274,
+                275,
+                298,
+                2554,
+                2568,
+                2569,
+                2611,
+                2647,
+                2651,
+                2653
+              ]
+            },
+            {
+              "file": "docs/research/M120-patchwork.md",
+              "lines": [
+                1338,
+                1352,
+                1357
+              ]
+            },
+            {
+              "file": "docs/research/M126-default-audit.md",
+              "lines": [
+                657,
+                659
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "three selected subjects",
+            "100 frames per subject, but first 100 of 299 for bee",
+            "selected masks/windows",
+            "photometric deltas and no-harm claim",
+            "later all-299 one-subject campaign"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion": "Photometric normalization never harms on 3/3 and stays below promotion; foam is unpowered.",
+          "resolved_verdict": "Photometric never-harms refuted by full-299 HARM on 10 of 12 windows; no promotion unchanged",
+          "load_bearing_consequence": "Keep photometric off by default; remove the no-harm rationale.",
+          "source_lifecycle_statuses": [
+            "SUPERSEDED"
+          ],
+          "true_population": [
+            "All eligible frames, subjects, and preregistered regions for a promotion/no-harm claim. Foam's own 100-frame result is complete in frame depth but remains an outer selected-subject/mask result."
+          ],
+          "exact_missing_input": [
+            "Broader subject/region coverage for a corpus-wide disposition; no further bee run is needed to reject 'never harms.'"
+          ],
+          "evidence_labels": [
+            "INFERRED_BY_READING"
+          ],
+          "exact_replacement_text": "The main-campaign 'photometric never harms' claim is superseded: its decisive bee arm used the first 100 of 299 frames, while the all-299 campaign reports harm on 10 of 12 windows. No promotion remains the correct decision; the no-harm supporting claim does not."
+        },
+        {
+          "id": "flip-historical-03-veyes-best-frame-ceiling",
+          "category": "HISTORICAL_OR_CORRECTED",
+          "canonical_lifecycle_status": "HISTORICAL_OR_CORRECTED",
+          "source_finding_ids": [
+            "s07-veyes-thirteen-frame-reversal",
+            "m151-s03-m116-p9-prefix"
+          ],
+          "source_adjudications": [
+            "experiments/M151-denominator-audit/adjudication-01-03.json",
+            "experiments/M151-denominator-audit/adjudication-07-08.json"
+          ],
+          "classification": "cap",
+          "source_locations": [
+            {
+              "file": "docs/research/V-EYES.md",
+              "lines": "44-74"
+            },
+            {
+              "file": "docs/research/M116-promotion.md",
+              "lines": [
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                304,
+                314,
+                320,
+                335,
+                336,
+                340,
+                341,
+                1872,
+                1873,
+                2282
+              ]
+            },
+            {
+              "file": "experiments/M116-promotion/pick_single.py",
+              "lines": [
+                1
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "two early subjects",
+            "13 source frames, only 6% and 11% of their brackets",
+            "per-site maximum from that cap",
+            "master divided by capped source maximum",
+            "later exhaustive 19/19, 22/22, 33/33, 205/205, and 299/299 checks"
+          ],
+          "consequence_tier": "critical",
+          "original_conclusion": "The master was 1.87x and 1.54x sharper than its per-site best input frame.",
+          "resolved_verdict": "Complete-bracket result is 5-19% softer on averaging-dominated subjects; M116 P9 is collapsed into this root analysis",
+          "load_bearing_consequence": "The master was 1.87x and 1.54x sharper than its per-site best input frame.",
+          "source_lifecycle_statuses": [
+            "SUPERSEDED",
+            "SUPERSEDED"
+          ],
+          "true_population": [
+            "Every frame in the bracket for each subject being given a per-site best-frame ceiling.",
+            "For each scored site, the best source among every frame in that subject's full bracket."
+          ],
+          "exact_missing_input": [
+            "Exhaustive ceilings for corpus subjects not among the five completed brackets.",
+            "Full-bracket per-site ceilings for M116's three original subjects if their exact ratios are wanted; the P9 direction is already invalidated by the independent control."
+          ],
+          "evidence_labels": [
+            "INFERRED_BY_READING"
+          ],
+          "exact_replacement_text": "The earlier 1.87x and 1.54x results used a 13-frame ceiling and are superseded. Across complete brackets, strehl is 5-19% softer on averaging-dominated subjects; the effect is regime-dependent and was below the measured visibility threshold.",
+          "deduplication_note": "M116 P9 repeats the same global/first-100 versus per-site complete-bracket ceiling error and is collapsed into the V-EYES root analysis rather than counted again."
+        },
+        {
+          "id": "flip-historical-04-vgather-nsrc10",
+          "category": "HISTORICAL_OR_CORRECTED",
+          "canonical_lifecycle_status": "HISTORICAL_OR_CORRECTED",
+          "source_finding_ids": [
+            "s07-vgather-nsrc10-reversal"
+          ],
+          "source_adjudications": [
+            "experiments/M151-denominator-audit/adjudication-07-08.json"
+          ],
+          "classification": "cap",
+          "source_locations": [
+            {
+              "file": "docs/research/V-GATHER.md",
+              "lines": "274-310"
+            }
+          ],
+          "denominator_chain": [
+            "source-frame reference",
+            "main samples nsrc=10",
+            "one in 30 frames on a 299-frame stack",
+            "best-source denominator held fixed in commissioning",
+            "reference-only thinning later moved readings across unity"
+          ],
+          "consequence_tier": "critical",
+          "original_conclusion": "Project sharpness ratios above unity and the RECONSTRUCT comparison were treated as evidence for the master.",
+          "resolved_verdict": "nsrc=10 ratios invalid; changing only the denominator moved measurements across unity",
+          "load_bearing_consequence": "Project sharpness ratios above unity and the RECONSTRUCT comparison were treated as evidence for the master.",
+          "source_lifecycle_statuses": [
+            "SUPERSEDED"
+          ],
+          "true_population": [
+            "Every source frame in every bracket retained for a source-ceiling comparison."
+          ],
+          "exact_missing_input": [
+            "Full-bracket denominators for any original subject-level ratio someone proposes to retain."
+          ],
+          "evidence_labels": [
+            "INFERRED_BY_READING"
+          ],
+          "exact_replacement_text": "The prior real-subject sharpness ratios used nsrc=10 and are invalid. Thinning the reference alone moved readings across unity with the master unchanged; retained ratios require every source frame or an independently justified frozen sampling design."
+        }
+      ]
+    },
+    "excluded_known_m151_correction": {
+      "finding_id": "adj-05-m151-273",
+      "source_adjudication": "experiments/M151-denominator-audit/adjudication-04-06.json",
+      "reason_excluded": "Known M151 64-to-1,944 capture correction; the requested count is non-M151 denominator-caused flips.",
+      "resolved_verdict": "Capture route conditionally sufficient for M5 rehearsal eligibility; the M5 performance score remains UNMEASURED.",
+      "source_locations": [
+        {
+          "file": "docs/research/M151-m5-checker.md",
+          "lines": [
+            273,
+            274,
+            275,
+            285,
+            286,
+            287,
+            305,
+            306,
+            307,
+            308,
+            338,
+            351,
+            353,
+            354,
+            355,
+            356,
+            368,
+            377,
+            460,
+            462
+          ]
+        }
+      ],
+      "evidence_label": "VERIFIED_BY_RUNNING",
+      "exact_replacement_text": "Historical M151 capture NO is superseded: the 64 tiles were a commissioning cap, while the exhaustive 1,944-tile census finds 275 eligible in the best exact-27 tilted arm, above the 133-site feasibility minimum. This is the known M151 correction and is excluded from the count of other denominator flips; M5 itself remains UNMEASURED."
+    },
+    "rejected_proposed_yes": [
+      {
+        "finding_id": "m151-s01-m21-enrichment",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "The later M63 reversal is a mechanism-interpretation refutation, not a consequence forced by the 21-of-105 frame denominator; the full-105 numeric rate remains uncomputed.",
+        "source_locations": [
+          {
+            "file": "docs/research/M21-occlusion-bimodality-measured.md",
+            "lines": [
+              97
+            ]
+          },
+          {
+            "file": "docs/research/SYNTHESIS.md",
+            "lines": [
+              879
+            ]
+          },
+          {
+            "file": "docs/research/M63-bimodality.md",
+            "lines": [
+              56,
+              62,
+              1159,
+              1160,
+              1161,
+              1164
+            ]
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "BIMODALITY_EXISTS_BUT_TWO_DEPTH_OCCLUSION_INTERPRETATION_REFUTED"
+      },
+      {
+        "finding_id": "m151-s01-m21-intensity-strata",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "The reversal comes from later evidence that the self-normalized instrument is edge-blind, not from completing the capped frame population.",
+        "source_locations": [
+          {
+            "file": "docs/research/M21-occlusion-bimodality-measured.md",
+            "lines": [
+              108
+            ]
+          },
+          {
+            "file": "docs/research/M63-bimodality.md",
+            "lines": [
+              1535,
+              1544
+            ]
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "THE_CONTROL_DOES_NOT_REJECT_EDGE_BLINDNESS"
+      },
+      {
+        "finding_id": "m151-s01-m21-placebo",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "The placebo is invalid for calibrating two-depth prevalence; that instrument defect, not the omitted 84 frames, defeats the 18x headroom claim.",
+        "source_locations": [
+          {
+            "file": "docs/research/M21-occlusion-bimodality-measured.md",
+            "lines": [
+              140,
+              144
+            ]
+          },
+          {
+            "file": "docs/research/M63-bimodality.md",
+            "lines": [
+              652,
+              1321
+            ]
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "ORIGINAL_PERMUTATION_PLACEBO_UNINTERPRETABLE_FOR_TWO_DEPTH_PREVALENCE"
+      },
+      {
+        "finding_id": "m151-s01-voracle-ruler-withdrawal",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "The source already withdrew the provisional ruler confirmation using its subject-specific null inside the same capped survey; the full-299 result remains open rather than denominator-flipped.",
+        "source_locations": [
+          {
+            "file": "docs/research/V-ORACLE.md",
+            "lines": [
+              374,
+              390,
+              437,
+              438
+            ]
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "PROVISIONAL_CONFIRMATION_WITHDRAWN"
+      },
+      {
+        "finding_id": "m151-s02-vhull-first5",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "The historical reversal was caused by the mask being placed on the veil edge rather than the silhouette. Completing 205 frames is still needed for the exact envelope but did not cause the recorded retraction.",
+        "source_locations": [
+          {
+            "file": "docs/research/V-hull.md",
+            "lines": [
+              12,
+              13,
+              14,
+              117,
+              196,
+              357,
+              420,
+              423,
+              425
+            ]
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "INITIAL_LINK2_REFUTATION_RETRACTED; LINK2_CONFIRMED_WITH_CAVEAT"
+      },
+      {
+        "finding_id": "m151-s03-mcover-geometry",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "The current formal scorecard was already UNMEASURED and the source already separates the 100.0% array-containment diagnostic from the undefined common-scene population; zero scorecard cells change.",
+        "source_locations": [
+          {
+            "file": "docs/research/M-COVER-NATIVE.md",
+            "lines": [
+              1,
+              4,
+              5,
+              22,
+              27,
+              46,
+              487,
+              491
+            ]
+          },
+          {
+            "file": "docs/proposals/2026-09-sota-scorecard.md",
+            "lines": [
+              537,
+              538
+            ]
+          }
+        ],
+        "evidence_label": "VERIFIED_BY_RUNNING",
+        "source_resolved_verdict": "UNMEASURED_DENOMINATOR_UNDEFINED"
+      },
+      {
+        "finding_id": "s07-vgather-certificate-sign-reversal",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "The four REFUSED-to-FAIL changes were caused by a registration-sign bug. The separate capped source-ceiling risk remains unresolved and is not the cause of this reversal.",
+        "source_locations": [
+          {
+            "file": "docs/research/V-GATHER.md",
+            "lines": "521-615"
+          },
+          {
+            "file": "docs/research/V-GATHER.md",
+            "lines": "1060-1081"
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "The corrected four-axis partition is 1 clean, 17 failing, and 8 unexamined on at least one axis; the four sign-caused refusals all resolve to FAIL."
+      },
+      {
+        "finding_id": "s08-proposal-phase1-refutation-withdrawn",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "NO_COMMON_K failed because a fixed-global-k candidate was required to match a band-shaped target, making the gate unsatisfiable by construction; this is a gate-design error, not a denominator-caused flip.",
+        "source_locations": [
+          {
+            "file": "docs/proposals/2026-08-sota-path.md",
+            "lines": "2354-2375"
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "Phase 1 is UNTESTED, not DEAD or REFUTED. This withdraws the refutation but does not validate the merge rule."
+      },
+      {
+        "finding_id": "s08-m90-round2-historical-correction",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "Round 2 corrected the rho_warp=1 scalar model and measured sign/non-monotonicity; the model error, not a capped population, caused the historical correction.",
+        "source_locations": [
+          {
+            "file": "docs/research/M90-prnu-noise-model.md",
+            "lines": "24-32"
+          },
+          {
+            "file": "docs/research/M90-prnu-noise-model.md",
+            "lines": "550-565"
+          },
+          {
+            "file": "docs/research/M90-prnu-noise-model.md",
+            "lines": "735-850"
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "rho_warp=1 is false; the scalar model is inadequate. The measured mean at n_eff=44.19 is +19.04%, the correction is negative on foam, and it is not monotone in n_eff."
+      },
+      {
+        "finding_id": "s08-m20-corpus-figure-reversal",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "15.1% remains reproduced for 109MSDCF and only its corpus-wide generalization is rejected; the higher-level opt-in decision survives, so no denominator-caused decision flip is counted.",
+        "source_locations": [
+          {
+            "file": "docs/research/M20-VERIFICATION.md",
+            "lines": "20-40"
+          },
+          {
+            "file": "docs/research/M20-VERIFICATION.md",
+            "lines": "270-281"
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "15.1% is reproduced on 109MSDCF but refuted as a corpus figure; the measured five-stack range is 3.5%-65.8%. The higher-level opt-in headline survives."
+      },
+      {
+        "finding_id": "s08-vheadtohead2-zerene-deficit-retraction",
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "proposed_verdict_flip": "YES",
+        "canonical_denominator_caused_flip": false,
+        "reason": "Differential development tone reproduces the apparent band-power gap. The retraction is caused by a measurement confound, not by a denominator cap or missing population.",
+        "source_locations": [
+          {
+            "file": "docs/research/V-HEADTOHEAD2.md",
+            "lines": "55-77"
+          },
+          {
+            "file": "docs/research/V-HEADTOHEAD2.md",
+            "lines": "750-765"
+          }
+        ],
+        "evidence_label": "INFERRED_BY_READING",
+        "source_resolved_verdict": "The Zerene fine-scale deficit is not measurable on these files and is retracted; the measurement is dominated by development tone, not program resolution."
+      }
+    ]
+  },
+  "current_scorecard_impact": {
+    "cells_flipped": 0,
+    "affected_cells": [],
+    "status": "NO CHANGE",
+    "current_board": "M1-M12 remains 0 measured / 12 unmeasured.",
+    "reason": "The canonical denominator flips downgrade live prose overclaims or correct historical/supporting conclusions; no current accepted scorecard PASS or FAIL changes.",
+    "citation": {
+      "file": "docs/proposals/2026-09-sota-scorecard.md",
+      "lines": [
+        71,
+        72,
+        73,
+        74
+      ]
+    },
+    "adjudicated_gates_01_03": [
+      {
+        "gate": "Current SOTA M1-M12 scoreboard",
+        "decision": "NO CHANGE",
+        "reason": "The scorecard states 0 measured / 12 unmeasured and forbids importing these pre-existing results as score outputs."
+      },
+      {
+        "gate": "M-COVER common-overlap FOV and clean-site clauses",
+        "decision": "UNMEASURED_DENOMINATOR_UNDEFINED",
+        "reason": "The live scorecard names common-input overlap once but does not construct its scene-coordinate population. Array containment is only a diagnostic surrogate."
+      },
+      {
+        "gate": "M95 B1 model-fidelity kill switch",
+        "decision": "FULL-CANDIDATE GATE UNMEASURED",
+        "reason": "The 81.905756% PASS is conditional on pixels reachable through 23 rendered candidates; 276 of 299 candidates are absent."
+      },
+      {
+        "gate": "M116 instrument promotion",
+        "decision": "NO PROMOTION; KEEP-OFF RESULTS STAND",
+        "reason": "The favorable P9 headline and halo exception were already withdrawn. Full-299 evidence strengthens KEEP-OFF rather than reversing it."
+      },
+      {
+        "gate": "M-PHASE0-PIPE to M11",
+        "decision": "DIAGNOSTIC ONLY",
+        "reason": "First-64 timing cannot populate M11, which remains scientifically blocked and unmeasured."
+      },
+      {
+        "gate": "A5 after M-PHASE0-ZFIELD",
+        "decision": "NEXT-LANE LICENSE ONLY",
+        "reason": "The 30,000-draw result was SURVIVE, NOT ROBUST and explicitly did not license A5."
+      }
+    ],
+    "adjudicated_gates_04_06": {
+      "M3": "Capture-sufficient for the frozen 500-site population; axis remains UNMEASURED_COMPARATOR_QUALIFICATION with NO SCORE and NO CI.",
+      "M4": "UNMEASURED_CAPTURE_INADEQUATE; the denominator is repaired, but only 138 of 250 required flat sites can be selected.",
+      "M5": "UNMEASURED; the historical M151 capture-NO ruling is corrected, rehearsal eligibility is feasible, and the score still lacks registered outputs and a unique non-planar run construction.",
+      "M6": "UNMEASURED; RGB recoverability reduction remains undefined and capture is under-powered.",
+      "M8": "Current M8-R FAIL is unchanged; historical M8-O v1.4 is superseded and v1.5 remains UNMEASURED.",
+      "M9": "DEFINITION BLOCKED on independent candidate-specific acuity truth.",
+      "M10": "DEFINITION BLOCKED and non-operative pending population definitions.",
+      "D15_NVME": "PASS for the pre-registered first-60 workload; no IOCP build."
+    }
+  },
+  "exact_replacement_text_for_live_wrong_claims": [
+    {
+      "canonical_flip_id": "flip-live-01-m109-causal-exclusivity",
+      "source_finding_id": "m151-s02-m109-contributing-frames",
+      "text": "B15 is UNMEASURED for causal exclusivity. The reported 21.02% uses 75 of 299 frames and divides by all sampled frames, while the merge uses each pixel's unknown focus-gated contributing set. Recompute clip persistence over those contributors before comparing it with 74.7%; no numerator may be inferred from the capped rate."
+    },
+    {
+      "canonical_flip_id": "flip-live-02-build-elect-all-299-h4",
+      "source_finding_id": "adj-05-build-elect-49",
+      "text": "BUILD-ELECT found no qualifying texture peak on the 21 flower or 26 bee ladder rungs. It did not test every bracket frame, so every-frame H4 acceptance is UNMEASURED; the later pyramid path supersedes the proposed election remedy."
+    },
+    {
+      "canonical_flip_id": "flip-live-03-v-bestframe-capture-limited-h1",
+      "source_finding_id": "adj-04-v-bestframe-5",
+      "text": "V-bestframe measures the selected first-12/20 frame sets, not the complete brackets. The bounded results flag merge deficits, but H1 capture-limited is UNMEASURED until every usable frame or a preregistered depth-covering sample is evaluated."
+    }
+  ],
+  "high_consequence_unresolved_risks": {
+    "count": 19,
+    "selection_rule": "verdict_flip is UNRESOLVED and normalized consequence tier is critical or high in the three adjudications.",
+    "findings": [
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-04-06.json",
+        "finding": {
+          "id": "adj-04-v-softcheck-387",
+          "classification": "cap",
+          "summary_classification": "cap",
+          "source": {
+            "file": "docs/research/V-SOFTCHECK-bandqual.md",
+            "lines": [
+              387
+            ]
+          },
+          "denominator_chain": [
+            "299-frame bee-1-cpl bracket",
+            "probes through frame 200",
+            "registered usable probes after alignment",
+            "band qualification statistic"
+          ],
+          "consequence_tier": "T1_LIVE_HEADLINE_OR_SHIP",
+          "original_conclusion": "The 0.30-0.35 band is MARGINAL on bee and the qualified-band sign survives.",
+          "claim_status": "caveated",
+          "true_population": "All valid, registration-qualified probe frames across the 299-frame bee bracket.",
+          "derivation_or_missing_evidence": "Valid probes for frames 201-299 are missing. Adding probe candidates can change the selected extrema and qualification; the source reports an interior-peak sensitivity that moves R only 1.8480 to 1.8721, but that diagnostic does not enumerate the omitted tail and cannot resolve it.",
+          "evidence_label": "INFERRED_BY_READING",
+          "finding_disposition": "CAVEAT",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_count_bucket": "UNRESOLVED",
+          "orchestrator_replacement_text": "Bee's band qualification is MARGINAL on probes through frame 200 only; qualification over the complete 299-frame bracket is UNMEASURED. The complete 63-frame 113MSDCF arm remains MARGINAL."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-04-06.json",
+        "finding": {
+          "id": "adj-05-build-pyrnoise-221",
+          "classification": "unstated",
+          "summary_classification": "unstated",
+          "source": {
+            "file": "docs/research/BUILD-PYRNOISE-ADJUDICATION.md",
+            "lines": [
+              221,
+              229,
+              292,
+              295,
+              302,
+              303,
+              306,
+              308,
+              310,
+              311
+            ]
+          },
+          "denominator_chain": [
+            "eligible-window universe not specified",
+            "400 observed windows",
+            "nested informative and admission-failing subsets",
+            "admission-versus-error conclusion"
+          ],
+          "consequence_tier": "T1_LIVE_HEADLINE_OR_SHIP",
+          "original_conclusion": "Published admission is missing a photometric term and does not predict error across the plane.",
+          "claim_status": "live",
+          "true_population": null,
+          "derivation_or_missing_evidence": "The source does not freeze window generation, overlap, guards, exclusions, or completeness. The 400-window correlations are measured for the observed set, but population-wide predictive failure is unresolved.",
+          "evidence_label": "INFERRED_BY_READING",
+          "finding_disposition": "CAVEAT",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_count_bucket": "UNRESOLVED",
+          "orchestrator_replacement_text": "The admission/error result applies to the 400 observed windows only. Population-wide predictive failure is UNMEASURED until the eligible window grid and exclusions are frozen."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s01-decoder-122",
+          "source_summaries": [
+            "summary-01"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/M1-decode-measured.md",
+              "lines": [
+                3,
+                5,
+                13,
+                15,
+                16,
+                18,
+                19
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "two bounded corpora",
+            "122 convenience-selected ARWs in stated ranges",
+            "122 successful decodes",
+            "external decoder dependency decision"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion_or_verdict": "122/122 decoded; the hard dependency was cleared and an in-house decoder branch stayed closed.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "Every camera RAW mode and file class the product promises to accept.",
+          "population_basis": "Established by the product support claim, not by the 122-file convenience corpus.",
+          "missing_data_or_compute": "A frozen acceptance corpus spanning every supported capture mode, or an explicit support-scope restriction to the tested modes.",
+          "evidence_basis": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "ARCHITECTURE_DECISION_REMAINS_PRACTICAL_BUT_NOT_UNIVERSAL",
+          "gate_effect": "Keep the dependency decision, but do not claim universal A7C II support.",
+          "replacement_text": "The external decoder passed 122/122 files in two bounded corpora. That supports retaining the dependency for the tested modes; support outside that acceptance pool remains UNMEASURED."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s01-voracle-corpus-headline",
+          "source_summaries": [
+            "summary-01"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/V-ORACLE.md",
+              "lines": [
+                367,
+                380,
+                382,
+                393,
+                587,
+                592,
+                593,
+                623
+              ]
+            },
+            {
+              "file": "experiments/V-ORACLE/data/rank-corpus.txt",
+              "lines": [
+                1
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "26 delivered masters",
+            "21 rankable subjects",
+            "7 full-depth plus 14 capped subjects",
+            "subject-specific stuck-minus-flat excess",
+            "count above +5",
+            "sole-positive corpus headline"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion_or_verdict": "Flowers-cpl is the sole subject above +5: 1 of 21.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "All frames in all 21 rankable subjects, with the stated disposition of the other five delivered masters.",
+          "population_basis": "The banked partition covers all 26 masters, but the running probe verified that only 7 of 21 ranked subjects are full-depth.",
+          "missing_data_or_compute": "Full-depth stage-A curves for the 14 capped rankable subjects, then the unchanged eligibility and +5 rule.",
+          "evidence_basis": "VERIFIED_BY_RUNNING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "THE_FLOWERS_RESULT_IS_FULL_DEPTH; THE_CORPUS_UNIQUENESS_CLAIM_IS_NOT",
+          "gate_effect": "The subject-specific flowers-cpl reshoot advice stands; reject a full-corpus uniqueness claim until the 14 caps are removed.",
+          "replacement_text": "In the banked survey, flowers-cpl is the only one of 21 ranked subjects above +5, and flowers-cpl itself uses all 176 frames. Because 14 of the other 20 ranks are capped at 100 endpoint-spanning frames, full-depth corpus uniqueness remains UNMEASURED."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s02-pipe-first64",
+          "source_summaries": [
+            "summary-02"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/M-PHASE0-PIPE.md",
+              "lines": [
+                3,
+                4,
+                8,
+                9,
+                36,
+                52,
+                58,
+                59,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80,
+                81,
+                84,
+                85,
+                96,
+                102,
+                180,
+                192,
+                193,
+                194,
+                195,
+                201,
+                205,
+                221,
+                230,
+                240,
+                243
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "79- and 299-frame captures",
+            "first 64 name-sorted frames from each",
+            "accepted load-gated worker sweeps and queue pairs",
+            "8-to-16 fold scaling and queue-retention bars",
+            "D13 FALSE and queue rejection"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion_or_verdict": "D13 FALSE; fold saturates at eight; the queue failed retention and was removed.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "The complete 79- and 299-frame workloads under the same load gate for any deep-stack performance claim.",
+          "population_basis": "The report inventories both complete capture sizes and explicitly states first 64 as input.",
+          "missing_data_or_compute": "Repeat the registered W=1/2/4/8/16 and queue campaign on complete 79- and 299-frame stacks.",
+          "evidence_basis": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "MEMORY_PRESSURE_AND_OVERLAP_CHANGE_WITH_DEPTH",
+          "gate_effect": "Queue remains rejected on measured evidence; D13 and saturation must be quoted as 64-frame results. M11 stays UNMEASURED.",
+          "replacement_text": "On first-64 prefixes of the 79- and 299-frame stacks, D13 failed and the bounded queue was 1.3%-2.1% slower, so the candidate was removed. Complete-stack scaling, saturation, and queue retention remain UNMEASURED, and these timings do not populate M11."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s02-zfield-30000",
+          "source_summaries": [
+            "summary-02"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/M-PHASE0-ZFIELD.md",
+              "lines": [
+                24,
+                25,
+                27,
+                46,
+                101,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                119,
+                123,
+                124,
+                159,
+                160,
+                161,
+                162,
+                163,
+                164,
+                165,
+                166,
+                167,
+                183,
+                184,
+                186,
+                189,
+                208
+              ]
+            },
+            {
+              "file": "experiments/M-PHASE0-ZFIELD/src/z1_census.py",
+              "lines": [
+                31,
+                112,
+                113
+              ]
+            },
+            {
+              "file": "experiments/M-PHASE0-ZFIELD/out/z1-census.json",
+              "lines": [
+                1
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "eight complete M66 response cubes",
+            "515,094 spatial pixels per cube",
+            "30,000 seeded draws with replacement per stack",
+            "bootstrap sigma_z and window search",
+            "median WINNABLE over stacks",
+            "10% SURVIVE bar"
+          ],
+          "consequence_tier": "critical",
+          "original_conclusion_or_verdict": "SURVIVE, NOT ROBUST: 14.02% and 10.12% at F=6.83; 9.03% at the conservative F=5.40 is inconclusive.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "All 515,094 spatial pixels in each of the eight frozen response cubes under the registered validity, bootstrap, and aggregation rules.",
+          "population_basis": "The independent checker verified every cube has shape 586x879 and the source fixes N_SAMPLE=30000 with replacement.",
+          "missing_data_or_compute": "An exhaustive all-pixel bootstrap census, especially the near-threshold F=5.40 and F=6.83, DOF/2=3.0 cells. This is not cheap: the existing 1.48 GB of cubes would expand the 64-replicate bootstrap by about 17x over the registered sample.",
+          "evidence_basis": "VERIFIED_BY_RUNNING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "THE_REGISTERED_SAMPLE_RESULT_IS_GREEN; THE_EXHAUSTIVE_POPULATION_CAN_CROSS_10_PERCENT",
+          "gate_effect": "Keep only NEXT-LANE LICENSE. Do not call A5 licensed or the exhaustive population SURVIVE.",
+          "replacement_text": "In 30,000 seeded pixel draws with replacement per stack, ZFIELD is SURVIVE, NOT ROBUST; the DOF/2=3.0 cells are 10.12% at F=6.83 and 9.03% at F=5.40 around a 10% bar. The all-515,094-pixel-per-cube verdict is UNMEASURED, and this phase-0 result licenses only the next shipping-operator lane."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s03-m30-three-stacks",
+          "source_summaries": [
+            "summary-03"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/M30-hdr-cobracket-measured.md",
+              "lines": [
+                51,
+                52,
+                83,
+                125,
+                138
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "eligible fixed-light capture regimes",
+            "three selected stacks",
+            "all pixels in stated read-noise and gathered-frame clipping cells",
+            "support-not-default HDR recommendation"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion_or_verdict": "Read noise affects 0.0000% and gathered-frame clipping is at most 0.075%; support HDR co-bracketing but do not default it.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "Eligible scene classes and noise/dynamic-range regimes, especially specular flash subjects.",
+          "population_basis": "The report is complete within three stacks but explicitly identifies unmeasured regimes.",
+          "missing_data_or_compute": "Broader fixed-budget captures including read-noise-limited and specular/high-dynamic-range scenes.",
+          "evidence_basis": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "SCOPED_SHOT_NOISE_IDENTITY_STANDS; SENSOR_WIDE_DEMAND_CLAIM_CAN_CHANGE",
+          "gate_effect": "The conservative support-not-default decision stands; never trigger from a presumed 0.0000% outside the measured stacks.",
+          "replacement_text": "Across the three measured stacks, no pixel was read-noise-limited under the registered rule and gathered-frame clipping was at most 0.075%. This supports a per-stack trigger and no default; demand in unmeasured specular or read-noise regimes remains UNMEASURED."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s03-m5-session-captures",
+          "source_summaries": [
+            "summary-03"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/M5-diffraction-measured.md",
+              "lines": [
+                20,
+                21,
+                48,
+                259,
+                319,
+                333,
+                346,
+                363,
+                407,
+                413,
+                444,
+                476,
+                506,
+                669,
+                758
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "eligible lens/body/session population",
+            "one selected subject per aperture and five selected ROIs",
+            "complete cases within those captures",
+            "cutoff bounds and shooting recommendation"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion_or_verdict": "Scoped B=5 falsification and diffraction findings support a shooting recommendation; several wider-aperture knees are only bounds.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "Independent subjects, sessions, and apertures for the reference lens/body setup.",
+          "population_basis": "The source is exhaustive within selected captures but has one subject/session per aperture and labels f/8 and f/5.6 knees unmeasurable.",
+          "missing_data_or_compute": "Independent sessions and subjects, including a primary fixed-subject aperture ladder and a clean f/5.6 measurement.",
+          "evidence_basis": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "SCOPED_FALSIFICATION_HAS_MARGIN; NUMERIC_GENERALIZATION_AND_ADVICE_CAN_MOVE",
+          "gate_effect": "Retain scoped optical constraints; do not state the bandwidth-cost figures as rig-wide population values.",
+          "replacement_text": "M5's cases are complete within selected captures and support the scoped diffraction falsification. Numeric bandwidth costs and shooting advice remain one-session/one-subject-per-aperture results; f/8 and f/5.6 provide bounds, not measured knees."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s03-m95-23-candidates",
+          "source_summaries": [
+            "summary-03"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/M95-election-quality.md",
+              "lines": [
+                379,
+                383,
+                388,
+                401,
+                402,
+                403,
+                407,
+                410,
+                427
+              ]
+            },
+            {
+              "file": "experiments/M95-oracle/out/o4_b1.json",
+              "lines": [
+                1
+              ]
+            },
+            {
+              "file": "experiments/M95-oracle/src/o4_b1.py",
+              "lines": [
+                1,
+                14,
+                19,
+                20,
+                21
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "299-frame product election",
+            "23 rendered candidate frames, indices 119-208",
+            "pixels whose product winner is uniquely one of those candidates",
+            "model restricted to same 23 candidates",
+            "81.905756% conditional agreement",
+            "80% B1 kill switch"
+          ],
+          "consequence_tier": "critical",
+          "original_conclusion_or_verdict": "B1 PASS at 81.9058% on the preregistered testable-pixel subset; the source says the residual bounds downstream conclusions.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "All 299 candidate frames and all eligible pixels in the registered ROIs.",
+          "population_basis": "The artifact census verifies 23 candidates, 276 missing, and only 24.85%-28.74% detail-ROI coverage; the PASS is conditional on that selected reachable subset.",
+          "missing_data_or_compute": "Render the missing 276 single frames, recover the full 299-way product truth, run the model over all 299 candidates, and score every eligible pixel under the same ambiguity rule.",
+          "evidence_basis": "VERIFIED_BY_RUNNING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "THE_REGISTERED_CONDITIONAL_PASS_STANDS; FULL_CANDIDATE_GENERALIZATION_IS_UNRESOLVED",
+          "gate_effect": "Do not promote downstream M95 election-offset conclusions through B1 as a full-population PASS. The preregistered conditional 23-way diagnostic remains valid.",
+          "replacement_text": "B1 is a CONDITIONAL PASS as registered: 81.905756% agreement among testable pixels whose 299-way product winner is uniquely reachable through 23 rendered candidates, covering 24.85%-28.74% of the detail ROIs. With 276 candidates absent, full-299 model fidelity remains UNMEASURED."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s03-orch-eight-frame-patchwork",
+          "source_summaries": [
+            "summary-03"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/ORCH-veiling.md",
+              "lines": [
+                4148,
+                4150,
+                4200,
+                4221,
+                4223
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "299-frame bee-1-cpl capture",
+            "8 endpoint/sample frames",
+            "six tiles per probe at one scale",
+            "patchwork ratio and gate ladder",
+            "default-change recommendation"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion_or_verdict": "Patchwork 1.305 falls to 0.165 at gate 4.5 with detail unchanged; raise the default after a gallery.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "All frames, independently registered tiles, scales, and eligible subjects for a default-setting recommendation.",
+          "population_basis": "The source states 8/299, six tiles, one scale, and explicitly requires a gallery and independent replication.",
+          "missing_data_or_compute": "Full-299, multi-subject, multi-scale rerun with independent verification and a ladder extending until the detail control moves.",
+          "evidence_basis": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "LARGE_SCOPED_EFFECT_BUT_DEFAULT_POPULATION_UNMEASURED",
+          "gate_effect": "Do not change a default from this arm alone; it licenses the gallery.",
+          "replacement_text": "On one subject, 8 of 299 frames, six tiles, and one scale, gate 4.5 strongly reduces the patchwork probe without moving its detail controls. This is a next-gallery result, not a default-setting PASS."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-01-03.json",
+        "finding": {
+          "finding_id": "m151-s03-orch-nine-subject-full-stacks",
+          "source_summaries": [
+            "summary-03"
+          ],
+          "classification": "cap",
+          "locations": [
+            {
+              "file": "docs/research/ORCH-veiling.md",
+              "lines": [
+                11483,
+                11486,
+                11487,
+                11491,
+                11513,
+                11515,
+                11517
+              ]
+            }
+          ],
+          "denominator_chain": [
+            "26-master SHIP-V3 corpus",
+            "nine convenience-selected subjects",
+            "full stack per selected subject",
+            "accepted patches",
+            "subject medians and cross-subject conclusion"
+          ],
+          "consequence_tier": "high",
+          "original_conclusion_or_verdict": "Every one of nine subjects is above 1.0; bee-1 alone did not create the result.",
+          "lifecycle": {
+            "live": true,
+            "superseded": false,
+            "caveated": true,
+            "illustrative": false
+          },
+          "true_population": "All 26 SHIP-V3 subjects under the same metric and a pre-frozen site rule.",
+          "population_basis": "The source states nine of 26 and full stacks.",
+          "missing_data_or_compute": "The remaining 17 subjects under the unchanged metric/site rule.",
+          "evidence_basis": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "flip_context": "NARROW_CROSS_SUBJECT_REPLICATION_SUPPORTED; CORPUS_UNIVERSAL_NOT_ESTABLISHED",
+          "gate_effect": "May reject 'bee-1 only'; may not promote 'all corpus subjects reconstruct.'",
+          "replacement_text": "Full-stack measurements on nine selected subjects all exceed 1.0, so the effect is not unique to bee-1. Seventeen of 26 subjects remain unmeasured, so a corpus-wide universal or prevalence claim is UNMEASURED."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "finding": {
+          "id": "s07-m107-a1-three-of-five",
+          "summary": "07",
+          "summary_claim_ids": [
+            "m107-a1-three-of-five"
+          ],
+          "classification": "cap",
+          "adjudicated_classification": "live_registered_population_shortfall",
+          "source_locations": [
+            {
+              "file": "docs/research/M107b-lateral-correction.md",
+              "lines": "148-193"
+            },
+            {
+              "file": "docs/research/M107b-lateral-correction.md",
+              "lines": "290-291"
+            }
+          ],
+          "denominator_chain": [
+            "registered all-five-stack A1 rule",
+            "three persisted argmax volumes",
+            "radius and depth regressions scored on only those three",
+            "two no-CPL stacks absent"
+          ],
+          "consequence_tier": "CRITICAL",
+          "original_conclusion": "A1 is ADEQUATE versus radius and INDETERMINATE versus depth.",
+          "status": "LIVE",
+          "true_population": "The five stacks named by the registered A1 rule.",
+          "missing_evidence": "Argmax volumes and the registered regressions for the two no-CPL stacks.",
+          "evidence_label": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "exact_replacement_text": "A1 is provisionally ADEQUATE versus radius and INDETERMINATE versus depth on 3 of 5 registered stacks. No five-stack A1 verdict exists until the two no-CPL argmax volumes are persisted and scored without changing the rule."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "finding": {
+          "id": "s07-m173-real-pair-truth",
+          "summary": "07",
+          "summary_claim_ids": [
+            "m173-real-pair-admission"
+          ],
+          "classification": "unstated",
+          "adjudicated_classification": "live_truth_population_missing",
+          "source_locations": [
+            {
+              "file": "docs/research/M173-ask2a-audit.md",
+              "lines": "286-293"
+            }
+          ],
+          "denominator_chain": [
+            "one real optical-state pair",
+            "unknown true optical ratio",
+            "estimator emits a ratio with an unbound 0.25% allowance",
+            "no independently truthed real-pair calibration population"
+          ],
+          "consequence_tier": "HIGH",
+          "original_conclusion": "The estimator allowance cannot be relabeled calibrated or admitted for the converter-change claim.",
+          "status": "LIVE",
+          "true_population": null,
+          "missing_evidence": "Converter-off and converter-on real captures with independent optical truth sufficient to calibrate estimator bias, followed by independent admission review.",
+          "evidence_label": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "exact_replacement_text": "A single unknown-ratio real pair cannot calibrate converter-dependent estimator bias. Keep the allowance uncalibrated and the converter-change behavior unadmitted until independently truthed real pairs are reviewed."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "finding": {
+          "id": "s07-vgather-cap56",
+          "summary": "07",
+          "summary_claim_ids": [
+            "vgather-search-cap56"
+          ],
+          "classification": "cap",
+          "adjudicated_classification": "partially_exhausted_ceiling_cap",
+          "source_locations": [
+            {
+              "file": "docs/research/V-GATHER.md",
+              "lines": "1378-1455"
+            }
+          ],
+          "denominator_chain": [
+            "sharpaxis.py ceiling search",
+            "maximum 56 renders",
+            "18.1% coverage for a 299-frame bracket",
+            "under-sampled maximum used as denominator",
+            "one 299-frame stack later rendered exhaustively"
+          ],
+          "consequence_tier": "CRITICAL",
+          "original_conclusion": "Deep-stack manufactured-detail excess was read against a ceiling whose coverage covaried strongly with stack depth.",
+          "status": "CAVEATED",
+          "true_population": "Every frame in each bracket; the completed deep control is all 299 frames of pencil-steep-angle-cpl.",
+          "missing_evidence": "Exhaustive ceiling searches for the remaining deep stacks.",
+          "evidence_label": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "exact_replacement_text": "The 56-render ceiling cap is a real confound. On pencil-steep-angle-cpl, exhaustive 299-frame search reduced e1 excess from 43.644% to 36.164% without changing sign; other deep-stack excess verdicts remain unresolved until their ceilings are exhaustive."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "finding": {
+          "id": "s07-vgather-certificate-live-ceiling",
+          "summary": "07",
+          "summary_claim_ids": [
+            "vgather-sampled-certificate"
+          ],
+          "classification": "cap",
+          "adjudicated_classification": "live_capped_source_ceiling",
+          "source_locations": [
+            {
+              "file": "docs/research/V-GATHER.md",
+              "lines": "521-548"
+            },
+            {
+              "file": "docs/research/V-GATHER.md",
+              "lines": "1070-1081"
+            }
+          ],
+          "denominator_chain": [
+            "26 sealed subjects",
+            "sampled and registered source frames",
+            "maximum source statistic among usable sampled frames",
+            "subject PASS or FAIL on the source-ceiling axis"
+          ],
+          "consequence_tier": "HIGH",
+          "original_conclusion": "The sampled source ceilings licensed subject-level certificate rows.",
+          "status": "CAVEATED",
+          "true_population": "Every source frame that covers each frozen site in all 26 brackets.",
+          "missing_evidence": "Complete coverage-preserving source-frame renders for deep stacks whose source ceiling remains sampled.",
+          "evidence_label": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "exact_replacement_text": "The registration-sign reversal is resolved, but deep-stack source-ceiling values remain conditional on sampled usable frames. Do not promote a capped ceiling to an exhaustive subject-level source maximum."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "finding": {
+          "id": "s08-build-crop-refit-proxy",
+          "summary": "08",
+          "summary_claim_ids": [
+            "den-2ff33d8fbf84fdca253d7f30"
+          ],
+          "classification": "unstated",
+          "adjudicated_classification": "fixed_one_frame_proxy_subsample",
+          "source_locations": [
+            {
+              "file": "docs/research/BUILD-CROP.md",
+              "lines": "1618-1642"
+            }
+          ],
+          "denominator_chain": [
+            "22 scored subjects",
+            "one mid-stack proxy frame per subject",
+            "proxy validated on one subject as ordering-preserving but effect-compressing",
+            "18 proxy wins and four proxy losses",
+            "four losses at or below proxy resolution"
+          ],
+          "consequence_tier": "HIGH",
+          "original_conclusion": "The re-fit beats shipped on 18 of 22 scored subjects and loses on four.",
+          "status": "CAVEATED",
+          "true_population": "Full delivered masters for the 22 scored subjects if the conclusion is about render quality rather than proxy ordering.",
+          "missing_evidence": "Full-master re-renders and scoring for all 22 subjects, or a multi-subject calibration proving the one-frame proxy's ordering and resolution.",
+          "evidence_label": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "exact_replacement_text": "On the one-mid-stack-frame proxy, the re-fit beats shipped on 18 of 22 subjects. The four apparent losses are at or below proxy resolution. Treat this as proxy ordering, not a 22-master render verdict, until full-master checks exist."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "finding": {
+          "id": "s08-m26-three-frame-saturation",
+          "summary": "08",
+          "summary_claim_ids": [
+            "den-c1853a5ee2c44e79ff18b65b"
+          ],
+          "classification": "unstated",
+          "adjudicated_classification": "three_frame_cap_mislabeled_as_stack_census",
+          "source_locations": [
+            {
+              "file": "docs/research/M26-colour-clipping-measured.md",
+              "lines": "96-116"
+            }
+          ],
+          "denominator_chain": [
+            "six named stacks",
+            "first, middle, and last frame only",
+            "pixel census inside those three frames",
+            "four sampled stacks show no value within 39% of white",
+            "wording promotes three-frame observation to whole-stack never"
+          ],
+          "consequence_tier": "HIGH",
+          "original_conclusion": "Four of six stacks never come within 39% of the white level; saturation is per-stack and must be detected.",
+          "status": "CAVEATED",
+          "true_population": "Every frame of each of the six stacks for a whole-stack 'never' claim.",
+          "missing_evidence": "An all-frame maximum or a proven bound for the four stacks represented by only first/middle/last frames.",
+          "evidence_label": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "exact_replacement_text": "Across the first, middle, and last frames sampled from each of six stacks, four stacks had no sampled pixel within 39% of the white level and two reached saturation. Whole-stack 'never' claims require checking every frame; the evidence still shows saturation cannot be assumed universal."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "finding": {
+          "id": "s08-m89-corpus-prevalence",
+          "summary": "08",
+          "summary_claim_ids": [
+            "den-862ce521ac5f4e98c803b019",
+            "den-befecfb9b1715b4e0368e0b9"
+          ],
+          "classification": "unstated",
+          "adjudicated_classification": "observed_census_without_frozen_owner_universe",
+          "source_locations": [
+            {
+              "file": "docs/research/M89-robustness-mask.md",
+              "lines": "568-582"
+            },
+            {
+              "file": "docs/research/M89-robustness-mask.md",
+              "lines": "1068-1076"
+            }
+          ],
+          "denominator_chain": [
+            "23 surveyed real owner stacks",
+            "per-stack contamination rate",
+            "null-normalized threshold greater than 20x",
+            "8 observed stacks clear the threshold",
+            "complete owner-stack universe and selection rule not frozen"
+          ],
+          "consequence_tier": "HIGH",
+          "original_conclusion": "Contamination is common, 8 of 23 stacks exceed 20x the null, and lead-1-cpl is the most contaminated stack in the corpus.",
+          "status": "CAVEATED",
+          "true_population": null,
+          "missing_evidence": "A frozen exhaustive owner-stack manifest or a principled sampling design for corpus-wide prevalence and rank.",
+          "evidence_label": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "exact_replacement_text": "Within the 23 surveyed stacks, 8 exceed 20x the null and lead-1-cpl ranks highest. The exact prevalence and corpus-wide maximum remain conditional because the complete owner-stack universe and selection rule were not frozen."
+        }
+      },
+      {
+        "source_adjudication": "experiments/M151-denominator-audit/adjudication-07-08.json",
+        "finding": {
+          "id": "s08-m90-six-stack-cap",
+          "summary": "08",
+          "summary_claim_ids": [
+            "den-087cdf8ab813f04392a30e73",
+            "den-fe198e05f899de35b34d0825",
+            "den-8b7c5f3e0d6ecd60cb7125a4",
+            "den-b25f726e58dbdc38fbf888d3",
+            "den-7eee221aa1b3c92016465512",
+            "den-bad786f887ea445ab868bf8f",
+            "den-02238c89d4e747fea9ffddf3",
+            "den-33fa05d305c1c842a919d2d7",
+            "den-ed481aaed868efad44a0286a",
+            "den-23a1c4cfcb7507cf95a9b4fc",
+            "den-8f2ba461960f081dfc4f17d2",
+            "den-fd4686be0f932ec679415013",
+            "den-8bc3999c9e8c3e16adc0a8b5",
+            "den-4847f169fa6a04e32165e914",
+            "den-34a15c47130ed653b7a6f349",
+            "den-0be407382455b146e39966b5",
+            "den-0800c85ef4163c33ae610273",
+            "den-dd1d03e1a1eca9deb4ba8ffd",
+            "den-1c8abc66915221d537107fd6",
+            "den-8f160087eec9227899184e55",
+            "den-969e32f80c37bb1a73436bc5",
+            "den-487f4211ba36f61af1fcb2e0",
+            "den-412a2e5860096343607bbac5",
+            "den-54759ded8f7cacab3f1feab1"
+          ],
+          "classification": "cap",
+          "adjudicated_classification": "live_capped_blast_radius_measurement",
+          "source_locations": [
+            {
+              "file": "docs/research/M90-prnu-noise-model.md",
+              "lines": "5-17"
+            },
+            {
+              "file": "docs/research/M90-prnu-noise-model.md",
+              "lines": "248-276"
+            },
+            {
+              "file": "docs/research/M90-prnu-noise-model.md",
+              "lines": "375-382"
+            },
+            {
+              "file": "docs/research/M90-prnu-noise-model.md",
+              "lines": "560-568"
+            }
+          ],
+          "denominator_chain": [
+            "six stacks chosen for decode speed and label clarity",
+            "stacks deeper than 60 truncated to first 60 frames",
+            "all frames and pixels inside each capped run",
+            "reported zero kappa-only selection changes and 0.0006%-0.0073% election-winner movement"
+          ],
+          "consequence_tier": "CRITICAL",
+          "original_conclusion": "Kappa alone is free and published images survive the default flip because election winners move on at most 0.0073% of pixels across all six stacks.",
+          "status": "CAVEATED",
+          "true_population": "Every frame and output pixel in a frozen representative target-stack population.",
+          "missing_evidence": "Uncapped full-stack reruns plus either an exhaustive target-stack manifest or a principled sampling design.",
+          "evidence_label": "INFERRED_BY_READING",
+          "verdict_flip": "UNRESOLVED",
+          "resolved_verdict": null,
+          "exact_replacement_text": "On the six measured runs, with deep stacks capped at their first 60 frames, kappa-only moved zero selection decisions and the combined change moved 0.0006%-0.0073% of election winners. Do not promote that observed maximum to a corpus-wide bound without uncapped representative reruns."
+        }
+      }
+    ]
+  },
+  "deterministic_reevaluations_from_adjudication": [
+    {
+      "id": "adjudication-01-03-reevaluation-01",
+      "applies_to_finding_ids": [
+        "m151-s02-zfield-30000"
+      ],
+      "record": {
+        "command": "python -B experiments/M-PHASE0-ZFIELD/src/check_note.py",
+        "command_sha256": "c438a060d59d062a54d6fceee77acb9f0d5c66d00e9a7804856e77834937859b",
+        "exit_code": 0,
+        "result": "171 passed, 0 failed, 0 skipped; GREEN",
+        "result_hashes": {
+          "z1-census.json": "dab4e0c60da67e7b5fffa16f172235cdf6f25d5e39185f21855e7591563f64b6",
+          "z5-verdict.json": "093dc424abf1bf9cdfae351ed8b16203924e0b0cfdf5273fe63b1243e33144c3",
+          "check_note.py": "4f79855d52490d6d69b6fcb854b15b696ad65cb7fb53ea5b63e7811659a7b98b"
+        }
+      }
+    },
+    {
+      "id": "adjudication-01-03-reevaluation-02",
+      "applies_to_finding_ids": [
+        "m151-s03-mcover-geometry"
+      ],
+      "record": {
+        "command": "python -",
+        "stdin_source_lines": [
+          "import hashlib,json,pathlib",
+          "p=pathlib.Path(\"docs/proposals/2026-09-sota-scorecard.md\")",
+          "lines=p.read_text(encoding=\"utf-8\").splitlines()",
+          "hits=[{\"line\":i,\"text\":s} for i,s in enumerate(lines,1) if \"common-input overlap\" in s.lower()]",
+          "orig=3516*2344; bare=3470*2312; inset=2958*1800",
+          "r={\"scorecard_sha256\":hashlib.sha256(p.read_bytes()).hexdigest(),\"common_input_overlap_occurrences\":hits,\"overlap_construction_defined\":len(hits)>1,\"bare_vs_original_pct\":100*bare/orig,\"inset_vs_original_pct\":100*inset/orig,\"inset_vs_bare_pct\":100*inset/bare,\"formal_verdict\":\"UNMEASURED_DENOMINATOR_UNDEFINED\" if len(hits)==1 else \"REVIEW_REQUIRED\"}",
+          "print(json.dumps(r,sort_keys=True,separators=(\",\",\":\")))"
+        ],
+        "command_sha256": "99ee5f94cb7161c656d60abffbd419e3b507d1aab0c57a8cb2ac7b51b30c305f",
+        "exit_code": 0,
+        "result": "One live common-input-overlap occurrence; construction undefined; formal scorecard FOV result UNMEASURED_DENOMINATOR_UNDEFINED.",
+        "result_sha256": "89eade0974d3855528b7296534d618aa8458331e3f7dd6f51537e2b751148938",
+        "source_sha256": "eb5ed446ee06e8842c61e5f90cb1bd4a8e81ca5dfd39ef53988598ef05dcb603"
+      }
+    },
+    {
+      "id": "adjudication-01-03-reevaluation-03",
+      "applies_to_finding_ids": [
+        "m151-s03-m95-23-candidates"
+      ],
+      "record": {
+        "command": "python -",
+        "stdin_source_lines": [
+          "import hashlib,json,pathlib",
+          "p=pathlib.Path(\"experiments/M95-oracle/out/o4_b1.json\"); d=json.loads(p.read_text(encoding=\"utf-8\"))",
+          "rois=[d[k] for k in (\"ROI-LOWDRIFT\",\"ROI-MIDDRIFT\",\"ROI-HIGHDRIFT\")]",
+          "r={\"artifact_sha256\":hashlib.sha256(p.read_bytes()).hexdigest(),\"source_frames\":299,\"rendered_candidates\":len(d[\"candidates\"]),\"missing_candidates\":299-len(d[\"candidates\"]),\"candidate_first\":min(d[\"candidates\"]),\"candidate_last\":max(d[\"candidates\"]),\"detail_roi_coverage_pct_range\":[min(x[\"coverage_pct\"] for x in rois),max(x[\"coverage_pct\"] for x in rois)],\"conditional_agreement_pct\":d[\"overall_pct\"],\"conditional_verdict\":\"PASS\",\"full_candidate_verdict\":\"UNMEASURED\"}",
+          "print(json.dumps(r,sort_keys=True,separators=(\",\",\":\")))"
+        ],
+        "command_sha256": "d469afebb28323abb00aafc474f5ae67fc25d99c0e30800e32bf52f4e4e89ed5",
+        "exit_code": 0,
+        "result": "23 rendered candidates, 276 missing, detail-ROI coverage 24.852483%-28.743873%, conditional agreement 81.905756%, full-candidate verdict UNMEASURED.",
+        "result_sha256": "3f251edd519f08f292e1342a5beb7f21c9153af7994494f769f084253b1c7fbe",
+        "source_sha256": "c44c6c4bcb78cdf909b12cef44f8100ef435225d1bc6d536a5a5da449c8aaa8f"
+      }
+    },
+    {
+      "id": "adjudication-01-03-reevaluation-04",
+      "applies_to_finding_ids": [
+        "m151-s02-m126-first100",
+        "m151-s03-m116-main-prefix",
+        "m151-s03-m116-p9-prefix"
+      ],
+      "record": {
+        "command": "python -",
+        "stdin_source_lines": [
+          "import ast,hashlib,json,pathlib,re",
+          "pick=pathlib.Path(\"experiments/M116-promotion/pick_single.py\"); t=pick.read_text(encoding=\"utf-8\"); tree=ast.parse(t)",
+          "limit=[n.value.value for n in ast.walk(tree) if isinstance(n,ast.Assign) and any(isinstance(x,ast.Name) and x.id==\"LIMIT\" for x in n.targets) and isinstance(n.value,ast.Constant)][0]",
+          "m116=pathlib.Path(\"docs/research/M116-promotion.md\"); a=m116.read_text(encoding=\"utf-8\"); m126=pathlib.Path(\"docs/research/M126-default-audit.md\"); b=m126.read_text(encoding=\"utf-8\")",
+          "r={\"pick_single_sha256\":hashlib.sha256(pick.read_bytes()).hexdigest(),\"m116_sha256\":hashlib.sha256(m116.read_bytes()).hexdigest(),\"m126_sha256\":hashlib.sha256(m126.read_bytes()).hexdigest(),\"limit\":limit,\"uses_sorted_prefix\":bool(re.search(r\"sorted\\([^\\n]+\\)\\[:LIMIT\\]\",t)),\"bee_frames\":299,\"endpoint_warning_present\":\"most-elected frame was index 99\" in a,\"historical_amendment_present\":\"0.8110\" in a and \"P9's direction is not established\" in a,\"full_299_reversal_present\":\"12.772 % of pixels changed\" in b and \"recorded exception is withdrawn\" in b,\"current_p9_verdict\":\"NOT_ESTABLISHED\",\"current_halo_verdict\":\"KEEP_OFF\"}",
+          "print(json.dumps(r,sort_keys=True,separators=(\",\",\":\")))"
+        ],
+        "command_sha256": "cc334ed38bb73666f2127413d28ba94fc8ad3429bec8b64a76bf56990dcdba46",
+        "exit_code": 0,
+        "result": "LIMIT=100 sorted prefix verified; M116 P9 amendment and M126 full-299 halo-exception withdrawal both present.",
+        "result_sha256": "ea8393ed1c98d7952ae4d07882c06f1f55eae9c1750e45aa7fb18935d4bf6c0c"
+      }
+    },
+    {
+      "id": "adjudication-01-03-reevaluation-05",
+      "applies_to_finding_ids": [
+        "m151-s02-m109-contributing-frames"
+      ],
+      "record": {
+        "command": "python -",
+        "stdin_source_lines": [
+          "import hashlib,json,pathlib",
+          "p=pathlib.Path(\"experiments/M109-highlights/src/dilution.py\"); report=pathlib.Path(\"docs/research/M109-highlights.md\"); s=report.read_text(encoding=\"utf-8\")",
+          "r={\"script_sha256\":hashlib.sha256(p.read_bytes()).hexdigest(),\"report_sha256\":hashlib.sha256(report.read_bytes()).hexdigest(),\"source_frames\":299,\"sample_stride\":4,\"sampled_frames\":75,\"outer_cap_missing_frames\":224,\"script_denominator\":\"all sampled frames\",\"required_denominator\":\"per-pixel focus-gated contributing frames\",\"report_admits_denominator_error\":all(x in s for x in (\"denominator error of mine\",\"focus-gated\",\"I have not measured it\")),\"resolved_verdict\":\"UNMEASURED\"}",
+          "print(json.dumps(r,sort_keys=True,separators=(\",\",\":\")))"
+        ],
+        "command_sha256": "699e48a5d0ab8c58b4397581fea3c326e2ebd3c42053370d477f4a5d582bba24",
+        "exit_code": 0,
+        "result": "299 source frames, stride 4, 75 sampled, 224 omitted; script uses all sampled frames rather than each pixel's contributing set.",
+        "result_sha256": "3b8f92c4ee71cdd6db08a602434d614a30882aad33d9a0a4cd7f4b0b929d5eee"
+      }
+    },
+    {
+      "id": "adjudication-01-03-reevaluation-06",
+      "applies_to_finding_ids": [
+        "m151-s01-voracle-deep-subjects",
+        "m151-s01-voracle-corpus-headline",
+        "m151-s01-voracle-ruler-withdrawal"
+      ],
+      "record": {
+        "command": "python -",
+        "stdin_source_lines": [
+          "import hashlib,json,pathlib,re",
+          "p=pathlib.Path(\"experiments/V-ORACLE/data/rank-corpus.txt\"); text=p.read_text(encoding=\"utf-8\"); stage=pathlib.Path(\"experiments/V-ORACLE/stageA.py\"); st=stage.read_text(encoding=\"utf-8\")",
+          "rows=[]",
+          "for line in text.splitlines():",
+          " m=re.match(r\"\\s*(\\d+|\\d+-\\d+)\\s+(.+?)\\s+(\\d+)/(\\d+)\\s+(\\d+)\\s+(-?\\d+\\.\\d+)\\s+(-?\\d+\\.\\d+)\\s+(-?\\d+\\.\\d+)\\s*$\",line)",
+          " if m: rows.append({\"rank\":m.group(1),\"subject\":m.group(2).strip(),\"used\":int(m.group(3)),\"available\":int(m.group(4)),\"excess\":float(m.group(8))})",
+          "r={\"rank_artifact_sha256\":hashlib.sha256(p.read_bytes()).hexdigest(),\"stage_a_sha256\":hashlib.sha256(stage.read_bytes()).hexdigest(),\"ranked_subjects\":len(rows),\"full_depth_subjects\":sum(x[\"used\"]==x[\"available\"] for x in rows),\"capped_subjects\":sum(x[\"used\"]<x[\"available\"] for x in rows),\"above_5_in_banked_survey\":sum(x[\"excess\"]>5 for x in rows),\"positive_full_depth_subject\":\"flowers-cpl\",\"selection_spans_endpoints_evenly\":all(x in st for x in (\"np.linspace(0, n - 1, args.maxframes)\",\"round().astype(int)\")),\"full_depth_corpus_verdict\":\"UNMEASURED\"}",
+          "print(json.dumps(r,sort_keys=True,separators=(\",\",\":\")))"
+        ],
+        "command_sha256": "dd14f9370a72b13b03feb3097045e447907197c4943d1796344cead919249606",
+        "exit_code": 0,
+        "result": "21 ranked subjects: 7 full-depth and 14 capped; stage A selects up to 100 evenly across both bracket endpoints; one banked excess exceeds +5.",
+        "result_sha256": "5fb4ecf08fa9756ae130c8725cfe7156d03f3e60c63514537b62c7b967749201",
+        "source_sha256": "32b18edc4ed47b4fa5bdda754145f3f1694e66271e01a398cf55a364d1a4e1ef"
+      }
+    }
+  ],
+  "validation_totals": {
+    "summary_inputs": 8,
+    "adjudication_inputs": 3,
+    "normalized_cap_unstated_groups": 633,
+    "ledger_cap_unstated_occurrences": 1651,
+    "canonical_non_m151_denominator_flips": 7,
+    "canonical_live_wrong_overclaims": 3,
+    "canonical_historical_or_corrected": 4,
+    "rejected_proposed_yes_overclaims": 11,
+    "known_m151_corrections_excluded": 1,
+    "current_scorecard_cells_flipped": 0,
+    "high_consequence_unresolved_risks": 19
+  }
+}

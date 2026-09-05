@@ -1,0 +1,218 @@
+{
+  "schema": "denominator-review-lock-summary-v1",
+  "schema_version": 1,
+  "scope": {
+    "snapshot_directory": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-next",
+    "manifest": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-next\\corpus-manifest.json",
+    "candidates": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-next\\candidates.jsonl",
+    "review": "experiments/M151-denominator-audit/review-lock-a.jsonl",
+    "files": [
+      "docs/research/M139-m12-campaign.md",
+      "docs/research/M152-site-census.md",
+      "docs/research/M176-worker-invariance.md",
+      "docs/research/M180-detail-route.md"
+    ],
+    "file_count": 4,
+    "review_snapshot": "M151-out-next raw-byte hashes",
+    "validation_boundary": "In-memory M151-out-next manifest and candidate subset only; no live-corpus rescan and no shard ownership check.",
+    "prohibited_path_accessed": false,
+    "subagents_used": false
+  },
+  "snapshot_identity": {
+    "schema": "denominator-corpus-manifest-v1",
+    "manifest_sha256": "c4d14d94190c8904df645d1717a87f34cf7b7e5eef601cb59b6cf80558a63895",
+    "corpus_sha256": "f016d5de1f6b44a413325d7c6f79c2488a3e90225e9e49871a1c3086cc191832",
+    "candidates_sha256": "d240281159aff520fbc225b0ddb7d9270e000cf98da4109b2c1778126e48172a"
+  },
+  "review_totals": {
+    "candidates_dispositioned_exactly_once": 244,
+    "complete_file_attestations": 4,
+    "classifications": {
+      "fixed_subsample": 13,
+      "fixture": 69,
+      "out_of_scope": 119,
+      "population": 43
+    },
+    "evidence_labels": {
+      "ARGUED": 119,
+      "MEASURED": 56,
+      "VERIFIED": 69
+    },
+    "resolution_statuses": {
+      "accepted": 69,
+      "not_applicable": 119,
+      "verified": 56
+    },
+    "review_sha256": "a7e432504ef0e8cd023bd7ad476852cba895d82013284f7c9dac69da71c1cc9e",
+    "ascii_jsonl": true,
+    "per_file": [
+      {
+        "path": "docs/research/M139-m12-campaign.md",
+        "candidate_count": 78,
+        "classifications": {
+          "fixture": 1,
+          "out_of_scope": 40,
+          "population": 37
+        },
+        "snapshot_sha256": "dc13ec46e050a1f8b4169f7bb4b69b640e2e730ec058998eef17a64ae544b6e2",
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M152-site-census.md",
+        "candidate_count": 103,
+        "classifications": {
+          "fixed_subsample": 13,
+          "fixture": 54,
+          "out_of_scope": 36
+        },
+        "snapshot_sha256": "29764f3c48fcf6cb48d99177f72a4bbfc166e4c9a2d9864da661a6b6ab343b91",
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M176-worker-invariance.md",
+        "candidate_count": 34,
+        "classifications": {
+          "fixture": 6,
+          "out_of_scope": 22,
+          "population": 6
+        },
+        "snapshot_sha256": "639f83c14ce44f4ca8e1dc4303350dac4f8c3cbbdc5541ee91ce3e080fc9eac0",
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M180-detail-route.md",
+        "candidate_count": 29,
+        "classifications": {
+          "fixture": 8,
+          "out_of_scope": 21
+        },
+        "snapshot_sha256": "f2110e8378dfdda5d9441606a35cf34bf637f534cdb1c63762d09bb3ba21126c",
+        "complete_file_attested": true
+      }
+    ]
+  },
+  "cap_unstated_audit": {
+    "cap_group_count": 0,
+    "unstated_group_count": 0,
+    "groups": [],
+    "true_population_or_exact_missing_evidence": [],
+    "classification_rationale": "No occurrence in the four files has cap or unstated outer provenance. M152 uses deterministic lower-bound discovery and explicitly frozen score populations; the integrated M151 adjudication promotes its former seven raw cap labels to fixed_subsample with no verdict flip. Its supplemental clean-noise surrogate and synthetic mutation battery are fixture evidence; their 500 frozen sites and eleven temporal pair clusters are explicitly disclosed and are not generalized to independent capture prevalence."
+  },
+  "non_cap_missing_evidence": [
+    {
+      "id": "m139-memory-ratio-sampling-coverage",
+      "file": "docs/research/M139-m12-campaign.md",
+      "exact_missing_evidence": "Every score-driving run needed at least 0.90 monitor sampling coverage; the measured minimum was 0.7957678743186919.",
+      "consequence": "The N=299/N=33 memory ratio remains UNMEASURED_SAMPLING_COVERAGE; absolute memory and cross-worker bytes still establish M12 FAIL.",
+      "denominator_classification": "population"
+    },
+    {
+      "id": "m152-product-and-flat-inputs",
+      "file": "docs/research/M152-site-census.md",
+      "exact_missing_evidence": "M3 lacks registered common-input candidate/comparator outputs and qualification; M4 lacks 112 selected flat score sites under the frozen quotas, a separate at-least-100-site development flat, and owner adoption of a scored flat population.",
+      "consequence": "M3 stays UNMEASURED_COMPARATOR_QUALIFICATION; M4 stays capture-inadequate and unscoreable. The M3 capture-sufficient and M4 needs-new-capture decisions do not flip.",
+      "denominator_classification": "fixed_subsample"
+    },
+    {
+      "id": "m176-post-fix-m12s-ladder",
+      "file": "docs/research/M176-worker-invariance.md",
+      "exact_missing_evidence": "A fresh post-fix final-TIFF W=1/2/4/8/16 registered ladder with bound requested/resolved workers and reduction lattice.",
+      "consequence": "The one-stack W1/W2 control cannot license M12-S PASS; historical M139 cross-worker FAIL and M12 FAIL survive.",
+      "denominator_classification": "population"
+    },
+    {
+      "id": "m180-physical-reference-admission",
+      "file": "docs/research/M180-detail-route.md",
+      "exact_missing_evidence": "Physical R1/R2 and complete S1/S2 dominance, a sufficient complete-S reduction, a frozen reference-bearing M167 adapter satisfying P1-P7/A1-A6, and a true A6 sandbox.",
+      "consequence": "The route remains UNDECIDED and not admitted; no M1 result or score is created.",
+      "denominator_classification": "out_of_scope"
+    }
+  ],
+  "file_findings": [
+    {
+      "file": "docs/research/M139-m12-campaign.md",
+      "finding": "The registered campaign reports complete fixed-worker and cross-worker observations. M12-D passes; cross-worker bytes and absolute memory fail; timing numerically fails but is formally quarantined; the memory ratio remains coverage-unmeasured.",
+      "denominator_effect": "No cap or unstated provenance and no denominator-caused decision change.",
+      "decision_effect": "M12 FAIL survives."
+    },
+    {
+      "file": "docs/research/M152-site-census.md",
+      "finding": "The 17-frame edge search is explicitly a deterministic lower bound that already exceeds frozen quotas; flat eligibility is evaluated across every relevant frame until logical extinction. Supplemental side-max commissioning is an explicitly bounded surrogate.",
+      "denominator_effect": "Former raw cap labels are fixed_subsample under the canonical adjudication. No cap or unstated root remains.",
+      "decision_effect": "M3 capture SUFFICIENT and M4 NEEDS NEW CAPTURE survive; M3 product scoring remains unmeasured and M4 remains unscoreable."
+    },
+    {
+      "file": "docs/research/M176-worker-invariance.md",
+      "finding": "The affected W1/W2 comparison covers all 8,241,504 output pixels on the named 19-frame development control, while the blast audit is revision-bound and exactly enumerated.",
+      "denominator_effect": "No cap or unstated provenance; the one-stack mechanism result is explicitly scoped.",
+      "decision_effect": "No PASS is manufactured. Historical M139 and M12 FAIL survive."
+    },
+    {
+      "file": "docs/research/M180-detail-route.md",
+      "finding": "Only a reference-conditional route remains in principle. The reported gate and mutation counts are commissioning fixtures, while admission language is conditional or status language rather than population evidence.",
+      "denominator_effect": "No cap or unstated provenance.",
+      "decision_effect": "UNDECIDED and not admitted remain unchanged; no capture is released and no scorecard cell changes."
+    }
+  ],
+  "decision_effect": {
+    "denominator_caused_flips": [],
+    "pass_fail_unmeasured_capture_flip_count": 0,
+    "unchanged": [
+      "M12 remains FAIL; its memory-ratio sub-result remains UNMEASURED_SAMPLING_COVERAGE.",
+      "M3 capture remains SUFFICIENT but product score remains UNMEASURED_COMPARATOR_QUALIFICATION.",
+      "M4 remains NEEDS NEW CAPTURE and lacks an adopted scored flat population.",
+      "M176 does not create a post-fix M12-S PASS.",
+      "M180 remains UNDECIDED and not admitted."
+    ]
+  },
+  "canonical_effect": {
+    "canonical_non_m151_denominator_flips_before": 7,
+    "delta_denominator_flips": 0,
+    "canonical_non_m151_denominator_flips_after": 7,
+    "unresolved_high_consequence_risks_before": 19,
+    "delta_unresolved_high_consequence_risks": 0,
+    "unresolved_high_consequence_risks_after": 19,
+    "scorecard_cells_changed_by_denominator_provenance": 0,
+    "reason": "None of the four files adds or changes a canonical M151 root finding or unresolved high-consequence risk. The M152 fixed_subsample promotion was already the integrated adjudication and had verdict_flip NO."
+  },
+  "snapshot_binding_observation": {
+    "bindings": [
+      {
+        "path": "docs/research/M139-m12-campaign.md",
+        "snapshot_sha256": "dc13ec46e050a1f8b4169f7bb4b69b640e2e730ec058998eef17a64ae544b6e2",
+        "live_sha256_at_generation": "dc13ec46e050a1f8b4169f7bb4b69b640e2e730ec058998eef17a64ae544b6e2",
+        "live_matches_snapshot": true
+      },
+      {
+        "path": "docs/research/M152-site-census.md",
+        "snapshot_sha256": "29764f3c48fcf6cb48d99177f72a4bbfc166e4c9a2d9864da661a6b6ab343b91",
+        "live_sha256_at_generation": "29764f3c48fcf6cb48d99177f72a4bbfc166e4c9a2d9864da661a6b6ab343b91",
+        "live_matches_snapshot": true
+      },
+      {
+        "path": "docs/research/M176-worker-invariance.md",
+        "snapshot_sha256": "639f83c14ce44f4ca8e1dc4303350dac4f8c3cbbdc5541ee91ce3e080fc9eac0",
+        "live_sha256_at_generation": "28bd75b98883a2fd0e2d6ebacb63252febf4dc5af50c8425b555a3ddb76cc98e",
+        "live_matches_snapshot": false
+      },
+      {
+        "path": "docs/research/M180-detail-route.md",
+        "snapshot_sha256": "f2110e8378dfdda5d9441606a35cf34bf637f534cdb1c63762d09bb3ba21126c",
+        "live_sha256_at_generation": "f2110e8378dfdda5d9441606a35cf34bf637f534cdb1c63762d09bb3ba21126c",
+        "live_matches_snapshot": true
+      }
+    ],
+    "note": "M176 changed in the shared worktree after the out-next snapshot was read. At final verification the live file had a different hash and eight of the 34 candidate source lines had changed. The review, source lines, and complete-file attestation remain intentionally bound to the earlier reviewed out-next snapshot, and validation is against that in-memory snapshot subset."
+  },
+  "validation": {
+    "method": "In-memory M151-out-next manifest filtered to the four paths and canonical M151-out-next candidate JSONL filtered to the same paths, then denominator_audit.validate_ledgers without shard ownership or live-corpus validation.",
+    "filtered_manifest_file_count": 4,
+    "filtered_manifest_candidate_count": 244,
+    "filtered_manifest_sha256": "a74624dddbc2b897577399a7eac076cb6a7e68b574bb97c70cd1e0af3964bcef",
+    "filtered_candidates_sha256": "a8a36849a73043c9deeb4b4e5ec692932621df7ba0e744d61e7dade2988dcc9d",
+    "validated_dispositions": 244,
+    "validated_complete_file_attestations": 4,
+    "errors": [],
+    "result": "GREEN"
+  }
+}

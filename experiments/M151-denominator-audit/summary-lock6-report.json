@@ -1,0 +1,41 @@
+{
+  "cap_unstated_audit": {
+    "cap_occurrences": 18,
+    "new_normalized_groups": 0,
+    "unstated_occurrences": 3
+  },
+  "decision_effect": {
+    "canonical_non_m151_flips": 7,
+    "denominator_caused_flips": 0,
+    "scorecard_cells_changed": 0,
+    "unresolved_high_consequence_risks": 19
+  },
+  "review_totals": {
+    "classifications": {
+      "cap": 18,
+      "fixture": 11,
+      "out_of_scope": 1,
+      "population": 11,
+      "unstated": 3
+    },
+    "complete_file_attestations": 1,
+    "new_inventory_occurrences": 2,
+    "retained_occurrences": 42,
+    "review_sha256": "b4071628058fa0f3755b0925e9770fb7d7f895704691ea7272153213fb552eb1"
+  },
+  "schema": "denominator-lock6-report-summary-v1",
+  "schema_version": 1,
+  "scope": {
+    "candidate_count": 44,
+    "complete_file_read": true,
+    "file": "docs/research/M151-denominator-audit.md",
+    "prohibited_path_accessed": false,
+    "snapshot": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-lock6"
+  },
+  "validation": {
+    "errors": [],
+    "result": "GREEN",
+    "validated_attestations": 1,
+    "validated_dispositions": 44
+  }
+}

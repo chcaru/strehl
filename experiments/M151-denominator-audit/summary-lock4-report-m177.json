@@ -1,0 +1,48 @@
+{
+  "cap_unstated_audit": {
+    "cap_occurrences": 18,
+    "new_normalized_groups": 0,
+    "unstated_occurrences": 3
+  },
+  "decision_effect": {
+    "canonical_non_m151_flips": 7,
+    "denominator_caused_flips": 0,
+    "scorecard_cells_changed": 0,
+    "unresolved_high_consequence_risks": 19
+  },
+  "notes": [
+    "M177 changed only one non-candidate citation range; every candidate identity survived.",
+    "The report changed only two detector-inventory candidate identities; both are exhaustive-population counts."
+  ],
+  "review_totals": {
+    "classifications": {
+      "cap": 18,
+      "fixture": 13,
+      "out_of_scope": 48,
+      "population": 14,
+      "unstated": 3
+    },
+    "complete_file_attestations": 2,
+    "new_report_inventory_occurrences": 2,
+    "retained_occurrences": 94,
+    "review_sha256": "9cdd5e26fe5b0f0cd06eb70ada5daf31f96c9c36c3b251c5da65afc96ad374ea"
+  },
+  "schema": "denominator-lock4-report-m177-summary-v1",
+  "schema_version": 1,
+  "scope": {
+    "candidate_count": 96,
+    "complete_files_read": true,
+    "files": [
+      "docs/research/M151-denominator-audit.md",
+      "docs/research/M177-capture-programme.md"
+    ],
+    "prohibited_path_accessed": false,
+    "snapshot": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-lock4"
+  },
+  "validation": {
+    "errors": [],
+    "result": "GREEN",
+    "validated_attestations": 2,
+    "validated_dispositions": 96
+  }
+}

@@ -1,0 +1,367 @@
+{
+  "schema": "denominator-audit-shard-summary-v1",
+  "schema_version": 1,
+  "reviewer": "reviewer-01",
+  "shard": "shard-01",
+  "manifest_sha256": "e13886e1c3a6bec675ac906bf92eb4962860bc8af27bbe2623b7e6ffbbb93913",
+  "shard_sha256": "83d02ef14556efaeef5b5ce5a9548a88fa5d33b420f121c556c0ac0abd615d3d",
+  "assigned_file_count": 29,
+  "assigned_candidate_count": 5301,
+  "classification_totals": {
+    "population": 2186,
+    "fixed_subsample": 162,
+    "cap": 26,
+    "fixture": 193,
+    "unstated": 2,
+    "out_of_scope": 2732
+  },
+  "cap_or_unstated_claims": [
+    {
+      "classification": "unstated",
+      "locations": [
+        {
+          "file": "docs/research/C-landscape.md",
+          "line": 162
+        },
+        {
+          "file": "docs/research/C-landscape.md",
+          "line": 482
+        }
+      ],
+      "occurrence_ids": [
+        "den-f0f3107bb57c07d8b53f2e94",
+        "den-832f2b70e0f6b72103867429"
+      ],
+      "exact_claim": "| 21 | Field work fails | \"**even the slightest movement of the air will make some shots unusable** for focus stacking, even to not getting anything worth using sometimes... **the failure rate was very high**\" \u2014 user Keith, 15 yrs experience | <https://www.photomacrography.net/forum/viewtopic.php?f=26&t=49541> |",
+      "denominator_provenance": "One named practitioner reports a very high field-macro failure rate, but gives neither attempt count nor selection rule.",
+      "load_bearing_decision_or_verdict": "Context for alignment fragility only; it cannot quantify a product or field-wide failure rate.",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "Count of attempted field stacks, count of failures, inclusion period, and sampling rule."
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/M1-decode-measured.md",
+          "line": 15
+        }
+      ],
+      "occurrence_ids": [
+        "den-6fd54c5069dc01889f779949"
+      ],
+      "exact_claim": "- **122 / 122 files decoded, 0 failures**, across two unrelated corpora and",
+      "denominator_provenance": "122 attempted files from two bounded corpora; the second corpus includes the first 40 ARWs and the rest are three disjoint convenience ranges.",
+      "load_bearing_decision_or_verdict": "Supports keeping the external decoder dependency; does not prove support for every target ARW mode or file.",
+      "current_status": "open outside the tested pool",
+      "true_population": "All A7C II ARWs and capture modes the product intends to accept.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/M21-occlusion-bimodality-measured.md",
+          "line": 97
+        },
+        {
+          "file": "docs/research/SYNTHESIS.md",
+          "line": 879
+        }
+      ],
+      "occurrence_ids": [
+        "den-d5ba031e3ecf65dee0a5826e",
+        "den-05ee0729a2379b525ed71b33",
+        "den-031f60fd78f9e0cb246be583",
+        "den-30db7763de80ecaf54496ab9",
+        "den-07d96bc43bcc3275baf27e06"
+      ],
+      "exact_claim": "| `coffee-bean` | 21 | 4.8% | 19.4% | 4.4% | **4.38x** | 1.01x |",
+      "denominator_provenance": "Every pixel in the fixed crop was scored, but the through-focus input was every fifth coffee-bean frame: 21 of the 105 captured frames.",
+      "load_bearing_decision_or_verdict": "Originally supported a conditional R2 bimodality endorsement; later corpus evidence refutes the two-depth interpretation independently of this cap.",
+      "current_status": "full-density rate open; two-depth interpretation refuted",
+      "true_population": "All pixels in the fixed crop evaluated over all 105 coffee-bean frames.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/M21-occlusion-bimodality-measured.md",
+          "line": 108
+        }
+      ],
+      "occurrence_ids": [
+        "den-58d3b3c7aec724e59eb3a45e",
+        "den-c2996864ce44961aa666a00b"
+      ],
+      "exact_claim": "with intensity edges (0.0% at the top decile of intensity gradient vs 9.2% in",
+      "denominator_provenance": "Intensity-edge rates were computed from the same 21-of-105 coffee-bean frame pool and then stratified by a stated top decile.",
+      "load_bearing_decision_or_verdict": "Used to reject intensity-edge confounding of the capped bimodality result.",
+      "current_status": "open at full frame density",
+      "true_population": "The fixed crop over all 105 coffee-bean frames, with the same intensity-decile rule.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/M21-occlusion-bimodality-measured.md",
+          "line": 140
+        },
+        {
+          "file": "docs/research/M21-occlusion-bimodality-measured.md",
+          "line": 144
+        }
+      ],
+      "occurrence_ids": [
+        "den-2b5632071744dc817d940731",
+        "den-902f38f813d0fa4c9c2edb6e",
+        "den-31bda9a04e237c30624e838e",
+        "den-6813e5a6c5cc4e3b56ff47be"
+      ],
+      "exact_claim": "| `coffee-bean` | 4.8% | 86.2% | **18.0x** |",
+      "denominator_provenance": "Real and permuted detector rates use the 21-frame computational subsample of the 105-frame coffee-bean capture.",
+      "load_bearing_decision_or_verdict": "Establishes detector headroom only for the coarse sampled ladder.",
+      "current_status": "open at full frame density",
+      "true_population": "The corresponding real and permutation-placebo rates over all 105 frames.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/M97p-n-eff-map.md",
+          "line": 73
+        }
+      ],
+      "occurrence_ids": [
+        "den-ca7e0574a48aebf28d32aec9"
+      ],
+      "exact_claim": "- **U5 (DERIVED).** Because `n_eff` at gate 4 averages 4.563 of 20 frames while",
+      "denominator_provenance": "The reported 4.563 mean is complete on a --limit 20 prefix; the comparison point uses the full 79-frame capture.",
+      "load_bearing_decision_or_verdict": "The two observed points refute a fixed bracket-length fraction, but the 20-frame value is not a capture-wide estimate.",
+      "current_status": "open as a 20-frame-prefix estimate; counterexample accepted",
+      "true_population": "All 79 flat-on-ruler-cpl frames for any capture-wide n_eff claim.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 370
+        }
+      ],
+      "occurrence_ids": [
+        "den-7ffadc0ec45afea6469d38f7"
+      ],
+      "exact_claim": "| 2 | bee-1-cpl | 100/299 | 360 | 0.8 | 0.0 | +0.8 |",
+      "denominator_provenance": "The corpus survey scores at most 100 frames from this named capture; the source row records the selected count over the available frame count.",
+      "load_bearing_decision_or_verdict": "Contributes to the capture-gap corpus ranking and its claim that flowers-cpl is the sole positive subject.",
+      "current_status": "open for a full-depth subject rerun",
+      "true_population": "All 299 frames of the named capture.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 372
+        }
+      ],
+      "occurrence_ids": [
+        "den-120ef79f48b6d9d71dae4779"
+      ],
+      "exact_claim": "| 9 | coffee-bean | 100/105 | 339 | 7.1 | 9.7 | -2.6 |",
+      "denominator_provenance": "The corpus survey scores at most 100 frames from this named capture; the source row records the selected count over the available frame count.",
+      "load_bearing_decision_or_verdict": "Contributes to the capture-gap corpus ranking and its claim that flowers-cpl is the sole positive subject.",
+      "current_status": "open for a full-depth subject rerun",
+      "true_population": "All 105 frames of the named capture.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 373
+        }
+      ],
+      "occurrence_ids": [
+        "den-d37f5bc5301a0eec32f65a0d"
+      ],
+      "exact_claim": "| 13 | bee-3-cpl | 100/299 | 392 | 0.3 | 25.9 | -25.7 |",
+      "denominator_provenance": "The corpus survey scores at most 100 frames from this named capture; the source row records the selected count over the available frame count.",
+      "load_bearing_decision_or_verdict": "Contributes to the capture-gap corpus ranking and its claim that flowers-cpl is the sole positive subject.",
+      "current_status": "open for a full-depth subject rerun",
+      "true_population": "All 299 frames of the named capture.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 374
+        }
+      ],
+      "occurrence_ids": [
+        "den-3f28fb85aae8cc941e95a4ab"
+      ],
+      "exact_claim": "| 14 | highly-angled-ruler-mm-cpl | 100/299 | 187 | 18.2 | 44.4 | **-26.2** |",
+      "denominator_provenance": "The corpus survey scores at most 100 frames from this named capture; the source row records the selected count over the available frame count.",
+      "load_bearing_decision_or_verdict": "Contributes to the capture-gap corpus ranking and its claim that flowers-cpl is the sole positive subject.",
+      "current_status": "open for a full-depth subject rerun",
+      "true_population": "All 299 frames of the named capture.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 375
+        }
+      ],
+      "occurrence_ids": [
+        "den-86c848ea38f7bb36683cb01a"
+      ],
+      "exact_claim": "| 15 | flower-bud-with-background-fern-cpl | 100/299 | 247 | 14.2 | 41.1 | -26.9 |",
+      "denominator_provenance": "The corpus survey scores at most 100 frames from this named capture; the source row records the selected count over the available frame count.",
+      "load_bearing_decision_or_verdict": "Contributes to the capture-gap corpus ranking and its claim that flowers-cpl is the sole positive subject.",
+      "current_status": "open for a full-depth subject rerun",
+      "true_population": "All 299 frames of the named capture.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 377
+        }
+      ],
+      "occurrence_ids": [
+        "den-5184085e40fdca0dc7978375"
+      ],
+      "exact_claim": "| 21 | dry-erase-marker-head-cpl | 100/299 | 329 | 4.3 | 53.5 | -49.3 |",
+      "denominator_provenance": "The corpus survey scores at most 100 frames from this named capture; the source row records the selected count over the available frame count.",
+      "load_bearing_decision_or_verdict": "Contributes to the capture-gap corpus ranking and its claim that flowers-cpl is the sole positive subject.",
+      "current_status": "open for a full-depth subject rerun",
+      "true_population": "All 299 frames of the named capture.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 380
+        }
+      ],
+      "occurrence_ids": [
+        "den-d2f09d2adfd47c1fdf056d57"
+      ],
+      "exact_claim": "points: 1 of 21.** Detail-definition agreement r = 0.978.",
+      "denominator_provenance": "Twenty-one rankable subjects were included, but most deep captures contributed at most 100 frames; five delivered masters were separately unranked for stated detail/registration reasons.",
+      "load_bearing_decision_or_verdict": "The statement that only one of 21 ranked subjects exceeds the +5-point capture-gap threshold is the corpus-level headline.",
+      "current_status": "open because capped per-subject curves can change ranks",
+      "true_population": "All frames in all 26 delivered masters, retaining the stated registration and minimum-detail disposition rules.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 390
+        },
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 437
+        },
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 438
+        }
+      ],
+      "occurrence_ids": [
+        "den-ee11a931f7f4ce239f7b2710",
+        "den-f56e60bbf5cf4bb959484d8f",
+        "den-c1df312fd19af195290d15c5"
+      ],
+      "exact_claim": "that confirmation is now withdrawn**: its no-detail tiles fire at 44.4%, so its",
+      "denominator_provenance": "The ruler no-detail and detail rates come from the at-most-100-frame survey rather than its full 299-frame capture.",
+      "load_bearing_decision_or_verdict": "Withdraws the provisional claim that the ruler has a capture gap; its capped detail rate is below its capped no-detail null.",
+      "current_status": "open at full 299-frame depth, though the capped result is adverse to the withdrawn verdict",
+      "true_population": "All 299 highly-angled-ruler-mm-cpl frames under the same tile definitions.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 403
+        }
+      ],
+      "occurrence_ids": [
+        "den-c7f21230e7a8a60b9f104231"
+      ],
+      "exact_claim": "as an ordering of merge quality. Its top entry is `coffee-bean` (20.35%), whose",
+      "denominator_provenance": "The coffee-bean lose rate uses 100 of 105 frames in the survey.",
+      "load_bearing_decision_or_verdict": "Places coffee-bean first in the explicitly weak merge-defect ranking, which the report says must not be read as a quality ordering.",
+      "current_status": "open for the five omitted frames and already non-load-bearing",
+      "true_population": "All 105 coffee-bean frames.",
+      "missing_input": null
+    },
+    {
+      "classification": "cap",
+      "locations": [
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 438
+        },
+        {
+          "file": "docs/research/V-ORACLE.md",
+          "line": 620
+        }
+      ],
+      "occurrence_ids": [
+        "den-368c9cb11556d7617876d3b9",
+        "den-2b1364b9d7c67eee778c5cd4"
+      ],
+      "exact_claim": "   53.5% on `dry-erase-marker-head-cpl`. Against its own null the ruler's 18.2%",
+      "denominator_provenance": "The dry-erase no-detail rate uses 100 of its 299 captured frames.",
+      "load_bearing_decision_or_verdict": "Motivates subtracting each subject-specific no-detail rate before issuing a reshoot recommendation.",
+      "current_status": "open at full 299-frame depth; method requirement remains conservative",
+      "true_population": "All 299 dry-erase-marker-head-cpl frames.",
+      "missing_input": null
+    }
+  ],
+  "plausible_verdict_flips": [
+    {
+      "claim": "A7C II decoder support is treated as a cleared dependency after 122/122 bounded files decoded.",
+      "could_flip_if": "An untested target capture mode or an ARW outside the convenience ranges fails decode.",
+      "needed": "A frozen product acceptance corpus covering every supported A7C II RAW mode, or an explicit support-scope restriction."
+    },
+    {
+      "claim": "coffee-bean bimodality enrichment and detector headroom were measured on 21 of 105 frames.",
+      "could_flip_if": "The full frame-density curve turns the apparent peaks into noise or changes the real/permutation rates materially.",
+      "needed": "Run the registered statistic and placebo on all 105 frames; the source itself names this frame-density sweep as unrun."
+    },
+    {
+      "claim": "flowers-cpl is the only ranked subject with a positive capture-gap signature above +5 points.",
+      "could_flip_if": "A capped deep subject develops a positive excess when all captured frames are included.",
+      "needed": "Full-depth stage-A curves for every subject currently represented by at most 100 frames, followed by the unchanged eligibility and ranking rule."
+    }
+  ],
+  "attestation": {
+    "complete_files_read": 29,
+    "complete_file_hashes_match_manifest": true,
+    "dispositions_written": 5301,
+    "file_attestations_written": 29
+  }
+}

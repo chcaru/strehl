@@ -1,0 +1,64 @@
+{
+  "attestation_count": 366,
+  "candidates_sha256": "3e10021f70a03f49c1e5fd6add4d3d7f02537bdce13f6c5c8f1282ed8db9d5b6",
+  "classification_counts": {
+    "cap": 1166,
+    "fixed_subsample": 1705,
+    "fixture": 2313,
+    "out_of_scope": 30562,
+    "population": 6463,
+    "unstated": 499
+  },
+  "disposition_count": 42708,
+  "final_ledger_sha256": "dbfd9be8949875bed6cb3d370538ec7c3f09b7b585aa22ec1b0d5dbab3ec4662",
+  "manifest_sha256": "c4a8e3306ecab5935d7cfe6a22fef0a623da510f8d3e8e8f2efcbd742e426e2f",
+  "prohibited_path_accessed_during_finalization": false,
+  "reviewer_field": "Rebound to the exact final canonical shard owner; source reviewer and source ledger are committed by selection_sha256.",
+  "schema": "denominator-final-ledger-provenance-v1",
+  "schema_version": 1,
+  "selected_attestations_by_source": {
+    "audit-ledger.jsonl": 350,
+    "review-current-delta.jsonl": 4,
+    "review-final-delta.jsonl": 3,
+    "review-lock-a.jsonl": 3,
+    "review-lock-b.jsonl": 2,
+    "review-lock3-changing.jsonl": 1,
+    "review-lock4-report-m177.jsonl": 1,
+    "review-lock5-proposal.jsonl": 1,
+    "review-lock6-report.jsonl": 1
+  },
+  "selected_dispositions_by_source": {
+    "audit-ledger.jsonl": 41408,
+    "review-current-delta.jsonl": 526,
+    "review-final-delta.jsonl": 125,
+    "review-lock-a.jsonl": 210,
+    "review-lock-b.jsonl": 65,
+    "review-lock3-changing.jsonl": 34,
+    "review-lock4-report-m177.jsonl": 52,
+    "review-lock5-proposal.jsonl": 244,
+    "review-lock6-report.jsonl": 44
+  },
+  "selection_sha256": "84a3e7e507641ace6da2c1174d1164af58e90063980a463ea10a7f1ae4688c32",
+  "source_precedence_low_to_high": [
+    "audit-ledger.jsonl",
+    "review-current-delta.jsonl",
+    "review-final-delta.jsonl",
+    "review-lock-a.jsonl",
+    "review-lock-b.jsonl",
+    "review-lock3-changing.jsonl",
+    "review-lock4-report-m177.jsonl",
+    "review-lock5-proposal.jsonl",
+    "review-lock6-report.jsonl"
+  ],
+  "source_sha256": {
+    "audit-ledger.jsonl": "ad400d1f94178b0d7489df825688faf03234ac5c1d0f603ccaa7a015b1d773a0",
+    "review-current-delta.jsonl": "63107596ee9a5914a626c73d60c43a7cffb2ac7b021639a2c48b63a434dcdfb7",
+    "review-final-delta.jsonl": "fd8d1ad67f8a1683f3f27404fd8fd5e51eb0f222bfe5b9f08da2d2d446d35faf",
+    "review-lock-a.jsonl": "a7e432504ef0e8cd023bd7ad476852cba895d82013284f7c9dac69da71c1cc9e",
+    "review-lock-b.jsonl": "45f11f1756ba8d8bdde96611bddf58ad38f986e51269c5c317d3f4774048a072",
+    "review-lock3-changing.jsonl": "0194293ec19eb4a765a0067a7a0b49d9310cd43ada9c24d038158af102162e17",
+    "review-lock4-report-m177.jsonl": "9cdd5e26fe5b0f0cd06eb70ada5daf31f96c9c36c3b251c5da65afc96ad374ea",
+    "review-lock5-proposal.jsonl": "caf5d57e1494c91251d1751e596d04486738a5f730f50d83a7a40cf5578cdc69",
+    "review-lock6-report.jsonl": "b4071628058fa0f3755b0925e9770fb7d7f895704691ea7272153213fb552eb1"
+  }
+}

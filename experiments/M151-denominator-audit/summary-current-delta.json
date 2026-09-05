@@ -1,0 +1,373 @@
+{
+  "schema": "denominator-current-delta-summary-v1",
+  "schema_version": 1,
+  "scope": {
+    "baseline_manifest": "experiments/M151-denominator-audit/out/corpus-manifest.json",
+    "baseline_candidates": "experiments/M151-denominator-audit/out/candidates.jsonl",
+    "current_manifest": "experiments/M151-denominator-audit/out-current/corpus-manifest.json",
+    "current_candidates": "experiments/M151-denominator-audit/out-current/candidates.jsonl",
+    "review": "experiments/M151-denominator-audit/review-current-delta.jsonl",
+    "files": [
+      "docs/proposals/2026-09-sota-scorecard.md",
+      "docs/research/M139-m12-campaign.md",
+      "docs/research/M166-capture-reconciliation.md",
+      "docs/research/M171-aperture-reference.md",
+      "docs/research/M171-reference-admission.md",
+      "docs/research/M176-worker-invariance.md",
+      "docs/research/M178-m12s-adjudication.md"
+    ],
+    "file_count": 7,
+    "review_snapshot": "out-current raw-byte hashes"
+  },
+  "corpus_comparison": {
+    "baseline": {
+      "file_count": 360,
+      "candidate_count": 42404,
+      "total_lines": 279529,
+      "total_bytes": 18303989,
+      "corpus_sha256": "cefd3de58687750c6e8f5bf75c4373fdb1d98b345d05db90603f650cb1d96feb",
+      "candidates_sha256": "928e995d949c8e37b20462bc16e2c800ba1ae095af89ebe3edf1bd32c48f5817",
+      "manifest_sha256": "e13886e1c3a6bec675ac906bf92eb4962860bc8af27bbe2623b7e6ffbbb93913"
+    },
+    "current": {
+      "file_count": 362,
+      "candidate_count": 42479,
+      "total_lines": 280393,
+      "total_bytes": 18357544,
+      "corpus_sha256": "64bf88731c67f703fd1b198294b00417678834aa1a962fdfe9ffdc6aca45fd50",
+      "candidates_sha256": "e6ef9f3c30e4b9bbebeefc597cad558da376e82e78e436da282cc23f4eab8ba0",
+      "manifest_sha256": "d981d3321317e37b120d336b1e6c05fac0bd704bd79be37099d227082d0fdd41"
+    },
+    "files_added": [
+      "docs/research/M176-worker-invariance.md",
+      "docs/research/M178-m12s-adjudication.md"
+    ],
+    "files_removed": [],
+    "files_hash_changed": [
+      "docs/proposals/2026-09-sota-scorecard.md",
+      "docs/research/M139-m12-campaign.md",
+      "docs/research/M166-capture-reconciliation.md",
+      "docs/research/M171-aperture-reference.md",
+      "docs/research/M171-reference-admission.md"
+    ],
+    "candidate_occurrences": {
+      "retained": 42297,
+      "removed": 107,
+      "added": 182
+    },
+    "all_corpus_changes_are_in_scope": true,
+    "file_delta": [
+      {
+        "path": "docs/proposals/2026-09-sota-scorecard.md",
+        "baseline": {
+          "sha256": "eb5ed446ee06e8842c61e5f90cb1bd4a8e81ca5dfd39ef53988598ef05dcb603",
+          "bytes": 163484,
+          "lines": 2221,
+          "candidate_count": 430
+        },
+        "current": {
+          "sha256": "405f3749f097104778ec11404eb432e53869ee9cfa6ef13bab4bc2cdbda7a696",
+          "bytes": 165917,
+          "lines": 2240,
+          "candidate_count": 444
+        },
+        "candidate_delta": {
+          "retained": 421,
+          "removed": 9,
+          "added": 23
+        },
+        "review_classifications": {
+          "fixed_subsample": 86,
+          "fixture": 27,
+          "out_of_scope": 331
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M139-m12-campaign.md",
+        "baseline": {
+          "sha256": "e75e721af4205d6756874901ffa55d996e951ca4a4294b54fbdbf8a0ecfb507f",
+          "bytes": 14687,
+          "lines": 268,
+          "candidate_count": 65
+        },
+        "current": {
+          "sha256": "e555cdbb1390e6f6280685d0f6634b9f814d2a75645f6c04977dc3ace773a857",
+          "bytes": 19468,
+          "lines": 409,
+          "candidate_count": 64
+        },
+        "candidate_delta": {
+          "retained": 0,
+          "removed": 65,
+          "added": 64
+        },
+        "review_classifications": {
+          "fixture": 1,
+          "out_of_scope": 31,
+          "population": 32
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M166-capture-reconciliation.md",
+        "baseline": {
+          "sha256": "80dcea55ef911d5b430430e8031d30c3f882384e8116ec33ce9c220c2fcdafda",
+          "bytes": 21466,
+          "lines": 321,
+          "candidate_count": 42
+        },
+        "current": {
+          "sha256": "524f8abcb75b9125959733fd9b022c848f42fe11bbf870a79873461025b7fbd5",
+          "bytes": 21612,
+          "lines": 324,
+          "candidate_count": 42
+        },
+        "candidate_delta": {
+          "retained": 39,
+          "removed": 3,
+          "added": 3
+        },
+        "review_classifications": {
+          "fixture": 12,
+          "out_of_scope": 30
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M171-aperture-reference.md",
+        "baseline": {
+          "sha256": "c2ba25ab630a62576550e8ffeb8e99845338b575ae3a2c4e0c95ed779c54abac",
+          "bytes": 12489,
+          "lines": 261,
+          "candidate_count": 9
+        },
+        "current": {
+          "sha256": "69d0b5580956d77af57fb7d2b8c689fc0a9470febcabd6ada3bbb4c3b5434607",
+          "bytes": 12909,
+          "lines": 267,
+          "candidate_count": 10
+        },
+        "candidate_delta": {
+          "retained": 9,
+          "removed": 0,
+          "added": 1
+        },
+        "review_classifications": {
+          "fixture": 4,
+          "out_of_scope": 5,
+          "population": 1
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M171-reference-admission.md",
+        "baseline": {
+          "sha256": "bd29a3e49481d18ad0fe95cd82de0c601290dd0306b6f3e7ad88150e50bfe1c7",
+          "bytes": 14496,
+          "lines": 82,
+          "candidate_count": 32
+        },
+        "current": {
+          "sha256": "d94e51bc8f4bdfa09c2fba54c2218dd865e4c65f87c2883ea02ecaf043d252a0",
+          "bytes": 18376,
+          "lines": 98,
+          "candidate_count": 35
+        },
+        "candidate_delta": {
+          "retained": 2,
+          "removed": 30,
+          "added": 33
+        },
+        "review_classifications": {
+          "fixture": 2,
+          "out_of_scope": 33
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M176-worker-invariance.md",
+        "baseline": null,
+        "current": {
+          "sha256": "a2b286a60e080b1c93a86a491667f3c16e4ac325a5627eb3609781e8a06e0f80",
+          "bytes": 26207,
+          "lines": 376,
+          "candidate_count": 28
+        },
+        "candidate_delta": {
+          "retained": 0,
+          "removed": 0,
+          "added": 28
+        },
+        "review_classifications": {
+          "fixture": 4,
+          "out_of_scope": 18,
+          "population": 6
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M178-m12s-adjudication.md",
+        "baseline": null,
+        "current": {
+          "sha256": "cb4b1456a97bcca79ec8b46c2418d521a3fe7f389a529f85b34573ef5823f760",
+          "bytes": 15688,
+          "lines": 303,
+          "candidate_count": 30
+        },
+        "candidate_delta": {
+          "retained": 0,
+          "removed": 0,
+          "added": 30
+        },
+        "review_classifications": {
+          "out_of_scope": 27,
+          "population": 3
+        },
+        "complete_file_attested": true
+      }
+    ]
+  },
+  "review_totals": {
+    "current_candidates_dispositioned_exactly_once": 653,
+    "complete_file_attestations": 7,
+    "retained_candidate_dispositions_carried_forward_with_current_lines": 471,
+    "current_only_candidate_dispositions_read_and_added": 182,
+    "classifications": {
+      "fixed_subsample": 86,
+      "fixture": 50,
+      "out_of_scope": 475,
+      "population": 42
+    },
+    "evidence_labels": {
+      "ARGUED": 369,
+      "MEASURED": 155,
+      "VERIFIED": 129
+    },
+    "resolution_statuses": {
+      "accepted": 10,
+      "not_applicable": 475,
+      "verified": 168
+    },
+    "review_sha256": "63107596ee9a5914a626c73d60c43a7cffb2ac7b021639a2c48b63a434dcdfb7",
+    "ascii_jsonl": true
+  },
+  "cap_unstated_audit": {
+    "cap_group_count": 0,
+    "unstated_group_count": 0,
+    "groups": [],
+    "classification_rationale": "No current occurrence in the seven files relies on a convenience-capped or provenance-unstated population. The 0.7957678743186919 M139 monitoring coverage is an explicitly measured coverage diagnostic over the registered run, not an unstated source population or selected frame cap; this follows the baseline ledger treatment of the same 79.5768 percent fact as population evidence.",
+    "true_population_or_exact_missing_evidence": [
+      {
+        "id": "m139-memory-ratio-sampling-coverage",
+        "files": [
+          "docs/proposals/2026-09-sota-scorecard.md",
+          "docs/research/M139-m12-campaign.md",
+          "docs/research/M178-m12s-adjudication.md"
+        ],
+        "true_population": "The preregistered N=299 versus N=33 warm process-tree peak-memory comparison over the accepted registered runs.",
+        "exact_missing_evidence": "Every score-driving run needed at least 0.90 monitor sampling coverage for a formal ratio verdict; the measured minimum was 0.7957678743186919. The observed sampled and Job Object ratios both exceed 1.10, but the formal ratio remains UNMEASURED_SAMPLING_COVERAGE.",
+        "load_bearing_consequence": "None for the current M12 axis result. Absolute memory, cross-worker byte invariance, and N-mod-4 already fail; the ratio cannot rescue those exact failures.",
+        "canonical_non_m151_denominator_flip_change": 0,
+        "current_scorecard_cell_change": false
+      }
+    ]
+  },
+  "file_findings": [
+    {
+      "file": "docs/proposals/2026-09-sota-scorecard.md",
+      "finding": "Revision 1.11 records M12-D PASS and M12-S, absolute memory, and N-mod-4 FAIL; it removes the reverse M11 prerequisite after M178. The M12 strehl cell moves from UNMEASURED to FAIL, but by completed measurement plus plan precedence, not by denominator repair.",
+      "denominator_effect": "No cap or unstated group and no denominator-caused cell change.",
+      "scorecard_effect": "M12 is now FAIL; M12-D is a passing sub-property; peak_N299/peak_N33 remains UNMEASURED_SAMPLING_COVERAGE. M8 FAIL is unchanged."
+    },
+    {
+      "file": "docs/research/M139-m12-campaign.md",
+      "finding": "The registered matrix is complete. All 15 fixed-worker cells are byte-stable; every N has five cross-worker hashes; absolute memory and N-mod-4 fail. The document preserves the harness mechanical M12 FAIL but still reports M12-S BLOCKED-BY-LICENCE and overall NOT_ASSIGNED under an earlier orchestrator directive.",
+      "denominator_effect": "The only incomplete quantity is the explicitly reported memory-ratio sampling-coverage requirement; it does not alter M12 FAIL or the canonical denominator count.",
+      "scorecard_effect": "Measurement supplies the M12 cell evidence. The report-level NOT_ASSIGNED wording is stale against M178 and scorecard revision 1.11; that conflict is adjudication/precedence, not denominator provenance."
+    },
+    {
+      "file": "docs/research/M166-capture-reconciliation.md",
+      "finding": "Current complete-program arithmetic is rehearsal 1,092, scored 1,215, registered two-sitting total 2,307, and 2,309 including the two-frame preflight. The optional 900-frame M1-only score is a named future scope reduction, not a correction to the combined program.",
+      "denominator_effect": "All roles and totals are explicit; there is no cap or unstated group. The 704-to-1,215 and 896-to-1,092 changes are program-definition and supersession changes.",
+      "scorecard_effect": "No current scorecard cell changes."
+    },
+    {
+      "file": "docs/research/M171-aperture-reference.md",
+      "finding": "The metadata census is exhaustive over 789 named ARWs, but aperture metadata cannot force realized MTF ordering. No pixel decode, detail candidate, confidence interval, or M167 execution occurred.",
+      "denominator_effect": "No cap or unstated candidate group. Exact missing evidence is a lower bound or independent observation of realized lens-plus-teleconverter-plus-focus-state transfer, not a larger denominator.",
+      "scorecard_effect": "No cell changes; this is a physics/identifiability stop."
+    },
+    {
+      "file": "docs/research/M171-reference-admission.md",
+      "finding": "Amendment 1 and v2 synthetic commissioning verify the GX_REFERENCE_CONDITIONAL gate family, while DIGITAL_K remains refused and production admission remains UNMEASURED.",
+      "denominator_effect": "Synthetic fixtures are complete within their stated scope. Exact missing production evidence is frozen production thresholds, reduction-sufficiency provenance, the production noise-estimand ruling, and DIGITAL_K identification/uncertainty commissioning.",
+      "scorecard_effect": "No current scorecard cell changes; synthetic PASS is not production admission or an M1 score."
+    },
+    {
+      "file": "docs/research/M176-worker-invariance.md",
+      "finding": "The affected W1/W2 comparison exhausts 8,241,504 pixels on one 19-frame development control and finds 3,430 changed pixels, while the fixed W1/W2 control is byte-identical. The 22-ID/52-file blast audit preserves the historical M139 cross-worker FAIL and identifies M-COVER-BORDER as the confirmed worker-caused false difference.",
+      "denominator_effect": "No cap or unstated group. The one-stack mechanism claim is explicitly scoped; the exact missing evidence for a current M12-S PASS is a fresh post-fix W=1/2/4/8/16 registered ladder.",
+      "scorecard_effect": "No current cell flips. M176 prevents interpreting the post-fix W1/W2 control as M12-S PASS and leaves M12 FAIL intact."
+    },
+    {
+      "file": "docs/research/M178-m12s-adjudication.md",
+      "finding": "The reverse rule making formal M12-S wait for M11 is an UNRATIFIED_ADDITION absent from the governing proposal. Under plan precedence M12-S is FAIL and M12 overall is FAIL without a licence.",
+      "denominator_effect": "No cap or unstated group and no denominator-caused flip. The ruling is a precedence/definition correction already counted by M169 as R9, not a new denominator finding.",
+      "scorecard_effect": "Changes the M12 reporting cell from licence-withheld/NOT_ASSIGNED to FAIL when combined with M139 measurement; does not adjudicate M11 or any other cell."
+    }
+  ],
+  "canonical_effect": {
+    "baseline_canonical_non_m151_denominator_flips": 7,
+    "delta_denominator_flips": 0,
+    "current_canonical_non_m151_denominator_flips": 7,
+    "known_m151_correction_excluded": 1,
+    "current_scorecard_cells_changed_by_denominator_provenance": 0,
+    "reason": "The seven canonical findings remain the previously integrated capped/unstated overclaims. None of the seven current files adds, removes, or repairs one of those findings."
+  },
+  "scorecard_effect": {
+    "denominator_caused_changes": [],
+    "non_denominator_changes": [
+      {
+        "cell": "M12 strehl/current standing",
+        "before": "UNMEASURED; diagnostic M12-D PASS and M12-S FAIL only",
+        "current": "FAIL; M12-D PASS, M12-S FAIL, absolute memory FAIL, N-mod-4 FAIL, peak_N299/peak_N33 UNMEASURED_SAMPLING_COVERAGE",
+        "cause": "M139 completed registered measurement plus M178 plan-precedence adjudication removing an unratified reverse M11 dependency.",
+        "denominator_caused": false
+      }
+    ],
+    "unchanged_relevant_cells": [
+      "M8 remains FAIL.",
+      "M1, M2, M3, M4, M5, M6, M7, and M11 retain their recorded unmeasured states.",
+      "M9 and M10 remain definition-blocked."
+    ],
+    "m176_boundary": "Historical M139 cross-worker FAIL survives. A W1/W2 fixed-control equality on one 19-frame development stack is not a fresh M12-S PASS."
+  },
+  "current_document_consistency_notes": [
+    {
+      "files": [
+        "docs/research/M139-m12-campaign.md",
+        "docs/research/M178-m12s-adjudication.md",
+        "docs/proposals/2026-09-sota-scorecard.md"
+      ],
+      "note": "M139 still reports formal M12-S BLOCKED-BY-LICENCE and overall NOT_ASSIGNED, while M178 and scorecard revision 1.11 report licence-free M12-S FAIL and M12 FAIL. M139 preserves the same mechanical FAIL, so this is stale reporting precedence, not a measurement or denominator disagreement."
+    },
+    {
+      "files": [
+        "docs/proposals/2026-09-sota-scorecard.md"
+      ],
+      "note": "The updated M12 rows at lines 851 and 2113 conflict with stale prose at lines 854-856, 901-903, 2022-2037, and 2047-2051 that still says the run is deferred, M12 is unmeasured, or the other nine axes are unmeasured. No source repair was made because this lane is review-only."
+    }
+  ],
+  "validation": {
+    "method": "In-memory current manifest filtered to the seven paths, current candidate JSONL filtered to the same paths, then denominator_audit.validate_ledgers without shard ownership.",
+    "filtered_manifest_file_count": 7,
+    "filtered_manifest_candidate_count": 653,
+    "filtered_manifest_sha256": "0c34e18b687e8a2c38a1e7fe3403b772d4c3cf2b86f7a98dea72e23b6721ee98",
+    "filtered_candidates_sha256": "954ddfbf060332b14cd6eb7275b7a9d115b356504f45368ae33eac14bd43874e",
+    "validated_dispositions": 653,
+    "validated_complete_file_attestations": 7,
+    "errors": [],
+    "result": "GREEN"
+  }
+}

@@ -1,0 +1,1795 @@
+{
+  "schema": "denominator-audit-shard-summary-v1",
+  "reviewer": "reviewer-05",
+  "shard": "shard-05",
+  "candidate_count": 5299,
+  "file_count": 48,
+  "classification_totals": {
+    "population": 658,
+    "fixed_subsample": 248,
+    "cap": 417,
+    "fixture": 830,
+    "unstated": 129,
+    "out_of_scope": 3017
+  },
+  "complete_file_attestations": 48,
+  "cap_or_unstated_claims": [
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-ELECT.md",
+      "occurrence_count": 41,
+      "claims": [
+        {
+          "line": 49,
+          "exact_claim": "0 of 1 defect ROIs on `flower-bud`, 0 of 3 on the bee, controls preserved. At the"
+        },
+        {
+          "line": 121,
+          "exact_claim": "a merge change but the **coverage output** of 12.6: no frame in `flower-bud`'s"
+        },
+        {
+          "line": 265,
+          "exact_claim": "**4/4 on the band, 3/4 on the stricter median test.** The replica reproduces the"
+        },
+        {
+          "line": 332,
+          "exact_claim": "| **H4** | the null: an honest coverage gap | **DEAD** | The through-focus curve at `pale-wash` has a clear texture peak at **f40, 2.1\u00d7 its own floor**, that the election missed by ~96 frames. The data has an answer; the election did not take it. `src/ladder.py`, `src/focusdecomp.py` |"
+        },
+        {
+          "line": 391,
+          "exact_claim": "   remedy already passes this: at `dark-patch` the two arms give an identical"
+        },
+        {
+          "line": 406,
+          "exact_claim": "**41.7% to 9.7%**, and the control crop is untouched."
+        },
+        {
+          "line": 408,
+          "exact_claim": "**This is a simulation and I am not going to overstate it.** It runs on 21 of 205"
+        },
+        {
+          "line": 454,
+          "exact_claim": "  green, and omits the edge-aware layer support. It commissions 4/4 on the band"
+        },
+        {
+          "line": 455,
+          "exact_claim": "  and 3/4 on the median; the `subject-sharp` median miss is unexplained."
+        },
+        {
+          "line": 623,
+          "exact_claim": "luma into a veil part and a texture part. The replica commissions **5/5** on band"
+        },
+        {
+          "line": 624,
+          "exact_claim": "and 4/5 on median against the shipped align-off election, and the `bee-sharp`"
+        },
+        {
+          "line": 625,
+          "exact_claim": "control passes: the test correctly reports that the election is right there."
+        },
+        {
+          "line": 633,
+          "exact_claim": "| `bee-sharp` | f45 | f48 | 4.35 | election correct, control PASS |"
+        },
+        {
+          "line": 669,
+          "exact_claim": "| `leg-good` | 2.0% | 1.57 | **1.00** | **0.87** | 168 | **12** | **12** |"
+        },
+        {
+          "line": 670,
+          "exact_claim": "| `bee-sharp` | 0.0% | 0.93 | **0.73** | **0.73** | 120 | **48** | **48** |"
+        },
+        {
+          "line": 671,
+          "exact_claim": "| `fringe-ok` | 11.1% | 2.89 | 3.17 | **2.02** | 240 | 108 | 92 |"
+        },
+        {
+          "line": 672,
+          "exact_claim": "| `blob` | 35.0% | 3.48 | **5.13** | 3.99 | 298 | 192 | 192 |"
+        },
+        {
+          "line": 673,
+          "exact_claim": "| `fringe` | 53.0% | 3.21 | **10.12** | 8.23 | 262 | **274** | 274 |"
+        },
+        {
+          "line": 678,
+          "exact_claim": "worse the coverage the worse the damage."
+        },
+        {
+          "line": 695,
+          "exact_claim": "`blob`, and B is a clear win at three of five ROIs. At `fringe`, the 53%-abstain"
+        },
+        {
+          "line": 706,
+          "exact_claim": "low-coverage regions worse."
+        },
+        {
+          "line": 721,
+          "exact_claim": "**Part 2, the guard.** Abstention fraction must be **0.0% at `bee-sharp` and"
+        },
+        {
+          "line": 722,
+          "exact_claim": "2.0% at `leg-good`**. If a change makes correctly-elected regions abstain, it has"
+        },
+        {
+          "line": 733,
+          "exact_claim": "- **It admits the stacker cannot always answer.** 53% of one ROI and 35% of"
+        },
+        {
+          "line": 739,
+          "exact_claim": "- **Part 1 without part 2 is a regression** in low-coverage regions, measured at"
+        },
+        {
+          "line": 745,
+          "exact_claim": "  replica of `focus.rs` operating on ladder renders, commissioned 5/5 on band but"
+        },
+        {
+          "line": 778,
+          "exact_claim": "**It is not supported.** It fails at 0 of 1 defect ROIs on `flower-bud` and 0 of 3"
+        },
+        {
+          "line": 807,
+          "exact_claim": "elected index there. It does, **4/4 on `flower-bud` and 5/5 on the bee**. The"
+        },
+        {
+          "line": 919,
+          "exact_claim": "Two honesties about that table. `hp max|g|` wins at 4 of 6, not 6 of 6 \u2014 it loses"
+        },
+        {
+          "line": 1528,
+          "exact_claim": "behaviour is to say so. \u00a79 MEASURED honest coverage gaps at 2 of 3 bee defect ROIs"
+        },
+        {
+          "line": 1766,
+          "exact_claim": "monotonically 60.5% -> 103.5%. Section 9 MEASURED honest coverage gaps at 2 of 3"
+        }
+      ],
+      "denominator_provenance": "205-frame flower and 299-frame bee brackets -> computational 21- and 26-rung ladders -> selected ROIs/pixels -> reported outcome",
+      "load_bearing_decision_or_verdict": "The claim is exhaustive only inside capped frame ladders; it cannot establish the full-bracket focus, coverage, abstention, or remedy verdict.",
+      "current_status": "open",
+      "true_population": "all eligible evidence across the complete 205- and 299-frame brackets under a frozen ROI rule",
+      "missing_input": "full-frame ladders, complete ROI rule, and production-path execution",
+      "plausible_verdict_flip": "Omitted between-rung peaks could reverse coverage, focus, or commissioning calls."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/DELIVER-V6.md",
+      "occurrence_count": 1,
+      "claims": [
+        {
+          "line": 372,
+          "exact_claim": "- **Bit-identity of the CA-old arm beyond 5 subjects.** I tested 5 of 26. The"
+        }
+      ],
+      "denominator_provenance": "frozen 26-subject cohort -> five tested subjects -> full-pixel comparison",
+      "load_bearing_decision_or_verdict": "Five-subject bit identity does not establish corpus-wide build neutrality.",
+      "current_status": "open",
+      "true_population": "all 26 subjects",
+      "missing_input": "the 21 untested subjects under the same comparison",
+      "plausible_verdict_flip": "One differing untested subject would restore the build-drift confound."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M135-detail-instrument.md",
+      "occurrence_count": 2,
+      "claims": [
+        {
+          "line": 1821,
+          "exact_claim": "artifact fixture reproduced at attempt 5/120; the vulnerable source fixture"
+        },
+        {
+          "line": 1822,
+          "exact_claim": "reproduced with sentinel execution at attempt 2/120. Against amendment 9, 128"
+        }
+      ],
+      "denominator_provenance": "race schedule -> first 120 attempts -> first observed reproduction",
+      "load_bearing_decision_or_verdict": "The bounded campaign proves reproducibility but not an incidence rate outside the first 120 attempts.",
+      "current_status": "open",
+      "true_population": "all eligible randomized schedule attempts if incidence is claimed",
+      "missing_input": "an outcome-independent extended attempt design",
+      "plausible_verdict_flip": "The mechanism and repair do not flip, but any incidence estimate could."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M136-m8-census-groundtruth.md",
+      "occurrence_count": 4,
+      "claims": [
+        {
+          "line": 553,
+          "exact_claim": "`699,932`, or `97.82732358971707%`, were the post-hoc class \u201cencoded 65535 and"
+        },
+        {
+          "line": 556,
+          "exact_claim": "inset rate from `4.333602019238783%` to `12.301308105446983%` and increased all"
+        }
+      ],
+      "denominator_provenance": "selected 256-pixel inset -> all inset coordinates/violations -> reported rate",
+      "load_bearing_decision_or_verdict": "The inset diagnoses the rail trap but cannot supply a full-capture violation rate.",
+      "current_status": "open",
+      "true_population": "the complete registered Crop/quality coordinate population",
+      "missing_input": "a complete registered-coordinate census beyond the inset",
+      "plausible_verdict_flip": "The rate could change, although the representability defect remains."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M151-m5-checker.md",
+      "occurrence_count": 57,
+      "claims": [
+        {
+          "line": 273,
+          "exact_claim": "| development tilted-sw10 complete oracle null | 4 | **100.0%** | **59.6521%** | **0 / 14 nodes = 0%** | **100%** |"
+        },
+        {
+          "line": 274,
+          "exact_claim": "| development tilted-sw10 three-node slab deletion | 4 | **75.0%** (1 fail; **-25.0 pp**) | **35.6168%** | **3.5 / 14 = 25.0%** | **100%** |"
+        },
+        {
+          "line": 275,
+          "exact_claim": "| development tilted-sw10 far-only defect | 4 | **0%** | **0%** | **14 / 14 = 100%** | **100%** |"
+        },
+        {
+          "line": 285,
+          "exact_claim": "eligible sites changed source, coverage moved **100% -> 75%**, and longest"
+        },
+        {
+          "line": 286,
+          "exact_claim": "failed run moved **0 -> 3.5 nodes** (**25%** of represented depth). The reverse"
+        },
+        {
+          "line": 287,
+          "exact_claim": "far-to-best improvement again moved **0% -> 100%**. These real magnitudes prove"
+        },
+        {
+          "line": 305,
+          "exact_claim": "| burned calibration grid sw4 | exact planned **55** | **0/64**; max 1.08784 | **0/64**; max 1.04749 | **0/64** |"
+        },
+        {
+          "line": 306,
+          "exact_claim": "| burned calibration grid sw10 | exact planned **27** | **0/64**; max 1.27195 | **0/64**; max 1.18673 | **0/64** |"
+        },
+        {
+          "line": 307,
+          "exact_claim": "| development tilted-sw10, full | 92 | **4/64** | **5/64** | **4/64** |"
+        },
+        {
+          "line": 308,
+          "exact_claim": "| development tilted-sw10, best of all 66 contiguous 27-frame windows | 27 | point upper bound **15/64** | **17/64** separately | **13/64** |"
+        },
+        {
+          "line": 338,
+          "exact_claim": "Thus the earlier `13/64` result was a sample count, not evidence that the"
+        },
+        {
+          "line": 351,
+          "exact_claim": "- **Initial real coverage controls:** 4/4, 3/4, and 0/4 use every eligible site"
+        },
+        {
+          "line": 353,
+          "exact_claim": "  every eligible site in the frame."
+        },
+        {
+          "line": 354,
+          "exact_claim": "- **Initial real eligibility:** burned sw4 0/64, burned sw10 0/64, tilted-92"
+        },
+        {
+          "line": 355,
+          "exact_claim": "  4/64, and best-27 13/64 (with separate point/bootstrap counts 15/64 and"
+        },
+        {
+          "line": 356,
+          "exact_claim": "  17/64) all use the same imposed fixed 8x8 subsample and computational cap."
+        },
+        {
+          "line": 368,
+          "exact_claim": "  0/14, 3.5/14, and 14/14). The synthetic planted slab's 14.2857% depth"
+        },
+        {
+          "line": 377,
+          "exact_claim": "0/64, 0/64, 13/64 and four-eligible-site results without stating that 64 was"
+        },
+        {
+          "line": 460,
+          "exact_claim": "- The accepted real null/defect response used four eligible sites from the"
+        },
+        {
+          "line": 462,
+          "exact_claim": "  per-capture coverage, or comparator parity. The later census found 53"
+        }
+      ],
+      "denominator_provenance": "computational 8x8 grid -> 64 sites -> eligible sites and downstream controls",
+      "load_bearing_decision_or_verdict": "All-eligible statements inherit the 64-site cap; the later 1,944-tile census repairs eligibility, not the still-unscored output verdict.",
+      "current_status": "partly repaired by the exhaustive eligibility census; downstream performance controls remain open",
+      "true_population": "1,944 tiles for eligibility and all final eligible rehearsal outputs for performance",
+      "missing_input": "final common-input scored outputs and rehearsal captures",
+      "plausible_verdict_flip": "The eligibility ruling already flipped from 13/64 to 275/1,944; the performance verdict remains unknown."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M169-m3-veil.md",
+      "occurrence_count": 6,
+      "claims": [
+        {
+          "line": 37,
+          "exact_claim": "| `m3-duck-tape` | 197 | 197 | 221 | 133 | PASS |"
+        },
+        {
+          "line": 38,
+          "exact_claim": "| `m3-chia` | 130 | 130 | 399 | 133 | PASS |"
+        },
+        {
+          "line": 39,
+          "exact_claim": "| `m3-flower-fern` | 299 | 299 | 511 | 132 | PASS |"
+        },
+        {
+          "line": 40,
+          "exact_claim": "| `m3-razor-control` | 67 | 67 | 102 | 102 | PASS |"
+        },
+        {
+          "line": 41,
+          "exact_claim": "| **Total** | **693** | **693** | **1,233** | **500** | **PASS** |"
+        },
+        {
+          "line": 50,
+          "exact_claim": "pre-output freeze and concluded that M3 had 1,233 broad-eligible edges and"
+        }
+      ],
+      "denominator_provenance": "693 inventoried frames -> 17 discovery frames per capture -> at most 2,048 candidates per frame -> 1,233 eligible capped-pool sites -> quality-ranked 500",
+      "load_bearing_decision_or_verdict": "Capture sufficiency is shown inside two discovery caps; the future 500-site M3 performance result is not population-wide.",
+      "current_status": "open",
+      "true_population": "all eligible sites across all 693 frames before discovery limits",
+      "missing_input": "uncapped candidate enumeration or inclusion probabilities and the final scored M3 inputs",
+      "plausible_verdict_flip": "Quality ranking and omitted sites could flip future M3 performance, though not existence of the selected 500."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M48-read-noise-measured.md",
+      "occurrence_count": 4,
+      "claims": [
+        {
+          "line": 780,
+          "exact_claim": "| coffee-bubbles | 1000 | 191.5 DN | 4.95 DN | **0.0000%** | **0.345%** | 0.482% |"
+        },
+        {
+          "line": 781,
+          "exact_claim": "| 113MSDCF | 500 | 271.0 DN | 2.47 DN | **0.0000%** | **0.137%** | 0.335% |"
+        },
+        {
+          "line": 782,
+          "exact_claim": "| 119MSDCF | 50 | 3253.5 DN | 4.04 DN | 0.0000% | 0.000% | 0.000% |"
+        },
+        {
+          "line": 785,
+          "exact_claim": "0.1% of the ISO-1000 stack sits at 132 DN, **27x above it**. The 17.4% spread is"
+        }
+      ],
+      "denominator_provenance": "three named stacks -> lexically first 3/3/2 frames -> all pixels in selected frames",
+      "load_bearing_decision_or_verdict": "The crossover and percentile claims are exhaustive only inside a first-N frame cap.",
+      "current_status": "open",
+      "true_population": "all eligible frames and pixels in the three complete stacks",
+      "missing_input": "all-frame census or principled outcome-independent frame sampling",
+      "plausible_verdict_flip": "Full stacks could change the tail and crossover rates."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M57-detail-metric-from-first-principles.md",
+      "occurrence_count": 25,
+      "claims": [
+        {
+          "line": 52,
+          "exact_claim": "  undefined sign rule (S3, 17 of 48 real split cells)."
+        },
+        {
+          "line": 242,
+          "exact_claim": "| 112MSDCF/flat | 2/6 | \u22120.03% | 0.00001 px | **0.01%** |"
+        },
+        {
+          "line": 243,
+          "exact_claim": "| 112MSDCF/detail | 5/6 | \u22120.06% | 0.00002 px | **0.02%** |"
+        },
+        {
+          "line": 244,
+          "exact_claim": "| 113MSDCF/flat | 3/6 | \u22120.03% | 0.00002 px | **0.02%** |"
+        },
+        {
+          "line": 245,
+          "exact_claim": "| 113MSDCF/centre | 5/6 | \u22120.05% | 0.00002 px | **0.02%** |"
+        },
+        {
+          "line": 246,
+          "exact_claim": "| foam/flat | 1/6 | \u22120.08% | 0.00000 px | **0.00%** |"
+        },
+        {
+          "line": 247,
+          "exact_claim": "| foam/centre | 4/6 | +0.01% | 0.00005 px | **0.05%** |"
+        },
+        {
+          "line": 248,
+          "exact_claim": "| 109MSDCF/flat | 5/6 | \u22120.33% | 0.00036 px | **0.36%** |"
+        },
+        {
+          "line": 249,
+          "exact_claim": "| 109MSDCF/centre | 6/6 | +0.27% | 0.00030 px | **0.30%** |"
+        },
+        {
+          "line": 251,
+          "exact_claim": "**PR4 PASSES on all eight cells, by four orders of magnitude.** Fact 705's 5000%"
+        },
+        {
+          "line": 262,
+          "exact_claim": "**MEASURED, and it is the reply to fact 706.** In 17 of 48 real (cell, split)"
+        },
+        {
+          "line": 264,
+          "exact_claim": "returned **`NaN` with `ok = False`** \u2014 31 of 48 were measurable. `foam/flat` \u2014 one of fact 707's"
+        },
+        {
+          "line": 469,
+          "exact_claim": "**MEASURED (S5). N2 passes everywhere**, on all eight cells, at \u03bb \u2208 {1.10, 1.30,"
+        },
+        {
+          "line": 509,
+          "exact_claim": "**My derived mechanism is refuted and is reported as refuted.** PR16 passed for"
+        },
+        {
+          "line": 533,
+          "exact_claim": "**PR19's pre-registered rule returns BIAS**, because 1 of 18 combinations has"
+        },
+        {
+          "line": 589,
+          "exact_claim": "**In 6 of 8 cells the near-selector is the sharpest configuration, by"
+        },
+        {
+          "line": 653,
+          "exact_claim": "| PR2 | Photometric gain | **PASS, exactly** \u2014 1e\u221215 relative, both-sided and one-sided |"
+        },
+        {
+          "line": 655,
+          "exact_claim": "| PR4 | Split leverage < planted signal | **PASS** \u2014 0.01\u20130.36% of signal on 8 cells (fact 705: 5000%) |"
+        },
+        {
+          "line": 657,
+          "exact_claim": "| PR6 | Real planted blur \u00b130%, four-way re-pairing null within 2 se | **SIGNAL PASSES** (\u00b10.33% on 8 cells); **NULL FAILS** (0.19\u20130.54 px, 3.6\u201312.8 se) \u2014 **but the null was mis-specified**: S2's oracle shows its truth is non-zero |"
+        },
+        {
+          "line": 658,
+          "exact_claim": "| PR7 | Planted wrong answer must be rejected both ways | **PASS** \u2014 1119\u201311213 \u03c3 on real data, 8706\u03c3 on the plant |"
+        },
+        {
+          "line": 665,
+          "exact_claim": "| PR15 | Signal survives the fix | **PASS** \u2014 \u2264 0.16% error for all three |"
+        },
+        {
+          "line": 666,
+          "exact_claim": "| PR16 | Gain invariance survives the fix | **PASS** \u2014 \u2264 1.14e\u221206 px; my prediction that K6 would lose it was **wrong** |"
+        },
+        {
+          "line": 667,
+          "exact_claim": "| PR17 | Split spread < 5% of signal after the fix | **PASS** K1 0.357%, K6 0.244%; **FAIL** K7 24.85% |"
+        },
+        {
+          "line": 772,
+          "exact_claim": "* **P11 (MEASURED).** On 6 of 8 real cells and on a ground-truth plant, the"
+        },
+        {
+          "line": 780,
+          "exact_claim": "* **P12 (MEASURED).** `dsig` returns `NaN` rather than a number in 17 of 48 real"
+        }
+      ],
+      "denominator_provenance": "available real corpus -> convenience four-stack/eight-cell pool -> all split rules or conditions inside that pool",
+      "load_bearing_decision_or_verdict": "Exhausting conditions inside eight selected cells does not support wider-corpus measurability or performance.",
+      "current_status": "open",
+      "true_population": "all eligible cells in the complete frozen real corpus",
+      "missing_input": "outcome-independent stack/ROI selection or exhaustive eligible-cell census",
+      "plausible_verdict_flip": "The quality-selected eight cells could overstate measurability and change real-cell verdicts."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M60-prior-art-and-the-rival-explanations.md",
+      "occurrence_count": 4,
+      "claims": [
+        {
+          "line": 130,
+          "exact_claim": "| S5 | A clean-calibrated threshold transfers, in the predicted order | 1.01% / 8.33% / 17.88% @ FPR 1% |"
+        },
+        {
+          "line": 136,
+          "exact_claim": "> masking on a merged image.** Whether flagging 8.33% of `coffee-bubbles`' tiles"
+        }
+      ],
+      "denominator_provenance": "three named stacks -> adjacent pairs -> centered 3,072-pixel crop -> eligible tiles",
+      "load_bearing_decision_or_verdict": "Detector-transfer rates are crop-capped rather than full-plane rates.",
+      "current_status": "open",
+      "true_population": "all eligible tiles over complete planes and intended adjacent pairs",
+      "missing_input": "uncropped full-plane census and crop rationale",
+      "plausible_verdict_flip": "Absolute rates and affected surface could change."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M63-bimodality.md",
+      "occurrence_count": 207,
+      "claims": [
+        {
+          "line": 56,
+          "exact_claim": "The bimodality is **there**. It is abundant: 78.3% of band pixels at"
+        },
+        {
+          "line": 67,
+          "exact_claim": "   a veiled-background peak is physically impossible. 78.9% vs 78.3%,"
+        },
+        {
+          "line": 70,
+          "exact_claim": "   \u2014 measured on an independent, unoccluded pixel set \u2014 in **7.2%** of"
+        },
+        {
+          "line": 71,
+          "exact_claim": "   occlusion band pixels (chance, from permuted pairing, 1.6%) (**MEASURED**)."
+        },
+        {
+          "line": 73,
+          "exact_claim": "   the same scene. At matched flag rate Cohen's \u03ba = **+0.109** median, range"
+        },
+        {
+          "line": 75,
+          "exact_claim": "   6 frames only 8.5\u201316.5% of the time (**MEASURED**)."
+        },
+        {
+          "line": 97,
+          "exact_claim": "  either stack end) is **0.00% median, 1.09% max** across all 25 cells, and the"
+        },
+        {
+          "line": 151,
+          "exact_claim": "   stacks, decimating to 23 frames raises S0's rate **2.8\u00d7** (17.2% \u2192 48.5%,"
+        },
+        {
+          "line": 152,
+          "exact_claim": "   median over 10 cells) (**MEASURED**). Rates are not comparable across stacks"
+        },
+        {
+          "line": 446,
+          "exact_claim": "25 cells \u00d7 12 Monte-Carlo noise reps. 12 000 pixels resolve a per-cell hit rate"
+        },
+        {
+          "line": 616,
+          "exact_claim": "| `occ` | 9 | **78.3%** | 69.8 \u2013 90.6% |"
+        },
+        {
+          "line": 617,
+          "exact_claim": "| `occ_flat` | 5 | **78.9%** | 7.5 \u2013 82.5% |"
+        },
+        {
+          "line": 618,
+          "exact_claim": "| `ctl` | 11 | **47.0%** | 4.9 \u2013 59.4% |"
+        },
+        {
+          "line": 627,
+          "exact_claim": "(min 69.8%) exceeds every one of the 11 control cells (max 59.4%). The rank"
+        },
+        {
+          "line": 632,
+          "exact_claim": "within those cells the median fraction of *band pixels* that do is **78.3%**."
+        },
+        {
+          "line": 633,
+          "exact_claim": "Matched on frame count (n = 299 only), `occ` 78.3%, `occ_flat` 78.9%, `ctl` 56.9%"
+        },
+        {
+          "line": 638,
+          "exact_claim": "**6.1 The control fires too.** `ctl` cells sit at 47% median, not at the 1% their"
+        },
+        {
+          "line": 654,
+          "exact_claim": "marginal exactly, and gives a hit rate of **100.0%** in every class (median), with"
+        },
+        {
+          "line": 657,
+          "exact_claim": "A hit rate of 78% therefore cannot be read as \"78% of pixels have two depths\"."
+        },
+        {
+          "line": 660,
+          "exact_claim": "tall in-focus value \u2014 but it disposes of any reading of the raw rate as a"
+        },
+        {
+          "line": 712,
+          "exact_claim": "the **highest hit rate in the corpus, 85.3%**, with a separation of 35 frames."
+        },
+        {
+          "line": 722,
+          "exact_claim": "| `occ3-wing-thorax` hit / sep | 69.8% / 27 | 66.9% / 15 | 61.0% / 9 | 48.7% / 7 | 35.0% / 6 |"
+        },
+        {
+          "line": 723,
+          "exact_claim": "| `occ3-leg-hair-1` | 76.6% / 16 | 74.0% / 9 | 62.6% / 6 | 39.8% / 6 | 25.1% / 6 |"
+        },
+        {
+          "line": 724,
+          "exact_claim": "| `occ3-limb-abdomen` | 78.1% / 53 | 78.1% / 27 | 76.9% / 15 | 72.7% / 8 | 65.2% / 6 |"
+        },
+        {
+          "line": 725,
+          "exact_claim": "| `occ1-leg-body-1` | 90.6% / 27 | 88.7% / 15 | 84.5% / 8 | 71.4% / 6 | 59.5% / 4 |"
+        },
+        {
+          "line": 734,
+          "exact_claim": "**And the hit rate falls with `n`**: 78% \u2192 35% for `occ3-wing-thorax`, 76.6% \u2192"
+        },
+        {
+          "line": 735,
+          "exact_claim": "25.1% for `occ3-leg-hair-1`. **DERIVED:** a real second mode at a real second"
+        },
+        {
+          "line": 739,
+          "exact_claim": "*reduce* false positives and raise the true rate. The observed direction is what a"
+        },
+        {
+          "line": 751,
+          "exact_claim": "| `occ3-wing-thorax` hit / sep | 18.8% / 21 | 33.6% / 27 | 39.1% / 46 | 34.9% / 68 |"
+        },
+        {
+          "line": 752,
+          "exact_claim": "| `occ3-limb-abdomen` | 22.0% / 46 | 35.8% / 53 | 48.5% / 63 | 56.0% / 67 |"
+        },
+        {
+          "line": 753,
+          "exact_claim": "| `occ3-antenna-head` | 16.7% / 47 | 26.6% / 49 | 38.7% / 54 | 51.6% / 63 |"
+        },
+        {
+          "line": 754,
+          "exact_claim": "| `occ3-leg-card-2` (`occ_flat`) | 20.4% / 22 | 32.3% / 24 | 43.7% / 30 | 44.5% / 37 |"
+        },
+        {
+          "line": 755,
+          "exact_claim": "| `ctl3-eye` (`ctl`) | 9.0% / 26 | 18.0% / 32 | 27.9% / 48 | 37.8% / 79 |"
+        },
+        {
+          "line": 762,
+          "exact_claim": "(The R-sweep's absolute hit rates are lower than \u00a76's because it uses a"
+        },
+        {
+          "line": 765,
+          "exact_claim": "absolute rates are not comparable to \u00a76 and are not quoted as such.)"
+        },
+        {
+          "line": 805,
+          "exact_claim": "**Result:** `occ_flat` fires at **78.9%**, indistinguishable from `occ` at 78.3%"
+        },
+        {
+          "line": 806,
+          "exact_claim": "(AUC 0.600, p = 0.61). `ctl3-eye` fires at 56.9%."
+        },
+        {
+          "line": 818,
+          "exact_claim": "**Result:** 47.0% median hit rate (range 4.9\u201359.4%), and a `k2`-lands-near-`k_bg`"
+        },
+        {
+          "line": 819,
+          "exact_claim": "rate of **20.1%** \u2014 *higher* than the occlusion class's 7.2%, because with"
+        },
+        {
+          "line": 838,
+          "exact_claim": "| `occ` | **0.00%** | 0.04% | 0.12% |"
+        },
+        {
+          "line": 839,
+          "exact_claim": "| `occ_flat` | **0.00%** | 1.09% | 0.37% |"
+        },
+        {
+          "line": 840,
+          "exact_claim": "| `ctl` | **0.00%** | 0.08% | 2.38% |"
+        },
+        {
+          "line": 867,
+          "exact_claim": "| `occ` | 19 fr | **7.2%** | 1.6% |"
+        },
+        {
+          "line": 868,
+          "exact_claim": "| `occ_flat` | 49 fr | 2.9% | 0.5% |"
+        },
+        {
+          "line": 869,
+          "exact_claim": "| `ctl` | 1 fr | 20.1% | 10.8% |"
+        },
+        {
+          "line": 872,
+          "exact_claim": "permuted cell\u2194reference pairing \u2014 is **not falsified**: 7.2% vs 1.6% is a genuine"
+        },
+        {
+          "line": 874,
+          "exact_claim": "is **flatly falsified**: they fire at 47%."
+        },
+        {
+          "line": 876,
+          "exact_claim": "And 7.2% is not a detector. **DERIVED:** if the veiled-background peak were the"
+        },
+        {
+          "line": 878,
+          "exact_claim": "digits. 92.8% of the time the second mode is somewhere else."
+        },
+        {
+          "line": 927,
+          "exact_claim": "offset of **\u22122.0 frames**. Flag rates are **matched** between captures rather than"
+        },
+        {
+          "line": 928,
+          "exact_claim": "thresholded independently, so the agreement statistic is not inflated by a rate"
+        },
+        {
+          "line": 931,
+          "exact_claim": "| cell | class | flag rate (both) | agree | chance | **\u03ba** | `k2` within 6 fr |"
+        },
+        {
+          "line": 933,
+          "exact_claim": "| `occ3-wing-thorax` | occ | 69.8% | 57.3% | 57.8% | **\u22120.013** | 12.3% |"
+        },
+        {
+          "line": 934,
+          "exact_claim": "| `occ3-leg-hair-1` | occ | 76.6% | 68.1% | 64.2% | +0.110 | 16.5% |"
+        },
+        {
+          "line": 935,
+          "exact_claim": "| `occ3-leg-hair-2` | occ | 78.3% | 69.6% | 66.0% | +0.107 | 13.4% |"
+        },
+        {
+          "line": 936,
+          "exact_claim": "| `occ3-limb-abdomen` | occ | 78.1% | 66.0% | 65.8% | **+0.006** | 9.8% |"
+        },
+        {
+          "line": 937,
+          "exact_claim": "| `occ3-antenna-head` | occ | 73.7% | 66.7% | 61.2% | +0.142 | 9.9% |"
+        },
+        {
+          "line": 938,
+          "exact_claim": "| `occ3-antenna-eye` | occ | 85.3% | 76.5% | 74.9% | +0.064 | 11.9% |"
+        },
+        {
+          "line": 939,
+          "exact_claim": "| `occ3-leg-card-1` | occ_flat | 82.5% | 74.2% | 71.1% | +0.108 | 10.7% |"
+        },
+        {
+          "line": 940,
+          "exact_claim": "| `occ3-claw-card` | occ_flat | 78.9% | 70.9% | 66.7% | +0.124 | 8.5% |"
+        },
+        {
+          "line": 941,
+          "exact_claim": "| `occ3-leg-card-2` | occ_flat | 79.0% | 71.3% | 66.8% | +0.135 | 15.2% |"
+        },
+        {
+          "line": 942,
+          "exact_claim": "| `ctl3-eye` | ctl | 56.9% | 60.0% | 50.9% | +0.185 | 10.0% |"
+        },
+        {
+          "line": 953,
+          "exact_claim": "other **8.5\u201316.5%** of the time. The flag is dominated by something that changes"
+        },
+        {
+          "line": 1119,
+          "exact_claim": "| `occ3-wing-thorax` | occ | 35.2% | 0.669 | 0.659 | 0.649 |"
+        },
+        {
+          "line": 1120,
+          "exact_claim": "| `occ3-leg-hair-1` | occ | 31.4% | 0.665 | 0.658 | 0.652 |"
+        },
+        {
+          "line": 1121,
+          "exact_claim": "| `occ3-leg-hair-2` | occ | 53.9% | 0.658 | 0.603 | 0.584 |"
+        },
+        {
+          "line": 1122,
+          "exact_claim": "| `occ3-limb-abdomen` | occ | 75.6% | 0.593 | 0.566 | 0.596 |"
+        },
+        {
+          "line": 1123,
+          "exact_claim": "| `occ3-antenna-head` | occ | 89.5% | 0.595 | 0.561 | 0.544 |"
+        },
+        {
+          "line": 1124,
+          "exact_claim": "| `occ3-antenna-eye` | occ | 63.4% | 0.564 | 0.538 | 0.508 |"
+        },
+        {
+          "line": 1125,
+          "exact_claim": "| `occ3-leg-card-1` | occ_flat | 40.8% | 0.692 | 0.672 | 0.647 |"
+        },
+        {
+          "line": 1126,
+          "exact_claim": "| `occ3-claw-card` | occ_flat | 43.8% | **0.792** | 0.762 | 0.753 |"
+        },
+        {
+          "line": 1127,
+          "exact_claim": "| `occ3-leg-card-2` | occ_flat | 52.5% | 0.600 | 0.623 | **0.627** |"
+        },
+        {
+          "line": 1128,
+          "exact_claim": "| `ctl3-eye` | ctl | 38.1% | 0.594 | 0.741 | 0.727 |"
+        },
+        {
+          "line": 1140,
+          "exact_claim": "texture anywhere (peak/floor 1.62, hit rate 7.5%), has entropy **0.902 at T = 1**"
+        },
+        {
+          "line": 1159,
+          "exact_claim": "| its through-focus curve is bimodal | **MEASURED, TRUE, and much more common than claimed** | 78.3% of occlusion band pixels clear a calibrated noise floor; 9/9 cells; AUC 1.000 vs control (\u00a76) |"
+        },
+        {
+          "line": 1160,
+          "exact_claim": "| **the bimodality identifies occlusion** | **MEASURED, FALSE** | fires at 78.9% where no background exists to veil (\u00a76.2); control cells at 47% (\u00a76.1); permutation placebo at 100% (\u00a76.3) |"
+        },
+        {
+          "line": 1161,
+          "exact_claim": "| **the second mode is the background's focus frame** | **MEASURED, FALSE** | 7.2% of pixels, vs 1.6% chance (\u00a78.6); in a plant with a known second depth, 0.0\u20131.0% beyond 8 px while the single-depth side-lobe takes 54\u201368% (\u00a79.3) |"
+        },
+        {
+          "line": 1167,
+          "exact_claim": "| boundary mass is \"no frame in focus\" | **MEASURED, NO POPULATION** | 0.00% median, 1.09% max on the registered statistic; 0.0000 on the soft one (\u00a78.4) |"
+        },
+        {
+          "line": 1240,
+          "exact_claim": "6. **`z*` is calibrated per cell**, so hit rates are comparable across classes at"
+        },
+        {
+          "line": 1308,
+          "exact_claim": "| **P1** | At hand-labelled occluding edges in `bee-1`/`bee-3` (299 frames, ISO 100, marked f/5.6), 78.3% of band pixels (median of 9 cells, range 69.8\u201390.6%) carry a second through-focus peak clearing a per-cell noise floor calibrated to 1% FPR on a matched noise-only null. 9/9 occlusion cells exceed every no-discontinuity control cell; AUC 1.000, p = 2.0e-4 | MEASURED | `data/18-classes.txt` |"
+        },
+        {
+          "line": 1309,
+          "exact_claim": "| **P2** | The same statistic fires at 78.9% (median, 5 cells) at silhouettes standing against a featureless white card, where no background texture exists to be veiled. AUC(occ vs occ_flat) = 0.600, p = 0.61. **Firing is not evidence of a veiled background** | MEASURED | `data/18-classes.txt` |"
+        },
+        {
+          "line": 1310,
+          "exact_claim": "| **P3** | The second mode lands within 6 frames of the background's own focus frame \u2014 measured on an independent unoccluded pixel set \u2014 in 7.2% of occlusion band pixels; permuted cell\u2194reference pairing gives 1.6%. Above chance, and single-digit | MEASURED | `data/18-classes.txt` |"
+        },
+        {
+          "line": 1311,
+          "exact_claim": "| **P4** | The bimodality flag does not reproduce across two independent 299-frame captures of the same scene (`bee-2` vs `bee-3`, NCC 0.9562). At matched flag rate Cohen's \u03ba = +0.109 median, range \u22120.013 to +0.185 over 10 cells; among pixels flagged in both, `k2` agrees within 6 frames 8.5\u201316.5% of the time | MEASURED | `data/20-audit.txt` |"
+        },
+        {
+          "line": 1315,
+          "exact_claim": "| **P8** | The \"no frame in focus\" diagnosis has no population in this corpus: the fraction of band pixels whose argmax is within 2 frames of either stack end is 0.00% median (max 1.09%) across all 25 cells, and posterior mass in the outer 5% of frames is exactly 0.0000 at median and p90 in every class at the calibrated noise temperature | MEASURED | `data/23-boundary.txt`, `data/18-classes.txt` |"
+        },
+        {
+          "line": 1320,
+          "exact_claim": "| **P13** | On the occlusion class the measured separation is comparable in median to the independently measured depth step (sep/step 1.15, n = 8, range 0.61\u20132.11) but the two are not significantly correlated across cells: Spearman +0.579, p = 0.103 (n = 9); across all 25 cells +0.066, p = 0.755. One labelled occlusion cell with a **zero-frame** reference depth step has the corpus's highest hit rate, 85.3% | MEASURED | `data/21-sweeps.txt`, `data/23-boundary.txt` |"
+        },
+        {
+          "line": 1321,
+          "exact_claim": "| **P14** | M21's frame-permutation placebo, run on M63's cells at M63's calibrated `z*`, fires at 100.0% (median, every class) against 78.3% on real occlusion data. A bimodality hit rate is therefore not interpretable as the fraction of pixels containing two depths | MEASURED | `data/21-sweeps.txt` |"
+        },
+        {
+          "line": 1884,
+          "exact_claim": "blank card with **no background at all**, has the corpus's **highest S0 rate**."
+        },
+        {
+          "line": 1890,
+          "exact_claim": "S0's rate as the same `bee-3` cells are decimated, median over 10 cells:"
+        },
+        {
+          "line": 1894,
+          "exact_claim": "| S0 rate | 17.2% | 31.6% | 39.4% | 45.9% | **48.5%** |"
+        },
+        {
+          "line": 1900,
+          "exact_claim": "measurement): facts 150\u2013151 compare `multipeak` rates across stacks, and those"
+        },
+        {
+          "line": 1901,
+          "exact_claim": "stacks do not have equal frame counts or equal focus steps. Rates from this"
+        },
+        {
+          "line": 1917,
+          "exact_claim": "| **facts 150, 151** | `multipeak` rates compared across stacks | **Confounded by frame count.** T5 measures 2.8\u00d7 from decimation alone on identical content |"
+        },
+        {
+          "line": 1944,
+          "exact_claim": "| **P22** | `multipeak`'s rate depends strongly on frame count. Decimating identical `bee-3` cells 299 \u2192 23 frames raises the median rate **2.8\u00d7** (17.2% \u2192 48.5%), monotone throughout. Rates from this statistic are not comparable across stacks of different depth without normalising for `n` | MEASURED | `data/32-swap2.txt` |"
+        }
+      ],
+      "denominator_provenance": "purposively selected real cells -> labelled band pixels -> seeded cap of 12,000 pixels per cell -> downstream rates",
+      "load_bearing_decision_or_verdict": "All downstream real-pixel rates remain capped despite evaluating every selected pixel; spatial and cell-selection uncertainty remain.",
+      "current_status": "open",
+      "true_population": "all eligible labelled pixels in every eligible occlusion cell",
+      "missing_input": "uncapped pixel ledger, spatial-cluster uncertainty, and an exhaustive or probability-based cell sample",
+      "plausible_verdict_flip": "Marginal localization, entropy, and generalization claims could flip; large within-cell separations are less likely to."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-DILUTE.md",
+      "occurrence_count": 11,
+      "claims": [
+        {
+          "line": 176,
+          "exact_claim": "| sign test | **20 of 32** tiles favour x2 (p \u2248 0.30) |"
+        },
+        {
+          "line": 218,
+          "exact_claim": "**The x2 arm's apparent 11% detail gain is more than accounted for by an 18% noise gain.** On a"
+        },
+        {
+          "line": 227,
+          "exact_claim": "A confounded, non-significant, noise-explained 11% cannot stand in for an order of magnitude."
+        },
+        {
+          "line": 241,
+          "exact_claim": "| decoded-array difference | \u2014 | **0.0588% of samples, max \u0394 1 DN** |"
+        },
+        {
+          "line": 365,
+          "exact_claim": "6. **Experiment B's one pro-model number is a noise artifact.** Its 11% detail gain comes with"
+        },
+        {
+          "line": 366,
+          "exact_claim": "   an 18% noise gain on the same tiles; noise-matched it reverses to 0.948. Judged on detail"
+        },
+        {
+          "line": 472,
+          "exact_claim": "N=22 \u2192 3.3% at N=150 on the pin), so a *growing fraction* of coefficients come under"
+        },
+        {
+          "line": 591,
+          "exact_claim": "Assignment 1 (a 4% geometry artifact). So acuity is reported **divided by the"
+        },
+        {
+          "line": 1131,
+          "exact_claim": "| `capK8` / `capK4` | 225.59 / 225.32 | 3.86 | 0.988 / 0.980 | **lever refuted** |"
+        }
+      ],
+      "denominator_provenance": "selected subject/window or explicit candidate cap -> all units inside cap -> reported effect",
+      "load_bearing_decision_or_verdict": "First-150 and candidate-capped arms cannot establish outcome-independent corpus behavior.",
+      "current_status": "open",
+      "true_population": "all outcome-independent windows and candidate sets across intended subjects",
+      "missing_input": "focus-balanced full-window comparisons and uncapped candidate policies",
+      "plausible_verdict_flip": "Raw effects or engineering preference could reverse on complete windows or another cap policy."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-RIM.md",
+      "occurrence_count": 55,
+      "claims": [
+        {
+          "line": 180,
+          "exact_claim": "| **Zerene Stacker PMax** | commercial stacker, 63-frame `test2` set | **+7.455%** | **FAIL** |"
+        },
+        {
+          "line": 181,
+          "exact_claim": "| strehl `stack_test2_rec2020` | same 63 frames | -1.994% | PASS |"
+        },
+        {
+          "line": 182,
+          "exact_claim": "| `test2` frame 30 | one Lightroom-developed capture, never stacked | +1.621% | PASS |"
+        },
+        {
+          "line": 183,
+          "exact_claim": "| `test2` frame 45 | one capture, never stacked | **+3.862%** | **FAIL** |"
+        },
+        {
+          "line": 184,
+          "exact_claim": "| `coffee-bean` frame 30 | one capture of a FAILING SUBJECT, never stacked | **+6.741%** | **FAIL** |"
+        },
+        {
+          "line": 185,
+          "exact_claim": "| `coffee-bean` frame 60 | ditto | +1.938% | PASS |"
+        },
+        {
+          "line": 186,
+          "exact_claim": "| `coffee-bean` frame 90 | ditto | **+7.579%** | **FAIL** |"
+        },
+        {
+          "line": 192,
+          "exact_claim": "of one scene is 1.9% to 7.6%, nearly three times the entire FAIL threshold."
+        },
+        {
+          "line": 194,
+          "exact_claim": "Zerene, a commercial product, reads +7.455% \u2014 level with `wrapped-text-1`"
+        },
+        {
+          "line": 195,
+          "exact_claim": "(+7.48%) and `pencil-steep-angle-cpl` (+6.77%). Whatever this axis convicts,"
+        },
+        {
+          "line": 218,
+          "exact_claim": "- **`coffee-bean`** worst four sites (`ov` +278%, +277%, +216%, +205%): the"
+        },
+        {
+          "line": 220,
+          "exact_claim": "- **`113MSDCF`** and **`112MSDCF`** worst sites (+254%, +223%): a thicket of"
+        },
+        {
+          "line": 224,
+          "exact_claim": "- **`leaf-2-cpl`** worst four sites (+2986%, +1089%, +408%, +406%): **flat,"
+        },
+        {
+          "line": 227,
+          "exact_claim": "- **`wrapped-text-2`** (+240%): printed dots on foam. The surround is uniform"
+        },
+        {
+          "line": 232,
+          "exact_claim": "- Control: **`flower-inner-edge-cpl`**, which PASSES at -0.06%, has a worst-edge"
+        },
+        {
+          "line": 233,
+          "exact_claim": "  `ov` of **+102.9%**. Per-edge overshoots above 100% are present on subjects the"
+        },
+        {
+          "line": 258,
+          "exact_claim": "same `usm`, same amounts, radius 2.0 -- on failing subjects and on the passing"
+        },
+        {
+          "line": 262,
+          "exact_claim": "109MSDCF  PASS control   usm 0.00 -> -2.11%   usm 2.00 -> +1.23%   usm 4.00 -> +10.22%"
+        },
+        {
+          "line": 263,
+          "exact_claim": "wrapped-text-2           usm 0.00 -> +12.67%  usm 1.00 -> +28.33%  usm 4.00 -> +71.16%"
+        },
+        {
+          "line": 264,
+          "exact_claim": "113MSDCF                 usm 0.00 -> +11.89%  usm 1.00 -> +23.37%  usm 4.00 -> +54.03%"
+        },
+        {
+          "line": 265,
+          "exact_claim": "coffee-bean              usm 0.00 -> +8.36%   usm 2.00 -> +23.61%  usm 3.00 -> REFUSED"
+        },
+        {
+          "line": 269,
+          "exact_claim": "radius 2.0** is needed to reach +10.2%. `wrapped-text-2` reads +10.93% and"
+        },
+        {
+          "line": 270,
+          "exact_claim": "`coffee-bean` +33.25% on the full frame. Taken at face value the axis is"
+        },
+        {
+          "line": 274,
+          "exact_claim": "Note also the crop dependence: `coffee-bean` reads **+33.25%** whole-frame and"
+        },
+        {
+          "line": 275,
+          "exact_claim": "**+8.36%** on a 2048px crop of itself. Twenty-five points, same image."
+        },
+        {
+          "line": 288,
+          "exact_claim": "`corrected_bright` only. `flower-bud-alone-cpl` reads `corrected_dark` +4.51%"
+        },
+        {
+          "line": 289,
+          "exact_claim": "with bright -0.04% and is recorded PASS; `flower-bud-with-background-fern-cpl`"
+        },
+        {
+          "line": 290,
+          "exact_claim": "reads dark +3.88% and is recorded PASS. Under a planted unsharp mask the two"
+        },
+        {
+          "line": 304,
+          "exact_claim": "| 1 | `bee-1-cpl` | +3.13% | **instrument artifact** | rim-free at its sd reads +10.04%; stack peak +0.4%; worst site `ov` +5198% on bee setae |"
+        },
+        {
+          "line": 313,
+          "exact_claim": "| 10 | `coffee-bean` | +33.25% | **instrument artifact** | worst four sites are bean surface crystal with no edge in frame; two of three never-stacked captures of this same subject FAIL the same axis at +6.7% and +7.6% |"
+        }
+      ],
+      "denominator_provenance": "convenience producer outputs, worst/top-N sites, or selected subjects -> measured metric",
+      "load_bearing_decision_or_verdict": "Extreme examples establish existence, not prevalence or corpus calibration.",
+      "current_status": "open",
+      "true_population": "all eligible producer outputs, sites, frames, and subjects under frozen rules",
+      "missing_input": "complete comparator/output/site census and frozen selection criteria",
+      "plausible_verdict_flip": "Prevalence and calibration equivalence could flip, while shown false positives remain."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/BUILD-ELECT.md",
+      "occurrence_count": 1,
+      "claims": [
+        {
+          "line": 2882,
+          "exact_claim": "| \"all 19 sectors negative\" | **fragile** | 16 of 19 under a frame reference; replaced by the reference-free 24 of 24 in 17.3 |"
+        }
+      ],
+      "denominator_provenance": "24-sector partition -> undocumented 19-sector subset -> 16 negative sectors",
+      "load_bearing_decision_or_verdict": "The undocumented subset cannot support all-sector language; a later 24/24 replacement supersedes it.",
+      "current_status": "resolved by the replacement 24/24 sector result",
+      "true_population": "24 sectors",
+      "missing_input": "the historical 19-sector inclusion rule",
+      "plausible_verdict_flip": "The original all-negative reading already changed to 16/19 before the replacement."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/BUILD-PYRNOISE-ADJUDICATION.md",
+      "occurrence_count": 11,
+      "claims": [
+        {
+          "line": 221,
+          "exact_claim": "**The admission test as published is missing a photometric term and"
+        },
+        {
+          "line": 229,
+          "exact_claim": "* `leaf-2-cpl` is still largely non-stationary \u2014 383 of 400 windows still fail"
+        },
+        {
+          "line": 292,
+          "exact_claim": "### 4.3 Across the plane, admission does not predict the error at all"
+        },
+        {
+          "line": 295,
+          "exact_claim": "prediction from the n_eff map, and its admission ratio. Restricted to the 22"
+        },
+        {
+          "line": 302,
+          "exact_claim": "| corr(admission ratio, log deviation) | **\u22120.002** |"
+        },
+        {
+          "line": 303,
+          "exact_claim": "| median absolute deviation | **2.8%** |"
+        },
+        {
+          "line": 306,
+          "exact_claim": "whose **median admission ratio is 1.66, all of them failing admission** \u2014 the"
+        },
+        {
+          "line": 308,
+          "exact_claim": "of **+2.7%**."
+        },
+        {
+          "line": 310,
+          "exact_claim": "**Thirteen windows that fail admission, and the arm-vs-arm ratio is right"
+        },
+        {
+          "line": 311,
+          "exact_claim": "anyway, to under 3%.**"
+        }
+      ],
+      "denominator_provenance": "unknown eligible-window universe/selection -> 400 observed windows -> nested informative/failing subsets",
+      "load_bearing_decision_or_verdict": "The 400-window and nested rates cannot be generalized, weakening the admission-versus-error adjudication.",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "window-generation, overlap, guard, eligibility, and completeness rules",
+      "plausible_verdict_flip": "A complete grid could make admission predictive or materially change the failure rate."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M-PHASE0-VEIL2.md",
+      "occurrence_count": 2,
+      "claims": [
+        {
+          "line": 238,
+          "exact_claim": "at **78.9%** versus **78.3%** for the supposed occlusion class, and its physical"
+        }
+      ],
+      "denominator_provenance": "cited M63 class trials -> unstated trial/site denominators -> 78.9% versus 78.3%",
+      "load_bearing_decision_or_verdict": "The near-equal rates cannot establish lack of specificity without class denominators and selection provenance.",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "both class counts, sampling unit, eligibility rule, and cap/balancing policy",
+      "plausible_verdict_flip": "A 0.6-point gap can readily reverse under sampling or weighting."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M115-deconv-headroom.md",
+      "occurrence_count": 4,
+      "claims": [
+        {
+          "line": 40,
+          "exact_claim": "This agrees with M70's independent prediction from a different direction (band matrix rank-1 to 0.9959, so matched filtering over near-scaled copies *is* weighted averaging) and with M20's simulation (guarded Wiener wins on 15.1 % of pixels). Three routes, three instruments, one answer."
+        },
+        {
+          "line": 236,
+          "exact_claim": "26. **P26 \u2014 MEASURED, `109MSDCF`.** A minimum-support floor converts silent corruption into refusal, progressively: admitted samples fell **404 623 \u2192 56 616** (5\u00d75) and **408 004 \u2192 134 651** (27\u00d727) across the sweep, and the count varied at every level, so the control was not saturated in ORCH's sense."
+        },
+        {
+          "line": 365,
+          "exact_claim": "**The support floor is confirmed as a real defence.** Admitted samples fell 404 623 \u2192 56 616 (5\u00d75) and 408 004 \u2192 134 651 (27\u00d727) across the sweep: the floor converts damage into refusal, progressively. ORCH's saturation check was applied to my own control and **passes** \u2014 the admitted count varies at every level, so the control was not testing nothing."
+        }
+      ],
+      "denominator_provenance": "cited simulation or quantization sweep -> reported rates/counts -> base eligible population omitted",
+      "load_bearing_decision_or_verdict": "The claims are corroborative or establish refusal direction, but prevalence and practical rejection cost are unquantified.",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "simulation pixel/scenario universe and total eligible sweep counts at every level",
+      "plausible_verdict_flip": "Corroboration could disappear and the safeguard could change from cheap to catastrophically rejecting."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M121-halo-polarity.md",
+      "occurrence_count": 1,
+      "claims": [
+        {
+          "line": 785,
+          "exact_claim": "classifier that agrees with bee-3's five-frame classifier **81.7 %** of the time."
+        }
+      ],
+      "denominator_provenance": "classifier comparison -> compared unit/count and selection omitted -> agreement rate",
+      "load_bearing_decision_or_verdict": "The agreement value is not a validated classifier rate.",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "exact compared edge/pixel list, exclusions, and selection rule",
+      "plausible_verdict_flip": "The reported agreement could materially change."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M133-blocker-audit.md",
+      "occurrence_count": 29,
+      "claims": [
+        {
+          "line": 689,
+          "exact_claim": "| M4 | **VERIFIED FAIL.** Bar: \u201cMedian flat-patchwork ratio `<=1.00`; sites above `1.25` or ghost ratio above `0.10`: `<=1%`, Wilson upper bound `<=2%`; no worse than best comparator.\u201d (`docs/proposals/2026-09-sota-scorecard.md:395`) `noise_floor` is undefined, and no flat/edge site-mixture denominator is frozen. | **ASSUMED YES.** The fixed-weight mean is explicitly expected to produce at most 1% failures, so no numerical floor makes the target impossible (`docs/proposals/2026-09-sota-scorecard.md:697-701`). | **VERIFIED INCOMPLETE PLAN.** A selector plant and mean null are specified, but no v1.7 site manifest or control run exists, and the undefined denominator prevents a complete implementation (`docs/proposals/2026-09-sota-scorecard.md:697-701,1148`). | **VERIFIED:** a low rate of output-created flat patchwork and secondary-edge ghosts at registered sites, with a qualifying comparator guard (`docs/proposals/2026-09-sota-scorecard.md:667-701`). |"
+        },
+        {
+          "line": 690,
+          "exact_claim": "| M5 | **VERIFIED FAIL.** Bar: \u201c`>=99%` of eligible tiles pass `rho_best>=0.90` and focus margin `>=0.05`; Wilson lower bound `>=98%`; longest failed run `<=1%` of sweep.\u201d (`docs/proposals/2026-09-sota-scorecard.md:396`) \u201csource-signal\u201d and the run construction on non-planar tile maps are undefined. | **ASSUMED YES.** Correlation, margin, coverage, and run tolerances are nonzero; no quantisation or noise floor forces failure once eligible truth and a complete focus sweep exist. | **VERIFIED INCOMPLETE PLAN.** Development captures and defect/null controls are named, but the checker is not commissioned and the run statistic is not implementable uniquely (`docs/proposals/2026-09-sota-scorecard.md:709-748,1149`). | **VERIFIED:** at least 99% coverage of input-eligible depth tiles, no long focus hole, retained field of view, and comparator parity; it says nothing about ineligible regions (`docs/proposals/2026-09-sota-scorecard.md:704-748`). |"
+        },
+        {
+          "line": 691,
+          "exact_claim": "| M6 | **VERIFIED FAIL.** Bar: \u201cRecoverable high-rail and low-rail clipping each `<=0.10%`; highlight-detail retention `>=0.90`; no worse than best comparator.\u201d (`docs/proposals/2026-09-sota-scorecard.md:397`) The common image is RGB, but recoverability, clipping, and `rho_best` never say per-channel, any-channel, all-channel, or luminance; those choices change both denominator and verdict. | **ASSUMED YES.** The clipping allowance is nonzero, recoverability requires an interior source sample, and 16-bit quantisation does not itself force a sample to either rail. | **VERIFIED PARTIAL.** The rail eligibility census was commissioned red/green, while the full detail/comparator checker remains a plan and the registered capture is under-powered (`docs/research/SCORECARD-BASELINE.md:48`; `docs/proposals/2026-09-sota-scorecard.md:428,750-780`). | **VERIFIED:** recovery of input-recoverable highlights and shadows without erasing their detail, no worse than the qualifying comparator (`docs/proposals/2026-09-sota-scorecard.md:750-780`). |"
+        },
+        {
+          "line": 694,
+          "exact_claim": "| M9 | **VERIFIED FAIL.** Bar: \u201cFalse-certification Wilson upper bound `<=1%`; true-band coverage `>=90%`; nominal 95% interval coverage `93%`\u2013`97%`; variance ratio `0.90`\u2013`1.10`.\u201d (`docs/proposals/2026-09-sota-scorecard.md:400`) Its acuity truth is the nonexistent \u201cfuture independently commissioned M1 condition\u201d; decile construction is also unfrozen. | **ASSUMED YES after repair.** Calibrated coverage and variance intervals have no exact physical floor, and the proposed all-valid/all-invalid/1.25x controls can exercise both directions (`docs/proposals/2026-09-sota-scorecard.md:928-934`). | **VERIFIED FAIL TODAY.** There is no compatible certificate product or M1 truth from which to build the acuity checker; the variance-channel outline alone is not a complete checker (`docs/research/SCORECARD-BASELINE.md:50-52`; `docs/proposals/2026-09-sota-scorecard.md:908-934`). | **VERIFIED:** a calibrated statement about where/frequency the output is trustworthy and whether its `n_eff`/variance intervals have honest coverage; not image superiority by itself (`docs/proposals/2026-09-sota-scorecard.md:890-934`). |"
+        },
+        {
+          "line": 695,
+          "exact_claim": "| M10 | **VERIFIED FAIL.** Bar: \u201cValid target pixels `>=99%`; rank correlation `>=0.99`; median error `<=0.5` focus step, p95 `<=1.0` step; physical slope error `<=5%`.\u201d (`docs/proposals/2026-09-sota-scorecard.md:401`) \u201cvalid\u201d and \u201clayer confusion\u201d are undefined, while required boundary bias is reported without any pass threshold. | **ASSUMED YES.** Error tolerances are nonzero, and the card requires an exact truth map to pass every bar, providing a constructive numerical null (`docs/proposals/2026-09-sota-scorecard.md:971-978`). | **VERIFIED INCOMPLETE PLAN.** Physical and synthetic controls are proposed, but no compatible depth product/checker exists and the missing definitions prevent unique implementation (`docs/research/SCORECARD-BASELINE.md:50-52`; `docs/proposals/2026-09-sota-scorecard.md:948-978`). | **VERIFIED:** coverage, ordering, typical/tail step error, and ruler slope on registered targets. It licenses no bounded boundary-accuracy claim because boundary bias has no gate. |"
+        },
+        {
+          "line": 763,
+          "exact_claim": "**VERIFIED:** it never says median, mean, maximum, per-site all-pass, or a"
+        },
+        {
+          "line": 772,
+          "exact_claim": "therefore produce different pass/fail results from the same ROI values."
+        },
+        {
+          "line": 806,
+          "exact_claim": "rate. M4 fails (i) and its checker plan is not complete until both quantities"
+        },
+        {
+          "line": 809,
+          "exact_claim": "#### M5 \u2014 eligibility and \u201clongest run\u201d are not executable uniquely"
+        },
+        {
+          "line": 811,
+          "exact_claim": "The eligibility gate uses an undefined quantity:"
+        },
+        {
+          "line": 813,
+          "exact_claim": "> A tile is eligible only when its best/far source-signal ratio is `>=2.0`"
+        },
+        {
+          "line": 851,
+          "exact_claim": "channel qualifies, one only if all qualify, or a luminance value. The existing"
+        },
+        {
+          "line": 933,
+          "exact_claim": "`truth_valid`, false-certification, and true-band coverage cannot be computed"
+        },
+        {
+          "line": 1043,
+          "exact_claim": "- Whether M2's `eta` was intended to pass per ROI, per cross-fit, by a median,"
+        },
+        {
+          "line": 1166,
+          "exact_claim": "| M5 | \u201c`>=99%` of eligible tiles pass `rho_best>=0.90` and focus margin `>=0.05`; Wilson lower bound `>=98%`; longest failed run `<=1%` of sweep.\u201d (`docs/proposals/2026-09-sota-scorecard.md:396`) | A5 requires recovered depth \u201cwithin [bar] of truth,\u201d no planted-defect regression, and no excessive displaced depth steps (`docs/proposals/2026-08-sota-path.md:657-665`); D3 expressly consumes \u201cM27's coverage criterion\u201d (`docs/proposals/2026-08-sota-path.md:1595-1598`). | **VERIFIED \u2014 legitimate completion.** It supplies the missing output-coverage definition; M10 separately owns depth accuracy. **Consequence: checker plus a fresh controlled-slide holdout after the old unit burned (`docs/proposals/2026-09-sota-scorecard.md:704-716`).** |"
+        },
+        {
+          "line": 1170,
+          "exact_claim": "| M9 | \u201cFalse-certification Wilson upper bound `<=1%`; true-band coverage `>=90%`; nominal 95% interval coverage `93%`\u2013`97%`; variance ratio `0.90`\u2013`1.10`.\u201d (`docs/proposals/2026-09-sota-scorecard.md:400`) | D2 requires an empirical FRC channel, a single-image decorrelation channel, and an explicit disagreement flag beside the model channel (`docs/proposals/2026-08-sota-path.md:1568-1574`). | **VERIFIED \u2014 weakening.** Removing same-frame FRC is justified by Amendment 1, but M9 does not require the surviving decorrelation channel, a replacement independent product channel, or a shipped disagreement result. A pass licenses less than D2's still-written product claim. |"
+        }
+      ],
+      "denominator_provenance": "scorecard input values -> missing aggregation, eligibility, validity, or population constructors -> nominal rate/verdict",
+      "load_bearing_decision_or_verdict": "The affected M2/M4/M5/M6/M9/M10 bars are non-unique or non-executable.",
+      "current_status": "some definitions were later repaired; affected score verdicts remain unresolved",
+      "true_population": null,
+      "missing_input": "frozen reductions, eligibility constructors, channel rules, truth, binning, weighting, and validity definitions",
+      "plausible_verdict_flip": "Freezing these definitions can change both denominators and pass/fail verdicts."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M135-detail-instrument.md",
+      "occurrence_count": 1,
+      "claims": [
+        {
+          "line": 450,
+          "exact_claim": "  sufficient for `87.3%` of observed incoherence"
+        }
+      ],
+      "denominator_provenance": "inherited incoherence claim -> coordinates/cells and weighting omitted -> 87.3%",
+      "load_bearing_decision_or_verdict": "The inherited value supports only qualitative attribution.",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "exact coordinates/cells, exclusions, weighting, and numerator construction",
+      "plausible_verdict_flip": "Magnitude and classification could change."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M63-bimodality.md",
+      "occurrence_count": 3,
+      "claims": [
+        {
+          "line": 1538,
+          "exact_claim": "alone \u2014 \"0.0% at the top decile of intensity gradient vs 9.2% in flat regions\" \u2014"
+        },
+        {
+          "line": 1542,
+          "exact_claim": "is the premise of Part I. A statistic reading **exactly 0.0%** in the top decile"
+        }
+      ],
+      "denominator_provenance": "quoted M21 pixels -> intensity-gradient bins -> source population/caps omitted",
+      "load_bearing_decision_or_verdict": "The citation motivates edge blindness but does not carry the independent instrument-defect verdict.",
+      "current_status": "unresolved",
+      "true_population": "M21 complete eligible pixel universe",
+      "missing_input": "source stacks, eligible counts, bin construction, masks, caps, and numerators",
+      "plausible_verdict_flip": "The quoted contrast could change, though the independent Part II verdict remains."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M64-estimator-default.md",
+      "occurrence_count": 6,
+      "claims": [
+        {
+          "line": 163,
+          "exact_claim": "| PR3 | focus guard: `mean n_eff / N < 0.95` on the real 22-frame stack | **0.2267** (4.987 of 22); **7 of 7 corpus stacks pass**, worst 0.3011 | **MET** |"
+        },
+        {
+          "line": 234,
+          "exact_claim": "**7 of 7 pass. Worst case `coffee-bean` at 0.30109 \u2014 a 3.16x margin below the"
+        },
+        {
+          "line": 533,
+          "exact_claim": "  oracle-confirmed ground truth, and 0.496-0.740 px on 6 of 8 real cells at"
+        },
+        {
+          "line": 666,
+          "exact_claim": "| All 7 corpus stacks pass the guard at the shipped default; worst 0.30109 | MEASURED | `out/11-focus-guard-m64-*.json`, section 2.4 |"
+        }
+      ],
+      "denominator_provenance": "claimed corpus or cited real cells -> seven legacy stacks or eight cells -> selection omissions",
+      "load_bearing_decision_or_verdict": "All-corpus and real-cell pricing language is unsupported by the selected denominators.",
+      "current_status": "unresolved",
+      "true_population": "12-stack frozen corpus for stack claims; all M57-eligible cells for the 6/8 claim",
+      "missing_input": "five omitted stack outputs and the full cell roster/eligibility rule",
+      "plausible_verdict_flip": "Omitted scene content or cells could weaken or reverse the general claim."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M83-survey-audit.md",
+      "occurrence_count": 2,
+      "claims": [
+        {
+          "line": 542,
+          "exact_claim": "refuted 5/5 by M5's model-free frequency test. M5 explicitly cannot separate"
+        },
+        {
+          "line": 719,
+          "exact_claim": "| P16 | **MEASURED; VERIFIED-AT-PRIMARY-SOURCE / READ-AT-PROJECT-SOURCE** | Edmund Optics gives the symmetric working-f-number equation `N_eff \u2248 N(1+m)`. M5 measures this rig's composite `1+m/p` in [2.41, 3.06], supports the approximately-3 prediction, and refutes the 5 prediction 5/5. |"
+        }
+      ],
+      "denominator_provenance": "M5 model-free cases -> five reported cases -> case-selection provenance stops",
+      "load_bearing_decision_or_verdict": "The local 5/5 cannot alone support an exhaustive architectural conclusion.",
+      "current_status": "unresolved",
+      "true_population": "all admissible M5 model-free frequency configurations",
+      "missing_input": "selection/exclusion rule and completeness statement",
+      "plausible_verdict_flip": "Omitted eligible cells could reduce 5/5, although independent support limits the architectural flip."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/V-CA-audit.md",
+      "occurrence_count": 2,
+      "claims": [
+        {
+          "line": 213,
+          "exact_claim": "   W3 sign-retention bar **FAILED at 75.1 %** against a >90 % bar."
+        },
+        {
+          "line": 299,
+          "exact_claim": "- **M107b \u00a719.2:** the W3 sign-retention bar **FAILED at 75.1 %** \u2014 though M110 fact 54 /"
+        }
+      ],
+      "denominator_provenance": "W3-qualified edge sites/ROIs -> evaluated sites -> 75.1% sign retention, with base omitted",
+      "load_bearing_decision_or_verdict": "The defective bar cannot support the harm claim and is not needed for final default-off.",
+      "current_status": "bar reinterpreted as defective; original denominator remains unresolved",
+      "true_population": "all W3-qualified edge sites under the M107b rule",
+      "missing_input": "eligible count, construction, exclusions, and weighting",
+      "plausible_verdict_flip": "The threshold verdict could flip; the final CA recommendation would not."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/V-DILUTE.md",
+      "occurrence_count": 17,
+      "claims": [
+        {
+          "line": 55,
+          "exact_claim": "ORCH's quoted potency figure is 90.98%; I measure **84.94%** on `beeN22`, presumably a"
+        },
+        {
+          "line": 1467,
+          "exact_claim": "own tabulation shows to be atypical: mean 25.8% averaged and a 0.0-72.5%"
+        },
+        {
+          "line": 1468,
+          "exact_claim": "spread, against a uniform ~0% in bands 1-6. The premium literature describes"
+        },
+        {
+          "line": 1520,
+          "exact_claim": "as ORCH clearing the `--exposure` defect on a file hash when 0 of 98,898,048"
+        },
+        {
+          "line": 1547,
+          "exact_claim": "| abstention | admits sub-threshold frames, so it **reduces** band 0's 25.8% | leaves it essentially unchanged |"
+        },
+        {
+          "line": 1580,
+          "exact_claim": "   25.8% and 0.0-72.5% across subjects \u2014 and it will do least in bands 1-6,"
+        },
+        {
+          "line": 1581,
+          "exact_claim": "   which are 0.00-0.29% averaged. That is the opposite of where ORCH's own"
+        },
+        {
+          "line": 1632,
+          "exact_claim": "hash when 0 of 98,898,048 samples differed.** Mine is 0 of 24,724,512. A no-op"
+        },
+        {
+          "line": 1691,
+          "exact_claim": "`bee-1-cpl`, which V-LINEAR rates R = 5.311 PASS at this slice. If my"
+        },
+        {
+          "line": 1692,
+          "exact_claim": "instrument reads a 5.311 PASS subject as noise, it is biased low and I.2 is"
+        },
+        {
+          "line": 1813,
+          "exact_claim": "and a design aimed at bands 1-6 is aimed at 0.03-0.29% of coefficients.\""
+        },
+        {
+          "line": 1819,
+          "exact_claim": "selecting regime is eligible. That regime is ~100% of bands 1-6 and ~74% of"
+        }
+      ],
+      "denominator_provenance": "imported ORCH/corpus/candidate claims -> source subject, build, weighting, or eligibility omitted",
+      "load_bearing_decision_or_verdict": "Imported values cannot establish corpus-wide reach or qualification; local controls remain independent.",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "named source arrays/subjects, per-band totals, builds, flags, weighting, and aligned bundle",
+      "plausible_verdict_flip": "Corpus-wide reach or the bee qualification could flip; local 109MSDCF controls would not."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/V-HEADTOHEAD3.md",
+      "occurrence_count": 14,
+      "claims": [
+        {
+          "line": 308,
+          "exact_claim": "The 17\u201327% detail deficit in"
+        },
+        {
+          "line": 311,
+          "exact_claim": "94.8%, 109.9% and 267.1% of the old apparent three-band gap.  It also records"
+        },
+        {
+          "line": 467,
+          "exact_claim": "| 113 PMax, sharpening 0 | 1.002 / 1.002 | 0 | 81 / 81 | PASS |"
+        },
+        {
+          "line": 468,
+          "exact_claim": "| 113 PMax, sharpening 40 | 1.003 / 1.008 | 0.4985% | 55 / 56 | PASS |"
+        },
+        {
+          "line": 469,
+          "exact_claim": "| 119 PMax | 0.996 / 1.001 | 0.5020% | 96 / 94 | **FAIL** |"
+        },
+        {
+          "line": 470,
+          "exact_claim": "| 119 PMax UDR, contrast +50 | 0.996 / 1.003 | 0.7028% | 96 / 68 | **FAIL** |"
+        },
+        {
+          "line": 471,
+          "exact_claim": "| 119 PMax UDR, contrast 0 | 1.003 / 1.003 | 0 | 70 / 67 | PASS |"
+        },
+        {
+          "line": 472,
+          "exact_claim": "| 119 fork, float | 1.006 / 1.006 | 0 | 94 / 94 | PASS |"
+        },
+        {
+          "line": 473,
+          "exact_claim": "| 119 fork, defringed | 1.006 / 1.006 | 0 | 94 / 94 | PASS |"
+        },
+        {
+          "line": 474,
+          "exact_claim": "| 119 fork, 16-bit | 1.006 / 1.006 | 0 | 94 / 94 | PASS |"
+        },
+        {
+          "line": 475,
+          "exact_claim": "| coffee fork | 1.036 / 1.044 | 0.7722% | 55 / 54 | **FAIL** |"
+        },
+        {
+          "line": 598,
+          "exact_claim": "old 17\u201327% deficit remains retracted; the new sharp-PMax trails are"
+        }
+      ],
+      "denominator_provenance": "historical or author/checker eligible counts -> original pair/site or candidate-ROI universe omitted",
+      "load_bearing_decision_or_verdict": "Historical values are retracted; current geometry disagreements remain unresolved under both implementations.",
+      "current_status": "historical claims retracted; current geometry denominator remains unresolved",
+      "true_population": null,
+      "missing_input": "original frozen pairs/sites and per-pair candidate totals with exclusions",
+      "plausible_verdict_flip": "Geometry gates could move, though no opposing win/loss is currently hidden."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/V-RIM.md",
+      "occurrence_count": 30,
+      "claims": [
+        {
+          "line": 91,
+          "exact_claim": "**P4 \u2014 the false-positive rate has never been measured.** `rimcommission.py`"
+        },
+        {
+          "line": 569,
+          "exact_claim": "report a 0-140 px ring window with a 170-300 px null and **RING on 5 of 14**."
+        },
+        {
+          "line": 586,
+          "exact_claim": "| `bee-3-cpl` | +4.48% @29 RING | +0.06% @89 no ring | +0.07% @96 no ring | +0.40% @21 no ring |"
+        },
+        {
+          "line": 587,
+          "exact_claim": "| `flower-bud-alone-cpl` | +3.18% @22 RING | +0.04% @98 no ring | +0.04% @113 no ring | +0.13% @109 no ring |"
+        },
+        {
+          "line": 588,
+          "exact_claim": "| `flower-bud-with-background-fern-cpl` | +9.76% @21 RING | +0.12% @116 no ring | +0.09% @115 no ring | +0.28% @127 no ring |"
+        },
+        {
+          "line": 589,
+          "exact_claim": "| `lavendar-cpl` | +2.93% @22 RING | +0.80% @77 no ring | +0.63% @67 no ring | +0.76% @87 no ring |"
+        },
+        {
+          "line": 590,
+          "exact_claim": "| `coffee-bean` | +7.13% @34 RING | +1.82% @84 no ring | +1.76% @83 no ring | +0.06% @132 no ring |"
+        },
+        {
+          "line": 601,
+          "exact_claim": "and `ORCH-FAITHFUL/faithful` matches it to **0.02%** on the green channel over"
+        },
+        {
+          "line": 615,
+          "exact_claim": "| `bee-3-cpl` | +0.06% | +0.15% | 0/48 |"
+        },
+        {
+          "line": 616,
+          "exact_claim": "| `flower-bud-alone-cpl` | +0.04% | +0.14% | 0/48 |"
+        },
+        {
+          "line": 617,
+          "exact_claim": "| `flower-bud-with-background-fern-cpl` | +0.12% | +0.13% | 0/48 |"
+        },
+        {
+          "line": 618,
+          "exact_claim": "| `lavendar-cpl` | +0.80% | +1.10% | 0/48 |"
+        },
+        {
+          "line": 619,
+          "exact_claim": "| `coffee-bean` | +1.82% | +4.77% | 0/48 |"
+        },
+        {
+          "line": 620,
+          "exact_claim": "| `bee-1-cpl` | +0.78% | +1.06% | 0/48 |"
+        },
+        {
+          "line": 621,
+          "exact_claim": "| `bee-2-cpl` | +0.96% | +0.77% | 0/48 |"
+        },
+        {
+          "line": 622,
+          "exact_claim": "| `109MSDCF` | +5.72% | +6.60% | 0/48 |"
+        },
+        {
+          "line": 623,
+          "exact_claim": "| `119MSDCF` | +0.19% | +1.56% | 0/48 |"
+        },
+        {
+          "line": 626,
+          "exact_claim": "the mid-scale axis differs from the tight-scale one. But **8 of 9 subjects read"
+        },
+        {
+          "line": 646,
+          "exact_claim": "the far field, the published +3% to +10% band at 21-34 px would be saturated"
+        },
+        {
+          "line": 702,
+          "exact_claim": "- **Any re-render at commit `1cacb61` reproducing +9.76% on"
+        }
+      ],
+      "denominator_provenance": "historical selected subjects/sites/samples -> reported ring or similarity result -> selection rule omitted",
+      "load_bearing_decision_or_verdict": "Historical conviction and read-across are unreproducible or local, not corpus prevalence.",
+      "current_status": "partly resolved by current reruns and specificity fixtures; historical selection provenance remains unresolved",
+      "true_population": "26 deliverable subjects and all eligible sites/pixels under named binaries",
+      "missing_input": "subject/site/sample selection, binaries, render space, and full ledgers",
+      "plausible_verdict_flip": "A historical regression or corpus prevalence call could flip; completed specificity fixtures do not."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/V-chroma2.md",
+      "occurrence_count": 6,
+      "claims": [
+        {
+          "line": 26,
+          "exact_claim": "| 10 | fairness of the 0.2%-vs-151 ppm comparison at n=1 | **CONFIRMED as a limitation** |"
+        },
+        {
+          "line": 189,
+          "exact_claim": "residual is an 84% reduction (0.363 \u00d7 0.16 = 0.058 \u2713), whereas 0.368 is what the"
+        },
+        {
+          "line": 251,
+          "exact_claim": "The comparison \"651.9 ppm (f/5.6) vs 650.7 ppm (f/8), 0.2%, against a"
+        },
+        {
+          "line": 254,
+          "exact_claim": "0.2% gap has no error bar: it is one draw from an unmeasured f/8 distribution,"
+        },
+        {
+          "line": 257,
+          "exact_claim": "f/8 point could sit 0.2% from the f/5.6 mean by chance with high probability"
+        },
+        {
+          "line": 286,
+          "exact_claim": "reproduces **every** number \u00a746.2 publishes \u2014 `foam` 0.034 / 9.38% / 0.8026 /"
+        }
+      ],
+      "denominator_provenance": "five f/5.6 plus one f/8 stack or undefined flat-site fingerprint -> result",
+      "load_bearing_decision_or_verdict": "Aperture invariance was underpowered and the fingerprint denominator is not auditable.",
+      "current_status": "unresolved",
+      "true_population": "all three f/8 and three f/11 subjects plus stated f/5.6 cohort",
+      "missing_input": "complete aperture strata, within-stratum dispersion, and flat-site definition",
+      "plausible_verdict_flip": "A real aperture dependence could emerge and reverse the invariance ground."
+    }
+  ],
+  "plausible_verdict_flips": [
+    {
+      "file": "docs/research/BUILD-ELECT.md",
+      "classification": "cap",
+      "assessment": "Omitted between-rung peaks could reverse coverage, focus, or commissioning calls."
+    },
+    {
+      "file": "docs/research/DELIVER-V6.md",
+      "classification": "cap",
+      "assessment": "One differing untested subject would restore the build-drift confound."
+    },
+    {
+      "file": "docs/research/M135-detail-instrument.md",
+      "classification": "cap",
+      "assessment": "The mechanism and repair do not flip, but any incidence estimate could."
+    },
+    {
+      "file": "docs/research/M136-m8-census-groundtruth.md",
+      "classification": "cap",
+      "assessment": "The rate could change, although the representability defect remains."
+    },
+    {
+      "file": "docs/research/M151-m5-checker.md",
+      "classification": "cap",
+      "assessment": "The eligibility ruling already flipped from 13/64 to 275/1,944; the performance verdict remains unknown."
+    },
+    {
+      "file": "docs/research/M169-m3-veil.md",
+      "classification": "cap",
+      "assessment": "Quality ranking and omitted sites could flip future M3 performance, though not existence of the selected 500."
+    },
+    {
+      "file": "docs/research/M48-read-noise-measured.md",
+      "classification": "cap",
+      "assessment": "Full stacks could change the tail and crossover rates."
+    },
+    {
+      "file": "docs/research/M57-detail-metric-from-first-principles.md",
+      "classification": "cap",
+      "assessment": "The quality-selected eight cells could overstate measurability and change real-cell verdicts."
+    },
+    {
+      "file": "docs/research/M60-prior-art-and-the-rival-explanations.md",
+      "classification": "cap",
+      "assessment": "Absolute rates and affected surface could change."
+    },
+    {
+      "file": "docs/research/M63-bimodality.md",
+      "classification": "cap",
+      "assessment": "Marginal localization, entropy, and generalization claims could flip; large within-cell separations are less likely to."
+    },
+    {
+      "file": "docs/research/V-DILUTE.md",
+      "classification": "cap",
+      "assessment": "Raw effects or engineering preference could reverse on complete windows or another cap policy."
+    },
+    {
+      "file": "docs/research/V-RIM.md",
+      "classification": "cap",
+      "assessment": "Prevalence and calibration equivalence could flip, while shown false positives remain."
+    },
+    {
+      "file": "docs/research/BUILD-ELECT.md",
+      "classification": "unstated",
+      "assessment": "The original all-negative reading already changed to 16/19 before the replacement."
+    },
+    {
+      "file": "docs/research/BUILD-PYRNOISE-ADJUDICATION.md",
+      "classification": "unstated",
+      "assessment": "A complete grid could make admission predictive or materially change the failure rate."
+    },
+    {
+      "file": "docs/research/M-PHASE0-VEIL2.md",
+      "classification": "unstated",
+      "assessment": "A 0.6-point gap can readily reverse under sampling or weighting."
+    },
+    {
+      "file": "docs/research/M115-deconv-headroom.md",
+      "classification": "unstated",
+      "assessment": "Corroboration could disappear and the safeguard could change from cheap to catastrophically rejecting."
+    },
+    {
+      "file": "docs/research/M121-halo-polarity.md",
+      "classification": "unstated",
+      "assessment": "The reported agreement could materially change."
+    },
+    {
+      "file": "docs/research/M133-blocker-audit.md",
+      "classification": "unstated",
+      "assessment": "Freezing these definitions can change both denominators and pass/fail verdicts."
+    },
+    {
+      "file": "docs/research/M135-detail-instrument.md",
+      "classification": "unstated",
+      "assessment": "Magnitude and classification could change."
+    },
+    {
+      "file": "docs/research/M63-bimodality.md",
+      "classification": "unstated",
+      "assessment": "The quoted contrast could change, though the independent Part II verdict remains."
+    },
+    {
+      "file": "docs/research/M64-estimator-default.md",
+      "classification": "unstated",
+      "assessment": "Omitted scene content or cells could weaken or reverse the general claim."
+    },
+    {
+      "file": "docs/research/M83-survey-audit.md",
+      "classification": "unstated",
+      "assessment": "Omitted eligible cells could reduce 5/5, although independent support limits the architectural flip."
+    },
+    {
+      "file": "docs/research/V-CA-audit.md",
+      "classification": "unstated",
+      "assessment": "The threshold verdict could flip; the final CA recommendation would not."
+    },
+    {
+      "file": "docs/research/V-DILUTE.md",
+      "classification": "unstated",
+      "assessment": "Corpus-wide reach or the bee qualification could flip; local 109MSDCF controls would not."
+    },
+    {
+      "file": "docs/research/V-HEADTOHEAD3.md",
+      "classification": "unstated",
+      "assessment": "Geometry gates could move, though no opposing win/loss is currently hidden."
+    },
+    {
+      "file": "docs/research/V-RIM.md",
+      "classification": "unstated",
+      "assessment": "A historical regression or corpus prevalence call could flip; completed specificity fixtures do not."
+    },
+    {
+      "file": "docs/research/V-chroma2.md",
+      "classification": "unstated",
+      "assessment": "A real aperture dependence could emerge and reverse the invariance ground."
+    }
+  ],
+  "source_snapshot_status": {
+    "matches_manifest": false,
+    "drifted_files": [
+      {
+        "file": "docs/research/M166-capture-reconciliation.md",
+        "manifest_sha256": "80dcea55ef911d5b430430e8031d30c3f882384e8116ec33ce9c220c2fcdafda",
+        "observed_sha256": "524f8abcb75b9125959733fd9b022c848f42fe11bbf870a79873461025b7fbd5",
+        "impact": "Frozen candidates contain 24/24 fixture claims; the live file now says 25/25, so live-corpus validation cannot pass until the shared inventory is refreshed."
+      },
+      {
+        "file": "docs/research/M171-aperture-reference.md",
+        "manifest_sha256": "c2ba25ab630a62576550e8ffeb8e99845338b575ae3a2c4e0c95ed779c54abac",
+        "observed_sha256": "69d0b5580956d77af57fb7d2b8c689fc0a9470febcabd6ada3bbb4c3b5434607",
+        "impact": "The live file changed outside its candidate lines after complete review, so live-corpus validation cannot pass until the shared inventory is refreshed."
+      }
+    ]
+  }
+}

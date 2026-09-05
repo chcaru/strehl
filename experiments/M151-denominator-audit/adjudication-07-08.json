@@ -1,0 +1,1682 @@
+{
+  "schema": "denominator-adjudication-07-08-v1",
+  "source_summaries": [
+    {
+      "file": "experiments/M151-denominator-audit/summary-07.json",
+      "sha256": "7752552ffee57f3205828bbe62616b47ff9feaf59f42e34ce930d7c7dc326d00",
+      "deduplicated_claims_reviewed": 11,
+      "candidate_occurrences_represented": 34
+    },
+    {
+      "file": "experiments/M151-denominator-audit/summary-08.json",
+      "sha256": "fb46e7e9f74792746f51ccf1b3b7fea81fb68c59e218873591877c21dba150f7",
+      "deduplicated_claims_reviewed": 274,
+      "candidate_occurrences_represented": 440
+    }
+  ],
+  "review_method": {
+    "scope": "Every deduplicated cap or unstated claim in summaries 07 and 08 was read, then high-consequence verdict, capture, promotion, scorecard, proposal, and headline cases were traced to source context.",
+    "cap_rule": "A cap establishes only the observations inside the cap. No numerator was derived from a cap.",
+    "status_rule": "SUPERSEDED means the source already records the correction; it is not a currently live wrong verdict. CAVEATED means the observation survives only at its stated population. LIVE includes explicit UNMEASURED states, not implied passes.",
+    "evidence_rule": "VERIFIED_BY_RUNNING is reserved for an adjudicator-run check. These source conclusions were adjudicated by source and existing-artifact reading, so findings are labeled INFERRED_BY_READING.",
+    "heavy_new_renders": 0,
+    "prohibited_path_accessed": false
+  },
+  "headline": "No currently live wrong PASS/FAIL verdict was established. Seven verdict or headline reversals are real but already documented and superseded: V-EYES's 13-frame ceiling, V-GATHER's nsrc=10 denominator and certificate sign correction, the proposal's NO_COMMON_K phase-1 refutation, M90 Round 2, M20's 15.1% corpus figure, and the V-HEADTOHEAD2 Zerene deficit. Live denominator risk remains explicit and unresolved for M107's 3/5 A1 score, unexhausted V-GATHER ceilings, the M89 census claim, M90's capped six-stack blast-radius range, the BUILD-CROP proxy headline, and M26's three-frame-per-stack saturation headline.",
+  "aggregate_counts": {
+    "deduplicated_claims_reviewed": 285,
+    "candidate_occurrences_represented": 474,
+    "source_classification": {
+      "cap": 55,
+      "unstated": 230
+    },
+    "high_consequence_findings": 41,
+    "currently_live_wrong_verdicts_established": 0,
+    "historical_documented_flips": 7,
+    "by_status": {
+      "LIVE": 15,
+      "SUPERSEDED": 9,
+      "CAVEATED": 13,
+      "ILLUSTRATIVE": 4
+    },
+    "by_verdict_flip": {
+      "YES": 7,
+      "NO": 17,
+      "UNRESOLVED": 9,
+      "NOT_APPLICABLE": 8
+    },
+    "by_consequence_tier": {
+      "CRITICAL": 16,
+      "HIGH": 21,
+      "MEDIUM": 3,
+      "LOW": 1
+    }
+  },
+  "findings": [
+    {
+      "id": "s07-build-gate2-limit10",
+      "summary": "07",
+      "summary_claim_ids": [
+        "gate-limit10"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "cap_with_structural_verdict",
+      "source_locations": [
+        {
+          "file": "docs/research/BUILD-GATE-2.md",
+          "lines": "151-198"
+        }
+      ],
+      "denominator_chain": [
+        "six named stacks",
+        "first 10 frames of each stack",
+        "all 10 placed in each prefix",
+        "band-0 averaged fractions under white-floor and measured-floor arms"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "On the owner's written criteria, equal averaged fractions is FAIL and averaged falling in both arms is FAIL; the physically stated same-multiple-of-own-floor criterion is PASS.",
+      "status": "CAVEATED",
+      "true_population": "Every frame in each of the six complete brackets.",
+      "missing_evidence": "Full-bracket fractions are missing, but they are not needed to establish direction: lowering the plane threshold cannot raise its averaged fraction and raising the full-resolution threshold cannot lower its averaged fraction.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The reported fractions use the first 10 placed frames of each of six stacks. Full-bracket fractions remain unmeasured, but criterion 2 cannot reverse: the measured floor lowers the plane threshold and raises the full-resolution threshold. The load-bearing same-multiple-of-own-floor criterion passes at 2.00x in both arms."
+    },
+    {
+      "id": "s07-m107-a1-three-of-five",
+      "summary": "07",
+      "summary_claim_ids": [
+        "m107-a1-three-of-five"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "live_registered_population_shortfall",
+      "source_locations": [
+        {
+          "file": "docs/research/M107b-lateral-correction.md",
+          "lines": "148-193"
+        },
+        {
+          "file": "docs/research/M107b-lateral-correction.md",
+          "lines": "290-291"
+        }
+      ],
+      "denominator_chain": [
+        "registered all-five-stack A1 rule",
+        "three persisted argmax volumes",
+        "radius and depth regressions scored on only those three",
+        "two no-CPL stacks absent"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "A1 is ADEQUATE versus radius and INDETERMINATE versus depth.",
+      "status": "LIVE",
+      "true_population": "The five stacks named by the registered A1 rule.",
+      "missing_evidence": "Argmax volumes and the registered regressions for the two no-CPL stacks.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "A1 is provisionally ADEQUATE versus radius and INDETERMINATE versus depth on 3 of 5 registered stacks. No five-stack A1 verdict exists until the two no-CPL argmax volumes are persisted and scored without changing the rule."
+    },
+    {
+      "id": "s07-m95-cache-limit6",
+      "summary": "07",
+      "summary_claim_ids": [
+        "m95-six-frame-cache"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "mechanism_control_not_incidence_estimate",
+      "source_locations": [
+        {
+          "file": "docs/research/M95-kernel.md",
+          "lines": "600-635"
+        }
+      ],
+      "denominator_chain": [
+        "one six-frame bee-3-cpl prefix",
+        "three existing shared-cache entries",
+        "SHA-256 before and after align --limit 6 --out"
+      ],
+      "consequence_tier": "LOW",
+      "original_conclusion": "--out protects the shared cache, while a reader still uses the shared sidecar unless STREHL_CACHE_DIR is isolated.",
+      "status": "ILLUSTRATIVE",
+      "true_population": "All calls through the same cache-path code; 299 frames only matter to incidence, not to path selection.",
+      "missing_evidence": "A full-bracket A/B would estimate incidence, but is not needed for the code-path ruling.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NOT_APPLICABLE",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The six-frame run is a mechanism control, not a full-bracket incidence estimate. It establishes that --out does not mutate the shared cache; STREHL_CACHE_DIR remains the isolation primitive for both readers and writers."
+    },
+    {
+      "id": "s07-vhighlight-limit10-null",
+      "summary": "07",
+      "summary_claim_ids": [
+        "vhighlight-limit10-null"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "self_retracted_out_of_range_control",
+      "source_locations": [
+        {
+          "file": "docs/research/V-HIGHLIGHT.md",
+          "lines": "95-100"
+        },
+        {
+          "file": "docs/research/V-HIGHLIGHT.md",
+          "lines": "440-492"
+        }
+      ],
+      "denominator_chain": [
+        "seven subjects",
+        "10-frame prefixes",
+        "byte identity under a 0.60-knee roll-off",
+        "later max-u check found 0 of 7 subjects reached the knee"
+      ],
+      "consequence_tier": "MEDIUM",
+      "original_conclusion": "The null's support was materially widened to eight subjects.",
+      "status": "SUPERSEDED",
+      "true_population": "Subjects whose input reaches the 0.60 knee; the seven added prefixes were outside that sensitive population.",
+      "missing_evidence": "None for withdrawing the widening claim. A new widening claim needs a non-saturating subject that actually reaches the knee.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "I retract 'widened to 8 subjects.' All seven added prefixes had max u below the 0.60 knee, so byte identity was guaranteed and supplied no null evidence. The original measured 109MSDCF null remains."
+    },
+    {
+      "id": "s07-veyes-thirteen-frame-reversal",
+      "summary": "07",
+      "summary_claim_ids": [
+        "veyes-thirteen-frame-ceiling"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "historical_documented_reversal",
+      "source_locations": [
+        {
+          "file": "docs/research/V-EYES.md",
+          "lines": "44-74"
+        }
+      ],
+      "denominator_chain": [
+        "two early subjects",
+        "13 source frames, only 6% and 11% of their brackets",
+        "per-site maximum from that cap",
+        "master divided by capped source maximum",
+        "later exhaustive 19/19, 22/22, 33/33, 205/205, and 299/299 checks"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "The master was 1.87x and 1.54x sharper than its per-site best input frame.",
+      "status": "SUPERSEDED",
+      "true_population": "Every frame in the bracket for each subject being given a per-site best-frame ceiling.",
+      "missing_evidence": "Exhaustive ceilings for corpus subjects not among the five completed brackets.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "YES",
+      "resolved_verdict": "On averaging-dominated subjects the complete-bracket master is 5-19% softer than its per-site best input; a complete 299-frame selection-dominated subject is above parity. The measured deficit is below the reported visibility threshold.",
+      "exact_replacement_text": "The earlier 1.87x and 1.54x results used a 13-frame ceiling and are superseded. Across complete brackets, strehl is 5-19% softer on averaging-dominated subjects; the effect is regime-dependent and was below the measured visibility threshold."
+    },
+    {
+      "id": "s07-vgather-nsrc10-reversal",
+      "summary": "07",
+      "summary_claim_ids": [
+        "vgather-nsrc10"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "historical_documented_reversal",
+      "source_locations": [
+        {
+          "file": "docs/research/V-GATHER.md",
+          "lines": "274-310"
+        }
+      ],
+      "denominator_chain": [
+        "source-frame reference",
+        "main samples nsrc=10",
+        "one in 30 frames on a 299-frame stack",
+        "best-source denominator held fixed in commissioning",
+        "reference-only thinning later moved readings across unity"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "Project sharpness ratios above unity and the RECONSTRUCT comparison were treated as evidence for the master.",
+      "status": "SUPERSEDED",
+      "true_population": "Every source frame in every bracket retained for a source-ceiling comparison.",
+      "missing_evidence": "Full-bracket denominators for any original subject-level ratio someone proposes to retain.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "YES",
+      "resolved_verdict": "The nsrc=10 denominator inflated the prior real-subject sharpness ratios; changing only the denominator moved measurements across unity.",
+      "exact_replacement_text": "The prior real-subject sharpness ratios used nsrc=10 and are invalid. Thinning the reference alone moved readings across unity with the master unchanged; retained ratios require every source frame or an independently justified frozen sampling design."
+    },
+    {
+      "id": "s07-vgather-certificate-sign-reversal",
+      "summary": "07",
+      "summary_claim_ids": [
+        "vgather-sampled-certificate"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "historical_documented_reversal",
+      "source_locations": [
+        {
+          "file": "docs/research/V-GATHER.md",
+          "lines": "521-615"
+        },
+        {
+          "file": "docs/research/V-GATHER.md",
+          "lines": "1060-1081"
+        }
+      ],
+      "denominator_chain": [
+        "26-subject certificate",
+        "12 sampled frames per subject for the blotch source ceiling",
+        "coverage-preserving registered windows",
+        "registration consumer used the shift with the wrong sign",
+        "four REFUSED rows became four FAIL rows after correction"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "The first certificate partition was 17 PASS, 5 FAIL, 4 REFUSED and was later paraphrased as 17 PASS / 9 acquitted / 0 FAIL across a partial axis set.",
+      "status": "SUPERSEDED",
+      "true_population": "All 26 sealed subjects on every axis the certificate claims to cover.",
+      "missing_evidence": "None for the sign correction; the separate exhaustive-ceiling gap is recorded in the next finding.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "YES",
+      "resolved_verdict": "The corrected four-axis partition is 1 clean, 17 failing, and 8 unexamined on at least one axis; the four sign-caused refusals all resolve to FAIL.",
+      "exact_replacement_text": "The original certificate is superseded. Correcting the registration sign moved all four REFUSED subjects to FAIL; after adding the blind axes, the partition is 1 clean, 17 failing, and 8 unexamined on at least one axis."
+    },
+    {
+      "id": "s07-vgather-certificate-live-ceiling",
+      "summary": "07",
+      "summary_claim_ids": [
+        "vgather-sampled-certificate"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "live_capped_source_ceiling",
+      "source_locations": [
+        {
+          "file": "docs/research/V-GATHER.md",
+          "lines": "521-548"
+        },
+        {
+          "file": "docs/research/V-GATHER.md",
+          "lines": "1070-1081"
+        }
+      ],
+      "denominator_chain": [
+        "26 sealed subjects",
+        "sampled and registered source frames",
+        "maximum source statistic among usable sampled frames",
+        "subject PASS or FAIL on the source-ceiling axis"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The sampled source ceilings licensed subject-level certificate rows.",
+      "status": "CAVEATED",
+      "true_population": "Every source frame that covers each frozen site in all 26 brackets.",
+      "missing_evidence": "Complete coverage-preserving source-frame renders for deep stacks whose source ceiling remains sampled.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The registration-sign reversal is resolved, but deep-stack source-ceiling values remain conditional on sampled usable frames. Do not promote a capped ceiling to an exhaustive subject-level source maximum."
+    },
+    {
+      "id": "s07-vgather-cap56",
+      "summary": "07",
+      "summary_claim_ids": [
+        "vgather-search-cap56"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "partially_exhausted_ceiling_cap",
+      "source_locations": [
+        {
+          "file": "docs/research/V-GATHER.md",
+          "lines": "1378-1455"
+        }
+      ],
+      "denominator_chain": [
+        "sharpaxis.py ceiling search",
+        "maximum 56 renders",
+        "18.1% coverage for a 299-frame bracket",
+        "under-sampled maximum used as denominator",
+        "one 299-frame stack later rendered exhaustively"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "Deep-stack manufactured-detail excess was read against a ceiling whose coverage covaried strongly with stack depth.",
+      "status": "CAVEATED",
+      "true_population": "Every frame in each bracket; the completed deep control is all 299 frames of pencil-steep-angle-cpl.",
+      "missing_evidence": "Exhaustive ceiling searches for the remaining deep stacks.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The 56-render ceiling cap is a real confound. On pencil-steep-angle-cpl, exhaustive 299-frame search reduced e1 excess from 43.644% to 36.164% without changing sign; other deep-stack excess verdicts remain unresolved until their ceilings are exhaustive."
+    },
+    {
+      "id": "s07-m132-market-exhaustion",
+      "summary": "07",
+      "summary_claim_ids": [
+        "m132-no-equal-replacement"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "open_market_census_but_bounded_scorecard",
+      "source_locations": [
+        {
+          "file": "docs/research/M132-blocker-d-routes.md",
+          "lines": "314-350"
+        }
+      ],
+      "denominator_chain": [
+        "named candidate alternatives",
+        "field standing, common-input boundary, and native 16-bit linear-TIFF contract",
+        "no frozen exhaustive market census"
+      ],
+      "consequence_tier": "MEDIUM",
+      "original_conclusion": "No cheaper third-party candidate was verified to combine all three properties.",
+      "status": "LIVE",
+      "true_population": null,
+      "missing_evidence": "A frozen comparator census or one newly identified candidate with a qualifying witness. A replacement also requires a scorecard amendment because current comparators are named.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Among the named candidates examined, none was verified to combine equal field standing, a clean common-input merge boundary, and native 16-bit linear-TIFF output. This is not an exhaustive market claim, and a substitute would require a scorecard amendment."
+    },
+    {
+      "id": "s07-m166-flat-truth-unmeasured",
+      "summary": "07",
+      "summary_claim_ids": [
+        "m166-flat-null-truth"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "explicit_missing_population_not_hidden",
+      "source_locations": [
+        {
+          "file": "docs/research/M166-m10-definition-repair.md",
+          "lines": "620-639"
+        }
+      ],
+      "denominator_chain": [
+        "registered ISO-100 stack",
+        "no admitted output-blind face mask",
+        "no planarity bound",
+        "no qualified flat-null population"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "M10 remains UNMEASURED_FLAT_TRUTH and has neither PASS nor FAIL.",
+      "status": "LIVE",
+      "true_population": null,
+      "missing_evidence": "An admitted output-blind face mask plus planarity certificate, or a fresh certified planar unit.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NOT_APPLICABLE",
+      "resolved_verdict": null,
+      "exact_replacement_text": "M10 flat-null truth is UNMEASURED. No PASS or FAIL may be assigned until an output-blind mask and planarity-qualified population are admitted, or a fresh certified planar target is supplied."
+    },
+    {
+      "id": "s07-m173-real-pair-truth",
+      "summary": "07",
+      "summary_claim_ids": [
+        "m173-real-pair-admission"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "live_truth_population_missing",
+      "source_locations": [
+        {
+          "file": "docs/research/M173-ask2a-audit.md",
+          "lines": "286-293"
+        }
+      ],
+      "denominator_chain": [
+        "one real optical-state pair",
+        "unknown true optical ratio",
+        "estimator emits a ratio with an unbound 0.25% allowance",
+        "no independently truthed real-pair calibration population"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The estimator allowance cannot be relabeled calibrated or admitted for the converter-change claim.",
+      "status": "LIVE",
+      "true_population": null,
+      "missing_evidence": "Converter-off and converter-on real captures with independent optical truth sufficient to calibrate estimator bias, followed by independent admission review.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "A single unknown-ratio real pair cannot calibrate converter-dependent estimator bias. Keep the allowance uncalibrated and the converter-change behavior unadmitted until independently truthed real pairs are reviewed."
+    },
+    {
+      "id": "s08-proposal-phase1-refutation-withdrawn",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-6ca07a7d00abea0a0de001d5"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "fixed_candidate_grid_exposed_unsatisfiable_gate",
+      "source_locations": [
+        {
+          "file": "docs/proposals/2026-08-sota-path.md",
+          "lines": "2354-2375"
+        }
+      ],
+      "denominator_chain": [
+        "18 candidate width comparisons in bands 4-6",
+        "fixed-global-k candidates",
+        "band-shaped legacy target",
+        "0 survivors because the gate demanded a band-constant candidate match a band-shaped target",
+        "no Pareto frontier was rendered"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "NO_COMMON_K refuted Phase 1 and treated the route as dead.",
+      "status": "SUPERSEDED",
+      "true_population": "The complete 18-candidate grid generated by that registered width gate; its emptiness cannot answer output quality because the gate was unsatisfiable by construction.",
+      "missing_evidence": "A preregistered satisfiable output-quality gate and the candidate renders it permits.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "YES",
+      "resolved_verdict": "Phase 1 is UNTESTED, not DEAD or REFUTED. This withdraws the refutation but does not validate the merge rule.",
+      "exact_replacement_text": "Phase 1 is UNTESTED, not DEAD. The 0-of-18 result came from a fixed-k gate that could not match the band-shaped target by construction, so the intended Pareto frontier was never rendered. This is unvalidated, not rescued."
+    },
+    {
+      "id": "s08-proposal-a2-stop-zero-of-seven",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-2b3a95bd9d8e02f583c39e7f",
+        "den-f9ef9bac6aa43aa27f75a94a"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "false_positive_complete_registered_gate_set",
+      "source_locations": [
+        {
+          "file": "docs/proposals/2026-08-sota-path.md",
+          "lines": "2385-2392"
+        },
+        {
+          "file": "docs/proposals/2026-08-sota-path.md",
+          "lines": "2478-2484"
+        }
+      ],
+      "denominator_chain": [
+        "seven preregistered fail-closed A2 gates",
+        "all seven evaluated",
+        "0 passed",
+        "STOP_DO_NOT_BUILD"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "Phase 1 cannot include A2 as written; remove it or commission a new causal and tone-safe instrument.",
+      "status": "LIVE",
+      "true_population": "All seven gates in the frozen A2 audit instrument.",
+      "missing_evidence": "No denominator evidence is missing for the current STOP. A different A2 needs a newly commissioned instrument rather than extra post hoc gates.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "A2 remains STOP_DO_NOT_BUILD: 0 of all 7 preregistered gates passed. The denominator is the complete frozen gate set, not an unstated sample."
+    },
+    {
+      "id": "s08-proposal-scoreboard-two-of-twelve",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-ef353ebfcb648eafa3d0a1f7"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "false_positive_fixed_scorecard_census",
+      "source_locations": [
+        {
+          "file": "docs/proposals/2026-08-sota-path.md",
+          "lines": "2274-2294"
+        }
+      ],
+      "denominator_chain": [
+        "fixed M1-M12 scorecard",
+        "12 total axes",
+        "2 axes currently measurable",
+        "blocker conjunction table determines promotion"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The scoreboard remains 2 of 12; clearing isolated blockers often has zero scorecard payoff.",
+      "status": "LIVE",
+      "true_population": "All 12 named scorecard axes.",
+      "missing_evidence": "None about the denominator. Individual axis clearance still requires its own evidence.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The scoreboard denominator is the fixed set of 12 named axes. It currently reads 2 of 12; this is an administrative census, not a sample or an unstated population."
+    },
+    {
+      "id": "s08-proposal-capture-limited-ten-of-fourteen",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-7c870453c65340d580d6dc6b"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "fixed_readme_subject_set_used_as_motivation",
+      "source_locations": [
+        {
+          "file": "docs/proposals/2026-08-sota-path.md",
+          "lines": "1781-1797"
+        }
+      ],
+      "denominator_chain": [
+        "14 defective subjects enumerated by the cited README",
+        "10 classified capture-limited",
+        "count used to motivate a live reshoot advisor"
+      ],
+      "consequence_tier": "MEDIUM",
+      "original_conclusion": "Late feedback has a measured capture cost: 10 of 14 defective subjects were capture-limited.",
+      "status": "ILLUSTRATIVE",
+      "true_population": "The 14 defective subjects in the cited README, not all future captures or all owner stacks.",
+      "missing_evidence": "A frozen broader capture census would be required for a prevalence claim beyond those 14 subjects.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NOT_APPLICABLE",
+      "resolved_verdict": null,
+      "exact_replacement_text": "In the cited 14-subject defective set, 10 verdicts were capture-limited. Use this as motivation for the advisor, not as an all-corpus or future-capture prevalence estimate."
+    },
+    {
+      "id": "s08-proposal-veil-detector-close",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-84362bd1e7cc0353897f1e10",
+        "den-0d9bb22b1320a3862961b61d",
+        "den-addd09bc9badea071abe9c14"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_named_validation_battery",
+      "source_locations": [
+        {
+          "file": "docs/proposals/2026-09-phase0-triage.md",
+          "lines": "116-141"
+        }
+      ],
+      "denominator_chain": [
+        "seven named repaired-detector curves",
+        "three known two-layer cases",
+        "all seven curves passed and all three cases found",
+        "three bee-stack multi-peak fractions used as supporting measurements"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The V-VEIL2 acceptance-instrument question is ALREADY ANSWERED and can close, while implementation safety remains separate.",
+      "status": "CAVEATED",
+      "true_population": "The seven validation curves, three known two-layer cases, and three bee stacks named by this gate.",
+      "missing_evidence": "Corpus-wide safety evidence for any particular A2 implementation; the source explicitly does not claim it.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Close V-VEIL2's instrument question on its complete named battery: 7/7 curves passed and 3/3 known two-layer cases were found. This does not certify any A2 implementation corpus-wide."
+    },
+    {
+      "id": "s08-proposal-w5-capture-protocol",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-6f99a02602cc1154bdd9d2a1"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "protocol_definition_not_observed_fraction",
+      "source_locations": [
+        {
+          "file": "docs/proposals/2026-09-phase1-design.md",
+          "lines": "359-374"
+        }
+      ],
+      "denominator_chain": [
+        "prospective W5 protocol",
+        "named full grid, coffee-bean, foam, and N=33/100/299 systems arms",
+        "site manifests sealed before rendering",
+        "reserve explicitly excluded from current scorecard evidence"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "These named captures and hierarchy levels define future W5 scoring and reserve handling.",
+      "status": "ILLUSTRATIVE",
+      "true_population": "The prospective capture set explicitly named by the W5 protocol.",
+      "missing_evidence": "No result exists yet; future W5 evidence must follow the sealed protocol.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NOT_APPLICABLE",
+      "resolved_verdict": null,
+      "exact_replacement_text": "This is a prospective population definition, not a measurement. Seal the named W5 manifests before rendering; keep the reserve out of current scorecard evidence."
+    },
+    {
+      "id": "s08-scorecard-threshold-quotations",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-3b5d1248e868b2b26480fbef",
+        "den-b499210fb28a186c609377d9",
+        "den-df84a83f2fbda79c5d8ee513",
+        "den-b24afb96902baef9efd40102",
+        "den-4eba2ee7467505ac3f1dd3f4",
+        "den-fcf19fbb6e65127192cb05e6",
+        "den-337853e34d8136f4870811e6",
+        "den-a5bd81d699b679ffb05791a5",
+        "den-ea72ad1f1f23162727cfaa09",
+        "den-02b06fb0e8a954a715cbbc78",
+        "den-0b6d20c7065456d3c58bf7f3",
+        "den-915c4d9e69b2384c7ad1730f",
+        "den-fdc3d038dfd3b70e245ef5e0"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "false_positive_criteria_and_explicit_sensitivity_assumption",
+      "source_locations": [
+        {
+          "file": "docs/research/M144-reference-uncertainty.md",
+          "lines": "164-230"
+        },
+        {
+          "file": "docs/research/M144-reference-uncertainty.md",
+          "lines": "548-558"
+        },
+        {
+          "file": "docs/research/M146-unlock-audit.md",
+          "lines": "163-193"
+        },
+        {
+          "file": "docs/research/M146-unlock-audit.md",
+          "lines": "232-238"
+        }
+      ],
+      "denominator_chain": [
+        "quoted M3, M4, M5, M8, and M9 scorecard thresholds",
+        "percentages define future acceptance bars rather than observed numerators",
+        "M144's 500-cell cases are explicitly labeled assumed minimum-size sensitivity"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The quoted values define scorecard success and boundary sensitivity.",
+      "status": "ILLUSTRATIVE",
+      "true_population": "Defined by each future scorecard execution; no empirical population is asserted by the quotation itself.",
+      "missing_evidence": "Future scored populations and outcomes. M144 intentionally models an assumed 500-cell boundary case rather than claiming a measured census.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NOT_APPLICABLE",
+      "resolved_verdict": null,
+      "exact_replacement_text": "These percentages are scorecard criteria, not measured pass fractions. M144's 500-cell examples are explicitly assumed sensitivity cases; do not classify either kind as an unstated empirical denominator."
+    },
+    {
+      "id": "s08-m146-m4-site-floor-gap",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-1f8fd57877acff96f6a55f3d",
+        "den-3fdf0707efe21784022c7c08"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "explicit_unmeasured_capture_population",
+      "source_locations": [
+        {
+          "file": "docs/research/M146-unlock-audit.md",
+          "lines": "294-306"
+        },
+        {
+          "file": "docs/research/M146-unlock-audit.md",
+          "lines": "420-429"
+        }
+      ],
+      "denominator_chain": [
+        "candidate M4 flat and edge captures",
+        "scorecard requires at least 500 eligible sites and 50 per capture",
+        "no scored-site manifest proves those floors",
+        "population is undefined and M4 is not executable"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "M4's capture blocker is plausible but not demonstrated; the larger blocker is an undefined scoring population.",
+      "status": "LIVE",
+      "true_population": null,
+      "missing_evidence": "An input-only scored-site manifest demonstrating at least 500 eligible sites overall and 50 per capture, with commissioning and scored inputs separated.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NOT_APPLICABLE",
+      "resolved_verdict": null,
+      "exact_replacement_text": "M4 remains UNMEASURED: no admitted site manifest defines the scored flat/edge population or proves the 500-overall and 50-per-capture floors. This is an explicit evidence gap, not an unstated pass."
+    },
+    {
+      "id": "s08-m160-m8-fail-and-unmeasured",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-a11d5d4d362c8d865fa03430"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "full_population_fail_plus_explicit_unmeasured_axis",
+      "source_locations": [
+        {
+          "file": "docs/research/M160-amendment6-reachability.md",
+          "lines": "90-99"
+        }
+      ],
+      "denominator_chain": [
+        "every output sample in the shipping Catmull-Rom M8-R trace",
+        "1.030569% violations",
+        "exact-zero scorecard bar",
+        "M8-R FAIL",
+        "M8-O v1.5 has no commissioned measurement"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "Shipping Catmull-Rom fails M8-R; M8-O v1.5 is UNMEASURED.",
+      "status": "LIVE",
+      "true_population": "All samples in each scored M8-R capture; M8-O requires every scored final-output capture.",
+      "missing_evidence": "A landed corrected gather with V=0 on every scored M8-R capture and an independently recommissioned M8-O checker producing V=0 on every scored capture.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "M8-R is FAIL because the exact-zero bar is violated at 1.030569% of the scored output population. M8-O v1.5 is UNMEASURED, not PASS. Clearance requires V=0 for both axes on every scored capture."
+    },
+    {
+      "id": "s08-m89-corpus-prevalence",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-862ce521ac5f4e98c803b019",
+        "den-befecfb9b1715b4e0368e0b9"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "observed_census_without_frozen_owner_universe",
+      "source_locations": [
+        {
+          "file": "docs/research/M89-robustness-mask.md",
+          "lines": "568-582"
+        },
+        {
+          "file": "docs/research/M89-robustness-mask.md",
+          "lines": "1068-1076"
+        }
+      ],
+      "denominator_chain": [
+        "23 surveyed real owner stacks",
+        "per-stack contamination rate",
+        "null-normalized threshold greater than 20x",
+        "8 observed stacks clear the threshold",
+        "complete owner-stack universe and selection rule not frozen"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "Contamination is common, 8 of 23 stacks exceed 20x the null, and lead-1-cpl is the most contaminated stack in the corpus.",
+      "status": "CAVEATED",
+      "true_population": null,
+      "missing_evidence": "A frozen exhaustive owner-stack manifest or a principled sampling design for corpus-wide prevalence and rank.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Within the 23 surveyed stacks, 8 exceed 20x the null and lead-1-cpl ranks highest. The exact prevalence and corpus-wide maximum remain conditional because the complete owner-stack universe and selection rule were not frozen."
+    },
+    {
+      "id": "s08-m90-round2-historical-correction",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-667abf1960d441c3094f35f2",
+        "den-432a969b6f021675499f0828"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "historical_documented_model_correction",
+      "source_locations": [
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "lines": "24-32"
+        },
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "lines": "550-565"
+        },
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "lines": "735-850"
+        }
+      ],
+      "denominator_chain": [
+        "Round 1 assumed rho_warp=1",
+        "bright-octave scalar reported as +285.71%",
+        "Round 2 measured warp correlation and resampler variance",
+        "two-parameter W and rho(d) model",
+        "mean correction at n_eff=44.19 became +19.04%",
+        "registered sign and monotonicity prediction failed"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "Merged over-confidence reached +285.71%, rho_warp=1 supplied the bound, and the correction was positive and monotone in n_eff.",
+      "status": "SUPERSEDED",
+      "true_population": "The Round-2 measured pair/lag and resampler populations for the four reported stacks; broader generalization remains governed by the separate six-stack cap.",
+      "missing_evidence": "None for superseding the Round-1 scalar. Representative uncapped reruns are still needed for corpus-wide blast-radius ranges.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "YES",
+      "resolved_verdict": "rho_warp=1 is false; the scalar model is inadequate. The measured mean at n_eff=44.19 is +19.04%, the correction is negative on foam, and it is not monotone in n_eff.",
+      "exact_replacement_text": "Round 1's +285.71% and rho_warp=1 model are superseded. Round 2 measures a two-parameter (W, rho(d)) response: mean Delta sigma is +19.04% at n_eff=44.19, -0.76% on foam, and non-monotone in n_eff."
+    },
+    {
+      "id": "s08-m90-six-stack-cap",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-087cdf8ab813f04392a30e73",
+        "den-fe198e05f899de35b34d0825",
+        "den-8b7c5f3e0d6ecd60cb7125a4",
+        "den-b25f726e58dbdc38fbf888d3",
+        "den-7eee221aa1b3c92016465512",
+        "den-bad786f887ea445ab868bf8f",
+        "den-02238c89d4e747fea9ffddf3",
+        "den-33fa05d305c1c842a919d2d7",
+        "den-ed481aaed868efad44a0286a",
+        "den-23a1c4cfcb7507cf95a9b4fc",
+        "den-8f2ba461960f081dfc4f17d2",
+        "den-fd4686be0f932ec679415013",
+        "den-8bc3999c9e8c3e16adc0a8b5",
+        "den-4847f169fa6a04e32165e914",
+        "den-34a15c47130ed653b7a6f349",
+        "den-0be407382455b146e39966b5",
+        "den-0800c85ef4163c33ae610273",
+        "den-dd1d03e1a1eca9deb4ba8ffd",
+        "den-1c8abc66915221d537107fd6",
+        "den-8f160087eec9227899184e55",
+        "den-969e32f80c37bb1a73436bc5",
+        "den-487f4211ba36f61af1fcb2e0",
+        "den-412a2e5860096343607bbac5",
+        "den-54759ded8f7cacab3f1feab1"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "live_capped_blast_radius_measurement",
+      "source_locations": [
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "lines": "5-17"
+        },
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "lines": "248-276"
+        },
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "lines": "375-382"
+        },
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "lines": "560-568"
+        }
+      ],
+      "denominator_chain": [
+        "six stacks chosen for decode speed and label clarity",
+        "stacks deeper than 60 truncated to first 60 frames",
+        "all frames and pixels inside each capped run",
+        "reported zero kappa-only selection changes and 0.0006%-0.0073% election-winner movement"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "Kappa alone is free and published images survive the default flip because election winners move on at most 0.0073% of pixels across all six stacks.",
+      "status": "CAVEATED",
+      "true_population": "Every frame and output pixel in a frozen representative target-stack population.",
+      "missing_evidence": "Uncapped full-stack reruns plus either an exhaustive target-stack manifest or a principled sampling design.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "On the six measured runs, with deep stacks capped at their first 60 frames, kappa-only moved zero selection decisions and the combined change moved 0.0006%-0.0073% of election winners. Do not promote that observed maximum to a corpus-wide bound without uncapped representative reruns."
+    },
+    {
+      "id": "s08-m90-bandwidth-bar",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-e6fc14ae2fe1a5d99228f04a",
+        "den-b27d8e115397d6eda06cd012"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_registered_comparison_set",
+      "source_locations": [
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "lines": "770-840"
+        }
+      ],
+      "denominator_chain": [
+        "registered F-stability bar",
+        "18 planned cross-radius comparisons",
+        "all 18 evaluated",
+        "all moved 27%-43% against a 20% bar",
+        "border bug removed and residual consumer-dependent bandwidth effect diagnosed"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The bandwidth 20% bar FAILED on 18 of 18 comparisons.",
+      "status": "LIVE",
+      "true_population": "All 18 comparisons in the registered bandwidth check.",
+      "missing_evidence": "None about the denominator. The source records that the prescribed unidentifiability exit was poorly targeted and separately shows the substantive rho_warp=1 ruling is robust at every tested bandwidth.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The registered bandwidth bar remains FAIL: all 18 planned comparisons move 27%-43% against a 20% limit. After removing border contamination, F is still consumer-bandwidth-dependent; do not reinterpret the failed bar as an unstated sample."
+    },
+    {
+      "id": "s08-vadj13-max-baseline-acquittals",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-e0e08b4f3003a4c0b1d18abe",
+        "den-e0c0eb515fda8fca75dbd396",
+        "den-21b1900169c0d043ae6e3047",
+        "den-156356b40105dc3d18681411",
+        "den-40db373136f307e5e623885d",
+        "den-8215969297a5cdd2319e6d81",
+        "den-9a80567f02f3e9d7c174c15b",
+        "den-7cb45ab05ac0d6b2ca3c0bb8",
+        "den-1bdd9466d1183670d01efa82",
+        "den-bf5db7009ed7d5fd8f4f3fa8",
+        "den-4ee375ebfc2e28a2b21cd0c2",
+        "den-ca920fa67e763273082b0a58",
+        "den-3a81c2a64a32143ce131b2e8"
+      ],
+      "classification": "cap",
+      "adjudicated_classification": "capped_values_with_monotone_safe_verdicts",
+      "source_locations": [
+        {
+          "file": "docs/research/V-ADJ13.md",
+          "lines": "55-82"
+        },
+        {
+          "file": "docs/research/V-ADJ13.md",
+          "lines": "289-305"
+        }
+      ],
+      "denominator_chain": [
+        "13 unresolved masters",
+        "13-25 sampled source frames per subject",
+        "NCC>=0.75 registered subset",
+        "source baseline is max over usable sampled frames",
+        "fixed measured master numerator divided by that maximum",
+        "ACQUIT if worst ratio <=1.3"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "All 13 subjects ACQUIT, with worst sampled ratios from 0.795x to 1.257x.",
+      "status": "CAVEATED",
+      "true_population": "All available registered source frames for each subject if exact source maxima are desired.",
+      "missing_evidence": "Exhaustive registered-frame rendering for exact ratios; none is required to preserve the ACQUIT direction.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "All 13 ACQUIT verdicts are monotone-safe. Their exact ratios use max baselines from 13-25 registered frames, but adding source frames can only raise each denominator and lower each fixed-master ratio; no ACQUIT can become CONVICT through exhaustive sampling."
+    },
+    {
+      "id": "s08-build-plugin-bit-identity",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-5f4ec80b8190e557c0151f0e"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_plane_control_with_code_path_repair",
+      "source_locations": [
+        {
+          "file": "docs/research/BUILD-PLUGIN.md",
+          "lines": "47-55"
+        },
+        {
+          "file": "docs/research/BUILD-PLUGIN.md",
+          "lines": "90-121"
+        }
+      ],
+      "denominator_chain": [
+        "three real 3516x2344 focus planes",
+        "8,241,504 samples per plane",
+        "bare and regularized fields compared sample-for-sample",
+        "zero differences",
+        "environment-radius conditional discovered and unified"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The crate's bit-identity claim is TRUE.",
+      "status": "CAVEATED",
+      "true_population": "All samples produced by the unified default operator under supported runtime radius resolution.",
+      "missing_evidence": "The three-plane control is not an exhaustive input-space proof; source unification and the repaired runtime radius path carry the general claim.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Bit identity is upheld on all 8,241,504 samples of each of three real planes and on the in-crate synthetic controls after unifying runtime window-radius resolution. Treat the empirical count as a complete-plane control, not as an exhaustive input-space census."
+    },
+    {
+      "id": "s08-build-halo-sharpness-metric",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-a336f29dbc783fb36642bbc1"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "historically_void_metric_rederived_without_verdict_flip",
+      "source_locations": [
+        {
+          "file": "docs/research/BUILD-HALO.md",
+          "lines": "354-366"
+        },
+        {
+          "file": "docs/research/BUILD-HALO.md",
+          "lines": "820-873"
+        }
+      ],
+      "denominator_chain": [
+        "15 detail crops on five subjects",
+        "hp_energy reported 0 of 15 worse and mean +6.7%",
+        "flat controls showed hp_energy rewards noise and artifact",
+        "original sharpness evidence voided",
+        "three-subject seam-excluded replacement found +0.3%, +0.0%, and -0.0% outside treatment boundaries"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "0 of 15 crops were worse, mean sharpness was +6.7%, therefore the fix was not a blur.",
+      "status": "SUPERSEDED",
+      "true_population": "The frozen seam-excluded ROI population in the replacement three-subject experiment for the no-blur claim.",
+      "missing_evidence": "No evidence is missing for replacing the invalid metric; broader subject generalization remains limited to the replacement population.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Void the '0 of 15 worse, mean +6.7%' hp_energy claim. Re-derived outside treatment boundaries, high-frequency energy moves +0.3% / +0.0% / -0.0%; that is the supported no-blur result."
+    },
+    {
+      "id": "s08-m111-h7-refuted",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-a79effc36060f48a9df90bb8",
+        "den-d8582d1a751a2101349b5183",
+        "den-f7dc05aa2feadb2e773f5bf7"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_registered_prediction_set",
+      "source_locations": [
+        {
+          "file": "docs/research/M111-waxy-blobs.md",
+          "lines": "382-410"
+        }
+      ],
+      "denominator_chain": [
+        "H7's four registered predictions on the symptomatic stack",
+        "all four evaluated",
+        "three failed including the nominated discriminator",
+        "one survived"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "H7 heterogeneous-PSF averaging is REFUTED.",
+      "status": "LIVE",
+      "true_population": "All four predictions H7 nominated for this defect diagnosis.",
+      "missing_evidence": "None about the denominator. A new mechanism would require new predictions rather than adding post hoc H7 successes.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "H7 remains REFUTED on its complete four-prediction set: 3 of 4 fail, including its nominated discriminator. The denominator is not an unstated hypothesis universe."
+    },
+    {
+      "id": "s08-m20-corpus-figure-reversal",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-2563319e474437afce822ad9"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "historical_documented_generalization_reversal",
+      "source_locations": [
+        {
+          "file": "docs/research/M20-VERIFICATION.md",
+          "lines": "20-40"
+        },
+        {
+          "file": "docs/research/M20-VERIFICATION.md",
+          "lines": "270-281"
+        }
+      ],
+      "denominator_chain": [
+        "15.1% measured on 109MSDCF",
+        "treated as a real-pixel corpus figure",
+        "five-stack check found 3.5%-65.8%",
+        "single-stack generalization refuted"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "15.1% of real pixels are below crossover and the median is 3.3x past it.",
+      "status": "SUPERSEDED",
+      "true_population": "Each named stack's complete scored pixel population; a corpus figure requires a frozen representative stack population.",
+      "missing_evidence": "A representative corpus design if one scalar prevalence is still wanted.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "YES",
+      "resolved_verdict": "15.1% is reproduced on 109MSDCF but refuted as a corpus figure; the measured five-stack range is 3.5%-65.8%. The higher-level opt-in headline survives.",
+      "exact_replacement_text": "15.1% is a 109MSDCF result, not a corpus constant. Across the measured five-stack corpus the fraction spans 3.5%-65.8%; the headline that deconvolution remains opt-in survives."
+    },
+    {
+      "id": "s08-m55-b6-threshold",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-1d848a091794aef1c95f7926",
+        "den-795a2e7040689ee0e9d91fc3",
+        "den-a62156015c7e2a219fa7cd20",
+        "den-5025a429c71bc3761c6960b4",
+        "den-6612236bb2e96bee0cf9b037",
+        "den-7c2866ab2a9e7fec2977d6df"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "acceptance_definition_with_documented_dead_clause",
+      "source_locations": [
+        {
+          "file": "docs/research/M55-acceptance-spec.md",
+          "lines": "238-263"
+        },
+        {
+          "file": "docs/research/M55-acceptance-spec.md",
+          "lines": "1316-1326"
+        },
+        {
+          "file": "docs/research/M55-acceptance-spec.md",
+          "lines": "1400-1410"
+        }
+      ],
+      "denominator_chain": [
+        "B6 acceptance specification",
+        "100% powered cells required",
+        ">=90% pooled pass clause",
+        "per-subject and stratum clauses bind at real subject sizes",
+        "pooled clause documented as dead code"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "At least 90% of cells must pass, but the pooled clause never binds at real subject sizes.",
+      "status": "LIVE",
+      "true_population": "The complete submitted B6 cell set, partitioned by subject and power stratum.",
+      "missing_evidence": "Future candidate cells; no denominator is missing from the criterion definition.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NOT_APPLICABLE",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The >=90% value is a preregistered criterion, not an observed fraction. It is retained but documented as nonbinding at real subject sizes; powered-cell, subject, stratum, and wrong-direction clauses decide."
+    },
+    {
+      "id": "s08-m8-headline-fit-exclusions",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-91588a131c3711fde4590dc1",
+        "den-fc788be7a9c31646e3555da2",
+        "den-ba60f501257fae13d4031d60",
+        "den-88bd878e7c0019200e975fc8",
+        "den-0743f2873608a62456677bc7",
+        "den-92de7075e7028b5b2c41c18b"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_run_grid_with_declared_mechanistic_exclusion",
+      "source_locations": [
+        {
+          "file": "docs/research/M8-scratch-measured.md",
+          "lines": "18-25"
+        },
+        {
+          "file": "docs/research/M8-scratch-measured.md",
+          "lines": "338-353"
+        },
+        {
+          "file": "docs/research/M8-scratch-measured.md",
+          "lines": "542-552"
+        },
+        {
+          "file": "docs/research/M8-scratch-measured.md",
+          "lines": "598-606"
+        }
+      ],
+      "denominator_chain": [
+        "complete designed run grid",
+        "82 fit runs",
+        "8 chunk_len=1 many-chunk runs excluded because their concurrency window cannot fill",
+        "74 steady-state runs in headline fit",
+        "separate 108-run counter audit reports 8 violations"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The headline working-set fit uses 74 of 82 runs after excluding a stated transient regime.",
+      "status": "CAVEATED",
+      "true_population": "The steady-state multi-worker regime the fit models; the excluded transient regime is reported separately.",
+      "missing_evidence": "No hidden denominator evidence is missing. A model claiming all regimes would need to model the excluded transient cases explicitly.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Headline fit: n=74 steady-state runs from the complete 82-run grid. Eight chunk_len=1 many-chunk runs are excluded by a stated mechanistic rule and reported separately; do not describe the fit as covering that transient regime."
+    },
+    {
+      "id": "s08-m92-placebo-eight-of-nine",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-0ce2254cf7b0b4a2362f7998"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_placebo_grid",
+      "source_locations": [
+        {
+          "file": "docs/research/M92-null-averaging.md",
+          "lines": "421-439"
+        }
+      ],
+      "denominator_chain": [
+        "three stacks",
+        "three placebo readings per stack",
+        "nine total planned readings",
+        "eight pass",
+        "one symmetric-arm failure diagnosed while the registered placebo passes 3 of 3"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "Placebo is 8 of 9 pass and the one failure is diagnosed.",
+      "status": "CAVEATED",
+      "true_population": "All nine readings in the frozen placebo grid.",
+      "missing_evidence": "None about the denominator. The failed symmetric arm remains a reported instrument limitation.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The placebo denominator is the complete nine-reading grid. Eight pass; the single PLsym failure is retained and diagnosed. The registered one-sided PL arm passes on all three stacks."
+    },
+    {
+      "id": "s08-vheadtohead2-zerene-deficit-retraction",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-2447565ffc8db564c4ce8592"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "historical_documented_variable_confound_reversal",
+      "source_locations": [
+        {
+          "file": "docs/research/V-HEADTOHEAD2.md",
+          "lines": "55-77"
+        },
+        {
+          "file": "docs/research/V-HEADTOHEAD2.md",
+          "lines": "750-765"
+        }
+      ],
+      "denominator_chain": [
+        "strehl and comparator developed through different tone pipelines",
+        "band-power ratio treated as resolution",
+        "block-mean tone map with no fine-resolution information reproduces the apparent gap",
+        "corrected values strengthen the confound",
+        "resolution deficit withdrawn"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "Strehl was 17-27% behind Zerene at 3-5 px features.",
+      "status": "SUPERSEDED",
+      "true_population": "Common-input, common-development comparator outputs scored by an admitted resolution instrument.",
+      "missing_evidence": "Such common-development comparator outputs; the existing files cannot answer the resolution ranking.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "YES",
+      "resolved_verdict": "The Zerene fine-scale deficit is not measurable on these files and is retracted; the measurement is dominated by development tone, not program resolution.",
+      "exact_replacement_text": "Retract the 17-27% Zerene fine-scale deficit. A tone mapping built only from 4x4 block averages reproduces or exceeds the apparent band-power gap, so these differently developed files cannot support a resolution ranking."
+    },
+    {
+      "id": "s08-vheadtohead2-focus-stack-unmeasured",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-93941a991e927f6f88b43fb6",
+        "den-f60adb8da177cd6e0ba9d6bd"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_registration_grid_refusal",
+      "source_locations": [
+        {
+          "file": "docs/research/V-HEADTOHEAD2.md",
+          "lines": "69-82"
+        },
+        {
+          "file": "docs/research/V-HEADTOHEAD2.md",
+          "lines": "763-773"
+        }
+      ],
+      "denominator_chain": [
+        "64 candidate co-located regions",
+        "all tested against a null-calibrated registration gate",
+        "41 fail registration",
+        "remaining 23 are insufficient for per-band confidence intervals",
+        "comparison abandoned as not computable"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "The patched focus-stack comparison cannot be computed on co-located regions.",
+      "status": "LIVE",
+      "true_population": "All 64 regions in the frozen candidate grid.",
+      "missing_evidence": "A correspondence method or common alignment model that establishes like-for-like content without outcome-selected regions.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NOT_APPLICABLE",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The focus-stack comparison is UNMEASURED, not lost: 41 of the complete 64-region grid fail a null-calibrated registration gate, and 23 survivors cannot support the planned per-band intervals."
+    },
+    {
+      "id": "s08-vheadtohead2-arm2-rule-fail",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-e78f4361259c0a40fe330f32",
+        "den-9b656baa4863c720abcf7d51"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_preregistered_band_set",
+      "source_locations": [
+        {
+          "file": "docs/research/V-HEADTOHEAD2.md",
+          "lines": "657-683"
+        }
+      ],
+      "denominator_chain": [
+        "four preregistered fine bands",
+        "tone-explained fraction in each band",
+        "rule required all four under 25%",
+        "three pass and one fails",
+        "fourth band's original gap was below the separate reporting floor"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "ARM 2 VERDICT: FAIL because only 3 of 4 fine bands are under 25%.",
+      "status": "CAVEATED",
+      "true_population": "All four bands named by the rule as written.",
+      "missing_evidence": "None about the denominator. A revised rule would require preregistration rather than dropping the below-floor band post outcome.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "ARM 2 remains FAIL under the four-band rule as written: 3 of 4 bands pass. Separately report that the failing fourth band began below the 1.34 gap floor and that all three bands carrying the substantive claim pass."
+    },
+    {
+      "id": "s08-vheadtohead2-rim-headline",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-01d7268a7f6d9e6560629fae"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_named_comparison_set",
+      "source_locations": [
+        {
+          "file": "docs/research/V-HEADTOHEAD2.md",
+          "lines": "1974-1987"
+        }
+      ],
+      "denominator_chain": [
+        "eight admitted rim comparisons",
+        "all eight classified",
+        "three ahead",
+        "five level",
+        "zero behind"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "Rims: strehl is ahead on 3 of 8 comparisons, level on 5, and behind on none.",
+      "status": "LIVE",
+      "true_population": "The eight admitted rim comparisons in the reported head-to-head design.",
+      "missing_evidence": "A broader representative comparator population would be needed for a product-wide ranking; none is needed for the eight-comparison result.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Within the eight admitted rim comparisons, strehl is ahead on 3, level on 5, and behind on 0. Do not generalize beyond this fixed comparison set without a new design."
+    },
+    {
+      "id": "s08-cover-default-retained",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-f9ac1e7996673a267ab15b0e",
+        "den-63aa292ff6e708241e95a4ee"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "exhaustive_counterexample_to_every_stack_gate",
+      "source_locations": [
+        {
+          "file": "docs/research/cover-default.md",
+          "lines": "401-420"
+        }
+      ],
+      "denominator_chain": [
+        "preregistered at-least-80%-retained gate",
+        "complete 109MSDCF pixel extent after evidenced safe inset",
+        "64.60% retained",
+        "gate requires success on every stack",
+        "one complete counterexample forces FAIL"
+      ],
+      "consequence_tier": "CRITICAL",
+      "original_conclusion": "Crop fails the retained-area gate and DEFAULT_COVER_MODE remains Scale.",
+      "status": "LIVE",
+      "true_population": "All original pixels of every admitted stack; a single complete stack below 80% is sufficient to fail an every-stack rule.",
+      "missing_evidence": "No denominator evidence can rescue this implementation's current default decision. A repaired early-crop implementation needs a new preregistered run.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "The retained-area gate remains FAIL: 109MSDCF retains 64.60% against an at-least-80% every-stack bar. This complete counterexample is sufficient; DEFAULT_COVER_MODE remains Scale."
+    },
+    {
+      "id": "s08-build-crop-refit-proxy",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-2ff33d8fbf84fdca253d7f30"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "fixed_one_frame_proxy_subsample",
+      "source_locations": [
+        {
+          "file": "docs/research/BUILD-CROP.md",
+          "lines": "1618-1642"
+        }
+      ],
+      "denominator_chain": [
+        "22 scored subjects",
+        "one mid-stack proxy frame per subject",
+        "proxy validated on one subject as ordering-preserving but effect-compressing",
+        "18 proxy wins and four proxy losses",
+        "four losses at or below proxy resolution"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The re-fit beats shipped on 18 of 22 scored subjects and loses on four.",
+      "status": "CAVEATED",
+      "true_population": "Full delivered masters for the 22 scored subjects if the conclusion is about render quality rather than proxy ordering.",
+      "missing_evidence": "Full-master re-renders and scoring for all 22 subjects, or a multi-subject calibration proving the one-frame proxy's ordering and resolution.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "On the one-mid-stack-frame proxy, the re-fit beats shipped on 18 of 22 subjects. The four apparent losses are at or below proxy resolution. Treat this as proxy ordering, not a 22-master render verdict, until full-master checks exist."
+    },
+    {
+      "id": "s08-m26-three-frame-saturation",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-c1853a5ee2c44e79ff18b65b"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "three_frame_cap_mislabeled_as_stack_census",
+      "source_locations": [
+        {
+          "file": "docs/research/M26-colour-clipping-measured.md",
+          "lines": "96-116"
+        }
+      ],
+      "denominator_chain": [
+        "six named stacks",
+        "first, middle, and last frame only",
+        "pixel census inside those three frames",
+        "four sampled stacks show no value within 39% of white",
+        "wording promotes three-frame observation to whole-stack never"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "Four of six stacks never come within 39% of the white level; saturation is per-stack and must be detected.",
+      "status": "CAVEATED",
+      "true_population": "Every frame of each of the six stacks for a whole-stack 'never' claim.",
+      "missing_evidence": "An all-frame maximum or a proven bound for the four stacks represented by only first/middle/last frames.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "UNRESOLVED",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Across the first, middle, and last frames sampled from each of six stacks, four stacks had no sampled pixel within 39% of the white level and two reached saturation. Whole-stack 'never' claims require checking every frame; the evidence still shows saturation cannot be assumed universal."
+    },
+    {
+      "id": "s08-m131-sixty-three-of-sixty-four",
+      "summary": "08",
+      "summary_claim_ids": [
+        "den-04f7426a1d99abdd4a4734d0",
+        "den-7def527c4dcae1ad7dd477d7"
+      ],
+      "classification": "unstated",
+      "adjudicated_classification": "complete_site_grid_and_directional_tail_check",
+      "source_locations": [
+        {
+          "file": "docs/research/M131-cand2-ruling.md",
+          "lines": "284-309"
+        }
+      ],
+      "denominator_chain": [
+        "64 fixed grid sites",
+        "both metrics and both stacks evaluated at each site",
+        "63 sites have an interior peak",
+        "one boundary-peak site makes the exact 64-site rule fail",
+        "unmatched 26/14-frame tails contain none of the 64 observed maxima"
+      ],
+      "consequence_tier": "HIGH",
+      "original_conclusion": "The exact 64-site claim fails rather than being rounded up; the observed unmatched tail has no route to manufacture a dense advantage on this grid.",
+      "status": "LIVE",
+      "true_population": "All 64 sites in the frozen grid.",
+      "missing_evidence": "No denominator evidence is missing for this grid. The source correctly refuses to generalize the tail result to an unobserved task.",
+      "evidence_label": "INFERRED_BY_READING",
+      "verdict_flip": "NO",
+      "resolved_verdict": null,
+      "exact_replacement_text": "Rule 18 fails on the complete 64-site grid because only 63 sites peak internally in both metrics and stacks. The 26/14 unmatched tails contain none of those observed maxima; no broader task claim is licensed."
+    }
+  ],
+  "coverage": {
+    "summary_07": {
+      "claims_reviewed": 11,
+      "claims_represented_by_findings": 11,
+      "unrepresented_claims": 0
+    },
+    "summary_08": {
+      "claims_reviewed": 274,
+      "source_files_reviewed": 31,
+      "source_files": [
+        {
+          "file": "docs/proposals/2026-08-sota-path.md",
+          "claims": 12,
+          "cap": 0,
+          "unstated": 12
+        },
+        {
+          "file": "docs/proposals/2026-09-phase0-triage.md",
+          "claims": 1,
+          "cap": 0,
+          "unstated": 1
+        },
+        {
+          "file": "docs/proposals/2026-09-phase1-design.md",
+          "claims": 1,
+          "cap": 0,
+          "unstated": 1
+        },
+        {
+          "file": "docs/research/BUILD-CROP.md",
+          "claims": 12,
+          "cap": 0,
+          "unstated": 12
+        },
+        {
+          "file": "docs/research/BUILD-HALO.md",
+          "claims": 30,
+          "cap": 0,
+          "unstated": 30
+        },
+        {
+          "file": "docs/research/BUILD-PLUGIN.md",
+          "claims": 3,
+          "cap": 0,
+          "unstated": 3
+        },
+        {
+          "file": "docs/research/M111-waxy-blobs.md",
+          "claims": 16,
+          "cap": 0,
+          "unstated": 16
+        },
+        {
+          "file": "docs/research/M113-kernel-verify.md",
+          "claims": 5,
+          "cap": 0,
+          "unstated": 5
+        },
+        {
+          "file": "docs/research/M131-cand2-ruling.md",
+          "claims": 2,
+          "cap": 0,
+          "unstated": 2
+        },
+        {
+          "file": "docs/research/M144-reference-uncertainty.md",
+          "claims": 6,
+          "cap": 0,
+          "unstated": 6
+        },
+        {
+          "file": "docs/research/M146-unlock-audit.md",
+          "claims": 6,
+          "cap": 0,
+          "unstated": 6
+        },
+        {
+          "file": "docs/research/M160-amendment6-reachability.md",
+          "claims": 1,
+          "cap": 0,
+          "unstated": 1
+        },
+        {
+          "file": "docs/research/M162-noise-regression.md",
+          "claims": 1,
+          "cap": 0,
+          "unstated": 1
+        },
+        {
+          "file": "docs/research/M20-VERIFICATION.md",
+          "claims": 19,
+          "cap": 0,
+          "unstated": 19
+        },
+        {
+          "file": "docs/research/M26-colour-clipping-measured.md",
+          "claims": 2,
+          "cap": 0,
+          "unstated": 2
+        },
+        {
+          "file": "docs/research/M40-VERIFICATION.md",
+          "claims": 15,
+          "cap": 0,
+          "unstated": 15
+        },
+        {
+          "file": "docs/research/M53-flat-ratio.md",
+          "claims": 1,
+          "cap": 0,
+          "unstated": 1
+        },
+        {
+          "file": "docs/research/M55-acceptance-spec.md",
+          "claims": 7,
+          "cap": 0,
+          "unstated": 7
+        },
+        {
+          "file": "docs/research/M60-robustness-mask-at-merge-time.md",
+          "claims": 3,
+          "cap": 0,
+          "unstated": 3
+        },
+        {
+          "file": "docs/research/M8-scratch-measured.md",
+          "claims": 6,
+          "cap": 0,
+          "unstated": 6
+        },
+        {
+          "file": "docs/research/M81-estimation-merge.md",
+          "claims": 2,
+          "cap": 0,
+          "unstated": 2
+        },
+        {
+          "file": "docs/research/M89-robustness-mask.md",
+          "claims": 14,
+          "cap": 0,
+          "unstated": 14
+        },
+        {
+          "file": "docs/research/M90-prnu-noise-model.md",
+          "claims": 32,
+          "cap": 29,
+          "unstated": 3
+        },
+        {
+          "file": "docs/research/M92-null-averaging.md",
+          "claims": 7,
+          "cap": 0,
+          "unstated": 7
+        },
+        {
+          "file": "docs/research/V-ADJ13.md",
+          "claims": 18,
+          "cap": 18,
+          "unstated": 0
+        },
+        {
+          "file": "docs/research/V-CA-anti-prereg.md",
+          "claims": 10,
+          "cap": 0,
+          "unstated": 10
+        },
+        {
+          "file": "docs/research/V-HEADTOHEAD.md",
+          "claims": 2,
+          "cap": 0,
+          "unstated": 2
+        },
+        {
+          "file": "docs/research/V-HEADTOHEAD2.md",
+          "claims": 24,
+          "cap": 0,
+          "unstated": 24
+        },
+        {
+          "file": "docs/research/V-SOFTCHECK-coherence.md",
+          "claims": 1,
+          "cap": 0,
+          "unstated": 1
+        },
+        {
+          "file": "docs/research/V-seam.md",
+          "claims": 1,
+          "cap": 0,
+          "unstated": 1
+        },
+        {
+          "file": "docs/research/cover-default.md",
+          "claims": 14,
+          "cap": 0,
+          "unstated": 14
+        }
+      ],
+      "non_finding_disposition": "Claims not elevated into findings are local table rows, complete deterministic sweeps, fixed fixtures, criteria definitions, exact inventories, or repeated support for a represented finding. They do not independently supply a PASS, FAIL, UNMEASURED, capture admission, promotion, proposal, scorecard, or headline conclusion."
+    }
+  }
+}

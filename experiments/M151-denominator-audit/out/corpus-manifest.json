@@ -1,0 +1,2911 @@
+{
+  "candidate_count": 42404,
+  "candidates_sha256": "928e995d949c8e37b20462bc16e2c800ba1ae095af89ebe3edf1bd32c48f5817",
+  "corpus_sha256": "cefd3de58687750c6e8f5bf75c4373fdb1d98b345d05db90603f650cb1d96feb",
+  "direct_children_only": true,
+  "file_count": 360,
+  "files": [
+    {
+      "bytes": 35040,
+      "candidate_count": 80,
+      "git_state": "clean",
+      "lines": 224,
+      "path": "docs/proposals/2026-08-external-review.md",
+      "sha256": "a440ca4f90329923dcc966b4d3ce290ad3587982e7c4243a28462af8e587281e"
+    },
+    {
+      "bytes": 193734,
+      "candidate_count": 238,
+      "git_state": "clean",
+      "lines": 2780,
+      "path": "docs/proposals/2026-08-sota-path.md",
+      "sha256": "72f8257918e929acb3f50c4606a4a7a73a44594492f040b4fcf196072e6a0b94"
+    },
+    {
+      "bytes": 29270,
+      "candidate_count": 35,
+      "git_state": "clean",
+      "lines": 397,
+      "path": "docs/proposals/2026-09-detail-instrument-investigation.md",
+      "sha256": "165279873964e767f6fa7e6a584a782a7ff06b0e8fcfbfeb6b3041b4d3a410fb"
+    },
+    {
+      "bytes": 17071,
+      "candidate_count": 35,
+      "git_state": "clean",
+      "lines": 284,
+      "path": "docs/proposals/2026-09-next-build-path.md",
+      "sha256": "cf2210be06fec6bec7a49c5ce502b45d34bc020a949360f4130abc53bfc4c15b"
+    },
+    {
+      "bytes": 26665,
+      "candidate_count": 42,
+      "git_state": "clean",
+      "lines": 396,
+      "path": "docs/proposals/2026-09-phase0-triage.md",
+      "sha256": "c75ded4487d2e6719890cbf38de20c0519e1cb6560ef41c32ba7f49d5b70f651"
+    },
+    {
+      "bytes": 44093,
+      "candidate_count": 96,
+      "git_state": "clean",
+      "lines": 565,
+      "path": "docs/proposals/2026-09-phase1-design.md",
+      "sha256": "497ba0edbd093e333acb06dff8621485b1259e35a5c7efe8458ee011a10f32f5"
+    },
+    {
+      "bytes": 163484,
+      "candidate_count": 430,
+      "git_state": "clean",
+      "lines": 2221,
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "sha256": "eb5ed446ee06e8842c61e5f90cb1bd4a8e81ca5dfd39ef53988598ef05dcb603"
+    },
+    {
+      "bytes": 80555,
+      "candidate_count": 93,
+      "git_state": "clean",
+      "lines": 1418,
+      "path": "docs/proposals/2026-09-truth-referenced-detail.md",
+      "sha256": "c4faaa30acb3caa04315ee9197c4d7d2265eca02f5e77f153455e6aed1be62b0"
+    },
+    {
+      "bytes": 82947,
+      "candidate_count": 203,
+      "git_state": "clean",
+      "lines": 728,
+      "path": "docs/research/A-prior-corpus.md",
+      "sha256": "3fc2c0214919aa4435a78705f6ceadc7900376468eab7826e0c38f76c6d40d07"
+    },
+    {
+      "bytes": 101653,
+      "candidate_count": 45,
+      "git_state": "clean",
+      "lines": 1154,
+      "path": "docs/research/B-algorithms-sota.md",
+      "sha256": "1165fe3b8b68aebfd00e484559c670c53ffc206cf56adc0da345af5f020a241f"
+    },
+    {
+      "bytes": 157235,
+      "candidate_count": 422,
+      "git_state": "clean",
+      "lines": 2827,
+      "path": "docs/research/BUILD-BLEND.md",
+      "sha256": "f0e6b89496c874d654bae2a37165aa798e6721ea8008a2e7219874cbba3f1f09"
+    },
+    {
+      "bytes": 115523,
+      "candidate_count": 347,
+      "git_state": "clean",
+      "lines": 1998,
+      "path": "docs/research/BUILD-CHROMA.md",
+      "sha256": "0bbf0a15aafa7fb52c3ee5ee6e39c7ed7e9877e108c5a807057c19497bd1386f"
+    },
+    {
+      "bytes": 22050,
+      "candidate_count": 32,
+      "git_state": "clean",
+      "lines": 431,
+      "path": "docs/research/BUILD-COSITE.md",
+      "sha256": "2621a05762292e0c70c75bcbebc14aaf65a7011280cc1e1d4bd3f085c98edcee"
+    },
+    {
+      "bytes": 87665,
+      "candidate_count": 282,
+      "git_state": "clean",
+      "lines": 1705,
+      "path": "docs/research/BUILD-CROP.md",
+      "sha256": "e5b617c2d3b3590183925b2de6e97aaa16ee43192fe8775ce1faceeba218f8b1"
+    },
+    {
+      "bytes": 243125,
+      "candidate_count": 650,
+      "git_state": "clean",
+      "lines": 4483,
+      "path": "docs/research/BUILD-DEFECT.md",
+      "sha256": "842c900ce3d5f53a2a4c9bbf5c5931362f1bb6f8c07af95d3d81fdcc0965bd6f"
+    },
+    {
+      "bytes": 20435,
+      "candidate_count": 44,
+      "git_state": "clean",
+      "lines": 410,
+      "path": "docs/research/BUILD-DEMOSAIC.md",
+      "sha256": "179dbea0883758a0574707aeabe65bf756e605530e370ad3fb76ccc2d4c4d17e"
+    },
+    {
+      "bytes": 196986,
+      "candidate_count": 711,
+      "git_state": "clean",
+      "lines": 3536,
+      "path": "docs/research/BUILD-ELECT.md",
+      "sha256": "1c8f7ebd7ce6d4158de8fb144e7222d6abfca85414018c36c20e50ee7ee53a3c"
+    },
+    {
+      "bytes": 19553,
+      "candidate_count": 40,
+      "git_state": "clean",
+      "lines": 375,
+      "path": "docs/research/BUILD-GATE-2.md",
+      "sha256": "cc3a80b6aa145cdb59acef05b23a7d2cc1f56cdadd0a61f5a61990000aee00eb"
+    },
+    {
+      "bytes": 13783,
+      "candidate_count": 26,
+      "git_state": "clean",
+      "lines": 264,
+      "path": "docs/research/BUILD-GATE-3.md",
+      "sha256": "da112fe0c2e476f22fd98304cd8598fa8c382d0cafa5ba41692aa83bd83624bf"
+    },
+    {
+      "bytes": 91039,
+      "candidate_count": 910,
+      "git_state": "clean",
+      "lines": 1601,
+      "path": "docs/research/BUILD-GATE-4.md",
+      "sha256": "8164d871b74fddd1c0c142c7ab4b79a6d258a6aee0f9394165b31d808f3d3236"
+    },
+    {
+      "bytes": 25356,
+      "candidate_count": 96,
+      "git_state": "clean",
+      "lines": 497,
+      "path": "docs/research/BUILD-GATE-PRINT.md",
+      "sha256": "3907c9c5bcf42cecc045a2ed7b0ce13b5d14ae4c90ccbd9eaa666f1941546821"
+    },
+    {
+      "bytes": 22049,
+      "candidate_count": 53,
+      "git_state": "clean",
+      "lines": 421,
+      "path": "docs/research/BUILD-GATE.md",
+      "sha256": "fa2b41e964bf26805f2464370c5363cfefc5441de6a00e4e2835a2f4bfdc2bd4"
+    },
+    {
+      "bytes": 29701,
+      "candidate_count": 50,
+      "git_state": "clean",
+      "lines": 446,
+      "path": "docs/research/BUILD-GHOST.md",
+      "sha256": "53cf9408cf31eda8c20f3d08049f69eb0c02a4043760ff7b64910d2c220fd505"
+    },
+    {
+      "bytes": 171583,
+      "candidate_count": 514,
+      "git_state": "clean",
+      "lines": 3332,
+      "path": "docs/research/BUILD-HALO.md",
+      "sha256": "f0a61c365055162b7b043337afc9117695d316fa26cba3d95604f0cc92d86875"
+    },
+    {
+      "bytes": 83361,
+      "candidate_count": 297,
+      "git_state": "clean",
+      "lines": 1438,
+      "path": "docs/research/BUILD-HIGHLIGHT.md",
+      "sha256": "6c36f3a6eb6a2bd6395de7040d5f403dd1f091a2a88357a0034278f42efb0617"
+    },
+    {
+      "bytes": 126405,
+      "candidate_count": 396,
+      "git_state": "clean",
+      "lines": 2225,
+      "path": "docs/research/BUILD-HULL.md",
+      "sha256": "a40813f8015fc2f197c122123635bc5cab2c2329b3c2c38db7fa3d90ecfc635b"
+    },
+    {
+      "bytes": 124118,
+      "candidate_count": 459,
+      "git_state": "clean",
+      "lines": 2332,
+      "path": "docs/research/BUILD-OUTPUT.md",
+      "sha256": "d6a15ee428cd92b771ba9433060545d454db5c4c692b9325fa872ab20762edc4"
+    },
+    {
+      "bytes": 24463,
+      "candidate_count": 30,
+      "git_state": "clean",
+      "lines": 480,
+      "path": "docs/research/BUILD-PLUGIN.md",
+      "sha256": "52a8ac9e6ffa2d4c74a8ef87b246a9dfb20c693b5728c92b100adb90c28c8f24"
+    },
+    {
+      "bytes": 25115,
+      "candidate_count": 89,
+      "git_state": "clean",
+      "lines": 501,
+      "path": "docs/research/BUILD-PYRNOISE-ADJUDICATION.md",
+      "sha256": "1ff93169df88f3c2e5f7b341821f417e2839e663bc6d2a8b9644d2872daa72f9"
+    },
+    {
+      "bytes": 25470,
+      "candidate_count": 97,
+      "git_state": "clean",
+      "lines": 484,
+      "path": "docs/research/BUILD-PYRNOISE.md",
+      "sha256": "9845624f266ed8c15ec54ad97d39263b13d1c649d597bc0085cf129ba2e5d352"
+    },
+    {
+      "bytes": 149839,
+      "candidate_count": 297,
+      "git_state": "clean",
+      "lines": 2826,
+      "path": "docs/research/BUILD-RENDER.md",
+      "sha256": "2dd378b42cb3379cd5546170ce4c4e25a547a0336d4f28578f24309a9903d72e"
+    },
+    {
+      "bytes": 295114,
+      "candidate_count": 443,
+      "git_state": "clean",
+      "lines": 5523,
+      "path": "docs/research/BUILD-SHARP.md",
+      "sha256": "5f0763c7a5d469e3def80fb36cdbd7599342d3aa99085e115716ad8066ca6f23"
+    },
+    {
+      "bytes": 23387,
+      "candidate_count": 27,
+      "git_state": "clean",
+      "lines": 452,
+      "path": "docs/research/BUILD-SHARPMETRIC.md",
+      "sha256": "fa12e55f908d45de6e7efb864fe6dc260a43e8e046c161a4172e56b25e9bbfed"
+    },
+    {
+      "bytes": 34594,
+      "candidate_count": 53,
+      "git_state": "clean",
+      "lines": 606,
+      "path": "docs/research/BUILD-SOFTGATE.md",
+      "sha256": "54020aa0a7dfea12b497cd4abd933242d4311d5f0f0a12e17c9b163d0f63641a"
+    },
+    {
+      "bytes": 101069,
+      "candidate_count": 228,
+      "git_state": "clean",
+      "lines": 1820,
+      "path": "docs/research/BUILD-TRIAGE.md",
+      "sha256": "6932b7ad693893d9169f8af2b487fbe7eb833febd4bce762fe602d9ef24914a8"
+    },
+    {
+      "bytes": 76447,
+      "candidate_count": 15,
+      "git_state": "clean",
+      "lines": 867,
+      "path": "docs/research/C-landscape.md",
+      "sha256": "c65f59c7324f25e361f57128265840afe5959ae29e365271647544ec57dab808"
+    },
+    {
+      "bytes": 76488,
+      "candidate_count": 55,
+      "git_state": "clean",
+      "lines": 793,
+      "path": "docs/research/D-rust-and-hardware.md",
+      "sha256": "4c9e6bf499b22637dd1c964612d6275e2b0bde3bdcd7bc5a4b20b45da7bba91e"
+    },
+    {
+      "bytes": 40570,
+      "candidate_count": 78,
+      "git_state": "clean",
+      "lines": 690,
+      "path": "docs/research/DELIVER-V6.md",
+      "sha256": "49a7c4423df333b01218a8b68f9447ced8b7726da738b8ca25c583e557641979"
+    },
+    {
+      "bytes": 130752,
+      "candidate_count": 52,
+      "git_state": "clean",
+      "lines": 1706,
+      "path": "docs/research/E-plugin-architecture.md",
+      "sha256": "e8fd022956f1f9c55b47d114ecfccc2d3e2559928045efadcb936794c72b2103"
+    },
+    {
+      "bytes": 96879,
+      "candidate_count": 100,
+      "git_state": "clean",
+      "lines": 1444,
+      "path": "docs/research/F-camera-lens-optics.md",
+      "sha256": "56ccbae7d6ed64f29a854a150fcc291acabda15ad08746b4a7d5d77b43089966"
+    },
+    {
+      "bytes": 127565,
+      "candidate_count": 96,
+      "git_state": "clean",
+      "lines": 895,
+      "path": "docs/research/G-edof-deconvolution.md",
+      "sha256": "d77b101114058eee2a41e7e1f09ad93e7eb37142e00e7c527c5b91948a8200bd"
+    },
+    {
+      "bytes": 3370,
+      "candidate_count": 3,
+      "git_state": "clean",
+      "lines": 64,
+      "path": "docs/research/M-CAND1.md",
+      "sha256": "37e87eb9b23eb8e5a83cfb3163f41635b8d89e77c7b5988e3a947e33836bcba0"
+    },
+    {
+      "bytes": 24027,
+      "candidate_count": 22,
+      "git_state": " M",
+      "lines": 393,
+      "path": "docs/research/M-CAND2.md",
+      "sha256": "f337abe5e55ee3a9e0ddcaa2bcf6d76b25013bb1fbcc8998b5adc90459b6bf64"
+    },
+    {
+      "bytes": 38428,
+      "candidate_count": 91,
+      "git_state": "clean",
+      "lines": 823,
+      "path": "docs/research/M-COVER-BORDER.md",
+      "sha256": "b75a7bb01e83a33f0418a073bf87e2d64af919c5d6a71321dbb9dcf03f5944c2"
+    },
+    {
+      "bytes": 42537,
+      "candidate_count": 198,
+      "git_state": "clean",
+      "lines": 727,
+      "path": "docs/research/M-COVER-NATIVE.md",
+      "sha256": "cae2102496fe23d716e31c6a2238e169d6d0b06fbdfbf0ce0bb4905df3ea27a3"
+    },
+    {
+      "bytes": 9800,
+      "candidate_count": 53,
+      "git_state": "clean",
+      "lines": 200,
+      "path": "docs/research/M-FLATNULL.md",
+      "sha256": "f298eccfcb670fcf2a6db0ef35e052a98f58c3b1550ca1568e4370b5a9c77947"
+    },
+    {
+      "bytes": 12495,
+      "candidate_count": 25,
+      "git_state": "clean",
+      "lines": 280,
+      "path": "docs/research/M-FRC-NODE-GATE.md",
+      "sha256": "c8e0a7c4686e986017364cb5d8b2153d276b15bfb5eb284475360c1150577bb6"
+    },
+    {
+      "bytes": 36884,
+      "candidate_count": 49,
+      "git_state": "clean",
+      "lines": 636,
+      "path": "docs/research/M-FRC-VIABILITY.md",
+      "sha256": "03dd758a74f85764a03de4fce1a82ca42ef8570681e9b8079ddec4fb5dd3965c"
+    },
+    {
+      "bytes": 11323,
+      "candidate_count": 23,
+      "git_state": "clean",
+      "lines": 236,
+      "path": "docs/research/M-PHASE0-ASTIG.md",
+      "sha256": "97499eeb80b183c2975888276ed3eec57325bf910468af70c8f0293ca8949860"
+    },
+    {
+      "bytes": 16613,
+      "candidate_count": 21,
+      "git_state": "clean",
+      "lines": 320,
+      "path": "docs/research/M-PHASE0-CURV.md",
+      "sha256": "872d05b28604cbf0a9533524fc875d48459edeee60dcd772e7d064916afc2f2b"
+    },
+    {
+      "bytes": 7000,
+      "candidate_count": 28,
+      "git_state": "clean",
+      "lines": 131,
+      "path": "docs/research/M-PHASE0-DECODE2.md",
+      "sha256": "babc21b714e5370fe580a9314238fbcfafbe7f714fbd53cca6a93300bd3c66d7"
+    },
+    {
+      "bytes": 6292,
+      "candidate_count": 18,
+      "git_state": "clean",
+      "lines": 119,
+      "path": "docs/research/M-PHASE0-DPAR2.md",
+      "sha256": "f7b8317dbc6bb7d41e0dbfbb8925b906300803c14f7500bfb6317de73af83687"
+    },
+    {
+      "bytes": 24661,
+      "candidate_count": 59,
+      "git_state": "clean",
+      "lines": 460,
+      "path": "docs/research/M-PHASE0-LCA.md",
+      "sha256": "d1ebbe44614fbb90be6bafe84f50401628e51e0ce2cbeec5df9aee0651d4a978"
+    },
+    {
+      "bytes": 6607,
+      "candidate_count": 49,
+      "git_state": "clean",
+      "lines": 120,
+      "path": "docs/research/M-PHASE0-NVME2.md",
+      "sha256": "e33311870295f677773ecff19d54d8f7fe6a6fb25e7a0f079d4b578e005c535b"
+    },
+    {
+      "bytes": 14584,
+      "candidate_count": 60,
+      "git_state": "clean",
+      "lines": 264,
+      "path": "docs/research/M-PHASE0-PIPE.md",
+      "sha256": "a51b1af8e2693a36f8d2ee24c3058171e3a09f8ec80185fe1fa296d0dea81ba5"
+    },
+    {
+      "bytes": 13601,
+      "candidate_count": 62,
+      "git_state": "clean",
+      "lines": 269,
+      "path": "docs/research/M-PHASE0-PTC.md",
+      "sha256": "7474e243d63c94d485a9a4a45465193c321f3367a837e2c6fd71285077d02bb3"
+    },
+    {
+      "bytes": 16036,
+      "candidate_count": 16,
+      "git_state": "clean",
+      "lines": 312,
+      "path": "docs/research/M-PHASE0-QUINCUNX.md",
+      "sha256": "d38145f33f2ccaaba5fd9521c4a3cba2d5e51a15c1b5166a7ad693fb1d65dfcb"
+    },
+    {
+      "bytes": 12427,
+      "candidate_count": 12,
+      "git_state": "clean",
+      "lines": 258,
+      "path": "docs/research/M-PHASE0-RHO.md",
+      "sha256": "6f8340fb08780027838adc945e178a78bc86835bb86df85854f0c699df28337a"
+    },
+    {
+      "bytes": 19119,
+      "candidate_count": 72,
+      "git_state": "clean",
+      "lines": 326,
+      "path": "docs/research/M-PHASE0-SLANTEDGE.md",
+      "sha256": "a4061ea7e1d06c3c1e2fc8bf6f095427ceb2f23f3c5170efecd096b99928b9f8"
+    },
+    {
+      "bytes": 17388,
+      "candidate_count": 33,
+      "git_state": "clean",
+      "lines": 298,
+      "path": "docs/research/M-PHASE0-SPLIT.md",
+      "sha256": "aca7e41c42eb2575027ec747178e8da631087a41d9864f621776156692eebcf6"
+    },
+    {
+      "bytes": 9308,
+      "candidate_count": 16,
+      "git_state": "clean",
+      "lines": 173,
+      "path": "docs/research/M-PHASE0-SPLIT2.md",
+      "sha256": "4a2b50040a44cad491e794d22bb6db4691965ea4ee600f304fc96be4798efed3"
+    },
+    {
+      "bytes": 14773,
+      "candidate_count": 36,
+      "git_state": "clean",
+      "lines": 261,
+      "path": "docs/research/M-PHASE0-VEIL2.md",
+      "sha256": "2608457662c8202f2e00e30c00001522b91628eadddfb03914a6f903a8bc9386"
+    },
+    {
+      "bytes": 14451,
+      "candidate_count": 58,
+      "git_state": "clean",
+      "lines": 298,
+      "path": "docs/research/M-PHASE0-XSPEC.md",
+      "sha256": "4d84c64d896f9c9d5fef59d9ac73d9f7c157e93bb91c0d65fa76c1459944009a"
+    },
+    {
+      "bytes": 16379,
+      "candidate_count": 90,
+      "git_state": "clean",
+      "lines": 267,
+      "path": "docs/research/M-PHASE0-ZFIELD.md",
+      "sha256": "2a2c4f885ad474612fccdfe57bf536489b32c8b3d29970fca76db9ae9c05a5e7"
+    },
+    {
+      "bytes": 5096,
+      "candidate_count": 3,
+      "git_state": "clean",
+      "lines": 110,
+      "path": "docs/research/M1-decode-measured.md",
+      "sha256": "e5e8fa87e54b5dd5bf9f7ae90dbe9e9e2796d7e49a19b9734b139231e4390bfe"
+    },
+    {
+      "bytes": 36308,
+      "candidate_count": 107,
+      "git_state": "clean",
+      "lines": 654,
+      "path": "docs/research/M10-deep-alignment-measured.md",
+      "sha256": "4516839f5bc598ef2b35f4d52d7cf9e7de36f436ad6a27801b2770b421e597d6"
+    },
+    {
+      "bytes": 44110,
+      "candidate_count": 65,
+      "git_state": "clean",
+      "lines": 992,
+      "path": "docs/research/M100-exposure.md",
+      "sha256": "0c9f9f7745729ccafee8dc030d587fd3d22651a48230568c6a90084702579593"
+    },
+    {
+      "bytes": 48483,
+      "candidate_count": 118,
+      "git_state": "clean",
+      "lines": 875,
+      "path": "docs/research/M101-defect.md",
+      "sha256": "7607d498bf8ce9d7215cd939c903452e8cabe8aacee1f77b96378e70c0e44eb7"
+    },
+    {
+      "bytes": 31696,
+      "candidate_count": 54,
+      "git_state": "clean",
+      "lines": 581,
+      "path": "docs/research/M102-simulator.md",
+      "sha256": "f0980ddb64116034da890868a75e9e445bff875932c411d4a1465dd623d7ced5"
+    },
+    {
+      "bytes": 116405,
+      "candidate_count": 201,
+      "git_state": "clean",
+      "lines": 2079,
+      "path": "docs/research/M103-halfdrift.md",
+      "sha256": "04dffd42c5f9e5ec3c3cb937af36ac16e4c11937c2848037fbc6e3a9e486fcd9"
+    },
+    {
+      "bytes": 30254,
+      "candidate_count": 61,
+      "git_state": "clean",
+      "lines": 554,
+      "path": "docs/research/M104-resample-verify.md",
+      "sha256": "b428b6cd0e9b53885f0f2f8a2e39dbe4d6b4e791c3b5b3f63ebb880028c5591f"
+    },
+    {
+      "bytes": 16070,
+      "candidate_count": 17,
+      "git_state": "clean",
+      "lines": 312,
+      "path": "docs/research/M104b-demosaic-lever.md",
+      "sha256": "0a502a3dd25a26101c31113238edc0d57e73006e1cd7e3f92dd6002bd8255369"
+    },
+    {
+      "bytes": 6987,
+      "candidate_count": 6,
+      "git_state": "clean",
+      "lines": 145,
+      "path": "docs/research/M104c-m95-binning-verification.md",
+      "sha256": "6ebce217f18d8cc74f8e2d933272db1a8b9c022b581ad88534f1107b02801d27"
+    },
+    {
+      "bytes": 8579,
+      "candidate_count": 27,
+      "git_state": "clean",
+      "lines": 163,
+      "path": "docs/research/M104c-mtf.md",
+      "sha256": "955d771f57da5f31d81daaf3fcfef06421c2be8a9fdb18f5b0333f7ac83c3a86"
+    },
+    {
+      "bytes": 126710,
+      "candidate_count": 91,
+      "git_state": "clean",
+      "lines": 2085,
+      "path": "docs/research/M105b-exposure-ship.md",
+      "sha256": "6002e2901bd60e47d7d4f881d26dc4baf39be81b96b7beb895198ed6be8046f5"
+    },
+    {
+      "bytes": 13857,
+      "candidate_count": 12,
+      "git_state": "clean",
+      "lines": 195,
+      "path": "docs/research/M106-freeze-attribution.md",
+      "sha256": "4867ed38e7f4cd2c637e562a20aeebd0c42a840e39a40382dc36a9d12cc51cf1"
+    },
+    {
+      "bytes": 68606,
+      "candidate_count": 129,
+      "git_state": "clean",
+      "lines": 1079,
+      "path": "docs/research/M107-chroma.md",
+      "sha256": "050681615e644897aa941485557aafe11049ed8fdad6d1bb81eebd50d41561d0"
+    },
+    {
+      "bytes": 130252,
+      "candidate_count": 237,
+      "git_state": "clean",
+      "lines": 2362,
+      "path": "docs/research/M107b-lateral-correction.md",
+      "sha256": "505e618762f20a95970478a70b90d6d7482b5fda5e033997aa9e948cd825f6a0"
+    },
+    {
+      "bytes": 6371,
+      "candidate_count": 8,
+      "git_state": "clean",
+      "lines": 132,
+      "path": "docs/research/M107b-radial-chroma.md",
+      "sha256": "0d585c1d1633bf2076043326e0bf5f62a9e5e6e8d75cd0f5505fcff89c74eb70"
+    },
+    {
+      "bytes": 67398,
+      "candidate_count": 49,
+      "git_state": "clean",
+      "lines": 1251,
+      "path": "docs/research/M108-freeze-test.md",
+      "sha256": "df58a14920b678fc020897ebc82611138011321f065c5656592d769c96621b55"
+    },
+    {
+      "bytes": 52123,
+      "candidate_count": 150,
+      "git_state": "clean",
+      "lines": 952,
+      "path": "docs/research/M109-highlights.md",
+      "sha256": "c717061746ce6fc385057e25629289236385d3fc56b075c1c34908e38dc991d3"
+    },
+    {
+      "bytes": 41318,
+      "candidate_count": 49,
+      "git_state": "clean",
+      "lines": 704,
+      "path": "docs/research/M11-focus-bakeoff-measured.md",
+      "sha256": "d6abb8680d5e07bfe1473e28c0e259c65503803569bf3fa0f05099b2560ae8cc"
+    },
+    {
+      "bytes": 119545,
+      "candidate_count": 251,
+      "git_state": "clean",
+      "lines": 1890,
+      "path": "docs/research/M110-sheet.md",
+      "sha256": "87ec95dba46024792c42ec3d3b1da55457fe5762c0ee0acefafd2e9e05558b61"
+    },
+    {
+      "bytes": 28177,
+      "candidate_count": 88,
+      "git_state": "clean",
+      "lines": 536,
+      "path": "docs/research/M110-track-jitter.md",
+      "sha256": "34b577cf14744eb2cf5750f870b1c10f17a943caf89510c65e0ce5da69fde403"
+    },
+    {
+      "bytes": 145501,
+      "candidate_count": 328,
+      "git_state": "clean",
+      "lines": 1431,
+      "path": "docs/research/M111-waxy-blobs.md",
+      "sha256": "28f6a4e88e3c7f27f36ab41389cf21ce68709a6836a204984544fe2e23290ff4"
+    },
+    {
+      "bytes": 38347,
+      "candidate_count": 68,
+      "git_state": "clean",
+      "lines": 681,
+      "path": "docs/research/M112-real-pixels.md",
+      "sha256": "d2427d66746aa60dc1edd4c1f9d9f8b585f9512f26f4f0ce5d7b7afd6b83b66d"
+    },
+    {
+      "bytes": 15142,
+      "candidate_count": 29,
+      "git_state": "clean",
+      "lines": 291,
+      "path": "docs/research/M113-ca.md",
+      "sha256": "cb533a66545821f66c897324e9119b77412309a06d81a5b3541b9dea2f90e155"
+    },
+    {
+      "bytes": 36103,
+      "candidate_count": 85,
+      "git_state": "clean",
+      "lines": 643,
+      "path": "docs/research/M113-kernel-verify.md",
+      "sha256": "5ca5f386d371883b9fb33a0b1761f79ad784c2b25d1b8425964bbaa9b19b3aae"
+    },
+    {
+      "bytes": 26608,
+      "candidate_count": 50,
+      "git_state": "clean",
+      "lines": 487,
+      "path": "docs/research/M113-spectral.md",
+      "sha256": "3e2297b50aa35a609986cb012bcbcc87a2bfbcd150fba810431d62c283d33bd9"
+    },
+    {
+      "bytes": 19620,
+      "candidate_count": 50,
+      "git_state": "clean",
+      "lines": 295,
+      "path": "docs/research/M114-ca-verify.md",
+      "sha256": "16964f927b3db9a96cf3dd6dbe45a5502edb0a7b4ea4db396b14d2a4fe17c803"
+    },
+    {
+      "bytes": 51642,
+      "candidate_count": 102,
+      "git_state": "clean",
+      "lines": 437,
+      "path": "docs/research/M115-deconv-headroom.md",
+      "sha256": "e89dc6c778df44dbe692df217e33a9112b8bb957e8e7484fced54eafca565374"
+    },
+    {
+      "bytes": 166669,
+      "candidate_count": 344,
+      "git_state": "clean",
+      "lines": 2751,
+      "path": "docs/research/M116-promotion.md",
+      "sha256": "8afc7326a71fdfd66c80fecd4abf96cf9edc64b21c9106bafadcd545bda67673"
+    },
+    {
+      "bytes": 31963,
+      "candidate_count": 42,
+      "git_state": "clean",
+      "lines": 550,
+      "path": "docs/research/M117-cache-audit.md",
+      "sha256": "1041169c1a2d44818daff23277be1b5ce369be3fc7a1dba8b38fcf53d370a766"
+    },
+    {
+      "bytes": 38794,
+      "candidate_count": 99,
+      "git_state": "clean",
+      "lines": 664,
+      "path": "docs/research/M118-resampler.md",
+      "sha256": "92e40836e88e9606f6ffb632f1cf979088b3d433387d855e1497d9c6d00024f7"
+    },
+    {
+      "bytes": 27269,
+      "candidate_count": 29,
+      "git_state": "clean",
+      "lines": 462,
+      "path": "docs/research/M119-gear-identity.md",
+      "sha256": "8983df646327ee127e9bb2488b6d516a978b62f29072df7ba906be2114cf4501"
+    },
+    {
+      "bytes": 53781,
+      "candidate_count": 155,
+      "git_state": "clean",
+      "lines": 755,
+      "path": "docs/research/M12-shrinkage-measured.md",
+      "sha256": "a197e4d632073e94ed3a58605211928609982d8cbfd8038a88abcd6d04102f7f"
+    },
+    {
+      "bytes": 88528,
+      "candidate_count": 210,
+      "git_state": "clean",
+      "lines": 1462,
+      "path": "docs/research/M120-patchwork.md",
+      "sha256": "0797f0986b08e4bdb6f417ecd6665be41802fc5024006634db101be6d574155f"
+    },
+    {
+      "bytes": 61911,
+      "candidate_count": 92,
+      "git_state": "clean",
+      "lines": 1161,
+      "path": "docs/research/M121-halo-polarity.md",
+      "sha256": "8224632ed1eafa0df12d55c9eed186f7da52deaad5bb43d865957d9d298fa6c2"
+    },
+    {
+      "bytes": 48720,
+      "candidate_count": 79,
+      "git_state": "clean",
+      "lines": 880,
+      "path": "docs/research/M122-photometric-promotion.md",
+      "sha256": "08665d552d7de2889086adc4b77381dde354f682de2ee98a4822d8c02585794a"
+    },
+    {
+      "bytes": 44362,
+      "candidate_count": 177,
+      "git_state": "clean",
+      "lines": 750,
+      "path": "docs/research/M123-outlier-mask.md",
+      "sha256": "253901b46a0623cdd88c2bf2eea24f5d27247a1ef718ab3a14a97156e637132a"
+    },
+    {
+      "bytes": 18100,
+      "candidate_count": 11,
+      "git_state": "clean",
+      "lines": 321,
+      "path": "docs/research/M124-resampler-flag.md",
+      "sha256": "d35c1e772b86f5c099bc39a7482a587dc68cd0766eb32d01bafdc68f7a45fce2"
+    },
+    {
+      "bytes": 34259,
+      "candidate_count": 82,
+      "git_state": "clean",
+      "lines": 658,
+      "path": "docs/research/M125-photometric-auto.md",
+      "sha256": "a0a54976fc5c99b43acca5ad12aff278a8751f9281256bf1435828f5d9b22abe"
+    },
+    {
+      "bytes": 47421,
+      "candidate_count": 32,
+      "git_state": "clean",
+      "lines": 861,
+      "path": "docs/research/M126-composite.md",
+      "sha256": "bcfcda783330e5ac60622e71c95130b941431c5446502ff2296e831d63c296b9"
+    },
+    {
+      "bytes": 86168,
+      "candidate_count": 251,
+      "git_state": "clean",
+      "lines": 1478,
+      "path": "docs/research/M126-default-audit.md",
+      "sha256": "8a70c3c753113048e375511b3ec92a14b868177834250c758a227d9995358b5c"
+    },
+    {
+      "bytes": 14791,
+      "candidate_count": 33,
+      "git_state": "clean",
+      "lines": 289,
+      "path": "docs/research/M127-noise-head-to-head.md",
+      "sha256": "45eb6f2e09da4b707ba03e81a8d68970c964239cae699183fbaff4fcac692e11"
+    },
+    {
+      "bytes": 58630,
+      "candidate_count": 104,
+      "git_state": "clean",
+      "lines": 1073,
+      "path": "docs/research/M13-window-depth-measured.md",
+      "sha256": "f13c3f11350cae8a1d6ea25f259da1836441148aef679a6e554ba6d0f9f47134"
+    },
+    {
+      "bytes": 32193,
+      "candidate_count": 47,
+      "git_state": "clean",
+      "lines": 797,
+      "path": "docs/research/M130-crop-early.md",
+      "sha256": "348c255314978e6c540b69549c71bbac67fb51b21c11c8005f851877547e74df"
+    },
+    {
+      "bytes": 23266,
+      "candidate_count": 24,
+      "git_state": "clean",
+      "lines": 482,
+      "path": "docs/research/M131-cand2-ruling.md",
+      "sha256": "8b57e056ecb747645f5f40813c88edefca0325720c60d7c6d52f2038f9997a2d"
+    },
+    {
+      "bytes": 42206,
+      "candidate_count": 35,
+      "git_state": "clean",
+      "lines": 651,
+      "path": "docs/research/M132-blocker-d-routes.md",
+      "sha256": "127bdf0b6d9bffc02d17090e4cd46a2cf71160a1b8a3971270c744f67537b11c"
+    },
+    {
+      "bytes": 120898,
+      "candidate_count": 264,
+      "git_state": "clean",
+      "lines": 1648,
+      "path": "docs/research/M133-blocker-audit.md",
+      "sha256": "915f73fdf0044da60723fc44410adf0799644e1ac7f6aaa8ce93fe63db6d43d7"
+    },
+    {
+      "bytes": 105190,
+      "candidate_count": 154,
+      "git_state": "clean",
+      "lines": 1958,
+      "path": "docs/research/M135-detail-instrument.md",
+      "sha256": "9ba4ca24c9dab0656a2dd6f8cc3f9f3af6225d291be21180f2d733627d8689aa"
+    },
+    {
+      "bytes": 37818,
+      "candidate_count": 37,
+      "git_state": "clean",
+      "lines": 608,
+      "path": "docs/research/M136-m8-census-groundtruth.md",
+      "sha256": "194de389103219b15481b7e0045c6ea432a55d7737086c51ff13a6d8848aedf6"
+    },
+    {
+      "bytes": 28137,
+      "candidate_count": 41,
+      "git_state": "clean",
+      "lines": 527,
+      "path": "docs/research/M136-m8-passability.md",
+      "sha256": "24ae0c5903039c9c8471b00e29f2351e60723afafee35b26c6c1636e9ae10365"
+    },
+    {
+      "bytes": 63428,
+      "candidate_count": 64,
+      "git_state": "clean",
+      "lines": 1168,
+      "path": "docs/research/M136-m8o-bar.md",
+      "sha256": "70893f4e823862a8fba7cc5628bf36fbc3b1211aedbd909a4a5094b3409661ff"
+    },
+    {
+      "bytes": 14687,
+      "candidate_count": 65,
+      "git_state": "clean",
+      "lines": 268,
+      "path": "docs/research/M139-m12-campaign.md",
+      "sha256": "e75e721af4205d6756874901ffa55d996e951ca4a4294b54fbdbf8a0ecfb507f"
+    },
+    {
+      "bytes": 29185,
+      "candidate_count": 37,
+      "git_state": "clean",
+      "lines": 558,
+      "path": "docs/research/M14-tenengrad-implemented.md",
+      "sha256": "caf0830bdbcb4770cb58f529d49c2b20202ac6d6b83892b9ff9f6d2ad0e4164e"
+    },
+    {
+      "bytes": 17264,
+      "candidate_count": 34,
+      "git_state": "clean",
+      "lines": 327,
+      "path": "docs/research/M140-readiness.md",
+      "sha256": "873801d134daa5b8e85ee6b9e86eec38f8f00a5413616476085c8b4d484efbc2"
+    },
+    {
+      "bytes": 24396,
+      "candidate_count": 27,
+      "git_state": "clean",
+      "lines": 319,
+      "path": "docs/research/M141-capture-inventory.md",
+      "sha256": "35dc06d2fbff65cd01e93a55bf017103a603598070fbda5d4a5c4fc2dce26d85"
+    },
+    {
+      "bytes": 44364,
+      "candidate_count": 116,
+      "git_state": "clean",
+      "lines": 684,
+      "path": "docs/research/M144-reference-uncertainty.md",
+      "sha256": "46e48bae6cdf9b4459c0a17dfa1b9e15ace0b2a69473d6eb9aa6c91f1ff1ecaa"
+    },
+    {
+      "bytes": 17810,
+      "candidate_count": 21,
+      "git_state": "clean",
+      "lines": 356,
+      "path": "docs/research/M145-seam-population.md",
+      "sha256": "483813b5eff9df45164fce8239db8c804a1055ececf6f8d9b14592c500bfc441"
+    },
+    {
+      "bytes": 26480,
+      "candidate_count": 69,
+      "git_state": "clean",
+      "lines": 435,
+      "path": "docs/research/M146-unlock-audit.md",
+      "sha256": "e5b79794d9a07af226400bd5e0cbcb30efa9d49dcdc93e436dce1b5a7d8aaf6e"
+    },
+    {
+      "bytes": 21110,
+      "candidate_count": 70,
+      "git_state": "clean",
+      "lines": 391,
+      "path": "docs/research/M147-preflight.md",
+      "sha256": "a659eb6db50376615a5b37d8a718d3e3d95a8f328eac086a96ab81b0ed5bba82"
+    },
+    {
+      "bytes": 43481,
+      "candidate_count": 62,
+      "git_state": "clean",
+      "lines": 838,
+      "path": "docs/research/M15-regulariser-window-measured.md",
+      "sha256": "a0c236bf24d57466ce4b53aa3380dda48b168b54af6d11c48ba57b17c4c57549"
+    },
+    {
+      "bytes": 26181,
+      "candidate_count": 204,
+      "git_state": "clean",
+      "lines": 474,
+      "path": "docs/research/M151-m5-checker.md",
+      "sha256": "32287694814568fe342a571e90f175040499459fa7691657a07fc05b1234de5d"
+    },
+    {
+      "bytes": 19288,
+      "candidate_count": 58,
+      "git_state": "clean",
+      "lines": 434,
+      "path": "docs/research/M152-site-census.md",
+      "sha256": "f8785ed3c59af0b3bc29117a920e91b7c4f63ac2d1c38f7cd051380bb407b981"
+    },
+    {
+      "bytes": 22841,
+      "candidate_count": 52,
+      "git_state": "clean",
+      "lines": 434,
+      "path": "docs/research/M153-m11-harness.md",
+      "sha256": "32bb0f2f59bbdc0c655dcf9b5f1caee1adf820e3b72c2d7120781aa6aefb4e2c"
+    },
+    {
+      "bytes": 20221,
+      "candidate_count": 26,
+      "git_state": "clean",
+      "lines": 385,
+      "path": "docs/research/M154-m10-angle.md",
+      "sha256": "873601afc9c62f3ed8b87d8c53ba5e14cd4dc2c85288b723848cee1f29015e43"
+    },
+    {
+      "bytes": 11571,
+      "candidate_count": 14,
+      "git_state": "clean",
+      "lines": 151,
+      "path": "docs/research/M155-w1-review.md",
+      "sha256": "ecff7be9838d341be1d50a6d343a9ac597f5e8cd58e98eb517356415dd7e3dce"
+    },
+    {
+      "bytes": 35315,
+      "candidate_count": 11,
+      "git_state": "clean",
+      "lines": 774,
+      "path": "docs/research/M157-comparator-viability.md",
+      "sha256": "14660adc46e1d253e7e9646245708e789cd1cb4e1ba96312b424db1742e08c7e"
+    },
+    {
+      "bytes": 37538,
+      "candidate_count": 89,
+      "git_state": "clean",
+      "lines": 679,
+      "path": "docs/research/M158-scorecard-amendment-text.md",
+      "sha256": "ea8bb86c71bd8822aa198d3083f839f8e4add29c984607f9625c6664a861f883"
+    },
+    {
+      "bytes": 46409,
+      "candidate_count": 83,
+      "git_state": "clean",
+      "lines": 800,
+      "path": "docs/research/M158-scorecard-drift.md",
+      "sha256": "129546e240072d79be665618b356f8a5ac3b93e5046182c47c97d09e23175ee2"
+    },
+    {
+      "bytes": 20458,
+      "candidate_count": 29,
+      "git_state": "clean",
+      "lines": 390,
+      "path": "docs/research/M159-noise-clause.md",
+      "sha256": "4eef6548732fba02d0790de9f8dd7a72022be9b85a47db0ae289ffba43df13ca"
+    },
+    {
+      "bytes": 63118,
+      "candidate_count": 119,
+      "git_state": "clean",
+      "lines": 873,
+      "path": "docs/research/M16-orientation-fpn-measured.md",
+      "sha256": "71287c9bd4d347307e52cde79c313547173464401d36eeafa1f69c64644be6b0"
+    },
+    {
+      "bytes": 18448,
+      "candidate_count": 56,
+      "git_state": "clean",
+      "lines": 206,
+      "path": "docs/research/M160-amendment6-reachability.md",
+      "sha256": "fed1a5b054870e59462ede9402d88e04db00729f02484eae70027d938ca46358"
+    },
+    {
+      "bytes": 33640,
+      "candidate_count": 159,
+      "git_state": "clean",
+      "lines": 638,
+      "path": "docs/research/M160-scope-audit.md",
+      "sha256": "bf4ec239ba44acffa3185a635d71684990326ba260af13af784c35051f1907b2"
+    },
+    {
+      "bytes": 30142,
+      "candidate_count": 71,
+      "git_state": "clean",
+      "lines": 540,
+      "path": "docs/research/M161-bar-feasibility.md",
+      "sha256": "54012b9231aa0fc7c28a6634770d2baac730dbad43e6f0e3a745b5cdd0c089f5"
+    },
+    {
+      "bytes": 12449,
+      "candidate_count": 59,
+      "git_state": "clean",
+      "lines": 229,
+      "path": "docs/research/M161-m3-ratification.md",
+      "sha256": "3da41f80a05a9d1f91b35f03aa72ef1dece1d7252d21da8cc0ce5313d725b58e"
+    },
+    {
+      "bytes": 19855,
+      "candidate_count": 16,
+      "git_state": "clean",
+      "lines": 385,
+      "path": "docs/research/M162-noise-regression.md",
+      "sha256": "a86e8c2ff4f3c1d1c7fc7a80f1d0a3414de48e1d5102b38dc53ab6e8f6c40ee7"
+    },
+    {
+      "bytes": 11780,
+      "candidate_count": 58,
+      "git_state": "clean",
+      "lines": 263,
+      "path": "docs/research/M163-m10-uncertainty.md",
+      "sha256": "6cf7fd0878221d232e1a88826934e033310919f2b003b9f916824f75b3499579"
+    },
+    {
+      "bytes": 10723,
+      "candidate_count": 7,
+      "git_state": "clean",
+      "lines": 232,
+      "path": "docs/research/M164-aperture-identifiability.md",
+      "sha256": "f948d6e21d15be6b5f6940dfc20548976df7fd4c13d7b45350f3d1af6f22086f"
+    },
+    {
+      "bytes": 20226,
+      "candidate_count": 17,
+      "git_state": "clean",
+      "lines": 350,
+      "path": "docs/research/M164-dominance-manifest.md",
+      "sha256": "4c589e7fa44ce387691a7e1aa227147b861e30b92346c467581d2f612b502ccb"
+    },
+    {
+      "bytes": 14346,
+      "candidate_count": 19,
+      "git_state": "clean",
+      "lines": 316,
+      "path": "docs/research/M164-gx-sota-claim.md",
+      "sha256": "59d56ffeae5156d9afd046e864efacc8dba45ef455487bd5317000f2bca0fde8"
+    },
+    {
+      "bytes": 22041,
+      "candidate_count": 63,
+      "git_state": "clean",
+      "lines": 433,
+      "path": "docs/research/M164-m1-admissibility.md",
+      "sha256": "d01620563fd1665b0b5ecae93c66c071b1ddf4994e165cb3da96697507bc0d87"
+    },
+    {
+      "bytes": 56197,
+      "candidate_count": 64,
+      "git_state": "clean",
+      "lines": 812,
+      "path": "docs/research/M164-m1-staged-capture.md",
+      "sha256": "f0e1c0db471b8618d4614db5781cd84acf56fe319b6342a0693befa5b464c3b1"
+    },
+    {
+      "bytes": 21644,
+      "candidate_count": 34,
+      "git_state": "clean",
+      "lines": 431,
+      "path": "docs/research/M164-m2-repair.md",
+      "sha256": "02e4a92462314eddfed210d6413810b4e60f9271cf85b7ec9058229f90c46db0"
+    },
+    {
+      "bytes": 19558,
+      "candidate_count": 33,
+      "git_state": "clean",
+      "lines": 538,
+      "path": "docs/research/M164-reference-dominance.md",
+      "sha256": "0b0f203d29d6959228f0218c07e88a42a86718b2f2570844e3faceac471da786"
+    },
+    {
+      "bytes": 17370,
+      "candidate_count": 33,
+      "git_state": "clean",
+      "lines": 437,
+      "path": "docs/research/M164-reference-identifiability.md",
+      "sha256": "1ff127194adf3c7f2bbb75c8eb4087cf54050abd9324c653b2038e99af5d89a6"
+    },
+    {
+      "bytes": 16354,
+      "candidate_count": 42,
+      "git_state": "clean",
+      "lines": 386,
+      "path": "docs/research/M164-transfer-veto.md",
+      "sha256": "5801d4c08c4aa1ec3f69ac98c4e1d82a8817d282b761efee4252b2cae1462554"
+    },
+    {
+      "bytes": 42879,
+      "candidate_count": 100,
+      "git_state": "clean",
+      "lines": 806,
+      "path": "docs/research/M165-common-input.md",
+      "sha256": "5d68e89058230cae2fc30cb4610539511f9b4731a010efeae4fda1aa53684423"
+    },
+    {
+      "bytes": 20007,
+      "candidate_count": 30,
+      "git_state": "clean",
+      "lines": 480,
+      "path": "docs/research/M166-aperture-premise.md",
+      "sha256": "e0bb3c25b88086c5ebf352a5606d716f5c20b3b9dd451e6e7b4e686d0a8e2752"
+    },
+    {
+      "bytes": 25467,
+      "candidate_count": 70,
+      "git_state": "clean",
+      "lines": 495,
+      "path": "docs/research/M166-bar-achievability.md",
+      "sha256": "eed8ba24fa735a3df11e331a0ffafc2fc5b351249f9e0799425a0ec67896a818"
+    },
+    {
+      "bytes": 30431,
+      "candidate_count": 77,
+      "git_state": "clean",
+      "lines": 587,
+      "path": "docs/research/M166-bar-definition-repairs.md",
+      "sha256": "b66bd24d9fad69c7e9629ac0dbb187e4c08b981e2479104220671eb06fea1cfd"
+    },
+    {
+      "bytes": 21466,
+      "candidate_count": 42,
+      "git_state": "??",
+      "lines": 321,
+      "path": "docs/research/M166-capture-reconciliation.md",
+      "sha256": "80dcea55ef911d5b430430e8031d30c3f882384e8116ec33ce9c220c2fcdafda"
+    },
+    {
+      "bytes": 37287,
+      "candidate_count": 68,
+      "git_state": "clean",
+      "lines": 671,
+      "path": "docs/research/M166-m10-definition-repair.md",
+      "sha256": "7e7da77a9bba0c17b35845b129abc936b434ad820d5d7794cc32f61dc43bad9a"
+    },
+    {
+      "bytes": 34263,
+      "candidate_count": 50,
+      "git_state": "clean",
+      "lines": 605,
+      "path": "docs/research/M166-reference-dominance-rehearsal.md",
+      "sha256": "e5d4bdb629172c90b1f0a2f61dabe5ee0356a4c03f2f4530cc4fbe4eb8521b04"
+    },
+    {
+      "bytes": 16531,
+      "candidate_count": 15,
+      "git_state": "clean",
+      "lines": 380,
+      "path": "docs/research/M166-reference-information-dominance-physical.md",
+      "sha256": "21061dbcad99a71152196c01ecb3daa091466184d8bcec7931e6415469ab9cf0"
+    },
+    {
+      "bytes": 32434,
+      "candidate_count": 52,
+      "git_state": "clean",
+      "lines": 512,
+      "path": "docs/research/M166-rehearsal-cost.md",
+      "sha256": "05ebe717fd3194bb1ff3b4723fd9eeac54049b611a05ad79224c580affcf882f"
+    },
+    {
+      "bytes": 26000,
+      "candidate_count": 19,
+      "git_state": "clean",
+      "lines": 576,
+      "path": "docs/research/M166-truth-reference-capture-audit.md",
+      "sha256": "495289741df95fa96202bbdd68a9011518c8225ac7383708ef9e8f64d220df42"
+    },
+    {
+      "bytes": 34500,
+      "candidate_count": 81,
+      "git_state": "clean",
+      "lines": 619,
+      "path": "docs/research/M167-detail-battery.md",
+      "sha256": "8c534facae69ad74d5c10d7327b549f76a1ac82233afa87e205d34c245a4b2af"
+    },
+    {
+      "bytes": 10971,
+      "candidate_count": 42,
+      "git_state": "clean",
+      "lines": 144,
+      "path": "docs/research/M168-cheap-reference-feasibility.md",
+      "sha256": "f6d9763decd321c195822656864a332c70a5c5d2df9049924f6bb3fda7d0b0fc"
+    },
+    {
+      "bytes": 17403,
+      "candidate_count": 21,
+      "git_state": "clean",
+      "lines": 295,
+      "path": "docs/research/M168-m2-identifiability.md",
+      "sha256": "caad84caf846d977b8160826069527577d7cac7486175e9e5f1468891a28e910"
+    },
+    {
+      "bytes": 32023,
+      "candidate_count": 32,
+      "git_state": "clean",
+      "lines": 616,
+      "path": "docs/research/M168-orchestrator-verifier-audit.md",
+      "sha256": "9c78b4d208798e9383e33f2e6f44b3c4078c42c9ff5a94d604d6ae80023b151a"
+    },
+    {
+      "bytes": 25389,
+      "candidate_count": 46,
+      "git_state": "clean",
+      "lines": 395,
+      "path": "docs/research/M169-comparator-requirement-audit.md",
+      "sha256": "71f08bf819e74d0bf5f69a3957028d36c525ddb694d6f7cdb0b9de0e973a7b38"
+    },
+    {
+      "bytes": 19210,
+      "candidate_count": 95,
+      "git_state": "clean",
+      "lines": 403,
+      "path": "docs/research/M169-m3-veil.md",
+      "sha256": "d83eab7a42670eef54554e0638eb3cc27df48445cd34fb93f4f51e01d3869cb1"
+    },
+    {
+      "bytes": 25891,
+      "candidate_count": 44,
+      "git_state": "??",
+      "lines": 446,
+      "path": "docs/research/M169-ratification-stakes.md",
+      "sha256": "ff9f576686189d7890fcc7c56db1bff214f2fccbf55b076d5cdf16ef775e3377"
+    },
+    {
+      "bytes": 38596,
+      "candidate_count": 53,
+      "git_state": "clean",
+      "lines": 539,
+      "path": "docs/research/M17-dual-response-measured.md",
+      "sha256": "62ae363c48715a4d84b3a2acfabed71e317e05cff2341ba3cbd603be239b8691"
+    },
+    {
+      "bytes": 12489,
+      "candidate_count": 9,
+      "git_state": "clean",
+      "lines": 261,
+      "path": "docs/research/M171-aperture-reference.md",
+      "sha256": "c2ba25ab630a62576550e8ffeb8e99845338b575ae3a2c4e0c95ed779c54abac"
+    },
+    {
+      "bytes": 14496,
+      "candidate_count": 32,
+      "git_state": "??",
+      "lines": 82,
+      "path": "docs/research/M171-reference-admission.md",
+      "sha256": "bd29a3e49481d18ad0fe95cd82de0c601290dd0306b6f3e7ad88150e50bfe1c7"
+    },
+    {
+      "bytes": 34880,
+      "candidate_count": 51,
+      "git_state": "clean",
+      "lines": 323,
+      "path": "docs/research/M173-ask2a-audit.md",
+      "sha256": "7ad346aa6eba39bb35099b58ce5efd6894773dd1b206fc3aeafae91954ab5fc9"
+    },
+    {
+      "bytes": 10347,
+      "candidate_count": 75,
+      "git_state": "clean",
+      "lines": 222,
+      "path": "docs/research/M174-m3-improvement-assertion.md",
+      "sha256": "b547a557c25516f24217193d797c3af54ac44ac45483079352fea6d23d65b0c5"
+    },
+    {
+      "bytes": 17132,
+      "candidate_count": 14,
+      "git_state": "clean",
+      "lines": 341,
+      "path": "docs/research/M175-fork-arm.md",
+      "sha256": "a6b86e660f8cef2e46af5864f7236fdf3e58237a9a9679d4cc85444efbb9c61c"
+    },
+    {
+      "bytes": 55183,
+      "candidate_count": 119,
+      "git_state": "clean",
+      "lines": 1007,
+      "path": "docs/research/M18-merge-implemented.md",
+      "sha256": "d110771963b9cd4a18d6bf97806d9f4d0d5a092882747008f1bbacb9fa3489a8"
+    },
+    {
+      "bytes": 33692,
+      "candidate_count": 60,
+      "git_state": "clean",
+      "lines": 609,
+      "path": "docs/research/M2-baseline-skeleton.md",
+      "sha256": "4690a0b9cfcce6fa30ec4398749b4dea6cfe1f16cbd07ec4c7bbda056f2cc650"
+    },
+    {
+      "bytes": 5502,
+      "candidate_count": 6,
+      "git_state": "clean",
+      "lines": 96,
+      "path": "docs/research/M2-rss-resolved.md",
+      "sha256": "22141e3562e75845cba333828146bafa289b67bcc9559ce861551c6fbf231585"
+    },
+    {
+      "bytes": 15397,
+      "candidate_count": 33,
+      "git_state": "clean",
+      "lines": 220,
+      "path": "docs/research/M2-verification.md",
+      "sha256": "71568f2a03a1ec54a768e299f18b9368181d7b0553cc162b9c3daa4446f1515f"
+    },
+    {
+      "bytes": 42638,
+      "candidate_count": 164,
+      "git_state": "clean",
+      "lines": 691,
+      "path": "docs/research/M20-VERIFICATION.md",
+      "sha256": "adc4367cc7e42aa6a081cea147ebb13a33767aa9ad682b2a88388223b2ca9ac2"
+    },
+    {
+      "bytes": 15625,
+      "candidate_count": 27,
+      "git_state": "clean",
+      "lines": 302,
+      "path": "docs/research/M20-deconvolution-ceiling-measured.md",
+      "sha256": "a273b556f0eec6b3c6b2db4822e933f7db67428bcd1ed072c771e6ea78a34c13"
+    },
+    {
+      "bytes": 11021,
+      "candidate_count": 32,
+      "git_state": "clean",
+      "lines": 215,
+      "path": "docs/research/M21-occlusion-bimodality-measured.md",
+      "sha256": "06d9c71129ea3f0a4541928835c5e1f880ef61cbd9f4369a540cf3111a39f8fc"
+    },
+    {
+      "bytes": 8772,
+      "candidate_count": 21,
+      "git_state": "clean",
+      "lines": 182,
+      "path": "docs/research/M22-hot-pixels-measured.md",
+      "sha256": "e9c040de95e3738fa2aa45d5f389f2b0aa6ea27a2a05000c419a7fb428b3cb0e"
+    },
+    {
+      "bytes": 38766,
+      "candidate_count": 69,
+      "git_state": "clean",
+      "lines": 616,
+      "path": "docs/research/M23-metacalibrated-edges-measured.md",
+      "sha256": "272a5536cb9c6ff0891882c52f3352f5572f5c2b3f6c47131f26e5e4df798339"
+    },
+    {
+      "bytes": 6607,
+      "candidate_count": 44,
+      "git_state": "clean",
+      "lines": 137,
+      "path": "docs/research/M24-photometric-drift-measured.md",
+      "sha256": "8dbdac8b94e7f84900be7163d42ed07f9259d5a16162c983e39ca5eb78e0aa67"
+    },
+    {
+      "bytes": 78282,
+      "candidate_count": 223,
+      "git_state": "clean",
+      "lines": 1329,
+      "path": "docs/research/M25-simulator-measured.md",
+      "sha256": "759d800d2a3ff3406eff9565df8d133898b1fbc4ed414f806f291ef304ba49df"
+    },
+    {
+      "bytes": 10616,
+      "candidate_count": 8,
+      "git_state": "clean",
+      "lines": 230,
+      "path": "docs/research/M26-colour-clipping-measured.md",
+      "sha256": "c1c25158b30c057db7369a50391ae12791e12625110f977bbfcdf61c6db2f5e2"
+    },
+    {
+      "bytes": 10692,
+      "candidate_count": 22,
+      "git_state": "clean",
+      "lines": 194,
+      "path": "docs/research/M27-coverage-gap-measured.md",
+      "sha256": "59b5dec17ca216e213e99fb0badcebdef9d670054465e64c13071461e2bbd521"
+    },
+    {
+      "bytes": 12057,
+      "candidate_count": 78,
+      "git_state": "clean",
+      "lines": 232,
+      "path": "docs/research/M28-robustness-mask-measured.md",
+      "sha256": "cd1ec2d15682e79224e710825f6edaa99cf24c70a3a2832deb8dbce0eb1fce9d"
+    },
+    {
+      "bytes": 18306,
+      "candidate_count": 43,
+      "git_state": "clean",
+      "lines": 353,
+      "path": "docs/research/M29-static-defects-measured.md",
+      "sha256": "c3384511c385810445aeedbf13a6822798c52108b7553b04587954422a515497"
+    },
+    {
+      "bytes": 11958,
+      "candidate_count": 18,
+      "git_state": "clean",
+      "lines": 252,
+      "path": "docs/research/M3-alignment-measured.md",
+      "sha256": "95f2bd903cdb665720d7fb0467556b084fcee511a7a8c568c71e68f341402208"
+    },
+    {
+      "bytes": 9935,
+      "candidate_count": 38,
+      "git_state": "clean",
+      "lines": 177,
+      "path": "docs/research/M30-hdr-cobracket-measured.md",
+      "sha256": "74f16a16f00ba3ce79585a817bf38f443c36a792fab0767be366239e7824913a"
+    },
+    {
+      "bytes": 54012,
+      "candidate_count": 253,
+      "git_state": "clean",
+      "lines": 889,
+      "path": "docs/research/M31-VERIFICATION.md",
+      "sha256": "22e993c619b5cf80cf645adfa419da27a7deecb7756edc725df245e457e0acd3"
+    },
+    {
+      "bytes": 17461,
+      "candidate_count": 11,
+      "git_state": "clean",
+      "lines": 312,
+      "path": "docs/research/M32-posterior-confidence-measured.md",
+      "sha256": "0191b648cf5be372272a8832b8ef3d4b553246e45bb7c75533e850224711fcef"
+    },
+    {
+      "bytes": 16431,
+      "candidate_count": 82,
+      "git_state": "clean",
+      "lines": 297,
+      "path": "docs/research/M33-subframe-offset-measured.md",
+      "sha256": "6103f7991bae4ccc0ce84acdd6d403882f69bdd09935411b93212295a5bb7cf2"
+    },
+    {
+      "bytes": 13501,
+      "candidate_count": 48,
+      "git_state": "clean",
+      "lines": 248,
+      "path": "docs/research/M34-confidence-vector-measured.md",
+      "sha256": "603559305f54dc93253109c5eaa3b7fb1262a5df08a6f67b2e51de80a8a7b341"
+    },
+    {
+      "bytes": 9987,
+      "candidate_count": 29,
+      "git_state": "clean",
+      "lines": 208,
+      "path": "docs/research/M35-fit-generality-measured.md",
+      "sha256": "3959c1a47bb8725bfb0f146006386fbb5617eb2ed66689a37b3d3e147ceec9d3"
+    },
+    {
+      "bytes": 39622,
+      "candidate_count": 135,
+      "git_state": "clean",
+      "lines": 505,
+      "path": "docs/research/M36-VERIFICATION.md",
+      "sha256": "a98fdf7167f02a34fe20dca8666abd74e29eef074fa578a90d1946c1102166c6"
+    },
+    {
+      "bytes": 12966,
+      "candidate_count": 37,
+      "git_state": "clean",
+      "lines": 242,
+      "path": "docs/research/M38-merge-on-real-frames-measured.md",
+      "sha256": "4b9485a2bc75fa7b477bbe24081db8c7139386dcd9a2a09b07847d436eca7ea5"
+    },
+    {
+      "bytes": 41366,
+      "candidate_count": 270,
+      "git_state": "clean",
+      "lines": 768,
+      "path": "docs/research/M39-verify-detail-metric.md",
+      "sha256": "d4c93494946fde55a4dff02cec8c4fb767d628fb4fb29e8b7e53d4d01717c149"
+    },
+    {
+      "bytes": 32731,
+      "candidate_count": 93,
+      "git_state": "clean",
+      "lines": 658,
+      "path": "docs/research/M4-fpn-measured.md",
+      "sha256": "18b22f3ef6f47b67a6868d3d0d87a59f21d5cb8cb69b59297776db5649b743bc"
+    },
+    {
+      "bytes": 38266,
+      "candidate_count": 140,
+      "git_state": "clean",
+      "lines": 539,
+      "path": "docs/research/M40-VERIFICATION.md",
+      "sha256": "bf56c5f8f50d383aac0cce31c96b284c34489e37b848ed453ef68587c4f09467"
+    },
+    {
+      "bytes": 66056,
+      "candidate_count": 263,
+      "git_state": "clean",
+      "lines": 998,
+      "path": "docs/research/M41-r3-kill-measured.md",
+      "sha256": "45ad61ad7705676b85ae2f72eb340e9e923cfdfd162231b7ab4c0e68315ac7b6"
+    },
+    {
+      "bytes": 21146,
+      "candidate_count": 20,
+      "git_state": "clean",
+      "lines": 369,
+      "path": "docs/research/M42-window-ladder-measured.md",
+      "sha256": "cab6306bdb13d54a80d9cef28edfc816a6a583ad615e35cd8c982a01a954b29a"
+    },
+    {
+      "bytes": 13845,
+      "candidate_count": 17,
+      "git_state": "clean",
+      "lines": 276,
+      "path": "docs/research/M43-plugin-calibration-seam.md",
+      "sha256": "2c2216527cd9c5892f848a02b8e4166d082b21c639816e0fabceb15e8d38e7a1"
+    },
+    {
+      "bytes": 28724,
+      "candidate_count": 98,
+      "git_state": "clean",
+      "lines": 507,
+      "path": "docs/research/M45-plugin-crate-implemented.md",
+      "sha256": "43186c69f13a1fe06353a3922332f68a6dafbf318fe1a9f6b55f1fb070971afd"
+    },
+    {
+      "bytes": 84418,
+      "candidate_count": 112,
+      "git_state": "clean",
+      "lines": 1513,
+      "path": "docs/research/M46-detail-metric-measured.md",
+      "sha256": "bb593db3b2286937204693a6095645ef5f12fdaa46b879fea983063c6858d8d7"
+    },
+    {
+      "bytes": 23798,
+      "candidate_count": 62,
+      "git_state": "clean",
+      "lines": 208,
+      "path": "docs/research/M47-gain-blast-radius.md",
+      "sha256": "b06b0c7a4224f0c3f4f677271965f29e10a90a92c04a0bf12f10e200968708e4"
+    },
+    {
+      "bytes": 56512,
+      "candidate_count": 189,
+      "git_state": "clean",
+      "lines": 998,
+      "path": "docs/research/M48-read-noise-measured.md",
+      "sha256": "8e4ebe4d8f783c5a57fc07f94948f413e25b4694d98725b220f8d2b2c1a148a7"
+    },
+    {
+      "bytes": 21073,
+      "candidate_count": 44,
+      "git_state": "clean",
+      "lines": 385,
+      "path": "docs/research/M48b-fpn-rho-measured.md",
+      "sha256": "3ef10f8fbef18825bf6e5e8f545524bc16636a7ac39324ae7ded121697f82e60"
+    },
+    {
+      "bytes": 25120,
+      "candidate_count": 46,
+      "git_state": "clean",
+      "lines": 445,
+      "path": "docs/research/M48c-defect-layer-measured.md",
+      "sha256": "02f28ae1e131ed0f7dba16829995a3fa40e46380442b25657889e08786e4ecd1"
+    },
+    {
+      "bytes": 26161,
+      "candidate_count": 81,
+      "git_state": "clean",
+      "lines": 190,
+      "path": "docs/research/M49-unapplied-findings.md",
+      "sha256": "dfbc8426e9697191fb7deca1e5cfac28631c1b92353ebf00b84e4d05f108c653"
+    },
+    {
+      "bytes": 48840,
+      "candidate_count": 154,
+      "git_state": "clean",
+      "lines": 809,
+      "path": "docs/research/M5-diffraction-measured.md",
+      "sha256": "449a31b229776a9dff78d2b78d07655c7de996f1709cb2722320c4262753ff78"
+    },
+    {
+      "bytes": 24784,
+      "candidate_count": 43,
+      "git_state": "clean",
+      "lines": 426,
+      "path": "docs/research/M50-fpn-anisotropy-measured.md",
+      "sha256": "cb7feb1a2b890908e6a50e42b55d7387da3fefbef27157a7a63cf2318622dbd4"
+    },
+    {
+      "bytes": 40216,
+      "candidate_count": 128,
+      "git_state": "clean",
+      "lines": 710,
+      "path": "docs/research/M52-gate-cluster-verified.md",
+      "sha256": "a5e80f1bcba91c4dc4689273e46eef874dbc5b3d2dc62c31f112822ad58be8ac"
+    },
+    {
+      "bytes": 22612,
+      "candidate_count": 35,
+      "git_state": "clean",
+      "lines": 429,
+      "path": "docs/research/M53-flat-ratio.md",
+      "sha256": "8eff34dae6cb76f17b16ab0ce8b28a54bd672dc7622428f5f5fde948ba400ed2"
+    },
+    {
+      "bytes": 9890,
+      "candidate_count": 19,
+      "git_state": "clean",
+      "lines": 186,
+      "path": "docs/research/M53-flat-roi-statistic.md",
+      "sha256": "0c2e3842ad1fd56145e27e1f4fd2b8da313876d1876fc7d345b10f8328e1a224"
+    },
+    {
+      "bytes": 35613,
+      "candidate_count": 75,
+      "git_state": "clean",
+      "lines": 640,
+      "path": "docs/research/M54-clip-mask-measured.md",
+      "sha256": "f01ce167476d843ff742f2c45ba40eabe922117e15d27346d5879568b3704c11"
+    },
+    {
+      "bytes": 99786,
+      "candidate_count": 206,
+      "git_state": "clean",
+      "lines": 1452,
+      "path": "docs/research/M55-acceptance-spec.md",
+      "sha256": "3637528988312d20953d3829ebbdedd06d81b96c44a06a3d105929f746391ac8"
+    },
+    {
+      "bytes": 41719,
+      "candidate_count": 80,
+      "git_state": "clean",
+      "lines": 632,
+      "path": "docs/research/M55-sigpow-verification.md",
+      "sha256": "698e59a1f37882525153a9277ba828691e3c08ac171314914c389d31eae52516"
+    },
+    {
+      "bytes": 43424,
+      "candidate_count": 97,
+      "git_state": "clean",
+      "lines": 748,
+      "path": "docs/research/M56-citation-audit.md",
+      "sha256": "a8a01f06b3ce3eb769f2baf24a5d232abf561db47ab421c7c21321dc903ab138"
+    },
+    {
+      "bytes": 48372,
+      "candidate_count": 112,
+      "git_state": "clean",
+      "lines": 828,
+      "path": "docs/research/M57-detail-metric-from-first-principles.md",
+      "sha256": "6d86265f74768574c694c0ca035dd9493ec1ae77703aae18d3f281ea2e21703c"
+    },
+    {
+      "bytes": 24770,
+      "candidate_count": 47,
+      "git_state": "clean",
+      "lines": 434,
+      "path": "docs/research/M58-citation-content-repaired.md",
+      "sha256": "9e581146056123f241f9dd7ad36e412bf3abe0887b5f1c3723286a30b2dffa7a"
+    },
+    {
+      "bytes": 31354,
+      "candidate_count": 49,
+      "git_state": "clean",
+      "lines": 547,
+      "path": "docs/research/M58b-fold-fidelity-audit.md",
+      "sha256": "b52f55ac54e23b62a4628668b7a428cb3daef756edf3cf6d5dcd34ac597e5caa"
+    },
+    {
+      "bytes": 31075,
+      "candidate_count": 56,
+      "git_state": "clean",
+      "lines": 554,
+      "path": "docs/research/M58c-repair-audit.md",
+      "sha256": "d93b3b1dbc1b896838cc9007d003039f14988ab23330a26af31afa9ae61286bc"
+    },
+    {
+      "bytes": 70588,
+      "candidate_count": 75,
+      "git_state": "clean",
+      "lines": 1246,
+      "path": "docs/research/M59-corpus-linter.md",
+      "sha256": "14d669e88c04008bc78de6d14a6838bdd1dd9296a19efdb716a65a7872646f16"
+    },
+    {
+      "bytes": 39318,
+      "candidate_count": 62,
+      "git_state": "clean",
+      "lines": 654,
+      "path": "docs/research/M6-residual-halo-measured.md",
+      "sha256": "c6127da8fd560fe29e04aca6e3771b9b4d561643987ebc9beb244d60e248890d"
+    },
+    {
+      "bytes": 35831,
+      "candidate_count": 139,
+      "git_state": "clean",
+      "lines": 605,
+      "path": "docs/research/M60-prior-art-and-the-rival-explanations.md",
+      "sha256": "54666e77b688b1134d966886cec956e6d960059d77647c47a77fe15b659cf628"
+    },
+    {
+      "bytes": 41149,
+      "candidate_count": 96,
+      "git_state": "clean",
+      "lines": 691,
+      "path": "docs/research/M60-robustness-mask-at-merge-time.md",
+      "sha256": "7ac9ee4583bd4a06add2830d23c8f0775e4490fe685d716e91696d93caa1ca4e"
+    },
+    {
+      "bytes": 12925,
+      "candidate_count": 25,
+      "git_state": "clean",
+      "lines": 225,
+      "path": "docs/research/M60c-speckle-citation-and-the-gate.md",
+      "sha256": "b23e54e1c9f8eaaa7d37b19c04a67d270ce84582304370fc22673c198ab4caa2"
+    },
+    {
+      "bytes": 115600,
+      "candidate_count": 150,
+      "git_state": "clean",
+      "lines": 1883,
+      "path": "docs/research/M61-ptc-high-iso-measured.md",
+      "sha256": "e645944af7e52fe8d95bbef6e4711e10940883dfb661eab6eab148da1de5f5ac"
+    },
+    {
+      "bytes": 14280,
+      "candidate_count": 21,
+      "git_state": "clean",
+      "lines": 235,
+      "path": "docs/research/M62-ruling-M64-addendum.md",
+      "sha256": "97278913fedc2b1d5f9c30e641c090c530c03565fe140effde8f429e5113e03e"
+    },
+    {
+      "bytes": 15392,
+      "candidate_count": 34,
+      "git_state": "clean",
+      "lines": 272,
+      "path": "docs/research/M62-ruling-M64.md",
+      "sha256": "79da2d5db93a86614fca8b56482ab4fec4c149899a1bc162861674f4d701f277"
+    },
+    {
+      "bytes": 45211,
+      "candidate_count": 117,
+      "git_state": "clean",
+      "lines": 756,
+      "path": "docs/research/M62-sqrt-n.md",
+      "sha256": "2d752281728a3b51a930e687c8889aedef5120eb0d6655cd26dfd18828e94597"
+    },
+    {
+      "bytes": 122688,
+      "candidate_count": 431,
+      "git_state": "clean",
+      "lines": 2056,
+      "path": "docs/research/M63-bimodality.md",
+      "sha256": "0d3de21b949aca66018e81e74196bac0ea8e1904159daef4872976dd17b43aa6"
+    },
+    {
+      "bytes": 43381,
+      "candidate_count": 67,
+      "git_state": "clean",
+      "lines": 782,
+      "path": "docs/research/M64-estimator-default.md",
+      "sha256": "66f9da8399fbe6c31bcd2b7815b0fbf4a7880b0deb2d5042d610725a987c2d3c"
+    },
+    {
+      "bytes": 35942,
+      "candidate_count": 114,
+      "git_state": "clean",
+      "lines": 562,
+      "path": "docs/research/M65-election-gate-measured.md",
+      "sha256": "5d9e6fad7c464f9f16bf4380ba0b08ad44923e80fef93f1367d886820c9f1579"
+    },
+    {
+      "bytes": 32342,
+      "candidate_count": 53,
+      "git_state": "clean",
+      "lines": 589,
+      "path": "docs/research/M66-gate-n-dependence.md",
+      "sha256": "5eb68ba1f024d206662db1461b1824a7b491f6e36422d7f9d06151cf0fdd25c5"
+    },
+    {
+      "bytes": 53043,
+      "candidate_count": 121,
+      "git_state": "clean",
+      "lines": 813,
+      "path": "docs/research/M67-focus-correctness.md",
+      "sha256": "300f135311e8063548b4359b30fb4663ebe9b37a768dfe578c892e06f4ec20ee"
+    },
+    {
+      "bytes": 37268,
+      "candidate_count": 74,
+      "git_state": "clean",
+      "lines": 632,
+      "path": "docs/research/M68-b-plane-mechanism.md",
+      "sha256": "aaa6f35c3290d170ff5554afe6c7a36f875ddb24715b69a494e0b834f7909b1d"
+    },
+    {
+      "bytes": 91800,
+      "candidate_count": 210,
+      "git_state": "clean",
+      "lines": 1501,
+      "path": "docs/research/M69-focus-noise-sd.md",
+      "sha256": "6f82c8f1da1c6aa2436eea80c4399745da5eff8a95f55951c9513912993e3045"
+    },
+    {
+      "bytes": 34984,
+      "candidate_count": 90,
+      "git_state": "clean",
+      "lines": 601,
+      "path": "docs/research/M7-gpu-focus-measured.md",
+      "sha256": "68af236b2d3d331cdb5e908de0b7ce7fbd55727c8d8f5c535a1892c4b1ca8e20"
+    },
+    {
+      "bytes": 165544,
+      "candidate_count": 315,
+      "git_state": "clean",
+      "lines": 2541,
+      "path": "docs/research/M70-through-focus-spectrum.md",
+      "sha256": "6bef2167fc38a5b91d359f054051f5b6a9057aa152169f2a33c5b41c5b1120c7"
+    },
+    {
+      "bytes": 94115,
+      "candidate_count": 349,
+      "git_state": "clean",
+      "lines": 1534,
+      "path": "docs/research/M71-flat-fields.md",
+      "sha256": "0c4711e26f57bfbba0745e331ee04013dc76e9a8ca68e192d690d74e3e58f3df"
+    },
+    {
+      "bytes": 41430,
+      "candidate_count": 75,
+      "git_state": "clean",
+      "lines": 743,
+      "path": "docs/research/M72-green-plane-correlation.md",
+      "sha256": "4ea26998cc7bca44fee09d529f6f1819374e7a79064bc14249af5193b907ae1c"
+    },
+    {
+      "bytes": 36305,
+      "candidate_count": 238,
+      "git_state": "clean",
+      "lines": 659,
+      "path": "docs/research/M73-cylinder-invariant.md",
+      "sha256": "5cfb2db48dc8de4ca137ee1dd596d46b8986ef85b048d766111b5f2b0cf552ac"
+    },
+    {
+      "bytes": 25505,
+      "candidate_count": 27,
+      "git_state": "clean",
+      "lines": 490,
+      "path": "docs/research/M75-rb-asymmetry.md",
+      "sha256": "ba057034216bce07071469ce289b5baf21a1835fafc116d266a52d10c669c0ca"
+    },
+    {
+      "bytes": 24342,
+      "candidate_count": 101,
+      "git_state": "clean",
+      "lines": 477,
+      "path": "docs/research/M76-stratum-gate-residuals.md",
+      "sha256": "2eafc98df4cdb68ef07c08ec22a6c0826707ac79cefdea6b4603b22a8bd9b58c"
+    },
+    {
+      "bytes": 23835,
+      "candidate_count": 68,
+      "git_state": "clean",
+      "lines": 511,
+      "path": "docs/research/M76b-reconciliations.md",
+      "sha256": "a7979a108ee9e096030d44ac1154416141497fb407c0afe89a157d145fc36cee"
+    },
+    {
+      "bytes": 28119,
+      "candidate_count": 92,
+      "git_state": "clean",
+      "lines": 587,
+      "path": "docs/research/M76c-floor-remainder.md",
+      "sha256": "502f76567df527fdaa0964b20939cdf2e28b18e74b17f83fd91a3fd148daa514"
+    },
+    {
+      "bytes": 51941,
+      "candidate_count": 89,
+      "git_state": "clean",
+      "lines": 877,
+      "path": "docs/research/M77-gate-sweep.md",
+      "sha256": "d2a42e61e8004357d03c6052b4c992ce723951b57bf2232999edd1a2a1e24c89"
+    },
+    {
+      "bytes": 25411,
+      "candidate_count": 43,
+      "git_state": "clean",
+      "lines": 466,
+      "path": "docs/research/M78-blur-equalised-edges.md",
+      "sha256": "8cbbb1ffbc2d7bc98e82aacd2e02be486f51be876f7d9bd3976a492c14379f0f"
+    },
+    {
+      "bytes": 18756,
+      "candidate_count": 32,
+      "git_state": "clean",
+      "lines": 369,
+      "path": "docs/research/M78b-b6-fixture-repair.md",
+      "sha256": "a74be1a03ad87c3b23839c1b4898c209e5322483693da4b34f8679c8e574342d"
+    },
+    {
+      "bytes": 58881,
+      "candidate_count": 25,
+      "git_state": "clean",
+      "lines": 835,
+      "path": "docs/research/M79-edof-microscopy-survey.md",
+      "sha256": "e4f366547af5af61131ed5557c0308ea7cdb5922f46ae85dc519bc08638ec744"
+    },
+    {
+      "bytes": 36614,
+      "candidate_count": 14,
+      "git_state": "clean",
+      "lines": 520,
+      "path": "docs/research/M79-edof-verification.md",
+      "sha256": "3cbd8b7171e8071a9b57511883912116cacf36de3b4d71de3c873bf4f3a38217"
+    },
+    {
+      "bytes": 45287,
+      "candidate_count": 33,
+      "git_state": "clean",
+      "lines": 976,
+      "path": "docs/research/M8-COMPARATIVE-PROTOCOL.md",
+      "sha256": "f52dac0d0668fc9ca502c66dd1efb80b9ed79849ed1c95622e7f9315bde0f1ed"
+    },
+    {
+      "bytes": 33699,
+      "candidate_count": 71,
+      "git_state": "clean",
+      "lines": 626,
+      "path": "docs/research/M8-COMPARATIVE.md",
+      "sha256": "e1d4a5211f75a1ef054614aa2e6e43e6291dc87a193c6607cd84c204dc6f0f12"
+    },
+    {
+      "bytes": 8311,
+      "candidate_count": 69,
+      "git_state": " M",
+      "lines": 148,
+      "path": "docs/research/M8-overshoot.md",
+      "sha256": "1cd81dbee41a5332f390b5da4c2f64e4600be39d19dcd7b9f52ed1bb279f6e63"
+    },
+    {
+      "bytes": 44232,
+      "candidate_count": 103,
+      "git_state": "clean",
+      "lines": 734,
+      "path": "docs/research/M8-scratch-measured.md",
+      "sha256": "7cd80df24e9cd8a70064663c41c2aa5ad26e68413a511c8673693f5a6e9e6444"
+    },
+    {
+      "bytes": 23366,
+      "candidate_count": 28,
+      "git_state": "clean",
+      "lines": 440,
+      "path": "docs/research/M80-invariant-repair.md",
+      "sha256": "e8cddc9b2b89e73491621d9999ad4386fc0aa4dae577ddd51605b7e77acee8f8"
+    },
+    {
+      "bytes": 29869,
+      "candidate_count": 92,
+      "git_state": "clean",
+      "lines": 473,
+      "path": "docs/research/M81-estimation-merge.md",
+      "sha256": "e317d6d35ef84b0c6060adfa9be47a47579606ed7a2f02636a108e3814adeecb"
+    },
+    {
+      "bytes": 61383,
+      "candidate_count": 252,
+      "git_state": "clean",
+      "lines": 936,
+      "path": "docs/research/M82-normalised-gate.md",
+      "sha256": "fe09442421c702d8ae9f17551ceca6b38411e691d71e55360e7ea8248339f418"
+    },
+    {
+      "bytes": 54345,
+      "candidate_count": 74,
+      "git_state": "clean",
+      "lines": 740,
+      "path": "docs/research/M83-survey-audit.md",
+      "sha256": "20fca3214888ef3b01f3351769382248f74cf18804597a7d993ab23af823774f"
+    },
+    {
+      "bytes": 24393,
+      "candidate_count": 39,
+      "git_state": "clean",
+      "lines": 450,
+      "path": "docs/research/M84-ruler-metrology.md",
+      "sha256": "8e669022a404fe94325556c3cf3d44f4057525d0c4629839301b5ad94a5a65ed"
+    },
+    {
+      "bytes": 54981,
+      "candidate_count": 96,
+      "git_state": "clean",
+      "lines": 829,
+      "path": "docs/research/M84b-ruler-metrology.md",
+      "sha256": "c124436a1a235e8e84be123ed9042ab9bcd77a55badcc5e4122451bd3388aacc"
+    },
+    {
+      "bytes": 47667,
+      "candidate_count": 60,
+      "git_state": "clean",
+      "lines": 796,
+      "path": "docs/research/M85-output-correctness.md",
+      "sha256": "830a936ab8be8c6adf198e49d6cf1a686a313f4ad0961ab343892e54a0277d5f"
+    },
+    {
+      "bytes": 70660,
+      "candidate_count": 124,
+      "git_state": "clean",
+      "lines": 1256,
+      "path": "docs/research/M86-alignment.md",
+      "sha256": "a4a7c24f3549953b78c24235d340c3f0ba692e5ced688a280c0cdcc9cbdc7f5a"
+    },
+    {
+      "bytes": 422108,
+      "candidate_count": 1348,
+      "git_state": "clean",
+      "lines": 5713,
+      "path": "docs/research/M87-occlusion.md",
+      "sha256": "5c36c82e79efc8b9d64c7a6947c088368c57dd1661d5ab110ed6e04a94cae811"
+    },
+    {
+      "bytes": 47525,
+      "candidate_count": 94,
+      "git_state": "clean",
+      "lines": 726,
+      "path": "docs/research/M88-optical-ceiling.md",
+      "sha256": "5008c623c49c5beb2d9c469a7509349322f630f3fb1b1554420ffbece6bfb5ef"
+    },
+    {
+      "bytes": 11606,
+      "candidate_count": 26,
+      "git_state": "clean",
+      "lines": 179,
+      "path": "docs/research/M88b-merge-sharpness.md",
+      "sha256": "0ae1f7f29eeb3d1b927bfb1ffc391715fae1196d06283f67e1b4dd0548be1757"
+    },
+    {
+      "bytes": 76040,
+      "candidate_count": 261,
+      "git_state": "clean",
+      "lines": 1352,
+      "path": "docs/research/M89-robustness-mask.md",
+      "sha256": "319b8c317f205e70d120f724d691ba23e4a6b3c69e2cf246e13507251fcb0eb4"
+    },
+    {
+      "bytes": 45828,
+      "candidate_count": 50,
+      "git_state": "clean",
+      "lines": 832,
+      "path": "docs/research/M9-support-coupling-measured.md",
+      "sha256": "59d31a6836bbdfe207d6dbabbd18a3836edc2037c507c030d99416ae99cd18d2"
+    },
+    {
+      "bytes": 58068,
+      "candidate_count": 393,
+      "git_state": "clean",
+      "lines": 1020,
+      "path": "docs/research/M90-prnu-noise-model.md",
+      "sha256": "e538d4dbe9d36d17fe80f3cdd826f835e69221231d6161610ee97aa4359e947b"
+    },
+    {
+      "bytes": 34069,
+      "candidate_count": 202,
+      "git_state": "clean",
+      "lines": 592,
+      "path": "docs/research/M91-photometry.md",
+      "sha256": "1eedb9160075ce0b2e4400fc1ce8dc0471bea2e0b987a419dcad3b9f1adb6d34"
+    },
+    {
+      "bytes": 41902,
+      "candidate_count": 75,
+      "git_state": "clean",
+      "lines": 708,
+      "path": "docs/research/M92-null-averaging.md",
+      "sha256": "8583477327ceeec8cf132336f7461f6b7a305b8d9a23d954257668f5288cbd51"
+    },
+    {
+      "bytes": 30181,
+      "candidate_count": 25,
+      "git_state": "clean",
+      "lines": 546,
+      "path": "docs/research/M92b-iso-blast-radius.md",
+      "sha256": "8836f0456c9baad188681d10d91e3340813acae8e397a604e02106ae02206644"
+    },
+    {
+      "bytes": 50515,
+      "candidate_count": 295,
+      "git_state": "clean",
+      "lines": 959,
+      "path": "docs/research/M93-election-gate.md",
+      "sha256": "0173a92650b7801a4d39a067de161afd7f280e778265c6afc1121e2d4d09d1e3"
+    },
+    {
+      "bytes": 26653,
+      "candidate_count": 36,
+      "git_state": "clean",
+      "lines": 528,
+      "path": "docs/research/M95-cdiff.md",
+      "sha256": "7b465c9c03e30c91f1c2f32ebf88445ef2ed175c068b0225ccfeb2c01ff69e66"
+    },
+    {
+      "bytes": 36577,
+      "candidate_count": 57,
+      "git_state": "clean",
+      "lines": 674,
+      "path": "docs/research/M95-chroma-cositing.md",
+      "sha256": "a4c386ad972b347aab0d6e6e620266f2834987e82bda095e6e79069c908b710d"
+    },
+    {
+      "bytes": 18413,
+      "candidate_count": 61,
+      "git_state": "clean",
+      "lines": 339,
+      "path": "docs/research/M95-coverage.md",
+      "sha256": "670297b65d4d04ef6e76bd1591e85939aa51fecfcd2d77bf41c668d3c24dc452"
+    },
+    {
+      "bytes": 20253,
+      "candidate_count": 25,
+      "git_state": "clean",
+      "lines": 383,
+      "path": "docs/research/M95-demosaic.md",
+      "sha256": "18a139b40ffb3ec76fa6bf592b0228ba2cc9a2d8ba266a6d078ba17e3e78ed37"
+    },
+    {
+      "bytes": 12520,
+      "candidate_count": 41,
+      "git_state": "clean",
+      "lines": 226,
+      "path": "docs/research/M95-dose.md",
+      "sha256": "0db1a74765a54cf2d52ad4ff4d1bb6cbede39f696d0de4996aa59c17c61e2cfb"
+    },
+    {
+      "bytes": 50302,
+      "candidate_count": 291,
+      "git_state": "clean",
+      "lines": 983,
+      "path": "docs/research/M95-election-quality.md",
+      "sha256": "e4de8a698dc3a450d0e6dacf8b9445734e7d678774850415c168c87c3e61e36f"
+    },
+    {
+      "bytes": 172419,
+      "candidate_count": 344,
+      "git_state": "clean",
+      "lines": 3121,
+      "path": "docs/research/M95-kernel.md",
+      "sha256": "01a4b2def0130e2bdc40aa27858ae6543daf2f933ecba04757322cc1baa6e884"
+    },
+    {
+      "bytes": 41609,
+      "candidate_count": 94,
+      "git_state": "clean",
+      "lines": 706,
+      "path": "docs/research/M95-merge-vs-frame-sharpness.md",
+      "sha256": "dd9e2a40411afb3cbc8d4060b9d208f93d10cba704b2c6119d941515bc667358"
+    },
+    {
+      "bytes": 34052,
+      "candidate_count": 66,
+      "git_state": "clean",
+      "lines": 657,
+      "path": "docs/research/M95-resample.md",
+      "sha256": "53fdd1cebb2f354f553990bd2d18cdca919f8aefc51c1ca01d388f06df707310"
+    },
+    {
+      "bytes": 37709,
+      "candidate_count": 109,
+      "git_state": "clean",
+      "lines": 617,
+      "path": "docs/research/M95-resolution.md",
+      "sha256": "c16cf0a58ee0e3e1ed6d8810fb0a336c157a44bca8284efc802c5c1bd57119b4"
+    },
+    {
+      "bytes": 11941,
+      "candidate_count": 32,
+      "git_state": "clean",
+      "lines": 234,
+      "path": "docs/research/M95-tile-provenance.md",
+      "sha256": "f76f85d7ee63aed8b661d2bc1a05e88ce4c2e894c9c0b21e1a5701a9012f403c"
+    },
+    {
+      "bytes": 51795,
+      "candidate_count": 230,
+      "git_state": "clean",
+      "lines": 913,
+      "path": "docs/research/M96-election-margin.md",
+      "sha256": "61a74c5e1cc62540de2e945ebb1f95936099be8a0d60e1f71e0103de6f8b96a1"
+    },
+    {
+      "bytes": 46786,
+      "candidate_count": 94,
+      "git_state": "clean",
+      "lines": 898,
+      "path": "docs/research/M97-warped-merge.md",
+      "sha256": "ed71d3a8f091b684d7238b355e0e121610aaeb05b48809c55b64b54d1acadf29"
+    },
+    {
+      "bytes": 71758,
+      "candidate_count": 147,
+      "git_state": "clean",
+      "lines": 1261,
+      "path": "docs/research/M97b-align-visible.md",
+      "sha256": "18c222ae8da2b3144f35f2143ab37b2037001544120349bbfca563f6b246b200"
+    },
+    {
+      "bytes": 9949,
+      "candidate_count": 12,
+      "git_state": "clean",
+      "lines": 176,
+      "path": "docs/research/M97c-clip-mass.md",
+      "sha256": "ba35d4c9d12b82b203753f766512f2e09218dae136edeea58e6e86e114a3599d"
+    },
+    {
+      "bytes": 12569,
+      "candidate_count": 25,
+      "git_state": "clean",
+      "lines": 245,
+      "path": "docs/research/M97e-robust-election.md",
+      "sha256": "6f303eba41e5662087e84869105a3cd6a03a30a0a431a79abc4ce88630902c0c"
+    },
+    {
+      "bytes": 20815,
+      "candidate_count": 36,
+      "git_state": "clean",
+      "lines": 391,
+      "path": "docs/research/M97g-m100-handoff.md",
+      "sha256": "c66d241125ed298ecca0993929e60ea70b0a68eea1627c55dfefd35448937038"
+    },
+    {
+      "bytes": 7727,
+      "candidate_count": 28,
+      "git_state": "clean",
+      "lines": 154,
+      "path": "docs/research/M97m-election-map.md",
+      "sha256": "fb8f85cd97655d8fa10cd77366415adfe9ddeecb38ad097af217ee080408e472"
+    },
+    {
+      "bytes": 7379,
+      "candidate_count": 12,
+      "git_state": "clean",
+      "lines": 133,
+      "path": "docs/research/M97n-cache-key.md",
+      "sha256": "b21efa8f769ad9345ce35393c1d2c05df32b49479763c8f19300163b4e8315de"
+    },
+    {
+      "bytes": 6008,
+      "candidate_count": 21,
+      "git_state": "clean",
+      "lines": 119,
+      "path": "docs/research/M97o-refused-frames.md",
+      "sha256": "00b5f761dccd3c11ef88f830f039473d542b8390b537c506af23091a90c6e334"
+    },
+    {
+      "bytes": 5434,
+      "candidate_count": 8,
+      "git_state": "clean",
+      "lines": 98,
+      "path": "docs/research/M97p-n-eff-map.md",
+      "sha256": "72f6ca034e1b5b8c125548c60bbef699c2a55b0152b12b5ae8c478b790316507"
+    },
+    {
+      "bytes": 10011,
+      "candidate_count": 43,
+      "git_state": "clean",
+      "lines": 173,
+      "path": "docs/research/M97q-photometric-wiring.md",
+      "sha256": "6f5470a137a60643de739a9727631dd2d1c18ed3a94678520e7a419358337958"
+    },
+    {
+      "bytes": 13633,
+      "candidate_count": 36,
+      "git_state": "clean",
+      "lines": 257,
+      "path": "docs/research/M97r-outlier-mask.md",
+      "sha256": "bf6e94c68d46d64abe86012ccf9ad2329d642ae6aa8c2d2d8233264249af8cdb"
+    },
+    {
+      "bytes": 13875,
+      "candidate_count": 13,
+      "git_state": "clean",
+      "lines": 240,
+      "path": "docs/research/M97s-soft-gate.md",
+      "sha256": "4e98284970efb9603a408eac1fd821ab5f9746db3561f6b57dbbc5cafc4b9658"
+    },
+    {
+      "bytes": 46497,
+      "candidate_count": 79,
+      "git_state": "clean",
+      "lines": 808,
+      "path": "docs/research/M98-gate-adjudication.md",
+      "sha256": "b8cb833684796edd089fd6caa048b666ef41aeabf31fba2999f4e495079ee94b"
+    },
+    {
+      "bytes": 89554,
+      "candidate_count": 247,
+      "git_state": "clean",
+      "lines": 1669,
+      "path": "docs/research/M99-photometric.md",
+      "sha256": "0d8da4a25f77f3071abcb9d00163e6879fedb3c82dfaa3b3903f1a5eb551aead"
+    },
+    {
+      "bytes": 15985,
+      "candidate_count": 13,
+      "git_state": "clean",
+      "lines": 275,
+      "path": "docs/research/ORCH-kernel-decision.md",
+      "sha256": "244993e3823925d6fb01fc3b3d58eb1c9813622e42cdf67f7489058238722685"
+    },
+    {
+      "bytes": 773722,
+      "candidate_count": 1105,
+      "git_state": "clean",
+      "lines": 14449,
+      "path": "docs/research/ORCH-veiling.md",
+      "sha256": "f873a12dd9f79b02b6ce9171c3c04275c966398891d08fec680437dbf6486721"
+    },
+    {
+      "bytes": 99868,
+      "candidate_count": 116,
+      "git_state": "clean",
+      "lines": 1429,
+      "path": "docs/research/OWNER-QUESTIONS.md",
+      "sha256": "625a7aee0f1d3538a4d177e3fe877962a530ffc08eeb1cc7ee8568857b1df6ba"
+    },
+    {
+      "bytes": 15678,
+      "candidate_count": 9,
+      "git_state": "clean",
+      "lines": 199,
+      "path": "docs/research/REVIEW-plugin.md",
+      "sha256": "c9e7833420811ac4a955f1a8afb42d4be4832b627a89374da803ce21f1c98933"
+    },
+    {
+      "bytes": 26616,
+      "candidate_count": 20,
+      "git_state": "clean",
+      "lines": 205,
+      "path": "docs/research/REVIEW.md",
+      "sha256": "705e5fda6a9c30d5729a401c2986c46617810c63c693927676f98176511f3c47"
+    },
+    {
+      "bytes": 6044,
+      "candidate_count": 26,
+      "git_state": "clean",
+      "lines": 102,
+      "path": "docs/research/SCORECARD-BASELINE.md",
+      "sha256": "685f0379f4e8d506080a4a2ae12113bfd7c6189cc358f8f7c8858ab016858319"
+    },
+    {
+      "bytes": 2213785,
+      "candidate_count": 4213,
+      "git_state": "clean",
+      "lines": 5225,
+      "path": "docs/research/SYNTHESIS.md",
+      "sha256": "e0448cc278635067dccd004cd8e469a73ad2a2df7bd1232b80a3cf4ccde9e6b0"
+    },
+    {
+      "bytes": 30475,
+      "candidate_count": 129,
+      "git_state": "clean",
+      "lines": 459,
+      "path": "docs/research/V-ADJ13.md",
+      "sha256": "ae46b56479b2c939ee89ca0fa0f1c9f036eba4f6453d54a3a7eb7c6ff6b661d8"
+    },
+    {
+      "bytes": 19805,
+      "candidate_count": 148,
+      "git_state": "clean",
+      "lines": 392,
+      "path": "docs/research/V-ANTI-verify.md",
+      "sha256": "bda23e071a9c8b9a3d6af9eac05a21120aec9beaf415ff743856f2c664d82405"
+    },
+    {
+      "bytes": 44500,
+      "candidate_count": 115,
+      "git_state": "clean",
+      "lines": 781,
+      "path": "docs/research/V-BLEND-verification.md",
+      "sha256": "62c2f62086d0cd30fb452a9a76cd609fcf53e23a6ec9672c1381e45da821b6b3"
+    },
+    {
+      "bytes": 10687,
+      "candidate_count": 61,
+      "git_state": "clean",
+      "lines": 209,
+      "path": "docs/research/V-CA-anti-prereg.md",
+      "sha256": "7046c285907a5b3359552ae720f16a6acb545bd8dfb2c0ce243f86c1ccfe10ca"
+    },
+    {
+      "bytes": 84477,
+      "candidate_count": 297,
+      "git_state": "clean",
+      "lines": 1498,
+      "path": "docs/research/V-CA-audit.md",
+      "sha256": "96ce739949e74f16b209c7743ad3800df6d4c9dd64558fe6b446da6a7895d526"
+    },
+    {
+      "bytes": 12192,
+      "candidate_count": 35,
+      "git_state": "clean",
+      "lines": 240,
+      "path": "docs/research/V-DCNULL.md",
+      "sha256": "6e68fc7ef0a8e498547b125735555ecfe0db066d3c9bcff86daca60820293137"
+    },
+    {
+      "bytes": 103646,
+      "candidate_count": 304,
+      "git_state": "clean",
+      "lines": 1867,
+      "path": "docs/research/V-DILUTE.md",
+      "sha256": "1f2c6065ee54c1197359532057c29fb5e5c6510de9b9c3e84815a0b85ff606ab"
+    },
+    {
+      "bytes": 28297,
+      "candidate_count": 30,
+      "git_state": "clean",
+      "lines": 547,
+      "path": "docs/research/V-DRIFT.md",
+      "sha256": "b6b315c1dee0156785a0860425f20a74caddf0782d7cc49c102cbc69d5eb4422"
+    },
+    {
+      "bytes": 31254,
+      "candidate_count": 3,
+      "git_state": "clean",
+      "lines": 480,
+      "path": "docs/research/V-ENVSURF.md",
+      "sha256": "d415916a5b9eb8cf3ff8c08ee5bbc9f9c4b612c963db1c2dcb91b6d644909853"
+    },
+    {
+      "bytes": 96535,
+      "candidate_count": 276,
+      "git_state": "clean",
+      "lines": 1742,
+      "path": "docs/research/V-EYES.md",
+      "sha256": "44e466662b15cb38cfa9989f557aed07c66b65a13983eacf1775f1973de4eeee"
+    },
+    {
+      "bytes": 30730,
+      "candidate_count": 87,
+      "git_state": "clean",
+      "lines": 431,
+      "path": "docs/research/V-FOLD-audit.md",
+      "sha256": "d504e78fb55aded1501df316a0ffe891e68ba8c2792edf9ad24ac67cad87acee"
+    },
+    {
+      "bytes": 137911,
+      "candidate_count": 607,
+      "git_state": "clean",
+      "lines": 2614,
+      "path": "docs/research/V-GATHER.md",
+      "sha256": "30be677fff4108554322076723fa33f2f2a4dcf75b03072598d3c1d16aee715f"
+    },
+    {
+      "bytes": 8289,
+      "candidate_count": 11,
+      "git_state": "clean",
+      "lines": 168,
+      "path": "docs/research/V-GREEN.md",
+      "sha256": "14e12cbf9d1432d8522cf49a8874a09c674dee500047462508b42275768cc84d"
+    },
+    {
+      "bytes": 8110,
+      "candidate_count": 19,
+      "git_state": "clean",
+      "lines": 163,
+      "path": "docs/research/V-H2H2.md",
+      "sha256": "e4f72677749eb55697ea3c709920b9c2e20a067ef9073c921549d71bfbdffc9a"
+    },
+    {
+      "bytes": 20458,
+      "candidate_count": 55,
+      "git_state": "clean",
+      "lines": 387,
+      "path": "docs/research/V-HALO-verify.md",
+      "sha256": "61a447bc49fb5e24dc3fa144a740d9408b130dfda5fdaf8360391fa5f890b004"
+    },
+    {
+      "bytes": 18247,
+      "candidate_count": 56,
+      "git_state": "clean",
+      "lines": 296,
+      "path": "docs/research/V-HEADTOHEAD.md",
+      "sha256": "4e3fc4272dca6b4fcce054961b114e2bd82dbbc9e8920696c4a0740f60fa8518"
+    },
+    {
+      "bytes": 196948,
+      "candidate_count": 581,
+      "git_state": "clean",
+      "lines": 3545,
+      "path": "docs/research/V-HEADTOHEAD2.md",
+      "sha256": "5758ead2a313c5f04788cb73c37ad7ba7b38ef4ee0b44dfa76a67065b665eab4"
+    },
+    {
+      "bytes": 42114,
+      "candidate_count": 125,
+      "git_state": "clean",
+      "lines": 730,
+      "path": "docs/research/V-HEADTOHEAD3.md",
+      "sha256": "97cffcdd8232ea32371ec8fa9e3a47539bdb2cd37d2100a0d408b1a484bf780f"
+    },
+    {
+      "bytes": 42151,
+      "candidate_count": 104,
+      "git_state": "clean",
+      "lines": 878,
+      "path": "docs/research/V-HIGHLIGHT.md",
+      "sha256": "c35815261033f4b36eb0cf757f156bdf5120cada2d1925162449cc937011adb2"
+    },
+    {
+      "bytes": 84311,
+      "candidate_count": 358,
+      "git_state": "clean",
+      "lines": 1528,
+      "path": "docs/research/V-LINEAR-BANDS.md",
+      "sha256": "83c6ae8a2b0bad65a62ac975508302ba15cde109911f64e99280c790ae1df7ed"
+    },
+    {
+      "bytes": 35459,
+      "candidate_count": 46,
+      "git_state": "clean",
+      "lines": 642,
+      "path": "docs/research/V-LINEAR.md",
+      "sha256": "b2736386b659b3673024b9c40f94e77ccf6c0203a1e50b842b5d6ef40f3e1071"
+    },
+    {
+      "bytes": 56012,
+      "candidate_count": 119,
+      "git_state": "clean",
+      "lines": 989,
+      "path": "docs/research/V-LINEAR2.md",
+      "sha256": "d1367e695f8ff4e799546a61ff5a30dad1bdf047730db9aeda786e8ba6eb4114"
+    },
+    {
+      "bytes": 46089,
+      "candidate_count": 108,
+      "git_state": "clean",
+      "lines": 583,
+      "path": "docs/research/V-M111-verification.md",
+      "sha256": "33dee3319d19d7ee484c60988b4c9163a10b9ab14025367210a4912d5600d3db"
+    },
+    {
+      "bytes": 33347,
+      "candidate_count": 165,
+      "git_state": "clean",
+      "lines": 553,
+      "path": "docs/research/V-M97kill-verification.md",
+      "sha256": "bbb6e0c3e4b3cf4b876de1353ac42d7d7bd7310638726df4d181b0b7ea05303b"
+    },
+    {
+      "bytes": 31642,
+      "candidate_count": 135,
+      "git_state": "clean",
+      "lines": 579,
+      "path": "docs/research/V-MOTE.md",
+      "sha256": "5a10b53511a3baa36865fbadc095d02a0eeb931e7a55b4110ccba7576950ef22"
+    },
+    {
+      "bytes": 37140,
+      "candidate_count": 78,
+      "git_state": "clean",
+      "lines": 657,
+      "path": "docs/research/V-ORACLE.md",
+      "sha256": "5819cb65b354dbb6be7021bcc2e978b1f99e23e82ade8aece57fd0632b71a2cc"
+    },
+    {
+      "bytes": 11120,
+      "candidate_count": 1,
+      "git_state": "clean",
+      "lines": 232,
+      "path": "docs/research/V-REVIEW-aura-ship.md",
+      "sha256": "48417b9839124d2d708e43c59be9f7af38099dc85c86cc39cccdb6b3acf3b504"
+    },
+    {
+      "bytes": 6271,
+      "candidate_count": 4,
+      "git_state": "clean",
+      "lines": 124,
+      "path": "docs/research/V-REVIEW-aura.md",
+      "sha256": "6718ab4626c014954573c742d7c25e67285c34d9723777ffae7a0d350d4fd223"
+    },
+    {
+      "bytes": 11868,
+      "candidate_count": 72,
+      "git_state": "clean",
+      "lines": 234,
+      "path": "docs/research/V-REVIEW-dust.md",
+      "sha256": "b31ac3bcd32cc9c746c200c78c76e0fd5d02ea7b07984ee3ffa9948638c62716"
+    },
+    {
+      "bytes": 11077,
+      "candidate_count": 10,
+      "git_state": "clean",
+      "lines": 206,
+      "path": "docs/research/V-REVIEW-geometry.md",
+      "sha256": "8233b58bff8ac1c758e08acb3325cf2f2ddaafb679583687c2b2d379adbb97e9"
+    },
+    {
+      "bytes": 9768,
+      "candidate_count": 11,
+      "git_state": "clean",
+      "lines": 182,
+      "path": "docs/research/V-REVIEW-halo.md",
+      "sha256": "c927631e020a5966f778eb9a2b3361d2c156921b365e5170c477b6cd7262f9ea"
+    },
+    {
+      "bytes": 6876,
+      "candidate_count": 5,
+      "git_state": "clean",
+      "lines": 140,
+      "path": "docs/research/V-REVIEW-merge-rim.md",
+      "sha256": "07be0875187fbcf0a77773ae7afeaa0e612c10dac55bedf79d633c254f2fe53c"
+    },
+    {
+      "bytes": 37319,
+      "candidate_count": 51,
+      "git_state": "clean",
+      "lines": 739,
+      "path": "docs/research/V-REVIEW-noise-verification.md",
+      "sha256": "4164a071d9da530a7ea2a5aecaf2b263cab9aaff0389cab1181493e90ff7adcd"
+    },
+    {
+      "bytes": 24970,
+      "candidate_count": 112,
+      "git_state": "clean",
+      "lines": 432,
+      "path": "docs/research/V-RIM-verification.md",
+      "sha256": "32f8e9ddfd5441398a77937f18de75fefbebf782715e6b9af8041afaf2f37f21"
+    },
+    {
+      "bytes": 40093,
+      "candidate_count": 353,
+      "git_state": "clean",
+      "lines": 709,
+      "path": "docs/research/V-RIM.md",
+      "sha256": "48a8362644e236ab8524f125ac2b9e8b5a87e391536b6e10dd6c9ff4a44a3b01"
+    },
+    {
+      "bytes": 46944,
+      "candidate_count": 104,
+      "git_state": "clean",
+      "lines": 864,
+      "path": "docs/research/V-SELECT.md",
+      "sha256": "818ef1deac3bede208fde408b921a49517c98fd178f3c1f9ba75d86a27f6e0aa"
+    },
+    {
+      "bytes": 14215,
+      "candidate_count": 51,
+      "git_state": "clean",
+      "lines": 275,
+      "path": "docs/research/V-SOFTCHECK-N-invariance.md",
+      "sha256": "e13617fa6316dd31d77456ffda8e99a6a033a37df41cec706e5f332a19b25a69"
+    },
+    {
+      "bytes": 29073,
+      "candidate_count": 86,
+      "git_state": "clean",
+      "lines": 493,
+      "path": "docs/research/V-SOFTCHECK-bandqual.md",
+      "sha256": "a4c99dc25e349fa06b7d52611be33c476393767fa442e11b182eec27e805a1f9"
+    },
+    {
+      "bytes": 12101,
+      "candidate_count": 13,
+      "git_state": "clean",
+      "lines": 227,
+      "path": "docs/research/V-SOFTCHECK-coherence.md",
+      "sha256": "9c9259189f92cb41d106560e11d04b1c316e2356e536abdf6e17577e5674c78e"
+    },
+    {
+      "bytes": 17524,
+      "candidate_count": 31,
+      "git_state": "clean",
+      "lines": 318,
+      "path": "docs/research/V-SOFTCHECK-ninvariance.md",
+      "sha256": "5fbdecfc675ee940ad6f0cee306432c55d165e78b2f71889972083028fa22d24"
+    },
+    {
+      "bytes": 8193,
+      "candidate_count": 8,
+      "git_state": "clean",
+      "lines": 165,
+      "path": "docs/research/V-SOFTCHECK-nyquist.md",
+      "sha256": "af0109f06547f91b86e20307e55d2cd971b796f368cd951d1fc6fdd4da4df792"
+    },
+    {
+      "bytes": 11253,
+      "candidate_count": 17,
+      "git_state": "clean",
+      "lines": 193,
+      "path": "docs/research/V-SOFTCHECK-selection-vs-alignment.md",
+      "sha256": "9dbcc3e95081039a32490036cc36825c96f6e779805fc7403e1e43acf661a180"
+    },
+    {
+      "bytes": 49593,
+      "candidate_count": 171,
+      "git_state": "clean",
+      "lines": 922,
+      "path": "docs/research/V-SPEED-HALO.md",
+      "sha256": "1dcd1470a7bda2274536c42d97502de790c9fef8459c03f2ee91aba318897b9d"
+    },
+    {
+      "bytes": 38787,
+      "candidate_count": 57,
+      "git_state": "clean",
+      "lines": 757,
+      "path": "docs/research/V-SPEED.md",
+      "sha256": "695a43634fe8d7547802e3b68db7986773d1f4083a763e61318e5e95d34670e3"
+    },
+    {
+      "bytes": 27086,
+      "candidate_count": 78,
+      "git_state": "clean",
+      "lines": 516,
+      "path": "docs/research/V-THESIS.md",
+      "sha256": "307cd45ecb2a60b1114359527fe88083bd360c4ffc3801b40f412007d726accb"
+    },
+    {
+      "bytes": 17041,
+      "candidate_count": 31,
+      "git_state": "clean",
+      "lines": 367,
+      "path": "docs/research/V-TRIAGE.md",
+      "sha256": "7e72406f7a2db6453df10a9b89052c70a20275bb5a9d8c1773eda14654cac39c"
+    },
+    {
+      "bytes": 49871,
+      "candidate_count": 273,
+      "git_state": "clean",
+      "lines": 911,
+      "path": "docs/research/V-bestframe.md",
+      "sha256": "39218ff1f47f0da3294912fa3a4f20d96920ccef3acdb457478f8c017990405f"
+    },
+    {
+      "bytes": 20141,
+      "candidate_count": 38,
+      "git_state": "clean",
+      "lines": 358,
+      "path": "docs/research/V-ca.md",
+      "sha256": "45357512f21066a141df4b2d011a92c001e36003f90529d8ba9bf4e2c160561b"
+    },
+    {
+      "bytes": 25550,
+      "candidate_count": 53,
+      "git_state": "clean",
+      "lines": 454,
+      "path": "docs/research/V-chroma2.md",
+      "sha256": "29ebd0df335bf64ce2f3053174297c54a806ee2fe9d281fc34e5cc31042604c0"
+    },
+    {
+      "bytes": 45846,
+      "candidate_count": 166,
+      "git_state": "clean",
+      "lines": 880,
+      "path": "docs/research/V-hull.md",
+      "sha256": "64ff6c713a00fc5bb4c23e8d6a6dd04cae83c6a2ccf36038c45c65347ca73d78"
+    },
+    {
+      "bytes": 18126,
+      "candidate_count": 40,
+      "git_state": "clean",
+      "lines": 331,
+      "path": "docs/research/V-seam.md",
+      "sha256": "2b75997510a013d2f2512618f5f64119ed57ef12ba6cd1ad9d9955f6153f80a2"
+    },
+    {
+      "bytes": 28081,
+      "candidate_count": 75,
+      "git_state": "clean",
+      "lines": 529,
+      "path": "docs/research/V-softness.md",
+      "sha256": "3623e3faa7e2707aacd0a61053c5c64e732de6a8395c52ed54757f124d74f34a"
+    },
+    {
+      "bytes": 12872,
+      "candidate_count": 30,
+      "git_state": "clean",
+      "lines": 227,
+      "path": "docs/research/V-veiling.md",
+      "sha256": "c5f966781f7f4d1561d0b7fdb942d71a6fe1359be548f72b7f0194b21000f7b6"
+    },
+    {
+      "bytes": 41567,
+      "candidate_count": 173,
+      "git_state": "clean",
+      "lines": 799,
+      "path": "docs/research/cover-default.md",
+      "sha256": "f1921cc8b77edc20e6726f29235a5cbb05fff0842ab2092a61637753dd368a18"
+    }
+  ],
+  "manifest_sha256": "e13886e1c3a6bec675ac906bf92eb4962860bc8af27bbe2623b7e6ffbbb93913",
+  "patterns": [
+    "docs/research/*.md",
+    "docs/proposals/*.md"
+  ],
+  "reviewer_count": 8,
+  "schema": "denominator-corpus-manifest-v1",
+  "schema_version": 1,
+  "shard_candidate_load_spread": 4,
+  "shard_candidate_loads": [
+    5301,
+    5301,
+    5302,
+    5302,
+    5299,
+    5298,
+    5301,
+    5300
+  ],
+  "sharding": "whole-file greedy LPT by candidate_count, stable ties",
+  "total_bytes": 18303989,
+  "total_lines": 279529
+}

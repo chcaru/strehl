@@ -1,0 +1,207 @@
+{
+  "schema": "denominator-audit-shard-summary-v1",
+  "reviewer": "reviewer-07",
+  "shard": "shard-07",
+  "file_count": 48,
+  "candidate_count": 5301,
+  "file_attestation_count": 48,
+  "classification_totals": {
+    "population": 845,
+    "fixed_subsample": 8,
+    "cap": 31,
+    "fixture": 190,
+    "unstated": 3,
+    "out_of_scope": 4224
+  },
+  "cap_or_unstated_claims": [
+    {
+      "claim_id": "gate-limit10",
+      "classification": "cap",
+      "file": "docs/research/BUILD-GATE-2.md",
+      "line": 151,
+      "exact_claim": "`--limit 10`, all frames placed, W = white floor (today), M = measured floor.",
+      "denominator_provenance": "First ten frames of each of six named stacks; all placed frames only within that prefix.",
+      "load_bearing_decision_or_verdict": "Acceptance criteria 1 and 2 are reported FAIL from the arm-gap and averaged fractions.",
+      "current_status": "Open: the source does not report a full-bracket rerun.",
+      "true_population": null,
+      "missing_input": "Both floor arms over every frame of each of the six complete brackets.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 6
+    },
+    {
+      "claim_id": "m107-a1-three-of-five",
+      "classification": "cap",
+      "file": "docs/research/M107b-lateral-correction.md",
+      "line": 290,
+      "exact_claim": "5. **A1 on depth** \u2014 indeterminate, and left indeterminate. **And scored on 3 of the 5\n   stacks its bar names**, because only 3 argmax volumes were ever persisted (\u00a74).",
+      "denominator_provenance": "Three persisted argmax-volume stacks out of the five stacks required by the registered A1 rule.",
+      "load_bearing_decision_or_verdict": "A1 is ADEQUATE on radius and INDETERMINATE on depth.",
+      "current_status": "Unresolved; the source expressly discloses the 3-of-5 deviation.",
+      "true_population": "Five registered stacks.",
+      "missing_input": "The two no-CPL stacks whose argmax volumes were never persisted.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 1
+    },
+    {
+      "claim_id": "m95-six-frame-cache",
+      "classification": "cap",
+      "file": "docs/research/M95-kernel.md",
+      "line": 615,
+      "exact_claim": "**`--out` protects the shared cache (H1 = PASS):** an `align --limit 6 --out\n<my scratch>` left all three entries byte-identical by SHA-256, and the shared",
+      "denominator_provenance": "A six-frame prefix used for the sidecar/cache control.",
+      "load_bearing_decision_or_verdict": "The control demonstrates cache isolation and later supports the resampler-key defect.",
+      "current_status": "Open as a denominator claim; the mechanism and later source fix are established, but full-bracket incidence was not measured.",
+      "true_population": "The 299-frame bee-3-cpl bracket for the cited cache hazard.",
+      "missing_input": "A same-binary full-bracket cache A/B under the two solve configurations.",
+      "plausible_verdict_flip": false,
+      "assigned_occurrences": 4
+    },
+    {
+      "claim_id": "vhighlight-limit10-null",
+      "classification": "cap",
+      "file": "docs/research/V-HIGHLIGHT.md",
+      "line": 95,
+      "exact_claim": "I then screened seven subjects the author never tested (`--limit 10`, otherwise\nidentical arms): `112MSDCF`, `113MSDCF`, `119MSDCF`, `wrapped-text-1`,\n`bee-3-cpl`, `flowers-cpl`, `lavendar-cpl`. **All eight subjects byte-identical.**\nThe null's support is materially wider than the report claims. *Caveat: these are\n10-frame stacks, not full ones.*",
+      "denominator_provenance": "Seven named subjects rendered with --limit 10, plus the original subject.",
+      "load_bearing_decision_or_verdict": "The report initially claimed the null support was materially widened.",
+      "current_status": "Resolved and retracted: all seven prefixes had max-u below the knee, so the test could not fire.",
+      "true_population": "All frames of the seven named stacks.",
+      "missing_input": "No further input is needed to reject the claimed widening; full-stack renders would be required for a new widening claim.",
+      "plausible_verdict_flip": false,
+      "assigned_occurrences": 1
+    },
+    {
+      "claim_id": "veyes-thirteen-frame-ceiling",
+      "classification": "cap",
+      "file": "docs/research/V-EYES.md",
+      "line": 48,
+      "exact_claim": "**13-frame subsample** \u2014 6% and 11% of those brackets. Developing *every* frame\nand comparing against the true per-site best reverses the result: on the four",
+      "denominator_provenance": "Best-frame ceiling drawn from 13 frames, only 6% and 11% of the two brackets named in the early result.",
+      "load_bearing_decision_or_verdict": "The early verdict said the master was 1.87x and 1.54x sharper than its per-site best frame.",
+      "current_status": "Resolved for five complete brackets and superseded; the sign flipped on averaging-dominated subjects.",
+      "true_population": "Complete brackets measured later: 19/19, 22/22, 33/33, 205/205, and 299/299.",
+      "missing_input": "Complete-bracket ceilings for the remaining corpus subjects.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 8
+    },
+    {
+      "claim_id": "vgather-nsrc10",
+      "classification": "cap",
+      "file": "docs/research/V-GATHER.md",
+      "line": 274,
+      "exact_claim": "`main()` samples `nsrc=10` frames \u2014 one in thirty on a 299-frame stack.\nThinning the reference **alone**, master untouched in every row:",
+      "denominator_provenance": "The original sharpness denominator sampled nsrc=10 frames, one in thirty on a 299-frame stack.",
+      "load_bearing_decision_or_verdict": "It supported project-wide sharpness numbers and the RECONSTRUCT comparison.",
+      "current_status": "Resolved as invalid; thinning the denominator alone moved readings across unity.",
+      "true_population": "Every source frame in each evaluated bracket.",
+      "missing_input": "Full-bracket denominators for any subject whose original result is retained.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 3
+    },
+    {
+      "claim_id": "vgather-sampled-certificate",
+      "classification": "cap",
+      "file": "docs/research/V-GATHER.md",
+      "line": 521,
+      "exact_claim": "**17 PASS, 5 FAIL, 0 SUBJECT, 4 REFUSED, 0 NOT EXAMINED.**",
+      "denominator_provenance": "Best-source comparisons used sampled frames that also had to retain coverage of the master window.",
+      "load_bearing_decision_or_verdict": "The print certificate reported 17 PASS, 5 FAIL, and 4 REFUSED before later axes were added.",
+      "current_status": "Unresolved for source-ceiling claims on deep stacks; later registration correction resolves the four prior refusals but not every capped ceiling.",
+      "true_population": "Every source frame that covers each frozen site in all 26 brackets.",
+      "missing_input": "Complete coverage-preserving frame renders for the deep stacks.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 4
+    },
+    {
+      "claim_id": "vgather-search-cap56",
+      "classification": "cap",
+      "file": "docs/research/V-GATHER.md",
+      "line": 1378,
+      "exact_claim": "`sharpaxis.py` caps its ceiling search at 56 renders. A 299-frame stack is\ntherefore searched at **18.1% coverage** against **78.9%** for a 19-frame stack.",
+      "denominator_provenance": "The sharpness ceiling search stops at 56 renders, only 18.1% of a 299-frame bracket.",
+      "load_bearing_decision_or_verdict": "The cap inflated apparent manufactured-detail excess and informed the selection-law diagnosis.",
+      "current_status": "Partially resolved: an exhaustive 299-frame run reduced one residual by 17.1% but did not eliminate it; other deep stacks remain capped.",
+      "true_population": "All 299 frames for the exhaustively checked deep stack; full brackets for each other subject.",
+      "missing_input": "Exhaustive per-site ceiling searches for the remaining deep stacks.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 4
+    },
+    {
+      "claim_id": "m132-no-equal-replacement",
+      "classification": "unstated",
+      "file": "docs/research/M132-blocker-d-routes.md",
+      "line": 319,
+      "exact_claim": "- `[VERIFIED]` No cheaper third-party candidate was verified to combine\n  **equal field standing**, a clean common-input merge boundary, and the",
+      "denominator_provenance": "A stated set of commercial, freeware, and scholarly candidates, but no frozen exhaustive universe of possible tools.",
+      "load_bearing_decision_or_verdict": "Supports the conclusion that no cheaper equal-standing replacement clears blocker (d).",
+      "current_status": "Unresolved as an exhaustive market claim.",
+      "true_population": null,
+      "missing_input": "A frozen comparator census or a newly identified tool with a qualifying witness.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 1
+    },
+    {
+      "claim_id": "m166-flat-null-truth",
+      "classification": "unstated",
+      "file": "docs/research/M166-m10-definition-repair.md",
+      "line": 629,
+      "exact_claim": "The ISO-100 battery stack is registered clean, but no admitted output-blind face mask or planarity bound exists. If it cannot be certified, a fresh planar unit is required.",
+      "denominator_provenance": "The stack exists, but the output-blind face mask and planarity-qualified flat population are not defined.",
+      "load_bearing_decision_or_verdict": "M10 flat-null truth remains UNMEASURED_FLAT_TRUTH and may require a fresh planar unit.",
+      "current_status": "Unresolved: no admitted mask or planarity certificate is present.",
+      "true_population": null,
+      "missing_input": "An output-blind face mask and planarity certificate, or a fresh certified planar target.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 1
+    },
+    {
+      "claim_id": "m173-real-pair-admission",
+      "classification": "unstated",
+      "file": "docs/research/M173-ask2a-audit.md",
+      "line": 289,
+      "exact_claim": "One unknown-ratio real pair supplies no external truth value for converter-dependent estimator bias.",
+      "denominator_provenance": "One real pair is present, but its optical truth ratio is unknown and no independently truthed real-pair calibration population is specified.",
+      "load_bearing_decision_or_verdict": "The estimator allowance cannot be relabeled calibrated or admitted for the converter-change claim.",
+      "current_status": "Unresolved pending independently truthed real captures and review.",
+      "true_population": null,
+      "missing_input": "Converter-off and converter-on real captures with independent optical truth sufficient to calibrate estimator bias.",
+      "plausible_verdict_flip": true,
+      "assigned_occurrences": 1
+    }
+  ],
+  "plausible_verdict_flips": [
+    {
+      "claim_id": "veyes-thirteen-frame-ceiling",
+      "assessment": "Actual flip observed: capped ceilings said the master was sharper; complete brackets showed 5-19% softness on averaging-dominated subjects."
+    },
+    {
+      "claim_id": "vgather-nsrc10",
+      "assessment": "Actual flip observed: thinning the source denominator moved sharpness readings across unity with the master unchanged."
+    },
+    {
+      "claim_id": "gate-limit10",
+      "assessment": "Plausible: full-bracket admission distributions could change the stated arm-gap FAIL; no full run is present."
+    },
+    {
+      "claim_id": "m107-a1-three-of-five",
+      "assessment": "Plausible: either missing registered stack could move depth A1 from INDETERMINATE or invalidate radius adequacy."
+    },
+    {
+      "claim_id": "vgather-search-cap56",
+      "assessment": "Plausible on unexhausted deep stacks; one exhaustive run changed the residual materially but not its sign."
+    },
+    {
+      "claim_id": "m132-no-equal-replacement",
+      "assessment": "Plausible blocker flip if an unexamined comparator passes the common-input contract."
+    },
+    {
+      "claim_id": "m166-flat-null-truth",
+      "assessment": "Plausible: defining and certifying a flat-truth population could move the result from UNMEASURED to a scored pass or fail."
+    },
+    {
+      "claim_id": "m173-real-pair-admission",
+      "assessment": "Plausible: independently truthed real captures could validate or refute admission of the converter-dependent estimator allowance."
+    }
+  ],
+  "attestation": "Every assigned source file was read completely at the manifest SHA-256 before disposition."
+}

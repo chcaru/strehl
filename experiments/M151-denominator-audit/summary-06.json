@@ -1,0 +1,1168 @@
+{
+  "schema": "denominator-review-summary-v1",
+  "reviewer": "reviewer-06",
+  "shard": "shard-06",
+  "candidate_count": 5298,
+  "file_count": 47,
+  "classification_totals": {
+    "population": 396,
+    "fixed_subsample": 197,
+    "cap": 92,
+    "fixture": 233,
+    "unstated": 13,
+    "out_of_scope": 4367
+  },
+  "complete_file_attestations": 47,
+  "cap_or_unstated_claims": [
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 256,
+      "exact_claim": "pixels differing: 16039 of 32966016 (0.048653%)",
+      "denominator_provenance": [
+        "299 frames in bee-3-cpl",
+        "first 20 frames selected by --limit 20",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The delivered-pixel locality PASS is measured on the first 20 bee-3-cpl frames; the remaining 279 frames are not covered.",
+      "current_status": "open",
+      "true_population": "299 frames in bee-3-cpl",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 262,
+      "exact_claim": "untouched: 99.9513% of the frame",
+      "denominator_provenance": [
+        "299 frames in bee-3-cpl",
+        "first 20 frames selected by --limit 20",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The delivered-pixel locality PASS is measured on the first 20 bee-3-cpl frames; the remaining 279 frames are not covered.",
+      "current_status": "open",
+      "true_population": "299 frames in bee-3-cpl",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 389,
+      "exact_claim": "of a possible 90,800 samples moved (98.10%). The 1,726-sample shortfall is",
+      "denominator_provenance": [
+        "105 frames in coffee-bean",
+        "first 20 frames selected by --limit 20",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The cross-path defect tally is measured on the first 20 coffee-bean frames; the remaining 85 frames are not covered.",
+      "current_status": "open",
+      "true_population": "105 frames in coffee-bean",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 735,
+      "exact_claim": "folded          : 20 / 20 frames in 22.1 s (1.11 s per frame, 4 workers)",
+      "denominator_provenance": [
+        "105 frames in coffee-bean",
+        "first 20 frames selected by --limit 20",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The shipping-path correction and fold result is measured on the first 20 coffee-bean frames; the remaining 85 frames are not covered.",
+      "current_status": "open",
+      "true_population": "105 frames in coffee-bean",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 776,
+      "exact_claim": "FIRES  mote1 6/10   mote2 8/10   CONTROLS 0/40  (controls must be 0)",
+      "denominator_provenance": [
+        "complete populations of the selected real capture stacks",
+        "8 sampled frames per stack for self-validation",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The self-validation rate, site partition, and associated decision use 8 frames per selected stack; full-stack validation behavior is not measured.",
+      "current_status": "open",
+      "missing_input": "complete per-stack validation results for every selected real capture",
+      "occurrence_count": 3
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 876,
+      "exact_claim": "all arms PASS -- self-validation blocks the stale-map failure mode",
+      "denominator_provenance": [
+        "complete populations of the selected real capture stacks",
+        "8 sampled frames per stack for self-validation",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The self-validation rate, site partition, and associated decision use 8 frames per selected stack; full-stack validation behavior is not measured.",
+      "current_status": "open",
+      "missing_input": "complete per-stack validation results for every selected real capture",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 898,
+      "exact_claim": "| clean control sites | NO FIRE | 0/40 fire |",
+      "denominator_provenance": [
+        "complete populations of the selected real capture stacks",
+        "8 sampled frames per stack for self-validation",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The self-validation rate, site partition, and associated decision use 8 frames per selected stack; full-stack validation behavior is not measured.",
+      "current_status": "open",
+      "missing_input": "complete per-stack validation results for every selected real capture",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 1289,
+      "exact_claim": "### 12.8 P39 \u2014 the guard that broke 11 of 26 renders, found by running the binary",
+      "denominator_provenance": [
+        "26-stack corpus",
+        "first decoded frame from each stack for the geometry census",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The geometry-compatibility census covers all 26 stacks but only the first decoded frame in each; within-stack geometry stability is not measured.",
+      "current_status": "open",
+      "missing_input": "geometry observations for every frame in each of the 26 stacks",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 1318,
+      "exact_claim": "**An exact-equality geometry guard hard-failed 11 of 26 renders** \u2014 including",
+      "denominator_provenance": [
+        "26-stack corpus",
+        "first decoded frame from each stack for the geometry census",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The geometry-compatibility census covers all 26 stacks but only the first decoded frame in each; within-stack geometry stability is not measured.",
+      "current_status": "open",
+      "missing_input": "geometry observations for every frame in each of the 26 stacks",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 1432,
+      "exact_claim": "in **18 of 26 delivered masters**; this reads at least one site as present in **17 of",
+      "denominator_provenance": [
+        "26-stack corpus",
+        "first 8 frames per stack selected by --limit 8",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The then-default-ON GREEN corpus sweep covers all 26 stacks but only their first 8 frames; the document later reverts the default to OFF.",
+      "current_status": "open",
+      "missing_input": "complete per-stack render results for the 26-stack corpus",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3375,
+      "exact_claim": "### 22.2 A gate that only compared pixels read PASS on the defective script",
+      "denominator_provenance": [
+        "complete 109MSDCF and foam captures",
+        "first 8 frames per subject for the cross-binary replay",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The sidecar reproduction-command fix is judged from first-8-frame cross-binary renders, not complete captures.",
+      "current_status": "open",
+      "missing_input": "cross-binary behavior on complete 109MSDCF and foam stacks",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3394,
+      "exact_claim": "| C_PLANTED | `--limit 8` -> `--limit 6`, pin binary | FAIL, max abs 31,792 DN over 96,349,077 of 98,898,048 samples | FAIL |",
+      "denominator_provenance": [
+        "complete 109MSDCF and foam captures",
+        "first 8 frames per subject for the cross-binary replay",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The sidecar reproduction-command fix is judged from first-8-frame cross-binary renders, not complete captures.",
+      "current_status": "open",
+      "missing_input": "cross-binary behavior on complete 109MSDCF and foam stacks",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3421,
+      "exact_claim": "independently reproduces ORCH's 85.5234%, measured on a different frame count.",
+      "denominator_provenance": [
+        "complete 109MSDCF and foam captures",
+        "first 8 frames per subject for the cross-binary replay",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The sidecar reproduction-command fix is judged from first-8-frame cross-binary renders, not complete captures.",
+      "current_status": "open",
+      "missing_input": "cross-binary behavior on complete 109MSDCF and foam stacks",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3434,
+      "exact_claim": "| pre-fix blob at `81ee69fa` | **RED**, 0 passed + 2 failed + 0 undefined | `--srgb --exposure +2.61`, contract violated, both subjects |",
+      "denominator_provenance": [
+        "complete 109MSDCF and foam captures",
+        "first 8 frames per subject for the cross-binary replay",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The sidecar reproduction-command fix is judged from first-8-frame cross-binary renders, not complete captures.",
+      "current_status": "open",
+      "missing_input": "cross-binary behavior on complete 109MSDCF and foam stacks",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3435,
+      "exact_claim": "| fixed working copy | **GREEN**, 2 passed + 0 failed + 0 undefined | `--srgb --auto-exposure`, 0 DN, both subjects |",
+      "denominator_provenance": [
+        "complete 109MSDCF and foam captures",
+        "first 8 frames per subject for the cross-binary replay",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The sidecar reproduction-command fix is judged from first-8-frame cross-binary renders, not complete captures.",
+      "current_status": "open",
+      "missing_input": "cross-binary behavior on complete 109MSDCF and foam stacks",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3469,
+      "exact_claim": "| 109MSDCF | 0.0012% clipped, median 60,918, sha `18E6EDA98DEC9930` | 0.0012%, median 60,918, sha `18E6EDA98DEC9930` | **0 DN over 98,898,048 samples** |",
+      "denominator_provenance": [
+        "complete 109MSDCF and foam captures",
+        "first 8 frames per subject for the cross-binary replay",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The sidecar reproduction-command fix is judged from first-8-frame cross-binary renders, not complete captures.",
+      "current_status": "open",
+      "missing_input": "cross-binary behavior on complete 109MSDCF and foam stacks",
+      "occurrence_count": 2
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3470,
+      "exact_claim": "| foam | 0.0020% clipped, median 6,768, sha `84F57ADD94BE902A` | 0.0020%, median 6,768, sha `84F57ADD94BE902A` | **0 DN over 98,898,048 samples** |",
+      "denominator_provenance": [
+        "complete 109MSDCF and foam captures",
+        "first 8 frames per subject for the cross-binary replay",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The sidecar reproduction-command fix is judged from first-8-frame cross-binary renders, not complete captures.",
+      "current_status": "open",
+      "missing_input": "cross-binary behavior on complete 109MSDCF and foam stacks",
+      "occurrence_count": 2
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3852,
+      "exact_claim": "sites           : 1/2 sites confirmed from 8 frames (not significant 1, too shallow 0, not stationary 0, unmeasurable 0)",
+      "denominator_provenance": [
+        "complete coffee-bubbles capture",
+        "first 8 frames used by the site validator",
+        "reported site outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The site-confirmation and amplitude scale use the first 8 frames even though the downstream correction tally covers 19 frame loads; the outer validation cap remains load-bearing.",
+      "current_status": "open",
+      "missing_input": "full-capture site-validation results for coffee-bubbles",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3853,
+      "exact_claim": "site ( 3202,  119): depth  -9.468% (map -3.606%), p 0.0075 -> skip: not significant here",
+      "denominator_provenance": [
+        "complete coffee-bubbles capture",
+        "first 8 frames used by the site validator",
+        "reported site outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The site-confirmation and amplitude scale use the first 8 frames even though the downstream correction tally covers 19 frame loads; the outer validation cap remains load-bearing.",
+      "current_status": "open",
+      "missing_input": "full-capture site-validation results for coffee-bubbles",
+      "occurrence_count": 2
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 3854,
+      "exact_claim": "site ( 3434, 2305): depth -12.606% (map -8.236%), p 0.0025 -> CORRECT at scale 1.568",
+      "denominator_provenance": [
+        "complete coffee-bubbles capture",
+        "first 8 frames used by the site validator",
+        "reported site outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The site-confirmation and amplitude scale use the first 8 frames even though the downstream correction tally covers 19 frame loads; the outer validation cap remains load-bearing.",
+      "current_status": "open",
+      "missing_input": "full-capture site-validation results for coffee-bubbles",
+      "occurrence_count": 2
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 4377,
+      "exact_claim": "    pixels changed  : 16039 = 0.0487%",
+      "denominator_provenance": [
+        "105 frames in coffee-bean",
+        "first 20 frames selected by --limit 20",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The re-derived delivered-pixel pair is measured on the first 20 coffee-bean frames; the remaining 85 frames are not covered.",
+      "current_status": "open",
+      "true_population": "105 frames in coffee-bean",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 4378,
+      "exact_claim": "    pixels identical: 32949977 = 99.9513%",
+      "denominator_provenance": [
+        "105 frames in coffee-bean",
+        "first 20 frames selected by --limit 20",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The re-derived delivered-pixel pair is measured on the first 20 coffee-bean frames; the remaining 85 frames are not covered.",
+      "current_status": "open",
+      "true_population": "105 frames in coffee-bean",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/BUILD-DEFECT.md",
+      "line": 4383,
+      "exact_claim": "**`99.9513%` is the same untouched fraction \u00a73 reports**, re-derived from the",
+      "denominator_provenance": [
+        "105 frames in coffee-bean",
+        "first 20 frames selected by --limit 20",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The re-derived delivered-pixel pair is measured on the first 20 coffee-bean frames; the remaining 85 frames are not covered.",
+      "current_status": "open",
+      "true_population": "105 frames in coffee-bean",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 1,
+      "exact_claim": "# M-PHASE0-NVME2 \u2014 cold-device ARW read rate (MEASURED)",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 3,
+      "exact_claim": "**Verdict: PASS; storage is not a material bottleneck.** The Samsung 980 PRO",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 6,
+      "exact_claim": "reached **20.615 compressed-input GB/s**, **3.25x** the cold-device rate. A",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 38,
+      "exact_claim": "### Cache control \u2014 PASS",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 47,
+      "exact_claim": "that the first pass came from the device rather than RAM. More importantly,",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 49,
+      "exact_claim": "within 2.7% of its pre-warm rate instead of jumping to 19.7\u201320.6",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 2
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 68,
+      "exact_claim": "| no-buffering, 1 worker, before | 4.970 / 9.7% | 5.063 / 7.9% |",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 4
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 69,
+      "exact_claim": "| **no-buffering, 8 workers, cold primary** | **6.338 / 7.4%** | **6.342 / 6.4%** |",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 4
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 70,
+      "exact_claim": "| buffered, first read | 6.313 / 9.6% | 6.327 / 11.6% |",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 4
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 71,
+      "exact_claim": "| **buffered, immediate warm reread** | **20.615 / 24.7%** | **19.671 / 30.2%** |",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 4
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 72,
+      "exact_claim": "| no-buffering, 8 workers, after warm | 6.178 / 15.1% | 6.169 / 15.6% |",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 4
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 73,
+      "exact_claim": "| no-buffering, 1 worker, reverse endpoint | 5.136 / 8.3% | 5.111 / 7.6% |",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 4
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 75,
+      "exact_claim": "The unrounded primary cold rates, 6.338117 and 6.341589 compressed-input GB/s,",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 76,
+      "exact_claim": "differ by only **0.055%**. Although other agents were active on this shared",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 77,
+      "exact_claim": "machine, `GetSystemTimes` measured only 6.4\u20137.4% busy during the accepted",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 85,
+      "exact_claim": "The primary cold rate is 1.268x the proposal's assumed 5 compressed-input",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 89,
+      "exact_claim": "D11's measured 32-thread output rate projects the same 60 frames'",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 91,
+      "exact_claim": "therefore **11.41%** of decode time, below the preregistered 20% materiality",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 101,
+      "exact_claim": "The page cache could only flatter a purported cold rate; no-buffering plus the",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 110,
+      "exact_claim": "so the physical-sector size was not independently queried; successful aligned",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 118,
+      "exact_claim": "GB/s cold, cache-control ratio 3.194x, timer/read-only controls PASS, and the",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "line": 120,
+      "exact_claim": "the 5 compressed-input GB/s and 11.41% decisions without discrepancy.",
+      "denominator_provenance": [
+        "79 files in the source directory",
+        "the first 60 name-sorted ARWs",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The PASS that storage is not material and does not justify IOCP is measured on the 60-file prefix.",
+      "current_status": "open",
+      "true_population": "79 files in the source directory",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M100-exposure.md",
+      "line": 276,
+      "exact_claim": "B1 **PASS**: the default measurement file is bit-identical. As a by-product,",
+      "denominator_provenance": [
+        "299 frames in bee-3-cpl",
+        "the first 60 frames, plus the first-30/first-60 sensitivity points, from bee-3-cpl",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The byte-freeze evidence for automatic exposure is a first-60 prefix result.",
+      "current_status": "open",
+      "true_population": "299 frames in bee-3-cpl",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M100-exposure.md",
+      "line": 428,
+      "exact_claim": "  `bee-3-cpl` at 30 / 60 / 299 frames chooses **+1.47 / +1.48 / +1.54**. A",
+      "denominator_provenance": [
+        "299 frames in bee-3-cpl",
+        "the first 60 frames, plus the first-30/first-60 sensitivity points, from bee-3-cpl",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The sensitivity line includes the full 299-frame result and shows the selected exposure changes from +1.47/+1.48 to +1.54.",
+      "current_status": "resolved",
+      "true_population": "299 frames in bee-3-cpl",
+      "occurrence_count": 2
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M112-real-pixels.md",
+      "line": 271,
+      "exact_claim": "provenance is not what the row says, and the arithmetic in its \"7.8% of the",
+      "denominator_provenance": [
+        "299 frames in the shipped bee-3-cpl render",
+        "an 8-frame sidecar with reference frame 4",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "Fact 1419 provenance is corrected: the 8-frame +0.0143 dex claim is not the shipped render, and the full-299 run is more negative, leaving NO-GO unchanged.",
+      "current_status": "resolved",
+      "true_population": "299 frames in the shipped bee-3-cpl render",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M125-photometric-auto.md",
+      "line": 345,
+      "exact_claim": "measured drift  : 1.1156% peak-to-peak over 40 frame(s)",
+      "denominator_provenance": [
+        "available source-capture population",
+        "M24 sorted-glob samples capped at 40 frames per reachable stack",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The promoted drift estimator and auto threshold are calibrated or reproduced on capped 40-frame samples; the source later shows strong frame-count dependence.",
+      "current_status": "open",
+      "missing_input": "full-frame reproduction for every calibrated stack",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M125-photometric-auto.md",
+      "line": 454,
+      "exact_claim": "| **P3** | MEASURED | The promoted Rust drift estimator reproduces M24 on 3/3 CLI-reachable stacks within \u00b10.004 pp. |",
+      "denominator_provenance": [
+        "available source-capture population",
+        "M24 sorted-glob samples capped at 40 frames per reachable stack",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The promoted drift estimator and auto threshold are calibrated or reproduced on capped 40-frame samples; the source later shows strong frame-count dependence.",
+      "current_status": "open",
+      "missing_input": "full-frame reproduction for every calibrated stack",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M76-stratum-gate-residuals.md",
+      "line": 18,
+      "exact_claim": "`rho = -0.8596`, fixed-stack `beta = -1.3402`, bootstrap 95% interval",
+      "denominator_provenance": [
+        "available source-capture population",
+        "the first 64 lexically sorted ARWs from each of six named stacks",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "Q1 remains INCONCLUSIVE; all readable-cell association evidence is downstream of the first-64 cap.",
+      "current_status": "open",
+      "missing_input": "complete frame counts and a full-stack rerun for all six captures",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M76-stratum-gate-residuals.md",
+      "line": 248,
+      "exact_claim": "| arm | finite cells | Spearman `rho` | bootstrap 95% | fixed-stack `beta` | bootstrap 95% | permutation `p` |",
+      "denominator_provenance": [
+        "available source-capture population",
+        "the first 64 lexically sorted ARWs from each of six named stacks",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "Q1 remains INCONCLUSIVE; all readable-cell association evidence is downstream of the first-64 cap.",
+      "current_status": "open",
+      "missing_input": "complete frame counts and a full-stack rerun for all six captures",
+      "occurrence_count": 2
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M76-stratum-gate-residuals.md",
+      "line": 406,
+      "exact_claim": "with `\\|z\\|`: Spearman `rho=-0.8596`; fixed-stack `beta=-1.3402`, bootstrap 95%",
+      "denominator_provenance": [
+        "available source-capture population",
+        "the first 64 lexically sorted ARWs from each of six named stacks",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "Q1 remains INCONCLUSIVE; all readable-cell association evidence is downstream of the first-64 cap.",
+      "current_status": "open",
+      "missing_input": "complete frame counts and a full-stack rerun for all six captures",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 5,
+      "exact_claim": "blobs\" complaint. Six pre-registered bars, all passing, both nulls planted.",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 63,
+      "exact_claim": "| B3b | the variable's map is identical to the flag's | PASS, `EC225A4C\u2026` both |",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 99,
+      "exact_claim": "- **Median jump across a boundary: 1 frame. 71.4% of boundaries are",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 101,
+      "exact_claim": "- **SHUFFLE CONTROL:** permuting the same pixel values gives **77.41%**",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 102,
+      "exact_claim": "  horizontal boundaries against the map's 3.33% \u2014 a **23.2x structure factor**.",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 116,
+      "exact_claim": "elections are spatially structured at 23.2x, boundaries are sparse at 3.3%, and",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 147,
+      "exact_claim": "- **R3 (MEASURED).** On 12 frames of `109MSDCF` with alignment off, 3.33% of",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 148,
+      "exact_claim": "  horizontal and 3.34% of vertical adjacent pixel pairs elect different frames;",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 149,
+      "exact_claim": "  71.4% of those boundaries are single-frame steps, median jump 1 frame.",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M97m-election-map.md",
+      "line": 151,
+      "exact_claim": "  value-preserving shuffle of itself (3.33% against 77.41% boundary density), so",
+      "denominator_provenance": [
+        "22 frames in 109MSDCF",
+        "the first 12 or 13 frames of 109MSDCF selected by --limit",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The election-map export ships, but the reported spatial and bar statistics describe only the capped prefix.",
+      "current_status": "open",
+      "true_population": "22 frames in 109MSDCF",
+      "occurrence_count": 2
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M99-photometric.md",
+      "line": 1259,
+      "exact_claim": "measured 29.033% disconnected with **mean gap 4.69 frames** and A3 enrichment of",
+      "denominator_provenance": [
+        "299 frames in each final pass-3 deck",
+        "the first 60 frames used in the initial pass-3 run",
+        "reported empirical outcome"
+      ],
+      "load_bearing_decision_or_verdict": "The capped 29.033% result is explicitly corrected and superseded by full-299-frame measurements.",
+      "current_status": "resolved",
+      "true_population": "299 frames in each final pass-3 deck",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/A-prior-corpus.md",
+      "line": 67,
+      "exact_claim": "| `PROBE_MDDL_CHANNEL_J.md` | Is MDDL a useful confidence channel? | No: Pearson 0.926 with ISTD, disjoint mass 0.14%. | **MEASURED** (negative) |",
+      "denominator_provenance": [
+        "reported empirical rate or fraction",
+        "provenance stops before the evaluated universe and selection rule"
+      ],
+      "load_bearing_decision_or_verdict": "The MDDL independence rejection uses a mass fraction whose evaluated universe is not identified here.",
+      "current_status": "unresolved",
+      "missing_input": "the image population and eligibility rule behind the reported disjoint mass",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/A-prior-corpus.md",
+      "line": 108,
+      "exact_claim": "| Per-frame green anomaly density | 0.022\u20130.024% (= noise floor); 0 rows above mean+3\u03c3 | `PROBE10_PDAF_MASK.md` | MEASURED |",
+      "denominator_provenance": [
+        "reported empirical rate or fraction",
+        "provenance stops before the evaluated universe and selection rule"
+      ],
+      "load_bearing_decision_or_verdict": "The no-sparse-PDAF-mask recommendation lacks a reconstructable anomaly-density denominator in this source.",
+      "current_status": "unresolved",
+      "missing_input": "the evaluated frames, pixel mask, and complete anomaly-candidate universe",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/A-prior-corpus.md",
+      "line": 143,
+      "exact_claim": "| Pixel engagement at \u03b1=2.0 | ~66% | MEASURED |",
+      "denominator_provenance": [
+        "reported empirical rate or fraction",
+        "provenance stops before the evaluated universe and selection rule"
+      ],
+      "load_bearing_decision_or_verdict": "The central pixel-engagement characterization cannot be scoped to a frozen image population.",
+      "current_status": "unresolved",
+      "missing_input": "the stack, pixel domain, and eligibility mask behind the engagement rate",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/A-prior-corpus.md",
+      "line": 217,
+      "exact_claim": "| MDDL as confidence channel | Pearson(MDDL, ISTD) = **0.926**; EDGE/SMOOTH ratio 1.4\u00d7 vs Helmli-Scherer's 2.9\u00d7; disjoint mass 0.14% | \u2014 | `PROBE_MDDL_CHANNEL_J.md` | MEASURED |",
+      "denominator_provenance": [
+        "reported empirical rate or fraction",
+        "provenance stops before the evaluated universe and selection rule"
+      ],
+      "load_bearing_decision_or_verdict": "The MDDL independence rejection uses a mass fraction whose evaluated universe is not identified here.",
+      "current_status": "unresolved",
+      "missing_input": "the image population and eligibility rule behind the reported disjoint mass",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/A-prior-corpus.md",
+      "line": 312,
+      "exact_claim": "| F4 | **PDAF-pixel masking** | ~759 PDAF points, \"~85% probability of working, paper-worthy\" | **0 candidate pixels** in a 5-frame cross-frame anomaly intersection; anomaly density 0.022\u20130.024% = noise floor | A7C II (BIONZ XR generation) uses dual-pixel / quad-Bayer PDAF with **no sparse-anomaly signature**. RawTherapee camconst.json covers only 25 *older* sparse-PDAF Sony bodies. | **INTRINSIC to this sensor generation.** Do not build a sparse-PDAF masker for modern Sony bodies. |",
+      "denominator_provenance": [
+        "reported empirical rate or fraction",
+        "provenance stops before the evaluated universe and selection rule"
+      ],
+      "load_bearing_decision_or_verdict": "The no-sparse-PDAF-mask recommendation lacks a reconstructable anomaly-density denominator in this source.",
+      "current_status": "unresolved",
+      "missing_input": "the evaluated frames, pixel mask, and complete anomaly-candidate universe",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/A-prior-corpus.md",
+      "line": 710,
+      "exact_claim": "1. **The feature's premise was invalidated, not its implementation.** NLM substitutes pixels *inside* the P8.2+P9.1 union override mask (~80% of the image, measured: 80.9% NLM coverage, 65.7% P8.2 engagement, 69.9% P9.1 engagement \u2014 `out2/qa_p125_nlm_light.log`). In Phase 10.1 that zone held the noisy winner-copy. After 12.5 it holds a 33-frame arithmetic mean. *\"Arithmetic mean over 33 frames gives ~5.7\u00d7 shot-noise reduction; NLM-Multi's T=5 patch average gives at most ~2.2\u00d7. NLM cannot improve over what's already there.\"*",
+      "denominator_provenance": [
+        "reported empirical rate or fraction",
+        "provenance stops before the evaluated universe and selection rule"
+      ],
+      "load_bearing_decision_or_verdict": "The NLM premise-invalidation argument is load-bearing, but its coverage universe is not reconstructable from this source line and citation.",
+      "current_status": "unresolved",
+      "missing_input": "the evaluated image and pixel eligibility mask behind the NLM/P8.2/P9.1 coverage fractions",
+      "occurrence_count": 5
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/OWNER-QUESTIONS.md",
+      "line": 1250,
+      "exact_claim": "78.3% of pixels at hand-labelled occluding edges show a clean second peak in the",
+      "denominator_provenance": [
+        "reported empirical rate or fraction",
+        "provenance stops before the evaluated universe and selection rule"
+      ],
+      "load_bearing_decision_or_verdict": "The second-peak and focus-election mechanism claim cannot generalize beyond the undisclosed hand-labeled edge set.",
+      "current_status": "unresolved",
+      "missing_input": "the hand-labeling protocol and complete eligible edge-pixel population",
+      "occurrence_count": 1
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/OWNER-QUESTIONS.md",
+      "line": 1254,
+      "exact_claim": "background's actual focus frame 7.2% of the time against 1.6% chance; **it does not",
+      "denominator_provenance": [
+        "reported empirical rate or fraction",
+        "provenance stops before the evaluated universe and selection rule"
+      ],
+      "load_bearing_decision_or_verdict": "The second-peak and focus-election mechanism claim cannot generalize beyond the undisclosed hand-labeled edge set.",
+      "current_status": "unresolved",
+      "missing_input": "the hand-labeling protocol and complete eligible edge-pixel population",
+      "occurrence_count": 2
+    }
+  ],
+  "plausible_verdict_flips": [
+    {
+      "file": "docs/research/BUILD-DEFECT.md",
+      "lines": [
+        1289,
+        1318,
+        1432
+      ],
+      "current_verdict": "The first-8-frame, 26-stack sweep reported GREEN for default-ON, but the document later reverted the default to OFF on separate adjudication evidence.",
+      "plausible_flip": "The capped sweep cannot establish long-bracket execution safety; complete per-stack runs could expose a fold-only failure even though setup, geometry, and validation ran in the capped sweep.",
+      "status": "open"
+    },
+    {
+      "file": "docs/research/M-PHASE0-NVME2.md",
+      "lines": [
+        3,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        91,
+        120
+      ],
+      "current_verdict": "PASS: storage is 11.41% of decode and no IOCP prefetch is justified.",
+      "plausible_flip": "A complete 79-file or production-order workload could cross the registered 20% materiality bar if the omitted tail is systematically slower; the first-60 name-sorted prefix does not rule that out.",
+      "status": "open"
+    },
+    {
+      "file": "docs/research/M125-photometric-auto.md",
+      "lines": [
+        345,
+        454
+      ],
+      "current_verdict": "The auto drift estimator is promoted from 3/3 CLI-reachable 40-frame reproductions.",
+      "plausible_flip": "The same source reports strong frame-count dependence (1.626% at 100 frames versus 8.472% at 299), so full-frame calibration can move a stack across the auto threshold and change ON/OFF.",
+      "status": "open"
+    },
+    {
+      "file": "docs/research/M76-stratum-gate-residuals.md",
+      "lines": [
+        18,
+        248,
+        406
+      ],
+      "current_verdict": "Q1 is INCONCLUSIVE because only 18 of 24 registered cells are readable.",
+      "plausible_flip": "Corrected coordinates and complete-stack inputs could satisfy the 20-cell rule and produce either the registered YES or NO branch; the current first-64 evidence cannot settle it.",
+      "status": "open"
+    }
+  ],
+  "resolved_cap_checks": [
+    {
+      "file": "docs/research/M100-exposure.md",
+      "line": 428,
+      "resolution": "The line includes the full 299-frame result beside the first-30/60 results and exposes the frame-count change directly."
+    },
+    {
+      "file": "docs/research/M112-real-pixels.md",
+      "line": 271,
+      "resolution": "The 8-frame sidecar is identified and replaced for the shipping claim by a full-299-frame solve; NO-GO is unchanged."
+    },
+    {
+      "file": "docs/research/M99-photometric.md",
+      "line": 1259,
+      "resolution": "The first-60 pass-3 number is explicitly superseded by two full-299-frame measurements."
+    }
+  ],
+  "resolved_artifact_checks": [
+    {
+      "file": "docs/research/M31-VERIFICATION.md",
+      "lines": [
+        749,
+        750
+      ],
+      "resolution": "The cited 04-sensitivity.py defines `others` as every fixed tile origin on every other residual frame. The 109MSDCF cache loader uses step 1 over all 22 files; neighbor trimming yields 20 residual maps, so calibration is 19 x 132 = 2,508 tiles and the tested placebo universe is 132 tiles. The measured 9.85/8.33/10.61% and 0.00% rates are population; the nominal 5%, 1%, and 0.1% labels are out_of_scope thresholds."
+    }
+  ]
+}

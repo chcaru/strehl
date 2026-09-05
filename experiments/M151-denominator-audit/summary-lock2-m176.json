@@ -1,0 +1,162 @@
+{
+  "schema": "denominator-review-lock2-m176-summary-v1",
+  "schema_version": 1,
+  "scope": {
+    "snapshot_directory": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-lock2",
+    "manifest": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-lock2\\corpus-manifest.json",
+    "candidates": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-lock2\\candidates.jsonl",
+    "review": "experiments/M151-denominator-audit/review-lock2-m176.jsonl",
+    "files": [
+      "docs/research/M176-worker-invariance.md"
+    ],
+    "file_count": 1,
+    "candidate_count": 34,
+    "reviewer": "review-lock2-m176",
+    "review_snapshot": "M151-out-lock2 raw-byte hashes",
+    "validation_boundary": "Exact one-file in-memory M151-out-lock2 manifest and candidate subset only; no live-corpus rescan and no shard ownership check.",
+    "prohibited_path_accessed": false,
+    "subagents_used": false
+  },
+  "snapshot_identity": {
+    "schema": "denominator-corpus-manifest-v1",
+    "raw_manifest_sha256": "2afc646ae5cd17c62dc7b1b366356292162d5b87b8132732fe06043d2057d3a2",
+    "manifest_sha256": "5bb62c911c3611e0ad945073c782198c22cb0f2625b4efea8cba785992d40ec3",
+    "corpus_sha256": "4fa47ab676cd99969a12d1fd9070d86ce08b19101724ac4f7f19649b2decb797",
+    "candidates_sha256": "1c4b8eaba846e608f1b6dbe5584b8f431f7415933b57b05d477b0fb57f2f7c08",
+    "candidate_file_raw_sha256_matches_manifest": true
+  },
+  "file_attestation": {
+    "file": "docs/research/M176-worker-invariance.md",
+    "lines": 452,
+    "bytes": 31986,
+    "candidate_count": 34,
+    "sha256": "076848b4c641fc25dc380d191634064135a956ff7ce50c9b0736271ab72ddcc2",
+    "complete": true
+  },
+  "review_totals": {
+    "candidates_dispositioned_exactly_once": 34,
+    "unique_occurrence_ids": 34,
+    "complete_file_attestations": 1,
+    "candidate_order_matches_snapshot": true,
+    "classifications": {
+      "fixture": 5,
+      "out_of_scope": 23,
+      "population": 6
+    },
+    "evidence_labels": {
+      "ARGUED": 22,
+      "DERIVED": 1,
+      "MEASURED": 6,
+      "VERIFIED": 5
+    },
+    "resolution_statuses": {
+      "accepted": 5,
+      "not_applicable": 23,
+      "verified": 6
+    },
+    "review_sha256": "6ce7599b208c86d254887849a3cd8340c75a013d4caa6065b9ad435894ce0908",
+    "ascii_jsonl": true
+  },
+  "cap_unstated_audit": {
+    "cap_group_count": 0,
+    "cap_occurrence_count": 0,
+    "unstated_group_count": 0,
+    "unstated_occurrence_count": 0,
+    "groups": [],
+    "finding": "No candidate has cap or unstated outer provenance. The measured claims either enumerate complete named populations, the commissioning ratios are fixed fixtures, or the detector hit is a setting, arm label, mechanism term, verdict term, or arithmetic conversion with no empirical denominator."
+  },
+  "true_population_evidence": [
+    {
+      "id": "m176-affected-w1-w2-pixel-population",
+      "occurrence_ids": [
+        "den-d9e001a4c84e55508c96ad5d",
+        "den-0495c9b77824455fff8b0666",
+        "den-2b93ec2d188e3f4bec8762f3"
+      ],
+      "population": "All 8,241,504 decoded output pixels in the affected W1/W2 comparison on the named 19-frame development control.",
+      "result": "3,430 pixels differ, or 0.041619 percent.",
+      "completeness": "Complete named output-pixel population."
+    },
+    {
+      "id": "m176-affected-channel-partition",
+      "occurrence_ids": [
+        "den-b28eea7fec23a3a10f39ffab"
+      ],
+      "population": "All 3,437 differing channel samples in the affected W1/W2 decoded-output comparison.",
+      "result": "R/G/B counts are 1,855, 791, and 791.",
+      "completeness": "Complete partition of every differing channel sample."
+    },
+    {
+      "id": "m176-affected-relative-maximum",
+      "occurrence_ids": [
+        "den-7d69dc24867100aff6dfc974"
+      ],
+      "population": "All corresponding channel samples in the complete affected W1/W2 decoded-output comparison.",
+      "result": "The maximum per-sample relative difference is 1/176.",
+      "completeness": "Complete per-sample maximum scan, not a sampled fraction or cap."
+    },
+    {
+      "id": "m176-m8r-historical-census",
+      "occurrence_ids": [
+        "den-5730ad0e6e57e239d42e3ade"
+      ],
+      "population": "The complete registered historical M8-R pre-merge trace census cited by M176.",
+      "result": "The governing 1.030569 percent FAIL survives the Pyramid worker defect.",
+      "completeness": "Complete named historical census; the observable is pre-merge."
+    }
+  ],
+  "exact_missing_evidence": [
+    {
+      "id": "m176-post-fix-m12s-ladder",
+      "missing": "A fresh registered post-fix final-TIFF W=1/2/4/8/16 ladder with requested workers, resolved workers, the versioned reduction lattice, whole-file SHA-256, and canonical-pixel SHA-256 bound for every arm.",
+      "consequence": "The one-stack W1/W2 control cannot license M12-S PASS. Historical M139 cross-worker FAIL and the M12 FAIL survive.",
+      "denominator_classification": "population"
+    }
+  ],
+  "file_finding": {
+    "file": "docs/research/M176-worker-invariance.md",
+    "finding": "The affected W1/W2 mechanism comparison covers every decoded output pixel on one explicitly named 19-frame development control. Its changed-channel partition and per-sample maximum are complete for that comparison. The revision-bound blast audit and commissioning counts do not introduce cap or unstated empirical roots.",
+    "denominator_effect": "No denominator repair, cap, or unstated provenance changes the bounded mechanism result. The experiment remains explicitly scoped to one W1/W2 control rather than a full post-fix worker ladder.",
+    "verdict_effect": "No PASS is manufactured. M176's bounded worker-dependence mechanism verdict survives, historical M139 and M12 FAIL survive, and M12-S remains unlicensed."
+  },
+  "decision_effect": {
+    "denominator_caused_flips": [],
+    "pass_fail_unmeasured_capture_flip_count": 0,
+    "unchanged": [
+      "M176's affected-source worker-dependence mechanism remains measured on the named 19-frame control.",
+      "The historical M139 cross-worker FAIL survives.",
+      "M12 remains FAIL.",
+      "A full current M12-S PASS remains unmeasured and unlicensed."
+    ]
+  },
+  "canonical_effect": {
+    "canonical_non_m151_denominator_flips_before": 7,
+    "delta_denominator_flips": 0,
+    "canonical_non_m151_denominator_flips_after": 7,
+    "unresolved_high_consequence_risks_before": 19,
+    "delta_unresolved_high_consequence_risks": 0,
+    "unresolved_high_consequence_risks_after": 19,
+    "scorecard_cells_changed_by_denominator_provenance": 0,
+    "reason": "The lock2 M176 review adds no cap or unstated root, repairs no canonical denominator finding, and changes no verdict or scorecard cell."
+  },
+  "snapshot_binding_observation": {
+    "snapshot_sha256": "076848b4c641fc25dc380d191634064135a956ff7ce50c9b0736271ab72ddcc2",
+    "live_sha256_at_initial_complete_read": "076848b4c641fc25dc380d191634064135a956ff7ce50c9b0736271ab72ddcc2",
+    "initial_live_matches_snapshot": true,
+    "live_sha256_after_review_before_summary": "938782d1b98c2b38b5d6bd8a607ad2ec4412790c874c53a5e03544406514a8e2",
+    "post_read_live_matches_snapshot": false,
+    "note": "The shared-worktree source changed after the complete 452-line read and initial hash check. The ledger, source lines, and complete-file attestation intentionally remain bound to the exact M151-out-lock2 snapshot requested by the workstream; final validation did not substitute or rescan the later live file."
+  },
+  "validation": {
+    "method": "Loaded the exact M151-out-lock2 manifest and candidate JSONL, verified their embedded envelope hashes, filtered both in memory to docs/research/M176-worker-invariance.md, and ran denominator_audit.validate_ledgers on only that one-file subset without shards or live-corpus validation.",
+    "filtered_manifest_file_count": 1,
+    "filtered_manifest_candidate_count": 34,
+    "filtered_manifest_files_sha256": "bb2ee193ceb58cdfda8a9ce617dc8cc53fbce9d4fc782f511060977a1e3097b9",
+    "filtered_manifest_digest_basis": "SHA-256 of canonical ASCII JSON for the one ordered lock2 manifest file row.",
+    "filtered_candidates_sha256": "81ff015418e59084014a83bc8a63aaa5cae89db755f61b81344bf13e81f8c3fe",
+    "validated_dispositions": 34,
+    "validated_complete_file_attestations": 1,
+    "errors": [],
+    "result": "GREEN"
+  }
+}

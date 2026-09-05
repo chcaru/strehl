@@ -1,0 +1,3072 @@
+{
+  "schema": "denominator-audit-summary-v1",
+  "reviewer": "reviewer-03",
+  "shard": "shard-03",
+  "review_basis": "Complete-file review; outer first-N, computational, and convenience bounds remain cap.",
+  "assigned_candidate_count": 5302,
+  "assigned_file_count": 47,
+  "totals_by_classification": {
+    "population": 277,
+    "fixed_subsample": 410,
+    "cap": 180,
+    "fixture": 137,
+    "unstated": 9,
+    "out_of_scope": 4289
+  },
+  "cap_unstated_claim_count": 155,
+  "cap_unstated_claims": [
+    {
+      "classification": "unstated",
+      "file": "docs/research/B-algorithms-sota.md",
+      "line": 481,
+      "exact_claim": "> The log fit is exact on a Gaussian response and reaches calibration 0.710 / 51.2%-within-2\u00d7 on real",
+      "denominator_provenance": [
+        "real calibration cases",
+        "reported within-2x percentage",
+        "selection/count not stated in this source"
+      ],
+      "consequence": "The real-data calibration percentages are quoted without the number of cases or the selection rule, so their empirical universe cannot be reconstructed from this source.",
+      "load_bearing_decision_or_verdict": "4.4 Sub-frame focus-peak interpolation",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "Case count, dataset identity, exclusions, and selection rule from the cited study",
+      "plausible_verdict_flip": "Calibration superiority can change once the case universe and exclusions are known."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/B-algorithms-sota.md",
+      "line": 482,
+      "exact_claim": "> data, against the parabola's 0.457 / 37.5%. Baseline subtraction is required because `log` is not",
+      "denominator_provenance": [
+        "real calibration cases",
+        "reported within-2x percentage",
+        "selection/count not stated in this source"
+      ],
+      "consequence": "The real-data calibration percentages are quoted without the number of cases or the selection rule, so their empirical universe cannot be reconstructed from this source.",
+      "load_bearing_decision_or_verdict": "4.4 Sub-frame focus-peak interpolation",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "Case count, dataset identity, exclusions, and selection rule from the cited study",
+      "plausible_verdict_flip": "Calibration superiority can change once the case universe and exclusions are known."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M-COVER-NATIVE.md",
+      "line": 487,
+      "exact_claim": "| \u00a71.5 fixed common-overlap FOV `>=99%` | **GEOMETRIC PASS 8/8** | Array containment gives 100.0%; exact rawpy-to-strehl scene-frame identity is unmeasured. |",
+      "denominator_provenance": [
+        "required common scene-frame overlap",
+        "array containment surrogate",
+        "scene correspondence and clean-site selection not established"
+      ],
+      "consequence": "The geometric percentage is measured on arrays, but the formal common-input/clean-site universe is undefined, so it does not resolve the comparability denominator.",
+      "load_bearing_decision_or_verdict": "Per-clause verdict",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "A frozen scene-frame mapping, admitted residual, and clean-border site-survival census",
+      "plausible_verdict_flip": "The formal geometric PASS can become FAIL once the required scene/clean-site population is defined."
+    },
+    {
+      "classification": "unstated",
+      "file": "docs/research/M-COVER-NATIVE.md",
+      "line": 491,
+      "exact_claim": "| \u00a71.5 sites `>=80%`, differential attrition `<=2 pp` | **GEOMETRIC CONTAINMENT PASS; FORMAL CLEAN-SITE STATUS UNMEASURED** | Raw containment is 100.0% / 0.0 pp; Crop's border-safe inset does not have a transferable certificate. |",
+      "denominator_provenance": [
+        "required common scene-frame overlap",
+        "array containment surrogate",
+        "scene correspondence and clean-site selection not established"
+      ],
+      "consequence": "The geometric percentage is measured on arrays, but the formal common-input/clean-site universe is undefined, so it does not resolve the comparability denominator.",
+      "load_bearing_decision_or_verdict": "Per-clause verdict",
+      "current_status": "unresolved",
+      "true_population": null,
+      "missing_input": "A frozen scene-frame mapping, admitted residual, and clean-border site-survival census",
+      "plausible_verdict_flip": "The formal geometric PASS can become FAIL once the required scene/clean-site population is defined."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 274,
+      "exact_claim": "every subject, and still fails its bar.** \u0394D is positive on 3 of 3",
+      "denominator_provenance": [
+        "299-frame bee-3-cpl bracket",
+        "first 100-frame prefix selected by LIMIT=100",
+        "global or per-site statistic inside the prefix",
+        "reported main-campaign result"
+      ],
+      "consequence": "The first-100 prefix truncates the focus range; a maximum or election over that pool is not a ceiling over the 299-frame stack and can reverse the verdict.",
+      "load_bearing_decision_or_verdict": "5. Candidate facts",
+      "current_status": "open",
+      "true_population": "All 299 bee-3-cpl frames with a per-site best-frame ceiling",
+      "missing_input": "Full-bracket per-site evaluation for each reported row",
+      "plausible_verdict_flip": "Yes. The cited independent full-bracket per-site control changes 1.1458 (merge sharper) to 0.8110 (merge softer)."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 275,
+      "exact_claim": "(`+0.00652`, `+0.00323`, `+0.00583`); \u0394Q is `>= -0.00003` on 3 of 3. It is the",
+      "denominator_provenance": [
+        "299-frame bee-3-cpl bracket",
+        "first 100-frame prefix selected by LIMIT=100",
+        "global or per-site statistic inside the prefix",
+        "reported main-campaign result"
+      ],
+      "consequence": "The first-100 prefix truncates the focus range; a maximum or election over that pool is not a ceiling over the 299-frame stack and can reverse the verdict.",
+      "load_bearing_decision_or_verdict": "5. Candidate facts",
+      "current_status": "open",
+      "true_population": "All 299 bee-3-cpl frames with a per-site best-frame ceiling",
+      "missing_input": "Full-bracket per-site evaluation for each reported row",
+      "plausible_verdict_flip": "Yes. The cited independent full-bracket per-site control changes 1.1458 (merge sharper) to 0.8110 (merge softer)."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 298,
+      "exact_claim": "of detail-band variance is `56.27%` \u2014 foam's \"detail\" mask is more than half",
+      "denominator_provenance": [
+        "299-frame bee-3-cpl bracket",
+        "first 100-frame prefix selected by LIMIT=100",
+        "global or per-site statistic inside the prefix",
+        "reported main-campaign result"
+      ],
+      "consequence": "The first-100 prefix truncates the focus range; a maximum or election over that pool is not a ceiling over the 299-frame stack and can reverse the verdict.",
+      "load_bearing_decision_or_verdict": "5. Candidate facts",
+      "current_status": "open",
+      "true_population": "All 299 bee-3-cpl frames with a per-site best-frame ceiling",
+      "missing_input": "Full-bracket per-site evaluation for each reported row",
+      "plausible_verdict_flip": "Yes. The cited independent full-bracket per-site control changes 1.1458 (merge sharper) to 0.8110 (merge softer)."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 1872,
+      "exact_claim": "  the first 100 of 299 frames. The most-elected frame was index 99 \u2014 the last",
+      "denominator_provenance": [
+        "299-frame bee-3-cpl bracket",
+        "first 100-frame prefix selected by LIMIT=100",
+        "global or per-site statistic inside the prefix",
+        "reported result"
+      ],
+      "consequence": "The first-100 prefix truncates the focus range; a maximum or election over that pool is not a ceiling over the 299-frame stack and can reverse the verdict.",
+      "load_bearing_decision_or_verdict": "7. What this does NOT claim",
+      "current_status": "open",
+      "true_population": "All 299 bee-3-cpl frames with a per-site best-frame ceiling",
+      "missing_input": "Full-bracket per-site evaluation for each reported row",
+      "plausible_verdict_flip": "Yes. The cited independent full-bracket per-site control changes 1.1458 (merge sharper) to 0.8110 (merge softer)."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 1873,
+      "exact_claim": "  frame of the truncated set, winning 31.55% of pixels \u2014 which means the sweep",
+      "denominator_provenance": [
+        "299-frame bee-3-cpl bracket",
+        "first 100-frame prefix selected by LIMIT=100",
+        "global or per-site statistic inside the prefix",
+        "reported result"
+      ],
+      "consequence": "The first-100 prefix truncates the focus range; a maximum or election over that pool is not a ceiling over the 299-frame stack and can reverse the verdict.",
+      "load_bearing_decision_or_verdict": "7. What this does NOT claim",
+      "current_status": "open",
+      "true_population": "All 299 bee-3-cpl frames with a per-site best-frame ceiling",
+      "missing_input": "Full-bracket per-site evaluation for each reported row",
+      "plausible_verdict_flip": "Yes. The cited independent full-bracket per-site control changes 1.1458 (merge sharper) to 0.8110 (merge softer)."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2282,
+      "exact_claim": "| bee-3-cpl | high-contrast insect, dense hairs, large flat white ground | 100 of 299 | the M111 complaint subject; maximum detail/flat separation |",
+      "denominator_provenance": [
+        "299-frame bee-3-cpl bracket",
+        "first 100-frame prefix selected by LIMIT=100",
+        "global or per-site statistic inside the prefix",
+        "reported result"
+      ],
+      "consequence": "The first-100 prefix truncates the focus range; a maximum or election over that pool is not a ceiling over the 299-frame stack and can reverse the verdict.",
+      "load_bearing_decision_or_verdict": "10. Method, in brief",
+      "current_status": "open",
+      "true_population": "All 299 bee-3-cpl frames with a per-site best-frame ceiling",
+      "missing_input": "Full-bracket per-site evaluation for each reported row",
+      "plausible_verdict_flip": "Yes. The cited independent full-bracket per-site control changes 1.1458 (merge sharper) to 0.8110 (merge softer)."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2568,
+      "exact_claim": "| `P0-default` (shipped) | **1.114** | 7 of 12 | `E6132CD07B13` |",
+      "denominator_provenance": [
+        "26-subject project corpus",
+        "one selected subject and 12 selected windows",
+        "all 299 frames within that subject",
+        "reported campaign-6 result"
+      ],
+      "consequence": "All frames were used internally, but the outer one-subject/window convenience bound prevents a corpus-wide promotion claim.",
+      "load_bearing_decision_or_verdict": "12.1 The arms, and what is held constant",
+      "current_status": "open",
+      "true_population": "All eligible subjects and registered windows in the project corpus",
+      "missing_input": "The same frozen measurement across the remaining eligible subjects",
+      "plausible_verdict_flip": "A corpus-wide promotion verdict can change even though the scoped one-subject result is measured."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2569,
+      "exact_claim": "| `P1-photometric` | **1.101** | 7 of 12 | `891297BF4F60` |",
+      "denominator_provenance": [
+        "26-subject project corpus",
+        "one selected subject and 12 selected windows",
+        "all 299 frames within that subject",
+        "reported campaign-6 result"
+      ],
+      "consequence": "All frames were used internally, but the outer one-subject/window convenience bound prevents a corpus-wide promotion claim.",
+      "load_bearing_decision_or_verdict": "12.1 The arms, and what is held constant",
+      "current_status": "open",
+      "true_population": "All eligible subjects and registered windows in the project corpus",
+      "missing_input": "The same frozen measurement across the remaining eligible subjects",
+      "plausible_verdict_flip": "A corpus-wide promotion verdict can change even though the scoped one-subject result is measured."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2611,
+      "exact_claim": "Per-window, `--photometric` **raises** fine-scale structure in **9 of 12",
+      "denominator_provenance": [
+        "26-subject project corpus",
+        "one selected subject and 12 selected windows",
+        "all 299 frames within that subject",
+        "reported campaign-6 result"
+      ],
+      "consequence": "All frames were used internally, but the outer one-subject/window convenience bound prevents a corpus-wide promotion claim.",
+      "load_bearing_decision_or_verdict": "12.5 The headline statistic and the paired statistic disagree in sign",
+      "current_status": "open",
+      "true_population": "All eligible subjects and registered windows in the project corpus",
+      "missing_input": "The same frozen measurement across the remaining eligible subjects",
+      "plausible_verdict_flip": "A corpus-wide promotion verdict can change even though the scoped one-subject result is measured."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2651,
+      "exact_claim": "| M120 \u00a736.2 | `q = lapRMS / median`, ratio-of-ratios across two builds | **1.0946** (HARM, 12 of 12) |",
+      "denominator_provenance": [
+        "26-subject project corpus",
+        "one selected subject and 12 selected windows",
+        "all 299 frames within that subject",
+        "reported campaign-6 result"
+      ],
+      "consequence": "All frames were used internally, but the outer one-subject/window convenience bound prevents a corpus-wide promotion claim.",
+      "load_bearing_decision_or_verdict": "12.7 Three designs, one sign",
+      "current_status": "open",
+      "true_population": "All eligible subjects and registered windows in the project corpus",
+      "missing_input": "The same frozen measurement across the remaining eligible subjects",
+      "plausible_verdict_flip": "A corpus-wide promotion verdict can change even though the scoped one-subject result is measured."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2653,
+      "exact_claim": "| **M116 campaign 6** | `q`, one frozen build, identical pixels | **1.0455** (HARM, 10 of 12) |",
+      "denominator_provenance": [
+        "26-subject project corpus",
+        "one selected subject and 12 selected windows",
+        "all 299 frames within that subject",
+        "reported campaign-6 result"
+      ],
+      "consequence": "All frames were used internally, but the outer one-subject/window convenience bound prevents a corpus-wide promotion claim.",
+      "load_bearing_decision_or_verdict": "12.7 Three designs, one sign",
+      "current_status": "open",
+      "true_population": "All eligible subjects and registered windows in the project corpus",
+      "missing_input": "The same frozen measurement across the remaining eligible subjects",
+      "plausible_verdict_flip": "A corpus-wide promotion verdict can change even though the scoped one-subject result is measured."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2683,
+      "exact_claim": "| violations | **up to 6 of 12** | 7 of 12 | **FAILS** |",
+      "denominator_provenance": [
+        "26-subject project corpus",
+        "one selected subject and 12 selected windows",
+        "all 299 frames within that subject",
+        "reported campaign-6 result"
+      ],
+      "consequence": "All frames were used internally, but the outer one-subject/window convenience bound prevents a corpus-wide promotion claim.",
+      "load_bearing_decision_or_verdict": "12.8 The trap: ORCH's instrument fails on its violation count",
+      "current_status": "open",
+      "true_population": "All eligible subjects and registered windows in the project corpus",
+      "missing_input": "The same frozen measurement across the remaining eligible subjects",
+      "plausible_verdict_flip": "A corpus-wide promotion verdict can change even though the scoped one-subject result is measured."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2687,
+      "exact_claim": "count rises with frame noise.** ORCH's \"1.114x and 7/12 is the number any",
+      "denominator_provenance": [
+        "26-subject project corpus",
+        "one selected subject and 12 selected windows",
+        "all 299 frames within that subject",
+        "reported campaign-6 result"
+      ],
+      "consequence": "All frames were used internally, but the outer one-subject/window convenience bound prevents a corpus-wide promotion claim.",
+      "load_bearing_decision_or_verdict": "12.8 The trap: ORCH's instrument fails on its violation count",
+      "current_status": "open",
+      "true_population": "All eligible subjects and registered windows in the project corpus",
+      "missing_input": "The same frozen measurement across the remaining eligible subjects",
+      "plausible_verdict_flip": "A corpus-wide promotion verdict can change even though the scoped one-subject result is measured."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M116-promotion.md",
+      "line": 2689,
+      "exact_claim": "`7/12` half is very nearly all available without any merge.",
+      "denominator_provenance": [
+        "26-subject project corpus",
+        "one selected subject and 12 selected windows",
+        "all 299 frames within that subject",
+        "reported campaign-6 result"
+      ],
+      "consequence": "All frames were used internally, but the outer one-subject/window convenience bound prevents a corpus-wide promotion claim.",
+      "load_bearing_decision_or_verdict": "12.8 The trap: ORCH's instrument fails on its violation count",
+      "current_status": "open",
+      "true_population": "All eligible subjects and registered windows in the project corpus",
+      "missing_input": "The same frozen measurement across the remaining eligible subjects",
+      "plausible_verdict_flip": "A corpus-wide promotion verdict can change even though the scoped one-subject result is measured."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 12,
+      "exact_claim": "> comparison (**idealised wins by 12\u201317% relative; the harm replicates 12/12 windows**),",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "M120 \u2014 the background patchwork: what it is, what it is not, and a number for it",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 23,
+      "exact_claim": "different frame \u2014 at the shipped gate it averages **166.8 of 299** frames per pixel",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "M120 \u2014 the background patchwork: what it is, what it is not, and a number for it",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 83,
+      "exact_claim": "| R1a | response flat \u2192 noise-dominated \u2192 argmax near-random | **REFUTED** | winner **15.0\u00d7** the noise ceiling; **0.0%** of ROI at or below it; through-focus range **8.6 noise SD** |",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "2. Verdicts on R1\u2013R7",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 85,
+      "exact_claim": "| R1c | each polygon gathers a different frame; exposure drift makes the step | **REFUTED at the shipped gate** | gate 4 averages **166.8 / 299** frames per ROI pixel, n_eff = 1 on **0.3%**; drift explains only **60.9%** |",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "2. Verdicts on R1\u2013R7",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 86,
+      "exact_claim": "| **R2** | tiling / block artifact of the implementation | **DEAD** | **26.2%** of edges within 10\u00b0 of axis-aligned vs **22.2%** for uniform; spectral peaks at **25.6** and **21.3 px**, z = +3.20 / +4.15, non-matching, no integer pitch |",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "2. Verdicts on R1\u2013R7",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 350,
+      "exact_claim": "exceeds hard `n_eff` by more than 5% on **64.8%** of pixels. Hard gate 4 averages 31.77",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "PREDICTION (labelled ARGUED-from-MEASURED; falsifiable by M116)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 387,
+      "exact_claim": "  0.0% of ROI pixels sit at or below the ceiling. The argmax is not noise-driven.",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "10. Proposed facts",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 389,
+      "exact_claim": "  166.8 of 299 frames per ROI pixel and reaches n_eff = 1 on 0.3%. It is true only at gate 0.",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "10. Proposed facts",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 400,
+      "exact_claim": "- **P8 (MEASURED).** Not a tiling artifact: 26.2% of index edges axis-aligned vs 22.2%",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "10. Proposed facts",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 409,
+      "exact_claim": "  (gaussian) or 1.744 (exponential), affecting 64.8% of the frame, and will not reach the",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "10. Proposed facts",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 412,
+      "exact_claim": "  Q crosses 1.284 only between gate 8 and gate 16, where n_eff is 263\u2013295 of 299.",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "10. Proposed facts",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 542,
+      "exact_claim": "(347,676 px, 40.8% of the plane, max-over-frames local sd < 250 DN). Arm C is taken from",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "14. M1 \u2014 isolating the two operators (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 566,
+      "exact_claim": "  the background: **56.2% identical index, 79.0% within \u00b13 frames** (64.6% / 83.2% after a",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "14. M1 \u2014 isolating the two operators (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 580,
+      "exact_claim": "background is **562 noise \u03c3**, and **0.00%** of background pixels fall below 3 \u03c3. \"The data",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "15. P2 \u2014 the two quantities ORCH's wording conflates (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 585,
+      "exact_claim": "smaller discriminative signal \u2014 and below 1 gate unit on **21.2%** of background pixels",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "15. P2 \u2014 the two quantities ORCH's wording conflates (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 586,
+      "exact_claim": "(subject: 1.1%). So the election is **degenerate near its peak**, not data-free. That",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "15. P2 \u2014 the two quantities ORCH's wording conflates (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 640,
+      "exact_claim": "| admission width, gate 0 \u2192 16 | `STREHL_GATE` | 7.166 \u2192 **0.953** (**\u221286.7%**, first arm to pass) |",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "17. The operator price, measured on the render, not the index field (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 652,
+      "exact_claim": "  masked comparison was confounded: the subject mask was 1.6% of the plane against the",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "18. P1 and P4",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 705,
+      "exact_claim": "   gate 4's 4.337, against a bound of 1.284, affecting 64.8% of the frame. This mechanism",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "20. The corrected mechanism (ARGUED, and it predicts)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 726,
+      "exact_claim": "  the shipped field at 96.75%; the residual 3.25% is unexplained and is most likely the",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "21. What M120b could not verify, and one correction to the brief",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 806,
+      "exact_claim": "| single frame | 0.03 | 0.10 | **0 / 40** |",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "23. An instrument control ORCH's commissioning did not have \u2014 and it clears ORCH (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 813,
+      "exact_claim": "**Kurtosis does not follow it. 0/40 at every N.**",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "23. An instrument control ORCH's commissioning did not have \u2014 and it clears ORCH (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 847,
+      "exact_claim": "of an arm that manufactures none. At gate 4 the median window is within **16%** of a plain",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "24. A plainer statistic, and what \"localised\" is worth (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 848,
+      "exact_claim": "mean, and the damage concentrates in **28%** of windows. ORCH's \"a quarter of the",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "24. A plainer statistic, and what \"localised\" is worth (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 912,
+      "exact_claim": "corner and one filament**, 0.55% of pixels above 5\u03c3. That arc is a silhouette edge.",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "Where the residual actually lives (OBSERVED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 949,
+      "exact_claim": "| **ORCH: on the shipped render the defect is LOCALISED, not universal** | **CONFIRMED on an independent statistic** (\u00a724): 28% of windows over R > 2, median R 1.161. |",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "27. Revised verdict \u2014 it is two defects, not one (ARGUED from MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 952,
+      "exact_claim": "| **M120 (me): ORCH's kurtosis instrument is confounded by denoising** | **REFUTED \u2014 my error** (\u00a723): plain mean 0/40 over bar at every N to 299. |",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "27. Revised verdict \u2014 it is two defects, not one (ARGUED from MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 962,
+      "exact_claim": "  largely fixes it** by averaging ~167 tied frames (median R 1.161, within 16% of a plain",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "27. Revised verdict \u2014 it is two defects, not one (ARGUED from MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 967,
+      "exact_claim": "  responsible for the 28% of windows still over bar. Frames near an occluding edge do not",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "27. Revised verdict \u2014 it is two defects, not one (ARGUED from MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 991,
+      "exact_claim": "  roughly 10% of the frame. ORCH's own 12-window shipped-render measurement covers more and",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "28. What M120c could not verify",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1059,
+      "exact_claim": "frame-wide smooth ramp. The tell was independent: that run implied a **23.7%** level swing,",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "30. T1 \u2014 regions do inherit their elected frame's level. (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1060,
+      "exact_claim": "~3\u00d7 the 3.2\u20138.4% inter-frame drift ORCH measured directly. It was fitting scene structure.",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "30. T1 \u2014 regions do inherit their elected frame's level. (MEASURED)",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1150,
+      "exact_claim": "- **One stack.** All of \u00a729\u2013\u00a731 is `bee-3-cpl`, inside the M87 leg box (~10% of frame). The",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "33. What Part IV could not verify",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1154,
+      "exact_claim": "  index field at 96.75% (\u00a714) and the shipped admission exactly (`n_eff` 166.8, \u00a724), but a",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "33. What Part IV could not verify",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1156,
+      "exact_claim": "- **T1's gate-4 null is clean at the median (\u22120.034) but not tight** \u2014 17/40 windows exceed",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "33. What Part IV could not verify",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1338,
+      "exact_claim": "| `--photometric` \u00f7 default (M116 build) | **0.9912** (\u22120.9%) | **1.0946 (+9.5% HARM)** |",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "\u00a736.2 The numbers",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1352,
+      "exact_claim": "2. **Idealised removal harms exactly the windows where it should.** 10 of 12 windows improve",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "\u00a736.3 Three things in the per-window breakdown that matter more than the headline",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1357,
+      "exact_claim": "3. **`--photometric`'s sign flips with ROI: \u22120.9% on pure background, +9.5% on the",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "\u00a736.3 Three things in the per-window breakdown that matter more than the headline",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1366,
+      "exact_claim": "frames. ORCH measured 3.2\u20138.4% on M93; M24 measured 2.88 / 6.84 / 8.93 / 11.70% on four",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "\u00a736.4 Drift on this stack is larger than any figure in the corpus",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M120-patchwork.md",
+      "line": 1423,
+      "exact_claim": "the merge is the plain mean \u2014 **which \u00a723 already measured at 0/40 windows over bar and",
+      "denominator_provenance": [
+        "project subject corpus and native shipped renders",
+        "one bee-3-cpl stack",
+        "one selected box or fixed window pool",
+        "all eligible rows within that bounded pool"
+      ],
+      "consequence": "The result is exhaustive only inside one selected stack/ROI/window pool; it does not supply the missing native complete-population or corpus-wide denominator.",
+      "load_bearing_decision_or_verdict": "\u00a737 Item 2 \u2014 spatial smoothing of the weight field",
+      "current_status": "open",
+      "true_population": "All 299 frames rendered singly through the shipped pipeline across the registered subject/ROI population",
+      "missing_input": "Native full-frame renders and the same measurement outside bee-3-cpl",
+      "plausible_verdict_flip": "Yes for generalization and the photometric sign: the document reports -0.9% on pure background versus +9.5% on selected windows."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M27-coverage-gap-measured.md",
+      "line": 126,
+      "exact_claim": "**MEASURED verdict on the owner's own capture:** at 53 frames only **0.01%** of",
+      "denominator_provenance": [
+        "real under-sampled capture population",
+        "one coffee-bean stack and crop",
+        "every-second-frame decimation to 53 of 105",
+        "reported detector result"
+      ],
+      "consequence": "The deliberate decimation is complete only within one convenience-selected stack/crop and cannot establish performance on genuinely under-sampled captures.",
+      "load_bearing_decision_or_verdict": "4. The deployable criterion, and a verdict on real capture practice",
+      "current_status": "open",
+      "true_population": "Genuinely under-sampled real stacks across eligible subjects",
+      "missing_input": "A real under-sampled stack and non-oracle reliability filter",
+      "plausible_verdict_flip": "The detector behavior can change on a real under-sampled acquisition."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M30-hdr-cobracket-measured.md",
+      "line": 51,
+      "exact_claim": "| read noise | fewer, longer frames | **0.0000% of pixels** |",
+      "denominator_provenance": [
+        "eligible fixed-light capture regimes",
+        "three selected stacks",
+        "reported clipping/noise cells"
+      ],
+      "consequence": "The three-stack convenience set supports the scoped shot-noise result but not a default across scene and noise regimes.",
+      "load_bearing_decision_or_verdict": "1. The result that decides it: exposure allocation is neutral at fixed light",
+      "current_status": "open",
+      "true_population": "All eligible scene classes and non-shot-noise regimes",
+      "missing_input": "Broader fixed-budget captures including read-noise and dynamic-range stress",
+      "plausible_verdict_flip": "The default recommendation can change outside the measured shot-noise regime."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M30-hdr-cobracket-measured.md",
+      "line": 52,
+      "exact_claim": "| clipping | more, shorter frames | **0.075% max** |",
+      "denominator_provenance": [
+        "eligible fixed-light capture regimes",
+        "three selected stacks",
+        "reported clipping/noise cells"
+      ],
+      "consequence": "The three-stack convenience set supports the scoped shot-noise result but not a default across scene and noise regimes.",
+      "load_bearing_decision_or_verdict": "1. The result that decides it: exposure allocation is neutral at fixed light",
+      "current_status": "open",
+      "true_population": "All eligible scene classes and non-shot-noise regimes",
+      "missing_input": "Broader fixed-budget captures including read-noise and dynamic-range stress",
+      "plausible_verdict_flip": "The default recommendation can change outside the measured shot-noise regime."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M30-hdr-cobracket-measured.md",
+      "line": 83,
+      "exact_claim": "its justification is, on this rig, depending on 0.0000% of the frame.",
+      "denominator_provenance": [
+        "eligible fixed-light capture regimes",
+        "three selected stacks",
+        "reported clipping/noise cells"
+      ],
+      "consequence": "The three-stack convenience set supports the scoped shot-noise result but not a default across scene and noise regimes.",
+      "load_bearing_decision_or_verdict": "2. This sensor is shot-noise limited across its entire usable range",
+      "current_status": "open",
+      "true_population": "All eligible scene classes and non-shot-noise regimes",
+      "missing_input": "Broader fixed-budget captures including read-noise and dynamic-range stress",
+      "plausible_verdict_flip": "The default recommendation can change outside the measured shot-noise regime."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M30-hdr-cobracket-measured.md",
+      "line": 125,
+      "exact_claim": "   computable from the stack itself \u2014 0.075% here, and a wet chitinous subject under flash",
+      "denominator_provenance": [
+        "eligible fixed-light capture regimes",
+        "three selected stacks",
+        "reported clipping/noise cells"
+      ],
+      "consequence": "The three-stack convenience set supports the scoped shot-noise result but not a default across scene and noise regimes.",
+      "load_bearing_decision_or_verdict": "4. Verdict on R17",
+      "current_status": "open",
+      "true_population": "All eligible scene classes and non-shot-noise regimes",
+      "missing_input": "Broader fixed-budget captures including read-noise and dynamic-range stress",
+      "plausible_verdict_flip": "The default recommendation can change outside the measured shot-noise regime."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M30-hdr-cobracket-measured.md",
+      "line": 138,
+      "exact_claim": "already answers it: coverage is **saturated** on `coffee-bean` at 53 frames (0.01% of",
+      "denominator_provenance": [
+        "eligible fixed-light capture regimes",
+        "three selected stacks",
+        "reported clipping/noise cells"
+      ],
+      "consequence": "The three-stack convenience set supports the scoped shot-noise result but not a default across scene and noise regimes.",
+      "load_bearing_decision_or_verdict": "Derived disposition for R16's first half, at no extra cost",
+      "current_status": "open",
+      "true_population": "All eligible scene classes and non-shot-noise regimes",
+      "missing_input": "Broader fixed-budget captures including read-noise and dynamic-range stress",
+      "plausible_verdict_flip": "The default recommendation can change outside the measured shot-noise regime."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M36-VERIFICATION.md",
+      "line": 357,
+      "exact_claim": "| M33: 40k sample, no baseline subtraction | **2.75274%** | 48.6897% |",
+      "denominator_provenance": [
+        "1,048,576-pixel fixture population",
+        "40,000-pixel computational sample",
+        "reported M33 statistic"
+      ],
+      "consequence": "The original statistic was computed on 40,000 pixels rather than the full fixture population.",
+      "load_bearing_decision_or_verdict": "D12 \u2014 INFORMATIONAL (M33/M34). The ground-truth disagreement is fully accounted for \u2014 in the mean, and not at all in the fraction.",
+      "current_status": "open",
+      "true_population": "All 1,048,576 pixels",
+      "missing_input": null,
+      "plausible_verdict_flip": "No. The complete-population remeasurement is present and changes 48.6897% to 48.9098%, not the verdict."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 58,
+      "exact_claim": "> **33.271 %** (109MSDCF) and **61.880 %** (119MSDCF) of detail-ROI pixels",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "0. Verdict",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 59,
+      "exact_claim": "> outside the range of every input frame, against arm D's full 63.966 % and",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "0. Verdict",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 387,
+      "exact_claim": "> censoring flag (`m41lib3.cross`, same rule, same numbers): **9 of 12**",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "3.7.1 The mechanism: a right-censored constant",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 390,
+      "exact_claim": "> curves do not approach 1/7 anywhere. All six 119MSDCF arms are censored;",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "3.7.1 The mechanism: a right-censored constant",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 663,
+      "exact_claim": "max-abs complex-wavelet selection puts **\u2248 30 %** of pixels outside the dynamic",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "4.3 Detail ROI, all arms",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 665,
+      "exact_claim": "method. **Arm D is at 64 % and 81 %** \u2014 two to two-and-a-half times worse than",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "4.3 Detail ROI, all arms",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 707,
+      "exact_claim": "4. It is one 512\u00d7512 ROI per stack. M20's verification found its 15.1 % headline",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "5. What this does and does not say",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 733,
+      "exact_claim": "- **462.** MEASURED. Arm D puts **63.966 %** (109MSDCF) and **81.249 %**",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "6. Proposed facts (460\u2013479 reserved for M41)",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 735,
+      "exact_claim": "  0.000 % for arms A, B and C. Forster et al. 2004 measured \u2248 30 % for max-abs",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "6. Proposed facts (460\u2013479 reserved for M41)",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 756,
+      "exact_claim": "  (0.595 vs 0.565 at `f_sig`, 109MSDCF) and ranks arm E \u2014 295\u00d7 noise, 99 %",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "6. Proposed facts (460\u2013479 reserved for M41)",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 792,
+      "exact_claim": "  0.499023 at `nbin` = 32 / 128 / 256. **9 of 12** run-of-record detail-ROI",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "6. Proposed facts (460\u2013479 reserved for M41)",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 901,
+      "exact_claim": "  stack? M20's 15.1 % headline was one capture from a 3.5\u201365.8 % range.",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "8. Questions proposed (unnumbered)",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 981,
+      "exact_claim": "| 462 | Arm D puts 63.966 % (109MSDCF) and 81.249 % (119MSDCF) of detail-ROI pixels outside the range of every input frame, against 0.000 % for arms A, B and C. | Forster et al. 2004 measured ~30 % for max-abs selection and called that the defect; the RIF is twice as bad. | `out/a6_run.log` (M41) |",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "Proposed SYNTHESIS entries",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "line": 994,
+      "exact_claim": "| 475 | The \"FRC 1/7 crossing = 0.4961 cyc/px\" reported by every M41 arm, both nulls and both circularity variants is not a measurement: it is `ff[-1]`, the last ring centre of `m41lib.frc`'s 64-ring grid at n = 512 (254/512 = 0.49609375), returned by `frc_cross` when the curve never crosses. It moves to 0.492188 / 0.498047 / 0.499023 at nbin = 32 / 128 / 256, and 9 of 12 run-of-record detail-ROI crossings are this constant. | A right-censored bound was published as a measurement and then used as both numerator and denominator of a ratio: 119MSDCF's `f_D/f_A = 1.000` is a ratio of two lower bounds and carries no information. Rule 13's endpoint-argmin defect in a new costume. | `out/a10_frc_diagnose.log` (M44) |",
+      "denominator_provenance": [
+        "eligible shipped-path capture corpus",
+        "two selected stacks and one ROI class per stack",
+        "reported arm/control cells"
+      ],
+      "consequence": "The kill result is bounded to two stacks, the shipped unaligned path, and selected ROIs; it cannot establish a corpus-wide detail verdict.",
+      "load_bearing_decision_or_verdict": "Proposed SYNTHESIS entries",
+      "current_status": "open",
+      "true_population": "All eligible stacks, aligned operation, and an admitted real-detail metric",
+      "missing_input": "Aligned/iterative arms and a real-detail denominator across the corpus",
+      "plausible_verdict_flip": "The FRC limb already flipped from measured value to censored bound; the noise-clause scoped refutation survives."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 20,
+      "exact_claim": "> | `m5_measure.py null` on `D:\\macro-dark-frames` | **113/330 raw detections (34.2%), 0 surviving the `dyn \u2265 10` gate** \u2014 reproduces \u00a73.1 exactly, including the failure it discloses. |",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "M5 \u2014 the diffraction cutoff, measured from the raw CFA",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 21,
+      "exact_claim": "> | `m5_measure.py measure coffee-bean --n 8.0` | **Deliberately a stack the author did not re-run.** 0/15 cases with a valid floor, inflated **4.58-20.19x**, out-of-band bound **B < 3.317**, bandwidth 77.6% / area 60.2% \u2014 every figure identical to \u00a71, \u00a74.2 and \u00a79.1. |",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "M5 \u2014 the diffraction cutoff, measured from the raw CFA",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 48,
+      "exact_claim": "and the null control fired a raw detection on **34.2% of 330 dark-frame cases**, caught only by",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "0. The verdict in one paragraph",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 259,
+      "exact_claim": "**Result: `f_sig` changed by exactly +0.00% in all 15 f/11 cases. `B_max` unchanged to 3 decimals.**",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "3.2 C2b \u2014 subtracting the dark spectrum changes nothing (MEASURED)",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 319,
+      "exact_claim": "**13 of the 15 f/11 tile cases have a floor consistent with the photon-transfer model (<1.15x),",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "4.1 f/11 \u2014 the one aperture that yields a real measurement",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 333,
+      "exact_claim": "cases with a floor consistent with the photon-transfer model (<1.15x): 0 of 15",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "4.2 f/8 \u2014 a bound, and no knee at all",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 346,
+      "exact_claim": "**MEASURED:** power at 0.3508 cyc/px exceeds the photon-transfer noise model on 15 of 15 cases,",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "4.2 f/8 \u2014 a bound, and no knee at all",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 363,
+      "exact_claim": "cases with a floor consistent with the photon-transfer model (<1.15x): 0 of 15",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "4.3 f/5.6 \u2014 a consistency check, exactly as the brief predicted",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 407,
+      "exact_claim": "| **B=3** | **0.2821** | REFUTED(b) 5/5 | REFUTED(b) 5/5 | **survives** |",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "4.5 The falsification table (MEASURED)",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 413,
+      "exact_claim": "at f/8; signal is detected at 0.2762 and 0.2817 respectively, on 5 of 5 ROIs each time.",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "4.5 The falsification table (MEASURED)",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 444,
+      "exact_claim": "- At f/8 and f/5.6 the knee is **texture-and-floor-limited**: 0 of 15 cases have a clean floor,",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "5. C3 \u2014 monotonicity is NOT testable on this data",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 476,
+      "exact_claim": "f/8 GQ: cv **1.0%** (but every case is an artifact, \u00a74.2). f/5.6 GQ: cv **23.9%**.",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "6.1 C4 \u2014 five ROIs, one centre and four off-axis at 30%/70% of the frame (MEASURED)",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 506,
+      "exact_claim": "high-dyn cases. **Their mean levels agree to \u22640.20% at every ROI** (MEASURED \u2014 the mean-DN column",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "6.2 C5 \u2014 the two green sublattices (MEASURED)",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 669,
+      "exact_claim": "- **f/8 costs 40% of the bandwidth area and 46% of the contrast at 4-pixel detail; f/11 costs",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "9.2 The shooting recommendation",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M5-diffraction-measured.md",
+      "line": 758,
+      "exact_claim": "- **The 0/330 dark-frame false-alarm rate without the 113/330 raw rate beside it.** Quoting the",
+      "denominator_provenance": [
+        "eligible lens/body/session population",
+        "one selected subject per aperture and selected ROIs",
+        "all test cases within that bounded capture",
+        "reported cutoff/noise result"
+      ],
+      "consequence": "The finite cases are complete inside selected captures, but the outer one-session/one-subject-per-aperture bound limits generalization.",
+      "load_bearing_decision_or_verdict": "11. How to quote this result",
+      "current_status": "open",
+      "true_population": "All eligible subjects, sessions, and apertures for the lens/body setup",
+      "missing_input": "Independent sessions and subjects, including a primary f/5.6 measurement",
+      "plausible_verdict_flip": "The numeric generalization can change; the scoped B=5 falsification has strong within-capture support."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-election-quality.md",
+      "line": 401,
+      "exact_claim": "Coverage is 25-29 % because only 23 of 299 frames were rendered, so only pixels",
+      "denominator_provenance": [
+        "299-frame source stack",
+        "23 rendered candidate frames",
+        "pixels whose winner lies in those 23 candidates",
+        "B1 agreement/coverage result"
+      ],
+      "consequence": "Only the 23 rendered candidates are observable, so the testable pixels and elector agreement are capped; the 80% PASS is not a 299-frame population result.",
+      "load_bearing_decision_or_verdict": "11. B1, the kill switch: is my elector the product's elector?",
+      "current_status": "open",
+      "true_population": "All 299 candidate frames and all eligible pixels",
+      "missing_input": "The missing 276 single-frame renders and a full-candidate elector comparison",
+      "plausible_verdict_flip": "Yes. The reported 81.9058% clears the 80% bar by only 1.9 points and can fall below it on the full candidate universe."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-election-quality.md",
+      "line": 407,
+      "exact_claim": "downstream.** ROI-FLAT's 24 % is the same story section 13 tells: on a field with",
+      "denominator_provenance": [
+        "299-frame source stack",
+        "23 rendered candidate frames",
+        "pixels whose winner lies in those 23 candidates",
+        "B1 agreement/coverage result"
+      ],
+      "consequence": "Only the 23 rendered candidates are observable, so the testable pixels and elector agreement are capped; the 80% PASS is not a 299-frame population result.",
+      "load_bearing_decision_or_verdict": "11. B1, the kill switch: is my elector the product's elector?",
+      "current_status": "open",
+      "true_population": "All 299 candidate frames and all eligible pixels",
+      "missing_input": "The missing 276 single-frame renders and a full-candidate elector comparison",
+      "plausible_verdict_flip": "Yes. The reported 81.9058% clears the 80% bar by only 1.9 points and can fall below it on the full candidate universe."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-election-quality.md",
+      "line": 427,
+      "exact_claim": "**The scale is the point.** `D` of 1.3-2.8 % sits against a one-frame",
+      "denominator_provenance": [
+        "299-frame source stack",
+        "23 rendered candidate frames",
+        "pixels whose winner lies in those 23 candidates",
+        "B1 agreement/coverage result"
+      ],
+      "consequence": "Only the 23 rendered candidates are observable, so the testable pixels and elector agreement are capped; the 80% PASS is not a 299-frame population result.",
+      "load_bearing_decision_or_verdict": "12. The deficit: what the election actually costs",
+      "current_status": "open",
+      "true_population": "All 299 candidate frames and all eligible pixels",
+      "missing_input": "The missing 276 single-frame renders and a full-candidate elector comparison",
+      "plausible_verdict_flip": "Yes. The reported 81.9058% clears the 80% bar by only 1.9 points and can fall below it on the full candidate universe."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 46,
+      "exact_claim": "| Green signal power destroyed in the top octave, four blind crops | **10.7 / 19.3 / 21.1 / 29.2 %** | MEASURED, and a **lower bound** |",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "1. Headline",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 85,
+      "exact_claim": "| **B1** | `E` = var(D) in focus \u00f7 var(D) defocused, brightness matched | `E \u2265 2.0` | real green detail exists above the binned Nyquist | **FIRED**, 4/4 tiles |",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "3. Pre-registered bars",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 140,
+      "exact_claim": "| **K5** | \u22653 frames, \u22652 regions; sign must not depend on which | consistent | 50 frames, 4 tiles, all same sign | pass |",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "5. Controls on the headline instrument",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 289,
+      "exact_claim": "the vein boundaries stop being soft ramps. On C3 \u2014 my **weakest** crop at 10.7 %, checked",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "9. The figure, and the control that makes it honest",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 463,
+      "exact_claim": "**69/69 present, 69/69 discriminate.**",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "14. Verification of the numbers in this report",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 498,
+      "exact_claim": "Pre-registered bar B1 (`E \u2265 2.0`) fired on 4/4 tiles of `bee-3-cpl`: `E` = **3.824, 3.626,",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "Candidate facts",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 524,
+      "exact_claim": "in the top octave of the merged aligned render on four tiles (**6.0 / 6.1 / 7.7 / 9.4 %** in",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "Candidate facts",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 525,
+      "exact_claim": "the upper half of the band; **0.19\u20130.50 %** over all frequencies). On four crops selected",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "Candidate facts",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 546,
+      "exact_claim": "**80.9 / 71.5 / 62.2 / 44.4 %**. Even the worst case has its cutoff **above** the sensor",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "Candidate facts",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 554,
+      "exact_claim": "branches differ on **0.1894 %** of pixels by more than 1000 DN, against a positive control",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "Candidate facts",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/M95-resolution.md",
+      "line": 568,
+      "exact_claim": "by at most **6.65 percentage points** and every value stays above 8 %.",
+      "denominator_provenance": [
+        "project capture corpus",
+        "one bee-3-cpl stack",
+        "eligible pixels/bands on that stack",
+        "reported destruction fraction"
+      ],
+      "consequence": "The single-subject convenience bound licenses a lower bound for bee-3-cpl only, not a corpus-wide destroyed-detail rate.",
+      "load_bearing_decision_or_verdict": "Candidate facts",
+      "current_status": "open",
+      "true_population": "All eligible subjects and the unseen higher green band",
+      "missing_input": "Measurements on other subjects and beyond 48.94 cy/mm",
+      "plausible_verdict_flip": "The corpus-wide magnitude can change; the scoped single-subject lower bound does not."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 418,
+      "exact_claim": "**Every candidate destroys 64\u201382% of the subject's gradient energy.**",
+      "denominator_provenance": [
+        "full source-frame stack",
+        "three- or nine-frame computational sample",
+        "sampled-frame comparison",
+        "reported invariant result"
+      ],
+      "consequence": "The statement compares only sampled frames; unrendered frames can change an all-frame extremum or noise floor.",
+      "load_bearing_decision_or_verdict": "The guard fires, and it is the most important number here",
+      "current_status": "open",
+      "true_population": "Every frame in the source stack",
+      "missing_input": "Full-stack per-frame renders under the same normalization",
+      "plausible_verdict_flip": "An all-frame extremum can change; the scoped sampled-frame observation remains valid."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 4150,
+      "exact_claim": "One subject (`bee-1-cpl`), 8 of 299 frames sampled, 6 tiles, one spatial scale (a 4 px",
+      "denominator_provenance": [
+        "299-frame bee-1-cpl stack",
+        "8 sampled frames",
+        "6 selected tiles per probe at one scale",
+        "reported gate/patchwork result"
+      ],
+      "consequence": "All tile values are still conditional on eight of 299 frames, one subject, six tiles, and one scale; the default-setting recommendation remains open.",
+      "load_bearing_decision_or_verdict": "39.6 Scope, honestly",
+      "current_status": "open",
+      "true_population": "All 299 frames across the gallery, registered tiles, and spatial scales",
+      "missing_input": "Full-stack, multi-subject, multi-scale rerun and independent replication",
+      "plausible_verdict_flip": "Yes. The source explicitly requires the gallery before changing the default."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 4223,
+      "exact_claim": "One subject (`bee-1-cpl`), 8 of 299 frames, 6 tiles per probe, a single spatial scale. The",
+      "denominator_provenance": [
+        "299-frame bee-1-cpl stack",
+        "8 sampled frames",
+        "6 selected tiles per probe at one scale",
+        "reported gate/patchwork result"
+      ],
+      "consequence": "All tile values are still conditional on eight of 299 frames, one subject, six tiles, and one scale; the default-setting recommendation remains open.",
+      "load_bearing_decision_or_verdict": "40.5 Scope",
+      "current_status": "open",
+      "true_population": "All 299 frames across the gallery, registered tiles, and spatial scales",
+      "missing_input": "Full-stack, multi-subject, multi-scale rerun and independent replication",
+      "plausible_verdict_flip": "Yes. The source explicitly requires the gallery before changing the default."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 11268,
+      "exact_claim": "**Median 2.756x, and the master is sharper on 126 of 128 patches.** The p10 of",
+      "denominator_provenance": [
+        "299-frame bee-1-cpl stack",
+        "30 linearly spaced source frames",
+        "two master-selected sites and 128 patches",
+        "reported reconstruction/clipping result"
+      ],
+      "consequence": "The 30-frame computational subset and master-selected sites bound every derived patch and clipping result; all eligible within that pool remains cap.",
+      "load_bearing_decision_or_verdict": "103.2 The honest measurement: patches small enough to be one depth",
+      "current_status": "open",
+      "true_population": "All 299 source frames and a pre-frozen, non-outcome-selected site population across subjects",
+      "missing_input": "Full-stack sources and independently selected sites/subjects",
+      "plausible_verdict_flip": "Yes. Site selection favors regions where the merge did well, so the win-rate/reconstruction verdict can weaken or reverse."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 11286,
+      "exact_claim": "- display clipping at **11.88%** against the master's 2.21% -- overshoot pushing",
+      "denominator_provenance": [
+        "299-frame bee-1-cpl stack",
+        "30 linearly spaced source frames",
+        "two master-selected sites and 128 patches",
+        "reported reconstruction/clipping result"
+      ],
+      "consequence": "The 30-frame computational subset and master-selected sites bound every derived patch and clipping result; all eligible within that pool remains cap.",
+      "load_bearing_decision_or_verdict": "103.3 The innocent explanation, named in advance and then killed",
+      "current_status": "open",
+      "true_population": "All 299 source frames and a pre-frozen, non-outcome-selected site population across subjects",
+      "missing_input": "Full-stack sources and independently selected sites/subjects",
+      "plausible_verdict_flip": "Yes. Site selection favors regions where the merge did well, so the win-rate/reconstruction verdict can weaken or reverse."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 11318,
+      "exact_claim": "- **One subject, two sites, 30 of 299 frames.** `bee-1-cpl` only.",
+      "denominator_provenance": [
+        "299-frame bee-1-cpl stack",
+        "30 linearly spaced source frames",
+        "two master-selected sites and 128 patches",
+        "reported reconstruction/clipping result"
+      ],
+      "consequence": "The 30-frame computational subset and master-selected sites bound every derived patch and clipping result; all eligible within that pool remains cap.",
+      "load_bearing_decision_or_verdict": "103.5 What this does not establish",
+      "current_status": "open",
+      "true_population": "All 299 source frames and a pre-frozen, non-outcome-selected site population across subjects",
+      "missing_input": "Full-stack sources and independently selected sites/subjects",
+      "plausible_verdict_flip": "Yes. Site selection favors regions where the merge did well, so the win-rate/reconstruction verdict can weaken or reverse."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 11328,
+      "exact_claim": "  merge did well on. The 126/128 win rate is subject to that selection.",
+      "denominator_provenance": [
+        "299-frame bee-1-cpl stack",
+        "30 linearly spaced source frames",
+        "two master-selected sites and 128 patches",
+        "reported reconstruction/clipping result"
+      ],
+      "consequence": "The 30-frame computational subset and master-selected sites bound every derived patch and clipping result; all eligible within that pool remains cap.",
+      "load_bearing_decision_or_verdict": "103.5 What this does not establish",
+      "current_status": "open",
+      "true_population": "All 299 source frames and a pre-frozen, non-outcome-selected site population across subjects",
+      "missing_input": "Full-stack sources and independently selected sites/subjects",
+      "plausible_verdict_flip": "Yes. Site selection favors regions where the merge did well, so the win-rate/reconstruction verdict can weaken or reverse."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 11486,
+      "exact_claim": "limitation in bold: **\"One subject, two sites, 30 of 299 frames. `bee-1-cpl`",
+      "denominator_provenance": [
+        "26-master SHIP-V3 corpus",
+        "nine convenience-selected subjects",
+        "full stacks and accepted patches for those subjects",
+        "reported cross-subject result"
+      ],
+      "consequence": "Full stacks remove the frame cap, but nine of 26 subjects remain an outer convenience bound.",
+      "load_bearing_decision_or_verdict": "105. Nine subjects instead of one -- and the number went past the arm that defines perfection",
+      "current_status": "open",
+      "true_population": "All 26 SHIP-V3 masters under the same metric and site rule",
+      "missing_input": "The remaining 17 subjects",
+      "plausible_verdict_flip": "The corpus-wide verdict can change; the narrower claim that bee-1 alone did not create the result is supported."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 11487,
+      "exact_claim": "only.\"** It also warned that the 126/128 win rate was \"subject to that",
+      "denominator_provenance": [
+        "26-master SHIP-V3 corpus",
+        "nine convenience-selected subjects",
+        "full stacks and accepted patches for those subjects",
+        "reported cross-subject result"
+      ],
+      "consequence": "Full stacks remove the frame cap, but nine of 26 subjects remain an outer convenience bound.",
+      "load_bearing_decision_or_verdict": "105. Nine subjects instead of one -- and the number went past the arm that defines perfection",
+      "current_status": "open",
+      "true_population": "All 26 SHIP-V3 masters under the same metric and site rule",
+      "missing_input": "The remaining 17 subjects",
+      "plausible_verdict_flip": "The corpus-wide verdict can change; the narrower claim that bee-1 alone did not create the result is supported."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 11513,
+      "exact_claim": "On `bee-3-cpl` the master is sharper on **191 of 192** patches. MEASURED.",
+      "denominator_provenance": [
+        "26-master SHIP-V3 corpus",
+        "nine convenience-selected subjects",
+        "full stacks and accepted patches for those subjects",
+        "reported cross-subject result"
+      ],
+      "consequence": "Full stacks remove the frame cap, but nine of 26 subjects remain an outer convenience bound.",
+      "load_bearing_decision_or_verdict": "105.1 The sweep",
+      "current_status": "open",
+      "true_population": "All 26 SHIP-V3 masters under the same metric and site rule",
+      "missing_input": "The remaining 17 subjects",
+      "plausible_verdict_flip": "The corpus-wide verdict can change; the narrower claim that bee-1 alone did not create the result is supported."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/ORCH-veiling.md",
+      "line": 13821,
+      "exact_claim": "we have been publishing are floors. The `+16%` on one subject is at least 16%.",
+      "denominator_provenance": [
+        "full source-frame stacks",
+        "subsampled source-frame minimum",
+        "master/minimum ratio",
+        "reported excess"
+      ],
+      "consequence": "The source-frame minimum is computed on a subsample, biasing the denominator high and the ratio low; convictions are conservative floors but acquittals are unresolved.",
+      "load_bearing_decision_or_verdict": "\u00a7134 \u2014 derive which way a sampling bias pushes before you publish the number, because it decides whether you have a floor or a ceiling",
+      "current_status": "open",
+      "true_population": "Every source frame in each claimed stack",
+      "missing_input": "Full-stack minima for each subsampled subject",
+      "plausible_verdict_flip": "An acquittal can flip to conviction; the positive excess/conviction direction cannot be manufactured by this bias."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 203,
+      "exact_claim": "\u00a74. Boundary invariant on 5/5 subjects across a 2.5\u20136\u00d7 range of `far`.",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "5.2 The defocus parameter \u2014 REJECTED (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 221,
+      "exact_claim": "**4 of 10 subject pairs are concordant** (one pair is tied on boundary and",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "5.3 Fine-structure content \u2014 REJECTED, and it was my own hypothesis (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 260,
+      "exact_claim": "boundary across the five subjects: **4 of 10 pairs concordant for the numerator,",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "5.4 R's denominator explains the outlier, and nothing explains the ordering (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 261,
+      "exact_claim": "4 of 10 for the denominator** \u2014 chance in both cases, the same as \u00a75.3's texture",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "5.4 R's denominator explains the outlier, and nothing explains the ordering (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 311,
+      "exact_claim": "reproducible \u2014 measured `0.000e+00` absolute difference over **12/12** bands on",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "6.1 Two reproduction hazards in the shared instrument",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 314,
+      "exact_claim": "on **12/12** bands, with verdicts identical on all 12.",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "6.1 Two reproduction hazards in the shared instrument",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 454,
+      "exact_claim": "| `112MSDCF` | carries ORCH's band-0 gate-floor arm (32.1% -> 80.9% averaged duty cycle) and was absent from \u00a73, so a candidate default rested on an unqualified band |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "9.1 Which subjects, and why",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 466,
+      "exact_claim": "measured window at 107% of its flagged value; `tweezers-cpl`'s \"bump\" is one",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "9.1 Which subjects, and why",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 548,
+      "exact_claim": "**6/6 unchanged**, matching the 5/5 of \u00a74. Eleven subjects have now held their",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "9.4 The `far` ladder control (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 565,
+      "exact_claim": "step     full=2    decim=2     ok        bands differing: 0/12",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "9.5 Decimation, commissioned before use (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 568,
+      "exact_claim": "**Digit-exact on 12/12 bands.** Run `python bandsweep.py --far 20 --simdecim 2",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "9.5 Decimation, commissioned before use (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 606,
+      "exact_claim": "**0.000% clipped**, max 8438 of 65535. The develops carry `--linear-srgb` with",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "9.7 Clipping control (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 633,
+      "exact_claim": "**Signal on 5 of 11; noise or mixed on 6.** `NOISE` means every FINE slice of",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "10. Band 0 is unqualified on the majority (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 655,
+      "exact_claim": "**EDGE high-pass std x0.9108** (9% cost), flat sites **-206.7 DN**. Fact 1826",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "11.1 What was asked",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 691,
+      "exact_claim": "At **64x**, fact 1826 measured the paper sweep losing **25% of its band-1",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "11.4 On the replacement criterion there is a real answer, and it disqualifies the aggressive setting",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 702,
+      "exact_claim": "- **The 9% edge cost at 4x is not a licensed structural cost.** It is measured",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "11.5 Two corrections this produced, both against the lane that asked",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 703,
+      "exact_claim": "  in band 0, which on `112MSDCF` is noise. On that subject *both* the 73%",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "11.5 Two corrections this produced, both against the lane that asked",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 762,
+      "exact_claim": "### 12.3 Checks this document passes",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "12.3 Checks this document passes",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 800,
+      "exact_claim": "  \"**6/6 unchanged**\" checked against the rows it summarises \u2014 because a check",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "12.3 Checks this document passes",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 926,
+      "exact_claim": "| `paper-sweep` | 0 of 12 | exact zero |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.2 The instrument change, and why it is appended rather than inserted",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 927,
+      "exact_claim": "| `dry-erase-marker-head-cpl` | 0 of 12 | exact zero |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.2 The instrument change, and why it is appended rather than inserted",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 928,
+      "exact_claim": "| `112MSDCF` | 0 of 12 | exact zero |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.2 The instrument change, and why it is appended rather than inserted",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 929,
+      "exact_claim": "| `lavendar-cpl` | 0 of 12 | exact zero |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.2 The instrument change, and why it is appended rather than inserted",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 932,
+      "exact_claim": "after. The document's other 241 checks were re-run and still pass.",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.2 The instrument change, and why it is appended rather than inserted",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 974,
+      "exact_claim": "`112MSDCF` is the subject carrying ORCH's **\u221244.6%**, the figure on which",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.5 The decisive subject: `112MSDCF` carries no resolvable signal at 0.30\u20130.35",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 982,
+      "exact_claim": "R \u2248 1.08 means the in-focus frames carry about 8% more power at 0.30\u20130.35 than",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.5 The decisive subject: `112MSDCF` carries no resolvable signal at 0.30\u20130.35",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 984,
+      "exact_claim": "almost no real detail there at all. Roughly 92% of what is present in that band",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.5 The decisive subject: `112MSDCF` carries no resolvable signal at 0.30\u20130.35",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 991,
+      "exact_claim": "- Therefore the \u221244.6% is computed in a band that carries no resolvable signal",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.5 The decisive subject: `112MSDCF` carries no resolvable signal at 0.30\u20130.35",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 998,
+      "exact_claim": "### 13.6 `coffee-bubbles`, the 27.2% subject, and a confound that had to be controlled",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.6 `coffee-bubbles`, the 27.2% subject, and a confound that had to be controlled",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 1012,
+      "exact_claim": "| `--far 20` | 5 developed frames | 4.530 | PASS |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.6 `coffee-bubbles`, the 27.2% subject, and a confound that had to be controlled",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 1013,
+      "exact_claim": "| `--far 24` | 6 developed frames | **4.659** | **PASS** |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.6 `coffee-bubbles`, the 27.2% subject, and a confound that had to be controlled",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 1053,
+      "exact_claim": "The largest move is 12.2% and no subject changes verdict *group*. One subject",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.7 The narrow band tracks the wide band (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 1059,
+      "exact_claim": "`dry-erase-marker-head-cpl`, the same depth, loses 7.1%. Narrowing the band is",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "13.7 The narrow band tracks the wide band (MEASURED)",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 1153,
+      "exact_claim": "| `leaf-2-cpl` | never purged | **0 of 12** | 12 of 12 |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "What actually moved, and the control that decides it",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 1154,
+      "exact_claim": "| `bee-1-cpl` | purged, re-made at the pin | **0 of 12** | 12 of 12 |",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "What actually moved, and the control that decides it",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    },
+    {
+      "classification": "cap",
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "line": 1172,
+      "exact_claim": "run rather than cited. Had `leaf-2-cpl` shown 0 of 12 CIs differing, there would",
+      "denominator_provenance": [
+        "34-subject corpus",
+        "11 convenience-selected subjects with develops/dependencies",
+        "about 60-100 strided frames per measured stack",
+        "reported band/tile result"
+      ],
+      "consequence": "The result is bounded by non-random subject selection and computational frame subsampling; it can refute a universal boundary but cannot establish a corpus range.",
+      "load_bearing_decision_or_verdict": "The criterion was wrong, not the measurement",
+      "current_status": "open",
+      "true_population": "34 corpus subjects and every frame in each stack",
+      "missing_input": "Measurements for the unqualified subjects and full-stack frame populations",
+      "plausible_verdict_flip": "Corpus-range and unqualified-subject verdicts can change; the observed counterexample to a universal 0.25 boundary cannot."
+    }
+  ],
+  "plausible_verdict_flips": [
+    {
+      "file": "docs/research/M116-promotion.md",
+      "lines": [
+        314,
+        320,
+        335
+      ],
+      "from": "1.1458: merge sharper than one global frame from the first-100 prefix",
+      "to": "0.8110: merge softer than the full-bracket per-site best frame",
+      "basis": "The cited code fixes LIMIT=100 and slices sorted frames to [:LIMIT]; the complete source records the independent full-bracket per-site sign flip.",
+      "status": "resolved for the cited P9 claim; similar prefix-derived claims remain open until rerun"
+    },
+    {
+      "file": "docs/research/M95-election-quality.md",
+      "lines": [
+        388,
+        401,
+        409
+      ],
+      "from": "B1 PASS at 81.9058% against an 80% bar on pixels reachable by 23 rendered candidates",
+      "to": "possible FAIL on the complete 299-frame candidate universe",
+      "basis": "The margin is 1.9 percentage points and 276 candidate renders are missing.",
+      "status": "open"
+    },
+    {
+      "file": "docs/research/ORCH-veiling.md",
+      "lines": [
+        13813,
+        13821,
+        13845
+      ],
+      "from": "subsampled-minimum caveat treated as manufacturing excess",
+      "to": "convictions are conservative floors; acquittals can flip to convictions",
+      "basis": "The minimum is the denominator, so subsampling biases the ratio downward; one full-stack control establishes the direction but not each missing full-stack value.",
+      "status": "open for each subsampled subject"
+    },
+    {
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "lines": [
+        88,
+        370,
+        1274
+      ],
+      "from": "observed 0.17-0.48 boundary treated as a corpus range",
+      "to": "range may widen or change on the unmeasured subjects",
+      "basis": "Subjects were chosen by on-disk availability/dependency and frames were computationally subsampled; 22 of 34 roster subjects remain unqualified.",
+      "status": "open; the counterexample to a universal 0.25 boundary remains valid"
+    }
+  ],
+  "complete_file_attestations": [
+    {
+      "file": "docs/research/B-algorithms-sota.md",
+      "sha256": "1165fe3b8b68aebfd00e484559c670c53ffc206cf56adc0da345af5f020a241f",
+      "complete": true
+    },
+    {
+      "file": "docs/research/BUILD-PYRNOISE.md",
+      "sha256": "9845624f266ed8c15ec54ad97d39263b13d1c649d597bc0085cf129ba2e5d352",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M-CAND2.md",
+      "sha256": "f337abe5e55ee3a9e0ddcaa2bcf6d76b25013bb1fbcc8998b5adc90459b6bf64",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M-COVER-BORDER.md",
+      "sha256": "b75a7bb01e83a33f0418a073bf87e2d64af919c5d6a71321dbb9dcf03f5944c2",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M-COVER-NATIVE.md",
+      "sha256": "cae2102496fe23d716e31c6a2238e169d6d0b06fbdfbf0ce0bb4905df3ea27a3",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M-PHASE0-RHO.md",
+      "sha256": "6f8340fb08780027838adc945e178a78bc86835bb86df85854f0c699df28337a",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M-PHASE0-XSPEC.md",
+      "sha256": "4d84c64d896f9c9d5fef59d9ac73d9f7c157e93bb91c0d65fa76c1459944009a",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M101-defect.md",
+      "sha256": "7607d498bf8ce9d7215cd939c903452e8cabe8aacee1f77b96378e70c0e44eb7",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M102-simulator.md",
+      "sha256": "f0980ddb64116034da890868a75e9e445bff875932c411d4a1465dd623d7ced5",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M104-resample-verify.md",
+      "sha256": "b428b6cd0e9b53885f0f2f8a2e39dbe4d6b4e791c3b5b3f63ebb880028c5591f",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M116-promotion.md",
+      "sha256": "8afc7326a71fdfd66c80fecd4abf96cf9edc64b21c9106bafadcd545bda67673",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M120-patchwork.md",
+      "sha256": "0797f0986b08e4bdb6f417ecd6665be41802fc5024006634db101be6d574155f",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M127-noise-head-to-head.md",
+      "sha256": "45eb6f2e09da4b707ba03e81a8d68970c964239cae699183fbaff4fcac692e11",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M153-m11-harness.md",
+      "sha256": "32bb0f2f59bbdc0c655dcf9b5f1caee1adf820e3b72c2d7120781aa6aefb4e2c",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M164-aperture-identifiability.md",
+      "sha256": "f948d6e21d15be6b5f6940dfc20548976df7fd4c13d7b45350f3d1af6f22086f",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M164-gx-sota-claim.md",
+      "sha256": "59d56ffeae5156d9afd046e864efacc8dba45ef455487bd5317000f2bca0fde8",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M164-m1-admissibility.md",
+      "sha256": "d01620563fd1665b0b5ecae93c66c071b1ddf4994e165cb3da96697507bc0d87",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M164-transfer-veto.md",
+      "sha256": "5801d4c08c4aa1ec3f69ac98c4e1d82a8817d282b761efee4252b2cae1462554",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M166-reference-dominance-rehearsal.md",
+      "sha256": "e5d4bdb629172c90b1f0a2f61dabe5ee0356a4c03f2f4530cc4fbe4eb8521b04",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M167-detail-battery.md",
+      "sha256": "8c534facae69ad74d5c10d7327b549f76a1ac82233afa87e205d34c245a4b2af",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M169-comparator-requirement-audit.md",
+      "sha256": "71f08bf819e74d0bf5f69a3957028d36c525ddb694d6f7cdb0b9de0e973a7b38",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M27-coverage-gap-measured.md",
+      "sha256": "59b5dec17ca216e213e99fb0badcebdef9d670054465e64c13071461e2bbd521",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M30-hdr-cobracket-measured.md",
+      "sha256": "74f16a16f00ba3ce79585a817bf38f443c36a792fab0767be366239e7824913a",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M36-VERIFICATION.md",
+      "sha256": "a98fdf7167f02a34fe20dca8666abd74e29eef074fa578a90d1946c1102166c6",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M41-r3-kill-measured.md",
+      "sha256": "45ad61ad7705676b85ae2f72eb340e9e923cfdfd162231b7ab4c0e68315ac7b6",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M43-plugin-calibration-seam.md",
+      "sha256": "2c2216527cd9c5892f848a02b8e4166d082b21c639816e0fabceb15e8d38e7a1",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M5-diffraction-measured.md",
+      "sha256": "449a31b229776a9dff78d2b78d07655c7de996f1709cb2722320c4262753ff78",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M55-sigpow-verification.md",
+      "sha256": "698e59a1f37882525153a9277ba828691e3c08ac171314914c389d31eae52516",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M67-focus-correctness.md",
+      "sha256": "300f135311e8063548b4359b30fb4663ebe9b37a768dfe578c892e06f4ec20ee",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M7-gpu-focus-measured.md",
+      "sha256": "68af236b2d3d331cdb5e908de0b7ce7fbd55727c8d8f5c535a1892c4b1ca8e20",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M72-green-plane-correlation.md",
+      "sha256": "4ea26998cc7bca44fee09d529f6f1819374e7a79064bc14249af5193b907ae1c",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M75-rb-asymmetry.md",
+      "sha256": "ba057034216bce07071469ce289b5baf21a1835fafc116d266a52d10c669c0ca",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M8-COMPARATIVE-PROTOCOL.md",
+      "sha256": "f52dac0d0668fc9ca502c66dd1efb80b9ed79849ed1c95622e7f9315bde0f1ed",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M8-COMPARATIVE.md",
+      "sha256": "e1d4a5211f75a1ef054614aa2e6e43e6291dc87a193c6607cd84c204dc6f0f12",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M8-overshoot.md",
+      "sha256": "1cd81dbee41a5332f390b5da4c2f64e4600be39d19dcd7b9f52ed1bb279f6e63",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M80-invariant-repair.md",
+      "sha256": "e8cddc9b2b89e73491621d9999ad4386fc0aa4dae577ddd51605b7e77acee8f8",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M84b-ruler-metrology.md",
+      "sha256": "c124436a1a235e8e84be123ed9042ab9bcd77a55badcc5e4122451bd3388aacc",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M95-election-quality.md",
+      "sha256": "e4de8a698dc3a450d0e6dacf8b9445734e7d678774850415c168c87c3e61e36f",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M95-resolution.md",
+      "sha256": "c16cf0a58ee0e3e1ed6d8810fb0a336c157a44bca8284efc802c5c1bd57119b4",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M96-election-margin.md",
+      "sha256": "61a74c5e1cc62540de2e945ebb1f95936099be8a0d60e1f71e0103de6f8b96a1",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M97c-clip-mass.md",
+      "sha256": "ba35d4c9d12b82b203753f766512f2e09218dae136edeea58e6e86e114a3599d",
+      "complete": true
+    },
+    {
+      "file": "docs/research/M97r-outlier-mask.md",
+      "sha256": "bf6e94c68d46d64abe86012ccf9ad2329d642ae6aa8c2d2d8233264249af8cdb",
+      "complete": true
+    },
+    {
+      "file": "docs/research/ORCH-veiling.md",
+      "sha256": "f873a12dd9f79b02b6ce9171c3c04275c966398891d08fec680437dbf6486721",
+      "complete": true
+    },
+    {
+      "file": "docs/research/V-LINEAR-BANDS.md",
+      "sha256": "83c6ae8a2b0bad65a62ac975508302ba15cde109911f64e99280c790ae1df7ed",
+      "complete": true
+    },
+    {
+      "file": "docs/research/V-REVIEW-merge-rim.md",
+      "sha256": "07be0875187fbcf0a77773ae7afeaa0e612c10dac55bedf79d633c254f2fe53c",
+      "complete": true
+    },
+    {
+      "file": "docs/research/V-SELECT.md",
+      "sha256": "818ef1deac3bede208fde408b921a49517c98fd178f3c1f9ba75d86a27f6e0aa",
+      "complete": true
+    },
+    {
+      "file": "docs/research/V-veiling.md",
+      "sha256": "c5f966781f7f4d1561d0b7fdb942d71a6fe1359be548f72b7f0194b21000f7b6",
+      "complete": true
+    }
+  ]
+}

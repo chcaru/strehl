@@ -1,0 +1,51 @@
+{
+  "cap_unstated_audit": {
+    "cap_occurrence_count": 0,
+    "groups": [],
+    "unstated_occurrence_count": 0
+  },
+  "decision_effect": {
+    "canonical_non_m151_flips": 7,
+    "capture_programme": "No capture release or sequencing verdict changes.",
+    "denominator_caused_flips": 0,
+    "m12": "FAIL survives; no full post-fix M12-S ladder exists.",
+    "scorecard_cells_changed": 0,
+    "unresolved_high_consequence_risks": 19
+  },
+  "notes": [
+    "M176 retained all 34 candidate identities; source lines and attestation were rebound to lock3.",
+    "M177 retained 26 candidate identities, removed 51 prior occurrences, and added 26 out-of-scope semantic/scalar occurrences.",
+    "Both immutable copies were read completely."
+  ],
+  "review_totals": {
+    "classifications": {
+      "fixture": 7,
+      "out_of_scope": 70,
+      "population": 9
+    },
+    "complete_file_attestations": 2,
+    "new_m177_occurrences": 26,
+    "retained_occurrences": 60,
+    "review_sha256": "0194293ec19eb4a765a0067a7a0b49d9310cd43ada9c24d038158af102162e17"
+  },
+  "schema": "denominator-lock3-changing-summary-v1",
+  "schema_version": 1,
+  "scope": {
+    "candidate_count": 86,
+    "complete_frozen_copies_read": true,
+    "file_count": 2,
+    "files": [
+      "docs/research/M176-worker-invariance.md",
+      "docs/research/M177-capture-programme.md"
+    ],
+    "prohibited_path_accessed": false,
+    "review": "experiments/M151-denominator-audit/review-lock3-changing.jsonl",
+    "snapshot": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M151-out-lock3"
+  },
+  "validation": {
+    "errors": [],
+    "result": "GREEN",
+    "validated_attestations": 2,
+    "validated_dispositions": 86
+  }
+}

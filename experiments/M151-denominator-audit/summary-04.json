@@ -1,0 +1,1424 @@
+{
+  "attestation": "Every assigned source file was read byte-for-byte and matched its manifest SHA-256 before classification.",
+  "candidate_total": 5302,
+  "cap_or_unstated_claims": [
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "31 definitions",
+        "3 definitions selected for verifier audit",
+        "reported verification conclusion"
+      ],
+      "evidence_needed_to_resolve_cap": "Verifier review of the remaining 28 definitions.",
+      "exact_claim": "triage.json emits 31 fields. All 31 have definitions; none is orphaned; the gate is green and correct. The verifier audited 3 of the 31 definitions for content, and one of the three was wrong. The remaining 28 are unverified.",
+      "file": "docs/research/BUILD-TRIAGE.md",
+      "line": 1763,
+      "load_bearing_decision_or_verdict": "triage-definition verification assurance",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-16580e6f76399f4d71cc560f"
+      ],
+      "true_population": "31 definitions."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "299-frame bee-3-cpl capture",
+        "--limit 60 sorted opening prefix",
+        "reported result from the bounded arm"
+      ],
+      "evidence_needed_to_resolve_cap": "Full 299-frame arm or a sampling design spanning the complete focus range.",
+      "exact_claim": "--limit n takes the first n frames in capture order, so 60 of 299 samples the opening fifth of a focus sweep while 60 of 100 samples three fifths; the first V6 design manufactured a null by matching frame count rather than scene coverage.",
+      "file": "docs/research/M105b-exposure-ship.md",
+      "line": 1936,
+      "load_bearing_decision_or_verdict": "auto-exposure verification and discarded percentile-arm interpretation",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-81f7bc3034617c33c9e71202"
+      ],
+      "true_population": "299 frames for bee-3-cpl; the bounded arm uses the first 60."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "full capture stack",
+        "M100/M95 --limit prefix used by the frozen invocation",
+        "reported hash or behavior result"
+      ],
+      "evidence_needed_to_resolve_cap": "Full-stack hashes under the same binary, environment, gate, sidecar, and cache state.",
+      "exact_claim": "| M100 baseline vs HEAD, **M100's real command** | **0** | **0.0000** | **0.0000%** |",
+      "file": "docs/research/M106-freeze-attribution.md",
+      "line": 76,
+      "load_bearing_decision_or_verdict": "byte-freeze attribution and re-baseline recommendation",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-b342e366755de8676b04a27f"
+      ],
+      "true_population": "The assigned corpus identifies 299 frames for bee-3-cpl and 105 for coffee-bean; bounded freezes use 60 or 20."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "252 folded facts",
+        "49 facts individually examined for the named issue",
+        "reported conclusion"
+      ],
+      "evidence_needed_to_resolve_cap": "Equivalent contamination/code-path review of the remaining 203 folded facts.",
+      "exact_claim": "Report what you did not look at, in the same units as what you did: 49 of 252 folded sites adjudicated is a usable number; no problems found from the same work is not.",
+      "file": "docs/research/M110-sheet.md",
+      "line": 1889,
+      "load_bearing_decision_or_verdict": "folded-fact contamination audit",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-cf99cf48caa888e407a33e47"
+      ],
+      "true_population": "252 folded facts."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "registered capture sessions",
+        "17 deterministic evenly indexed discovery frames per stack and fixed scoring quotas",
+        "eligible sites within that bounded pool",
+        "reported census/scoring result"
+      ],
+      "evidence_needed_to_resolve_cap": "All registered discovery frames for a true exhaustive edge census; for the score, the uncapped eligible-site manifest and adopted population rule.",
+      "exact_claim": "| M4 edge arm | 10,355 eligible sites; 2,435 / 2,284 / 2,121 on the three fabric stacks, 1,289 duck tape, 2,226 flower/fern | **SUFFICIENT** |",
+      "file": "docs/research/M152-site-census.md",
+      "line": 20,
+      "load_bearing_decision_or_verdict": "M3 capture SUFFICIENT and M4 NEEDS NEW CAPTURE decisions",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-0aefb38768d44bc3c2067a9c"
+      ],
+      "true_population": "M3 registered captures total 693 frames and yielded 1,233 broad-eligible sites; the scored pool is fixed at 500. M4 edge eligibility is 10,355 before 250-site selection."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "registered capture sessions",
+        "17 deterministic evenly indexed discovery frames per stack and fixed scoring quotas",
+        "eligible sites within that bounded pool",
+        "reported census/scoring result"
+      ],
+      "evidence_needed_to_resolve_cap": "All registered discovery frames for a true exhaustive edge census; for the score, the uncapped eligible-site manifest and adopted population rule.",
+      "exact_claim": "| M4 flat arm | 178 eligible sites: medication pill 55, exact bee background 123, foam 0; the frozen scored quotas are 84 / 83 / 83 | **NEEDS NEW CAPTURE** |",
+      "file": "docs/research/M152-site-census.md",
+      "line": 21,
+      "load_bearing_decision_or_verdict": "M3 capture SUFFICIENT and M4 NEEDS NEW CAPTURE decisions",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-0e0fb7f56da501165b0ebc25"
+      ],
+      "true_population": "M3 registered captures total 693 frames and yielded 1,233 broad-eligible sites; the scored pool is fixed at 500. M4 edge eligibility is 10,355 before 250-site selection."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "registered capture sessions",
+        "17 deterministic evenly indexed discovery frames per stack and fixed scoring quotas",
+        "eligible sites within that bounded pool",
+        "reported census/scoring result"
+      ],
+      "evidence_needed_to_resolve_cap": "All registered discovery frames for a true exhaustive edge census; for the score, the uncapped eligible-site manifest and adopted population rule.",
+      "exact_claim": "As a post-result robustness diagnostic only, an axis-aligned 800 px frame inset still leaves 876 sites (151 / 287 / 382 / 56), so the 500/50 result is not carried by sites sitting barely 400 px from the sensor edge.",
+      "file": "docs/research/M152-site-census.md",
+      "line": 106,
+      "load_bearing_decision_or_verdict": "M3 capture SUFFICIENT and M4 NEEDS NEW CAPTURE decisions",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-b2ac1fc067f4883f34d84e8f",
+        "den-c3030925b61882a330115d11",
+        "den-5b857c036db3286e66a9df8b"
+      ],
+      "true_population": "M3 registered captures total 693 frames and yielded 1,233 broad-eligible sites; the scored pool is fixed at 500. M4 edge eligibility is 10,355 before 250-site selection."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "registered capture sessions",
+        "17 deterministic evenly indexed discovery frames per stack and fixed scoring quotas",
+        "eligible sites within that bounded pool",
+        "reported census/scoring result"
+      ],
+      "evidence_needed_to_resolve_cap": "All registered discovery frames for a true exhaustive edge census; for the score, the uncapped eligible-site manifest and adopted population rule.",
+      "exact_claim": "The untouched horizontal-razor RAW identity null used 50 registered control sites and measured median/p99 h_e=0/0, median/p99 v_e=0/0, and false-positive rate 0%.",
+      "file": "docs/research/M152-site-census.md",
+      "line": 330,
+      "load_bearing_decision_or_verdict": "M3 capture SUFFICIENT and M4 NEEDS NEW CAPTURE decisions",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-e84f8dbc721a540a77658555",
+        "den-2fc2bc351563f733ce38416b"
+      ],
+      "true_population": "M3 registered captures total 693 frames and yielded 1,233 broad-eligible sites; the scored pool is fixed at 500. M4 edge eligibility is 10,355 before 250-site selection."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "357 folded fact rows",
+        "roughly 70 rows individually verified against code",
+        "remaining rows adjudicated from text plus confirming grep",
+        "reported audit conclusion"
+      ],
+      "evidence_needed_to_resolve_cap": "Individual source/consumer verification for the remaining folded fact rows.",
+      "exact_claim": "- **The long tail of \u00a74 was adjudicated from the row text, not from a per-fact code read.** I individually verified against code roughly 70 of the 357 rows. The unbuilt-component blocks (alignment 1/3/5/16/17/18/43\u201354, hot pixels 160\u2013162, robustness mask 220\u2013224, reshoot advisor 210\u2013213, deconvolution 140\u2013145/400\u2013419/461\u2013479, HDR 240\u2013243/433\u2013435) I classified NOT APPLICABLE-unbuilt on the strength of the row plus one confirming grep each; fact 473 independently confirms `merge_cmd.rs` contains no alignment, warp or registration, which I re-verified.",
+      "file": "docs/research/M49-unapplied-findings.md",
+      "line": 187,
+      "load_bearing_decision_or_verdict": "research-to-code gap defect inventory and long-tail audit assurance",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-258f8f4bd7ac2d4be31d7256",
+        "den-3257ab63415d7e584b727d3c",
+        "den-ca9ae224b7bd1323b8e46447",
+        "den-d13b0e7a31d22ec9f10bf043",
+        "den-8b8ce693b3cad102abe75d11",
+        "den-e0db9ae4e872c1e3c09fe785"
+      ],
+      "true_population": "357 folded fact rows; roughly 70 received individual code verification."
+    },
+    {
+      "classification": "unstated",
+      "current_status": "unresolved",
+      "denominator_provenance": [
+        "empirical proportion or rate quoted in docs/research/M79-edof-microscopy-survey.md",
+        "source/study universe and selection rule not stated in this complete file",
+        "reported result"
+      ],
+      "exact_claim": "Maximum-magnitude coefficient selection puts about 30% of typical fused pixels outside every input image's dynamic range, increasing energy, noise, and saturation.",
+      "file": "docs/research/M79-edof-microscopy-survey.md",
+      "line": 189,
+      "load_bearing_decision_or_verdict": "survey evidence used to rank follow-up mechanisms",
+      "missing_input": "The cited study or source milestone population manifest, eligibility criteria, exclusions, and sampling rule.",
+      "occurrence_ids": [
+        "den-a36ed55c1948a505a5caeffe"
+      ],
+      "true_population": null
+    },
+    {
+      "classification": "unstated",
+      "current_status": "unresolved",
+      "denominator_provenance": [
+        "empirical proportion or rate quoted in docs/research/M79-edof-microscopy-survey.md",
+        "source/study universe and selection rule not stated in this complete file",
+        "reported result"
+      ],
+      "exact_claim": "M63 section 0.1 measured 78.3% bimodality at labelled occlusion edges and 78.9% at featureless-card silhouettes; only 7.2% of second peaks landed near independently estimated background focus.",
+      "file": "docs/research/M79-edof-microscopy-survey.md",
+      "line": 467,
+      "lines": [
+        467,
+        468
+      ],
+      "load_bearing_decision_or_verdict": "survey evidence used to rank follow-up mechanisms",
+      "missing_input": "The cited study or source milestone population manifest, eligibility criteria, exclusions, and sampling rule.",
+      "occurrence_ids": [
+        "den-bfe297ebcc36a16fcf6ec58f",
+        "den-56785ca18de0e6dfed016481",
+        "den-118ef3aa6ab28fa714e24c45"
+      ],
+      "true_population": null
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "full flat-on-ruler-cpl capture",
+        "--limit 20 sorted prefix",
+        "reported pixel/check denominator within the bounded run"
+      ],
+      "evidence_needed_to_resolve_cap": "The remaining 59 frames under the same controls, including real refusal/region-guard cases.",
+      "exact_claim": "On n_eff, a pass-two quantity, the gain moves 289,835 pixels (3.51%) and a deliberately mis-propagated build moves 763,987 pixels (9.26%), dropping mean n_eff from 4.5638 to 4.5256.",
+      "file": "docs/research/M97q-photometric-wiring.md",
+      "line": 71,
+      "lines": [
+        71,
+        72,
+        97,
+        98,
+        149,
+        150,
+        151
+      ],
+      "load_bearing_decision_or_verdict": "photometric wiring SHIPPED/control verdict",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-f981210e637e860e7339c1f5",
+        "den-74214fed7f4a795d4c3e4718",
+        "den-8b22fef89a50afc0c6766f19",
+        "den-124a717b74b77250d5238466",
+        "den-58a4e304fb5fa79abb490c11",
+        "den-55fb71f2e26fae9c30304bb3",
+        "den-615d2d4866046edb7e687144",
+        "den-70090bc93947c180e02b4a6c",
+        "den-00330cdad4ab5581d694955d"
+      ],
+      "true_population": "flat-on-ruler-cpl has 79 frames elsewhere in the assigned corpus; only the first 20 were used here."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "full flat-on-ruler-cpl capture",
+        "--limit 20 sorted prefix",
+        "reported pixel/check denominator within the bounded run"
+      ],
+      "evidence_needed_to_resolve_cap": "The remaining 59 frames under the same controls, including real refusal/region-guard cases.",
+      "exact_claim": "Byte-freeze 5/5 HOLD (both frozen rows, including the sidecar row 119936E6...), 67 unit tests pass, clippy exits 0, and corpus_lint.py reports 0 violations.",
+      "file": "docs/research/M97q-photometric-wiring.md",
+      "line": 76,
+      "load_bearing_decision_or_verdict": "photometric wiring SHIPPED/control verdict",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-f6470700da7994afa866ff23"
+      ],
+      "true_population": "flat-on-ruler-cpl has 79 frames elsewhere in the assigned corpus; only the first 20 were used here."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "full flat-on-ruler-cpl capture",
+        "--limit 20 sorted prefix",
+        "reported pixel/check denominator within the bounded run"
+      ],
+      "evidence_needed_to_resolve_cap": "The remaining 59 frames under the same controls, including real refusal/region-guard cases.",
+      "exact_claim": "The eroded region keeps 1,744,561 pixels of 2,558,489 (68.2%) on flat-on-ruler-cpl; the real-data refusal threshold was not exercised.",
+      "file": "docs/research/M97q-photometric-wiring.md",
+      "line": 123,
+      "lines": [
+        123,
+        157
+      ],
+      "load_bearing_decision_or_verdict": "photometric wiring SHIPPED/control verdict",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-251855cd857ac1e0b382cef3",
+        "den-1260f7f090f5166d419b1330"
+      ],
+      "true_population": "flat-on-ruler-cpl has 79 frames elsewhere in the assigned corpus; only the first 20 were used here."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "299-frame bee-1-cpl capture",
+        "probe sequence stopping at frame 200 after later registration failures",
+        "reported qualified-band result"
+      ],
+      "evidence_needed_to_resolve_cap": "Valid probes for frames 201-299 or a pre-stated reason those frames are outside the target population.",
+      "exact_claim": "bee's probes stop at frame 200 of 299 because probes 225-298 register 250-330 px out, past the T/2 trust limit; tiles whose true focus lies beyond 200 have their peak clamped to the ladder edge.",
+      "file": "docs/research/V-SOFTCHECK-bandqual.md",
+      "line": 387,
+      "load_bearing_decision_or_verdict": "bee qualified-band and softness conclusions",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-af210e70e921fbc80b750a1d"
+      ],
+      "true_population": "299 bee-1-cpl frames; probes stop at 200."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "The best single input frame holds detail above the flowers-cpl fixed-pattern floor in 48 of 352 tiles (13.6%), against 222 of 352 (63.1%) for bee-1-cpl.",
+      "file": "docs/research/V-bestframe.md",
+      "line": 5,
+      "lines": [
+        5,
+        6
+      ],
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-99755d29688872ccd6aeeea1",
+        "den-98c3571e1364bdd15702d3ea",
+        "den-b94ec4313cfc41d5b688a47f",
+        "den-fe908b5d0a3b76acbe8bd8b8"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "The qualification, stated up front because it is real: in **2 of 352 tiles** the",
+      "file": "docs/research/V-bestframe.md",
+      "line": 13,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-fa5e54cd05dd3c32a2afdcc4"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "4.5%, `119MSDCF` at 23.1%, and the count of tiles below 0.8 summed across the 24",
+      "file": "docs/research/V-bestframe.md",
+      "line": 29,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-ad03b443de8b744f7e67c992",
+        "den-fa7f02d569780f12e1a1c298"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "over sampled frames \u2014 returned **merge below best frame in 88.64% of tiles** on",
+      "file": "docs/research/V-bestframe.md",
+      "line": 63,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-ca9d5479eb5d4092ebcd7f62"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "Frames read, labelled as the bounds they are: 20 of 176 for flowers-cpl and 20 of 299 for bee-1-cpl (10 adjacent pairs each), reducing to 12 each under the registration gate.",
+      "file": "docs/research/V-bestframe.md",
+      "line": 152,
+      "lines": [
+        152,
+        153
+      ],
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-391c26c116564a573f8210d9",
+        "den-8781580a718b8f210e8a7cef"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| bee-1-cpl, ungated | 299 | 20 | 250 of 352 = 71.0% | 98.8% | 2.370 | 2 (0.8%) |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 183,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-f3aa4f012db6d9f1402fff53",
+        "den-a594c2beac7b3093399fc619",
+        "den-b0fee1402065abb8511c722d",
+        "den-94ac31afe3d560709ff6b9ad"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| bee-1-cpl, gated | 299 | 12 | 222 of 352 = 63.1% | **99.5%** | 2.719 | **0** |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 184,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-62e1e980e847d05018067273",
+        "den-112c2ad97232e48549e883dd",
+        "den-f2b0da84e2be5fcae1937396"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| flowers-cpl, ungated | 176 | 20 | 49 of 352 = 13.9% | 81.6% | 1.379 | 3 (6.1%) |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 185,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-89d10c4001a51897f9ea6f98",
+        "den-4173464d71b0dacff271323e",
+        "den-caef176f301c55880520d06e",
+        "den-8448812246587eb9e9ae63f1"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| flowers-cpl, gated | 176 | 12 | 48 of 352 = **13.6%** | **83.3%** | 1.414 | 2 (4.2%) |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 186,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-cec96adfaf53c75088695bb7",
+        "den-44497de4a6e907c86f7f8912",
+        "den-e6f31ba68095d8426fbaef18",
+        "den-3e1e04d1f7f41dcc54ab2f09"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| bee-1-cpl, gated | 222 | 1 (0.5%) | -1025.9 DN | **-433.3 DN** | -67.3 DN | 6.2 DN behind |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 196,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-c3db79df1561a164cd6869de"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "than averaged away; it amounts to 8 of 352 tiles, or 2.3% of the image.",
+      "file": "docs/research/V-bestframe.md",
+      "line": 204,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-403c8d080cc44c9516c3b489",
+        "den-b6cc33a07895d6bf2a2bb31b"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "After gating, `flowers-cpl` retains **2 of 352 tiles** where the merge is",
+      "file": "docs/research/V-bestframe.md",
+      "line": 219,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-9c02b8b0f3a7702e6693c068"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "It held on 13 of the 24 measured subjects. The column below labelled `capped`",
+      "file": "docs/research/V-bestframe.md",
+      "line": 323,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-daa16efb9e3ac8b44efe7fee"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| 109MSDCF | 22 | 12 | 246/352 | 4.5% | 0.86 | 84 | 4.5% | 91.3% |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 340,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-ac0f1717d036bf3b5abeaa05",
+        "den-65add2761508bdcba892c7e7",
+        "den-b8efc91229cba6e995ede172",
+        "den-ff94fff5b8e0066f66afe92a"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| 119MSDCF | 33 | 12 | 221/352 | 22.6% | 0.91 | 55 | 22.2% | 84.7% |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 341,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-51f6a9c0e35b0872535e72e0",
+        "den-bb64fc747e1c41e44d6f2d14",
+        "den-8d4ea09283171b16ef434a27"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| flower-bud-alone-cpl | 205 | 12 | 193/352 | 46.6% | 0.93 | 50 | 43.5% | 86.0% |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 342,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-438b7eb2fb3a116b7defde3a",
+        "den-cd9e0d4bb2821b936534dd1e",
+        "den-f24f34a9f8a24c4c5084b9e4"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| flower-bud-with-background-fern-cpl | 299 | 12 | 202/352 | 68.8% | 1.84 | 52 | 68.3% | 66.1% |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 343,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-a92903dbdc1c2b6664505286",
+        "den-56af8e7fedd6527550a92696",
+        "den-c6375fddc45b21a667b5bff3"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| **flowers-cpl** | 176 | 12 | **48/352** | **83.3%** | 1.41 | 2 | 83.3% | 94.5% |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 344,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-a00b46ce08807757ace2fada",
+        "den-0330ea32c9e84f834e711df1",
+        "den-506772108cc1ae7c869a7bc1"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| flat-on-ruler-cpl | 79 | 12 | 352/352 | 86.4% | 2.09 | 0 | invalid | 0.1% |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 345,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-e81e97692d6c424d4694f521",
+        "den-52225434d55671faea505de9"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| avgFine >= 80% | 5 | 46.6% |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 405,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-855d704d676211517273990e",
+        "den-da2d78daadd8873a24d55263"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| avgFine < 80% | 19 | 97.0% |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 406,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-605c07f064679519a34e3699",
+        "den-55998437fdadbc3e673c780f"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "peak 0.936, 329 of 352 detail tiles, merge at or above the best frame in 97.0% of",
+      "file": "docs/research/V-bestframe.md",
+      "line": 445,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-b7e3a09f614116af9f44bc75",
+        "den-8e0886df3e74f406faa78a55"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| **109MSDCF** | 22 | 12 | 18.22 | 245/352 | **4.5%** | 0.86 | 0.436 | **84** |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 534,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-be8731ac1472e1bf745826be"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| **119MSDCF** | 33 | 12 | 16.88 | 221/352 | **23.1%** | 0.91 | 0.476 | **55** |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 535,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-bd4ad223eed272908ddbc93b"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| **flower-bud-alone-cpl** | 205 | 12 | 10.94 | 193/352 | **43.5%** | 0.82 | 0.609 | **91** |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 536,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-a204d690089ad430151eec05"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| flower-bud-with-background-fern-cpl | 299 | 12 | 13.77 | 202/352 | 70.3% | 1.90 | 0.321 | 52 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 537,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-428a790abe4b2b6ccbd0684d"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| **flowers-cpl** | 176 | 12 | 18.57 | 48/352 | 83.3% | 1.44 | 0.841 | 2 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 538,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-121ec377fd1f375896d761f4"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| dry-erase-marker-head-cpl | 299 | 10 | 11.02 | 144/352 | 86.8% | 3.25 | 0.354 | 16 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 539,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-88e5662d54850053acb9e338"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| flat-on-ruler-cpl | 79 | 12 | 20.20 | 352/352 | 86.9% | 2.13 | 0.945 | 0 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 540,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-a36d0edfbf9f29c2c5d10e73"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| wrapped-text-2 | 120 | 12 | 20.06 | 272/352 | 88.2% | 2.52 | 0.833 | 11 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 541,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-ab2fe8226df9296f06ca1bff"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| pencil-steep-angle-cpl | 299 | 8 | 17.31 | 75/352 | 90.7% | 2.38 | 0.423 | 7 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 542,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-fe1cece4f3e1e11756f10937"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| coffee-bubbles | 19 | 12 | 7.51 | 352/352 | 91.5% | 1.28 | 0.962 | 2 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 543,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-e5132e6120e9adbc5ae5988d"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| leaf-2-cpl | 182 | 10 | 28.79 | 195/352 | 91.8% | 2.31 | 0.947 | 4 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 544,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-e710e1d61bc07a615b46573e"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| tweezers-cpl | 100 | 12 | 18.86 | 204/352 | 92.2% | 3.26 | 0.945 | 1 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 545,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-7467b8c5f0f571cd4f94dd61"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| lavendar-cpl | 299 | 8 | 20.48 | 105/352 | 95.2% | 4.14 | 1.342 | 5 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 546,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-0170595496405eab2ea6cda4"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| **lead-1-cpl** | 123 | 20 | 20.77 | 329/352 | 95.7% | 1.75 | 1.033 | **0** |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 547,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-9cae268a10b2766b61bc98d7"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| pencil-flatter-angle-cpl | 299 | 8 | 17.62 | 72/352 | 95.8% | 2.86 | 1.018 | 3 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 548,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-0ce9f22c3f1f7d1be8a48cd5"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| wrapped-text-1 | 130 | 12 | 15.92 | 285/352 | 97.9% | 3.79 | 1.106 | 0 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 549,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-5e3fe3a0350b02fab5c40a76"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| bee-2-cpl | 299 | 8 | 18.21 | 194/352 | 97.9% | 3.44 | 1.509 | 3 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 550,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-29c16dec4c388586153df212"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| bee-3-cpl | 299 | 8 | 14.05 | 211/352 | 98.1% | 3.57 | 1.459 | 2 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 551,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-51f76c64db522c18c20a4945"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| 113MSDCF | 63 | 12 | 20.63 | 351/352 | 98.9% | 1.54 | 1.095 | 0 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 552,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-3afbf816f5e2f90274f1f817"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| flower-inner-edge-cpl | 299 | 6 | 10.73 | 168/352 | 99.4% | 3.20 | 1.474 | 0 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 553,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-e9f11a8d2491e2bb1c9d12d2"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| 112MSDCF | 79 | 12 | 30.84 | 348/352 | 99.4% | 1.62 | 1.107 | 0 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 554,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-afc694c5105752317659d68d"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| **bee-1-cpl** | 299 | 12 | 16.25 | 222/352 | 99.5% | 2.76 | 1.310 | 0 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 555,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-7455139fd3c8f06ceb369c57"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| coffee-bean | 105 | 12 | 13.56 | 227/352 | 99.6% | 2.23 | 1.144 | 0 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 556,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-1b70cf5ddee9e8f884401f3d"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| **109MSDCF** | 4.5% | 4.5% | **+0.0** | 0.86 | 0.86 | 84 | 84 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 572,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-2b0b67c615f11ab47c86d991",
+        "den-c4b80c5bfc9a53d4c7950ac7"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| subjects improved | 10 of 24 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 589,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-c6be679818726cc12a94d3fb"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| subjects worsened | 5 of 24 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 590,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-5a2ea5cca089b67311843214"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "| subjects unchanged | 9 of 24 |",
+      "file": "docs/research/V-bestframe.md",
+      "line": 591,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-1d87dc4adae95baa4a206947"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    },
+    {
+      "classification": "cap",
+      "current_status": "open",
+      "denominator_provenance": [
+        "frames on disk",
+        "first/adjacent-frame bound: generally 12 or 20 frames read per subject",
+        "complete fixed 22x16 tile grid within the bounded frames",
+        "reported result"
+      ],
+      "evidence_needed_to_resolve_cap": "Measurements on all frames on disk under the same registered pairing/registration rules.",
+      "exact_claim": "**4.5%**. R varies by a factor of 1.098 across these subjects; the pass rate",
+      "file": "docs/research/V-bestframe.md",
+      "line": 858,
+      "load_bearing_decision_or_verdict": "H1 capture-limited verdict and the SHIP-V1 merge-versus-best-frame blocker",
+      "missing_input": null,
+      "occurrence_ids": [
+        "den-ae2f51cce83cb0d0a9c0d9ed",
+        "den-2fb927904e44e9fbada7cbc2",
+        "den-49cb87cbea6e5cfbd0f2ccfa"
+      ],
+      "true_population": "Known per-subject frame counts are printed in the source (19 to 299); headline populations are 176 flowers and 299 bee frames, with 352 fixed tiles."
+    }
+  ],
+  "classification_totals": {
+    "cap": 115,
+    "fixed_subsample": 415,
+    "fixture": 128,
+    "out_of_scope": 4631,
+    "population": 9,
+    "unstated": 4
+  },
+  "file_total": 47,
+  "plausible_verdict_flips": [
+    {
+      "decision_or_verdict": "triage gate/definition correctness assurance",
+      "file": "docs/research/BUILD-TRIAGE.md",
+      "needed_evidence": "Apply the same verifier audit to the remaining 28 definitions.",
+      "plausible_flip": "Yes. Only 3 of 31 definitions received the cited verifier audit, so an error in any of the remaining definitions could invalidate the green gate assurance."
+    },
+    {
+      "decision_or_verdict": "folded-fact contamination assurance",
+      "file": "docs/research/M110-sheet.md",
+      "needed_evidence": "Review the remaining 203 folded facts against the same contamination criterion and cited code paths.",
+      "plausible_flip": "Plausible for the broad assurance. Only 49 of 252 folded facts were examined for the named failure shape, so the unexamined remainder can contain a contrary case."
+    },
+    {
+      "decision_or_verdict": "roadmap ranking based on quoted prior rates",
+      "file": "docs/research/M79-edof-microscopy-survey.md",
+      "needed_evidence": "Recover the cited population definitions and recalculate the quoted rates.",
+      "plausible_flip": "Plausible if the omitted study/source population is strongly selected; no direct shipped verdict depends on these quotations alone."
+    },
+    {
+      "decision_or_verdict": "photometric feature verification",
+      "file": "docs/research/M97q-photometric-wiring.md",
+      "needed_evidence": "Full-stack controlled run plus an exercised real refusal/region-guard case.",
+      "plausible_flip": "Plausible for operational robustness, not for the demonstrated first-20 control. Later frames could trigger gain/refusal/region behavior not exercised by the prefix."
+    },
+    {
+      "decision_or_verdict": "bee qualified-band/softness result",
+      "file": "docs/research/V-SOFTCHECK-bandqual.md",
+      "needed_evidence": "Restore valid registration/probes through frame 299 and rerun the frozen qualification.",
+      "plausible_flip": "Yes for magnitude or qualification. The missing final 99 frames occupy bracket range not represented by the retained probes."
+    },
+    {
+      "decision_or_verdict": "H1 capture-limited and SHIP-V1 blocker",
+      "file": "docs/research/V-bestframe.md",
+      "needed_evidence": "Run the frozen instrument over every usable adjacent pair or a preregistered depth-covering sample with an uncertainty bound.",
+      "plausible_flip": "Yes. An unsampled frame can contain detail absent from the sampled adjacent pairs, raising the best-frame arm and changing either the capture-limited inference or the magnitude of the ship blocker."
+    }
+  ],
+  "reviewer": "reviewer-04",
+  "schema": "denominator-audit-summary-v1",
+  "schema_version": 1,
+  "shard": "04"
+}

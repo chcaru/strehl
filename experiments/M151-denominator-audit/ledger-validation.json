@@ -1,0 +1,402 @@
+{
+  "schema": "denominator-audit-ledger-validation-v1",
+  "schema_version": 1,
+  "result": "valid_frozen_snapshot_with_live_drift",
+  "frozen_snapshot_validation": {
+    "valid": true,
+    "method": "snapshot-bound structural validation using denominator_audit.py validation functions and stored manifest hashes",
+    "limitation": "The existing validate-ledgers CLI could not reach shard and ledger validation because it first detected live-corpus drift. Frozen manifest/candidate/shard/ledger checks were therefore invoked directly, without treating current corpus freshness as valid.",
+    "manifest_sha256": "e13886e1c3a6bec675ac906bf92eb4962860bc8af27bbe2623b7e6ffbbb93913",
+    "corpus_sha256": "cefd3de58687750c6e8f5bf75c4373fdb1d98b345d05db90603f650cb1d96feb",
+    "candidates_sha256": "928e995d949c8e37b20462bc16e2c800ba1ae095af89ebe3edf1bd32c48f5817",
+    "checks": {
+      "manifest_and_candidate_structure": true,
+      "manifest_envelope_hash": true,
+      "candidate_jsonl_hash": true,
+      "candidate_identity_and_order": true,
+      "corpus_inventory_hash": true,
+      "shard_envelope_hashes": true,
+      "deterministic_shard_partition": true,
+      "shard_ownership": true,
+      "ledger_record_structure": true,
+      "classification_enums": true,
+      "source_lines": true,
+      "attestation_manifest_hashes": true,
+      "exact_coverage": true,
+      "ascii": true
+    },
+    "errors": []
+  },
+  "live_corpus_validation": {
+    "fresh": false,
+    "existing_validator_exit_code": 1,
+    "existing_validator_errors": [
+      "manifest is stale: it does not exactly match a fresh live-corpus scan",
+      "candidates JSONL is stale: it does not exactly match a fresh live-corpus scan"
+    ],
+    "frozen_file_count": 360,
+    "live_file_count": 360,
+    "frozen_candidate_count": 42404,
+    "live_candidate_count": 42407,
+    "live_manifest_sha256": "51d83de7b603ac979cca62a9b3453f15e833e2dde3939ed983e2bb6dc6a0772b",
+    "live_corpus_sha256": "1c3c774a3ce9a3ff63f53c3aa62e0281b9b5746fff24b8ead7e5f2167cd0460b",
+    "live_candidates_sha256": "73924b8c3d823cd6b22ae66a06803cee54767757713269f4eda758aa10dfa00f",
+    "stale_files": {
+      "modified_count": 4,
+      "modified": [
+        {
+          "file": "docs/research/M139-m12-campaign.md",
+          "frozen_sha256": "e75e721af4205d6756874901ffa55d996e951ca4a4294b54fbdbf8a0ecfb507f",
+          "live_sha256": "e555cdbb1390e6f6280685d0f6634b9f814d2a75645f6c04977dc3ace773a857",
+          "frozen_bytes": 14687,
+          "live_bytes": 19468,
+          "frozen_lines": 268,
+          "live_lines": 409,
+          "frozen_candidate_count": 65,
+          "live_candidate_count": 64,
+          "frozen_git_state": "clean",
+          "live_git_state": "clean"
+        },
+        {
+          "file": "docs/research/M166-capture-reconciliation.md",
+          "frozen_sha256": "80dcea55ef911d5b430430e8031d30c3f882384e8116ec33ce9c220c2fcdafda",
+          "live_sha256": "524f8abcb75b9125959733fd9b022c848f42fe11bbf870a79873461025b7fbd5",
+          "frozen_bytes": 21466,
+          "live_bytes": 21612,
+          "frozen_lines": 321,
+          "live_lines": 324,
+          "frozen_candidate_count": 42,
+          "live_candidate_count": 42,
+          "frozen_git_state": "??",
+          "live_git_state": "clean"
+        },
+        {
+          "file": "docs/research/M171-aperture-reference.md",
+          "frozen_sha256": "c2ba25ab630a62576550e8ffeb8e99845338b575ae3a2c4e0c95ed779c54abac",
+          "live_sha256": "69d0b5580956d77af57fb7d2b8c689fc0a9470febcabd6ada3bbb4c3b5434607",
+          "frozen_bytes": 12489,
+          "live_bytes": 12909,
+          "frozen_lines": 261,
+          "live_lines": 267,
+          "frozen_candidate_count": 9,
+          "live_candidate_count": 10,
+          "frozen_git_state": "clean",
+          "live_git_state": " M"
+        },
+        {
+          "file": "docs/research/M171-reference-admission.md",
+          "frozen_sha256": "bd29a3e49481d18ad0fe95cd82de0c601290dd0306b6f3e7ad88150e50bfe1c7",
+          "live_sha256": "05a18afd9df7f31e3be2ced7c3ac726e289da50304f6b43b251adf76bb24095d",
+          "frozen_bytes": 14496,
+          "live_bytes": 16215,
+          "frozen_lines": 82,
+          "live_lines": 83,
+          "frozen_candidate_count": 32,
+          "live_candidate_count": 35,
+          "frozen_git_state": "??",
+          "live_git_state": "??"
+        }
+      ],
+      "missing_count": 0,
+      "missing": [],
+      "added_count": 0,
+      "added": [],
+      "metadata_only_changed_count": 1,
+      "metadata_only_changed": [
+        {
+          "file": "docs/research/M169-ratification-stakes.md",
+          "sha256": "ff9f576686189d7890fcc7c56db1bff214f2fccbf55b076d5cdf16ef775e3377",
+          "frozen_git_state": "??",
+          "live_git_state": "clean"
+        }
+      ]
+    },
+    "observation_semantics": "Point-in-time live scan during ledger merge; live files may continue changing independently. These observed values are not inputs to, and do not alter, frozen-snapshot validity."
+  },
+  "inputs": {
+    "manifest": {
+      "file": "out/corpus-manifest.json",
+      "file_sha256": "a8348e7554ba5d9dce7309dadba36e06683af5027718b9bf169b52757d05dd4c",
+      "manifest_sha256": "e13886e1c3a6bec675ac906bf92eb4962860bc8af27bbe2623b7e6ffbbb93913"
+    },
+    "candidates": {
+      "file": "out/candidates.jsonl",
+      "sha256": "928e995d949c8e37b20462bc16e2c800ba1ae095af89ebe3edf1bd32c48f5817"
+    },
+    "shards": [
+      {
+        "file": "out/shards/shard-01.json",
+        "reviewer": "reviewer-01",
+        "sha256": "25637c13ea5089a6f1c5a8bd7cfa56364aaeda437df31fd554027f655e73d1a7",
+        "shard_sha256": "83d02ef14556efaeef5b5ce5a9548a88fa5d33b420f121c556c0ac0abd615d3d"
+      },
+      {
+        "file": "out/shards/shard-02.json",
+        "reviewer": "reviewer-02",
+        "sha256": "f5860ec0da02eecde4c219ac9b1f7dd4216bed92964bc47737be3992949d29dc",
+        "shard_sha256": "38b9ffae0886a6c4abbcea9c2914d196fc0cf1f59ede3e56643274114b613c3c"
+      },
+      {
+        "file": "out/shards/shard-03.json",
+        "reviewer": "reviewer-03",
+        "sha256": "cbfd07b9fb0a52e4ae91ca8a02d816bf20403819de47fdeea3cd22de049d3a02",
+        "shard_sha256": "0e626f51842eb76f347027a17daca00ebedc7c2a546fecd212c52d2a72e155cb"
+      },
+      {
+        "file": "out/shards/shard-04.json",
+        "reviewer": "reviewer-04",
+        "sha256": "8b74b92274b983dfc5f5e6ab2a6b66ebfe371d64b7e7b32a9a352338eef411e6",
+        "shard_sha256": "14274c480569b71316daf31c59bf3d0036c212eef4139380c06b5541043b950c"
+      },
+      {
+        "file": "out/shards/shard-05.json",
+        "reviewer": "reviewer-05",
+        "sha256": "a408004ce3681b38380770c6bb331e2d64a17a8f30d44222a77e6e7f23fa27e7",
+        "shard_sha256": "5ea7e51b4b7f2582af3341ea94b30f76803d3e13325692abd17756a26fef13a9"
+      },
+      {
+        "file": "out/shards/shard-06.json",
+        "reviewer": "reviewer-06",
+        "sha256": "f1566e028a40ae2d66897916d200f38433fcf649b93a33fe9401c4d953ef4d2b",
+        "shard_sha256": "76cd1ab089ad5ebbfec5c642e6d27846e115f1debcefc5eda06081565a438220"
+      },
+      {
+        "file": "out/shards/shard-07.json",
+        "reviewer": "reviewer-07",
+        "sha256": "6fa94a124bfae0474e38387e6d34a1b9f67c0ed3b0e85325b17763e8ba25372c",
+        "shard_sha256": "98f42c1fa17cdf2408ccbb752502de64fc98d3c28d713fb11d5f3bfeaba4720b"
+      },
+      {
+        "file": "out/shards/shard-08.json",
+        "reviewer": "reviewer-08",
+        "sha256": "898723f3657344ffb07adc3d4442ec1c8e1e5082c8e23fe3d53ef17d2ecfde34",
+        "shard_sha256": "b4ecd564f94ab1a2e20f92779ecfd94697a84013ca47b2657fd1d39a103be5d5"
+      }
+    ],
+    "review_ledgers": [
+      {
+        "file": "review-01.jsonl",
+        "reviewer": "reviewer-01",
+        "sha256": "2b188fb643d88cd21763562df9e7e2299c88ca6b5ec892b5b78c4f60a624a630",
+        "records": 5330,
+        "ascii": true,
+        "canonical_within_shard": true
+      },
+      {
+        "file": "review-02.jsonl",
+        "reviewer": "reviewer-02",
+        "sha256": "af65d1b0d42fab78de8da134e6d6a7ea42e8f8bb94ba06a1cbbb97c36ce95853",
+        "records": 5347,
+        "ascii": true,
+        "canonical_within_shard": true
+      },
+      {
+        "file": "review-03.jsonl",
+        "reviewer": "reviewer-03",
+        "sha256": "8aad75f0d742f0a92ca353f670d547729b1fd6e76de40bd57477b9a1a76ccd05",
+        "records": 5349,
+        "ascii": true,
+        "canonical_within_shard": true
+      },
+      {
+        "file": "review-04.jsonl",
+        "reviewer": "reviewer-04",
+        "sha256": "257330311eb732a9370abe99f1591be150127c9342de110fcbd1c16ad6cae6c7",
+        "records": 5349,
+        "ascii": true,
+        "canonical_within_shard": true
+      },
+      {
+        "file": "review-05.jsonl",
+        "reviewer": "reviewer-05",
+        "sha256": "88435775914bd57df20f9aecfe80fb0abde4d4cfbb8cd6b15690d56bc02216dc",
+        "records": 5347,
+        "ascii": true,
+        "canonical_within_shard": true
+      },
+      {
+        "file": "review-06.jsonl",
+        "reviewer": "reviewer-06",
+        "sha256": "b276c039ff9e9d22f5a1bf633df7e2f3f8a114ad0640c901b08451f83098628d",
+        "records": 5345,
+        "ascii": true,
+        "canonical_within_shard": true
+      },
+      {
+        "file": "review-07.jsonl",
+        "reviewer": "reviewer-07",
+        "sha256": "3e98ebbe0938f208305e395cc9b477510367d80e59611112e1a410fcd583a4e7",
+        "records": 5349,
+        "ascii": true,
+        "canonical_within_shard": true
+      },
+      {
+        "file": "review-08.jsonl",
+        "reviewer": "reviewer-08",
+        "sha256": "3ccc787db9f385db20740651dcf990dadf666fc3b8bcde5f9c693637be11ad2b",
+        "records": 5348,
+        "ascii": true,
+        "canonical_within_shard": true
+      }
+    ]
+  },
+  "merge": {
+    "output": "audit-ledger.jsonl",
+    "order": [
+      "review-01.jsonl",
+      "review-02.jsonl",
+      "review-03.jsonl",
+      "review-04.jsonl",
+      "review-05.jsonl",
+      "review-06.jsonl",
+      "review-07.jsonl",
+      "review-08.jsonl"
+    ],
+    "canonical_within_each_shard": true,
+    "byte_exact_concatenation": true,
+    "ends_with_lf": true,
+    "ascii": true,
+    "sha256": "ad400d1f94178b0d7489df825688faf03234ac5c1d0f603ccaa7a015b1d773a0",
+    "bytes": 21498445
+  },
+  "totals": {
+    "records": 42764,
+    "dispositions": 42404,
+    "file_attestations": 360,
+    "classification": {
+      "population": 6412,
+      "fixed_subsample": 1682,
+      "cap": 1155,
+      "fixture": 2223,
+      "unstated": 496,
+      "out_of_scope": 30436
+    },
+    "reviewer": {
+      "reviewer-01": {
+        "records": 5330,
+        "dispositions": 5301,
+        "file_attestations": 29,
+        "classification_totals": {
+          "population": 2186,
+          "fixed_subsample": 162,
+          "cap": 26,
+          "fixture": 193,
+          "unstated": 2,
+          "out_of_scope": 2732
+        }
+      },
+      "reviewer-02": {
+        "records": 5347,
+        "dispositions": 5301,
+        "file_attestations": 46,
+        "classification_totals": {
+          "population": 1869,
+          "fixed_subsample": 129,
+          "cap": 190,
+          "fixture": 444,
+          "unstated": 0,
+          "out_of_scope": 2669
+        }
+      },
+      "reviewer-03": {
+        "records": 5349,
+        "dispositions": 5302,
+        "file_attestations": 47,
+        "classification_totals": {
+          "population": 277,
+          "fixed_subsample": 410,
+          "cap": 180,
+          "fixture": 137,
+          "unstated": 9,
+          "out_of_scope": 4289
+        }
+      },
+      "reviewer-04": {
+        "records": 5349,
+        "dispositions": 5302,
+        "file_attestations": 47,
+        "classification_totals": {
+          "population": 9,
+          "fixed_subsample": 415,
+          "cap": 115,
+          "fixture": 128,
+          "unstated": 4,
+          "out_of_scope": 4631
+        }
+      },
+      "reviewer-05": {
+        "records": 5347,
+        "dispositions": 5299,
+        "file_attestations": 48,
+        "classification_totals": {
+          "population": 658,
+          "fixed_subsample": 248,
+          "cap": 417,
+          "fixture": 830,
+          "unstated": 129,
+          "out_of_scope": 3017
+        }
+      },
+      "reviewer-06": {
+        "records": 5345,
+        "dispositions": 5298,
+        "file_attestations": 47,
+        "classification_totals": {
+          "population": 396,
+          "fixed_subsample": 197,
+          "cap": 92,
+          "fixture": 233,
+          "unstated": 13,
+          "out_of_scope": 4367
+        }
+      },
+      "reviewer-07": {
+        "records": 5349,
+        "dispositions": 5301,
+        "file_attestations": 48,
+        "classification_totals": {
+          "population": 845,
+          "fixed_subsample": 8,
+          "cap": 31,
+          "fixture": 190,
+          "unstated": 3,
+          "out_of_scope": 4224
+        }
+      },
+      "reviewer-08": {
+        "records": 5348,
+        "dispositions": 5300,
+        "file_attestations": 48,
+        "classification_totals": {
+          "population": 172,
+          "fixed_subsample": 113,
+          "cap": 104,
+          "fixture": 68,
+          "unstated": 336,
+          "out_of_scope": 4507
+        }
+      }
+    }
+  },
+  "coverage": {
+    "expected_dispositions": 42404,
+    "unique_dispositions": 42404,
+    "missing_disposition_count": 0,
+    "missing_disposition_ids": [],
+    "duplicate_disposition_id_count": 0,
+    "duplicate_disposition_record_count": 0,
+    "duplicate_disposition_ids": [],
+    "unknown_disposition_count": 0,
+    "unknown_disposition_ids": [],
+    "expected_file_attestations": 360,
+    "unique_file_attestations": 360,
+    "missing_file_attestation_count": 0,
+    "missing_file_attestations": [],
+    "duplicate_file_attestation_count": 0,
+    "duplicate_file_attestation_record_count": 0,
+    "duplicate_file_attestations": [],
+    "unknown_file_attestation_count": 0,
+    "unknown_file_attestations": [],
+    "unknown_record_type_count": 0
+  }
+}

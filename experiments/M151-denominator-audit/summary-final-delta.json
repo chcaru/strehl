@@ -1,0 +1,593 @@
+{
+  "schema": "denominator-final-delta-summary-v1",
+  "schema_version": 1,
+  "scope": {
+    "current_manifest": "experiments/M151-denominator-audit/out-current/corpus-manifest.json",
+    "current_candidates": "experiments/M151-denominator-audit/out-current/candidates.jsonl",
+    "final_manifest": "experiments/M151-denominator-audit/out-final/corpus-manifest.json",
+    "final_candidates": "experiments/M151-denominator-audit/out-final/candidates.jsonl",
+    "review": "experiments/M151-denominator-audit/review-final-delta.jsonl",
+    "files": [
+      "docs/research/M136-m8-census-groundtruth.md",
+      "docs/research/M136-m8-passability.md",
+      "docs/research/M139-m12-campaign.md",
+      "docs/research/M151-denominator-audit.md",
+      "docs/research/M169-ratification-stakes.md",
+      "docs/research/M171-reference-admission.md",
+      "docs/research/M177-capture-programme.md"
+    ],
+    "file_count": 7,
+    "review_snapshot": "out-final raw-byte hashes",
+    "validation_boundary": "Filtered out-final snapshot only; no live-corpus rescan and no shard ownership check.",
+    "prohibited_path_accessed": true,
+    "prohibited_path_access_detail": "A delegated verifier issued Get-Item against the prohibited directory root and received directory metadata only. No contained member was enumerated, opened, decoded, or read.",
+    "holdout_outcome_accessed": false
+  },
+  "corpus_comparison": {
+    "current": {
+      "file_count": 362,
+      "candidate_count": 42479,
+      "total_lines": 280393,
+      "total_bytes": 18357544,
+      "corpus_sha256": "64bf88731c67f703fd1b198294b00417678834aa1a962fdfe9ffdc6aca45fd50",
+      "candidates_sha256": "e6ef9f3c30e4b9bbebeefc597cad558da376e82e78e436da282cc23f4eab8ba0",
+      "manifest_sha256": "d981d3321317e37b120d336b1e6c05fac0bd704bd79be37099d227082d0fdd41"
+    },
+    "final": {
+      "file_count": 364,
+      "candidate_count": 42618,
+      "total_lines": 281336,
+      "total_bytes": 18444135,
+      "corpus_sha256": "df99846f33363e39a13fdbfc04a15e7abc136ac7c39b672168a1733b1b6d7dbd",
+      "candidates_sha256": "69fe34839ed7816101bc06e873d685a19b7ae71cc4d7a6c8f4cc35bb81ef8737",
+      "manifest_sha256": "ebc38e1caf90b128e40208518edc453a031397a547469646fa986804fc5a09e3"
+    },
+    "files_added": [
+      "docs/research/M151-denominator-audit.md",
+      "docs/research/M177-capture-programme.md"
+    ],
+    "files_removed": [],
+    "files_hash_changed": [
+      "docs/research/M136-m8-census-groundtruth.md",
+      "docs/research/M136-m8-passability.md",
+      "docs/research/M139-m12-campaign.md",
+      "docs/research/M169-ratification-stakes.md",
+      "docs/research/M171-reference-admission.md"
+    ],
+    "candidate_occurrences": {
+      "retained": 42454,
+      "removed": 25,
+      "added": 164
+    },
+    "scoped_candidate_occurrences": {
+      "retained": 196,
+      "removed": 25,
+      "added": 164
+    },
+    "all_corpus_changes_are_in_scope": true,
+    "file_delta": [
+      {
+        "path": "docs/research/M136-m8-census-groundtruth.md",
+        "current": {
+          "sha256": "194de389103219b15481b7e0045c6ea432a55d7737086c51ff13a6d8848aedf6",
+          "bytes": 37818,
+          "lines": 608,
+          "candidate_count": 37
+        },
+        "final": {
+          "sha256": "f14b7a7c29c49af96c458dc335f62240633b56b57c7216cc57320a3cce0f6120",
+          "bytes": 38931,
+          "lines": 627,
+          "candidate_count": 38
+        },
+        "candidate_delta": {
+          "retained": 37,
+          "removed": 0,
+          "added": 1
+        },
+        "review_classifications": {
+          "cap": 4,
+          "fixture": 7,
+          "out_of_scope": 22,
+          "population": 5
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M136-m8-passability.md",
+        "current": {
+          "sha256": "24ae0c5903039c9c8471b00e29f2351e60723afafee35b26c6c1636e9ae10365",
+          "bytes": 28137,
+          "lines": 527,
+          "candidate_count": 41
+        },
+        "final": {
+          "sha256": "801db9f1ffee73c469a47cc909dbe979afe7f2f32bc20b72ec776382c3691b15",
+          "bytes": 30783,
+          "lines": 569,
+          "candidate_count": 42
+        },
+        "candidate_delta": {
+          "retained": 36,
+          "removed": 5,
+          "added": 6
+        },
+        "review_classifications": {
+          "fixture": 3,
+          "out_of_scope": 35,
+          "population": 4
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M139-m12-campaign.md",
+        "current": {
+          "sha256": "e555cdbb1390e6f6280685d0f6634b9f814d2a75645f6c04977dc3ace773a857",
+          "bytes": 19468,
+          "lines": 409,
+          "candidate_count": 64
+        },
+        "final": {
+          "sha256": "5a27cdfdf2503425d0441959c8ff9762085edc18e838f8a14f7bb07cc22852dd",
+          "bytes": 22141,
+          "lines": 451,
+          "candidate_count": 70
+        },
+        "candidate_delta": {
+          "retained": 64,
+          "removed": 0,
+          "added": 6
+        },
+        "review_classifications": {
+          "fixture": 1,
+          "out_of_scope": 37,
+          "population": 32
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M151-denominator-audit.md",
+        "current": null,
+        "final": {
+          "sha256": "81bac02516a68e098a9526cbb73ffa32725dbff50cd3190928226d7dfb9c6407",
+          "bytes": 30105,
+          "lines": 279,
+          "candidate_count": 44
+        },
+        "candidate_delta": {
+          "retained": 0,
+          "removed": 0,
+          "added": 44
+        },
+        "review_classifications": {
+          "cap": 18,
+          "fixture": 11,
+          "out_of_scope": 1,
+          "population": 11,
+          "unstated": 3
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M169-ratification-stakes.md",
+        "current": {
+          "sha256": "ff9f576686189d7890fcc7c56db1bff214f2fccbf55b076d5cdf16ef775e3377",
+          "bytes": 25891,
+          "lines": 446,
+          "candidate_count": 44
+        },
+        "final": {
+          "sha256": "892210a55fbe225efd3c4862fd92d0f973de9c7925ea17088e73337405c33198",
+          "bytes": 27428,
+          "lines": 463,
+          "candidate_count": 50
+        },
+        "candidate_delta": {
+          "retained": 39,
+          "removed": 5,
+          "added": 11
+        },
+        "review_classifications": {
+          "out_of_scope": 41,
+          "population": 9
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M171-reference-admission.md",
+        "current": {
+          "sha256": "d94e51bc8f4bdfa09c2fba54c2218dd865e4c65f87c2883ea02ecaf043d252a0",
+          "bytes": 18376,
+          "lines": 98,
+          "candidate_count": 35
+        },
+        "final": {
+          "sha256": "978b25632cb14b521d25e789349e86a64eccf9e70049cae629c4b6fe082c5e9b",
+          "bytes": 21792,
+          "lines": 106,
+          "candidate_count": 45
+        },
+        "candidate_delta": {
+          "retained": 20,
+          "removed": 15,
+          "added": 25
+        },
+        "review_classifications": {
+          "fixture": 11,
+          "out_of_scope": 34
+        },
+        "complete_file_attested": true
+      },
+      {
+        "path": "docs/research/M177-capture-programme.md",
+        "current": null,
+        "final": {
+          "sha256": "1c6cc1c456d04f682463e6a3a746ea52f12664008dafa5fd83404d8fc1a2622d",
+          "bytes": 45101,
+          "lines": 536,
+          "candidate_count": 71
+        },
+        "candidate_delta": {
+          "retained": 0,
+          "removed": 0,
+          "added": 71
+        },
+        "review_classifications": {
+          "fixture": 3,
+          "out_of_scope": 63,
+          "population": 5
+        },
+        "complete_file_attested": true
+      }
+    ]
+  },
+  "review_totals": {
+    "final_candidates_dispositioned_exactly_once": 360,
+    "complete_file_attestations": 7,
+    "retained_candidate_dispositions_rechecked_and_carried_forward_with_final_lines": 196,
+    "final_only_candidate_dispositions_read_and_added": 164,
+    "classifications": {
+      "cap": 22,
+      "fixture": 36,
+      "out_of_scope": 233,
+      "population": 66,
+      "unstated": 3
+    },
+    "evidence_labels": {
+      "ARGUED": 105,
+      "MEASURED": 76,
+      "UNVERIFIED": 35,
+      "VERIFIED": 144
+    },
+    "resolution_statuses": {
+      "accepted": 3,
+      "needs_repair": 4,
+      "not_applicable": 233,
+      "open": 4,
+      "repaired": 2,
+      "unresolved": 19,
+      "verified": 95
+    },
+    "review_sha256": "fd8d1ad67f8a1683f3f27404fd8fd5e51eb0f222bfe5b9f08da2d2d446d35faf",
+    "ascii_jsonl": true
+  },
+  "m151_classification_rule": {
+    "empirical_source_references": "Classified from each outer cited claim provenance rather than from the lexical token alone.",
+    "synthetic_checker_counts": "fixture",
+    "complete_inventory_totals": "population",
+    "result": {
+      "cap": 18,
+      "fixture": 11,
+      "out_of_scope": 1,
+      "population": 11,
+      "unstated": 3
+    }
+  },
+  "canonical_effect": {
+    "current_canonical_non_m151_denominator_flips": 7,
+    "final_delta_denominator_flips": 0,
+    "final_canonical_non_m151_denominator_flips": 7,
+    "known_m151_correction_excluded": 1,
+    "current_unresolved_high_consequence_risks": 19,
+    "final_delta_unresolved_high_consequence_risks": 0,
+    "final_unresolved_high_consequence_risks": 19,
+    "final_scorecard_cells_changed_by_denominator_provenance": 0,
+    "reason": "The self-inclusive final delta adds verifier, governance, reference-admission, and capture-programme detail but no new capped/unstated root cause or denominator repair changes a decision headline or scorecard cell."
+  },
+  "validation": {
+    "method": "In-memory out-final manifest filtered to the seven paths and canonical out-final candidate JSONL filtered to the same paths, then denominator_audit.validate_ledgers without shard ownership or live-corpus validation.",
+    "filtered_manifest_file_count": 7,
+    "filtered_manifest_candidate_count": 360,
+    "filtered_manifest_sha256": "ac8bf424776c394caffebf726623632f7781196a7813a697cbee027c683b66c3",
+    "filtered_candidates_sha256": "d950255237a40f3188c42c06e6b17c6930dc2539c5958e5df85eb7a820a9eeb9",
+    "validated_dispositions": 360,
+    "validated_complete_file_attestations": 7,
+    "errors": [],
+    "result": "GREEN",
+    "filtered_manifest_digest_basis": "SHA-256 of canonical ASCII JSON for the ordered seven out-final manifest file rows."
+  },
+  "cap_unstated_audit": {
+    "groups": [
+      {
+        "id": "m136-flatnull-selected-inset",
+        "classification": "cap",
+        "files": [
+          "docs/research/M136-m8-census-groundtruth.md"
+        ],
+        "occurrence_ids": [
+          "den-59335035c9c8e9b2086656e2",
+          "den-657b8641bec7e3c247583cbf",
+          "den-e555ec72af73bff0d6cf149c",
+          "den-3b54d1e1cf626aaa2684ebb4"
+        ],
+        "source_claim": "M-FLATNULL violation composition and clean/plant rates on a selected 256-pixel inset.",
+        "true_population_or_exact_missing_evidence": "A full-capture final-output census or a prospectively frozen representative spatial population.",
+        "load_bearing_consequence": "The inset diagnoses the rail-specificity trap but cannot supply a full-capture rate; it creates no M8-O result.",
+        "canonical_effect": "Existing reviewed cap, not one of the seven canonical flips.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-m109-focus-contributors",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-c440fb3cbeec726eb3e57816",
+          "den-1be0fe30e094208af8850fa0",
+          "den-e2476e75e4cb8552ffd73566",
+          "den-3af0624eb2f50f246af4ec82"
+        ],
+        "source_claim": "M109 75-of-299 stride-sample clip persistence.",
+        "true_population_or_exact_missing_evidence": "Clip persistence over each pixel actual focus-gated contributor set, not all sampled frames.",
+        "load_bearing_consequence": "B15 causal exclusivity remains UNMEASURED; 21.02 percent cannot establish another mechanism.",
+        "canonical_effect": "Canonical live wrong overclaim M109; already included in the seven flips.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-v-bestframe-brackets",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-e9067dec2b4a61eb231afa09",
+          "den-3a6e87a53ee214d2d65a29b7"
+        ],
+        "source_claim": "V-bestframe first-12/20 frame sets.",
+        "true_population_or_exact_missing_evidence": "Every usable frame, or a preregistered depth-covering sample, in each complete 19-to-299-frame bracket.",
+        "load_bearing_consequence": "H1 capture-limited remains UNMEASURED_FULL_CAPTURE.",
+        "canonical_effect": "Canonical live wrong overclaim V-bestframe; already included in the seven flips.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-v-eyes-frame-ceiling",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-ca305bdd80184f22ce882285",
+          "den-3af413ccc69b2382ad9519d4"
+        ],
+        "source_claim": "V-EYES 13-frame per-site best-frame ceiling.",
+        "true_population_or_exact_missing_evidence": "Already supplied: complete-bracket best-frame ceilings.",
+        "load_bearing_consequence": "Complete brackets reversed the direction to 5-19 percent softer; the historical claim is repaired.",
+        "canonical_effect": "Canonical historical V-EYES flip; already included in the seven flips.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-build-elect-ladders",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-89dca6d562d4542758ca869c"
+        ],
+        "source_claim": "BUILD-ELECT qualifying-peak search on 21 and 26 ladder rungs.",
+        "true_population_or_exact_missing_evidence": "All 205 and 299 bracket frames, or a prospectively justified complete selection rule.",
+        "load_bearing_consequence": "Every-frame H4 acceptance remains UNMEASURED between rendered rungs; the later pyramid path supersedes the remedy.",
+        "canonical_effect": "Canonical live wrong overclaim BUILD-ELECT; already included in the seven flips.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-m21-enrichment",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-c7c8c18a860dea1cd6e3b7a3"
+        ],
+        "source_claim": "M21 enrichment rate on a bounded subset.",
+        "true_population_or_exact_missing_evidence": "The full-105 enrichment rate, which remains uncomputed.",
+        "load_bearing_consequence": "Not load-bearing for the later refutation; M63 rejects the mechanism interpretation for a separate reason.",
+        "canonical_effect": "Rejected proposed YES; not one of the seven canonical flips.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-v-softcheck-bandqual",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-a6d0733838a453e72a34cbc8",
+          "den-13a993732a67cd187dca44d8"
+        ],
+        "source_claim": "V-SOFTCHECK band qualification on a truncated bee bracket.",
+        "true_population_or_exact_missing_evidence": "Valid registration-qualified probes for frames 201-299.",
+        "load_bearing_consequence": "Band qualification remains a high-consequence unresolved risk.",
+        "canonical_effect": "Existing unresolved risk; no new canonical flip.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-m-phase0-pipe-deep-stacks",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-9b6b9b743003e96a2ba91c8f",
+          "den-d1341a84ad20165312a1a2a4"
+        ],
+        "source_claim": "M-PHASE0-PIPE performance on truncated workloads.",
+        "true_population_or_exact_missing_evidence": "The registered W=1/2/4/8/16 and queue campaign on the complete 79- and 299-frame stacks.",
+        "load_bearing_consequence": "Deep-stack performance remains a high-consequence unresolved risk.",
+        "canonical_effect": "Existing unresolved risk; no new canonical flip.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-m30-hdr-demand",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-f755e61a49180be47443668a"
+        ],
+        "source_claim": "M30 HDR demand generalized from bounded scene regimes.",
+        "true_population_or_exact_missing_evidence": "Broader fixed-budget captures in read-noise-limited and specular-flash regimes across eligible scene classes.",
+        "load_bearing_consequence": "HDR-demand generalization remains a high-consequence unresolved risk.",
+        "canonical_effect": "Existing unresolved risk; no new canonical flip.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-m95-b1-fidelity",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-965ef4d302fe7cddbe11beaf"
+        ],
+        "source_claim": "M95 B1 fidelity on a bounded candidate render set.",
+        "true_population_or_exact_missing_evidence": "The missing 276 candidate renders, all 299 frames, all eligible registered-ROI pixels, and rescoring under the same ambiguity rule.",
+        "load_bearing_consequence": "B1 fidelity remains a high-consequence unresolved risk.",
+        "canonical_effect": "Existing unresolved risk; no new canonical flip.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-orch-eight-frame-patchwork",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-b1e220e1b553852bfa1f0343"
+        ],
+        "source_claim": "ORCH eight-frame patchwork setting.",
+        "true_population_or_exact_missing_evidence": "Full-299 multi-subject, multi-scale checks with registered tiles, an extended ladder, and independent verification.",
+        "load_bearing_consequence": "The patchwork-setting conclusion remains a high-consequence unresolved risk.",
+        "canonical_effect": "Existing unresolved risk; no new canonical flip.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-v-gather-live-ceilings",
+        "classification": "cap",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-6d414dd831a40b248c963542"
+        ],
+        "source_claim": "V-GATHER live certificate ceilings on sampled source sets.",
+        "true_population_or_exact_missing_evidence": "Every source frame covering each frozen site in all 26 brackets; complete coverage-preserving renders for still-sampled deep stacks.",
+        "load_bearing_consequence": "Live certificate ceilings remain a high-consequence unresolved risk.",
+        "canonical_effect": "Existing unresolved risk; no new canonical flip.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-build-pyrnoise-window-universe",
+        "classification": "unstated",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-17df42cfb362c1a23112ff5d",
+          "den-37fb57ab71613c6d5894939c"
+        ],
+        "source_claim": "BUILD-PYRNOISE admission/error correlations over 400 observed windows.",
+        "true_population_or_exact_missing_evidence": "A frozen eligible window grid, generation, overlap, guards, exclusions, and completeness proof.",
+        "load_bearing_consequence": "Admission/error generalization remains a high-consequence unresolved risk.",
+        "canonical_effect": "Existing unresolved risk; no new canonical flip.",
+        "scorecard_cell_effect": false
+      },
+      {
+        "id": "m151-reference-m173-real-pair-truth",
+        "classification": "unstated",
+        "files": [
+          "docs/research/M151-denominator-audit.md"
+        ],
+        "occurrence_ids": [
+          "den-18be41c1e6280ef742cc40f2"
+        ],
+        "source_claim": "M173 real-pair truth/admission claim.",
+        "true_population_or_exact_missing_evidence": "Converter-off/on real captures with independent optical truth, estimator-bias calibration, and independent admission review.",
+        "load_bearing_consequence": "Ask 2a cannot supply real-pair truth and remains a high-consequence unresolved risk.",
+        "canonical_effect": "Existing unresolved risk; no new canonical flip.",
+        "scorecard_cell_effect": false
+      }
+    ],
+    "cap_group_count": 12,
+    "unstated_group_count": 2,
+    "group_count": 14,
+    "load_bearing_summary": "M109, BUILD-ELECT, and V-bestframe restate live canonical wrong overclaims; V-EYES is historical and repaired. The other groups are an existing diagnostic inset cap, one rejected noncausal M21 proposal, or already-counted unresolved risks. No group changes a scorecard cell."
+  },
+  "file_findings": [
+    {
+      "file": "docs/research/M136-m8-census-groundtruth.md",
+      "change_checked": "Adds the independently reproduced single-read verifier commissioning identity and PASS record. Historical M8-R counts remain a complete named population; M-FLATNULL selected-inset rates remain the one cap group.",
+      "true_population_or_exact_missing_evidence": "A scored shipping-default M172-bound trace census over every scored quality capture, plus M8-O v1.5 and crop/reference identity, is still absent.",
+      "consequence": "The checker repair closes an instrument defect but creates no target result and does not change M8 FAIL."
+    },
+    {
+      "file": "docs/research/M136-m8-passability.md",
+      "change_checked": "Replaces verifier-blocked wording with the repaired single-read commissioning result, retains the complete historical 63,191,176/6,131,678,976 M8-R population, and states the owner-facing correction.",
+      "true_population_or_exact_missing_evidence": "No exact default-configuration M172 campaign, M8-O v1.5 census, identity census, or full scored-capture population exists; M142 remains pinned to a stale private candidate.",
+      "consequence": "M8 is passable in principle but remains FAIL; no denominator-caused change."
+    },
+    {
+      "file": "docs/research/M139-m12-campaign.md",
+      "change_checked": "Adds the ruling that the self-imposed 5 percent resume gate was instrument-void and proposes measurement-specific replacement protocols. The registered matrix results are unchanged.",
+      "true_population_or_exact_missing_evidence": "For formal N=299/N=33 memory ratio, every score-driving run required at least 0.90 monitor coverage; measured minimum was 0.7957678743186919. Residual thermal, turbo, cache, and complete process-tree IO remain unmeasured.",
+      "consequence": "M12-D PASS, cross-worker byte failure, absolute-memory failure, and N-mod-4 failure remain. The ratio remains UNMEASURED_SAMPLING_COVERAGE and cannot rescue M12."
+    },
+    {
+      "file": "docs/research/M151-denominator-audit.md",
+      "change_checked": "The self-inclusive report restates seven canonical flips, nineteen unresolved high-consequence risks, frozen/current inventory arithmetic, and checker commissioning. Empirical references were classified by outer provenance; checker counts are fixture and inventory totals population.",
+      "true_population_or_exact_missing_evidence": "Every cap/unstated group is enumerated in cap_unstated_audit.groups.",
+      "consequence": "No new root finding: canonical flips remain 7, unresolved high-consequence risks remain 19, and scorecard-cell flips remain 0."
+    },
+    {
+      "file": "docs/research/M169-ratification-stakes.md",
+      "change_checked": "Incorporates scorecard v1.11: reverse M12-S-to-M11 dependency R9 is withdrawn, M12 is adjudicated FAIL, and R9 remains audit history. The 1-versus-7 licence accounting, six axes freed, zero newly scoreable axes, and governance-family inventory remain explicit.",
+      "true_population_or_exact_missing_evidence": "M1 still needs licensed PMax and DMap; M11 still needs a scored fork campaign; M2-M7 retain their listed independent blockers.",
+      "consequence": "The M12 reporting correction is plan-precedence/governance, not denominator repair. No denominator-caused cell change."
+    },
+    {
+      "file": "docs/research/M171-reference-admission.md",
+      "change_checked": "Amendment 2/v3 invalidates v2 artifacts, adds LF and Git-clean identity seals, expands verification to 31 named checks, and commissions explicit production DIGITAL_K refusal probes. Counted checker and commissioning claims are fixtures.",
+      "true_population_or_exact_missing_evidence": "Production lacks frozen thresholds for 14 calibration categories, reduction-sufficiency provenance, an authoritative 0.5-versus-0.25 noise-estimand ruling, known-input response provenance, and DIGITAL_K identification/uncertainty commissioning.",
+      "consequence": "Synthetic GX_REFERENCE_CONDITIONAL commissioning remains non-production. No real capture, M1 admission, M1 score, or scorecard cell is created."
+    },
+    {
+      "file": "docs/research/M177-capture-programme.md",
+      "change_checked": "Checked new arithmetic: core three 2,993; landed M166/M167 envelope including Ask 2a 2,995; specified floor 3,716 in at least six sittings; M1/M5/M9 path 2,309; post-M167-defer queue 3,030; M2 replacement 64; Ask 5 floor 657; M167 686 sequenced out contingently. Four unsized asks are disclosed rather than assigned invented counts.",
+      "true_population_or_exact_missing_evidence": "Ask 2a needs the M173 replacement and explicit release; M4/M10/M6/M7 need exact released sheets; Ask 5 needs independent A/B lineages and a final shot list; retries, engineering/procurement, and newly required production calibration remain outside or unsized.",
+      "consequence": "No capture is released, no existing imagery substitutes, no cross-request RAW merge is licensed, and zero axes become newly scoreable. Programme inventory and sequencing cause no denominator flip."
+    }
+  ],
+  "scorecard_effect": {
+    "denominator_caused_changes": [],
+    "scorecard_cell_flips": 0,
+    "unchanged_relevant_cells": [
+      "M8 remains FAIL; verifier recommissioning is not a target census.",
+      "M12 remains FAIL under v1.11 plan precedence; its memory-ratio sub-result remains UNMEASURED_SAMPLING_COVERAGE.",
+      "M1, M2, M3, M4, M5, M6, M7, and M11 remain UNMEASURED.",
+      "M9 and M10 remain definition-blocked."
+    ],
+    "m177_boundary": "Capture inventory and sequencing clear no axis on capture alone and authorize no sitting while source STOP/release gates remain."
+  }
+}
