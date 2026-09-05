@@ -257,9 +257,12 @@ costs — is not met.
    (`docs/research/ORCH-kernel-decision.md:100-139`,
    `docs/research/ORCH-kernel-decision.md:214-252`).
 5. The scorecard itself names destructive clipping as a known way to buy zero
-   and limits a current M8 pass to the internal invariant while independent
-   detail/transfer controls are absent
-   (`docs/proposals/2026-09-sota-scorecard.md:1564-1582`).
+   and states literally: “A future M1 and the retained M4
+   flat-power-plus-transfer component are the owner-gate controls against buying
+   the hull result through sharpening, attenuation, or clamping.” It limits a
+   current M8 pass to the internal invariant while M1 is absent
+   (`docs/proposals/2026-09-sota-scorecard.md`, M8 “Known defeat” and “Control”
+   paragraphs).
 
 ### 4.3 Ruling
 
@@ -297,8 +300,9 @@ only that opt-in configuration.
 
 **INFERRED BY READING:** No M8 pass licenses preserved resolved detail,
 perceptual superiority, restored-kernel equivalence, or SOTA. The scorecard says
-that explicitly while M1 is absent
-(`docs/proposals/2026-09-sota-scorecard.md:1573-1582`).
+that explicitly: “While M1 is absent, M8 may prove only this internal invariant,
+not SOTA”
+(`docs/proposals/2026-09-sota-scorecard.md`, M8 “Control” paragraph).
 
 ## 5. Why M8 does not pass now
 
