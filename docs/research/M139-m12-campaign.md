@@ -1,27 +1,15 @@
 # M139 — registered M12 scorecard campaign
 
 **Status:** the registered campaign is complete. **M12-D PASS. M12-S FAIL.
-M12 overall FAIL.** The absolute-memory bar is **FAIL**. The observed
+M12 overall FAIL.** The absolute-memory bar is **FAIL**, the observed
 N=299/N=33 memory ratio misses its numeric bar but is formally
-**UNMEASURED_SAMPLING_COVERAGE**. The N-mod-4 observation numerically misses
-its bar but is formally **UNMEASURED_HOST_QUARANTINE** under the later
-program-wide timing policy. **HOST RELEASED.**
+**UNMEASURED_SAMPLING_COVERAGE**, and the N-mod-4 timing bar is **FAIL**.
+**HOST RELEASED.**
 
-The frozen harness's conjunctive adjudication yielded **M12 FAIL** from memory,
-cross-worker invariance, and timing. That value is preserved as
-`frozen_registration_mechanical_result`. The later timing quarantine removes
-the wall-clock arm from formal scoring, but it does not reverse the verdict:
-memory and cross-worker invariance are correctness measurements and each
-independently fails.
-
-The former formal M12-S label **BLOCKED-BY-LICENCE** is withdrawn. The frozen
-scorecard did contain a reverse dependency on M11, so this report continues to
-quote it as registration provenance. M178 subsequently established that the
-dependency was an **UNRATIFIED_ADDITION** absent from the governing plan
-(`docs/research/M178-m12s-adjudication.md:1-16`). Under plan precedence it does
-not withhold the measured M12-S failure. This revision confirms, rather than
-withdraws, the overall M12 **FAIL**; it corrects the former reason for
-withholding M12-S.
+The frozen harness's conjunctive adjudication yields **M12 FAIL** from the
+measured hard failures. The scorecard's reverse dependency making M12-S wait
+for all of M11 is an unratified addition not present in the governing proposal;
+under plan precedence it does not withhold the measured M12-S result.
 
 **Measured source:** `8009447e059febb8f9c59fda509f141835d6abdb`. This was the
 exact repository `HEAD` frozen at dispatch and contains crop-early commit
@@ -361,33 +349,20 @@ At three independent `N` values, the campaign found five distinct TIFF hashes
 and five distinct pixel hashes across workers 1/2/4/8/16. The cross-worker byte
 property therefore fails independently at every registered N.
 
-The frozen registration additionally said that the 16-worker output must pass
-M11. The governing plan does not contain that reverse dependency; it names
-memory, worker-count byte invariance, and the N-mod-4 staircase as coequal M12
-systems bars (`docs/proposals/2026-08-sota-path.md:1973-1985`). M178 therefore
-classified the reverse dependency as **UNRATIFIED_ADDITION**
-(`docs/research/M178-m12s-adjudication.md:1-16`). The installed comparator's
-licence status remains **BLOCKED-BY-LICENCE** for M11, but it is not an M12-S
-eligibility or validity precondition.
+The scorecard additionally says that the 16-worker output must pass all of M11.
+That reverse dependency is an unratified scorecard addition, not a validity
+precondition in the governing proposal. The plan-faithful forward rule remains:
+any production-speed M11 output must be byte-identical across worker counts.
 
 Accordingly:
 
 - measured and formal M12-S status: **FAIL**;
-- M11 comparator status: **BLOCKED-BY-LICENCE**, but not applicable to the
-  M12-S verdict;
-- overall M12 verdict: **FAIL**, independently established by both the
-  non-timing absolute-memory and cross-worker-invariance failures.
+- overall M12 verdict: **FAIL**.
 
-Even if a future licensed M11 run passes, it cannot change the cross-worker
-byte failure at this measured commit.
-
-For completeness, the frozen harness's generic conjunctive rule mechanically
-records M12 **FAIL** because cross-worker invariance, absolute memory, and the
-observed N-mod-4 result are hard failures. `summary.json` and `closeout.json`
-preserve that pre-quarantine mechanical value. The current formal M12 **FAIL**
-rests on the non-timing memory and byte-invariance evidence. Earlier commit
-messages saying “formal M12 FAIL” remain accurate; this correction removes only
-the erroneous licence-withheld disposition of M12-S.
+A future licensed M11 run cannot change the cross-worker byte failure at this
+measured commit. The frozen harness's generic conjunctive rule independently
+records M12 **FAIL** because cross-worker invariance, absolute memory, and
+N-mod-4 timing are hard failures.
 
 ### Absolute memory: FAIL
 
