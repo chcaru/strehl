@@ -2778,3 +2778,131 @@ source, not by `verify.py`.
   §16.2 rather than withdrawn.
 - **No result is retracted.** M164's synthetic commissioning stands as
   synthetic; what is narrowed is the scope claimed around it.
+## 17. Amendment 7 — D8's phase-0 gate fired KILL, and the plan still reads as though it is alive (orchestrator, 2026-09-06)
+
+**This proposal is my standing instruction, and part of it has been falsified by
+its own gate.** Section 9 front-loads roughly sixteen zero-capture phase-0 lanes
+and calls each a go/no-go for a specific downstream item. One of those gates has
+fired, returned KILL, and the plan was never amended to say so. I am recording
+that here rather than leaving the contradiction in force.
+
+### 17.1 What fired
+
+`docs/research/M-PHASE0-SPLIT.md:3` reads, verbatim:
+
+> **Verdict: KILL — STOP/REMOVE RUST; retain the split instrument offline.**
+
+That lane was preregistered before implementation
+(`experiments/M-PHASE0-SPLIT/PREREGISTRATION.md`) and the killed feature commit
+is named: `1cd3019c77b8f4a2c45cd1d541cc85305296e390`. This is a gate that was
+wired in, run against a prior registration, and allowed to fire against the
+thing it was gating. It is the system working, not the system failing.
+
+### 17.2 The exact scope of the kill, which is narrower than the word KILL suggests
+
+Overstating this would be as damaging as ignoring it, so precisely:
+
+- **Dead: the product path.** The prototype's Rust CLI/core/merge wiring is
+  removed in the corrective commit. D8 does not ship.
+- **Alive: the instrument, offline.** The verdict explicitly retains the split
+  instrument for offline use, and retains the code, measurements and failure in
+  history.
+- **Not retracted: the numbers.** The 1/7 FRC crossing of **0.400367
+  cycles/quad-pixel** on `109MSDCF`, bootstrap median **0.399986**, 95%
+  percentile interval **[0.381916, 0.408871]**, deterministically reproduces.
+  What was refused is the inference from that number to a product, not the
+  number.
+
+The lane's own summary of the gap is the sentence to keep: *"the exact
+historical M115 numbers reproduce, but their controls do not transfer to the
+common-mode and data-dependent-tuning failures on which D8 depends."*
+
+### 17.3 Why it died, and why the reason generalises beyond D8
+
+Two of the checks that made M115 look well-commissioned are **not independent
+evidence**, for algebraic reasons rather than experimental ones:
+
+1. A common linear transfer function **cancels algebraically** from ideal FRC.
+2. `(P(A)+P(B))/2 = P_sig + P_noise` is an **identity**.
+
+Neither can catch a generator and a checker that share an error. And M115's own
+replacement flat null failed its registered `0.25` bar: `MEAN=0.2984`,
+`WIENER_UNG=0.4034` (`M115-deconv-headroom.md` §2.5).
+
+**The generalisable law — and it is already registered elsewhere in this
+corpus** (`docs/research/M-FRC-VIABILITY.md`): a detail statistic that is
+*exactly invariant* to a common linear filter is, by the same algebra, *blind to
+blur*. Invariance and blindness are not two properties to be traded off; they
+are one property described twice. Any future instrument proposed for M1 that
+advertises exact common-filter invariance as a strength is advertising the
+defect. Test it against a planted **improvement** as well as a planted defect,
+because a statistic that is blind in this way passes every degradation test
+trivially.
+
+### 17.4 The passages that are now stale
+
+I am **not** deleting or rewriting §D8. The forward anti-cheat discipline that
+governs the scorecard governs this document too: registered content stays
+registered, and is corrected by amendment where a reader will meet it. The
+following passages should be read only together with this amendment:
+
+| Line | What it still asserts | Status |
+|---|---|---|
+| `:51` | D8 introduced as split-stack self-calibration | superseded as a *product*; instrument survives offline |
+| `:252` | *"D8 now promotes into the product itself"* | **false** — the product path is removed |
+| `:509` | admission width `k` *"stops being a constant the day D8 lands"* | **moot** — D8 does not land |
+| `:576` | *"D8 adds the empirical (split-half)"* component | offline only |
+| `:895` | split-stack halves as *"empirical noise/resolution ground truth"* | **overstated** — a cross-half correlation crossing is not optical resolution; common sensor structure is indistinguishable from scene signal |
+| `:1212-1214` | C6's κ map *"lets D8 subtract rather than merely bound"* | conditional on a dead consumer |
+| `:1530` | *"D8 productises it"* | **false** |
+| `:1569` | *"D8's empirical per-tile FRC"* as a live input to D2's certified-acuity map | **D2 has lost this input** |
+| `:1611` | a repeated bracket as *"D8's gold-standard FRC pair"* | the pair survives; the gold-standard framing does not |
+| `:1694-1745` | §D8 card, incl. *"the best-commissioned instrument in the corpus"* at `:1696` | the superlative is withdrawn by §17.3 |
+| `:2065` | §9 scheduling *"D8's go/no-go"* as still pending | **the gate has fired** |
+
+### 17.5 What this changes in section 9
+
+**Phase 2 loses an item.** D8 self-tuning is not scheduled work; it is closed.
+No lane should be dispatched to build it, and any lane currently reading §9 as a
+work queue must treat `:2065` as answered.
+
+**D2 loses an input, and that is the consequential half.** The certified-acuity
+map at `:1569` named D8's per-tile FRC as one of its empirical inputs. D2 now
+needs either a different empirical acuity channel or an explicit statement that
+it proceeds without one. **This is a real hole and I am not filling it by
+assertion here.**
+
+**The blocker count does not move.** D8 was not gating any of the twelve axes,
+and no axis becomes scoreable or unscoreable because of this amendment. The
+scoreboard remains **0 of 12**.
+
+### 17.6 What is still open
+
+D8 is the **proven** instance of a pattern, not necessarily the only one. A full
+reconciliation of every phase-0 gate against the plan text is in flight — which
+lanes returned GO, which returned KILL, which have never run, and whether §9's
+ordering survives the answer. Lanes with a produced verdict include `ZFIELD`,
+`XSPEC`, `LCA`, `QUINCUNX`, `ASTIG`, `DPAR2`, `CURV`, `PTC`, `SPLIT`, `SPLIT2`,
+`SLANTEDGE`, `PIPE`, `RHO`, `VEIL2`, `DECODE2`, `NVME2`. Reported absent, and
+**not yet confirmed absent by content search**: `M-PHASE0-PHASE` (C1's gate),
+`M-PHASE0-MAKERNOTE` (C13's gate), `M-PHASE0-TETHER` (D10's gate). Absence from
+one retrieval method is not absence.
+
+Until that audit lands, **treat any plan passage that assumes a phase-0-gated
+item is alive as unverified rather than true.**
+
+### 17.7 What would make me wrong
+
+- If `M-PHASE0-SPLIT2.md` reverses or materially qualifies the KILL, this
+  amendment is wrong in its central claim and must be withdrawn, not footnoted.
+  I have not read SPLIT2 in full; `M-FRC-VIABILITY.md` describes itself as
+  *"revised after the SPLIT2 primary-source clarification"*, which shows SPLIT2
+  carries load I have not weighed here.
+- If the split instrument's offline retention is enough to serve D2's acuity
+  map, then §17.5's *"D2 has lost this input"* is too strong and the correct
+  statement is that D2's input became offline-only.
+- If D8 was in fact gating an axis through a path I have not traced, then
+  §17.5's *"the blocker count does not move"* is false.
+
+**Amendments 1–6 stand. No result is retracted by this amendment; one inference
+is.**
