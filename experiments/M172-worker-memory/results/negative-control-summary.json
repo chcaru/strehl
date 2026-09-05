@@ -62,5 +62,5 @@
   "red_controls": 5,
   "schema": "M172-negative-control-verification-v1",
   "verdict": "PRE CONTROL FIRES; POST D9 IS WORKER-INVARIANT",
-  "verified_utc": "2026-09-05T05:32:55.532823+00:00"
+  "verified_utc": "2026-09-05T05:58:46.219931+00:00"
 }
