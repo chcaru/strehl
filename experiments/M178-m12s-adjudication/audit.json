@@ -1,0 +1,233 @@
+{
+  "current_proposal_phrase_hits": [
+    {
+      "line": 797,
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "phrase": "while 16 workers passes M11"
+    },
+    {
+      "line": 2000,
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "phrase": "must simultaneously pass M11"
+    }
+  ],
+  "decisive_source_lines": {
+    "m169_r9": [
+      {
+        "line": 344,
+        "text": "| **R9 \u2014 new** | M12-S requires its 16-worker output to pass all of M11. (`scorecard:796-798,1996-2001`) | D9/D15 require byte invariance for the speed arm, not the reverse full-axis dependency. | Can withhold a formal M12-S result for a non-M12 failure. |"
+      }
+    ],
+    "m169_reverse_ruling": [
+      {
+        "line": 310,
+        "text": "The forward anti-cheat belongs in M11. The reverse full-axis dependency is a"
+      },
+      {
+        "line": 344,
+        "text": "| **R9 \u2014 new** | M12-S requires its 16-worker output to pass all of M11. (`scorecard:796-798,1996-2001`) | D9/D15 require byte invariance for the speed arm, not the reverse full-axis dependency. | Can withhold a formal M12-S result for a non-M12 failure. |"
+      }
+    ],
+    "owner_pending_register": [
+      {
+        "line": 480,
+        "text": "> **A full ratification instrument is being prepared.** M169 has found **nine**"
+      }
+    ],
+    "owner_silence_not_ratification": [
+      {
+        "line": 1720,
+        "text": "not treat silence as ratification of the rule itself."
+      }
+    ],
+    "plan_d15_bars": [
+      {
+        "line": 1981,
+        "text": "  once with its number and frozen after); memory \u22646 GiB warm; bytes invariant to"
+      }
+    ],
+    "plan_d9_bytes": [
+      {
+        "line": 1758,
+        "text": "Bytes are then invariant to worker count *by construction* \u2014 the freeze rows stop"
+      }
+    ],
+    "plan_d9_summary": [
+      {
+        "line": 56,
+        "text": "- **D9 (new) \u2014 determinism decoupled from worker count**: the 1.29\u00d7 worker-cap cost"
+      },
+      {
+        "line": 452,
+        "text": "  capture planner, offline and then live; determinism decoupled from worker count;"
+      }
+    ],
+    "plan_m12_measurable": [
+      {
+        "line": 2262,
+        "text": "**10** axes, `(a)` **8**, `(d)` **8**, `(c)` **6**. Two axes -- M8 and M12 --"
+      }
+    ],
+    "scorecard_attribution": [
+      {
+        "line": 799,
+        "text": "M8, the M11 comparator/CPU/hybrid/cold/live targets, the M12 6-GiB bar, and byte"
+      }
+    ],
+    "scorecard_m12_clause": [
+      {
+        "line": 2000,
+        "text": "must simultaneously pass M11. A product may pass M12-D while failing M12-S; the two"
+      }
+    ],
+    "scorecard_m12_row": [
+      {
+        "line": 797,
+        "text": "| M12 | Memory, determinism, and scaling invariance | Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; every fixed-worker repeat is byte-identical and the outputs at 1/2/4/8/16 workers are mutually byte-identical while 16 workers passes M11; N-mod-4 per-frame spread `<=2%`. |"
+      }
+    ],
+    "scorecard_revision_1_1": [
+      {
+        "line": 90,
+        "text": "**Revision 1.1, still before any score render:** adds joint anti-cheat constraints,"
+      }
+    ]
+  },
+  "git_provenance": {
+    "current_wording_commit": {
+      "body": "Rule existing worker-hash evidence out of the registered product matrix,\nrecord its diagnostic disposition, and freeze the remaining host run.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "commit": "dd957dd5f8ef36af99065db5aa52065171556adf",
+      "date": "2026-09-03T02:27:41-07:00",
+      "subject": "scorecard: separate M12 determinism from scaling invariance"
+    },
+    "introducing_commit": {
+      "body": "Bind opposed metrics to the same outputs, cap licensed detail reporting at\n0.25 cycles/pixel, and isolate comparative timing from RAW decode and storage.\nDocument which cross-lane suggestions were accepted, corrected, or rejected.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "commit": "986c46535fc082395831724f1d45c33a1d974390",
+      "date": "2026-09-02T23:32:20-07:00",
+      "subject": "Tighten scorecard anti-cheat constraints"
+    },
+    "pickaxe": {
+      "must simultaneously pass M11": [
+        {
+          "commit": "986c46535fc082395831724f1d45c33a1d974390",
+          "date": "2026-09-02T23:32:20-07:00",
+          "subject": "Tighten scorecard anti-cheat constraints"
+        }
+      ],
+      "while 16 workers passes M11": [
+        {
+          "commit": "dd957dd5f8ef36af99065db5aa52065171556adf",
+          "date": "2026-09-03T02:27:41-07:00",
+          "subject": "scorecard: separate M12 determinism from scaling invariance"
+        }
+      ]
+    }
+  },
+  "m139_machine_results": {
+    "campaign_complete": true,
+    "distinct_hashes_by_n": {
+      "105": {
+        "output": 5,
+        "pixels": 5
+      },
+      "299": {
+        "output": 5,
+        "pixels": 5
+      },
+      "33": {
+        "output": 5,
+        "pixels": 5
+      }
+    },
+    "m12_d": {
+      "complete_fixed_worker_cells": 15,
+      "evidence_tag": "VERIFIED",
+      "required_complete_fixed_worker_cells": 15,
+      "verdict": "PASS"
+    },
+    "m12_s_byte_property_verdict": "FAIL",
+    "maximum_sampled_gib": 35.65724182128906,
+    "mechanical_m12": {
+      "disposition": "Preserved as mechanical provenance. The program orchestrator subsequently required split M12-D/M12-S reporting and directed that no overall M12 verdict be assigned while the M11 term is blocked by licensing.",
+      "evidence_tag": "VERIFIED",
+      "hard_failures": [
+        "absolute-memory",
+        "cross-worker-scaling-invariance",
+        "n-mod-4-spread"
+      ],
+      "verdict": "FAIL"
+    },
+    "memory_bar_gib": 6.0,
+    "memory_bar_verdict": "FAIL",
+    "memory_multiple": 5.942873636881511,
+    "n_mod_4_bar": 0.02,
+    "n_mod_4_spread": 0.07618677189815302,
+    "n_mod_4_verdict": "FAIL",
+    "orchestrator_directed_m12": {
+      "evidence_tag": "VERIFIED",
+      "reason": "The registered sub-verdicts are not conflated, and the M11 precondition for M12-S is blocked by comparator licensing.",
+      "reporting_basis": "ORCHESTRATOR_DIRECTIVE",
+      "verdict": "NOT_ASSIGNED"
+    }
+  },
+  "owner_ratification_search": {
+    "explicit_wholesale_ratification_hits": [],
+    "owner_questions_last_commit": {
+      "commit": "6702e1798db8ee27ae7a2b1a3a4868963f57820a",
+      "date": "2026-08-23T23:13:27-07:00",
+      "subject": "Settle the subagent model question: claude-opus-5 only"
+    },
+    "owner_questions_scorecard_hits": [],
+    "tracked_candidate_records": [
+      "docs/OWNER-ACTIONS.md",
+      "docs/research/M161-m3-ratification.md",
+      "docs/research/M169-ratification-stakes.md",
+      "docs/research/M17-dual-response-measured.md",
+      "docs/research/OWNER-QUESTIONS.md"
+    ]
+  },
+  "plan_absence_checks": {
+    "all_revision_phrase_hits": [],
+    "current_whitespace_collapsed_phrase_hits": [],
+    "revision_count": 10
+  },
+  "schema": 1,
+  "source_fingerprints": [
+    {
+      "lines": 2780,
+      "path": "docs/proposals/2026-08-sota-path.md",
+      "sha256": "72f8257918e929acb3f50c4606a4a7a73a44594492f040b4fcf196072e6a0b94"
+    },
+    {
+      "lines": 2221,
+      "path": "docs/proposals/2026-09-sota-scorecard.md",
+      "sha256": "eb5ed446ee06e8842c61e5f90cb1bd4a8e81ca5dfd39ef53988598ef05dcb603"
+    },
+    {
+      "lines": 409,
+      "path": "docs/research/M139-m12-campaign.md",
+      "sha256": "e555cdbb1390e6f6280685d0f6634b9f814d2a75645f6c04977dc3ace773a857"
+    },
+    {
+      "lines": 446,
+      "path": "docs/research/M169-ratification-stakes.md",
+      "sha256": "ff9f576686189d7890fcc7c56db1bff214f2fccbf55b076d5cdf16ef775e3377"
+    },
+    {
+      "lines": 1736,
+      "path": "docs/OWNER-ACTIONS.md",
+      "sha256": "cf524089b7604a70368a2ebfca5884d21a79800d2711e536ed06058de28e89b2"
+    },
+    {
+      "lines": 1429,
+      "path": "docs/research/OWNER-QUESTIONS.md",
+      "sha256": "625a7aee0f1d3538a4d177e3fe877962a530ffc08eeb1cc7ee8568857b1df6ba"
+    },
+    {
+      "lines": 923,
+      "path": "experiments/m12-scorecard/out/campaign-8009447e-m139/closeout.json",
+      "sha256": "ae067e0dc171dd57016d6079f14419220e67138670d949cfc4c742acc361fc75"
+    }
+  ],
+  "verdict": "UNRATIFIED_ADDITION"
+}
