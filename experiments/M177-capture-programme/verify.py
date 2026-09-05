@@ -38,6 +38,15 @@ SOURCE_PATHS = {
     "m160": ROOT / "docs" / "research" / "M160-amendment6-reachability.md",
     "m144": ROOT / "docs" / "research" / "M144-reference-uncertainty.md",
     "m169": ROOT / "docs" / "research" / "M169-ratification-stakes.md",
+    "m171": ROOT / "docs" / "research" / "M171-reference-admission.md",
+    "m171_prereg": ROOT
+    / "experiments"
+    / "M171-reference-admission"
+    / "PREREGISTRATION.md",
+    "m173": ROOT / "docs" / "research" / "M173-ask2a-audit.md",
+    "m164_manifest": ROOT / "docs" / "research" / "M164-dominance-manifest.md",
+    "plan": ROOT / "docs" / "proposals" / "2026-08-sota-path.md",
+    "status": ROOT / "docs" / "STATUS.md",
     "owner": ROOT / "docs" / "OWNER-ACTIONS.md",
     "capture": ROOT
     / "docs"
@@ -285,7 +294,7 @@ def derive(sources: dict[str, str]) -> dict[str, object]:
         "landed_campaigns": preflight + rehearsal_total + score_total + m167_total,
         "score_path": preflight + rehearsal_total + score_total,
         "specified_floor": specified_floor,
-        "post_cut": specified_floor - m167_total,
+        "after_m167_defer": specified_floor - m167_total,
         "budget_remainder": 300 - preflight,
         "zero_axes": zero_axes,
         "rehearsal_bracket": 164 + 164,
@@ -333,6 +342,22 @@ def audit(
         facts = derive(sources)
     except Exception as exc:  # fail closed on source drift
         return [Check("source.derivation", False, str(exc))]
+
+    owner_flat = re.sub(r"\s+", " ", sources["owner"])
+    report_flat = re.sub(r"\s+", " ", report)
+    critical_path_markers = (
+        "| 0 | Execute the repaired, released Ask 2a",
+        "| 1 | Freeze the production route",
+        "| 2 | Capture the M166 exact-configuration rehearsal",
+        "| 3 | Instantiate and run production M171 G1–G8",
+        "| 4 | Build, freeze, commission and independently admit the detail instrument",
+        "| 5 | Clear blocker `(a)` for the admitted instrument, then capture the sealed M166 score",
+        "| 6 | Run admitted instruments and axis-specific checkers",
+    )
+    critical_path_positions = [report.find(marker) for marker in critical_path_markers]
+    critical_path_in_order = all(
+        position >= 0 for position in critical_path_positions
+    ) and critical_path_positions == sorted(critical_path_positions)
 
     add(
         "arithmetic.rehearsal",
@@ -411,10 +436,12 @@ def audit(
         str(facts["score_path"]),
     )
     add(
-        "arithmetic.post-cut",
-        facts["post_cut"] == 3030
-        and contains_once(report, "CHECK[post-cut] 3,716 - 686 = 3,030"),
-        str(facts["post_cut"]),
+        "arithmetic.after-m167-defer",
+        facts["after_m167_defer"] == 3030
+        and contains_once(
+            report, "CHECK[after-m167-defer] 3,716 - 686 = 3,030"
+        ),
+        str(facts["after_m167_defer"]),
     )
     add(
         "arithmetic.budget",
@@ -531,11 +558,72 @@ def audit(
         str(facts["zero_axes"]),
     )
     add(
-        "cut.m167",
+        "ask2a.soundness",
+        "Specification verdict: NOT SOUND." in sources["m173"]
+        and "HOLD LIFTED" in owner_flat
+        and "high-resolution calibration slide's regular dot grid" in owner_flat
+        and "full-resolution 14-bit lossless-compressed ARW" in owner_flat
+        and "Put the sliding focus ring in **FULL MF**" in owner_flat
+        and "camera/lens assembly axially on the rail" in owner_flat
+        and "discard **both** frames and restart at step 1" in owner_flat
+        and "**Numerical PASS:**" in owner_flat
+        and "**Numerical FAIL:**" in owner_flat
+        and "**REFUSED / no ratio:**" in owner_flat
+        and "provisional console `PASS` is not permission to start either session; "
+        "wait for an explicit go-ahead." in owner_flat
+        and "`1.560%` relative to the required value, or `1.536%`" in owner_flat
+        and "Ask 2a is the only released capture on a sound owner sheet" in report
+        and "repaired and released nominal two-frame Ask 2a pair" in report,
+        "M173 repair is present and the later Ask 2a hold is lifted",
+    )
+    add(
+        "sequence.m167",
         "NO DEPLOYABLE DETAIL INSTRUMENT ADMITTED" in sources["m167"]
-        and "Cut all 686 M167 frames from the owner queue." in report
-        and "686 frames cut as unblocking nothing" in report.splitlines()[0],
-        "M167 has diagnostic, not scorecard-axis, licence",
+        and "Before any result is opened, freeze the" in sources["m167"]
+        and "No new magnification, optical state, or calibration exposure is requested."
+        in sources["m171_prereg"]
+        and "Sequence all 686 M167 frames out of the owner queue" in report
+        and "The reason is contingent sequencing" in report
+        and "Restore the battery to the queue immediately" in report
+        and "686 frames sequenced out pending detail-candidate admission"
+        in report.splitlines()[0],
+        "M167 is deferred until candidate admission, not rejected permanently",
+    )
+    add(
+        "path.blocker-a-order",
+        "reads no real capture, supplies NO CI for real capture, cannot emit M1 admission"
+        in sources["m171"]
+        and "cannot emit a real-candidate admission" in sources["m167"]
+        and contains_once(
+            report,
+            "CHECK[critical-path] 2 + 1,092 + 1,215 = 2,309 registered frames",
+        )
+        and critical_path_in_order
+        and "Real reference and instrument admission must succeed\n"
+        "on non-holdout evidence before the score is exposed" in report,
+        "admission precedes the sealed score",
+    )
+    add(
+        "path.non-capture-gates",
+        "buy the admitted Zerene licence" in sources["m164_manifest"]
+        and "enumerate the complete Cartesian family" in sources["m164_manifest"]
+        and "production must refuse admission until a versioned authority resolves"
+        in sources["m171"]
+        and "No amount of shooting produces it." in sources["status"]
+        and "Owner frames alone cannot clear blocker `(a)`." in report
+        and "evaluator-controlled OS-strength A6 sandbox" in report,
+        "manifest, authority, implementation, sandbox and admission remain",
+    )
+    add(
+        "path.reachability",
+        "| \\+ Zerene `$189` | `b+c+d` | **`4 of 12`** |" in sources["status"]
+        and "| \\+ a detail instrument | `a` | `12 of 12` | all |"
+        in sources["status"]
+        and "if blockers `(b)`, `(c)`, `(d)` and the axis-specific prerequisites "
+        "are already clear" in report_flat
+        and "measurement ceiling from `4 of 12` to `12 of 12`" in report
+        and "That is reachability, not a\nclaim of twelve passing results" in report,
+        "working instrument has 4-to-12 reach only after the other blockers",
     )
     add(
         "rig.impossible-paired-node",
@@ -570,7 +658,7 @@ def audit(
         "report.commission-record",
         contains_once(
             report,
-            "CHECK[commission] planted defects caught = 13; missed = 0; "
+            "CHECK[commission] planted defects caught = 20; missed = 0; "
             "inert edits passed = 1 of 1",
         ),
         "commission record anchor",
@@ -646,9 +734,9 @@ def commissioned(
         "`flat-sw4` (185) and",
     )
     report_mutation(
-        "report-cut-total",
-        "CHECK[post-cut] 3,716 - 686 = 3,030",
-        "CHECK[post-cut] 3,716 - 685 = 3,031",
+        "report-after-m167-defer-total",
+        "CHECK[after-m167-defer] 3,716 - 686 = 3,030",
+        "CHECK[after-m167-defer] 3,716 - 685 = 3,031",
     )
     report_mutation(
         "dedup-role-collapse",
@@ -664,6 +752,46 @@ def commissioned(
         "m166-dom-optical-state-collapse",
         "M166 registers both `TC0-DOM` blocks as\n**converter off**",
         "M166 registers both `TC0-DOM` blocks as\n**converter on**",
+    )
+    report_mutation(
+        "ask2a-repair-erased",
+        "Ask 2a is the only released capture on a sound owner sheet",
+        "No capture is currently released on a sound owner sheet",
+    )
+    source_mutation(
+        "ask2a-unsafe-pass-release",
+        "owner",
+        "provisional console `PASS` is not permission to start either session; wait for",
+        "provisional console `PASS` immediately releases the 1,092-frame rehearsal;",
+    )
+    source_mutation(
+        "ask2a-axial-rule-removed",
+        "owner",
+        "camera/lens assembly axially on the rail",
+        "camera/lens assembly by any convenient movement",
+    )
+    report_mutation(
+        "m167-contingency-made-permanent",
+        "The reason is contingent sequencing",
+        "The reason is permanent zero-axis value",
+    )
+    report_mutation(
+        "critical-path-order-reversed",
+        "Real reference and instrument admission must succeed\n"
+        "on non-holdout evidence before the score is exposed",
+        "The score must be exposed before real reference and instrument admission",
+    )
+    report_mutation(
+        "critical-freeze-rehearsal-order-reversed",
+        "| 1 | Freeze the production route |",
+        "| 3 | Freeze the production route |",
+    )
+    report_mutation(
+        "reachability-prerequisites-removed",
+        "if blockers `(b)`, `(c)`, `(d)` and the axis-specific prerequisites\n"
+        "are already clear",
+        "even if blockers `(b)`, `(c)`, `(d)` and the axis-specific prerequisites\n"
+        "remain uncleared",
     )
     source_mutation(
         "m169-zero-axis-source",
@@ -748,7 +876,7 @@ def main() -> int:
         f"COMMISSIONED: {caught} caught, {missed} missed; "
         f"inert {inert_passed}/{inert_total} passed"
     )
-    return 0 if caught == 13 and missed == 0 and inert_passed == inert_total else 1
+    return 0 if caught == 20 and missed == 0 and inert_passed == inert_total else 1
 
 
 if __name__ == "__main__":
