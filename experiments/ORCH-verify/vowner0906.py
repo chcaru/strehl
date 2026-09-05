@@ -189,6 +189,68 @@ for label, ok in rev_checks:
     else:
         red += 1
 
+# ---- the ratification stakes table, re-derived across two documents ----
+#
+# The owner acts on these four numbers, so a presence check is not enough: a
+# bare "**1 of 12**" occurs in several places and would be satisfied by a
+# duplicate long after the row it is supposed to guard had drifted. Instead the
+# value is EXTRACTED from lane M169's own table row and compared with the value
+# extracted from the owner-facing row. Either side drifting fails the check.
+print()
+M169 = ROOT / "docs" / "research" / "M169-ratification-stakes.md"
+RATIFY = [
+    # (label, phrase identifying M169's row, phrase identifying the owner's row)
+    ("plan licence prerequisite",
+     "makes a paid licensed comparator a score prerequisite",
+     "makes a paid licence a direct score prerequisite"),
+    ("unratified propagation",
+     "propagates the missing paid Zerene arms",
+     "propagates the missing paid arms"),
+    ("axes shedding (d)",
+     "Axes that lose `(d)` entirely",
+     "shed blocker `(d)` entirely if you reject my rule"),
+    ("newly scoreable",
+     "Axes that become newly scoreable",
+     "become **newly scoreable**"),
+]
+
+
+def cell_after(text, phrase):
+    """The '**N of 12**' value in the same table row as `phrase`.
+
+    Bounded to the row by searching only as far as the next newline, so a
+    value belonging to a different row can never be picked up."""
+    i = text.find(phrase)
+    if i < 0:
+        return None
+    row_end = text.find("\n", i)
+    row = text[i:row_end if row_end > 0 else len(text)]
+    m = re.search(r"\*\*(\d+) of 12\*\*", row)
+    return m.group(1) if m else None
+
+
+if not M169.exists():
+    print("RED   ratify SOURCE MISSING %s" % M169.name)
+    red += 1
+else:
+    m169_raw = M169.read_text(encoding="utf-8", errors="replace")
+    for label, src_phrase, own_phrase in RATIFY:
+        a = cell_after(m169_raw, src_phrase)
+        b = cell_after(owner_raw, own_phrase)
+        if a is None:
+            print("RED   ratify %-26s M169 row not found" % label)
+            red += 1
+        elif b is None:
+            print("RED   ratify %-26s owner row not found" % label)
+            red += 1
+        elif a != b:
+            print("RED   ratify %-26s M169 says %s of 12, owner says %s of 12"
+                  % (label, a, b))
+            red += 1
+        else:
+            print("GREEN ratify %-26s both say %s of 12" % (label, a))
+            green += 1
+
 # ---- control: a wrong total must not re-derive ----
 ctl = (2 + sum(stages) + 704) != 1603
 ctl2 = (891 + 32 + 164 + 128) != 1147  # the stale total must no longer re-derive

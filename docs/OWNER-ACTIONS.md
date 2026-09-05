@@ -442,21 +442,52 @@ No action needed on any of these. They cost nothing and need none of your time.
 
 **It costs nothing, and it protects the $189 whenever you do spend it.**
 
-> **⚠ The "8 of 12" figure below is under audit and may be substantially too
-> high.** Lane M169 (commit `7ae6dac3`) re-derived your plan's comparator
-> requirement from source and found that the scorecard — my document, not yours —
-> requires *all three* comparator arms for *every* comparative axis, while your
-> plan assigns them **by claim**: PMax and DMap to detail, DMap to depth, the fork
-> to the speed quote. Your own axis table records noise as *"Nothing — quotable
-> now"* and speed/memory as *"Hold the line"* — **neither names a licence.** If
-> that is right, a purchase clears fewer axes than this section claims, and some
-> axes were never blocked by it at all. I have flagged the rule rather than
-> quietly relaxing it, and I am not scoring anything under the looser reading
-> until you rule on it.
+> **⚠ RESOLVED 2026-09-07 — the "8 of 12" figure below was wrong, and the
+> correction cuts both ways.** Lane M169 first flagged it (commit `7ae6dac3`)
+> and has now re-derived the whole question from source (commit `188245e8`,
+> `research/M169-ratification-stakes.md` §4.1). I verified its table at source
+> myself before writing this. The finding:
 >
-> **⚠⚠ THE HOLD IS WITHDRAWN — and not because the audit above resolved.** It
-> has not. I previously ended this block with *"hold the $189 until I give you
-> the corrected number."* **Ignore that instruction. It was wrong twice over.**
+> | Question | Answer | Which axes |
+> | --- | ---: | --- |
+> | Axes for which **your plan** makes a paid licence a direct score prerequisite | **1 of 12** | M1 |
+> | Further axes to which **my unratified rule** propagates the missing paid arms | **7 of 12** | M2–M7, M11 |
+> | Axes that would shed blocker `(d)` entirely if you reject my rule | **6 of 12** | M2–M7 |
+> | Axes that would become **newly scoreable** | **0 of 12** | none |
+>
+> **Read the last row before the others.** Rejecting my rule frees six axes from
+> the comparator blocker and makes **not one of them scoreable**, because each
+> retains other blockers of its own — missing instruments, missing captures,
+> missing targets. **"This frees a blocker" and "this makes an axis scoreable"
+> are different claims, and only the second one is worth anything to you today.**
+>
+> So the correction is not the windfall the flag implied. What it actually does
+> is destroy a *reason to buy* that I had given you: I told you the board was
+> frozen behind a purchase, and as a statement about your plan that was
+> materially wrong. **The licence is directly load-bearing for one axis, M1 —
+> not eight.** The scorecard's all-arms-always conjunction, which produced the
+> larger number, is my invention and is marked `SCORECARD ADDITION —
+> UNRATIFIED`. I have not relaxed it, because loosening a gate that is blocking
+> my own scoreboard is the single most self-serving action available to me, and
+> a preregistered scorecard that gets edited whenever it is inconvenient is
+> worth nothing. **Nothing will be scored under the looser reading until you
+> rule.**
+>
+> **This does not change what you should do**, because the purchase has a second
+> and independent justification — see the reversal immediately below. It changes
+> only what I am allowed to tell you it buys.
+>
+> **A full ratification instrument is being prepared.** M169 has found **nine**
+> unratified additions in the scorecard by three separate routes, and I have
+> asked it to census the rest and prove the enumeration complete, so you rule
+> once on all of them rather than being drip-fed technicalities. Do not wait on
+> that to send the email or make the purchase.
+>
+> **⚠⚠ THE HOLD IS WITHDRAWN.** I withdrew it *before* the audit above
+> resolved, and the resolution has since confirmed the withdrawal was right for
+> a reason I did not have at the time. I previously ended this block with
+> *"hold the $189 until I give you the corrected number."* **Ignore that
+> instruction. It was wrong twice over.**
 >
 > **First, the figure is wrong.** `$189` is Prosumer, and Ask 3's correction
 > `D3` establishes from the licence text that a published competitive benchmark
@@ -487,9 +518,12 @@ No action needed on any of these. They cost nothing and need none of your time.
 > **So: send the email first — it settles the edition and the benchmarking
 > question — then buy Professional. Do not wait on the axis-count audit.**
 
-Blocker `(d)` — the Zerene/Helicon comparison — gates **8 of the 12 axes**. The
-entire point of it is to *publish* a comparison. Lane M132 read both vendors'
-current licence terms with a browser user-agent and audited them for
+Blocker `(d)` — the Zerene/Helicon comparison — is *recorded in my scorecard* as
+gating **8 of the 12 axes**, and the resolved audit above establishes that seven
+of those eight are gated by my own unratified rule rather than by your plan.
+**Read the figure as a description of my document, not of your requirements.**
+The entire point of `(d)` is to *publish* a comparison. Lane M132 read both
+vendors' current licence terms with a browser user-agent and audited them for
 benchmarking clauses. The finding:
 
 > **Both EULAs are completely silent on publishing benchmark or comparative
