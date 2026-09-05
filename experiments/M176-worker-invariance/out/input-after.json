@@ -1,0 +1,267 @@
+{
+  "entries": [
+    {
+      "ctime_ns": 1779753784119754600,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751109360000000,
+      "relative_path": "DSC00034.ARW",
+      "sha256": "3f39fae4df9976e7db0f2db1123f967976af90d8e1b264e2c749deab333f7167",
+      "size": 39079936
+    },
+    {
+      "ctime_ns": 1779753785075204200,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751112670000000,
+      "relative_path": "DSC00035.ARW",
+      "sha256": "ab6db6fc3fda96006f5572d5ee458b6b2f9d0a5504e9b4d7e5234399bc945e96",
+      "size": 39223296
+    },
+    {
+      "ctime_ns": 1779753786036998700,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751116020000000,
+      "relative_path": "DSC00036.ARW",
+      "sha256": "01c26e7d1ed015915a9833baa1731ac92aa24d4676d708485d4287ff227e352d",
+      "size": 39370752
+    },
+    {
+      "ctime_ns": 1779753786987944800,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751119440000000,
+      "relative_path": "DSC00037.ARW",
+      "sha256": "9c0fdc1005b2942970ca16db933cae6f3376778590c93829afb35f2b5c8eb1f1",
+      "size": 39563264
+    },
+    {
+      "ctime_ns": 1779753787967512200,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751122700000000,
+      "relative_path": "DSC00038.ARW",
+      "sha256": "cea973400a82c96187f465281fc2f4db02bf90881c14c9112e16bf692a27118d",
+      "size": 39796736
+    },
+    {
+      "ctime_ns": 1779753788940040700,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751126110000000,
+      "relative_path": "DSC00039.ARW",
+      "sha256": "3a2114020324d9617630e306e862474a5246ea1b8ac3eec0fd7cbe68575f011c",
+      "size": 40148992
+    },
+    {
+      "ctime_ns": 1779753789928323200,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751129460000000,
+      "relative_path": "DSC00040.ARW",
+      "sha256": "d44409d3ae582ec72e0d8ef463ebe7eb3774a737996eef74b42560a3251f0677",
+      "size": 40280064
+    },
+    {
+      "ctime_ns": 1779753790920999500,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751132780000000,
+      "relative_path": "DSC00041.ARW",
+      "sha256": "b9108697746a3611fb730fcf0aa96462b86da9ffec6c793fa58d2723ade7e906",
+      "size": 40263680
+    },
+    {
+      "ctime_ns": 1779753791913404100,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751136190000000,
+      "relative_path": "DSC00042.ARW",
+      "sha256": "d85746fa8d8cd025dfeabe84c0e27d98259611bb3a3370142f93691bfe3b36af",
+      "size": 40083456
+    },
+    {
+      "ctime_ns": 1779753792887833700,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751139490000000,
+      "relative_path": "DSC00043.ARW",
+      "sha256": "303cad1eff772499c853d06d685ffa5eee28670f8ac49a1600ed4b12e07599c8",
+      "size": 39849984
+    },
+    {
+      "ctime_ns": 1779753793874006000,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751142740000000,
+      "relative_path": "DSC00044.ARW",
+      "sha256": "1a2d004625dc7f99a396db4a6df120a39478b626d4bee07f8eeb12cfe7de8494",
+      "size": 39616512
+    },
+    {
+      "ctime_ns": 1779753794851874900,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751146000000000,
+      "relative_path": "DSC00045.ARW",
+      "sha256": "1b298b5534bcbfd1bc187b6542869b15aa5686f3ac2f5126ce6f14811ba83bc4",
+      "size": 39432192
+    },
+    {
+      "ctime_ns": 1779753795819432700,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751149270000000,
+      "relative_path": "DSC00046.ARW",
+      "sha256": "8fb8ac51da37206e49f0a2882f5492470b4da8579354e6b0cc1367c0b0b4f2e9",
+      "size": 39297024
+    },
+    {
+      "ctime_ns": 1779753796780256000,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751152680000000,
+      "relative_path": "DSC00047.ARW",
+      "sha256": "e952a4c1d24bddd0d52e15dc3a47d26d41ccd1955931daf0574ec1ecfe53fe81",
+      "size": 39198720
+    },
+    {
+      "ctime_ns": 1779753797741805300,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751156010000000,
+      "relative_path": "DSC00048.ARW",
+      "sha256": "9aea2d56cf1ffa9931dc168745681cd74dc5bd93d72db0327ce50514d1135d6a",
+      "size": 39149568
+    },
+    {
+      "ctime_ns": 1779753798716640600,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751159290000000,
+      "relative_path": "DSC00049.ARW",
+      "sha256": "1d493f4cfa60335b8d324dd1c94c8e39d2de641dde53fcf8ed26e74f1fc59c78",
+      "size": 39030784
+    },
+    {
+      "ctime_ns": 1779753799686954900,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751162680000000,
+      "relative_path": "DSC00050.ARW",
+      "sha256": "1b12b89146570dba4fa762805c6def54eb4e53d29048cefb32a67e4d0c501f8e",
+      "size": 38989824
+    },
+    {
+      "ctime_ns": 1779753800640462200,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751166090000000,
+      "relative_path": "DSC00051.ARW",
+      "sha256": "f9716c7ccd76fb3a26458c72854d03acaec269c158585e91d1d56877f7c1e8d8",
+      "size": 38936576
+    },
+    {
+      "ctime_ns": 1779753801586736000,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779751169420000000,
+      "relative_path": "DSC00052.ARW",
+      "sha256": "f9c8af2d059d77a4838e9ccec53b04c1fda54cd9886057b5e08d4aa8720962fd",
+      "size": 38916096
+    },
+    {
+      "ctime_ns": 1779754848273060800,
+      "file_attributes": 16,
+      "kind": "directory",
+      "mode": 16895,
+      "mtime_ns": 1779754965416662800,
+      "relative_path": "stack"
+    },
+    {
+      "ctime_ns": 1779754957203561700,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779772901477041400,
+      "relative_path": "stack/stack.dng",
+      "sha256": "36c953cc2fc76cf409f0c2c6ef235503e24a0a6137f707c1ce0304efeca48e25",
+      "size": 458561054
+    },
+    {
+      "ctime_ns": 1779754848393502800,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779754965998577800,
+      "relative_path": "stack/stack.log",
+      "sha256": "36268c31586f98c78989f5069dae33a3de8bb5396174073d79c814951aced686",
+      "size": 57583
+    },
+    {
+      "ctime_ns": 1779754965416662800,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779754965951477000,
+      "relative_path": "stack/stack_3d.png",
+      "sha256": "3d95de1e3d056a63a9376aec250aa7c8542d774f944f02c93683b04299602f79",
+      "size": 28916111
+    },
+    {
+      "ctime_ns": 1779754964852165700,
+      "file_attributes": 32,
+      "kind": "file",
+      "mode": 33206,
+      "mtime_ns": 1779754965370845600,
+      "relative_path": "stack/stack_depth.png",
+      "sha256": "a35e4038df4b44fe2e56c314931ef0e2ec6ee372c80e6e4956dfa19d4dcae674",
+      "size": 37888925
+    }
+  ],
+  "manifest_sha256": "80c16282d9be43a3b3deae5f36141af8bc503717711589ce082888db17eded09",
+  "root": "D:\\personal\\macro\\coffee-bubbles",
+  "schema": "strehl-m176-capture-manifest-v1",
+  "top_level_arw_count": 19,
+  "top_level_arw_names": [
+    "DSC00034.ARW",
+    "DSC00035.ARW",
+    "DSC00036.ARW",
+    "DSC00037.ARW",
+    "DSC00038.ARW",
+    "DSC00039.ARW",
+    "DSC00040.ARW",
+    "DSC00041.ARW",
+    "DSC00042.ARW",
+    "DSC00043.ARW",
+    "DSC00044.ARW",
+    "DSC00045.ARW",
+    "DSC00046.ARW",
+    "DSC00047.ARW",
+    "DSC00048.ARW",
+    "DSC00049.ARW",
+    "DSC00050.ARW",
+    "DSC00051.ARW",
+    "DSC00052.ARW"
+  ]
+}

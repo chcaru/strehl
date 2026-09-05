@@ -1,0 +1,315 @@
+{
+  "builds": [
+    {
+      "archive": {
+        "commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+        "extracted": {
+          "file_count": 10009,
+          "manifest_sha256": "cfea3187db0bfbcac526d523f29e0c3d987509c1c30f233c55593c4052a534fc",
+          "total_bytes": 364877615
+        },
+        "git_command": "git -C C:\\dev\\blog\\death-of-software\\projects\\strehl archive --format=tar 1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+        "git_exit_code": 0,
+        "git_stderr": {
+          "mtime_ns": 1788575742420174900,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\archive-1a6fd10c.git.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "stream_sha256": "08ff3c86226be0be5115ca1cf333a592a567fe9d915627b44c50d06a0ee7df08",
+        "tar_command": "tar -xf - -C C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\source-affected-1a6fd10c",
+        "tar_exit_code": 0,
+        "tar_stderr": {
+          "mtime_ns": 1788575742421919400,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\archive-1a6fd10c.tar.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "tar_stdout": {
+          "mtime_ns": 1788575742420174900,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\archive-1a6fd10c.tar.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        }
+      },
+      "binary": {
+        "mtime_ns": 1788575882167476500,
+        "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-affected-1a6fd10c\\release\\strehl.exe",
+        "sha256": "cfa15c5e02bfda011e082ef60981965c44a4924fce6f9e9c02fd8513b602feb3",
+        "size": 9866240
+      },
+      "binary_preexisting": false,
+      "binary_version": {
+        "argv": [
+          "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-affected-1a6fd10c\\release\\strehl.exe",
+          "--version"
+        ],
+        "command": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-affected-1a6fd10c\\release\\strehl.exe --version",
+        "exit_code": 0,
+        "stderr": {
+          "mtime_ns": 1788575882558725400,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\affected-binary-version.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "stdout": {
+          "mtime_ns": 1788575882558725400,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\affected-binary-version.stdout.log",
+          "sha256": "c847c069b7ab4fa48b67d38ae89139866b7853d32c46c18cbceadcb3f4c1382b",
+          "size": 56
+        }
+      },
+      "binary_version_text": "strehl 0.0.0 (1a6fd10c94dcb4b780f6af78c46c62a156c39b71)",
+      "build": {
+        "argv": [
+          "cargo",
+          "build",
+          "--release",
+          "--locked",
+          "-p",
+          "strehl-cli",
+          "--bin",
+          "strehl"
+        ],
+        "command": "cargo build --release --locked -p strehl-cli --bin strehl",
+        "exit_code": 0,
+        "stderr": {
+          "mtime_ns": 1788575882405288400,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\affected-build.stderr.log",
+          "sha256": "1741c0dd84c73d82b57a14102ba67bf48e9859b7d0096a9dc6d89f1bf3521ccc",
+          "size": 5252
+        },
+        "stdout": {
+          "mtime_ns": 1788575882405288400,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\affected-build.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        }
+      },
+      "build_environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_TARGET_DIR": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-affected-1a6fd10c",
+        "SOURCE_DATE_EPOCH": "1788556788",
+        "STREHL_BUILD_ID": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71"
+      },
+      "cargo_version": {
+        "argv": [
+          "cargo",
+          "--version",
+          "--verbose"
+        ],
+        "command": "cargo --version --verbose",
+        "exit_code": 0,
+        "stderr": {
+          "mtime_ns": 1788575812364934800,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\affected-cargo-version.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "stdout": {
+          "mtime_ns": 1788575812364934800,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\affected-cargo-version.stdout.log",
+          "sha256": "c0716915ad8353e130842d120d4c493ce0186cc2a0ef017cbfaaf437f6ca5c85",
+          "size": 313
+        }
+      },
+      "cargo_version_text": "cargo 1.98.0 (797e8a9bc 2026-08-05)\nrelease: 1.98.0\ncommit-hash: 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d\ncommit-date: 2026-08-05\nhost: x86_64-pc-windows-msvc\nlibgit2: 1.9.4 (sys:0.21.0 vendored)\nlibcurl: 8.21.0-DEV (sys:0.4.90+curl-8.21.0 vendored ssl:Schannel)\nos: Windows 10.0.26200 (Windows 11 Core) [64-bit]",
+      "label": "affected",
+      "rustc_version": {
+        "argv": [
+          "rustc",
+          "--version",
+          "--verbose"
+        ],
+        "command": "rustc --version --verbose",
+        "exit_code": 0,
+        "stderr": {
+          "mtime_ns": 1788575812416292900,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\affected-rustc-version.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "stdout": {
+          "mtime_ns": 1788575812416292900,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\affected-rustc-version.stdout.log",
+          "sha256": "1fb10dcd2dd67ff767f95bad0b2d205e34c03d0a346f60593f2cbc35abf4bf52",
+          "size": 194
+        }
+      },
+      "rustc_version_text": "rustc 1.98.0 (88d9e12ae 2026-08-18)\nbinary: rustc\ncommit-hash: 88d9e12ae178fab0fb5cc050a94da85685d449ea\ncommit-date: 2026-08-18\nhost: x86_64-pc-windows-msvc\nrelease: 1.98.0\nLLVM version: 22.1.8",
+      "source_commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+      "source_directory": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\source-affected-1a6fd10c",
+      "source_tree": "0d4cce57dfa10a5aa9917df863a8bb4bc8c7ea9d",
+      "target_directory": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-affected-1a6fd10c",
+      "target_preexisting": false
+    },
+    {
+      "archive": {
+        "commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+        "extracted": {
+          "file_count": 10045,
+          "manifest_sha256": "ede8319274b65be393ef2b615dab5ef977049ddeca836b922f73924234b837ce",
+          "total_bytes": 365498801
+        },
+        "git_command": "git -C C:\\dev\\blog\\death-of-software\\projects\\strehl archive --format=tar a97275817c58e164f75c7cd3d80ca99444a2a145",
+        "git_exit_code": 0,
+        "git_stderr": {
+          "mtime_ns": 1788575887092495300,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\archive-a9727581.git.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "stream_sha256": "727b92eb89aa68b72672a972a576e59542f25b5a6e0236e77a005dd242c3467d",
+        "tar_command": "tar -xf - -C C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\source-fixed-a9727581",
+        "tar_exit_code": 0,
+        "tar_stderr": {
+          "mtime_ns": 1788575887092495300,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\archive-a9727581.tar.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "tar_stdout": {
+          "mtime_ns": 1788575887092495300,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\archive-a9727581.tar.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        }
+      },
+      "binary": {
+        "mtime_ns": 1788576030430481400,
+        "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-fixed-a9727581\\release\\strehl.exe",
+        "sha256": "c50420c4b4d790476ad970f144fd0f021ca2ea25a9dcdaf88e83908e5adc982b",
+        "size": 10043904
+      },
+      "binary_preexisting": false,
+      "binary_version": {
+        "argv": [
+          "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-fixed-a9727581\\release\\strehl.exe",
+          "--version"
+        ],
+        "command": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-fixed-a9727581\\release\\strehl.exe --version",
+        "exit_code": 0,
+        "stderr": {
+          "mtime_ns": 1788576030781981800,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\fixed-binary-version.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "stdout": {
+          "mtime_ns": 1788576030781981800,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\fixed-binary-version.stdout.log",
+          "sha256": "044295fbc0548d3e0c3267209bcf7b61aea9343df6f77275d6ae5a560a8b7e02",
+          "size": 56
+        }
+      },
+      "binary_version_text": "strehl 0.0.0 (a97275817c58e164f75c7cd3d80ca99444a2a145)",
+      "build": {
+        "argv": [
+          "cargo",
+          "build",
+          "--release",
+          "--locked",
+          "-p",
+          "strehl-cli",
+          "--bin",
+          "strehl"
+        ],
+        "command": "cargo build --release --locked -p strehl-cli --bin strehl",
+        "exit_code": 0,
+        "stderr": {
+          "mtime_ns": 1788576030655259300,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\fixed-build.stderr.log",
+          "sha256": "175f71f2868e4ae08d6405bee3751b6d74626c8c7d2191cf4fd9702237790fe3",
+          "size": 5240
+        },
+        "stdout": {
+          "mtime_ns": 1788576030655259300,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\fixed-build.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        }
+      },
+      "build_environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_TARGET_DIR": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-fixed-a9727581",
+        "SOURCE_DATE_EPOCH": "1788572521",
+        "STREHL_BUILD_ID": "a97275817c58e164f75c7cd3d80ca99444a2a145"
+      },
+      "cargo_version": {
+        "argv": [
+          "cargo",
+          "--version",
+          "--verbose"
+        ],
+        "command": "cargo --version --verbose",
+        "exit_code": 0,
+        "stderr": {
+          "mtime_ns": 1788575956115104800,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\fixed-cargo-version.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "stdout": {
+          "mtime_ns": 1788575956115104800,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\fixed-cargo-version.stdout.log",
+          "sha256": "c0716915ad8353e130842d120d4c493ce0186cc2a0ef017cbfaaf437f6ca5c85",
+          "size": 313
+        }
+      },
+      "cargo_version_text": "cargo 1.98.0 (797e8a9bc 2026-08-05)\nrelease: 1.98.0\ncommit-hash: 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d\ncommit-date: 2026-08-05\nhost: x86_64-pc-windows-msvc\nlibgit2: 1.9.4 (sys:0.21.0 vendored)\nlibcurl: 8.21.0-DEV (sys:0.4.90+curl-8.21.0 vendored ssl:Schannel)\nos: Windows 10.0.26200 (Windows 11 Core) [64-bit]",
+      "label": "fixed",
+      "rustc_version": {
+        "argv": [
+          "rustc",
+          "--version",
+          "--verbose"
+        ],
+        "command": "rustc --version --verbose",
+        "exit_code": 0,
+        "stderr": {
+          "mtime_ns": 1788575956169240600,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\fixed-rustc-version.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "stdout": {
+          "mtime_ns": 1788575956169240600,
+          "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\fixed-rustc-version.stdout.log",
+          "sha256": "1fb10dcd2dd67ff767f95bad0b2d205e34c03d0a346f60593f2cbc35abf4bf52",
+          "size": 194
+        }
+      },
+      "rustc_version_text": "rustc 1.98.0 (88d9e12ae 2026-08-18)\nbinary: rustc\ncommit-hash: 88d9e12ae178fab0fb5cc050a94da85685d449ea\ncommit-date: 2026-08-18\nhost: x86_64-pc-windows-msvc\nrelease: 1.98.0\nLLVM version: 22.1.8",
+      "source_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+      "source_directory": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\source-fixed-a9727581",
+      "source_tree": "21e04c831c7dddda4ec6727b2525c729fe54b6a7",
+      "target_directory": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-fixed-a9727581",
+      "target_preexisting": false
+    }
+  ],
+  "lineage": {
+    "affected_source": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+    "affected_tree": "0d4cce57dfa10a5aa9917df863a8bb4bc8c7ea9d",
+    "fixed_source": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+    "fixed_subject": "Bound Pyramid worker memory",
+    "fixed_tree": "21e04c831c7dddda4ec6727b2525c729fe54b6a7",
+    "m139_is_ancestor_of_affected": true,
+    "m139_report_citation": "docs/research/M139-m12-campaign.md:11-15",
+    "m139_report_source_lineage_only": "8009447e059febb8f9c59fda509f141835d6abdb",
+    "repair_commit": "fc2abb499126a56302de7f21f527de5613be34e7",
+    "repair_is_ancestor_of_fixed": true,
+    "repair_parent": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71"
+  },
+  "schema": "strehl-m176-builds-v1",
+  "tooling": {
+    "git_version": "git version 2.55.0.windows.2",
+    "python_executable": {
+      "mtime_ns": 1744145856000000000,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "size": 104952
+    },
+    "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "tar_executable": "C:\\WINDOWS\\system32\\tar.EXE"
+  }
+}

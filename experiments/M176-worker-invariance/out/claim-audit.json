@@ -1,0 +1,2325 @@
+{
+  "schema": "strehl-m176-claim-audit-v2",
+  "audit": {
+    "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+    "revision_object_type": "commit",
+    "source": "M176 fixed-commit blast-radius audit plus deterministic adversarial resweep",
+    "source_line_count": 172,
+    "moving_worktree_excluded": true,
+    "m139_artifact_policy": "COMMITTED_REPORT_ONLY_NO_OUTPUT_ARTIFACTS",
+    "adversarial_resweep": "Revision-bound Git search and exact-blob citation resolution; moving worktree excluded."
+  },
+  "classification_enum": [
+    "CONDITIONED_UNRECORDED",
+    "IRRELEVANT_PREMERGE",
+    "SUPERSEDED",
+    "SURVIVES_SAME_WORKER_ONLY",
+    "SURVIVES_UNCONDITIONALLY",
+    "VOID_AS_DETERMINISM_EVIDENCE"
+  ],
+  "worker_provenance_state_enum": [
+    "DECLARED_SWEEP",
+    "DEFAULT_SANITIZED_COMMON",
+    "ESTIMATOR_NOT_PYRAMID",
+    "EXPLICIT_PIN",
+    "EXTERNAL_SINGLE_THREAD",
+    "FUTURE_CONTRACT_UNBOUND",
+    "INHERITED_UNRECOVERABLE",
+    "MIXED_HISTORY_CONFIRMED",
+    "NOT_APPLICABLE_PREMERGE",
+    "RECORDED_NOT_ASSERTED",
+    "SAME_PROCESS_COMMON_DEFAULT"
+  ],
+  "exposure_state_enum": [
+    "CONFIRMED",
+    "MATERIAL",
+    "NONE",
+    "NOT_OBSERVED",
+    "POSSIBLE",
+    "SEPARATE_NON_WORKER"
+  ],
+  "required_claim_ids": [
+    "M139",
+    "M8-R",
+    "M8-O",
+    "M165",
+    "M164-WITNESS",
+    "M164-FUTURE-CANDIDATE",
+    "M164-BLOCKED-CHECKER",
+    "SHIPPING-SCALE-CATMULL-ROM-BYTE-FREEZE",
+    "M130",
+    "V-MOTE-DUST-OFF",
+    "M-COVER-BORDER",
+    "PINNED-WORKER-PYRAMID-GROUPS",
+    "M-PHASE0",
+    "SAME-PROCESS-DEFAULT-AB-GROUPS",
+    "DELIVER-V6",
+    "ESTIMATOR-PREMERGE-GROUPS",
+    "METADATA-ONLY-EXPOSURE",
+    "WARP-CACHE-M117",
+    "M175",
+    "SCORED-RUN-MANIFEST-M153",
+    "FINALPASS-CACHE",
+    "M162",
+    "V-ENVSURF-WORKERS",
+    "M-PHASE0-SPLIT",
+    "BUILD-SPEED",
+    "ORCH-SHIP-V3-V4",
+    "V-NEVERWORSE-SHIP-RENDER",
+    "SCORECARD-BASELINE",
+    "UNSEALED-RENDER-RESUME-PATHS",
+    "M172-UNIT-WORKER-CONTRACT"
+  ],
+  "normative_requirement": "Every scored, cached, or hash-frozen render MUST bind workers_requested, workers_resolved, and a versioned reduction_lattice_id containing the exact logical frame partitions and ordered reduction topology to both its whole-file and canonical-pixel SHA-256, and MUST refuse comparison or reuse on any mismatch.",
+  "current_repair_boundary": {
+    "affected_source": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+    "audit_revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+    "audit_revision_contains_fixed_control": true,
+    "fixed_control": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+    "full_post_fix_m12_worker_ladder_claimed": false,
+    "m176_renderer_change": "NONE",
+    "repair_commit": "fc2abb499126a56302de7f21f527de5613be34e7",
+    "repair_owner": "M172",
+    "repair_parent_count": 1
+  },
+  "status_replacement": {
+    "target_path": "docs/STATUS.md",
+    "target_revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+    "target_blob_sha1": "aab1a092cafa4b6768bffbf5627da1dd54d37512",
+    "old_semantic_anchor": "**Every hash pin in this repository is therefore",
+    "proposed_replacement": "**M176 narrows the blast radius.** The affected Pyramid backend made final-render bytes depend on its logical worker decomposition, but not every repository hash is a Pyramid final-render hash. The historical M139 cross-worker FAIL; pre-merge M8-R and M165 checks; M164 witness and blocked checker; estimator-era results; M117 warp-cache clearance; and M175 transfer sentinel survive. The shipping Scale + Catmull-Rom freeze and M130 equality at explicit W=2 remain valid at their recorded worker topology, not as cross-worker determinism evidence. V-MOTE's wrong-map/OFF equality and DELIVER-V6's generalized determinism wording must be conditioned on a common worker lattice; M8-O v1.4 and the metadata-only `--exposure` whole-file difference were already superseded. M-COVER-BORDER's mixed-history profile is the one confirmed worker-caused false difference, superseded by its pinned-worker rerun. V-ENVSURF's N=3 W=3/W=1 equality is an exact observation and a confirmed false-agreement surface if generalized, not proof of invariance. M-PHASE0-SPLIT's fixed-W=1 null preserves its KILL verdict; BUILD-SPEED's W=1/2/4/8 treatment is valid without admitting absolute timing; ORCH's 26 equal V3/V4 files do not prove two runs of one binary; and V-NEVERWORSE's shipping-master rerender identity survives only within its common unresolved topology. SCORECARD-BASELINE remains UNMEASURED, render_all/gallery/finalpass resume paths remain unsealed, and M172's unit worker contract is not a full final-TIFF ladder.\n\nExact equal bytes remain exact observations; they do not prove cross-worker determinism without matching requested/resolved workers and reduction lattice. V-ENVSURF confirms that equal bytes can be a false-agreement surface when generalized, while no cancellation of an independent scientific treatment by worker rounding was measured; stale-render reuse is a separate material false-agreement risk. Every scored, cached, or hash-frozen render MUST bind workers_requested, workers_resolved, and a versioned reduction_lattice_id containing the exact logical frame partitions and ordered reduction topology to both its whole-file and canonical-pixel SHA-256, and MUST refuse comparison or reuse on any mismatch. The M172 repair was already present at audit revision `69bdacafbb4a49a198e9f430590033e8a5ed25a2`; M176 lands no renderer repair.",
+    "status_edit_performed": false,
+    "lane_write_boundary": "PROPOSAL_ONLY_STATUS_NOT_WRITTEN",
+    "route_to": "orchestrator",
+    "worktree_state_before_lane": "PREEXISTING_MODIFIED"
+  },
+  "claims": [
+    {
+      "id": "M139",
+      "category": "historical-worker-ladder",
+      "claim_or_contract": "Formal historical M12 measured W=1/2/4/8/16 with six repetitions per completed N=33 and N=105 cell; fixed-worker cells were stable while cross-worker canonical images differed.",
+      "evidence": [
+        {
+          "path": "docs/research/M139-m12-campaign.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "The registered main matrix is “the same N=33/105/299 and worker-count matrix"
+        },
+        {
+          "path": "docs/research/M139-m12-campaign.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**Cross-worker scaling invariance: FAIL.** N=33 has five distinct TIFF hashes"
+        }
+      ],
+      "worker_provenance": {
+        "state": "DECLARED_SWEEP",
+        "detail": "Registered W=1/2/4/8/16 with six repetitions per completed cell."
+      },
+      "classifications": [
+        "SURVIVES_UNCONDITIONALLY"
+      ],
+      "classification_basis": "historical M12 worker ladder",
+      "consequence": "The historical cross-worker FAIL and overall conjunctive M12 FAIL stand; fixed-worker stability must not be promoted to a full post-fix M12-S PASS, and M12-D remains UNMEASURED at N=299.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "Both whole-file and canonical-pixel hashes were retained for the declared worker treatment."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "The worker-induced differences are the measured treatment response, not an uncontrolled nuisance."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "Historical commit 8009447e remains a valid affected-result record; no M139 output artifact was reused by M176."
+    },
+    {
+      "id": "M8-R",
+      "category": "pre-merge-score",
+      "claim_or_contract": "The governing source-hull score observes each frame's gather before merge, reconstruction, serialization, or final rail handling.",
+      "evidence": [
+        {
+          "path": "experiments/M8-overshoot/run.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "$env:STREHL_PYRAMID_WORKERS = \"1\""
+        },
+        {
+          "path": "docs/research/M136-m8-census-groundtruth.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "M8-R exactly zero. Merge, reconstruction, green averaging, output gain,\nserialization and final rail clipping cannot contribute to M8-R because they\noccur after its observed boundary"
+        },
+        {
+          "path": "docs/research/M136-m8-passability.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "M8-R result remains `63,191,176 / 6,131,678,976 = 1.030569%`; it is the\n> governing score but not a fresh measurement of M172."
+        }
+      ],
+      "worker_provenance": {
+        "state": "EXPLICIT_PIN",
+        "detail": "The runner explicitly pins Pyramid W=1; the scored observable is pre-merge regardless."
+      },
+      "classifications": [
+        "IRRELEVANT_PREMERGE"
+      ],
+      "classification_basis": "M8-R gather census",
+      "consequence": "The 1.030569% M8-R FAIL survives unchanged.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "Final-fold workers cannot enter the observable."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "Final-fold workers cannot enter the observable."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "Current M8 remains FAIL on M8-R."
+    },
+    {
+      "id": "M8-O",
+      "category": "historical-final-render-score",
+      "claim_or_contract": "M8-O v1.4 read final RGB uint16 TIFFs; v1.5 replaced it because the old census mixed invention with unavoidable rail projection.",
+      "evidence": [
+        {
+          "path": "experiments/M8-overshoot/run.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "$env:STREHL_PYRAMID_WORKERS = \"1\""
+        },
+        {
+          "path": "docs/research/M136-m8-census-groundtruth.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "heading",
+          "anchor": "| Element | M8-R | M8-O v1.5 |"
+        },
+        {
+          "path": "docs/research/M136-m8-passability.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "heading",
+          "anchor": "### 5.3 M8-O v1.5"
+        }
+      ],
+      "worker_provenance": {
+        "state": "EXPLICIT_PIN",
+        "detail": "The historical final-render arm was W=1."
+      },
+      "classifications": [
+        "SUPERSEDED"
+      ],
+      "classification_basis": "M8-O v1.4 replaced by v1.5",
+      "consequence": "The historical 1.326144% remains fixed-worker evidence only; M8-O v1.5 is UNMEASURED and contributes no current PASS/FAIL.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "The historical arm was pinned; supersession is semantic, not a worker effect."
+      },
+      "false_difference_exposure": {
+        "state": "SEPARATE_NON_WORKER",
+        "detail": "The v1.4 failure mixed invention with representational rail projection."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "The current UNMEASURED v1.5 ruling stands; the v1.4 score is not current."
+    },
+    {
+      "id": "M165",
+      "category": "common-input-pre-merge-identity",
+      "claim_or_contract": "Stage 0M/0C binds admitted TIFF payload, decoded uint16, reconstructed f32 allocations, source/converter/settings/map hashes, and optional entry into BandMerge, not a finished render hash.",
+      "evidence": [
+        {
+          "path": "docs/research/M165-common-input.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**Stage 0M is closed in software. The Stage 0C consumer-boundary gate is\ncommissioned in software, and the fresh retained-source fork arm now passes\ndevelopment common-input admission. The real competitive package is still\n`UNMEASURED`.**"
+        },
+        {
+          "path": "crates/strehl-cli/src/bin/strehl-common-input.rs",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "merge.add_frame(&refs, &luma, &variance, &mut frame_workspace);"
+        },
+        {
+          "path": "experiments/M165-common-input/commission.py",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"source_sha256\": source_sha,\n        \"converter_executable_sha256\": converter_sha,\n        \"settings_sha256\": freeze[\"converter\"][\"bundle_members\"][\"settings_sha256\"],\n        \"icc_sha256\": converter.hash_file(icc_path),\n        \"pattern_map_sha256\": converter.hash_bytes(b\"synthetic pattern map\"),\n        \"pattern_manifest_sha256\": converter.hash_bytes(b\"synthetic pattern manifest\"),"
+        }
+      ],
+      "worker_provenance": {
+        "state": "NOT_APPLICABLE_PREMERGE",
+        "detail": "No renderer worker field is required because the hashes stop at the admitted input/load boundary."
+      },
+      "classifications": [
+        "IRRELEVANT_PREMERGE"
+      ],
+      "classification_basis": "M165 admitted-input boundary",
+      "consequence": "Stage 0M/0C software conclusions survive; campaign identity remains NOT YET TESTABLE and opaque-consumer semantic use remains unproved.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "Pyramid final-fold ordering is downstream of the hashed boundary."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "Pyramid final-fold ordering is downstream of the hashed boundary."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "The common-input admission verdict survives without a worker qualification."
+    },
+    {
+      "id": "M164-WITNESS",
+      "category": "pre-merge-frozen-witness",
+      "claim_or_contract": "S_1/S_2 are source-disjoint pre-merge witness sets reduced through a frozen candidate-blind path; they are not candidate or comparator renders.",
+      "evidence": [
+        {
+          "path": "docs/research/M164-reference-dominance.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "`S_1,k` and `S_2,k` are not candidate or comparator renders. Each must"
+        },
+        {
+          "path": "docs/research/M164-dominance-manifest.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "$env:OMP_NUM_THREADS='1'\n$env:OPENBLAS_NUM_THREADS='1'\n$env:MKL_NUM_THREADS='1'\n$env:NUMEXPR_NUM_THREADS='1'\n$env:BLIS_NUM_THREADS='1'\n$env:VECLIB_MAXIMUM_THREADS='1'"
+        }
+      ],
+      "worker_provenance": {
+        "state": "NOT_APPLICABLE_PREMERGE",
+        "detail": "Checker execution-thread pins are not Pyramid renderer worker provenance."
+      },
+      "classifications": [
+        "IRRELEVANT_PREMERGE"
+      ],
+      "classification_basis": "M164 frozen witness",
+      "consequence": "The reference witness, licence, Ask-2a critical-path, and blocked-state conclusions survive.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "No candidate image is produced or reused."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "No candidate image is produced or reused."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "The witness remains a valid pre-merge checker input."
+    },
+    {
+      "id": "M164-FUTURE-CANDIDATE",
+      "category": "future-production-contract",
+      "claim_or_contract": "Any eventual production candidate render must extend the blocked manifest with requested/resolved workers and a versioned reduction lattice bound to both output hashes.",
+      "evidence": [
+        {
+          "path": "experiments/M164-dominance-manifest/production-manifest-v1.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"cells\": []"
+        },
+        {
+          "path": "experiments/M164-dominance-manifest/production-manifest-v1.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"reduction\": null"
+        },
+        {
+          "path": "docs/research/M164-dominance-manifest.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "The record deliberately says `status =\nBLOCKED`, preserves unresolved fields as `null` or an empty hash group, and\nnames the producer for each missing input."
+        }
+      ],
+      "worker_provenance": {
+        "state": "FUTURE_CONTRACT_UNBOUND",
+        "detail": "No candidate render exists; the eventual manifest has no requested/resolved worker or lattice schema yet."
+      },
+      "classifications": [
+        "CONDITIONED_UNRECORDED"
+      ],
+      "classification_basis": "future M164 candidate",
+      "consequence": "No present image hash is damaged; future candidate comparison is inadmissible until the worker/lattice contract is added.",
+      "false_agreement_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A future stale or mismatched candidate could compare equal without topology provenance."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A future candidate could differ only because its reduction topology changed."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "Current BLOCKED status survives; the condition applies prospectively."
+    },
+    {
+      "id": "M164-BLOCKED-CHECKER",
+      "category": "non-render-byte-freeze",
+      "claim_or_contract": "The blocked-manifest hash and refusal bind manifest/checker/launcher bytes and deterministic JSON refusal, not image pixels.",
+      "evidence": [
+        {
+          "path": "docs/research/M164-dominance-manifest.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "That digest identifies a **blocked-state record**, not\na production-ready manifest."
+        },
+        {
+          "path": "experiments/M164-dominance-manifest/production-manifest-v1.freeze.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"manifest_sha256\": \"0e8035a763ae890330d7e4deeca041ddae08d037421823d280817d2e6ac8bbcc\""
+        }
+      ],
+      "worker_provenance": {
+        "state": "NOT_APPLICABLE_PREMERGE",
+        "detail": "The checker emits no Pyramid image."
+      },
+      "classifications": [
+        "SURVIVES_UNCONDITIONALLY"
+      ],
+      "classification_basis": "M164 blocked checker",
+      "consequence": "Byte-reproducible refusal survives and is not renderer determinism evidence.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "No final render is cached or compared."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "No final render is cached or compared."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "The blocked checker remains valid as a non-render contract."
+    },
+    {
+      "id": "SHIPPING-SCALE-CATMULL-ROM-BYTE-FREEZE",
+      "category": "shipping-final-render-byte-freeze",
+      "claim_or_contract": "The coffee-bean aligned Pyramid registry row freezes compiled default Scale coverage with a Catmull-Rom sidecar at one observed W=4 topology.",
+      "evidence": [
+        {
+          "path": "crates/strehl-cli/tests/byte-freeze.rs",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "fn the_frozen_renders_still_produce_their_recorded_bytes()"
+        },
+        {
+          "path": "crates/strehl-cli/tests/byte-freezes.tsv",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "coffee-bean-20-gate2-pyramid-sidecar\tcoffee-bean\tDSC00016..DSC00035\t20\tpyramid\t2.0"
+        },
+        {
+          "path": "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "resampler catmull-rom"
+        },
+        {
+          "path": "docs/research/M108-freeze-test.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "* **Reported only:** the `workers … : N chunks of <= M frames` fingerprint."
+        }
+      ],
+      "worker_provenance": {
+        "state": "RECORDED_NOT_ASSERTED",
+        "detail": "The registry records 4 workers, but the test gates bytes and uses the worker field only as a moved-hash diagnostic."
+      },
+      "classifications": [
+        "SURVIVES_SAME_WORKER_ONLY",
+        "VOID_AS_DETERMINISM_EVIDENCE"
+      ],
+      "classification_basis": "shipping Scale plus Catmull-Rom byte freeze",
+      "consequence": "FB76...B084 remains a valid W=4 witness; it never established cross-worker determinism and the registry lacks requested/resolved counts and lattice identity.",
+      "false_agreement_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A treatment delta could in principle cancel a worker-order delta when a future comparison ignores topology."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A different worker lattice can false-red the absolute hash."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "The same-worker freeze survives; any cross-worker reading is void."
+    },
+    {
+      "id": "M130",
+      "category": "same-topology-code-change-control",
+      "claim_or_contract": "M130's no-cover before/after pair reported equal TIFF hashes, equal decoded arrays, and zero differing samples with STREHL_PYRAMID_WORKERS=2 and RAYON_NUM_THREADS=6 in every comparable render.",
+      "evidence": [
+        {
+          "path": "docs/research/M130-crop-early.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "heading",
+          "anchor": "### Default/Scale byte freeze"
+        },
+        {
+          "path": "docs/research/M130-crop-early.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "STREHL_PYRAMID_WORKERS=2"
+        }
+      ],
+      "worker_provenance": {
+        "state": "EXPLICIT_PIN",
+        "detail": "Every comparable A/B render explicitly set Pyramid W=2; the separate registry witness records W=4 and is not the A/B provenance."
+      },
+      "classifications": [
+        "SURVIVES_SAME_WORKER_ONLY"
+      ],
+      "classification_basis": "M130 no-cover before/after equality at explicit W=2",
+      "consequence": "The code-change non-perturbation and Scale geometry conclusion survive at explicit W=2; the separate W=4 registry witness remains separate and neither is cross-worker proof.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "The compared pair shared build input and the same explicit W=2 topology."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "Replaying the absolute pin at another historical topology could false-red."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "M130's intervention conclusion survives with an explicit same-W=2 qualification; it was not a sanitized-default A/B."
+    },
+    {
+      "id": "V-MOTE-DUST-OFF",
+      "category": "scientific-final-render-ab",
+      "claim_or_contract": "OFF and WRONGMAP were separate runs of one pinned executable and separate caches; the validator rejected both fabricated sites and emitted the same bytes, while ON-versus-OFF showed a large localized effect.",
+      "evidence": [
+        {
+          "path": "docs/research/V-MOTE.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "| F7 | MEASURED | The self-validation gate reduces a wrong coordinate to **zero bytes**."
+        },
+        {
+          "path": "docs/research/V-MOTE.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "| F8 | ARGUED | Byte-identity under a wrong map bounds the **downside** of enabling a corrector;"
+        }
+      ],
+      "worker_provenance": {
+        "state": "INHERITED_UNRECOVERABLE",
+        "detail": "Neither retained command sets or clears STREHL_PYRAMID_WORKERS and no resolved worker line survives."
+      },
+      "classifications": [
+        "CONDITIONED_UNRECORDED",
+        "SURVIVES_SAME_WORKER_ONLY"
+      ],
+      "classification_basis": "V-MOTE dust wrong-map versus OFF",
+      "consequence": "The recommendation and common-topology validator conclusion survive; the historical absolute zero-downside hash must be qualified as fixed/common worker.",
+      "false_agreement_exposure": {
+        "state": "POSSIBLE",
+        "detail": "No worker-only false agreement was observed, but cancellation is logically unexcluded because the counts are unrecoverable."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A worker-order delta could have been attributed to the dust treatment."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "Scientific A/B conclusion survives same-worker-only; absolute cross-worker determinism does not."
+    },
+    {
+      "id": "M-COVER-BORDER",
+      "category": "confirmed-worker-false-difference",
+      "claim_or_contract": "The original profile-final.json mixed worker/order histories; the corrected W=2 rerun re-established Scale 8 px, Crop 256 px, and the 8/32/256 ladder.",
+      "evidence": [
+        {
+          "path": "docs/research/M-COVER-BORDER.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "`profile-final.json` therefore mixed worker/order histories in its b4 ladder"
+        },
+        {
+          "path": "experiments/M-COVER-BORDER/load_render.py",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"STREHL_PYRAMID_WORKERS\": \"2\""
+        }
+      ],
+      "worker_provenance": {
+        "state": "MIXED_HISTORY_CONFIRMED",
+        "detail": "Original arms mixed worker histories; replacement arms explicitly pin W=2."
+      },
+      "classifications": [
+        "SUPERSEDED"
+      ],
+      "classification_basis": "M-COVER-BORDER original profile",
+      "consequence": "The old profile is invalid for intervention attribution; the pinned rerun supplies the current border ruling.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "The documented corruption was a false difference, not an equality."
+      },
+      "false_difference_exposure": {
+        "state": "CONFIRMED",
+        "detail": "Mixed worker histories produced the repository's confirmed worker-caused false difference."
+      },
+      "current_score_survives": false,
+      "current_verdict_survives": true,
+      "survival_detail": "Original profile withdrawn; corrected W=2 result survives."
+    },
+    {
+      "id": "PINNED-WORKER-PYRAMID-GROUPS",
+      "category": "grouped-fixed-worker-results",
+      "group_members": [
+        "M-FLATNULL",
+        "M8-v2",
+        "M142",
+        "BUILD-RESAMP",
+        "V-ca",
+        "V-chroma2",
+        "BUILD-CHROMA"
+      ],
+      "claim_or_contract": "M-FLATNULL, M8-v2, M142, BUILD-RESAMP, V-ca, and the V-chroma2 reproduction of BUILD-CHROMA used explicit Pyramid-worker or legacy --chunks pins for their within-pair conclusions.",
+      "evidence": [
+        {
+          "path": "docs/research/M-FLATNULL.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "`STREHL_DEFECT=off`; `STREHL_PYRAMID_WORKERS=1`; `RAYON_NUM_THREADS=8`"
+        },
+        {
+          "path": "experiments/cover-default/m8-v2/run_v2.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "$env:STREHL_PYRAMID_WORKERS = \"1\""
+        },
+        {
+          "path": "experiments/M142-m8o-execute/run-clamped-m8o.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "STREHL_PYRAMID_WORKERS = \"1\""
+        },
+        {
+          "path": "experiments/BUILD-RESAMP/render6-h2h.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "$env:STREHL_PYRAMID_WORKERS = '2'"
+        },
+        {
+          "path": "docs/research/V-ca.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "- **`--chunks` was pinned in every A/B**, and frame counts match across all six pairs."
+        },
+        {
+          "path": "docs/research/V-chroma2.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "ran three arms on `coffee-bean --limit 2\n--chunks 4`. **BUILD-CHROMA's hashes reproduce exactly.**"
+        },
+        {
+          "path": "docs/research/BUILD-CHROMA.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "table above is a **same-binary** A/B — one `blend-render` binary, three env\nsettings"
+        }
+      ],
+      "worker_provenance": {
+        "state": "EXPLICIT_PIN",
+        "detail": "Explicit pins were W=1 for M-FLATNULL/M8-v2/M142, W=2 for BUILD-RESAMP, legacy --chunks 5 for V-ca, and legacy --chunks 4 for V-chroma2 reproducing BUILD-CHROMA."
+      },
+      "classifications": [
+        "SURVIVES_SAME_WORKER_ONLY"
+      ],
+      "classification_basis": "fixed-worker Pyramid groups",
+      "consequence": "The listed scientific A/B conclusions survive only at their explicit pins; no row is promoted to cross-worker determinism.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "Compared arms share the explicit pin."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "Compared arms share the explicit pin."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "Grouped fixed-worker results survive with their original scope."
+    },
+    {
+      "id": "M-PHASE0",
+      "category": "declared-worker-treatment-and-fixed-worker-queue",
+      "group_members": [
+        "W=1/2/4/8/16 scaling",
+        "fixed-W queue pairs"
+      ],
+      "claim_or_contract": "Worker count is the declared treatment for the scaling result, while queue transparency compares fixed-worker pairs.",
+      "evidence": [
+        {
+          "path": "docs/research/M-PHASE0-PIPE.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "Two real stacks at W=1/2/4/8/16"
+        },
+        {
+          "path": "docs/research/M-PHASE0-PIPE.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "Fixed-worker off/on renders matched byte-for-byte on two aligned stacks and one independent holdout"
+        },
+        {
+          "path": "experiments/M-PHASE0-PIPE/measure.py",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "WORKERS_ENV = \"STREHL_PYRAMID_WORKERS\""
+        }
+      ],
+      "worker_provenance": {
+        "state": "DECLARED_SWEEP",
+        "detail": "Worker count is explicit per scaling cell; queue pairs hold it fixed."
+      },
+      "classifications": [
+        "SURVIVES_UNCONDITIONALLY"
+      ],
+      "classification_basis": "M-PHASE0 declared worker treatment",
+      "consequence": "The scaling result survives because W is the treatment; queue transparency remains fixed-worker evidence only.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "The treatment and fixed-W subclaims are separated."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "Worker differences are intentional in the scaling arm."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "Both subclaims survive at their explicitly stated scopes."
+    },
+    {
+      "id": "SAME-PROCESS-DEFAULT-AB-GROUPS",
+      "category": "grouped-common-default-results",
+      "group_members": [
+        "M126",
+        "BUILD-BLEND",
+        "soft-gate controls",
+        "band-floor controls",
+        "M-COVER-NATIVE"
+      ],
+      "claim_or_contract": "These runners clear inherited STREHL state per arm or keep one process environment unchanged across each compared pair.",
+      "evidence": [
+        {
+          "path": "experiments/M126-default-audit/composite/run_arms.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "function Clear-Strehl {"
+        },
+        {
+          "path": "docs/research/M-COVER-NATIVE.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "Every other ambient `STREHL_*`\nvariable was removed before each binary invocation."
+        }
+      ],
+      "worker_provenance": {
+        "state": "SAME_PROCESS_COMMON_DEFAULT",
+        "detail": "Each A/B pair shares build, input, process environment, and default worker resolution."
+      },
+      "classifications": [
+        "SURVIVES_SAME_WORKER_ONLY"
+      ],
+      "classification_basis": "same-process/default-count A/B groups",
+      "consequence": "Feature nesting, liveness, and no-op conclusions survive; structural no-call-site findings survive unconditionally, but literal hashes are not cross-worker pins.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "Within-pair topology is common."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "An absolute hash replay under a different historical default topology could false-red."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "Scientific pairwise conclusions survive with a common-default qualification."
+    },
+    {
+      "id": "DELIVER-V6",
+      "category": "delivered-file-identity-and-generalized-determinism",
+      "claim_or_contract": "Seven delivered files were observed equal across single-stream and three-concurrent-process runs, but the environment-clearing record omitted the per-render Pyramid worker control.",
+      "evidence": [
+        {
+          "path": "docs/research/DELIVER-V6.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**The pipeline is bit-exactly deterministic for a fixed binary.**"
+        },
+        {
+          "path": "experiments/DELIVER-V6/render.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "$hdr += \"all other STREHL_* : unset (shipping default)\""
+        },
+        {
+          "path": "experiments/DELIVER-V6/render.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "if (Test-Path $target) {\n        \"[$i/$($subjects.Count)] $name SKIP (exists)\" | Tee-Object -FilePath $log -Append\n        continue"
+        }
+      ],
+      "worker_provenance": {
+        "state": "INHERITED_UNRECOVERABLE",
+        "detail": "Process concurrency changed, but per-render worker counts were not set, cleared, or retained."
+      },
+      "classifications": [
+        "CONDITIONED_UNRECORDED",
+        "VOID_AS_DETERMINISM_EVIDENCE"
+      ],
+      "classification_basis": "DELIVER-V6 fixed-binary determinism generalization",
+      "consequence": "The seven equal-file observations and duplicate-copy conclusions survive; the generalized cross-worker determinism claim does not.",
+      "false_agreement_exposure": {
+        "state": "POSSIBLE",
+        "detail": "Unrecorded topology prevents the same-worker counterfactual; the resume path can also reuse an existing target."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A worker-order change could be mistaken for a delivery change."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": false,
+      "survival_detail": "Observed identity survives; generalized determinism must be conditioned."
+    },
+    {
+      "id": "ESTIMATOR-PREMERGE-GROUPS",
+      "category": "non-pyramid-and-pre-merge-group",
+      "group_members": [
+        "M2",
+        "M18",
+        "M95",
+        "M97",
+        "M100",
+        "M105",
+        "M107",
+        "M109",
+        "M111",
+        "M114",
+        "M116",
+        "M117",
+        "M121",
+        "M122",
+        "M124"
+      ],
+      "claim_or_contract": "These claims use Estimator, pre-merge/source hashes, observer identity, or post-render copy equality rather than the affected Pyramid final fold.",
+      "evidence": [
+        {
+          "path": "docs/research/M2-baseline-skeleton.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "Two runs — one on all 32 threads, one restricted to 4\nlogical CPUs — produced **byte-identical** output and index maps"
+        },
+        {
+          "path": "docs/research/M18-merge-implemented.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "heading",
+          "anchor": "### The gather is provably non-perturbing"
+        }
+      ],
+      "worker_provenance": {
+        "state": "ESTIMATOR_NOT_PYRAMID",
+        "detail": "STREHL_PYRAMID_WORKERS cannot affect these historical claim paths."
+      },
+      "classifications": [
+        "SURVIVES_UNCONDITIONALLY"
+      ],
+      "classification_basis": "Estimator and pre-merge grouped claims",
+      "consequence": "The grouped results survive M176; this is not a universal proof of Estimator equality on every input because its planner can consult available_parallelism.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "The identified Pyramid defect is outside these paths."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "The identified Pyramid defect is outside these paths."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "Existing scientific conclusions survive against M176's specific Pyramid mechanism."
+    },
+    {
+      "id": "METADATA-ONLY-EXPOSURE",
+      "category": "whole-file-versus-pixel-semantics",
+      "claim_or_contract": "A historical --exposure comparison produced different TIFF bytes solely because the description recorded different requested values while all 98,898,048 decoded samples were equal.",
+      "evidence": [
+        {
+          "path": "docs/research/BUILD-DEFECT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "heading",
+          "anchor": "## 21. THE HASH THAT SAID YES: `--exposure` WAS INERT AT THE PIN, AND THE SEALED CORPUS INHERITED IT"
+        },
+        {
+          "path": "docs/research/BUILD-DEFECT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**Those two files are different bytes and the same image. Zero of 98,898,048"
+        }
+      ],
+      "worker_provenance": {
+        "state": "ESTIMATOR_NOT_PYRAMID",
+        "detail": "This is a metadata semantic failure, not worker provenance."
+      },
+      "classifications": [
+        "SUPERSEDED",
+        "VOID_AS_DETERMINISM_EVIDENCE"
+      ],
+      "classification_basis": "metadata-only --exposure hash difference",
+      "consequence": "Whole-file SHA alone cannot prove pixel liveness or difference; both whole-file and canonical-pixel hashes are required.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "The failure was a false difference."
+      },
+      "false_difference_exposure": {
+        "state": "CONFIRMED",
+        "detail": "Metadata created a confirmed non-worker file-hash difference with identical pixels."
+      },
+      "current_score_survives": false,
+      "current_verdict_survives": false,
+      "survival_detail": "The old whole-file liveness inference is superseded; the dual-hash lesson survives."
+    },
+    {
+      "id": "WARP-CACHE-M117",
+      "category": "pre-merge-cache-and-clearance",
+      "claim_or_contract": "The live cache stores warp maps keyed by canonical capture path and solve configuration, including generation/reference/spans/resampler/SOLVE_ENV; it does not cache final renders.",
+      "evidence": [
+        {
+          "path": "crates/strehl-cli/src/align_cmd.rs",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "const SOLVE_ENV: [&str; 2] = [\"STREHL_SMOOTH\", \"STREHL_SMOOTH_HUBER\"];"
+        },
+        {
+          "path": "docs/research/M117-cache-audit.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**The corpus is trustworthy. I found no contaminated number.**"
+        }
+      ],
+      "worker_provenance": {
+        "state": "NOT_APPLICABLE_PREMERGE",
+        "detail": "Pyramid workers and reduction topology do not alter placement maps."
+      },
+      "classifications": [
+        "IRRELEVANT_PREMERGE",
+        "SURVIVES_UNCONDITIONALLY"
+      ],
+      "classification_basis": "warp-cache M117",
+      "consequence": "Do not add Pyramid worker/lattice identity to the warp-map key; the old poisoning defect is fixed and M117's no-contamination clearance stands.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "M117 audited and cleared the exposed historical reports."
+      },
+      "false_difference_exposure": {
+        "state": "SEPARATE_NON_WORKER",
+        "detail": "The old history-dependent cache issue was a solve-configuration defect and is fixed."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "M117's corpus-clearance verdict survives unconditionally."
+    },
+    {
+      "id": "M175",
+      "category": "external-single-thread-transfer",
+      "claim_or_contract": "The fresh-fork transfer sentinel freezes an external renderer at --threads=1 and observes decoded output pixels equal to the input payload.",
+      "evidence": [
+        {
+          "path": "experiments/M175-fork-arm/RUN-MANIFEST.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"--threads=1\""
+        },
+        {
+          "path": "experiments/M175-fork-arm/RUN-MANIFEST.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"threads\": 1"
+        },
+        {
+          "path": "docs/research/M175-fork-arm.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "the decoded output-pixel SHA-256 equals the frozen input-payload SHA-256"
+        }
+      ],
+      "worker_provenance": {
+        "state": "EXTERNAL_SINGLE_THREAD",
+        "detail": "The non-Strehl renderer is explicitly single-threaded."
+      },
+      "classifications": [
+        "SURVIVES_UNCONDITIONALLY"
+      ],
+      "classification_basis": "M175 fresh-fork sentinel",
+      "consequence": "The transfer admission survives; it is not Pyramid determinism evidence or a quality score.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "Thread provenance is explicit and the pixel payload is directly compared."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "Thread provenance is explicit and the pixel payload is directly compared."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "M175's admission verdict survives."
+    },
+    {
+      "id": "SCORED-RUN-MANIFEST-M153",
+      "category": "prospective-scored-output-contract",
+      "claim_or_contract": "The scorecard and M153 bind a requested worker count through argv/environment and record output hashes, but not resolved threads, exact logical partitions, ordered topology, or a lattice ID.",
+      "evidence": [
+        {
+          "path": "docs/proposals/2026-09-sota-scorecard.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "complete settings, worker count, cache state, and output contract;"
+        },
+        {
+          "path": "experiments/M153-m11-harness/m11_harness.py",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "f\"{setting['mode_id']} does not operationally bind its worker count\""
+        },
+        {
+          "path": "experiments/M153-m11-harness/quality-manifest-template.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"output_sha256\": null,\n    \"pixel_sha256\": null"
+        }
+      ],
+      "worker_provenance": {
+        "state": "FUTURE_CONTRACT_UNBOUND",
+        "detail": "Requested worker value is bound; resolved execution and arithmetic topology are not."
+      },
+      "classifications": [
+        "CONDITIONED_UNRECORDED"
+      ],
+      "classification_basis": "scored RUN-MANIFEST and M153 contract",
+      "consequence": "No scored result currently exists under the gap; future scoring must implement the exact normative requirement before comparison.",
+      "false_agreement_exposure": {
+        "state": "POSSIBLE",
+        "detail": "Mismatched topology could cancel a treatment delta or be silently accepted."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "Mismatched topology could false-red a score or frozen hash."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "Current no-score state survives; the contract is prospectively incomplete."
+    },
+    {
+      "id": "FINALPASS-CACHE",
+      "category": "stale-final-render-reuse",
+      "claim_or_contract": "finalpass resumes on any nonempty TIFF plus .ok; the sentinel contains the binary hash rather than the image hash and validates no manifest, workers, or lattice.",
+      "evidence": [
+        {
+          "path": "scripts/finalpass.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "if ((Test-Path $tif) -and ((Get-Item $tif).Length -gt 0) -and (Test-Path \"$tif.ok\")) {"
+        },
+        {
+          "path": "scripts/finalpass.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "if ($status -eq 'ok') { \"$binHash\" | Out-File -Encoding ascii \"$tif.ok\" }"
+        },
+        {
+          "path": "docs/research/BUILD-DEFECT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**A seal that does not hash its subject cannot"
+        }
+      ],
+      "worker_provenance": {
+        "state": "FUTURE_CONTRACT_UNBOUND",
+        "detail": "Reuse validates neither requested/resolved workers nor reduction topology."
+      },
+      "classifications": [
+        "CONDITIONED_UNRECORDED"
+      ],
+      "classification_basis": "finalpass resume cache",
+      "consequence": "Reuse is inadmissible until the cache seals the image, both output hashes, producing inputs, requested/resolved workers, and lattice and refuses every mismatch.",
+      "false_agreement_exposure": {
+        "state": "MATERIAL",
+        "detail": "Both arms can be handed the same stale TIFF; this is the material false-agreement channel."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A stale unrelated TIFF can also manufacture a difference."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": null,
+      "survival_detail": "This is an unfixed cache contract defect, not a scored result."
+    },
+    {
+      "id": "M162",
+      "category": "render-contract-gap",
+      "claim_or_contract": "M162 binds executable, source manifest, warp map, argv, and explicitly set environment, but omits resolved workers and reduction lattice identity.",
+      "evidence": [
+        {
+          "path": "experiments/M162-noise-regression/render.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"exe_sha256=$ExeHash\",\n        \"commit=$Commit\",\n        \"source_manifest_sha256=$SourceManifestHash\",\n        \"warpmap_sha256=$WarpmapHash\""
+        },
+        {
+          "path": "docs/research/M162-noise-regression.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**VERDICT: UNRESOLVED — neither REGRESSION nor TRADE is yet admissible.**"
+        }
+      ],
+      "worker_provenance": {
+        "state": "FUTURE_CONTRACT_UNBOUND",
+        "detail": "The contract records set environment but no resolved worker or lattice identity."
+      },
+      "classifications": [
+        "CONDITIONED_UNRECORDED"
+      ],
+      "classification_basis": "M162 render contract",
+      "consequence": "No current score is invalidated; any future comparison must add the normative worker/lattice binding.",
+      "false_agreement_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A topology mismatch could be silently compared or reused."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A topology mismatch could be attributed to regression/trade."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "M162's existing UNRESOLVED verdict remains unchanged."
+    },
+    {
+      "id": "V-ENVSURF-WORKERS",
+      "category": "environment-surface-worker-control",
+      "claim_or_contract": "At N=3, the unset control resolved W=3 and explicit STREHL_PYRAMID_WORKERS=1 resolved W=1; the two output files were exactly equal because both paths accumulated frames in frame order.",
+      "evidence": [
+        {
+          "path": "docs/research/V-ENVSURF.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "`1` -> banner `3 -> 1 workers`, image SAME"
+        },
+        {
+          "path": "docs/research/V-ENVSURF.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "byte-identical because the accumulator sums in frame order either way"
+        },
+        {
+          "path": "docs/research/V-ENVSURF.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "Byte-invariance here is a **correctness\nproperty**, not inertness."
+        }
+      ],
+      "worker_provenance": {
+        "state": "RECORDED_NOT_ASSERTED",
+        "detail": "The banner records unset W=3 versus explicit W=1 at exactly N=3; worker count was the environment-surface treatment, not a registered determinism ladder."
+      },
+      "classifications": [
+        "SURVIVES_UNCONDITIONALLY",
+        "VOID_AS_DETERMINISM_EVIDENCE"
+      ],
+      "classification_basis": "N=3 environment-surface control",
+      "consequence": "The exact output equality survives as an observation. Generalizing it to worker invariance is void: N=3 makes 3x1 and 1x3 evaluate the same frame-order expression.",
+      "false_agreement_exposure": {
+        "state": "CONFIRMED",
+        "detail": "This is a confirmed false-agreement surface if equal bytes are generalized to worker invariance; it is not a measured cancellation of an independent treatment."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "The observed files were equal and workers were the deliberate treatment."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "The LIVE environment-control verdict and N=3 equality survive; the determinism interpretation does not."
+    },
+    {
+      "id": "M-PHASE0-SPLIT",
+      "category": "superseded-fixed-worker-prototype",
+      "claim_or_contract": "The split-off/split-on prototype comparison explicitly fixed STREHL_PYRAMID_WORKERS=1 and RAYON_NUM_THREADS=1 and produced equal ordinary-output hashes.",
+      "evidence": [
+        {
+          "path": "docs/research/M-PHASE0-SPLIT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**Verdict: KILL — STOP/REMOVE RUST; retain the split instrument offline.**"
+        },
+        {
+          "path": "docs/research/M-PHASE0-SPLIT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "TIFF with split off and on is byte-identical:"
+        },
+        {
+          "path": "docs/research/M-PHASE0-SPLIT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "one deterministic worker."
+        },
+        {
+          "path": "experiments/M-PHASE0-SPLIT/out/real-109/run.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"STREHL_PYRAMID_WORKERS\": \"1\",\n    \"RAYON_NUM_THREADS\": \"1\""
+        },
+        {
+          "path": "experiments/M-PHASE0-SPLIT/out/real-109/run.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"byte_identical\": true"
+        }
+      ],
+      "worker_provenance": {
+        "state": "EXPLICIT_PIN",
+        "detail": "Both split-off/on arms explicitly used Pyramid W=1 and Rayon=1."
+      },
+      "classifications": [
+        "SURVIVES_SAME_WORKER_ONLY",
+        "SUPERSEDED"
+      ],
+      "classification_basis": "fixed-W split prototype null and removal verdict",
+      "consequence": "The ordinary-output non-perturbation observation survives at W=1; the KILL/STOP/REMOVE prototype verdict survives and the code path is superseded.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "The compared prototype arms shared the same explicit worker topology."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "The compared ordinary outputs were equal under the controlled topology."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "This is not cross-worker evidence and does not revive the removed prototype."
+    },
+    {
+      "id": "BUILD-SPEED",
+      "category": "declared-worker-scaling-treatment",
+      "claim_or_contract": "The worker sweep declared W=1/2/4/8 as the treatment in alternating order; separate common-default W=4 repetitions supplied same-topology output-hash controls.",
+      "evidence": [
+        {
+          "path": "experiments/BUILD-SPEED/worker_sweep.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "$settings = @(1, 2, 4, 8)"
+        },
+        {
+          "path": "experiments/BUILD-SPEED/worker_sweep.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "$env:STREHL_PYRAMID_WORKERS = \"$w\""
+        },
+        {
+          "path": "experiments/BUILD-SPEED/REPORT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "Six default-gate runs produced one hash. Six gate-4.5 runs produced one hash."
+        },
+        {
+          "path": "experiments/BUILD-SPEED/REPORT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "Sweeping `STREHL_PYRAMID_WORKERS` on a 40-frame limit, two passes in\nopposite order, per-setting minimum"
+        }
+      ],
+      "worker_provenance": {
+        "state": "DECLARED_SWEEP",
+        "detail": "W=1/2/4/8 was the declared independent variable; the common-default output controls resolved W=4."
+      },
+      "classifications": [
+        "SURVIVES_UNCONDITIONALLY",
+        "SURVIVES_SAME_WORKER_ONLY"
+      ],
+      "classification_basis": "worker treatment plus common-W=4 output controls",
+      "consequence": "The declared worker-treatment/scaling design survives unconditionally and the repeated output hashes survive at common W=4. Quarantined absolute timing is not admitted or scoreable here.",
+      "false_agreement_exposure": {
+        "state": "NOT_OBSERVED",
+        "detail": "Hash controls compare repeated common-W=4 runs; the sweep does not use output equality as a quality verdict."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "Cross-worker byte changes are part of the declared worker treatment, not a nuisance variable."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "Only worker treatment and same-W hash controls are adjudicated; no absolute time is adopted."
+    },
+    {
+      "id": "ORCH-SHIP-V3-V4",
+      "category": "cross-binary-shipping-file-equality",
+      "claim_or_contract": "ORCH observed 26 equal master files and recorded four worker threads in both arms, but later evidence identifies SHIP-V3 and SHIP-V4 as different binary pins.",
+      "evidence": [
+        {
+          "path": "docs/research/ORCH-veiling.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "byte-identical: 26    differ: 0    sum=26 == common=26"
+        },
+        {
+          "path": "docs/research/ORCH-veiling.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "| concurrency | 4 worker threads, **under 4-agent machine load** |"
+        },
+        {
+          "path": "docs/research/ORCH-veiling.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "only across two runs of one binary"
+        },
+        {
+          "path": "experiments/V-NEVERWORSE/RESULT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "SHIP-V4's own `RUN.txt` names **`9b05d0b7`**\n(`strehl.exe` sha256 `44C2F2CD…F490`); `740e7056` rendered SHIP-V3."
+        },
+        {
+          "path": "experiments/ORCH-drift-check/intervrender.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "A pair of binaries that differ in hash but not in behaviour would\n# otherwise read as a successful control."
+        }
+      ],
+      "worker_provenance": {
+        "state": "RECORDED_NOT_ASSERTED",
+        "detail": "Both reports record four worker threads, but neither binds requested/resolved workers or the reduction lattice."
+      },
+      "classifications": [
+        "SURVIVES_SAME_WORKER_ONLY",
+        "VOID_AS_DETERMINISM_EVIDENCE"
+      ],
+      "classification_basis": "26 observed equal files across different binary pins",
+      "consequence": "The 26 equal files remain exact observations at the recorded worker count. The interpretation as two runs of one binary and therefore a determinism result is withdrawn.",
+      "false_agreement_exposure": {
+        "state": "MATERIAL",
+        "detail": "Different binary pins can agree byte-for-byte; that equality cannot isolate scheduler or worker invariance."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "Without a common binary and lattice, a difference would also be confounded."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": false,
+      "survival_detail": "File equality survives; the one-binary determinism verdict does not."
+    },
+    {
+      "id": "V-NEVERWORSE-SHIP-RENDER",
+      "category": "common-sanitized-shipping-rerender",
+      "claim_or_contract": "V-NEVERWORSE cleared every STREHL_* variable, matched the shipping binary and switch state, and reproduced a shipping master byte-identically; resolved Pyramid workers were not recorded.",
+      "evidence": [
+        {
+          "path": "experiments/V-NEVERWORSE/RESULT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**Both annotations resolve to `(unset)`**, so\n`vn_lib.render()`'s blanket clear of every `STREHL_*` variable reproduces the shipping\nswitch state exactly rather than merely approximately."
+        },
+        {
+          "path": "experiments/V-NEVERWORSE/RESULT.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "with the pin, a cleared environment and the master's own recorded\nstops, `coffee-bubbles` re-renders **byte-identically** to the shipped master"
+        },
+        {
+          "path": "experiments/V-NEVERWORSE/vn_lib.py",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "Every STREHL_* variable is CLEARED so a neighbouring lane's environment\n    cannot leak in"
+        }
+      ],
+      "worker_provenance": {
+        "state": "DEFAULT_SANITIZED_COMMON",
+        "detail": "The common environment was sanitized and the binary matched, but no resolved worker/lattice record survives."
+      },
+      "classifications": [
+        "SURVIVES_SAME_WORKER_ONLY"
+      ],
+      "classification_basis": "shipping-master identity under one common sanitized default",
+      "consequence": "The shipping-master rerender identity and corrected lane verdict survive within the common topology; they do not establish cross-worker invariance.",
+      "false_agreement_exposure": {
+        "state": "POSSIBLE",
+        "detail": "Resolved topology is absent, so broader reuse of the identity could hide a topology mismatch."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "Replaying under another default topology could move bytes."
+      },
+      "current_score_survives": true,
+      "current_verdict_survives": true,
+      "survival_detail": "The corrected verdict is retained with a same-common-worker qualification."
+    },
+    {
+      "id": "SCORECARD-BASELINE",
+      "category": "unscored-diagnostic-renders",
+      "claim_or_contract": "The quality worker override is null, while captured banners record W=4; the run is diagnostic only and its manifest has file SHA-256 but no canonical pixel hash or reduction lattice.",
+      "evidence": [
+        {
+          "path": "docs/research/SCORECARD-BASELINE.md",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "semantic",
+          "anchor": "**UNMEASURED.** This lane produced real native-RAW diagnostics, but no quality\nvalue is admitted as a v1.1 score."
+        },
+        {
+          "path": "experiments/SCORECARD-BASELINE/render.py",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "env.pop(\"STREHL_PYRAMID_WORKERS\", None)"
+        },
+        {
+          "path": "experiments/SCORECARD-BASELINE/out/RUN-MANIFEST.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"quality_pyramid_workers_override\": null"
+        },
+        {
+          "path": "experiments/SCORECARD-BASELINE/out/RENDER-MANIFEST.json",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "\"  coverage      : field of view scaled to 0.9969 so that EVERY frame covers every pixel (0.3% of width dropped, then upsampled to keep the output dimensions).\",\n        \"memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in\""
+        }
+      ],
+      "worker_provenance": {
+        "state": "RECORDED_NOT_ASSERTED",
+        "detail": "The override is null and banners record W=4; requested/resolved topology and lattice are not manifest fields."
+      },
+      "classifications": [
+        "SURVIVES_SAME_WORKER_ONLY",
+        "CONDITIONED_UNRECORDED"
+      ],
+      "classification_basis": "W=4 diagnostics with incomplete image identity contract",
+      "consequence": "The W=4 diagnostics survive within that topology. The current score remains UNMEASURED; the manifest cannot support a canonical-pixel or lattice-bound freeze.",
+      "false_agreement_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A file hash without canonical pixels/lattice cannot exclude stale or topology-mismatched equality."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "A future replay can move bytes from topology or metadata without changing the diagnostic question."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "UNMEASURED survives; no quality score is promoted."
+    },
+    {
+      "id": "UNSEALED-RENDER-RESUME-PATHS",
+      "category": "future-resume-cache-contract",
+      "claim_or_contract": "render_all.ps1 resumes on TIFF existence and gallery-ab.ps1 resumes on a nonempty TIFF; finalpass.ps1 adds .ok but that sentinel records only the binary hash, not TIFF or topology identity.",
+      "evidence": [
+        {
+          "path": "scripts/render_all.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "if ($Resume -and (Test-Path $tif)) {\n        Write-Host (\"skip     : {0} (already rendered)\" -f $s.Name)\n        continue"
+        },
+        {
+          "path": "scripts/gallery-ab.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "if ((Test-Path $tif) -and (Get-Item $tif).Length -gt 0) {\n            Write-Host \"$s [$($arm.Name)] already rendered, skipping\""
+        },
+        {
+          "path": "scripts/finalpass.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "if ((Test-Path $tif) -and ((Get-Item $tif).Length -gt 0) -and (Test-Path \"$tif.ok\")) {"
+        },
+        {
+          "path": "scripts/finalpass.ps1",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "content",
+          "anchor": "if ($status -eq 'ok') { \"$binHash\" | Out-File -Encoding ascii \"$tif.ok\" }"
+        }
+      ],
+      "worker_provenance": {
+        "state": "FUTURE_CONTRACT_UNBOUND",
+        "detail": "None of the three resume gates binds requested/resolved workers, lattice, whole-file hash, and canonical-pixel hash together."
+      },
+      "classifications": [
+        "CONDITIONED_UNRECORDED"
+      ],
+      "classification_basis": "existence/nonempty/binary-only resume sentinels",
+      "consequence": "Reuse through these paths is inadmissible for scored, cached, or frozen renders until the normative image/topology contract is enforced.",
+      "false_agreement_exposure": {
+        "state": "MATERIAL",
+        "detail": "Both arms can reuse the same stale TIFF; render_all and gallery-ab are distinct unsealed paths from finalpass .ok."
+      },
+      "false_difference_exposure": {
+        "state": "POSSIBLE",
+        "detail": "Mismatched stale files or topology can also create an unrelated difference."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": null,
+      "survival_detail": "This is a prospective cache/reuse contract, not a withdrawal of an admitted score."
+    },
+    {
+      "id": "M172-UNIT-WORKER-CONTRACT",
+      "category": "post-fix-unit-worker-contract",
+      "claim_or_contract": "M172 unit controls compare one versus four spatial execution threads bit-for-bit and separately assert that worker overrides do not change canonical reduction partitions.",
+      "evidence": [
+        {
+          "path": "crates/strehl-core/src/pyramid.rs",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "assert_eq!(\n            run(1),\n            run(4),\n            \"spatial work scheduling changed a destination sample's arithmetic\""
+        },
+        {
+          "path": "crates/strehl-cli/src/merge_cmd.rs",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "\"{BAND_WORKERS_ENV} changed the floating-point reduction partition\""
+        },
+        {
+          "path": "crates/strehl-cli/src/merge_cmd.rs",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "\"a large execution-thread override changed the canonical partition\""
+        },
+        {
+          "path": "experiments/M172-worker-memory/measure_memory.py",
+          "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+          "anchor_kind": "symbol",
+          "anchor": "parser.add_argument(\"--workers\", type=int, required=True)"
+        }
+      ],
+      "worker_provenance": {
+        "state": "DECLARED_SWEEP",
+        "detail": "The unit negative control explicitly evaluates W=1 and W=4; resolver tests exercise explicit worker overrides against canonical partitions."
+      },
+      "classifications": [
+        "SURVIVES_UNCONDITIONALLY"
+      ],
+      "classification_basis": "post-fix unit worker and partition contract",
+      "consequence": "The unit-level execution-worker contract survives unconditionally. It is not a final-TIFF W=1/2/4/8/16 ladder and does not establish M12 PASS.",
+      "false_agreement_exposure": {
+        "state": "NONE",
+        "detail": "The test has a direct W1/W4 equality assertion and separate partition-invariance assertions."
+      },
+      "false_difference_exposure": {
+        "state": "NONE",
+        "detail": "A changed arithmetic sample or partition makes the unit test red."
+      },
+      "current_score_survives": null,
+      "current_verdict_survives": true,
+      "survival_detail": "Unit controls survive; full post-fix end-to-end ladder remains unmeasured."
+    }
+  ],
+  "material_file_inventory": {
+    "basis_revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+    "count": 82,
+    "selection_rule": "Sorted union of every evidence path and declared additional material paths; all minimum adversarial-resweep paths are mandatory.",
+    "additional_material_search_paths": [
+      "AGENTS.md",
+      "crates/strehl-cli/src/main.rs",
+      "crates/strehl-cli/src/stack.rs",
+      "crates/strehl-core/src/merge.rs",
+      "crates/strehl-core/src/warpmap.rs",
+      "crates/strehl-raw/src/common_tiff.rs",
+      "docs/STATUS.md",
+      "docs/research/M124-resampler-flag.md",
+      "docs/research/M126-composite.md",
+      "docs/research/M166-reference-dominance-rehearsal.md",
+      "docs/research/M8-overshoot.md",
+      "docs/research/M97n-cache-key.md",
+      "docs/research/SYNTHESIS.md",
+      "experiments/M153-m11-harness/campaign-template.json",
+      "experiments/M164-dominance-manifest/reader_core.py",
+      "experiments/M165-common-input/consumer_gate.py",
+      "experiments/M175-fork-arm/PRE-RENDER-FREEZE.json",
+      "experiments/m12-scorecard/m12-harness.py",
+      "scripts/check-defaults.py"
+    ],
+    "paths": [
+      "AGENTS.md",
+      "crates/strehl-cli/src/align_cmd.rs",
+      "crates/strehl-cli/src/bin/strehl-common-input.rs",
+      "crates/strehl-cli/src/main.rs",
+      "crates/strehl-cli/src/merge_cmd.rs",
+      "crates/strehl-cli/src/stack.rs",
+      "crates/strehl-cli/tests/byte-freeze.rs",
+      "crates/strehl-cli/tests/byte-freezes.tsv",
+      "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt",
+      "crates/strehl-core/src/merge.rs",
+      "crates/strehl-core/src/pyramid.rs",
+      "crates/strehl-core/src/warpmap.rs",
+      "crates/strehl-raw/src/common_tiff.rs",
+      "docs/STATUS.md",
+      "docs/proposals/2026-09-sota-scorecard.md",
+      "docs/research/BUILD-CHROMA.md",
+      "docs/research/BUILD-DEFECT.md",
+      "docs/research/DELIVER-V6.md",
+      "docs/research/M-COVER-BORDER.md",
+      "docs/research/M-COVER-NATIVE.md",
+      "docs/research/M-FLATNULL.md",
+      "docs/research/M-PHASE0-PIPE.md",
+      "docs/research/M-PHASE0-SPLIT.md",
+      "docs/research/M108-freeze-test.md",
+      "docs/research/M117-cache-audit.md",
+      "docs/research/M124-resampler-flag.md",
+      "docs/research/M126-composite.md",
+      "docs/research/M130-crop-early.md",
+      "docs/research/M136-m8-census-groundtruth.md",
+      "docs/research/M136-m8-passability.md",
+      "docs/research/M139-m12-campaign.md",
+      "docs/research/M162-noise-regression.md",
+      "docs/research/M164-dominance-manifest.md",
+      "docs/research/M164-reference-dominance.md",
+      "docs/research/M165-common-input.md",
+      "docs/research/M166-reference-dominance-rehearsal.md",
+      "docs/research/M175-fork-arm.md",
+      "docs/research/M18-merge-implemented.md",
+      "docs/research/M2-baseline-skeleton.md",
+      "docs/research/M8-overshoot.md",
+      "docs/research/M97n-cache-key.md",
+      "docs/research/ORCH-veiling.md",
+      "docs/research/SCORECARD-BASELINE.md",
+      "docs/research/SYNTHESIS.md",
+      "docs/research/V-ENVSURF.md",
+      "docs/research/V-MOTE.md",
+      "docs/research/V-ca.md",
+      "docs/research/V-chroma2.md",
+      "experiments/BUILD-RESAMP/render6-h2h.ps1",
+      "experiments/BUILD-SPEED/REPORT.md",
+      "experiments/BUILD-SPEED/worker_sweep.ps1",
+      "experiments/DELIVER-V6/render.ps1",
+      "experiments/M-COVER-BORDER/load_render.py",
+      "experiments/M-PHASE0-PIPE/measure.py",
+      "experiments/M-PHASE0-SPLIT/out/real-109/run.json",
+      "experiments/M126-default-audit/composite/run_arms.ps1",
+      "experiments/M142-m8o-execute/run-clamped-m8o.ps1",
+      "experiments/M153-m11-harness/campaign-template.json",
+      "experiments/M153-m11-harness/m11_harness.py",
+      "experiments/M153-m11-harness/quality-manifest-template.json",
+      "experiments/M162-noise-regression/render.ps1",
+      "experiments/M164-dominance-manifest/production-manifest-v1.freeze.json",
+      "experiments/M164-dominance-manifest/production-manifest-v1.json",
+      "experiments/M164-dominance-manifest/reader_core.py",
+      "experiments/M165-common-input/commission.py",
+      "experiments/M165-common-input/consumer_gate.py",
+      "experiments/M172-worker-memory/measure_memory.py",
+      "experiments/M175-fork-arm/PRE-RENDER-FREEZE.json",
+      "experiments/M175-fork-arm/RUN-MANIFEST.json",
+      "experiments/M8-overshoot/run.ps1",
+      "experiments/ORCH-drift-check/intervrender.ps1",
+      "experiments/SCORECARD-BASELINE/out/RENDER-MANIFEST.json",
+      "experiments/SCORECARD-BASELINE/out/RUN-MANIFEST.json",
+      "experiments/SCORECARD-BASELINE/render.py",
+      "experiments/V-NEVERWORSE/RESULT.md",
+      "experiments/V-NEVERWORSE/vn_lib.py",
+      "experiments/cover-default/m8-v2/run_v2.ps1",
+      "experiments/m12-scorecard/m12-harness.py",
+      "scripts/check-defaults.py",
+      "scripts/finalpass.ps1",
+      "scripts/gallery-ab.ps1",
+      "scripts/render_all.ps1"
+    ]
+  },
+  "uncertainties": [
+    {
+      "id": "U1",
+      "text": "No committed full-product post-a9727581 W=1/2/4/8/16 ladder proves the repair end to end."
+    },
+    {
+      "id": "U2",
+      "text": "V-MOTE and DELIVER-V6 historical resolved worker counts cannot be recovered from committed evidence."
+    },
+    {
+      "id": "U3",
+      "text": "Estimator cross-thread equality is measured on several historical cells, not proved for every input and configuration."
+    },
+    {
+      "id": "U4",
+      "text": "M164 production is intentionally blocked, so its eventual renderer schema is amendable and no current candidate image needs withdrawal."
+    },
+    {
+      "id": "U5",
+      "text": "BUILD-SPEED absolute timing remains outside this audit; only its declared worker treatment and same-W output controls are adjudicated."
+    },
+    {
+      "id": "U6",
+      "text": "SCORECARD-BASELINE records W=4 banners but no requested/resolved worker fields, canonical pixel hash, or reduction lattice."
+    }
+  ],
+  "checkout_stability": {
+    "policy_file": ".gitattributes",
+    "core_autocrlf": true,
+    "required_policy_lines": [
+      "*.py text eol=lf",
+      "*.json text eol=lf",
+      "*.md text eol=lf",
+      ".gitignore text eol=lf",
+      ".gitattributes text eol=lf"
+    ],
+    "bound_paths": [
+      ".gitattributes",
+      ".gitignore",
+      "analyze.py",
+      "common.py",
+      "mutation_commission.py",
+      "out/analysis.json",
+      "out/builds.json",
+      "out/claim-audit.json",
+      "out/commission.json",
+      "out/input-after.json",
+      "out/input-before.json",
+      "out/lineage.json",
+      "out/provenance.json",
+      "out/resource-estimate.json",
+      "out/runs.json",
+      "out/source-evidence.json",
+      "out/verification.json",
+      "preregistration.json",
+      "run.py",
+      "test_verify.py",
+      "verify.py"
+    ],
+    "proof": "Private Git init/add/commit and clone/checkout with core.autocrlf=true; Git attributes and SHA-256 bytes are checked before and after."
+  },
+  "revision_search": {
+    "revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+    "engine": "git grep over commit tree",
+    "flags": [
+      "-I",
+      "-i",
+      "-l",
+      "-E"
+    ],
+    "command_template": "git grep -Iil -E -e <pattern> <revision> -- <pathspecs...>",
+    "coverage_terms": [
+      "STREHL_PYRAMID_WORKERS",
+      "legacy --chunks",
+      "worker-count and worker-thread controls",
+      "reduction-order and canonical-chunk language",
+      "byte/bit identity and byte freezes near worker controls",
+      "TIFF/output/pixel hashes near worker controls",
+      "resume/cache TIFF skips in repository scripts"
+    ],
+    "queries": [
+      {
+        "name": "worker-control-and-topology",
+        "pattern": "STREHL_PYRAMID_WORKERS|--chunks(=|[[:space:]])|worker[- ]count|worker threads?|worker sweep|worker ladder|reduction order|canonical chunks?|logical frame partitions?",
+        "pathspecs": [
+          ":(glob)docs/research/*.md",
+          ":(glob)experiments/**/*.md",
+          ":(glob)experiments/**/*.py",
+          ":(glob)experiments/**/*.ps1",
+          ":(glob)experiments/**/*.json",
+          ":(glob)crates/strehl-cli/tests/**/*.rs",
+          ":(glob)crates/strehl-cli/tests/**/*.tsv",
+          "crates/strehl-cli/src/merge_cmd.rs",
+          "crates/strehl-cli/src/stack.rs",
+          "crates/strehl-core/src/pyramid.rs",
+          ":(exclude,glob)experiments/**/out/**",
+          ":(exclude,glob)experiments/**/results/**",
+          ":(exclude,glob)experiments/**/banked/**",
+          ":(exclude,glob)experiments/**/artifacts/**",
+          ":(exclude,glob)experiments/**/logs/**",
+          ":(exclude,glob)experiments/M139*/**",
+          ":(exclude,glob)experiments/**/M139*/**"
+        ]
+      },
+      {
+        "name": "worker-near-byte-bit-freeze-tiff-output-pixel-hash",
+        "pattern": "(worker|chunks).{0,100}(byte|bit|freeze|hash|TIFF|output|pixel)|(byte|bit|freeze|hash|TIFF|output|pixel).{0,100}(worker|chunks)",
+        "pathspecs": [
+          ":(glob)docs/research/*.md",
+          ":(glob)experiments/**/*.md",
+          ":(glob)experiments/**/*.py",
+          ":(glob)experiments/**/*.ps1",
+          ":(glob)experiments/**/*.json",
+          ":(glob)crates/strehl-cli/tests/**/*.rs",
+          ":(glob)crates/strehl-cli/tests/**/*.tsv",
+          "crates/strehl-cli/src/merge_cmd.rs",
+          "crates/strehl-cli/src/stack.rs",
+          "crates/strehl-core/src/pyramid.rs",
+          ":(exclude,glob)experiments/**/out/**",
+          ":(exclude,glob)experiments/**/results/**",
+          ":(exclude,glob)experiments/**/banked/**",
+          ":(exclude,glob)experiments/**/artifacts/**",
+          ":(exclude,glob)experiments/**/logs/**",
+          ":(exclude,glob)experiments/M139*/**",
+          ":(exclude,glob)experiments/**/M139*/**"
+        ]
+      },
+      {
+        "name": "resume-cache-skip-scripts",
+        "pattern": "(Test-Path|Length|\\.ok).{0,120}(tif|output|render)|(tif|output|render).{0,120}(Test-Path|Length|\\.ok)",
+        "pathspecs": [
+          ":(glob)scripts/*.ps1"
+        ]
+      }
+    ],
+    "candidate_count": 142,
+    "candidate_paths": [
+      "crates/strehl-cli/src/merge_cmd.rs",
+      "crates/strehl-cli/src/stack.rs",
+      "crates/strehl-cli/tests/byte-freeze.rs",
+      "crates/strehl-cli/tests/byte-freezes.tsv",
+      "crates/strehl-core/src/pyramid.rs",
+      "docs/research/BUILD-BLEND.md",
+      "docs/research/BUILD-CROP.md",
+      "docs/research/BUILD-DEFECT.md",
+      "docs/research/BUILD-GATE-2.md",
+      "docs/research/BUILD-GATE-PRINT.md",
+      "docs/research/BUILD-OUTPUT.md",
+      "docs/research/BUILD-PLUGIN.md",
+      "docs/research/D-rust-and-hardware.md",
+      "docs/research/M-COVER-BORDER.md",
+      "docs/research/M-FLATNULL.md",
+      "docs/research/M-PHASE0-NVME2.md",
+      "docs/research/M-PHASE0-PIPE.md",
+      "docs/research/M-PHASE0-SPLIT.md",
+      "docs/research/M100-exposure.md",
+      "docs/research/M107-chroma.md",
+      "docs/research/M108-freeze-test.md",
+      "docs/research/M130-crop-early.md",
+      "docs/research/M133-blocker-audit.md",
+      "docs/research/M139-m12-campaign.md",
+      "docs/research/M14-tenengrad-implemented.md",
+      "docs/research/M140-readiness.md",
+      "docs/research/M153-m11-harness.md",
+      "docs/research/M158-scorecard-amendment-text.md",
+      "docs/research/M158-scorecard-drift.md",
+      "docs/research/M160-amendment6-reachability.md",
+      "docs/research/M160-scope-audit.md",
+      "docs/research/M166-bar-achievability.md",
+      "docs/research/M166-bar-definition-repairs.md",
+      "docs/research/M167-detail-battery.md",
+      "docs/research/M169-ratification-stakes.md",
+      "docs/research/M18-merge-implemented.md",
+      "docs/research/M2-baseline-skeleton.md",
+      "docs/research/M2-rss-resolved.md",
+      "docs/research/M56-citation-audit.md",
+      "docs/research/M8-scratch-measured.md",
+      "docs/research/M93-election-gate.md",
+      "docs/research/M95-kernel.md",
+      "docs/research/M97e-robust-election.md",
+      "docs/research/M97m-election-map.md",
+      "docs/research/ORCH-veiling.md",
+      "docs/research/SCORECARD-BASELINE.md",
+      "docs/research/SYNTHESIS.md",
+      "docs/research/V-ENVSURF.md",
+      "docs/research/V-SPEED.md",
+      "docs/research/V-bestframe.md",
+      "docs/research/V-ca.md",
+      "docs/research/V-chroma2.md",
+      "docs/research/V-hull.md",
+      "experiments/BUILD-BLEND/declare_switch.py",
+      "experiments/BUILD-GATE-PRINT/rebaseline_sidecar.py",
+      "experiments/BUILD-HALO/attribute_acuity_freeze.py",
+      "experiments/BUILD-OUTPUT/commission_tagger.py",
+      "experiments/BUILD-OUTPUT/png_probe.py",
+      "experiments/BUILD-RENDER-hotpix/attribute_ca_freeze.py",
+      "experiments/BUILD-RESAMP/render6-h2h.ps1",
+      "experiments/BUILD-RESAMP/render7-h2h.ps1",
+      "experiments/BUILD-SOFTGATE/render.ps1",
+      "experiments/BUILD-SPEED/REPORT.md",
+      "experiments/BUILD-SPEED/scaling_fit.py",
+      "experiments/BUILD-SPEED/timeit_stack.py",
+      "experiments/BUILD-SPEED/worker_sweep.ps1",
+      "experiments/DELIVER-V5/build.py",
+      "experiments/M-COVER-BORDER/CONTRADICTION-PREREGISTRATION.md",
+      "experiments/M-COVER-BORDER/WORST-CASE-PREREGISTRATION.md",
+      "experiments/M-COVER-BORDER/load_render.py",
+      "experiments/M-COVER-NATIVE/PREREGISTRATION.md",
+      "experiments/M-FLATNULL/PREREGISTRATION.md",
+      "experiments/M-FLATNULL/results.json",
+      "experiments/M-FLATNULL/run.ps1",
+      "experiments/M-PHASE0-IOPERF/PREREGISTRATION.md",
+      "experiments/M-PHASE0-LCA/C2-BUILD-PREREGISTRATION.md",
+      "experiments/M-PHASE0-PIPE/PREREGISTRATION.md",
+      "experiments/M-PHASE0-PIPE/measure.py",
+      "experiments/M-PHASE0-SPLIT/PREREGISTRATION.md",
+      "experiments/M130-crop-early/PREREGISTRATION.md",
+      "experiments/M133-blocker-audit/bar-card-audit.json",
+      "experiments/M136-m8o-bar/clamped-m8o-preregistration.json",
+      "experiments/M142-m8o-execute/checker_m136.py",
+      "experiments/M142-m8o-execute/patch_snapshot_m142.py",
+      "experiments/M142-m8o-execute/run-clamped-m8o.ps1",
+      "experiments/M144-reference-uncertainty/results.json",
+      "experiments/M152-site-census/m3_checker.py",
+      "experiments/M153-m11-harness/contract.json",
+      "experiments/M153-m11-harness/m11_core.py",
+      "experiments/M153-m11-harness/m11_harness.py",
+      "experiments/M153-m11-harness/m12-worker16-records-template.json",
+      "experiments/M153-m11-harness/test_runtime.py",
+      "experiments/M155-w1-review/race_noise_output.py",
+      "experiments/M160-scope-audit/nc_reconciliation.py",
+      "experiments/M160-scope-audit/verify_reconciliation.py",
+      "experiments/M160-scope-audit/verify_scope_audit.py",
+      "experiments/M161-m3-ratification/m3_checker_v2.py",
+      "experiments/M169-m3-veil/m3_checker_v2.py",
+      "experiments/M169-ratification-stakes/audit.json",
+      "experiments/M169-ratification-stakes/verify.py",
+      "experiments/M8-overshoot/run.ps1",
+      "experiments/M95-resample/src/x9_record.py",
+      "experiments/ORCH-drift-check/apply_m100.py",
+      "experiments/ORCH-drift-check/attribute_gather_freeze.py",
+      "experiments/ORCH-drift-check/galleryfixed.ps1",
+      "experiments/ORCH-drift-check/intervrender.ps1",
+      "experiments/ORCH-verify/commission_quotes.py",
+      "experiments/ORCH-verify/v2951.ps1",
+      "experiments/ORCH-verify/v2954.py",
+      "experiments/SCORECARD-BASELINE/prepare.py",
+      "experiments/SCORECARD-BASELINE/render.py",
+      "experiments/V-CA/a5_render.ps1",
+      "experiments/V-CA/a8_guard_render.ps1",
+      "experiments/V-GATHER/sharpmerge.py",
+      "experiments/V-GATHER/threads.py",
+      "experiments/V-HEADTOHEAD2/render_ab.ps1",
+      "experiments/V-HEADTOHEAD2/render_all.ps1",
+      "experiments/V-HEADTOHEAD2/render_foam_ab.ps1",
+      "experiments/V-HEADTOHEAD2/render_halves.ps1",
+      "experiments/V-LINEAR/r2_develop.ps1",
+      "experiments/V-NEVERWORSE/RESULT.md",
+      "experiments/V-NOISE2/ladder_build.ps1",
+      "experiments/V-NOISE2/run_subject.ps1",
+      "experiments/V-RIM/vr_coherence.py",
+      "experiments/V-SOFTCHECK/render_all.ps1",
+      "experiments/cover-default/m8-run-plan-r5.json",
+      "experiments/cover-default/m8-run-plan-r6.json",
+      "experiments/cover-default/m8-run-plan.json",
+      "experiments/cover-default/m8-v2/RUNNER-SCHEMA.md",
+      "experiments/cover-default/m8-v2/manifest_v2.py",
+      "experiments/cover-default/m8-v2/producer_tests.py",
+      "experiments/cover-default/m8-v2/run_v2.ps1",
+      "experiments/m12-scorecard/m12-harness.py",
+      "experiments/m8-scratch/README.md",
+      "experiments/m8-scratch/m8_analyse.py",
+      "experiments/m8-scratch/negative-control.ps1",
+      "scripts/finalpass.ps1",
+      "scripts/gallery-ab.ps1",
+      "scripts/gallery.ps1",
+      "scripts/render_all.ps1",
+      "scripts/render_table.ps1",
+      "scripts/shippack.ps1"
+    ],
+    "explicit_exclusions": [
+      {
+        "path": "docs/research/BUILD-BLEND.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/BUILD-CROP.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/BUILD-GATE-2.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/BUILD-GATE-PRINT.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/BUILD-OUTPUT.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/BUILD-PLUGIN.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/D-rust-and-hardware.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M-PHASE0-NVME2.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M100-exposure.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M107-chroma.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M133-blocker-audit.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M14-tenengrad-implemented.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M140-readiness.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M153-m11-harness.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M158-scorecard-amendment-text.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M158-scorecard-drift.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M160-amendment6-reachability.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M160-scope-audit.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M166-bar-achievability.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M166-bar-definition-repairs.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M167-detail-battery.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M169-ratification-stakes.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M2-rss-resolved.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M56-citation-audit.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M8-scratch-measured.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M93-election-gate.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M95-kernel.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M97e-robust-election.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/M97m-election-map.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/V-SPEED.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/V-bestframe.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "docs/research/V-hull.md",
+        "disposition": "Historical/supporting report hit with no distinct current score, cache, or freeze contract; covered by an explicit/grouped row or outside the M176 high-stakes set."
+      },
+      {
+        "path": "experiments/BUILD-BLEND/declare_switch.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-GATE-PRINT/rebaseline_sidecar.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-HALO/attribute_acuity_freeze.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-OUTPUT/commission_tagger.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-OUTPUT/png_probe.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-RENDER-hotpix/attribute_ca_freeze.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-RESAMP/render7-h2h.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-SOFTGATE/render.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-SPEED/scaling_fit.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/BUILD-SPEED/timeit_stack.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/DELIVER-V5/build.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-COVER-BORDER/CONTRADICTION-PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-COVER-BORDER/WORST-CASE-PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-COVER-NATIVE/PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-FLATNULL/PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-FLATNULL/results.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-FLATNULL/run.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-PHASE0-IOPERF/PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-PHASE0-LCA/C2-BUILD-PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-PHASE0-PIPE/PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M-PHASE0-SPLIT/PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M130-crop-early/PREREGISTRATION.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M133-blocker-audit/bar-card-audit.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M136-m8o-bar/clamped-m8o-preregistration.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M142-m8o-execute/checker_m136.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M142-m8o-execute/patch_snapshot_m142.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M144-reference-uncertainty/results.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M152-site-census/m3_checker.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M153-m11-harness/contract.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M153-m11-harness/m11_core.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M153-m11-harness/m12-worker16-records-template.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M153-m11-harness/test_runtime.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M155-w1-review/race_noise_output.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M160-scope-audit/nc_reconciliation.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M160-scope-audit/verify_reconciliation.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M160-scope-audit/verify_scope_audit.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M161-m3-ratification/m3_checker_v2.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M169-m3-veil/m3_checker_v2.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M169-ratification-stakes/audit.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M169-ratification-stakes/verify.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/M95-resample/src/x9_record.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/ORCH-drift-check/apply_m100.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/ORCH-drift-check/attribute_gather_freeze.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/ORCH-drift-check/galleryfixed.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/ORCH-verify/commission_quotes.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/ORCH-verify/v2951.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/ORCH-verify/v2954.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/SCORECARD-BASELINE/prepare.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-CA/a5_render.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-CA/a8_guard_render.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-GATHER/sharpmerge.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-GATHER/threads.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-HEADTOHEAD2/render_ab.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-HEADTOHEAD2/render_all.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-HEADTOHEAD2/render_foam_ab.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-HEADTOHEAD2/render_halves.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-LINEAR/r2_develop.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-NOISE2/ladder_build.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-NOISE2/run_subject.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-RIM/vr_coherence.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/V-SOFTCHECK/render_all.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/cover-default/m8-run-plan-r5.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/cover-default/m8-run-plan-r6.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/cover-default/m8-run-plan.json",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/cover-default/m8-v2/RUNNER-SCHEMA.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/cover-default/m8-v2/manifest_v2.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/cover-default/m8-v2/producer_tests.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/m8-scratch/README.md",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/m8-scratch/m8_analyse.py",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "experiments/m8-scratch/negative-control.ps1",
+        "disposition": "Harness, fixture, or superseded implementation hit with no distinct current score, cache, or freeze contract beyond the represented rows."
+      },
+      {
+        "path": "scripts/gallery.ps1",
+        "disposition": "Generic script output guard with no scored/frozen Pyramid identity contract; no standalone M176 row required."
+      },
+      {
+        "path": "scripts/render_table.ps1",
+        "disposition": "Generic script output guard with no scored/frozen Pyramid identity contract; no standalone M176 row required."
+      },
+      {
+        "path": "scripts/shippack.ps1",
+        "disposition": "Generic script output guard with no scored/frozen Pyramid identity contract; no standalone M176 row required."
+      }
+    ],
+    "per_query_candidate_counts": {
+      "worker-control-and-topology": 93,
+      "worker-near-byte-bit-freeze-tiff-output-pixel-hash": 76,
+      "resume-cache-skip-scripts": 6
+    }
+  }
+}

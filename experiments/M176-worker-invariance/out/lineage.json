@@ -1,0 +1,13 @@
+{
+  "affected_source": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+  "affected_tree": "0d4cce57dfa10a5aa9917df863a8bb4bc8c7ea9d",
+  "fixed_source": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+  "fixed_subject": "Bound Pyramid worker memory",
+  "fixed_tree": "21e04c831c7dddda4ec6727b2525c729fe54b6a7",
+  "m139_is_ancestor_of_affected": true,
+  "m139_report_citation": "docs/research/M139-m12-campaign.md:11-15",
+  "m139_report_source_lineage_only": "8009447e059febb8f9c59fda509f141835d6abdb",
+  "repair_commit": "fc2abb499126a56302de7f21f527de5613be34e7",
+  "repair_is_ancestor_of_fixed": true,
+  "repair_parent": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71"
+}

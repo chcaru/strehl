@@ -1,0 +1,361 @@
+{
+  "all_pass": true,
+  "checks": [
+    {
+      "name": "preregistration-production-python-binding",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "approved-input-before-after-current-integrity",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "git-lineage-identifies-affected-and-fixed",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "independent-git-archives-remain-byte-bound",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "fresh-binary-source-sha256-provenance",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "registered-arm-order-worker-and-rayon-provenance",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "stale-preexisting-output-refusal",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "all-renderer-environment-recorded-only-worker-varies",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "all-non-output-argv-settings-identical",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "tiff-log-binary-run-record-binding",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "independent-tiff-decoder-corroboration",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "affected-fixed-worker-repeat-is-deterministic",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "affected-cross-worker-equality-or-difference-classified",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "fixed-build-worker-invariance",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "whole-file-versus-decoded-pixel-semantics",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "decoded-magnitude-sign-and-normalization-recomputed",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "source-mechanism-preconditions-and-verdict",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "protected-forbidden-path-confinement",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "source-before-after-byte-and-metadata-manifest",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "resource-estimate-and-observed-resident-stop-rule",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "w3-fallback-trigger-and-ceiling",
+      "status": "PASS_PRESERVED_BY_SHA256"
+    },
+    {
+      "name": "historical-render-time-source-byte-binding-preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "audit-revision-is-valid-fixed-commit",
+      "status": "PASS"
+    },
+    {
+      "name": "all-required-high-stakes-claim-ids-occur-exactly-once",
+      "status": "PASS"
+    },
+    {
+      "name": "classification-enum-worker-provenance-consequence-survival-explicit",
+      "status": "PASS"
+    },
+    {
+      "name": "exact-one-line-scored-cache-hash-freeze-requirement",
+      "status": "PASS"
+    },
+    {
+      "name": "revision-bound-evidence-paths-exist-and-exact-anchors-occur-once",
+      "status": "PASS"
+    },
+    {
+      "name": "material-inventory-is-sorted-evidence-plus-search-union-at-revision",
+      "status": "PASS"
+    },
+    {
+      "name": "revision-bound-worker-hash-and-resume-search-is-complete",
+      "status": "PASS"
+    },
+    {
+      "name": "checkout-byte-stability-under-core-autocrlf-true",
+      "status": "PASS"
+    },
+    {
+      "name": "status-replacement-present-target-bound-and-status-byte-untouched",
+      "status": "PASS"
+    },
+    {
+      "name": "current-repair-boundary-is-m172-and-m176-lands-no-repair",
+      "status": "PASS"
+    },
+    {
+      "name": "remaining-uncertainties-are-explicit",
+      "status": "PASS"
+    }
+  ],
+  "claim_audit_sha256": "063314b6aea43db6cd699aa50f49d32e59bc95c78182bda030d467d4ce70a3f4",
+  "claim_audit_verification": {
+    "all_pass": true,
+    "audit_revision": "69bdacafbb4a49a198e9f430590033e8a5ed25a2",
+    "checkout_stability": {
+      "bound_path_count": 21,
+      "bytes_identical": true,
+      "comparison": "per-path SHA-256 of worktree bytes before and after checkout",
+      "core_autocrlf": true
+    },
+    "checks": [
+      {
+        "name": "audit-revision-is-valid-fixed-commit",
+        "status": "PASS"
+      },
+      {
+        "name": "all-required-high-stakes-claim-ids-occur-exactly-once",
+        "status": "PASS"
+      },
+      {
+        "name": "classification-enum-worker-provenance-consequence-survival-explicit",
+        "status": "PASS"
+      },
+      {
+        "name": "exact-one-line-scored-cache-hash-freeze-requirement",
+        "status": "PASS"
+      },
+      {
+        "name": "revision-bound-evidence-paths-exist-and-exact-anchors-occur-once",
+        "status": "PASS"
+      },
+      {
+        "name": "material-inventory-is-sorted-evidence-plus-search-union-at-revision",
+        "status": "PASS"
+      },
+      {
+        "name": "revision-bound-worker-hash-and-resume-search-is-complete",
+        "status": "PASS"
+      },
+      {
+        "name": "checkout-byte-stability-under-core-autocrlf-true",
+        "status": "PASS"
+      },
+      {
+        "name": "status-replacement-present-target-bound-and-status-byte-untouched",
+        "status": "PASS"
+      },
+      {
+        "name": "current-repair-boundary-is-m172-and-m176-lands-no-repair",
+        "status": "PASS"
+      },
+      {
+        "name": "remaining-uncertainties-are-explicit",
+        "status": "PASS"
+      }
+    ],
+    "checks_run": 11,
+    "citation_resolution": {
+      "evidence_items_resolved": 92,
+      "unique_blobs_decoded": 63
+    },
+    "claim_audit_sha256": "063314b6aea43db6cd699aa50f49d32e59bc95c78182bda030d467d4ce70a3f4",
+    "claim_count": 30,
+    "material_file_count": 82,
+    "revision_search": {
+      "candidate_count": 142,
+      "excluded_candidate_count": 105,
+      "material_candidate_count": 37,
+      "query_candidate_counts": {
+        "resume-cache-skip-scripts": 6,
+        "worker-control-and-topology": 93,
+        "worker-near-byte-bit-freeze-tiff-output-pixel-hash": 76
+      }
+    },
+    "schema": "strehl-m176-claim-audit-verification-v1",
+    "source_sha256": {
+      ".gitattributes": "f5dd40e6a07bacfed1888d632e1800730bfeba210a2a5309ddc2f31c19d23f86",
+      ".gitignore": "51c91ef3167129c06f8136c90379166622261cac922b5d8f4e5f2ea5e80759ed",
+      "analyze.py": "0f99f6bf66c62b78994e1667dd425169aec841114975db67fdf26bf57a46ae97",
+      "common.py": "6ecf9ad74598ab30246731993dfc5cc3bc79144a85e8be6b092ed08b517e09dd",
+      "mutation_commission.py": "0748c526c9bcb0bab90dd6de8af1a15a7761e29e9ca65725774260343859f2c0",
+      "preregistration.json": "cdbe37bd7bd337b7c1a7a69dced5ede9371a51295d27b76cd313057698a76aac",
+      "run.py": "d7ad259615d61ec52a8562940c8bccf626a5950fc55bd3c8444bc7fd55745177",
+      "test_verify.py": "505c466d1d5b561af5a07b43c8b672ff1848882c7f22dc6514989f0dc65ea51a",
+      "verify.py": "c945e8f94c5afadc587f32475aa205ea0c14d2d38aa4ced319308b139c991840"
+    },
+    "status_target_blob_sha1": "aab1a092cafa4b6768bffbf5627da1dd54d37512",
+    "status_worktree_untouched_during_check": true
+  },
+  "counts": {
+    "checks_run": 33,
+    "claim_audit_checks_run": 11,
+    "historical_production_binding_checks": 1,
+    "reproduction_checks_preserved": 21
+  },
+  "integration_scope": "Claim/report integration only; no build, render, capture access, or renderer repair.",
+  "integration_script_sha256": {
+    ".gitattributes": "f5dd40e6a07bacfed1888d632e1800730bfeba210a2a5309ddc2f31c19d23f86",
+    ".gitignore": "51c91ef3167129c06f8136c90379166622261cac922b5d8f4e5f2ea5e80759ed",
+    "analyze.py": "0f99f6bf66c62b78994e1667dd425169aec841114975db67fdf26bf57a46ae97",
+    "common.py": "6ecf9ad74598ab30246731993dfc5cc3bc79144a85e8be6b092ed08b517e09dd",
+    "mutation_commission.py": "0748c526c9bcb0bab90dd6de8af1a15a7761e29e9ca65725774260343859f2c0",
+    "preregistration.json": "cdbe37bd7bd337b7c1a7a69dced5ede9371a51295d27b76cd313057698a76aac",
+    "run.py": "d7ad259615d61ec52a8562940c8bccf626a5950fc55bd3c8444bc7fd55745177",
+    "test_verify.py": "505c466d1d5b561af5a07b43c8b672ff1848882c7f22dc6514989f0dc65ea51a",
+    "verify.py": "c945e8f94c5afadc587f32475aa205ea0c14d2d38aa4ced319308b139c991840"
+  },
+  "mechanism_verdict": "REDUCTION_ORDER",
+  "reproduction_verification": {
+    "all_pass": true,
+    "checks": [
+      {
+        "name": "preregistration-production-python-binding",
+        "status": "PASS"
+      },
+      {
+        "name": "approved-input-before-after-current-integrity",
+        "status": "PASS"
+      },
+      {
+        "name": "git-lineage-identifies-affected-and-fixed",
+        "status": "PASS"
+      },
+      {
+        "name": "independent-git-archives-remain-byte-bound",
+        "status": "PASS"
+      },
+      {
+        "name": "fresh-binary-source-sha256-provenance",
+        "status": "PASS"
+      },
+      {
+        "name": "registered-arm-order-worker-and-rayon-provenance",
+        "status": "PASS"
+      },
+      {
+        "name": "stale-preexisting-output-refusal",
+        "status": "PASS"
+      },
+      {
+        "name": "all-renderer-environment-recorded-only-worker-varies",
+        "status": "PASS"
+      },
+      {
+        "name": "all-non-output-argv-settings-identical",
+        "status": "PASS"
+      },
+      {
+        "name": "tiff-log-binary-run-record-binding",
+        "status": "PASS"
+      },
+      {
+        "name": "independent-tiff-decoder-corroboration",
+        "status": "PASS"
+      },
+      {
+        "name": "affected-fixed-worker-repeat-is-deterministic",
+        "status": "PASS"
+      },
+      {
+        "name": "affected-cross-worker-equality-or-difference-classified",
+        "status": "PASS"
+      },
+      {
+        "name": "fixed-build-worker-invariance",
+        "status": "PASS"
+      },
+      {
+        "name": "whole-file-versus-decoded-pixel-semantics",
+        "status": "PASS"
+      },
+      {
+        "name": "decoded-magnitude-sign-and-normalization-recomputed",
+        "status": "PASS"
+      },
+      {
+        "name": "source-mechanism-preconditions-and-verdict",
+        "status": "PASS"
+      },
+      {
+        "name": "protected-forbidden-path-confinement",
+        "status": "PASS"
+      },
+      {
+        "name": "source-before-after-byte-and-metadata-manifest",
+        "status": "PASS"
+      },
+      {
+        "name": "resource-estimate-and-observed-resident-stop-rule",
+        "status": "PASS"
+      },
+      {
+        "name": "w3-fallback-trigger-and-ceiling",
+        "status": "PASS"
+      }
+    ],
+    "checks_run": 21,
+    "immutable_evidence_sha256": {
+      "analysis.json": "69efe9e1c27249ac27cf5622988b5d56592119f48fe705384a83a928bf141b0e",
+      "builds.json": "c43c59cf3ae171623b4a3b8e98774735b3a8455b32f1159e7f23287ef0d78ecc",
+      "input-after.json": "cb3e64575f3edc4ecca6d18aec379c5908a18c3482966689102d08c56b53ff6b",
+      "input-before.json": "cb3e64575f3edc4ecca6d18aec379c5908a18c3482966689102d08c56b53ff6b",
+      "lineage.json": "42d117f7136a4f0a0317b69d14678ad03974a7c922ae1903af0944aa4a8006c2",
+      "provenance.json": "77e447a584df3f5090f7976543f48f62a0a272a96c806c422ceab71a0ffcface",
+      "resource-estimate.json": "054ee2782f4baf27c440fc1203970f4b886d71295ef3c6e353fd537718fe1f62",
+      "runs.json": "520ac6b43ac57418dfb3fef8e7184129c7109af19f23df0e1046b845f6d52cb4",
+      "source-evidence.json": "b7ea70c28f8afd54370ee030db04c545f1263cc592065d9ed20d23fb07b6811a"
+    },
+    "legacy_commission_sha256": "2a563ccbc51906c6e69a5eee6d5daa3df5eabe6ef1a24f5715dd238976fe0709",
+    "mechanism_verdict": "REDUCTION_ORDER",
+    "preservation_mode": "Prior independent production verification retained by SHA-256; integration regeneration performs no build, render, or capture access.",
+    "production_script_sha256": {
+      "analyze.py": "608fe9da28afb6795043f54d343f0e9c273224c07781a1a1f9f15206d6f43dec",
+      "common.py": "4e3e1fdaf888d6c36ff3fa2cde645919a38226b3b54f4a5ef422daade683fb05",
+      "mutation_commission.py": "1c0a1391751f78c33a49461d02e473c98ef0b9f91ef01ca91d0664b605db4e24",
+      "preregistration.json": "a70babea9c05ad9b787ef4f48e201c814fa8472d7daa51cb6df280e3497efe62",
+      "run.py": "5a178e8f423a32424af26ab3f124d6efe739624fe06dc78a281bcd305eca78c5",
+      "test_verify.py": "a1439f160cf26b1a916250449d908d72e3adbca8c9d01a9da672d5d02e596c39",
+      "verify.py": "15cc15289317572166dfcf62688e67a45aafe5f461454289c0f10dd3a02d8203"
+    },
+    "schema": "strehl-m176-verification-v1",
+    "verification_sha256": "92072b3eddfe0c2b40b6e6806c67e4b29df1a0ce27f9c05df5bd6b255cecabe4"
+  },
+  "schema": "strehl-m176-integration-verification-v2"
+}

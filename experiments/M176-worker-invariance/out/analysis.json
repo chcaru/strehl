@@ -1,0 +1,422 @@
+{
+  "comparisons": {
+    "affected_w1_vs_repeat": {
+      "a": "affected-w1",
+      "b": "affected-w1-repeat",
+      "differing_channel_samples": 0,
+      "differing_pixel_bbox_xyxy_inclusive": null,
+      "differing_pixel_edge_distance_bins": {
+        "[0,1)": 0,
+        "[1,2)": 0,
+        "[128,256)": 0,
+        "[16,32)": 0,
+        "[2,4)": 0,
+        "[256,inf)": 0,
+        "[32,64)": 0,
+        "[4,8)": 0,
+        "[64,128)": 0,
+        "[8,16)": 0
+      },
+      "differing_pixels_any_channel": 0,
+      "dtype": "uint16",
+      "file_pixel_relation": "FILE_AND_PIXELS_IDENTICAL",
+      "first_differing_channel_samples": [],
+      "max_absolute_dn16": 0,
+      "max_absolute_location": null,
+      "max_absolute_over_65535": 0.0,
+      "max_relative_location": null,
+      "max_relative_per_pixel_channel": 0.0,
+      "per_channel_differing_samples": {
+        "B": 0,
+        "G": 0,
+        "R": 0
+      },
+      "pixel_identical": true,
+      "shape": [
+        2344,
+        3516,
+        3
+      ],
+      "signed_delta_direction": "B_MINUS_A",
+      "signed_delta_histogram": {}
+    },
+    "affected_w1_vs_w2": {
+      "a": "affected-w1",
+      "b": "affected-w2",
+      "differing_channel_samples": 3437,
+      "differing_pixel_bbox_xyxy_inclusive": [
+        1,
+        0,
+        3515,
+        2343
+      ],
+      "differing_pixel_edge_distance_bins": {
+        "[0,1)": 4,
+        "[1,2)": 3,
+        "[128,256)": 395,
+        "[16,32)": 50,
+        "[2,4)": 8,
+        "[256,inf)": 2642,
+        "[32,64)": 102,
+        "[4,8)": 15,
+        "[64,128)": 180,
+        "[8,16)": 31
+      },
+      "differing_pixels_any_channel": 3430,
+      "dtype": "uint16",
+      "file_pixel_relation": "PIXELS_DIFFER",
+      "first_differing_channel_samples": [
+        {
+          "a": 721,
+          "b": 720,
+          "channel": "G",
+          "signed_delta_b_minus_a": -1,
+          "x": 3074,
+          "y": 0
+        },
+        {
+          "a": 3050,
+          "b": 3051,
+          "channel": "R",
+          "signed_delta_b_minus_a": 1,
+          "x": 425,
+          "y": 2
+        },
+        {
+          "a": 995,
+          "b": 996,
+          "channel": "G",
+          "signed_delta_b_minus_a": 1,
+          "x": 3178,
+          "y": 2
+        },
+        {
+          "a": 3225,
+          "b": 3226,
+          "channel": "R",
+          "signed_delta_b_minus_a": 1,
+          "x": 1706,
+          "y": 4
+        },
+        {
+          "a": 3274,
+          "b": 3275,
+          "channel": "R",
+          "signed_delta_b_minus_a": 1,
+          "x": 1664,
+          "y": 5
+        },
+        {
+          "a": 398,
+          "b": 399,
+          "channel": "B",
+          "signed_delta_b_minus_a": 1,
+          "x": 2702,
+          "y": 5
+        },
+        {
+          "a": 3018,
+          "b": 3019,
+          "channel": "R",
+          "signed_delta_b_minus_a": 1,
+          "x": 210,
+          "y": 7
+        },
+        {
+          "a": 3092,
+          "b": 3093,
+          "channel": "R",
+          "signed_delta_b_minus_a": 1,
+          "x": 288,
+          "y": 8
+        },
+        {
+          "a": 606,
+          "b": 607,
+          "channel": "B",
+          "signed_delta_b_minus_a": 1,
+          "x": 957,
+          "y": 8
+        },
+        {
+          "a": 3278,
+          "b": 3279,
+          "channel": "R",
+          "signed_delta_b_minus_a": 1,
+          "x": 1496,
+          "y": 8
+        },
+        {
+          "a": 3322,
+          "b": 3323,
+          "channel": "R",
+          "signed_delta_b_minus_a": 1,
+          "x": 458,
+          "y": 9
+        },
+        {
+          "a": 744,
+          "b": 745,
+          "channel": "G",
+          "signed_delta_b_minus_a": 1,
+          "x": 156,
+          "y": 12
+        },
+        {
+          "a": 805,
+          "b": 806,
+          "channel": "G",
+          "signed_delta_b_minus_a": 1,
+          "x": 1342,
+          "y": 12
+        },
+        {
+          "a": 429,
+          "b": 430,
+          "channel": "B",
+          "signed_delta_b_minus_a": 1,
+          "x": 902,
+          "y": 13
+        },
+        {
+          "a": 3372,
+          "b": 3373,
+          "channel": "R",
+          "signed_delta_b_minus_a": 1,
+          "x": 1741,
+          "y": 14
+        },
+        {
+          "a": 861,
+          "b": 860,
+          "channel": "G",
+          "signed_delta_b_minus_a": -1,
+          "x": 1606,
+          "y": 17
+        }
+      ],
+      "max_absolute_dn16": 1,
+      "max_absolute_location": {
+        "a": 721,
+        "b": 720,
+        "channel": "G",
+        "signed_delta_b_minus_a": -1,
+        "x": 3074,
+        "y": 0
+      },
+      "max_absolute_over_65535": 1.5259021896696422e-05,
+      "max_relative_location": {
+        "a": 175,
+        "absolute_delta": 1,
+        "b": 176,
+        "channel": "B",
+        "relative_deviation": 0.005681818181818182,
+        "x": 3487,
+        "y": 1327
+      },
+      "max_relative_per_pixel_channel": 0.005681818181818182,
+      "per_channel_differing_samples": {
+        "B": 791,
+        "G": 791,
+        "R": 1855
+      },
+      "pixel_identical": false,
+      "shape": [
+        2344,
+        3516,
+        3
+      ],
+      "signed_delta_direction": "B_MINUS_A",
+      "signed_delta_histogram": {
+        "-1": 1657,
+        "1": 1780
+      }
+    },
+    "fixed_w1_vs_w2": {
+      "a": "fixed-w1",
+      "b": "fixed-w2",
+      "differing_channel_samples": 0,
+      "differing_pixel_bbox_xyxy_inclusive": null,
+      "differing_pixel_edge_distance_bins": {
+        "[0,1)": 0,
+        "[1,2)": 0,
+        "[128,256)": 0,
+        "[16,32)": 0,
+        "[2,4)": 0,
+        "[256,inf)": 0,
+        "[32,64)": 0,
+        "[4,8)": 0,
+        "[64,128)": 0,
+        "[8,16)": 0
+      },
+      "differing_pixels_any_channel": 0,
+      "dtype": "uint16",
+      "file_pixel_relation": "FILE_AND_PIXELS_IDENTICAL",
+      "first_differing_channel_samples": [],
+      "max_absolute_dn16": 0,
+      "max_absolute_location": null,
+      "max_absolute_over_65535": 0.0,
+      "max_relative_location": null,
+      "max_relative_per_pixel_channel": 0.0,
+      "per_channel_differing_samples": {
+        "B": 0,
+        "G": 0,
+        "R": 0
+      },
+      "pixel_identical": true,
+      "shape": [
+        2344,
+        3516,
+        3
+      ],
+      "signed_delta_direction": "B_MINUS_A",
+      "signed_delta_histogram": {}
+    }
+  },
+  "images": {
+    "affected-w1": {
+      "canonical_pixel_sha256": "e4733757eef94b7442f243c805bb624619a28103aad682fef562b2d5221c6a82",
+      "dtype": "uint16",
+      "file": {
+        "mtime_ns": 1788576038604178400,
+        "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\outputs\\affected-w1.tiff",
+        "sha256": "cdfc0c589eac96b6c394c9e295d0e25921bf3d625e2d17914cd79369b1cd8c57",
+        "size": 49450708
+      },
+      "independent_decoders_equal": true,
+      "primary_decoder": {
+        "library": "tifffile",
+        "version": "2026.5.2"
+      },
+      "secondary_canonical_pixel_sha256": "e4733757eef94b7442f243c805bb624619a28103aad682fef562b2d5221c6a82",
+      "secondary_decoder": {
+        "channel_normalization": "BGR-to-RGB",
+        "library": "opencv",
+        "version": "4.13.0"
+      },
+      "shape": [
+        2344,
+        3516,
+        3
+      ]
+    },
+    "affected-w1-repeat": {
+      "canonical_pixel_sha256": "e4733757eef94b7442f243c805bb624619a28103aad682fef562b2d5221c6a82",
+      "dtype": "uint16",
+      "file": {
+        "mtime_ns": 1788576052213436700,
+        "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\outputs\\affected-w1-repeat.tiff",
+        "sha256": "cdfc0c589eac96b6c394c9e295d0e25921bf3d625e2d17914cd79369b1cd8c57",
+        "size": 49450708
+      },
+      "independent_decoders_equal": true,
+      "primary_decoder": {
+        "library": "tifffile",
+        "version": "2026.5.2"
+      },
+      "secondary_canonical_pixel_sha256": "e4733757eef94b7442f243c805bb624619a28103aad682fef562b2d5221c6a82",
+      "secondary_decoder": {
+        "channel_normalization": "BGR-to-RGB",
+        "library": "opencv",
+        "version": "4.13.0"
+      },
+      "shape": [
+        2344,
+        3516,
+        3
+      ]
+    },
+    "affected-w2": {
+      "canonical_pixel_sha256": "ccbcda05920c0d44b4f45c548bea643e905cc927ff5791b68dea38987c0868da",
+      "dtype": "uint16",
+      "file": {
+        "mtime_ns": 1788576044659582300,
+        "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\outputs\\affected-w2.tiff",
+        "sha256": "1824bde27c5b709600eb8b38a8a2b5796a7b09fb43a69382e3e2714615ffb258",
+        "size": 49450708
+      },
+      "independent_decoders_equal": true,
+      "primary_decoder": {
+        "library": "tifffile",
+        "version": "2026.5.2"
+      },
+      "secondary_canonical_pixel_sha256": "ccbcda05920c0d44b4f45c548bea643e905cc927ff5791b68dea38987c0868da",
+      "secondary_decoder": {
+        "channel_normalization": "BGR-to-RGB",
+        "library": "opencv",
+        "version": "4.13.0"
+      },
+      "shape": [
+        2344,
+        3516,
+        3
+      ]
+    },
+    "fixed-w1": {
+      "canonical_pixel_sha256": "92ff913ee211d74ee5d8dead15ddb4709a9a8ecf49785e4263dd4964d14a2c8c",
+      "dtype": "uint16",
+      "file": {
+        "mtime_ns": 1788576062102428000,
+        "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\outputs\\fixed-w1.tiff",
+        "sha256": "af6c282e9214d72cd0135b5b7f4a5a6958330910e5bd3a146aa8855ffc7850e3",
+        "size": 49450708
+      },
+      "independent_decoders_equal": true,
+      "primary_decoder": {
+        "library": "tifffile",
+        "version": "2026.5.2"
+      },
+      "secondary_canonical_pixel_sha256": "92ff913ee211d74ee5d8dead15ddb4709a9a8ecf49785e4263dd4964d14a2c8c",
+      "secondary_decoder": {
+        "channel_normalization": "BGR-to-RGB",
+        "library": "opencv",
+        "version": "4.13.0"
+      },
+      "shape": [
+        2344,
+        3516,
+        3
+      ]
+    },
+    "fixed-w2": {
+      "canonical_pixel_sha256": "92ff913ee211d74ee5d8dead15ddb4709a9a8ecf49785e4263dd4964d14a2c8c",
+      "dtype": "uint16",
+      "file": {
+        "mtime_ns": 1788576068742433400,
+        "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\outputs\\fixed-w2.tiff",
+        "sha256": "af6c282e9214d72cd0135b5b7f4a5a6958330910e5bd3a146aa8855ffc7850e3",
+        "size": 49450708
+      },
+      "independent_decoders_equal": true,
+      "primary_decoder": {
+        "library": "tifffile",
+        "version": "2026.5.2"
+      },
+      "secondary_canonical_pixel_sha256": "92ff913ee211d74ee5d8dead15ddb4709a9a8ecf49785e4263dd4964d14a2c8c",
+      "secondary_decoder": {
+        "channel_normalization": "BGR-to-RGB",
+        "library": "opencv",
+        "version": "4.13.0"
+      },
+      "shape": [
+        2344,
+        3516,
+        3
+      ]
+    }
+  },
+  "independent_decoder_corroboration": {
+    "all_images_equal": true,
+    "image_count": 5
+  },
+  "mechanism_reasons": [
+    "affected fixed-worker repeat is pixel-identical",
+    "affected cross-worker decoded pixels differ",
+    "affected workers select different frame chunks and absorb grouping",
+    "fixed W1/W2 decoded pixels are pixel-identical",
+    "SoftPower accumulates and absorbs f32 sums",
+    "alignment is off, so coverage/resampling boundaries cannot select the delta"
+  ],
+  "mechanism_verdict": "REDUCTION_ORDER",
+  "schema": "strehl-m176-analysis-v1"
+}

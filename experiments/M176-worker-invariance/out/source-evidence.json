@@ -1,0 +1,191 @@
+{
+  "affected_comparison": "affected_w1_vs_w2",
+  "affected_other_arm": "affected-w2",
+  "affected_source": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+  "chunking": {
+    "affected": {
+      "formula": "ceil(frames / requested_workers)",
+      "w1": [
+        19
+      ],
+      "w2": [
+        10,
+        9
+      ],
+      "w3": [
+        7,
+        7,
+        5
+      ]
+    },
+    "fixed": {
+      "canonical_chunk_count": 4,
+      "formula": "ceil(frames / canonical_memory_chunks), independent of requested workers",
+      "w1": [
+        5,
+        5,
+        5,
+        4
+      ],
+      "w2": [
+        5,
+        5,
+        5,
+        4
+      ]
+    },
+    "frames": 19
+  },
+  "excerpts": {
+    "affected_left_to_right_absorb": {
+      "anchor": "            Some(a) => a.absorb(&m),",
+      "excerpt": "        }\n        beta_n += bn;\n        match &mut merged {\n            Some(a) => a.absorb(&m),\n            None => merged = Some(m),\n        }\n    }\n",
+      "excerpt_sha256": "179545ae266e51be75bcad8d3e8e1b0674b96905ed3a30ec1a093314e835587f",
+      "file": "merge_cmd.rs",
+      "file_sha256": "f19e8fe4b9bd7aafd871e32385c1f6e609fc9df2856a4faa7b86eb1366cc6df4",
+      "line": 5840,
+      "range": [
+        5837,
+        5843
+      ]
+    },
+    "affected_parallel_chunks": {
+      "anchor": "        .par_chunks(per_chunk)",
+      "excerpt": "    let t_fold = Instant::now();\n    let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();\n    let parts: Vec<Result<FoldPart>> = indexed\n        .par_chunks(per_chunk)\n        .map(|chunk| {\n            let mut w = BandWorker::new(domain, cfg);\n            let mut folded = 0usize;\n",
+      "excerpt_sha256": "c633377762df69d38f4dc89f3cbed5e073f23154f434de8f961cf8dabca82840",
+      "file": "merge_cmd.rs",
+      "file_sha256": "f19e8fe4b9bd7aafd871e32385c1f6e609fc9df2856a4faa7b86eb1366cc6df4",
+      "line": 5802,
+      "range": [
+        5799,
+        5805
+      ]
+    },
+    "affected_worker_chunk_count": {
+      "anchor": "    let per_chunk = paths.len().div_ceil(workers);",
+      "excerpt": "    let per_worker_bytes =\n        4 * (acc_floats + ws_floats + (BAND_PLANES + 2) * geom.pixels()) + frame_bytes;\n    let workers = band_workers(per_worker_bytes, paths.len())?;\n    let per_chunk = paths.len().div_ceil(workers);\n    eprintln!(\n        \"memory plan     : {workers} workers x {:.0} MB = {:.1} GB against a {} MB budget, \\\n         CONSTANT in\\n                  the frame count. The merge is a fold: every accumulator \\\n",
+      "excerpt_sha256": "418dd9796d9facaf539bccac5d0b7573a8191870c549998f1bbe5fc3334e3fc7",
+      "file": "merge_cmd.rs",
+      "file_sha256": "f19e8fe4b9bd7aafd871e32385c1f6e609fc9df2856a4faa7b86eb1366cc6df4",
+      "line": 5787,
+      "range": [
+        5784,
+        5790
+      ]
+    },
+    "f32_absorb": {
+      "anchor": "                        for (a, b) in self.num[i].iter_mut().zip(&other.num[i]) {",
+      "excerpt": "                    }\n                    for c in 0..self.planes {\n                        let i = k * self.planes + c;\n                        for (a, b) in self.num[i].iter_mut().zip(&other.num[i]) {\n                            *a += b;\n                        }\n                        for (a, b) in self.usum[i].iter_mut().zip(&other.usum[i]) {\n",
+      "excerpt_sha256": "66123774cd764db453ebbd8e62a462c92653aec9739c8cae2f76ed179c1d3181",
+      "file": "pyramid.rs",
+      "file_sha256": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47",
+      "line": 2031,
+      "range": [
+        2028,
+        2034
+      ]
+    },
+    "f32_numerator": {
+      "anchor": "    num: Vec<Vec<f32>>,",
+      "excerpt": "    sizes: Vec<LevelSize>,\n    planes: usize,\n    /// `sum(w * L)`, indexed `[level * planes + plane]`.\n    num: Vec<Vec<f32>>,\n    /// `sum(L)`, same indexing. The fallback numerator where no frame cleared\n    /// the noise floor.\n    usum: Vec<Vec<f32>>,\n",
+      "excerpt_sha256": "2064808d4faec2aecb52cce07869b761152de0451149631dd959b4e110371751",
+      "file": "pyramid.rs",
+      "file_sha256": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47",
+      "line": 1315,
+      "range": [
+        1312,
+        1318
+      ]
+    },
+    "fixed_canonical_chunk_count": {
+      "anchor": "    let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());",
+      "excerpt": "    // arithmetic chunks, not simultaneously resident workers.\n    let planning_bytes =\n        4 * (acc_floats + ws_floats + (BAND_PLANES + 2) * geom.pixels()) + frame_bytes;\n    let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());\n    let workers = band_workers(planning_bytes, paths.len())?;\n    let per_chunk = paths.len().div_ceil(canonical_chunks);\n    eprintln!(\n",
+      "excerpt_sha256": "2f9d7142a04a1389285975b735c2fef524c5b4c2aef8f3993e2bfd416f301748",
+      "file": "merge_cmd.rs",
+      "file_sha256": "da41f88278aeb3072c02a30132aa2cd69ade54766a0c314f8a5e4f05350ff8eb",
+      "line": 5796,
+      "range": [
+        5793,
+        5799
+      ]
+    },
+    "fixed_canonical_chunk_size": {
+      "anchor": "    let per_chunk = paths.len().div_ceil(canonical_chunks);",
+      "excerpt": "        4 * (acc_floats + ws_floats + (BAND_PLANES + 2) * geom.pixels()) + frame_bytes;\n    let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());\n    let workers = band_workers(planning_bytes, paths.len())?;\n    let per_chunk = paths.len().div_ceil(canonical_chunks);\n    eprintln!(\n        \"memory plan     : {canonical_chunks} canonical chunks, 1 reusable frame worker, \\\n         1 retained + 1 scratch accumulator, {workers} execution threads\\n                  \\\n",
+      "excerpt_sha256": "c51dc226c77867fe58c111668adc26fcb078f75b0640d6545d36a232a6a19f0a",
+      "file": "merge_cmd.rs",
+      "file_sha256": "da41f88278aeb3072c02a30132aa2cd69ade54766a0c314f8a5e4f05350ff8eb",
+      "line": 5798,
+      "range": [
+        5795,
+        5801
+      ]
+    },
+    "fixed_canonical_iteration": {
+      "anchor": "        let mut chunks = paths.chunks(per_chunk).enumerate().peekable();",
+      "excerpt": "    let mut beta_sum: Vec<f64> = Vec::new();\n    let mut beta_n = 0usize;\n    pool.install(|| -> Result<()> {\n        let mut chunks = paths.chunks(per_chunk).enumerate().peekable();\n        while let Some((chunk_index, chunk)) = chunks.next() {\n            let mut folded = 0usize;\n            for (offset, path) in chunk.iter().enumerate() {\n",
+      "excerpt_sha256": "14667069ce4726c9ae1d8a0b8fb1f56b51b5f0d1d4f95d52f6f24629edd3560b",
+      "file": "merge_cmd.rs",
+      "file_sha256": "da41f88278aeb3072c02a30132aa2cd69ade54766a0c314f8a5e4f05350ff8eb",
+      "line": 5819,
+      "range": [
+        5816,
+        5822
+      ]
+    },
+    "fixed_left_to_right_absorb": {
+      "anchor": "                Some(acc) => acc.absorb(&worker.merge),",
+      "excerpt": "            }\n            beta_n += worker.beta_n;\n            match merged.as_mut() {\n                Some(acc) => acc.absorb(&worker.merge),\n                None => {\n                    merged = Some(std::mem::replace(\n                        &mut worker.merge,\n",
+      "excerpt_sha256": "1e892fae4775816207d34ebbfde0b17448824982599a2c5a8f69ebc28194d2ca",
+      "file": "merge_cmd.rs",
+      "file_sha256": "da41f88278aeb3072c02a30132aa2cd69ade54766a0c314f8a5e4f05350ff8eb",
+      "line": 5837,
+      "range": [
+        5834,
+        5840
+      ]
+    },
+    "soft_power_default": {
+      "anchor": "            select: SelectMode::SoftPower,",
+      "excerpt": "            // couch-fibers. The gentler of two equals wins, because the risk\n            // being traded against sits in the coarse bands.\n            sharpen_per_octave: 1.4,\n            select: SelectMode::SoftPower,\n            // Measured, not argued -- see `BaseBand`. Weighting the base band\n            // cost -475 DN of global level and 835 DN of position-dependent\n            // structure on flower-bud-alone-cpl, against +11 DN and 45 DN for\n",
+      "excerpt_sha256": "d00d0c6f14adacd889b200f698b0802651c4d5b1bcb00de57aedd70787caad16",
+      "file": "pyramid.rs",
+      "file_sha256": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47",
+      "line": 1275,
+      "range": [
+        1272,
+        1278
+      ]
+    }
+  },
+  "fixed_source": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+  "mechanism_preconditions": {
+    "affected_workers_change_chunks": true,
+    "f32_absorb_addition": true,
+    "f32_accumulators": true,
+    "fixed_workers_do_not_change_chunks": true,
+    "soft_power_default": true
+  },
+  "repair_commit": "fc2abb499126a56302de7f21f527de5613be34e7",
+  "runtime_preconditions": {
+    "affected_w1_worker": 1,
+    "affected_w2_worker": 2,
+    "alignment_off_all_runs": true,
+    "coverage_boundary_excluded": true,
+    "fixed_w1_worker": 1,
+    "fixed_w2_worker": 2,
+    "same_output_shape_required": true,
+    "scale_coverage_requested_all_runs": true
+  },
+  "schema": "strehl-m176-source-evidence-v1",
+  "source_files": {
+    "affected_merge_cmd_git_blob": "081406ae3de079820eb4e134594cd75e72f187fd",
+    "affected_merge_cmd_sha256": "f19e8fe4b9bd7aafd871e32385c1f6e609fc9df2856a4faa7b86eb1366cc6df4",
+    "affected_pyramid_git_blob": "470ce5a2626856c913e60166cf4e20e5f44b8633",
+    "affected_pyramid_sha256": "021ff15ee266d71fdc83beec4d514d003735063fa6a54e516e5a5acedb587c47",
+    "fixed_merge_cmd_git_blob": "e674cac30d40dcf2c86c9cfb9468a1bad909b40e",
+    "fixed_merge_cmd_sha256": "da41f88278aeb3072c02a30132aa2cd69ade54766a0c314f8a5e4f05350ff8eb",
+    "fixed_pyramid_git_blob": "142bf6a15e2e6e25377c66073730ce3ab1ca259e",
+    "fixed_pyramid_sha256": "7b6376e68a1a6488f958b85e65cfdc57dfe8b8826d4612d8429d08f8743632ac"
+  }
+}

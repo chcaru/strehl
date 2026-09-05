@@ -1,0 +1,149 @@
+{
+  "active_raw_geometry": [
+    7032,
+    4688
+  ],
+  "affected_w2_source_plan_bytes": 2784170456,
+  "affected_w2_source_plan_gib": 2.592960797250271,
+  "analysis_geometry": [
+    3516,
+    2344
+  ],
+  "buffer_geometry": [
+    7168,
+    5120
+  ],
+  "fixed_reusable_fold_source_model_bytes": 2051415232,
+  "fixed_reusable_fold_source_model_gib": 1.9105293154716492,
+  "frame_bytes": 73400320,
+  "maximum_six_uncompressed_pixel_payload_bytes": 296694144,
+  "minimum_free_scratch_bytes": 10737418240,
+  "not_a_timing_measurement": true,
+  "planning_bytes_per_affected_worker": 1392085228,
+  "planning_mib_per_affected_worker": 1327.5959281921387,
+  "probe": {
+    "active": [
+      7032,
+      4688
+    ],
+    "argv": [
+      "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-affected-1a6fd10c\\release\\strehl.exe",
+      "probe",
+      "D:\\personal\\macro\\coffee-bubbles",
+      "--limit",
+      "1"
+    ],
+    "buffer": [
+      7168,
+      5120
+    ],
+    "command": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\target-affected-1a6fd10c\\release\\strehl.exe probe D:\\personal\\macro\\coffee-bubbles --limit 1",
+    "exit_code": 0,
+    "stderr": {
+      "mtime_ns": 1788576031058502700,
+      "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\probe.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "stdout": {
+      "mtime_ns": 1788576031058502700,
+      "path": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\logs\\probe.stdout.log",
+      "sha256": "0819f8e7edc65ccbef4e4afb2a786175807566dd4634b9302a70d6ecb20548f7",
+      "size": 733
+    }
+  },
+  "probe_renderer_environment": {
+    "LOCALAPPDATA": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\runtime-cache",
+    "RAYON_NUM_THREADS": "2",
+    "RUST_LOG": "warn",
+    "STREHL_ACUITY": null,
+    "STREHL_ALIGN": "0",
+    "STREHL_BIMODAL_DUMP": null,
+    "STREHL_BUILD_ID": null,
+    "STREHL_CACHE_DIR": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\runtime-cache",
+    "STREHL_CONFIDENCE_DEBUG": null,
+    "STREHL_CONFIDENCE_MAP": null,
+    "STREHL_COVER": "scale",
+    "STREHL_DEFECT": "off",
+    "STREHL_DEFECT_ARM": "none",
+    "STREHL_DEFECT_HOT_FLOOR": null,
+    "STREHL_DEFECT_MAP": null,
+    "STREHL_DEMOSAIC": null,
+    "STREHL_DUMP_ELECTION": null,
+    "STREHL_DUMP_MERGE_STATE": null,
+    "STREHL_DUMP_NEFF": null,
+    "STREHL_EDGE_AWARE": null,
+    "STREHL_EDGE_CONF": null,
+    "STREHL_EDGE_FEATHER": null,
+    "STREHL_EDGE_TAU": null,
+    "STREHL_FIX_CA": "off",
+    "STREHL_FIX_HALO": "0",
+    "STREHL_FIX_HALO_DELTA": null,
+    "STREHL_FULLRES_GATHER": null,
+    "STREHL_GATE_FLOOR": null,
+    "STREHL_GATE_FLOOR_SCALE": null,
+    "STREHL_HIGHLIGHT_KNEE": "0.60",
+    "STREHL_HULL": "input-range",
+    "STREHL_MERGE": "pyramid",
+    "STREHL_ONLY_FRAME": null,
+    "STREHL_PHOTOMETRIC": null,
+    "STREHL_PYRAMID_MEAN_COARSE": "0",
+    "STREHL_PYRAMID_SIGNIFICANCE": "0",
+    "STREHL_PYRAMID_WEIGHT_DUMP": null,
+    "STREHL_PYRAMID_WORKERS": "1",
+    "STREHL_RESTORE": "off",
+    "STREHL_RESTORE_SIGMA": null,
+    "STREHL_ROBUST_ELECTION": null,
+    "STREHL_SMOOTH": null,
+    "STREHL_SMOOTH_HUBER": null,
+    "STREHL_SOFT_GATE": null,
+    "STREHL_VEIL": null,
+    "STREHL_VEIL_DISPERSION": null,
+    "STREHL_VEIL_FLOOR": null,
+    "STREHL_VEIL_MARGIN": null,
+    "STREHL_WARPMAP": null,
+    "STREHL_WINDOW_RADIUS": null,
+    "TEMP": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\runtime-temp",
+    "TMP": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\runtime-temp",
+    "TMPDIR": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\runtime-temp",
+    "XDG_CACHE_HOME": "C:\\Users\\chris\\.copilot\\session-state\\841ddf83-8ef0-40bd-a341-d2c66d487731\\files\\M176-worker-invariance\\production\\runtime-cache"
+  },
+  "pyramid_level_sizes": [
+    [
+      3516,
+      2344
+    ],
+    [
+      1758,
+      1172
+    ],
+    [
+      879,
+      586
+    ],
+    [
+      440,
+      293
+    ],
+    [
+      220,
+      147
+    ],
+    [
+      110,
+      74
+    ],
+    [
+      55,
+      37
+    ],
+    [
+      28,
+      19
+    ]
+  ],
+  "resident_stop_limit_bytes": 4294967296,
+  "schema": "strehl-m176-resource-estimate-v1",
+  "scratch_free_bytes_before_renders": 589796851712,
+  "within_limits": true
+}
