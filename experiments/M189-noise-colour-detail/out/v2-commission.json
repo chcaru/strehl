@@ -1,0 +1,179 @@
+{
+  "environment": {
+    "captures_opened": 0,
+    "numpy": "2.4.4",
+    "python": "3.12.10",
+    "scipy": "1.17.1",
+    "thread_contract": 1
+  },
+  "fixture": {
+    "base_sigma": 1.0,
+    "degraded_sigma": 1.65,
+    "gain_dn_per_e": 0.221113,
+    "improved_sigma": 0.55,
+    "latent_seed": 189101,
+    "noise_seeds": [
+      189103,
+      189104,
+      189105,
+      189106
+    ],
+    "oversample": 4,
+    "pairs": 16,
+    "post_blur_sigma": 1.0,
+    "read_noise_e": 1.2392,
+    "scene_sha256": {
+      "adaptive_renoise_usm": "C493AFB1B41016386FB5D92269B2C9E3EB015B2D12990503ADCBA4B93D494CA3",
+      "base": "4D6D27E4EA7213548D109824C74D9EA53D66A3ECB09648D8709020DA81E7924F",
+      "flat": "6D02134D913112C09362BED36DE579361B18F79F65609C559E757E091010D55E",
+      "optical_degraded": "4D5F07E5C26ABFC3DCD711D4AC8C8FE8E2CE8046300D2BB017489B49B8C28A8B",
+      "optical_improved": "74B28D8AD2E3774B74A5362E82EA2FCF48B3BFC0371D87E13803B19404DB8BD0"
+    },
+    "side": 256,
+    "usm_amount": 0.75,
+    "usm_sigma": 1.0
+  },
+  "local_score_ratios": {
+    "adaptive_renoise_usm": 1.841745129099944,
+    "identity": 1.0,
+    "optical_degraded": 0.1526027618393716,
+    "optical_improved": 2.922975032516979,
+    "post_blur": 0.3130796427522063,
+    "post_usm": 1.0048396505127095
+  },
+  "measurements": {
+    "adaptive_renoise_usm": {
+      "bin_gain_max": 1.0431227382593706,
+      "bin_gain_median": 1.0012055171720307,
+      "bin_gain_min": 0.9591113685485481,
+      "licensed_modes": 15548,
+      "local_score": 299358.7167845247,
+      "observed_noise_power": 1768.2264067508477,
+      "populated_bins": 36,
+      "raw_coherent_power": 300967.254238321,
+      "reference_noise_power": 1768.9790514164058,
+      "score": 288525.2551780594,
+      "weighted_noise_gain": 0.9995745316119173
+    },
+    "base": {
+      "bin_gain_max": 1.0406916167318294,
+      "bin_gain_median": 1.0018409923261729,
+      "bin_gain_min": 0.9723403631876818,
+      "licensed_modes": 15548,
+      "local_score": 162540.79462711568,
+      "observed_noise_power": 1775.7156966729806,
+      "populated_bins": 36,
+      "raw_coherent_power": 164368.65000543563,
+      "reference_noise_power": 1768.9812089205004,
+      "score": 157941.74504990844,
+      "weighted_noise_gain": 1.0038069865968728
+    },
+    "flat": {
+      "bin_gain_max": 1.04065750386508,
+      "bin_gain_median": 1.002037019668236,
+      "bin_gain_min": 0.973125929848088,
+      "licensed_modes": 15548,
+      "local_score": -7.0163234958640315,
+      "observed_noise_power": 1775.9633226134436,
+      "populated_bins": 36,
+      "raw_coherent_power": -7.235080310127022,
+      "reference_noise_power": 1768.9812366747994,
+      "score": -6.952412569222237,
+      "weighted_noise_gain": 1.0039469530789193
+    },
+    "identity": {
+      "bin_gain_max": 1.0406916167318294,
+      "bin_gain_median": 1.0018409923261729,
+      "bin_gain_min": 0.9723403631876818,
+      "licensed_modes": 15548,
+      "local_score": 162540.79462711568,
+      "observed_noise_power": 1775.7156966729806,
+      "populated_bins": 36,
+      "raw_coherent_power": 164368.65000543563,
+      "reference_noise_power": 1768.9812089205004,
+      "score": 157941.74504990844,
+      "weighted_noise_gain": 1.0038069865968728
+    },
+    "optical_degraded": {
+      "bin_gain_max": 1.0407645407056687,
+      "bin_gain_median": 1.0018651892805068,
+      "bin_gain_min": 0.9728203945275656,
+      "licensed_modes": 15548,
+      "local_score": 24804.174171663948,
+      "observed_noise_power": 1775.7876820506588,
+      "populated_bins": 36,
+      "raw_coherent_power": 25191.11282736589,
+      "reference_noise_power": 1768.981207508413,
+      "score": 24204.43034145416,
+      "weighted_noise_gain": 1.0038476805255792
+    },
+    "optical_improved": {
+      "bin_gain_max": 1.039935732816333,
+      "bin_gain_median": 1.001658440375933,
+      "bin_gain_min": 0.9719798909358491,
+      "licensed_modes": 15548,
+      "local_score": 475102.68446052907,
+      "observed_noise_power": 1775.564265448492,
+      "populated_bins": 36,
+      "raw_coherent_power": 479625.5121231805,
+      "reference_noise_power": 1768.9813011022618,
+      "score": 461206.8774906583,
+      "weighted_noise_gain": 1.0037213306563095
+    },
+    "post_blur": {
+      "bin_gain_max": 0.5746151392428296,
+      "bin_gain_median": 0.17652552321251708,
+      "bin_gain_min": 0.030134312655583154,
+      "licensed_modes": 15548,
+      "local_score": 50888.21391451711,
+      "observed_noise_power": 321.12003166754266,
+      "populated_bins": 36,
+      "raw_coherent_power": 50888.21391451711,
+      "reference_noise_power": 1768.9812089205,
+      "score": 50888.21391451711,
+      "weighted_noise_gain": 0.18152823220971487
+    },
+    "post_usm": {
+      "bin_gain_max": 2.5983584069596257,
+      "bin_gain_median": 2.0778156215858914,
+      "bin_gain_min": 1.4745868403472515,
+      "licensed_modes": 15548,
+      "local_score": 163327.435267169,
+      "observed_noise_power": 3793.0500547901684,
+      "populated_bins": 36,
+      "raw_coherent_power": 301094.9530396941,
+      "reference_noise_power": 1768.9812089205009,
+      "score": 115878.91502312392,
+      "weighted_noise_gain": 2.144200309004317
+    }
+  },
+  "raw_coherent_ratios": {
+    "adaptive_renoise_usm": 1.8310502290331403,
+    "identity": 1.0,
+    "optical_degraded": 0.15325983894454828,
+    "optical_improved": 2.9179865631756385,
+    "post_blur": 0.3095980523830685,
+    "post_usm": 1.8318271338831156
+  },
+  "schema": "m189-noise-colour-detail-v2",
+  "score_ratios": {
+    "adaptive_renoise_usm": 1.8267827488349424,
+    "identity": 1.0,
+    "optical_degraded": 0.15324910038068618,
+    "optical_improved": 2.920107520307062,
+    "post_blur": 0.32219609767156115,
+    "post_usm": 0.7336813645215015
+  },
+  "source": {
+    "git_head_before_run": "1dface58aac0b279ae3e8125c019e9c2b1a7d63d",
+    "sha256": {
+      "AMENDMENT-1.md": "12DA90CA64E2D5676769EDA9AECC31515FEB43FAEA9B9E728BC6FA2966625313",
+      "PREREGISTRATION.md": "2E195DA0B2AA05BA9638EFAE12897B311C91289B9B83155DE3105D4583C503A9",
+      "commission.py": "7A7B2C070057B0E7237B8DB6E91052E49B13D2F5E5A8C21BB4E307DEAA2EB8E1",
+      "commission_v2.py": "204EC6E12CB07CAEF014D0F34A27C4B353EE9F020C6A241CD569A6339325A357",
+      "metric_v2.py": "104F7414CE70C245AF0F4D14475047C05565084CA60C4DAAF2CA1AD486BC831E",
+      "verify_v2.py": "C3CF15D675CDF715DDD26A0C4F5D665935C80CAFFF5AFC9426FFB618E52D7405"
+    }
+  },
+  "status": "MEASURED_SYNTHETIC"
+}

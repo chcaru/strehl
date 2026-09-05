@@ -1,0 +1,14 @@
+M189 PTC-anchored Q_sup held-out synthetic commissioning
+base_score=157941.74505
+optical_improved/base=2.920107520
+optical_degraded/base=0.153249100
+post_blur/base=0.322196098
+post_usm/base=0.733681365
+post_usm_local/base=1.004839651
+post_usm_raw_coherent/base=1.831827134
+post_usm_weighted_noise_gain=2.144200309
+post_usm_noise_gain_sup=2.598358407
+adaptive_renoise_usm/base=1.826782749
+adaptive_renoise_weighted_noise_gain=0.999574532
+flat_score=-6.95241256922
+captures_opened=0
