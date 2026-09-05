@@ -1,0 +1,142 @@
+{
+  "schema": "m152-side-max-commission-definition-v1",
+  "status": "FROZEN_BEFORE_EMPIRICAL_NOISE_MEASUREMENT",
+  "purpose": "Commission the amended per-side maximum against the original M152 battery and a movable clean-noise population without opening holdout pixels or product outputs.",
+  "authority": {
+    "scorecard_amendment_commit": "4b79b6dc",
+    "canonical_checker": "..\\M161-m3-ratification\\m3_checker_v2.py",
+    "canonical_checker_sha256": "05d291c8c24712d46666e9ed398f39cb982fa3b4c918a7e0cfcdee200dec2eda",
+    "canonical_definition": "..\\M161-m3-ratification\\m3-checker-definition-v2.json",
+    "canonical_definition_sha256": "578022e6eeefecce60a00191024e9ffd4dc3c621410b398709b3f92b987b67ca",
+    "historical_m152_v1_policy": "m3_checker.py, m3-checker-definition.json, commission_m3.py, and out/m3-commission.json remain unchanged historical evidence",
+    "historical_m152_v1_hashes": {
+      "m3_checker.py": "be6c77eaee4996db1341115097384ff6c3716622fc2f9d7df53ba14e5574b809",
+      "m3-checker-definition.json": "882440eb073caba2c285f42b2baac0e92d49ad254d90d61a1e67eb188efc2221",
+      "commission_m3.py": "39d01eb56f9d966aea96bb95728c37d76c1739135d2ac275650d320ea4ea342a",
+      "out\\m3-commission.json": "cd997c28a6e0532c48858350f0f3c0c0434285ede91413ce43952a6880b36ad6"
+    },
+    "local_dependency_hashes": {
+      "census_common.py": "3e36a18d8c7b675f224f4fbe694ef2d16297e3e038df18e61cdb4dead219a680",
+      "census-definition.json": "b2e872a6a8214d4fbe379287f52fc57b8f5e61f292aab4c30e96b11d49325879"
+    }
+  },
+  "site_population": {
+    "manifest": "out\\census-manifest.json",
+    "manifest_sha256": "35d5058afc1f310923ba2a3e5bf0cd3b91b3eb2df0e8d4868c22099de7bcd38d",
+    "selected_site_count": 500,
+    "capture_counts": {
+      "m3-duck-tape": 133,
+      "m3-chia": 133,
+      "m3-flower-fern": 132,
+      "m3-razor-control": 102
+    },
+    "pixel_policy": "consume frozen site IDs, capture IDs, normals, step_broad_dn, and sigma_temporal_dn metadata only; never decode the protected site pixels"
+  },
+  "empirical_noise": {
+    "calibration_artifact": "out\\noise-calibration.json",
+    "calibration_artifact_sha256": "ed8e2467911316e049198dc485542263744ce715e89f293b153c16f8d3dad9c1",
+    "source_class": "CONTROL_NOT_HOLDOUT",
+    "source_path": "D:\\personal\\macro\\requests\\6-11-extended-dark-frames",
+    "groups": [
+      {
+        "iso": 100,
+        "role": "primary closest available morphology for the ISO 50 and ISO 100 frozen sites"
+      },
+      {
+        "iso": 1000,
+        "role": "pre-registered tail-morphology sensitivity arm, rescaled to each frozen site's sigma"
+      }
+    ],
+    "pairing": "the 22 frozen input records in each ISO group are paired in artifact order as adjacent disjoint pairs; difference=(first-second)/sqrt(2)",
+    "pair_count_per_group": 11,
+    "trace_allocation_seed": 15220260904,
+    "trace_geometry": {
+      "profile_offsets_native_px": [-400, 400],
+      "profile_sample_step_native_px": 1,
+      "source_samples": "403 contiguous green-luma samples at native offsets -402,-400,...,402, linearly interpolated to -400,-399,...,400",
+      "orientation": "horizontal when abs(normal_x)>=abs(normal_y), otherwise vertical; reverse when the dominant normal component is negative",
+      "allocation": "fixed-seed unique rows for horizontal traces and unique columns for vertical traces; centres are sampled uniformly from positions with full support",
+      "eligibility_filter": "none; allocation cannot inspect trace values"
+    },
+    "normalization": "divide raw difference traces by the group's already-frozen pair_spatial_sigma_p50_dn, with no per-trace, per-side, or post-result centering; multiply by each site's frozen sigma_temporal_dn",
+    "exercise_gate": {
+      "absolute_side_difference_tolerance": 1e-12,
+      "minimum_asymmetric_site_fraction": 0.95,
+      "minimum_each_side_dominance_fraction": 0.1,
+      "minimum_median_side_max_over_mean": 1.01,
+      "reason": "A nonzero but side-symmetric population would leave max equal to mean and would not exercise the amended reduction."
+    },
+    "edge_fixture": "a defect-free logistic edge whose broad step is the site's frozen step_broad_dn; all eleven noisy profiles form the source hull",
+    "arms": [
+      {
+        "name": "iso100_production_covariance_k11",
+        "role": "PRIMARY",
+        "output": "mean of all 11 noisy source profiles",
+        "far_reference": "site_index modulo 11; therefore included in the output mean"
+      },
+      {
+        "name": "iso100_disjoint_reference_k10",
+        "role": "CONSERVATIVE_COVARIANCE_STRESS",
+        "output": "mean of the 10 noisy source profiles excluding the far reference"
+      },
+      {
+        "name": "iso1000_production_covariance_k11",
+        "role": "TAIL_MORPHOLOGY_SENSITIVITY",
+        "output": "mean of all 11 noisy source profiles"
+      },
+      {
+        "name": "iso1000_disjoint_reference_k10",
+        "role": "TAIL_AND_COVARIANCE_STRESS",
+        "output": "mean of the 10 noisy source profiles excluding the far reference"
+      }
+    ],
+    "scope_limit": "The noise amplitude is conditioned on the frozen temporal model. These arms test the side reduction and empirical sensor-noise morphology; they do not validate that model, an output warp, or a rendered product."
+  },
+  "reported_per_site": [
+    "site_id",
+    "capture_id",
+    "v_e_negative_side",
+    "v_e_positive_side",
+    "v_e_mean_legacy",
+    "v_e_side_max",
+    "side_max_over_mean",
+    "affected"
+  ],
+  "reported_pooled": [
+    "legacy and amended median v_e",
+    "legacy and amended nearest-rank p99 v_e",
+    "side_max_over_mean nearest-rank median, p95, and maximum",
+    "affected-edge point rate",
+    "one-sided Wilson UCB95",
+    "new-only threshold crossings"
+  ],
+  "unchanged_bars": {
+    "median_v_e_max": 0.01,
+    "p99_v_e_max": 0.05,
+    "affected_point_rate_max": 0.01,
+    "affected_wilson_ucb95_max": 0.02,
+    "site_failure_strictly_greater_than": 0.05
+  },
+  "decision_rule": {
+    "clean_noise": "If any pre-registered clean arm breaches median 0.01, p99 0.05, affected rate 0.01, or Wilson UCB95 0.02, return NOT_ADMITTED_COMMISSIONING_FAILED. Otherwise return SIDE_MAX_REDUCTION_COMMISSIONING_PASS.",
+    "product_scope": "A green result is reduction-level commissioning only. M3 remains UNMEASURED_COMPARATOR_QUALIFICATION until the scorecard's common-output, input-only-warp, and M1-qualified comparator requirements exist.",
+    "threshold_policy": "Never change a threshold in this lane after reading the result."
+  },
+  "full_battery": {
+    "inert_controls": [
+      "synthetic identity wiring null",
+      "untouched non-holdout razor identity wiring null",
+      "the four empirical-noise clean arms"
+    ],
+    "defect_mutations": [
+      "6 percent rim",
+      "6 percent opposite-sign rim",
+      "6 percent two-sided veil",
+      "6 percent one-sided +33 through +232 veil",
+      "6 percent combined rim and veil",
+      "Gaussian blur"
+    ],
+    "improvement_control": "0.5 percent combined rim and veil",
+    "one_sided_ratio_assertion": "amended v_e divided by legacy mean must equal 2.000 to within 1e-12"
+  }
+}
