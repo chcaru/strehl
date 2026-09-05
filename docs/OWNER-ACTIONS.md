@@ -143,6 +143,33 @@ Maintained by the orchestrator. Last updated after lane M175.
 
 ## The one thing that actually gates this program
 
+> ### ⚠️ Added 2026-09-07 — the title of this section is no longer quite right, and the correction is useful to you
+>
+> I re-derived the whole board mechanically tonight from the scorecard's own
+> readiness table (`experiments/ORCH-verify/board_critical_path.py`) instead of
+> describing it from memory. Two things came out of it.
+>
+> **There is no "one thing".** Counting literal blocker codes, `(b)` geometry is
+> on **8** axes, `(c)` capture on **7**, `(d)` comparator on **7**, and `(a)`
+> detail instrument on **6** — `M1`, `M3`, `M4`, `M5`, `M6`, `M9`. The **eight**
+> below is not wrong; it reaches eight the same way this sheet reaches eight for
+> `(d)`, by also counting `M2`'s instrument void and `M11`'s qualification, which
+> is transitive on `M1` and `M2`. Both conventions are fine, but under either one
+> **`(a)` is one of two blockers tied at the top, not a unique gate.**
+>
+> **And the part that actually matters: no single blocker, cleared on its own,
+> fully unblocks any axis on this board.** Not `(a)`, not `(b)`, not `(c)`, not
+> `(d)`. Clearing `(a)` leaves no axis within one step of scoreable. So finishing
+> the detail instrument — which is real work and is still worth doing — will not,
+> by itself, move the scoreboard either.
+>
+> **What this changes for you, concretely:** the nearest three axes are `M12`
+> (being certified now), `M8` (no listed blocker, waiting on its own apparatus),
+> and `M10` — and `M10` needs only `(b)`, which is free and mine, plus `(c)`,
+> which is **Ask 2d, one tilted-ruler capture**. That makes Ask 2d the highest-
+> value thing you can physically do, ahead of the `$289` in Ask 3. The reasoning
+> is in `STATUS` §2.9.84.
+
 **Blocker `(a)`, an admissible detail/transfer instrument, is attached to eight
 of the twelve axes by the current scorecard. A better capture is not a way
 around it -- capture supplies the outside information the only usable
