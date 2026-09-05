@@ -1,6 +1,13 @@
 {
-  "schema": "m171-reference-admission-contract-v1",
+  "schema": "m171-reference-admission-contract-v2",
   "frozen_at": "2026-09-04T14:25:21.553-07:00",
+  "amended_at": "2026-09-04T19:28:53.3637072-07:00",
+  "amendment": {
+    "amends_preregistration_commit": "15f5a84ea348f36698209383c6dccbc0a9da95d3",
+    "reason": "Independent verification found the max-t numerator reversed and DIGITAL_K under-specified.",
+    "invalidated_commission_sha256": "2B9A6A2DD1D1321C63F202FA8615BB466CD255D3BC52BAD2140ACBD71A24132E",
+    "invalidated_verification_sha256": "7627BDC0D42E3DDD011DEE2EF06CDD6BDA72471630919F02ABE96F282D0F68FE"
+  },
   "claim_scope": "GX_REFERENCE_CONDITIONAL",
   "capture_ruling": "ANALYSIS_ONLY",
   "source_authority": {
@@ -13,9 +20,9 @@
   },
   "schemas": {
     "evidence": "m171-reference-admission-evidence-v1",
-    "result": "m171-reference-admission-result-v1",
-    "commission": "m171-reference-admission-commission-v1",
-    "verification": "m171-reference-admission-verification-v1"
+    "result": "m171-reference-admission-result-v2",
+    "commission": "m171-reference-admission-commission-v2",
+    "verification": "m171-reference-admission-verification-v2"
   },
   "statuses": {
     "scientific": [
@@ -152,6 +159,24 @@
     ],
     "invalid_draw_policy": "UNMEASURED",
     "zero_standard_error_policy": "UNMEASURED"
+  },
+  "inference_contract": {
+    "max_t_studentized_numerator": "bootstrap_minus_observed",
+    "lower_bound": "observed_minus_critical_times_standard_error",
+    "g2_coordinate": "natural_log_reference_snr",
+    "g2_reported_bound": "exp_coordinate_lower_bound",
+    "g8_information_coordinate": "log_information_ratio_minus_log1p_delta",
+    "g8_transfer_coordinate": "log_transfer_ratio_minus_log1p_delta"
+  },
+  "digital_k_policy": {
+    "status": "UNMEASURED",
+    "reason": "DIGITAL_K_IDENTIFICATION_NOT_COMMISSIONED",
+    "required_future_evidence": [
+      "independent_q_transfer_baseline",
+      "q_rank_and_conditioning",
+      "q_simultaneous_uncertainty",
+      "frozen_geometry_and_sites"
+    ]
   },
   "synthetic_thresholds": {
     "sampling_ratio_lcb_min": 2.0,

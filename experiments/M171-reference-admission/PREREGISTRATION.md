@@ -29,8 +29,9 @@ The controlling gate-8 noise convention is the one in M164 commit
 N_P,k = 0.5 E |P_1,k - P_2,k|^2.
 ```
 
-The frozen `contract.json` SHA-256 is
+The initial v1 `contract.json` SHA-256 was
 `5DBE0382EB1D80A557CF0DB2D592E5D72BA7553D947D0E6BD5E575FF1050AB7B`.
+Amendment 1 below supersedes it before the replacement campaign.
 
 A later M164 report defines `0.25` times the split-difference variance when
 the estimand is the noise in the average of the two repeats. M171 does not
@@ -272,3 +273,71 @@ After the first commit:
 Changing a scientific threshold, cell, mutation, expected reason, seed, or
 arm after the first outcome requires a new preregistration commit and a new
 campaign. It may not be hidden in the implementation commit.
+
+## 8. Amendment 1 - max-t direction and DIGITAL_K refusal
+
+Status: **FROZEN AFTER INVALIDATION AND BEFORE REPLACEMENT EXECUTION**
+
+Written: **2026-09-04T19:28:53.3637072-07:00**
+
+An independent read-only verifier found that the first implementation used
+the opposite max-t numerator from the source contract. It computed
+`(observed - bootstrap) / se`; the required lower-bound construction is:
+
+```text
+t_b = max_f (bootstrap_f,b - observed_f) / se_f
+LCB_f = observed_f - quantile_0.975(t_b) * se_f.
+```
+
+The affected commission SHA-256
+`2B9A6A2DD1D1321C63F202FA8615BB466CD255D3BC52BAD2140ACBD71A24132E`
+and verification SHA-256
+`7627BDC0D42E3DDD011DEE2EF06CDD6BDA72471630919F02ABE96F282D0F68FE`
+are invalidated in full. Their stored `COMMISSIONED` and `PASS` labels have no
+standing. No result from that campaign may be cited as commissioning
+evidence.
+
+The defect exposed an unfrozen coordinate choice in G2. A raw-scale normal
+bound on a strictly positive SNR ratio can cross below zero under a skewed
+cluster bootstrap even when every draw is positive. Before replacement
+execution, G2 is now frozen on the natural-log SNR coordinate:
+
+```text
+z_k = log(P_R,k / N_R,k)
+t_b = max_k (z_k,b - z_k) / se(z_k)
+LCB_SNR,k = exp(z_k - quantile_0.975(t_b) * se(z_k)).
+```
+
+The pass predicate remains unchanged:
+
+```text
+every LCB_SNR,k > 4.0.
+```
+
+This transformation preserves positivity, scale invariance, ordering, the
+same familywise alpha, hierarchy, seed, cells, fixture, threshold, and
+no-compensation rule. No fixture value or expected scientific arm changes.
+The amendment is driven by the independently identified sign error, not by
+selection among candidate results.
+
+The verifier also showed that a finite, hash-bound but singular all-zero
+`q_k` baseline could pass a `DIGITAL_K` request. This harness has not frozen
+or commissioned the required `q_k` rank, conditioning, simultaneous
+uncertainty, geometry, and site contract. It therefore refuses every
+`DIGITAL_K` claim with
+`DIGITAL_K_IDENTIFICATION_NOT_COMMISSIONED`, whether or not a matrix payload
+is supplied. `GX_REFERENCE_CONDITIONAL` remains the only commissioned scope.
+
+The amended v2 `contract.json` SHA-256 is
+`E881BE8B28B12C58157133650B4B5405971C01B23A2D9E6743D14C411D691114`.
+The v2 contract also freezes:
+
+- max-t numerator `bootstrap_minus_observed`;
+- G2 coordinate `natural_log_reference_snr`;
+- G2 reported bound `exp_coordinate_lower_bound`;
+- the existing log information and log transfer coordinates for G8; and
+- fail-closed `DIGITAL_K` policy with the four categories of evidence a
+  future preregistration must add.
+
+The replacement implementation and campaign may begin only after this
+amendment and the v2 contract are committed together.
