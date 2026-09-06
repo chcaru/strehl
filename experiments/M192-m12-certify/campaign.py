@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import importlib.util
+import io
 import json
 import math
 import os
@@ -17,6 +19,7 @@ import sys
 import tarfile
 import threading
 import time
+import traceback
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
@@ -79,6 +82,80 @@ def write_json(path: Path, value: Any) -> None:
         stream.flush()
         os.fsync(stream.fileno())
     os.replace(temporary, path)
+
+
+def retire_terminal(stream: Any) -> None:
+    """Make Python's final stdout/stderr flush harmless after display fails."""
+    if stream is not sys.stdout and stream is not sys.stderr:
+        return
+    try:
+        descriptor = stream.fileno()
+    except (AttributeError, io.UnsupportedOperation, ValueError):
+        if stream is sys.stdout:
+            sys.stdout = None
+        if stream is sys.stderr:
+            sys.stderr = None
+        return
+    # Keep the original TextIOWrapper's descriptor valid: sys.__stdout__ or
+    # sys.__stderr__ may still refer to it at interpreter shutdown. Merely
+    # replacing sys.stdout leaves that buffered wrapper able to fail again.
+    null_descriptor = os.open(os.devnull, os.O_WRONLY)
+    try:
+        if null_descriptor != descriptor:
+            os.dup2(null_descriptor, descriptor)
+    finally:
+        # If open reused the just-closed descriptor, the wrapper owns it now.
+        if null_descriptor != descriptor:
+            os.close(null_descriptor)
+
+
+def write_terminal(message: str, stream: Any) -> dict[str, Any] | None:
+    """Optional display only; evidence-file I/O never passes through here."""
+    if stream is None:
+        return {"type": "UnavailableStream", "error": "terminal is absent"}
+    try:
+        print(message, file=stream, flush=True)
+    except OSError as error:
+        if error.errno not in {errno.EBADF, errno.EINVAL, errno.EPIPE}:
+            raise
+        retire_terminal(stream)
+        return {"type": type(error).__name__, "error": str(error), "errno": error.errno}
+    except ValueError as error:
+        if not getattr(stream, "closed", False):
+            raise
+        retire_terminal(stream)
+        return {"type": type(error).__name__, "error": str(error)}
+    return None
+
+
+def append_diagnostic(event: dict[str, Any]) -> None:
+    # Keep durability failures fatal. This file is distinct from the scored
+    # record chain; presentation cannot alter a product record or its hash.
+    with (WORK / "progress.jsonl").open("a", encoding="utf-8", newline="\n") as stream:
+        stream.write(json.dumps(event, ensure_ascii=False, allow_nan=False) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def emit_status(message: str, *, error: bool = False) -> None:
+    event = {"utc": utc_now(), "channel": "stderr" if error else "stdout", "message": message}
+    # Verification/refusal can occur before this invocation creates a work
+    # directory. Do not create one merely to display that result.
+    durable = WORK.is_dir()
+    if durable:
+        append_diagnostic(event)
+    unavailable = write_terminal(message, sys.stderr if error else sys.stdout)
+    if unavailable is not None and durable:
+        append_diagnostic({**event, "terminal_unavailable": unavailable})
+
+
+def campaign_paths(directory: Path) -> tuple[Path, Path]:
+    resolved = directory.resolve()
+    require(resolved.is_relative_to(HERE.resolve()), "campaign directory must stay inside M192")
+    paths = (resolved / "work", resolved / "results")
+    for path in paths:
+        require(path.resolve().is_relative_to(resolved), f"campaign path escapes its directory: {path}")
+    return paths
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -280,7 +357,7 @@ def archive_build(
         "--manifest-path",
         str(source / "Cargo.toml"),
     ]
-    print(f"[build] {label} {commit[:12]}", flush=True)
+    emit_status(f"[build] {label} {commit[:12]}")
     result = run_capture(build_command, cwd=source, env=env, log=log)
     if result.returncode:
         raise RuntimeError(
@@ -357,7 +434,7 @@ def input_manifest(spec: dict[str, Any], phase: str) -> dict[str, Any]:
             }
         )
         if index % 50 == 0:
-            print(f"[inputs:{phase}] hashed {index}/{len(selected)}", flush=True)
+            emit_status(f"[inputs:{phase}] hashed {index}/{len(selected)}")
     require(len(rows) == 404, f"expected 404 unique selected ARWs, found {len(rows)}")
     return {
         "schema": "m192-input-manifest-v1",
@@ -924,14 +1001,13 @@ def progress(record: dict[str, Any]) -> None:
         int(memory["peak_process_tree_private_committed_bytes"]),
         int(memory["kernel_job_peak_memory"]["peak_job_memory_used_bytes"]),
     )
-    print(
+    emit_status(
         f"[run {record['sequence_index'] + 1:03d}/133] {record['run_id']} "
         f"wall={record['wall_seconds']:.2f}s "
         f"peak={peak / (1 << 30):.4f}GiB "
         f"coverage={record['sampling_coverage']:.6f} "
         f"host_mean={record['whole_host_cpu_mean_percent']:.1f}% "
         f"hash={record['output_sha256'][:12]}",
-        flush=True,
     )
 
 
@@ -1105,7 +1181,7 @@ def run_campaign(spec: dict[str, Any], jobs: int) -> dict[str, Any]:
     }
     measured_binary = Path(builds["measured"]["binary_path"])
     sidecars, sidecar_record = prepare_sidecars(spec, measured_binary)
-    print("[inputs] hashing pre-campaign selection", flush=True)
+    emit_status("[inputs] hashing pre-campaign selection")
     inputs_before = input_manifest(spec, "before")
     commission_record = commission(
         monitor=monitor,
@@ -1114,7 +1190,7 @@ def run_campaign(spec: dict[str, Any], jobs: int) -> dict[str, Any]:
         builds=builds,
         sidecars=sidecars,
     )
-    print("[commission] all planted defects fired", flush=True)
+    emit_status("[commission] all planted defects fired")
 
     journal = Journal(WORK / "records.jsonl")
     workers = tuple(int(value) for value in spec["registered_matrix"]["native"]["workers"])
@@ -1244,12 +1320,11 @@ def run_campaign(spec: dict[str, Any], jobs: int) -> dict[str, Any]:
                 },
             }
         )
-        print(
+        emit_status(
             f"[sweep] {sweep_id} host mean="
             f"{sweeps[-1]['whole_host_cpu_mean_percent']:.1f}% peak="
             f"{sweeps[-1]['whole_host_cpu_peak_percent']:.1f}% external="
             f"{100 * sweeps[-1]['external_busy_fraction_of_wall_capacity']:.1f}%",
-            flush=True,
         )
 
     counts = (96, 97, 98, 99)
@@ -1265,7 +1340,7 @@ def run_campaign(spec: dict[str, Any], jobs: int) -> dict[str, Any]:
         )
 
     require(journal.count == 133, f"campaign produced {journal.count} records")
-    print("[inputs] hashing post-campaign selection", flush=True)
+    emit_status("[inputs] hashing post-campaign selection")
     inputs_after = input_manifest(spec, "after")
     require(
         inputs_before["files"] == inputs_after["files"],
@@ -1333,13 +1408,18 @@ def run_campaign(spec: dict[str, Any], jobs: int) -> dict[str, Any]:
     )
     verified = verifier.verify_artifact(RESULTS)
     write_json(RESULTS / "verification.json", verified)
-    print(json.dumps(certificate, indent=2), flush=True)
+    emit_status(json.dumps(certificate, indent=2))
     return certificate
 
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser()
     result.add_argument("--jobs", type=int, default=8)
+    result.add_argument(
+        "--campaign-dir",
+        type=Path,
+        help="Fresh campaign directory inside M192; keeps prior interrupted evidence in place.",
+    )
     result.add_argument(
         "--discard-interrupted",
         action="store_true",
@@ -1354,36 +1434,52 @@ def parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
+    global WORK, RESULTS
     args = parser().parse_args()
+    if args.campaign_dir is not None:
+        WORK, RESULTS = campaign_paths(args.campaign_dir)
     spec = read_json(PROTOCOL_PATH)
+    owns_work = False
     try:
         if args.verify_only:
             verifier = load_module("m192_independent_verifier", VERIFY_PATH)
             result = verifier.verify_artifact(RESULTS)
-            print(json.dumps(result, indent=2))
+            emit_status(json.dumps(result, indent=2))
             return 0
         if args.discard_interrupted:
+            # Resolve both targets before either recursive deletion.
+            campaign_paths(WORK.parent)
+            require(WORK.resolve().is_relative_to(HERE.resolve()), "work path escapes M192")
+            require(RESULTS.resolve().is_relative_to(HERE.resolve()), "results path escapes M192")
             if WORK.exists():
                 shutil.rmtree(WORK)
             if RESULTS.exists():
                 shutil.rmtree(RESULTS)
+        owns_work = not WORK.exists() and not RESULTS.exists()
         certificate = run_campaign(spec, args.jobs)
         return 0 if certificate["overall_verdict"] in {"PASS", "FAIL", "UNMEASURED"} else 1
     except Exception as error:
-        if WORK.exists():
-            try:
-                write_json(
-                    WORK / "campaign-aborted.json",
-                    {
-                        "schema": "m192-campaign-aborted-v1",
-                        "generated_utc": utc_now(),
-                        "error": str(error),
-                        "resume_allowed": False,
-                    },
-                )
-            except Exception:
-                pass
-        print(f"CAMPAIGN ERROR: {error}", file=sys.stderr, flush=True)
+        if owns_work and WORK.exists():
+            write_json(
+                WORK / "campaign-aborted.json",
+                {
+                    "schema": "m192-campaign-aborted-v1",
+                    "generated_utc": utc_now(),
+                    "error": str(error),
+                    "error_type": type(error).__name__,
+                    "error_repr": repr(error),
+                    "errno": getattr(error, "errno", None),
+                    "winerror": getattr(error, "winerror", None),
+                    "traceback": traceback.format_exc(),
+                    "resume_allowed": False,
+                },
+            )
+        if owns_work and WORK.is_dir():
+            emit_status(f"CAMPAIGN ERROR: {error}", error=True)
+        else:
+            # A no-resume refusal must not rewrite the previous abort record
+            # or append diagnostics to an invocation we did not start.
+            write_terminal(f"CAMPAIGN ERROR: {error}", sys.stderr)
         return 1
 
 
