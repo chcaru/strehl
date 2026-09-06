@@ -1,0 +1,25 @@
+{
+  "schema": "m192-recovery-launch-v1",
+  "launched_utc": "2026-09-06T23:32:53.6044320Z",
+  "pid": 22556,
+  "process_started_utc": "2026-09-06T23:32:53.5980708Z",
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "arguments": [
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\campaign.py",
+    "--campaign-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253",
+    "--jobs",
+    "4"
+  ],
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "campaign_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253",
+  "stdout": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\runner-stdout.log",
+  "stderr": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\runner-stderr.log",
+  "runner_commit": "3b05ed2d",
+  "runner_sha256": "273CD86CC38FDE7A8A356318F937AB6A29C7CA12487DC230AD899D32349DB4A8",
+  "protocol_sha256": "E10723DDEF7D60D7A4C202E726ED998BB4CC7FF95FB3B6ABAA203D98219D9898",
+  "previous_aborted_work_preserved": true
+}

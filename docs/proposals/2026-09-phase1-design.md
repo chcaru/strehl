@@ -1,5 +1,12 @@
 # Phase 1 — unified banded-admission merge
 
+> **Supersession notice (2026-09-06):** the REFUTED banner below is historical.
+> [August-plan Amendment 3](2026-08-sota-path.md) withdrew that refutation after
+> finding the old W1 gate unsatisfiable by construction. The design is
+> **unvalidated**, not refuted and not rescued. Follow the
+> [current execution plan](2026-09-sota-program.md) and a repaired gate before
+> implementation or shipment.
+
 > **REFUTED — DO NOT IMPLEMENT. This design is retained as history only.**
 >
 > The W1 go/no-go gate below **fired against this design** and it did not survive.

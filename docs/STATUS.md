@@ -1,5 +1,13 @@
 # strehl — status and gaps
 
+> **Current execution entry point (2026-09-06):**
+> [SOTA program — current execution plan](proposals/2026-09-sota-program.md).
+> The takeover found an explicit M192 abort after 35/133 invocations, so older
+> descriptions of that campaign as running are superseded. M193's proposed
+> geometry closure failed independent review. M189 remains a restricted
+> synthetic candidate; M189b confirms its directional-filter limitation.
+> No scorecard axis is promoted by these findings.
+
 **Updated:** 2026-09-05, during the SOTA-path program.
 **Scope:** what is measured, what is broken, and what is not yet known. Facts cited
 by number refer to the table in [`research/SYNTHESIS.md`](research/SYNTHESIS.md).

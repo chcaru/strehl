@@ -1,0 +1,58 @@
+{
+  "scope": "independent synthetic re-choice; no capture or scorecard admission",
+  "command": "python -B experiments/m189b-directional-detail/verify-directional.py",
+  "metric_sha256": "104f7414ce70c245af0f4d14475047c05565084ca60c4daaf2ca1ad486bc831e",
+  "flat_first": {
+    "values": [
+      -1.4596749806764018,
+      2.331202209541474,
+      1.4873577304168548,
+      1.2885858743124743
+    ],
+    "mean": 0.9118677083986004,
+    "sem": 0.822183601464806
+  },
+  "ratios": {
+    "diagonal_sharpen": {
+      "values": [
+        1.390032397982146,
+        1.345601506242319,
+        1.34791550891618,
+        1.3472579487744205
+      ],
+      "mean": 1.3577018404787664,
+      "sem": 0.010787841135965908
+    },
+    "perpendicular_placebo": {
+      "values": [
+        0.48500915604018163,
+        0.46416249007183286,
+        0.4751690089076371,
+        0.47582927399396874
+      ],
+      "mean": 0.47504248225340506,
+      "sem": 0.004265597520476488
+    },
+    "optical_improved": {
+      "values": [
+        4.466579007272708,
+        4.46792951788935,
+        4.4672547033993055,
+        4.470683272745098
+      ],
+      "mean": 4.468111625326616,
+      "sem": 0.0009004520555606956
+    },
+    "identity": {
+      "values": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean": 1.0,
+      "sem": 0.0
+    }
+  },
+  "verdict": "VERIFIED_DIRECTIONAL_LIMITATION"
+}

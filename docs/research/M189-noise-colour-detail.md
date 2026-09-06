@@ -1,5 +1,13 @@
 # M189 — PTC-referenced noise-colour detail
 
+> **Scope clarification, M189b (2026-09-06):** the `common-LSI` labels below
+> mean the tested isotropic blur/USM fixture, not arbitrary common linear
+> filtering. [M189b](M189b-directional-detail.md) independently measured a
+> directional fixed convolution that raises this frozen score; a diagonal
+> re-choice confirms the limitation. This executes Amendment 1's existing
+> anisotropy exclusion. The isotropic readings and optical positive control
+> remain valid; general sharpening safety and M1 admission remain unestablished.
+
 **Status: INSTRUMENT VIABLE WITH DECLARED LIMITATION; SYNTHETIC COMMON-LSI
 COMMISSIONING GREEN.** The earlier no-build ruling in commit `af6cc9dc` was too
 broad. Its adaptive-renderer counterexample remains correct, but it was filed

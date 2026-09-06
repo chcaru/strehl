@@ -1,5 +1,10 @@
 # strehl — the path to a defensible SOTA claim
 
+> **Execution update (2026-09-06):** the active queue is maintained in
+> [SOTA program — current execution plan](2026-09-sota-program.md). This proposal
+> and its amendments remain the design history. Read the current plan before
+> scheduling work from the original phase list.
+
 **Status: PROPOSAL, revision 3 (2026-08-29).** Every claim here is ARGUED unless it
 cites a measured report by name. Numbers I derived myself are labelled DERIVED with the
 arithmetic shown; numbers transcribed from the corpus carry the report or file that owns

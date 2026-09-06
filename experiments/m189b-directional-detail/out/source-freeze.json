@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "experiments/m189b-directional-detail/run.py"
+  ],
+  "captures_opened": 0,
+  "head_before": "cba20daef1b92e1c5b41d95df06a96c65c003051",
+  "numpy": "2.4.4",
+  "python": "3.12.10",
+  "python_executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "source_before": {
+    "experiments\\M189-noise-colour-detail\\metric_v2.py": {
+      "bytes": 4322,
+      "sha256": "104f7414ce70c245af0f4d14475047c05565084ca60c4daaf2ca1ad486bc831e"
+    },
+    "experiments\\m189b-directional-detail\\preregistration.md": {
+      "bytes": 7849,
+      "sha256": "a5fb2cd2116d0b73c47cae2b5d9ba345c94a7f199f665dc75cfdca004fb46a3c"
+    },
+    "experiments\\m189b-directional-detail\\reproduce.py": {
+      "bytes": 1582,
+      "sha256": "c8f46d95e89aa9402635f34d0721757943d8dca6f61e62f8df461a012057f222"
+    },
+    "experiments\\m189b-directional-detail\\run.py": {
+      "bytes": 11179,
+      "sha256": "a63c52735f6506aeccaac00d85db8de62c053ab7373841a058dc2ed5ccd835f1"
+    }
+  },
+  "thread_environment": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "working_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+}

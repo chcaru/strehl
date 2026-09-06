@@ -1,3 +1,6 @@
 work/
 results\logs\*.tiff
 
+/recovery-*/work/
+/recovery-*/results/logs/*.tiff
+

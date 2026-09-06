@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "experiments/m189b-directional-detail/reproduce.py"
+  ],
+  "numerical_payload_exact": {
+    "fixture": true,
+    "local_score_ratios": true,
+    "measurements": true,
+    "raw_coherent_ratios": true,
+    "score_ratios": true
+  },
+  "original_source_unchanged": true,
+  "source_sha256": {
+    "AMENDMENT-1.md": "12da90ca64e2d5676769eda9aecc31515feb43faea9b9e728bc6fa2966625313",
+    "COMPARATOR-THREAT.md": "47bdb778e0942357b3ab9e4e331268c4ae003ef8610096b534ec19d25e0b1a41",
+    "PREREGISTRATION.md": "2e195da0b2aa05ba9638efae12897b311c91289b9b83155de3105d4583c503a9",
+    "REPEAT-ATTACK-RESULT.md": "b635989c3bb98c2bdf53da7822e226881545457f99b4161199d8235c1bedc00e",
+    "V1-RESULT.md": "fc8e73afbb8df7ceba7931ae17e154e7dd8bb7c301d34fa49e998e9a13b4721c",
+    "V2-RESULT.md": "a095b9b1844bd45d8426ab66b4d6be266bea52b438bac2203632675a22e698a1",
+    "commission.py": "7a7b2c070057b0e7237b8db6e91052e49b13d2f5e5a8c21bb4e307deaa2eb8e1",
+    "commission_v2.py": "204ec6e12cb07caef014d0f34a27c4b353ee9f020c6a241cd569a6339325a357",
+    "metric.py": "2918fdb4a7f2853d8758cd8ff1638d501380aca6e5acaca16c32e75e09beba3a",
+    "metric_v2.py": "104f7414ce70c245af0f4d14475047c05565084ca60c4daaf2ca1ad486bc831e",
+    "repeat_attack_witness.py": "034ca8582c67fe0dfa9855126736051f4b1663a91aa0e0f77630dd7e61a9f1c0",
+    "verify.py": "43bfc5412ba8568adf51c37f46b9aa8a7457a34d30cb082861dd0f2bad08bc0b",
+    "verify_report.py": "11ed6a3bbe017990d892706da0001566447e4951fd54ecf19b20b5997a4ad61f",
+    "verify_v2.py": "c3cf15d675cdf715ddd26a0c4f5d665935c80cafff5afc9426ffb618e52d7405"
+  }
+}

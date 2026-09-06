@@ -1,0 +1,108 @@
+{
+  "scope": "Independent development-only counterexamples; no RAW/candidate/holdout access",
+  "source_sha256": "c08340f6f0658fae048dda92629a543b5a539462a93db196aaae29e1862ba790",
+  "baseline_cropped": {
+    "arm_id": "cropped-grid",
+    "retained_pixels": 97188,
+    "denominator_pixels": 99918,
+    "retained_fraction_numerator": 178,
+    "retained_fraction_denominator": 183,
+    "retained_percent": "97.267759563",
+    "field_of_view_verdict": "FAIL_GEOMETRY_FIELD_OF_VIEW"
+  },
+  "identity_control": {
+    "arm_id": "identity-control",
+    "retained_pixels": 99918,
+    "denominator_pixels": 99918,
+    "retained_fraction_numerator": 1,
+    "retained_fraction_denominator": 1,
+    "retained_percent": "100.000000000",
+    "field_of_view_verdict": "PASS"
+  },
+  "denominator_tamper": {
+    "hash_is_stale": true,
+    "outcome": {
+      "accepted": true,
+      "value": {
+        "arm_id": "cropped-grid",
+        "retained_pixels": 400,
+        "denominator_pixels": 400,
+        "retained_fraction_numerator": 1,
+        "retained_fraction_denominator": 1,
+        "retained_percent": "100.000000000",
+        "field_of_view_verdict": "PASS"
+      }
+    }
+  },
+  "unknown_schema": {
+    "accepted": true,
+    "value": {
+      "arm_id": "identity-control",
+      "retained_pixels": 99918,
+      "denominator_pixels": 99918,
+      "retained_fraction_numerator": 1,
+      "retained_fraction_denominator": 1,
+      "retained_percent": "100.000000000",
+      "field_of_view_verdict": "PASS"
+    }
+  },
+  "inconsistent_area": {
+    "accepted": true,
+    "value": {
+      "arm_id": "identity-control",
+      "retained_pixels": 99918,
+      "denominator_pixels": 99918,
+      "retained_fraction_numerator": 1,
+      "retained_fraction_denominator": 1,
+      "retained_percent": "100.000000000",
+      "field_of_view_verdict": "PASS"
+    }
+  },
+  "unbacked_adapter_syntax": {
+    "accepted": true,
+    "value": {
+      "arm_id": "identity-control",
+      "retained_pixels": 99918,
+      "denominator_pixels": 99918,
+      "retained_fraction_numerator": 1,
+      "retained_fraction_denominator": 1,
+      "retained_percent": "100.000000000",
+      "field_of_view_verdict": "PASS"
+    }
+  },
+  "focus_identity_control": {
+    "accepted": true,
+    "value": {
+      "mutual_match_count": 256,
+      "calibration_count": 128,
+      "calibration_inlier_count": 128,
+      "holdout_count": 128,
+      "holdout_inlier_count": 128,
+      "heldout_rms_reference_px": "0.000000000",
+      "heldout_max_source_px_ceil_q8": 0,
+      "coordinate_quantization_guard_q8": 1,
+      "valid_support_continuous_margin_q8": 129
+    }
+  },
+  "complementary_focus": {
+    "native_width": 384,
+    "native_height": 288,
+    "planted_geometry": "exact identity; only local PSF changes",
+    "features": [
+      1024,
+      1024
+    ],
+    "direct_matches": 3,
+    "outcome": {
+      "accepted": false,
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "detail": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks"
+    }
+  },
+  "native_input_payload_lower_bound": {
+    "one_rgb16_frame_bytes": 197796096,
+    "n299_blob_and_decoded_bytes": 118282065408,
+    "n299_blob_and_decoded_gib": 110.15875768661499,
+    "scope": "derived payload only: construct_overlap retains input TIFF byte strings and a decoded list; excludes overhead"
+  }
+}
