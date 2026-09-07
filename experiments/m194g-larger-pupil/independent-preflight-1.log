@@ -1,0 +1,61 @@
+{"name": "intended-fixture-external-pin", "passed": true, "detail": {"sha256": "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2"}}
+{"name": "intended-shape-frame-arm-consumer", "passed": true, "detail": {"scope": "literal preregistration consistency; not optical evidence"}}
+{"name": "intended-geometry-and-limits", "passed": true, "detail": {"scope": "fixed input identity and resource contract"}}
+{"name": "frozen-loader-restores-existing-bare-model", "passed": true, "detail": {}}
+{"name": "actual-render-imports-actual-pinned-model", "passed": true, "detail": {"model_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py", "render_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py"}}
+{"name": "loaded-original-source-hashes-current", "passed": true, "detail": {}}
+{"name": "unchanged-private-source-copy-companion", "passed": true, "detail": {}}
+{"name": "changed-model.py-before-import", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\private-frozen-copy\\model.py"}}
+{"name": "changed-model.py-after-import", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\private-frozen-copy\\model.py"}}
+{"name": "failed-load-restores-bare-model-model.py", "passed": true, "detail": {}}
+{"name": "changed-render.py-before-import", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\private-frozen-copy\\render.py"}}
+{"name": "changed-render.py-after-import", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\private-frozen-copy\\render.py"}}
+{"name": "failed-load-restores-bare-model-render.py", "passed": true, "detail": {}}
+{"name": "missing-model-before-import", "passed": true, "detail": {"refusal": "FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-preflight-1\\\\private-frozen-copy\\\\model.py'"}}
+{"name": "missing-source-error-preserves-bare-model", "passed": true, "detail": {}}
+{"name": "restored-source-copy-final-companion", "passed": true, "detail": {}}
+{"name": "actual-intended-fixture-load-companion", "passed": true, "detail": {}}
+{"name": "wrong-schema-stale-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\wrong-schema.json"}}
+{"name": "wrong-schema-rehashed-unregistered-fixture", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "unknown-field-stale-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\unknown-field.json"}}
+{"name": "unknown-field-rehashed-unregistered-fixture", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "missing-scene-stale-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\missing-scene.json"}}
+{"name": "missing-scene-rehashed-unregistered-fixture", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "bool-width-stale-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\bool-width.json"}}
+{"name": "bool-width-rehashed-unregistered-fixture", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "float-width-stale-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\float-width.json"}}
+{"name": "float-width-rehashed-unregistered-fixture", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "duplicate-frame-stale-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\duplicate-frame.json"}}
+{"name": "duplicate-frame-rehashed-unregistered-fixture", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "duplicate-arm-stale-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\duplicate-arm.json"}}
+{"name": "duplicate-arm-rehashed-unregistered-fixture", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "changed-scene-phase-stale-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-1\\changed-scene-phase.json"}}
+{"name": "changed-scene-phase-rehashed-unregistered-fixture", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "wrong-external-fixture-pin", "passed": true, "detail": {"refusal": "ValueError: external fixture binding differs from registered fixture"}}
+{"name": "actual-budget-points-just-below", "passed": true, "detail": {"consumed": 16, "strict_limit": 17}}
+{"name": "actual-budget-points-equality", "passed": true, "detail": {"refusal": "CostFailure: UNCOMMISSIONED_COST: strict per-frame work ceiling"}}
+{"name": "actual-budget-nodes-just-below", "passed": true, "detail": {"consumed": 16, "strict_limit": 17}}
+{"name": "actual-budget-nodes-equality", "passed": true, "detail": {"refusal": "CostFailure: UNCOMMISSIONED_COST: strict per-frame work ceiling"}}
+{"name": "actual-budget-cpu-does-not-reset-with-frame", "passed": true, "detail": {"refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"}}
+{"name": "actual-budget-wall-does-not-reset-with-frame", "passed": true, "detail": {"refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"}}
+{"name": "actual-budget-two-views-one-1024-byte-owner", "passed": true, "detail": {"backing_bytes": 1024}}
+{"name": "actual-budget-second-owned-allocation-refuses", "passed": true, "detail": {"refusal": "CostFailure: UNCOMMISSIONED_COST: tracked owned-array ceiling"}}
+{"name": "actual-budget-released-owner-no-longer-live", "passed": true, "detail": {"live_bytes": 1024}}
+{"name": "actual-insufficient-rational-budget-falls-back-unchanged", "passed": true, "detail": {"dispositions": ["numerical", "numerical", "numerical"], "reason": "rational intermediate bit ceiling"}}
+{"name": "invalid-rational-budget-0", "passed": true, "detail": {"refusal": "ValueError: rational bit limit must be1..4096"}}
+{"name": "invalid-rational-budget--1", "passed": true, "detail": {"refusal": "ValueError: rational bit limit must be1..4096"}}
+{"name": "invalid-rational-budget-True", "passed": true, "detail": {"refusal": "ValueError: rational bit limit must be1..4096"}}
+{"name": "invalid-rational-budget-4097", "passed": true, "detail": {"refusal": "ValueError: rational bit limit must be1..4096"}}
+{"name": "invalid-rational-budget-8.0", "passed": true, "detail": {"refusal": "ValueError: rational bit limit must be1..4096"}}
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-preflight-controls.py", line 546, in main
+    count_controls(audit, counter, bound, fixture)
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-preflight-controls.py", line 292, in count_controls
+    reference = private_nominal_reference(bound, scene, frames)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-preflight-controls.py", line 120, in private_nominal_reference
+    for y in range(height):
+             ^^^^^^^^^^^^^
+TypeError: 'numpy.float64' object cannot be interpreted as an integer
+
+{"passed": false, "checks": 49, "result_sha256": "86dedfca30ff12682ba7d58035c5386d3e2357453f2afa9dafa95ddb743473b3"}

@@ -1,0 +1,128 @@
+{
+  "schema": "m194g-expected-fixture-v1",
+  "scope": "continuous shared-pupil scalar expected electrons; no noise or CFA authority",
+  "width": true,
+  "height": 240,
+  "cell": "integer-centre-unit-square",
+  "dtype": "<f8",
+  "scene": {
+    "depths": [
+      1.0,
+      2.0
+    ],
+    "mask_normal": [
+      1.0,
+      -0.15
+    ],
+    "mask_offset": 142.0,
+    "mask_state": "half-plane",
+    "foreground": {
+      "constant": 15000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1400.0,
+          "frequency": [
+            0.045,
+            0.095
+          ],
+          "phase": 0.7
+        },
+        {
+          "amplitude": 700.0,
+          "frequency": [
+            0.17,
+            0.01
+          ],
+          "phase": 0.3
+        }
+      ]
+    },
+    "background": {
+      "constant": 12000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 3200.0,
+          "frequency": [
+            0.08,
+            0.015
+          ],
+          "phase": 0.2
+        },
+        {
+          "amplitude": 1800.0,
+          "frequency": [
+            -0.035,
+            0.12
+          ],
+          "phase": 1.1
+        }
+      ]
+    }
+  },
+  "frame_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "inverse_foci": [
+    0.5,
+    0.625,
+    0.75,
+    0.875,
+    1.0
+  ],
+  "K": 12.0,
+  "forward_similarity": {
+    "scale": 1.0,
+    "rotation": 0.0,
+    "centre": [
+      0.0,
+      0.0
+    ],
+    "translation": [
+      0.0,
+      0.0
+    ]
+  },
+  "reference_index": 2,
+  "gauge": "reference-2 native pixels; identity placements",
+  "arms": [
+    "primary",
+    "angle-refined",
+    "cell-refined"
+  ],
+  "selector_intermediate_bit_limit": 4096,
+  "preflight_limits": {
+    "whole_run_cpu_seconds": 60.0,
+    "whole_run_wall_seconds": 120.0,
+    "tracked_owned_ndarray_bytes": 33554432,
+    "per_frame_points_strictly_below": 8000000,
+    "per_frame_angular_nodes_strictly_below": 1200000000
+  },
+  "future_render_limits": {
+    "per_frame_points": 16000000,
+    "per_frame_angular_nodes": 2400000000,
+    "per_arm_cpu_seconds": 1800.0,
+    "per_arm_wall_seconds": 3600.0,
+    "tracked_owned_ndarray_bytes": 33554432,
+    "live_scalar_frames": 1,
+    "node_pairs": 32768
+  },
+  "future_float_bars_e": {
+    "maximum": 0.004,
+    "rms": 0.0008,
+    "author_refinement_maximum": 0.001,
+    "independent_refinement_maximum": 0.0005,
+    "fixed_boundary_abs_mask_height": 8.0
+  }
+}

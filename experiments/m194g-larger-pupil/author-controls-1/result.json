@@ -1,0 +1,386 @@
+{
+  "schema": "m194g-author-controls-v1",
+  "status": "PASS_AUTHOR_CONTROLS",
+  "checks": [
+    {
+      "name": "fixed fixture parsed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "changed fixture bytes refuse",
+      "passed": true,
+      "detail": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\author-controls-1\\\\changed-fixture.json')"
+    },
+    {
+      "name": "candidate-selected fixture hash refuses",
+      "passed": true,
+      "detail": "ValueError('external fixture binding differs from registered fixture')"
+    },
+    {
+      "name": "three branches actually occur",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "both exact tangencies fall back",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "one-ULP outward foreground live",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "one-ULP inward foreground fallback",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "signed defocus support symmetry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "zero defocus retains cell support",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "explicit full",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "explicit absent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "nonfinite coordinate refuses",
+      "passed": true,
+      "detail": "ValueError('finite coordinate pair required')"
+    },
+    {
+      "name": "nonidentity exact height",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "bounded unsupported fallback",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual rounded-height path has signed power",
+      "passed": true,
+      "detail": [
+        {
+          "xy": [
+            3.0517578125e-05,
+            0.0
+          ],
+          "height": 0.0,
+          "radius": 2.23606797749979,
+          "alpha": -2.0344439357957027,
+          "cuts": [
+            -3.6052402625905993,
+            -0.46364760900080615,
+            2.677945044588987
+          ]
+        },
+        {
+          "xy": [
+            -3.0517578125e-05,
+            0.0
+          ],
+          "height": 0.0,
+          "radius": 2.23606797749979,
+          "alpha": -2.0344439357957027,
+          "cuts": [
+            -3.6052402625905993,
+            -0.46364760900080615,
+            2.677945044588987
+          ]
+        }
+      ]
+    },
+    {
+      "name": "private non-square complete geometry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "both actual rule batches counted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual stream node total",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "sink observer byte-null",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "missing cell refuses",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: incomplete coordinate coverage')"
+    },
+    {
+      "name": "duplicate cell refuses",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: duplicate or out-of-range coordinate coverage')"
+    },
+    {
+      "name": "consumed mass corruption refuses",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: UNCOMMISSIONED_NUMERICS: relative cell rule mass')"
+    },
+    {
+      "name": "consumed missing low point refuses",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: consumed cell rule point count')"
+    },
+    {
+      "name": "points below cap passes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "points exact cap refuses",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: strict per-frame work ceiling')"
+    },
+    {
+      "name": "nodes below cap passes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "nodes exact cap refuses",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: strict per-frame work ceiling')"
+    },
+    {
+      "name": "clock persists across frame reset",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    },
+    {
+      "name": "analytic-only cells enforce time",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    },
+    {
+      "name": "views share allocation accounting",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "additional owned allocation refuses",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: tracked owned-array ceiling')"
+    },
+    {
+      "name": "foreign bare model not consumed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "relocated identical frozen sources pass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "changed frozen source refuses before execution",
+      "passed": true,
+      "detail": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\author-controls-1\\\\copied-frozen\\\\model.py')"
+    },
+    {
+      "name": "private subset cannot authorize intended completion",
+      "passed": true,
+      "detail": "CostFailure('UNCOMMISSIONED_COST: intended population completion mismatch')"
+    },
+    {
+      "name": "all owned and frozen source bytes unchanged",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "scope": "small private geometry/API controls, not intended cost admission",
+  "started_utc": "2026-09-07T16:41:26.163656+00:00",
+  "invocation": {
+    "orig_argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/author-cache-1",
+      "experiments/m194g-larger-pupil/author-controls.py",
+      "--output",
+      "experiments/m194g-larger-pupil/author-controls-1"
+    ],
+    "argv": [
+      "experiments/m194g-larger-pupil/author-controls.py",
+      "--output",
+      "experiments/m194g-larger-pupil/author-controls-1"
+    ],
+    "xoptions": {
+      "utf8": true,
+      "pycache_prefix": "experiments/m194g-larger-pupil/work/author-cache-1"
+    },
+    "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+  },
+  "sources_before": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py",
+      "sha256": "ac130bfe0dca3c9d4162c0d5b776c54f7dcd91fdd1832357e5a821f5f53223bc",
+      "bytes": 21970
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py",
+      "sha256": "2c1d0854f0a1d20fb3f15c72e15ea15459a0247f0ea505c78c0e3a64fa56443a",
+      "bytes": 12863
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py",
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py",
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791
+    }
+  },
+  "fixture": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json",
+    "sha256": "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2",
+    "bytes": 1984
+  },
+  "sources_after": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py",
+      "sha256": "ac130bfe0dca3c9d4162c0d5b776c54f7dcd91fdd1832357e5a821f5f53223bc",
+      "bytes": 21970
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py",
+      "sha256": "2c1d0854f0a1d20fb3f15c72e15ea15459a0247f0ea505c78c0e3a64fa56443a",
+      "bytes": 12863
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py",
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py",
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791
+    }
+  },
+  "passed": 36,
+  "private_count": {
+    "status": "PASS_COST_ONLY",
+    "width": 7,
+    "height": 3,
+    "frame_indices": [
+      0
+    ],
+    "arms": [
+      "primary"
+    ],
+    "frames": [
+      {
+        "arm": "primary",
+        "frame_index": 0,
+        "visited_cells": 21,
+        "branches": {
+          "foreground": 6,
+          "background": 6,
+          "numerical": 9
+        },
+        "roots": 36,
+        "low_points": 576,
+        "high_points": 2304,
+        "angular_nodes": 639936,
+        "maximum_intervals": 28,
+        "unsupported_selector_reason": null,
+        "integrator": {
+          "arm": "primary",
+          "angle_low": 16,
+          "angle_high": 32,
+          "cell_low": 4,
+          "cell_high": 8,
+          "pupil_tolerance": 0.00025,
+          "cell_tolerance": 0.00075,
+          "cell_point_tolerance": 4.6875e-05,
+          "angle_depth": 10,
+          "cell_depth": 6,
+          "point_limit": 4000000,
+          "angular_limit": 600000000,
+          "cpu_limit": 600,
+          "wall_limit": 1200,
+          "array_limit": 33554432,
+          "node_pair_limit": 32768
+        },
+        "status": "complete",
+        "last_coordinate": [
+          6,
+          2
+        ]
+      }
+    ],
+    "completed_frames": 1,
+    "completed_cells": 21,
+    "ordered_stream_sha256": "b7be8b035823b6c9cbf50ecb808b34cb372823484f0693fc1d02517666a04936",
+    "work": {
+      "limits": {
+        "whole_run_cpu_seconds": 60.0,
+        "whole_run_wall_seconds": 120.0,
+        "tracked_owned_ndarray_bytes": 33554432,
+        "per_frame_points_strictly_below": 8000000,
+        "per_frame_angular_nodes_strictly_below": 1200000000
+      },
+      "cpu_seconds": 0.046875,
+      "wall_seconds": 0.062000000034458935,
+      "frame_points": 2880,
+      "frame_angular_nodes": 639936,
+      "total_points": 2880,
+      "total_angular_nodes": 639936,
+      "frame_count": 1,
+      "check_calls": 3406,
+      "tracked_peak_ndarray_bytes": 3877,
+      "tracked_peak_ndarrays": 16,
+      "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+    }
+  },
+  "ended_utc": "2026-09-07T16:41:26.597561+00:00"
+}

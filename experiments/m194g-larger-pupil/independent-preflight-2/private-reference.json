@@ -1,0 +1,227 @@
+[
+  {
+    "arm": "primary",
+    "index": 0,
+    "visited": 54,
+    "branches": {
+      "foreground": 16,
+      "background": 18,
+      "numerical": 20
+    },
+    "roots": 88,
+    "low_points": 1408,
+    "high_points": 5632,
+    "nodes": 1575456,
+    "max_intervals": 34
+  },
+  {
+    "arm": "primary",
+    "index": 1,
+    "visited": 54,
+    "branches": {
+      "foreground": 20,
+      "background": 21,
+      "numerical": 13
+    },
+    "roots": 70,
+    "low_points": 1120,
+    "high_points": 4480,
+    "nodes": 1166976,
+    "max_intervals": 32
+  },
+  {
+    "arm": "primary",
+    "index": 2,
+    "visited": 54,
+    "branches": {
+      "foreground": 22,
+      "background": 24,
+      "numerical": 8
+    },
+    "roots": 32,
+    "low_points": 512,
+    "high_points": 2048,
+    "nodes": 122880,
+    "max_intervals": 1
+  },
+  {
+    "arm": "primary",
+    "index": 3,
+    "visited": 54,
+    "branches": {
+      "foreground": 20,
+      "background": 21,
+      "numerical": 13
+    },
+    "roots": 70,
+    "low_points": 1120,
+    "high_points": 4480,
+    "nodes": 1166976,
+    "max_intervals": 32
+  },
+  {
+    "arm": "primary",
+    "index": 4,
+    "visited": 54,
+    "branches": {
+      "foreground": 16,
+      "background": 18,
+      "numerical": 20
+    },
+    "roots": 88,
+    "low_points": 1408,
+    "high_points": 5632,
+    "nodes": 1575456,
+    "max_intervals": 34
+  },
+  {
+    "arm": "angle-refined",
+    "index": 0,
+    "visited": 54,
+    "branches": {
+      "foreground": 16,
+      "background": 18,
+      "numerical": 20
+    },
+    "roots": 88,
+    "low_points": 1408,
+    "high_points": 5632,
+    "nodes": 3150912,
+    "max_intervals": 34
+  },
+  {
+    "arm": "angle-refined",
+    "index": 1,
+    "visited": 54,
+    "branches": {
+      "foreground": 20,
+      "background": 21,
+      "numerical": 13
+    },
+    "roots": 70,
+    "low_points": 1120,
+    "high_points": 4480,
+    "nodes": 2333952,
+    "max_intervals": 32
+  },
+  {
+    "arm": "angle-refined",
+    "index": 2,
+    "visited": 54,
+    "branches": {
+      "foreground": 22,
+      "background": 24,
+      "numerical": 8
+    },
+    "roots": 32,
+    "low_points": 512,
+    "high_points": 2048,
+    "nodes": 245760,
+    "max_intervals": 1
+  },
+  {
+    "arm": "angle-refined",
+    "index": 3,
+    "visited": 54,
+    "branches": {
+      "foreground": 20,
+      "background": 21,
+      "numerical": 13
+    },
+    "roots": 70,
+    "low_points": 1120,
+    "high_points": 4480,
+    "nodes": 2333952,
+    "max_intervals": 32
+  },
+  {
+    "arm": "angle-refined",
+    "index": 4,
+    "visited": 54,
+    "branches": {
+      "foreground": 16,
+      "background": 18,
+      "numerical": 20
+    },
+    "roots": 88,
+    "low_points": 1408,
+    "high_points": 5632,
+    "nodes": 3150912,
+    "max_intervals": 34
+  },
+  {
+    "arm": "cell-refined",
+    "index": 0,
+    "visited": 54,
+    "branches": {
+      "foreground": 16,
+      "background": 18,
+      "numerical": 20
+    },
+    "roots": 88,
+    "low_points": 5632,
+    "high_points": 22528,
+    "nodes": 6439488,
+    "max_intervals": 42
+  },
+  {
+    "arm": "cell-refined",
+    "index": 1,
+    "visited": 54,
+    "branches": {
+      "foreground": 20,
+      "background": 21,
+      "numerical": 13
+    },
+    "roots": 70,
+    "low_points": 4480,
+    "high_points": 17920,
+    "nodes": 4813056,
+    "max_intervals": 40
+  },
+  {
+    "arm": "cell-refined",
+    "index": 2,
+    "visited": 54,
+    "branches": {
+      "foreground": 22,
+      "background": 24,
+      "numerical": 8
+    },
+    "roots": 32,
+    "low_points": 2048,
+    "high_points": 8192,
+    "nodes": 491520,
+    "max_intervals": 1
+  },
+  {
+    "arm": "cell-refined",
+    "index": 3,
+    "visited": 54,
+    "branches": {
+      "foreground": 20,
+      "background": 21,
+      "numerical": 13
+    },
+    "roots": 70,
+    "low_points": 4480,
+    "high_points": 17920,
+    "nodes": 4813056,
+    "max_intervals": 40
+  },
+  {
+    "arm": "cell-refined",
+    "index": 4,
+    "visited": 54,
+    "branches": {
+      "foreground": 16,
+      "background": 18,
+      "numerical": 20
+    },
+    "roots": 88,
+    "low_points": 5632,
+    "high_points": 22528,
+    "nodes": 6439488,
+    "max_intervals": 42
+  }
+]
