@@ -110,7 +110,7 @@ def main():
         invoke_args = SimpleNamespace(build_record=record_path, build_sha256="0" * 64 if external_wrong else sha(record_path),
             mode="plan", manifest=folder / "private-manifest.json", manifest_sha256="c" * 64,
             cfa_commission=folder / "private-gate.json", cfa_commission_sha256="d" * 64,
-            plan=folder / "plan.json", observer="off", confidence=False, exposure=0, log=folder / "child.log")
+            plan=folder / "plan.json", observer="off", confidence=False, exposure=0, wb_mode="baseline", log=folder / "child.log")
         invoked = []
         def child(command, **kwargs):
             invoked.append(dict(command=command, environment=d.relevant_env(kwargs["env"])))

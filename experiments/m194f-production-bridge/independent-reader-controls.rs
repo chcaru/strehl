@@ -721,6 +721,19 @@ fn m194f_independent_source_observer_and_second_file_read() {
 #[test]
 fn m194f_independent_plan_and_actual_confidence_reread() {
     let mut audit = IndependentAudit::new("plan-reread");
+    independent_mhc_wb_witness(&mut audit);
+    audit.record(
+        "actual-camera-linear-exposure-one-needs-srgb",
+        strehl_core::color::Exposure::resolve(false, 1.0, false)
+            == Err(strehl_core::color::ExposureError::NeedsSrgb),
+        json!({"scope": "retained original unsupported production control"}),
+    );
+    audit.record(
+        "actual-camera-linear-exposure-zero-is-none",
+        strehl_core::color::Exposure::resolve(false, 0.0, false)
+            == Ok(strehl_core::color::Exposure::None),
+        json!({"stops": 0}),
+    );
     let (manifest_path, gate_path) = independent_copy_inputs(&audit.root);
     let inputs = BridgeInputs::load(
         &manifest_path,
@@ -740,8 +753,80 @@ fn m194f_independent_plan_and_actual_confidence_reread() {
         observer: ObserverMode::Count,
         confidence: true,
         exposure: 0,
+        wb_mode: WbMode::Baseline,
     };
     let (domain, fit, plan) = prepare_bridge(&inputs, &settings, &environment).unwrap();
+    let baseline_wb = [4.0_f32 / 3.0, 1.0, 5.0 / 3.0];
+    let red_wb = [8.0_f32 / 3.0, 1.0, 5.0 / 3.0];
+    audit.record(
+        "baseline-plan-binds-actual-writer-and-frame-wb",
+        plan["wb_mode"] == "baseline"
+            && plan["wb_f32"] == json!(baseline_wb)
+            && plan["frame_wb_f32"] == json!(baseline_wb),
+        json!({"mode": plan["wb_mode"], "writer": plan["wb_f32"], "frame": plan["frame_wb_f32"]}),
+    );
+    let red_settings = BridgeSettings {
+        wb_mode: WbMode::RedDouble,
+        ..settings
+    };
+    let (_, _, red_plan) = prepare_bridge(&inputs, &red_settings, &environment).unwrap();
+    audit.record("red-double-plan-valid-with-unchanged-frame-wb",
+        validate_plan(&red_plan, &red_plan).is_ok() && red_plan["wb_mode"] == "red-double"
+            && red_plan["wb_f32"] == json!(red_wb) && red_plan["frame_wb_f32"] == json!(baseline_wb),
+        json!({"mode": red_plan["wb_mode"], "writer": red_plan["wb_f32"], "frame": red_plan["frame_wb_f32"]}));
+    audit.record(
+        "wb-mode-parser-valid-companions",
+        WbMode::parse("baseline").unwrap() == WbMode::Baseline
+            && WbMode::parse("red-double").unwrap() == WbMode::RedDouble,
+        json!({"baseline": WbMode::Baseline.gains(), "red_double": WbMode::RedDouble.gains()}),
+    );
+    for value in ["", "Baseline", "red_double", "red-double ", "green-double"] {
+        audit.rejects(
+            &format!("malformed-wb-mode-{value:?}"),
+            WbMode::parse(value),
+        );
+    }
+    for exposure in [1, 2, 255] {
+        let unsupported = BridgeSettings {
+            exposure,
+            ..settings
+        };
+        audit.rejects(
+            &format!("exposure-{exposure}-refuses-before-plan"),
+            prepare_bridge(&inputs, &unsupported, &environment),
+        );
+    }
+    audit.rejects(
+        "baseline-plan-cannot-authorize-red-double",
+        validate_plan(&plan, &red_plan),
+    );
+    audit.rejects(
+        "red-double-plan-cannot-authorize-baseline",
+        validate_plan(&red_plan, &plan),
+    );
+    for (name, pointer, value) in [
+        ("red-plan-writer-wb-restored", "/wb_f32", json!(baseline_wb)),
+        ("red-plan-frame-wb-changed", "/frame_wb_f32", json!(red_wb)),
+        ("red-plan-mode-restored", "/wb_mode", json!("baseline")),
+        ("red-plan-wrong-green-wb", "/wb_f32/1", json!(2.0)),
+        ("red-plan-wrong-blue-wb", "/wb_f32/2", json!(10.0_f32 / 3.0)),
+    ] {
+        let original = serde_json::to_vec(&red_plan).unwrap();
+        let mut mutant = red_plan.clone();
+        *mutant.pointer_mut(pointer).unwrap() = value;
+        let raw = serde_json::to_vec(&mutant).unwrap();
+        let path = audit.root.join(format!("{name}.json"));
+        fs::write(&path, &raw).unwrap();
+        audit.rejects(
+            &format!("{name}-stale-hash"),
+            read_json_bound(&path, &digest(&original)),
+        );
+        let resealed = read_json_bound(&path, &digest(&raw)).unwrap();
+        audit.rejects(
+            &format!("{name}-rehashed"),
+            validate_plan(&resealed, &red_plan),
+        );
+    }
     audit.record("actual-recomputed-plan-valid", validate_plan(&plan, &plan).is_ok(),
         json!({"crop": plan["crop_quad"], "levels": plan["level_sizes"], "offset": plan["canonical_native_offset"]}));
     for (name, pointer, value) in [
@@ -800,7 +885,12 @@ fn m194f_independent_plan_and_actual_confidence_reread() {
     let healthy =
         BridgeSource::new(inputs.paths.clone(), hashes.clone(), ObserverMode::Count).unwrap();
     for index in [3, 0, 4, 1, 2] {
-        healthy.decode(index).unwrap();
+        let frame = healthy.decode(index).unwrap();
+        audit.record(
+            &format!("actual-decoded-frame-{index}-baseline-wb"),
+            frame.wb_gains() == Some(baseline_wb),
+            json!({"wb": frame.wb_gains(), "red_plan_frame_wb": red_plan["frame_wb_f32"]}),
+        );
     }
     let luma = vec![3000.0; domain.analysis().pixels()];
     let confidence = confidence_pass(
@@ -834,4 +924,71 @@ fn m194f_independent_plan_and_actual_confidence_reread() {
         json!({"error": error, "successes": failed.success_counts(), "attempts": failed.attempt_counts(), "hooks": failed.hook_calls(),
         "partial_rgb_exists": output.exists(), "partial_gray_exists": auxiliary.exists(), "scope": "private injected second-read fault, not intended render"}));
     audit.finish();
+}
+
+fn independent_mhc_wb_witness(audit: &mut IndependentAudit) {
+    // Direct DN-valued f32 Mosaic component, not normalized samples or a TIFF.
+    const WIDTH: usize = 10;
+    const HEIGHT: usize = 8;
+    let render = |data: &[f32]| {
+        let mosaic = strehl_core::demosaic::Mosaic {
+            data,
+            width: WIDTH,
+            height: HEIGHT,
+        };
+        let mut rgb = vec![0.0_f32; WIDTH * HEIGHT * 3];
+        for y in 0..HEIGHT {
+            strehl_core::demosaic::demosaic_row(
+                &mosaic,
+                y,
+                &mut rgb[y * WIDTH * 3..(y + 1) * WIDTH * 3],
+            );
+        }
+        rgb
+    };
+    let red_double = |data: &[f32]| {
+        let mut changed = data.to_vec();
+        for y in (0..HEIGHT).step_by(2) {
+            for x in (0..WIDTH).step_by(2) {
+                changed[y * WIDTH + x] *= 2.0;
+            }
+        }
+        changed
+    };
+    audit.record("direct-mhc-component-environment-cleared", std::env::var_os("STREHL_DEMOSAIC").is_none(),
+        json!({"scope": "actual default dispatcher; exact non-affine witness below distinguishes MHC"}));
+    let mut data = vec![1000.0_f32; WIDTH * HEIGHT];
+    data[4 * WIDTH + 4] += 64.0;
+    data[4 * WIDTH + 5] += 80.0;
+    let old = render(&data);
+    let new = render(&red_double(&data));
+    for (name, x, channel, before, after) in [
+        ("known-red", 4, 0, 1064.0, 2128.0),
+        ("interpolated-green-at-red", 4, 1, 1052.0, 1084.0),
+        ("interpolated-blue-at-red", 4, 2, 1048.0, 1096.0),
+        ("interpolated-red-at-green", 5, 0, 1082.0, 2114.0),
+        ("known-green", 5, 1, 1080.0, 1080.0),
+    ] {
+        let i = (4 * WIDTH + x) * 3 + channel;
+        audit.record(&format!("actual-mhc-dn-{name}"), old[i] == before && new[i] == after,
+            json!({"x": x, "y": 4, "channel": channel, "before_dn": old[i], "after_dn": new[i],
+                "expected_before_dn": before, "expected_after_dn": after, "units": "unnormalized DN f32 component"}));
+    }
+    let i = (4 * WIDTH + 5) * 3;
+    audit.record(
+        "wrong-all-pixel-red-double-oracle-is-live",
+        new[i] - 2.0 * old[i] == -50.0,
+        json!({"wrong_oracle_delta_dn": new[i] - 2.0 * old[i]}),
+    );
+    let i = (4 * WIDTH + 4) * 3;
+    audit.record("wrong-all-pixel-gb-identity-oracle-is-live", new[i + 1] - old[i + 1] == 32.0
+        && new[i + 2] - old[i + 2] == 48.0,
+        json!({"green_delta_dn": new[i + 1] - old[i + 1], "blue_delta_dn": new[i + 2] - old[i + 2]}));
+    let constant = vec![1000.0_f32; WIDTH * HEIGHT];
+    let flat_old = render(&constant);
+    let flat_new = render(&red_double(&constant));
+    audit.record("actual-mhc-constant-null-all-pixels", flat_old.iter().all(|v| *v == 1000.0)
+        && flat_new.as_chunks::<3>().0.iter().all(|v| *v == [2000.0, 1000.0, 1000.0]),
+        json!({"pixels": WIDTH * HEIGHT, "baseline_rgb_dn": [1000, 1000, 1000],
+            "red_double_rgb_dn": [2000, 1000, 1000], "scope": "same actual dispatcher, including reflected borders"}));
 }

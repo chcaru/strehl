@@ -100,3 +100,46 @@ at `independent-orchestrator-1/result.json`. Valid scheduling and interruption
 companions passed. The correction consumes each prerequisite's actual log,
 exact executable/test command and six independent child results. These stub
 checks produce no production image and do not admit the intended population.
+
+## First intended population and protocol correction
+
+The final pre-amendment build3 record is `build-3.json`, SHA
+`69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc`.
+Its independent refresh again passes all153 input checks and145 CLI tests.
+The scheduler's final25 controls pass after additionally rejecting duplicate
+private output paths; the intermediate duplicate-path acceptance and a separate
+test-script syntax failure remain preserved. Strict clippy stopped on the
+pre-existing build-script `collapsible_if` warning. A diagnostic clippy run
+completed; its two new fixed-pair iterator warnings were corrected before
+build3. The remaining diagnostics concern unchanged code. This is not a
+warning-free strict-clippy pass.
+
+The first actual private five-image population passes the independent reader:
+constant maximum error0.102356DN, affine maximum0.111463DN, and changed green
+sample movement63.891600DN. The rank and unseen-sentinel Gray samples match
+exactly. The first independent read refused a Windows extended-path spelling
+before reading TIFF samples; a narrow local-drive prefix normalization with
+containment controls fixed that reader. Both attempts remain saved. No pixel
+bar changed.
+
+**MEASURED incomplete result:** `production-population-1` then wrote the first
+four genuine RGB images and the confidence auxiliary, but refused its fifth
+exposure+1 arm at the real production guard. `Exposure::resolve(false,1,false)`
+correctly rejects viewing exposure for CameraLinear measurement output. The
+scheduler returned exit1 and wrote no completed index. The protocol's claim
+that this control was supported was wrong; this is not a product defect.
+
+[Amendment1](../../experiments/m194f-production-bridge/amendment-1.md), committed
+with two independent source/design reviews at `b0b55909` before implementation,
+replaces that arm with normalized red-WB doubling. Its consumer is each CFA
+site's observed output component: measured R doubles within one u16 code;
+measured G/B remain exact. All compared red values must be positive and
+unclipped. Root's initial proposed all-pixel rule was also rejected before any
+replacement output: WB precedes MHC, whose cross-channel curvature terms move
+interpolated components. A non-affine direct-MHC witness tests that distinction.
+The original exposure restriction receives an explicit refusal regression.
+
+The other controls, eleven-image count, input authority and private numerical
+bars remain unchanged. The complete population must run afresh on the amended
+build; none of the earlier successful images is substituted into it. No final
+bridge admission or larger quality population has been claimed.

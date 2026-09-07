@@ -1,0 +1,725 @@
+{
+  "schema": "m194f-independent-orchestrator-controls-v1",
+  "passed": true,
+  "check_count": 27,
+  "checks": [
+    {
+      "name": "private-valid-stub",
+      "passed": true,
+      "detail": {
+        "exit_code": 0
+      }
+    },
+    {
+      "name": "private-failed-result",
+      "passed": true,
+      "detail": {
+        "exit_code": 1
+      }
+    },
+    {
+      "name": "private-wrong-schema",
+      "passed": true,
+      "detail": {
+        "exit_code": 1
+      }
+    },
+    {
+      "name": "private-malformed-result",
+      "passed": true,
+      "detail": {
+        "exit_code": 1
+      }
+    },
+    {
+      "name": "private-missing-result",
+      "passed": true,
+      "detail": {
+        "exit_code": 1
+      }
+    },
+    {
+      "name": "private-zero-test",
+      "passed": true,
+      "detail": {
+        "exit_code": 1
+      }
+    },
+    {
+      "name": "private-nonzero-child",
+      "passed": true,
+      "detail": {
+        "exit_code": 1
+      }
+    },
+    {
+      "name": "renders-valid-fixed-five-schedule",
+      "passed": true,
+      "detail": {
+        "exit_code": 0,
+        "calls": [
+          {
+            "mode": "plan",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          }
+        ],
+        "completed_index_exists": true,
+        "actual_protocol": {
+          "preregistration": {
+            "path": "experiments/m194f-production-bridge/preregister.md",
+            "sha256": "02ebf87b1a73aff39ab52ac9596b84542007e86c9bcc6f4357945441cf47dfb7",
+            "bytes": 16612
+          },
+          "amendments": [
+            {
+              "path": "experiments/m194f-production-bridge/amendment-1.md",
+              "sha256": "925b454c19380ffe21ca14fcb6640b269a5ca2af7c1b2e38d061cdedafd210b0",
+              "bytes": 6517
+            }
+          ],
+          "amendment_reviews": [
+            {
+              "path": "experiments/m194f-production-bridge/independent-amendment-1-review.md",
+              "sha256": "1a13b337120a668e1e0d967cef417e5e261faebc41f24c2a15a93738a72dc336",
+              "bytes": 8013
+            },
+            {
+              "path": "experiments/m194f-production-bridge/independent-wb-amendment-review.md",
+              "sha256": "f62fe5a9b1d3307884c57d0a720d7805d679838dcafbdc905fa6f6d66e7eebe9",
+              "bytes": 9066
+            }
+          ]
+        },
+        "expected_protocol": {
+          "preregistration": {
+            "path": "experiments/m194f-production-bridge/preregister.md",
+            "sha256": "02ebf87b1a73aff39ab52ac9596b84542007e86c9bcc6f4357945441cf47dfb7",
+            "bytes": 16612
+          },
+          "amendments": [
+            {
+              "path": "experiments/m194f-production-bridge/amendment-1.md",
+              "sha256": "925b454c19380ffe21ca14fcb6640b269a5ca2af7c1b2e38d061cdedafd210b0",
+              "bytes": 6517
+            }
+          ],
+          "amendment_reviews": [
+            {
+              "path": "experiments/m194f-production-bridge/independent-amendment-1-review.md",
+              "sha256": "1a13b337120a668e1e0d967cef417e5e261faebc41f24c2a15a93738a72dc336",
+              "bytes": 8013
+            },
+            {
+              "path": "experiments/m194f-production-bridge/independent-wb-amendment-review.md",
+              "sha256": "f62fe5a9b1d3307884c57d0a720d7805d679838dcafbdc905fa6f6d66e7eebe9",
+              "bytes": 9066
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "wrong-dependency-external-pin",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: private_command_record external digest differs",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "failed-controls-record",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: controls_command_record did not complete on this build",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "omitted-six-independent-results",
+      "passed": true,
+      "detail": {
+        "refusal": "KeyError: 'independent_results'",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "rehashed-failed-independent-child",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: independent group failed or incomplete",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "controls-zero-tests-rebound-log",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: seven compiled controls did not complete",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "controls-wrong-filter",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: seven compiled controls did not complete",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "controls-wrong-copied-executable",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: controls_command_record executable differs",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "private-wrong-test-command",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: private command or source completion differs",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "first-plan-refusal",
+      "passed": true,
+      "detail": {
+        "exit_code": 1,
+        "calls": [
+          {
+            "mode": "plan",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          }
+        ],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "third-render-refusal",
+      "passed": true,
+      "detail": {
+        "exit_code": 1,
+        "calls": [
+          {
+            "mode": "plan",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          }
+        ],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "last-render-refusal",
+      "passed": true,
+      "detail": {
+        "exit_code": 1,
+        "calls": [
+          {
+            "mode": "plan",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          }
+        ],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "source-changed-after-population",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: sources changed during intended population",
+        "calls": [
+          {
+            "mode": "plan",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          }
+        ],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "amendment-changed-after-population",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: sources changed during intended population",
+        "calls": [
+          {
+            "mode": "plan",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          }
+        ],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "amendment-review-changed-after-population",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: sources changed during intended population",
+        "calls": [
+          {
+            "mode": "plan",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "off",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "placebo",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": true,
+            "exposure": 0,
+            "wb_mode": "baseline"
+          },
+          {
+            "mode": "plan",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          },
+          {
+            "mode": "render",
+            "observer": "count",
+            "confidence": false,
+            "exposure": 0,
+            "wb_mode": "red-double"
+          }
+        ],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "duplicate-independent-child-path",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: independent group binding differs",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "empty-independent-checks-rebound",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: independent group failed or incomplete",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "false-check-with-pass-status-rebound",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: independent group failed or incomplete",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "missing-private-gray-rebound",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: private component population incomplete",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    },
+    {
+      "name": "duplicate-private-output-paths-rebound",
+      "passed": true,
+      "detail": {
+        "refusal": "ValueError: private output binding changed",
+        "calls": [],
+        "completed_index_exists": false
+      }
+    }
+  ],
+  "source_before": {
+    "independent-orchestrator-controls.py": "fd793d8fcd7e7ee2ce39ae697c02852654322fa1264a299426a0ea66b28b46ee",
+    "run-commission.py": "3b679ec4d72e510b662e7887d6a7753df84eda7f5f048bbde03335265048ae62",
+    "consumer-run.py": "2dad7d6699492f17eb8610820763fad73f54a06b2d1f358c1c765ee4f553310b"
+  },
+  "source_after": {
+    "independent-orchestrator-controls.py": "fd793d8fcd7e7ee2ce39ae697c02852654322fa1264a299426a0ea66b28b46ee",
+    "run-commission.py": "3b679ec4d72e510b662e7887d6a7753df84eda7f5f048bbde03335265048ae62",
+    "consumer-run.py": "2dad7d6699492f17eb8610820763fad73f54a06b2d1f358c1c765ee4f553310b"
+  },
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/independent-orchestrator-cache-5",
+    "experiments/m194f-production-bridge/independent-orchestrator-controls.py",
+    "--output",
+    "experiments/m194f-production-bridge/independent-orchestrator-5"
+  ],
+  "xoptions": {
+    "faulthandler": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/independent-orchestrator-cache-5"
+  },
+  "command": [
+    "experiments/m194f-production-bridge/independent-orchestrator-controls.py",
+    "--output",
+    "experiments/m194f-production-bridge/independent-orchestrator-5"
+  ],
+  "scope": "private stub orchestration only; no real build, tests, pixels or optical authority"
+}

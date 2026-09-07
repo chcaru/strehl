@@ -124,8 +124,25 @@ fn m194f_author_default_and_configuration_controls() -> Result<()> {
         observer: ObserverMode::Count,
         confidence: false,
         exposure: 2,
+        wb_mode: WbMode::Baseline,
     };
     ensure!(bad.validate().is_err(), "unsupported exposure must refuse");
+    ensure!(
+        BridgeSettings { exposure: 1, ..bad }.validate().is_err()
+            && Exposure::resolve(false, 1.0, false).is_err()
+            && matches!(Exposure::resolve(false, 0.0, false), Ok(Exposure::None)),
+        "original exposure1 refusal and exposure0 companion"
+    );
+    let baseline = WbMode::Baseline.gains();
+    let red_double = WbMode::RedDouble.gains();
+    ensure!(
+        WbMode::parse("baseline")? == WbMode::Baseline
+            && WbMode::parse("red-double")? == WbMode::RedDouble
+            && WbMode::parse("unknown").is_err()
+            && red_double == [2.0 * baseline[0], baseline[1], baseline[2]]
+            && bridge_frame(vec![512; CFA_BYTES / 2], 64, 48, 0).wb_gains() == Some(baseline),
+        "registered writer WB modes and unchanged frame WB"
+    );
     let mut shifted =
         json!({"schema":"m194f-consumer-plan-v1","crop_quad":{"x":3,"y":5,"width":24,"height":16}});
     let original = shifted.clone();
@@ -157,6 +174,7 @@ fn m194f_private_coordinate_and_rank_controls() -> Result<()> {
         observer: ObserverMode::Count,
         confidence: false,
         exposure: 0,
+        wb_mode: WbMode::Baseline,
     };
     let mut rgb = serde_json::Map::new();
     let mut rgb_counts = serde_json::Map::new();

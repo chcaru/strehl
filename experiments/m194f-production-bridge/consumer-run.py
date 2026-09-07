@@ -209,7 +209,7 @@ def invoke(args):
     fields = dict(MODE=args.mode, MANIFEST=str(args.manifest.resolve()), MANIFEST_SHA256=args.manifest_sha256,
                   CFA_COMMISSION=str(args.cfa_commission.resolve()), CFA_COMMISSION_SHA256=args.cfa_commission_sha256,
                   PLAN=str(args.plan.resolve()), OBSERVER=args.observer, CONFIDENCE=str(int(args.confidence)),
-                  EXPOSURE=str(args.exposure))
+                  EXPOSURE=str(args.exposure), WB_MODE=args.wb_mode)
     target = args.plan if args.mode == "plan" else args.receipt
     if args.mode == "render":
         if bool(args.confidence_output) != args.confidence:
@@ -265,6 +265,7 @@ def main():
         p.add_argument("--observer", choices=("off", "count", "placebo"), required=True)
         p.add_argument("--confidence", action="store_true")
         p.add_argument("--exposure", type=int, choices=(0, 1), default=0)
+        p.add_argument("--wb-mode", choices=("baseline", "red-double"), default="baseline")
         p.add_argument("--log", type=Path)
         if name == "render":
             p.add_argument("--plan-sha256", required=True)

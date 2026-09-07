@@ -849,15 +849,37 @@ impl PyramidFrameSource for BridgeSource {
         Ok(frame)
     }
 }
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "kebab-case")]
+enum WbMode {
+    Baseline,
+    RedDouble,
+}
+impl WbMode {
+    fn parse(value: &str) -> Result<Self> {
+        match value {
+            "baseline" => Ok(Self::Baseline),
+            "red-double" => Ok(Self::RedDouble),
+            _ => bail!("unregistered WB mode"),
+        }
+    }
+    fn gains(self) -> [f32; 3] {
+        match self {
+            Self::Baseline => [4.0 / 3.0, 1.0, 5.0 / 3.0],
+            Self::RedDouble => [8.0 / 3.0, 1.0, 5.0 / 3.0],
+        }
+    }
+}
 #[derive(Clone, Copy, Debug)]
 struct BridgeSettings {
     observer: ObserverMode,
     confidence: bool,
     exposure: u8,
+    wb_mode: WbMode,
 }
 impl BridgeSettings {
     fn validate(self) -> Result<()> {
-        ensure!(self.exposure <= 1, "unregistered exposure");
+        ensure!(self.exposure == 0, "CameraLinear bridge requires exposure0");
         Ok(())
     }
 }
@@ -941,7 +963,8 @@ fn prepare_bridge(
         "canonical_native_offset":[rect.x*2,rect.y*2],"output_native":[rect.width*2,rect.height*2],"output_channels":3,
         "reference_original_index":2,"reference_local_index":2,"placements":placements,"cover_fit":{"kind":"Crop","k":k},
         "level_sizes":sizes.iter().map(|s|[s.width,s.height]).collect::<Vec<_>>(),
-        "noise":noise,"wb_f32":[4.0f32/3.0,1.0f32,5.0f32/3.0],"normalization":normalization,"config":config,
+        "noise":noise,"wb_mode":settings.wb_mode,"wb_f32":settings.wb_mode.gains(),
+        "frame_wb_f32":WbMode::Baseline.gains(),"normalization":normalization,"config":config,
         "observer":{"mode":settings.observer,"excludes_planning_reads":true,"excludes_raw_prologue":true},"environment":environment,
         "build":build});
     Ok((domain, fit, plan))
@@ -955,6 +978,15 @@ fn run_bridge_source(
     source: &impl PyramidFrameSource,
     domain: PyramidDomain,
     fit: align_cmd::CoverFit,
+) -> Result<()> {
+    run_bridge_source_with_wb(opts, source, domain, fit, WbMode::Baseline)
+}
+fn run_bridge_source_with_wb(
+    opts: &MergeOptions,
+    source: &impl PyramidFrameSource,
+    domain: PyramidDomain,
+    fit: align_cmd::CoverFit,
+    wb_mode: WbMode,
 ) -> Result<()> {
     ensure!(source.len() == 5, "prepared bridge requires five sources");
     let paths: Vec<_> = (0..5)
@@ -972,7 +1004,7 @@ fn run_bridge_source(
             geom: domain.full,
             levels: bridge_levels(),
             noise: bridge_noise(),
-            wb: Some([4.0 / 3.0, 1.0, 5.0 / 3.0]),
+            wb: Some(wb_mode.gains()),
             xyz_to_cam: None,
             frame_bytes: CFA_BYTES,
             alignment: Some((identity_map(domain.full), "M194f supplied identity", fit)),
@@ -1045,6 +1077,7 @@ fn controlled_bridge_environment() -> Result<BTreeMap<String, String>> {
         "OBSERVER",
         "CONFIDENCE",
         "EXPOSURE",
+        "WB_MODE",
         "PLAN_SHA256",
         "OUTPUT",
         "RECEIPT",
@@ -1086,7 +1119,9 @@ fn execute_bridge() -> Result<()> {
             "1" => 1,
             _ => bail!("unknown exposure"),
         },
+        wb_mode: WbMode::parse(&f_env("WB_MODE")?)?,
     };
+    settings.validate()?;
     let inputs = BridgeInputs::load(
         &PathBuf::from(f_env("MANIFEST")?),
         &f_env("MANIFEST_SHA256")?,
@@ -1136,7 +1171,7 @@ fn execute_bridge() -> Result<()> {
             .collect(),
         settings.observer,
     )?;
-    run_bridge_source(&opts, &source, domain, fit)?;
+    run_bridge_source_with_wb(&opts, &source, domain, fit, settings.wb_mode)?;
     let calls = if settings.confidence { 2 } else { 1 };
     ensure!(
         source.success_counts()

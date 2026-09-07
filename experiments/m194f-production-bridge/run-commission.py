@@ -17,9 +17,9 @@ MANIFEST = ROOT / "experiments/m194e-joint-pupil/cfa-emission-1/manifest.json"
 MANIFEST_SHA = "f47c2b8720560fe9dbd777eeed3281ce2531f1f2287f5c88ef7b51a083d03299"
 GATE = ROOT / "experiments/m194e-joint-pupil/independent-cfa-verification-1/cfa-commission.json"
 GATE_SHA = "706462ad18a5a3846cadd99e1ef24d6b92b77e064df2e34cbe72e45907fc06a6"
-RUNS = [("baseline-off", "off", False, 0), ("baseline-count", "count", False, 0),
-        ("baseline-placebo", "placebo", False, 0), ("confidence-count", "count", True, 0),
-        ("exposure-plus-one-count", "count", False, 1)]
+RUNS = [("baseline-off", "off", False, 0, "baseline"), ("baseline-count", "count", False, 0, "baseline"),
+        ("baseline-placebo", "placebo", False, 0, "baseline"), ("confidence-count", "count", True, 0, "baseline"),
+        ("red-wb-double-count", "count", False, 0, "red-double")]
 
 
 def now():
@@ -34,6 +34,13 @@ def ref(path):
 def drivers():
     return {p.relative_to(ROOT).as_posix(): D.sha(p)
             for p in (Path(__file__).resolve(), HERE / "consumer-run.py")}
+
+
+def protocol_refs():
+    return dict(preregistration=ref(HERE / "preregister.md"),
+                amendments=[ref(HERE / "amendment-1.md")],
+                amendment_reviews=[ref(HERE / name) for name in
+                    ("independent-amendment-1-review.md", "independent-wb-amendment-review.md")])
 
 
 def admitted_build(args):
@@ -177,32 +184,33 @@ def renders(args):
     if D.sha(MANIFEST) != MANIFEST_SHA or D.sha(GATE) != GATE_SHA:
         raise ValueError("genuine authority changed")
     before, driver_before, start = D.sources(), drivers(), now()
+    protocol = protocol_refs()
     out.mkdir(parents=True, exist_ok=False)
     rows = []
-    for name, observer, confidence, exposure in RUNS:
+    for name, observer, confidence, exposure, wb_mode in RUNS:
         run = out / name
         run.mkdir()
         plan, receipt = run / "plan.json", run / "receipt.json"
         common = dict(build_record=args.build_record, build_sha256=args.build_sha256,
                       manifest=MANIFEST, manifest_sha256=MANIFEST_SHA, cfa_commission=GATE,
                       cfa_commission_sha256=GATE_SHA, observer=observer, confidence=confidence,
-                      exposure=exposure, plan=plan, log=None)
+                      exposure=exposure, wb_mode=wb_mode, plan=plan, log=None)
         if D.invoke(argparse.Namespace(mode="plan", **common)) != 0:
             return 1
         if D.invoke(argparse.Namespace(mode="render", **common, plan_sha256=D.sha(plan),
                     receipt=receipt, output=run / "output.tif",
                     confidence_output=run / "confidence.tif" if confidence else None)) != 0:
             return 1
-        rows.append(dict(name=name, observer=observer, confidence=confidence, exposure=exposure,
+        rows.append(dict(name=name, observer=observer, confidence=confidence, exposure=exposure, wb_mode=wb_mode,
                          plan=ref(plan), receipt=ref(receipt),
                          command_record=ref(receipt.with_suffix(".command.json")),
                          plan_command_record=ref(plan.with_suffix(".command.json"))))
     after, driver_after = D.sources(), drivers()
-    if before != after or driver_before != driver_after:
+    if before != after or driver_before != driver_after or protocol != protocol_refs():
         raise ValueError("sources changed during intended population")
     D.checked_executable(b)
     index = dict(schema="m194f-production-run-v1", status="OUTPUTS_COMPLETE_UNVERIFIED",
-                 preregistration=ref(HERE / "preregister.md"), build=ref(args.build_record),
+                 **protocol, build=ref(args.build_record),
                  **dependencies, runs=rows, sources_before=before, sources_after=after,
                  driver_before=driver_before, driver_after=driver_after,
                  command=sys.argv, interpreter_argv=sys.orig_argv, started_utc=start, ended_utc=now())

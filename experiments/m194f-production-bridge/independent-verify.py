@@ -25,9 +25,9 @@ spec.loader.exec_module(R)
 AUTHORITY = dict(manifest_sha256="f47c2b8720560fe9dbd777eeed3281ce2531f1f2287f5c88ef7b51a083d03299",
                  cfa_commission_sha256="706462ad18a5a3846cadd99e1ef24d6b92b77e064df2e34cbe72e45907fc06a6",
                  float_commission_sha256="4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217")
-RUNS = [("baseline-off", "off", False, 0), ("baseline-count", "count", False, 0),
-        ("baseline-placebo", "placebo", False, 0), ("confidence-count", "count", True, 0),
-        ("exposure-plus-one-count", "count", False, 1)]
+RUNS = [("baseline-off", "off", False, 0, "baseline"), ("baseline-count", "count", False, 0, "baseline"),
+        ("baseline-placebo", "placebo", False, 0, "baseline"), ("confidence-count", "count", True, 0, "baseline"),
+        ("red-wb-double-count", "count", False, 0, "red-double")]
 BASE_ENV = dict(STREHL_DEFECT="off", STREHL_FIX_CA="off", STREHL_FULLRES_GATHER="1",
                 STREHL_PYRAMID_WORKERS="2", RAYON_NUM_THREADS="2")
 TEST = "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge"
@@ -92,6 +92,9 @@ def repository_path(value):
 def artifact_path(value):
     # Rust receipts deliberately emit canonical absolute workspace paths.
     R.require(type(value) is str, "artifact path type")
+    if value.startswith("\\\\?\\"):
+        value = value[4:]
+        R.require(re.match(r"^[A-Za-z]:[\\/]",value) is not None,"extended path must be a local drive")
     path = Path(value).resolve()
     R.require(path.is_relative_to(ROOT), "artifact containment")
     return path
@@ -161,7 +164,13 @@ def check_plan(plan, run, build):
         R.require(placement["original_index"] == placement["local_index"] == i, "original/local identity")
         same(placement["quad_similarity"], dict(a_re=1.0,a_im=0.0,b_re=0.0,b_im=0.0), "identity placement")
     R.require(len(plan["placements"]) == 5, "five placements")
-    R.require(plan["wb_f32"] == [float(np.float32(4/3)),1.0,float(np.float32(5/3))], "represented WB")
+    frame_wb=[float(np.float32(4/3)),1.0,float(np.float32(5/3))]
+    R.require(plan["frame_wb_f32"] == frame_wb,"unchanged frame WB")
+    R.require(plan["wb_mode"] == run["wb_mode"] and run["wb_mode"] in ("baseline","red-double"),"explicit WB mode")
+    prepared_wb=frame_wb.copy()
+    if run["wb_mode"] == "red-double":prepared_wb[0]=float(np.float32(8/3))
+    R.require(plan["wb_f32"] == prepared_wb,"represented prepared writer WB")
+    R.require(type(run["exposure"]) is int and run["exposure"] == 0,"measurement exposure remains zero")
     n = plan["normalization"]
     R.require(n["tiff_u16_to_dn"] == R.RANGE/65535 and n["second_black_subtraction"] is False
               and n["input_rounding"] == "ties-to-even" and n["output_rounding"] == "half-up after clipping", "normalization convention")
@@ -201,7 +210,7 @@ def check_command(command, run, build, build_sha, mode="render"):
     check_test_log(log,command["log_sha256"],1)
     env = command["environment"]
     same({k:v for k,v in env.items() if not k.startswith("STREHL_M194F_")},BASE_ENV,"child render environment")
-    fields = dict(MODE=mode,OBSERVER=run["observer"],CONFIDENCE=str(int(run["confidence"])),EXPOSURE=str(run["exposure"]),
+    fields = dict(MODE=mode,OBSERVER=run["observer"],CONFIDENCE=str(int(run["confidence"])),EXPOSURE=str(run["exposure"]),WB_MODE=run["wb_mode"],
                   MANIFEST_SHA256=AUTHORITY["manifest_sha256"],CFA_COMMISSION_SHA256=AUTHORITY["cfa_commission_sha256"])
     if mode == "render":
         fields["PLAN_SHA256"] = run["plan"]["sha256"]
@@ -294,6 +303,39 @@ def read_output(record, kind, shape):
     return pixels, own
 
 
+def wb_check(baseline, changed, native_offset):
+    """Amendment1: complete observed CFA components, not all RGB components."""
+    R.require(isinstance(baseline,np.ndarray) and isinstance(changed,np.ndarray)
+              and baseline.dtype == changed.dtype == np.dtype("uint16"),"WB uint16 inputs")
+    R.require(baseline.shape == changed.shape and baseline.ndim == 3 and baseline.shape[2] == 3
+              and baseline.shape[0] > 0 and baseline.shape[1] > 0,"WB common nonempty RGB extent")
+    R.require(type(native_offset) is list and len(native_offset) == 2 and all(integer(v) for v in native_offset),"WB native origin")
+    y,x=np.indices(baseline.shape[:2]);x+=native_offset[0];y+=native_offset[1]
+    masks=dict(R=(x%2==0)&(y%2==0),G1=(x%2==1)&(y%2==0),G2=(x%2==0)&(y%2==1),B=(x%2==1)&(y%2==1))
+    R.require(all(bool(mask.any()) for mask in masks.values()),"WB all four CFA populations")
+    a,b=baseline.astype(np.int32),changed.astype(np.int32)
+    red_a,red_b=a[...,0][masks["R"]],b[...,0][masks["R"]]
+    R.require(bool(((red_a>0)&(red_a<65535)&(red_b>0)&(red_b<65535)).all()),"WB red positive/unclipped full population")
+    R.require(int(red_a.max()) > 1,"WB amplitude witness")
+    residual=red_b-2*red_a
+    R.require(bool((np.abs(residual)<=1).all()),"WB measured red doubling within one code")
+    R.require(bool((red_b>red_a).all()),"WB every observed red increased")
+    for name,channel in (("G1",1),("G2",1),("B",2)):
+        R.require(np.array_equal(a[...,channel][masks[name]],b[...,channel][masks[name]]),"WB observed "+name+" exact")
+    delta=b-a
+    measured=[masks["R"],masks["G1"]|masks["G2"],masks["B"]]
+    interpolated={}
+    for channel,name in enumerate(("R","G","B")):
+        values=delta[...,channel][~measured[channel]]
+        interpolated[name]=dict(samples=int(values.size),changed=int(np.count_nonzero(values)),max_abs_codes=int(np.abs(values).max()),bar="none")
+    return dict(native_offset=native_offset,shape=list(baseline.shape),parity_counts={k:int(m.sum()) for k,m in masks.items()},
+                red_baseline_min=int(red_a.min()),red_baseline_max=int(red_a.max()),red_changed_min=int(red_b.min()),red_changed_max=int(red_b.max()),
+                red_residual_min=int(residual.min()),red_residual_max=int(residual.max()),
+                red_max_abs_doubling_error_codes=int(np.abs(residual).max()),
+                all_component_changed_counts=np.count_nonzero(delta,axis=(0,1)).tolist(),
+                all_component_max_abs_movement_codes=np.abs(delta).max(axis=(0,1)).tolist(),interpolated=interpolated)
+
+
 def verify_private(private):
     R.require(private["schema"] == "m194f-private-controls-v1" and private["status"] == "complete"
               and private["fixture_only"] is True, "private component scope")
@@ -332,9 +374,12 @@ def verify(index_path, index_sha, build_sha):
     index = load(index_path,index_sha)
     keys(index,("schema","status","preregistration","build","private_controls","private_command_record",
                 "controls_command_record","runs","sources_before","sources_after","driver_before","driver_after",
-                "command","interpreter_argv","started_utc","ended_utc"),"final index")
+                "command","interpreter_argv","started_utc","ended_utc","amendments","amendment_reviews"),"final index")
     R.require(index["schema"] == "m194f-production-run-v1" and index["status"] == "OUTPUTS_COMPLETE_UNVERIFIED", "complete unverified eleven-file index")
     file_ref(index["preregistration"])
+    R.require(len(index["amendments"]) == 1 and len(index["amendment_reviews"]) == 2,"registered amendment/review population")
+    R.require(file_ref(index["amendments"][0]) == HERE/"amendment-1.md","actual registered amendment")
+    R.require({file_ref(r) for r in index["amendment_reviews"]} == {HERE/"independent-amendment-1-review.md",HERE/"independent-wb-amendment-review.md"},"actual independent amendment reviews")
     build = check_build(index["build"],build_sha)
     drivers = {p.relative_to(ROOT).as_posix():sha(p) for p in (HERE/"consumer-run.py",HERE/"run-commission.py")}
     check_run_bindings(index,build,drivers)
@@ -344,8 +389,8 @@ def verify(index_path, index_sha, build_sha):
     R.require(len(index["runs"]) == 5,"complete five genuine runs")
     results, pixels, plans = {}, {}, []
     for run, expected in zip(index["runs"],RUNS,strict=True):
-        keys(run,("name","observer","confidence","exposure","plan","receipt","command_record","plan_command_record"),"genuine run")
-        same([run["name"],run["observer"],run["confidence"],run["exposure"]],list(expected),"fixed ordered run matrix")
+        keys(run,("name","observer","confidence","exposure","wb_mode","plan","receipt","command_record","plan_command_record"),"genuine run")
+        same([run["name"],run["observer"],run["confidence"],run["exposure"],run["wb_mode"]],list(expected),"fixed ordered run matrix")
         plan = load(file_ref(run["plan"]))
         receipt = load(file_ref(run["receipt"]))
         command = load(file_ref(run["command_record"]))
@@ -373,14 +418,15 @@ def verify(index_path, index_sha, build_sha):
         normalized["observer"]["mode"] = "off"
         normalized["config"]["confidence"] = False
         normalized["config"]["exposure_stops"] = 0
+        normalized["wb_mode"] = "baseline"
+        normalized["wb_f32"] = normalized["frame_wb_f32"].copy()
         plans.append(normalized)
     for plan in plans[1:]:
         same(plan,plans[0],"only preregistered settings differ across plans")
     for name in ("baseline-count","baseline-placebo","confidence-count"):
         R.require(results[name]["rgb"]["sha256"] == results["baseline-off"]["rgb"]["sha256"]
                   and np.array_equal(pixels[name],pixels["baseline-off"]),"actual observer/confidence RGB byte null " + name)
-    changed = pixels["exposure-plus-one-count"] != pixels["baseline-count"]
-    R.require(bool(changed.any()),"exposure control actual pixels must change")
+    white_balance=wb_check(pixels["baseline-count"],pixels["red-wb-double-count"],plans[0]["canonical_native_offset"])
     private = verify_private(load(file_ref(index["private_controls"])))
     outputs = [item["rgb"] for item in results.values()] + [results["confidence-count"]["gray"]] + list(private.values())
     R.require(len(outputs) == 11 and len({p["path"] for p in outputs}) == 11,"eleven distinct actual TIFFs")
@@ -389,7 +435,7 @@ def verify(index_path, index_sha, build_sha):
     R.require(sha(index_path) == index_sha,"index unchanged through independent read")
     return dict(status="PASS_DELIVERED_TIFF_VALUES",scope="bounded production integration, no quality or optical-confidence claim",
                 genuine=results,private=private,tiff_count=11,
-                exposure_changed_samples=int(changed.sum()),input_plan=plans[0],
+                white_balance_potency=white_balance,input_plan=plans[0],
                 source_map=build["sources_after"],index_sha256=index_sha,build_sha256=build_sha)
 
 

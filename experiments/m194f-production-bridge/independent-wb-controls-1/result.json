@@ -1,0 +1,282 @@
+{
+  "schema": "m194f-independent-wb-reader-controls-v1",
+  "status": "PASS_WB_READER_INSTRUMENT_ONLY",
+  "fixture_only": true,
+  "orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/cache-wb-controls-1",
+    "experiments/m194f-production-bridge/independent-wb-controls.py",
+    "--out",
+    "experiments/m194f-production-bridge/independent-wb-controls-1"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/cache-wb-controls-1"
+  },
+  "numpy": "2.4.4",
+  "source_before": {
+    "experiments/m194f-production-bridge/independent-wb-controls.py": "0261c43a3e0dd595f4366418eb0e836856095f5bfb870589d5a87a82fe6093ed",
+    "experiments/m194f-production-bridge/independent-verify.py": "cc7013c2af20f9da46e75f5078217d59c7b5063e3616f7a064ce19fdb29d0468",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d",
+    "experiments/m194f-production-bridge/amendment-1.md": "925b454c19380ffe21ca14fcb6640b269a5ca2af7c1b2e38d061cdedafd210b0",
+    "experiments/m194f-production-bridge/independent-wb-amendment-review.md": "f62fe5a9b1d3307884c57d0a720d7805d679838dcafbdc905fa6f6d66e7eebe9"
+  },
+  "started_utc": "2026-09-07T15:54:35.307493+00:00",
+  "cases": [
+    {
+      "name": "valid-unequal-even-origin",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "native_offset": [
+          6,
+          10
+        ],
+        "shape": [
+          18,
+          22,
+          3
+        ],
+        "parity_counts": {
+          "R": 99,
+          "G1": 99,
+          "G2": 99,
+          "B": 99
+        },
+        "red_baseline_min": 3200,
+        "red_baseline_max": 4332,
+        "red_changed_min": 6399,
+        "red_changed_max": 8665,
+        "red_residual_min": -1,
+        "red_residual_max": 1,
+        "red_max_abs_doubling_error_codes": 1,
+        "all_component_changed_counts": [
+          396,
+          198,
+          297
+        ],
+        "all_component_max_abs_movement_codes": [
+          4333,
+          7,
+          13
+        ],
+        "interpolated": {
+          "R": {
+            "samples": 297,
+            "changed": 297,
+            "max_abs_codes": 11,
+            "bar": "none"
+          },
+          "G": {
+            "samples": 198,
+            "changed": 198,
+            "max_abs_codes": 7,
+            "bar": "none"
+          },
+          "B": {
+            "samples": 297,
+            "changed": 297,
+            "max_abs_codes": 13,
+            "bar": "none"
+          }
+        }
+      }
+    },
+    {
+      "name": "valid-odd-x-origin",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "native_offset": [
+          7,
+          10
+        ],
+        "shape": [
+          18,
+          22,
+          3
+        ],
+        "parity_counts": {
+          "R": 99,
+          "G1": 99,
+          "G2": 99,
+          "B": 99
+        },
+        "red_baseline_min": 3243,
+        "red_baseline_max": 4375,
+        "red_changed_min": 6485,
+        "red_changed_max": 8751,
+        "red_residual_min": -1,
+        "red_residual_max": 1,
+        "red_max_abs_doubling_error_codes": 1,
+        "all_component_changed_counts": [
+          396,
+          198,
+          297
+        ],
+        "all_component_max_abs_movement_codes": [
+          4376,
+          7,
+          13
+        ],
+        "interpolated": {
+          "R": {
+            "samples": 297,
+            "changed": 297,
+            "max_abs_codes": 11,
+            "bar": "none"
+          },
+          "G": {
+            "samples": 198,
+            "changed": 198,
+            "max_abs_codes": 7,
+            "bar": "none"
+          },
+          "B": {
+            "samples": 297,
+            "changed": 297,
+            "max_abs_codes": 13,
+            "bar": "none"
+          }
+        }
+      }
+    },
+    {
+      "name": "null-WB",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB measured red doubling within one code"
+    },
+    {
+      "name": "wrong-channel-doubled",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB measured red doubling within one code"
+    },
+    {
+      "name": "red-triple",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB measured red doubling within one code"
+    },
+    {
+      "name": "one-observed-R-outside-bar",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB measured red doubling within one code"
+    },
+    {
+      "name": "one-observed-G1-outside-bar",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB observed G1 exact"
+    },
+    {
+      "name": "one-observed-G2-outside-bar",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB observed G2 exact"
+    },
+    {
+      "name": "one-observed-B-outside-bar",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB observed B exact"
+    },
+    {
+      "name": "zero-baseline",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB red positive/unclipped full population"
+    },
+    {
+      "name": "clipped-baseline",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB red positive/unclipped full population"
+    },
+    {
+      "name": "zero-changed",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB red positive/unclipped full population"
+    },
+    {
+      "name": "clipped-changed",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB red positive/unclipped full population"
+    },
+    {
+      "name": "unit-code-amplitude",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB amplitude witness"
+    },
+    {
+      "name": "one-red-not-increasing",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB every observed red increased"
+    },
+    {
+      "name": "wrong-x-CFA-origin",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB measured red doubling within one code"
+    },
+    {
+      "name": "wrong-y-CFA-origin",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB measured red doubling within one code"
+    },
+    {
+      "name": "empty-height",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB common nonempty RGB extent"
+    },
+    {
+      "name": "empty-parity",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB all four CFA populations"
+    },
+    {
+      "name": "different-extents",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB common nonempty RGB extent"
+    },
+    {
+      "name": "wrong-sample-type",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "WB uint16 inputs"
+    }
+  ],
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "source_after": {
+    "experiments/m194f-production-bridge/independent-wb-controls.py": "0261c43a3e0dd595f4366418eb0e836856095f5bfb870589d5a87a82fe6093ed",
+    "experiments/m194f-production-bridge/independent-verify.py": "cc7013c2af20f9da46e75f5078217d59c7b5063e3616f7a064ce19fdb29d0468",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d",
+    "experiments/m194f-production-bridge/amendment-1.md": "925b454c19380ffe21ca14fcb6640b269a5ca2af7c1b2e38d061cdedafd210b0",
+    "experiments/m194f-production-bridge/independent-wb-amendment-review.md": "f62fe5a9b1d3307884c57d0a720d7805d679838dcafbdc905fa6f6d66e7eebe9"
+  },
+  "wall_seconds": 0.03322770004160702,
+  "cpu_seconds": 0.03125,
+  "ended_utc": "2026-09-07T15:54:35.341024+00:00",
+  "source_unchanged": true,
+  "passed": 21,
+  "count": 21
+}

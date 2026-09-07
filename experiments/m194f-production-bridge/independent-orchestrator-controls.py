@@ -103,7 +103,7 @@ def main():
         accepted, detail = private_case(name, **options)
         record(name, not accepted, detail)
 
-    def renders_case(name, *, mutate=None, failed_invocation=None, source_changed=False, pin_wrong=False):
+    def renders_case(name, *, mutate=None, failed_invocation=None, source_changed=False, pin_wrong=False, protocol_changed=None):
         folder = out / name
         folder.mkdir()
         private_result = folder / "private-controls.json"
@@ -141,7 +141,7 @@ def main():
         ns.build_record.write_bytes(b"private stub build reference")
         calls = []
         def child(invocation):
-            calls.append(dict(mode=invocation.mode, observer=invocation.observer, confidence=invocation.confidence, exposure=invocation.exposure))
+            calls.append(dict(mode=invocation.mode, observer=invocation.observer, confidence=invocation.confidence, exposure=invocation.exposure, wb_mode=invocation.wb_mode))
             if failed_invocation == len(calls):
                 return 1
             target = invocation.plan if invocation.mode == "plan" else invocation.receipt
@@ -150,9 +150,17 @@ def main():
             return 0
         def sources():
             return {"changed": "f" * 64} if source_changed and len(calls) == 10 else source_map
+        original_protocol_refs = r.protocol_refs
+        expected_protocol = original_protocol_refs()
+        def protocol_refs():
+            value = original_protocol_refs()
+            if protocol_changed and len(calls) == 10:
+                # Private dependency-change injection, not a mutation of registered files.
+                value[protocol_changed][0]["sha256"] = "0" * 64
+            return value
         stream = io.StringIO()
         try:
-            with patch.object(r, "admitted_build", return_value=fake_build), patch.object(r.D, "sources", side_effect=sources), patch.object(r.D, "checked_executable", return_value=Path(fake_build["test_executable"]["path"])), patch.object(r.D, "invoke", side_effect=child), contextlib.redirect_stdout(stream):
+            with patch.object(r, "admitted_build", return_value=fake_build), patch.object(r.D, "sources", side_effect=sources), patch.object(r, "protocol_refs", side_effect=protocol_refs), patch.object(r.D, "checked_executable", return_value=Path(fake_build["test_executable"]["path"])), patch.object(r.D, "invoke", side_effect=child), contextlib.redirect_stdout(stream):
                 code = r.renders(ns)
             accepted = code == 0
             detail = dict(exit_code=code, calls=calls)
@@ -160,12 +168,22 @@ def main():
             accepted = False
             detail = dict(refusal=type(exc).__name__ + ": " + str(exc), calls=calls)
         detail["completed_index_exists"] = (ns.output / "run-index.json").exists()
+        if detail["completed_index_exists"]:
+            index = json.loads((ns.output / "run-index.json").read_bytes())
+            detail["actual_protocol"] = {key: index[key] for key in expected_protocol}
+            detail["expected_protocol"] = expected_protocol
         (folder / "controller.log").write_text(stream.getvalue(), encoding="utf-8")
         return accepted, detail
 
     accepted, detail = renders_case("renders-valid-stub")
-    expected = [dict(mode=mode, observer=o, confidence=c, exposure=e) for _, o, c, e in r.RUNS for mode in ("plan", "render")]
-    record("renders-valid-fixed-five-schedule", accepted and detail["calls"] == expected and detail["completed_index_exists"], detail)
+    # Independent fixed amendment schedule; do not derive expectation from RUNS.
+    expected = [dict(mode=mode, observer=o, confidence=c, exposure=0, wb_mode=w)
+                for o, c, w in [("off", False, "baseline"), ("count", False, "baseline"),
+                                ("placebo", False, "baseline"), ("count", True, "baseline"),
+                                ("count", False, "red-double")]
+                for mode in ("plan", "render")]
+    record("renders-valid-fixed-five-schedule", accepted and detail["calls"] == expected
+           and detail["completed_index_exists"] and detail["actual_protocol"] == detail["expected_protocol"], detail)
     def fail_child(p, c, folder):
         child = Path(c["independent_results"][3]["path"])
         value = json.loads(child.read_bytes())
@@ -198,6 +216,8 @@ def main():
         ("third-render-refusal", dict(failed_invocation=6)),
         ("last-render-refusal", dict(failed_invocation=10)),
         ("source-changed-after-population", dict(source_changed=True)),
+        ("amendment-changed-after-population", dict(protocol_changed="amendments")),
+        ("amendment-review-changed-after-population", dict(protocol_changed="amendment_reviews")),
         ("duplicate-independent-child-path", dict(mutate=lambda p, c, f: c["independent_results"].__setitem__(5, c["independent_results"][0]))),
         ("empty-independent-checks-rebound", dict(mutate=lambda p, c, f: mutate_child(c, lambda v: v.update(check_count=0, checks=[])))),
         ("false-check-with-pass-status-rebound", dict(mutate=lambda p, c, f: mutate_child(c, lambda v: v["checks"][0].update({"pass": False})))),
