@@ -1,0 +1,314 @@
+{
+  "schema": "m194e-independent-reference-v1",
+  "status": "PASS_COMPLETE_REFERENCE_ONLY",
+  "argv": [
+    "experiments/m194e-joint-pupil/independent-reference.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-reference-1",
+    "--controls",
+    "experiments/m194e-joint-pupil/independent-controls-1/result.json",
+    "--controls-sha256",
+    "e122c38565184a0d1798a6e03cfdf3dd2fae9aab2ede6e7a0dae82b8f7cb10ab"
+  ],
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "numpy": "2.4.4",
+  "scipy": "1.17.1",
+  "frames": [
+    {
+      "arm": "primary",
+      "index": 0,
+      "inverse_focus": 0.5,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "primary-0.npy",
+        "bytes": 24704,
+        "sha256": "7ae5cb0eb66b4c7db1998d10930ce3612a0500512fe2cc7569128ddd46659ca8"
+      },
+      "indicators": {
+        "path": "primary-0-indicators.npy",
+        "bytes": 24704,
+        "sha256": "a8589685d685ae99a2a05eb45e664295df8cc01b668e5cacf693db032400cfc3"
+      },
+      "max_error_indicator_e": 4.151116912119572e-05,
+      "min_e": 7085.686794258557,
+      "max_e": 16905.12985079429
+    },
+    {
+      "arm": "primary",
+      "index": 1,
+      "inverse_focus": 0.625,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "primary-1.npy",
+        "bytes": 24704,
+        "sha256": "008627ac8f0111a6bea92ee6da53afc951ca6656717c06263ef9f01d7240995e"
+      },
+      "indicators": {
+        "path": "primary-1-indicators.npy",
+        "bytes": 24704,
+        "sha256": "1d4d2c1cb734d3f8b9d9c79c7a04f60866ab147fd1427a774cca42f7d1015f59"
+      },
+      "max_error_indicator_e": 3.8509366050905773e-05,
+      "min_e": 7599.658931990755,
+      "max_e": 16392.048868133705
+    },
+    {
+      "arm": "primary",
+      "index": 2,
+      "inverse_focus": 0.75,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "primary-2.npy",
+        "bytes": 24704,
+        "sha256": "d8898033d096e3bb0d0452ee4f94ca252f0feea58603d03990d2ed02e39c9f98"
+      },
+      "indicators": {
+        "path": "primary-2-indicators.npy",
+        "bytes": 24704,
+        "sha256": "d84c8e3058eb8d36a62ce51445ec9b1ff102deb3abd8cb100466521328478064"
+      },
+      "max_error_indicator_e": 6.657910910114942e-05,
+      "min_e": 8894.538936152438,
+      "max_e": 15911.371385616678
+    },
+    {
+      "arm": "primary",
+      "index": 3,
+      "inverse_focus": 0.875,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "primary-3.npy",
+        "bytes": 24704,
+        "sha256": "493fc8a27a208ce0f8c09b5752a1c1d04a826a5dd2bf3a68b4f61d51aa1a5653"
+      },
+      "indicators": {
+        "path": "primary-3-indicators.npy",
+        "bytes": 24704,
+        "sha256": "dff3be10697f9146f1a378e92b02355ccfc6d51feff11825e72f3ddfbe1c4017"
+      },
+      "max_error_indicator_e": 2.9502788368295633e-05,
+      "min_e": 10395.5434555134,
+      "max_e": 16686.344669452334
+    },
+    {
+      "arm": "primary",
+      "index": 4,
+      "inverse_focus": 1.0,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "primary-4.npy",
+        "bytes": 24704,
+        "sha256": "03ffab637e2efb3ab4d95a2517bb508847ddbc4582ccecb6fd2fe8db88128a41"
+      },
+      "indicators": {
+        "path": "primary-4-indicators.npy",
+        "bytes": 24704,
+        "sha256": "b25ba55867478ba8161c7c824d6bb5f5c3d9b1c77ed7f4c7d43945a2ec069bf2"
+      },
+      "max_error_indicator_e": 3.6096845233506566e-05,
+      "min_e": 11144.571877907854,
+      "max_e": 17040.95951878192
+    },
+    {
+      "arm": "refined",
+      "index": 0,
+      "inverse_focus": 0.5,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "refined-0.npy",
+        "bytes": 24704,
+        "sha256": "2a227f46c2b9781feabe6a7383a63c50e9f843157ef70ead17a0a3a1eac41899"
+      },
+      "indicators": {
+        "path": "refined-0-indicators.npy",
+        "bytes": 24704,
+        "sha256": "ea4c2c175161ce53d627526f69c8ff70a119c606b5d0362963c3ce8d371d05db"
+      },
+      "max_error_indicator_e": 7.811584189427995e-06,
+      "min_e": 7085.686794258557,
+      "max_e": 16905.129850794256
+    },
+    {
+      "arm": "refined",
+      "index": 1,
+      "inverse_focus": 0.625,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "refined-1.npy",
+        "bytes": 24704,
+        "sha256": "cc22d4c3960086515119341b44ade8d47b6c5735c9892b6098d72b5783b1f305"
+      },
+      "indicators": {
+        "path": "refined-1-indicators.npy",
+        "bytes": 24704,
+        "sha256": "8f83d44df5d4ad0cede9e54854eba9db47c70b9c8ef40bbebba765fde1d6b4c2"
+      },
+      "max_error_indicator_e": 7.811718517963918e-06,
+      "min_e": 7599.658931990781,
+      "max_e": 16392.048868133705
+    },
+    {
+      "arm": "refined",
+      "index": 2,
+      "inverse_focus": 0.75,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "refined-2.npy",
+        "bytes": 24704,
+        "sha256": "580e77622eb612e2a45b65b8e6d45f5bf87b3b86960eaa7e0e9fe53ff804a11d"
+      },
+      "indicators": {
+        "path": "refined-2-indicators.npy",
+        "bytes": 24704,
+        "sha256": "33ab775c4b48bf75b2569c511965ff450a6bb28cfb68722a6c6f7433f7c94e0d"
+      },
+      "max_error_indicator_e": 7.812021915174364e-06,
+      "min_e": 8894.538936152561,
+      "max_e": 15911.371385616729
+    },
+    {
+      "arm": "refined",
+      "index": 3,
+      "inverse_focus": 0.875,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "refined-3.npy",
+        "bytes": 24704,
+        "sha256": "72c7842f7061fda599be011db3e89b12741876ed3ab9ba56137e2a916d9a0d82"
+      },
+      "indicators": {
+        "path": "refined-3-indicators.npy",
+        "bytes": 24704,
+        "sha256": "a4ecd95f2480575d3980bb14f951f61bcdf32fbfd8287e0977527ec620a60cb6"
+      },
+      "max_error_indicator_e": 7.80520821599014e-06,
+      "min_e": 10395.543455513696,
+      "max_e": 16686.344669452315
+    },
+    {
+      "arm": "refined",
+      "index": 4,
+      "inverse_focus": 1.0,
+      "shape": [
+        48,
+        64
+      ],
+      "dtype": "<f8",
+      "array": {
+        "path": "refined-4.npy",
+        "bytes": 24704,
+        "sha256": "3ddd4fa171949b5ee06b81432ba6dc03537403425c47827b2f1c2498b5df55a1"
+      },
+      "indicators": {
+        "path": "refined-4-indicators.npy",
+        "bytes": 24704,
+        "sha256": "d2f18073c893acec947f21917637cea664053c4bdccebbdf6639e26950a3cad3"
+      },
+      "max_error_indicator_e": 7.762213820457874e-06,
+      "min_e": 11144.571877907854,
+      "max_e": 17040.95951878189
+    }
+  ],
+  "budgets": {
+    "primary": {
+      "evaluations": 6337002,
+      "cpu_seconds": 46.046875,
+      "wall_seconds": 46.10899999993853,
+      "limits": {
+        "evaluations": 30000000,
+        "cpu_seconds": 600.0,
+        "wall_seconds": 1200.0
+      }
+    },
+    "refined": {
+      "evaluations": 7125594,
+      "cpu_seconds": 52.453125,
+      "wall_seconds": 52.64100000006147,
+      "limits": {
+        "evaluations": 30000000,
+        "cpu_seconds": 600.0,
+        "wall_seconds": 1200.0
+      }
+    }
+  },
+  "sources": {
+    "independent-model.py": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+    "independent-controls.py": "1cbed1f0b815e117ea6abd43d3871147a35c639721e04852fae2ccbcf26c5048",
+    "independent-reference.py": "e3105500e0d6e697258a4d689b3634a6c65a6008a9b23149609d5eeb5304fda7",
+    "independent-design.md": "5d98f9e949b77da629cc32e1cc3f35d2bcf9cb0b7fbdad28d58476e35509bf87"
+  },
+  "actual_peak_explicit_ndarray_bytes": 122880,
+  "controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-controls-1\\result.json",
+    "sha256": "e122c38565184a0d1798a6e03cfdf3dd2fae9aab2ede6e7a0dae82b8f7cb10ab"
+  },
+  "refinement": [
+    {
+      "index": 0,
+      "maximum_e": 2.956221578642726e-08,
+      "rms_e": 9.456412600241273e-10,
+      "passed": true
+    },
+    {
+      "index": 1,
+      "maximum_e": 2.5502959033474326e-07,
+      "rms_e": 7.181552046673229e-09,
+      "passed": true
+    },
+    {
+      "index": 2,
+      "maximum_e": 5.183519533602521e-07,
+      "rms_e": 1.4857987864820216e-08,
+      "passed": true
+    },
+    {
+      "index": 3,
+      "maximum_e": 2.2009771782904863e-09,
+      "rms_e": 1.5778747431422617e-10,
+      "passed": true
+    },
+    {
+      "index": 4,
+      "maximum_e": 1.9572325982153416e-09,
+      "rms_e": 5.911752773805319e-10,
+      "passed": true
+    }
+  ],
+  "source_unchanged": true
+}

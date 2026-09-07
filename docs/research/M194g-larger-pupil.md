@@ -1,10 +1,11 @@
 # M194g — larger shared-pupil expected images
 
-2026-09-07. **IN PROGRESS; amended complete geometry count independently passes.** The fixed
+2026-09-07. **IN PROGRESS; first numerical reference population is uncommissioned.** The fixed
 320×240 fixture needs a complete geometry-only cost pass, independently
 commissioned radiance components, and complete independently admitted expected
-arrays before it can feed any noise or production comparison. No larger
-radiance, float array, noise population or production output has been released.
+arrays before it can feed any noise or production comparison. The geometry cost
+prerequisite passes; numerical component work is active. No full expected-image
+population, noise population or larger production output has been released.
 
 ## Consumer and decision
 
@@ -252,3 +253,61 @@ not a scored optical or production population.
 
 No core merge, noise model, product default or camera profile changed in this
 milestone. No SYNTHESIS fact/discipline/question fold is being attempted.
+
+## First numerical component execution
+
+Implementation/specification release9b5ca1dc was followed by source/command
+release98748490, before either numerical batch. Root checked all24 committed
+source bindings and12 input bindings against current bytes and the exact
+eight-path commit. The execution release is
+`numerical-components-release-1.json`, SHA256
+`99895afd4cd99151708b7fa0e462297a273bd5fceabf205c0228f0bb197847fa`.
+It contains both exact original interpreter argument arrays. The
+[pre-execution source review](../../experiments/m194g-larger-pupil/numerical-source-review-1.md)
+records corrections made before any numerical call, including input reopening,
+array order, restored fault phases, consumed cache factors and resource tracking.
+
+**MEASURED producer result, independent admission pending:** the author batch
+started18:12:47.6381192 UTC and returned exit0 at18:14:08.0065778 UTC; root
+collected completion from session50422. Its result hash is
+`358aebe2292a8c1aa920763481cae36ce43ebe2d756a5d2e0b8e8fde20fb080e`.
+It has331 planned and331 actual rows:299 ordinary calls,15 deliberate faults,
+15 restored companions and2 cache primes. The one refused numerical row is
+the intended zero-over-zero fault. All511 producer checks report pass. All60
+normal observer frames are present, covering3240 sites; the additional failed
+coverage traversal is retained separately. These are the author's completed
+checks, not yet an independently admitted optical comparison.
+
+The same cumulative author allowance recorded1082883 actual point calls,
+270801888 angular nodes,79.203125CPU/80.25wall seconds,6832758 tracked ndarray
+bytes and32768 simultaneous node pairs. The latter reaches its inclusive
+ceiling. Peak live scalar frames is1. Off collected no hook activity; count
+and placebo each reached4338 hybrid and204813 fallback hooks per normal
+execution, with optional collection only in count. The saved records retain
+the actual scalar/branch/sparse diagnostic payloads and their deliberate
+corruptions; independent file/equality/resource checks remain required.
+
+**MEASURED refusal, retained:** the independent reference started
+18:12:47.8333379 UTC and returned exit1 at18:12:56.8972312 UTC. Its result hash is
+`514520ee73ea4504be17f0520791c174d11f202c371cd1ce9f6b11a4a8da7b0b`.
+All300 ordinary rows were attempted, but272 returned values and28 refused.
+Each of14 geometry cases refused in both primary and refined arms:
+004,006,011,013,015,022,060,062,067,069,071,078,116,117. Every refusal came from
+the unchanged Cartesian reference's quadrature-warning boundary, with
+`Extremely bad integrand behavior` on a near-tangent case. There was no process
+exception or finalization error, and its recorded sources stayed unchanged.
+
+All52 separately recorded literal/series/retained-array oracle comparisons and
+all14 deliberate fault/restored comparisons report pass. Of150 required
+reference refinement comparisons,136 have values and pass;14 lack values.
+The completed-values requirement is the one failing check among55. Its
+120372 integrand calls and8.890625CPU/8.937000000034459wall seconds do not
+approach the declared allowance. This is a numerical completeness failure,
+not a cost refusal, and the272-value subset cannot authorize expected images.
+
+**ARGUED diagnosis, not yet an observed failing-interval proof:** independently
+reading the saved inputs and frozen interval construction identifies topology
+cuts only a few binary64 steps from a pupil endpoint. The next task is a
+bounded diagnostic and prospectively specified integration correction if that
+mechanism is confirmed. Keep the first population, all inputs, accuracy bars
+and original helper source. No warning suppression or omitted case is released.

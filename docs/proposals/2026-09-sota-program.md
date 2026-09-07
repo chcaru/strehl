@@ -180,8 +180,12 @@ commissions the larger numerical boundary fixture, starting with geometry-only
 cost and coverage checks. Its amended full count independently passes all15
 rows and1152000 cells within the prospectively chosen180CPU/240wall allowance.
 The original60-second refusal and stopped profiling instrument are retained.
-Current work is the numerical renderer, separate spatial reference and their
-fixed component/observer commission; no larger radiance population is admitted. See the
+The first author component/observer batch completed its331 calls and60 normal
+observer frames. The separate reference attempted all300 rows but refused28
+near-tangent evaluations on quadrature warnings, so numerical admission remains
+blocked on that incomplete reference and the independent reader/resource checks.
+Current work is its bounded interval diagnosis; no full expected-image population
+is admitted. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.
