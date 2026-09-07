@@ -1,0 +1,67 @@
+{
+  "schema": "m194g-numerical-execution-release-v1",
+  "scope": "noise-authority-controls",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/independent-noise-authority-controls.py": {
+      "sha256": "2f23c3f31465538dae07be072c582ee8190597047418c9a19d26b281794839d1",
+      "bytes": 16911
+    },
+    "experiments/m194g-larger-pupil/independent-noise-verifier-support.py": {
+      "sha256": "0854094c53db0e73a109cc74d12d37b02f6500af9c364231217e7565cd013c15",
+      "bytes": 12422
+    },
+    "experiments/m194g-larger-pupil/software-noise.py": {
+      "sha256": "abe9d712cbf9caf07f8dfc276a0e0ab4474366db039fd3b1fc2f25cb7a057292",
+      "bytes": 35805
+    },
+    "experiments/m194g-larger-pupil/software-noise-authority.py": {
+      "sha256": "c02508370fd2706f81babe4f15d7961a4f2bbd5ae65b83ec7ccedb443000bac0",
+      "bytes": 13041
+    },
+    "experiments/m194g-larger-pupil/next-noise-contract.md": {
+      "sha256": "4e92e176d0cfae6dcdc9fedab3ff8f5d40f858c47eb0fcddbd14877d894d29f2",
+      "bytes": 30515
+    },
+    "experiments/m194g-larger-pupil/independent-full-float-authority-schema.md": {
+      "sha256": "3097142b76a796838a2b9ed50d8dcda972ba9945bbc0df75906901abe0e2c606",
+      "bytes": 7787
+    },
+    "experiments/m194g-larger-pupil/next-noise-files-verifier-design.md": {
+      "sha256": "375dd381d821c8805a94b72845d8c4b588d2a10fa377407638c92aa57035a510",
+      "bytes": 13391
+    },
+    "experiments/m194g-larger-pupil/software-noise-interface.md": {
+      "sha256": "98048ba64d9f984e6dbba17607b40d6c5899057aa88708b9354e98a40fa131c2",
+      "bytes": 8242
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+      "sha256": "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b",
+      "bytes": 2981
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-noise-authority-controls-1",
+      "experiments/m194g-larger-pupil/independent-noise-authority-controls.py",
+      "--release",
+      "experiments/m194g-larger-pupil/independent-noise-authority-controls-release-1.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--float-commission",
+      "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+      "--float-commission-sha256",
+      "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-noise-authority-controls-1"
+    ]
+  ]
+}

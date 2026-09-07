@@ -805,3 +805,10 @@ mod joint_pupil_bridge {
         "/src/merge_cmd/joint-pupil-bridge.rs"
     ));
 }
+
+mod noise_pupil_bridge {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/src/merge_cmd/noise-pupil-bridge.rs"
+    ));
+}

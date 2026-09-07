@@ -38,7 +38,11 @@ zero-clipping admission; checking decoded bounds cannot reconstruct a
 pre-clipping excursion. Planning may stream all declared payload bindings,
 but retains no decoded stack. Each actual decode owns one u16 CFA buffer,
 with no materialized aligned stack and no RAW-decoder fallback. Missing RAW
-sentinels make unintended RAW reads fail explicitly.
+sentinels cannot supply decoded pixels. The unchanged full-resolution gather
+still attempts its metadata identity lookup; the local identity reader returns
+`CaptureIdentity::EMPTY` when opening that sentinel fails. This tolerated
+metadata lookup is not a proof of zero file-open attempts. CA stays explicitly
+off.
 
 Inject the exact four-plane gain .25DN/e and read noise4e with black512 and
 white15360. Frame and writer white balance use the registered f32 values
@@ -69,6 +73,12 @@ the reduced source list is not a new focus or alignment solution. Recompute
 and require the same output crop before treating endpoint and merge TIFFs as
 co-located observations.
 
+Record original frame index, local source index and actual probe seed index
+separately. The unchanged fold passes its local index into `Probe::measure`:
+original frame4 alone therefore has local/probe index0. Reference2 remains the
+coordinate gauge, not a member of that one-source map. A false original-frame
+selection or false probe-index plan must refuse.
+
 The nonempty measured-floor prefix must be observed at the production
 consumer. Existing `BandWorker::fold` filters the actual `Probe::last` prefix,
 passes it to `add_frame_with_gain`, and accumulates `beta_n`/`beta_sum` for its
@@ -79,6 +89,12 @@ availability but cannot supply this witness. Its four-decimal values are
 descriptive output, not exact full-precision beta authority. A private altered
 log/count must fail the independent receipt reader, with the original restored.
 No additional observer hook is needed to establish this presence/count claim.
+Four levels allow at most two measured bands because the actual probe uses
+`min(4, level_sizes.len()-2)`; do not describe this as three measured floors.
+Record the actual prefix length and remaining white-floor fallback. The reader
+requires one anchored banner/count pair, refusing missing, duplicate,
+nonfinite and altered-count logs. Explicitly clear the floor-scale and
+white/debug overrides; scaling can extend a list beyond its measured prefix.
 
 Write the actual production RGB16 TIFF and bind both file bytes and canonical
 little-endian pixel bytes. Record software, dimensions, channels and sample
@@ -104,6 +120,10 @@ failed/missing authority children and a same-length altered CFA. A below-black
 valid private CFA companion must pass while out-of-rail values fail. Keep
 every control private and never promote a forged gate to genuine authority.
 Check full-root path containment and aliases on the actual host.
+Direct source controls contain0,511,512 and15360 and require those exact u16
+values before any downstream clamp;15361 refuses. A source that clamps to black
+must fail even if its final TIFF looks plausible. Equal bytes in distinct
+flat/noise-off files remain legal; aliases of the same actual file do not.
 
 Decode off/count/placebo diagnostics use the actual source and forbid extra
 reads from the observer. Require byte-identical TIFF outputs, with placebo
@@ -112,6 +132,19 @@ unsupported CameraLinear exposure request or a provenance failure. A failed
 consumer command must not leave a successful receipt. Independent verification
 must change the private coordinates, corruption site and null rather than
 only recompute the author's fixtures.
+
+Confidence remains off: this RGB-only bridge does not repeat M194f's auxiliary
+rank/Gray controls. Its larger constant/affine/channel fixtures exercise the
+changed dimensions and actual four-level fold. JSON reads are limited to16MiB,
+individual CFA reads to153600 bytes, with a limit-plus-one same-buffer read.
+Actual per-command input/source bindings persist through receipt publication.
+
+The exact bridge/control command proposal and private failure witnesses are
+recorded in `production-bridge-command-design.md` before source execution.
+The source-only independent review is
+`independent-production-bridge-review.md`; its missing-sentinel and local-probe
+findings are discharged above. Source/command release and genuine noise-file
+admission remain required before intended renders.
 
 The complete38-output quality matrix remains a separate registration after
 this bridge and its independent TIFF/configuration reader pass. First compare
