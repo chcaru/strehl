@@ -1,0 +1,6 @@
+{
+  "fixture_only": true,
+  "count_sentinel_calls": 0,
+  "source_capture_calls": 1,
+  "error": "FileNotFoundError(2, 'The system cannot find the file specified')"
+}

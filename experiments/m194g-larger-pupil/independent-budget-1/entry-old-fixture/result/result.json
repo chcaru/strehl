@@ -1,0 +1,95 @@
+{
+  "schema": "m194g-geometry-preflight-v1",
+  "status": "UNCOMMISSIONED_COST",
+  "scope": "cost only; no numerical/radiance authority",
+  "invocation": {
+    "orig_argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-budget-1",
+      "experiments/m194g-larger-pupil/independent-budget-controls.py",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-budget-1"
+    ],
+    "argv": [
+      "experiments/m194g-larger-pupil/independent-budget-controls.py",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-budget-1"
+    ],
+    "xoptions": {
+      "faulthandler": true,
+      "pycache_prefix": "experiments/m194g-larger-pupil/work/cache-independent-budget-1"
+    },
+    "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+  },
+  "started_utc": "2026-09-07T17:30:39.034114+00:00",
+  "error": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-old-fixture\\\\experiments\\\\m194g-larger-pupil\\\\fixture.json')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\preflight.py\", line 361, in run\n    fixture, fixture_ref = load_fixture(fixture_path)\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\preflight.py\", line 276, in load_fixture\n    raw, binding = loader.checked_bytes(path, FIXTURE_HASH)\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\pinned-loader.py\", line 24, in checked_bytes\n    raise ValueError(\"pinned source mismatch: \" + str(path))\nValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\fixture.json\n",
+  "work": {
+    "limits": {
+      "whole_run_cpu_seconds": 180.0,
+      "whole_run_wall_seconds": 240.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 0.0,
+    "wall_seconds": 0.015999999945051968,
+    "frame_points": 0,
+    "frame_angular_nodes": 0,
+    "total_points": 0,
+    "total_angular_nodes": 0,
+    "frame_count": 0,
+    "check_calls": 1,
+    "tracked_peak_ndarray_bytes": 0,
+    "tracked_peak_ndarrays": 0,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  },
+  "sources_after": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md",
+      "sha256": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+      "bytes": 5367
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\design-sources.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\design-sources.json",
+      "sha256": "d7f488811494c4231b5cfc3ab2cb8ac672b6f0a481becc4e510b521e5a39f636",
+      "bytes": 2695
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\fixture.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\fixture.json",
+      "sha256": "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2",
+      "bytes": 1984
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\geometry.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md",
+      "sha256": "fd8265226dec4fa398b8676eb6c0e79c150cf69bb24ec875bcd3c4a6bbae3e27",
+      "bytes": 7377
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\pinned-loader.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\preflight.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\preflight.py",
+      "sha256": "c162c2651b1fd3e8345f08c0c9cd5edf5e100d94d7958c5dedde1d791a18763c",
+      "bytes": 23049
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-old-fixture\\experiments\\m194g-larger-pupil\\preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645
+    }
+  },
+  "ended_utc": "2026-09-07T17:30:39.044180+00:00"
+}

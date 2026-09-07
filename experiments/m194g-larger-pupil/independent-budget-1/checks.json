@@ -1,0 +1,363 @@
+[
+  {
+    "name": "whole-source-exact-allowlist",
+    "passed": true,
+    "detail": {
+      "named_replacements": 5
+    }
+  },
+  {
+    "name": "unchanged-actual-function-and-class-bodies",
+    "passed": true,
+    "detail": {
+      "symbols": [
+        "CostFailure",
+        "fail",
+        "Budget",
+        "enumerate_cells",
+        "point_cuts",
+        "_stream",
+        "count_geometry",
+        "load_fixture",
+        "fixture_models",
+        "write_json",
+        "validate_completion"
+      ]
+    }
+  },
+  {
+    "name": "fixture-only-two-elapsed-fields",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "unchanged-original-geometry.py",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "unchanged-original-pinned-loader.py",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "unchanged-original-preregister.md",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "actual-defaults-match-new-external-fixture",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "actual-budget-cpu-179.999",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-constructor-cpu-179.999",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-budget-cpu-180.0",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-constructor-cpu-180.0",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-budget-cpu-180.001",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "actual-constructor-cpu-180.001",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "new-policy-admits-cpu-companion",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "old-policy-refuses-cpu-companion",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "actual-budget-wall-239.999",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-constructor-wall-239.999",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-budget-wall-240.0",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-constructor-wall-240.0",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-budget-wall-240.001",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "actual-constructor-wall-240.001",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "new-policy-admits-wall-companion",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "old-policy-refuses-wall-companion",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "strict-points-7999999",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "strict-points-8000000",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: strict per-frame work ceiling')"
+    }
+  },
+  {
+    "name": "strict-nodes-1199999999",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "strict-nodes-1200000000",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: strict per-frame work ceiling')"
+    }
+  },
+  {
+    "name": "unchanged-storage-valid-shared-owner",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "actual-storage-check-private-1023-cap-refuses",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: tracked owned-array ceiling')"
+    }
+  },
+  {
+    "name": "actual-traversal-cpu-179.999",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-traversal-cpu-180.0",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-traversal-cpu-180.001",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "nonreset-cpu-across-cells",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "nonreset-cpu-across-frames",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "nonreset-cpu-across-arms",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "actual-traversal-wall-239.999",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-traversal-wall-240.0",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "actual-traversal-wall-240.001",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "nonreset-wall-across-cells",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "nonreset-wall-across-frames",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "nonreset-wall-across-arms",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+    }
+  },
+  {
+    "name": "actual-eight-analytic-cells-valid-final-companion",
+    "passed": true,
+    "detail": {
+      "outcome": "returned"
+    }
+  },
+  {
+    "name": "analytic-actual-population-complete",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "copied-actual-run-reaches-only-private-sentinel",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "actual-entry-missing-amendment-refuses-before-count",
+    "passed": true,
+    "detail": {
+      "error": "FileNotFoundError(2, 'The system cannot find the file specified')"
+    }
+  },
+  {
+    "name": "actual-entry-changed-amendment-refuses-before-count",
+    "passed": true,
+    "detail": {
+      "error": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-changed-amendment\\\\experiments\\\\m194g-larger-pupil\\\\amendment-1-counter-budget.md')"
+    }
+  },
+  {
+    "name": "actual-entry-old-fixture-refuses-before-count",
+    "passed": true,
+    "detail": {
+      "error": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-old-fixture\\\\experiments\\\\m194g-larger-pupil\\\\fixture.json')"
+    }
+  },
+  {
+    "name": "actual-entry-changed-fixture-refuses-before-count",
+    "passed": true,
+    "detail": {
+      "error": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-changed-fixture\\\\experiments\\\\m194g-larger-pupil\\\\fixture.json')"
+    }
+  },
+  {
+    "name": "rehash-altered-fixture-cannot-select-policy",
+    "passed": true,
+    "detail": {
+      "error": "ValueError('external fixture binding differs from registered fixture')"
+    }
+  },
+  {
+    "name": "actual-amendment-in-both-source-ledgers",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "after-start-amendment-change-recorded",
+    "passed": true,
+    "detail": {
+      "scope": "actual changed bytes recorded; sentinel remains deciding refusal"
+    }
+  },
+  {
+    "name": "original-private-error-retained-with-secondary-source-error",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "copied-entry-valid-final-companion",
+    "passed": true,
+    "detail": {}
+  }
+]

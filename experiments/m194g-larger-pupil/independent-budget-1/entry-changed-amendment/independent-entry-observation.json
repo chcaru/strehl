@@ -1,0 +1,6 @@
+{
+  "fixture_only": true,
+  "count_sentinel_calls": 0,
+  "source_capture_calls": 1,
+  "error": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-changed-amendment\\\\experiments\\\\m194g-larger-pupil\\\\amendment-1-counter-budget.md')"
+}

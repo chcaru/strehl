@@ -1,0 +1,55 @@
+{
+  "schema": "m194g-geometry-preflight-v1",
+  "status": "UNCOMMISSIONED_COST",
+  "scope": "cost only; no numerical/radiance authority",
+  "invocation": {
+    "orig_argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-budget-1",
+      "experiments/m194g-larger-pupil/independent-budget-controls.py",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-budget-1"
+    ],
+    "argv": [
+      "experiments/m194g-larger-pupil/independent-budget-controls.py",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-budget-1"
+    ],
+    "xoptions": {
+      "faulthandler": true,
+      "pycache_prefix": "experiments/m194g-larger-pupil/work/cache-independent-budget-1"
+    },
+    "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+  },
+  "started_utc": "2026-09-07T17:30:38.940836+00:00",
+  "error": "FileNotFoundError(2, 'The system cannot find the file specified')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-missing-amendment\\experiments\\m194g-larger-pupil\\preflight.py\", line 363, in run\n    loader.checked_bytes(HERE / \"amendment-1-counter-budget.md\", AMENDMENT_HASH)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-missing-amendment\\experiments\\m194g-larger-pupil\\pinned-loader.py\", line 17, in checked_bytes\n    path = Path(path).resolve(strict=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1240, in resolve\n    s = self._flavour.realpath(self, strict=strict)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen ntpath>\", line 727, in realpath\nFileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-missing-amendment\\\\experiments\\\\m194g-larger-pupil\\\\amendment-1-counter-budget.md'\n",
+  "work": {
+    "limits": {
+      "whole_run_cpu_seconds": 180.0,
+      "whole_run_wall_seconds": 240.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 0.0,
+    "wall_seconds": 0.015999999945051968,
+    "frame_points": 0,
+    "frame_angular_nodes": 0,
+    "total_points": 0,
+    "total_angular_nodes": 0,
+    "frame_count": 0,
+    "check_calls": 1,
+    "tracked_peak_ndarray_bytes": 0,
+    "tracked_peak_ndarrays": 0,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  },
+  "sources_after_error": "FileNotFoundError(2, 'The system cannot find the file specified')",
+  "sources_after_traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-missing-amendment\\experiments\\m194g-larger-pupil\\preflight.py\", line 363, in run\n    loader.checked_bytes(HERE / \"amendment-1-counter-budget.md\", AMENDMENT_HASH)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-missing-amendment\\experiments\\m194g-larger-pupil\\pinned-loader.py\", line 17, in checked_bytes\n    path = Path(path).resolve(strict=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1240, in resolve\n    s = self._flavour.realpath(self, strict=strict)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen ntpath>\", line 727, in realpath\nFileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-missing-amendment\\\\experiments\\\\m194g-larger-pupil\\\\amendment-1-counter-budget.md'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-missing-amendment\\experiments\\m194g-larger-pupil\\preflight.py\", line 404, in run\n    result[\"sources_after\"] = source_bindings()\n                              ^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\mock.py\", line 1139, in __call__\n    return self._mock_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\mock.py\", line 1143, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\mock.py\", line 1204, in _execute_mock_call\n    result = effect(*args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls.py\", line 259, in source_capture\n    return original_sources()\n           ^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-missing-amendment\\experiments\\m194g-larger-pupil\\preflight.py\", line 304, in source_bindings\n    return {str(path.resolve()): loader.checked_bytes(path)[1] for path in sorted(set(paths))}\n                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-1\\entry-missing-amendment\\experiments\\m194g-larger-pupil\\pinned-loader.py\", line 17, in checked_bytes\n    path = Path(path).resolve(strict=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1240, in resolve\n    s = self._flavour.realpath(self, strict=strict)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen ntpath>\", line 727, in realpath\nFileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-missing-amendment\\\\experiments\\\\m194g-larger-pupil\\\\amendment-1-counter-budget.md'\n",
+  "ended_utc": "2026-09-07T17:30:38.947837+00:00"
+}

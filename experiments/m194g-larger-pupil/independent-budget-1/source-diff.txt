@@ -1,0 +1,33 @@
+--- old
++++ candidate
+@@ -29,9 +29,10 @@
+ exec(compile(raw, str(HERE / "pinned-loader.py"), "exec"), loader.__dict__)
+ LOADER_IMPORT_SHA = hashlib.sha256(raw).hexdigest()
+ geometry = loader.execute_bytes(HERE / "geometry.py", "m194g_geometry")
+-FIXTURE_HASH = "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2"
++FIXTURE_HASH = "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb"
+ PREREG_HASH = "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8"
+-DEFAULT_LIMITS = dict(whole_run_cpu_seconds=60., whole_run_wall_seconds=120.,
++AMENDMENT_HASH = "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99"
++DEFAULT_LIMITS = dict(whole_run_cpu_seconds=180., whole_run_wall_seconds=240.,
+                       tracked_owned_ndarray_bytes=32 * 1024 * 1024,
+                       per_frame_points_strictly_below=8_000_000,
+                       per_frame_angular_nodes_strictly_below=1_200_000_000)
+@@ -296,7 +297,8 @@
+ 
+ def source_bindings():
+     paths = [*HERE.glob("*.py"), HERE / "fixture.json", HERE / "preregister.md",
+-             HERE / "design-sources.json", HERE / "independent-preflight-design-review.md"]
++             HERE / "design-sources.json", HERE / "independent-preflight-design-review.md",
++             HERE / "amendment-1-counter-budget.md"]
+     paths += list(HERE.glob("independent*preregister*.md"))
+     paths += list(HERE.glob("independent*design*.md"))
+     return {str(path.resolve()): loader.checked_bytes(path)[1] for path in sorted(set(paths))}
+@@ -358,6 +360,7 @@
+         budget = Budget(started_cpu=ENTRY_CPU, started_wall=ENTRY_WALL)
+         fixture, fixture_ref = load_fixture(fixture_path)
+         loader.checked_bytes(HERE / "preregister.md", PREREG_HASH)
++        loader.checked_bytes(HERE / "amendment-1-counter-budget.md", AMENDMENT_HASH)
+         if fixture["preflight_limits"] != budget.limits:
+             fail("registered limits mismatch")
+         before = source_bindings()

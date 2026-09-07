@@ -1,0 +1,6 @@
+{
+  "fixture_only": true,
+  "count_sentinel_calls": 1,
+  "source_capture_calls": 2,
+  "error": "RuntimeError('PRIVATE_NO_INTENDED_COUNT_SENTINEL')"
+}

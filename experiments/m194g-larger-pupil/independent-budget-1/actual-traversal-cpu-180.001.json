@@ -1,0 +1,94 @@
+{
+  "fixture_only": true,
+  "result": {
+    "status": "UNCOMMISSIONED_COST",
+    "width": 2,
+    "height": 1,
+    "frame_indices": [
+      0,
+      1
+    ],
+    "arms": [
+      "primary",
+      "angle-refined"
+    ],
+    "frames": [
+      {
+        "arm": "primary",
+        "frame_index": 0,
+        "visited_cells": 1,
+        "branches": {
+          "foreground": 1,
+          "background": 0,
+          "numerical": 0
+        },
+        "roots": 0,
+        "low_points": 0,
+        "high_points": 0,
+        "angular_nodes": 0,
+        "maximum_intervals": 0,
+        "unsupported_selector_reason": null,
+        "integrator": {
+          "arm": "primary",
+          "angle_low": 16,
+          "angle_high": 32,
+          "cell_low": 4,
+          "cell_high": 8,
+          "pupil_tolerance": 0.00025,
+          "cell_tolerance": 0.00075,
+          "cell_point_tolerance": 4.6875e-05,
+          "angle_depth": 10,
+          "cell_depth": 6,
+          "point_limit": 4000000,
+          "angular_limit": 600000000,
+          "cpu_limit": 600,
+          "wall_limit": 1200,
+          "array_limit": 33554432,
+          "node_pair_limit": 32768
+        },
+        "status": "running",
+        "last_coordinate": [
+          0,
+          0
+        ]
+      }
+    ],
+    "completed_frames": 0,
+    "completed_cells": 1,
+    "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py\", line 253, in count_geometry\n    budget.check()\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py\", line 81, in check\n    fail(\"whole-run time ceiling\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py\", line 46, in fail\n    raise CostFailure(\"UNCOMMISSIONED_COST: \" + message)\nm194g_independent_budget_candidate.CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling\n",
+    "ordered_partial_stream_sha256": "018f2053815d9b26f5fd69de11357c5f32ad4073892529ad40f05306e4ece663",
+    "work": {
+      "limits": {
+        "whole_run_cpu_seconds": 180.0,
+        "whole_run_wall_seconds": 240.0,
+        "tracked_owned_ndarray_bytes": 33554432,
+        "per_frame_points_strictly_below": 8000000,
+        "per_frame_angular_nodes_strictly_below": 1200000000
+      },
+      "cpu_seconds": 180.001,
+      "wall_seconds": 0.0,
+      "frame_points": 0,
+      "frame_angular_nodes": 0,
+      "total_points": 0,
+      "total_angular_nodes": 0,
+      "frame_count": 1,
+      "check_calls": 8,
+      "tracked_peak_ndarray_bytes": 32,
+      "tracked_peak_ndarrays": 1,
+      "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+    }
+  },
+  "observed_cells": [
+    [
+      "primary",
+      0,
+      0,
+      0
+    ]
+  ],
+  "clock_values": [
+    180.001
+  ],
+  "forbidden_calls": []
+}

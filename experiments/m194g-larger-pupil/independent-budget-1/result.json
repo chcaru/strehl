@@ -1,0 +1,432 @@
+{
+  "schema": "m194g-independent-budget-controls-v1",
+  "passed": true,
+  "checks": [
+    {
+      "name": "whole-source-exact-allowlist",
+      "passed": true,
+      "detail": {
+        "named_replacements": 5
+      }
+    },
+    {
+      "name": "unchanged-actual-function-and-class-bodies",
+      "passed": true,
+      "detail": {
+        "symbols": [
+          "CostFailure",
+          "fail",
+          "Budget",
+          "enumerate_cells",
+          "point_cuts",
+          "_stream",
+          "count_geometry",
+          "load_fixture",
+          "fixture_models",
+          "write_json",
+          "validate_completion"
+        ]
+      }
+    },
+    {
+      "name": "fixture-only-two-elapsed-fields",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "unchanged-original-geometry.py",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "unchanged-original-pinned-loader.py",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "unchanged-original-preregister.md",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "actual-defaults-match-new-external-fixture",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "actual-budget-cpu-179.999",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-constructor-cpu-179.999",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-budget-cpu-180.0",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-constructor-cpu-180.0",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-budget-cpu-180.001",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "actual-constructor-cpu-180.001",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "new-policy-admits-cpu-companion",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "old-policy-refuses-cpu-companion",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "actual-budget-wall-239.999",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-constructor-wall-239.999",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-budget-wall-240.0",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-constructor-wall-240.0",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-budget-wall-240.001",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "actual-constructor-wall-240.001",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "new-policy-admits-wall-companion",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "old-policy-refuses-wall-companion",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "strict-points-7999999",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "strict-points-8000000",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: strict per-frame work ceiling')"
+      }
+    },
+    {
+      "name": "strict-nodes-1199999999",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "strict-nodes-1200000000",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: strict per-frame work ceiling')"
+      }
+    },
+    {
+      "name": "unchanged-storage-valid-shared-owner",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "actual-storage-check-private-1023-cap-refuses",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: tracked owned-array ceiling')"
+      }
+    },
+    {
+      "name": "actual-traversal-cpu-179.999",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-traversal-cpu-180.0",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-traversal-cpu-180.001",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "nonreset-cpu-across-cells",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "nonreset-cpu-across-frames",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "nonreset-cpu-across-arms",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "actual-traversal-wall-239.999",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-traversal-wall-240.0",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "actual-traversal-wall-240.001",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "nonreset-wall-across-cells",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "nonreset-wall-across-frames",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "nonreset-wall-across-arms",
+      "passed": true,
+      "detail": {
+        "error": "CostFailure('UNCOMMISSIONED_COST: whole-run time ceiling')"
+      }
+    },
+    {
+      "name": "actual-eight-analytic-cells-valid-final-companion",
+      "passed": true,
+      "detail": {
+        "outcome": "returned"
+      }
+    },
+    {
+      "name": "analytic-actual-population-complete",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "copied-actual-run-reaches-only-private-sentinel",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "actual-entry-missing-amendment-refuses-before-count",
+      "passed": true,
+      "detail": {
+        "error": "FileNotFoundError(2, 'The system cannot find the file specified')"
+      }
+    },
+    {
+      "name": "actual-entry-changed-amendment-refuses-before-count",
+      "passed": true,
+      "detail": {
+        "error": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-changed-amendment\\\\experiments\\\\m194g-larger-pupil\\\\amendment-1-counter-budget.md')"
+      }
+    },
+    {
+      "name": "actual-entry-old-fixture-refuses-before-count",
+      "passed": true,
+      "detail": {
+        "error": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-old-fixture\\\\experiments\\\\m194g-larger-pupil\\\\fixture.json')"
+      }
+    },
+    {
+      "name": "actual-entry-changed-fixture-refuses-before-count",
+      "passed": true,
+      "detail": {
+        "error": "ValueError('pinned source mismatch: C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-budget-1\\\\entry-changed-fixture\\\\experiments\\\\m194g-larger-pupil\\\\fixture.json')"
+      }
+    },
+    {
+      "name": "rehash-altered-fixture-cannot-select-policy",
+      "passed": true,
+      "detail": {
+        "error": "ValueError('external fixture binding differs from registered fixture')"
+      }
+    },
+    {
+      "name": "actual-amendment-in-both-source-ledgers",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "after-start-amendment-change-recorded",
+      "passed": true,
+      "detail": {
+        "scope": "actual changed bytes recorded; sentinel remains deciding refusal"
+      }
+    },
+    {
+      "name": "original-private-error-retained-with-secondary-source-error",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "copied-entry-valid-final-companion",
+      "passed": true,
+      "detail": {}
+    }
+  ],
+  "check_count": 53,
+  "failure": null,
+  "sources_before": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": "c162c2651b1fd3e8345f08c0c9cd5edf5e100d94d7958c5dedde1d791a18763c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls.py": "14fe92cca70b25ec98719ed5c8d0ae1f9c5f38f3642c6eb894b1222923e57b99",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls-design.md": "8c02b87686b7521ff2a216aee5567ce9557454a13764075bdd3251ad6896f5eb",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8"
+  },
+  "sources_after": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": "c162c2651b1fd3e8345f08c0c9cd5edf5e100d94d7958c5dedde1d791a18763c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls.py": "14fe92cca70b25ec98719ed5c8d0ae1f9c5f38f3642c6eb894b1222923e57b99",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls-design.md": "8c02b87686b7521ff2a216aee5567ce9557454a13764075bdd3251ad6896f5eb",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8"
+  },
+  "source_unchanged": true,
+  "pins": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": "c162c2651b1fd3e8345f08c0c9cd5edf5e100d94d7958c5dedde1d791a18763c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97"
+  },
+  "old_commit": "0e125df2eb0319982a0cbf97c9f85608d68ab01e",
+  "orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-budget-1",
+    "experiments/m194g-larger-pupil/independent-budget-controls.py",
+    "--output",
+    "experiments/m194g-larger-pupil/independent-budget-1"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "xoptions": {
+    "faulthandler": true,
+    "pycache_prefix": "experiments/m194g-larger-pupil/work/cache-independent-budget-1"
+  },
+  "versions": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "numpy": "2.4.4"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "NUMEXPR_NUM_THREADS": "2"
+  },
+  "wall_seconds": 0.6089999999385327,
+  "scope": "affected elapsed/entry/source controls; injected clocks; no intended count or radiance authority"
+}
