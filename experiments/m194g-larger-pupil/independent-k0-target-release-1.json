@@ -1,0 +1,69 @@
+{
+  "schema": "m194g-numerical-execution-release-v1",
+  "scope": "independent-k0-target",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/independent-k0-target.py": {
+      "sha256": "da30c953916f90b940fe3aa9867460d50b4370857325717bcd0a114b739ffe91",
+      "bytes": 27878
+    },
+    "experiments/m194g-larger-pupil/independent-k0-target-design.md": {
+      "sha256": "f762e58b4c75abc57ec30760dc404389fb8cb7b567141ce89b3d028520e91138",
+      "bytes": 8700
+    },
+    "experiments/m194g-larger-pupil/independent-full-array-reader.py": {
+      "sha256": "a310518b7192059a5ce42326a6d05d93fa72ecf1046e177ea64b7b03272c1682",
+      "bytes": 48030
+    },
+    "experiments/m194g-larger-pupil/independent-component-reader.py": {
+      "sha256": "8477478b12a1f47b7c119db875e448825e52b0878d43a5f37388e1d2b461b683",
+      "bytes": 70763
+    },
+    "experiments/m194g-larger-pupil/next-quality-target-interface.md": {
+      "sha256": "fd9ddb9f259c70013cace8394653d0b406f300ce2ec3524ac9c760ee7f736993",
+      "bytes": 5774
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-target-1/target.json",
+      "sha256": "e72eb2bf4f23e71bad1ce03ef1b9df44142a15107585a542462b6acfbbcf8c2f",
+      "bytes": 5059
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+      "sha256": "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b",
+      "bytes": 2981
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-source-review.md",
+      "sha256": "8a220a9261cd328692bd8589f14dbd87b8bc83257a95c86614a77fb5e63ced89",
+      "bytes": 2570
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-k0-target-1",
+      "experiments/m194g-larger-pupil/independent-k0-target.py",
+      "--target",
+      "experiments/m194g-larger-pupil/independent-quality-target-1/target.json",
+      "--target-sha256",
+      "e72eb2bf4f23e71bad1ce03ef1b9df44142a15107585a542462b6acfbbcf8c2f",
+      "--float-commission",
+      "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+      "--float-commission-sha256",
+      "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b",
+      "--execution-release",
+      "experiments/m194g-larger-pupil/independent-k0-target-release-1.json",
+      "--execution-release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-k0-target-1"
+    ]
+  ]
+}

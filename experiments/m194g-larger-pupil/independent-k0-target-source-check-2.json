@@ -1,0 +1,25 @@
+{
+  "schema": "m194g-k0-source-check-v1",
+  "status": "PASS_AST_ONLY",
+  "invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-c",
+    "import ast,hashlib,json,sys; from pathlib import Path; p=Path(\"experiments/m194g-larger-pupil\"); names=[\"independent-k0-target.py\",\"independent-k0-target-design.md\",\"next-quality-target-interface.md\"]; bindings={n:{\"sha256\":hashlib.sha256((p/n).read_bytes()).hexdigest(),\"bytes\":(p/n).stat().st_size} for n in names}; ast.parse((p/names[0]).read_text(encoding=\"utf-8\"),filename=str(p/names[0])); result={\"schema\":\"m194g-k0-source-check-v1\",\"status\":\"PASS_AST_ONLY\",\"invocation\":sys.orig_argv,\"source_bindings\":bindings,\"scope\":\"AST parse only; metadata source/input correction; no target module import, control, quadrature, or target computation\"}; (p/\"independent-k0-target-source-check-2.json\").write_text(json.dumps(result,indent=2)+\"\\n\",encoding=\"utf-8\"); print(json.dumps(result))"
+  ],
+  "source_bindings": {
+    "independent-k0-target.py": {
+      "sha256": "da30c953916f90b940fe3aa9867460d50b4370857325717bcd0a114b739ffe91",
+      "bytes": 27878
+    },
+    "independent-k0-target-design.md": {
+      "sha256": "f762e58b4c75abc57ec30760dc404389fb8cb7b567141ce89b3d028520e91138",
+      "bytes": 8700
+    },
+    "next-quality-target-interface.md": {
+      "sha256": "fd9ddb9f259c70013cace8394653d0b406f300ce2ec3524ac9c760ee7f736993",
+      "bytes": 5774
+    }
+  },
+  "scope": "AST parse only; metadata source/input correction; no target module import, control, quadrature, or target computation"
+}

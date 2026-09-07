@@ -12,7 +12,8 @@ commission must pass before this matrix is released.
 Use scene order flat, textured. Within each scene use noise-off first, then
 the fixed seeds701,709,719,727,733,739,743,751. Each state uses both admissions
 `hard-floor` and `floor-pedestal-v1` on exactly the same five original CFA
-frames. Alternate their run order by state ordinal: even starts with HardFloor,
+frames. Alternate their run order by the global state ordinal0..17 across both
+scenes (flat0..8, textured9..17): even starts with HardFloor,
 odd with FloorPedestalV1. Both are still independently labeled; order is not
 an acceptance variable or timing experiment. This gives36 main outputs.
 Append textured/noise-off/HardFloor original frame0 and original frame4 alone,
